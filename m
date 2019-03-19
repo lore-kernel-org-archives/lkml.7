@@ -2,124 +2,99 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0877EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1B6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2562217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390C62075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553028000;
+	bh=z7iuGagrwEaBId+f098IfvLJJwkOy9SVQw22I4DA0WI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0PA+zBA74ZmOdJtc44l6ZGTpfAF0en9cDSDOU2bWpe8muHykjLGvzaKIy8EkEgQau
+	 gfd0T0YIX5VI4IwP0cCVvBluUv4+GA0YsvnkiGAR/a93etXKVfDfEYfL6QFXOHjSBB
+	 UXmIQOHCDR8FiRgGZ7/unLJ771zWpkqOO2yYIIlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfCSUjX (ORCPT
+        id S1727369AbfCSUj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:39:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726914AbfCSUjX (ORCPT
+        Tue, 19 Mar 2019 16:39:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44684 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCSUj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:39:23 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JKYT39114232
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:39:21 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rb5qvdqdb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:39:21 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 19 Mar 2019 20:39:16 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 20:39:14 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JKdFOQ48496670
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 20:39:16 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D93D0AE051;
-        Tue, 19 Mar 2019 20:39:15 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC7ECAE045;
-        Tue, 19 Mar 2019 20:39:14 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.239])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 19 Mar 2019 20:39:14 +0000 (GMT)
-Date:   Tue, 19 Mar 2019 22:39:12 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH] sh: mm: make use of new memblocks_present() helper
-References: <20190319180930.8231-1-logang@deltatee.com>
+        Tue, 19 Mar 2019 16:39:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w2so310651wrt.11;
+        Tue, 19 Mar 2019 13:39:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3SQjUGvbtviPeRdXVgSnXLx9Qu2xWq+9wjer0xhPxQc=;
+        b=U5MiH1WHRvW2BPXSmbFyRMF/frJy7jQn8w/Bff0zURj9w9iWrSq9ghVezDQFmC0k/I
+         MhmQ73qwzWJHMaugwWZVVHC8D0GAwoq+4VSsFzRk0DxAncWhcRgpvEQIi1CJt9jeMc9m
+         NTWPs4OOsutJzHwUwIowx5WP1tnyEoaJ6pdMcESv1Rb7HRu0DXQog67d8gVcLc+48Rk9
+         LoyBUN+KNNtHmrXZJNXYzvT52HxK32CDyL3LvMfux7Siy4DbFv0iLRxv39uyWK3bERwo
+         jIpL+2QXZKs72xYOShJCcuVXDGdQ94yHuW1H0fjnzP9h0K8Tr6KwYDqDyaAsD3Ifgx8+
+         qNcA==
+X-Gm-Message-State: APjAAAUpOYePneuDOMjy9hBkcYR3iSc6P/3tEtnfTCs1rvSaYJAbu9QS
+        s1QZBkXb/4fDN43psin2/I0=
+X-Google-Smtp-Source: APXvYqw5wO64i6x9SmvLfDMXwqKjKjcp36TduqPNhf084IleMKCwzt92Ub9Lmu/DHBYUgXtl3EhL+A==
+X-Received: by 2002:a05:6000:10c9:: with SMTP id b9mr18247393wrx.281.1553027996454;
+        Tue, 19 Mar 2019 13:39:56 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.153])
+        by smtp.googlemail.com with ESMTPSA id z1sm12539323wrw.28.2019.03.19.13.39.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 13:39:55 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 21:39:46 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
+        Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 03/15] ARM: exynos: fix a leaked reference by adding
+ missing of_node_put
+Message-ID: <20190319203946.GB16150@kozik-lap>
+References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
+ <1551785646-46173-3-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190319180930.8231-1-logang@deltatee.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19031920-0012-0000-0000-00000304DB9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031920-0013-0000-0000-0000213BEC1B
-Message-Id: <20190319203912.GA17966@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=809 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190144
+In-Reply-To: <1551785646-46173-3-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 12:09:30PM -0600, Logan Gunthorpe wrote:
-> Cleanup the open coded for_each_memblock() loop that is equivalent
-> to the new memblocks_present() helper.
+On Tue, Mar 05, 2019 at 07:33:54PM +0800, Wen Yang wrote:
+> The call to of_get_next_child returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
 > 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-
+> Detected by coccinelle with the following warnings:
+> ./arch/arm/mach-exynos/firmware.c:201:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 193, but without a corresponding object release within this function.
+> ./arch/arm/mach-exynos/firmware.c:204:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 193, but without a corresponding object release within this function.
+> ./arch/arm/mach-exynos/suspend.c:642:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 634, but without a corresponding object release within this function.
+> 
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  arch/sh/mm/init.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> This is just a resend
-> 
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index a8e5c0e00fca..dc0ff41d602d 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -234,12 +234,7 @@ static void __init do_init_bootmem(void)
-> 
->  	plat_mem_setup();
-> 
-> -	for_each_memblock(memory, reg) {
-> -		int nid = memblock_get_region_node(reg);
-> -
-> -		memory_present(nid, memblock_region_memory_base_pfn(reg),
-> -			memblock_region_memory_end_pfn(reg));
-> -	}
-> +	memblocks_present();
->  	sparse_init();
->  }
-> 
-> --
-> 2.19.0
-> 
 
--- 
-Sincerely yours,
-Mike.
+Thanks, applied, with adjustments in commit msg and removal of Florian's
+reviewed-by tag (I cannot find his email with review).
+
+Best regards,
+Krzysztof
 
