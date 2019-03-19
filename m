@@ -6,25 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB8AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286DEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F632183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32152085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfCSV5y (ORCPT
+        id S1727769AbfCSV55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:57:54 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:42919 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfCSV5w (ORCPT
+        Tue, 19 Mar 2019 17:57:57 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:41199 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727743AbfCSV5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:57:52 -0400
-X-Originating-IP: 90.89.68.76
+        Tue, 19 Mar 2019 17:57:55 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id A42DE40006;
-        Tue, 19 Mar 2019 21:57:48 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id ED9DE100002;
+        Tue, 19 Mar 2019 21:57:51 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -39,9 +38,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: [RFC PATCH 08/20] drm/malidp: Convert to generic image format library
-Date:   Tue, 19 Mar 2019 22:57:13 +0100
-Message-Id: <93737da7ef4ae99082ac8735a7713f68c017c535.1553032382.git-series.maxime.ripard@bootlin.com>
+Subject: [RFC PATCH 09/20] drm/client: Convert to generic image format library
+Date:   Tue, 19 Mar 2019 22:57:14 +0100
+Message-Id: <c4e7c10eb4d1441ed472ff735d0ed54ddc21262e.1553032382.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
 References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
@@ -52,56 +51,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have a generic image format libary, let's convert drivers to
-use it so that we can deprecate the old DRM one.
+Now that we have a generic image format libary, let's convert the rest of
+the DRM core to use it so that we can deprecate the old DRM one.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/arm/malidp_drv.c | 3 ++-
- drivers/gpu/drm/arm/malidp_hw.c  | 4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_client.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-index fec4fe15a71b..1fcbe364a137 100644
---- a/drivers/gpu/drm/arm/malidp_drv.c
-+++ b/drivers/gpu/drm/arm/malidp_drv.c
-@@ -10,6 +10,7 @@
-  * ARM Mali DP500/DP550/DP650 KMS/DRM driver
-  */
- 
-+#include <linux/image-formats.h>
- #include <linux/module.h>
- #include <linux/clk.h>
- #include <linux/component.h>
-@@ -314,7 +315,7 @@ malidp_verify_afbc_framebuffer_size(struct drm_device *dev,
- 				    const struct drm_mode_fb_cmd2 *mode_cmd)
+diff --git a/drivers/gpu/drm/drm_client.c b/drivers/gpu/drm/drm_client.c
+index 9df52b7fd074..a48181e18934 100644
+--- a/drivers/gpu/drm/drm_client.c
++++ b/drivers/gpu/drm/drm_client.c
+@@ -243,7 +243,7 @@ static void drm_client_buffer_delete(struct drm_client_buffer *buffer)
+ static struct drm_client_buffer *
+ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u32 format)
  {
- 	int n_superblocks = 0;
+-	const struct drm_format_info *info = drm_format_info(format);
++	const struct image_format_info *info = image_format_drm_lookup(format);
+ 	struct drm_mode_create_dumb dumb_args = { };
+ 	struct drm_device *dev = client->dev;
+ 	struct drm_client_buffer *buffer;
+@@ -259,7 +259,7 @@ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u
+ 
+ 	dumb_args.width = width;
+ 	dumb_args.height = height;
+-	dumb_args.bpp = drm_format_plane_cpp(info, 0) * 8;
++	dumb_args.bpp = image_format_plane_cpp(info, 0) * 8;
+ 	ret = drm_mode_create_dumb(dev, &dumb_args, client->file);
+ 	if (ret)
+ 		goto err_delete;
+@@ -319,10 +319,10 @@ static int drm_client_buffer_addfb(struct drm_client_buffer *buffer,
+ {
+ 	struct drm_client_dev *client = buffer->client;
+ 	struct drm_mode_fb_cmd fb_req = { };
 -	const struct drm_format_info *info;
 +	const struct image_format_info *info;
- 	struct drm_gem_object *objs = NULL;
- 	u32 afbc_superblock_size = 0, afbc_superblock_height = 0;
- 	u32 afbc_superblock_width = 0, afbc_size = 0;
-diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-index 07971ad53b29..d25bc4af1bc9 100644
---- a/drivers/gpu/drm/arm/malidp_hw.c
-+++ b/drivers/gpu/drm/arm/malidp_hw.c
-@@ -326,14 +326,14 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
+ 	int ret;
  
- static int malidp500_rotmem_required(struct malidp_hw_device *hwdev, u16 w, u16 h, u32 fmt)
- {
--	const struct drm_format_info *info = drm_format_info(fmt);
-+	const struct image_format_info *info = image_format_drm_lookup(fmt);
- 
- 	/*
- 	 * Each layer needs enough rotation memory to fit 8 lines
- 	 * worth of pixel data. Required size is then:
- 	 *    size = rotated_width * (bpp / 8) * 8;
- 	 */
--	return w * drm_format_plane_cpp(info, 0) * 8;
-+	return w * image_format_plane_cpp(info, 0) * 8;
- }
- 
- static void malidp500_se_write_pp_coefftab(struct malidp_hw_device *hwdev,
+-	info = drm_format_info(format);
++	info = image_format_drm_lookup(format);
+ 	fb_req.bpp = info->cpp[0] * 8;
+ 	fb_req.depth = info->depth;
+ 	fb_req.width = width;
 -- 
 git-series 0.9.1
