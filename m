@@ -2,53 +2,55 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E40DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF4BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6C320685
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5D42147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="FZuRPg9A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="ojJaqxyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfCSMtf (ORCPT
+        id S1727670AbfCSMtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:49:35 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:47307 "EHLO
+        Tue, 19 Mar 2019 08:49:50 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:47320 "EHLO
         kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfCSMtf (ORCPT
+        with ESMTP id S1726002AbfCSMtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:49:35 -0400
+        Tue, 19 Mar 2019 08:49:49 -0400
 Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 8E02725BEF5;
-        Tue, 19 Mar 2019 23:49:32 +1100 (AEDT)
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 690C825BEFA;
+        Tue, 19 Mar 2019 23:49:46 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1552999772; bh=e7UzDC0OZ9gIO7vuQBiOkBMN692NaxhTH0JPmu3iNsk=;
+        t=1552999786; bh=RFTQBYqWmUxW3EYPl7gvbgDBTS9WEt713FJ0/BUT5tc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FZuRPg9APf6PX+EeOD0kNrwtcUZi7h5T8NvnpgPTuuWJ2QLlTa2J65iuijPjB+TY/
-         /ZzI3n07v+3Ra8nYjADmHcdOf0QembTYtE8oZXzQsKkbDd8PA206UiaToi0x5KtJmr
-         9WXdDs9mz2BHCmHyP8yDqNHGv93NBs8g2DONmBI0=
+        b=ojJaqxydQUDv5oALVKmDH3rUlpbM/OLQsSH2TlwRrlJl3suvTiURfqN8/b0omUpfE
+         Xt7/Oy9Dj6c4vSBVlSNHaD9dd6GTd2LBnPUMCRT+H+B0QgTpg317ot+4rC4mHv43eP
+         e1AMIetaNfEjrCQKiRoIpRPlndFvhwkK6QNW8Tp4=
 Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 0A850940663; Tue, 19 Mar 2019 13:49:30 +0100 (CET)
-Date:   Tue, 19 Mar 2019 13:49:30 +0100
+        id D851E940663; Tue, 19 Mar 2019 13:49:44 +0100 (CET)
+Date:   Tue, 19 Mar 2019 13:49:44 +0100
 From:   Simon Horman <horms@verge.net.au>
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Re: [PATCH 3/6] mfd: da9063: remove platform_data support
-Message-ID: <20190319124930.es5gzwfaudkvvftl@verge.net.au>
+        Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 4/6] regulator: da9063: move definitions out of a header
+ into the driver
+Message-ID: <20190319124944.rdo2qzuprisdhq6h@verge.net.au>
 References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
- <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-5-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190318154759.21978-5-wsa+renesas@sang-engineering.com>
 Organisation: Horms Solutions BV
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,90 +58,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 04:47:55PM +0100, Wolfram Sang wrote:
-> There are no in-kernel users anymore, so remove this outdated interface.
+On Mon, Mar 18, 2019 at 04:47:56PM +0100, Wolfram Sang wrote:
+> Those definitions are only used within the driver meanwhile, so put them
+> there.
 > 
 > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
 > ---
->  drivers/mfd/da9063-core.c | 20 ++------------------
->  drivers/mfd/da9063-i2c.c  |  1 -
->  drivers/mfd/da9063-irq.c  |  1 -
->  3 files changed, 2 insertions(+), 20 deletions(-)
+>  drivers/regulator/da9063-regulator.c | 44 +++++++++++++++++++++++++++++++-
+>  include/linux/mfd/da9063/pdata.h     | 49 ------------------------------------
+>  2 files changed, 43 insertions(+), 50 deletions(-)
 > 
-> diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-> index 6e4ce49b4405..65ca288b0c90 100644
-> --- a/drivers/mfd/da9063-core.c
-> +++ b/drivers/mfd/da9063-core.c
-> @@ -26,7 +26,6 @@
->  #include <linux/regmap.h>
->  
+> diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+> index 73c85039d0cf..c05859ad63d8 100644
+> --- a/drivers/regulator/da9063-regulator.c
+> +++ b/drivers/regulator/da9063-regulator.c
+> @@ -25,7 +25,6 @@
+>  #include <linux/regulator/machine.h>
+>  #include <linux/regulator/of_regulator.h>
 >  #include <linux/mfd/da9063/core.h>
 > -#include <linux/mfd/da9063/pdata.h>
 >  #include <linux/mfd/da9063/registers.h>
 >  
->  #include <linux/proc_fs.h>
-> @@ -165,7 +164,6 @@ static int da9063_clear_fault_log(struct da9063 *da9063)
 >  
->  int da9063_device_init(struct da9063 *da9063, unsigned int irq)
->  {
-> -	struct da9063_pdata *pdata = da9063->dev->platform_data;
->  	int model, variant_id, variant_code;
->  	int ret;
+> @@ -34,6 +33,49 @@
+>  	REG_FIELD(_reg, __builtin_ffs((int)_mask) - 1, \
+>  		sizeof(unsigned int) * 8 - __builtin_clz((_mask)) - 1)
 >  
-> @@ -173,24 +171,10 @@ int da9063_device_init(struct da9063 *da9063, unsigned int irq)
->  	if (ret < 0)
->  		dev_err(da9063->dev, "Cannot clear fault log\n");
+> +/* DA9063 and DA9063L regulator IDs */
+> +enum {
+> +	/* BUCKs */
+> +	DA9063_ID_BCORE1,
+> +	DA9063_ID_BCORE2,
+> +	DA9063_ID_BPRO,
+> +	DA9063_ID_BMEM,
+> +	DA9063_ID_BIO,
+> +	DA9063_ID_BPERI,
+> +
+> +	/* BCORE1 and BCORE2 in merged mode */
+> +	DA9063_ID_BCORES_MERGED,
+> +	/* BMEM and BIO in merged mode */
+> +	DA9063_ID_BMEM_BIO_MERGED,
+> +	/* When two BUCKs are merged, they cannot be reused separately */
+> +
+> +	/* LDOs on both DA9063 and DA9063L */
+> +	DA9063_ID_LDO3,
+> +	DA9063_ID_LDO7,
+> +	DA9063_ID_LDO8,
+> +	DA9063_ID_LDO9,
+> +	DA9063_ID_LDO11,
+> +
+> +	/* DA9063-only LDOs */
+> +	DA9063_ID_LDO1,
+> +	DA9063_ID_LDO2,
+> +	DA9063_ID_LDO4,
+> +	DA9063_ID_LDO5,
+> +	DA9063_ID_LDO6,
+> +	DA9063_ID_LDO10,
+> +};
+> +
+> +/* Old regulator platform data */
+> +struct da9063_regulator_data {
+> +	int				id;
+> +	struct regulator_init_data	*initdata;
+> +};
+> +
+> +struct da9063_regulators_pdata {
+> +	unsigned int			n_regulators;
+> +	struct da9063_regulator_data	*regulator_data;
+> +};
+> +
+>  /* Regulator capabilities and registers description */
+>  struct da9063_regulator_info {
+>  	struct regulator_desc desc;
+> diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9063/pdata.h
+> index 50bed4f89c1a..21a2d107f0cf 100644
+> --- a/include/linux/mfd/da9063/pdata.h
+> +++ b/include/linux/mfd/da9063/pdata.h
+> @@ -16,55 +16,6 @@
+>  #ifndef __MFD_DA9063_PDATA_H__
+>  #define __MFD_DA9063_PDATA_H__
 >  
-> -	if (pdata) {
-> -		da9063->flags = pdata->flags;
-> -		da9063->irq_base = pdata->irq_base;
-> -	} else {
-> -		da9063->flags = 0;
-> -		da9063->irq_base = -1;
-> -	}
-> +	da9063->flags = 0;
-> +	da9063->irq_base = -1;
->  	da9063->chip_irq = irq;
->  
-> -	if (pdata && pdata->init != NULL) {
-> -		ret = pdata->init(da9063);
-> -		if (ret != 0) {
-> -			dev_err(da9063->dev,
-> -				"Platform initialization failed.\n");
-> -			return ret;
-> -		}
-> -	}
+> -#include <linux/regulator/machine.h>
 > -
->  	ret = regmap_read(da9063->regmap, DA9063_REG_CHIP_ID, &model);
->  	if (ret < 0) {
->  		dev_err(da9063->dev, "Cannot read chip model id.\n");
-> diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
-> index 50a24b1921d0..5f707b100e69 100644
-> --- a/drivers/mfd/da9063-i2c.c
-> +++ b/drivers/mfd/da9063-i2c.c
-> @@ -22,7 +22,6 @@
->  
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/da9063/core.h>
-> -#include <linux/mfd/da9063/pdata.h>
->  #include <linux/mfd/da9063/registers.h>
->  
->  #include <linux/of.h>
-> diff --git a/drivers/mfd/da9063-irq.c b/drivers/mfd/da9063-irq.c
-> index ecc0c8ce6c58..ac02c31c5802 100644
-> --- a/drivers/mfd/da9063-irq.c
-> +++ b/drivers/mfd/da9063-irq.c
-> @@ -19,7 +19,6 @@
->  #include <linux/interrupt.h>
->  #include <linux/regmap.h>
->  #include <linux/mfd/da9063/core.h>
-> -#include <linux/mfd/da9063/pdata.h>
->  
->  #define	DA9063_REG_EVENT_A_OFFSET	0
->  #define	DA9063_REG_EVENT_B_OFFSET	1
+> -/*
+> - * Regulator configuration
+> - */
+> -/* DA9063 and DA9063L regulator IDs */
+> -enum {
+> -	/* BUCKs */
+> -	DA9063_ID_BCORE1,
+> -	DA9063_ID_BCORE2,
+> -	DA9063_ID_BPRO,
+> -	DA9063_ID_BMEM,
+> -	DA9063_ID_BIO,
+> -	DA9063_ID_BPERI,
+> -
+> -	/* BCORE1 and BCORE2 in merged mode */
+> -	DA9063_ID_BCORES_MERGED,
+> -	/* BMEM and BIO in merged mode */
+> -	DA9063_ID_BMEM_BIO_MERGED,
+> -	/* When two BUCKs are merged, they cannot be reused separately */
+> -
+> -	/* LDOs on both DA9063 and DA9063L */
+> -	DA9063_ID_LDO3,
+> -	DA9063_ID_LDO7,
+> -	DA9063_ID_LDO8,
+> -	DA9063_ID_LDO9,
+> -	DA9063_ID_LDO11,
+> -
+> -	/* DA9063-only LDOs */
+> -	DA9063_ID_LDO1,
+> -	DA9063_ID_LDO2,
+> -	DA9063_ID_LDO4,
+> -	DA9063_ID_LDO5,
+> -	DA9063_ID_LDO6,
+> -	DA9063_ID_LDO10,
+> -};
+> -
+> -/* Regulators platform data */
+> -struct da9063_regulator_data {
+> -	int				id;
+> -	struct regulator_init_data	*initdata;
+> -};
+> -
+> -struct da9063_regulators_pdata {
+> -	unsigned			n_regulators;
+> -	struct da9063_regulator_data	*regulator_data;
+> -};
+> -
+> -
+>  /*
+>   * RGB LED configuration
+>   */
 > -- 
 > 2.11.0
 > 
