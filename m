@@ -2,96 +2,149 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64136C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F692077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3631E20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:36:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAIGJe8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfCSWc4 (ORCPT
+        id S1727269AbfCSWgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:32:56 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:47046 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfCSWc4 (ORCPT
+        Tue, 19 Mar 2019 18:36:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37468 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfCSWgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:32:56 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 1BDF872CCAC;
-        Wed, 20 Mar 2019 01:32:53 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 0E1F27CC74C; Wed, 20 Mar 2019 01:32:53 +0300 (MSK)
-Date:   Wed, 20 Mar 2019 01:32:53 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [RESEND PATCH] ptrace: take into account saved_sigmask in
- PTRACE_{GET,SET}SIGMASK
-Message-ID: <20190319223252.GA19424@altlinux.org>
-References: <20190319191957.27156-1-avagin@gmail.com>
+        Tue, 19 Mar 2019 18:36:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y15so616525wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=71cG6l5GTA/71CCX4+CFrV/JbL1WCVvp+ptkx8iiESY=;
+        b=uAIGJe8sLoeqcv9sisFtcBr49/lpRTY6Xk+STGp5rwQZkWPOC0yYmHq53YIgOxiP4O
+         n/e6QrgxstHYTEmn5+xO3Lo38p8WzlMmVjPThiFhB/EQvCZRwbipxyms9S45iBsdxmpA
+         F7Ad2o5uuk54M9OpjzafQMysr3K9hpAlhsk871TgR/XBwx1OrMZ02tEzsJexIjYyPOhh
+         VoqGrXB/xKhv+gBG8xP6lqxgYJ9rR8oDNKSWrs6QUN3uWR2prebl5fJF+rRPcSH7wSG0
+         F0eD5kz7w6KUQNF8gsAfFanTHi8e6YiclIJ11SavigAg6J4Ok3IcNnwFjjoVSPrRHkVT
+         SWdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=71cG6l5GTA/71CCX4+CFrV/JbL1WCVvp+ptkx8iiESY=;
+        b=iOYPjyZC6cWTBkwsoFXEV8PsLhYcIFcK+23QtdGf/yVWRVc4cU2O3Q9GIQTX/Hp8aw
+         9mR6UT0BmM+SQy3jV3zfx882NV/8A75IyYoFDWvmw68doiKc7zvezL1+v+VgTkp5ZhKs
+         UGV/OQl0fh8Fm1zV5hmn+O4gm4Ge0WV7KdUNZhbKrSI95gP3n8qOpuXG5htf+mcGDwoK
+         JF+AzgbVcbTJSPNmFCa+QY+6A4UgpbmBCGR/E84p0mts41EYeftZTfEOWgvMZSAse5iW
+         CrbehpreYBkJsxuGLtW/NE+5DRQUUZ5fuBrkzNufxyQ94bHZO/YAD07IArPHm606zocC
+         gO4w==
+X-Gm-Message-State: APjAAAUzu/s7TXeosbBe9kjjhMz9ClVGc1Q8xTfj2ZLlgArHIDbd6baM
+        GvKZzpfyOD2VC1ImyRXeGM143zqNE5qt5PecMRSyRg==
+X-Google-Smtp-Source: APXvYqwaHqPhnL61INkOyi6PAct/Paz87bcRyWCg8G+nXbKY+OB7xkf+eGiBdyfWgaM1YLX5S8scoadfXtH4rQGkXrM=
+X-Received: by 2002:adf:c543:: with SMTP id s3mr18154285wrf.192.1553034979529;
+ Tue, 19 Mar 2019 15:36:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <20190319191957.27156-1-avagin@gmail.com>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
+ <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
+ <CA+M3ks7q8QnNirk_WkaE5CmFWkEPn4uu5Hfb2kP+4d5qapHvrA@mail.gmail.com>
+ <c51be371-086a-bd5b-b70a-5579f5b95320@ti.com> <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
+In-Reply-To: <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 19 Mar 2019 15:36:06 -0700
+Message-ID: <CALAqxLVbdpj+T4u3jZ_5Uqda5La1Py-ZGpXSep_CCoLzWyap8A@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Alistair Strachan <astrachan@google.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Chenbo Feng <fengc@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Marissa Wall <marissaw@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 2:58 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Tue, Mar 19, 2019 at 1:00 PM Andrew F. Davis <afd@ti.com> wrote:
+> >
+> > On 3/19/19 11:54 AM, Benjamin Gaignard wrote:
+> > > Le mer. 13 mars 2019 =C3=A0 23:31, John Stultz <john.stultz@linaro.or=
+g> a =C3=A9crit :
+> > >>
+> > >> On Wed, Mar 13, 2019 at 1:11 PM Liam Mark <lmark@codeaurora.org> wro=
+te:
+> > >>> On Tue, 5 Mar 2019, John Stultz wrote:
+> > >>>>
+> > >>>> Eventual TODOS:
+> > >>>> * Reimplement page-pool for system heap (working on this)
+> > >>>> * Add stats accounting to system/cma heaps
+> > >>>> * Make the kselftest actually useful
+> > >>>> * Add other heaps folks see as useful (would love to get
+> > >>>>   some help from actual carveout/chunk users)!
+> > >>>
+> > >>> We use a modified carveout heap for certain secure use cases.
+> > >>
+> > >> Cool! It would be great to see if you have any concerns about adding
+> > >> such a secure-carveout heap to this framework. I suspect it would be
+> > >> fairly similar to how its integrated into ION, but particularly I'd =
+be
+> > >> interested in issues around the lack of private flags and other
+> > >> allocation arguments like alignment.
+> > >>
+> > >>> Although there would probably be some benefit in discssing how the =
+dma-buf
+> > >>> heap framework may want to support
+> > >>> secure heaps in the future it is a large topic which I assume you d=
+on't
+> > >>> want to tackle now.
+> > >>
+> > >> So I suspect others (Benjamin?) would have a more informed opinion o=
+n
+> > >> the details, but the intent is to allow secure heap implementations.
+> > >> I'm not sure what areas of concern you have for this allocation
+> > >> framework in particular?
+> > >
+> > > yes I would be great to understand how you provide the information to
+> > > tell that a dmabuf
+> > > is secure (or not) since we can't add flag in dmabuf structure itself=
+.
+> > > An option is manage
+> > > the access rights when a device attach itself to the dmabuf but in
+> > > this case you need define
+> > > a list of allowed devices per heap...
+> > > If you have a good solution for secure heaps you are welcome :-)
+> > >
+> >
+> > Do we really need any of that? A secure buffer is secured by the
+> > hardware firewalls that keep out certain IP (including often the
+> > processor running Linux). So the only thing we need to track internally
+> > is that we should not allow mmap/kmap on the buffer. That can be done i=
+n
+> > the per-heap layer, everything else stays the same as a standard
+> > carveout heap.
+>
+> For at least some hw the importing driver needs to configure things
+> differently for secure buffers :-/
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does the import ioctl need/use a flag for that then? Userland already
+has to keep meta-data about dmabufs around.
 
-On Tue, Mar 19, 2019 at 12:19:57PM -0700, Andrei Vagin wrote:
-> There are a few system calls (pselect, ppoll, etc) which replace a task
-> sigmask while they are running in a kernel-space
->=20
-> When a task calls one of these syscalls, the kernel saves a current
-> sigmask in task->saved_sigmask and sets a syscall sigmask.
->=20
-> On syscall-exit-stop, ptrace traps a task before restoring the
-> saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
-> PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
-> saved_sigmask, when the task returns to user-space.
->=20
-> This patch fixes this problem.  PTRACE_GET_SIGMASK returns saved_sigmask
-> is it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
-
-If it's not too late, could somebody tweak the commit message so that
-PTRACE_GET_SIGMASK becomes PTRACE_GETSIGMASK and "is it's set" is changed
-to "if it's set", please?
-
-
---=20
-ldv
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJckW4UAAoJEAVFT+BVnCUItfsP/R6/j0iRF6lVA67Vlb3yafBM
-w5nk7j1eV0Pm/gKALaGVrB6rwJC7ghD05S64uqca9vX8oKJLSTayP6e3Xy1WqP1c
-EymLkosU9869M95+3EN/zfKyRUzrVOdvSdMNgl1WGMRSs3txCub3PuWJ8QHq6EBi
-bCzLbK5V15tJs3yOn/yqR3AXKLvt+/ZVWhHUHkbf/DcMMYs3Ycjt6BSM27pExvg9
-rDxPoxtEC63bzgDSSY3fbaFbRScGS1X2Pl+PNiCaTCuyP+oULXLDPPXExZDHZTP2
-hsS7ID5FIXhYAzLfvrN9tRQmqHC+fQdDMIDf15zUKl8XaoCwnf43gyNZPWIxTe+H
-k7/UIoOBHYPD50HX9+al7S1QfGX2E7fyinmBl0mT+X9eMORxNoWFMbI3WmmJZkDE
-ZR/weOis2GpeDtev+aBOTS9k0csY6/hhVFtC8/OULHExr01EdImA37NKlkQbwXEq
-HKW7b60sPqSVeYAoF5o00UjfzTL/eAHxSJWI/2/6XfHhbde6XzDfuPEwuBU6bC+O
-XIRLV1EShd64cgfaskThMMivjB3gnJpaukC01MfzUJi+xZWAzdnJme56kJ5xS12j
-OtgL3Zv9V18Nq/SIOlE2bIIQKYFMZopM/b4Y70tKA4R2swNFSzmcxRli7YgxY09i
-umENVJldGMUEyoVrGYTV
-=29F8
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+thanks
+-john
