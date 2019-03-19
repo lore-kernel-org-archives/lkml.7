@@ -2,57 +2,92 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8023AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0246C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5649120850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19BF2083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfCSPkm convert rfc822-to-8bit (ORCPT
+        id S1727270AbfCSPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:40:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33070 "EHLO gloria.sntech.de"
+        Tue, 19 Mar 2019 11:43:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:54112 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfCSPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:40:41 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h6Gqx-0007Yd-Fw; Tue, 19 Mar 2019 16:40:35 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH -next] phy: rockchip-typec: Make usb3_pll_cfg and dp_pll_cfg static
-Date:   Tue, 19 Mar 2019 16:40:35 +0100
-Message-ID: <9533465.g4Uc9Oev60@diego>
-In-Reply-To: <20190319153028.22452-1-yuehaibing@huawei.com>
-References: <20190319153028.22452-1-yuehaibing@huawei.com>
+        id S1726466AbfCSPna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:43:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 871CA1650;
+        Tue, 19 Mar 2019 08:43:29 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A5A03F614;
+        Tue, 19 Mar 2019 08:43:28 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 15:43:22 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, kishon@ti.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools: PCI: exit with error code when test fails
+Message-ID: <20190319154322.GA12647@e107981-ln.cambridge.arm.com>
+References: <1537455773-13470-1-git-send-email-jjhiblot@ti.com>
+ <20181004111144.GC5233@e107981-ln.cambridge.arm.com>
+ <20181116120113.GB3228@e107981-ln.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181116120113.GB3228@e107981-ln.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 19. März 2019, 16:30:28 CET schrieb Yue Haibing:
-> From: YueHaibing <yuehaibing@huawei.com>
+On Fri, Nov 16, 2018 at 12:01:13PM +0000, Lorenzo Pieralisi wrote:
+> On Thu, Oct 04, 2018 at 12:11:44PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, Sep 20, 2018 at 05:02:53PM +0200, Jean-Jacques Hiblot wrote:
+> > > This makes it easier to use pcitest in automated setups.
+> > > 
+> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > > ---
+> > >  tools/pci/pcitest.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+> > > index af146bb..5adc8cd 100644
+> > > --- a/tools/pci/pcitest.c
+> > > +++ b/tools/pci/pcitest.c
+> > > @@ -143,6 +143,7 @@ static int run_test(struct pci_test *test)
+> > >  	}
+> > >  
+> > >  	fflush(stdout);
+> > > +	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+> > >  }
+> > >  
+> > >  int main(int argc, char **argv)
+> > > @@ -231,6 +232,5 @@ int main(int argc, char **argv)
+> > >  		return -EINVAL;
+> > >  	}
+> > >  
+> > > -	run_test(test);
+> > > -	return 0;
+> > > +	return run_test(test);
+> > >  }
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> > Hi Kishon,
+> > 
+> > are you OK with this patch ? Please let me know.
 > 
-> Fix sparse warning:
-> 
-> drivers/phy/rockchip/phy-rockchip-typec.c:403:16: warning: symbol 'usb3_pll_cfg' was not declared. Should it be static?
-> drivers/phy/rockchip/phy-rockchip-typec.c:420:16: warning: symbol 'dp_pll_cfg' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Please let me know, I need your ACK on this to queue it.
 
-looks good,
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Hi Kishon,
 
+I will merge this patch unless you have something against it,
+please let me know.
 
+Thanks,
+Lorenzo
