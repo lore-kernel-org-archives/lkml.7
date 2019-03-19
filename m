@@ -2,123 +2,129 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C482C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9CD2133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552976079;
-	bh=5sbE827tg+ZWwofJp/qDuF8JZfq7umv1xRsacUOjDhQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=P2v7oYjkXG16zIB6yNQPC+qJUIL/DfI16CRn85qn8+VYmF66U3DWKQLc7Bhrcxz2t
-	 eiAaxlUX5ixMlbnx8ZMeKHSXbL+4BcGU8LZWS1ZplU9xxlLby/7Hqn4nXdG1TpOAGQ
-	 FzD0DVYVvQpUvQdt8mWYF0axvr0/wX6CXjEj1iXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1EFA620854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfCSGOi (ORCPT
+        id S1727109AbfCSGOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 02:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfCSGOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 02:14:37 -0400
-Received: from localhost (unknown [77.138.135.184])
+        Tue, 19 Mar 2019 02:14:55 -0400
+Received: from smtp.bonedaddy.net ([45.33.94.42]:42126 "EHLO
+        smtp.bonedaddy.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfCSGOz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 02:14:55 -0400
+X-Greylist: delayed 501 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Mar 2019 02:14:54 EDT
+Received: from chianamo (unknown [114.111.153.40])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AA920854;
-        Tue, 19 Mar 2019 06:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552976077;
-        bh=5sbE827tg+ZWwofJp/qDuF8JZfq7umv1xRsacUOjDhQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=j/DhXWCI7q3IbKRzEEHEqO/9VfcOnpCG2j7OqMz58C0n2CuQNtzG9krwC5hjwaP/O
-         Ghzt/oTxfWBz4BK+KDWu5kQSi4YBZKwwZVotAQWks1OPQ2oTVy0njrSTAEn0bkxBOg
-         ai154EjiHSAqs8Q68DmMSScLEdevhe5tRwySd7vM=
-Date:   Tue, 19 Mar 2019 08:14:31 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Aditya Pakki <pakki001@umn.edu>,
-        Boris Pismeny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Cc:     kjlu@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        Wei Yongjun <weiyongjun1@huawei.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: mlx5: Add a missing check on idr_find
-Message-ID: <20190319061431.GL4823@mtr-leonro.mtl.com>
+        (Authenticated sender: pabs3@bonedaddy.net)
+        by smtp.bonedaddy.net (Postfix) with ESMTPSA id 7BAF1180043;
+        Tue, 19 Mar 2019 02:06:33 -0400 (EDT)
+Message-ID: <c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net>
+Subject: PROBLEM: Linux kernel.core_pattern with pipes does argument
+ splitting after template expansion
+From:   Paul Wise <pabs3@bonedaddy.net>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Jakub Wilk <jwilk@jwilk.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-/kAUG1cFZlcQ+Edi9z5s"
+Date:   Tue, 19 Mar 2019 14:06:27 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FoLtEtfbNGMjfgrs"
-Content-Disposition: inline
-In-Reply-To: <20190318221924.7034-1-pakki001@umn.edu>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+User-Agent: Evolution 3.30.5-1 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---FoLtEtfbNGMjfgrs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-/kAUG1cFZlcQ+Edi9z5s
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2019 at 05:18:51PM -0500, Aditya Pakki wrote:
-> idr_find() can return a NULL value to 'flow' which is used without a check.
-> The patch adds a check to avoid potential NULL pointer dereference.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
-> index 5cf5f2a9d51f..3df468acdffc 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
-> @@ -226,6 +226,8 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_core_dev *mdev, u32 handle, u32 seq,
->  	rcu_read_lock();
->  	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
->  	rcu_read_unlock();
-> +	if (!flow)
-> +		return -EINVAL;
+The Linux kernel.core_pattern support for core dump handlers using the
+pipe syntax does argument splitting after template expansion.
 
-It is wrong and whole function is wrong too.
-In such case, you will leak "buf" allocated above.
+At minimum this bug could cause truncated values for the executable
+name. This also means that the argument parsing for core dump handlers
+is slightly more complicated because they have to deal with the fact
+that an attacker that can control the executable name via %E and %e
+could pass additional arguments, including command-line options, to the
+handler. Usually this is easy to deal with by merging the remaining
+arguments after an options termination indicator but it is very
+unlikely that core dump handler implementers are aware of the issue.
 
-The function mlx5_fpga_sbu_conn_sendmsg() which is used below can fail
-and it will leave "buf" unfreed too.
+Theoretically hostnames with %h could also be split up but in practice
+they do not appear to be allowed to contain spaces.
 
-Thanks
+Steps to reproduce:
 
+   $ cat foo=20
+   #!/bin/sh
+   printf "%s~" "$@" >> /var/log/core
+   echo >> /var/log/core
 
->  	mlx5_fpga_tls_flow_to_cmd(flow, cmd);
->
->  	MLX5_SET(tls_cmd, cmd, swid, ntohl(handle));
-> --
-> 2.17.1
->
+   $ chmod a+rx foo
 
---FoLtEtfbNGMjfgrs
+   $ sudo sysctl kernel.core_pattern=3D"|`pwd`/foo %E"
+   kernel.core_pattern =3D |/home/pabs/foo %E
+
+   $ cp /bin/sleep 'sleep with spaces'
+
+   $ ./sleep\ with\ spaces 55555 &
+   [1] 16041
+
+   $ kill -SEGV %1
+   [1]+  Segmentation fault      (core dumped) ./sleep\ with\ spaces 55555
+
+Incorrect results:
+
+   $ cat /var/log/core
+   !home!pabs!sleep~with~spaces~
+
+Correct results:
+
+   $ cat /var/log/core
+   !home!pabs!sleep with spaces~
+
+This was originally reported by Jakub Wilk <jwilk@jwilk.net>:
+<20190312145043.jxjoj66kqssptolr@jwilk.net>
+https://bugs.debian.org/924398
+
+--=20
+bye,
+pabs
+
+https://bonedaddy.net/pabs3/
+
+--=-/kAUG1cFZlcQ+Edi9z5s
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJckIjHAAoJEORje4g2clin+iIQAI6aublc3HGEI5E/b4t52jAG
-pQTUj1oD9JEMzwc3LxmjuVVF3Lmmj9iRbY7Svq7Q9eMVIe3L8z5Wo2AMcgwN1jJL
-IX3Ap9IPwnV35qj9jeFGfb/EyiuEvu4HbeBLQL+DsyYGhJzl1WOgAF0Qr6GLpfma
-95f4+ySbbPRU/cH8vu13asGGPqJvkqKYiSyTAzxUlZTivl1Xjoe3zC+Cwh3aFxr/
-UahAJN1qZX/7IBJ8qSq9D5iHoJt+ODwmdEQm2HYppeUC+nFuWOmXh/UylDw9JPDh
-5ZLh4aZxqViggE0jRQY/LzhBGLgb4v+8/A1B4Mmtv6NbE7nKnWvsQpd7exvA+a84
-PPrvLP7PY7oWdEiN6hl2SRHjN/Jx5FniD6zJcLmxumk7vEHlut6sodFGCsxohExZ
-E/HbIXLLIfoUuW/RBUEDHmDI9KLMM+a1tZ/tTWbr+5jAe+9poIhLZ/iXZj02CUNE
-ZS0nsfkebg7hj7fGICnYD4TaAWvvyIDfhtarJ3zP0xYTNK93S+KEpUBCuqAD9C58
-hFpUX2swbdzAfNmfraXm2uQo8kQQ5l65vjKZZkiFftJGBl8C4vNgh5kWOQg3pgAU
-GqNrDVHaTJ/xY2s3g7iM+oOZ3RPPTVEkBvr5Ibhkabrdl9FGL+THiKQ+JN/AYmc5
-nhzqw5UciZW82vo7fja1
-=nczu
+iQIzBAABCgAdFiEEYQsotVz8/kXqG1Y7MRa6Xp/6aaMFAlyQht8ACgkQMRa6Xp/6
+aaNflhAAqeV4lwN8MJQOpFEUQPbk/Nwy0gw/oO9oCTOg//oVcn4WA0xm4KHkc2cK
+8YNdsr0AziSH+/6legrCS8X3yL9BFLza6V7T296oLXTdlhDhEI4qqSKKiF6fWTT3
+p0YLgIvBe+4mOMXRZx2821oUhTdAZQ8Pn2gN76HqCFfy/0Ym28j+FlcRhfdGRm4E
+dh3mbwqUcig4Klv9BXnlHh7qLGo4ZnezFLLO/yJsyPjxJKxNpgaYenF1OwdP3S6s
+rSjXOBPRN8mriqVE9X4kw5eLGOkUHVV78xhtVzqTPNVCTfgMgjkXpNPIe5v+qL/2
+ymJAeJDT7ghwG+v0Nc6aWZuXvn0tBvmx45hKZcSWNdOJtWcqgi3EloRvrY/OJxEw
+A/P2wvfb2WgSPIQ3i4snoqAcbn9+wdPzCt4RrkBbCFnSWs4/sB5MnNR6DuG+T5/V
+r1hUqdRJAzco8oZ1n9MW+rkWYJdhZV8pDcCKv+OGPmw3O3W9S4eOAjrNzGciBTej
+epkkLOwewot/PrNqj9Rsqgf6yz0plkXRsKC4hIXE6DyntiIU6wtn435YKYEi8QxR
+ma7PFV4ylVjYWaTp1Pjbv+c7ToG2QN841rHvtfEOM8xhniSX4b9oOLi++f5ky1g8
+qjam1ie9H0NrcCg615arLD8hnB7qT+xWg5SGem3dzeut1aC9JJk=
+=66OZ
 -----END PGP SIGNATURE-----
 
---FoLtEtfbNGMjfgrs--
+--=-/kAUG1cFZlcQ+Edi9z5s--
+
