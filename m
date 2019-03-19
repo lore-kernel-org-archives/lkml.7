@@ -2,255 +2,293 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45A1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37650C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1DE2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA3920857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfCSLyg (ORCPT
+        id S1727366AbfCSLyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:54:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725951AbfCSLyg (ORCPT
+        Tue, 19 Mar 2019 07:54:41 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43584 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfCSLyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:54:36 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JBnfSg094991
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:54:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rayt50ft7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:54:34 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 19 Mar 2019 11:54:29 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 11:54:25 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JBsRr260358880
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 11:54:27 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34CCE52050;
-        Tue, 19 Mar 2019 11:54:27 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.98.162])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id CD7EA52052;
-        Tue, 19 Mar 2019 11:54:26 +0000 (GMT)
-Date:   Tue, 19 Mar 2019 12:54:25 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v5 4/7] s390: ap: setup relation betwen KVM and mediated
- device
-In-Reply-To: <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
-References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
-        <1552493104-30510-5-git-send-email-pmorel@linux.ibm.com>
-        <20190315191557.6c8d7668@oc2783563651>
-        <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 19 Mar 2019 07:54:38 -0400
+Received: by mail-vs1-f65.google.com with SMTP id i207so2973232vsd.10;
+        Tue, 19 Mar 2019 04:54:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=xB0SYS6yozX17m3yvu88B8zGd5S3SXrJMO5aDgG7P5k=;
+        b=aRywJ2cTqqaPRFC9G/DUFb7HrifFE9GlmIBzv+Es34dM8UQVDyfZuqMDDhCko0sVyP
+         mjyDEuOSd11+JnOfWe8O2zz7Z77gNyQRZiZ2CXr4cs0u//l/HDyiOhK2AHvnVF+W68TE
+         RJVQEBbjytz1HlEGBwWip8p8jzp0hngKV/lcQ06nKVT0wie5qne8VHmntVDkcI0WO02M
+         xvPu7svXyAshJOoNitLVyvOI6GHB7zYV4/x9t3aeVbc/ahYPBEPapCY2vX5Nq77tX5nx
+         IjRRAiJ9dndJFbGTOCTawjTuQmq7YzRLiwZCx8I4C2/Au1DoYDH/Nc2buH1X/I6srLY6
+         Wf7Q==
+X-Gm-Message-State: APjAAAVMvF32GAZ4Z5xfrS3umVFj9HMZzgDYXdC4Xjx8gww5K806Jj1u
+        KnY9Ftva2JUMFH8NE8x+gnqErh1PjWkTASdP6CQ=
+X-Google-Smtp-Source: APXvYqwtpfHEkFvn0obJz4Ro3X83t/CemLPj0YZ0YBsW95zJaAaT7J3IyaZR1Wxl5OxtNDmOluCJ9merQeJBZccvvM4=
+X-Received: by 2002:a67:8588:: with SMTP id h130mr1139510vsd.11.1552996475345;
+ Tue, 19 Mar 2019 04:54:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031911-0008-0000-0000-000002CF1C42
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031911-0009-0000-0000-0000223B2F08
-Message-Id: <20190319125425.0cf5324e@oc2783563651>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190089
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 Mar 2019 12:54:23 +0100
+Message-ID: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+Subject: crypto: Kernel memory overwrite attempt detected to spans multiple pages
+To:     Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-security-module@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 10:38:42 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+When running the sha1-asm crypto selftest on arm with
+CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
 
-> On 15/03/2019 19:15, Halil Pasic wrote:
-> > On Wed, 13 Mar 2019 17:05:01 +0100
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> > 
-> >> When the mediated device is open we setup the relation with KVM unset it
-> >> when the mediated device is released.
-> >>
-> >> We ensure KVM is present on opening of the mediated device.
-> >>
-> >> We ensure that KVM survives the mediated device, and establish a direct
-> > 
-> > survives?
-> 
-> what alternative do you prefer?
-> 
+    usercopy: Kernel memory overwrite attempt detected to spans
+multiple pages (offset 0, size 42)!
+    ------------[ cut here ]------------
+    kernel BUG at mm/usercopy.c:102!
+    Internal error: Oops - BUG: 0 [#1] SMP ARM
+    Modules linked in:
+    CPU: 0 PID: 35 Comm: cryptomgr_test Not tainted
+5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+    PC is at usercopy_abort+0x68/0x90
+    LR is at usercopy_abort+0x68/0x90
+    pc : [<c030fd60>]    lr : [<c030fd60>]    psr: 60000013
+    sp : ea54bc60  ip : 00000010  fp : cccccccd
+    r10: 00000000  r9 : c0e0ce04  r8 : ea54d009
+    r7 : ea54d00a  r6 : 00000000  r5 : 0000002a  r4 : c09d1120
+    r3 : dd6cd422  r2 : dd6cd422  r1 : 2abb4000  r0 : 0000005f
+    Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+    Control: 30c5387d  Table: 40003000  DAC: fffffffd
+    Process cryptomgr_test (pid: 35, stack limit = 0x(ptrval))
+    Stack: (0xea54bc60 to 0xea54c000)
+    bc60: c09d1120 c09d1120 c09d1120 00000000 0000002a 0000002a
+00000000 c0310060
+    bc80: 0000002a 00000000 000001c0 00000000 00000000 c0eb11e8
+ea54cfe0 ea538c00
+    bca0: 00000000 ea54cfe0 ebef73e0 0000002a ea538c20 ea54bd84
+0000003a c0427a30
+    bcc0: ea54bdbc 00000000 00000000 c081cf70 eb074280 c081cf70
+0000002a c081cf80
+    bce0: 0000000e c07da138 ea54bd0c 00000000 c084061c c04248e8
+c0e0a408 eb074240
+    bd00: eb074200 c04253c8 eb074280 ea550000 00000012 dd6cd422
+ebef7480 eb074200
+    bd20: ea54bd84 c081cf64 ea537200 00000002 00000000 00000014
+c084061c c0428c38
+    bd40: ea54bd84 ea54bdbc c081cd34 00000000 c0e4e4b4 ea538c40
+00000002 eabe4e80
+    bd60: ea538c00 00000400 ea4f7a00 ea4f7a60 eb074240 00000060
+00000006 c09d544c
+    bd80: 00000038 00000003 00000000 00000038 ea54bd7c 00000001
+eb074200 00000000
+    bda0: 00000000 dead4ead ffffffff ffffffff ea54bdb0 ea54bdb0
+00000000 c081cf70
+    bdc0: c081ce68 c081ce78 ea4f7480 eb000780 00000dc0 eb000780
+c0e4ee80 443e9884
+    bde0: 6ed23b1c a14aaeba e52951f9 f17046e5 fefefefe fefefefe
+fefefefe fefefefe
+    be00: eb000780 c04292c4 c0e0a638 60000013 60000013 c0305298
+ea4f7a00 c03062bc
+    be20: eb000780 00000cc0 ea4f7a00 dd6cd422 00000cc0 ea538c00
+00000002 eabe4e40
+    be40: ea537200 00000007 00000000 ea4f7a00 eb074200 c0429314
+eb074200 ea538c00
+    be60: ea4f7a00 0000000a eabe4e80 c084061c c08405fc 00000006
+c04dace8 00000006
+    be80: 00000000 c084065c ea537200 0000000e 00000400 eb04de08
+ea4f71a8 c0429420
+    bea0: 00000400 ea537200 0000000e ea537200 0000000e c0429374
+00000400 ffffffff
+    bec0: 000000a2 c042a414 00000103 c0e0a408 00000000 c0e0a438
+c0e5a2a0 c0e5a2a0
+    bee0: 00000001 00000001 00000017 ffffe000 00000000 60000013
+c0e5a2a0 c0269470
+    bf00: c09c9ed0 ea54bf5c 00000103 00000000 00000000 c0e0a408
+ea537280 0000000e
+    bf20: 00000400 c0426500 00000000 eb04de08 ea4f71a8 c02694f4
+c09c9ed0 ea54bf5c
+    bf40: ea54bf28 c02699d0 ea54bf5c dd6cd422 ea537200 dd6cd422
+c09c9ed0 ea537200
+    bf60: ea4af1c0 ea54a000 ea537200 c0426500 00000000 eb04de08
+ea4f71a8 c0426524
+    bf80: ea4f7180 c023dcec ea54a000 ea4af1c0 c023dbb4 00000000
+00000000 00000000
+    bfa0: 00000000 00000000 00000000 c02010d8 00000000 00000000
+00000000 00000000
+    bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+00000000 00000000
+    bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+00000000 00000000
+    [<c030fd60>] (usercopy_abort) from [<c0310060>]
+(__check_object_size+0x2d8/0x448)
+    [<c0310060>] (__check_object_size) from [<c0427a30>]
+(build_test_sglist+0x268/0x2d8)
+    [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+(test_hash_vec_cfg+0x110/0x694)
+    [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+(__alg_test_hash+0x158/0x1b8)
+    [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+    [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+    [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+    [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+    [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+    Exception stack(0xea54bfb0 to 0xea54bff8)
+    bfa0:                                     00000000 00000000
+00000000 00000000
+    bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+00000000 00000000
+    bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+    Code: e58de000 e98d0012 e1a0100c ebfd6712 (e7f001f2)
+    ---[ end trace 190b3cf48e720f78 ]---
+    BUG: sleeping function called from invalid context at
+include/linux/percpu-rwsem.h:34
+    in_atomic(): 0, irqs_disabled(): 128, pid: 35, name: cryptomgr_test
+    CPU: 0 PID: 35 Comm: cryptomgr_test Tainted: G      D
+5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+    [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
+    [<c020ae58>] (show_stack) from [<c07c3624>] (dump_stack+0x7c/0x9c)
+    [<c07c3624>] (dump_stack) from [<c0242e14>] (___might_sleep+0xf4/0x158)
+    [<c0242e14>] (___might_sleep) from [<c0230210>] (exit_signals+0x2c/0x258)
+    [<c0230210>] (exit_signals) from [<c0223d6c>] (do_exit+0x114/0xa20)
+    [<c0223d6c>] (do_exit) from [<c020b160>] (die+0x304/0x344)
+    [<c020b160>] (die) from [<c020b388>] (do_undefinstr+0x80/0x190)
+    [<c020b388>] (do_undefinstr) from [<c0201b24>] (__und_svc_finish+0x0/0x3c)
+    Exception stack(0xea54bc10 to 0xea54bc58)
+    bc00:                                     0000005f 2abb4000
+dd6cd422 dd6cd422
+    bc20: c09d1120 0000002a 00000000 ea54d00a ea54d009 c0e0ce04
+00000000 cccccccd
+    bc40: 00000010 ea54bc60 c030fd60 c030fd60 60000013 ffffffff
+    [<c0201b24>] (__und_svc_finish) from [<c030fd60>] (usercopy_abort+0x68/0x90)
+    [<c030fd60>] (usercopy_abort) from [<c0310060>]
+(__check_object_size+0x2d8/0x448)
+    [<c0310060>] (__check_object_size) from [<c0427a30>]
+(build_test_sglist+0x268/0x2d8)
+    [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+(test_hash_vec_cfg+0x110/0x694)
+    [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+(__alg_test_hash+0x158/0x1b8)
+    [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+    [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+    [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+    [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+    [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+    Exception stack(0xea54bfb0 to 0xea54bff8)
+    bfa0:                                     00000000 00000000
+00000000 00000000
+    bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+00000000 00000000
+    bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-Increase kvm's refcount to ensure the guest is alive when the
-ap_matrix_mdev is active. An ap mp_matrix becomes active with
-a successful open() and ceases to be active with a release().
+A similar trace is seen with sha1-ce on arm64:
 
-Your sentence was materially wrong as the mdev is allowed to outlive
-the KVM. BTW survive tends to have an 'in spite of' note to it, which
-outlive does not. vfio-ap is, I hope, not a calamity that threatens
-the life of KVM ;). https://en.oxforddictionaries.com/definition/survive
+    usercopy: Kernel memory overwrite attempt detected to spans
+multiple pages (offset 0, size 42)!
+    ------------[ cut here ]------------
+    kernel BUG at mm/usercopy.c:102!
+    Internal error: Oops - BUG: 0 [#1] SMP
+    Modules linked in:
+    CPU: 1 PID: 33 Comm: cryptomgr_test Not tainted
+5.1.0-rc1-salvator-x-01109-gbeb7d6376ecfbf07-dirty #352
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
+    pstate: 60400005 (nZCv daif +PAN -UAO)
+    pc : usercopy_abort+0x64/0x90
+    lr : usercopy_abort+0x64/0x90
+    sp : ffffff8011eb38d0
+    x29: ffffff8011eb38e0 x28: 6db6db6db6db6db7
+    x27: ffffffbf00000000 x26: 0000000000000038
+    x25: ffffffc0778fd009 x24: 0000000000000000
+    x23: ffffffc0778fd00a x22: ffffff8010d51000
+    x21: 0000000000000000 x20: 000000000000002a
+    x19: ffffffc0778fcfe0 x18: 000000000000000a
+    x17: 00000000526a1be5 x16: 0000000000000014
+    x15: 000000000009f6c2 x14: 0720072007200720
+    x13: 0720072007200720 x12: 0720072007200720
+    x11: 0720072007200720 x10: 0720072007200720
+    x9 : ffffff80110126c8 x8 : 0000000000000000
+    x7 : ffffff801015700c x6 : 0000000000000000
+    x5 : 0000000000000000 x4 : ffffff8011eb4000
+    x3 : 0000000000000080 x2 : a045404094166600
+    x1 : 0000000000000000 x0 : 000000000000005f
+    Process cryptomgr_test (pid: 33, stack limit = 0x(____ptrval____))
+    Call trace:
+     usercopy_abort+0x64/0x90
+     __check_object_size+0x64/0x464
+     build_test_sglist+0x238/0x2c8
+     test_hash_vec_cfg+0x130/0x660
+     __alg_test_hash+0x1b4/0x1f4
+     alg_test_hash+0x88/0x104
+     alg_test.part.6+0x2a8/0x330
+     alg_test+0x98/0xa0
+     cryptomgr_test+0x24/0x4c
+     kthread+0x120/0x130
+     ret_from_fork+0x10/0x18
+    Code: aa0003e3 b00053e0 91148000 97fc3bf2 (d4210000)
+    ---[ end trace d9f3261d50a7f84f ]---
+    BUG: sleeping function called from invalid context at
+include/linux/percpu-rwsem.h:34
+    in_atomic(): 0, irqs_disabled(): 128, pid: 33, name: cryptomgr_test
+    INFO: lockdep is turned off.
+    irq event stamp: 262
+    hardirqs last  enabled at (261): [<ffffff8010157050>]
+console_unlock+0x554/0x560
+    hardirqs last disabled at (262): [<ffffff8010081a28>]
+do_debug_exception+0x48/0x13c
+    softirqs last  enabled at (258): [<ffffff8010081ee4>]
+__do_softirq+0x18c/0x4a0
+    softirqs last disabled at (245): [<ffffff80100f3e10>] irq_exit+0xa4/0x100
+    CPU: 1 PID: 33 Comm: cryptomgr_test Tainted: G      D
+5.1.0-rc1-salvator-x-01109-gbeb7d6376ecfbf07-dirty #352
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
+    Call trace:
+     dump_backtrace+0x0/0x118
+     show_stack+0x14/0x1c
+     dump_stack+0xc8/0x118
+     ___might_sleep+0x24c/0x25c
+     __might_sleep+0x70/0x80
+     exit_signals+0x48/0x278
+     do_exit+0x10c/0xa30
+     die+0x1f4/0x208
+     bug_handler+0x4c/0x78
+     brk_handler+0x15c/0x188
+     do_debug_exception+0xd4/0x13c
+     el1_dbg+0x18/0xbc
+     usercopy_abort+0x64/0x90
+     __check_object_size+0x64/0x464
+     build_test_sglist+0x238/0x2c8
+     test_hash_vec_cfg+0x130/0x660
+     __alg_test_hash+0x1b4/0x1f4
+     alg_test_hash+0x88/0x104
+     alg_test.part.6+0x2a8/0x330
+     alg_test+0x98/0xa0
+     cryptomgr_test+0x24/0x4c
+     kthread+0x120/0x130
+     ret_from_fork+0x10/0x18
 
-> > 
-> >> link from KVM to the mediated device to simplify the relationship.
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> ---
-> 
-> ...snip...
-> 
-> >>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
-> >>   				       unsigned long action, void *data)
-> >>   {
-> >> -	int ret;
-> >>   	struct ap_matrix_mdev *matrix_mdev;
-> >>   
-> >>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
-> >>   		return NOTIFY_OK;
-> >>   
-> >>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
-> >> -
-> >> -	if (!data) {
-> >> -		matrix_mdev->kvm = NULL;
-> >> -		return NOTIFY_OK;
-> >> -	}
-> >> -
-> >> -	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
-> >> -	if (ret)
-> >> -		return NOTIFY_DONE;
-> >> -
-> >> -	/* If there is no CRYCB pointer, then we can't copy the masks */
-> >> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
-> >> -		return NOTIFY_DONE;
-> >> -
-> >> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
-> >> -				  matrix_mdev->matrix.aqm,
-> >> -				  matrix_mdev->matrix.adm);
-> >> +	matrix_mdev->kvm = data;
-> >>   
-> >>   	return NOTIFY_OK;
-> >>   }
-> >> @@ -888,6 +873,12 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
-> >>   	if (ret)
-> >>   		goto err_group;
-> >>   
-> >> +	/* We do not support opening the mediated device without KVM */
-> >> +	if (!matrix_mdev->kvm) {
-> >> +		ret = -ENODEV;
-> >> +		goto err_group;
-> >> +	}
-> >> +
-> >>   	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
-> >>   	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
-> >>   
-> >> @@ -896,8 +887,15 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
-> >>   	if (ret)
-> >>   		goto err_iommu;
-> >>   
-> >> +	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
-> > 
-> > At this point the matrix_mdev->kvm ain't guaranteed to be valid IMHO. Or
-> > am I wrong? If I'm right kvm_get_kvm(matrix_mdev->kvm) could be too late.
-> 
-> What about the if (!matrix_mdev->kvm) 10 lines above ?
-> 
+Gr{oetje,eeting}s,
 
-That check is not sufficient.
+                        Geert
 
-You should do the kvm_get_kvm() in vfio_ap_mdev_group_notifier(). VFIO
-must ensure that the kvm pointer you get is valid, in a sense that it
-points to a valid struct kvm and the kvm object is alive, while you are
-in the callback. But not beyond.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-If another thread were to decrement the refcount of the kvm object you
-would end up with matrix_mdev->kvm pointing to an object that has already
-died.
-
-Does my analysis make sense to you?
-
-> > 
-> >> +	if (ret)
-> >> +		goto err_kvm;
-> >> +
-> >>   	return 0;
-> >>   
-> >> +err_kvm:
-> >> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-> >> +				 &matrix_mdev->iommu_notifier);
-> >>   err_iommu:
-> >>   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
-> >>   				 &matrix_mdev->group_notifier);
-> >> @@ -906,19 +904,33 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
-> >>   	return ret;
-> >>   }
-> >>   
-> >> -static void vfio_ap_mdev_release(struct mdev_device *mdev)
-> >> +static int vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
-> >>   {
-> >> -	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> >> +	struct kvm *kvm = matrix_mdev->kvm;
-> >>   
-> >>   	if (matrix_mdev->kvm)
-> >>   		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-> > 
-> > This still conditional?
-> 
-> Yes, nothing to clear if there is no KVM.
-> 
-
-Since we have ensured the open only works if there is a KVM at that
-point in time, and we have taken a reference to KVM, I would expect
-KVM can not go away before we give up our reference.
-
-> > 
-> >> -
-> >> +	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
-> > 
-> > I guess your intention was to move vfio_ap_mdev_reset_queues()
-> > here from vfio_ap_mdev_release(), but you still have a
-> > vfio_ap_mdev_reset_queues() call in vfio_ap_mdev_release().
-> > 
-> >> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-> >>   	matrix_mdev->kvm = NULL;
-> >> +
-> >> +	kvm_put_kvm(kvm);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static void vfio_ap_mdev_release(struct mdev_device *mdev)
-> >> +{
-> >> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> >> +
-> >> +	mutex_lock(&matrix_dev->lock);
-> >> +
-> >>   	vfio_ap_mdev_reset_queues(mdev);
-> 
-> right, this one will go away.
-> Thanks for reviewing.
-> 
-
-yw
-
-Regards,
-Halil
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
