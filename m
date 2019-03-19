@@ -2,109 +2,110 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B529C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E54C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439842075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257EC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552984401;
+	bh=jjSqJUBachI3OkoOnRR731pkIsic5VXZ2MyMB0BSh8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C7Nh2n3bh4a7amZR1cKirnxhZIOfUrXxaIxBjYyjIA27CEDtnfciHcBSb6Xo4T2Tm
+	 I0/qxhO1gGiLKHBDBh3cKRjqh2DCnOBxlyZ6Np66fpthcY5MpTlCLYFwbTny8K/kkX
+	 3+q4Tq5tJieA5jrxddSAH3W66/wv2y+KXEgPjUWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfCSIc3 (ORCPT
+        id S1727407AbfCSIdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:32:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60900 "EHLO mx1.suse.de"
+        Tue, 19 Mar 2019 04:33:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32962 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725906AbfCSIc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:32:28 -0400
+        id S1725978AbfCSIdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:33:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 656C9AEB0;
-        Tue, 19 Mar 2019 08:32:26 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id E50DA1E428E; Tue, 19 Mar 2019 09:32:25 +0100 (CET)
-Date:   Tue, 19 Mar 2019 09:32:25 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, cai@lca.pw,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: bad usercopy in fanotify_read
-Message-ID: <20190319083225.GB17334@quack2.suse.cz>
-References: <00000000000016f7d40583d79bd9@google.com>
- <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
- <20190313143503.GD9108@quack2.suse.cz>
- <CAGXu5j+_Ao_CU8DG9nrTbx5ioDkJUFw0cGcLBMWnvNLe_eFJ4A@mail.gmail.com>
- <20190313154712.GJ9108@quack2.suse.cz>
- <CAGXu5jK2cOTm=Ds_NXaCFB4i1d2d0agirHKpshy8q_2KycdnJQ@mail.gmail.com>
+        by mx1.suse.de (Postfix) with ESMTP id 43236AFDF;
+        Tue, 19 Mar 2019 08:33:18 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 09:33:16 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
+        "Serge E . Hallyn" <serge.hallyn@ubuntu.com>,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH] device_cgroup: fix RCU imbalance in error case
+Message-ID: <20190319083316.GQ8924@dhcp22.suse.cz>
+References: <20190319013659.86199-1-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGXu5jK2cOTm=Ds_NXaCFB4i1d2d0agirHKpshy8q_2KycdnJQ@mail.gmail.com>
+In-Reply-To: <20190319013659.86199-1-jannh@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18-03-19 11:27:12, Kees Cook wrote:
-> On Wed, Mar 13, 2019 at 8:47 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Wed 13-03-19 08:35:33, Kees Cook wrote:
-> > > On Wed, Mar 13, 2019 at 7:35 AM Jan Kara <jack@suse.cz> wrote:
-> > > > On Tue 12-03-19 23:26:22, Kees Cook wrote:
-> > > > > On Mon, Mar 11, 2019 at 1:42 PM syzbot
-> > > > > <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com> wrote:
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee410b200000
-> > > > > > [...]
-> > > > > > ------------[ cut here ]------------
-> > > > > > Bad or missing usercopy whitelist? Kernel memory exposure attempt detected
-> > > > > > from SLAB object 'fanotify_event' (offset 40, size 8)!
-> > > > > > [...]
-> > > > > >   copy_to_user include/linux/uaccess.h:151 [inline]
-> > > > > >   copy_fid_to_user fs/notify/fanotify/fanotify_user.c:236 [inline]
-> > > > > >   copy_event_to_user fs/notify/fanotify/fanotify_user.c:294 [inline]
-> > > > >
-> > > > > Looks like this is the fh/ext_fh union in struct fanotify_fid, field
-> > > > > "fid" in struct fanotify_event. Given that "fid" is itself in a union
-> > > > > against a struct path, I think instead of a whitelist using
-> > > > > KMEM_CACHE_USERCOPY(), this should just use a bounce buffer to avoid
-> > > > > leaving a whitelist open for path or ext_fh exposure.
-> > > >
-> > > > Do you mean to protect it from a situation when some other code (i.e. not
-> > > > copy_fid_to_user()) would be tricked into copying ext_fh containing slab
-> > > > pointer to userspace?
-> > >
-> > > Yes. That's the design around the usercopy hardening. The
-> > > "whitelisting" is either via code (with a bounce buffer, so only the
-> > > specific "expected" code path can copy it), with a
-> > > kmem_create_usercopy() range marking (generally best for areas that
-> > > are not unions or when bounce buffers would be too big/slow), or with
-> > > implicit whitelisting (via a constant copy size that cannot change at
-> > > run-time, like: copy_to_user(dst, src, 6)).
-> > >
-> > > In this case, since there are multiple unions in place and
-> > > FANOTIFY_INLINE_FH_LEN is small, it seemed best to go with a bounce
-> > > buffer.
-> >
-> > OK, makes sense. I'll replace tha patch using kmem_create_usercopy() in my
-> > tree with a variant you've suggested.
+On Tue 19-03-19 02:36:59, Jann Horn wrote:
+> When dev_exception_add() returns an error (due to a failed memory
+> allocation), make sure that we move the RCU preemption count back to where
+> it was before we were called. We dropped the RCU read lock inside the loop
+> body, so we can't just "break".
 > 
-> Thanks! If you're able to update the patch, it would be nice to include:
+> sparse complains about this, too:
 > 
-> Reported-by: syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com
-> Fixes: a8b13aa2 ("fanotify: enable FAN_REPORT_FID init flag")
+> $ make -s C=2 security/device_cgroup.o
+> ./include/linux/rcupdate.h:647:9: warning: context imbalance in
+> 'propagate_exception' - unexpected unlock
+> 
+> Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Yeah, it's easy enough to amend the commit at this point. Done.
+FWIW looks good to me.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-								Honza
+Thanks
+
+> ---
+> Compile-tested only.
+> 
+> I'm not entirely sure who's supposed to be the maintainer for this thing.
+> The sign-offs on the commits to this file come from Tejun, but MAINTAINERS
+> claims it's part of security/, so I'm just sending this to both the
+> security folks and the cgroup folks, you can figure out whose tree you want
+> to take this through. :P
+> If the cgroup folks feel responsible for this file, maybe you could fix up
+> MAINTAINERS?
+> 
+>  security/device_cgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/device_cgroup.c b/security/device_cgroup.c
+> index cd97929fac66..dc28914fa72e 100644
+> --- a/security/device_cgroup.c
+> +++ b/security/device_cgroup.c
+> @@ -560,7 +560,7 @@ static int propagate_exception(struct dev_cgroup *devcg_root,
+>  		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
+>  			rc = dev_exception_add(devcg, ex);
+>  			if (rc)
+> -				break;
+> +				return rc;
+>  		} else {
+>  			/*
+>  			 * in the other possible cases:
+> -- 
+> 2.21.0.225.g810b269d1ac-goog
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Michal Hocko
+SUSE Labs
