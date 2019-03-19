@@ -3,93 +3,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B90C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0881C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB9B2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CABF2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfCSUu4 (ORCPT
+        id S1727555AbfCSUvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:50:56 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60272 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfCSUu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:50:56 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h6Lgr-0004hj-5s; Tue, 19 Mar 2019 14:50:30 -0600
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Philip Derrin <philip@cog.systems>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>
-References: <20190319181357.9305-1-logang@deltatee.com>
- <20190319204253.GB17966@rapoport-lnx>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a9b528f1-0c4b-3894-18e1-a4999c18f4a4@deltatee.com>
-Date:   Tue, 19 Mar 2019 14:50:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 16:51:04 -0400
+Received: from p3plsmtpa11-01.prod.phx3.secureserver.net ([68.178.252.102]:50334
+        "EHLO p3plsmtpa11-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727058AbfCSUvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 16:51:04 -0400
+Received: from [10.10.38.206] ([139.138.146.66])
+        by :SMTPAUTH: with ESMTPSA
+        id 6LaKhOUO4K1jK6LaKhFqDp; Tue, 19 Mar 2019 13:43:46 -0700
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+To:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Jerome Glisse <jglisse@redhat.com>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com> <20190319141416.GA3879@redhat.com>
+ <20190319142918.6a5vom55aeojapjp@kshutemo-mobl1>
+ <20190319153644.GB26099@quack2.suse.cz>
+ <20190319090322.GE7485@iweiny-DESK2.sc.intel.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <f9195df4-66ca-95f6-874e-d19cd775794d@talpey.com>
+Date:   Tue, 19 Mar 2019 15:43:44 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190319204253.GB17966@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+In-Reply-To: <20190319090322.GE7485@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: nicolas.pitre@linaro.org, rostedt@goodmis.org, philip@cog.systems, keescook@chromium.org, linux@armlinux.org.uk, robh@kernel.org, f.fainelli@gmail.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rppt@linux.ibm.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] ARM: mm: make use of new memblocks_present() helper
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-CMAE-Envelope: MS4wfN68ogHI//w010AOOp/HiIKMI+WedmJjAfCUDtxFhhDVGnjPk04WBXY2mLLWMKbpDReApTSBOCQizPAeuLqpYMbwcbWkdCv0lExYdkQDqOgifQ1qlW81
+ eUAFG+FD7SEdo0ezn5Tu+wBkJdLBZ5+6oUIhCUnhEDCHPYua5JMWgzd3pgerrhRgr9EMHq74vwzcr2HhGrdhj+alNY3YKk3JEGq2VfUIqCsybjvNmj1Tc8V0
+ bTQLXZTtHQGzuY+EKmgTSSGcvmr77Cm2vbGY6JS0ezq3fwtYtHMHjOhkwhDaYFfqXNbdkDxeqlrIMi/ANE95sVSnhvosYwZIvzA6rmfgVLpPk/7aVr4eI7dp
+ eMdSB2AZyUs064blgdnsUFcBU/JjxfQLkYvtEoJv1GEzxdnccd5Nkw//roQAG5GLEvFQ47pv16cEIVT0AO2IoOriZjpLkLOav1tNInyTwF6SfyKRxcoVanm5
+ Dp6l/ldmndbSQ+9j60cRk46Pe4R6nMQodYQpycFFLOg5hz13Y4aHT7wbHYQpWcdpL0DiJp2KXWZQJMbfEhvGzpLS9EdsrjRrelNCOiwvck7ZLp6nLamI4Gge
+ hh4ATvQ3Su6XlUfHNMFIYy1M9MiqrkCFoy+bvsl05dCIyuiW6u7tvkSPVoearPn6QB5TKdq4eqRzx8Br3yQ5Qb02SUiDuf+eStUeL77EwlBpQdhacDgV/wmn
+ oComaDWsXh/deXq+4YMXFVIdDssWLqVkEwb//dTjelTadR3jEVhg99VvK3uW21t37iCwfC7oPfIvsCeRZza7ltQlgnQqqrijMJxISVg7/cOdfLC9likn+n6B
+ OblLK/zKLJCXVSM6a03oyWXPDXfqD8pBGqJABh9Ps/X5Gun8efR3ulUTARJSMG4yW6DGFGsHfT0PcoCcZw7CUE4EMlGkyP916b0Ppu4z
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-03-19 2:42 p.m., Mike Rapoport wrote:
-> On Tue, Mar 19, 2019 at 12:13:57PM -0600, Logan Gunthorpe wrote:
->> Cleanup the arm_memory_present() function seeing it's very
->> similar to other arches.
+On 3/19/2019 4:03 AM, Ira Weiny wrote:
+> On Tue, Mar 19, 2019 at 04:36:44PM +0100, Jan Kara wrote:
+>> On Tue 19-03-19 17:29:18, Kirill A. Shutemov wrote:
+>>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
+>>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
+>>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
+>>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+>>>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>>> diff --git a/mm/gup.c b/mm/gup.c
+>>>>>>> index f84e22685aaa..37085b8163b1 100644
+>>>>>>> --- a/mm/gup.c
+>>>>>>> +++ b/mm/gup.c
+>>>>>>> @@ -28,6 +28,88 @@ struct follow_page_context {
+>>>>>>>   	unsigned int page_mask;
+>>>>>>>   };
+>>>>>>>   
+>>>>>>> +typedef int (*set_dirty_func_t)(struct page *page);
+>>>>>>> +
+>>>>>>> +static void __put_user_pages_dirty(struct page **pages,
+>>>>>>> +				   unsigned long npages,
+>>>>>>> +				   set_dirty_func_t sdf)
+>>>>>>> +{
+>>>>>>> +	unsigned long index;
+>>>>>>> +
+>>>>>>> +	for (index = 0; index < npages; index++) {
+>>>>>>> +		struct page *page = compound_head(pages[index]);
+>>>>>>> +
+>>>>>>> +		if (!PageDirty(page))
+>>>>>>> +			sdf(page);
+>>>>>>
+>>>>>> How is this safe? What prevents the page to be cleared under you?
+>>>>>>
+>>>>>> If it's safe to race clear_page_dirty*() it has to be stated explicitly
+>>>>>> with a reason why. It's not very clear to me as it is.
+>>>>>
+>>>>> The PageDirty() optimization above is fine to race with clear the
+>>>>> page flag as it means it is racing after a page_mkclean() and the
+>>>>> GUP user is done with the page so page is about to be write back
+>>>>> ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
+>>>>> call while a split second after TestClearPageDirty() happens then
+>>>>> it means the racing clear is about to write back the page so all
+>>>>> is fine (the page was dirty and it is being clear for write back).
+>>>>>
+>>>>> If it does call the sdf() while racing with write back then we
+>>>>> just redirtied the page just like clear_page_dirty_for_io() would
+>>>>> do if page_mkclean() failed so nothing harmful will come of that
+>>>>> neither. Page stays dirty despite write back it just means that
+>>>>> the page might be write back twice in a row.
+>>>>
+>>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
+>>>> about set_page_dirty() and Andrea had the good idea of maybe doing
+>>>> the set_page_dirty() at GUP time (when GUP with write) not when the
+>>>> GUP user calls put_page(). We can do that by setting the dirty bit
+>>>> in the pte for instance. They are few bonus of doing things that way:
+>>>>      - amortize the cost of calling set_page_dirty() (ie one call for
+>>>>        GUP and page_mkclean()
+>>>>      - it is always safe to do so at GUP time (ie the pte has write
+>>>>        permission and thus the page is in correct state)
+>>>>      - safe from truncate race
+>>>>      - no need to ever lock the page
+>>>>
+>>>> Extra bonus from my point of view, it simplify thing for my generic
+>>>> page protection patchset (KSM for file back page).
+>>>>
+>>>> So maybe we should explore that ? It would also be a lot less code.
+>>>
+>>> Yes, please. It sounds more sensible to me to dirty the page on get, not
+>>> on put.
 >>
->> The new memblocks_present() helper checks for node ids which the
->> arm version did not. However, this is equivalent seeing
->> HAVE_MEMBLOCK_NODE_MAP should be false in this arch and therefore
->> memblock_get_region_node() should return 0.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Philip Derrin <philip@cog.systems>
->> Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
->> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+>> I fully agree this is a desirable final state of affairs.
 > 
-> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Strangely, I've got a feeling I've already reviewed such patch from a
-> different person...
+> I'm glad to see this presented because it has crossed my mind more than once
+> that effectively a GUP pinned page should be considered "dirty" at all times
+> until the pin is removed.  This is especially true in the RDMA case.
 
-You're probably referring to [1] which was for arm64 and was redundant
-as my patch for that architecture was already picked up by Catalin.
+But, what if the RDMA registration is readonly? That's not uncommon, and
+marking dirty unconditonally would add needless overhead to such pages.
 
-I was the person who originally introduced memblocks_present() and I'm
-still hoping to get the cleanup patches for the arm and sh arches to be
-picked up.
-
-Thanks,
-
-Logan
-
-[1]
-https://lore.kernel.org/lkml/20190210093738.30923-1-peng.fan@nxp.com/T/#u
+Tom.
