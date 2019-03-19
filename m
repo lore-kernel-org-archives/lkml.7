@@ -2,96 +2,129 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C27C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E70C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616652133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CC72133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:38:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XRELgRpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfCSOfV convert rfc822-to-8bit (ORCPT
+        id S1727537AbfCSOio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:35:21 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:39426 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbfCSOfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:35:20 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id E54B114CEB; Tue, 19 Mar 2019 14:35:18 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Dan Williams <dcbw@redhat.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
-References: <20190226170710.12709-1-mans@mansr.com>
-        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
-        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
-        <20190319102840.GI6124@localhost> <yw1xd0mn16ev.fsf@mansr.com>
-        <20190319110819.GB3178@localhost> <yw1x8sxb125q.fsf@mansr.com>
-        <20190319122719.GC3178@localhost> <20190319124358.GK6124@localhost>
-        <6c89938b00ad289e1802f675bd00e288b1458d73.camel@redhat.com>
-Date:   Tue, 19 Mar 2019 14:35:18 +0000
-In-Reply-To: <6c89938b00ad289e1802f675bd00e288b1458d73.camel@redhat.com> (Dan
-        Williams's message of "Tue, 19 Mar 2019 09:30:25 -0500")
-Message-ID: <yw1xr2b3ylsp.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Tue, 19 Mar 2019 10:38:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39410 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfCSOin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:38:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id e13so7786659ioq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7U+OTIIdWnCov6mSraadUfkAw2secBf1APCOplQxL94=;
+        b=XRELgRpcW8PByrSutifGNQYcR6UVobnjl5KctbwlWR2qqbx/tOPIgag5tMMWADDnhW
+         1W8IOQnCI31OxiRK+5OkKCjiC9T5T15+1hubhiOBG+QOWp+ZJ1QrjpiO4pO3C5pnywOR
+         sCG2FhV5Y5NZpyORDCN3eLdpXI+9RGx0u2iAHFuU9t6byV3Tpj5wmCNzhwYADxBqJB4m
+         1fl89A0ewjx48HjOP/e5YwPyD07aYjaLGrfXVN57LPhPkou71d0piG1Kzqk6ahpzeDjJ
+         E3PKU8MtJzWdMU6b1mp5vlIDtzsz93TXnL5kGncZDbXRwD2nM9nDJFMJQz8aZXx9pNDP
+         5b2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7U+OTIIdWnCov6mSraadUfkAw2secBf1APCOplQxL94=;
+        b=puRCZ/tnvrE0jCTZVSOr/1f8aRMnd2jX9BhU7CxGWVvtlqk2oGuqP2bU7CY4BToDZQ
+         kG+5zkP4bypkUMr5tVn+LBoSN/lu9zu0ipvjYVC1/K5aPTDR6wPACOtaQ5WJ49A996zV
+         KeZJQ1bkwOfxrL4Thym4usDrBXpkENqOozYioGBv0AaSU21/cgyi2RDF7HXDd3wTjkTT
+         0qAwyUoA5ADnQUGXDUmOSfGuEsOTAa7mZrFxF1Et8EcjI8seWFkVygIm/jsZiRk5CiRX
+         XSKiMefSdRIpMyhDl/vD2nNjLX1Hg76YRoArb2YhhyqG+JWJ1kUqp+7dDIauzUM2kuP+
+         eOhw==
+X-Gm-Message-State: APjAAAWDdE0Im4WGLN+XHu6PbU9fpHYU+sJNWp1zffEj/1I6bdx3UVUu
+        Mxbe13I9jC59/SYQiIxxFPtfrH7FvPOcCKY7hBTCcw==
+X-Google-Smtp-Source: APXvYqyY83V62WrHkto4UDsuc9so3fmaBovZbKrPZqFQgI+GspR8tfbe9PVzljL9UEzgbvlg5S8KS25Vf8LW+3TCp8M=
+X-Received: by 2002:a5e:d608:: with SMTP id w8mr1679711iom.293.1553006323165;
+ Tue, 19 Mar 2019 07:38:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+References: <20190315022649.17848-1-yuehaibing@huawei.com> <20190318171518.GH22548@kernel.org>
+In-Reply-To: <20190318171518.GH22548@kernel.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 19 Mar 2019 08:38:32 -0600
+Message-ID: <CANLsYkzU25wAx0dMQqMVZ2asx+z-taOfffLO7DMd6mkDXc7D9A@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: return errcode in cs_etm__process_auxtrace_info
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Yue Haibing <yuehaibing@huawei.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dcbw@redhat.com> writes:
-
-> On Tue, 2019-03-19 at 13:43 +0100, Johan Hovold wrote:
->> On Tue, Mar 19, 2019 at 01:27:19PM +0100, Johan Hovold wrote:
->> > On Tue, Mar 19, 2019 at 12:25:53PM +0000, Måns Rullgård wrote:
->> > > Johan Hovold <johan@kernel.org> writes:
->> > > 
->> > > > On Tue, Mar 19, 2019 at 10:54:00AM +0000, Måns Rullgård wrote:
->> > > > > Johan Hovold <johan@kernel.org> writes:
->> > > > > > > Regardless, setting the NCTRL flag should be harmless.
->> > > > > > 
->> > > > > > Well, there are devices that depend on getting these
->> > > > > > requests, at least
->> > > > > > for the QMI interface. But we can always revert if anyone
->> > > > > > complains.
->> > > > > 
->> > > > > The QMI interface doesn't even pretend to be a uart.  The
->> > > > > other ones do,
->> > > > > but there isn't actually any real uart behind them.  For
->> > > > > instance, it
->> > > > > doesn't matter what baud rate one sets.
->> > > > 
->> > > > Sure, but some devices still require "DTR" to be set for the
->> > > > QMI
->> > > > interface, so there not being any real uart is no guarantee
->> > > > that there
->> > > > is no firmware that expects these calls.
->> > > 
->> > > Now I'm thoroughly confused.  The QMI interface has a completely
->> > > separate driver that creates a network device (if I'm reading the
->> > > code
->> > > correctly).
->> > 
->> > I was just giving an example of firmware sometimes doing unexpected
->> > things.
->> 
->> See 93725149794d ("net: qmi_wwan: MDM9x30 specific power management")
->> for some background.
+On Mon, 18 Mar 2019 at 11:15, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> TLDR; some firmware uses the DTR signal as an indicator to come out of
-> low-power mode. Without doing so you cannot talk to the modem over any
-> of it's ports, QMI, net, or serial.
+> Em Fri, Mar 15, 2019 at 10:26:49AM +0800, Yue Haibing escreveu:
+> > From: YueHaibing <yuehaibing@huawei.com>
+> >
+> > 'err' is set in err path, but it's not returned to callers.
+> > Also fix a pass zero to PTR_ERR issue.
+>
+> Next time please submit two patches, one for the PTR_ERR and another for
+> not throwing away the err = -E!INVAL and returning just -EINVAL, I'm
+> doing it this time.
+>
 
-I must be missing something, but how does a network interface have a DTR
-signal?
+Please hold off on that - I've asked for other modifications to be
+done on this patch.
 
--- 
-Måns Rullgård
+Mathieu
+
+>  - Arnaldo
+>
+> > Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  tools/perf/util/cs-etm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 1108049..111f33c 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -1908,7 +1908,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >
+> >               /* Something went wrong, no need to continue */
+> >               if (!inode) {
+> > -                     err = PTR_ERR(inode);
+> > +                     err = -ENOMEM;
+> >                       goto err_free_metadata;
+> >               }
+> >
+> > @@ -2023,5 +2023,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >  err_free_hdr:
+> >       zfree(&hdr);
+> >
+> > -     return -EINVAL;
+> > +     return err;
+> >  }
+> > --
+> > 2.7.0
+> >
+>
+> --
+>
+> - Arnaldo
