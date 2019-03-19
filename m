@@ -2,332 +2,122 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C72C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D24D20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423FB20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NStvJdfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfCSHyf (ORCPT
+        id S1727017AbfCSH71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:54:35 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:34582 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725906AbfCSHye (ORCPT
+        Tue, 19 Mar 2019 03:59:27 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57944 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfCSH71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:54:34 -0400
-X-UUID: 6e7bc55353bb43e3b798fa5847304e68-20190319
-X-UUID: 6e7bc55353bb43e3b798fa5847304e68-20190319
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 930980853; Tue, 19 Mar 2019 15:54:22 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 19 Mar
- 2019 15:54:20 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 19 Mar 2019 15:54:19 +0800
-Message-ID: <1552982059.10179.143.camel@mhfsdcap03>
-Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Felipe Balbi <balbi@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "Dmitry Torokhov" <dtor@chromium.org>,
-        Johan Hovold <johan@kernel.org>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 19 Mar 2019 15:54:19 +0800
-In-Reply-To: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
-References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Mar 2019 03:59:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2J7xLpf006846;
+        Tue, 19 Mar 2019 02:59:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552982361;
+        bh=eUQ23bQSfVBY26o04Gc0aqlKevkr8rc9nOUmAUrXLQY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NStvJdfD2/rJj4Uv847A5K/OcTh37kXgqk3wyLNLA65LI5cQh3zYqUv3pBhavvQKw
+         vw3qT/kjh/2nvwIfbYIIF0thdPonHCowZ1kKMVuhU0HsgjniDmSV3Rrq2MNU9mTu5R
+         5GpvaGzqIf8OpeZ1gMbDsrU3Ye0SG7WQYQBe+cwk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2J7xL1u078588
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 02:59:21 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 19
+ Mar 2019 02:59:20 -0500
+Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Tue, 19 Mar 2019 02:59:21 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2J7xIZe020095;
+        Tue, 19 Mar 2019 02:59:19 -0500
+Subject: Re: [PATCH v3 1/2] mmc: sdhci: Make sdhci_send_command() public
+To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>
+References: <20190319063533.12171-1-faiz_abbas@ti.com>
+ <20190319063533.12171-2-faiz_abbas@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <53872d7f-9339-b288-4e48-a6164ee463c5@ti.com>
+Date:   Tue, 19 Mar 2019 13:28:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190319063533.12171-2-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Faiz,
 
-Hi Felipe & Mathias,
+On 19/03/19 12:05 PM, Faiz Abbas wrote:
+> Make sdhci_send_command() public so that it can be called from platform
+> drivers.
 
-Could you please comment this patch, if there is some-effect on dwc3 and
-xhci, I'll remove its change.
+This should be sdhci_finish_command here and also in subject
+How about using "mmc: sdhci: Export sdhci_finish_command()"?
 
-Sorry for bothering you
-
-
-On Tue, 2019-03-19 at 15:44 +0800, Chunfeng Yun wrote:
-> In some places, the code prints a human-readable USB endpoint
-> transfer type (e.g. "Bulk"). This involves a switch statement
-> sometimes wrapped around in ({ ... }) block leading to code
-> repetition.
-> To make this scenario easier, here introduces usb_ep_type_string()
-> function, which returns a human-readable name of provided
-> endpoint type.
-> It also changes a few places switch was used to use this
-> new function.
+Thanks
+Kishon
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 > ---
-> v2 changes:
->     1. keep type string consistent with type_show() used in endpoint.c
-> ---
->  drivers/usb/common/common.c              | 16 ++++++++++++++++
->  drivers/usb/core/endpoint.c              | 18 ++----------------
->  drivers/usb/core/hcd.c                   | 17 ++---------------
->  drivers/usb/dwc3/debugfs.c               | 23 ++++-------------------
->  drivers/usb/gadget/udc/aspeed-vhub/epn.c |  6 +-----
->  drivers/usb/gadget/udc/dummy_hcd.c       | 16 +---------------
->  drivers/usb/host/xhci-trace.h            | 19 ++-----------------
->  include/linux/usb/ch9.h                  |  8 ++++++++
->  8 files changed, 36 insertions(+), 87 deletions(-)
+>  drivers/mmc/host/sdhci.c | 3 ++-
+>  drivers/mmc/host/sdhci.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 48277bbc15e4..529b01e786fd 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -16,6 +16,22 @@
->  #include <linux/usb/otg.h>
->  #include <linux/of_platform.h>
->  
-> +static const char *const ep_type_names[] = {
-> +	[USB_ENDPOINT_XFER_CONTROL] = "Control",
-> +	[USB_ENDPOINT_XFER_ISOC] = "Isoc",
-> +	[USB_ENDPOINT_XFER_BULK] = "Bulk",
-> +	[USB_ENDPOINT_XFER_INT] = "Interrupt",
-> +};
-> +
-> +const char *usb_ep_type_string(int ep_type)
-> +{
-> +	if (ep_type < 0 || ep_type >= ARRAY_SIZE(ep_type_names))
-> +		return "unknown";
-> +
-> +	return ep_type_names[ep_type];
-> +}
-> +EXPORT_SYMBOL_GPL(usb_ep_type_string);
-> +
->  const char *usb_otg_state_string(enum usb_otg_state state)
->  {
->  	static const char *const names[] = {
-> diff --git a/drivers/usb/core/endpoint.c b/drivers/usb/core/endpoint.c
-> index 1c2c04079676..afa43f9a47b2 100644
-> --- a/drivers/usb/core/endpoint.c
-> +++ b/drivers/usb/core/endpoint.c
-> @@ -60,23 +60,9 @@ static ssize_t type_show(struct device *dev, struct device_attribute *attr,
->  			 char *buf)
->  {
->  	struct ep_device *ep = to_ep_device(dev);
-> -	char *type = "unknown";
-> +	int ep_type = usb_endpoint_type(ep->desc);
->  
-> -	switch (usb_endpoint_type(ep->desc)) {
-> -	case USB_ENDPOINT_XFER_CONTROL:
-> -		type = "Control";
-> -		break;
-> -	case USB_ENDPOINT_XFER_ISOC:
-> -		type = "Isoc";
-> -		break;
-> -	case USB_ENDPOINT_XFER_BULK:
-> -		type = "Bulk";
-> -		break;
-> -	case USB_ENDPOINT_XFER_INT:
-> -		type = "Interrupt";
-> -		break;
-> -	}
-> -	return sprintf(buf, "%s\n", type);
-> +	return sprintf(buf, "%s\n", usb_ep_type_string(ep_type));
->  }
->  static DEVICE_ATTR_RO(type);
->  
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index 3189181bb628..0ccf2efeb40b 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -1878,23 +1878,10 @@ void usb_hcd_flush_endpoint(struct usb_device *udev,
->  		/* kick hcd */
->  		unlink1(hcd, urb, -ESHUTDOWN);
->  		dev_dbg (hcd->self.controller,
-> -			"shutdown urb %pK ep%d%s%s\n",
-> +			"shutdown urb %pK ep%d%s-%s\n",
->  			urb, usb_endpoint_num(&ep->desc),
->  			is_in ? "in" : "out",
-> -			({	char *s;
-> -
-> -				 switch (usb_endpoint_type(&ep->desc)) {
-> -				 case USB_ENDPOINT_XFER_CONTROL:
-> -					s = ""; break;
-> -				 case USB_ENDPOINT_XFER_BULK:
-> -					s = "-bulk"; break;
-> -				 case USB_ENDPOINT_XFER_INT:
-> -					s = "-intr"; break;
-> -				 default:
-> -					s = "-iso"; break;
-> -				};
-> -				s;
-> -			}));
-> +			usb_ep_type_string(usb_endpoint_type(&ep->desc)));
->  		usb_put_urb (urb);
->  
->  		/* list contents may have changed */
-> diff --git a/drivers/usb/dwc3/debugfs.c b/drivers/usb/dwc3/debugfs.c
-> index 1c792710348f..d9e2a63835fe 100644
-> --- a/drivers/usb/dwc3/debugfs.c
-> +++ b/drivers/usb/dwc3/debugfs.c
-> @@ -750,28 +750,13 @@ static int dwc3_transfer_type_show(struct seq_file *s, void *unused)
->  	unsigned long		flags;
->  
->  	spin_lock_irqsave(&dwc->lock, flags);
-> -	if (!(dep->flags & DWC3_EP_ENABLED) ||
-> -			!dep->endpoint.desc) {
-> -		seq_printf(s, "--\n");
-> +	if (!(dep->flags & DWC3_EP_ENABLED) || !dep->endpoint.desc) {
-> +		seq_puts(s, "unknown\n");
->  		goto out;
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index a8141ff9be03..76d36e13a011 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1445,7 +1445,7 @@ static void sdhci_read_rsp_136(struct sdhci_host *host, struct mmc_command *cmd)
 >  	}
+>  }
 >  
-> -	switch (usb_endpoint_type(dep->endpoint.desc)) {
-> -	case USB_ENDPOINT_XFER_CONTROL:
-> -		seq_printf(s, "control\n");
-> -		break;
-> -	case USB_ENDPOINT_XFER_ISOC:
-> -		seq_printf(s, "isochronous\n");
-> -		break;
-> -	case USB_ENDPOINT_XFER_BULK:
-> -		seq_printf(s, "bulk\n");
-> -		break;
-> -	case USB_ENDPOINT_XFER_INT:
-> -		seq_printf(s, "interrupt\n");
-> -		break;
-> -	default:
-> -		seq_printf(s, "--\n");
-> -	}
-> +	seq_printf(s, "%s\n",
-> +		   usb_ep_type_string(usb_endpoint_type(dep->endpoint.desc)));
->  
->  out:
->  	spin_unlock_irqrestore(&dwc->lock, flags);
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/epn.c b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-> index 83340f4fdc6e..35941dc125f9 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-> @@ -593,10 +593,6 @@ static int ast_vhub_epn_disable(struct usb_ep* u_ep)
->  static int ast_vhub_epn_enable(struct usb_ep* u_ep,
->  			       const struct usb_endpoint_descriptor *desc)
+> -static void sdhci_finish_command(struct sdhci_host *host)
+> +void sdhci_finish_command(struct sdhci_host *host)
 >  {
-> -	static const char *ep_type_string[] __maybe_unused = { "ctrl",
-> -							       "isoc",
-> -							       "bulk",
-> -							       "intr" };
->  	struct ast_vhub_ep *ep = to_ast_ep(u_ep);
->  	struct ast_vhub_dev *dev;
->  	struct ast_vhub *vhub;
-> @@ -646,7 +642,7 @@ static int ast_vhub_epn_enable(struct usb_ep* u_ep,
->  	ep->epn.wedged = false;
+>  	struct mmc_command *cmd = host->cmd;
 >  
->  	EPDBG(ep, "Enabling [%s] %s num %d maxpacket=%d\n",
-> -	      ep->epn.is_in ? "in" : "out", ep_type_string[type],
-> +	      ep->epn.is_in ? "in" : "out", usb_ep_type_string(type),
->  	      usb_endpoint_num(desc), maxpacket);
+> @@ -1495,6 +1495,7 @@ static void sdhci_finish_command(struct sdhci_host *host)
+>  			sdhci_finish_mrq(host, cmd->mrq);
+>  	}
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_finish_command);
 >  
->  	/* Can we use DMA descriptor mode ? */
-> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-> index baf72f95f0f1..40c6a484e232 100644
-> --- a/drivers/usb/gadget/udc/dummy_hcd.c
-> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-> @@ -617,21 +617,7 @@ static int dummy_enable(struct usb_ep *_ep,
->  		_ep->name,
->  		desc->bEndpointAddress & 0x0f,
->  		(desc->bEndpointAddress & USB_DIR_IN) ? "in" : "out",
-> -		({ char *val;
-> -		 switch (usb_endpoint_type(desc)) {
-> -		 case USB_ENDPOINT_XFER_BULK:
-> -			 val = "bulk";
-> -			 break;
-> -		 case USB_ENDPOINT_XFER_ISOC:
-> -			 val = "iso";
-> -			 break;
-> -		 case USB_ENDPOINT_XFER_INT:
-> -			 val = "intr";
-> -			 break;
-> -		 default:
-> -			 val = "ctrl";
-> -			 break;
-> -		 } val; }),
-> +		usb_ep_type_string(usb_endpoint_type(desc)),
->  		max, ep->stream_en ? "enabled" : "disabled");
+>  static u16 sdhci_get_preset_value(struct sdhci_host *host)
+>  {
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 01002cba1359..49b133babf47 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -798,5 +798,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+>  void sdhci_end_tuning(struct sdhci_host *host);
+>  void sdhci_reset_tuning(struct sdhci_host *host);
+>  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+> +void sdhci_finish_command(struct sdhci_host *host);
 >  
->  	/* at this point real hardware should be NAKing transfers
-> diff --git a/drivers/usb/host/xhci-trace.h b/drivers/usb/host/xhci-trace.h
-> index 88b427434bd8..bac73d688f11 100644
-> --- a/drivers/usb/host/xhci-trace.h
-> +++ b/drivers/usb/host/xhci-trace.h
-> @@ -289,23 +289,8 @@ DECLARE_EVENT_CLASS(xhci_log_urb,
->  	),
->  	TP_printk("ep%d%s-%s: urb %p pipe %u slot %d length %d/%d sgs %d/%d stream %d flags %08x",
->  			__entry->epnum, __entry->dir_in ? "in" : "out",
-> -			({ char *s;
-> -			switch (__entry->type) {
-> -			case USB_ENDPOINT_XFER_INT:
-> -				s = "intr";
-> -				break;
-> -			case USB_ENDPOINT_XFER_CONTROL:
-> -				s = "control";
-> -				break;
-> -			case USB_ENDPOINT_XFER_BULK:
-> -				s = "bulk";
-> -				break;
-> -			case USB_ENDPOINT_XFER_ISOC:
-> -				s = "isoc";
-> -				break;
-> -			default:
-> -				s = "UNKNOWN";
-> -			} s; }), __entry->urb, __entry->pipe, __entry->slot_id,
-> +			usb_ep_type_string(__entry->type),
-> +			__entry->urb, __entry->pipe, __entry->slot_id,
->  			__entry->actual, __entry->length, __entry->num_mapped_sgs,
->  			__entry->num_sgs, __entry->stream, __entry->flags
->  		)
-> diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
-> index 523aa088f6ab..da82606be605 100644
-> --- a/include/linux/usb/ch9.h
-> +++ b/include/linux/usb/ch9.h
-> @@ -36,6 +36,14 @@
->  #include <linux/device.h>
->  #include <uapi/linux/usb/ch9.h>
->  
-> +/**
-> + * usb_ep_type_string() - Returns human readable-name of the endpoint type.
-> + * @ep_type: The endpoint type to return human-readable name for.  If it's not
-> + *   any of the types: USB_ENDPOINT_XFER_{CONTROL, ISOC, BULK, INT},
-> + *   usually got by usb_endpoint_type(), the string 'unknown' will be returned.
-> + */
-> +extern const char *usb_ep_type_string(int ep_type);
-> +
->  /**
->   * usb_speed_string() - Returns human readable-name of the speed.
->   * @speed: The speed to return human-readable name for.  If it's not
-
-
+>  #endif /* __SDHCI_HW_H */
+> 
