@@ -2,117 +2,415 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A641C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1E7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FCE2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D95C20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ujQVjbS2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfCSXZf (ORCPT
+        id S1727062AbfCSX3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:25:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11579 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfCSXZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:25:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 16:25:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,246,1549958400"; 
-   d="scan'208";a="284114085"
-Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
-  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2019 16:25:33 -0700
-From:   fei.yang@intel.com
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        zhangjerry@google.com, andrzej.p@collabora.com,
-        plr.vincent@gmail.com, fei.yang@intel.com, jingx.shen@intel.com,
-        john.stultz@linaro.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: f_fs: don't free buffer prematurely
-Date:   Tue, 19 Mar 2019 16:25:15 -0700
-Message-Id: <1553037915-85931-1-git-send-email-fei.yang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Mar 2019 19:29:22 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40918 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSX3V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 19:29:21 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w20so4812998qka.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=RUjlhJ3AI4Px16kd0yzP8X+Scq0e8C+0X9AmUVyOZtI=;
+        b=ujQVjbS23YQRcts64Ox3wXbhqSZvQEGttoKa1Qpjvfqvy7A43LxFw5DOrcZOLg4gsr
+         f7Iy+v0J2hYyPe/tRGoQWkL7aqyp3knqQXJoGXJ0ar0naeA4Cgq6XFE37xKv1ZHw64ka
+         W46Rg/mtnh5dXyAQy5BVRSnAn/EgTRAOhhzeX9KjCareo0tVlAq1W1xNdozwVJ1EOoFx
+         vOSu3ni2COfgm8vckgGfqieuZ0kxHqu7O3SzICbUWTdSm3rAQSEXL61ceEwm37Wds+Py
+         mTom+JClDexAHqe7LDIo42LwDFbHGhX++rFnqgjTCkz3KoPLlIHvB1nnYHTGeEXc6h/1
+         iR0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=RUjlhJ3AI4Px16kd0yzP8X+Scq0e8C+0X9AmUVyOZtI=;
+        b=aoultgKsKvGEDXgffF0iRv54zmQNu+3HC0XFjalqeJU9mDbY+6AxeUHcxZ6U8kCnNn
+         0TCl/xeScf/JgE+SL7atpkpzvplQ4MCPyKZmBsNZQeFAAkrBUghee0+AJUR6yfylHjSY
+         0ERtFAqhUhhKdMCBRCc7Zu9CxcjCOq+mFCwqafvIQNHmwucvRyjmM7QVHPo2Sam1ZcYP
+         9LCjoyPSMlPFMNFq3nfax4cF0IrsznVXEhf1AIxJ+lFHMtKnkJYR9X7npSfJjjqpw2H1
+         R5cHDj38E7cl1+NGYN4JnhkFhbbefVuCnBpIllujKjVZshQSza8pYJNjVDFOmBtWYVbb
+         CjXw==
+X-Gm-Message-State: APjAAAURXszdpu3yk6tjv/+IXFSq1Ez2Z6cP6Nn0lyFw4/+KXodb0qCd
+        Cl92+Sf9wdH49WB5IXtGPh1pqw==
+X-Google-Smtp-Source: APXvYqz3+QKPYG7058x7OnnzuKnwUIozB7GFghR/DIPHnsxDv1bXIjrLTiO7fmur+oMN3sRuQ5CGWw==
+X-Received: by 2002:a37:4c85:: with SMTP id z127mr4098216qka.180.1553038160394;
+        Tue, 19 Mar 2019 16:29:20 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id o8sm169816qtg.1.2019.03.19.16.29.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 16:29:19 -0700 (PDT)
+Message-ID: <d8f4a31e35b1702230ced4a0cb43c10d1c7e60c8.camel@ndufresne.ca>
+Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Date:   Tue, 19 Mar 2019 19:29:18 -0400
+In-Reply-To: <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
+         <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Yang <fei.yang@intel.com>
+Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
+> V4L2 uses different fourcc's than DRM, and has a different set of formats.
+> For now, let's add the v4l2 fourcc's for the already existing formats.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  include/linux/image-formats.h |  9 +++++-
+>  lib/image-formats.c           | 67 ++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 76 insertions(+)
+> 
+> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
+> index 53fd73a71b3d..fbc3a4501ebd 100644
+> --- a/include/linux/image-formats.h
+> +++ b/include/linux/image-formats.h
+> @@ -26,6 +26,13 @@ struct image_format_info {
+>  	};
+>  
+>  	/**
+> +	 * @v4l2_fmt:
+> +	 *
+> +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
+> +	 */
+> +	u32 v4l2_fmt;
+> +
+> +	/**
+>  	 * @depth:
+>  	 *
+>  	 * Color depth (number of bits per pixel excluding padding bits),
+> @@ -222,6 +229,8 @@ image_format_info_is_yuv_sampling_444(const struct image_format_info *info)
+>  
+>  const struct image_format_info *__image_format_drm_lookup(u32 drm);
+>  const struct image_format_info *image_format_drm_lookup(u32 drm);
+> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
+> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
+>  unsigned int image_format_plane_cpp(const struct image_format_info *format,
+>  				    int plane);
+>  unsigned int image_format_plane_width(int width,
+> diff --git a/lib/image-formats.c b/lib/image-formats.c
+> index 9b9a73220c5d..39f1d38ae861 100644
+> --- a/lib/image-formats.c
+> +++ b/lib/image-formats.c
+> @@ -8,6 +8,7 @@
+>  static const struct image_format_info formats[] = {
+>  	{
+>  		.drm_fmt = DRM_FORMAT_C8,
+> +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
+>  		.depth = 8,
+>  		.num_planes = 1,
+>  		.cpp = { 1, 0, 0 },
+> @@ -15,6 +16,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_RGB332,
+> +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
+>  		.depth = 8,
+>  		.num_planes = 1,
+>  		.cpp = { 1, 0, 0 },
+> @@ -29,6 +31,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_XRGB4444,
+> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB444,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -57,6 +60,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_ARGB4444,
+> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB444,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -89,6 +93,7 @@ static const struct image_format_info formats[] = {
+>  		.has_alpha = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_XRGB1555,
+> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB555,
+>  		.depth = 15,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -117,6 +122,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_ARGB1555,
+> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB555,
+>  		.depth = 15,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -149,6 +155,7 @@ static const struct image_format_info formats[] = {
+>  		.has_alpha = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_RGB565,
+> +		.v4l2_fmt = V4L2_PIX_FMT_RGB565,
+>  		.depth = 16,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -163,6 +170,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_RGB888,
+> +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
+>  		.depth = 24,
+>  		.num_planes = 1,
+>  		.cpp = { 3, 0, 0 },
+> @@ -170,6 +178,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_BGR888,
+> +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
+>  		.depth = 24,
+>  		.num_planes = 1,
+>  		.cpp = { 3, 0, 0 },
+> @@ -177,6 +186,7 @@ static const struct image_format_info formats[] = {
+>  		.vsub = 1,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_XRGB8888,
+> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB32,
 
-The following kernel panic happens due to the io_data buffer gets deallocated
-before the async io is completed. Add a check for the case where io_data buffer
-should be deallocated by ffs_user_copy_worker.
 
-[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
-[   41.672099] #PF error: [normal kernel read fault]
-[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-[   41.683687] Oops: 0000 [#1] PREEMPT SMP
-[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-[   41.705309] Workqueue: adb ffs_user_copy_worker
-[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.705331] Call Trace:
-[   41.705338]  vfree+0x50/0xb0
-[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-[   41.705344]  process_one_work+0x19f/0x3e0
-[   41.705348]  worker_thread+0x3f/0x3b0
-[   41.829766]  kthread+0x12b/0x150
-[   41.833371]  ? process_one_work+0x3e0/0x3e0
-[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-[   41.843695]  ret_from_fork+0x3a/0x50
-[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-[   41.876880] CR2: 0000000000000048
-[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.985930] Kernel panic - not syncing: Fatal exception
-[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[   42.009525] Rebooting in 10 seconds..
-[   52.014376] ACPI MEMORY or I/O RESET_REG.
+All RGB mapping should be surrounded by ifdef, because many (not all)
+DRM formats represent the order of component when placed in a CPU
+register, unlike V4L2 which uses memory order. I've pick this one
+randomly, but this one on most system, little endian, will match
+V4L2_PIX_FMT_XBGR32. This type of complex mapping can be found in
+multiple places, notably in GStreamer:
 
-Signed-off-by: Fei Yang <fei.yang@intel.com>
----
- drivers/usb/gadget/function/f_fs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/blob/master/sys/kms/gstkmsutils.c#L45
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 20413c2..47be961 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- error_mutex:
- 	mutex_unlock(&epfile->mutex);
- error:
--	ffs_free_buffer(io_data);
-+	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
-+		ffs_free_buffer(io_data);
- 	return ret;
- }
- 
--- 
-2.7.4
+>  		.depth = 24,
+>  		.num_planes = 1,
+>  		.cpp = { 4, 0, 0 },
+> @@ -281,6 +291,7 @@ static const struct image_format_info formats[] = {
+>  		.has_alpha = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_ARGB8888,
+> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB32,
+>  		.depth = 32,
+>  		.num_planes = 1,
+>  		.cpp = { 4, 0, 0 },
+> @@ -361,6 +372,7 @@ static const struct image_format_info formats[] = {
+>  		.has_alpha = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YUV410,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YUV410,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -369,6 +381,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YVU410,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YVU410,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -393,6 +406,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YUV420,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YUV420M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -401,6 +415,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YVU420,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YVU420M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -409,6 +424,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YUV422,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YUV422M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -417,6 +433,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YVU422,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YVU422M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -425,6 +442,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YUV444,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YUV444M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -433,6 +451,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YVU444,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YVU444M,
+>  		.depth = 0,
+>  		.num_planes = 3,
+>  		.cpp = { 1, 1, 1 },
+> @@ -441,6 +460,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV12,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV12,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -449,6 +469,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV21,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV21,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -457,6 +478,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV16,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV16,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -465,6 +487,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV61,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV61,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -473,6 +496,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV24,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV24,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -481,6 +505,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_NV42,
+> +		.v4l2_fmt = V4L2_PIX_FMT_NV42,
+>  		.depth = 0,
+>  		.num_planes = 2,
+>  		.cpp = { 1, 2, 0 },
+> @@ -489,6 +514,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YUYV,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YUYV,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -497,6 +523,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_YVYU,
+> +		.v4l2_fmt = V4L2_PIX_FMT_YVYU,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -505,6 +532,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_UYVY,
+> +		.v4l2_fmt = V4L2_PIX_FMT_UYVY,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -513,6 +541,7 @@ static const struct image_format_info formats[] = {
+>  		.is_yuv = true,
+>  	}, {
+>  		.drm_fmt = DRM_FORMAT_VYUY,
+> +		.v4l2_fmt = V4L2_PIX_FMT_VYUY,
+>  		.depth = 0,
+>  		.num_planes = 1,
+>  		.cpp = { 2, 0, 0 },
+> @@ -632,6 +661,44 @@ const struct image_format_info *image_format_drm_lookup(u32 drm)
+>  EXPORT_SYMBOL(image_format_drm_lookup);
+>  
+>  /**
+> + * __image_format_v4l2_lookup - query information for a given format
+> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+> + *
+> + * The caller should only pass a supported pixel format to this function.
+> + *
+> + * Returns:
+> + * The instance of struct image_format_info that describes the pixel format, or
+> + * NULL if the format is unsupported.
+> + */
+> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2)
+> +{
+> +	return __image_format_lookup(v4l2_fmt, v4l2);
+> +}
+> +EXPORT_SYMBOL(__image_format_v4l2_lookup);
+> +
+> +/**
+> + * image_format_v4l2_lookup - query information for a given format
+> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+> + *
+> + * The caller should only pass a supported pixel format to this function.
+> + * Unsupported pixel formats will generate a warning in the kernel log.
+> + *
+> + * Returns:
+> + * The instance of struct image_format_info that describes the pixel format, or
+> + * NULL if the format is unsupported.
+> + */
+> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2)
+> +{
+> +	const struct image_format_info *format;
+> +
+> +	format = __image_format_v4l2_lookup(v4l2);
+> +
+> +	WARN_ON(!format);
+> +	return format;
+> +}
+> +EXPORT_SYMBOL(image_format_v4l2_lookup);
+> +
+> +/**
+>   * image_format_plane_cpp - determine the bytes per pixel value
+>   * @format: pointer to the image_format
+>   * @plane: plane index
 
