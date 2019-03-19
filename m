@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E72DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E1EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A9E2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C983120854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfCSGTW (ORCPT
+        id S1727457AbfCSGT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 02:19:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:55771 "EHLO mga11.intel.com"
+        Tue, 19 Mar 2019 02:19:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:14405 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfCSGTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 02:19:21 -0400
+        id S1725996AbfCSGT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 02:19:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 23:19:19 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 23:19:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,496,1544515200"; 
-   d="scan'208";a="152984724"
+   d="scan'208";a="156246127"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Mar 2019 23:19:21 -0700
-Subject: [PATCH 5/6] security/integrity/evm: Drop direct dependency on
+  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2019 23:19:26 -0700
+Subject: [PATCH 6/6] security/keys/encrypted: Drop export of
  key_type_encrypted
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     keyrings@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        vishal.l.verma@intel.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 18 Mar 2019 23:06:41 -0700
-Message-ID: <155297560193.2276575.1761562049509563946.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>, vishal.l.verma@intel.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Date:   Mon, 18 Mar 2019 23:06:47 -0700
+Message-ID: <155297560738.2276575.13044997734939158888.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -48,41 +48,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lookup the key type by name and protect evm from encrypted_keys.ko
-module load failures.
+Now that all users lookup the key type by name, drop the export and the
+direct module dependency.
 
 Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: <linux-integrity@vger.kernel.org>
+Cc: David Howells <dhowells@redhat.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- security/integrity/evm/evm_crypto.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ include/keys/encrypted-type.h            |    2 --
+ security/keys/encrypted-keys/encrypted.c |    3 +--
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index c37d08118af5..5c65c3aef427 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -354,10 +354,15 @@ int evm_init_hmac(struct inode *inode, const struct xattr *lsm_xattr,
- int evm_init_key(void)
- {
- 	struct key *evm_key;
-+	struct key_type *type;
- 	struct encrypted_key_payload *ekp;
- 	int rc;
+diff --git a/include/keys/encrypted-type.h b/include/keys/encrypted-type.h
+index 1d4541370a64..dd509835b4a4 100644
+--- a/include/keys/encrypted-type.h
++++ b/include/keys/encrypted-type.h
+@@ -33,6 +33,4 @@ struct encrypted_key_payload {
+ 	u8 payload_data[0];	/* payload data + datablob + hmac */
+ };
  
--	evm_key = request_key(&key_type_encrypted, EVMKEY, NULL);
-+	type = key_type_lookup("encrypted");
-+	if (IS_ERR(type))
-+		return PTR_ERR(type);
-+
-+	evm_key = request_key(type, EVMKEY, NULL);
- 	if (IS_ERR(evm_key))
- 		return -ENOENT;
- 
-@@ -372,3 +377,5 @@ int evm_init_key(void)
- 	key_put(evm_key);
- 	return rc;
+-extern struct key_type key_type_encrypted;
+-
+ #endif /* _KEYS_ENCRYPTED_TYPE_H */
+diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
+index 06925d3b30c9..c3999d5e2a19 100644
+--- a/security/keys/encrypted-keys/encrypted.c
++++ b/security/keys/encrypted-keys/encrypted.c
+@@ -1012,7 +1012,7 @@ static void encrypted_destroy(struct key *key)
+ 	kzfree(key->payload.data[0]);
  }
-+
-+MODULE_SOFTDEP("pre: encrypted_keys");
+ 
+-struct key_type key_type_encrypted = {
++static struct key_type key_type_encrypted = {
+ 	.name = "encrypted",
+ 	.instantiate = encrypted_instantiate,
+ 	.update = encrypted_update,
+@@ -1020,7 +1020,6 @@ struct key_type key_type_encrypted = {
+ 	.describe = user_describe,
+ 	.read = encrypted_read,
+ };
+-EXPORT_SYMBOL_GPL(key_type_encrypted);
+ 
+ static int __init init_encrypted(void)
+ {
 
