@@ -2,172 +2,200 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBB2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DE7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BD72083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF5E20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfCSREp (ORCPT
+        id S1727496AbfCSRHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:04:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:2385 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfCSREo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:04:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 10:04:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
-   d="scan'208";a="308543962"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 10:04:42 -0700
-Date:   Tue, 19 Mar 2019 02:03:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Jerome Glisse <jglisse@redhat.com>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190319090322.GE7485@iweiny-DESK2.sc.intel.com>
-References: <20190308213633.28978-1-jhubbard@nvidia.com>
- <20190308213633.28978-2-jhubbard@nvidia.com>
- <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
- <20190319134724.GB3437@redhat.com>
- <20190319141416.GA3879@redhat.com>
- <20190319142918.6a5vom55aeojapjp@kshutemo-mobl1>
- <20190319153644.GB26099@quack2.suse.cz>
+        Tue, 19 Mar 2019 13:07:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48710 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726579AbfCSRHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:07:17 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JH6Gs9080764
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:07:16 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rb30cn63g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:07:16 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 19 Mar 2019 17:07:10 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 17:07:06 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JH78BH38666242
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 17:07:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 88ED0AE059;
+        Tue, 19 Mar 2019 17:07:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A074CAE057;
+        Tue, 19 Mar 2019 17:07:07 +0000 (GMT)
+Received: from [9.145.41.62] (unknown [9.145.41.62])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Mar 2019 17:07:07 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, borntraeger@de.ibm.com,
+        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
+ <20190315112032.13b259c2.cohuck@redhat.com>
+ <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+ <20190315182839.4f7c0a73@oc2783563651>
+ <0351d631-b756-dd22-0848-6f30747dc5e2@linux.ibm.com>
+ <20190319155421.0f0e51c2@oc2783563651>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 19 Mar 2019 18:07:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319153644.GB26099@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190319155421.0f0e51c2@oc2783563651>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031917-0008-0000-0000-000002CF3977
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031917-0009-0000-0000-0000223B4DA3
+Message-Id: <9c114f56-70bd-cc9e-3751-f62494407246@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 04:36:44PM +0100, Jan Kara wrote:
-> On Tue 19-03-19 17:29:18, Kirill A. Shutemov wrote:
-> > On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
-> > > On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
-> > > > On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
-> > > > > On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
-> > > > > > From: John Hubbard <jhubbard@nvidia.com>
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > > diff --git a/mm/gup.c b/mm/gup.c
-> > > > > > index f84e22685aaa..37085b8163b1 100644
-> > > > > > --- a/mm/gup.c
-> > > > > > +++ b/mm/gup.c
-> > > > > > @@ -28,6 +28,88 @@ struct follow_page_context {
-> > > > > >  	unsigned int page_mask;
-> > > > > >  };
-> > > > > >  
-> > > > > > +typedef int (*set_dirty_func_t)(struct page *page);
-> > > > > > +
-> > > > > > +static void __put_user_pages_dirty(struct page **pages,
-> > > > > > +				   unsigned long npages,
-> > > > > > +				   set_dirty_func_t sdf)
-> > > > > > +{
-> > > > > > +	unsigned long index;
-> > > > > > +
-> > > > > > +	for (index = 0; index < npages; index++) {
-> > > > > > +		struct page *page = compound_head(pages[index]);
-> > > > > > +
-> > > > > > +		if (!PageDirty(page))
-> > > > > > +			sdf(page);
-> > > > > 
-> > > > > How is this safe? What prevents the page to be cleared under you?
-> > > > > 
-> > > > > If it's safe to race clear_page_dirty*() it has to be stated explicitly
-> > > > > with a reason why. It's not very clear to me as it is.
-> > > > 
-> > > > The PageDirty() optimization above is fine to race with clear the
-> > > > page flag as it means it is racing after a page_mkclean() and the
-> > > > GUP user is done with the page so page is about to be write back
-> > > > ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
-> > > > call while a split second after TestClearPageDirty() happens then
-> > > > it means the racing clear is about to write back the page so all
-> > > > is fine (the page was dirty and it is being clear for write back).
-> > > > 
-> > > > If it does call the sdf() while racing with write back then we
-> > > > just redirtied the page just like clear_page_dirty_for_io() would
-> > > > do if page_mkclean() failed so nothing harmful will come of that
-> > > > neither. Page stays dirty despite write back it just means that
-> > > > the page might be write back twice in a row.
-> > > 
-> > > Forgot to mention one thing, we had a discussion with Andrea and Jan
-> > > about set_page_dirty() and Andrea had the good idea of maybe doing
-> > > the set_page_dirty() at GUP time (when GUP with write) not when the
-> > > GUP user calls put_page(). We can do that by setting the dirty bit
-> > > in the pte for instance. They are few bonus of doing things that way:
-> > >     - amortize the cost of calling set_page_dirty() (ie one call for
-> > >       GUP and page_mkclean()
-> > >     - it is always safe to do so at GUP time (ie the pte has write
-> > >       permission and thus the page is in correct state)
-> > >     - safe from truncate race
-> > >     - no need to ever lock the page
-> > > 
-> > > Extra bonus from my point of view, it simplify thing for my generic
-> > > page protection patchset (KSM for file back page).
-> > > 
-> > > So maybe we should explore that ? It would also be a lot less code.
-> > 
-> > Yes, please. It sounds more sensible to me to dirty the page on get, not
-> > on put.
+On 19/03/2019 15:54, Halil Pasic wrote:
+> On Tue, 19 Mar 2019 11:01:44 +0100
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> I fully agree this is a desirable final state of affairs.
+>> On 15/03/2019 18:28, Halil Pasic wrote:
+> 
+> [..]
+> 
+>>>
+>>> Things get complicated when one considers that ECA.28 is an effective
+>>> control.
+>>
+>> I don't think so, ECA_28 is not really a problem.
+>> We do not propagate ECA_AIV in VSIE and ECA_AIV is tested in the vfio
+>> driver to support GISA.
+>> So that the guest 3 will not support interrupt.
+>>
+> 
+> That was not my concern, but while we are at it... I guess you refer to
+> the check in handle_pqap(). That seems to do -EOPNOTSUPP, i.e. got to
+> userspace, i.e. with today's QEMU operation exception. Which does not
+> seem right.
 
-I'm glad to see this presented because it has crossed my mind more than once
-that effectively a GUP pinned page should be considered "dirty" at all times
-until the pin is removed.  This is especially true in the RDMA case.
-
-> And with changes
-> to how we treat pinned pages during writeback there won't have to be any
-> explicit dirtying at all in the end because the page is guaranteed to be
-> dirty after a write page fault and pin would make sure it stays dirty until
-> unpinned. However initially I want the helpers to be as close to code they
-> are replacing as possible. Because it will be hard to catch all the bugs
-> due to driver conversions even in that situation. So I still think that
-> these helpers as they are a good first step. Then we need to convert
-> GUP users to use them and then it is much easier to modify the behavior
-> since it is no longer opencoded in two hudred or how many places...
-
-Agreed.  I continue to test with these patches and RDMA and have not seen any
-problems thus far.
-
-Ira
+We already discussed this. no?
 
 > 
-> 								Honza
+> My concern was the following. Let assume
+> ECA.28 == 1 and EECA.28 == 0 != 1
+> and guest issues a PQAP (for simplicity AQIC).
 > 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> Currently I guess we take a 0x04 interception and go to userspace, which
+> may or may not be the best thing to do.
+> 
+> With this patch we would take a 0x04, but (opposed to before) if guest
+> does not have facility 65 we go with a specification exception.
+
+This is not right.
+We return -EOPNOTSUPP which will be intercepted by QEMU which will 
+report an OPERATION exception as before.
+
+> Operation exception should however take priority over this kind of
+> specification exception. So basically everything except PQAP/AQIC would
+> give you and operation exception (with current QEMU), but PQAP/AQIC would
+> give you a specification exception. Which is wrong!
+> 
+> AFAICT there is no way to tell if we got a 04 interception because
+> EECA.28 != 1 (and ECA.28 == 1) and FW won't interpret the AP
+> instructions for us, or because it PQAP/AQIC is a mandatory intercept.
+> In other words I don't see a way to tell if EECA.28 is 1 when
+> interpreting PQAP/AQIC.
+> 
+> Do you agree?
+
+
+No.
+EECA = HOST_ECA & GUEST_ECA
+after we made sure that AP instructions are available, HOST_ECA=1
+
+(vcpu->arch.sie_block->eca & ECA_APIE) gives us the answer.
+
+In the case HOST_ECA=0 we always go to userland as before.
+
+> 
+> [..]
+> 
+>>
+>> Yes, the alternative is:
+>>
+>> 1) We do things right but this mean we change the ABI (SPECIFICATION
+>> instead of OPERATION)
+>>
+>> I thing this is the best thing to do, it is the implementation
+>> proposed by this patch where all is done in Kernel, so that we are
+>> right what ever the userland user is (QEMU or other).
+>>
+>> 2) We want to preserve the old ABI for old QEMU
+>> Then I proposed the implementation here under.
+>>
+>>
+>> My personal opinion, is that we should change the ABI and do things
+>> right now.
+> 
+> I tend to agree. Giving an operation exception instead of a specification
+> exception is a bug. If it is a kernel or qemu bug it ain't clear to me
+> at the moment.
+> 
+>> We should also do it right for TAPQ with t bit set. I remember
+>> Christian already warned about this but we did not implement it.
+>>
+> 
+> Yes, I have some blurry memories of something similar myself. I wonder
+> if there was a reason, or did we just forget to address this issue.
+
+
+I will integrate it in the next iteration too, even it is not IRQ, the 
+PQAP hook patch can be more general.
+
+Regards,
+Pierre
+
+> 
+> Regards,
+> Halil
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
