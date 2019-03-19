@@ -2,115 +2,97 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D17DC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB36C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CFE20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9652A20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ro5mFo/8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RtzEoB9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfCSBhQ (ORCPT
+        id S1727235AbfCSBkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 21:37:16 -0400
-Received: from mail-ua1-f73.google.com ([209.85.222.73]:52804 "EHLO
-        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfCSBhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 21:37:15 -0400
-Received: by mail-ua1-f73.google.com with SMTP id t34so1248542uat.19
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 18:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=oxLrVFgA5K2VrFmqjuGgoMdvHwMxEteTMdtMpCigLWw=;
-        b=Ro5mFo/8VKGStal+WvRPQf5iZfNNrqXCEgrQOYimjcc+oRRjOLj855EH4daY3u632C
-         TGstRQ29doBElkYZZOCcdGzGdm+yi4pwVvgYguH+iPcHoPKvGz6nsQN8HJp+4xn2hg0L
-         8fPVWt5dFia1r64RnLsrS/ChWMZpqPKpqFDtZKI9+ctavrnmGpvnAcFBjJ6MmBoFY6sM
-         dbWIsykhXp3ovl4NVfkDhvGc8iYmDHnrV1Fo16u1TdmveWhHl7umzaotEPdAM7PZLLgG
-         eOEsoc4kgZShng9Orx7gY5sxpfM0j6sws067v9fXD+XhQr+sEnTkMRGJ9dLfuwJ7NdjI
-         6qYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=oxLrVFgA5K2VrFmqjuGgoMdvHwMxEteTMdtMpCigLWw=;
-        b=MDnSDOExUuBnmzdTHV8L5c7xjSOdPhf7mxPPn4cSJv+Y0pimbvc/lKeqnhSnsmnBf3
-         dK0MnAmEgv7OG7b0wcSFjDK3+WNytKBSqtfN6OjGq5Ke04m3G+CGB/ChCtQWKexVKgNp
-         p2SGIBcnxnAV6A15EmdWJK0le5IyVkKqt8oM/QKCdmodwi+v+9Zk83egQCzYgRFC8w01
-         oUGzn2cknhscnRa65iNzN/NOQPFwUn2PbywwyEWWPCztupYI3wjDBUbW72yN3HofQqYF
-         QR7L5LRG24pB3pQY/X8c5FwJ82ZCPNOjFnK4agXB/PMe8Z5l8iFdxFdjyCg7LQrvvh1I
-         8UIg==
-X-Gm-Message-State: APjAAAVkX8x6F9ZAhkCC9+5o1e+vhsFOJY+cLz4DAcHQugUy8zYfR2qj
-        jTMloasDv9IE0BWA4QDdUMbuOQstzg==
-X-Google-Smtp-Source: APXvYqx50kUxib9LDp48jiiTw4UdyvfcFD9dK1b1J4aTvpg/lM85tbYMMNMd3SSrICQOPpOj4qx1Y4dc6A==
-X-Received: by 2002:a1f:8d0b:: with SMTP id p11mr8920357vkd.0.1552959434311;
- Mon, 18 Mar 2019 18:37:14 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 02:36:59 +0100
-Message-Id: <20190319013659.86199-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH] device_cgroup: fix RCU imbalance in error case
-From:   Jann Horn <jannh@google.com>
-To:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, jannh@google.com
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
-        "Serge E . Hallyn" <serge.hallyn@ubuntu.com>,
-        Michal Hocko <mhocko@suse.cz>, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 Mar 2019 21:40:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:51675 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfCSBkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 21:40:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44NbNM51bBz9s70;
+        Tue, 19 Mar 2019 12:40:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1552959638;
+        bh=Y5j6ROHawM0pecb+RB/gzAFZFTOOxrhe1b08ENnf0mA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RtzEoB9qAy1zptLlJQIO58Kpe1W+k1oOO2kz4z50IWlVOKdyXgx0NJ40epZ7ubGDs
+         koNmCvdGP4/TfxZpkNyxmk8vD+SEUrZECoRK0fw0ME964i2jEYMCADeSyBMP+0cDN5
+         suAIeJH4pHKXdRymWA7tERdddP6p5F2oK+psb5KZqlRj3HZPbSq+s69OzCtLLju9Ws
+         u+IvdN29rXfyT/gw2TjVFCow2O8ehepAmEzFnZRID8q6a6YkiC2zklx0SASPdKJxVI
+         nSw/+mlsIHncfN1o3bEBtN0lCOgYAQ6Lbq+O/rtebD5VYJs3k1g1gzo3pJVb6m5gRc
+         pztGSNwOessmw==
+Date:   Tue, 19 Mar 2019 12:40:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Dominick Grift <dominick.grift@defensec.nl>
+Subject: linux-next: build failure after merge of the selinux tree
+Message-ID: <20190319124034.13ff6044@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ky35U.Xly5mQAanE43DmKpK"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When dev_exception_add() returns an error (due to a failed memory
-allocation), make sure that we move the RCU preemption count back to where
-it was before we were called. We dropped the RCU read lock inside the loop
-body, so we can't just "break".
+--Sig_/ky35U.Xly5mQAanE43DmKpK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-sparse complains about this, too:
+Hi all,
 
-$ make -s C=2 security/device_cgroup.o
-./include/linux/rcupdate.h:647:9: warning: context imbalance in
-'propagate_exception' - unexpected unlock
+After merging the selinux tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
----
-Compile-tested only.
+In file included from /home/sfr/next/next/scripts/selinux/mdp/mdp.c:35:
+/home/sfr/next/next/include/linux/kconfig.h:5:10: fatal error: generated/au=
+toconf.h: No such file or directory
+ #include <generated/autoconf.h>
+          ^~~~~~~~~~~~~~~~~~~~~~
 
-I'm not entirely sure who's supposed to be the maintainer for this thing.
-The sign-offs on the commits to this file come from Tejun, but MAINTAINERS
-claims it's part of security/, so I'm just sending this to both the
-security folks and the cgroup folks, you can figure out whose tree you want
-to take this through. :P
-If the cgroup folks feel responsible for this file, maybe you could fix up
-MAINTAINERS?
+Caused by commit
 
- security/device_cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  e37c1877ba5b ("scripts/selinux: modernize mdp")
 
-diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index cd97929fac66..dc28914fa72e 100644
---- a/security/device_cgroup.c
-+++ b/security/device_cgroup.c
-@@ -560,7 +560,7 @@ static int propagate_exception(struct dev_cgroup *devcg_root,
- 		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
- 			rc = dev_exception_add(devcg, ex);
- 			if (rc)
--				break;
-+				return rc;
- 		} else {
- 			/*
- 			 * in the other possible cases:
--- 
-2.21.0.225.g810b269d1ac-goog
+I have used the selinux tree from next-20190318 for today.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ky35U.Xly5mQAanE43DmKpK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyQSJIACgkQAVBC80lX
+0GzVZwgAlQ516J43HIE13qa4LP9Sohe8B6vzwsb8i4ZMg8gxdAiuw4noquSkZsgV
+v1EYe7QL5WvlBnh6CBucw2IXgveIaOs5Yi5D87P17eqxIcPadlmKRwyvSQDCzezI
+RvWnNlbV2y/l6jNxuvNidCie7bnY0tVzwcyRXOhhfU2cHvbrUMMOqwYh51xW4LLb
+eHRUzScL3p+eDiY5e2Nz5NP5eJNDJ3gYwKLqwFleihai3HR/adcEiBWQ0/p4Q24a
++DcO8nlhWDQ79vxjJvVJWkIrlXhhC7uqMs5/YfcLrs9cFVdz3FLCNe14f1VwRoB7
+nvMkqkp+DwurodZLqnWD8yAp8bCJLg==
+=Tj/j
+-----END PGP SIGNATURE-----
+
+--Sig_/ky35U.Xly5mQAanE43DmKpK--
