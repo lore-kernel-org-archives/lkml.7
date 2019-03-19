@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28181C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB416C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD9A2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD42A20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553001230;
-	bh=Lxi8P2QL3DG3PanbNTwiklH9vRJSbtaHQ05IhX+o2MM=;
+	s=default; t=1553001235;
+	bh=UqAfBUpF2bq1iBlyIni7as0FfXLn9T8gqiIlKawU10s=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1MkJ4ZgxKBvHkI9LY4TJ0tI+a909ZyogjsGu5X36SYL92AFDP6ADJvfSqL8i0h7pV
-	 Pae9yYZu1MyLwN9gA0UaaM61GJ1d34cL4E5nb4k9EBSGjPzl7CCxynGyhypCzInTqk
-	 tQ8SkqHZ5k0VDMgClU6C/I+oKPGPb74/UYKCuLPQ=
+	b=l639aHxlM1lcHebiV3wZRLFwmCf9dgkaqQ3cUU153r6mLOooPYfKyfLq5WiOAA8hQ
+	 4SHmCNHJXKmkcCPoC/O3zqvfHy8OTQFeudEd6WEU/X9HMkOuivq5BbcbeSSsgC2gr/
+	 Ak3b1/6Xhfe+XI9za3oiiDSnPl6s016pKCEGqpnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfCSNNt (ORCPT
+        id S1727427AbfCSNNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:13:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48978 "EHLO
+        Tue, 19 Mar 2019 09:13:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49108 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbfCSNNs (ORCPT
+        with ESMTP id S1726466AbfCSNNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:13:48 -0400
+        Tue, 19 Mar 2019 09:13:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=z07gWogmgZ83XwBvuIWUWL8ubvxMCawYjj5txVQy8Q4=; b=pUcUQ61FysoE
-        KczdGUwalynEZU2EJKpLCkqNL73dOjXvpDVSLSW5f79zOWEpvJZjDfLqldzIG1JkE5LF+sywCKqx1
-        3MG/IjCgDmIHvfndgWn3SoqYSHu7jLI5GbMyJedvGS1Igpuq42XXPtBTV7xbOPOoOqEWi/7FrGGSt
-        Miwq4=;
+        List-Archive; bh=mtayLktrsM4NK6nMsgZa/4xcLvtHLhZIFZQDAzF23A4=; b=YxIzZ95WmGHx
+        qEnlC6sMVwWAMZry8/eqwyNWuNjIXAG3GFtJt20wpJJOF3QQMD9UTCbOJ0CS7Iy+Gj4hwqGOqgTht
+        mG3Zj7puNjeML2JU2Wm/dKpUmCC4e8WUTgCyZDjE7jN/SslKQmSP9inhC58VMwHb/M+j30neUeamI
+        e8+cY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6EYr-00039d-NV; Tue, 19 Mar 2019 13:13:45 +0000
+        id 1h6EYt-00039j-G4; Tue, 19 Mar 2019 13:13:47 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 5A46311288DF; Tue, 19 Mar 2019 13:13:45 +0000 (GMT)
+        id 100F211288DF; Tue, 19 Mar 2019 13:13:47 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     stable <stable@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Applied "regulator: core: fix error path for regulator_set_voltage_unlocked" to the regulator tree
+Subject: Applied "regulator: axp20x: Use rdev_get_id at appropriate places" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190319131345.5A46311288DF@debutante.sirena.org.uk>
-Date:   Tue, 19 Mar 2019 13:13:45 +0000 (GMT)
+Message-Id: <20190319131347.100F211288DF@debutante.sirena.org.uk>
+Date:   Tue, 19 Mar 2019 13:13:47 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: core: fix error path for regulator_set_voltage_unlocked
+   regulator: axp20x: Use rdev_get_id at appropriate places
 
 has been applied to the regulator tree at
 
@@ -85,57 +85,68 @@ to this mail.
 Thanks,
 Mark
 
-From 70b464918e5331e488058870fcc6821d54c4e541 Mon Sep 17 00:00:00 2001
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Mon, 18 Mar 2019 16:17:57 +0000
-Subject: [PATCH] regulator: core: fix error path for
- regulator_set_voltage_unlocked
+From 04d1446bce279ee6e4c39b3bf705bef3abba008e Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 19 Mar 2019 11:36:08 +0800
+Subject: [PATCH] regulator: axp20x: Use rdev_get_id at appropriate places
 
-During several error paths in the function
-regulator_set_voltage_unlocked() the value of 'ret' can take on negative
-error values. However, in calls that go through the 'goto out' statement,
-this return value is lost and return 0 is used instead, indicating a
-'pass'.
+Use rdev_get_id() to simplify the code a bit.
 
-There are several cases where this function should legitimately return a
-fail instead of a pass: one such case includes constraints check during
-voltage selection in the call to regulator_check_voltage(), which can
-have -EINVAL for the case when an unsupported voltage is incorrectly
-requested. In that case, -22 is expected as the return value, not 0.
-
-Fixes: 9243a195be7a ("regulator: core: Change voltage setting path")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/regulator/axp20x-regulator.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 68473d0cc57e..968dcd9d7a07 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3322,15 +3322,12 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 8a366f66208e..07e10c8b0a22 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -367,16 +367,14 @@ static const int axp209_dcdc2_ldo3_slew_rates[] = {
+ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ {
+ 	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
+-	const struct regulator_desc *desc;
++	int id = rdev_get_id(rdev);
+ 	u8 reg, mask, enable, cfg = 0xff;
+ 	const int *slew_rates;
+ 	int rate_count = 0;
  
- 	/* for not coupled regulators this will just set the voltage */
- 	ret = regulator_balance_voltage(rdev, state);
--	if (ret < 0)
--		goto out2;
-+	if (ret < 0) {
-+		voltage->min_uV = old_min_uV;
-+		voltage->max_uV = old_max_uV;
-+	}
- 
- out:
--	return 0;
--out2:
--	voltage->min_uV = old_min_uV;
--	voltage->max_uV = old_max_uV;
+-	desc = rdev->desc;
 -
- 	return ret;
- }
+ 	switch (axp20x->variant) {
+ 	case AXP209_ID:
+-		if (desc->id == AXP20X_DCDC2) {
++		if (id == AXP20X_DCDC2) {
+ 			slew_rates = axp209_dcdc2_ldo3_slew_rates;
+ 			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
+ 			reg = AXP20X_DCDC2_LDO3_V_RAMP;
+@@ -388,7 +386,7 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ 			break;
+ 		}
  
+-		if (desc->id == AXP20X_LDO3) {
++		if (id == AXP20X_LDO3) {
+ 			slew_rates = axp209_dcdc2_ldo3_slew_rates;
+ 			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
+ 			reg = AXP20X_DCDC2_LDO3_V_RAMP;
+@@ -435,13 +433,11 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
+ {
+ 	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
+-	const struct regulator_desc *desc;
+-
+-	desc = rdev->desc;
++	int id = rdev_get_id(rdev);
+ 
+ 	switch (axp20x->variant) {
+ 	case AXP209_ID:
+-		if ((desc->id == AXP20X_LDO3) &&
++		if ((id == AXP20X_LDO3) &&
+ 		    rdev->constraints && rdev->constraints->soft_start) {
+ 			int v_out;
+ 			int ret;
 -- 
 2.20.1
 
