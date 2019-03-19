@@ -2,104 +2,257 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C4DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9839C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16CF20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F97120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GXy35Fsn"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="BPEheruC";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="DTEV5AWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfCSPHu (ORCPT
+        id S1727399AbfCSPKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:07:50 -0400
-Received: from mout.gmx.net ([212.227.17.22]:55245 "EHLO mout.gmx.net"
+        Tue, 19 Mar 2019 11:10:23 -0400
+Received: from node.akkea.ca ([192.155.83.177]:48554 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfCSPHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1553008052;
-        bh=WPNsrlOZZ5wLYW+kGWxTIa/C9X5tDiZ5MDkLl1VUj9c=;
-        h=X-UI-Sender-Class:Subject:From:In-Reply-To:Date:Cc:References:To;
-        b=GXy35FsnIc68w/PnK6DODwIizmeg1F+0s4t5VuAqkDZOfKMAeRpO4lXc6svBKVLsu
-         9MPPCQjCQwN48i3k91pZUq5wxvUm/cPU0g1ny3Ka+rz0FdaAquUz9Cnz5ZH8ixnfsn
-         4fZ/l75Wo7A/FaznZwkhm2KddwcpwiRuF+iWuo1Q=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.4.14] ([79.201.202.244]) by mail.gmx.com (mrgmx101
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MbKXI-1hP1fz3dBM-00IknC; Tue, 19
- Mar 2019 16:07:32 +0100
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-From:   Julius Niedworok <julius.n@gmx.net>
-In-Reply-To: <20190311145240.akms2pz2hxsalmaz@azazel.net>
-Date:   Tue, 19 Mar 2019 16:07:32 +0100
-Cc:     Kalle Valo <kvalo@codeaurora.org>, ga58taw@mytum.de,
-        linux-wireless@vger.kernel.org, david@redhat.com, nc@net.in.tum.de,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        id S1726579AbfCSPKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:10:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 7DECA4E204E;
+        Tue, 19 Mar 2019 15:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553008221; bh=7ZBGcK65GXcS9qZYXZ/pmTEUyeotHEZiLQH5qGWMI6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=BPEheruCw4qu7a4R6gFk0A2+BpMKPkb+j9t9P7wzcGUzh2yWl6aYaqpYtyfHOLmue
+         L854dyhO/I0nhgHt3bdRHhvzwn1o+vL8SABRzQ712LZETSaGvuUrtZxV9A+aGM2Vv/
+         ibMgeFFwcDRh26OXhSrAG07tjCQQrxIZiCGooGYM=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JQL0oQdo_vaS; Tue, 19 Mar 2019 15:10:20 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 2F9FE4E204B;
+        Tue, 19 Mar 2019 15:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553008220; bh=7ZBGcK65GXcS9qZYXZ/pmTEUyeotHEZiLQH5qGWMI6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=DTEV5AWdCgeENxMO90Xom9sNtDtV7wjRTKaLDPRi7AkJQrWAN8y0p+q6wsdMeGc/N
+         +N5obRNQropZ8uGTwweW/c9SNtH33Sk7RxsbEsQvt2FWXYGkvSKxEmHjtlEvbyJFnn
+         JMKN6V9g6k6/+Sw1eOpAbHxET7y7fZw39kw3vbfw=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     andrew.smirnov@gmail.com, Lucas Stach <l.stach@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D78A58DC-E38B-4BD8-9D11-A873FFE16602@gmx.net>
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
- <20190306200206.60916-1-julius.n@gmx.net> <87k1hazo6r.fsf@purkki.adurom.net>
- <20190307193045.a7awwn6mycloccq5@mission-control>
- <87h8c98q4l.fsf@codeaurora.org> <20190311145240.akms2pz2hxsalmaz@azazel.net>
-To:     Jeremy Sowden <jeremy@azazel.net>
-X-Mailer: Apple Mail (2.3273)
-X-Provags-ID: V03:K1:ElvT8yCZ9rlyh4ZjBcTI13LvQl+o+kw7y1Ic/JtWIzVw0Jde37I
- h1iAvsYTqqqmHGBwTcQkhV/OHXAdEgxJWc4iAr7efhvAbavuRMe23/8okEk+22ZHokLXKSP
- AA4QnXiOKXt1IbLhSz/90z9u+ay3fVZW43YRDnPAR/juZl6SAbw4dDVWyntdorGQsubc5XZ
- 8uW6plTCqpE2jvNqvZv4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V6p1NcLpVoI=:m8WAF2ZRDn3/iMPyVlUfCe
- IEeajjeoLaehw4Y/WHVpMTKzokmfjdEncrzTMoD3i/mBopeLtZ2g7eTV93XMhZ5Y9zwrvcKCz
- aTET43nMtN7631d9EP6WFV+B2NaxXF3eBQyRun7ghVtwceYivnwKIKnig6f/VtFp+yJwDbDQr
- pP69ya/euCqnJIg33FNjVIKRtn4E9Dm7z5gTTAh03nH7iI2dO+i2uAnIw8RQNvecoUHt9a8OC
- eeprvztfiu43UlJA+5dg7u5Z9iNvlg0FCCHcSiSAdL2zhvFiKPvwD3RV+6VBBHiVLmx/iugIS
- mvo6YfcxyT69cIZvsnU2FXVvIJUbpiDWuvmTQFJ/Lc/Pi9xV3qpkB5NaNPksoMVZcPJdS8z+8
- Ey0U1c4ZKNzNRC59GFGZ9EBzTJI5ZC2BRDk2PgIDx21gAKT5NHRKPkjn84sNxdVAaGDKK+ip5
- yDij9UzFwnOPhFFfzq8g6bLkVVcAr5hdPam7FORSr9B2Q0LYs1IZBmEV56stvaSpBIHxLdas5
- Ec8WCyVw2okjj9gYILlcqRu4iy3qKffAdtvcf/h9sEKX0kq9Ekf3dogVP5VAc2cvyC4PUNfbH
- A1qbGTNU0JHESrHq/A6HWi3DALb9rjQ2as0K4AsqV5AJxyK7PQbycHcsJo+1nozgUMwhkJKdx
- vzuJb+I+k6WZlWUggBfJ9oobsV/wGGMtONz5ggFIuqEmiCnagpRrLboUOUkKeDBmhpMj59qZ3
- 58wgavZQgSMFqZlX0WqF1beOk97m+kVlHZUBrJ38SMk0Rbpht6+1Ue4uPQDgn+PZB1F8DlKjh
- hpXO8ZxBRLYLjAegGUmkGI1hLe9gMt2UIPWoNIJsj6rlwbgqNBZzrvs5s840Kxbzp1DpAhXYB
- BQkx0c0bmKLD9SmGp5TxHiqdGrGEVTxcyhamd+Cyp0kyyyb6m9N9i4N35SaGJzQ1bylnVsn/b
- 5X+J4fTZAog==
+Subject: [PATCH v3] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Date:   Tue, 19 Mar 2019 08:10:09 -0700
+Message-Id: <20190319151009.7603-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
+References: <20190311213124.29325-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the imx8mq TMU (Thermal management unit) nodes for CPU,
+GPU, and VPU.
 
-> On 11.03.2019 15:52, Jeremy Sowden wrote:
->
-> It's the value that matters, not the type.  It will only be too big for
-> the buffer if the result of casting local->force_tx_status to int is
-> less than -9 or greeater than 99.
->
->  scnprintf(buf, size(buf), "%lld\n", (long long)local->force_tx_status)
->
-> would also be fine if the value were in range.  Note also that scnprintf
-> will not overrun the buffer: it will truncate the string.
+Changes since v2:
 
-Thanks for the clarification :)
+Updated alert and critical temps for commercial parts.
+Fixed node names.
 
-> As it happens, arguments to variadic functions are subject to the
-> "default argument promotions," so if local->force_tx_status is in fact a
-> bool (I can't find the definition), it would be promoted to int and the
-> cast is superfluous.
+Changes since v1:
 
-Yes - the cast is superfluous. We still think it might be useful to keep i=
-t
-there to make the point that the value will be casted. However, if you
-prefer to omit the cast, we are happy to take it out.
+Removed references to multi sensor patch.
 
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
-Thank you,
-Julius and Charlie
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9155bd4784eb..83c0187e1524 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ #include "imx8mq-pinfunc.h"
+ 
+ / {
+@@ -89,6 +90,7 @@
+ 			reg = <0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_1: cpu@1 {
+@@ -97,6 +99,7 @@
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_2: cpu@2 {
+@@ -105,6 +108,7 @@
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -113,6 +117,7 @@
+ 			reg = <0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -210,6 +215,119 @@
+ 				#interrupt-cells = <2>;
+ 			};
+ 
++			tmu: tmu@30260000 {
++				compatible = "fsl,imx8mq-tmu";
++				reg = <0x30260000 0x10000>;
++				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				little-endian;
++				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
++				fsl,tmu-calibration = <0x00000000 0x00000023
++						       0x00000001 0x00000029
++						       0x00000002 0x0000002f
++						       0x00000003 0x00000035
++						       0x00000004 0x0000003d
++						       0x00000005 0x00000043
++						       0x00000006 0x0000004b
++						       0x00000007 0x00000051
++						       0x00000008 0x00000057
++						       0x00000009 0x0000005f
++						       0x0000000a 0x00000067
++						       0x0000000b 0x0000006f
++
++						       0x00010000 0x0000001b
++						       0x00010001 0x00000023
++						       0x00010002 0x0000002b
++						       0x00010003 0x00000033
++						       0x00010004 0x0000003b
++						       0x00010005 0x00000043
++						       0x00010006 0x0000004b
++						       0x00010007 0x00000055
++						       0x00010008 0x0000005d
++						       0x00010009 0x00000067
++						       0x0001000a 0x00000070
++
++						       0x00020000 0x00000017
++						       0x00020001 0x00000023
++						       0x00020002 0x0000002d
++						       0x00020003 0x00000037
++						       0x00020004 0x00000041
++						       0x00020005 0x0000004b
++						       0x00020006 0x00000057
++						       0x00020007 0x00000063
++						       0x00020008 0x0000006f
++
++						       0x00030000 0x00000015
++						       0x00030001 0x00000021
++						       0x00030002 0x0000002d
++						       0x00030003 0x00000039
++						       0x00030004 0x00000045
++						       0x00030005 0x00000053
++						       0x00030006 0x0000005f
++						       0x00030007 0x00000071>;
++				#thermal-sensor-cells =  <1>;
++			};
++
++			thermal-zones {
++				cpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 0>;
++
++					trips {
++						cpu_alert: cpu-alert {
++							temperature = <80000>;
++							hysteresis = <2000>;
++							type = "passive";
++						};
++
++						cpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++
++					cooling-maps {
++						map0 {
++							trip = <&cpu_alert>;
++							cooling-device =
++								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						};
++					};
++				};
++
++				gpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 1>;
++
++					trips {
++						gpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++				};
++
++				vpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 2>;
++
++					trips {
++						vpu-crit {
++							temperature = <90000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++				};
++			};
++
+ 			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
+-- 
+2.17.1
+
