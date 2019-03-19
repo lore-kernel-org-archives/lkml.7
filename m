@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DC4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E8C20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E158F2177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BXyMgmAE"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="M6DnObNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfCSPZE (ORCPT
+        id S1727824AbfCSPZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:25:04 -0400
-Received: from mout.gmx.net ([212.227.17.21]:54305 "EHLO mout.gmx.net"
+        Tue, 19 Mar 2019 11:25:10 -0400
+Received: from mout.gmx.net ([212.227.17.22]:35213 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfCSPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727661AbfCSPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 11:25:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1553009084;
-        bh=ipB3CHPowXwUEwhyQjUjLsxdRiVluHFcHPKLTIn+D/M=;
+        s=badeba3b8450; t=1553009079;
+        bh=Pko7ezwagGTe18JIsO/c11K0PwjfQ1g1lrIGGnUWh5M=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=BXyMgmAEXwnXASstwZU5mPG3kd7a+BZpPpWgjdOtJuSkSgzQUSt56Du51B7EcxI4T
-         gpe7lhakgmHjyjQHHSyTJMioQIqfI/eaod5YxfEPvAd8b5Lb8W0yAeyUpk7EHB2AKt
-         KrWPcKqTpm/jfRC8YrEMdzkEsjAjnDPPp/XEEbOM=
+        b=M6DnObNHhK8jvmlMM5tbodz4WHHAzt8QYdtZxGr06Yzr2Ackbb77oS7g5wb3yN/+I
+         Vjc87Yy0hFsmYTRur8XWjrfQP/IVtBlgDE51RvrLy9aSLzyZKfEy4MRYxOJdmSycxM
+         OFjLpfFzJ6Rmhq9HFcK0voxEdj8t5Chnh2wg2xd4=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LuJDv-1gz5Vj177X-011h7n; Tue, 19
- Mar 2019 16:24:44 +0100
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx101
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0M3NEK-1gosFD00Jc-00qz4U; Tue, 19
+ Mar 2019 16:24:39 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -51,83 +51,63 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 3/5] ARM: dts: imx50: Add PHY node for usbotg and adjust clocks
-Date:   Tue, 19 Mar 2019 16:24:18 +0100
-Message-Id: <20190319152421.16179-4-j.neuschaefer@gmx.net>
+Subject: [PATCH 1/5] dt-bindings: Add vendor prefix for Rakuten Kobo, Inc.
+Date:   Tue, 19 Mar 2019 16:24:16 +0100
+Message-Id: <20190319152421.16179-2-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190319152421.16179-1-j.neuschaefer@gmx.net>
 References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RQyRurqixI6BorymjXPsg/bz7SQ80dX0FrwjIhVr3Nu/jA/usv2
- PXBL2wrGE+ZXYEidkgoDmaWL/g/udYoSmXkBPQVgiA9r3HG0m5vg//9n7wd/4CGsJetRVdG
- P5OfFBsdeFMW/Ib8ok+Rf0B8N+rl+u99rFtS6mo94qXzuMPeaE5TRvoXTotTKsMT/qFMyW7
- DuyjSJ69zq/hH3rSHgW/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g8SzXboCY28=:U8o0eohhFLl2XENeHIL5Q6
- 48gpi74eKpQeiuUfEyHaTjVQHEViFVtg3/y6KyYqzVIidqGhALVwCpw7pKLWjssU+uWvVs5nN
- qBvtXUab4G3MIlNbzC0eVzxaKarJ7gFYBOPTm+ErI/LFzv4sB2Iwo00BP0WTk03wYs4FPmyfX
- Wnqyqx+ZsdLkvKrntsu00ZXpUZvw4h1ryKwY0ZHVvpDTVWhQTUYpLIStJwlZd34SHHiOptNr+
- WHFcsCm41jP07i7GUW+HKRzOBePFa7g568NQzyElq7Xin00x+6B3dGm4IXgH8hfx3LEMAfBGw
- 3JZpOhF0E8A42HPU1w/EhsbxgzNSiqCogeNENCrsTxgFoNHDPBfAbBL8zbvd4lqVEhiiq6Rof
- 72Q8EJRIX5x/c4njz09HmEMYKFrDq9UHeDhlnXObC78C/A64/PT+1gskvg/NGjZl2cTQCmGCV
- iLNgiYAMD7/UibrVPAmmWMR+LpwGFms47RvN2UdCNbLaa7VqlhsvZUn5uecrPDb5Ipi7N2ug1
- /vKY1W1b6fBq0v9Wdu+qXguGp9MJRbXPKbZHG8gAHOA72x3WRvhgpdi5Sui5TAJU8oAZsJGyL
- MqLCT6Cu2zbPs3q3u7fCv6XshEilBO+el774JIPKmH6vVkWWnElCNGL4TGy00D6WDcfddBWEA
- fK6lIkCUyrZQMZ93iiU1boV2tCHhmHl0UvAqH94zMYWOLqFE7KEEerbKu378ETqUO0kGWE4Vo
- OzI4PRFzn6JcgQoDAha33S0VPaa+b28KXzVF97C2BQb/HNx+iFn0FYo2+4f8NkYkZVN/BaLoM
- 56UhstFuQRMDfdAm9gfdguZLLSa3l9sNYIf0tGis1enLJkSVWQ3RsfKFCTxA81EWdPHhXnIfr
- xmADubCMRSq4b2+r9bo1ZUhNWje7GqXJzVNgYYcroaz0tq/1rOjUyLQJy915bbIDsE+9wyKp8
- mtHqtfS4iFQ==
+X-Provags-ID: V03:K1:YVWsPSmUV2YpZNYVpkNQezUqfQG93zHhqEw39dM+feuXEk8j7D0
+ NwCt7NeuVvzhgYfj2NohuAuLOnEMndxjthAnR+qlq/ffBwDj6V2H1MjM9mjr5N3c5bUDFmm
+ dgEFqn3bU4QdxWRBviiHDZY0JieUwxntZ4IJKAY0ZHDlxSZw/I4dg3qcW1KULVNOOeCmQuq
+ +G6Xct8RCRROf8WVGafBw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4P7NY6fdm+w=:GZ/OJdaYUrHvhJNUely6ic
+ g49kB+Exhf0Jc6gAtdKTpiw9VsRIAc6jCYjieuEp5unv1BhMrUzRDfg46/Q/oo8Aoz3Cw0GIi
+ AF2z4zPMD74T+92pBIjyBlnWtOLWR+HYFxUyOy1nQXItCKjFau7mSTaPPUmqPzfRAf7urZJpU
+ 6Beixr+G8x0aVyIUp+YDctJelWjNyKkqqimzzLUPmomQSUEJUuoYo2CCxDDTVZWosDRoot+jC
+ /AwjEr8EAihgjqnThFDHrZGfhn2qeg50UKGsKIdtpZC+JnFX8DKLPqvdeFMw7cxXqURMfRoip
+ /G3akQjcmO4ScldMp2zihCaNtfsbJF59fUpbMwWbgptKbUts8TunBzdS67snDGqM1emhhl+Qk
+ MY628/d+JOqm9U47QJ2RTXMcpQ/a1Y1sORmlyhRXPJi+oXfXAryuvL/vQ4mc7k08e2eH7L24i
+ usNGaT6Uho6YPwCCLGZIDqH0Ba+qYAbfsIqeGld8XL2Dtgziwi0ajOyOYqZTnL45xupjQWWCP
+ 5QDuI0Q2Gl2NOpvKSZSMkLvxucky7RNdXN5gHl6b7aIWfZtjBNlUrww8OHHNmDlLPNZPjh4kq
+ DoX2pHrlsBnIbdFsX3S3YR8+n2yxdit1r0o0lh2PsZmGyUTY0Vw+Lvpl/hHbM6VC44tdsI09P
+ M5mEyyvN+HeC+iL2ympi0dHWHnpB6wF+jI2Pfo9bGo/lJ7tYmq9xKHUpOxyKiVFYvUFe4pzCp
+ e1p8CCELHWPhmg+h+pjKa/p7bMa7CMbi89R2A4oaih7pdqYi01naSTJrnERdzeIkM186itfvU
+ +vrwH9NyBgvlnYPOM9oKzvUP2RQJCyDl6SQnXXVq37V4HcI1fxgRpVmRK2Xh35xXl6/P6O44+
+ LEOYcyuTmR3o7FmYtwxWp2g5n3Evg64c+w6GWfZJ+KfBT+vlBAuI7xf9Uq6MXSPE7LQZEnWiz
+ S8wus6lyPUQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even though the ChipIdea USB controller binding[1] doesn't specify the
-properties that reference a PHY as required, the Linux driver
-requires[2] such a reference.
+Rakuten Kobo, Inc. (formerly Kobo, Inc.) is a company that sells e-book
+readers and related products. More information is available at:
 
-The clock situation is like on i.MX53: The USB controller is clocked
-from IMX5_CLK_USBOH3_GATE and the PHY from IMX5_CLK_USB_PHY1_GATE.
-
-[1]: Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-[2]: Search for EINVAL in drivers/usb/chipidea/ci_hdrc_imx.c
+- https://en.wikipedia.org/wiki/Kobo_Inc.
+- https://www.kobo.com/
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- arch/arm/boot/dts/imx50.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index ee1e3e8bf4ec..e5632ce24ba0 100644
-=2D-- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -76,6 +76,14 @@
- 		};
- 	};
-
-+	usbphy0: usbphy-0 {
-+		compatible =3D "usb-nop-xceiv";
-+		clocks =3D <&clks IMX5_CLK_USB_PHY1_GATE>;
-+		clock-names =3D "main_clk";
-+		#phy-cells =3D <0>;
-+		status =3D "okay";
-+	};
-+
- 	soc {
- 		#address-cells =3D <1>;
- 		#size-cells =3D <1>;
-@@ -187,7 +195,8 @@
- 				compatible =3D "fsl,imx50-usb", "fsl,imx27-usb";
- 				reg =3D <0x53f80000 0x0200>;
- 				interrupts =3D <18>;
--				clocks =3D <&clks IMX5_CLK_USB_PHY1_GATE>;
-+				clocks =3D <&clks IMX5_CLK_USBOH3_GATE>;
-+				fsl,usbphy =3D <&usbphy0>;
- 				status =3D "disabled";
- 			};
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docum=
+entation/devicetree/bindings/vendor-prefixes.txt
+index 8162b0eb4b50..6cc50f1fac1c 100644
+=2D-- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -210,6 +210,7 @@ kiebackpeter    Kieback & Peter GmbH
+ kinetic Kinetic Technologies
+ kingdisplay	King & Display Technology Co., Ltd.
+ kingnovel	Kingnovel Technology Co., Ltd.
++kobo	Rakuten Kobo Inc.
+ koe	Kaohsiung Opto-Electronics Inc.
+ kosagi	Sutajio Ko-Usagi PTE Ltd.
+ kyo	Kyocera Corporation
 =2D-
 2.20.1
 
