@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E2DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD0C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938142146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D7C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9AM4YQM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqWAN5Rz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfCSCUo (ORCPT
+        id S1727693AbfCSCUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:20:44 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:53941 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfCSCUl (ORCPT
+        Mon, 18 Mar 2019 22:20:45 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53945 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbfCSCUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:20:41 -0400
-Received: by mail-it1-f194.google.com with SMTP id w85so6997958itc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:40 -0700 (PDT)
+        Mon, 18 Mar 2019 22:20:43 -0400
+Received: by mail-it1-f196.google.com with SMTP id w85so6998047itc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cj86xX4XozhEzBWPSaIZD8xNHra5AQsgtyWOlTKAxcE=;
-        b=f9AM4YQMr4y4PVVPppaa6Jluq1ZnsgjMb7yYGX3qrVRrnnGqCdVFBxXKRIkoD4FbjE
-         3X9M5hUyIwaAmW7BhF9tDEbkxw8vHCRZg+9OKMPGeluXwzhbQQD4iN98XzjMWafQ3cJq
-         dPk4xZOgRVxGR5PKFoCOwtvGseKc4B/ng9bmOkzjHo/Fg2DfCitXwevebed3pnIY8dZv
-         l9iWHOXz269RQYY5bEmK3OQnux7cnvudIilfqepkfiJWDDpiDq25ZNZ1Ssn6lgE6FfAe
-         uCuHBOD39cF5u30rTWp9gxS38T/VsL8dPAH1BuBLco9WQhRF2QsEjLqNHs46wBqQbYBx
-         gIfA==
+        bh=C+t0zVHPs47I9d5tL5665ViF1svCSYXr8jg/veuOUcY=;
+        b=WqWAN5Rz5lBIJcgbTmM4h/p3YBYrUvY4I7d/T0u5efY5EkCD+YWBmsPunaga/9C1YT
+         h3vUL6wIPTrDqNUhPDKiQ8jbpgkxqKcXrLLSMBUm8+r8kqy+eDwOmtFCsOHcw0jMB9GD
+         A4q2lSIQ2U5kCnrZILo0FlJfgF3Cp5c6mSH2jBBf8+HY3uuXSYkU39PfC8BkvbmLdYGW
+         NPTccUncIp90/P7bHOyh4pxabW6UnIRFQrbLopFU0GUbxbM4Zlu/qEyNl1g/MXrZXyZN
+         MhuGXDqlv5H4JQbV5K0NLDVcjtAFlM+FmFtNBcJ0QzzQ7jnkRYWrhPZBFDzrdK9hZAvT
+         AyAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cj86xX4XozhEzBWPSaIZD8xNHra5AQsgtyWOlTKAxcE=;
-        b=fqegQ2uiYLc11vvxwCBuieXyA5MNbeEaC+xpQT++gJ8Dyjx+wND4VbIFM2oTlOf+9U
-         FaZ4ZH7HxUtJnsB5dyXa1o//6ydiy3TDLPgW1YUMVXoXQtFGY8S7I3vr0TFg+Z5Tou4u
-         DYr9g8gA3u2aRFhpMpmdvqs8Rd0ohs9ESBMza1h87FSfOeQLgR2Cv7JO2QzC5rr+JpBc
-         gj8EuU7nNoCBYLxUdTSzQdpPgmjVrSufy0QBUGiFwuSdSGO5Tyb0yJJUPn/BmCKk1SI5
-         /JV4KqcZwrXHcY0Fk+q+b47ZXxsft2vprzEQy1u7/o2lpakyvzeZDLxKhln7ho2rd4yq
-         ICZw==
-X-Gm-Message-State: APjAAAXfVNc+JD9ccTgeQq6A+Yw4BiY5atF7b05kiH1CI7282813cdU9
-        nE3D1czBO0SRAsGy14q0hoI=
-X-Google-Smtp-Source: APXvYqzG+ar6Y8pBY7mR2M4rdK/LuvD4Jruap9WhbX21KN7yNPz6OcQGuW8VYUx94SdZGtLQ+obU1w==
-X-Received: by 2002:a05:660c:6ca:: with SMTP id z10mr41362itk.171.1552962040583;
-        Mon, 18 Mar 2019 19:20:40 -0700 (PDT)
+        bh=C+t0zVHPs47I9d5tL5665ViF1svCSYXr8jg/veuOUcY=;
+        b=buni78ReENeZQOyWvJxpQtBt1cMmSyW9HIeC5EQC25mLD5c2VS+kDJQVBnvTwC2wFH
+         OyhZqDJVibZW9m9rk0TGV6X5fvxBvJoCBFzqE3M99XvnUWBAFA6rWEVVNZ9B9xSo+iil
+         4c/ixZdgSEyYLSIR0w2ABop3cQU11V3kEliJOh5Ec1NNaIL6EL1AgIe3vqXYllXloWFX
+         dq0uSsB77/PGmoBNe1NfgDnlsA4soNZFsXHf9ftmNEPhRHfMlt+IluvGkV1Xz0GvWddb
+         b8LcscWwOvkxRKGqi8fPnDhaKRnt62F4KVTLAEsPrgueShrxWtlU3dm1zTZ40SUF9XfP
+         /VCQ==
+X-Gm-Message-State: APjAAAWLYvjZcGHvWgUysNXnnzlDCWtST4kLaY2UBJexfRymkVll1Udk
+        x9aI1GNBhejx5CWy3o6cv8E=
+X-Google-Smtp-Source: APXvYqxURWfkTndIruTHJ8Kv+xJNDAYk6k9lM4YyDybdd38vmqXq24DjoABWPlyc2UlsyaWD+WXMXQ==
+X-Received: by 2002:a24:f001:: with SMTP id s1mr39803ith.60.1552962042682;
+        Mon, 18 Mar 2019 19:20:42 -0700 (PDT)
 Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.39
+        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:20:40 -0700 (PDT)
+        Mon, 18 Mar 2019 19:20:42 -0700 (PDT)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
         George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v2 07/11] staging: mt7621-mmc: Check for nonzero number of scatterlist entries
-Date:   Mon, 18 Mar 2019 20:20:08 -0600
-Message-Id: <20190319022012.11051-8-thirtythreeforty@gmail.com>
+Subject: [PATCH v2 09/11] staging: mt7621-mmc: Immediately notify mmc layer of card change detection
+Date:   Mon, 18 Mar 2019 20:20:10 -0600
+Message-Id: <20190319022012.11051-10-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190319022012.11051-1-thirtythreeforty@gmail.com>
 References: <20190319022012.11051-1-thirtythreeforty@gmail.com>
@@ -73,33 +73,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buffer descriptor setup loop is correct only if it is setting up at
-least one bd struct.  Besides, there is an error somewhere if
-dma_map_sg() returns 0.  So add a paranoid check for this condition.
+There is no need to delay notifying the mmc layer.  Schedule the delayed
+work to run immediately.
 
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- drivers/staging/mt7621-mmc/sd.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/mt7621-mmc/sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-index c272aa780719..31c5b44bd29f 100644
+index df85888f3a03..f64d51c8bd42 100644
 --- a/drivers/staging/mt7621-mmc/sd.c
 +++ b/drivers/staging/mt7621-mmc/sd.c
-@@ -593,7 +593,12 @@ static void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
- 	struct bd *bd;
- 	u32 j;
+@@ -1352,7 +1352,7 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+ 	if (intsts & MSDC_INT_CDSC) {
+ 		if (host->mmc->caps & MMC_CAP_NEEDS_POLL)
+ 			return IRQ_HANDLED;
+-		schedule_delayed_work(&host->card_delaywork, HZ);
++		schedule_delayed_work(&host->card_delaywork, 0);
+ 		/* tuning when plug card ? */
+ 	}
  
--	BUG_ON(sglen > MAX_BD_NUM); /* not support currently */
-+	// Shouldn't happen; we configure the mmc host layer
-+	// based on MAX_BD_NUM:
-+	BUG_ON(sglen > MAX_BD_NUM);
-+	// Correct setup below requires at least one bd
-+	// (and dma_map_sg should not return 0):
-+	BUG_ON(sglen == 0);
- 
- 	gpd = dma->gpd;
- 	bd  = dma->bd;
 -- 
 2.21.0
 
