@@ -2,82 +2,113 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6608C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2512CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969C820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0033A20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfCSRpS (ORCPT
+        id S1727388AbfCSRp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:45:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44292 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfCSRpR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:45:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i2so857594pgj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:45:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QUFGfLG29A75veuqIZweVMZkiXE7Q0ff+BQ3wRQhS1A=;
-        b=ZFFsTsyn1XP7ltfptrw5gxX/I/FY3X83rhdBXxejFAriPjEbpBsK20nOBUXU5HDzft
-         mJ7oFmrgcS+4Ngq1gY9LVeRf6deOJ3gXd4X5wcl25K8NMD4p8G1087B3VSiIZT2zm6Br
-         lO6EHTqkJ6hN52G31lATIkopFBcxAlNHtOhN7t72AM9RLaIrN8+TQUA8cMUogQGIlQc3
-         w5hiNi+tzaC5oK23/BwBtG9HL0tRcgqKp82un3wOckXFq2XseJcpeD2l3s+5THzqF0gl
-         cNT6qty0dF232fgzw87GASA5fkSMcnH/4wLVIypXjrUQoISO42ZRPmdm5rwAOKsACeiZ
-         v5+Q==
-X-Gm-Message-State: APjAAAUnvYcg8abEjyAZf8sI4Zr67GBHQN792dzbgmXW8kgXakkuzzdp
-        JlLm2t+XoIvwEo85iXstl/I=
-X-Google-Smtp-Source: APXvYqy67enyhyWwkK64ocxpnWZ1SskNFq6xA3VBNNLjFcsP3if3JKHyJaa0VZqnmOxQYeWFx9ZEOQ==
-X-Received: by 2002:a17:902:728d:: with SMTP id d13mr3316637pll.65.1553017517250;
-        Tue, 19 Mar 2019 10:45:17 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id z6sm61364315pgo.31.2019.03.19.10.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 10:45:16 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH] kernel/workqueue: Document wq_worker_last_func() argument
-Date:   Tue, 19 Mar 2019 10:45:09 -0700
-Message-Id: <20190319174509.95910-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.20.GIT
+        Tue, 19 Mar 2019 13:45:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55488 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726944AbfCSRp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:45:56 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E6C43089ECB;
+        Tue, 19 Mar 2019 17:45:55 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7908560141;
+        Tue, 19 Mar 2019 17:45:54 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 13:45:52 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+Message-ID: <20190319174552.GA3769@redhat.com>
+References: <20190129165428.3931-1-jglisse@redhat.com>
+ <20190313012706.GB3402@redhat.com>
+ <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+ <20190318170404.GA6786@redhat.com>
+ <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+ <20190319165802.GA3656@redhat.com>
+ <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+ <20190319171847.GC3656@redhat.com>
+ <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 19 Mar 2019 17:45:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch avoids that the following warning is reported when building
-with W=1:
+On Tue, Mar 19, 2019 at 10:33:57AM -0700, Dan Williams wrote:
+> On Tue, Mar 19, 2019 at 10:19 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Tue, Mar 19, 2019 at 10:12:49AM -0700, Andrew Morton wrote:
+> > > On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+> [..]
+> > > Also, the discussion regarding [07/10] is substantial and is ongoing so
+> > > please let's push along wth that.
+> >
+> > I can move it as last patch in the serie but it is needed for ODP RDMA
+> > convertion too. Otherwise i will just move that code into the ODP RDMA
+> > code and will have to move it again into HMM code once i am done with
+> > the nouveau changes and in the meantime i expect other driver will want
+> > to use this 2 helpers too.
+> 
+> I still hold out hope that we can find a way to have productive
+> discussions about the implementation of this infrastructure.
+> Threatening to move the code elsewhere to bypass the feedback is not
+> productive.
 
-kernel/workqueue.c:938: warning: Function parameter or member 'task' not described in 'wq_worker_last_func'
+I am not threatening anything that code is in ODP _today_ with that
+patchset i was factering it out so that i could also use it in nouveau.
+nouveau is built in such way that right now i can not use it directly.
+But i wanted to factor out now in hope that i can get the nouveau
+changes in 5.2 and then convert nouveau in 5.3.
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- kernel/workqueue.c | 1 +
- 1 file changed, 1 insertion(+)
+So when i said that code will be in ODP it just means that instead of
+removing it from ODP i will keep it there and it will just delay more
+code sharing for everyone.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index ddee541ea97a..723964a566b1 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -913,6 +913,7 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
- 
- /**
-  * wq_worker_last_func - retrieve worker's last work function
-+ * @task: Task to retrieve last work function of.
-  *
-  * Determine the last function a worker executed. This is called from
-  * the scheduler to get a worker's last known identity.
--- 
-2.21.0.155.ge902e9bcae20
 
+> 
+> >
+> > >
+> > > What is the review/discussion status of "[PATCH 09/10] mm/hmm: allow to
+> > > mirror vma of a file on a DAX backed filesystem"?
+> >
+> > I explained that this is needed for the ODP RDMA convertion as ODP RDMA
+> > does supported DAX today and thus i can not push that convertion without
+> > that support as otherwise i would regress RDMA ODP.
+> >
+> > Also this is to be use by nouveau which is upstream and there is no
+> > reasons to not support vma that happens to be mmap of a file on a file-
+> > system that is using a DAX block device.
+> >
+> > I do not think Dan had any comment code wise, i think he was complaining
+> > about the wording of the commit not being clear and i proposed an updated
+> > wording that he seemed to like.
+> 
+> Yes, please resend with the updated changelog and I'll ack.
