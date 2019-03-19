@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91717C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D31C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40E42146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11F52146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dF97GjFf"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Yuwz9zhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfCSVyr (ORCPT
+        id S1727664AbfCSVyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:54:47 -0400
-Received: from mail-eopbgr710047.outbound.protection.outlook.com ([40.107.71.47]:1200
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        Tue, 19 Mar 2019 17:54:54 -0400
+Received: from mail-eopbgr800080.outbound.protection.outlook.com ([40.107.80.80]:30503
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727329AbfCSVy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:54:27 -0400
+        id S1727359AbfCSVyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:54:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LjR9UWPf7Rew164U6nf+/IJMYqQTVKpfFL+w7dZdlZ8=;
- b=dF97GjFfDJYN/pkHxl9beupTaRbGyx/aiPTZi0IOTfvIolWhV6V+mmF1Vwvr6nMaR9xEllMz4Sv4+iVfRnNHgv+PVRB8DqyF1Pd2vWzb7oS7l2pzD6PNvYeln/wEtFoYV6N55HzpUpYpkg2b+zsAe9Stb3qtKBGWlQZUVJxkyiI=
-Received: from BL0PR02CA0044.namprd02.prod.outlook.com (2603:10b6:207:3d::21)
- by CY4PR02MB2199.namprd02.prod.outlook.com (2603:10b6:903:9::13) with
+ bh=ikwhRobiAPAIyj7bqWFpDBd/PXuKxOgoI/Euv31ZV1Y=;
+ b=Yuwz9zhpZ6gS6KlEBt2jHrq4wTt6nDnz3//a8N/S2OWS+Ywqiao41MDXRPM93keHSERtMXAXBQx2bU53fR+oqubRCj2SoRROLogB+hGQG8iXAl5P67GAxc0s0etRqplD8SFqaL4PCTFMzaOsUj8XNzalycq0vqEDldruZILEN3Y=
+Received: from BN6PR02CA0076.namprd02.prod.outlook.com (2603:10b6:405:60::17)
+ by DM6PR02MB5915.namprd02.prod.outlook.com (2603:10b6:5:152::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.14; Tue, 19 Mar
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.13; Tue, 19 Mar
  2019 21:54:15 +0000
-Received: from BL2NAM02FT008.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::203) by BL0PR02CA0044.outlook.office365.com
- (2603:10b6:207:3d::21) with Microsoft SMTP Server (version=TLS1_2,
+Received: from BL2NAM02FT025.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by BN6PR02CA0076.outlook.office365.com
+ (2603:10b6:405:60::17) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
  Transport; Tue, 19 Mar 2019 21:54:15 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
  smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
  header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
  header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT008.mail.protection.outlook.com (10.152.76.162) with Microsoft SMTP
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ BL2NAM02FT025.mail.protection.outlook.com (10.152.77.151) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
  via Frontend Transport; Tue, 19 Mar 2019 21:54:14 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:52713 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
         (envelope-from <sonal.santan@xilinx.com>)
-        id 1h6MgY-0001Qb-10; Tue, 19 Mar 2019 14:54:14 -0700
+        id 1h6MgY-0002CI-6V; Tue, 19 Mar 2019 14:54:14 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <sonal.santan@xilinx.com>)
-        id 1h6MgS-0001Ps-SM; Tue, 19 Mar 2019 14:54:08 -0700
+        id 1h6MgT-0001Ps-2x; Tue, 19 Mar 2019 14:54:09 -0700
 Received: from [172.19.73.196] (helo=xsjsonals5570.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <sonals@xilinx.com>)
-        id 1h6MgL-0001KR-R8; Tue, 19 Mar 2019 14:54:01 -0700
+        id 1h6MgL-0001KP-QV; Tue, 19 Mar 2019 14:54:01 -0700
 Received: by xsjsonals5570.xilinx.com (Postfix, from userid 1000)
-        id 8E1D2760022; Tue, 19 Mar 2019 14:54:01 -0700 (PDT)
+        id 8998A76001F; Tue, 19 Mar 2019 14:54:01 -0700 (PDT)
 From:   <sonal.santan@xilinx.com>
 To:     <dri-devel@lists.freedesktop.org>
 CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
         <airlied@redhat.com>, <cyrilc@xilinx.com>, <michals@xilinx.com>,
         <lizhih@xilinx.com>, <hyunk@xilinx.com>,
         Sonal Santan <sonal.santan@xilinx.com>
-Subject: [RFC PATCH Xilinx Alveo 4/6] Add core of XDMA driver
-Date:   Tue, 19 Mar 2019 14:53:59 -0700
-Message-ID: <20190319215401.6562-5-sonal.santan@xilinx.com>
+Subject: [RFC PATCH Xilinx Alveo 3/6] Add platform drivers for various IPs and frameworks
+Date:   Tue, 19 Mar 2019 14:53:58 -0700
+Message-ID: <20190319215401.6562-4-sonal.santan@xilinx.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190319215401.6562-1-sonal.santan@xilinx.com>
 References: <20190319215401.6562-1-sonal.santan@xilinx.com>
@@ -79,26 +79,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(396003)(2980300002)(52084003)(189003)(199004)(63266004)(5024004)(48376002)(106466001)(54906003)(50466002)(30864003)(76176011)(107886003)(81166006)(5660300002)(1076003)(81156014)(14444005)(8676002)(8936002)(50226002)(186003)(6916009)(106002)(103686004)(2906002)(2876002)(51416003)(2351001)(4326008)(26005)(476003)(316002)(126002)(11346002)(486006)(446003)(16586007)(42186006)(36386004)(336012)(478600001)(2616005)(356004)(90966002)(86152003)(36756003)(47776003)(305945005)(426003)(52956003)(53946003)(6266002)(2004002)(559001)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2199;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(346002)(136003)(2980300002)(199004)(189003)(51234002)(336012)(42186006)(6666004)(106466001)(53946003)(63266004)(81166006)(8676002)(81156014)(30864003)(478600001)(11346002)(51416003)(446003)(5024004)(8936002)(52956003)(6916009)(966005)(486006)(476003)(126002)(90966002)(426003)(106002)(14444005)(1076003)(2616005)(186003)(76176011)(6306002)(50226002)(26005)(356004)(2876002)(305945005)(50466002)(36386004)(107886003)(6266002)(54906003)(36756003)(103686004)(86152003)(47776003)(48376002)(2351001)(16586007)(316002)(2906002)(5660300002)(4326008)(2004002)(5001870100001)(579004)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5915;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dc60b6c9-f558-4488-012b-08d6acb56dc1
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:CY4PR02MB2199;
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2199:
+X-MS-Office365-Filtering-Correlation-Id: 10ddb868-f89f-4bd5-5d8d-08d6acb56de8
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:DM6PR02MB5915;
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5915:
+X-MS-Exchange-PUrlCount: 2
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <CY4PR02MB2199D5B762D815404924AD5CBB400@CY4PR02MB2199.namprd02.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM6PR02MB591529539A540362D72449D7BB400@DM6PR02MB5915.namprd02.prod.outlook.com>
 X-Forefront-PRVS: 0981815F2F
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: j4yPhfOnEcLMXGxeIqi+KNLUho8TYcqZD9UKyqHXUyOLIMHHFBnmYVzlkeF+SGYn3JfTntVz7Oj0WBfIy0q8OHFB/LknNfqvbC+zu+PHdrKVkHYF6fAT4ufC63YGB5ke/hLVYxlKVfEZHdztZtAAHMK0cTx5gcp2sZGMVWnQ+7umhDfooAlgekDdgkfCblIxNMKovRiFEx2+BigaxvEBi4iZJOJpr6sfUz+EnaGqSEYPBZBJUs3dWWg0z9qnmMz0vusmwtPfk97u2efqDlR9xvTX0yl5N2MQIYsb4PYLX74V4Ia9fRw3s0Nlq/jdArdnpeZAPmCOLAAibkXKMBlj5cD94Y5sfX+ueajVixNu1WPkpSG2YpPqnw1dvKY6nvStgHwZJidiLyaFHGBr2C+FcFVEMrTGygUJnzEEKI0H5SQ=
+X-Microsoft-Antispam-Message-Info: ogUgcHm797GG4rasnTSTaq/fknYNPjGJngO0GwqcUe3l67uSybzzqAzH1qHjIOYIsvKcASZu0woKZJQfF+e1GhN5MJU67WCzqLqtTT7NPLGIms1EEp2F3cE+WBeieODlDDE6hTN7BZmxo671BSAs7EHk+PYNV956E84BRp4HVLv949hrIMMB0P8nPhwtmp/L9jgt2/9vmb5h/tPEnPTfkF78JZvv5ijavrdGoEb3cLMXMZI/Gv50ni4cFCh/PwHJxFF3jgBI4Ptv76Ro+Xk6MSfuj6eV6u3DvN2eOMNEl/Mxl6e+bORNzAfSvF+J1jnfyleC96PrjM7LNCplxJnmLs8NIek3Kwn/RoHNacgRDs3V9Q5uc2+KTHBw0OkdqKCe4rPfyHOqBzFvOu9ZNWHFi9N9jEvHL1IJA7bHaynFzNI=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 21:54:14.6174
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 21:54:14.8763
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc60b6c9-f558-4488-012b-08d6acb56dc1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ddb868-f89f-4bd5-5d8d-08d6acb56de8
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2199
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5915
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -108,5218 +109,13067 @@ From: Sonal Santan <sonal.santan@xilinx.com>
 
 Signed-off-by: Sonal Santan <sonal.santan@xilinx.com>
 ---
- drivers/gpu/drm/xocl/lib/Makefile.in   |   16 +
- drivers/gpu/drm/xocl/lib/cdev_sgdma.h  |   63 +
- drivers/gpu/drm/xocl/lib/libxdma.c     | 4368 ++++++++++++++++++++++++
- drivers/gpu/drm/xocl/lib/libxdma.h     |  596 ++++
- drivers/gpu/drm/xocl/lib/libxdma_api.h |  127 +
- 5 files changed, 5170 insertions(+)
- create mode 100644 drivers/gpu/drm/xocl/lib/Makefile.in
- create mode 100644 drivers/gpu/drm/xocl/lib/cdev_sgdma.h
- create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.c
- create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.h
- create mode 100644 drivers/gpu/drm/xocl/lib/libxdma_api.h
+ drivers/gpu/drm/xocl/subdev/dna.c          |  356 +++
+ drivers/gpu/drm/xocl/subdev/feature_rom.c  |  412 +++
+ drivers/gpu/drm/xocl/subdev/firewall.c     |  389 +++
+ drivers/gpu/drm/xocl/subdev/fmgr.c         |  198 ++
+ drivers/gpu/drm/xocl/subdev/icap.c         | 2859 ++++++++++++++++++
+ drivers/gpu/drm/xocl/subdev/mailbox.c      | 1868 ++++++++++++
+ drivers/gpu/drm/xocl/subdev/mb_scheduler.c | 3059 ++++++++++++++++++++
+ drivers/gpu/drm/xocl/subdev/microblaze.c   |  722 +++++
+ drivers/gpu/drm/xocl/subdev/mig.c          |  256 ++
+ drivers/gpu/drm/xocl/subdev/sysmon.c       |  385 +++
+ drivers/gpu/drm/xocl/subdev/xdma.c         |  510 ++++
+ drivers/gpu/drm/xocl/subdev/xmc.c          | 1480 ++++++++++
+ drivers/gpu/drm/xocl/subdev/xvc.c          |  461 +++
+ 13 files changed, 12955 insertions(+)
+ create mode 100644 drivers/gpu/drm/xocl/subdev/dna.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/feature_rom.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/firewall.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/fmgr.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/icap.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mailbox.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mb_scheduler.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/microblaze.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mig.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/sysmon.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xdma.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xmc.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xvc.c
 
-diff --git a/drivers/gpu/drm/xocl/lib/Makefile.in b/drivers/gpu/drm/xocl/lib/Makefile.in
+diff --git a/drivers/gpu/drm/xocl/subdev/dna.c b/drivers/gpu/drm/xocl/subdev/dna.c
 new file mode 100644
-index 000000000000..5e16aefd6aba
+index 000000000000..991d98e5b9aa
 --- /dev/null
-+++ b/drivers/gpu/drm/xocl/lib/Makefile.in
-@@ -0,0 +1,16 @@
-+#
-+# Copyright (C) 2016-2018 Xilinx, Inc. All rights reserved.
-+#
-+# Authors:
-+#
-+# This software is licensed under the terms of the GNU General Public
-+# License version 2, as published by the Free Software Foundation, and
-+# may be copied, distributed, and modified under those terms.
-+#
-+# This program is distributed in the hope that it will be useful,
-+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+
-+xocl_lib-y	:= ../lib/libxdma.o
-diff --git a/drivers/gpu/drm/xocl/lib/cdev_sgdma.h b/drivers/gpu/drm/xocl/lib/cdev_sgdma.h
-new file mode 100644
-index 000000000000..db6d3bbfe29b
---- /dev/null
-+++ b/drivers/gpu/drm/xocl/lib/cdev_sgdma.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
-+
-+/*******************************************************************************
-+ *
-+ * Xilinx XDMA IP Core Linux Driver
-+ * Copyright(c) 2015 - 2019 Xilinx, Inc.
-+ *
-+ * Karen Xie <karen.xie@xilinx.com>
-+ *
-+ ******************************************************************************/
-+#ifndef _XDMA_IOCALLS_POSIX_H_
-+#define _XDMA_IOCALLS_POSIX_H_
-+
-+#include <linux/ioctl.h>
-+
-+
-+#define IOCTL_XDMA_PERF_V1 (1)
-+#define XDMA_ADDRMODE_MEMORY (0)
-+#define XDMA_ADDRMODE_FIXED (1)
++++ b/drivers/gpu/drm/xocl/subdev/dna.c
+@@ -0,0 +1,356 @@
++// SPDX-License-Identifier: GPL-2.0
 +
 +/*
-+ * S means "Set" through a ptr,
-+ * T means "Tell" directly with the argument value
-+ * G means "Get": reply by setting through a pointer
-+ * Q means "Query": response is on the return value
-+ * X means "eXchange": switch G and S atomically
-+ * H means "sHift": switch T and Q atomically
++ * A GEM style device manager for PCIe based OpenCL accelerators.
 + *
-+ * _IO(type,nr)		    no arguments
-+ * _IOR(type,nr,datatype)   read data from driver
-+ * _IOW(type,nr.datatype)   write data to driver
-+ * _IORW(type,nr,datatype)  read/write data
++ * Copyright (C) 2018 Xilinx, Inc. All rights reserved.
 + *
-+ * _IOC_DIR(nr)		    returns direction
-+ * _IOC_TYPE(nr)	    returns magic
-+ * _IOC_NR(nr)		    returns number
-+ * _IOC_SIZE(nr)	    returns size
++ * Authors: Chien-Wei Lan <chienwei@xilinx.com>
++ *
 + */
 +
-+struct xdma_performance_ioctl {
-+	/* IOCTL_XDMA_IOCTL_Vx */
-+	uint32_t version;
-+	uint32_t transfer_size;
-+	/* measurement */
-+	uint32_t stopped;
-+	uint32_t iterations;
-+	uint64_t clock_cycle_count;
-+	uint64_t data_cycle_count;
-+	uint64_t pending_count;
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/vmalloc.h>
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++/* Registers are defined in pg150-ultrascale-memory-ip.pdf:
++ * AXI4-Lite Slave Control/Status Register Map
++ */
++#define XLNX_DNA_MEMORY_MAP_MAGIC_IS_DEFINED                        (0x3E4D7732)
++#define XLNX_DNA_MAJOR_MINOR_VERSION_REGISTER_OFFSET                0x00          //  RO
++#define XLNX_DNA_REVISION_REGISTER_OFFSET                           0x04          //  RO
++#define XLNX_DNA_CAPABILITY_REGISTER_OFFSET                         0x08          //  RO
++//#define XLNX_DNA_SCRATCHPAD_REGISTER_OFFSET                         (0x0C)          //  RO (31-1) + RW (0)
++#define XLNX_DNA_STATUS_REGISTER_OFFSET                             0x10            //  RO
++#define XLNX_DNA_FSM_DNA_WORD_WRITE_COUNT_REGISTER_OFFSET           (0x14)          //  RO
++#define XLNX_DNA_FSM_CERTIFICATE_WORD_WRITE_COUNT_REGISTER_OFFSET   (0x18)          //  RO
++#define XLNX_DNA_MESSAGE_START_AXI_ONLY_REGISTER_OFFSET             (0x20)          //  RO (31-1) + RW (0)
++#define XLNX_DNA_READBACK_REGISTER_2_OFFSET                         0x40            //  RO XLNX_DNA_BOARD_DNA_95_64
++#define XLNX_DNA_READBACK_REGISTER_1_OFFSET                         0x44            //  RO XLNX_DNA_BOARD_DNA_63_32
++#define XLNX_DNA_READBACK_REGISTER_0_OFFSET                         0x48            //  RO XLNX_DNA_BOARD_DNA_31_0
++#define XLNX_DNA_DATA_AXI_ONLY_REGISTER_OFFSET                      (0x80)          //  WO
++#define XLNX_DNA_CERTIFICATE_DATA_AXI_ONLY_REGISTER_OFFSET          (0xC0)          //  WO - 512 bit aligned.
++#define XLNX_DNA_MAX_ADDRESS_WORDS                                  (0xC4)
++
++struct xocl_xlnx_dna {
++	void __iomem		*base;
++	struct device		*xlnx_dna_dev;
++	struct mutex		xlnx_dna_lock;
++};
++
++static ssize_t status_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xlnx_dna *xlnx_dna = dev_get_drvdata(dev);
++	u32 status;
++
++	status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++
++	return sprintf(buf, "0x%x\n", status);
++}
++static DEVICE_ATTR_RO(status);
++
++static ssize_t dna_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xlnx_dna *xlnx_dna = dev_get_drvdata(dev);
++	uint32_t dna96_64, dna63_32, dna31_0;
++
++	dna96_64 = ioread32(xlnx_dna->base+XLNX_DNA_READBACK_REGISTER_2_OFFSET);
++	dna63_32 = ioread32(xlnx_dna->base+XLNX_DNA_READBACK_REGISTER_1_OFFSET);
++	dna31_0  = ioread32(xlnx_dna->base+XLNX_DNA_READBACK_REGISTER_0_OFFSET);
++
++	return sprintf(buf, "%08x%08x%08x\n", dna96_64, dna63_32, dna31_0);
++}
++static DEVICE_ATTR_RO(dna);
++
++static ssize_t capability_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xlnx_dna *xlnx_dna = dev_get_drvdata(dev);
++	u32 capability;
++
++	capability = ioread32(xlnx_dna->base+XLNX_DNA_CAPABILITY_REGISTER_OFFSET);
++
++	return sprintf(buf, "0x%x\n", capability);
++}
++static DEVICE_ATTR_RO(capability);
++
++
++static ssize_t dna_version_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xlnx_dna *xlnx_dna = dev_get_drvdata(dev);
++	u32 version;
++
++	version = ioread32(xlnx_dna->base+XLNX_DNA_MAJOR_MINOR_VERSION_REGISTER_OFFSET);
++
++	return sprintf(buf, "%d.%d\n", version>>16, version & 0xffff);
++}
++static DEVICE_ATTR_RO(dna_version);
++
++static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xlnx_dna *xlnx_dna = dev_get_drvdata(dev);
++	u32 revision;
++
++	revision = ioread32(xlnx_dna->base+XLNX_DNA_REVISION_REGISTER_OFFSET);
++
++	return sprintf(buf, "%d\n", revision);
++}
++static DEVICE_ATTR_RO(revision);
++
++static struct attribute *xlnx_dna_attributes[] = {
++	&dev_attr_status.attr,
++	&dev_attr_dna.attr,
++	&dev_attr_capability.attr,
++	&dev_attr_dna_version.attr,
++	&dev_attr_revision.attr,
++	NULL
++};
++
++static const struct attribute_group xlnx_dna_attrgroup = {
++	.attrs = xlnx_dna_attributes,
++};
++
++static uint32_t dna_status(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna *xlnx_dna = platform_get_drvdata(pdev);
++	uint32_t status = 0;
++	uint8_t retries = 10;
++	bool rsa4096done = false;
++
++	if (!xlnx_dna)
++		return status;
++
++	while (!rsa4096done && retries) {
++		status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++		if (status>>8 & 0x1) {
++			rsa4096done = true;
++			break;
++		}
++		msleep(1);
++		retries--;
++	}
++
++	if (retries == 0)
++		return -EBUSY;
++
++	status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++
++	return status;
++}
++
++static uint32_t dna_capability(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna *xlnx_dna = platform_get_drvdata(pdev);
++	u32 capability = 0;
++
++	if (!xlnx_dna)
++		return capability;
++
++	capability = ioread32(xlnx_dna->base+XLNX_DNA_CAPABILITY_REGISTER_OFFSET);
++
++	return capability;
++}
++
++static void dna_write_cert(struct platform_device *pdev, const uint32_t *cert, uint32_t len)
++{
++	struct xocl_xlnx_dna *xlnx_dna = platform_get_drvdata(pdev);
++	int i, j, k;
++	u32 status = 0, words;
++	uint8_t retries = 100;
++	bool sha256done = false;
++	uint32_t convert;
++	uint32_t sign_start, message_words = (len-512)>>2;
++
++	sign_start = message_words;
++
++	if (!xlnx_dna)
++		return;
++
++	iowrite32(0x1, xlnx_dna->base+XLNX_DNA_MESSAGE_START_AXI_ONLY_REGISTER_OFFSET);
++	status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++	xocl_info(&pdev->dev, "Start: status %08x", status);
++
++	for (i = 0; i < message_words; i += 16) {
++
++		retries = 100;
++		sha256done = false;
++
++		while (!sha256done && retries) {
++			status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++			if (!(status >> 4 & 0x1)) {
++				sha256done = true;
++				break;
++			}
++			msleep(10);
++			retries--;
++		}
++		for (j = 0; j < 16; ++j) {
++			convert = (*(cert+i+j) >> 24 & 0xff) | (*(cert+i+j) >> 8 & 0xff00) |
++				(*(cert+i+j) << 8 & 0xff0000) | ((*(cert+i+j) & 0xff) << 24);
++			iowrite32(convert, xlnx_dna->base+XLNX_DNA_DATA_AXI_ONLY_REGISTER_OFFSET+j*4);
++		}
++	}
++	retries = 100;
++	sha256done = false;
++	while (!sha256done && retries) {
++		status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++		if (!(status >> 4 & 0x1)) {
++			sha256done = true;
++			break;
++		}
++		msleep(10);
++		retries--;
++	}
++
++	status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++	words  = ioread32(xlnx_dna->base+XLNX_DNA_FSM_DNA_WORD_WRITE_COUNT_REGISTER_OFFSET);
++	xocl_info(&pdev->dev, "Message: status %08x dna words %d", status, words);
++
++	for (k = 0; k < 128; k += 16) {
++		for (i = 0; i < 16; i++) {
++			j = k+i+sign_start;
++			convert = (*(cert + j) >> 24 & 0xff) | (*(cert + j) >> 8 & 0xff00) |
++				(*(cert + j) << 8 & 0xff0000) | ((*(cert + j) & 0xff) << 24);
++			iowrite32(convert, xlnx_dna->base+XLNX_DNA_CERTIFICATE_DATA_AXI_ONLY_REGISTER_OFFSET + i * 4);
++		}
++	}
++
++	status = ioread32(xlnx_dna->base+XLNX_DNA_STATUS_REGISTER_OFFSET);
++	words  = ioread32(xlnx_dna->base+XLNX_DNA_FSM_CERTIFICATE_WORD_WRITE_COUNT_REGISTER_OFFSET);
++	xocl_info(&pdev->dev, "Signature: status %08x certificate words %d", status, words);
++}
++
++static struct xocl_dna_funcs dna_ops = {
++	.status = dna_status,
++	.capability = dna_capability,
++	.write_cert = dna_write_cert,
 +};
 +
 +
++static void mgmt_sysfs_destroy_xlnx_dna(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna *xlnx_dna;
 +
-+/* IOCTL codes */
++	xlnx_dna = platform_get_drvdata(pdev);
 +
-+#define IOCTL_XDMA_PERF_START   _IOW('q', 1, struct xdma_performance_ioctl *)
-+#define IOCTL_XDMA_PERF_STOP    _IOW('q', 2, struct xdma_performance_ioctl *)
-+#define IOCTL_XDMA_PERF_GET     _IOR('q', 3, struct xdma_performance_ioctl *)
-+#define IOCTL_XDMA_ADDRMODE_SET _IOW('q', 4, int)
-+#define IOCTL_XDMA_ADDRMODE_GET _IOR('q', 5, int)
-+#define IOCTL_XDMA_ALIGN_GET    _IOR('q', 6, int)
++	sysfs_remove_group(&pdev->dev.kobj, &xlnx_dna_attrgroup);
 +
-+#endif /* _XDMA_IOCALLS_POSIX_H_ */
-diff --git a/drivers/gpu/drm/xocl/lib/libxdma.c b/drivers/gpu/drm/xocl/lib/libxdma.c
++}
++
++static int mgmt_sysfs_create_xlnx_dna(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna *xlnx_dna;
++	struct xocl_dev_core *core;
++	int err;
++
++	xlnx_dna = platform_get_drvdata(pdev);
++	core = XDEV(xocl_get_xdev(pdev));
++
++	err = sysfs_create_group(&pdev->dev.kobj, &xlnx_dna_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create pw group failed: 0x%x", err);
++		goto create_grp_failed;
++	}
++
++	return 0;
++
++create_grp_failed:
++	return err;
++}
++
++static int xlnx_dna_probe(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna *xlnx_dna;
++	struct resource *res;
++	int err;
++
++	xlnx_dna = devm_kzalloc(&pdev->dev, sizeof(*xlnx_dna), GFP_KERNEL);
++	if (!xlnx_dna)
++		return -ENOMEM;
++
++	xlnx_dna->base = devm_kzalloc(&pdev->dev, sizeof(void __iomem *), GFP_KERNEL);
++	if (!xlnx_dna->base)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		xocl_err(&pdev->dev, "resource is NULL");
++		return -EINVAL;
++	}
++	xocl_info(&pdev->dev, "IO start: 0x%llx, end: 0x%llx",
++		res->start, res->end);
++
++	xlnx_dna->base = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!xlnx_dna->base) {
++		err = -EIO;
++		xocl_err(&pdev->dev, "Map iomem failed");
++		goto failed;
++	}
++
++	platform_set_drvdata(pdev, xlnx_dna);
++
++	err = mgmt_sysfs_create_xlnx_dna(pdev);
++	if (err)
++		goto create_xlnx_dna_failed;
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_DNA, &dna_ops);
++
++	return 0;
++
++create_xlnx_dna_failed:
++	platform_set_drvdata(pdev, NULL);
++failed:
++	return err;
++}
++
++
++static int xlnx_dna_remove(struct platform_device *pdev)
++{
++	struct xocl_xlnx_dna	*xlnx_dna;
++
++	xlnx_dna = platform_get_drvdata(pdev);
++	if (!xlnx_dna) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++
++	mgmt_sysfs_destroy_xlnx_dna(pdev);
++
++	if (xlnx_dna->base)
++		iounmap(xlnx_dna->base);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, xlnx_dna);
++
++	return 0;
++}
++
++struct platform_device_id xlnx_dna_id_table[] = {
++	{ XOCL_DNA, 0 },
++	{ },
++};
++
++static struct platform_driver	xlnx_dna_driver = {
++	.probe		= xlnx_dna_probe,
++	.remove		= xlnx_dna_remove,
++	.driver		= {
++		.name = "xocl_dna",
++	},
++	.id_table = xlnx_dna_id_table,
++};
++
++int __init xocl_init_dna(void)
++{
++	return platform_driver_register(&xlnx_dna_driver);
++}
++
++void xocl_fini_dna(void)
++{
++	platform_driver_unregister(&xlnx_dna_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/feature_rom.c b/drivers/gpu/drm/xocl/subdev/feature_rom.c
 new file mode 100644
-index 000000000000..290f2c153395
+index 000000000000..f898af6844aa
 --- /dev/null
-+++ b/drivers/gpu/drm/xocl/lib/libxdma.c
-@@ -0,0 +1,4368 @@
++++ b/drivers/gpu/drm/xocl/subdev/feature_rom.c
+@@ -0,0 +1,412 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors:
++ *
++ */
++
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include "../xclfeatures.h"
++#include "../xocl_drv.h"
++
++#define	MAGIC_NUM	0x786e6c78
++struct feature_rom {
++	void __iomem		*base;
++
++	struct FeatureRomHeader	header;
++	unsigned int            dsa_version;
++	bool			unified;
++	bool			mb_mgmt_enabled;
++	bool			mb_sche_enabled;
++	bool			are_dev;
++	bool			aws_dev;
++};
++
++static ssize_t VBNV_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	return sprintf(buf, "%s\n", rom->header.VBNVName);
++}
++static DEVICE_ATTR_RO(VBNV);
++
++static ssize_t dr_base_addr_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	//TODO: Fix: DRBaseAddress no longer required in feature rom
++	if (rom->header.MajorVersion >= 10)
++		return sprintf(buf, "%llu\n", rom->header.DRBaseAddress);
++	else
++		return sprintf(buf, "%u\n", 0);
++}
++static DEVICE_ATTR_RO(dr_base_addr);
++
++static ssize_t ddr_bank_count_max_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	return sprintf(buf, "%d\n", rom->header.DDRChannelCount);
++}
++static DEVICE_ATTR_RO(ddr_bank_count_max);
++
++static ssize_t ddr_bank_size_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	return sprintf(buf, "%d\n", rom->header.DDRChannelSize);
++}
++static DEVICE_ATTR_RO(ddr_bank_size);
++
++static ssize_t timestamp_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	return sprintf(buf, "%llu\n", rom->header.TimeSinceEpoch);
++}
++static DEVICE_ATTR_RO(timestamp);
++
++static ssize_t FPGA_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct feature_rom *rom = platform_get_drvdata(to_platform_device(dev));
++
++	return sprintf(buf, "%s\n", rom->header.FPGAPartName);
++}
++static DEVICE_ATTR_RO(FPGA);
++
++static struct attribute *rom_attrs[] = {
++	&dev_attr_VBNV.attr,
++	&dev_attr_dr_base_addr.attr,
++	&dev_attr_ddr_bank_count_max.attr,
++	&dev_attr_ddr_bank_size.attr,
++	&dev_attr_timestamp.attr,
++	&dev_attr_FPGA.attr,
++	NULL,
++};
++
++static struct attribute_group rom_attr_group = {
++	.attrs = rom_attrs,
++};
++
++static unsigned int dsa_version(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->dsa_version;
++}
++
++static bool is_unified(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->unified;
++}
++
++static bool mb_mgmt_on(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->mb_mgmt_enabled;
++}
++
++static bool mb_sched_on(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->mb_sche_enabled && !XOCL_DSA_MB_SCHE_OFF(xocl_get_xdev(pdev));
++}
++
++static uint32_t *get_cdma_base_addresses(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return (rom->header.FeatureBitMap & CDMA) ? rom->header.CDMABaseAddress : 0;
++}
++
++static u16 get_ddr_channel_count(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->header.DDRChannelCount;
++}
++
++static u64 get_ddr_channel_size(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->header.DDRChannelSize;
++}
++
++static u64 get_timestamp(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->header.TimeSinceEpoch;
++}
++
++static bool is_are(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->are_dev;
++}
++
++static bool is_aws(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	return rom->aws_dev;
++}
++
++static bool verify_timestamp(struct platform_device *pdev, u64 timestamp)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	xocl_info(&pdev->dev, "DSA timestamp: 0x%llx",
++		rom->header.TimeSinceEpoch);
++	xocl_info(&pdev->dev, "Verify timestamp: 0x%llx", timestamp);
++	return (rom->header.TimeSinceEpoch == timestamp);
++}
++
++static void get_raw_header(struct platform_device *pdev, void *header)
++{
++	struct feature_rom *rom;
++
++	rom = platform_get_drvdata(pdev);
++	BUG_ON(!rom);
++
++	memcpy(header, &rom->header, sizeof(rom->header));
++}
++
++static struct xocl_rom_funcs rom_ops = {
++	.dsa_version = dsa_version,
++	.is_unified = is_unified,
++	.mb_mgmt_on = mb_mgmt_on,
++	.mb_sched_on = mb_sched_on,
++	.cdma_addr = get_cdma_base_addresses,
++	.get_ddr_channel_count = get_ddr_channel_count,
++	.get_ddr_channel_size = get_ddr_channel_size,
++	.is_are = is_are,
++	.is_aws = is_aws,
++	.verify_timestamp = verify_timestamp,
++	.get_timestamp = get_timestamp,
++	.get_raw_header = get_raw_header,
++};
++
++static int feature_rom_probe(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++	struct resource *res;
++	u32	val;
++	u16	vendor, did;
++	char	*tmp;
++	int	ret;
++
++	rom = devm_kzalloc(&pdev->dev, sizeof(*rom), GFP_KERNEL);
++	if (!rom)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rom->base = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!rom->base) {
++		ret = -EIO;
++		xocl_err(&pdev->dev, "Map iomem failed");
++		goto failed;
++	}
++
++	val = ioread32(rom->base);
++	if (val != MAGIC_NUM) {
++		vendor = XOCL_PL_TO_PCI_DEV(pdev)->vendor;
++		did = XOCL_PL_TO_PCI_DEV(pdev)->device;
++		if (vendor == 0x1d0f && (did == 0x1042 || did == 0xf010)) { // MAGIC, we should define elsewhere
++			xocl_info(&pdev->dev,
++				"Found AWS VU9P Device without featureROM");
++			/*
++			 * This is AWS device. Fill the FeatureROM struct.
++			 * Right now it doesn't have FeatureROM
++			 */
++			memset(rom->header.EntryPointString, 0,
++				sizeof(rom->header.EntryPointString));
++			strncpy(rom->header.EntryPointString, "xlnx", 4);
++			memset(rom->header.FPGAPartName, 0,
++				sizeof(rom->header.FPGAPartName));
++			strncpy(rom->header.FPGAPartName, "AWS VU9P", 8);
++			memset(rom->header.VBNVName, 0,
++				sizeof(rom->header.VBNVName));
++			strncpy(rom->header.VBNVName,
++				"xilinx_aws-vu9p-f1_dynamic_5_0", 35);
++			rom->header.MajorVersion = 4;
++			rom->header.MinorVersion = 0;
++			rom->header.VivadoBuildID = 0xabcd;
++			rom->header.IPBuildID = 0xabcd;
++			rom->header.TimeSinceEpoch = 0xabcd;
++			rom->header.DDRChannelCount = 4;
++			rom->header.DDRChannelSize = 16;
++			rom->header.FeatureBitMap = 0x0;
++			rom->header.FeatureBitMap = UNIFIED_PLATFORM;
++			rom->unified = true;
++			rom->aws_dev = true;
++
++			xocl_info(&pdev->dev, "Enabling AWS dynamic 5.0 DSA");
++		} else {
++			xocl_err(&pdev->dev, "Magic number does not match, actual 0x%x, expected 0x%x",
++					val, MAGIC_NUM);
++			ret = -ENODEV;
++			goto failed;
++		}
++	}
++
++	xocl_memcpy_fromio(&rom->header, rom->base, sizeof(rom->header));
++
++	if (strstr(rom->header.VBNVName, "-xare")) {
++		/*
++		 * ARE device, ARE is mapped like another DDR inside FPGA;
++		 * map_connects as M04_AXI
++		 */
++		rom->header.DDRChannelCount = rom->header.DDRChannelCount - 1;
++		rom->are_dev = true;
++	}
++
++	rom->dsa_version = 0;
++	if (strstr(rom->header.VBNVName, "5_0"))
++		rom->dsa_version = 50;
++	else if (strstr(rom->header.VBNVName, "5_1")
++		 || strstr(rom->header.VBNVName, "u200_xdma_201820_1"))
++		rom->dsa_version = 51;
++	else if (strstr(rom->header.VBNVName, "5_2")
++		 || strstr(rom->header.VBNVName, "u200_xdma_201820_2")
++		 || strstr(rom->header.VBNVName, "u250_xdma_201820_1")
++		 || strstr(rom->header.VBNVName, "201830"))
++		rom->dsa_version = 52;
++	else if (strstr(rom->header.VBNVName, "5_3"))
++		rom->dsa_version = 53;
++
++	if (rom->header.FeatureBitMap & UNIFIED_PLATFORM)
++		rom->unified = true;
++
++	if (rom->header.FeatureBitMap & BOARD_MGMT_ENBLD)
++		rom->mb_mgmt_enabled = true;
++
++	if (rom->header.FeatureBitMap & MB_SCHEDULER)
++		rom->mb_sche_enabled = true;
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &rom_attr_group);
++	if (ret) {
++		xocl_err(&pdev->dev, "create sysfs failed");
++		goto failed;
++	}
++
++	tmp = rom->header.EntryPointString;
++	xocl_info(&pdev->dev, "ROM magic : %c%c%c%c",
++		tmp[0], tmp[1], tmp[2], tmp[3]);
++	xocl_info(&pdev->dev, "VBNV: %s", rom->header.VBNVName);
++	xocl_info(&pdev->dev, "DDR channel count : %d",
++		rom->header.DDRChannelCount);
++	xocl_info(&pdev->dev, "DDR channel size: %d GB",
++		rom->header.DDRChannelSize);
++	xocl_info(&pdev->dev, "Major Version: %d", rom->header.MajorVersion);
++	xocl_info(&pdev->dev, "Minor Version: %d", rom->header.MinorVersion);
++	xocl_info(&pdev->dev, "IPBuildID: %u", rom->header.IPBuildID);
++	xocl_info(&pdev->dev, "TimeSinceEpoch: %llx",
++		rom->header.TimeSinceEpoch);
++	xocl_info(&pdev->dev, "FeatureBitMap: %llx", rom->header.FeatureBitMap);
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_FEATURE_ROM, &rom_ops);
++	platform_set_drvdata(pdev, rom);
++
++	return 0;
++
++failed:
++	if (rom->base)
++		iounmap(rom->base);
++	devm_kfree(&pdev->dev, rom);
++	return ret;
++}
++
++static int feature_rom_remove(struct platform_device *pdev)
++{
++	struct feature_rom *rom;
++
++	xocl_info(&pdev->dev, "Remove feature rom");
++	rom = platform_get_drvdata(pdev);
++	if (!rom) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++	if (rom->base)
++		iounmap(rom->base);
++
++	sysfs_remove_group(&pdev->dev.kobj, &rom_attr_group);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, rom);
++	return 0;
++}
++
++struct platform_device_id rom_id_table[] =  {
++	{ XOCL_FEATURE_ROM, 0 },
++	{ },
++};
++
++static struct platform_driver	feature_rom_driver = {
++	.probe		= feature_rom_probe,
++	.remove		= feature_rom_remove,
++	.driver		= {
++		.name = XOCL_FEATURE_ROM,
++	},
++	.id_table = rom_id_table,
++};
++
++int __init xocl_init_feature_rom(void)
++{
++	return platform_driver_register(&feature_rom_driver);
++}
++
++void xocl_fini_feature_rom(void)
++{
++	return platform_driver_unregister(&feature_rom_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/firewall.c b/drivers/gpu/drm/xocl/subdev/firewall.c
+new file mode 100644
+index 000000000000..a32766507ae0
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/firewall.c
+@@ -0,0 +1,389 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/*
 + *  Copyright (C) 2017-2019 Xilinx, Inc. All rights reserved.
-+ *  Author: Karen Xie <karen.xie@xilinx.com>
++ *
++ *  Utility Functions for AXI firewall IP.
++ *  Author: Lizhi.Hou@Xilinx.com
 + *
 + */
-+#define pr_fmt(fmt)     KBUILD_MODNAME ":%s: " fmt, __func__
 +
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/mm.h>
-+#include <linux/errno.h>
-+#include <linux/sched.h>
-+#include <linux/vmalloc.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/ktime.h>
++#include <linux/rtc.h>
++#include "../xocl_drv.h"
 +
-+#include "libxdma.h"
-+#include "libxdma_api.h"
-+#include "cdev_sgdma.h"
++/* Firewall registers */
++#define	FAULT_STATUS				0x0
++#define	SOFT_CTRL				0x4
++#define	UNBLOCK_CTRL				0x8
++// Firewall error bits
++#define READ_RESPONSE_BUSY                        BIT(0)
++#define RECS_ARREADY_MAX_WAIT                     BIT(1)
++#define RECS_CONTINUOUS_RTRANSFERS_MAX_WAIT       BIT(2)
++#define ERRS_RDATA_NUM                            BIT(3)
++#define ERRS_RID                                  BIT(4)
++#define WRITE_RESPONSE_BUSY                       BIT(16)
++#define RECS_AWREADY_MAX_WAIT                     BIT(17)
++#define RECS_WREADY_MAX_WAIT                      BIT(18)
++#define RECS_WRITE_TO_BVALID_MAX_WAIT             BIT(19)
++#define ERRS_BRESP                                BIT(20)
 +
-+/* SECTION: Module licensing */
++#define	FIREWALL_STATUS_BUSY	(READ_RESPONSE_BUSY | WRITE_RESPONSE_BUSY)
++#define	CLEAR_RESET_GPIO		0
 +
-+#ifdef __LIBXDMA_MOD__
-+#include "version.h"
-+#define DRV_MODULE_NAME		"libxdma"
-+#define DRV_MODULE_DESC		"Xilinx XDMA Base Driver"
-+#define DRV_MODULE_RELDATE	"Feb. 2017"
++#define	READ_STATUS(fw, id)			\
++	XOCL_READ_REG32(fw->base_addrs[id] + FAULT_STATUS)
++#define	WRITE_UNBLOCK_CTRL(fw, id, val)			\
++	XOCL_WRITE_REG32(val, fw->base_addrs[id] + UNBLOCK_CTRL)
 +
-+static char version[] =
-+	DRV_MODULE_DESC " " DRV_MODULE_NAME " v" DRV_MODULE_VERSION "\n";
++#define	IS_FIRED(fw, id) (READ_STATUS(fw, id) & ~FIREWALL_STATUS_BUSY)
 +
-+MODULE_AUTHOR("Xilinx, Inc.");
-+MODULE_DESCRIPTION(DRV_MODULE_DESC);
-+MODULE_VERSION(DRV_MODULE_VERSION);
-+MODULE_LICENSE("GPL v2");
-+#endif
++#define	BUSY_RETRY_COUNT		20
++#define	BUSY_RETRY_INTERVAL		100		/* ms */
++#define	CLEAR_RETRY_COUNT		4
++#define	CLEAR_RETRY_INTERVAL		2		/* ms */
 +
-+/* Module Parameters */
-+static unsigned int poll_mode;
-+module_param(poll_mode, uint, 0644);
-+MODULE_PARM_DESC(poll_mode, "Set 1 for hw polling, default is 0 (interrupts)");
++#define	MAX_LEVEL		16
 +
-+static unsigned int interrupt_mode;
-+module_param(interrupt_mode, uint, 0644);
-+MODULE_PARM_DESC(interrupt_mode, "0 - MSI-x , 1 - MSI, 2 - Legacy");
++struct firewall {
++	void __iomem		*base_addrs[MAX_LEVEL];
++	u32			max_level;
++	void __iomem		*gpio_addr;
 +
-+static unsigned int enable_credit_mp;
-+module_param(enable_credit_mp, uint, 0644);
-+MODULE_PARM_DESC(enable_credit_mp, "Set 1 to enable creidt feature, default is 0 (no credit control)");
++	u32			curr_status;
++	int			curr_level;
 +
-+/*
-+ * xdma device management
-+ * maintains a list of the xdma devices
-+ */
-+static LIST_HEAD(xdev_list);
-+static DEFINE_MUTEX(xdev_mutex);
++	u32			err_detected_status;
++	u32			err_detected_level;
++	u64			err_detected_time;
 +
-+static LIST_HEAD(xdev_rcu_list);
-+static DEFINE_SPINLOCK(xdev_rcu_lock);
++	bool			inject_firewall;
++};
 +
-+#ifndef list_last_entry
-+#define list_last_entry(ptr, type, member) \
-+		list_entry((ptr)->prev, type, member)
-+#endif
++static int clear_firewall(struct platform_device *pdev);
++static u32 check_firewall(struct platform_device *pdev, int *level);
 +
-+static inline void xdev_list_add(struct xdma_dev *xdev)
++static int get_prop(struct platform_device *pdev, u32 prop, void *val)
 +{
-+	mutex_lock(&xdev_mutex);
-+	if (list_empty(&xdev_list))
-+		xdev->idx = 0;
-+	else {
-+		struct xdma_dev *last;
-+
-+		last = list_last_entry(&xdev_list, struct xdma_dev, list_head);
-+		xdev->idx = last->idx + 1;
-+	}
-+	list_add_tail(&xdev->list_head, &xdev_list);
-+	mutex_unlock(&xdev_mutex);
-+
-+	dbg_init("dev %s, xdev 0x%p, xdma idx %d.\n",
-+		dev_name(&xdev->pdev->dev), xdev, xdev->idx);
-+
-+	spin_lock(&xdev_rcu_lock);
-+	list_add_tail_rcu(&xdev->rcu_node, &xdev_rcu_list);
-+	spin_unlock(&xdev_rcu_lock);
-+}
-+
-+#undef list_last_entry
-+
-+static inline void xdev_list_remove(struct xdma_dev *xdev)
-+{
-+	mutex_lock(&xdev_mutex);
-+	list_del(&xdev->list_head);
-+	mutex_unlock(&xdev_mutex);
-+
-+	spin_lock(&xdev_rcu_lock);
-+	list_del_rcu(&xdev->rcu_node);
-+	spin_unlock(&xdev_rcu_lock);
-+	synchronize_rcu();
-+}
-+
-+static struct xdma_dev *xdev_find_by_pdev(struct pci_dev *pdev)
-+{
-+	struct xdma_dev *xdev, *tmp;
-+
-+	mutex_lock(&xdev_mutex);
-+	list_for_each_entry_safe(xdev, tmp, &xdev_list, list_head) {
-+		if (xdev->pdev == pdev) {
-+			mutex_unlock(&xdev_mutex);
-+			return xdev;
-+		}
-+	}
-+	mutex_unlock(&xdev_mutex);
-+return NULL;
-+}
-+
-+static inline int debug_check_dev_hndl(const char *fname, struct pci_dev *pdev,
-+				 void *hndl)
-+{
-+	struct xdma_dev *xdev;
-+
-+	if (!pdev)
-+		return -EINVAL;
-+
-+	xdev = xdev_find_by_pdev(pdev);
-+	if (!xdev) {
-+		pr_info("%s pdev 0x%p, hndl 0x%p, NO match found!\n",
-+			fname, pdev, hndl);
-+		return -EINVAL;
-+	}
-+	if (xdev != hndl) {
-+		pr_err("%s pdev 0x%p, hndl 0x%p != 0x%p!\n",
-+			fname, pdev, hndl, xdev);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef __LIBXDMA_DEBUG__
-+/* SECTION: Function definitions */
-+inline void __write_register(const char *fn, u32 value, void *iomem, unsigned long off)
-+{
-+	pr_err("%s: w reg 0x%lx(0x%p), 0x%x.\n", fn, off, iomem, value);
-+	iowrite32(value, iomem);
-+}
-+#define write_register(v, mem, off) __write_register(__func__, v, mem, off)
-+#else
-+#define write_register(v, mem, off) iowrite32(v, mem)
-+#endif
-+
-+inline u32 read_register(void *iomem)
-+{
-+	return ioread32(iomem);
-+}
-+
-+static inline u32 build_u32(u32 hi, u32 lo)
-+{
-+	return ((hi & 0xFFFFUL) << 16) | (lo & 0xFFFFUL);
-+}
-+
-+static inline u64 build_u64(u64 hi, u64 lo)
-+{
-+	return ((hi & 0xFFFFFFFULL) << 32) | (lo & 0xFFFFFFFFULL);
-+}
-+
-+static void check_nonzero_interrupt_status(struct xdma_dev *xdev)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+	u32 w;
-+
-+	w = read_register(&reg->user_int_enable);
-+	if (w)
-+		pr_info("%s xdma%d user_int_enable = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+
-+	w = read_register(&reg->channel_int_enable);
-+	if (w)
-+		pr_info("%s xdma%d channel_int_enable = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+
-+	w = read_register(&reg->user_int_request);
-+	if (w)
-+		pr_info("%s xdma%d user_int_request = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+	w = read_register(&reg->channel_int_request);
-+	if (w)
-+		pr_info("%s xdma%d channel_int_request = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+
-+	w = read_register(&reg->user_int_pending);
-+	if (w)
-+		pr_info("%s xdma%d user_int_pending = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+	w = read_register(&reg->channel_int_pending);
-+	if (w)
-+		pr_info("%s xdma%d channel_int_pending = 0x%08x\n",
-+			dev_name(&xdev->pdev->dev), xdev->idx, w);
-+}
-+
-+/* channel_interrupts_enable -- Enable interrupts we are interested in */
-+static void channel_interrupts_enable(struct xdma_dev *xdev, u32 mask)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+
-+	write_register(mask, &reg->channel_int_enable_w1s, XDMA_OFS_INT_CTRL);
-+}
-+
-+/* channel_interrupts_disable -- Disable interrupts we not interested in */
-+static void channel_interrupts_disable(struct xdma_dev *xdev, u32 mask)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+
-+	write_register(mask, &reg->channel_int_enable_w1c, XDMA_OFS_INT_CTRL);
-+}
-+
-+/* user_interrupts_enable -- Enable interrupts we are interested in */
-+static void user_interrupts_enable(struct xdma_dev *xdev, u32 mask)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+
-+	write_register(mask, &reg->user_int_enable_w1s, XDMA_OFS_INT_CTRL);
-+}
-+
-+/* user_interrupts_disable -- Disable interrupts we not interested in */
-+static void user_interrupts_disable(struct xdma_dev *xdev, u32 mask)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+
-+	write_register(mask, &reg->user_int_enable_w1c, XDMA_OFS_INT_CTRL);
-+}
-+
-+/* read_interrupts -- Print the interrupt controller status */
-+static u32 read_interrupts(struct xdma_dev *xdev)
-+{
-+	struct interrupt_regs *reg = (struct interrupt_regs *)
-+		(xdev->bar[xdev->config_bar_idx] + XDMA_OFS_INT_CTRL);
-+	u32 lo;
-+	u32 hi;
-+
-+	/* extra debugging; inspect complete engine set of registers */
-+	hi = read_register(&reg->user_int_request);
-+	dbg_io("ioread32(0x%p) returned 0x%08x (user_int_request).\n",
-+		&reg->user_int_request, hi);
-+	lo = read_register(&reg->channel_int_request);
-+	dbg_io("ioread32(0x%p) returned 0x%08x (channel_int_request)\n",
-+		&reg->channel_int_request, lo);
-+
-+	/* return interrupts: user in upper 16-bits, channel in lower 16-bits */
-+	return build_u32(hi, lo);
-+}
-+
-+void enable_perf(struct xdma_engine *engine)
-+{
-+	u32 w;
-+
-+	w = XDMA_PERF_CLEAR;
-+	write_register(w, &engine->regs->perf_ctrl,
-+			(unsigned long)(&engine->regs->perf_ctrl) -
-+			(unsigned long)(&engine->regs));
-+	read_register(&engine->regs->identifier);
-+	w = XDMA_PERF_AUTO | XDMA_PERF_RUN;
-+	write_register(w, &engine->regs->perf_ctrl,
-+			(unsigned long)(&engine->regs->perf_ctrl) -
-+			(unsigned long)(&engine->regs));
-+	read_register(&engine->regs->identifier);
-+
-+	dbg_perf("IOCTL_XDMA_PERF_START\n");
-+
-+}
-+EXPORT_SYMBOL_GPL(enable_perf);
-+
-+void get_perf_stats(struct xdma_engine *engine)
-+{
-+	u32 hi;
-+	u32 lo;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(!engine->xdma_perf);
-+
-+	hi = 0;
-+	lo = read_register(&engine->regs->completed_desc_count);
-+	engine->xdma_perf->iterations = build_u64(hi, lo);
-+
-+	hi = read_register(&engine->regs->perf_cyc_hi);
-+	lo = read_register(&engine->regs->perf_cyc_lo);
-+
-+	engine->xdma_perf->clock_cycle_count = build_u64(hi, lo);
-+
-+	hi = read_register(&engine->regs->perf_dat_hi);
-+	lo = read_register(&engine->regs->perf_dat_lo);
-+	engine->xdma_perf->data_cycle_count = build_u64(hi, lo);
-+
-+	hi = read_register(&engine->regs->perf_pnd_hi);
-+	lo = read_register(&engine->regs->perf_pnd_lo);
-+	engine->xdma_perf->pending_count = build_u64(hi, lo);
-+}
-+EXPORT_SYMBOL_GPL(get_perf_stats);
-+
-+static void engine_reg_dump(struct xdma_engine *engine)
-+{
-+	u32 w;
-+
-+	BUG_ON(!engine);
-+
-+	w = read_register(&engine->regs->identifier);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (id).\n",
-+		engine->name, &engine->regs->identifier, w);
-+	w &= BLOCK_ID_MASK;
-+	if (w != BLOCK_ID_HEAD) {
-+		pr_info("%s: engine id missing, 0x%08x exp. & 0x%x = 0x%x\n",
-+			 engine->name, w, BLOCK_ID_MASK, BLOCK_ID_HEAD);
-+		return;
-+	}
-+	/* extra debugging; inspect complete engine set of registers */
-+	w = read_register(&engine->regs->status);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (status).\n",
-+		engine->name, &engine->regs->status, w);
-+	w = read_register(&engine->regs->control);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (control)\n",
-+		engine->name, &engine->regs->control, w);
-+	w = read_register(&engine->sgdma_regs->first_desc_lo);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (first_desc_lo)\n",
-+		engine->name, &engine->sgdma_regs->first_desc_lo, w);
-+	w = read_register(&engine->sgdma_regs->first_desc_hi);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (first_desc_hi)\n",
-+		engine->name, &engine->sgdma_regs->first_desc_hi, w);
-+	w = read_register(&engine->sgdma_regs->first_desc_adjacent);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (first_desc_adjacent).\n",
-+		engine->name, &engine->sgdma_regs->first_desc_adjacent, w);
-+	w = read_register(&engine->regs->completed_desc_count);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (completed_desc_count).\n",
-+		engine->name, &engine->regs->completed_desc_count, w);
-+	w = read_register(&engine->regs->interrupt_enable_mask);
-+	pr_info("%s: ioread32(0x%p) = 0x%08x (interrupt_enable_mask)\n",
-+		engine->name, &engine->regs->interrupt_enable_mask, w);
-+}
-+
-+/**
-+ * engine_status_read() - read status of SG DMA engine (optionally reset)
-+ *
-+ * Stores status in engine->status.
-+ *
-+ * @return -1 on failure, status register otherwise
-+ */
-+static void engine_status_dump(struct xdma_engine *engine)
-+{
-+	u32 v = engine->status;
-+	char buffer[256];
-+	char *buf = buffer;
-+	int len = 0;
-+
-+	len = sprintf(buf, "SG engine %s status: 0x%08x: ", engine->name, v);
-+
-+	if ((v & XDMA_STAT_BUSY))
-+		len += sprintf(buf + len, "BUSY,");
-+	if ((v & XDMA_STAT_DESC_STOPPED))
-+		len += sprintf(buf + len, "DESC_STOPPED,");
-+	if ((v & XDMA_STAT_DESC_COMPLETED))
-+		len += sprintf(buf + len, "DESC_COMPL,");
-+
-+	/* common H2C & C2H */
-+	if ((v & XDMA_STAT_COMMON_ERR_MASK)) {
-+		if ((v & XDMA_STAT_ALIGN_MISMATCH))
-+			len += sprintf(buf + len, "ALIGN_MISMATCH ");
-+		if ((v & XDMA_STAT_MAGIC_STOPPED))
-+			len += sprintf(buf + len, "MAGIC_STOPPED ");
-+		if ((v & XDMA_STAT_INVALID_LEN))
-+			len += sprintf(buf + len, "INVLIAD_LEN ");
-+		if ((v & XDMA_STAT_IDLE_STOPPED))
-+			len += sprintf(buf + len, "IDLE_STOPPED ");
-+		buf[len - 1] = ',';
-+	}
-+
-+	if (engine->dir == DMA_TO_DEVICE) {
-+		/* H2C only */
-+		if ((v & XDMA_STAT_H2C_R_ERR_MASK)) {
-+			len += sprintf(buf + len, "R:");
-+			if ((v & XDMA_STAT_H2C_R_UNSUPP_REQ))
-+				len += sprintf(buf + len, "UNSUPP_REQ ");
-+			if ((v & XDMA_STAT_H2C_R_COMPL_ABORT))
-+				len += sprintf(buf + len, "COMPL_ABORT ");
-+			if ((v & XDMA_STAT_H2C_R_PARITY_ERR))
-+				len += sprintf(buf + len, "PARITY ");
-+			if ((v & XDMA_STAT_H2C_R_HEADER_EP))
-+				len += sprintf(buf + len, "HEADER_EP ");
-+			if ((v & XDMA_STAT_H2C_R_UNEXP_COMPL))
-+				len += sprintf(buf + len, "UNEXP_COMPL ");
-+			buf[len - 1] = ',';
-+		}
-+
-+		if ((v & XDMA_STAT_H2C_W_ERR_MASK)) {
-+			len += sprintf(buf + len, "W:");
-+			if ((v & XDMA_STAT_H2C_W_DECODE_ERR))
-+				len += sprintf(buf + len, "DECODE_ERR ");
-+			if ((v & XDMA_STAT_H2C_W_SLAVE_ERR))
-+				len += sprintf(buf + len, "SLAVE_ERR ");
-+			buf[len - 1] = ',';
-+		}
-+
-+	} else {
-+		/* C2H only */
-+		if ((v & XDMA_STAT_C2H_R_ERR_MASK)) {
-+			len += sprintf(buf + len, "R:");
-+			if ((v & XDMA_STAT_C2H_R_DECODE_ERR))
-+				len += sprintf(buf + len, "DECODE_ERR ");
-+			if ((v & XDMA_STAT_C2H_R_SLAVE_ERR))
-+				len += sprintf(buf + len, "SLAVE_ERR ");
-+			buf[len - 1] = ',';
-+		}
-+	}
-+
-+	/* common H2C & C2H */
-+	if ((v & XDMA_STAT_DESC_ERR_MASK)) {
-+		len += sprintf(buf + len, "DESC_ERR:");
-+		if ((v & XDMA_STAT_DESC_UNSUPP_REQ))
-+			len += sprintf(buf + len, "UNSUPP_REQ ");
-+		if ((v & XDMA_STAT_DESC_COMPL_ABORT))
-+			len += sprintf(buf + len, "COMPL_ABORT ");
-+		if ((v & XDMA_STAT_DESC_PARITY_ERR))
-+			len += sprintf(buf + len, "PARITY ");
-+		if ((v & XDMA_STAT_DESC_HEADER_EP))
-+			len += sprintf(buf + len, "HEADER_EP ");
-+		if ((v & XDMA_STAT_DESC_UNEXP_COMPL))
-+			len += sprintf(buf + len, "UNEXP_COMPL ");
-+		buf[len - 1] = ',';
-+	}
-+
-+	buf[len - 1] = '\0';
-+	pr_info("%s\n", buffer);
-+}
-+
-+static u32 engine_status_read(struct xdma_engine *engine, bool clear, bool dump)
-+{
-+	u32 value;
-+
-+	BUG_ON(!engine);
-+
-+	if (dump)
-+		engine_reg_dump(engine);
-+
-+	/* read status register */
-+	if (clear)
-+		value = engine->status =
-+			read_register(&engine->regs->status_rc);
-+	else
-+		value = engine->status = read_register(&engine->regs->status);
-+
-+	if (dump)
-+		engine_status_dump(engine);
-+
-+	return value;
-+}
-+
-+/**
-+ * xdma_engine_stop() - stop an SG DMA engine
-+ *
-+ */
-+static void xdma_engine_stop(struct xdma_engine *engine)
-+{
-+	u32 w;
-+
-+	BUG_ON(!engine);
-+	dbg_tfr("(engine=%p)\n", engine);
-+
-+	w = 0;
-+	w |= (u32)XDMA_CTRL_IE_DESC_ALIGN_MISMATCH;
-+	w |= (u32)XDMA_CTRL_IE_MAGIC_STOPPED;
-+	w |= (u32)XDMA_CTRL_IE_READ_ERROR;
-+	w |= (u32)XDMA_CTRL_IE_DESC_ERROR;
-+
-+	if (poll_mode) {
-+		w |= (u32) XDMA_CTRL_POLL_MODE_WB;
-+	} else {
-+		w |= (u32)XDMA_CTRL_IE_DESC_STOPPED;
-+		w |= (u32)XDMA_CTRL_IE_DESC_COMPLETED;
-+
-+		/* Disable IDLE STOPPED for MM */
-+		if ((engine->streaming && (engine->dir == DMA_FROM_DEVICE)) ||
-+		    (engine->xdma_perf))
-+			w |= (u32)XDMA_CTRL_IE_IDLE_STOPPED;
-+	}
-+
-+	dbg_tfr("Stopping SG DMA %s engine; writing 0x%08x to 0x%p.\n",
-+			engine->name, w, (u32 *)&engine->regs->control);
-+	write_register(w, &engine->regs->control,
-+			(unsigned long)(&engine->regs->control) -
-+			(unsigned long)(&engine->regs));
-+	/* dummy read of status register to flush all previous writes */
-+	dbg_tfr("(%s) done\n", engine->name);
-+}
-+
-+static void engine_start_mode_config(struct xdma_engine *engine)
-+{
-+	u32 w;
-+
-+	BUG_ON(!engine);
-+
-+	/* If a perf test is running, enable the engine interrupts */
-+	if (engine->xdma_perf) {
-+		w = XDMA_CTRL_IE_DESC_STOPPED;
-+		w |= XDMA_CTRL_IE_DESC_COMPLETED;
-+		w |= XDMA_CTRL_IE_DESC_ALIGN_MISMATCH;
-+		w |= XDMA_CTRL_IE_MAGIC_STOPPED;
-+		w |= XDMA_CTRL_IE_IDLE_STOPPED;
-+		w |= XDMA_CTRL_IE_READ_ERROR;
-+		w |= XDMA_CTRL_IE_DESC_ERROR;
-+
-+		write_register(w, &engine->regs->interrupt_enable_mask,
-+			(unsigned long)(&engine->regs->interrupt_enable_mask) -
-+			(unsigned long)(&engine->regs));
-+	}
-+
-+	/* write control register of SG DMA engine */
-+	w = (u32)XDMA_CTRL_RUN_STOP;
-+	w |= (u32)XDMA_CTRL_IE_READ_ERROR;
-+	w |= (u32)XDMA_CTRL_IE_DESC_ERROR;
-+	w |= (u32)XDMA_CTRL_IE_DESC_ALIGN_MISMATCH;
-+	w |= (u32)XDMA_CTRL_IE_MAGIC_STOPPED;
-+
-+	if (poll_mode) {
-+		w |= (u32)XDMA_CTRL_POLL_MODE_WB;
-+	} else {
-+		w |= (u32)XDMA_CTRL_IE_DESC_STOPPED;
-+		w |= (u32)XDMA_CTRL_IE_DESC_COMPLETED;
-+
-+		if ((engine->streaming && (engine->dir == DMA_FROM_DEVICE)) ||
-+		    (engine->xdma_perf))
-+			w |= (u32)XDMA_CTRL_IE_IDLE_STOPPED;
-+
-+		/* set non-incremental addressing mode */
-+		if (engine->non_incr_addr)
-+			w |= (u32)XDMA_CTRL_NON_INCR_ADDR;
-+	}
-+
-+	dbg_tfr("iowrite32(0x%08x to 0x%p) (control)\n", w,
-+			(void *)&engine->regs->control);
-+	/* start the engine */
-+	write_register(w, &engine->regs->control,
-+			(unsigned long)(&engine->regs->control) -
-+			(unsigned long)(&engine->regs));
-+
-+	/* dummy read of status register to flush all previous writes */
-+	w = read_register(&engine->regs->status);
-+	dbg_tfr("ioread32(0x%p) = 0x%08x (dummy read flushes writes).\n",
-+			&engine->regs->status, w);
-+}
-+
-+/**
-+ * engine_start() - start an idle engine with its first transfer on queue
-+ *
-+ * The engine will run and process all transfers that are queued using
-+ * transfer_queue() and thus have their descriptor lists chained.
-+ *
-+ * During the run, new transfers will be processed if transfer_queue() has
-+ * chained the descriptors before the hardware fetches the last descriptor.
-+ * A transfer that was chained too late will invoke a new run of the engine
-+ * initiated from the engine_service() routine.
-+ *
-+ * The engine must be idle and at least one transfer must be queued.
-+ * This function does not take locks; the engine spinlock must already be
-+ * taken.
-+ *
-+ */
-+static struct xdma_transfer *engine_start(struct xdma_engine *engine)
-+{
-+	struct xdma_transfer *transfer;
-+	u32 w;
-+	int extra_adj = 0;
-+
-+	/* engine must be idle */
-+	BUG_ON(engine->running);
-+	/* engine transfer queue must not be empty */
-+	BUG_ON(list_empty(&engine->transfer_list));
-+	/* inspect first transfer queued on the engine */
-+	transfer = list_entry(engine->transfer_list.next, struct xdma_transfer,
-+				entry);
-+	BUG_ON(!transfer);
-+
-+	/* engine is no longer shutdown */
-+	engine->shutdown = ENGINE_SHUTDOWN_NONE;
-+
-+	dbg_tfr("(%s): transfer=0x%p.\n", engine->name, transfer);
-+
-+	/* initialize number of descriptors of dequeued transfers */
-+	engine->desc_dequeued = 0;
-+
-+	/* write lower 32-bit of bus address of transfer first descriptor */
-+	w = cpu_to_le32(PCI_DMA_L(transfer->desc_bus));
-+	dbg_tfr("iowrite32(0x%08x to 0x%p) (first_desc_lo)\n", w,
-+			(void *)&engine->sgdma_regs->first_desc_lo);
-+	write_register(w, &engine->sgdma_regs->first_desc_lo,
-+			(unsigned long)(&engine->sgdma_regs->first_desc_lo) -
-+			(unsigned long)(&engine->sgdma_regs));
-+	/* write upper 32-bit of bus address of transfer first descriptor */
-+	w = cpu_to_le32(PCI_DMA_H(transfer->desc_bus));
-+	dbg_tfr("iowrite32(0x%08x to 0x%p) (first_desc_hi)\n", w,
-+			(void *)&engine->sgdma_regs->first_desc_hi);
-+	write_register(w, &engine->sgdma_regs->first_desc_hi,
-+			(unsigned long)(&engine->sgdma_regs->first_desc_hi) -
-+			(unsigned long)(&engine->sgdma_regs));
-+
-+	if (transfer->desc_adjacent > 0) {
-+		extra_adj = transfer->desc_adjacent - 1;
-+		if (extra_adj > MAX_EXTRA_ADJ)
-+			extra_adj = MAX_EXTRA_ADJ;
-+	}
-+	dbg_tfr("iowrite32(0x%08x to 0x%p) (first_desc_adjacent)\n",
-+		extra_adj, (void *)&engine->sgdma_regs->first_desc_adjacent);
-+	write_register(extra_adj, &engine->sgdma_regs->first_desc_adjacent,
-+			(unsigned long)(&engine->sgdma_regs->first_desc_adjacent) -
-+			(unsigned long)(&engine->sgdma_regs));
-+
-+	dbg_tfr("ioread32(0x%p) (dummy read flushes writes).\n",
-+		&engine->regs->status);
-+	mmiowb();
-+
-+	engine_start_mode_config(engine);
-+
-+	engine_status_read(engine, 0, 0);
-+
-+	dbg_tfr("%s engine 0x%p now running\n", engine->name, engine);
-+	/* remember the engine is running */
-+	engine->running = 1;
-+	return transfer;
-+}
-+
-+/**
-+ * engine_service() - service an SG DMA engine
-+ *
-+ * must be called with engine->lock already acquired
-+ *
-+ * @engine pointer to struct xdma_engine
-+ *
-+ */
-+static void engine_service_shutdown(struct xdma_engine *engine)
-+{
-+	/* if the engine stopped with RUN still asserted, de-assert RUN now */
-+	dbg_tfr("engine just went idle, resetting RUN_STOP.\n");
-+	xdma_engine_stop(engine);
-+	engine->running = 0;
-+
-+	/* awake task on engine's shutdown wait queue */
-+	wake_up(&engine->shutdown_wq);
-+}
-+
-+struct xdma_transfer *engine_transfer_completion(struct xdma_engine *engine,
-+		struct xdma_transfer *transfer)
-+{
-+	BUG_ON(!engine);
-+	BUG_ON(!transfer);
-+
-+	/* synchronous I/O? */
-+	/* awake task on transfer's wait queue */
-+	wake_up(&transfer->wq);
-+
-+	return transfer;
-+}
-+
-+struct xdma_transfer *engine_service_transfer_list(struct xdma_engine *engine,
-+		struct xdma_transfer *transfer, u32 *pdesc_completed)
-+{
-+	BUG_ON(!engine);
-+	BUG_ON(!pdesc_completed);
-+
-+	if (!transfer) {
-+		pr_info("%s xfer empty, pdesc completed %u.\n",
-+			engine->name, *pdesc_completed);
-+		return NULL;
-+	}
-+
-+	/*
-+	 * iterate over all the transfers completed by the engine,
-+	 * except for the last (i.e. use > instead of >=).
-+	 */
-+	while (transfer && (!transfer->cyclic) &&
-+		(*pdesc_completed > transfer->desc_num)) {
-+		/* remove this transfer from pdesc_completed */
-+		*pdesc_completed -= transfer->desc_num;
-+		dbg_tfr("%s engine completed non-cyclic xfer 0x%p (%d desc)\n",
-+			engine->name, transfer, transfer->desc_num);
-+		/* remove completed transfer from list */
-+		list_del(engine->transfer_list.next);
-+		/* add to dequeued number of descriptors during this run */
-+		engine->desc_dequeued += transfer->desc_num;
-+		/* mark transfer as succesfully completed */
-+		transfer->state = TRANSFER_STATE_COMPLETED;
-+
-+		/*
-+		 * Complete transfer - sets transfer to NULL if an async
-+		 * transfer has completed
-+		 */
-+		transfer = engine_transfer_completion(engine, transfer);
-+
-+		/* if exists, get the next transfer on the list */
-+		if (!list_empty(&engine->transfer_list)) {
-+			transfer = list_entry(engine->transfer_list.next,
-+					struct xdma_transfer, entry);
-+			dbg_tfr("Non-completed transfer %p\n", transfer);
-+		} else {
-+			/* no further transfers? */
-+			transfer = NULL;
-+		}
-+	}
-+
-+	return transfer;
-+}
-+
-+static void engine_err_handle(struct xdma_engine *engine,
-+		struct xdma_transfer *transfer, u32 desc_completed)
-+{
-+	u32 value;
-+
-+	/*
-+	 * The BUSY bit is expected to be clear now but older HW has a race
-+	 * condition which could cause it to be still set.  If it's set, re-read
-+	 * and check again.  If it's still set, log the issue.
-+	 */
-+	if (engine->status & XDMA_STAT_BUSY) {
-+		value = read_register(&engine->regs->status);
-+		if (value & XDMA_STAT_BUSY)
-+			pr_info_ratelimited("%s has errors but is still BUSY\n",
-+				engine->name);
-+	}
-+
-+	pr_info_ratelimited("%s, s 0x%x, aborted xfer 0x%p, cmpl %d/%d\n",
-+		engine->name, engine->status, transfer, desc_completed,
-+		transfer->desc_num);
-+
-+	/* mark transfer as failed */
-+	transfer->state = TRANSFER_STATE_FAILED;
-+	xdma_engine_stop(engine);
-+}
-+
-+struct xdma_transfer *engine_service_final_transfer(struct xdma_engine *engine,
-+			struct xdma_transfer *transfer, u32 *pdesc_completed)
-+{
-+	BUG_ON(!engine);
-+	BUG_ON(!transfer);
-+	BUG_ON(!pdesc_completed);
-+
-+	/* inspect the current transfer */
-+	if (transfer) {
-+		if (((engine->dir == DMA_FROM_DEVICE) &&
-+		     (engine->status & XDMA_STAT_C2H_ERR_MASK)) ||
-+		    ((engine->dir == DMA_TO_DEVICE) &&
-+		     (engine->status & XDMA_STAT_H2C_ERR_MASK))) {
-+			pr_info("engine %s, status error 0x%x.\n",
-+				engine->name, engine->status);
-+			engine_status_dump(engine);
-+			engine_err_handle(engine, transfer, *pdesc_completed);
-+			goto transfer_del;
-+		}
-+
-+		if (engine->status & XDMA_STAT_BUSY)
-+			dbg_tfr("Engine %s is unexpectedly busy - ignoring\n",
-+				engine->name);
-+
-+		/* the engine stopped on current transfer? */
-+		if (*pdesc_completed < transfer->desc_num) {
-+			transfer->state = TRANSFER_STATE_FAILED;
-+			pr_info("%s, xfer 0x%p, stopped half-way, %d/%d.\n",
-+				engine->name, transfer, *pdesc_completed,
-+				transfer->desc_num);
-+		} else {
-+			dbg_tfr("engine %s completed transfer\n", engine->name);
-+			dbg_tfr("Completed transfer ID = 0x%p\n", transfer);
-+			dbg_tfr("*pdesc_completed=%d, transfer->desc_num=%d",
-+				*pdesc_completed, transfer->desc_num);
-+
-+			if (!transfer->cyclic) {
-+				/*
-+				 * if the engine stopped on this transfer,
-+				 * it should be the last
-+				 */
-+				WARN_ON(*pdesc_completed > transfer->desc_num);
-+			}
-+			/* mark transfer as succesfully completed */
-+			transfer->state = TRANSFER_STATE_COMPLETED;
-+		}
-+
-+transfer_del:
-+		/* remove completed transfer from list */
-+		list_del(engine->transfer_list.next);
-+		/* add to dequeued number of descriptors during this run */
-+		engine->desc_dequeued += transfer->desc_num;
-+
-+		/*
-+		 * Complete transfer - sets transfer to NULL if an asynchronous
-+		 * transfer has completed
-+		 */
-+		transfer = engine_transfer_completion(engine, transfer);
-+	}
-+
-+	return transfer;
-+}
-+
-+static void engine_service_perf(struct xdma_engine *engine, u32 desc_completed)
-+{
-+	BUG_ON(!engine);
-+
-+	/* performance measurement is running? */
-+	if (engine->xdma_perf) {
-+		/* a descriptor was completed? */
-+		if (engine->status & XDMA_STAT_DESC_COMPLETED) {
-+			engine->xdma_perf->iterations = desc_completed;
-+			dbg_perf("transfer->xdma_perf->iterations=%d\n",
-+				engine->xdma_perf->iterations);
-+		}
-+
-+		/* a descriptor stopped the engine? */
-+		if (engine->status & XDMA_STAT_DESC_STOPPED) {
-+			engine->xdma_perf->stopped = 1;
-+			/*
-+			 * wake any XDMA_PERF_IOCTL_STOP waiting for
-+			 * the performance run to finish
-+			 */
-+			wake_up(&engine->xdma_perf_wq);
-+			dbg_perf("transfer->xdma_perf stopped\n");
-+		}
-+	}
-+}
-+
-+static void engine_transfer_dequeue(struct xdma_engine *engine)
-+{
-+	struct xdma_transfer *transfer;
-+
-+	BUG_ON(!engine);
-+
-+	/* pick first transfer on the queue (was submitted to the engine) */
-+	transfer = list_entry(engine->transfer_list.next, struct xdma_transfer,
-+		entry);
-+	BUG_ON(!transfer);
-+	BUG_ON(transfer != &engine->cyclic_req->xfer);
-+	dbg_tfr("%s engine completed cyclic transfer 0x%p (%d desc).\n",
-+		engine->name, transfer, transfer->desc_num);
-+	/* remove completed transfer from list */
-+	list_del(engine->transfer_list.next);
-+}
-+
-+static int engine_ring_process(struct xdma_engine *engine)
-+{
-+	struct xdma_result *result;
-+	int start;
-+	int eop_count = 0;
-+
-+	BUG_ON(!engine);
-+	result = engine->cyclic_result;
-+	BUG_ON(!result);
-+
-+	/* where we start receiving in the ring buffer */
-+	start = engine->rx_tail;
-+
-+	/* iterate through all newly received RX result descriptors */
-+	dbg_tfr("%s, result %d, 0x%x, len 0x%x.\n",
-+		engine->name, engine->rx_tail, result[engine->rx_tail].status,
-+		result[engine->rx_tail].length);
-+	while (result[engine->rx_tail].status && !engine->rx_overrun) {
-+		/* EOP bit set in result? */
-+		if (result[engine->rx_tail].status & RX_STATUS_EOP)
-+			eop_count++;
-+
-+		/* increment tail pointer */
-+		engine->rx_tail = (engine->rx_tail + 1) % CYCLIC_RX_PAGES_MAX;
-+
-+		dbg_tfr("%s, head %d, tail %d, 0x%x, len 0x%x.\n",
-+			engine->name, engine->rx_head, engine->rx_tail,
-+			result[engine->rx_tail].status,
-+			result[engine->rx_tail].length);
-+
-+		/* overrun? */
-+		if (engine->rx_tail == engine->rx_head) {
-+			dbg_tfr("%s: overrun\n", engine->name);
-+			/* flag to user space that overrun has occurred */
-+			engine->rx_overrun = 1;
-+		}
-+	}
-+
-+	return eop_count;
-+}
-+
-+static int engine_service_cyclic_polled(struct xdma_engine *engine)
-+{
-+	int eop_count = 0;
-+	int rc = 0;
-+	struct xdma_poll_wb *writeback_data;
-+	u32 sched_limit = 0;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	writeback_data = (struct xdma_poll_wb *)engine->poll_mode_addr_virt;
-+
-+	while (eop_count == 0) {
-+		if (sched_limit != 0) {
-+			if ((sched_limit % NUM_POLLS_PER_SCHED) == 0)
-+				schedule();
-+		}
-+		sched_limit++;
-+
-+		/* Monitor descriptor writeback address for errors */
-+		if ((writeback_data->completed_desc_count) & WB_ERR_MASK) {
-+			rc = -EINVAL;
-+			break;
-+		}
-+
-+		eop_count = engine_ring_process(engine);
-+	}
-+
-+	if (eop_count == 0) {
-+		engine_status_read(engine, 1, 0);
-+		if ((engine->running) && !(engine->status & XDMA_STAT_BUSY)) {
-+			/* transfers on queue? */
-+			if (!list_empty(&engine->transfer_list))
-+				engine_transfer_dequeue(engine);
-+
-+			engine_service_shutdown(engine);
-+		}
-+	}
-+
-+	return rc;
-+}
-+
-+static int engine_service_cyclic_interrupt(struct xdma_engine *engine)
-+{
-+	int eop_count = 0;
-+	struct xdma_transfer *xfer;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	engine_status_read(engine, 1, 0);
-+
-+	eop_count = engine_ring_process(engine);
-+	/*
-+	 * wake any reader on EOP, as one or more packets are now in
-+	 * the RX buffer
-+	 */
-+	xfer = &engine->cyclic_req->xfer;
-+	if (enable_credit_mp)
-+		wake_up(&xfer->wq);
-+	else {
-+		if (eop_count > 0) {
-+			/* awake task on transfer's wait queue */
-+			dbg_tfr("wake_up() due to %d EOP's\n", eop_count);
-+			engine->eop_found = 1;
-+			wake_up(&xfer->wq);
-+		}
-+	}
-+
-+	/* engine was running but is no longer busy? */
-+	if ((engine->running) && !(engine->status & XDMA_STAT_BUSY)) {
-+		/* transfers on queue? */
-+		if (!list_empty(&engine->transfer_list))
-+			engine_transfer_dequeue(engine);
-+
-+		engine_service_shutdown(engine);
-+	}
-+
-+	return 0;
-+}
-+
-+/* must be called with engine->lock already acquired */
-+static int engine_service_cyclic(struct xdma_engine *engine)
-+{
-+	int rc = 0;
-+
-+	dbg_tfr("is called\n");
-+
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	if (poll_mode)
-+		rc = engine_service_cyclic_polled(engine);
-+	else
-+		rc = engine_service_cyclic_interrupt(engine);
-+
-+	return rc;
-+}
-+
-+
-+static void engine_service_resume(struct xdma_engine *engine)
-+{
-+	struct xdma_transfer *transfer_started;
-+
-+	BUG_ON(!engine);
-+
-+	/* engine stopped? */
-+	if (!engine->running) {
-+		/* in the case of shutdown, let it finish what's in the Q */
-+		if (!list_empty(&engine->transfer_list)) {
-+			/* (re)start engine */
-+			transfer_started = engine_start(engine);
-+			dbg_tfr("re-started %s engine with pending xfer 0x%p\n",
-+				engine->name, transfer_started);
-+		/* engine was requested to be shutdown? */
-+		} else if (engine->shutdown & ENGINE_SHUTDOWN_REQUEST) {
-+			engine->shutdown |= ENGINE_SHUTDOWN_IDLE;
-+			/* awake task on engine's shutdown wait queue */
-+			wake_up(&engine->shutdown_wq);
-+		} else {
-+			dbg_tfr("no pending transfers, %s engine stays idle.\n",
-+				engine->name);
-+		}
-+	} else {
-+		/* engine is still running? */
-+		if (list_empty(&engine->transfer_list)) {
-+			pr_warn("no queued transfers but %s engine running!\n",
-+				engine->name);
-+			WARN_ON(1);
-+		}
-+	}
-+}
-+
-+/**
-+ * engine_service() - service an SG DMA engine
-+ *
-+ * must be called with engine->lock already acquired
-+ *
-+ * @engine pointer to struct xdma_engine
-+ *
-+ */
-+static int engine_service(struct xdma_engine *engine, int desc_writeback)
-+{
-+	struct xdma_transfer *transfer = NULL;
-+	u32 desc_count = desc_writeback & WB_COUNT_MASK;
-+	u32 err_flag = desc_writeback & WB_ERR_MASK;
-+	int rv = 0;
-+	struct xdma_poll_wb *wb_data;
-+
-+	BUG_ON(!engine);
-+
-+	/* If polling detected an error, signal to the caller */
-+	if (err_flag)
-+		rv = -EINVAL;
-+
-+	/* Service the engine */
-+	if (!engine->running) {
-+		dbg_tfr("Engine was not running!!! Clearing status\n");
-+		engine_status_read(engine, 1, 0);
-+		return 0;
-+	}
-+
-+	/*
-+	 * If called by the ISR or polling detected an error, read and clear
-+	 * engine status. For polled mode descriptor completion, this read is
-+	 * unnecessary and is skipped to reduce latency
-+	 */
-+	if ((desc_count == 0) || (err_flag != 0))
-+		engine_status_read(engine, 1, 0);
-+
-+	/*
-+	 * engine was running but is no longer busy, or writeback occurred,
-+	 * shut down
-+	 */
-+	if ((engine->running && !(engine->status & XDMA_STAT_BUSY)) ||
-+		(desc_count != 0))
-+		engine_service_shutdown(engine);
-+
-+	/*
-+	 * If called from the ISR, or if an error occurred, the descriptor
-+	 * count will be zero.  In this scenario, read the descriptor count
-+	 * from HW.  In polled mode descriptor completion, this read is
-+	 * unnecessary and is skipped to reduce latency
-+	 */
-+	if (!desc_count)
-+		desc_count = read_register(&engine->regs->completed_desc_count);
-+	dbg_tfr("desc_count = %d\n", desc_count);
-+
-+	/* transfers on queue? */
-+	if (!list_empty(&engine->transfer_list)) {
-+		/* pick first transfer on queue (was submitted to the engine) */
-+		transfer = list_entry(engine->transfer_list.next,
-+				struct xdma_transfer, entry);
-+
-+		dbg_tfr("head of queue transfer 0x%p has %d descriptors\n",
-+			transfer, (int)transfer->desc_num);
-+
-+		dbg_tfr("Engine completed %d desc, %d not yet dequeued\n",
-+			(int)desc_count,
-+			(int)desc_count - engine->desc_dequeued);
-+
-+		engine_service_perf(engine, desc_count);
-+	}
-+
-+	if (transfer) {
-+		/*
-+		 * account for already dequeued transfers during this engine
-+		 * run
-+		 */
-+		desc_count -= engine->desc_dequeued;
-+
-+		/* Process all but the last transfer */
-+		transfer = engine_service_transfer_list(engine, transfer,
-+			&desc_count);
-+
-+		/*
-+		 * Process final transfer - includes checks of number of
-+		 * descriptors to detect faulty completion
-+		 */
-+		transfer = engine_service_final_transfer(engine, transfer,
-+			&desc_count);
-+	}
-+
-+	/* Before starting engine again, clear the writeback data */
-+	if (poll_mode) {
-+		wb_data = (struct xdma_poll_wb *)engine->poll_mode_addr_virt;
-+		wb_data->completed_desc_count = 0;
-+	}
-+
-+	/* Restart the engine following the servicing */
-+	engine_service_resume(engine);
-+
-+	return 0;
-+}
-+
-+/* engine_service_work */
-+static void engine_service_work(struct work_struct *work)
-+{
-+	struct xdma_engine *engine;
-+	unsigned long flags;
-+
-+	engine = container_of(work, struct xdma_engine, work);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	/* lock the engine */
-+	spin_lock_irqsave(&engine->lock, flags);
-+
-+	dbg_tfr("engine_service() for %s engine %p\n",
-+		engine->name, engine);
-+	if (engine->cyclic_req)
-+		engine_service_cyclic(engine);
-+	else
-+		engine_service(engine, 0);
-+
-+	/* re-enable interrupts for this engine */
-+	if (engine->xdev->msix_enabled) {
-+		write_register(engine->interrupt_enable_mask_value,
-+			       &engine->regs->interrupt_enable_mask_w1s,
-+			(unsigned long)(&engine->regs->interrupt_enable_mask_w1s) -
-+			(unsigned long)(&engine->regs));
-+	} else
-+		channel_interrupts_enable(engine->xdev, engine->irq_bitmask);
-+
-+	/* unlock the engine */
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+}
-+
-+static u32 engine_service_wb_monitor(struct xdma_engine *engine,
-+	u32 expected_wb)
-+{
-+	struct xdma_poll_wb *wb_data;
-+	u32 desc_wb = 0;
-+	u32 sched_limit = 0;
-+	unsigned long timeout;
-+
-+	BUG_ON(!engine);
-+	wb_data = (struct xdma_poll_wb *)engine->poll_mode_addr_virt;
-+
-+	/*
-+	 * Poll the writeback location for the expected number of
-+	 * descriptors / error events This loop is skipped for cyclic mode,
-+	 * where the expected_desc_count passed in is zero, since it cannot be
-+	 * determined before the function is called
-+	 */
-+
-+	timeout = jiffies + (POLL_TIMEOUT_SECONDS * HZ);
-+	while (expected_wb != 0) {
-+		desc_wb = wb_data->completed_desc_count;
-+
-+		if (desc_wb & WB_ERR_MASK)
-+			break;
-+		else if (desc_wb == expected_wb)
-+			break;
-+
-+		/* RTO - prevent system from hanging in polled mode */
-+		if (time_after(jiffies, timeout)) {
-+			dbg_tfr("Polling timeout occurred");
-+			dbg_tfr("desc_wb = 0x%08x, expected 0x%08x\n", desc_wb,
-+				expected_wb);
-+			if ((desc_wb & WB_COUNT_MASK) > expected_wb)
-+				desc_wb = expected_wb | WB_ERR_MASK;
-+
-+			break;
-+		}
-+
-+		/*
-+		 * Define NUM_POLLS_PER_SCHED to limit how much time is spent
-+		 * in the scheduler
-+		 */
-+
-+		if (sched_limit != 0) {
-+			if ((sched_limit % NUM_POLLS_PER_SCHED) == 0)
-+				schedule();
-+		}
-+		sched_limit++;
-+	}
-+
-+	return desc_wb;
-+}
-+
-+static int engine_service_poll(struct xdma_engine *engine,
-+		u32 expected_desc_count)
-+{
-+	struct xdma_poll_wb *writeback_data;
-+	u32 desc_wb = 0;
-+	unsigned long flags;
-+	int rv = 0;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	writeback_data = (struct xdma_poll_wb *)engine->poll_mode_addr_virt;
-+
-+	if ((expected_desc_count & WB_COUNT_MASK) != expected_desc_count) {
-+		dbg_tfr("Queued descriptor count is larger than supported\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Poll the writeback location for the expected number of
-+	 * descriptors / error events This loop is skipped for cyclic mode,
-+	 * where the expected_desc_count passed in is zero, since it cannot be
-+	 * determined before the function is called
-+	 */
-+
-+	desc_wb = engine_service_wb_monitor(engine, expected_desc_count);
-+
-+	spin_lock_irqsave(&engine->lock, flags);
-+	dbg_tfr("%s service.\n", engine->name);
-+	if (engine->cyclic_req)
-+		rv = engine_service_cyclic(engine);
-+	else
-+		rv = engine_service(engine, desc_wb);
-+
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+
-+	return rv;
-+}
-+
-+static irqreturn_t user_irq_service(int irq, struct xdma_user_irq *user_irq)
-+{
-+	unsigned long flags;
-+
-+	BUG_ON(!user_irq);
-+
-+	if (user_irq->handler)
-+		return user_irq->handler(user_irq->user_idx, user_irq->dev);
-+
-+	spin_lock_irqsave(&(user_irq->events_lock), flags);
-+	if (!user_irq->events_irq) {
-+		user_irq->events_irq = 1;
-+		wake_up(&(user_irq->events_wq));
-+	}
-+	spin_unlock_irqrestore(&(user_irq->events_lock), flags);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * xdma_isr() - Interrupt handler
-+ *
-+ * @dev_id pointer to xdma_dev
-+ */
-+static irqreturn_t xdma_isr(int irq, void *dev_id)
-+{
-+	u32 ch_irq;
-+	u32 user_irq;
-+	u32 mask;
-+	struct xdma_dev *xdev;
-+	struct interrupt_regs *irq_regs;
-+
-+	dbg_irq("(irq=%d, dev 0x%p) <<<< ISR.\n", irq, dev_id);
-+	BUG_ON(!dev_id);
-+	xdev = (struct xdma_dev *)dev_id;
-+
-+	if (!xdev) {
-+		WARN_ON(!xdev);
-+		dbg_irq("(irq=%d) xdev=%p ??\n", irq, xdev);
-+		return IRQ_NONE;
-+	}
-+
-+	irq_regs = (struct interrupt_regs *)(xdev->bar[xdev->config_bar_idx] +
-+			XDMA_OFS_INT_CTRL);
-+
-+	/* read channel interrupt requests */
-+	ch_irq = read_register(&irq_regs->channel_int_request);
-+	dbg_irq("ch_irq = 0x%08x\n", ch_irq);
-+
-+	/*
-+	 * disable all interrupts that fired; these are re-enabled individually
-+	 * after the causing module has been fully serviced.
-+	 */
-+	if (ch_irq)
-+		channel_interrupts_disable(xdev, ch_irq);
-+
-+	/* read user interrupts - this read also flushes the above write */
-+	user_irq = read_register(&irq_regs->user_int_request);
-+	dbg_irq("user_irq = 0x%08x\n", user_irq);
-+
-+	if (user_irq) {
-+		int user = 0;
-+		u32 mask = 1;
-+		int max = xdev->h2c_channel_max;
-+
-+		for (; user < max && user_irq; user++, mask <<= 1) {
-+			if (user_irq & mask) {
-+				user_irq &= ~mask;
-+				user_irq_service(irq, &xdev->user_irq[user]);
-+			}
-+		}
-+	}
-+
-+	mask = ch_irq & xdev->mask_irq_h2c;
-+	if (mask) {
-+		int channel = 0;
-+		int max = xdev->h2c_channel_max;
-+
-+		/* iterate over H2C (PCIe read) */
-+		for (channel = 0; channel < max && mask; channel++) {
-+			struct xdma_engine *engine = &xdev->engine_h2c[channel];
-+
-+			/* engine present and its interrupt fired? */
-+			if ((engine->irq_bitmask & mask) &&
-+			   (engine->magic == MAGIC_ENGINE)) {
-+				mask &= ~engine->irq_bitmask;
-+				dbg_tfr("schedule_work, %s.\n", engine->name);
-+				schedule_work(&engine->work);
-+			}
-+		}
-+	}
-+
-+	mask = ch_irq & xdev->mask_irq_c2h;
-+	if (mask) {
-+		int channel = 0;
-+		int max = xdev->c2h_channel_max;
-+
-+		/* iterate over C2H (PCIe write) */
-+		for (channel = 0; channel < max && mask; channel++) {
-+			struct xdma_engine *engine = &xdev->engine_c2h[channel];
-+
-+			/* engine present and its interrupt fired? */
-+			if ((engine->irq_bitmask & mask) &&
-+			   (engine->magic == MAGIC_ENGINE)) {
-+				mask &= ~engine->irq_bitmask;
-+				dbg_tfr("schedule_work, %s.\n", engine->name);
-+				schedule_work(&engine->work);
-+			}
-+		}
-+	}
-+
-+	xdev->irq_count++;
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * xdma_user_irq() - Interrupt handler for user interrupts in MSI-X mode
-+ *
-+ * @dev_id pointer to xdma_dev
-+ */
-+static irqreturn_t xdma_user_irq(int irq, void *dev_id)
-+{
-+	struct xdma_user_irq *user_irq;
-+
-+	dbg_irq("(irq=%d) <<<< INTERRUPT SERVICE ROUTINE\n", irq);
-+
-+	BUG_ON(!dev_id);
-+	user_irq = (struct xdma_user_irq *)dev_id;
-+
-+	return  user_irq_service(irq, user_irq);
-+}
-+
-+/*
-+ * xdma_channel_irq() - Interrupt handler for channel interrupts in MSI-X mode
-+ *
-+ * @dev_id pointer to xdma_dev
-+ */
-+static irqreturn_t xdma_channel_irq(int irq, void *dev_id)
-+{
-+	struct xdma_dev *xdev;
-+	struct xdma_engine *engine;
-+	struct interrupt_regs *irq_regs;
-+
-+	dbg_irq("(irq=%d) <<<< INTERRUPT service ROUTINE\n", irq);
-+	BUG_ON(!dev_id);
-+
-+	engine = (struct xdma_engine *)dev_id;
-+	xdev = engine->xdev;
-+
-+	if (!xdev) {
-+		WARN_ON(!xdev);
-+		dbg_irq("(irq=%d) xdev=%p ??\n", irq, xdev);
-+		return IRQ_NONE;
-+	}
-+
-+	irq_regs = (struct interrupt_regs *)(xdev->bar[xdev->config_bar_idx] +
-+			XDMA_OFS_INT_CTRL);
-+
-+	/* Disable the interrupt for this engine */
-+	write_register(engine->interrupt_enable_mask_value,
-+			&engine->regs->interrupt_enable_mask_w1c,
-+			(unsigned long)
-+			(&engine->regs->interrupt_enable_mask_w1c) -
-+			(unsigned long)(&engine->regs));
-+	/* Dummy read to flush the above write */
-+	read_register(&irq_regs->channel_int_pending);
-+	/* Schedule the bottom half */
-+	schedule_work(&engine->work);
-+
-+	/*
-+	 * RTO - need to protect access here if multiple MSI-X are used for
-+	 * user interrupts
-+	 */
-+	xdev->irq_count++;
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Unmap the BAR regions that had been mapped earlier using map_bars()
-+ */
-+static void unmap_bars(struct xdma_dev *xdev, struct pci_dev *dev)
-+{
-+	int i;
-+
-+	for (i = 0; i < XDMA_BAR_NUM; i++) {
-+		/* is this BAR mapped? */
-+		if (xdev->bar[i]) {
-+			/* unmap BAR */
-+			iounmap(xdev->bar[i]);
-+			/* mark as unmapped */
-+			xdev->bar[i] = NULL;
-+		}
-+	}
-+}
-+
-+static resource_size_t map_single_bar(struct xdma_dev *xdev,
-+	struct pci_dev *dev, int idx)
-+{
-+	resource_size_t bar_start;
-+	resource_size_t bar_len;
-+	resource_size_t map_len;
-+
-+	bar_start = pci_resource_start(dev, idx);
-+	bar_len = pci_resource_len(dev, idx);
-+	map_len = bar_len;
-+
-+	xdev->bar[idx] = NULL;
-+
-+	/*
-+	 * do not map
-+	 * BARs with length 0. Note that start MAY be 0!
-+	 * P2P bar (size >= 256M)
-+	 */
-+	pr_info("map bar %d, len %lld\n", idx, bar_len);
-+	if (!bar_len || bar_len >= (1 << 28))
-+		return 0;
-+
-+	/*
-+	 * bail out if the bar is mapped
-+	 */
-+	if (!request_mem_region(bar_start, bar_len, xdev->mod_name))
-+		return 0;
-+
-+	release_mem_region(bar_start, bar_len);
-+	/* BAR size exceeds maximum desired mapping? */
-+	if (bar_len > INT_MAX) {
-+		pr_info("Limit BAR %d mapping from %llu to %d bytes\n", idx,
-+			(u64)bar_len, INT_MAX);
-+		map_len = (resource_size_t)INT_MAX;
-+	}
-+	/*
-+	 * map the full device memory or IO region into kernel virtual
-+	 * address space
-+	 */
-+	dbg_init("BAR%d: %llu bytes to be mapped.\n", idx, (u64)map_len);
-+	xdev->bar[idx] = ioremap_nocache(pci_resource_start(dev, idx),
-+			 map_len);
-+
-+	if (!xdev->bar[idx]) {
-+		pr_info("Could not map BAR %d.\n", idx);
-+		return -EINVAL;
-+	}
-+
-+	pr_info("BAR%d at 0x%llx mapped at 0x%p, length=%llu(/%llu)\n", idx,
-+		(u64)bar_start, xdev->bar[idx], (u64)map_len, (u64)bar_len);
-+
-+	return (int)map_len;
-+}
-+
-+static int is_config_bar(struct xdma_dev *xdev, int idx)
-+{
-+	u32 irq_id = 0;
-+	u32 cfg_id = 0;
-+	int flag = 0;
-+	u32 mask = 0xffff0000; /* Compare only XDMA ID's not Version number */
-+	struct interrupt_regs *irq_regs =
-+		(struct interrupt_regs *) (xdev->bar[idx] + XDMA_OFS_INT_CTRL);
-+	struct config_regs *cfg_regs =
-+		(struct config_regs *)(xdev->bar[idx] + XDMA_OFS_CONFIG);
-+
-+	if (!xdev->bar[idx])
-+		return 0;
-+
-+	irq_id = read_register(&irq_regs->identifier);
-+	cfg_id = read_register(&cfg_regs->identifier);
-+
-+	if (((irq_id & mask) == IRQ_BLOCK_ID) &&
-+	    ((cfg_id & mask) == CONFIG_BLOCK_ID)) {
-+		dbg_init("BAR %d is the XDMA config BAR\n", idx);
-+		flag = 1;
-+	} else {
-+		dbg_init("BAR %d is NOT the XDMA config BAR: 0x%x, 0x%x.\n",
-+			idx, irq_id, cfg_id);
-+		flag = 0;
-+	}
-+
-+	return flag;
-+}
-+
-+static void identify_bars(struct xdma_dev *xdev, int *bar_id_list, int num_bars,
-+			int config_bar_pos)
-+{
-+	/*
-+	 * The following logic identifies which BARs contain what functionality
-+	 * based on the position of the XDMA config BAR and the number of BARs
-+	 * detected. The rules are that the user logic and bypass logic BARs
-+	 * are optional.  When both are present, the XDMA config BAR will be the
-+	 * 2nd BAR detected (config_bar_pos = 1), with the user logic being
-+	 * detected first and the bypass being detected last. When one is
-+	 * omitted, the type of BAR present can be identified by whether the
-+	 * XDMA config BAR is detected first or last.  When both are omitted,
-+	 * only the XDMA config BAR is present.  This somewhat convoluted
-+	 * approach is used instead of relying on BAR numbers in order to work
-+	 * correctly with both 32-bit and 64-bit BARs.
-+	 */
-+
-+	BUG_ON(!xdev);
-+	BUG_ON(!bar_id_list);
-+
-+	pr_info("xdev 0x%p, bars %d, config at %d.\n",
-+		xdev, num_bars, config_bar_pos);
-+
-+	switch (num_bars) {
-+	case 1:
-+		/* Only one BAR present - no extra work necessary */
++	struct firewall *fw;
++
++	fw = platform_get_drvdata(pdev);
++	BUG_ON(!fw);
++
++	check_firewall(pdev, NULL);
++	switch (prop) {
++	case XOCL_AF_PROP_TOTAL_LEVEL:
++		*(u32 *)val = fw->max_level;
 +		break;
-+
-+	case 2:
-+		if (config_bar_pos == 0) {
-+			xdev->bypass_bar_idx = bar_id_list[1];
-+		} else if (config_bar_pos == 1) {
-+			xdev->user_bar_idx = bar_id_list[0];
-+		} else {
-+			pr_info("2, XDMA config BAR unexpected %d.\n",
-+				config_bar_pos);
-+		}
++	case XOCL_AF_PROP_STATUS:
++		*(u32 *)val = fw->curr_status;
 +		break;
-+
-+	case 3:
-+	case 4:
-+		if ((config_bar_pos == 1) || (config_bar_pos == 2)) {
-+			/* user bar at bar #0 */
-+			xdev->user_bar_idx = bar_id_list[0];
-+			/* bypass bar at the last bar */
-+			xdev->bypass_bar_idx = bar_id_list[num_bars - 1];
-+		} else {
-+			pr_info("3/4, XDMA config BAR unexpected %d.\n",
-+				config_bar_pos);
-+		}
++	case XOCL_AF_PROP_LEVEL:
++		*(int *)val = fw->curr_level;
 +		break;
-+
++	case XOCL_AF_PROP_DETECTED_STATUS:
++		*(u32 *)val = fw->err_detected_status;
++		break;
++	case XOCL_AF_PROP_DETECTED_LEVEL:
++		*(u32 *)val = fw->err_detected_level;
++		break;
++	case XOCL_AF_PROP_DETECTED_TIME:
++		*(u64 *)val = fw->err_detected_time;
++		break;
 +	default:
-+		/* Should not occur - warn user but safe to continue */
-+		pr_info("Unexpected # BARs (%d), XDMA config BAR only.\n",
-+			num_bars);
-+		break;
-+
-+	}
-+	pr_info("%d BARs: config %d, user %d, bypass %d.\n",
-+		num_bars, config_bar_pos, xdev->user_bar_idx,
-+		xdev->bypass_bar_idx);
-+}
-+
-+/* map_bars() -- map device regions into kernel virtual address space
-+ *
-+ * Map the device memory regions into kernel virtual address space after
-+ * verifying their sizes respect the minimum sizes needed
-+ */
-+static int map_bars(struct xdma_dev *xdev, struct pci_dev *dev)
-+{
-+	int rv;
-+	int i;
-+	int bar_id_list[XDMA_BAR_NUM];
-+	int bar_id_idx = 0;
-+	int config_bar_pos = 0;
-+
-+	/* iterate through all the BARs */
-+	for (i = 0; i < XDMA_BAR_NUM; i++) {
-+		resource_size_t bar_len;
-+
-+		bar_len = map_single_bar(xdev, dev, i);
-+		if (bar_len == 0) {
-+			continue;
-+		} else if (bar_len < 0) {
-+			rv = -EINVAL;
-+			goto fail;
-+		}
-+
-+		/* Try to identify BAR as XDMA control BAR */
-+		if ((bar_len >= XDMA_BAR_SIZE) && (xdev->config_bar_idx < 0)) {
-+
-+			if (is_config_bar(xdev, i)) {
-+				xdev->config_bar_idx = i;
-+				config_bar_pos = bar_id_idx;
-+				pr_info("config bar %d, pos %d.\n",
-+					xdev->config_bar_idx, config_bar_pos);
-+			}
-+		}
-+
-+		bar_id_list[bar_id_idx] = i;
-+		bar_id_idx++;
++		xocl_err(&pdev->dev, "Invalid prop %d", prop);
++		return -EINVAL;
 +	}
 +
-+	/* The XDMA config BAR must always be present */
-+	if (xdev->config_bar_idx < 0) {
-+		pr_info("Failed to detect XDMA config BAR\n");
-+		rv = -EINVAL;
-+		goto fail;
-+	}
-+
-+	identify_bars(xdev, bar_id_list, bar_id_idx, config_bar_pos);
-+
-+	/* successfully mapped all required BAR regions */
-+	return 0;
-+
-+fail:
-+	/* unwind; unmap any BARs that we did map */
-+	unmap_bars(xdev, dev);
-+	return rv;
-+}
-+
-+/*
-+ * MSI-X interrupt:
-+ *	<h2c+c2h channel_max> vectors, followed by <user_max> vectors
-+ */
-+
-+/*
-+ * RTO - code to detect if MSI/MSI-X capability exists is derived
-+ * from linux/pci/msi.c - pci_msi_check_device
-+ */
-+
-+#ifndef arch_msi_check_device
-+int arch_msi_check_device(struct pci_dev *dev, int nvec, int type)
-+{
 +	return 0;
 +}
-+#endif
 +
-+/* type = PCI_CAP_ID_MSI or PCI_CAP_ID_MSIX */
-+static int msi_msix_capable(struct pci_dev *dev, int type)
++/* sysfs support */
++static ssize_t show_firewall(struct device *dev, struct device_attribute *da,
++	char *buf)
 +{
-+	struct pci_bus *bus;
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
++	struct platform_device *pdev = to_platform_device(dev);
++	struct firewall *fw;
++	u64 t;
++	u32 val;
 +	int ret;
 +
-+	if (!dev || dev->no_msi)
-+		return 0;
++	fw = platform_get_drvdata(pdev);
++	BUG_ON(!fw);
 +
-+	for (bus = dev->bus; bus; bus = bus->parent)
-+		if (bus->bus_flags & PCI_BUS_FLAGS_NO_MSI)
-+			return 0;
++	if (attr->index == XOCL_AF_PROP_DETECTED_TIME) {
++		get_prop(pdev,  attr->index, &t);
++		return sprintf(buf, "%llu\n", t);
++	}
 +
-+	ret = arch_msi_check_device(dev, 1, type);
++	ret = get_prop(pdev, attr->index, &val);
 +	if (ret)
 +		return 0;
 +
-+	if (!pci_find_capability(dev, type))
-+		return 0;
-+
-+	return 1;
++	return sprintf(buf, "%u\n", val);
 +}
 +
-+static void disable_msi_msix(struct xdma_dev *xdev, struct pci_dev *pdev)
++static SENSOR_DEVICE_ATTR(status, 0444, show_firewall, NULL,
++	XOCL_AF_PROP_STATUS);
++static SENSOR_DEVICE_ATTR(level, 0444, show_firewall, NULL,
++	XOCL_AF_PROP_LEVEL);
++static SENSOR_DEVICE_ATTR(detected_status, 0444, show_firewall, NULL,
++	XOCL_AF_PROP_DETECTED_STATUS);
++static SENSOR_DEVICE_ATTR(detected_level, 0444, show_firewall, NULL,
++	XOCL_AF_PROP_DETECTED_LEVEL);
++static SENSOR_DEVICE_ATTR(detected_time, 0444, show_firewall, NULL,
++	XOCL_AF_PROP_DETECTED_TIME);
++
++static ssize_t clear_store(struct device *dev, struct device_attribute *da,
++	const char *buf, size_t count)
 +{
-+	if (xdev->msix_enabled) {
-+		pci_disable_msix(pdev);
-+		xdev->msix_enabled = 0;
-+	} else if (xdev->msi_enabled) {
-+		pci_disable_msi(pdev);
-+		xdev->msi_enabled = 0;
-+	}
++	struct platform_device *pdev = to_platform_device(dev);
++	u32 val = 0;
++
++	if (kstrtou32(buf, 10, &val) == -EINVAL || val != 1)
++		return -EINVAL;
++
++	clear_firewall(pdev);
++
++	return count;
 +}
++static DEVICE_ATTR_WO(clear);
 +
-+static int enable_msi_msix(struct xdma_dev *xdev, struct pci_dev *pdev)
++static ssize_t inject_store(struct device *dev, struct device_attribute *da,
++	const char *buf, size_t count)
 +{
-+	int rv = 0;
++	struct firewall *fw = platform_get_drvdata(to_platform_device(dev));
 +
-+	BUG_ON(!xdev);
-+	BUG_ON(!pdev);
-+
-+	if (!interrupt_mode && msi_msix_capable(pdev, PCI_CAP_ID_MSIX)) {
-+		int req_nvec = xdev->c2h_channel_max + xdev->h2c_channel_max +
-+				 xdev->user_max;
-+
-+		dbg_init("Enabling MSI-X\n");
-+		rv = pci_alloc_irq_vectors(pdev, req_nvec, req_nvec,
-+					PCI_IRQ_MSIX);
-+		if (rv < 0)
-+			dbg_init("Couldn't enable MSI-X mode: %d\n", rv);
-+
-+		xdev->msix_enabled = 1;
-+
-+	} else if (interrupt_mode == 1 &&
-+		   msi_msix_capable(pdev, PCI_CAP_ID_MSI)) {
-+		/* enable message signalled interrupts */
-+		dbg_init("pci_enable_msi()\n");
-+		rv = pci_enable_msi(pdev);
-+		if (rv < 0)
-+			dbg_init("Couldn't enable MSI mode: %d\n", rv);
-+		xdev->msi_enabled = 1;
-+
-+	} else {
-+		dbg_init("MSI/MSI-X not detected - using legacy interrupts\n");
-+	}
-+
-+	return rv;
++	fw->inject_firewall = true;
++	return count;
 +}
++static DEVICE_ATTR_WO(inject);
 +
-+static void pci_check_intr_pend(struct pci_dev *pdev)
++static struct attribute *firewall_attributes[] = {
++	&sensor_dev_attr_status.dev_attr.attr,
++	&sensor_dev_attr_level.dev_attr.attr,
++	&sensor_dev_attr_detected_status.dev_attr.attr,
++	&sensor_dev_attr_detected_level.dev_attr.attr,
++	&sensor_dev_attr_detected_time.dev_attr.attr,
++	&dev_attr_clear.attr,
++	&dev_attr_inject.attr,
++	NULL
++};
++
++static const struct attribute_group firewall_attrgroup = {
++	.attrs = firewall_attributes,
++};
++
++static u32 check_firewall(struct platform_device *pdev, int *level)
 +{
-+	u16 v;
++	struct firewall	*fw;
++//	struct timeval	time;
++	struct timespec64 now;
++	int	i;
++	u32	val = 0;
 +
-+	pci_read_config_word(pdev, PCI_STATUS, &v);
-+	if (v & PCI_STATUS_INTERRUPT) {
-+		pr_info("%s PCI STATUS Interrupt pending 0x%x.\n",
-+			dev_name(&pdev->dev), v);
-+		pci_write_config_word(pdev, PCI_STATUS, PCI_STATUS_INTERRUPT);
-+	}
-+}
++	fw = platform_get_drvdata(pdev);
++	BUG_ON(!fw);
 +
-+static void pci_keep_intx_enabled(struct pci_dev *pdev)
-+{
-+	/* workaround to a h/w bug:
-+	 * when msix/msi become unavaile, default to legacy.
-+	 * However the legacy enable was not checked.
-+	 * If the legacy was disabled, no ack then everything stuck
-+	 */
-+	u16 pcmd, pcmd_new;
++	for (i = 0; i < fw->max_level; i++) {
++		val = IS_FIRED(fw, i);
++		if (val) {
++			xocl_info(&pdev->dev, "AXI Firewall %d tripped, "
++				  "status: 0x%x", i, val);
++			if (!fw->curr_status) {
++				fw->err_detected_status = val;
++				fw->err_detected_level = i;
++				ktime_get_ts64(&now);
++				fw->err_detected_time = (u64)(now.tv_sec -
++					(sys_tz.tz_minuteswest * 60));
++			}
++			fw->curr_level = i;
 +
-+	pci_read_config_word(pdev, PCI_COMMAND, &pcmd);
-+	pcmd_new = pcmd & ~PCI_COMMAND_INTX_DISABLE;
-+	if (pcmd_new != pcmd) {
-+		pr_info("%s: clear INTX_DISABLE, 0x%x -> 0x%x.\n",
-+			dev_name(&pdev->dev), pcmd, pcmd_new);
-+		pci_write_config_word(pdev, PCI_COMMAND, pcmd_new);
-+	}
-+}
-+
-+static void prog_irq_msix_user(struct xdma_dev *xdev, bool clear)
-+{
-+	/* user */
-+	struct interrupt_regs *int_regs = (struct interrupt_regs *)
-+					(xdev->bar[xdev->config_bar_idx] +
-+					 XDMA_OFS_INT_CTRL);
-+	u32 i = xdev->c2h_channel_max + xdev->h2c_channel_max;
-+	u32 max = i + xdev->user_max;
-+	int j;
-+
-+	for (j = 0; i < max; j++) {
-+		u32 val = 0;
-+		int k;
-+		int shift = 0;
-+
-+		if (clear)
-+			i += 4;
-+		else
-+			for (k = 0; k < 4 && i < max; i++, k++, shift += 8)
-+				val |= (i & 0x1f) << shift;
-+
-+		write_register(val, &int_regs->user_msi_vector[j],
-+			XDMA_OFS_INT_CTRL +
-+			((unsigned long)&int_regs->user_msi_vector[j] -
-+			 (unsigned long)int_regs));
-+
-+		dbg_init("vector %d, 0x%x.\n", j, val);
-+	}
-+}
-+
-+static void prog_irq_msix_channel(struct xdma_dev *xdev, bool clear)
-+{
-+	struct interrupt_regs *int_regs = (struct interrupt_regs *)
-+					(xdev->bar[xdev->config_bar_idx] +
-+					 XDMA_OFS_INT_CTRL);
-+	u32 max = xdev->c2h_channel_max + xdev->h2c_channel_max;
-+	u32 i;
-+	int j;
-+
-+	/* engine */
-+	for (i = 0, j = 0; i < max; j++) {
-+		u32 val = 0;
-+		int k;
-+		int shift = 0;
-+
-+		if (clear)
-+			i += 4;
-+		else
-+			for (k = 0; k < 4 && i < max; i++, k++, shift += 8)
-+				val |= (i & 0x1f) << shift;
-+
-+		write_register(val, &int_regs->channel_msi_vector[j],
-+			XDMA_OFS_INT_CTRL +
-+			((unsigned long)&int_regs->channel_msi_vector[j] -
-+			 (unsigned long)int_regs));
-+		dbg_init("vector %d, 0x%x.\n", j, val);
-+	}
-+}
-+
-+static void irq_msix_channel_teardown(struct xdma_dev *xdev)
-+{
-+	struct xdma_engine *engine;
-+	int j = 0;
-+	int i = 0;
-+
-+	if (!xdev->msix_enabled)
-+		return;
-+
-+	prog_irq_msix_channel(xdev, 1);
-+
-+	engine = xdev->engine_h2c;
-+	for (i = 0; i < xdev->h2c_channel_max; i++, j++, engine++) {
-+		if (!engine->msix_irq_line)
++			if (level)
++				*level = i;
 +			break;
-+		dbg_sg("Release IRQ#%d for engine %p\n", engine->msix_irq_line,
-+			engine);
-+		free_irq(engine->msix_irq_line, engine);
++		}
 +	}
 +
-+	engine = xdev->engine_c2h;
-+	for (i = 0; i < xdev->c2h_channel_max; i++, j++, engine++) {
-+		if (!engine->msix_irq_line)
-+			break;
-+		dbg_sg("Release IRQ#%d for engine %p\n", engine->msix_irq_line,
-+			engine);
-+		free_irq(engine->msix_irq_line, engine);
++	fw->curr_status = val;
++	fw->curr_level = i >= fw->max_level ? -1 : i;
++
++	/* Inject firewall for testing. */
++	if (fw->curr_level == -1 && fw->inject_firewall) {
++		fw->inject_firewall = false;
++		fw->curr_level = 0;
++		fw->curr_status = 0x1;
 +	}
++
++	return fw->curr_status;
 +}
 +
-+static int irq_msix_channel_setup(struct xdma_dev *xdev)
++static int clear_firewall(struct platform_device *pdev)
 +{
-+	int i;
-+	int j = xdev->h2c_channel_max;
-+	int rv = 0;
-+	u32 vector;
-+	struct xdma_engine *engine;
++	struct firewall	*fw;
++	int	i, retry = 0, clear_retry = 0;
++	u32	val;
++	int	ret = 0;
 +
-+	BUG_ON(!xdev);
-+	if (!xdev->msix_enabled)
++	fw = platform_get_drvdata(pdev);
++	BUG_ON(!fw);
++
++	if (!check_firewall(pdev, NULL)) {
++		/* firewall is not tripped */
 +		return 0;
-+
-+	engine = xdev->engine_h2c;
-+	for (i = 0; i < xdev->h2c_channel_max; i++, engine++) {
-+		vector = pci_irq_vector(xdev->pdev, i);
-+		rv = request_irq(vector, xdma_channel_irq, 0, xdev->mod_name,
-+				 engine);
-+		if (rv) {
-+			pr_info("requesti irq#%d failed %d, engine %s.\n",
-+				vector, rv, engine->name);
-+			return rv;
-+		}
-+		pr_info("engine %s, irq#%d.\n", engine->name, vector);
-+		engine->msix_irq_line = vector;
 +	}
 +
-+	engine = xdev->engine_c2h;
-+	for (i = 0; i < xdev->c2h_channel_max; i++, j++, engine++) {
-+		vector = pci_irq_vector(xdev->pdev, j);
-+		rv = request_irq(vector, xdma_channel_irq, 0, xdev->mod_name,
-+				 engine);
-+		if (rv) {
-+			pr_info("requesti irq#%d failed %d, engine %s.\n",
-+				vector, rv, engine->name);
-+			return rv;
++retry_level1:
++	for (i = 0; i < fw->max_level; i++) {
++		for (val = READ_STATUS(fw, i);
++			(val & FIREWALL_STATUS_BUSY) &&
++			retry++ < BUSY_RETRY_COUNT;
++			val = READ_STATUS(fw, i)) {
++			msleep(BUSY_RETRY_INTERVAL);
 +		}
-+		pr_info("engine %s, irq#%d.\n", engine->name, vector);
-+		engine->msix_irq_line = vector;
++		if (val & FIREWALL_STATUS_BUSY) {
++			xocl_err(&pdev->dev, "firewall %d busy", i);
++			ret = -EBUSY;
++			goto failed;
++		}
++		WRITE_UNBLOCK_CTRL(fw, i, 1);
 +	}
++
++	if (check_firewall(pdev, NULL) && clear_retry++ < CLEAR_RETRY_COUNT) {
++		msleep(CLEAR_RETRY_INTERVAL);
++		goto retry_level1;
++	}
++
++	if (!check_firewall(pdev, NULL)) {
++		xocl_info(&pdev->dev, "firewall cleared level 1");
++		return 0;
++	}
++
++	clear_retry = 0;
++
++retry_level2:
++	XOCL_WRITE_REG32(CLEAR_RESET_GPIO, fw->gpio_addr);
++
++	if (check_firewall(pdev, NULL) && clear_retry++ < CLEAR_RETRY_COUNT) {
++		msleep(CLEAR_RETRY_INTERVAL);
++		goto retry_level2;
++	}
++
++	if (!check_firewall(pdev, NULL)) {
++		xocl_info(&pdev->dev, "firewall cleared level 2");
++		return 0;
++	}
++
++	xocl_info(&pdev->dev, "failed clear firewall, level %d, status 0x%x",
++		fw->curr_level, fw->curr_status);
++
++	ret = -EIO;
++
++failed:
++	return ret;
++}
++
++static struct xocl_firewall_funcs fw_ops = {
++	.clear_firewall	= clear_firewall,
++	.check_firewall = check_firewall,
++	.get_prop = get_prop,
++};
++
++static int firewall_remove(struct platform_device *pdev)
++{
++	struct firewall *fw;
++	int     i;
++
++	fw = platform_get_drvdata(pdev);
++	if (!fw) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++
++	sysfs_remove_group(&pdev->dev.kobj, &firewall_attrgroup);
++
++	for (i = 0; i <= fw->max_level; i++) {
++		if (fw->base_addrs[i])
++			iounmap(fw->base_addrs[i]);
++	}
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, fw);
 +
 +	return 0;
 +}
 +
-+static void irq_msix_user_teardown(struct xdma_dev *xdev)
++static int firewall_probe(struct platform_device *pdev)
 +{
-+	int i;
-+	int j = xdev->h2c_channel_max + xdev->c2h_channel_max;
++	struct firewall	*fw;
++	struct resource	*res;
++	int	i, ret = 0;
 +
-+	BUG_ON(!xdev);
++	xocl_info(&pdev->dev, "probe");
 +
-+	if (!xdev->msix_enabled)
-+		return;
++	fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
++	if (!fw)
++		return -ENOMEM;
 +
-+	prog_irq_msix_user(xdev, 1);
++	platform_set_drvdata(pdev, fw);
 +
-+	for (i = 0; i < xdev->user_max; i++, j++) {
-+		u32 vector = pci_irq_vector(xdev->pdev, j);
++	fw->curr_level = -1;
 +
-+		dbg_init("user %d, releasing IRQ#%d\n", i, vector);
-+		free_irq(vector, &xdev->user_irq[i]);
-+	}
-+}
-+
-+static int irq_msix_user_setup(struct xdma_dev *xdev)
-+{
-+	int i;
-+	int j = xdev->h2c_channel_max + xdev->c2h_channel_max;
-+	int rv = 0;
-+
-+	/* vectors set in probe_scan_for_msi() */
-+	for (i = 0; i < xdev->user_max; i++, j++) {
-+		u32 vector = pci_irq_vector(xdev->pdev, j);
-+
-+		rv = request_irq(vector, xdma_user_irq, 0, xdev->mod_name,
-+				&xdev->user_irq[i]);
-+		if (rv) {
-+			pr_info("user %d couldn't use IRQ#%d, %d\n",
-+				i, vector, rv);
++	for (i = 0; i < MAX_LEVEL; i++) {
++		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
++		if (!res) {
++			fw->max_level = i - 1;
++			fw->gpio_addr = fw->base_addrs[i - 1];
 +			break;
 +		}
-+		pr_info("%d-USR-%d, IRQ#%d with 0x%p\n", xdev->idx, i, vector,
-+			&xdev->user_irq[i]);
-+	}
-+
-+	/* If any errors occur, free IRQs that were successfully requested */
-+	if (rv) {
-+		for (i--, j--; i >= 0; i--, j--) {
-+			u32 vector = pci_irq_vector(xdev->pdev, j);
-+
-+			free_irq(vector, &xdev->user_irq[i]);
++		fw->base_addrs[i] =
++			ioremap_nocache(res->start, res->end - res->start + 1);
++		if (!fw->base_addrs[i]) {
++			ret = -EIO;
++			xocl_err(&pdev->dev, "Map iomem failed");
++			goto failed;
 +		}
 +	}
 +
-+	return rv;
-+}
-+
-+static int irq_msi_setup(struct xdma_dev *xdev, struct pci_dev *pdev)
-+{
-+	int rv;
-+
-+	xdev->irq_line = (int)pdev->irq;
-+	rv = request_irq(pdev->irq, xdma_isr, 0, xdev->mod_name, xdev);
-+	if (rv)
-+		dbg_init("Couldn't use IRQ#%d, %d\n", pdev->irq, rv);
-+	else
-+		dbg_init("Using IRQ#%d with 0x%p\n", pdev->irq, xdev);
-+
-+	return rv;
-+}
-+
-+static int irq_legacy_setup(struct xdma_dev *xdev, struct pci_dev *pdev)
-+{
-+	u32 w;
-+	u8 val;
-+	void *reg;
-+	int rv;
-+
-+	pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &val);
-+	dbg_init("Legacy Interrupt register value = %d\n", val);
-+	if (val > 1) {
-+		val--;
-+		w = (val<<24) | (val<<16) | (val<<8) | val;
-+		/* Program IRQ Block Channel vactor and IRQ Block User vector
-+		 * with Legacy interrupt value
-+		 */
-+		reg = xdev->bar[xdev->config_bar_idx] + 0x2080;   // IRQ user
-+		write_register(w, reg, 0x2080);
-+		write_register(w, reg+0x4, 0x2084);
-+		write_register(w, reg+0x8, 0x2088);
-+		write_register(w, reg+0xC, 0x208C);
-+		reg = xdev->bar[xdev->config_bar_idx] + 0x20A0;   // IRQ Block
-+		write_register(w, reg, 0x20A0);
-+		write_register(w, reg+0x4, 0x20A4);
++	ret = sysfs_create_group(&pdev->dev.kobj, &firewall_attrgroup);
++	if (ret) {
++		xocl_err(&pdev->dev, "create attr group failed: %d", ret);
++		goto failed;
 +	}
 +
-+	xdev->irq_line = (int)pdev->irq;
-+	rv = request_irq(pdev->irq, xdma_isr, IRQF_SHARED, xdev->mod_name,
-+			xdev);
-+	if (rv)
-+		dbg_init("Couldn't use IRQ#%d, %d\n", pdev->irq, rv);
-+	else
-+		dbg_init("Using IRQ#%d with 0x%p\n", pdev->irq, xdev);
++	xocl_subdev_register(pdev, XOCL_SUBDEV_AF, &fw_ops);
 +
-+	return rv;
++	return 0;
++
++failed:
++	firewall_remove(pdev);
++	return ret;
 +}
 +
-+static void irq_teardown(struct xdma_dev *xdev)
++struct platform_device_id firewall_id_table[] = {
++	{ XOCL_FIREWALL, 0 },
++	{ },
++};
++
++static struct platform_driver	firewall_driver = {
++	.probe		= firewall_probe,
++	.remove		= firewall_remove,
++	.driver		= {
++		.name = "xocl_firewall",
++	},
++	.id_table = firewall_id_table,
++};
++
++int __init xocl_init_firewall(void)
 +{
-+	if (xdev->msix_enabled) {
-+		irq_msix_channel_teardown(xdev);
-+		irq_msix_user_teardown(xdev);
-+	} else if (xdev->irq_line != -1) {
-+		dbg_init("Releasing IRQ#%d\n", xdev->irq_line);
-+		free_irq(xdev->irq_line, xdev);
-+	}
++	return platform_driver_register(&firewall_driver);
 +}
 +
-+static int irq_setup(struct xdma_dev *xdev, struct pci_dev *pdev)
++void xocl_fini_firewall(void)
 +{
-+	pci_keep_intx_enabled(pdev);
-+
-+	if (xdev->msix_enabled) {
-+		int rv = irq_msix_channel_setup(xdev);
-+
-+		if (rv)
-+			return rv;
-+		rv = irq_msix_user_setup(xdev);
-+		if (rv)
-+			return rv;
-+		prog_irq_msix_channel(xdev, 0);
-+		prog_irq_msix_user(xdev, 0);
-+
-+		return 0;
-+	} else if (xdev->msi_enabled)
-+		return irq_msi_setup(xdev, pdev);
-+
-+	return irq_legacy_setup(xdev, pdev);
++	return platform_driver_unregister(&firewall_driver);
 +}
-+
-+#ifdef __LIBXDMA_DEBUG__
-+static void dump_desc(struct xdma_desc *desc_virt)
-+{
-+	int j;
-+	u32 *p = (u32 *)desc_virt;
-+	static char * const field_name[] = {
-+		"magic|extra_adjacent|control", "bytes", "src_addr_lo",
-+		"src_addr_hi", "dst_addr_lo", "dst_addr_hi", "next_addr",
-+		"next_addr_pad"};
-+	char *dummy;
-+
-+	/* remove warning about unused variable when debug printing is off */
-+	dummy = field_name[0];
-+
-+	for (j = 0; j < 8; j += 1) {
-+		pr_info("0x%08lx/0x%02lx: 0x%08x 0x%08x %s\n",
-+			 (uintptr_t)p, (uintptr_t)p & 15, (int)*p,
-+			 le32_to_cpu(*p), field_name[j]);
-+		p++;
-+	}
-+	pr_info("\n");
-+}
-+
-+static void transfer_dump(struct xdma_transfer *transfer)
-+{
-+	int i;
-+	struct xdma_desc *desc_virt = transfer->desc_virt;
-+
-+	pr_info("xfer 0x%p, state 0x%x, f 0x%x, dir %d, len %u, last %d.\n",
-+		transfer, transfer->state, transfer->flags, transfer->dir,
-+		transfer->len, transfer->last_in_request);
-+
-+	pr_info("transfer 0x%p, desc %d, bus 0x%llx, adj %d.\n",
-+		transfer, transfer->desc_num, (u64)transfer->desc_bus,
-+		transfer->desc_adjacent);
-+	for (i = 0; i < transfer->desc_num; i += 1)
-+		dump_desc(desc_virt + i);
-+}
-+#endif /* __LIBXDMA_DEBUG__ */
-+
-+/* xdma_desc_alloc() - Allocate cache-coherent array of N descriptors.
-+ *
-+ * Allocates an array of 'number' descriptors in contiguous PCI bus addressable
-+ * memory. Chains the descriptors as a singly-linked list; the descriptor's
-+ * next * pointer specifies the bus address of the next descriptor.
-+ *
-+ *
-+ * @dev Pointer to pci_dev
-+ * @number Number of descriptors to be allocated
-+ * @desc_bus_p Pointer where to store the first descriptor bus address
-+ *
-+ * @return Virtual address of the first descriptor
-+ *
-+ */
-+static void transfer_desc_init(struct xdma_transfer *transfer, int count)
-+{
-+	struct xdma_desc *desc_virt = transfer->desc_virt;
-+	dma_addr_t desc_bus = transfer->desc_bus;
-+	int i;
-+	int adj = count - 1;
-+	int extra_adj;
-+	u32 temp_control;
-+
-+	BUG_ON(count > XDMA_TRANSFER_MAX_DESC);
-+
-+	/* create singly-linked list for SG DMA controller */
-+	for (i = 0; i < count - 1; i++) {
-+		/* increment bus address to next in array */
-+		desc_bus += sizeof(struct xdma_desc);
-+
-+		/* singly-linked list uses bus addresses */
-+		desc_virt[i].next_lo = cpu_to_le32(PCI_DMA_L(desc_bus));
-+		desc_virt[i].next_hi = cpu_to_le32(PCI_DMA_H(desc_bus));
-+		desc_virt[i].bytes = cpu_to_le32(0);
-+
-+		/* any adjacent descriptors? */
-+		if (adj > 0) {
-+			extra_adj = adj - 1;
-+			if (extra_adj > MAX_EXTRA_ADJ)
-+				extra_adj = MAX_EXTRA_ADJ;
-+
-+			adj--;
-+		} else {
-+			extra_adj = 0;
-+		}
-+
-+		temp_control = DESC_MAGIC | (extra_adj << 8);
-+
-+		desc_virt[i].control = cpu_to_le32(temp_control);
-+	}
-+	/* { i = number - 1 } */
-+	/* zero the last descriptor next pointer */
-+	desc_virt[i].next_lo = cpu_to_le32(0);
-+	desc_virt[i].next_hi = cpu_to_le32(0);
-+	desc_virt[i].bytes = cpu_to_le32(0);
-+
-+	temp_control = DESC_MAGIC;
-+
-+	desc_virt[i].control = cpu_to_le32(temp_control);
-+}
-+
-+/* xdma_desc_link() - Link two descriptors
-+ *
-+ * Link the first descriptor to a second descriptor, or terminate the first.
-+ *
-+ * @first first descriptor
-+ * @second second descriptor, or NULL if first descriptor must be set as last.
-+ * @second_bus bus address of second descriptor
-+ */
-+static void xdma_desc_link(struct xdma_desc *first, struct xdma_desc *second,
-+		dma_addr_t second_bus)
-+{
-+	/*
-+	 * remember reserved control in first descriptor, but zero
-+	 * extra_adjacent!
-+	 */
-+	 /* RTO - what's this about?  Shouldn't it be 0x0000c0ffUL? */
-+	u32 control = le32_to_cpu(first->control) & 0x0000f0ffUL;
-+	/* second descriptor given? */
-+	if (second) {
-+		/*
-+		 * link last descriptor of 1st array to first descriptor of
-+		 * 2nd array
-+		 */
-+		first->next_lo = cpu_to_le32(PCI_DMA_L(second_bus));
-+		first->next_hi = cpu_to_le32(PCI_DMA_H(second_bus));
-+		WARN_ON(first->next_hi);
-+		/* no second descriptor given */
-+	} else {
-+		/* first descriptor is the last */
-+		first->next_lo = 0;
-+		first->next_hi = 0;
-+	}
-+	/* merge magic, extra_adjacent and control field */
-+	control |= DESC_MAGIC;
-+
-+	/* write bytes and next_num */
-+	first->control = cpu_to_le32(control);
-+}
-+
-+/* xdma_desc_adjacent -- Set how many descriptors are adjacent to this one */
-+static void xdma_desc_adjacent(struct xdma_desc *desc, int next_adjacent)
-+{
-+	int extra_adj = 0;
-+	/* remember reserved and control bits */
-+	u32 control = le32_to_cpu(desc->control) & 0x0000f0ffUL;
-+	u32 max_adj_4k = 0;
-+
-+	if (next_adjacent > 0) {
-+		extra_adj =  next_adjacent - 1;
-+		if (extra_adj > MAX_EXTRA_ADJ)
-+			extra_adj = MAX_EXTRA_ADJ;
-+
-+		max_adj_4k = (0x1000 -
-+			((le32_to_cpu(desc->next_lo)) & 0xFFF)) / 32 - 1;
-+		if (extra_adj > max_adj_4k)
-+			extra_adj = max_adj_4k;
-+
-+		if (extra_adj < 0) {
-+			pr_info("Warning: extra_adj<0, converting it to 0\n");
-+			extra_adj = 0;
-+		}
-+	}
-+	/* merge adjacent and control field */
-+	control |= 0xAD4B0000UL | (extra_adj << 8);
-+	/* write control and next_adjacent */
-+	desc->control = cpu_to_le32(control);
-+}
-+
-+/* xdma_desc_control -- Set complete control field of a descriptor. */
-+static void xdma_desc_control_set(struct xdma_desc *first, u32 control_field)
-+{
-+	/* remember magic and adjacent number */
-+	u32 control = le32_to_cpu(first->control) & ~(LS_BYTE_MASK);
-+
-+	BUG_ON(control_field & ~(LS_BYTE_MASK));
-+	/* merge adjacent and control field */
-+	control |= control_field;
-+	/* write control and next_adjacent */
-+	first->control = cpu_to_le32(control);
-+}
-+
-+/* xdma_desc_clear -- Clear bits in control field of a descriptor. */
-+static void xdma_desc_control_clear(struct xdma_desc *first, u32 clear_mask)
-+{
-+	/* remember magic and adjacent number */
-+	u32 control = le32_to_cpu(first->control);
-+
-+	BUG_ON(clear_mask & ~(LS_BYTE_MASK));
-+
-+	/* merge adjacent and control field */
-+	control &= (~clear_mask);
-+	/* write control and next_adjacent */
-+	first->control = cpu_to_le32(control);
-+}
-+
-+/* xdma_desc_done - recycle cache-coherent linked list of descriptors.
-+ *
-+ * @dev Pointer to pci_dev
-+ * @number Number of descriptors to be allocated
-+ * @desc_virt Pointer to (i.e. virtual address of) first descriptor in list
-+ * @desc_bus Bus address of first descriptor in list
-+ */
-+static inline void xdma_desc_done(struct xdma_desc *desc_virt)
-+{
-+	memset(desc_virt, 0, XDMA_TRANSFER_MAX_DESC * sizeof(struct xdma_desc));
-+}
-+
-+/* xdma_desc() - Fill a descriptor with the transfer details
-+ *
-+ * @desc pointer to descriptor to be filled
-+ * @addr root complex address
-+ * @ep_addr end point address
-+ * @len number of bytes, must be a (non-negative) multiple of 4.
-+ * @dir, dma direction
-+ * is the end point address. If zero, vice versa.
-+ *
-+ * Does not modify the next pointer
-+ */
-+static void xdma_desc_set(struct xdma_desc *desc, dma_addr_t rc_bus_addr,
-+		u64 ep_addr, int len, int dir)
-+{
-+	/* transfer length */
-+	desc->bytes = cpu_to_le32(len);
-+	if (dir == DMA_TO_DEVICE) {
-+		/* read from root complex memory (source address) */
-+		desc->src_addr_lo = cpu_to_le32(PCI_DMA_L(rc_bus_addr));
-+		desc->src_addr_hi = cpu_to_le32(PCI_DMA_H(rc_bus_addr));
-+		/* write to end point address (destination address) */
-+		desc->dst_addr_lo = cpu_to_le32(PCI_DMA_L(ep_addr));
-+		desc->dst_addr_hi = cpu_to_le32(PCI_DMA_H(ep_addr));
-+	} else {
-+		/* read from end point address (source address) */
-+		desc->src_addr_lo = cpu_to_le32(PCI_DMA_L(ep_addr));
-+		desc->src_addr_hi = cpu_to_le32(PCI_DMA_H(ep_addr));
-+		/* write to root complex memory (destination address) */
-+		desc->dst_addr_lo = cpu_to_le32(PCI_DMA_L(rc_bus_addr));
-+		desc->dst_addr_hi = cpu_to_le32(PCI_DMA_H(rc_bus_addr));
-+	}
-+}
+diff --git a/drivers/gpu/drm/xocl/subdev/fmgr.c b/drivers/gpu/drm/xocl/subdev/fmgr.c
+new file mode 100644
+index 000000000000..99efd86ccd1b
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/fmgr.c
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0
 +
 +/*
-+ * should hold the engine->lock;
++ * FPGA Manager bindings for XRT driver
++ *
++ * Copyright (C) 2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors: Sonal Santan
++ *
 + */
-+static void transfer_abort(struct xdma_engine *engine,
-+			struct xdma_transfer *transfer)
-+{
-+	struct xdma_transfer *head;
 +
-+	BUG_ON(!engine);
-+	BUG_ON(!transfer);
-+	BUG_ON(transfer->desc_num == 0);
++#include <linux/fpga/fpga-mgr.h>
 +
-+	pr_info("abort transfer 0x%p, desc %d, engine desc queued %d.\n",
-+		transfer, transfer->desc_num, engine->desc_dequeued);
++#include "../xocl_drv.h"
++#include "../xclbin.h"
 +
-+	head = list_entry(engine->transfer_list.next, struct xdma_transfer,
-+			entry);
-+	if (head == transfer)
-+		list_del(engine->transfer_list.next);
-+	else
-+		pr_info("engine %s, transfer 0x%p NOT found, 0x%p.\n",
-+			engine->name, transfer, head);
-+
-+	if (transfer->state == TRANSFER_STATE_SUBMITTED)
-+		transfer->state = TRANSFER_STATE_ABORTED;
-+}
-+
-+/* transfer_queue() - Queue a DMA transfer on the engine
-+ *
-+ * @engine DMA engine doing the transfer
-+ * @transfer DMA transfer submitted to the engine
-+ *
-+ * Takes and releases the engine spinlock
++/*
++ * Container to capture and cache full xclbin as it is passed in blocks by FPGA
++ * Manager. xocl needs access to full xclbin to walk through xclbin sections. FPGA
++ * Manager's .write() backend sends incremental blocks without any knowledge of
++ * xclbin format forcing us to collect the blocks and stitch them together here.
++ * TODO:
++ * 1. Add a variant of API, icap_download_bitstream_axlf() which works off kernel buffer
++ * 2. Call this new API from FPGA Manager's write complete hook, xocl_pr_write_complete()
 + */
-+static int transfer_queue(struct xdma_engine *engine,
-+		struct xdma_transfer *transfer)
++
++struct xfpga_klass {
++	struct xocl_dev *xdev;
++	struct axlf *blob;
++	char name[64];
++	size_t count;
++	enum fpga_mgr_states state;
++};
++
++static int xocl_pr_write_init(struct fpga_manager *mgr,
++			      struct fpga_image_info *info, const char *buf, size_t count)
 +{
-+	int rv = 0;
-+	struct xdma_transfer *transfer_started;
-+	struct xdma_dev *xdev;
-+	unsigned long flags;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(!engine->xdev);
-+	BUG_ON(!transfer);
-+	BUG_ON(transfer->desc_num == 0);
-+	dbg_tfr("transfer=0x%p.\n", transfer);
-+
-+	xdev = engine->xdev;
-+	if (xdma_device_flag_check(xdev, XDEV_FLAG_OFFLINE)) {
-+		pr_info("dev 0x%p offline, transfer 0x%p not queued.\n",
-+			xdev, transfer);
-+		return -EBUSY;
-+	}
-+
-+	/* lock the engine state */
-+	spin_lock_irqsave(&engine->lock, flags);
-+
-+	engine->prev_cpu = get_cpu();
-+	put_cpu();
-+
-+	/* engine is being shutdown; do not accept new transfers */
-+	if (engine->shutdown & ENGINE_SHUTDOWN_REQUEST) {
-+		pr_info("engine %s offline, transfer 0x%p not queued.\n",
-+			engine->name, transfer);
-+		rv = -EBUSY;
-+		goto shutdown;
-+	}
-+
-+	/* mark the transfer as submitted */
-+	transfer->state = TRANSFER_STATE_SUBMITTED;
-+	/* add transfer to the tail of the engine transfer queue */
-+	list_add_tail(&transfer->entry, &engine->transfer_list);
-+
-+	/* engine is idle? */
-+	if (!engine->running) {
-+		/* start engine */
-+		dbg_tfr("starting %s engine.\n",
-+			engine->name);
-+		transfer_started = engine_start(engine);
-+		dbg_tfr("transfer=0x%p started %s engine with transfer 0x%p.\n",
-+			transfer, engine->name, transfer_started);
-+	} else {
-+		dbg_tfr("transfer=0x%p queued, with %s engine running.\n",
-+			transfer, engine->name);
-+	}
-+
-+shutdown:
-+	/* unlock the engine state */
-+	dbg_tfr("engine->running = %d\n", engine->running);
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+	return rv;
-+}
-+
-+static void engine_alignments(struct xdma_engine *engine)
-+{
-+	u32 w;
-+	u32 align_bytes;
-+	u32 granularity_bytes;
-+	u32 address_bits;
-+
-+	w = read_register(&engine->regs->alignments);
-+	dbg_init("engine %p name %s alignments=0x%08x\n", engine,
-+		engine->name, (int)w);
-+
-+	/* RTO  - add some macros to extract these fields */
-+	align_bytes = (w & 0x00ff0000U) >> 16;
-+	granularity_bytes = (w & 0x0000ff00U) >> 8;
-+	address_bits = (w & 0x000000ffU);
-+
-+	dbg_init("align_bytes = %d\n", align_bytes);
-+	dbg_init("granularity_bytes = %d\n", granularity_bytes);
-+	dbg_init("address_bits = %d\n", address_bits);
-+
-+	if (w) {
-+		engine->addr_align = align_bytes;
-+		engine->len_granularity = granularity_bytes;
-+		engine->addr_bits = address_bits;
-+	} else {
-+		/* Some default values if alignments are unspecified */
-+		engine->addr_align = 1;
-+		engine->len_granularity = 1;
-+		engine->addr_bits = 64;
-+	}
-+}
-+
-+static void engine_free_resource(struct xdma_engine *engine)
-+{
-+	struct xdma_dev *xdev = engine->xdev;
-+
-+	/* Release memory use for descriptor writebacks */
-+	if (engine->poll_mode_addr_virt) {
-+		dbg_sg("Releasing memory for descriptor writeback\n");
-+		dma_free_coherent(&xdev->pdev->dev,
-+				sizeof(struct xdma_poll_wb),
-+				engine->poll_mode_addr_virt,
-+				engine->poll_mode_bus);
-+		dbg_sg("Released memory for descriptor writeback\n");
-+		engine->poll_mode_addr_virt = NULL;
-+	}
-+
-+	if (engine->desc) {
-+		dbg_init("device %s, engine %s pre-alloc desc 0x%p,0x%llx.\n",
-+			dev_name(&xdev->pdev->dev), engine->name,
-+			engine->desc, engine->desc_bus);
-+		dma_free_coherent(&xdev->pdev->dev,
-+			XDMA_TRANSFER_MAX_DESC * sizeof(struct xdma_desc),
-+			engine->desc, engine->desc_bus);
-+		engine->desc = NULL;
-+	}
-+
-+	if (engine->cyclic_result) {
-+		dma_free_coherent(&xdev->pdev->dev,
-+			CYCLIC_RX_PAGES_MAX * sizeof(struct xdma_result),
-+			engine->cyclic_result, engine->cyclic_result_bus);
-+		engine->cyclic_result = NULL;
-+	}
-+}
-+
-+static void engine_destroy(struct xdma_dev *xdev, struct xdma_engine *engine)
-+{
-+	BUG_ON(!xdev);
-+	BUG_ON(!engine);
-+
-+	dbg_sg("Shutting down engine %s%d", engine->name, engine->channel);
-+
-+	/* Disable interrupts to stop processing new events during shutdown */
-+	write_register(0x0, &engine->regs->interrupt_enable_mask,
-+			(unsigned long)(&engine->regs->interrupt_enable_mask) -
-+			(unsigned long)(&engine->regs));
-+
-+	if (enable_credit_mp && engine->streaming &&
-+		engine->dir == DMA_FROM_DEVICE) {
-+		u32 reg_value = (0x1 << engine->channel) << 16;
-+		struct sgdma_common_regs *reg = (struct sgdma_common_regs *)
-+				(xdev->bar[xdev->config_bar_idx] +
-+				 (0x6*TARGET_SPACING));
-+		write_register(reg_value, &reg->credit_mode_enable_w1c, 0);
-+	}
-+
-+	/* Release memory use for descriptor writebacks */
-+	engine_free_resource(engine);
-+
-+	memset(engine, 0, sizeof(struct xdma_engine));
-+	/* Decrement the number of engines available */
-+	xdev->engines_num--;
-+}
-+
-+/**
-+ *engine_cyclic_stop() - stop a cyclic transfer running on an SG DMA engine
-+ *
-+ *engine->lock must be taken
-+ */
-+struct xdma_transfer *engine_cyclic_stop(struct xdma_engine *engine)
-+{
-+	struct xdma_transfer *transfer = 0;
-+
-+	/* transfers on queue? */
-+	if (!list_empty(&engine->transfer_list)) {
-+		/* pick first transfer on the queue (was submitted to engine) */
-+		transfer = list_entry(engine->transfer_list.next,
-+					struct xdma_transfer, entry);
-+		BUG_ON(!transfer);
-+
-+		xdma_engine_stop(engine);
-+
-+		if (transfer->cyclic) {
-+			if (engine->xdma_perf)
-+				dbg_perf("Stopping perf transfer on %s\n",
-+					engine->name);
-+			else
-+				dbg_perf("Stopping cyclic transfer on %s\n",
-+					engine->name);
-+			/* make sure the handler sees correct transfer state */
-+			transfer->cyclic = 1;
-+			/*
-+			 * set STOP flag and interrupt on completion, on the
-+			 * last descriptor
-+			 */
-+			xdma_desc_control_set(
-+				transfer->desc_virt + transfer->desc_num - 1,
-+				XDMA_DESC_COMPLETED | XDMA_DESC_STOPPED);
-+		} else {
-+			dbg_sg("(engine=%p) running transfer is not cyclic\n",
-+				engine);
-+		}
-+	} else {
-+		dbg_sg("(engine=%p) found not running transfer.\n", engine);
-+	}
-+	return transfer;
-+}
-+EXPORT_SYMBOL_GPL(engine_cyclic_stop);
-+
-+static int engine_writeback_setup(struct xdma_engine *engine)
-+{
-+	u32 w;
-+	struct xdma_dev *xdev;
-+	struct xdma_poll_wb *writeback;
-+
-+	BUG_ON(!engine);
-+	xdev = engine->xdev;
-+	BUG_ON(!xdev);
-+
-+	/*
-+	 * RTO - doing the allocation per engine is wasteful since a full page
-+	 * is allocated each time - better to allocate one page for the whole
-+	 * device during probe() and set per-engine offsets here
-+	 */
-+	writeback = (struct xdma_poll_wb *)engine->poll_mode_addr_virt;
-+	writeback->completed_desc_count = 0;
-+
-+	dbg_init("Setting writeback location to 0x%llx for engine %p",
-+		engine->poll_mode_bus, engine);
-+	w = cpu_to_le32(PCI_DMA_L(engine->poll_mode_bus));
-+	write_register(w, &engine->regs->poll_mode_wb_lo,
-+			(unsigned long)(&engine->regs->poll_mode_wb_lo) -
-+			(unsigned long)(&engine->regs));
-+	w = cpu_to_le32(PCI_DMA_H(engine->poll_mode_bus));
-+	write_register(w, &engine->regs->poll_mode_wb_hi,
-+			(unsigned long)(&engine->regs->poll_mode_wb_hi) -
-+			(unsigned long)(&engine->regs));
-+
-+	return 0;
-+}
-+
-+
-+/* engine_create() - Create an SG DMA engine bookkeeping data structure
-+ *
-+ * An SG DMA engine consists of the resources for a single-direction transfer
-+ * queue; the SG DMA hardware, the software queue and interrupt handling.
-+ *
-+ * @dev Pointer to pci_dev
-+ * @offset byte address offset in BAR[xdev->config_bar_idx] resource for the
-+ * SG DMA * controller registers.
-+ * @dir: DMA_TO/FROM_DEVICE
-+ * @streaming Whether the engine is attached to AXI ST (rather than MM)
-+ */
-+static int engine_init_regs(struct xdma_engine *engine)
-+{
-+	u32 reg_value;
-+	int rv = 0;
-+
-+	write_register(XDMA_CTRL_NON_INCR_ADDR, &engine->regs->control_w1c,
-+			(unsigned long)(&engine->regs->control_w1c) -
-+			(unsigned long)(&engine->regs));
-+
-+	engine_alignments(engine);
-+
-+	/* Configure error interrupts by default */
-+	reg_value = XDMA_CTRL_IE_DESC_ALIGN_MISMATCH;
-+	reg_value |= XDMA_CTRL_IE_MAGIC_STOPPED;
-+	reg_value |= XDMA_CTRL_IE_MAGIC_STOPPED;
-+	reg_value |= XDMA_CTRL_IE_READ_ERROR;
-+	reg_value |= XDMA_CTRL_IE_DESC_ERROR;
-+
-+	/* if using polled mode, configure writeback address */
-+	if (poll_mode) {
-+		rv = engine_writeback_setup(engine);
-+		if (rv) {
-+			dbg_init("%s descr writeback setup failed.\n",
-+				engine->name);
-+			goto fail_wb;
-+		}
-+	} else {
-+		/* enable the relevant completion interrupts */
-+		reg_value |= XDMA_CTRL_IE_DESC_STOPPED;
-+		reg_value |= XDMA_CTRL_IE_DESC_COMPLETED;
-+
-+		if (engine->streaming && engine->dir == DMA_FROM_DEVICE)
-+			reg_value |= XDMA_CTRL_IE_IDLE_STOPPED;
-+	}
-+
-+	/* Apply engine configurations */
-+	write_register(reg_value, &engine->regs->interrupt_enable_mask,
-+			(unsigned long)(&engine->regs->interrupt_enable_mask) -
-+			(unsigned long)(&engine->regs));
-+
-+	engine->interrupt_enable_mask_value = reg_value;
-+
-+	/* only enable credit mode for AXI-ST C2H */
-+	if (enable_credit_mp && engine->streaming &&
-+		engine->dir == DMA_FROM_DEVICE) {
-+
-+		struct xdma_dev *xdev = engine->xdev;
-+		u32 reg_value = (0x1 << engine->channel) << 16;
-+		struct sgdma_common_regs *reg = (struct sgdma_common_regs *)
-+				(xdev->bar[xdev->config_bar_idx] +
-+				 (0x6*TARGET_SPACING));
-+
-+		write_register(reg_value, &reg->credit_mode_enable_w1s, 0);
-+	}
-+
-+	return 0;
-+
-+fail_wb:
-+	return rv;
-+}
-+
-+static int engine_alloc_resource(struct xdma_engine *engine)
-+{
-+	struct xdma_dev *xdev = engine->xdev;
-+
-+	engine->desc = dma_alloc_coherent(&xdev->pdev->dev,
-+			XDMA_TRANSFER_MAX_DESC * sizeof(struct xdma_desc),
-+			&engine->desc_bus, GFP_KERNEL);
-+	if (!engine->desc) {
-+		pr_warn("dev %s, %s pre-alloc desc OOM.\n",
-+			dev_name(&xdev->pdev->dev), engine->name);
-+		goto err_out;
-+	}
-+
-+	if (poll_mode) {
-+		engine->poll_mode_addr_virt = dma_alloc_coherent(
-+					&xdev->pdev->dev,
-+					sizeof(struct xdma_poll_wb),
-+					&engine->poll_mode_bus, GFP_KERNEL);
-+		if (!engine->poll_mode_addr_virt) {
-+			pr_warn("%s, %s poll pre-alloc writeback OOM.\n",
-+				dev_name(&xdev->pdev->dev), engine->name);
-+			goto err_out;
-+		}
-+	}
-+
-+	if (engine->streaming && engine->dir == DMA_FROM_DEVICE) {
-+		engine->cyclic_result = dma_alloc_coherent(&xdev->pdev->dev,
-+			CYCLIC_RX_PAGES_MAX * sizeof(struct xdma_result),
-+			&engine->cyclic_result_bus, GFP_KERNEL);
-+
-+		if (!engine->cyclic_result) {
-+			pr_warn("%s, %s pre-alloc result OOM.\n",
-+				dev_name(&xdev->pdev->dev), engine->name);
-+			goto err_out;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_out:
-+	engine_free_resource(engine);
-+	return -ENOMEM;
-+}
-+
-+static int engine_init(struct xdma_engine *engine, struct xdma_dev *xdev,
-+			int offset, enum dma_data_direction dir, int channel)
-+{
-+	int rv;
-+	u32 val;
-+
-+	dbg_init("channel %d, offset 0x%x, dir %d.\n", channel, offset, dir);
-+
-+	/* set magic */
-+	engine->magic = MAGIC_ENGINE;
-+
-+	engine->channel = channel;
-+
-+	/* engine interrupt request bit */
-+	engine->irq_bitmask = (1 << XDMA_ENG_IRQ_NUM) - 1;
-+	engine->irq_bitmask <<= (xdev->engines_num * XDMA_ENG_IRQ_NUM);
-+	engine->bypass_offset = xdev->engines_num * BYPASS_MODE_SPACING;
-+
-+	/* parent */
-+	engine->xdev = xdev;
-+	/* register address */
-+	engine->regs = (xdev->bar[xdev->config_bar_idx] + offset);
-+	engine->sgdma_regs = xdev->bar[xdev->config_bar_idx] + offset +
-+				SGDMA_OFFSET_FROM_CHANNEL;
-+	val = read_register(&engine->regs->identifier);
-+	if (val & 0x8000U)
-+		engine->streaming = 1;
-+
-+	/* remember SG DMA direction */
-+	engine->dir = dir;
-+	sprintf(engine->name, "%d-%s%d-%s", xdev->idx,
-+		(dir == DMA_TO_DEVICE) ? "H2C" : "C2H", channel,
-+		engine->streaming ? "ST" : "MM");
-+
-+	dbg_init("engine %p name %s irq_bitmask=0x%08x\n", engine, engine->name,
-+		(int)engine->irq_bitmask);
-+
-+	/* initialize the deferred work for transfer completion */
-+	INIT_WORK(&engine->work, engine_service_work);
-+
-+	if (dir == DMA_TO_DEVICE)
-+		xdev->mask_irq_h2c |= engine->irq_bitmask;
-+	else
-+		xdev->mask_irq_c2h |= engine->irq_bitmask;
-+	xdev->engines_num++;
-+
-+	rv = engine_alloc_resource(engine);
-+	if (rv)
-+		return rv;
-+
-+	rv = engine_init_regs(engine);
-+	if (rv)
-+		return rv;
-+
-+	return 0;
-+}
-+
-+/* transfer_destroy() - free transfer */
-+static void transfer_destroy(struct xdma_dev *xdev, struct xdma_transfer *xfer)
-+{
-+	/* free descriptors */
-+	xdma_desc_done(xfer->desc_virt);
-+
-+	if (xfer->last_in_request && (xfer->flags & XFER_FLAG_NEED_UNMAP)) {
-+		struct sg_table *sgt = xfer->sgt;
-+
-+		if (sgt->nents) {
-+			pci_unmap_sg(xdev->pdev, sgt->sgl, sgt->nents,
-+				xfer->dir);
-+			sgt->nents = 0;
-+		}
-+	}
-+}
-+
-+static int transfer_build(struct xdma_engine *engine,
-+			struct xdma_request_cb *req, unsigned int desc_max)
-+{
-+	struct xdma_transfer *xfer = &req->xfer;
-+	struct sw_desc *sdesc = &(req->sdesc[req->sw_desc_idx]);
-+	int i = 0;
-+	int j = 0;
-+
-+	for (; i < desc_max; i++, j++, sdesc++) {
-+		dbg_desc("sw desc %d/%u: 0x%llx, 0x%x, ep 0x%llx.\n",
-+			i + req->sw_desc_idx, req->sw_desc_cnt,
-+			sdesc->addr, sdesc->len, req->ep_addr);
-+
-+		/* fill in descriptor entry j with transfer details */
-+		xdma_desc_set(xfer->desc_virt + j, sdesc->addr, req->ep_addr,
-+				 sdesc->len, xfer->dir);
-+		xfer->len += sdesc->len;
-+
-+		/* for non-inc-add mode don't increment ep_addr */
-+		if (!engine->non_incr_addr)
-+			req->ep_addr += sdesc->len;
-+	}
-+	req->sw_desc_idx += desc_max;
-+	return 0;
-+}
-+
-+static int transfer_init(struct xdma_engine *engine, struct xdma_request_cb *req)
-+{
-+	struct xdma_transfer *xfer = &req->xfer;
-+	unsigned int desc_max = min_t(unsigned int,
-+				req->sw_desc_cnt - req->sw_desc_idx,
-+				XDMA_TRANSFER_MAX_DESC);
-+	int i = 0;
-+	int last = 0;
-+	u32 control;
-+
-+	memset(xfer, 0, sizeof(*xfer));
-+
-+	/* initialize wait queue */
-+	init_waitqueue_head(&xfer->wq);
-+
-+	/* remember direction of transfer */
-+	xfer->dir = engine->dir;
-+
-+	xfer->desc_virt = engine->desc;
-+	xfer->desc_bus = engine->desc_bus;
-+
-+	transfer_desc_init(xfer, desc_max);
-+
-+	dbg_sg("transfer->desc_bus = 0x%llx.\n", (u64)xfer->desc_bus);
-+
-+	transfer_build(engine, req, desc_max);
-+
-+	/* terminate last descriptor */
-+	last = desc_max - 1;
-+	xdma_desc_link(xfer->desc_virt + last, 0, 0);
-+	/* stop engine, EOP for AXI ST, req IRQ on last descriptor */
-+	control = XDMA_DESC_STOPPED;
-+	control |= XDMA_DESC_EOP;
-+	control |= XDMA_DESC_COMPLETED;
-+	xdma_desc_control_set(xfer->desc_virt + last, control);
-+
-+	xfer->desc_num = xfer->desc_adjacent = desc_max;
-+
-+	dbg_sg("transfer 0x%p has %d descriptors\n", xfer, xfer->desc_num);
-+	/* fill in adjacent numbers */
-+	for (i = 0; i < xfer->desc_num; i++)
-+		xdma_desc_adjacent(xfer->desc_virt + i, xfer->desc_num - i - 1);
-+
-+	return 0;
-+}
-+
-+#ifdef __LIBXDMA_DEBUG__
-+static void sgt_dump(struct sg_table *sgt)
-+{
-+	int i;
-+	struct scatterlist *sg = sgt->sgl;
-+
-+	pr_info("sgt 0x%p, sgl 0x%p, nents %u/%u.\n",
-+		sgt, sgt->sgl, sgt->nents, sgt->orig_nents);
-+
-+	for (i = 0; i < sgt->orig_nents; i++, sg = sg_next(sg))
-+		pr_info("%d, 0x%p, pg 0x%p,%u+%u, dma 0x%llx,%u.\n",
-+			i, sg, sg_page(sg), sg->offset, sg->length,
-+			sg_dma_address(sg), sg_dma_len(sg));
-+}
-+
-+static void xdma_request_cb_dump(struct xdma_request_cb *req)
-+{
-+	int i;
-+
-+	pr_info("request 0x%p, total %u, ep 0x%llx, sw_desc %u, sgt 0x%p.\n",
-+		req, req->total_len, req->ep_addr, req->sw_desc_cnt, req->sgt);
-+	sgt_dump(req->sgt);
-+	for (i = 0; i < req->sw_desc_cnt; i++)
-+		pr_info("%d/%u, 0x%llx, %u.\n",
-+			i, req->sw_desc_cnt, req->sdesc[i].addr,
-+			req->sdesc[i].len);
-+}
-+#endif
-+
-+static void xdma_request_free(struct xdma_request_cb *req)
-+{
-+	if (((unsigned long)req) >= VMALLOC_START &&
-+	    ((unsigned long)req) < VMALLOC_END)
-+		vfree(req);
-+	else
-+		kfree(req);
-+}
-+
-+static struct xdma_request_cb *xdma_request_alloc(unsigned int sdesc_nr)
-+{
-+	struct xdma_request_cb *req;
-+	unsigned int size = sizeof(struct xdma_request_cb) +
-+				sdesc_nr * sizeof(struct sw_desc);
-+
-+	req = kzalloc(size, GFP_KERNEL);
-+	if (!req) {
-+		req = vmalloc(size);
-+		if (req)
-+			memset(req, 0, size);
-+	}
-+	if (!req) {
-+		pr_info("OOM, %u sw_desc, %u.\n", sdesc_nr, size);
-+		return NULL;
-+	}
-+
-+	return req;
-+}
-+
-+static struct xdma_request_cb *xdma_init_request(struct sg_table *sgt,
-+						u64 ep_addr)
-+{
-+	struct xdma_request_cb *req;
-+	struct scatterlist *sg = sgt->sgl;
-+	int max = sgt->nents;
-+	int extra = 0;
-+	int i, j = 0;
-+
-+	for (i = 0;  i < max; i++, sg = sg_next(sg)) {
-+		unsigned int len = sg_dma_len(sg);
-+
-+		if (unlikely(len > XDMA_DESC_BLEN_MAX))
-+			extra += len >> XDMA_DESC_BLEN_BITS;
-+	}
-+
-+	//pr_info("ep 0x%llx, desc %u+%u.\n", ep_addr, max, extra);
-+
-+	max += extra;
-+	req = xdma_request_alloc(max);
-+	if (!req)
-+		return NULL;
-+
-+	req->sgt = sgt;
-+	req->ep_addr = ep_addr;
-+
-+	for (i = 0, sg = sgt->sgl;  i < sgt->nents; i++, sg = sg_next(sg)) {
-+		unsigned int tlen = sg_dma_len(sg);
-+		dma_addr_t addr = sg_dma_address(sg);
-+
-+		req->total_len += tlen;
-+		while (tlen) {
-+			req->sdesc[j].addr = addr;
-+			if (tlen > XDMA_DESC_BLEN_MAX) {
-+				req->sdesc[j].len = XDMA_DESC_BLEN_MAX;
-+				addr += XDMA_DESC_BLEN_MAX;
-+				tlen -= XDMA_DESC_BLEN_MAX;
-+			} else {
-+				req->sdesc[j].len = tlen;
-+				tlen = 0;
-+			}
-+			j++;
-+		}
-+	}
-+	BUG_ON(j > max);
-+
-+	req->sw_desc_cnt = j;
-+#ifdef __LIBXDMA_DEBUG__
-+	xdma_request_cb_dump(req);
-+#endif
-+	return req;
-+}
-+
-+ssize_t xdma_xfer_submit(void *dev_hndl, int channel, bool write, u64 ep_addr,
-+			struct sg_table *sgt, bool dma_mapped, int timeout_ms)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+	struct xdma_engine *engine;
-+	int rv = 0;
-+	ssize_t done = 0;
-+	struct scatterlist *sg = sgt->sgl;
-+	int nents;
-+	enum dma_data_direction dir = write ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
-+	struct xdma_request_cb *req = NULL;
-+
-+	if (!dev_hndl)
-+		return -EINVAL;
-+
-+	if (debug_check_dev_hndl(__func__, xdev->pdev, dev_hndl) < 0)
-+		return -EINVAL;
-+
-+	if (write == 1) {
-+		if (channel >= xdev->h2c_channel_max) {
-+			pr_warn("H2C channel %d >= %d.\n",
-+				channel, xdev->h2c_channel_max);
-+			return -EINVAL;
-+		}
-+		engine = &xdev->engine_h2c[channel];
-+	} else if (write == 0) {
-+		if (channel >= xdev->c2h_channel_max) {
-+			pr_warn("C2H channel %d >= %d.\n",
-+				channel, xdev->c2h_channel_max);
-+			return -EINVAL;
-+		}
-+		engine = &xdev->engine_c2h[channel];
-+	} else {
-+		pr_warn("write %d, exp. 0|1.\n", write);
++	struct xfpga_klass *obj = mgr->priv;
++	const struct axlf *bin = (const struct axlf *)buf;
++
++	if (count < sizeof(struct axlf)) {
++		obj->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
 +		return -EINVAL;
 +	}
 +
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	xdev = engine->xdev;
-+	if (xdma_device_flag_check(xdev, XDEV_FLAG_OFFLINE)) {
-+		pr_info("xdev 0x%p, offline.\n", xdev);
-+		return -EBUSY;
-+	}
-+
-+	/* check the direction */
-+	if (engine->dir != dir) {
-+		pr_info("0x%p, %s, %d, W %d, 0x%x/0x%x mismatch.\n",
-+			engine, engine->name, channel, write, engine->dir, dir);
++	if (count > bin->m_header.m_length) {
++		obj->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
 +		return -EINVAL;
 +	}
 +
-+	if (!dma_mapped) {
-+		nents = pci_map_sg(xdev->pdev, sg, sgt->orig_nents, dir);
-+		if (!nents) {
-+			pr_info("map sgl failed, sgt 0x%p.\n", sgt);
-+			return -EIO;
-+		}
-+		sgt->nents = nents;
-+	} else {
-+		BUG_ON(!sgt->nents);
-+	}
-+
-+	req = xdma_init_request(sgt, ep_addr);
-+	if (!req) {
-+		rv = -ENOMEM;
-+		goto unmap_sgl;
-+	}
-+
-+	dbg_tfr("%s, len %u sg cnt %u.\n",
-+		engine->name, req->total_len, req->sw_desc_cnt);
-+
-+	sg = sgt->sgl;
-+	nents = req->sw_desc_cnt;
-+	while (nents) {
-+		unsigned long flags;
-+		struct xdma_transfer *xfer;
-+
-+		/* one transfer at a time */
-+#ifndef CONFIG_PREEMPT_COUNT
-+		spin_lock(&engine->desc_lock);
-+#else
-+		mutex_lock(&engine->desc_mutex);
-+#endif
-+
-+		/* build transfer */
-+		rv = transfer_init(engine, req);
-+		if (rv < 0) {
-+#ifndef CONFIG_PREEMPT_COUNT
-+			spin_unlock(&engine->desc_lock);
-+#else
-+			mutex_unlock(&engine->desc_mutex);
-+#endif
-+			goto unmap_sgl;
-+		}
-+		xfer = &req->xfer;
-+
-+		if (!dma_mapped)
-+			xfer->flags = XFER_FLAG_NEED_UNMAP;
-+
-+		/* last transfer for the given request? */
-+		nents -= xfer->desc_num;
-+		if (!nents) {
-+			xfer->last_in_request = 1;
-+			xfer->sgt = sgt;
-+		}
-+
-+		dbg_tfr("xfer, %u, ep 0x%llx, done %lu, sg %u/%u.\n",
-+			xfer->len, req->ep_addr, done, req->sw_desc_idx,
-+			req->sw_desc_cnt);
-+
-+#ifdef __LIBXDMA_DEBUG__
-+		transfer_dump(xfer);
-+#endif
-+
-+		rv = transfer_queue(engine, xfer);
-+		if (rv < 0) {
-+#ifndef CONFIG_PREEMPT_COUNT
-+			spin_unlock(&engine->desc_lock);
-+#else
-+			mutex_unlock(&engine->desc_mutex);
-+#endif
-+			pr_info("unable to submit %s, %d.\n", engine->name, rv);
-+			goto unmap_sgl;
-+		}
-+
-+		/*
-+		 * When polling, determine how many descriptors have been
-+		 * queued on the engine to determine the writeback value
-+		 * expected
-+		 */
-+		if (poll_mode) {
-+			unsigned int desc_count;
-+
-+			spin_lock_irqsave(&engine->lock, flags);
-+			desc_count = xfer->desc_num;
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+
-+			dbg_tfr("%s poll desc_count=%d\n",
-+				engine->name, desc_count);
-+			rv = engine_service_poll(engine, desc_count);
-+
-+		} else {
-+			rv = wait_event_timeout(xfer->wq,
-+				(xfer->state != TRANSFER_STATE_SUBMITTED),
-+				msecs_to_jiffies(timeout_ms));
-+		}
-+
-+		spin_lock_irqsave(&engine->lock, flags);
-+
-+		switch (xfer->state) {
-+		case TRANSFER_STATE_COMPLETED:
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+
-+			dbg_tfr("transfer %p, %u, ep 0x%llx compl, +%lu.\n",
-+				xfer, xfer->len, req->ep_addr - xfer->len, done);
-+			done += xfer->len;
-+			rv = 0;
-+			break;
-+		case TRANSFER_STATE_FAILED:
-+			pr_info("xfer 0x%p,%u, failed, ep 0x%llx.\n",
-+				 xfer, xfer->len, req->ep_addr - xfer->len);
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+
-+#ifdef __LIBXDMA_DEBUG__
-+			transfer_dump(xfer);
-+			sgt_dump(sgt);
-+#endif
-+			rv = -EIO;
-+			break;
-+		default:
-+			if (!poll_mode && rv == -ERESTARTSYS) {
-+				pr_info("xfer 0x%p,%u, canceled, ep 0x%llx.\n",
-+					xfer, xfer->len,
-+					req->ep_addr - xfer->len);
-+				spin_unlock_irqrestore(&engine->lock, flags);
-+				wait_event_timeout(xfer->wq, (xfer->state !=
-+					TRANSFER_STATE_SUBMITTED),
-+					msecs_to_jiffies(timeout_ms));
-+				xdma_engine_stop(engine);
-+				break;
-+			}
-+			/* transfer can still be in-flight */
-+			pr_info("xfer 0x%p,%u, s 0x%x timed out, ep 0x%llx.\n",
-+				 xfer, xfer->len, xfer->state, req->ep_addr);
-+			engine_status_read(engine, 0, 1);
-+			//engine_status_dump(engine);
-+			transfer_abort(engine, xfer);
-+
-+			xdma_engine_stop(engine);
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+
-+#ifdef __LIBXDMA_DEBUG__
-+			transfer_dump(xfer);
-+			sgt_dump(sgt);
-+#endif
-+			rv = -ERESTARTSYS;
-+			break;
-+		}
-+		transfer_destroy(xdev, xfer);
-+#ifndef CONFIG_PREEMPT_COUNT
-+			spin_unlock(&engine->desc_lock);
-+#else
-+			mutex_unlock(&engine->desc_mutex);
-+#endif
-+
-+		if (rv < 0)
-+			goto unmap_sgl;
-+	} /* while (sg) */
-+
-+unmap_sgl:
-+	if (!dma_mapped && sgt->nents) {
-+		pci_unmap_sg(xdev->pdev, sgt->sgl, sgt->orig_nents, dir);
-+		sgt->nents = 0;
-+	}
-+
-+	if (req)
-+		xdma_request_free(req);
-+
-+	if (rv < 0)
-+		return rv;
-+
-+	return done;
-+}
-+EXPORT_SYMBOL_GPL(xdma_xfer_submit);
-+
-+int xdma_performance_submit(struct xdma_dev *xdev, struct xdma_engine *engine)
-+{
-+	u8 *buffer_virt;
-+	u32 max_consistent_size = 128 * 32 * 1024; /* 1024 pages, 4MB */
-+	dma_addr_t buffer_bus;	/* bus address */
-+	struct xdma_transfer *transfer;
-+	u64 ep_addr = 0;
-+	int num_desc_in_a_loop = 128;
-+	int size_in_desc = engine->xdma_perf->transfer_size;
-+	int size = size_in_desc * num_desc_in_a_loop;
-+	int i;
-+
-+	BUG_ON(size_in_desc > max_consistent_size);
-+
-+	if (size > max_consistent_size) {
-+		size = max_consistent_size;
-+		num_desc_in_a_loop = size / size_in_desc;
-+	}
-+
-+	buffer_virt = dma_alloc_coherent(&xdev->pdev->dev, size,
-+					&buffer_bus, GFP_KERNEL);
-+
-+	/* allocate transfer data structure */
-+	transfer = kzalloc(sizeof(struct xdma_transfer), GFP_KERNEL);
-+	BUG_ON(!transfer);
-+
-+	/* 0 = write engine (to_dev=0) , 1 = read engine (to_dev=1) */
-+	transfer->dir = engine->dir;
-+	/* set number of descriptors */
-+	transfer->desc_num = num_desc_in_a_loop;
-+
-+	/* allocate descriptor list */
-+	if (!engine->desc) {
-+		engine->desc = dma_alloc_coherent(&xdev->pdev->dev,
-+			num_desc_in_a_loop * sizeof(struct xdma_desc),
-+			&engine->desc_bus, GFP_KERNEL);
-+		BUG_ON(!engine->desc);
-+		dbg_init("device %s, engine %s pre-alloc desc 0x%p,0x%llx.\n",
-+			dev_name(&xdev->pdev->dev), engine->name,
-+			engine->desc, engine->desc_bus);
-+	}
-+	transfer->desc_virt = engine->desc;
-+	transfer->desc_bus = engine->desc_bus;
-+
-+	transfer_desc_init(transfer, transfer->desc_num);
-+
-+	dbg_sg("transfer->desc_bus = 0x%llx.\n", (u64)transfer->desc_bus);
-+
-+	for (i = 0; i < transfer->desc_num; i++) {
-+		struct xdma_desc *desc = transfer->desc_virt + i;
-+		dma_addr_t rc_bus_addr = buffer_bus + size_in_desc * i;
-+
-+		/* fill in descriptor entry with transfer details */
-+		xdma_desc_set(desc, rc_bus_addr, ep_addr, size_in_desc,
-+			engine->dir);
-+	}
-+
-+	/* stop engine and request interrupt on last descriptor */
-+	xdma_desc_control_set(transfer->desc_virt, 0);
-+	/* create a linked loop */
-+	xdma_desc_link(transfer->desc_virt + transfer->desc_num - 1,
-+		transfer->desc_virt, transfer->desc_bus);
-+
-+	transfer->cyclic = 1;
-+
-+	/* initialize wait queue */
-+	init_waitqueue_head(&transfer->wq);
-+
-+	dbg_perf("Queueing XDMA I/O %s request for performance measurement.\n",
-+		engine->dir ? "write (to dev)" : "read (from dev)");
-+	transfer_queue(engine, transfer);
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL_GPL(xdma_performance_submit);
-+
-+static struct xdma_dev *alloc_dev_instance(struct pci_dev *pdev)
-+{
-+	int i;
-+	struct xdma_dev *xdev;
-+	struct xdma_engine *engine;
-+
-+	BUG_ON(!pdev);
-+
-+	/* allocate zeroed device book keeping structure */
-+	xdev = kzalloc(sizeof(struct xdma_dev), GFP_KERNEL);
-+	if (!xdev)
-+		return NULL;
-+
-+	spin_lock_init(&xdev->lock);
-+
-+	xdev->magic = MAGIC_DEVICE;
-+	xdev->config_bar_idx = -1;
-+	xdev->user_bar_idx = -1;
-+	xdev->bypass_bar_idx = -1;
-+	xdev->irq_line = -1;
-+
-+	/* create a driver to device reference */
-+	xdev->pdev = pdev;
-+	dbg_init("xdev = 0x%p\n", xdev);
-+
-+	/* Set up data user IRQ data structures */
-+	for (i = 0; i < 16; i++) {
-+		xdev->user_irq[i].xdev = xdev;
-+		spin_lock_init(&xdev->user_irq[i].events_lock);
-+		init_waitqueue_head(&xdev->user_irq[i].events_wq);
-+		xdev->user_irq[i].handler = NULL;
-+		xdev->user_irq[i].user_idx = i; /* 0 based */
-+	}
-+
-+	engine = xdev->engine_h2c;
-+	for (i = 0; i < XDMA_CHANNEL_NUM_MAX; i++, engine++) {
-+		spin_lock_init(&engine->lock);
-+		spin_lock_init(&engine->desc_lock);
-+#ifdef CONFIG_PREEMPT_COUNT
-+		mutex_init(&engine->desc_mutex);
-+#endif
-+		INIT_LIST_HEAD(&engine->transfer_list);
-+		init_waitqueue_head(&engine->shutdown_wq);
-+		init_waitqueue_head(&engine->xdma_perf_wq);
-+	}
-+
-+	engine = xdev->engine_c2h;
-+	for (i = 0; i < XDMA_CHANNEL_NUM_MAX; i++, engine++) {
-+		spin_lock_init(&engine->lock);
-+		spin_lock_init(&engine->desc_lock);
-+#ifdef CONFIG_PREEMPT_COUNT
-+		mutex_init(&engine->desc_mutex);
-+#endif
-+		INIT_LIST_HEAD(&engine->transfer_list);
-+		init_waitqueue_head(&engine->shutdown_wq);
-+		init_waitqueue_head(&engine->xdma_perf_wq);
-+	}
-+
-+	return xdev;
-+}
-+
-+static int set_dma_mask(struct pci_dev *pdev)
-+{
-+	BUG_ON(!pdev);
-+
-+	dbg_init("sizeof(dma_addr_t) == %ld\n", sizeof(dma_addr_t));
-+	/* 64-bit addressing capability for XDMA? */
-+	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
-+		/* query for DMA transfer */
-+		/* @see Documentation/DMA-mapping.txt */
-+		dbg_init("pci_set_dma_mask()\n");
-+		/* use 64-bit DMA */
-+		dbg_init("Using a 64-bit DMA mask.\n");
-+		/* use 32-bit DMA for descriptors */
-+		pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-+		/* use 64-bit DMA, 32-bit for consistent */
-+	} else if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
-+		dbg_init("Could not set 64-bit DMA mask.\n");
-+		pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-+		/* use 32-bit DMA */
-+		dbg_init("Using a 32-bit DMA mask.\n");
-+	} else {
-+		dbg_init("No suitable DMA possible.\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static u32 get_engine_channel_id(struct engine_regs *regs)
-+{
-+	u32 value;
-+
-+	BUG_ON(!regs);
-+
-+	value = read_register(&regs->identifier);
-+
-+	return (value & 0x00000f00U) >> 8;
-+}
-+
-+static u32 get_engine_id(struct engine_regs *regs)
-+{
-+	u32 value;
-+
-+	BUG_ON(!regs);
-+
-+	value = read_register(&regs->identifier);
-+	return (value & 0xffff0000U) >> 16;
-+}
-+
-+static void remove_engines(struct xdma_dev *xdev)
-+{
-+	struct xdma_engine *engine;
-+	int i;
-+
-+	BUG_ON(!xdev);
-+
-+	/* iterate over channels */
-+	for (i = 0; i < xdev->h2c_channel_max; i++) {
-+		engine = &xdev->engine_h2c[i];
-+		if (engine->magic == MAGIC_ENGINE) {
-+			dbg_sg("Remove %s, %d", engine->name, i);
-+			engine_destroy(xdev, engine);
-+			dbg_sg("%s, %d removed", engine->name, i);
-+		}
-+	}
-+
-+	for (i = 0; i < xdev->c2h_channel_max; i++) {
-+		engine = &xdev->engine_c2h[i];
-+		if (engine->magic == MAGIC_ENGINE) {
-+			dbg_sg("Remove %s, %d", engine->name, i);
-+			engine_destroy(xdev, engine);
-+			dbg_sg("%s, %d removed", engine->name, i);
-+		}
-+	}
-+}
-+
-+static int probe_for_engine(struct xdma_dev *xdev, enum dma_data_direction dir,
-+			int channel)
-+{
-+	struct engine_regs *regs;
-+	int offset = channel * CHANNEL_SPACING;
-+	u32 engine_id;
-+	u32 engine_id_expected;
-+	u32 channel_id;
-+	struct xdma_engine *engine;
-+	int rv;
-+
-+	/* register offset for the engine */
-+	/*
-+	 * read channels at 0x0000, write channels at 0x1000,
-+	 * channels at 0x100 interval
-+	 */
-+	if (dir == DMA_TO_DEVICE) {
-+		engine_id_expected = XDMA_ID_H2C;
-+		engine = &xdev->engine_h2c[channel];
-+	} else {
-+		offset += H2C_CHANNEL_OFFSET;
-+		engine_id_expected = XDMA_ID_C2H;
-+		engine = &xdev->engine_c2h[channel];
-+	}
-+
-+	regs = xdev->bar[xdev->config_bar_idx] + offset;
-+	engine_id = get_engine_id(regs);
-+	channel_id = get_engine_channel_id(regs);
-+
-+	if ((engine_id != engine_id_expected) || (channel_id != channel)) {
-+		dbg_init("%s %d engine, reg off 0x%x, id mismatch 0x%x,0x%x,exp 0x%x,0x%x, SKIP.\n",
-+			dir == DMA_TO_DEVICE ? "H2C" : "C2H",
-+			 channel, offset, engine_id, channel_id,
-+			engine_id_expected, channel_id != channel);
-+		return -EINVAL;
-+	}
-+
-+	dbg_init("found AXI %s %d engine, reg. off 0x%x, id 0x%x,0x%x.\n",
-+		 dir == DMA_TO_DEVICE ? "H2C" : "C2H", channel,
-+		 offset, engine_id, channel_id);
-+
-+	/* allocate and initialize engine */
-+	rv = engine_init(engine, xdev, offset, dir, channel);
-+	if (rv != 0) {
-+		pr_info("failed to create AXI %s %d engine.\n",
-+			dir == DMA_TO_DEVICE ? "H2C" : "C2H",
-+			channel);
-+		return rv;
-+	}
-+
-+	return 0;
-+}
-+
-+static int probe_engines(struct xdma_dev *xdev)
-+{
-+	int i;
-+	int rv = 0;
-+
-+	BUG_ON(!xdev);
-+
-+	/* iterate over channels */
-+	for (i = 0; i < xdev->h2c_channel_max; i++) {
-+		rv = probe_for_engine(xdev, DMA_TO_DEVICE, i);
-+		if (rv)
-+			break;
-+	}
-+	xdev->h2c_channel_max = i;
-+
-+	for (i = 0; i < xdev->c2h_channel_max; i++) {
-+		rv = probe_for_engine(xdev, DMA_FROM_DEVICE, i);
-+		if (rv)
-+			break;
-+	}
-+	xdev->c2h_channel_max = i;
-+
-+	return 0;
-+}
-+
-+static void pci_enable_capability(struct pci_dev *pdev, int cap)
-+{
-+	pcie_capability_set_word(pdev, PCI_EXP_DEVCTL, cap);
-+}
-+
-+static int pci_check_extended_tag(struct xdma_dev *xdev, struct pci_dev *pdev)
-+{
-+	u16 cap;
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
-+
-+	if ((cap & PCI_EXP_DEVCTL_EXT_TAG))
-+		return 0;
-+
-+	/* extended tag not enabled */
-+	pr_info("0x%p EXT_TAG disabled.\n", pdev);
-+
-+	/*
-+	 * Always enable ExtTag, even though xdma has configuration
-+	 * XDMA_OFS_CONFIG for system which does not have ExtTag enabled.
-+	 *
-+	 * We observed that the ExtTag was cleared on some system. The SSD-
-+	 * FPGA board will not work on that system (DMA failed). The solution
-+	 * is that XDMA driver enables ExtTag in this case.
-+	 *
-+	 * If ExtTag need to be disabled for your system, please enable this.
-+	 */
-+#ifdef _NO_FORCE_EXTTAG
-+	if (xdev->config_bar_idx < 0) {
-+		pr_info("pdev 0x%p, xdev 0x%p, config bar UNKNOWN.\n",
-+				pdev, xdev);
-+		return -EINVAL;
-+	}
-+
-+	reg = xdev->bar[xdev->config_bar_idx] + XDMA_OFS_CONFIG + 0x4C;
-+	v =  read_register(reg);
-+	v = (v & 0xFF) | (((u32)32) << 8);
-+	write_register(v, reg, XDMA_OFS_CONFIG + 0x4C);
-+	return 0;
-+#else
-+	/* Return 1 is going to enable ExtTag */
-+	return 1;
-+#endif
-+}
-+
-+void *xdma_device_open(const char *mname, struct pci_dev *pdev, int *user_max,
-+			int *h2c_channel_max, int *c2h_channel_max)
-+{
-+	struct xdma_dev *xdev = NULL;
-+	int rv = 0;
-+
-+	pr_info("%s device %s, 0x%p.\n", mname, dev_name(&pdev->dev), pdev);
-+
-+	/* allocate zeroed device book keeping structure */
-+	xdev = alloc_dev_instance(pdev);
-+	if (!xdev)
-+		return NULL;
-+	xdev->mod_name = mname;
-+	xdev->user_max = *user_max;
-+	xdev->h2c_channel_max = *h2c_channel_max;
-+	xdev->c2h_channel_max = *c2h_channel_max;
-+
-+	xdma_device_flag_set(xdev, XDEV_FLAG_OFFLINE);
-+	xdev_list_add(xdev);
-+
-+	if (xdev->user_max == 0 || xdev->user_max > MAX_USER_IRQ)
-+		xdev->user_max = MAX_USER_IRQ;
-+	if (xdev->h2c_channel_max == 0 ||
-+	    xdev->h2c_channel_max > XDMA_CHANNEL_NUM_MAX)
-+		xdev->h2c_channel_max = XDMA_CHANNEL_NUM_MAX;
-+	if (xdev->c2h_channel_max == 0 ||
-+	    xdev->c2h_channel_max > XDMA_CHANNEL_NUM_MAX)
-+		xdev->c2h_channel_max = XDMA_CHANNEL_NUM_MAX;
-+
-+	/* keep INTx enabled */
-+	pci_check_intr_pend(pdev);
-+
-+	/* enable relaxed ordering */
-+	pci_enable_capability(pdev, PCI_EXP_DEVCTL_RELAX_EN);
-+
-+	/* if extended tag check failed, enable it */
-+	if (pci_check_extended_tag(xdev, pdev)) {
-+		pr_info("ExtTag is disabled, try enable it.\n");
-+		pci_enable_capability(pdev, PCI_EXP_DEVCTL_EXT_TAG);
-+	}
-+
-+	/* force MRRS to be 512 */
-+	rv = pcie_get_readrq(pdev);
-+	if (rv < 0) {
-+		dev_err(&pdev->dev, "failed to read mrrs %d\n", rv);
-+		goto err_map;
-+	}
-+	if (rv > 512) {
-+		rv = pcie_set_readrq(pdev, 512);
-+		if (rv) {
-+			dev_err(&pdev->dev, "failed to force mrrs %d\n", rv);
-+			goto err_map;
-+		}
-+	}
-+
-+	/* enable bus master capability */
-+	pci_set_master(pdev);
-+
-+	rv = map_bars(xdev, pdev);
-+	if (rv)
-+		goto err_map;
-+
-+	rv = set_dma_mask(pdev);
-+	if (rv)
-+		goto err_mask;
-+
-+	check_nonzero_interrupt_status(xdev);
-+	/* explicitely zero all interrupt enable masks */
-+	channel_interrupts_disable(xdev, ~0);
-+	user_interrupts_disable(xdev, ~0);
-+	read_interrupts(xdev);
-+
-+	rv = probe_engines(xdev);
-+	if (rv)
-+		goto err_engines;
-+
-+	rv = enable_msi_msix(xdev, pdev);
-+	if (rv < 0)
-+		goto err_enable_msix;
-+
-+	rv = irq_setup(xdev, pdev);
-+	if (rv < 0)
-+		goto err_interrupts;
-+
-+	if (!poll_mode)
-+		channel_interrupts_enable(xdev, ~0);
-+
-+	/* Flush writes */
-+	read_interrupts(xdev);
-+
-+	*user_max = xdev->user_max;
-+	*h2c_channel_max = xdev->h2c_channel_max;
-+	*c2h_channel_max = xdev->c2h_channel_max;
-+
-+	xdma_device_flag_clear(xdev, XDEV_FLAG_OFFLINE);
-+	return (void *)xdev;
-+
-+err_interrupts:
-+	irq_teardown(xdev);
-+err_enable_msix:
-+	disable_msi_msix(xdev, pdev);
-+err_engines:
-+	remove_engines(xdev);
-+err_mask:
-+	unmap_bars(xdev, pdev);
-+err_map:
-+	xdev_list_remove(xdev);
-+	kfree(xdev);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(xdma_device_open);
-+
-+void xdma_device_close(struct pci_dev *pdev, void *dev_hndl)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	dbg_init("pdev 0x%p, xdev 0x%p.\n", pdev, dev_hndl);
-+
-+	if (!dev_hndl)
-+		return;
-+
-+	if (debug_check_dev_hndl(__func__, pdev, dev_hndl) < 0)
-+		return;
-+
-+	dbg_sg("remove(dev = 0x%p) where pdev->dev.driver_data = 0x%p\n",
-+		   pdev, xdev);
-+	if (xdev->pdev != pdev) {
-+		dbg_sg("pci_dev(0x%lx) != pdev(0x%lx)\n",
-+			(unsigned long)xdev->pdev, (unsigned long)pdev);
-+	}
-+
-+	channel_interrupts_disable(xdev, ~0);
-+	user_interrupts_disable(xdev, ~0);
-+	read_interrupts(xdev);
-+
-+	irq_teardown(xdev);
-+	disable_msi_msix(xdev, pdev);
-+
-+	remove_engines(xdev);
-+	unmap_bars(xdev, pdev);
-+
-+	xdev_list_remove(xdev);
-+
-+	kfree(xdev);
-+}
-+EXPORT_SYMBOL_GPL(xdma_device_close);
-+
-+void xdma_device_offline(struct pci_dev *pdev, void *dev_hndl)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+	struct xdma_engine *engine;
-+	int i;
-+
-+	if (!dev_hndl)
-+		return;
-+
-+	if (debug_check_dev_hndl(__func__, pdev, dev_hndl) < 0)
-+		return;
-+
-+pr_info("pdev 0x%p, xdev 0x%p.\n", pdev, xdev);
-+	xdma_device_flag_set(xdev, XDEV_FLAG_OFFLINE);
-+
-+	/* wait for all engines to be idle */
-+	for (i  = 0; i < xdev->h2c_channel_max; i++) {
-+		unsigned long flags;
-+
-+		engine = &xdev->engine_h2c[i];
-+
-+		if (engine->magic == MAGIC_ENGINE) {
-+			spin_lock_irqsave(&engine->lock, flags);
-+			engine->shutdown |= ENGINE_SHUTDOWN_REQUEST;
-+
-+			xdma_engine_stop(engine);
-+			engine->running = 0;
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+		}
-+	}
-+
-+	for (i  = 0; i < xdev->c2h_channel_max; i++) {
-+		unsigned long flags;
-+
-+		engine = &xdev->engine_c2h[i];
-+		if (engine->magic == MAGIC_ENGINE) {
-+			spin_lock_irqsave(&engine->lock, flags);
-+			engine->shutdown |= ENGINE_SHUTDOWN_REQUEST;
-+
-+			xdma_engine_stop(engine);
-+			engine->running = 0;
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+		}
-+	}
-+
-+	/* turn off interrupts */
-+	channel_interrupts_disable(xdev, ~0);
-+	user_interrupts_disable(xdev, ~0);
-+	read_interrupts(xdev);
-+	irq_teardown(xdev);
-+
-+	pr_info("xdev 0x%p, done.\n", xdev);
-+}
-+EXPORT_SYMBOL_GPL(xdma_device_offline);
-+
-+void xdma_device_online(struct pci_dev *pdev, void *dev_hndl)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+	struct xdma_engine *engine;
-+	unsigned long flags;
-+	int i;
-+
-+	if (!dev_hndl)
-+		return;
-+
-+	if (debug_check_dev_hndl(__func__, pdev, dev_hndl) < 0)
-+		return;
-+
-+pr_info("pdev 0x%p, xdev 0x%p.\n", pdev, xdev);
-+
-+	for (i  = 0; i < xdev->h2c_channel_max; i++) {
-+		engine = &xdev->engine_h2c[i];
-+		if (engine->magic == MAGIC_ENGINE) {
-+			engine_init_regs(engine);
-+			spin_lock_irqsave(&engine->lock, flags);
-+			engine->shutdown &= ~ENGINE_SHUTDOWN_REQUEST;
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+		}
-+	}
-+
-+	for (i  = 0; i < xdev->c2h_channel_max; i++) {
-+		engine = &xdev->engine_c2h[i];
-+		if (engine->magic == MAGIC_ENGINE) {
-+			engine_init_regs(engine);
-+			spin_lock_irqsave(&engine->lock, flags);
-+			engine->shutdown &= ~ENGINE_SHUTDOWN_REQUEST;
-+			spin_unlock_irqrestore(&engine->lock, flags);
-+		}
-+	}
-+
-+	/* re-write the interrupt table */
-+	if (!poll_mode) {
-+		irq_setup(xdev, pdev);
-+
-+		channel_interrupts_enable(xdev, ~0);
-+		user_interrupts_enable(xdev, xdev->mask_irq_user);
-+		read_interrupts(xdev);
-+	}
-+
-+	xdma_device_flag_clear(xdev, XDEV_FLAG_OFFLINE);
-+pr_info("xdev 0x%p, done.\n", xdev);
-+}
-+EXPORT_SYMBOL_GPL(xdma_device_online);
-+
-+int xdma_device_restart(struct pci_dev *pdev, void *dev_hndl)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	if (!dev_hndl)
-+		return -EINVAL;
-+
-+	if (debug_check_dev_hndl(__func__, pdev, dev_hndl) < 0)
-+		return -EINVAL;
-+
-+	pr_info("NOT implemented, 0x%p.\n", xdev);
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(xdma_device_restart);
-+
-+int xdma_user_isr_register(void *dev_hndl, unsigned int mask,
-+			irq_handler_t handler, void *dev)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+	int i;
-+
-+	if (!dev_hndl)
-+		return -EINVAL;
-+
-+	if (debug_check_dev_hndl(__func__, xdev->pdev, dev_hndl) < 0)
-+		return -EINVAL;
-+
-+	for (i = 0; i < xdev->user_max && mask; i++) {
-+		unsigned int bit = (1 << i);
-+
-+		if ((bit & mask) == 0)
-+			continue;
-+
-+		mask &= ~bit;
-+		xdev->user_irq[i].handler = handler;
-+		xdev->user_irq[i].dev = dev;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xdma_user_isr_register);
-+
-+int xdma_user_isr_enable(void *dev_hndl, unsigned int mask)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	if (!dev_hndl)
-+		return -EINVAL;
-+
-+	if (debug_check_dev_hndl(__func__, xdev->pdev, dev_hndl) < 0)
-+		return -EINVAL;
-+
-+	xdev->mask_irq_user |= mask;
-+	/* enable user interrupts */
-+	user_interrupts_enable(xdev, mask);
-+	read_interrupts(xdev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xdma_user_isr_enable);
-+
-+int xdma_user_isr_disable(void *dev_hndl, unsigned int mask)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	if (!dev_hndl)
-+		return -EINVAL;
-+
-+	if (debug_check_dev_hndl(__func__, xdev->pdev, dev_hndl) < 0)
-+		return -EINVAL;
-+
-+	xdev->mask_irq_user &= ~mask;
-+	user_interrupts_disable(xdev, mask);
-+	read_interrupts(xdev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xdma_user_isr_disable);
-+
-+int xdma_get_userio(void *dev_hndl, void * __iomem *base_addr,
-+	u64 *len, u32 *bar_idx)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	if (xdev->user_bar_idx < 0)
-+		return -ENOENT;
-+
-+	*base_addr = xdev->bar[xdev->user_bar_idx];
-+	*len = pci_resource_len(xdev->pdev, xdev->user_bar_idx);
-+	*bar_idx = xdev->user_bar_idx;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xdma_get_userio);
-+
-+int xdma_get_bypassio(void *dev_hndl, u64 *len, u32 *bar_idx)
-+{
-+	struct xdma_dev *xdev = (struct xdma_dev *)dev_hndl;
-+
-+	/* not necessary have bypass bar*/
-+	if (xdev->bypass_bar_idx < 0)
-+		return 0;
-+
-+	*len = pci_resource_len(xdev->pdev, xdev->bypass_bar_idx);
-+	*bar_idx = xdev->bypass_bar_idx;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xdma_get_bypassio);
-+
-+
-+#ifdef __LIBXDMA_MOD__
-+static int __init xdma_base_init(void)
-+{
-+	pr_info("%s", version);
-+	return 0;
-+}
-+
-+static void __exit xdma_base_exit(void)
-+{
-+}
-+
-+module_init(xdma_base_init);
-+module_exit(xdma_base_exit);
-+#endif
-+/* makes an existing transfer cyclic */
-+static void xdma_transfer_cyclic(struct xdma_transfer *transfer)
-+{
-+	/* link last descriptor to first descriptor */
-+	xdma_desc_link(transfer->desc_virt + transfer->desc_num - 1,
-+			transfer->desc_virt, transfer->desc_bus);
-+	/* remember transfer is cyclic */
-+	transfer->cyclic = 1;
-+}
-+
-+static int transfer_monitor_cyclic(struct xdma_engine *engine,
-+			struct xdma_transfer *transfer, int timeout_ms)
-+{
-+	struct xdma_result *result;
-+	int rc = 0;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(!transfer);
-+
-+	result = engine->cyclic_result;
-+	BUG_ON(!result);
-+
-+	if (poll_mode) {
-+		int i;
-+
-+		for (i = 0; i < 5; i++) {
-+			rc = engine_service_poll(engine, 0);
-+			if (rc) {
-+				pr_info("%s service_poll failed %d.\n",
-+					engine->name, rc);
-+				rc = -ERESTARTSYS;
-+			}
-+			if (result[engine->rx_head].status)
-+				return 0;
-+		}
-+	} else {
-+		if (enable_credit_mp) {
-+			dbg_tfr("%s: rx_head=%d,rx_tail=%d, wait ...\n",
-+				engine->name, engine->rx_head, engine->rx_tail);
-+			rc = wait_event_timeout(transfer->wq,
-+					(engine->rx_head != engine->rx_tail ||
-+					 engine->rx_overrun),
-+					msecs_to_jiffies(timeout_ms));
-+			dbg_tfr("%s: wait returns %d, rx %d/%d, overrun %d.\n",
-+				 engine->name, rc, engine->rx_head,
-+				engine->rx_tail, engine->rx_overrun);
-+		} else {
-+			rc = wait_event_timeout(transfer->wq,
-+					engine->eop_found,
-+					msecs_to_jiffies(timeout_ms));
-+			dbg_tfr("%s: wait returns %d, eop_found %d.\n",
-+				engine->name, rc, engine->eop_found);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+struct scatterlist *sglist_index(struct sg_table *sgt, unsigned int idx)
-+{
-+	struct scatterlist *sg = sgt->sgl;
-+	int i;
-+
-+	if (idx >= sgt->orig_nents)
-+		return NULL;
-+
-+	if (!idx)
-+		return sg;
-+
-+	for (i = 0; i < idx; i++, sg = sg_next(sg))
-+		;
-+
-+	return sg;
-+}
-+
-+static int copy_cyclic_to_user(struct xdma_engine *engine, int pkt_length,
-+				int head, char __user *buf, size_t count)
-+{
-+	struct scatterlist *sg;
-+	int more = pkt_length;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(!buf);
-+
-+	dbg_tfr("%s, pkt_len %d, head %d, user buf idx %u.\n",
-+		engine->name, pkt_length, head, engine->user_buffer_index);
-+
-+	sg = sglist_index(&engine->cyclic_sgt, head);
-+	if (!sg) {
-+		pr_info("%s, head %d OOR, sgl %u.\n",
-+			engine->name, head, engine->cyclic_sgt.orig_nents);
-+		return -EIO;
-+	}
-+
-+	/* EOP found? Transfer anything from head to EOP */
-+	while (more) {
-+		unsigned int copy = more > PAGE_SIZE ? PAGE_SIZE : more;
-+		unsigned int blen = count - engine->user_buffer_index;
-+		int rv;
-+
-+		if (copy > blen)
-+			copy = blen;
-+
-+		dbg_tfr("%s sg %d, 0x%p, copy %u to user %u.\n",
-+			engine->name, head, sg, copy,
-+			engine->user_buffer_index);
-+
-+		rv = copy_to_user(&buf[engine->user_buffer_index],
-+			page_address(sg_page(sg)), copy);
-+		if (rv) {
-+			pr_info("%s copy_to_user %u failed %d\n",
-+				engine->name, copy, rv);
-+			return -EIO;
-+		}
-+
-+		more -= copy;
-+		engine->user_buffer_index += copy;
-+
-+		if (engine->user_buffer_index == count) {
-+			/* user buffer used up */
-+			break;
-+		}
-+
-+		head++;
-+		if (head >= CYCLIC_RX_PAGES_MAX) {
-+			head = 0;
-+			sg = engine->cyclic_sgt.sgl;
-+		} else
-+			sg = sg_next(sg);
-+	}
-+
-+	return pkt_length;
-+}
-+
-+static int complete_cyclic(struct xdma_engine *engine, char __user *buf,
-+			   size_t count)
-+{
-+	struct xdma_result *result;
-+	int pkt_length = 0;
-+	int fault = 0;
-+	int eop = 0;
-+	int head;
-+	int rc = 0;
-+	int num_credit = 0;
-+	unsigned long flags;
-+
-+	BUG_ON(!engine);
-+	result = engine->cyclic_result;
-+	BUG_ON(!result);
-+
-+	spin_lock_irqsave(&engine->lock, flags);
-+
-+	/* where the host currently is in the ring buffer */
-+	head = engine->rx_head;
-+
-+	/* iterate over newly received results */
-+	while (engine->rx_head != engine->rx_tail || engine->rx_overrun) {
-+
-+		WARN_ON(result[engine->rx_head].status == 0);
-+
-+		dbg_tfr("%s, result[%d].status = 0x%x length = 0x%x.\n",
-+			engine->name, engine->rx_head,
-+			result[engine->rx_head].status,
-+			result[engine->rx_head].length);
-+
-+		if ((result[engine->rx_head].status >> 16) != C2H_WB) {
-+			pr_info("%s, result[%d].status 0x%x, no magic.\n",
-+				engine->name, engine->rx_head,
-+				result[engine->rx_head].status);
-+			fault = 1;
-+		} else if (result[engine->rx_head].length > PAGE_SIZE) {
-+			pr_info("%s, result[%d].len 0x%x, > PAGE_SIZE 0x%lx.\n",
-+				engine->name, engine->rx_head,
-+				result[engine->rx_head].length, PAGE_SIZE);
-+			fault = 1;
-+		} else if (result[engine->rx_head].length == 0) {
-+			pr_info("%s, result[%d].length 0x%x.\n",
-+				engine->name, engine->rx_head,
-+				result[engine->rx_head].length);
-+			fault = 1;
-+			/* valid result */
-+		} else {
-+			pkt_length += result[engine->rx_head].length;
-+			num_credit++;
-+			/* seen eop? */
-+			//if (result[engine->rx_head].status & RX_STATUS_EOP)
-+			if (result[engine->rx_head].status & RX_STATUS_EOP) {
-+				eop = 1;
-+				engine->eop_found = 1;
-+			}
-+
-+			dbg_tfr("%s, pkt_length=%d (%s)\n",
-+				engine->name, pkt_length,
-+				eop ? "with EOP" : "no EOP yet");
-+		}
-+		/* clear result */
-+		result[engine->rx_head].status = 0;
-+		result[engine->rx_head].length = 0;
-+		/* proceed head pointer so we make progress, even when fault */
-+		engine->rx_head = (engine->rx_head + 1) % CYCLIC_RX_PAGES_MAX;
-+
-+		/* stop processing if a fault/eop was detected */
-+		if (fault || eop)
-+			break;
-+	}
-+
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+
-+	if (fault)
-+		return -EIO;
-+
-+	rc = copy_cyclic_to_user(engine, pkt_length, head, buf, count);
-+	engine->rx_overrun = 0;
-+	/* if copy is successful, release credits */
-+	if (rc > 0)
-+		write_register(num_credit, &engine->sgdma_regs->credits, 0);
-+
-+	return rc;
-+}
-+
-+ssize_t xdma_engine_read_cyclic(struct xdma_engine *engine, char __user *buf,
-+				size_t count, int timeout_ms)
-+{
-+	int i = 0;
-+	int rc = 0;
-+	int rc_len = 0;
-+	struct xdma_transfer *transfer;
-+
-+	BUG_ON(!engine);
-+	BUG_ON(engine->magic != MAGIC_ENGINE);
-+
-+	transfer = &engine->cyclic_req->xfer;
-+	BUG_ON(!transfer);
-+
-+	engine->user_buffer_index = 0;
-+
-+	do {
-+		rc = transfer_monitor_cyclic(engine, transfer, timeout_ms);
-+		if (rc < 0)
-+			return rc;
-+		rc = complete_cyclic(engine, buf, count);
-+		if (rc < 0)
-+			return rc;
-+		rc_len += rc;
-+
-+		i++;
-+		if (i > 10)
-+			break;
-+	} while (!engine->eop_found);
-+
-+	if (enable_credit_mp)
-+		engine->eop_found = 0;
-+
-+	return rc_len;
-+}
-+
-+static void sgt_free_with_pages(struct sg_table *sgt, int dir,
-+				struct pci_dev *pdev)
-+{
-+	struct scatterlist *sg = sgt->sgl;
-+	int npages = sgt->orig_nents;
-+	int i;
-+
-+	for (i = 0; i < npages; i++, sg = sg_next(sg)) {
-+		struct page *pg = sg_page(sg);
-+		dma_addr_t bus = sg_dma_address(sg);
-+
-+		if (pg) {
-+			if (pdev)
-+				pci_unmap_page(pdev, bus, PAGE_SIZE, dir);
-+			__free_page(pg);
-+		} else
-+			break;
-+	}
-+	sg_free_table(sgt);
-+	memset(sgt, 0, sizeof(struct sg_table));
-+}
-+
-+static int sgt_alloc_with_pages(struct sg_table *sgt, unsigned int npages,
-+				int dir, struct pci_dev *pdev)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	if (sg_alloc_table(sgt, npages, GFP_KERNEL)) {
-+		pr_info("sgt OOM.\n");
++	/* Free up the previous blob */
++	vfree(obj->blob);
++	obj->blob = vmalloc(bin->m_header.m_length);
++	if (!obj->blob) {
++		obj->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
 +		return -ENOMEM;
 +	}
 +
-+	sg = sgt->sgl;
-+	for (i = 0; i < npages; i++, sg = sg_next(sg)) {
-+		struct page *pg = alloc_page(GFP_KERNEL);
-+
-+		if (!pg) {
-+			pr_info("%d/%u, page OOM.\n", i, npages);
-+			goto err_out;
-+		}
-+
-+		if (pdev) {
-+			dma_addr_t bus = pci_map_page(pdev, pg, 0, PAGE_SIZE,
-+							dir);
-+			if (unlikely(pci_dma_mapping_error(pdev, bus))) {
-+				pr_info("%d/%u, page 0x%p map err.\n",
-+					 i, npages, pg);
-+				__free_page(pg);
-+				goto err_out;
-+			}
-+			sg_dma_address(sg) = bus;
-+			sg_dma_len(sg) = PAGE_SIZE;
-+		}
-+		sg_set_page(sg, pg, PAGE_SIZE, 0);
-+	}
-+
-+	sgt->orig_nents = sgt->nents = npages;
-+
-+	return 0;
-+
-+err_out:
-+	sgt_free_with_pages(sgt, dir, pdev);
-+	return -ENOMEM;
-+}
-+
-+int xdma_cyclic_transfer_setup(struct xdma_engine *engine)
-+{
-+	struct xdma_dev *xdev;
-+	struct xdma_transfer *xfer;
-+	dma_addr_t bus;
-+	unsigned long flags;
-+	int i;
-+	int rc;
-+
-+	BUG_ON(!engine);
-+	xdev = engine->xdev;
-+	BUG_ON(!xdev);
-+
-+	if (engine->cyclic_req) {
-+		pr_info("%s: exclusive access already taken.\n",
-+			engine->name);
-+		return -EBUSY;
-+	}
-+
-+	spin_lock_irqsave(&engine->lock, flags);
-+
-+	engine->rx_tail = 0;
-+	engine->rx_head = 0;
-+	engine->rx_overrun = 0;
-+	engine->eop_found = 0;
-+
-+	rc = sgt_alloc_with_pages(&engine->cyclic_sgt, CYCLIC_RX_PAGES_MAX,
-+				engine->dir, xdev->pdev);
-+	if (rc < 0) {
-+		pr_info("%s cyclic pages %u OOM.\n",
-+			engine->name, CYCLIC_RX_PAGES_MAX);
-+		goto err_out;
-+	}
-+
-+	engine->cyclic_req = xdma_init_request(&engine->cyclic_sgt, 0);
-+	if (!engine->cyclic_req) {
-+		pr_info("%s cyclic request OOM.\n", engine->name);
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+#ifdef __LIBXDMA_DEBUG__
-+	xdma_request_cb_dump(engine->cyclic_req);
-+#endif
-+
-+	rc = transfer_init(engine, engine->cyclic_req);
-+	if (rc < 0)
-+		goto err_out;
-+
-+	xfer = &engine->cyclic_req->xfer;
-+
-+	/* replace source addresses with result write-back addresses */
-+	memset(engine->cyclic_result, 0,
-+		CYCLIC_RX_PAGES_MAX * sizeof(struct xdma_result));
-+	bus = engine->cyclic_result_bus;
-+	for (i = 0; i < xfer->desc_num; i++) {
-+		xfer->desc_virt[i].src_addr_lo = cpu_to_le32(PCI_DMA_L(bus));
-+		xfer->desc_virt[i].src_addr_hi = cpu_to_le32(PCI_DMA_H(bus));
-+		bus += sizeof(struct xdma_result);
-+	}
-+	/* set control of all descriptors */
-+	for (i = 0; i < xfer->desc_num; i++) {
-+		xdma_desc_control_clear(xfer->desc_virt + i, LS_BYTE_MASK);
-+		xdma_desc_control_set(xfer->desc_virt + i,
-+				 XDMA_DESC_EOP | XDMA_DESC_COMPLETED);
-+	}
-+
-+	/* make this a cyclic transfer */
-+	xdma_transfer_cyclic(xfer);
-+
-+#ifdef __LIBXDMA_DEBUG__
-+	transfer_dump(xfer);
-+#endif
-+
-+	if (enable_credit_mp)
-+		write_register(128, &engine->sgdma_regs->credits, 0);
-+
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+
-+	/* start cyclic transfer */
-+	transfer_queue(engine, xfer);
-+
-+	return 0;
-+
-+	/* unwind on errors */
-+err_out:
-+	if (engine->cyclic_req) {
-+		xdma_request_free(engine->cyclic_req);
-+		engine->cyclic_req = NULL;
-+	}
-+
-+	if (engine->cyclic_sgt.orig_nents) {
-+		sgt_free_with_pages(&engine->cyclic_sgt, engine->dir,
-+				xdev->pdev);
-+		engine->cyclic_sgt.orig_nents = 0;
-+		engine->cyclic_sgt.nents = 0;
-+		engine->cyclic_sgt.sgl = NULL;
-+	}
-+
-+	spin_unlock_irqrestore(&engine->lock, flags);
-+
-+	return rc;
-+}
-+
-+
-+static int cyclic_shutdown_polled(struct xdma_engine *engine)
-+{
-+	BUG_ON(!engine);
-+
-+	spin_lock(&engine->lock);
-+
-+	dbg_tfr("Polling for shutdown completion\n");
-+	do {
-+		engine_status_read(engine, 1, 0);
-+		schedule();
-+	} while (engine->status & XDMA_STAT_BUSY);
-+
-+	if ((engine->running) && !(engine->status & XDMA_STAT_BUSY)) {
-+		dbg_tfr("Engine has stopped\n");
-+
-+		if (!list_empty(&engine->transfer_list))
-+			engine_transfer_dequeue(engine);
-+
-+		engine_service_shutdown(engine);
-+	}
-+
-+	dbg_tfr("Shutdown completion polling done\n");
-+	spin_unlock(&engine->lock);
-+
++	memcpy(obj->blob, buf, count);
++	xocl_info(&mgr->dev, "Begin download of xclbin %pUb of length %lld B", &obj->blob->m_header.uuid,
++		  obj->blob->m_header.m_length);
++	obj->count = count;
++	obj->state = FPGA_MGR_STATE_WRITE_INIT;
 +	return 0;
 +}
 +
-+static int cyclic_shutdown_interrupt(struct xdma_engine *engine)
++static int xocl_pr_write(struct fpga_manager *mgr,
++			 const char *buf, size_t count)
 +{
-+	int rc;
++	struct xfpga_klass *obj = mgr->priv;
++	char *curr = (char *)obj->blob;
 +
-+	BUG_ON(!engine);
-+
-+	rc = wait_event_timeout(engine->shutdown_wq,
-+				!engine->running, msecs_to_jiffies(10000));
-+
-+	if (engine->running) {
-+		pr_info("%s still running?!, %d\n", engine->name, rc);
++	if ((obj->state != FPGA_MGR_STATE_WRITE_INIT) && (obj->state != FPGA_MGR_STATE_WRITE)) {
++		obj->state = FPGA_MGR_STATE_WRITE_ERR;
 +		return -EINVAL;
 +	}
 +
-+	return rc;
++	curr += obj->count;
++	obj->count += count;
++	/* Check if the xclbin buffer is not longer than advertised in the header */
++	if (obj->blob->m_header.m_length < obj->count) {
++		obj->state = FPGA_MGR_STATE_WRITE_ERR;
++		return -EINVAL;
++	}
++	memcpy(curr, buf, count);
++	xocl_info(&mgr->dev, "Next block of %zu B of xclbin %pUb", count, &obj->blob->m_header.uuid);
++	obj->state = FPGA_MGR_STATE_WRITE;
++	return 0;
 +}
 +
-+int xdma_cyclic_transfer_teardown(struct xdma_engine *engine)
++
++static int xocl_pr_write_complete(struct fpga_manager *mgr,
++				  struct fpga_image_info *info)
 +{
-+	int rc;
-+	struct xdma_dev *xdev = engine->xdev;
-+	struct xdma_transfer *transfer;
-+	unsigned long flags;
++	int result;
++	struct xfpga_klass *obj = mgr->priv;
 +
-+	transfer = engine_cyclic_stop(engine);
++	if (obj->state != FPGA_MGR_STATE_WRITE) {
++		obj->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
++		return -EINVAL;
++	}
 +
-+	spin_lock_irqsave(&engine->lock, flags);
-+	if (transfer) {
-+		dbg_tfr("%s: stop transfer 0x%p.\n", engine->name, transfer);
-+		if (transfer != &engine->cyclic_req->xfer) {
-+			pr_info("%s unexpected transfer 0x%p/0x%p\n",
-+				engine->name, transfer,
-+				&engine->cyclic_req->xfer);
++	/* Check if we got the complete xclbin */
++	if (obj->blob->m_header.m_length != obj->count) {
++		obj->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
++		return -EINVAL;
++	}
++	/* Send the xclbin blob to actual download framework in icap */
++	result = xocl_icap_download_axlf(obj->xdev, obj->blob);
++	obj->state = result ? FPGA_MGR_STATE_WRITE_COMPLETE_ERR : FPGA_MGR_STATE_WRITE_COMPLETE;
++	xocl_info(&mgr->dev, "Finish download of xclbin %pUb of size %zu B", &obj->blob->m_header.uuid, obj->count);
++	vfree(obj->blob);
++	obj->blob = NULL;
++	obj->count = 0;
++	return result;
++}
++
++static enum fpga_mgr_states xocl_pr_state(struct fpga_manager *mgr)
++{
++	struct xfpga_klass *obj = mgr->priv;
++
++	return obj->state;
++}
++
++static const struct fpga_manager_ops xocl_pr_ops = {
++	.initial_header_size = sizeof(struct axlf),
++	.write_init = xocl_pr_write_init,
++	.write = xocl_pr_write,
++	.write_complete = xocl_pr_write_complete,
++	.state = xocl_pr_state,
++};
++
++
++struct platform_device_id fmgr_id_table[] = {
++	{ XOCL_FMGR, 0 },
++	{ },
++};
++
++static int fmgr_probe(struct platform_device *pdev)
++{
++	struct fpga_manager *mgr;
++	int ret = 0;
++	struct xfpga_klass *obj = kzalloc(sizeof(struct xfpga_klass), GFP_KERNEL);
++
++	if (!obj)
++		return -ENOMEM;
++
++	obj->xdev = xocl_get_xdev(pdev);
++	snprintf(obj->name, sizeof(obj->name), "Xilinx PCIe FPGA Manager");
++
++	obj->state = FPGA_MGR_STATE_UNKNOWN;
++	mgr = fpga_mgr_create(&pdev->dev, obj->name, &xocl_pr_ops, obj);
++	if (!mgr) {
++		ret = -ENODEV;
++		goto out;
++	}
++	ret = fpga_mgr_register(mgr);
++	if (ret)
++		goto out;
++
++	return ret;
++out:
++	kfree(obj);
++	return ret;
++}
++
++static int fmgr_remove(struct platform_device *pdev)
++{
++	struct fpga_manager *mgr = platform_get_drvdata(pdev);
++	struct xfpga_klass *obj = mgr->priv;
++
++	obj->state = FPGA_MGR_STATE_UNKNOWN;
++	fpga_mgr_unregister(mgr);
++
++	platform_set_drvdata(pdev, NULL);
++	vfree(obj->blob);
++	kfree(obj);
++	return 0;
++}
++
++static struct platform_driver	fmgr_driver = {
++	.probe		= fmgr_probe,
++	.remove		= fmgr_remove,
++	.driver		= {
++		.name = "xocl_fmgr",
++	},
++	.id_table = fmgr_id_table,
++};
++
++int __init xocl_init_fmgr(void)
++{
++	return platform_driver_register(&fmgr_driver);
++}
++
++void xocl_fini_fmgr(void)
++{
++	platform_driver_unregister(&fmgr_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/icap.c b/drivers/gpu/drm/xocl/subdev/icap.c
+new file mode 100644
+index 000000000000..93eb6265a9c4
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/icap.c
+@@ -0,0 +1,2859 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ *  Copyright (C) 2017 Xilinx, Inc. All rights reserved.
++ *  Author: Sonal Santan
++ *  Code copied verbatim from SDAccel xcldma kernel mode driver
++ *
++ */
++
++/*
++ * TODO: Currently, locking / unlocking bitstream is implemented w/ pid as
++ * identification of bitstream users. We assume that, on bare metal, an app
++ * has only one process and will open both user and mgmt pfs. In this model,
++ * xclmgmt has enough information to handle locking/unlocking alone, but we
++ * still involve user pf and mailbox here so that it'll be easier to support
++ * cloud env later. We'll replace pid with a token that is more appropriate
++ * to identify a user later as well.
++ */
++
++#include <linux/firmware.h>
++#include <linux/vmalloc.h>
++#include <linux/string.h>
++#include <linux/version.h>
++#include <linux/uuid.h>
++#include <linux/pid.h>
++#include "../xclbin.h"
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++#if defined(XOCL_UUID)
++static uuid_t uuid_null = NULL_UUID_LE;
++#endif
++
++#define	ICAP_ERR(icap, fmt, arg...)	\
++	xocl_err(&(icap)->icap_pdev->dev, fmt "\n", ##arg)
++#define	ICAP_INFO(icap, fmt, arg...)	\
++	xocl_info(&(icap)->icap_pdev->dev, fmt "\n", ##arg)
++#define	ICAP_DBG(icap, fmt, arg...)	\
++	xocl_dbg(&(icap)->icap_pdev->dev, fmt "\n", ##arg)
++
++#define	ICAP_PRIVILEGED(icap)	((icap)->icap_regs != NULL)
++#define DMA_HWICAP_BITFILE_BUFFER_SIZE 1024
++#define	ICAP_MAX_REG_GROUPS		ARRAY_SIZE(XOCL_RES_ICAP_MGMT)
++
++#define	ICAP_MAX_NUM_CLOCKS		2
++#define OCL_CLKWIZ_STATUS_OFFSET	0x4
++#define OCL_CLKWIZ_CONFIG_OFFSET(n)	(0x200 + 4 * (n))
++#define OCL_CLK_FREQ_COUNTER_OFFSET	0x8
++
++/*
++ * Bitstream header information.
++ */
++struct XHwIcap_Bit_Header {
++	unsigned int HeaderLength;     /* Length of header in 32 bit words */
++	unsigned int BitstreamLength;  /* Length of bitstream to read in bytes*/
++	unsigned char *DesignName;     /* Design name read from bitstream header */
++	unsigned char *PartName;       /* Part name read from bitstream header */
++	unsigned char *Date;           /* Date read from bitstream header */
++	unsigned char *Time;           /* Bitstream creation time read from header */
++	unsigned int MagicLength;      /* Length of the magic numbers in header */
++};
++
++#define XHI_BIT_HEADER_FAILURE	-1
++/* Used for parsing bitstream header */
++#define XHI_EVEN_MAGIC_BYTE	0x0f
++#define XHI_ODD_MAGIC_BYTE	0xf0
++/* Extra mode for IDLE */
++#define XHI_OP_IDLE		-1
++/* The imaginary module length register */
++#define XHI_MLR			15
++
++#define	GATE_FREEZE_USER	0x0c
++#define GATE_FREEZE_SHELL	0x00
++
++static u32 gate_free_user[] = {0xe, 0xc, 0xe, 0xf};
++static u32 gate_free_shell[] = {0x8, 0xc, 0xe, 0xf};
++
++/*
++ * AXI-HWICAP IP register layout
++ */
++struct icap_reg {
++	u32			ir_rsvd1[7];
++	u32			ir_gier;
++	u32			ir_isr;
++	u32			ir_rsvd2;
++	u32			ir_ier;
++	u32			ir_rsvd3[53];
++	u32			ir_wf;
++	u32			ir_rf;
++	u32			ir_sz;
++	u32			ir_cr;
++	u32			ir_sr;
++	u32			ir_wfv;
++	u32			ir_rfo;
++	u32			ir_asr;
++} __attribute__((packed));
++
++struct icap_generic_state {
++	u32			igs_state;
++} __attribute__((packed));
++
++struct icap_axi_gate {
++	u32			iag_wr;
++	u32			iag_rvsd;
++	u32			iag_rd;
++} __attribute__((packed));
++
++struct icap_bitstream_user {
++	struct list_head	ibu_list;
++	pid_t			ibu_pid;
++};
++
++struct icap {
++	struct platform_device	*icap_pdev;
++	struct mutex		icap_lock;
++	struct icap_reg		*icap_regs;
++	struct icap_generic_state *icap_state;
++	unsigned int            idcode;
++	bool			icap_axi_gate_frozen;
++	bool			icap_axi_gate_shell_frozen;
++	struct icap_axi_gate	*icap_axi_gate;
++
++	u64			icap_bitstream_id;
++	uuid_t			icap_bitstream_uuid;
++	int			icap_bitstream_ref;
++	struct list_head	icap_bitstream_users;
++
++	char			*icap_clear_bitstream;
++	unsigned long		icap_clear_bitstream_length;
++
++	char			*icap_clock_bases[ICAP_MAX_NUM_CLOCKS];
++	unsigned short		icap_ocl_frequency[ICAP_MAX_NUM_CLOCKS];
++
++	char                    *icap_clock_freq_topology;
++	unsigned long		icap_clock_freq_topology_length;
++	char                    *icap_clock_freq_counter;
++	struct mem_topology      *mem_topo;
++	struct ip_layout         *ip_layout;
++	struct debug_ip_layout   *debug_layout;
++	struct connectivity      *connectivity;
++
++	char			*bit_buffer;
++	unsigned long		bit_length;
++};
++
++static inline u32 reg_rd(void __iomem *reg)
++{
++	return XOCL_READ_REG32(reg);
++}
++
++static inline void reg_wr(void __iomem *reg, u32 val)
++{
++	iowrite32(val, reg);
++}
++
++/*
++ * Precomputed table with config0 and config2 register values together with
++ * target frequency. The steps are approximately 5 MHz apart. Table is
++ * generated by wiz.pl.
++ */
++const static struct xclmgmt_ocl_clockwiz {
++	/* target frequency */
++	unsigned short ocl;
++	/* config0 register */
++	unsigned long config0;
++	/* config2 register */
++	unsigned short config2;
++} frequency_table[] = {
++	{/* 600*/   60, 0x0601, 0x000a},
++	{/* 600*/   66, 0x0601, 0x0009},
++	{/* 600*/   75, 0x0601, 0x0008},
++	{/* 800*/   80, 0x0801, 0x000a},
++	{/* 600*/   85, 0x0601, 0x0007},
++	{/* 900*/   90, 0x0901, 0x000a},
++	{/*1000*/  100, 0x0a01, 0x000a},
++	{/*1100*/  110, 0x0b01, 0x000a},
++	{/* 700*/  116, 0x0701, 0x0006},
++	{/*1100*/  122, 0x0b01, 0x0009},
++	{/* 900*/  128, 0x0901, 0x0007},
++	{/*1200*/  133, 0x0c01, 0x0009},
++	{/*1400*/  140, 0x0e01, 0x000a},
++	{/*1200*/  150, 0x0c01, 0x0008},
++	{/*1400*/  155, 0x0e01, 0x0009},
++	{/* 800*/  160, 0x0801, 0x0005},
++	{/*1000*/  166, 0x0a01, 0x0006},
++	{/*1200*/  171, 0x0c01, 0x0007},
++	{/* 900*/  180, 0x0901, 0x0005},
++	{/*1300*/  185, 0x0d01, 0x0007},
++	{/*1400*/  200, 0x0e01, 0x0007},
++	{/*1300*/  216, 0x0d01, 0x0006},
++	{/* 900*/  225, 0x0901, 0x0004},
++	{/*1400*/  233, 0x0e01, 0x0006},
++	{/*1200*/  240, 0x0c01, 0x0005},
++	{/*1000*/  250, 0x0a01, 0x0004},
++	{/*1300*/  260, 0x0d01, 0x0005},
++	{/* 800*/  266, 0x0801, 0x0003},
++	{/*1100*/  275, 0x0b01, 0x0004},
++	{/*1400*/  280, 0x0e01, 0x0005},
++	{/*1200*/  300, 0x0c01, 0x0004},
++	{/*1300*/  325, 0x0d01, 0x0004},
++	{/*1000*/  333, 0x0a01, 0x0003},
++	{/*1400*/  350, 0x0e01, 0x0004},
++	{/*1100*/  366, 0x0b01, 0x0003},
++	{/*1200*/  400, 0x0c01, 0x0003},
++	{/*1300*/  433, 0x0d01, 0x0003},
++	{/* 900*/  450, 0x0901, 0x0002},
++	{/*1400*/  466, 0x0e01, 0x0003},
++	{/*1000*/  500, 0x0a01, 0x0002}
++};
++
++static int icap_verify_bitstream_axlf(struct platform_device *pdev,
++	struct axlf *xclbin);
++static int icap_parse_bitstream_axlf_section(struct platform_device *pdev,
++	const struct axlf *xclbin, enum axlf_section_kind kind);
++
++static struct icap_bitstream_user *alloc_user(pid_t pid)
++{
++	struct icap_bitstream_user *u =
++		kzalloc(sizeof(struct icap_bitstream_user), GFP_KERNEL);
++
++	if (u) {
++		INIT_LIST_HEAD(&u->ibu_list);
++		u->ibu_pid = pid;
++	}
++	return u;
++}
++
++static void free_user(struct icap_bitstream_user *u)
++{
++	kfree(u);
++}
++
++static struct icap_bitstream_user *obtain_user(struct icap *icap, pid_t pid)
++{
++	struct list_head *pos, *n;
++
++	list_for_each_safe(pos, n, &icap->icap_bitstream_users) {
++		struct icap_bitstream_user *u = list_entry(pos, struct icap_bitstream_user, ibu_list);
++
++		if (u->ibu_pid == pid)
++			return u;
++	}
++
++	return NULL;
++}
++
++static void icap_read_from_peer(struct platform_device *pdev, enum data_kind kind, void *resp, size_t resplen)
++{
++	struct mailbox_subdev_peer subdev_peer = {0};
++	size_t data_len = sizeof(struct mailbox_subdev_peer);
++	struct mailbox_req *mb_req = NULL;
++	size_t reqlen = sizeof(struct mailbox_req) + data_len;
++
++	mb_req = vmalloc(reqlen);
++	if (!mb_req)
++		return;
++
++	mb_req->req = MAILBOX_REQ_PEER_DATA;
++
++	subdev_peer.kind = kind;
++	memcpy(mb_req->data, &subdev_peer, data_len);
++
++	(void) xocl_peer_request(XOCL_PL_DEV_TO_XDEV(pdev),
++		mb_req, reqlen, resp, &resplen, NULL, NULL);
++
++	vfree(mb_req);
++}
++
++
++static int add_user(struct icap *icap, pid_t pid)
++{
++	struct icap_bitstream_user *u;
++
++	u = obtain_user(icap, pid);
++	if (u)
++		return 0;
++
++	u = alloc_user(pid);
++	if (!u)
++		return -ENOMEM;
++
++	list_add_tail(&u->ibu_list, &icap->icap_bitstream_users);
++	icap->icap_bitstream_ref++;
++	return 0;
++}
++
++static int del_user(struct icap *icap, pid_t pid)
++{
++	struct icap_bitstream_user *u = NULL;
++
++	u = obtain_user(icap, pid);
++	if (!u)
++		return -EINVAL;
++
++	list_del(&u->ibu_list);
++	free_user(u);
++	icap->icap_bitstream_ref--;
++	return 0;
++}
++
++static void del_all_users(struct icap *icap)
++{
++	struct icap_bitstream_user *u = NULL;
++	struct list_head *pos, *n;
++
++	if (icap->icap_bitstream_ref == 0)
++		return;
++
++	list_for_each_safe(pos, n, &icap->icap_bitstream_users) {
++		u = list_entry(pos, struct icap_bitstream_user, ibu_list);
++		list_del(&u->ibu_list);
++		free_user(u);
++	}
++
++	ICAP_INFO(icap, "removed %d users", icap->icap_bitstream_ref);
++	icap->icap_bitstream_ref = 0;
++}
++
++static unsigned int find_matching_freq_config(unsigned int freq)
++{
++	unsigned int start = 0;
++	unsigned int end = ARRAY_SIZE(frequency_table) - 1;
++	unsigned int idx = ARRAY_SIZE(frequency_table) - 1;
++
++	if (freq < frequency_table[0].ocl)
++		return 0;
++
++	if (freq > frequency_table[ARRAY_SIZE(frequency_table) - 1].ocl)
++		return ARRAY_SIZE(frequency_table) - 1;
++
++	while (start < end) {
++		if (freq == frequency_table[idx].ocl)
++			break;
++		if (freq < frequency_table[idx].ocl)
++			end = idx;
++		else
++			start = idx + 1;
++		idx = start + (end - start) / 2;
++	}
++	if (freq < frequency_table[idx].ocl)
++		idx--;
++
++	return idx;
++}
++
++static unsigned short icap_get_ocl_frequency(const struct icap *icap, int idx)
++{
++#define XCL_INPUT_FREQ 100
++	const u64 input = XCL_INPUT_FREQ;
++	u32 val;
++	u32 mul0, div0;
++	u32 mul_frac0 = 0;
++	u32 div1;
++	u32 div_frac1 = 0;
++	u64 freq;
++	char *base = NULL;
++
++	if (ICAP_PRIVILEGED(icap)) {
++		base = icap->icap_clock_bases[idx];
++	  val = reg_rd(base + OCL_CLKWIZ_STATUS_OFFSET);
++		if ((val & 1) == 0)
++			return 0;
++
++		val = reg_rd(base + OCL_CLKWIZ_CONFIG_OFFSET(0));
++
++		div0 = val & 0xff;
++		mul0 = (val & 0xff00) >> 8;
++		if (val & BIT(26)) {
++			mul_frac0 = val >> 16;
++			mul_frac0 &= 0x3ff;
++		}
++
++		/*
++		 * Multiply both numerator (mul0) and the denominator (div0) with 1000
++		 * to account for fractional portion of multiplier
++		 */
++		mul0 *= 1000;
++		mul0 += mul_frac0;
++		div0 *= 1000;
++
++		val = reg_rd(base + OCL_CLKWIZ_CONFIG_OFFSET(2));
++
++		div1 = val & 0xff;
++		if (val & BIT(18)) {
++			div_frac1 = val >> 8;
++			div_frac1 &= 0x3ff;
++		}
++
++		/*
++		 * Multiply both numerator (mul0) and the denominator (div1) with 1000 to
++		 * account for fractional portion of divider
++		 */
++
++		div1 *= 1000;
++		div1 += div_frac1;
++		div0 *= div1;
++		mul0 *= 1000;
++		if (div0 == 0) {
++			ICAP_ERR(icap, "clockwiz 0 divider");
++			return 0;
++		}
++		freq = (input * mul0) / div0;
++	} else {
++		icap_read_from_peer(icap->icap_pdev, CLOCK_FREQ_0, (u32 *)&freq, sizeof(u32));
++	}
++	return freq;
++}
++
++static unsigned int icap_get_clock_frequency_counter_khz(const struct icap *icap, int idx)
++{
++	u32 freq, status;
++	char *base = icap->icap_clock_freq_counter;
++	int times;
++
++	times = 10;
++	freq = 0;
++	/*
++	 * reset and wait until done
++	 */
++	if (ICAP_PRIVILEGED(icap)) {
++		if (uuid_is_null(&icap->icap_bitstream_uuid)) {
++			ICAP_ERR(icap, "ERROR: There isn't a xclbin loaded in the dynamic "
++				 "region, frequencies counter cannot be determined");
++			return freq;
++		}
++		reg_wr(base, 0x1);
++
++		while (times != 0) {
++			status = reg_rd(base);
++			if (status == 0x2)
++				break;
++			mdelay(1);
++			times--;
++		};
++
++	  freq = reg_rd(base + OCL_CLK_FREQ_COUNTER_OFFSET + idx * sizeof(u32));
++	} else {
++		icap_read_from_peer(icap->icap_pdev, FREQ_COUNTER_0, (u32 *)&freq, sizeof(u32));
++	}
++	return freq;
++}
++/*
++ * Based on Clocking Wizard v5.1, section Dynamic Reconfiguration
++ * through AXI4-Lite
++ */
++static int icap_ocl_freqscaling(struct icap *icap, bool force)
++{
++	unsigned int curr_freq;
++	u32 config;
++	int i;
++	int j = 0;
++	u32 val = 0;
++	unsigned int idx = 0;
++	long err = 0;
++
++	for (i = 0; i < ICAP_MAX_NUM_CLOCKS; ++i) {
++		// A value of zero means skip scaling for this clock index
++		if (!icap->icap_ocl_frequency[i])
++			continue;
++
++		idx = find_matching_freq_config(icap->icap_ocl_frequency[i]);
++		curr_freq = icap_get_ocl_frequency(icap, i);
++		ICAP_INFO(icap, "Clock %d, Current %d Mhz, New %d Mhz ",
++				i, curr_freq, icap->icap_ocl_frequency[i]);
++
++		/*
++		 * If current frequency is in the same step as the
++		 * requested frequency then nothing to do.
++		 */
++		if (!force && (find_matching_freq_config(curr_freq) == idx))
++			continue;
++
++		val = reg_rd(icap->icap_clock_bases[i] +
++			OCL_CLKWIZ_STATUS_OFFSET);
++		if (val != 1) {
++			ICAP_ERR(icap, "clockwiz %d is busy", i);
++			err = -EBUSY;
++			break;
++		}
++
++		config = frequency_table[idx].config0;
++		reg_wr(icap->icap_clock_bases[i] + OCL_CLKWIZ_CONFIG_OFFSET(0),
++			config);
++		config = frequency_table[idx].config2;
++		reg_wr(icap->icap_clock_bases[i] + OCL_CLKWIZ_CONFIG_OFFSET(2),
++			config);
++		msleep(10);
++		reg_wr(icap->icap_clock_bases[i] + OCL_CLKWIZ_CONFIG_OFFSET(23),
++			0x00000007);
++		msleep(1);
++		reg_wr(icap->icap_clock_bases[i] + OCL_CLKWIZ_CONFIG_OFFSET(23),
++			0x00000002);
++
++		ICAP_INFO(icap, "clockwiz waiting for locked signal");
++		msleep(100);
++		for (j = 0; j < 100; j++) {
++			val = reg_rd(icap->icap_clock_bases[i] +
++				OCL_CLKWIZ_STATUS_OFFSET);
++			if (val != 1) {
++				msleep(100);
++				continue;
++			}
++		}
++		if (val != 1) {
++			ICAP_ERR(icap, "clockwiz MMCM/PLL did not lock after %d ms, "
++				"restoring the original configuration", 100 * 100);
++			/* restore the original clock configuration */
++			reg_wr(icap->icap_clock_bases[i] +
++				OCL_CLKWIZ_CONFIG_OFFSET(23), 0x00000004);
++			msleep(10);
++			reg_wr(icap->icap_clock_bases[i] +
++				OCL_CLKWIZ_CONFIG_OFFSET(23), 0x00000000);
++			err = -ETIMEDOUT;
++			break;
++		}
++		val = reg_rd(icap->icap_clock_bases[i] +
++			OCL_CLKWIZ_CONFIG_OFFSET(0));
++		ICAP_INFO(icap, "clockwiz CONFIG(0) 0x%x", val);
++		val = reg_rd(icap->icap_clock_bases[i] +
++			OCL_CLKWIZ_CONFIG_OFFSET(2));
++		ICAP_INFO(icap, "clockwiz CONFIG(2) 0x%x", val);
++	}
++
++	return err;
++}
++
++static bool icap_bitstream_in_use(struct icap *icap, pid_t pid)
++{
++	BUG_ON(icap->icap_bitstream_ref < 0);
++
++	/* Any user counts if pid isn't specified. */
++	if (pid == 0)
++		return icap->icap_bitstream_ref != 0;
++
++	if (icap->icap_bitstream_ref == 0)
++		return false;
++	if ((icap->icap_bitstream_ref == 1) && obtain_user(icap, pid))
++		return false;
++	return true;
++}
++
++static int icap_freeze_axi_gate_shell(struct icap *icap)
++{
++	xdev_handle_t xdev = xocl_get_xdev(icap->icap_pdev);
++
++	ICAP_INFO(icap, "freezing Shell AXI gate");
++	BUG_ON(icap->icap_axi_gate_shell_frozen);
++
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++	reg_wr(&icap->icap_axi_gate->iag_wr, GATE_FREEZE_SHELL);
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++
++	if (!xocl_is_unified(xdev)) {
++		reg_wr(&icap->icap_regs->ir_cr, 0xc);
++		ndelay(20);
++	} else {
++		/* New ICAP reset sequence applicable only to unified dsa. */
++		reg_wr(&icap->icap_regs->ir_cr, 0x8);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x0);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x4);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x0);
++		ndelay(2000);
++	}
++
++	icap->icap_axi_gate_shell_frozen = true;
++
++	return 0;
++}
++
++static int icap_free_axi_gate_shell(struct icap *icap)
++{
++	int i;
++
++	ICAP_INFO(icap, "freeing Shell AXI gate");
++	/*
++	 * First pulse the OCL RESET. This is important for PR with multiple
++	 * clocks as it resets the edge triggered clock converter FIFO
++	 */
++
++	if (!icap->icap_axi_gate_shell_frozen)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(gate_free_shell); i++) {
++		(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++		reg_wr(&icap->icap_axi_gate->iag_wr, gate_free_shell[i]);
++		mdelay(50);
++	}
++
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++
++	icap->icap_axi_gate_shell_frozen = false;
++
++	return 0;
++}
++
++static int icap_freeze_axi_gate(struct icap *icap)
++{
++	xdev_handle_t xdev = xocl_get_xdev(icap->icap_pdev);
++
++	ICAP_INFO(icap, "freezing CL AXI gate");
++	BUG_ON(icap->icap_axi_gate_frozen);
++
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++	reg_wr(&icap->icap_axi_gate->iag_wr, GATE_FREEZE_USER);
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++
++	if (!xocl_is_unified(xdev)) {
++		reg_wr(&icap->icap_regs->ir_cr, 0xc);
++		ndelay(20);
++	} else {
++		/* New ICAP reset sequence applicable only to unified dsa. */
++		reg_wr(&icap->icap_regs->ir_cr, 0x8);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x0);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x4);
++		ndelay(2000);
++		reg_wr(&icap->icap_regs->ir_cr, 0x0);
++		ndelay(2000);
++	}
++
++	icap->icap_axi_gate_frozen = true;
++
++	return 0;
++}
++
++static int icap_free_axi_gate(struct icap *icap)
++{
++	int i;
++
++	ICAP_INFO(icap, "freeing CL AXI gate");
++	/*
++	 * First pulse the OCL RESET. This is important for PR with multiple
++	 * clocks as it resets the edge triggered clock converter FIFO
++	 */
++
++	if (!icap->icap_axi_gate_frozen)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(gate_free_user); i++) {
++		(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++		reg_wr(&icap->icap_axi_gate->iag_wr, gate_free_user[i]);
++		ndelay(500);
++	}
++
++	(void) reg_rd(&icap->icap_axi_gate->iag_rd);
++
++	icap->icap_axi_gate_frozen = false;
++
++	return 0;
++}
++
++static void platform_reset_axi_gate(struct platform_device *pdev)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++
++	/* Can only be done from mgmt pf. */
++	if (!ICAP_PRIVILEGED(icap))
++		return;
++
++	mutex_lock(&icap->icap_lock);
++	if (!icap_bitstream_in_use(icap, 0)) {
++		(void) icap_freeze_axi_gate(platform_get_drvdata(pdev));
++		msleep(500);
++		(void) icap_free_axi_gate(platform_get_drvdata(pdev));
++		msleep(500);
++	}
++	mutex_unlock(&icap->icap_lock);
++}
++
++static int set_freqs(struct icap *icap, unsigned short *freqs, int num_freqs)
++{
++	int i;
++	int err;
++	u32 val;
++
++	for (i = 0; i < min(ICAP_MAX_NUM_CLOCKS, num_freqs); ++i) {
++		if (freqs[i] == 0)
++			continue;
++
++		val = reg_rd(icap->icap_clock_bases[i] +
++			OCL_CLKWIZ_STATUS_OFFSET);
++		if ((val & 0x1) == 0) {
++			ICAP_ERR(icap, "clockwiz %d is busy", i);
++			err = -EBUSY;
++			goto done;
 +		}
 +	}
-+	/* allow engine to be serviced after stop request */
-+	spin_unlock_irqrestore(&engine->lock, flags);
 +
-+	/* wait for engine to be no longer running */
-+	if (poll_mode)
-+		rc = cyclic_shutdown_polled(engine);
-+	else
-+		rc = cyclic_shutdown_interrupt(engine);
++	memcpy(icap->icap_ocl_frequency, freqs,
++		sizeof(*freqs) * min(ICAP_MAX_NUM_CLOCKS, num_freqs));
 +
-+	/* obtain spin lock to atomically remove resources */
-+	spin_lock_irqsave(&engine->lock, flags);
++	icap_freeze_axi_gate(icap);
++	err = icap_ocl_freqscaling(icap, false);
++	icap_free_axi_gate(icap);
 +
-+	if (engine->cyclic_req) {
-+		xdma_request_free(engine->cyclic_req);
-+		engine->cyclic_req = NULL;
++done:
++	return err;
++
++}
++
++static int set_and_verify_freqs(struct icap *icap, unsigned short *freqs, int num_freqs)
++{
++	int i;
++	int err;
++	u32 clock_freq_counter, request_in_khz, tolerance;
++
++	err = set_freqs(icap, freqs, num_freqs);
++	if (err)
++		return err;
++
++	for (i = 0; i < min(ICAP_MAX_NUM_CLOCKS, num_freqs); ++i) {
++		if (!freqs[i])
++			continue;
++		clock_freq_counter = icap_get_clock_frequency_counter_khz(icap, i);
++		if (clock_freq_counter == 0) {
++			err = -EDOM;
++			break;
++		}
++		request_in_khz = freqs[i]*1000;
++		tolerance = freqs[i]*50;
++		if (tolerance < abs(clock_freq_counter-request_in_khz)) {
++			ICAP_ERR(icap, "Frequency is higher than tolerance value, request %u khz, "
++				 "actual %u khz", request_in_khz, clock_freq_counter);
++			err = -EDOM;
++			break;
++		}
 +	}
 +
-+	if (engine->cyclic_sgt.orig_nents) {
-+		sgt_free_with_pages(&engine->cyclic_sgt, engine->dir,
-+				xdev->pdev);
-+		engine->cyclic_sgt.orig_nents = 0;
-+		engine->cyclic_sgt.nents = 0;
-+		engine->cyclic_sgt.sgl = NULL;
++	return err;
++}
++
++static int icap_ocl_set_freqscaling(struct platform_device *pdev,
++	unsigned int region, unsigned short *freqs, int num_freqs)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	int err = 0;
++
++	/* Can only be done from mgmt pf. */
++	if (!ICAP_PRIVILEGED(icap))
++		return -EPERM;
++
++	/* For now, only PR region 0 is supported. */
++	if (region != 0)
++		return -EINVAL;
++
++	mutex_lock(&icap->icap_lock);
++
++	err = set_freqs(icap, freqs, num_freqs);
++
++	mutex_unlock(&icap->icap_lock);
++
++	return err;
++}
++
++static int icap_ocl_update_clock_freq_topology(struct platform_device *pdev, struct xclmgmt_ioc_freqscaling *freq_obj)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	struct clock_freq_topology *topology = 0;
++	int num_clocks = 0;
++	int i = 0;
++	int err = 0;
++
++	mutex_lock(&icap->icap_lock);
++	if (icap->icap_clock_freq_topology) {
++		topology = (struct clock_freq_topology *)icap->icap_clock_freq_topology;
++		num_clocks = topology->m_count;
++		ICAP_INFO(icap, "Num clocks is %d", num_clocks);
++		for (i = 0; i < ARRAY_SIZE(freq_obj->ocl_target_freq); i++) {
++			ICAP_INFO(icap, "requested frequency is : "
++				"%d xclbin freq is: %d",
++				freq_obj->ocl_target_freq[i],
++				topology->m_clock_freq[i].m_freq_Mhz);
++			if (freq_obj->ocl_target_freq[i] >
++				topology->m_clock_freq[i].m_freq_Mhz) {
++				ICAP_ERR(icap, "Unable to set frequency as "
++					"requested frequency %d is greater "
++					"than set by xclbin %d",
++					freq_obj->ocl_target_freq[i],
++					topology->m_clock_freq[i].m_freq_Mhz);
++				err = -EDOM;
++				goto done;
++			}
++		}
++	} else {
++		ICAP_ERR(icap, "ERROR: There isn't a hardware accelerator loaded in the dynamic region."
++			" Validation of accelerator frequencies cannot be determine");
++		err = -EDOM;
++		goto done;
 +	}
 +
-+	spin_unlock_irqrestore(&engine->lock, flags);
++	err = set_and_verify_freqs(icap, freq_obj->ocl_target_freq, ARRAY_SIZE(freq_obj->ocl_target_freq));
++
++done:
++	mutex_unlock(&icap->icap_lock);
++	return err;
++}
++
++static int icap_ocl_get_freqscaling(struct platform_device *pdev,
++	unsigned int region, unsigned short *freqs, int num_freqs)
++{
++	int i;
++	struct icap *icap = platform_get_drvdata(pdev);
++
++	/* For now, only PR region 0 is supported. */
++	if (region != 0)
++		return -EINVAL;
++
++	mutex_lock(&icap->icap_lock);
++	for (i = 0; i < min(ICAP_MAX_NUM_CLOCKS, num_freqs); i++)
++		freqs[i] = icap_get_ocl_frequency(icap, i);
++	mutex_unlock(&icap->icap_lock);
 +
 +	return 0;
 +}
-diff --git a/drivers/gpu/drm/xocl/lib/libxdma.h b/drivers/gpu/drm/xocl/lib/libxdma.h
-new file mode 100644
-index 000000000000..b519958f9633
---- /dev/null
-+++ b/drivers/gpu/drm/xocl/lib/libxdma.h
-@@ -0,0 +1,596 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/*******************************************************************************
-+ *
-+ * Xilinx XDMA IP Core Linux Driver
-+ * Copyright(c) 2015 - 2017 Xilinx, Inc.
-+ *
-+ * Karen Xie <karen.xie@xilinx.com>
-+ *
-+ ******************************************************************************/
-+#ifndef XDMA_LIB_H
-+#define XDMA_LIB_H
++static inline bool mig_calibration_done(struct icap *icap)
++{
++	return (reg_rd(&icap->icap_state->igs_state) & BIT(0)) != 0;
++}
 +
-+#include <linux/version.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/workqueue.h>
++/* Check for MIG calibration. */
++static int calibrate_mig(struct icap *icap)
++{
++	int i;
 +
-+/* Switch debug printing on/off */
-+#define XDMA_DEBUG 0
++	for (i = 0; i < 10 && !mig_calibration_done(icap); ++i)
++		msleep(500);
 +
-+/* SECTION: Preprocessor macros/constants */
-+#define XDMA_BAR_NUM (6)
++	if (!mig_calibration_done(icap)) {
++		ICAP_ERR(icap,
++			"MIG calibration timeout after bitstream download");
++		return -ETIMEDOUT;
++	}
 +
-+/* maximum amount of register space to map */
-+#define XDMA_BAR_SIZE (0x8000UL)
++	return 0;
++}
 +
-+/* Use this definition to poll several times between calls to schedule */
-+#define NUM_POLLS_PER_SCHED 100
++static inline void free_clock_freq_topology(struct icap *icap)
++{
++	vfree(icap->icap_clock_freq_topology);
++	icap->icap_clock_freq_topology = NULL;
++	icap->icap_clock_freq_topology_length = 0;
++}
 +
-+#define XDMA_CHANNEL_NUM_MAX (4)
-+/*
-+ * interrupts per engine, rad2_vul.sv:237
-+ * .REG_IRQ_OUT	(reg_irq_from_ch[(channel*2) +: 2]),
-+ */
-+#define XDMA_ENG_IRQ_NUM (1)
-+#define MAX_EXTRA_ADJ (15)
-+#define RX_STATUS_EOP (1)
++static int icap_setup_clock_freq_topology(struct icap *icap,
++	const char *buffer, unsigned long length)
++{
++	if (length == 0)
++		return 0;
 +
-+/* Target internal components on XDMA control BAR */
-+#define XDMA_OFS_INT_CTRL	(0x2000UL)
-+#define XDMA_OFS_CONFIG		(0x3000UL)
++	free_clock_freq_topology(icap);
 +
-+/* maximum number of desc per transfer request */
-+#define XDMA_TRANSFER_MAX_DESC (2048)
++	icap->icap_clock_freq_topology = vmalloc(length);
++	if (!icap->icap_clock_freq_topology)
++		return -ENOMEM;
 +
-+/* maximum size of a single DMA transfer descriptor */
-+#define XDMA_DESC_BLEN_BITS	28
-+#define XDMA_DESC_BLEN_MAX	((1 << (XDMA_DESC_BLEN_BITS)) - 1)
++	memcpy(icap->icap_clock_freq_topology, buffer, length);
++	icap->icap_clock_freq_topology_length = length;
 +
-+/* bits of the SG DMA control register */
-+#define XDMA_CTRL_RUN_STOP			(1UL << 0)
-+#define XDMA_CTRL_IE_DESC_STOPPED		(1UL << 1)
-+#define XDMA_CTRL_IE_DESC_COMPLETED		(1UL << 2)
-+#define XDMA_CTRL_IE_DESC_ALIGN_MISMATCH	(1UL << 3)
-+#define XDMA_CTRL_IE_MAGIC_STOPPED		(1UL << 4)
-+#define XDMA_CTRL_IE_IDLE_STOPPED		(1UL << 6)
-+#define XDMA_CTRL_IE_READ_ERROR			(0x1FUL << 9)
-+#define XDMA_CTRL_IE_DESC_ERROR			(0x1FUL << 19)
-+#define XDMA_CTRL_NON_INCR_ADDR			(1UL << 25)
-+#define XDMA_CTRL_POLL_MODE_WB			(1UL << 26)
++	return 0;
++}
 +
-+/* bits of the SG DMA status register */
-+#define XDMA_STAT_BUSY			(1UL << 0)
-+#define XDMA_STAT_DESC_STOPPED		(1UL << 1)
-+#define XDMA_STAT_DESC_COMPLETED	(1UL << 2)
-+#define XDMA_STAT_ALIGN_MISMATCH	(1UL << 3)
-+#define XDMA_STAT_MAGIC_STOPPED		(1UL << 4)
-+#define XDMA_STAT_INVALID_LEN		(1UL << 5)
-+#define XDMA_STAT_IDLE_STOPPED		(1UL << 6)
++static inline void free_clear_bitstream(struct icap *icap)
++{
++	vfree(icap->icap_clear_bitstream);
++	icap->icap_clear_bitstream = NULL;
++	icap->icap_clear_bitstream_length = 0;
++}
 +
-+#define XDMA_STAT_COMMON_ERR_MASK \
-+	(XDMA_STAT_ALIGN_MISMATCH | XDMA_STAT_MAGIC_STOPPED | \
-+	 XDMA_STAT_INVALID_LEN)
++static int icap_setup_clear_bitstream(struct icap *icap,
++	const char *buffer, unsigned long length)
++{
++	if (length == 0)
++		return 0;
 +
-+/* desc_error, C2H & H2C */
-+#define XDMA_STAT_DESC_UNSUPP_REQ	(1UL << 19)
-+#define XDMA_STAT_DESC_COMPL_ABORT	(1UL << 20)
-+#define XDMA_STAT_DESC_PARITY_ERR	(1UL << 21)
-+#define XDMA_STAT_DESC_HEADER_EP	(1UL << 22)
-+#define XDMA_STAT_DESC_UNEXP_COMPL	(1UL << 23)
++	free_clear_bitstream(icap);
 +
-+#define XDMA_STAT_DESC_ERR_MASK	\
-+	(XDMA_STAT_DESC_UNSUPP_REQ | XDMA_STAT_DESC_COMPL_ABORT | \
-+	 XDMA_STAT_DESC_PARITY_ERR | XDMA_STAT_DESC_HEADER_EP | \
-+	 XDMA_STAT_DESC_UNEXP_COMPL)
++	icap->icap_clear_bitstream = vmalloc(length);
++	if (!icap->icap_clear_bitstream)
++		return -ENOMEM;
 +
-+/* read error: H2C */
-+#define XDMA_STAT_H2C_R_UNSUPP_REQ	(1UL << 9)
-+#define XDMA_STAT_H2C_R_COMPL_ABORT	(1UL << 10)
-+#define XDMA_STAT_H2C_R_PARITY_ERR	(1UL << 11)
-+#define XDMA_STAT_H2C_R_HEADER_EP	(1UL << 12)
-+#define XDMA_STAT_H2C_R_UNEXP_COMPL	(1UL << 13)
++	memcpy(icap->icap_clear_bitstream, buffer, length);
++	icap->icap_clear_bitstream_length = length;
 +
-+#define XDMA_STAT_H2C_R_ERR_MASK	\
-+	(XDMA_STAT_H2C_R_UNSUPP_REQ | XDMA_STAT_H2C_R_COMPL_ABORT | \
-+	 XDMA_STAT_H2C_R_PARITY_ERR | XDMA_STAT_H2C_R_HEADER_EP | \
-+	 XDMA_STAT_H2C_R_UNEXP_COMPL)
++	return 0;
++}
 +
-+/* write error, H2C only */
-+#define XDMA_STAT_H2C_W_DECODE_ERR	(1UL << 14)
-+#define XDMA_STAT_H2C_W_SLAVE_ERR	(1UL << 15)
++static int wait_for_done(struct icap *icap)
++{
++	u32 w;
++	int i = 0;
 +
-+#define XDMA_STAT_H2C_W_ERR_MASK	\
-+	(XDMA_STAT_H2C_W_DECODE_ERR | XDMA_STAT_H2C_W_SLAVE_ERR)
++	for (i = 0; i < 10; i++) {
++		udelay(5);
++		w = reg_rd(&icap->icap_regs->ir_sr);
++		ICAP_INFO(icap, "XHWICAP_SR: %x", w);
++		if (w & 0x5)
++			return 0;
++	}
 +
-+/* read error: C2H */
-+#define XDMA_STAT_C2H_R_DECODE_ERR	(1UL << 9)
-+#define XDMA_STAT_C2H_R_SLAVE_ERR	(1UL << 10)
++	ICAP_ERR(icap, "bitstream download timeout");
++	return -ETIMEDOUT;
++}
 +
-+#define XDMA_STAT_C2H_R_ERR_MASK	\
-+	(XDMA_STAT_C2H_R_DECODE_ERR | XDMA_STAT_C2H_R_SLAVE_ERR)
++static int icap_write(struct icap *icap, const u32 *word_buf, int size)
++{
++	int i;
++	u32 value = 0;
 +
-+/* all combined */
-+#define XDMA_STAT_H2C_ERR_MASK	\
-+	(XDMA_STAT_COMMON_ERR_MASK | XDMA_STAT_DESC_ERR_MASK | \
-+	 XDMA_STAT_H2C_R_ERR_MASK | XDMA_STAT_H2C_W_ERR_MASK)
++	for (i = 0; i < size; i++) {
++		value = be32_to_cpu(word_buf[i]);
++		reg_wr(&icap->icap_regs->ir_wf, value);
++	}
 +
-+#define XDMA_STAT_C2H_ERR_MASK	\
-+	(XDMA_STAT_COMMON_ERR_MASK | XDMA_STAT_DESC_ERR_MASK | \
-+	 XDMA_STAT_C2H_R_ERR_MASK)
++	reg_wr(&icap->icap_regs->ir_cr, 0x1);
 +
-+/* bits of the SGDMA descriptor control field */
-+#define XDMA_DESC_STOPPED	(1UL << 0)
-+#define XDMA_DESC_COMPLETED	(1UL << 1)
-+#define XDMA_DESC_EOP		(1UL << 4)
++	for (i = 0; i < 20; i++) {
++		value = reg_rd(&icap->icap_regs->ir_cr);
++		if ((value & 0x1) == 0)
++			return 0;
++		ndelay(50);
++	}
 +
-+#define XDMA_PERF_RUN	(1UL << 0)
-+#define XDMA_PERF_CLEAR	(1UL << 1)
-+#define XDMA_PERF_AUTO	(1UL << 2)
++	ICAP_ERR(icap, "writing %d dwords timeout", size);
++	return -EIO;
++}
 +
-+#define MAGIC_ENGINE	0xEEEEEEEEUL
-+#define MAGIC_DEVICE	0xDDDDDDDDUL
++static uint64_t icap_get_section_size(struct icap *icap, enum axlf_section_kind kind)
++{
++	uint64_t size = 0;
 +
-+/* upper 16-bits of engine identifier register */
-+#define XDMA_ID_H2C 0x1fc0U
-+#define XDMA_ID_C2H 0x1fc1U
++	switch (kind) {
++	case IP_LAYOUT:
++		size = sizeof_sect(icap->ip_layout, m_ip_data);
++		break;
++	case MEM_TOPOLOGY:
++		size = sizeof_sect(icap->mem_topo, m_mem_data);
++		break;
++	case DEBUG_IP_LAYOUT:
++		size = sizeof_sect(icap->debug_layout, m_debug_ip_data);
++		break;
++	case CONNECTIVITY:
++		size = sizeof_sect(icap->connectivity, m_connection);
++		break;
++	default:
++		break;
++	}
 +
-+/* for C2H AXI-ST mode */
-+#define CYCLIC_RX_PAGES_MAX	256
++	return size;
++}
 +
-+#define LS_BYTE_MASK 0x000000FFUL
++static int bitstream_parse_header(struct icap *icap, const unsigned char *Data,
++	unsigned int Size, struct XHwIcap_Bit_Header *Header)
++{
++	unsigned int I;
++	unsigned int Len;
++	unsigned int Tmp;
++	unsigned int Index;
 +
-+#define BLOCK_ID_MASK 0xFFF00000
-+#define BLOCK_ID_HEAD 0x1FC00000
++	/* Start Index at start of bitstream */
++	Index = 0;
 +
-+#define IRQ_BLOCK_ID 0x1fc20000UL
-+#define CONFIG_BLOCK_ID 0x1fc30000UL
-+
-+#define WB_COUNT_MASK 0x00ffffffUL
-+#define WB_ERR_MASK (1UL << 31)
-+#define POLL_TIMEOUT_SECONDS 10
-+
-+#define MAX_USER_IRQ 16
-+
-+#define MAX_DESC_BUS_ADDR (0xffffffffULL)
-+
-+#define DESC_MAGIC 0xAD4B0000UL
-+
-+#define C2H_WB 0x52B4UL
-+
-+#define MAX_NUM_ENGINES (XDMA_CHANNEL_NUM_MAX * 2)
-+#define H2C_CHANNEL_OFFSET 0x1000
-+#define SGDMA_OFFSET_FROM_CHANNEL 0x4000
-+#define CHANNEL_SPACING 0x100
-+#define TARGET_SPACING 0x1000
-+
-+#define BYPASS_MODE_SPACING 0x0100
-+
-+/* obtain the 32 most significant (high) bits of a 32-bit or 64-bit address */
-+#define PCI_DMA_H(addr) ((addr >> 16) >> 16)
-+/* obtain the 32 least significant (low) bits of a 32-bit or 64-bit address */
-+#define PCI_DMA_L(addr) (addr & 0xffffffffUL)
-+
-+#ifndef VM_RESERVED
-+	#define VMEM_FLAGS (VM_IO | VM_DONTEXPAND | VM_DONTDUMP)
-+#else
-+	#define VMEM_FLAGS (VM_IO | VM_RESERVED)
-+#endif
-+
-+#ifdef __LIBXDMA_DEBUG__
-+#define dbg_io		pr_err
-+#define dbg_fops	pr_err
-+#define dbg_perf	pr_err
-+#define dbg_sg		pr_err
-+#define dbg_tfr		pr_err
-+#define dbg_irq		pr_err
-+#define dbg_init	pr_err
-+#define dbg_desc	pr_err
-+#else
-+/* disable debugging */
-+#define dbg_io(...)
-+#define dbg_fops(...)
-+#define dbg_perf(...)
-+#define dbg_sg(...)
-+#define dbg_tfr(...)
-+#define dbg_irq(...)
-+#define dbg_init(...)
-+#define dbg_desc(...)
-+#endif
-+
-+/* SECTION: Enum definitions */
-+enum transfer_state {
-+	TRANSFER_STATE_NEW = 0,
-+	TRANSFER_STATE_SUBMITTED,
-+	TRANSFER_STATE_COMPLETED,
-+	TRANSFER_STATE_FAILED,
-+	TRANSFER_STATE_ABORTED
-+};
-+
-+enum shutdown_state {
-+	ENGINE_SHUTDOWN_NONE = 0,	/* No shutdown in progress */
-+	ENGINE_SHUTDOWN_REQUEST = 1,	/* engine requested to shutdown */
-+	ENGINE_SHUTDOWN_IDLE = 2	/* engine has shutdown and is idle */
-+};
-+
-+enum dev_capabilities {
-+	CAP_64BIT_DMA = 2,
-+	CAP_64BIT_DESC = 4,
-+	CAP_ENGINE_WRITE = 8,
-+	CAP_ENGINE_READ = 16
-+};
-+
-+/* SECTION: Structure definitions */
-+
-+struct config_regs {
-+	u32 identifier;
-+	u32 reserved_1[4];
-+	u32 msi_enable;
-+};
-+
-+/**
-+ * SG DMA Controller status and control registers
-+ *
-+ * These registers make the control interface for DMA transfers.
-+ *
-+ * It sits in End Point (FPGA) memory BAR[0] for 32-bit or BAR[0:1] for 64-bit.
-+ * It references the first descriptor which exists in Root Complex (PC) memory.
-+ *
-+ * @note The registers must be accessed using 32-bit (PCI DWORD) read/writes,
-+ * and their values are in little-endian byte ordering.
-+ */
-+struct engine_regs {
-+	u32 identifier;
-+	u32 control;
-+	u32 control_w1s;
-+	u32 control_w1c;
-+	u32 reserved_1[12];	/* padding */
-+
-+	u32 status;
-+	u32 status_rc;
-+	u32 completed_desc_count;
-+	u32 alignments;
-+	u32 reserved_2[14];	/* padding */
-+
-+	u32 poll_mode_wb_lo;
-+	u32 poll_mode_wb_hi;
-+	u32 interrupt_enable_mask;
-+	u32 interrupt_enable_mask_w1s;
-+	u32 interrupt_enable_mask_w1c;
-+	u32 reserved_3[9];	/* padding */
-+
-+	u32 perf_ctrl;
-+	u32 perf_cyc_lo;
-+	u32 perf_cyc_hi;
-+	u32 perf_dat_lo;
-+	u32 perf_dat_hi;
-+	u32 perf_pnd_lo;
-+	u32 perf_pnd_hi;
-+} __packed;
-+
-+struct engine_sgdma_regs {
-+	u32 identifier;
-+	u32 reserved_1[31];	/* padding */
-+
-+	/* bus address to first descriptor in Root Complex Memory */
-+	u32 first_desc_lo;
-+	u32 first_desc_hi;
-+	/* number of adjacent descriptors at first_desc */
-+	u32 first_desc_adjacent;
-+	u32 credits;
-+} __packed;
-+
-+struct msix_vec_table_entry {
-+	u32 msi_vec_addr_lo;
-+	u32 msi_vec_addr_hi;
-+	u32 msi_vec_data_lo;
-+	u32 msi_vec_data_hi;
-+} __packed;
-+
-+struct msix_vec_table {
-+	struct msix_vec_table_entry entry_list[32];
-+} __packed;
-+
-+struct interrupt_regs {
-+	u32 identifier;
-+	u32 user_int_enable;
-+	u32 user_int_enable_w1s;
-+	u32 user_int_enable_w1c;
-+	u32 channel_int_enable;
-+	u32 channel_int_enable_w1s;
-+	u32 channel_int_enable_w1c;
-+	u32 reserved_1[9];	/* padding */
-+
-+	u32 user_int_request;
-+	u32 channel_int_request;
-+	u32 user_int_pending;
-+	u32 channel_int_pending;
-+	u32 reserved_2[12];	/* padding */
-+
-+	u32 user_msi_vector[8];
-+	u32 channel_msi_vector[8];
-+} __packed;
-+
-+struct sgdma_common_regs {
-+	u32 padding[8];
-+	u32 credit_mode_enable;
-+	u32 credit_mode_enable_w1s;
-+	u32 credit_mode_enable_w1c;
-+} __packed;
-+
-+
-+/* Structure for polled mode descriptor writeback */
-+struct xdma_poll_wb {
-+	u32 completed_desc_count;
-+	u32 reserved_1[7];
-+} __packed;
-+
-+
-+/**
-+ * Descriptor for a single contiguous memory block transfer.
-+ *
-+ * Multiple descriptors are linked by means of the next pointer. An additional
-+ * extra adjacent number gives the amount of extra contiguous descriptors.
-+ *
-+ * The descriptors are in root complex memory, and the bytes in the 32-bit
-+ * words must be in little-endian byte ordering.
-+ */
-+struct xdma_desc {
-+	u32 control;
-+	u32 bytes;		/* transfer length in bytes */
-+	u32 src_addr_lo;	/* source address (low 32-bit) */
-+	u32 src_addr_hi;	/* source address (high 32-bit) */
-+	u32 dst_addr_lo;	/* destination address (low 32-bit) */
-+	u32 dst_addr_hi;	/* destination address (high 32-bit) */
-+	/*
-+	 * next descriptor in the single-linked list of descriptors;
-+	 * this is the PCIe (bus) address of the next descriptor in the
-+	 * root complex memory
++	/* Initialize HeaderLength.  If header returned early inidicates
++	 * failure.
 +	 */
-+	u32 next_lo;		/* next desc address (low 32-bit) */
-+	u32 next_hi;		/* next desc address (high 32-bit) */
-+} __packed;
++	Header->HeaderLength = XHI_BIT_HEADER_FAILURE;
 +
-+/* 32 bytes (four 32-bit words) or 64 bytes (eight 32-bit words) */
-+struct xdma_result {
-+	u32 status;
-+	u32 length;
-+	u32 reserved_1[6];	/* padding */
-+} __packed;
++	/* Get "Magic" length */
++	Header->MagicLength = Data[Index++];
++	Header->MagicLength = (Header->MagicLength << 8) | Data[Index++];
 +
-+struct sw_desc {
-+	dma_addr_t addr;
-+	unsigned int len;
-+};
++	/* Read in "magic" */
++	for (I = 0; I < Header->MagicLength - 1; I++) {
++		Tmp = Data[Index++];
++		if (I%2 == 0 && Tmp != XHI_EVEN_MAGIC_BYTE)
++			return -1;   /* INVALID_FILE_HEADER_ERROR */
 +
-+/* Describes a (SG DMA) single transfer for the engine */
-+struct xdma_transfer {
-+	struct list_head entry;		/* queue of non-completed transfers */
-+	struct xdma_desc *desc_virt;	/* virt addr of the 1st descriptor */
-+	dma_addr_t desc_bus;		/* bus addr of the first descriptor */
-+	int desc_adjacent;		/* adjacent descriptors at desc_bus */
-+	int desc_num;			/* number of descriptors in transfer */
-+	enum dma_data_direction dir;
-+	wait_queue_head_t wq;		/* wait queue for transfer completion */
++		if (I%2 == 1 && Tmp != XHI_ODD_MAGIC_BYTE)
++			return -1;   /* INVALID_FILE_HEADER_ERROR */
 +
-+	enum transfer_state state;	/* state of the transfer */
-+	unsigned int flags;
-+#define XFER_FLAG_NEED_UNMAP	0x1
-+	int cyclic;			/* flag if transfer is cyclic */
-+	int last_in_request;		/* flag if last within request */
-+	unsigned int len;
-+	struct sg_table *sgt;
-+};
-+
-+struct xdma_request_cb {
-+	struct sg_table *sgt;
-+	unsigned int total_len;
-+	u64 ep_addr;
-+
-+	struct xdma_transfer xfer;
-+
-+	unsigned int sw_desc_idx;
-+	unsigned int sw_desc_cnt;
-+	struct sw_desc sdesc[0];
-+};
-+
-+struct xdma_engine {
-+	unsigned long magic;	/* structure ID for sanity checks */
-+	struct xdma_dev *xdev;	/* parent device */
-+	char name[5];		/* name of this engine */
-+	int version;		/* version of this engine */
-+	//dev_t cdevno;		/* character device major:minor */
-+	//struct cdev cdev;	/* character device (embedded struct) */
-+
-+	/* HW register address offsets */
-+	struct engine_regs *regs;		/* Control reg BAR offset */
-+	struct engine_sgdma_regs *sgdma_regs;	/* SGDAM reg BAR offset */
-+	u32 bypass_offset;			/* Bypass mode BAR offset */
-+
-+	/* Engine state, configuration and flags */
-+	enum shutdown_state shutdown;	/* engine shutdown mode */
-+	enum dma_data_direction dir;
-+	int running;		/* flag if the driver started engine */
-+	int non_incr_addr;	/* flag if non-incremental addressing used */
-+	int streaming;
-+	int addr_align;		/* source/dest alignment in bytes */
-+	int len_granularity;	/* transfer length multiple */
-+	int addr_bits;		/* HW datapath address width */
-+	int channel;		/* engine indices */
-+	int max_extra_adj;	/* descriptor prefetch capability */
-+	int desc_dequeued;	/* num descriptors of completed transfers */
-+	u32 status;		/* last known status of device */
-+	u32 interrupt_enable_mask_value;/* only used for MSIX mode to store per-engine interrupt mask value */
-+
-+	/* Transfer list management */
-+	struct list_head transfer_list;	/* queue of transfers */
-+
-+	/* Members applicable to AXI-ST C2H (cyclic) transfers */
-+	struct xdma_result *cyclic_result;
-+	dma_addr_t cyclic_result_bus;	/* bus addr for transfer */
-+	struct xdma_request_cb *cyclic_req;
-+	struct sg_table cyclic_sgt;
-+	u8 eop_found; /* used only for cyclic(rx:c2h) */
-+
-+	int rx_tail;	/* follows the HW */
-+	int rx_head;	/* where the SW reads from */
-+	int rx_overrun;	/* flag if overrun occured */
-+
-+	/* for copy from cyclic buffer to user buffer */
-+	unsigned int user_buffer_index;
-+
-+	/* Members associated with polled mode support */
-+	u8 *poll_mode_addr_virt;	/* virt addr for descriptor writeback */
-+	dma_addr_t poll_mode_bus;	/* bus addr for descriptor writeback */
-+
-+	/* Members associated with interrupt mode support */
-+	wait_queue_head_t shutdown_wq;	/* wait queue for shutdown sync */
-+	spinlock_t lock;		/* protects concurrent access */
-+	int prev_cpu;			/* remember CPU# of (last) locker */
-+	int msix_irq_line;		/* MSI-X vector for this engine */
-+	u32 irq_bitmask;		/* IRQ bit mask for this engine */
-+	struct work_struct work;	/* Work queue for interrupt handling */
-+
-+	spinlock_t desc_lock;		/* protects concurrent access */
-+#ifdef CONFIG_PREEMPT_COUNT
-+	struct mutex desc_mutex;
-+#endif
-+
-+	dma_addr_t desc_bus;
-+	struct xdma_desc *desc;
-+
-+	/* for performance test support */
-+	struct xdma_performance_ioctl *xdma_perf;	/* perf test control */
-+	wait_queue_head_t xdma_perf_wq;	/* Perf test sync */
-+};
-+
-+struct xdma_user_irq {
-+	struct xdma_dev *xdev;		/* parent device */
-+	u8 user_idx;			/* 0 ~ 15 */
-+	u8 events_irq;			/* accumulated IRQs */
-+	spinlock_t events_lock;		/* lock to safely update events_irq */
-+	wait_queue_head_t events_wq;	/* wait queue to sync waiting threads */
-+	irq_handler_t handler;
-+
-+	void *dev;
-+};
-+
-+/* XDMA PCIe device specific book-keeping */
-+#define XDEV_FLAG_OFFLINE	0x1
-+struct xdma_dev {
-+	struct list_head list_head;
-+	struct list_head rcu_node;
-+
-+	unsigned long magic;		/* structure ID for sanity checks */
-+	struct pci_dev *pdev;	/* pci device struct from probe() */
-+	int idx;		/* dev index */
-+
-+	const char *mod_name;		/* name of module owning the dev */
-+
-+	spinlock_t lock;		/* protects concurrent access */
-+	unsigned int flags;
-+
-+	/* PCIe BAR management */
-+	void *__iomem bar[XDMA_BAR_NUM];	/* addresses for mapped BARs */
-+	int user_bar_idx;	/* BAR index of user logic */
-+	int config_bar_idx;	/* BAR index of XDMA config logic */
-+	int bypass_bar_idx;	/* BAR index of XDMA bypass logic */
-+	int regions_in_use;	/* flag if dev was in use during probe() */
-+	int got_regions;	/* flag if probe() obtained the regions */
-+
-+	int user_max;
-+	int c2h_channel_max;
-+	int h2c_channel_max;
-+
-+	/* Interrupt management */
-+	int irq_count;		/* interrupt counter */
-+	int irq_line;		/* flag if irq allocated successfully */
-+	int msi_enabled;	/* flag if msi was enabled for the device */
-+	int msix_enabled;	/* flag if msi-x was enabled for the device */
-+	struct xdma_user_irq user_irq[16];	/* user IRQ management */
-+	unsigned int mask_irq_user;
-+
-+	/* XDMA engine management */
-+	int engines_num;	/* Total engine count */
-+	u32 mask_irq_h2c;
-+	u32 mask_irq_c2h;
-+	struct xdma_engine engine_h2c[XDMA_CHANNEL_NUM_MAX];
-+	struct xdma_engine engine_c2h[XDMA_CHANNEL_NUM_MAX];
-+
-+	/* SD_Accel specific */
-+	enum dev_capabilities capabilities;
-+	u64 feature_id;
-+};
-+
-+static inline int xdma_device_flag_check(struct xdma_dev *xdev, unsigned int f)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&xdev->lock, flags);
-+	if (xdev->flags & f) {
-+		spin_unlock_irqrestore(&xdev->lock, flags);
-+		return 1;
 +	}
-+	spin_unlock_irqrestore(&xdev->lock, flags);
++
++	/* Read null end of magic data. */
++	Tmp = Data[Index++];
++
++	/* Read 0x01 (short) */
++	Tmp = Data[Index++];
++	Tmp = (Tmp << 8) | Data[Index++];
++
++	/* Check the "0x01" half word */
++	if (Tmp != 0x01)
++		return -1;	 /* INVALID_FILE_HEADER_ERROR */
++
++	/* Read 'a' */
++	Tmp = Data[Index++];
++	if (Tmp != 'a')
++		return -1;	  /* INVALID_FILE_HEADER_ERROR	*/
++
++	/* Get Design Name length */
++	Len = Data[Index++];
++	Len = (Len << 8) | Data[Index++];
++
++	/* allocate space for design name and final null character. */
++	Header->DesignName = kmalloc(Len, GFP_KERNEL);
++
++	/* Read in Design Name */
++	for (I = 0; I < Len; I++)
++		Header->DesignName[I] = Data[Index++];
++
++
++	if (Header->DesignName[Len-1] != '\0')
++		return -1;
++
++	/* Read 'b' */
++	Tmp = Data[Index++];
++	if (Tmp != 'b')
++		return -1;	/* INVALID_FILE_HEADER_ERROR */
++
++	/* Get Part Name length */
++	Len = Data[Index++];
++	Len = (Len << 8) | Data[Index++];
++
++	/* allocate space for part name and final null character. */
++	Header->PartName = kmalloc(Len, GFP_KERNEL);
++
++	/* Read in part name */
++	for (I = 0; I < Len; I++)
++		Header->PartName[I] = Data[Index++];
++
++	if (Header->PartName[Len-1] != '\0')
++		return -1;
++
++	/* Read 'c' */
++	Tmp = Data[Index++];
++	if (Tmp != 'c')
++		return -1;	/* INVALID_FILE_HEADER_ERROR */
++
++	/* Get date length */
++	Len = Data[Index++];
++	Len = (Len << 8) | Data[Index++];
++
++	/* allocate space for date and final null character. */
++	Header->Date = kmalloc(Len, GFP_KERNEL);
++
++	/* Read in date name */
++	for (I = 0; I < Len; I++)
++		Header->Date[I] = Data[Index++];
++
++	if (Header->Date[Len - 1] != '\0')
++		return -1;
++
++	/* Read 'd' */
++	Tmp = Data[Index++];
++	if (Tmp != 'd')
++		return -1;	/* INVALID_FILE_HEADER_ERROR  */
++
++	/* Get time length */
++	Len = Data[Index++];
++	Len = (Len << 8) | Data[Index++];
++
++	/* allocate space for time and final null character. */
++	Header->Time = kmalloc(Len, GFP_KERNEL);
++
++	/* Read in time name */
++	for (I = 0; I < Len; I++)
++		Header->Time[I] = Data[Index++];
++
++	if (Header->Time[Len - 1] != '\0')
++		return -1;
++
++	/* Read 'e' */
++	Tmp = Data[Index++];
++	if (Tmp != 'e')
++		return -1;	/* INVALID_FILE_HEADER_ERROR */
++
++	/* Get byte length of bitstream */
++	Header->BitstreamLength = Data[Index++];
++	Header->BitstreamLength = (Header->BitstreamLength << 8) | Data[Index++];
++	Header->BitstreamLength = (Header->BitstreamLength << 8) | Data[Index++];
++	Header->BitstreamLength = (Header->BitstreamLength << 8) | Data[Index++];
++	Header->HeaderLength = Index;
++
++	ICAP_INFO(icap, "Design \"%s\"", Header->DesignName);
++	ICAP_INFO(icap, "Part \"%s\"", Header->PartName);
++	ICAP_INFO(icap, "Timestamp \"%s %s\"", Header->Time, Header->Date);
++	ICAP_INFO(icap, "Raw data size 0x%x", Header->BitstreamLength);
 +	return 0;
 +}
 +
-+static inline int xdma_device_flag_test_n_set(struct xdma_dev *xdev,
-+					 unsigned int f)
++static int bitstream_helper(struct icap *icap, const u32 *word_buffer,
++			    unsigned int word_count)
 +{
-+	unsigned long flags;
++	unsigned int remain_word;
++	unsigned int word_written = 0;
++	int wr_fifo_vacancy = 0;
++	int err = 0;
++
++	for (remain_word = word_count; remain_word > 0;
++		remain_word -= word_written, word_buffer += word_written) {
++		wr_fifo_vacancy = reg_rd(&icap->icap_regs->ir_wfv);
++		if (wr_fifo_vacancy <= 0) {
++			ICAP_ERR(icap, "no vacancy: %d", wr_fifo_vacancy);
++			err = -EIO;
++			break;
++		}
++		word_written = (wr_fifo_vacancy < remain_word) ?
++			wr_fifo_vacancy : remain_word;
++		if (icap_write(icap, word_buffer, word_written) != 0) {
++			err = -EIO;
++			break;
++		}
++	}
++
++	return err;
++}
++
++static long icap_download(struct icap *icap, const char *buffer,
++	unsigned long length)
++{
++	long err = 0;
++	struct XHwIcap_Bit_Header bit_header = { 0 };
++	unsigned int numCharsRead = DMA_HWICAP_BITFILE_BUFFER_SIZE;
++	unsigned int byte_read;
++
++	BUG_ON(!buffer);
++	BUG_ON(!length);
++
++	if (bitstream_parse_header(icap, buffer,
++		DMA_HWICAP_BITFILE_BUFFER_SIZE, &bit_header)) {
++		err = -EINVAL;
++		goto free_buffers;
++	}
++
++	if ((bit_header.HeaderLength + bit_header.BitstreamLength) > length) {
++		err = -EINVAL;
++		goto free_buffers;
++	}
++
++	buffer += bit_header.HeaderLength;
++
++	for (byte_read = 0; byte_read < bit_header.BitstreamLength;
++		byte_read += numCharsRead) {
++		numCharsRead = bit_header.BitstreamLength - byte_read;
++		if (numCharsRead > DMA_HWICAP_BITFILE_BUFFER_SIZE)
++			numCharsRead = DMA_HWICAP_BITFILE_BUFFER_SIZE;
++
++		err = bitstream_helper(icap, (u32 *)buffer,
++				       numCharsRead / sizeof(u32));
++		if (err)
++			goto free_buffers;
++		buffer += numCharsRead;
++	}
++
++	err = wait_for_done(icap);
++
++free_buffers:
++	kfree(bit_header.DesignName);
++	kfree(bit_header.PartName);
++	kfree(bit_header.Date);
++	kfree(bit_header.Time);
++	return err;
++}
++
++static const struct axlf_section_header *get_axlf_section_hdr(
++	struct icap *icap, const struct axlf *top, enum axlf_section_kind kind)
++{
++	int i;
++	const struct axlf_section_header *hdr = NULL;
++
++	ICAP_INFO(icap,
++		"trying to find section header for axlf section %d", kind);
++
++	for (i = 0; i < top->m_header.m_numSections; i++) {
++		ICAP_INFO(icap, "saw section header: %d",
++			top->m_sections[i].m_sectionKind);
++		if (top->m_sections[i].m_sectionKind == kind) {
++			hdr = &top->m_sections[i];
++			break;
++		}
++	}
++
++	if (hdr) {
++		if ((hdr->m_sectionOffset + hdr->m_sectionSize) >
++			top->m_header.m_length) {
++			ICAP_INFO(icap, "found section is invalid");
++			hdr = NULL;
++		} else {
++			ICAP_INFO(icap, "header offset: %llu, size: %llu",
++				hdr->m_sectionOffset, hdr->m_sectionSize);
++		}
++	} else {
++		ICAP_INFO(icap, "could not find section header %d", kind);
++	}
++
++	return hdr;
++}
++
++static int alloc_and_get_axlf_section(struct icap *icap,
++	const struct axlf *top, enum axlf_section_kind kind,
++	void **addr, uint64_t *size)
++{
++	void *section = NULL;
++	const struct axlf_section_header *hdr =
++		get_axlf_section_hdr(icap, top, kind);
++
++	if (hdr == NULL)
++		return -EINVAL;
++
++	section = vmalloc(hdr->m_sectionSize);
++	if (section == NULL)
++		return -ENOMEM;
++
++	memcpy(section, ((const char *)top) + hdr->m_sectionOffset,
++		hdr->m_sectionSize);
++
++	*addr = section;
++	*size = hdr->m_sectionSize;
++	return 0;
++}
++
++static int icap_download_boot_firmware(struct platform_device *pdev)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	struct pci_dev *pcidev = XOCL_PL_TO_PCI_DEV(pdev);
++	struct pci_dev *pcidev_user = NULL;
++	xdev_handle_t xdev = xocl_get_xdev(pdev);
++	int funcid = PCI_FUNC(pcidev->devfn);
++	int slotid = PCI_SLOT(pcidev->devfn);
++	unsigned short deviceid = pcidev->device;
++	struct axlf *bin_obj_axlf;
++	const struct firmware *fw;
++	char fw_name[128];
++	struct XHwIcap_Bit_Header bit_header = { 0 };
++	long err = 0;
++	uint64_t length = 0;
++	uint64_t primaryFirmwareOffset = 0;
++	uint64_t primaryFirmwareLength = 0;
++	uint64_t secondaryFirmwareOffset = 0;
++	uint64_t secondaryFirmwareLength = 0;
++	uint64_t mbBinaryOffset = 0;
++	uint64_t mbBinaryLength = 0;
++	const struct axlf_section_header *primaryHeader = 0;
++	const struct axlf_section_header *secondaryHeader = 0;
++	const struct axlf_section_header *mbHeader = 0;
++	bool load_mbs = false;
++
++	/* Can only be done from mgmt pf. */
++	if (!ICAP_PRIVILEGED(icap))
++		return -EPERM;
++
++	/* Read dsabin from file system. */
++
++	if (funcid != 0) {
++		pcidev_user = pci_get_slot(pcidev->bus,
++			PCI_DEVFN(slotid, funcid - 1));
++		if (!pcidev_user) {
++			pcidev_user = pci_get_device(pcidev->vendor,
++				pcidev->device + 1, NULL);
++		}
++		if (pcidev_user)
++			deviceid = pcidev_user->device;
++	}
++
++	snprintf(fw_name, sizeof(fw_name),
++		"xilinx/%04x-%04x-%04x-%016llx.dsabin",
++		le16_to_cpu(pcidev->vendor),
++		le16_to_cpu(deviceid),
++		le16_to_cpu(pcidev->subsystem_device),
++		le64_to_cpu(xocl_get_timestamp(xdev)));
++	ICAP_INFO(icap, "try load dsabin %s", fw_name);
++	err = request_firmware(&fw, fw_name, &pcidev->dev);
++	if (err) {
++		snprintf(fw_name, sizeof(fw_name),
++			"xilinx/%04x-%04x-%04x-%016llx.dsabin",
++			le16_to_cpu(pcidev->vendor),
++			le16_to_cpu(deviceid + 1),
++			le16_to_cpu(pcidev->subsystem_device),
++			le64_to_cpu(xocl_get_timestamp(xdev)));
++		ICAP_INFO(icap, "try load dsabin %s", fw_name);
++		err = request_firmware(&fw, fw_name, &pcidev->dev);
++	}
++	/* Retry with the legacy dsabin. */
++	if (err) {
++		snprintf(fw_name, sizeof(fw_name),
++			"xilinx/%04x-%04x-%04x-%016llx.dsabin",
++			le16_to_cpu(pcidev->vendor),
++			le16_to_cpu(pcidev->device + 1),
++			le16_to_cpu(pcidev->subsystem_device),
++			le64_to_cpu(0x0000000000000000));
++		ICAP_INFO(icap, "try load dsabin %s", fw_name);
++		err = request_firmware(&fw, fw_name, &pcidev->dev);
++	}
++	if (err) {
++		/* Give up on finding .dsabin. */
++		ICAP_ERR(icap, "unable to find firmware, giving up");
++		return err;
++	}
++
++	/* Grab lock and touch hardware. */
++	mutex_lock(&icap->icap_lock);
++
++	if (xocl_mb_sched_on(xdev)) {
++		/* Try locating the microblaze binary. */
++		bin_obj_axlf = (struct axlf *)fw->data;
++		mbHeader = get_axlf_section_hdr(icap, bin_obj_axlf, SCHED_FIRMWARE);
++		if (mbHeader) {
++			mbBinaryOffset = mbHeader->m_sectionOffset;
++			mbBinaryLength = mbHeader->m_sectionSize;
++			length = bin_obj_axlf->m_header.m_length;
++			xocl_mb_load_sche_image(xdev, fw->data + mbBinaryOffset,
++				mbBinaryLength);
++			ICAP_INFO(icap, "stashed mb sche binary");
++			load_mbs = true;
++		}
++	}
++
++	if (xocl_mb_mgmt_on(xdev)) {
++		/* Try locating the board mgmt binary. */
++		bin_obj_axlf = (struct axlf *)fw->data;
++		mbHeader = get_axlf_section_hdr(icap, bin_obj_axlf, FIRMWARE);
++		if (mbHeader) {
++			mbBinaryOffset = mbHeader->m_sectionOffset;
++			mbBinaryLength = mbHeader->m_sectionSize;
++			length = bin_obj_axlf->m_header.m_length;
++			xocl_mb_load_mgmt_image(xdev, fw->data + mbBinaryOffset,
++				mbBinaryLength);
++			ICAP_INFO(icap, "stashed mb mgmt binary");
++			load_mbs = true;
++		}
++	}
++
++	if (load_mbs)
++		xocl_mb_reset(xdev);
++
++
++	if (memcmp(fw->data, ICAP_XCLBIN_V2, sizeof(ICAP_XCLBIN_V2)) != 0) {
++		ICAP_ERR(icap, "invalid firmware %s", fw_name);
++		err = -EINVAL;
++		goto done;
++	}
++
++	ICAP_INFO(icap, "boot_firmware in axlf format");
++	bin_obj_axlf = (struct axlf *)fw->data;
++	length = bin_obj_axlf->m_header.m_length;
++	/* Match the xclbin with the hardware. */
++	if (!xocl_verify_timestamp(xdev,
++		bin_obj_axlf->m_header.m_featureRomTimeStamp)) {
++		ICAP_ERR(icap, "timestamp of ROM did not match xclbin");
++		err = -EINVAL;
++		goto done;
++	}
++	ICAP_INFO(icap, "VBNV and timestamps matched");
++
++	if (xocl_xrt_version_check(xdev, bin_obj_axlf, true)) {
++		ICAP_ERR(icap, "Major version does not match xrt");
++		err = -EINVAL;
++		goto done;
++	}
++	ICAP_INFO(icap, "runtime version matched");
++
++	primaryHeader = get_axlf_section_hdr(icap, bin_obj_axlf, BITSTREAM);
++	secondaryHeader = get_axlf_section_hdr(icap, bin_obj_axlf,
++		CLEARING_BITSTREAM);
++	if (primaryHeader) {
++		primaryFirmwareOffset = primaryHeader->m_sectionOffset;
++		primaryFirmwareLength = primaryHeader->m_sectionSize;
++	}
++	if (secondaryHeader) {
++		secondaryFirmwareOffset = secondaryHeader->m_sectionOffset;
++		secondaryFirmwareLength = secondaryHeader->m_sectionSize;
++	}
++
++	if (length > fw->size) {
++		err = -EINVAL;
++		goto done;
++	}
++
++	if ((primaryFirmwareOffset + primaryFirmwareLength) > length) {
++		err = -EINVAL;
++		goto done;
++	}
++
++	if ((secondaryFirmwareOffset + secondaryFirmwareLength) > length) {
++		err = -EINVAL;
++		goto done;
++	}
++
++	if (primaryFirmwareLength) {
++		ICAP_INFO(icap,
++			"found second stage bitstream of size 0x%llx in %s",
++			primaryFirmwareLength, fw_name);
++		err = icap_download(icap, fw->data + primaryFirmwareOffset,
++			primaryFirmwareLength);
++		/*
++		 * If we loaded a new second stage, we do not need the
++		 * previously stashed clearing bitstream if any.
++		 */
++		free_clear_bitstream(icap);
++		if (err) {
++			ICAP_ERR(icap,
++				"failed to download second stage bitstream");
++			goto done;
++		}
++		ICAP_INFO(icap, "downloaded second stage bitstream");
++	}
++
++	/*
++	 * If both primary and secondary bitstreams have been provided then
++	 * ignore the previously stashed bitstream if any. If only secondary
++	 * bitstream was provided, but we found a previously stashed bitstream
++	 * we should use the latter since it is more appropriate for the
++	 * current state of the device
++	 */
++	if (secondaryFirmwareLength && (primaryFirmwareLength ||
++		!icap->icap_clear_bitstream)) {
++		free_clear_bitstream(icap);
++		icap->icap_clear_bitstream = vmalloc(secondaryFirmwareLength);
++		if (!icap->icap_clear_bitstream) {
++			err = -ENOMEM;
++			goto done;
++		}
++		icap->icap_clear_bitstream_length = secondaryFirmwareLength;
++		memcpy(icap->icap_clear_bitstream,
++			fw->data + secondaryFirmwareOffset,
++			icap->icap_clear_bitstream_length);
++		ICAP_INFO(icap, "found clearing bitstream of size 0x%lx in %s",
++			icap->icap_clear_bitstream_length, fw_name);
++	} else if (icap->icap_clear_bitstream) {
++		ICAP_INFO(icap,
++			"using existing clearing bitstream of size 0x%lx",
++		       icap->icap_clear_bitstream_length);
++	}
++
++	if (icap->icap_clear_bitstream &&
++		bitstream_parse_header(icap, icap->icap_clear_bitstream,
++		DMA_HWICAP_BITFILE_BUFFER_SIZE, &bit_header)) {
++		err = -EINVAL;
++		free_clear_bitstream(icap);
++	}
++
++done:
++	mutex_unlock(&icap->icap_lock);
++	release_firmware(fw);
++	kfree(bit_header.DesignName);
++	kfree(bit_header.PartName);
++	kfree(bit_header.Date);
++	kfree(bit_header.Time);
++	ICAP_INFO(icap, "%s err: %ld", __func__, err);
++	return err;
++}
++
++
++static long icap_download_clear_bitstream(struct icap *icap)
++{
++	long err = 0;
++	const char *buffer = icap->icap_clear_bitstream;
++	unsigned long length = icap->icap_clear_bitstream_length;
++
++	ICAP_INFO(icap, "downloading clear bitstream of length 0x%lx", length);
++
++	if (!buffer)
++		return 0;
++
++	err = icap_download(icap, buffer, length);
++
++	free_clear_bitstream(icap);
++	return err;
++}
++
++/*
++ * This function should be called with icap_mutex lock held
++ */
++static long axlf_set_freqscaling(struct icap *icap, struct platform_device *pdev,
++	const char *clk_buf, unsigned long length)
++{
++	struct clock_freq_topology *freqs = NULL;
++	int clock_type_count = 0;
++	int i = 0;
++	struct clock_freq *freq = NULL;
++	int data_clk_count = 0;
++	int kernel_clk_count = 0;
++	int system_clk_count = 0;
++	unsigned short target_freqs[4] = {0};
++
++	freqs = (struct clock_freq_topology *)clk_buf;
++	if (freqs->m_count > 4) {
++		ICAP_ERR(icap, "More than 4 clocks found in clock topology");
++		return -EDOM;
++	}
++
++	//Error checks - we support 1 data clk (reqd), one kernel clock(reqd) and
++	//at most 2 system clocks (optional/reqd for aws).
++	//Data clk needs to be the first entry, followed by kernel clock
++	//and then system clocks
++	//
++
++	for (i = 0; i < freqs->m_count; i++) {
++		freq = &(freqs->m_clock_freq[i]);
++		if (freq->m_type == CT_DATA)
++			data_clk_count++;
++
++		if (freq->m_type == CT_KERNEL)
++			kernel_clk_count++;
++
++		if (freq->m_type == CT_SYSTEM)
++			system_clk_count++;
++
++	}
++
++	if (data_clk_count != 1) {
++		ICAP_ERR(icap, "Data clock not found in clock topology");
++		return -EDOM;
++	}
++	if (kernel_clk_count != 1) {
++		ICAP_ERR(icap, "Kernel clock not found in clock topology");
++		return -EDOM;
++	}
++	if (system_clk_count > 2) {
++		ICAP_ERR(icap,
++			"More than 2 system clocks found in clock topology");
++		return -EDOM;
++	}
++
++	for (i = 0; i < freqs->m_count; i++) {
++		freq = &(freqs->m_clock_freq[i]);
++		if (freq->m_type == CT_DATA)
++			target_freqs[0] = freq->m_freq_Mhz;
++	}
++
++	for (i = 0; i < freqs->m_count; i++) {
++		freq = &(freqs->m_clock_freq[i]);
++		if (freq->m_type == CT_KERNEL)
++			target_freqs[1] = freq->m_freq_Mhz;
++	}
++
++	clock_type_count = 2;
++	for (i = 0; i < freqs->m_count; i++) {
++		freq = &(freqs->m_clock_freq[i]);
++		if (freq->m_type == CT_SYSTEM)
++			target_freqs[clock_type_count++] = freq->m_freq_Mhz;
++	}
++
++
++	ICAP_INFO(icap, "setting clock freq, "
++		"num: %lu, data_freq: %d , clk_freq: %d, "
++		"sys_freq[0]: %d, sys_freq[1]: %d",
++		ARRAY_SIZE(target_freqs), target_freqs[0], target_freqs[1],
++		target_freqs[2], target_freqs[3]);
++	return set_freqs(icap, target_freqs, 4);
++}
++
++
++static int icap_download_user(struct icap *icap, const char *bit_buf,
++	unsigned long length)
++{
++	long err = 0;
++	struct XHwIcap_Bit_Header bit_header = { 0 };
++	unsigned int numCharsRead = DMA_HWICAP_BITFILE_BUFFER_SIZE;
++	unsigned int byte_read;
++
++	ICAP_INFO(icap, "downloading bitstream, length: %lu", length);
++
++	icap_freeze_axi_gate(icap);
++
++	err = icap_download_clear_bitstream(icap);
++	if (err)
++		goto free_buffers;
++
++	if (bitstream_parse_header(icap, bit_buf,
++		DMA_HWICAP_BITFILE_BUFFER_SIZE, &bit_header)) {
++		err = -EINVAL;
++		goto free_buffers;
++	}
++	if ((bit_header.HeaderLength + bit_header.BitstreamLength) > length) {
++		err = -EINVAL;
++		goto free_buffers;
++	}
++
++	bit_buf += bit_header.HeaderLength;
++	for (byte_read = 0; byte_read < bit_header.BitstreamLength;
++		byte_read += numCharsRead) {
++		numCharsRead = bit_header.BitstreamLength - byte_read;
++		if (numCharsRead > DMA_HWICAP_BITFILE_BUFFER_SIZE)
++			numCharsRead = DMA_HWICAP_BITFILE_BUFFER_SIZE;
++
++		err = bitstream_helper(icap, (u32 *)bit_buf,
++				       numCharsRead / sizeof(u32));
++		if (err)
++			goto free_buffers;
++
++		bit_buf += numCharsRead;
++	}
++
++	err = wait_for_done(icap);
++	if (err)
++		goto free_buffers;
++
++	/*
++	 * Perform frequency scaling since PR download can silenty overwrite
++	 * MMCM settings in static region changing the clock frequencies
++	 * although ClockWiz CONFIG registers will misleading report the older
++	 * configuration from before bitstream download as if nothing has
++	 * changed.
++	 */
++	if (!err)
++		err = icap_ocl_freqscaling(icap, true);
++
++free_buffers:
++	icap_free_axi_gate(icap);
++	kfree(bit_header.DesignName);
++	kfree(bit_header.PartName);
++	kfree(bit_header.Date);
++	kfree(bit_header.Time);
++	return err;
++}
++
++
++static int __icap_lock_peer(struct platform_device *pdev, const uuid_t *id)
++{
++	int err = 0;
++	struct icap *icap = platform_get_drvdata(pdev);
++	int resp = 0;
++	size_t resplen = sizeof(resp);
++	struct mailbox_req_bitstream_lock bitstream_lock = {0};
++	size_t data_len = sizeof(struct mailbox_req_bitstream_lock);
++	struct mailbox_req *mb_req = NULL;
++	size_t reqlen = sizeof(struct mailbox_req) + data_len;
++	/* if there is no user there
++	 * ask mgmt to lock the bitstream
++	 */
++	if (icap->icap_bitstream_ref == 0) {
++		mb_req = vmalloc(reqlen);
++		if (!mb_req) {
++			err = -ENOMEM;
++			goto done;
++		}
++
++		mb_req->req = MAILBOX_REQ_LOCK_BITSTREAM;
++		uuid_copy(&bitstream_lock.uuid, id);
++
++		memcpy(mb_req->data, &bitstream_lock, data_len);
++
++		err = xocl_peer_request(XOCL_PL_DEV_TO_XDEV(pdev),
++			mb_req, reqlen, &resp, &resplen, NULL, NULL);
++
++		if (err) {
++			err = -ENODEV;
++			goto done;
++		}
++
++		if (resp < 0) {
++			err = resp;
++			goto done;
++		}
++	}
++
++done:
++	vfree(mb_req);
++	return err;
++}
++
++static int __icap_unlock_peer(struct platform_device *pdev, const uuid_t *id)
++{
++	int err = 0;
++	struct icap *icap = platform_get_drvdata(pdev);
++	struct mailbox_req_bitstream_lock bitstream_lock = {0};
++	size_t data_len = sizeof(struct mailbox_req_bitstream_lock);
++	struct mailbox_req *mb_req = NULL;
++	size_t reqlen = sizeof(struct mailbox_req) + data_len;
++	/* if there is no user there
++	 * ask mgmt to unlock the bitstream
++	 */
++	if (icap->icap_bitstream_ref == 0) {
++		mb_req = vmalloc(reqlen);
++		if (!mb_req) {
++			err = -ENOMEM;
++			goto done;
++		}
++
++		mb_req->req = MAILBOX_REQ_UNLOCK_BITSTREAM;
++		memcpy(mb_req->data, &bitstream_lock, data_len);
++
++		err = xocl_peer_notify(XOCL_PL_DEV_TO_XDEV(pdev), mb_req, reqlen);
++		if (err) {
++			err = -ENODEV;
++			goto done;
++		}
++	}
++done:
++	vfree(mb_req);
++	return err;
++}
++
++
++static int icap_download_bitstream_axlf(struct platform_device *pdev,
++	const void *u_xclbin)
++{
++	/*
++	 * decouple as 1. download xclbin, 2. parse xclbin 3. verify xclbin
++	 */
++	struct icap *icap = platform_get_drvdata(pdev);
++	long err = 0;
++	uint64_t primaryFirmwareOffset = 0;
++	uint64_t primaryFirmwareLength = 0;
++	uint64_t secondaryFirmwareOffset = 0;
++	uint64_t secondaryFirmwareLength = 0;
++	const struct axlf_section_header *primaryHeader = NULL;
++	const struct axlf_section_header *clockHeader = NULL;
++	const struct axlf_section_header *secondaryHeader = NULL;
++	struct axlf *xclbin = (struct axlf *)u_xclbin;
++	char *buffer;
++	xdev_handle_t xdev = xocl_get_xdev(pdev);
++	bool need_download;
++	int msg = -ETIMEDOUT;
++	size_t resplen = sizeof(msg);
++	int pid = pid_nr(task_tgid(current));
++	uint32_t data_len = 0;
++	int peer_connected;
++	struct mailbox_req *mb_req = NULL;
++	struct mailbox_bitstream_kaddr mb_addr = {0};
++	uuid_t peer_uuid;
++
++	if (memcmp(xclbin->m_magic, ICAP_XCLBIN_V2, sizeof(ICAP_XCLBIN_V2)))
++		return -EINVAL;
++
++	if (ICAP_PRIVILEGED(icap)) {
++		if (xocl_xrt_version_check(xdev, xclbin, true)) {
++			ICAP_ERR(icap, "XRT version does not match");
++			return -EINVAL;
++		}
++
++		/* Match the xclbin with the hardware. */
++		if (!xocl_verify_timestamp(xdev,
++			xclbin->m_header.m_featureRomTimeStamp)) {
++			ICAP_ERR(icap, "timestamp of ROM not match Xclbin");
++			xocl_sysfs_error(xdev, "timestamp of ROM not match Xclbin");
++			return -EINVAL;
++		}
++
++		mutex_lock(&icap->icap_lock);
++
++		ICAP_INFO(icap,
++			"incoming xclbin: %016llx, on device xclbin: %016llx",
++			xclbin->m_uniqueId, icap->icap_bitstream_id);
++
++		need_download = (icap->icap_bitstream_id != xclbin->m_uniqueId);
++
++		if (!need_download) {
++			/*
++			 * No need to download, if xclbin exists already.
++			 * But, still need to reset CUs.
++			 */
++			if (!icap_bitstream_in_use(icap, 0)) {
++				icap_freeze_axi_gate(icap);
++				msleep(50);
++				icap_free_axi_gate(icap);
++				msleep(50);
++			}
++			ICAP_INFO(icap, "bitstream already exists, skip downloading");
++		}
++
++		mutex_unlock(&icap->icap_lock);
++
++		if (!need_download)
++			return 0;
++
++		/*
++		 * Find sections in xclbin.
++		 */
++		ICAP_INFO(icap, "finding CLOCK_FREQ_TOPOLOGY section");
++		/* Read the CLOCK section but defer changing clocks to later */
++		clockHeader = get_axlf_section_hdr(icap, xclbin,
++			CLOCK_FREQ_TOPOLOGY);
++
++		ICAP_INFO(icap, "finding bitstream sections");
++		primaryHeader = get_axlf_section_hdr(icap, xclbin, BITSTREAM);
++		if (primaryHeader == NULL) {
++			err = -EINVAL;
++			goto done;
++		}
++		primaryFirmwareOffset = primaryHeader->m_sectionOffset;
++		primaryFirmwareLength = primaryHeader->m_sectionSize;
++
++		secondaryHeader = get_axlf_section_hdr(icap, xclbin,
++			CLEARING_BITSTREAM);
++		if (secondaryHeader) {
++			if (XOCL_PL_TO_PCI_DEV(pdev)->device == 0x7138) {
++				err = -EINVAL;
++				goto done;
++			} else {
++				secondaryFirmwareOffset =
++					secondaryHeader->m_sectionOffset;
++				secondaryFirmwareLength =
++					secondaryHeader->m_sectionSize;
++			}
++		}
++
++		mutex_lock(&icap->icap_lock);
++
++		if (icap_bitstream_in_use(icap, 0)) {
++			ICAP_ERR(icap, "bitstream is locked, can't download new one");
++			err = -EBUSY;
++			goto done;
++		}
++
++		/* All clear, go ahead and start fiddling with hardware */
++
++		if (clockHeader != NULL) {
++			uint64_t clockFirmwareOffset = clockHeader->m_sectionOffset;
++			uint64_t clockFirmwareLength = clockHeader->m_sectionSize;
++
++			buffer = (char *)xclbin;
++			buffer += clockFirmwareOffset;
++			err = axlf_set_freqscaling(icap, pdev, buffer, clockFirmwareLength);
++			if (err)
++				goto done;
++			err = icap_setup_clock_freq_topology(icap, buffer, clockFirmwareLength);
++			if (err)
++				goto done;
++		}
++
++		icap->icap_bitstream_id = 0;
++		uuid_copy(&icap->icap_bitstream_uuid, &uuid_null);
++
++		buffer = (char *)xclbin;
++		buffer += primaryFirmwareOffset;
++		err = icap_download_user(icap, buffer, primaryFirmwareLength);
++		if (err)
++			goto done;
++
++		buffer = (char *)u_xclbin;
++		buffer += secondaryFirmwareOffset;
++		err = icap_setup_clear_bitstream(icap, buffer, secondaryFirmwareLength);
++		if (err)
++			goto done;
++
++		if ((xocl_is_unified(xdev) || XOCL_DSA_XPR_ON(xdev)))
++			err = calibrate_mig(icap);
++		if (err)
++			goto done;
++
++		/* Remember "this" bitstream, so avoid redownload the next time. */
++		icap->icap_bitstream_id = xclbin->m_uniqueId;
++		if (!uuid_is_null(&xclbin->m_header.uuid)) {
++			uuid_copy(&icap->icap_bitstream_uuid, &xclbin->m_header.uuid);
++		} else {
++			// Legacy xclbin, convert legacy id to new id
++			memcpy(&icap->icap_bitstream_uuid,
++				&xclbin->m_header.m_timeStamp, 8);
++		}
++	} else {
++
++		mutex_lock(&icap->icap_lock);
++
++		if (icap_bitstream_in_use(icap, pid)) {
++			if (!uuid_equal(&xclbin->m_header.uuid, &icap->icap_bitstream_uuid)) {
++				err = -EBUSY;
++				goto done;
++			}
++		}
++
++		icap_read_from_peer(pdev, XCLBIN_UUID, &peer_uuid, sizeof(uuid_t));
++
++		if (!uuid_equal(&peer_uuid, &xclbin->m_header.uuid)) {
++			/*
++			 *  should replace with userpf download flow
++			 */
++			peer_connected = xocl_mailbox_get_data(xdev, PEER_CONN);
++			ICAP_INFO(icap, "%s peer_connected 0x%x", __func__,
++				peer_connected);
++			if (peer_connected < 0) {
++				err = -ENODEV;
++				goto done;
++			}
++
++			if (!(peer_connected & MB_PEER_CONNECTED)) {
++				ICAP_ERR(icap, "%s fail to find peer, abort!",
++					__func__);
++				err = -EFAULT;
++				goto done;
++			}
++
++			if ((peer_connected & 0xF) == MB_PEER_SAMEDOM_CONNECTED) {
++				data_len = sizeof(struct mailbox_req) + sizeof(struct mailbox_bitstream_kaddr);
++				mb_req = vmalloc(data_len);
++				if (!mb_req) {
++					ICAP_ERR(icap, "Unable to create mb_req\n");
++					err = -ENOMEM;
++					goto done;
++				}
++				mb_req->req = MAILBOX_REQ_LOAD_XCLBIN_KADDR;
++				mb_addr.addr = (uint64_t)xclbin;
++				memcpy(mb_req->data, &mb_addr, sizeof(struct mailbox_bitstream_kaddr));
++
++			} else if ((peer_connected & 0xF) == MB_PEER_CONNECTED) {
++				data_len = sizeof(struct mailbox_req) +
++					xclbin->m_header.m_length;
++				mb_req = vmalloc(data_len);
++				if (!mb_req) {
++					ICAP_ERR(icap, "Unable to create mb_req\n");
++					err = -ENOMEM;
++					goto done;
++				}
++				memcpy(mb_req->data, u_xclbin, xclbin->m_header.m_length);
++				mb_req->req = MAILBOX_REQ_LOAD_XCLBIN;
++			}
++
++			mb_req->data_total_len = data_len;
++			(void) xocl_peer_request(xdev,
++				mb_req, data_len, &msg, &resplen, NULL, NULL);
++
++			if (msg != 0) {
++				ICAP_ERR(icap,
++					"%s peer failed to download xclbin",
++					__func__);
++				err = -EFAULT;
++				goto done;
++			}
++		} else
++			ICAP_INFO(icap, "Already downloaded xclbin ID: %016llx",
++				xclbin->m_uniqueId);
++
++		icap->icap_bitstream_id = xclbin->m_uniqueId;
++		if (!uuid_is_null(&xclbin->m_header.uuid)) {
++			uuid_copy(&icap->icap_bitstream_uuid, &xclbin->m_header.uuid);
++		} else {
++			// Legacy xclbin, convert legacy id to new id
++			memcpy(&icap->icap_bitstream_uuid,
++				&xclbin->m_header.m_timeStamp, 8);
++		}
++
++	}
++
++	if (ICAP_PRIVILEGED(icap)) {
++		icap_parse_bitstream_axlf_section(pdev, xclbin, MEM_TOPOLOGY);
++		icap_parse_bitstream_axlf_section(pdev, xclbin, IP_LAYOUT);
++	} else {
++		icap_parse_bitstream_axlf_section(pdev, xclbin, IP_LAYOUT);
++		icap_parse_bitstream_axlf_section(pdev, xclbin, MEM_TOPOLOGY);
++		icap_parse_bitstream_axlf_section(pdev, xclbin, CONNECTIVITY);
++		icap_parse_bitstream_axlf_section(pdev, xclbin, DEBUG_IP_LAYOUT);
++	}
++
++	if (ICAP_PRIVILEGED(icap))
++		err = icap_verify_bitstream_axlf(pdev, xclbin);
++
++done:
++	mutex_unlock(&icap->icap_lock);
++	vfree(mb_req);
++	ICAP_INFO(icap, "%s err: %ld", __func__, err);
++	return err;
++}
++
++static int icap_verify_bitstream_axlf(struct platform_device *pdev,
++	struct axlf *xclbin)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	int err = 0, i;
++	xdev_handle_t xdev = xocl_get_xdev(pdev);
++	bool dna_check = false;
++	uint64_t section_size = 0;
++
++	/* Destroy all dynamically add sub-devices*/
++	xocl_subdev_destroy_by_id(xdev, XOCL_SUBDEV_DNA);
++	xocl_subdev_destroy_by_id(xdev, XOCL_SUBDEV_MIG);
++
++	/*
++	 * Add sub device dynamically.
++	 * restrict any dynamically added sub-device and 1 base address,
++	 * Has pre-defined length
++	 *  Ex:    "ip_data": {
++	 *         "m_type": "IP_DNASC",
++	 *         "properties": "0x0",
++	 *         "m_base_address": "0x1100000", <--  base address
++	 *         "m_name": "slr0\/dna_self_check_0"
++	 */
++
++	if (!icap->ip_layout) {
++		err = -EFAULT;
++		goto done;
++	}
++	for (i = 0; i < icap->ip_layout->m_count; ++i) {
++		struct xocl_subdev_info subdev_info = { 0 };
++		struct resource res = { 0 };
++		struct ip_data *ip = &icap->ip_layout->m_ip_data[i];
++
++		if (ip->m_type == IP_KERNEL)
++			continue;
++
++		if (ip->m_type == IP_DDR4_CONTROLLER) {
++			uint32_t memidx = ip->properties;
++
++			if (!icap->mem_topo || ip->properties >= icap->mem_topo->m_count ||
++				icap->mem_topo->m_mem_data[memidx].m_type !=
++				MEM_DDR4) {
++				ICAP_ERR(icap, "bad ECC controller index: %u",
++					ip->properties);
++				continue;
++			}
++			if (!icap->mem_topo->m_mem_data[memidx].m_used) {
++				ICAP_INFO(icap,
++					"ignore ECC controller for: %s",
++					icap->mem_topo->m_mem_data[memidx].m_tag);
++				continue;
++			}
++			err = xocl_subdev_get_devinfo(XOCL_SUBDEV_MIG,
++				&subdev_info, &res);
++			if (err) {
++				ICAP_ERR(icap, "can't get MIG subdev info");
++				goto done;
++			}
++			res.start += ip->m_base_address;
++			res.end += ip->m_base_address;
++			subdev_info.priv_data =
++				icap->mem_topo->m_mem_data[memidx].m_tag;
++			subdev_info.data_len =
++				sizeof(icap->mem_topo->m_mem_data[memidx].m_tag);
++			err = xocl_subdev_create_multi_inst(xdev, &subdev_info);
++			if (err) {
++				ICAP_ERR(icap, "can't create MIG subdev");
++				goto done;
++			}
++		}
++		if (ip->m_type == IP_DNASC) {
++			dna_check = true;
++			err = xocl_subdev_get_devinfo(XOCL_SUBDEV_DNA,
++				&subdev_info, &res);
++			if (err) {
++				ICAP_ERR(icap, "can't get DNA subdev info");
++				goto done;
++			}
++			res.start += ip->m_base_address;
++			res.end += ip->m_base_address;
++			err = xocl_subdev_create_one(xdev, &subdev_info);
++			if (err) {
++				ICAP_ERR(icap, "can't create DNA subdev");
++				goto done;
++			}
++		}
++	}
++
++	if (dna_check) {
++		bool is_axi = ((xocl_dna_capability(xdev) & 0x1) != 0);
++
++		/*
++		 * Any error occurs here should return -EACCES for app to
++		 * know that DNA has failed.
++		 */
++		err = -EACCES;
++
++		ICAP_INFO(icap, "DNA version: %s", is_axi ? "AXI" : "BRAM");
++
++		if (is_axi) {
++			uint32_t *cert = NULL;
++
++			if (alloc_and_get_axlf_section(icap, xclbin,
++				DNA_CERTIFICATE,
++				(void **)&cert, &section_size) != 0) {
++
++				// We keep dna sub device if IP_DNASC presents
++				ICAP_ERR(icap, "Can't get certificate section");
++				goto dna_cert_fail;
++			}
++
++			ICAP_INFO(icap, "DNA Certificate Size 0x%llx", section_size);
++			if (section_size % 64 || section_size < 576)
++				ICAP_ERR(icap, "Invalid certificate size");
++			else
++				xocl_dna_write_cert(xdev, cert, section_size);
++			vfree(cert);
++		}
++
++		/* Check DNA validation result. */
++		if (0x1 & xocl_dna_status(xdev)) {
++			err = 0; /* xclbin is valid */
++		} else {
++			ICAP_ERR(icap, "DNA inside xclbin is invalid");
++			goto dna_cert_fail;
++		}
++	}
++
++done:
++	if (err) {
++		vfree(icap->connectivity);
++		icap->connectivity = NULL;
++		vfree(icap->ip_layout);
++		icap->ip_layout = NULL;
++		vfree(icap->mem_topo);
++		icap->mem_topo = NULL;
++		xocl_subdev_destroy_by_id(xdev, XOCL_SUBDEV_DNA);
++		xocl_subdev_destroy_by_id(xdev, XOCL_SUBDEV_MIG);
++	}
++dna_cert_fail:
++	return err;
++}
++
++/*
++ * On x86_64, reset hwicap by loading special bitstream sequence which
++ * forces the FPGA to reload from PROM.
++ */
++static int icap_reset_bitstream(struct platform_device *pdev)
++{
++/*
++ * Booting FPGA from PROM
++ * http://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
++ * Table 7.1
++ */
++#define DUMMY_WORD         0xFFFFFFFF
++#define SYNC_WORD          0xAA995566
++#define TYPE1_NOOP         0x20000000
++#define TYPE1_WRITE_WBSTAR 0x30020001
++#define WBSTAR_ADD10       0x00000000
++#define WBSTAR_ADD11       0x01000000
++#define TYPE1_WRITE_CMD    0x30008001
++#define IPROG_CMD          0x0000000F
++#define SWAP_ENDIAN_32(x)						\
++	(unsigned int)((((x) & 0xFF000000) >> 24) | (((x) & 0x00FF0000) >> 8) | \
++		       (((x) & 0x0000FF00) << 8)  | (((x) & 0x000000FF) << 24))
++	/*
++	 * The bitstream is expected in big endian format
++	 */
++	const unsigned int fpga_boot_seq[] = {SWAP_ENDIAN_32(DUMMY_WORD),
++			SWAP_ENDIAN_32(SYNC_WORD),
++			SWAP_ENDIAN_32(TYPE1_NOOP),
++			SWAP_ENDIAN_32(TYPE1_WRITE_CMD),
++			SWAP_ENDIAN_32(IPROG_CMD),
++			SWAP_ENDIAN_32(TYPE1_NOOP),
++			SWAP_ENDIAN_32(TYPE1_NOOP)};
++
++	struct icap *icap = platform_get_drvdata(pdev);
++	int i;
++
++	/* Can only be done from mgmt pf. */
++	if (!ICAP_PRIVILEGED(icap))
++		return -EPERM;
++
++	mutex_lock(&icap->icap_lock);
++
++	if (icap_bitstream_in_use(icap, 0)) {
++		mutex_unlock(&icap->icap_lock);
++		ICAP_ERR(icap, "bitstream is locked, can't reset");
++		return -EBUSY;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(fpga_boot_seq); i++) {
++		unsigned int value = be32_to_cpu(fpga_boot_seq[i]);
++
++		reg_wr(&icap->icap_regs->ir_wfv, value);
++	}
++	reg_wr(&icap->icap_regs->ir_cr, 0x1);
++
++	msleep(4000);
++
++	mutex_unlock(&icap->icap_lock);
++
++	ICAP_INFO(icap, "reset bitstream is done");
++	return 0;
++}
++
++static int icap_lock_bitstream(struct platform_device *pdev, const uuid_t *id,
++	pid_t pid)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	int err = 0;
++
++	if (uuid_is_null(id)) {
++		ICAP_ERR(icap, "proc %d invalid UUID", pid);
++		return -EINVAL;
++	}
++
++	mutex_lock(&icap->icap_lock);
++
++	if (!ICAP_PRIVILEGED(icap)) {
++		err = __icap_lock_peer(pdev, id);
++		if (err < 0)
++			goto done;
++	}
++
++	if (uuid_equal(id, &icap->icap_bitstream_uuid))
++		err = add_user(icap, pid);
++	else
++		err = -EBUSY;
++
++	if (err >= 0)
++		err = icap->icap_bitstream_ref;
++
++	ICAP_INFO(icap, "proc %d try to lock bitstream %pUb, ref=%d, err=%d",
++		  pid, id, icap->icap_bitstream_ref, err);
++done:
++	mutex_unlock(&icap->icap_lock);
++
++	if (!ICAP_PRIVILEGED(icap) && err == 1) /* reset on first reference */
++		xocl_exec_reset(xocl_get_xdev(pdev));
++
++	if (err >= 0)
++		err = 0;
++
++	return err;
++}
++
++static int icap_unlock_bitstream(struct platform_device *pdev, const uuid_t *id,
++	pid_t pid)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	int err = 0;
++
++	if (id == NULL)
++		id = &uuid_null;
++
++	mutex_lock(&icap->icap_lock);
++
++	/* Force unlock. */
++	if (uuid_is_null(id))
++		del_all_users(icap);
++	else if (uuid_equal(id, &icap->icap_bitstream_uuid))
++		err = del_user(icap, pid);
++	else
++		err = -EINVAL;
++
++	if (!ICAP_PRIVILEGED(icap))
++		__icap_unlock_peer(pdev, id);
++
++	if (err >= 0)
++		err = icap->icap_bitstream_ref;
++
++	if (!ICAP_PRIVILEGED(icap)) {
++		if (err == 0)
++			xocl_exec_stop(xocl_get_xdev(pdev));
++	}
++
++	ICAP_INFO(icap, "proc %d try to unlock bitstream %pUb, ref=%d, err=%d",
++		  pid, id, icap->icap_bitstream_ref, err);
++
++	mutex_unlock(&icap->icap_lock);
++	if (err >= 0)
++		err = 0;
++	return err;
++}
++
++static int icap_parse_bitstream_axlf_section(struct platform_device *pdev,
++	const struct axlf *xclbin, enum axlf_section_kind kind)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	long err = 0;
++	uint64_t section_size = 0, sect_sz = 0;
++	void **target = NULL;
++
++	if (memcmp(xclbin->m_magic, ICAP_XCLBIN_V2, sizeof(ICAP_XCLBIN_V2)))
++		return -EINVAL;
++
++	switch (kind) {
++	case IP_LAYOUT:
++		target = (void **)&icap->ip_layout;
++		break;
++	case MEM_TOPOLOGY:
++		target = (void **)&icap->mem_topo;
++		break;
++	case DEBUG_IP_LAYOUT:
++		target = (void **)&icap->debug_layout;
++		break;
++	case CONNECTIVITY:
++		target = (void **)&icap->connectivity;
++		break;
++	default:
++		break;
++	}
++	if (target) {
++		vfree(*target);
++		*target = NULL;
++	}
++	err = alloc_and_get_axlf_section(icap, xclbin, kind,
++		target, &section_size);
++	if (err != 0)
++		goto done;
++	sect_sz = icap_get_section_size(icap, kind);
++	if (sect_sz > section_size) {
++		err = -EINVAL;
++		goto done;
++	}
++done:
++	if (err) {
++		vfree(*target);
++		*target = NULL;
++	}
++	ICAP_INFO(icap, "%s kind %d, err: %ld", __func__, kind, err);
++	return err;
++}
++
++static uint64_t icap_get_data(struct platform_device *pdev,
++	enum data_kind kind)
++{
++
++	struct icap *icap = platform_get_drvdata(pdev);
++	uint64_t target = 0;
++
++	mutex_lock(&icap->icap_lock);
++	switch (kind) {
++	case IPLAYOUT_AXLF:
++		target = (uint64_t)icap->ip_layout;
++		break;
++	case MEMTOPO_AXLF:
++		target = (uint64_t)icap->mem_topo;
++		break;
++	case DEBUG_IPLAYOUT_AXLF:
++		target = (uint64_t)icap->debug_layout;
++		break;
++	case CONNECTIVITY_AXLF:
++		target = (uint64_t)icap->connectivity;
++		break;
++	case IDCODE:
++		target = icap->idcode;
++		break;
++	case XCLBIN_UUID:
++		target = (uint64_t)&icap->icap_bitstream_uuid;
++		break;
++	default:
++		break;
++	}
++	mutex_unlock(&icap->icap_lock);
++	return target;
++}
++
++/* Kernel APIs exported from this sub-device driver. */
++static struct xocl_icap_funcs icap_ops = {
++	.reset_axi_gate = platform_reset_axi_gate,
++	.reset_bitstream = icap_reset_bitstream,
++	.download_boot_firmware = icap_download_boot_firmware,
++	.download_bitstream_axlf = icap_download_bitstream_axlf,
++	.ocl_set_freq = icap_ocl_set_freqscaling,
++	.ocl_get_freq = icap_ocl_get_freqscaling,
++	.ocl_update_clock_freq_topology = icap_ocl_update_clock_freq_topology,
++	.ocl_lock_bitstream = icap_lock_bitstream,
++	.ocl_unlock_bitstream = icap_unlock_bitstream,
++	.get_data = icap_get_data,
++};
++
++static ssize_t clock_freq_topology_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct icap *icap = platform_get_drvdata(to_platform_device(dev));
++	ssize_t cnt = 0;
++
++	mutex_lock(&icap->icap_lock);
++	if (ICAP_PRIVILEGED(icap)) {
++		memcpy(buf, icap->icap_clock_freq_topology, icap->icap_clock_freq_topology_length);
++		cnt = icap->icap_clock_freq_topology_length;
++	}
++	mutex_unlock(&icap->icap_lock);
++
++	return cnt;
++
++}
++
++static DEVICE_ATTR_RO(clock_freq_topology);
++
++static ssize_t clock_freqs_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct icap *icap = platform_get_drvdata(to_platform_device(dev));
++	ssize_t cnt = 0;
++	int i;
++	u32 freq_counter, freq, request_in_khz, tolerance;
++
++	mutex_lock(&icap->icap_lock);
++
++	for (i = 0; i < ICAP_MAX_NUM_CLOCKS; i++) {
++		freq = icap_get_ocl_frequency(icap, i);
++		if (!uuid_is_null(&icap->icap_bitstream_uuid)) {
++			freq_counter = icap_get_clock_frequency_counter_khz(icap, i);
++
++			request_in_khz = freq * 1000;
++			tolerance = freq * 50;
++
++			if (abs(freq_counter-request_in_khz) > tolerance)
++				ICAP_INFO(icap, "Frequency mismatch, Should be %u khz, Now is %ukhz",
++					  request_in_khz, freq_counter);
++			cnt += sprintf(buf + cnt, "%d\n", DIV_ROUND_CLOSEST(freq_counter, 1000));
++		} else {
++			cnt += sprintf(buf + cnt, "%d\n", freq);
++		}
++	}
++
++	mutex_unlock(&icap->icap_lock);
++
++	return cnt;
++}
++static DEVICE_ATTR_RO(clock_freqs);
++
++static ssize_t icap_rl_program(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t off, size_t count)
++{
++	struct XHwIcap_Bit_Header bit_header = { 0 };
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct icap *icap = platform_get_drvdata(to_platform_device(dev));
++	ssize_t ret = count;
++
++	if (off == 0) {
++		if (count < DMA_HWICAP_BITFILE_BUFFER_SIZE) {
++			ICAP_ERR(icap, "count is too small %ld", count);
++			return -EINVAL;
++		}
++
++		if (bitstream_parse_header(icap, buffer,
++			DMA_HWICAP_BITFILE_BUFFER_SIZE, &bit_header)) {
++			ICAP_ERR(icap, "parse header failed");
++			return -EINVAL;
++		}
++
++		icap->bit_length = bit_header.HeaderLength +
++			bit_header.BitstreamLength;
++		icap->bit_buffer = vmalloc(icap->bit_length);
++	}
++
++	if (off + count >= icap->bit_length) {
++		/*
++		 * assumes all subdevices are removed at this time
++		 */
++		memcpy(icap->bit_buffer + off, buffer, icap->bit_length - off);
++		icap_freeze_axi_gate_shell(icap);
++		ret = icap_download(icap, icap->bit_buffer, icap->bit_length);
++		if (ret) {
++			ICAP_ERR(icap, "bitstream download failed");
++			ret = -EIO;
++		} else {
++			ret = count;
++		}
++		icap_free_axi_gate_shell(icap);
++		/* has to reset pci, otherwise firewall trips */
++		xocl_reset(xocl_get_xdev(icap->icap_pdev));
++		icap->icap_bitstream_id = 0;
++		memset(&icap->icap_bitstream_uuid, 0, sizeof(uuid_t));
++		vfree(icap->bit_buffer);
++		icap->bit_buffer = NULL;
++	} else {
++		memcpy(icap->bit_buffer + off, buffer, count);
++	}
++
++	return ret;
++}
++
++static struct bin_attribute shell_program_attr = {
++	.attr = {
++		.name = "shell_program",
++		.mode = 0200
++	},
++	.read = NULL,
++	.write = icap_rl_program,
++	.size = 0
++};
++
++static struct bin_attribute *icap_mgmt_bin_attrs[] = {
++	&shell_program_attr,
++	NULL,
++};
++
++static struct attribute_group icap_mgmt_bin_attr_group = {
++	.bin_attrs = icap_mgmt_bin_attrs,
++};
++
++static ssize_t idcode_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct icap *icap = platform_get_drvdata(to_platform_device(dev));
++	ssize_t cnt = 0;
++	uint32_t val;
++
++	mutex_lock(&icap->icap_lock);
++	if (ICAP_PRIVILEGED(icap)) {
++		cnt = sprintf(buf, "0x%x\n", icap->idcode);
++	} else {
++		icap_read_from_peer(to_platform_device(dev), IDCODE, &val, sizeof(unsigned int));
++		cnt = sprintf(buf, "0x%x\n", val);
++	}
++	mutex_unlock(&icap->icap_lock);
++
++	return cnt;
++}
++
++static DEVICE_ATTR_RO(idcode);
++
++static struct attribute *icap_attrs[] = {
++	&dev_attr_clock_freq_topology.attr,
++	&dev_attr_clock_freqs.attr,
++	&dev_attr_idcode.attr,
++	NULL,
++};
++
++//- Debug IP_layout--
++static ssize_t icap_read_debug_ip_layout(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t offset, size_t count)
++{
++	struct icap *icap;
++	u32 nread = 0;
++	size_t size = 0;
++
++	icap = (struct icap *)dev_get_drvdata(container_of(kobj, struct device, kobj));
++
++	if (!icap || !icap->debug_layout)
++		return 0;
++
++	mutex_lock(&icap->icap_lock);
++
++	size = sizeof_sect(icap->debug_layout, m_debug_ip_data);
++	if (offset >= size)
++		goto unlock;
++
++	if (count < size - offset)
++		nread = count;
++	else
++		nread = size - offset;
++
++	memcpy(buffer, ((char *)icap->debug_layout) + offset, nread);
++
++unlock:
++	mutex_unlock(&icap->icap_lock);
++	return nread;
++}
++static struct bin_attribute debug_ip_layout_attr = {
++	.attr = {
++		.name = "debug_ip_layout",
++		.mode = 0444
++	},
++	.read = icap_read_debug_ip_layout,
++	.write = NULL,
++	.size = 0
++};
++
++//IP layout
++static ssize_t icap_read_ip_layout(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t offset, size_t count)
++{
++	struct icap *icap;
++	u32 nread = 0;
++	size_t size = 0;
++
++	icap = (struct icap *)dev_get_drvdata(container_of(kobj, struct device, kobj));
++
++	if (!icap || !icap->ip_layout)
++		return 0;
++
++	mutex_lock(&icap->icap_lock);
++
++	size = sizeof_sect(icap->ip_layout, m_ip_data);
++	if (offset >= size)
++		goto unlock;
++
++	if (count < size - offset)
++		nread = count;
++	else
++		nread = size - offset;
++
++	memcpy(buffer, ((char *)icap->ip_layout) + offset, nread);
++
++unlock:
++	mutex_unlock(&icap->icap_lock);
++	return nread;
++}
++
++static struct bin_attribute ip_layout_attr = {
++	.attr = {
++		.name = "ip_layout",
++		.mode = 0444
++	},
++	.read = icap_read_ip_layout,
++	.write = NULL,
++	.size = 0
++};
++
++//-Connectivity--
++static ssize_t icap_read_connectivity(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t offset, size_t count)
++{
++	struct icap *icap;
++	u32 nread = 0;
++	size_t size = 0;
++
++	icap = (struct icap *)dev_get_drvdata(container_of(kobj, struct device, kobj));
++
++	if (!icap || !icap->connectivity)
++		return 0;
++
++	mutex_lock(&icap->icap_lock);
++
++	size = sizeof_sect(icap->connectivity, m_connection);
++	if (offset >= size)
++		goto unlock;
++
++	if (count < size - offset)
++		nread = count;
++	else
++		nread = size - offset;
++
++	memcpy(buffer, ((char *)icap->connectivity) + offset, nread);
++
++unlock:
++	mutex_unlock(&icap->icap_lock);
++	return nread;
++}
++
++static struct bin_attribute connectivity_attr = {
++	.attr = {
++		.name = "connectivity",
++		.mode = 0444
++	},
++	.read = icap_read_connectivity,
++	.write = NULL,
++	.size = 0
++};
++
++
++//-Mem_topology--
++static ssize_t icap_read_mem_topology(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t offset, size_t count)
++{
++	struct icap *icap;
++	u32 nread = 0;
++	size_t size = 0;
++
++	icap = (struct icap *)dev_get_drvdata(container_of(kobj, struct device, kobj));
++
++	if (!icap || !icap->mem_topo)
++		return 0;
++
++	mutex_lock(&icap->icap_lock);
++
++	size = sizeof_sect(icap->mem_topo, m_mem_data);
++	if (offset >= size)
++		goto unlock;
++
++	if (count < size - offset)
++		nread = count;
++	else
++		nread = size - offset;
++
++	memcpy(buffer, ((char *)icap->mem_topo) + offset, nread);
++unlock:
++	mutex_unlock(&icap->icap_lock);
++	return nread;
++}
++
++
++static struct bin_attribute mem_topology_attr = {
++	.attr = {
++		.name = "mem_topology",
++		.mode = 0444
++	},
++	.read = icap_read_mem_topology,
++	.write = NULL,
++	.size = 0
++};
++
++static struct bin_attribute *icap_bin_attrs[] = {
++	&debug_ip_layout_attr,
++	&ip_layout_attr,
++	&connectivity_attr,
++	&mem_topology_attr,
++	NULL,
++};
++
++static struct attribute_group icap_attr_group = {
++	.attrs = icap_attrs,
++	.bin_attrs = icap_bin_attrs,
++};
++
++static int icap_remove(struct platform_device *pdev)
++{
++	struct icap *icap = platform_get_drvdata(pdev);
++	int i;
++
++	BUG_ON(icap == NULL);
++
++	del_all_users(icap);
++	xocl_subdev_register(pdev, XOCL_SUBDEV_ICAP, NULL);
++
++	if (ICAP_PRIVILEGED(icap))
++		sysfs_remove_group(&pdev->dev.kobj, &icap_mgmt_bin_attr_group);
++
++	if (icap->bit_buffer)
++		vfree(icap->bit_buffer);
++
++	iounmap(icap->icap_regs);
++	iounmap(icap->icap_state);
++	iounmap(icap->icap_axi_gate);
++	for (i = 0; i < ICAP_MAX_NUM_CLOCKS; i++)
++		iounmap(icap->icap_clock_bases[i]);
++	free_clear_bitstream(icap);
++	free_clock_freq_topology(icap);
++
++	sysfs_remove_group(&pdev->dev.kobj, &icap_attr_group);
++
++	ICAP_INFO(icap, "cleaned up successfully");
++	platform_set_drvdata(pdev, NULL);
++	vfree(icap->mem_topo);
++	vfree(icap->ip_layout);
++	vfree(icap->debug_layout);
++	vfree(icap->connectivity);
++	kfree(icap);
++	return 0;
++}
++
++/*
++ * Run the following sequence of canned commands to obtain IDCODE of the FPGA
++ */
++static void icap_probe_chip(struct icap *icap)
++{
++	u32 w;
++
++	if (!ICAP_PRIVILEGED(icap))
++		return;
++
++	w = reg_rd(&icap->icap_regs->ir_sr);
++	w = reg_rd(&icap->icap_regs->ir_sr);
++	reg_wr(&icap->icap_regs->ir_gier, 0x0);
++	w = reg_rd(&icap->icap_regs->ir_wfv);
++	reg_wr(&icap->icap_regs->ir_wf, 0xffffffff);
++	reg_wr(&icap->icap_regs->ir_wf, 0xaa995566);
++	reg_wr(&icap->icap_regs->ir_wf, 0x20000000);
++	reg_wr(&icap->icap_regs->ir_wf, 0x20000000);
++	reg_wr(&icap->icap_regs->ir_wf, 0x28018001);
++	reg_wr(&icap->icap_regs->ir_wf, 0x20000000);
++	reg_wr(&icap->icap_regs->ir_wf, 0x20000000);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++	reg_wr(&icap->icap_regs->ir_cr, 0x1);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++	w = reg_rd(&icap->icap_regs->ir_sr);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++	w = reg_rd(&icap->icap_regs->ir_sr);
++	reg_wr(&icap->icap_regs->ir_sz, 0x1);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++	reg_wr(&icap->icap_regs->ir_cr, 0x2);
++	w = reg_rd(&icap->icap_regs->ir_rfo);
++	icap->idcode = reg_rd(&icap->icap_regs->ir_rf);
++	w = reg_rd(&icap->icap_regs->ir_cr);
++}
++
++static int icap_probe(struct platform_device *pdev)
++{
++	struct icap *icap = NULL;
++	struct resource *res;
++	int ret;
++	int reg_grp;
++	void **regs;
++
++	icap = kzalloc(sizeof(struct icap), GFP_KERNEL);
++	if (!icap)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, icap);
++	icap->icap_pdev = pdev;
++	mutex_init(&icap->icap_lock);
++	INIT_LIST_HEAD(&icap->icap_bitstream_users);
++
++	for (reg_grp = 0; reg_grp < ICAP_MAX_REG_GROUPS; reg_grp++) {
++		switch (reg_grp) {
++		case 0:
++			regs = (void **)&icap->icap_regs;
++			break;
++		case 1:
++			regs = (void **)&icap->icap_state;
++			break;
++		case 2:
++			regs = (void **)&icap->icap_axi_gate;
++			break;
++		case 3:
++			regs = (void **)&icap->icap_clock_bases[0];
++			break;
++		case 4:
++			regs = (void **)&icap->icap_clock_bases[1];
++			break;
++		case 5:
++			regs = (void **)&icap->icap_clock_freq_counter;
++			break;
++		default:
++			BUG();
++			break;
++		}
++		res = platform_get_resource(pdev, IORESOURCE_MEM, reg_grp);
++		if (res != NULL) {
++			*regs = ioremap_nocache(res->start,
++				res->end - res->start + 1);
++			if (*regs == NULL) {
++				ICAP_ERR(icap,
++					"failed to map in register group: %d",
++					reg_grp);
++				ret = -EIO;
++				goto failed;
++			} else {
++				ICAP_INFO(icap,
++					"mapped in register group %d @ 0x%p",
++					reg_grp, *regs);
++			}
++		} else {
++			if (reg_grp != 0) {
++				ICAP_ERR(icap,
++					"failed to find register group: %d",
++					reg_grp);
++				ret = -EIO;
++				goto failed;
++			}
++			break;
++		}
++	}
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &icap_attr_group);
++	if (ret) {
++		ICAP_ERR(icap, "create icap attrs failed: %d", ret);
++		goto failed;
++	}
++
++	if (ICAP_PRIVILEGED(icap)) {
++		ret = sysfs_create_group(&pdev->dev.kobj,
++			&icap_mgmt_bin_attr_group);
++		if (ret) {
++			ICAP_ERR(icap, "create icap attrs failed: %d", ret);
++			goto failed;
++		}
++	}
++
++	icap_probe_chip(icap);
++	if (!ICAP_PRIVILEGED(icap))
++		icap_unlock_bitstream(pdev, NULL, 0);
++	ICAP_INFO(icap, "successfully initialized FPGA IDCODE 0x%x",
++			icap->idcode);
++	xocl_subdev_register(pdev, XOCL_SUBDEV_ICAP, &icap_ops);
++	return 0;
++
++failed:
++	(void) icap_remove(pdev);
++	return ret;
++}
++
++
++struct platform_device_id icap_id_table[] = {
++	{ XOCL_ICAP, 0 },
++	{ },
++};
++
++static struct platform_driver icap_driver = {
++	.probe		= icap_probe,
++	.remove		= icap_remove,
++	.driver		= {
++		.name	= XOCL_ICAP,
++	},
++	.id_table = icap_id_table,
++};
++
++int __init xocl_init_icap(void)
++{
++	return platform_driver_register(&icap_driver);
++}
++
++void xocl_fini_icap(void)
++{
++	platform_driver_unregister(&icap_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/mailbox.c b/drivers/gpu/drm/xocl/subdev/mailbox.c
+new file mode 100644
+index 000000000000..dc4736c9100a
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/mailbox.c
+@@ -0,0 +1,1868 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2018 Xilinx, Inc. All rights reserved.
++ *
++ * Authors: Max Zhen <maxz@xilinx.com>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/*
++ * Statement of Theory
++ *
++ * This is the mailbox sub-device driver added into existing xclmgmt / xocl
++ * driver so that user pf and mgmt pf can send and receive messages of
++ * arbitrary length to / from peer. The driver is written based on the spec of
++ * pg114 document (https://www.xilinx.com/support/documentation/
++ * ip_documentation/mailbox/v2_1/pg114-mailbox.pdf). The HW provides one TX
++ * channel and one RX channel, which operate completely independent of each
++ * other. Data can be pushed into or read from a channel in DWORD unit as a
++ * FIFO.
++ *
++ *
++ * Packet layer
++ *
++ * The driver implemented two transport layers - packet and message layer (see
++ * below). A packet is a fixed size chunk of data that can be send through TX
++ * channel or retrieved from RX channel. The TX and RX interrupt happens at
++ * packet boundary, instead of DWORD boundary. The driver will not attempt to
++ * send next packet until the previous one is read by peer. Similarly, the
++ * driver will not attempt to read the data from HW until a full packet has been
++ * written to HW by peer. No polling is implemented. Data transfer is entirely
++ * interrupt driven. So, the interrupt functionality needs to work and enabled
++ * on both mgmt and user pf for mailbox driver to function properly.
++ *
++ * A TX packet is considered as time'd out after sitting in the TX channel of
++ * mailbox HW for two packet ticks (1 packet tick = 1 second, for now) without
++ * being read by peer. Currently, the driver will not try to re-transmit the
++ * packet after timeout. It just simply propagate the error to the upper layer.
++ * A retry at packet layer can be implement later, if considered as appropriate.
++ *
++ *
++ * Message layer
++ *
++ * A message is a data buffer of arbitrary length. The driver will break a
++ * message into multiple packets and transmit them to the peer, which, in turn,
++ * will assemble them into a full message before it's delivered to upper layer
++ * for further processing. One message requires at least one packet to be
++ * transferred to the peer.
++ *
++ * Each message has a unique temporary u64 ID (see communication model below
++ * for more detail). The ID shows up in each packet's header. So, at packet
++ * layer, there is no assumption that adjacent packets belong to the same
++ * message. However, for the sake of simplicity, at message layer, the driver
++ * will not attempt to send the next message until the sending of current one
++ * is finished. I.E., we implement a FIFO for message TX channel. All messages
++ * are sent by driver in the order of received from upper layer. We can
++ * implement messages of different priority later, if needed. There is no
++ * certain order for receiving messages. It's up to the peer side to decide
++ * which message gets enqueued into its own TX queue first, which will be
++ * received first on the other side.
++ *
++ * A message is considered as time'd out when it's transmit (send or receive)
++ * is not finished within 10 packet ticks. This applies to all messages queued
++ * up on both RX and TX channels. Again, no retry for a time'd out message is
++ * implemented. The error will be simply passed to upper layer. Also, a TX
++ * message may time out earlier if it's being transmitted and one of it's
++ * packets time'd out. During normal operation, timeout should never happen.
++ *
++ * The upper layer can choose to queue a message for TX or RX asynchronously
++ * when it provides a callback or wait synchronously when no callback is
++ * provided.
++ *
++ *
++ * Communication model
++ *
++ * At the highest layer, the driver implements a request-response communication
++ * model. A request may or may not require a response, but a response must match
++ * a request, or it'll be silently dropped. The driver provides a few kernel
++ * APIs for mgmt and user pf to talk to each other in this model (see kernel
++ * APIs section below for details). Each request or response is a message by
++ * itself. A request message will automatically be assigned a message ID when
++ * it's enqueued into TX channel for sending. If this request requires a
++ * response, the buffer provided by caller for receiving response will be
++ * enqueued into RX channel as well. The enqueued response message will have
++ * the same message ID as the corresponding request message. The response
++ * message, if provided, will always be enqueued before the request message is
++ * enqueued to avoid race condition.
++ *
++ * The driver will automatically enqueue a special message into the RX channel
++ * for receiving new request after initialized. This request RX message has a
++ * special message ID (id=0) and never time'd out. When a new request comes
++ * from peer, it'll be copied into request RX message then passed to the
++ * callback provided by upper layer through xocl_peer_listen() API for further
++ * processing. Currently, the driver implements only one kernel thread for RX
++ * channel and one for TX channel. So, all message callback happens in the
++ * context of that channel thread. So, the user of mailbox driver needs to be
++ * careful when it calls xocl_peer_request() synchronously in this context.
++ * You may see deadlock when both ends are trying to call xocl_peer_request()
++ * synchronously at the same time.
++ *
++ *
++ * +------------------+            +------------------+
++ * | Request/Response | <--------> | Request/Response |
++ * +------------------+            +------------------+
++ * | Message          | <--------> | Message          |
++ * +------------------+            +------------------+
++ * | Packet           | <--------> | Packet           |
++ * +------------------+            +------------------+
++ * | RX/TX Channel    | <<======>> | RX/TX Channel    |
++ * +------------------+            +------------------+
++ *   mgmt pf                         user pf
++ */
++
++#include <linux/mutex.h>
++#include <linux/completion.h>
++#include <linux/list.h>
++#include <linux/device.h>
++#include <linux/crc32c.h>
++#include <linux/random.h>
++#include "../xocl_drv.h"
++
++int mailbox_no_intr;
++module_param(mailbox_no_intr, int, (S_IRUGO|S_IWUSR));
++MODULE_PARM_DESC(mailbox_no_intr,
++	"Disable mailbox interrupt and do timer-driven msg passing");
++
++#define	PACKET_SIZE	16 /* Number of DWORD. */
++
++#define	FLAG_STI	(1 << 0)
++#define	FLAG_RTI	(1 << 1)
++
++#define	STATUS_EMPTY	(1 << 0)
++#define	STATUS_FULL	(1 << 1)
++#define	STATUS_STA	(1 << 2)
++#define	STATUS_RTA	(1 << 3)
++
++#define	MBX_ERR(mbx, fmt, arg...)	\
++	xocl_err(&mbx->mbx_pdev->dev, fmt "\n", ##arg)
++#define	MBX_INFO(mbx, fmt, arg...)	\
++	xocl_info(&mbx->mbx_pdev->dev, fmt "\n", ##arg)
++#define	MBX_DBG(mbx, fmt, arg...)	\
++	xocl_dbg(&mbx->mbx_pdev->dev, fmt "\n", ##arg)
++
++#define	MAILBOX_TIMER	HZ	/* in jiffies */
++#define	MSG_TTL		10	/* in MAILBOX_TIMER */
++#define	TEST_MSG_LEN	128
++
++#define	INVALID_MSG_ID	((u64)-1)
++#define	MSG_FLAG_RESPONSE	(1 << 0)
++#define	MSG_FLAG_REQUEST (1 << 1)
++
++#define MAX_MSG_QUEUE_SZ  (PAGE_SIZE << 16)
++#define MAX_MSG_QUEUE_LEN 5
++
++#define MB_CONN_INIT	(0x1<<0)
++#define MB_CONN_SYN	(0x1<<1)
++#define MB_CONN_ACK	(0x1<<2)
++#define MB_CONN_FIN	(0x1<<3)
++
++/*
++ * Mailbox IP register layout
++ */
++struct mailbox_reg {
++	u32			mbr_wrdata;
++	u32			mbr_resv1;
++	u32			mbr_rddata;
++	u32			mbr_resv2;
++	u32			mbr_status;
++	u32			mbr_error;
++	u32			mbr_sit;
++	u32			mbr_rit;
++	u32			mbr_is;
++	u32			mbr_ie;
++	u32			mbr_ip;
++	u32			mbr_ctrl;
++} __attribute__((packed));
++
++/*
++ * A message transport by mailbox.
++ */
++struct mailbox_msg {
++	struct list_head	mbm_list;
++	struct mailbox_channel	*mbm_ch;
++	u64			mbm_req_id;
++	char			*mbm_data;
++	size_t			mbm_len;
++	int			mbm_error;
++	struct completion	mbm_complete;
++	mailbox_msg_cb_t	mbm_cb;
++	void			*mbm_cb_arg;
++	u32			mbm_flags;
++	int			mbm_ttl;
++	bool			mbm_timer_on;
++};
++
++/*
++ * A packet transport by mailbox.
++ * When extending, only add new data structure to body. Choose to add new flag
++ * if new feature can be safely ignored by peer, other wise, add new type.
++ */
++enum packet_type {
++	PKT_INVALID = 0,
++	PKT_TEST,
++	PKT_MSG_START,
++	PKT_MSG_BODY
++};
++
++
++enum conn_state {
++	CONN_START = 0,
++	CONN_SYN_SENT,
++	CONN_SYN_RECV,
++	CONN_ESTABLISH,
++};
++
++/* Lower 8 bits for type, the rest for flags. */
++#define	PKT_TYPE_MASK		0xff
++#define	PKT_TYPE_MSG_END	(1 << 31)
++struct mailbox_pkt {
++	struct {
++		u32		type;
++		u32		payload_size;
++	} hdr;
++	union {
++		u32		data[PACKET_SIZE - 2];
++		struct {
++			u64	msg_req_id;
++			u32	msg_flags;
++			u32	msg_size;
++			u32	payload[0];
++		} msg_start;
++		struct {
++			u32	payload[0];
++		} msg_body;
++	} body;
++} __attribute__((packed));
++
++/*
++ * Mailbox communication channel.
++ */
++#define MBXCS_BIT_READY		0
++#define MBXCS_BIT_STOP		1
++#define MBXCS_BIT_TICK		2
++#define MBXCS_BIT_CHK_STALL	3
++#define MBXCS_BIT_POLL_MODE	4
++
++struct mailbox_channel;
++typedef	void (*chan_func_t)(struct mailbox_channel *ch);
++struct mailbox_channel {
++	struct mailbox		*mbc_parent;
++	char			*mbc_name;
++
++	struct workqueue_struct	*mbc_wq;
++	struct work_struct	mbc_work;
++	struct completion	mbc_worker;
++	chan_func_t		mbc_tran;
++	unsigned long		mbc_state;
++
++	struct mutex		mbc_mutex;
++	struct list_head	mbc_msgs;
++
++	struct mailbox_msg	*mbc_cur_msg;
++	int			mbc_bytes_done;
++	struct mailbox_pkt	mbc_packet;
++
++	struct timer_list	mbc_timer;
++	bool			mbc_timer_on;
++};
++
++/*
++ * The mailbox softstate.
++ */
++struct mailbox {
++	struct platform_device	*mbx_pdev;
++	struct mailbox_reg	*mbx_regs;
++	u32			mbx_irq;
++
++	struct mailbox_channel	mbx_rx;
++	struct mailbox_channel	mbx_tx;
++
++	/* For listening to peer's request. */
++	mailbox_msg_cb_t	mbx_listen_cb;
++	void			*mbx_listen_cb_arg;
++	struct workqueue_struct	*mbx_listen_wq;
++	struct work_struct	mbx_listen_worker;
++
++	int			mbx_paired;
++	/*
++	 * For testing basic intr and mailbox comm functionality via sysfs.
++	 * No locking protection, use with care.
++	 */
++	struct mailbox_pkt	mbx_tst_pkt;
++	char			mbx_tst_tx_msg[TEST_MSG_LEN];
++	char			mbx_tst_rx_msg[TEST_MSG_LEN];
++	size_t			mbx_tst_tx_msg_len;
++
++	/* Req list for all incoming request message */
++	struct completion mbx_comp;
++	struct mutex mbx_lock;
++	struct list_head mbx_req_list;
++	uint8_t mbx_req_cnt;
++	size_t mbx_req_sz;
++
++	struct mutex mbx_conn_lock;
++	uint64_t mbx_conn_id;
++	enum conn_state mbx_state;
++	bool mbx_established;
++	uint32_t mbx_prot_ver;
++
++	void *mbx_kaddr;
++};
++
++static inline const char *reg2name(struct mailbox *mbx, u32 *reg)
++{
++	static const char *reg_names[] = {
++		"wrdata",
++		"reserved1",
++		"rddata",
++		"reserved2",
++		"status",
++		"error",
++		"sit",
++		"rit",
++		"is",
++		"ie",
++		"ip",
++		"ctrl"
++	};
++
++	return reg_names[((uintptr_t)reg -
++		(uintptr_t)mbx->mbx_regs) / sizeof(u32)];
++}
++
++struct mailbox_conn {
++	uint64_t flag;
++	void *kaddr;
++	phys_addr_t paddr;
++	uint32_t crc32;
++	uint32_t ver;
++	uint64_t sec_id;
++};
++
++int mailbox_request(struct platform_device *pdev, void *req, size_t reqlen,
++		    void *resp, size_t *resplen, mailbox_msg_cb_t cb, void *cbarg);
++int mailbox_post(struct platform_device *pdev, u64 reqid, void *buf, size_t len);
++static int mailbox_connect_status(struct platform_device *pdev);
++static void connect_state_handler(struct mailbox *mbx, struct mailbox_conn *conn);
++
++static void connect_state_touch(struct mailbox *mbx, uint64_t flag)
++{
++	struct mailbox_conn conn = {0};
++	if (!mbx)
++		return;
++	conn.flag = flag;
++	connect_state_handler(mbx, &conn);
++}
++
++
++static inline u32 mailbox_reg_rd(struct mailbox *mbx, u32 *reg)
++{
++	u32 val = ioread32(reg);
++
++#ifdef	MAILBOX_REG_DEBUG
++	MBX_DBG(mbx, "REG_RD(%s)=0x%x", reg2name(mbx, reg), val);
++#endif
++	return val;
++}
++
++static inline void mailbox_reg_wr(struct mailbox *mbx, u32 *reg, u32 val)
++{
++#ifdef	MAILBOX_REG_DEBUG
++	MBX_DBG(mbx, "REG_WR(%s, 0x%x)", reg2name(mbx, reg), val);
++#endif
++	iowrite32(val, reg);
++}
++
++static inline void reset_pkt(struct mailbox_pkt *pkt)
++{
++	pkt->hdr.type = PKT_INVALID;
++}
++
++static inline bool valid_pkt(struct mailbox_pkt *pkt)
++{
++	return (pkt->hdr.type != PKT_INVALID);
++}
++
++irqreturn_t mailbox_isr(int irq, void *arg)
++{
++	struct mailbox *mbx = (struct mailbox *)arg;
++	u32 is = mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_is);
++
++	while (is) {
++		MBX_DBG(mbx, "intr status: 0x%x", is);
++
++		if ((is & FLAG_STI) != 0) {
++			/* A packet has been sent successfully. */
++			complete(&mbx->mbx_tx.mbc_worker);
++		}
++		if ((is & FLAG_RTI) != 0) {
++			/* A packet is waiting to be received from mailbox. */
++			complete(&mbx->mbx_rx.mbc_worker);
++		}
++		/* Anything else is not expected. */
++		if ((is & (FLAG_STI | FLAG_RTI)) == 0) {
++			MBX_ERR(mbx, "spurious mailbox irq %d, is=0x%x",
++				irq, is);
++		}
++
++		/* Clear intr state for receiving next one. */
++		mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_is, is);
++
++		is = mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_is);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void chan_timer(struct timer_list *t)
++{
++	struct mailbox_channel *ch = from_timer(ch, t, mbc_timer);
++
++	MBX_DBG(ch->mbc_parent, "%s tick", ch->mbc_name);
++
++	set_bit(MBXCS_BIT_TICK, &ch->mbc_state);
++	complete(&ch->mbc_worker);
++
++	/* We're a periodic timer. */
++	mod_timer(&ch->mbc_timer, jiffies + MAILBOX_TIMER);
++}
++
++static void chan_config_timer(struct mailbox_channel *ch)
++{
++	struct list_head *pos, *n;
++	struct mailbox_msg *msg = NULL;
++	bool on = false;
++
++	mutex_lock(&ch->mbc_mutex);
++
++	if (test_bit(MBXCS_BIT_POLL_MODE, &ch->mbc_state)) {
++		on = true;
++	} else {
++		list_for_each_safe(pos, n, &ch->mbc_msgs) {
++			msg = list_entry(pos, struct mailbox_msg, mbm_list);
++			if (msg->mbm_req_id == 0)
++			       continue;
++			on = true;
++			break;
++		}
++	}
++
++	if (on != ch->mbc_timer_on) {
++		ch->mbc_timer_on = on;
++		if (on)
++			mod_timer(&ch->mbc_timer, jiffies + MAILBOX_TIMER);
++		else
++			del_timer_sync(&ch->mbc_timer);
++	}
++
++	mutex_unlock(&ch->mbc_mutex);
++}
++
++static void free_msg(struct mailbox_msg *msg)
++{
++	vfree(msg);
++}
++
++static void msg_done(struct mailbox_msg *msg, int err)
++{
++	struct mailbox_channel *ch = msg->mbm_ch;
++	struct mailbox *mbx = ch->mbc_parent;
++
++	MBX_DBG(ch->mbc_parent, "%s finishing msg id=0x%llx err=%d",
++		ch->mbc_name, msg->mbm_req_id, err);
++
++	msg->mbm_error = err;
++	if (msg->mbm_cb) {
++		msg->mbm_cb(msg->mbm_cb_arg, msg->mbm_data, msg->mbm_len,
++			msg->mbm_req_id, msg->mbm_error);
++		free_msg(msg);
++	} else {
++		if (msg->mbm_flags & MSG_FLAG_REQUEST) {
++			if ((mbx->mbx_req_sz+msg->mbm_len) >= MAX_MSG_QUEUE_SZ ||
++				  mbx->mbx_req_cnt >= MAX_MSG_QUEUE_LEN) {
++				goto done;
++			}
++			mutex_lock(&ch->mbc_parent->mbx_lock);
++			list_add_tail(&msg->mbm_list, &ch->mbc_parent->mbx_req_list);
++			mbx->mbx_req_cnt++;
++			mbx->mbx_req_sz += msg->mbm_len;
++			mutex_unlock(&ch->mbc_parent->mbx_lock);
++
++			complete(&ch->mbc_parent->mbx_comp);
++		} else {
++			complete(&msg->mbm_complete);
++		}
++	}
++done:
++	chan_config_timer(ch);
++}
++
++static void chan_msg_done(struct mailbox_channel *ch, int err)
++{
++	if (!ch->mbc_cur_msg)
++		return;
++
++	msg_done(ch->mbc_cur_msg, err);
++	ch->mbc_cur_msg = NULL;
++	ch->mbc_bytes_done = 0;
++}
++
++void timeout_msg(struct mailbox_channel *ch)
++{
++	struct mailbox *mbx = ch->mbc_parent;
++	struct mailbox_msg *msg = NULL;
++	struct list_head *pos, *n;
++	struct list_head l = LIST_HEAD_INIT(l);
++	bool reschedule = false;
++
++	/* Check active msg first. */
++	msg = ch->mbc_cur_msg;
++	if (msg) {
++
++		if (msg->mbm_ttl == 0) {
++			MBX_ERR(mbx, "found active msg time'd out");
++			chan_msg_done(ch, -ETIME);
++		} else {
++			if (msg->mbm_timer_on) {
++				msg->mbm_ttl--;
++				/* Need to come back again for this one. */
++				reschedule = true;
++			}
++		}
++	}
++
++	mutex_lock(&ch->mbc_mutex);
++
++	list_for_each_safe(pos, n, &ch->mbc_msgs) {
++		msg = list_entry(pos, struct mailbox_msg, mbm_list);
++		if (!msg->mbm_timer_on)
++			continue;
++		if (msg->mbm_req_id == 0)
++		       continue;
++		if (msg->mbm_ttl == 0) {
++			list_del(&msg->mbm_list);
++			list_add_tail(&msg->mbm_list, &l);
++		} else {
++			msg->mbm_ttl--;
++			/* Need to come back again for this one. */
++			reschedule = true;
++		}
++	}
++
++	mutex_unlock(&ch->mbc_mutex);
++
++	if (!list_empty(&l))
++		MBX_ERR(mbx, "found waiting msg time'd out");
++
++	list_for_each_safe(pos, n, &l) {
++		msg = list_entry(pos, struct mailbox_msg, mbm_list);
++		list_del(&msg->mbm_list);
++		msg_done(msg, -ETIME);
++	}
++}
++
++static void chann_worker(struct work_struct *work)
++{
++	struct mailbox_channel *ch =
++		container_of(work, struct mailbox_channel, mbc_work);
++	struct mailbox *mbx = ch->mbc_parent;
++
++	while (!test_bit(MBXCS_BIT_STOP, &ch->mbc_state)) {
++		MBX_DBG(mbx, "%s worker start", ch->mbc_name);
++		ch->mbc_tran(ch);
++		wait_for_completion_interruptible(&ch->mbc_worker);
++	}
++}
++
++static inline u32 mailbox_chk_err(struct mailbox *mbx)
++{
++	u32 val = mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_error);
++
++	/* Ignore bad register value after firewall is tripped. */
++	if (val == 0xffffffff)
++		val = 0;
++
++	/* Error should not be seen, shout when found. */
++	if (val)
++		MBX_ERR(mbx, "mailbox error detected, error=0x%x\n", val);
++	return val;
++}
++
++static int chan_msg_enqueue(struct mailbox_channel *ch, struct mailbox_msg *msg)
++{
 +	int rv = 0;
 +
-+	spin_lock_irqsave(&xdev->lock, flags);
-+	if (xdev->flags & f) {
-+		spin_unlock_irqrestore(&xdev->lock, flags);
-+		rv = 1;
-+	} else
-+		xdev->flags |= f;
-+	spin_unlock_irqrestore(&xdev->lock, flags);
++	MBX_DBG(ch->mbc_parent, "%s enqueuing msg, id=0x%llx\n",
++		ch->mbc_name, msg->mbm_req_id);
++
++	BUG_ON(msg->mbm_req_id == INVALID_MSG_ID);
++
++	mutex_lock(&ch->mbc_mutex);
++	if (test_bit(MBXCS_BIT_STOP, &ch->mbc_state)) {
++		rv = -ESHUTDOWN;
++	} else {
++		list_add_tail(&msg->mbm_list, &ch->mbc_msgs);
++		msg->mbm_ch = ch;
++//		msg->mbm_ttl = MSG_TTL;
++	}
++	mutex_unlock(&ch->mbc_mutex);
++
++	chan_config_timer(ch);
++
 +	return rv;
 +}
 +
-+static inline void xdma_device_flag_set(struct xdma_dev *xdev, unsigned int f)
++static struct mailbox_msg *chan_msg_dequeue(struct mailbox_channel *ch,
++	u64 req_id)
 +{
-+	unsigned long flags;
++	struct mailbox_msg *msg = NULL;
++	struct list_head *pos;
 +
-+	spin_lock_irqsave(&xdev->lock, flags);
-+	xdev->flags |= f;
-+	spin_unlock_irqrestore(&xdev->lock, flags);
++	mutex_lock(&ch->mbc_mutex);
++
++	/* Take the first msg. */
++	if (req_id == INVALID_MSG_ID) {
++		msg = list_first_entry_or_null(&ch->mbc_msgs,
++			struct mailbox_msg, mbm_list);
++	/* Take the msg w/ specified ID. */
++	} else {
++		list_for_each(pos, &ch->mbc_msgs) {
++			msg = list_entry(pos, struct mailbox_msg, mbm_list);
++			if (msg->mbm_req_id == req_id)
++				break;
++		}
++	}
++
++	if (msg) {
++		MBX_DBG(ch->mbc_parent, "%s dequeued msg, id=0x%llx\n",
++			ch->mbc_name, msg->mbm_req_id);
++		list_del(&msg->mbm_list);
++	}
++
++	mutex_unlock(&ch->mbc_mutex);
++
++	return msg;
 +}
 +
-+static inline void xdma_device_flag_clear(struct xdma_dev *xdev, unsigned int f)
++static struct mailbox_msg *alloc_msg(void *buf, size_t len)
 +{
-+	unsigned long flags;
++	char *newbuf = NULL;
++	struct mailbox_msg *msg = NULL;
++	/* Give MB*2 secs as time to live */
++	int calculated_ttl = (len >> 19) < MSG_TTL ? MSG_TTL : (len >> 19);
 +
-+	spin_lock_irqsave(&xdev->lock, flags);
-+	xdev->flags &= ~f;
-+	spin_unlock_irqrestore(&xdev->lock, flags);
++	if (!buf) {
++		msg = vzalloc(sizeof(struct mailbox_msg) + len);
++		if (!msg)
++			return NULL;
++		newbuf = ((char *)msg) + sizeof(struct mailbox_msg);
++	} else {
++		msg = vzalloc(sizeof(struct mailbox_msg));
++		if (!msg)
++			return NULL;
++		newbuf = buf;
++	}
++
++	INIT_LIST_HEAD(&msg->mbm_list);
++	msg->mbm_data = newbuf;
++	msg->mbm_len = len;
++	msg->mbm_ttl = calculated_ttl;
++	msg->mbm_timer_on = false;
++	init_completion(&msg->mbm_complete);
++
++	return msg;
 +}
 +
-+void write_register(u32 value, void *iomem);
-+u32 read_register(void *iomem);
++static int chan_init(struct mailbox *mbx, char *nm,
++	struct mailbox_channel *ch, chan_func_t fn)
++{
++	ch->mbc_parent = mbx;
++	ch->mbc_name = nm;
++	ch->mbc_tran = fn;
++	INIT_LIST_HEAD(&ch->mbc_msgs);
++	init_completion(&ch->mbc_worker);
++	mutex_init(&ch->mbc_mutex);
 +
-+void xdma_device_offline(struct pci_dev *pdev, void *dev_handle);
-+void xdma_device_online(struct pci_dev *pdev, void *dev_handle);
++	ch->mbc_cur_msg = NULL;
++	ch->mbc_bytes_done = 0;
 +
-+int xdma_performance_submit(struct xdma_dev *xdev, struct xdma_engine *engine);
-+struct xdma_transfer *engine_cyclic_stop(struct xdma_engine *engine);
-+void enable_perf(struct xdma_engine *engine);
-+void get_perf_stats(struct xdma_engine *engine);
++	reset_pkt(&ch->mbc_packet);
++	set_bit(MBXCS_BIT_READY, &ch->mbc_state);
 +
-+int xdma_cyclic_transfer_setup(struct xdma_engine *engine);
-+int xdma_cyclic_transfer_teardown(struct xdma_engine *engine);
-+ssize_t xdma_engine_read_cyclic(struct xdma_engine *engine, char __user *buf,
-+	size_t count, int timeout_ms);
++	/* One thread for one channel. */
++	ch->mbc_wq =
++		create_singlethread_workqueue(dev_name(&mbx->mbx_pdev->dev));
++	if (!ch->mbc_wq) {
++		ch->mbc_parent = NULL;
++		return -ENOMEM;
++	}
 +
-+#endif /* XDMA_LIB_H */
-diff --git a/drivers/gpu/drm/xocl/lib/libxdma_api.h b/drivers/gpu/drm/xocl/lib/libxdma_api.h
-new file mode 100644
-index 000000000000..bfa3e7ba9b11
---- /dev/null
-+++ b/drivers/gpu/drm/xocl/lib/libxdma_api.h
-@@ -0,0 +1,127 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++	INIT_WORK(&ch->mbc_work, chann_worker);
++	queue_work(ch->mbc_wq, &ch->mbc_work);
++
++	/* One timer for one channel. */
++	timer_setup(&ch->mbc_timer, chan_timer, 0);
++
++	return 0;
++}
++
++static void chan_fini(struct mailbox_channel *ch)
++{
++	struct mailbox_msg *msg;
++
++	if (!ch->mbc_parent)
++		return;
++
++	/*
++	 * Holding mutex to ensure no new msg is enqueued after
++	 * flag is set.
++	 */
++	mutex_lock(&ch->mbc_mutex);
++	set_bit(MBXCS_BIT_STOP, &ch->mbc_state);
++	mutex_unlock(&ch->mbc_mutex);
++
++	complete(&ch->mbc_worker);
++	cancel_work_sync(&ch->mbc_work);
++	destroy_workqueue(ch->mbc_wq);
++
++	msg = ch->mbc_cur_msg;
++	if (msg)
++		chan_msg_done(ch, -ESHUTDOWN);
++
++	while ((msg = chan_msg_dequeue(ch, INVALID_MSG_ID)) != NULL)
++		msg_done(msg, -ESHUTDOWN);
++
++	del_timer_sync(&ch->mbc_timer);
++}
++
++static void listen_wq_fini(struct mailbox *mbx)
++{
++	BUG_ON(mbx == NULL);
++
++	if (mbx->mbx_listen_wq != NULL) {
++		complete(&mbx->mbx_comp);
++		cancel_work_sync(&mbx->mbx_listen_worker);
++		destroy_workqueue(mbx->mbx_listen_wq);
++	}
++
++}
++
++static void chan_recv_pkt(struct mailbox_channel *ch)
++{
++	int i, retry = 10;
++	struct mailbox *mbx = ch->mbc_parent;
++	struct mailbox_pkt *pkt = &ch->mbc_packet;
++
++	BUG_ON(valid_pkt(pkt));
++
++	/* Picking up a packet from HW. */
++	for (i = 0; i < PACKET_SIZE; i++) {
++		while ((mailbox_reg_rd(mbx,
++			&mbx->mbx_regs->mbr_status) & STATUS_EMPTY) &&
++			(retry-- > 0))
++			msleep(100);
++
++		*(((u32 *)pkt) + i) =
++			mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_rddata);
++	}
++
++	if ((mailbox_chk_err(mbx) & STATUS_EMPTY) != 0)
++		reset_pkt(pkt);
++	else
++		MBX_DBG(mbx, "received pkt: type=0x%x", pkt->hdr.type);
++}
++
++static void chan_send_pkt(struct mailbox_channel *ch)
++{
++	int i;
++	struct mailbox *mbx = ch->mbc_parent;
++	struct mailbox_pkt *pkt = &ch->mbc_packet;
++
++	BUG_ON(!valid_pkt(pkt));
++
++	MBX_DBG(mbx, "sending pkt: type=0x%x", pkt->hdr.type);
++
++	/* Pushing a packet into HW. */
++	for (i = 0; i < PACKET_SIZE; i++) {
++		mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_wrdata,
++			*(((u32 *)pkt) + i));
++	}
++
++	reset_pkt(pkt);
++	if (ch->mbc_cur_msg)
++		ch->mbc_bytes_done += ch->mbc_packet.hdr.payload_size;
++
++	BUG_ON((mailbox_chk_err(mbx) & STATUS_FULL) != 0);
++}
++
++static int chan_pkt2msg(struct mailbox_channel *ch)
++{
++	struct mailbox *mbx = ch->mbc_parent;
++	void *msg_data, *pkt_data;
++	struct mailbox_msg *msg = ch->mbc_cur_msg;
++	struct mailbox_pkt *pkt = &ch->mbc_packet;
++	size_t cnt = pkt->hdr.payload_size;
++	u32 type = (pkt->hdr.type & PKT_TYPE_MASK);
++
++	BUG_ON(((type != PKT_MSG_START) && (type != PKT_MSG_BODY)) || !msg);
++
++	if (type == PKT_MSG_START) {
++		msg->mbm_req_id = pkt->body.msg_start.msg_req_id;
++		BUG_ON(msg->mbm_len < pkt->body.msg_start.msg_size);
++		msg->mbm_len = pkt->body.msg_start.msg_size;
++		pkt_data = pkt->body.msg_start.payload;
++	} else {
++		pkt_data = pkt->body.msg_body.payload;
++	}
++
++	if (cnt > msg->mbm_len - ch->mbc_bytes_done) {
++		MBX_ERR(mbx, "invalid mailbox packet size\n");
++		return -EBADMSG;
++	}
++
++	msg_data = msg->mbm_data + ch->mbc_bytes_done;
++	(void) memcpy(msg_data, pkt_data, cnt);
++	ch->mbc_bytes_done += cnt;
++
++	reset_pkt(pkt);
++	return 0;
++}
 +
 +/*
-+ * Copyright (C) 2016-2019 Xilinx, Inc
++ * Worker for RX channel.
++ */
++static void chan_do_rx(struct mailbox_channel *ch)
++{
++	struct mailbox *mbx = ch->mbc_parent;
++	struct mailbox_pkt *pkt = &ch->mbc_packet;
++	struct mailbox_msg *msg = NULL;
++	bool needs_read = false;
++	u64 id = 0;
++	bool eom;
++	int err;
++	u32 type;
++	u32 st = mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_status);
++
++	/* Check if a packet is ready for reading. */
++	if (st == 0xffffffff) {
++		/* Device is still being reset. */
++		needs_read = false;
++	} else if (test_bit(MBXCS_BIT_POLL_MODE, &ch->mbc_state)) {
++		needs_read = ((st & STATUS_EMPTY) == 0);
++	} else {
++		needs_read = ((st & STATUS_RTA) != 0);
++	}
++
++	if (needs_read) {
++		chan_recv_pkt(ch);
++		type = pkt->hdr.type & PKT_TYPE_MASK;
++		eom = ((pkt->hdr.type & PKT_TYPE_MSG_END) != 0);
++
++		switch (type) {
++		case PKT_TEST:
++			(void) memcpy(&mbx->mbx_tst_pkt, &ch->mbc_packet,
++				sizeof(struct mailbox_pkt));
++			reset_pkt(pkt);
++			return;
++		case PKT_MSG_START:
++			if (ch->mbc_cur_msg) {
++				MBX_ERR(mbx, "received partial msg\n");
++				chan_msg_done(ch, -EBADMSG);
++			}
++
++			/* Get a new active msg. */
++			id = 0;
++			if (pkt->body.msg_start.msg_flags & MSG_FLAG_RESPONSE)
++				id = pkt->body.msg_start.msg_req_id;
++			ch->mbc_cur_msg = chan_msg_dequeue(ch, id);
++
++			if (!ch->mbc_cur_msg) {
++				//no msg, alloc dynamically
++				msg = alloc_msg(NULL, pkt->body.msg_start.msg_size);
++
++				msg->mbm_ch = ch;
++				msg->mbm_flags |= MSG_FLAG_REQUEST;
++				ch->mbc_cur_msg = msg;
++
++			}	else if (pkt->body.msg_start.msg_size >
++				ch->mbc_cur_msg->mbm_len) {
++				chan_msg_done(ch, -EMSGSIZE);
++				MBX_ERR(mbx, "received msg is too big");
++				reset_pkt(pkt);
++			}
++			break;
++		case PKT_MSG_BODY:
++			if (!ch->mbc_cur_msg) {
++				MBX_ERR(mbx, "got unexpected msg body pkt\n");
++				reset_pkt(pkt);
++			}
++			break;
++		default:
++			MBX_ERR(mbx, "invalid mailbox pkt type\n");
++			reset_pkt(pkt);
++			return;
++		}
++
++		if (valid_pkt(pkt)) {
++			err = chan_pkt2msg(ch);
++			if (err || eom)
++				chan_msg_done(ch, err);
++		}
++	}
++
++	/* Handle timer event. */
++	if (test_bit(MBXCS_BIT_TICK, &ch->mbc_state)) {
++		timeout_msg(ch);
++		clear_bit(MBXCS_BIT_TICK, &ch->mbc_state);
++	}
++}
++
++static void chan_msg2pkt(struct mailbox_channel *ch)
++{
++	size_t cnt = 0;
++	size_t payload_off = 0;
++	void *msg_data, *pkt_data;
++	struct mailbox_msg *msg = ch->mbc_cur_msg;
++	struct mailbox_pkt *pkt = &ch->mbc_packet;
++	bool is_start = (ch->mbc_bytes_done == 0);
++	bool is_eom = false;
++
++	if (is_start) {
++		payload_off = offsetof(struct mailbox_pkt,
++			body.msg_start.payload);
++	} else {
++		payload_off = offsetof(struct mailbox_pkt,
++			body.msg_body.payload);
++	}
++	cnt = PACKET_SIZE * sizeof(u32) - payload_off;
++	if (cnt >= msg->mbm_len - ch->mbc_bytes_done) {
++		cnt = msg->mbm_len - ch->mbc_bytes_done;
++		is_eom = true;
++	}
++
++	pkt->hdr.type = is_start ? PKT_MSG_START : PKT_MSG_BODY;
++	pkt->hdr.type |= is_eom ? PKT_TYPE_MSG_END : 0;
++	pkt->hdr.payload_size = cnt;
++
++	if (is_start) {
++		pkt->body.msg_start.msg_req_id = msg->mbm_req_id;
++		pkt->body.msg_start.msg_size = msg->mbm_len;
++		pkt->body.msg_start.msg_flags = msg->mbm_flags;
++		pkt_data = pkt->body.msg_start.payload;
++	} else {
++		pkt_data = pkt->body.msg_body.payload;
++	}
++	msg_data = msg->mbm_data + ch->mbc_bytes_done;
++	(void) memcpy(pkt_data, msg_data, cnt);
++}
++
++static void check_tx_stall(struct mailbox_channel *ch)
++{
++	struct mailbox *mbx = ch->mbc_parent;
++	struct mailbox_msg *msg = ch->mbc_cur_msg;
++
++	/*
++	 * No stall checking in polling mode. Don't know how often peer will
++	 * check the channel.
++	 */
++	if ((msg == NULL) || test_bit(MBXCS_BIT_POLL_MODE, &ch->mbc_state))
++		return;
++
++	/*
++	 * No tx intr has come since last check.
++	 * The TX channel is stalled, reset it.
++	 */
++	if (test_bit(MBXCS_BIT_CHK_STALL, &ch->mbc_state)) {
++		MBX_ERR(mbx, "TX channel stall detected, reset...\n");
++		mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_ctrl, 0x1);
++		chan_msg_done(ch, -ETIME);
++		connect_state_touch(mbx, MB_CONN_FIN);
++	/* Mark it for next check. */
++	} else {
++		set_bit(MBXCS_BIT_CHK_STALL, &ch->mbc_state);
++	}
++}
++
++
++
++static void rx_enqueued_msg_timer_on(struct mailbox *mbx, uint64_t req_id)
++{
++	struct list_head *pos, *n;
++	struct mailbox_msg *msg = NULL;
++	struct mailbox_channel *ch = NULL;
++	ch = &mbx->mbx_rx;
++	MBX_DBG(mbx, "try to set ch rx, req_id %llu\n", req_id);
++	mutex_lock(&ch->mbc_mutex);
++
++	list_for_each_safe(pos, n, &ch->mbc_msgs) {
++		msg = list_entry(pos, struct mailbox_msg, mbm_list);
++		if (msg->mbm_req_id == req_id) {
++			msg->mbm_timer_on = true;
++			MBX_DBG(mbx, "set ch rx, req_id %llu\n", req_id);
++			break;
++		}
++	}
++
++	mutex_unlock(&ch->mbc_mutex);
++
++}
++
++/*
++ * Worker for TX channel.
++ */
++static void chan_do_tx(struct mailbox_channel *ch)
++{
++	struct mailbox *mbx = ch->mbc_parent;
++	u32 st = mailbox_reg_rd(mbx, &mbx->mbx_regs->mbr_status);
++
++	/* Check if a packet has been read by peer. */
++	if ((st != 0xffffffff) && ((st & STATUS_STA) != 0)) {
++		clear_bit(MBXCS_BIT_CHK_STALL, &ch->mbc_state);
++
++		/*
++		 * The mailbox is free for sending new pkt now. See if we
++		 * have something to send.
++		 */
++
++		/* Finished sending a whole msg, call it done. */
++		if (ch->mbc_cur_msg &&
++			(ch->mbc_cur_msg->mbm_len == ch->mbc_bytes_done)) {
++			rx_enqueued_msg_timer_on(mbx, ch->mbc_cur_msg->mbm_req_id);
++			chan_msg_done(ch, 0);
++		}
++
++		if (!ch->mbc_cur_msg) {
++			ch->mbc_cur_msg = chan_msg_dequeue(ch, INVALID_MSG_ID);
++			if (ch->mbc_cur_msg)
++				ch->mbc_cur_msg->mbm_timer_on = true;
++		}
++
++		if (ch->mbc_cur_msg) {
++			chan_msg2pkt(ch);
++		} else if (valid_pkt(&mbx->mbx_tst_pkt)) {
++			(void) memcpy(&ch->mbc_packet, &mbx->mbx_tst_pkt,
++				sizeof(struct mailbox_pkt));
++			reset_pkt(&mbx->mbx_tst_pkt);
++		} else {
++			return; /* Nothing to send. */
++		}
++
++		chan_send_pkt(ch);
++	}
++
++	/* Handle timer event. */
++	if (test_bit(MBXCS_BIT_TICK, &ch->mbc_state)) {
++		timeout_msg(ch);
++		check_tx_stall(ch);
++		clear_bit(MBXCS_BIT_TICK, &ch->mbc_state);
++	}
++}
++
++static int mailbox_connect_status(struct platform_device *pdev)
++{
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	int ret = 0;
++	mutex_lock(&mbx->mbx_lock);
++	ret = mbx->mbx_paired;
++	mutex_unlock(&mbx->mbx_lock);
++	return ret;
++}
++
++static ssize_t mailbox_ctl_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	u32 *reg = (u32 *)mbx->mbx_regs;
++	int r, n;
++	int nreg = sizeof (struct mailbox_reg) / sizeof (u32);
++
++	for (r = 0, n = 0; r < nreg; r++, reg++) {
++		/* Non-status registers. */
++		if ((reg == &mbx->mbx_regs->mbr_resv1)		||
++			(reg == &mbx->mbx_regs->mbr_wrdata)	||
++			(reg == &mbx->mbx_regs->mbr_rddata)	||
++			(reg == &mbx->mbx_regs->mbr_resv2))
++			continue;
++		/* Write-only status register. */
++		if (reg == &mbx->mbx_regs->mbr_ctrl) {
++			n += sprintf(buf + n, "%02ld %10s = --\n",
++				r * sizeof (u32), reg2name(mbx, reg));
++		/* Read-able status register. */
++		} else {
++			n += sprintf(buf + n, "%02ld %10s = 0x%08x\n",
++				r * sizeof (u32), reg2name(mbx, reg),
++				mailbox_reg_rd(mbx, reg));
++		}
++	}
++
++	return n;
++}
++
++static ssize_t mailbox_ctl_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	u32 off, val;
++	int nreg = sizeof (struct mailbox_reg) / sizeof (u32);
++	u32 *reg = (u32 *)mbx->mbx_regs;
++
++	if (sscanf(buf, "%d:%d", &off, &val) != 2 || (off % sizeof (u32)) ||
++		!(off >= 0 && off < nreg * sizeof (u32))) {
++		MBX_ERR(mbx, "input should be <reg_offset:reg_val>");
++		return -EINVAL;
++	}
++	reg += off / sizeof (u32);
++
++	mailbox_reg_wr(mbx, reg, val);
++	return count;
++}
++/* HW register level debugging i/f. */
++static DEVICE_ATTR_RW(mailbox_ctl);
++
++static ssize_t mailbox_pkt_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	int ret = 0;
++
++	if (valid_pkt(&mbx->mbx_tst_pkt)) {
++		(void) memcpy(buf, mbx->mbx_tst_pkt.body.data,
++			mbx->mbx_tst_pkt.hdr.payload_size);
++		ret = mbx->mbx_tst_pkt.hdr.payload_size;
++	}
++
++	return ret;
++}
++
++static ssize_t mailbox_pkt_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	size_t maxlen = sizeof (mbx->mbx_tst_pkt.body.data);
++
++	if (count > maxlen) {
++		MBX_ERR(mbx, "max input length is %ld", maxlen);
++		return 0;
++	}
++
++	(void) memcpy(mbx->mbx_tst_pkt.body.data, buf, count);
++	mbx->mbx_tst_pkt.hdr.payload_size = count;
++	mbx->mbx_tst_pkt.hdr.type = PKT_TEST;
++	complete(&mbx->mbx_tx.mbc_worker);
++	return count;
++}
++
++/* Packet test i/f. */
++static DEVICE_ATTR_RW(mailbox_pkt);
++
++static ssize_t mailbox_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	struct mailbox_req req;
++	size_t respsz = sizeof (mbx->mbx_tst_rx_msg);
++	int ret = 0;
++
++	req.req = MAILBOX_REQ_TEST_READ;
++	ret = mailbox_request(to_platform_device(dev), &req, sizeof (req),
++		mbx->mbx_tst_rx_msg, &respsz, NULL, NULL);
++	if (ret) {
++		MBX_ERR(mbx, "failed to read test msg from peer: %d", ret);
++	} else if (respsz > 0) {
++		(void) memcpy(buf, mbx->mbx_tst_rx_msg, respsz);
++		ret = respsz;
++	}
++
++	return ret;
++}
++
++static ssize_t mailbox_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	size_t maxlen = sizeof (mbx->mbx_tst_tx_msg);
++	struct mailbox_req req = { 0 };
++
++	if (count > maxlen) {
++		MBX_ERR(mbx, "max input length is %ld", maxlen);
++		return 0;
++	}
++
++	(void) memcpy(mbx->mbx_tst_tx_msg, buf, count);
++	mbx->mbx_tst_tx_msg_len = count;
++	req.req = MAILBOX_REQ_TEST_READY;
++	(void) mailbox_post(mbx->mbx_pdev, 0, &req, sizeof (req));
++
++	return count;
++}
++
++/* Msg test i/f. */
++static DEVICE_ATTR_RW(mailbox);
++
++static ssize_t connection_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	int ret;
++	ret = mailbox_connect_status(pdev);
++	return sprintf(buf, "0x%x\n", ret);
++}
++static DEVICE_ATTR_RO(connection);
++
++
++static struct attribute *mailbox_attrs[] = {
++	&dev_attr_mailbox.attr,
++	&dev_attr_mailbox_ctl.attr,
++	&dev_attr_mailbox_pkt.attr,
++	&dev_attr_connection.attr,
++	NULL,
++};
++
++static const struct attribute_group mailbox_attrgroup = {
++	.attrs = mailbox_attrs,
++};
++
++static void dft_req_msg_cb(void *arg, void *data, size_t len, u64 id, int err)
++{
++	struct mailbox_msg *respmsg;
++	struct mailbox_msg *reqmsg = (struct mailbox_msg *)arg;
++	struct mailbox *mbx = reqmsg->mbm_ch->mbc_parent;
++
++	/*
++	 * Can't send out request msg.
++	 * Removing corresponding response msg from queue and return error.
++	 */
++	if (err) {
++		respmsg = chan_msg_dequeue(&mbx->mbx_rx, reqmsg->mbm_req_id);
++		if (respmsg)
++			msg_done(respmsg, err);
++	}
++}
++
++static void dft_post_msg_cb(void *arg, void *buf, size_t len, u64 id, int err)
++{
++	struct mailbox_msg *msg = (struct mailbox_msg *)arg;
++
++	if (err) {
++		MBX_ERR(msg->mbm_ch->mbc_parent,
++			"failed to post msg, err=%d", err);
++	}
++}
++
++/*
++ * Msg will be sent to peer and reply will be received.
++ */
++int mailbox_request(struct platform_device *pdev, void *req, size_t reqlen,
++	void *resp, size_t *resplen, mailbox_msg_cb_t cb, void *cbarg)
++{
++	int rv = -ENOMEM;
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	struct mailbox_msg *reqmsg = NULL, *respmsg = NULL;
++
++	MBX_INFO(mbx, "sending request: %d", ((struct mailbox_req *)req)->req);
++
++	if (cb) {
++		reqmsg = alloc_msg(NULL, reqlen);
++		if (reqmsg)
++			(void) memcpy(reqmsg->mbm_data, req, reqlen);
++	} else {
++		reqmsg = alloc_msg(req, reqlen);
++	}
++	if (!reqmsg)
++		goto fail;
++	reqmsg->mbm_cb = dft_req_msg_cb;
++	reqmsg->mbm_cb_arg = reqmsg;
++	reqmsg->mbm_req_id = (uintptr_t)reqmsg->mbm_data;
++
++	respmsg = alloc_msg(resp, *resplen);
++	if (!respmsg)
++		goto fail;
++	respmsg->mbm_cb = cb;
++	respmsg->mbm_cb_arg = cbarg;
++	/* Only interested in response w/ same ID. */
++	respmsg->mbm_req_id = reqmsg->mbm_req_id;
++
++	/* Always enqueue RX msg before TX one to avoid race. */
++	rv = chan_msg_enqueue(&mbx->mbx_rx, respmsg);
++	if (rv)
++		goto fail;
++	rv = chan_msg_enqueue(&mbx->mbx_tx, reqmsg);
++	if (rv) {
++		respmsg = chan_msg_dequeue(&mbx->mbx_rx, reqmsg->mbm_req_id);
++		goto fail;
++	}
++
++	/* Kick TX channel to try to send out msg. */
++	complete(&mbx->mbx_tx.mbc_worker);
++
++	if (cb)
++		return 0;
++
++	wait_for_completion(&respmsg->mbm_complete);
++	rv = respmsg->mbm_error;
++	if (rv == 0)
++		*resplen = respmsg->mbm_len;
++
++	free_msg(respmsg);
++	return rv;
++
++fail:
++	if (reqmsg)
++		free_msg(reqmsg);
++	if (respmsg)
++		free_msg(respmsg);
++	return rv;
++}
++
++/*
++ * Msg will be posted, no wait for reply.
++ */
++int mailbox_post(struct platform_device *pdev, u64 reqid, void *buf, size_t len)
++{
++	int rv = 0;
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	struct mailbox_msg *msg = alloc_msg(NULL, len);
++
++	if (reqid == 0) {
++		MBX_DBG(mbx, "posting request: %d",
++			((struct mailbox_req *)buf)->req);
++	} else {
++		MBX_DBG(mbx, "posting response...");
++	}
++
++	if (!msg)
++		return -ENOMEM;
++
++	(void) memcpy(msg->mbm_data, buf, len);
++	msg->mbm_cb = dft_post_msg_cb;
++	msg->mbm_cb_arg = msg;
++	if (reqid) {
++		msg->mbm_req_id = reqid;
++		msg->mbm_flags |= MSG_FLAG_RESPONSE;
++	} else {
++		msg->mbm_req_id = (uintptr_t)msg->mbm_data;
++	}
++
++	rv = chan_msg_enqueue(&mbx->mbx_tx, msg);
++	if (rv)
++		free_msg(msg);
++
++	/* Kick TX channel to try to send out msg. */
++	complete(&mbx->mbx_tx.mbc_worker);
++
++	return rv;
++}
++/*
++ *   should not be called by other than connect_state_handler
++ */
++static int mailbox_connection_notify(struct platform_device *pdev, uint64_t sec_id, uint64_t flag)
++{
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	struct mailbox_req *mb_req = NULL;
++	struct mailbox_conn mb_conn = { 0 };
++	int  ret = 0;
++	size_t data_len = 0, reqlen = 0;
++	data_len = sizeof(struct mailbox_conn);
++	reqlen = sizeof(struct mailbox_req) + data_len;
++
++	mb_req = (struct mailbox_req *)vmalloc(reqlen);
++	if (!mb_req) {
++		ret = -ENOMEM;
++		goto done;
++	}
++	mb_req->req = MAILBOX_REQ_CONN_EXPL;
++	if (!mbx->mbx_kaddr) {
++		ret = -ENOMEM;
++		goto done;
++	}
++
++	mb_conn.kaddr = mbx->mbx_kaddr;
++	mb_conn.paddr = virt_to_phys(mbx->mbx_kaddr);
++	mb_conn.crc32 = crc32c_le(~0, mbx->mbx_kaddr, PAGE_SIZE);
++	mb_conn.flag = flag;
++	mb_conn.ver = mbx->mbx_prot_ver;
++
++	if (sec_id != 0) {
++		mb_conn.sec_id = sec_id;
++	} else {
++		mb_conn.sec_id = (uint64_t)mbx->mbx_kaddr;
++		mbx->mbx_conn_id = (uint64_t)mbx->mbx_kaddr;
++	}
++
++	memcpy(mb_req->data, &mb_conn, data_len);
++
++	ret = mailbox_post(pdev, 0, mb_req, reqlen);
++
++done:
++	vfree(mb_req);
++	return ret;
++}
++
++static int mailbox_connection_explore(struct platform_device *pdev, struct mailbox_conn *mb_conn)
++{
++	int ret = 0;
++	uint32_t crc_chk;
++	phys_addr_t paddr;
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	if (!mb_conn) {
++		ret = -EFAULT;
++		goto done;
++	}
++
++	paddr = virt_to_phys(mb_conn->kaddr);
++	if (paddr != mb_conn->paddr) {
++		MBX_INFO(mbx, "mb_conn->paddr %llx paddr: %llx\n", mb_conn->paddr, paddr);
++		MBX_INFO(mbx, "Failed to get the same physical addr, running in VMs?\n");
++		ret = -EFAULT;
++		goto done;
++	}
++	crc_chk = crc32c_le(~0, mb_conn->kaddr, PAGE_SIZE);
++
++	if (crc_chk != mb_conn->crc32) {
++		MBX_INFO(mbx, "crc32  : %x, %x\n",  mb_conn->crc32, crc_chk);
++		MBX_INFO(mbx, "failed to get the same CRC\n");
++		ret = -EFAULT;
++		goto done;
++	}
++done:
++	return ret;
++}
++
++static int mailbox_get_data(struct platform_device *pdev, enum data_kind kind)
++{
++	int ret = 0;
++	switch (kind) {
++	case PEER_CONN:
++		ret = mailbox_connect_status(pdev);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
++
++static void connect_state_handler(struct mailbox *mbx, struct mailbox_conn *conn)
++{
++		int ret = 0;
++
++		if (!mbx || !conn)
++			return;
++
++		mutex_lock(&mbx->mbx_lock);
++
++		switch (conn->flag) {
++		case MB_CONN_INIT:
++			/* clean up all cached data, */
++			mbx->mbx_paired = 0;
++			mbx->mbx_established = false;
++			kfree(mbx->mbx_kaddr);
++
++			mbx->mbx_kaddr = kzalloc(PAGE_SIZE, GFP_KERNEL);
++			get_random_bytes(mbx->mbx_kaddr, PAGE_SIZE);
++			ret = mailbox_connection_notify(mbx->mbx_pdev, 0, MB_CONN_SYN);
++			if (ret)
++				goto done;
++			mbx->mbx_state = CONN_SYN_SENT;
++			break;
++		case MB_CONN_SYN:
++			if (mbx->mbx_state == CONN_SYN_SENT) {
++				if (!mailbox_connection_explore(mbx->mbx_pdev, conn)) {
++					mbx->mbx_paired |= 0x2;
++					MBX_INFO(mbx, "mailbox mbx_prot_ver %x", mbx->mbx_prot_ver);
++				}
++				ret = mailbox_connection_notify(mbx->mbx_pdev, conn->sec_id, MB_CONN_ACK);
++				if (ret)
++					goto done;
++				mbx->mbx_state = CONN_SYN_RECV;
++			} else
++				mbx->mbx_state = CONN_START;
++			break;
++		case MB_CONN_ACK:
++			if (mbx->mbx_state & (CONN_SYN_SENT | CONN_SYN_RECV)) {
++				if (mbx->mbx_conn_id == (uint64_t)conn->sec_id) {
++					mbx->mbx_paired |= 0x1;
++					mbx->mbx_established = true;
++					mbx->mbx_state = CONN_ESTABLISH;
++					kfree(mbx->mbx_kaddr);
++					mbx->mbx_kaddr = NULL;
++				} else
++					mbx->mbx_state = CONN_START;
++			}
++			break;
++		case MB_CONN_FIN:
++			mbx->mbx_paired = 0;
++			mbx->mbx_established = false;
++			kfree(mbx->mbx_kaddr);
++			mbx->mbx_kaddr = NULL;
++			mbx->mbx_state = CONN_START;
++			break;
++		default:
++			break;
++		}
++done:
++	if (ret) {
++		kfree(mbx->mbx_kaddr);
++		mbx->mbx_kaddr = NULL;
++		mbx->mbx_paired = 0;
++		mbx->mbx_state = CONN_START;
++	}
++	mutex_unlock(&mbx->mbx_lock);
++	MBX_INFO(mbx, "mailbox connection state %d", mbx->mbx_paired);
++}
++
++static void process_request(struct mailbox *mbx, struct mailbox_msg *msg)
++{
++	struct mailbox_req *req = (struct mailbox_req *)msg->mbm_data;
++	struct mailbox_conn *conn = (struct mailbox_conn *)req->data;
++	int rc;
++	const char *recvstr = "received request from peer";
++	const char *sendstr = "sending test msg to peer";
++
++	if (req->req == MAILBOX_REQ_TEST_READ) {
++		MBX_INFO(mbx, "%s: %d", recvstr, req->req);
++		if (mbx->mbx_tst_tx_msg_len) {
++			MBX_INFO(mbx, "%s", sendstr);
++			rc = mailbox_post(mbx->mbx_pdev, msg->mbm_req_id,
++				mbx->mbx_tst_tx_msg, mbx->mbx_tst_tx_msg_len);
++			if (rc)
++				MBX_ERR(mbx, "%s failed: %d", sendstr, rc);
++			else
++				mbx->mbx_tst_tx_msg_len = 0;
++
++		}
++	} else if (req->req == MAILBOX_REQ_TEST_READY) {
++		MBX_INFO(mbx, "%s: %d", recvstr, req->req);
++	} else if (req->req == MAILBOX_REQ_CONN_EXPL) {
++		MBX_INFO(mbx, "%s: %d", recvstr, req->req);
++		if (mbx->mbx_state != CONN_SYN_SENT) {
++			/* if your peer droped without notice,
++			 * initial the connection Simultaneously
++			 * again.
++			 */
++			if (conn->flag == MB_CONN_SYN) {
++				connect_state_touch(mbx, MB_CONN_INIT);
++			}
++		}
++		connect_state_handler(mbx, conn);
++	} else if (mbx->mbx_listen_cb) {
++		/* Call client's registered callback to process request. */
++		MBX_DBG(mbx, "%s: %d, passed on", recvstr, req->req);
++		mbx->mbx_listen_cb(mbx->mbx_listen_cb_arg, msg->mbm_data,
++			msg->mbm_len, msg->mbm_req_id, msg->mbm_error);
++	} else {
++		MBX_INFO(mbx, "%s: %d, dropped", recvstr, req->req);
++	}
++}
++
++/*
++ * Wait for request from peer.
++ */
++static void mailbox_recv_request(struct work_struct *work)
++{
++	int rv = 0;
++	struct mailbox_msg *msg = NULL;
++	struct mailbox *mbx =
++		container_of(work, struct mailbox, mbx_listen_worker);
++
++	for (;;) {
++		/* Only interested in request msg. */
++
++		rv = wait_for_completion_interruptible(&mbx->mbx_comp);
++		if (rv)
++			break;
++		mutex_lock(&mbx->mbx_lock);
++		msg = list_first_entry_or_null(&mbx->mbx_req_list,
++			struct mailbox_msg, mbm_list);
++
++		if (msg) {
++			list_del(&msg->mbm_list);
++			mbx->mbx_req_cnt--;
++			mbx->mbx_req_sz -= msg->mbm_len;
++			mutex_unlock(&mbx->mbx_lock);
++		} else {
++			mutex_unlock(&mbx->mbx_lock);
++			break;
++		}
++
++		process_request(mbx, msg);
++		free_msg(msg);
++	}
++
++	if (rv == -ESHUTDOWN)
++		MBX_INFO(mbx, "channel is closed, no listen to peer");
++	else if (rv != 0)
++		MBX_ERR(mbx, "failed to receive request from peer, err=%d", rv);
++
++	if (msg)
++		free_msg(msg);
++}
++
++int mailbox_listen(struct platform_device *pdev,
++	mailbox_msg_cb_t cb, void *cbarg)
++{
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++
++	mbx->mbx_listen_cb_arg = cbarg;
++	/* mbx->mbx_listen_cb is used in another thread as a condition to
++	 * call the function. Ensuring that the argument is captured before
++	 * the function pointer
++	 */
++	wmb();
++	mbx->mbx_listen_cb = cb;
++
++	return 0;
++}
++
++static int mailbox_enable_intr_mode(struct mailbox *mbx)
++{
++	struct resource *res;
++	int ret;
++	struct platform_device *pdev = mbx->mbx_pdev;
++	struct xocl_dev *xdev = xocl_get_xdev(pdev);
++
++	if (mbx->mbx_irq != -1)
++		return 0;
++
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (res == NULL) {
++		MBX_ERR(mbx, "failed to acquire intr resource");
++		return -EINVAL;
++	}
++
++	ret = xocl_user_interrupt_reg(xdev, res->start, mailbox_isr, mbx);
++	if (ret) {
++		MBX_ERR(mbx, "failed to add intr handler");
++		return ret;
++	}
++	ret = xocl_user_interrupt_config(xdev, res->start, true);
++	BUG_ON(ret != 0);
++
++	/* Only see intr when we have full packet sent or received. */
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_rit, PACKET_SIZE - 1);
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_sit, 0);
++
++	/* Finally, enable TX / RX intr. */
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_ie, 0x3);
++
++	clear_bit(MBXCS_BIT_POLL_MODE, &mbx->mbx_rx.mbc_state);
++	chan_config_timer(&mbx->mbx_rx);
++
++	clear_bit(MBXCS_BIT_POLL_MODE, &mbx->mbx_tx.mbc_state);
++	chan_config_timer(&mbx->mbx_tx);
++
++	mbx->mbx_irq = res->start;
++	return 0;
++}
++
++static void mailbox_disable_intr_mode(struct mailbox *mbx)
++{
++	struct platform_device *pdev = mbx->mbx_pdev;
++	struct xocl_dev *xdev = xocl_get_xdev(pdev);
++
++	/*
++	 * No need to turn on polling mode for TX, which has
++	 * a channel stall checking timer always on when there is
++	 * outstanding TX packet.
++	 */
++	set_bit(MBXCS_BIT_POLL_MODE, &mbx->mbx_rx.mbc_state);
++	chan_config_timer(&mbx->mbx_rx);
++
++	/* Disable both TX / RX intrs. */
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_ie, 0x0);
++
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_rit, 0x0);
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_sit, 0x0);
++
++	if (mbx->mbx_irq == -1)
++		return;
++
++	(void) xocl_user_interrupt_config(xdev, mbx->mbx_irq, false);
++	(void) xocl_user_interrupt_reg(xdev, mbx->mbx_irq, NULL, mbx);
++
++	mbx->mbx_irq = -1;
++}
++
++int mailbox_reset(struct platform_device *pdev, bool end_of_reset)
++{
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++	int ret = 0;
++
++	if (mailbox_no_intr)
++		return 0;
++
++	if (end_of_reset) {
++		MBX_INFO(mbx, "enable intr mode");
++		if (mailbox_enable_intr_mode(mbx) != 0)
++			MBX_ERR(mbx, "failed to enable intr after reset");
++	} else {
++		MBX_INFO(mbx, "enable polling mode");
++		mailbox_disable_intr_mode(mbx);
++	}
++	return ret;
++}
++
++/* Kernel APIs exported from this sub-device driver. */
++static struct xocl_mailbox_funcs mailbox_ops = {
++	.request = mailbox_request,
++	.post = mailbox_post,
++	.listen = mailbox_listen,
++	.reset = mailbox_reset,
++	.get_data = mailbox_get_data,
++};
++
++static int mailbox_remove(struct platform_device *pdev)
++{
++	struct mailbox *mbx = platform_get_drvdata(pdev);
++
++	BUG_ON(mbx == NULL);
++
++	connect_state_touch(mbx, MB_CONN_FIN);
++
++	mailbox_disable_intr_mode(mbx);
++
++	sysfs_remove_group(&pdev->dev.kobj, &mailbox_attrgroup);
++
++	chan_fini(&mbx->mbx_rx);
++	chan_fini(&mbx->mbx_tx);
++	listen_wq_fini(mbx);
++
++	BUG_ON(!(list_empty(&mbx->mbx_req_list)));
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_MAILBOX, NULL);
++
++	if (mbx->mbx_regs)
++		iounmap(mbx->mbx_regs);
++
++	MBX_INFO(mbx, "mailbox cleaned up successfully");
++	platform_set_drvdata(pdev, NULL);
++	kfree(mbx);
++	return 0;
++}
++
++static int mailbox_probe(struct platform_device *pdev)
++{
++	struct mailbox *mbx = NULL;
++	struct resource *res;
++	int ret;
++
++	mbx = kzalloc(sizeof(struct mailbox), GFP_KERNEL);
++	if (!mbx)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, mbx);
++	mbx->mbx_pdev = pdev;
++	mbx->mbx_irq = (u32)-1;
++
++
++	init_completion(&mbx->mbx_comp);
++	mutex_init(&mbx->mbx_lock);
++	INIT_LIST_HEAD(&mbx->mbx_req_list);
++	mbx->mbx_req_cnt = 0;
++	mbx->mbx_req_sz = 0;
++
++	mutex_init(&mbx->mbx_conn_lock);
++	mbx->mbx_established = false;
++	mbx->mbx_conn_id = 0;
++	mbx->mbx_kaddr = NULL;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mbx->mbx_regs = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!mbx->mbx_regs) {
++		MBX_ERR(mbx, "failed to map in registers");
++		ret = -EIO;
++		goto failed;
++	}
++	/* Reset TX channel, RX channel is managed by peer as his TX. */
++	mailbox_reg_wr(mbx, &mbx->mbx_regs->mbr_ctrl, 0x1);
++
++	/* Set up software communication channels. */
++	ret = chan_init(mbx, "RX", &mbx->mbx_rx, chan_do_rx);
++	if (ret != 0) {
++		MBX_ERR(mbx, "failed to init rx channel");
++		goto failed;
++	}
++	ret = chan_init(mbx, "TX", &mbx->mbx_tx, chan_do_tx);
++	if (ret != 0) {
++		MBX_ERR(mbx, "failed to init tx channel");
++		goto failed;
++	}
++	/* Dedicated thread for listening to peer request. */
++	mbx->mbx_listen_wq =
++		create_singlethread_workqueue(dev_name(&mbx->mbx_pdev->dev));
++	if (!mbx->mbx_listen_wq) {
++		MBX_ERR(mbx, "failed to create request-listen work queue");
++		goto failed;
++	}
++	INIT_WORK(&mbx->mbx_listen_worker, mailbox_recv_request);
++	queue_work(mbx->mbx_listen_wq, &mbx->mbx_listen_worker);
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &mailbox_attrgroup);
++	if (ret != 0) {
++		MBX_ERR(mbx, "failed to init sysfs");
++		goto failed;
++	}
++
++	if (mailbox_no_intr) {
++		MBX_INFO(mbx, "Enabled timer-driven mode");
++		mailbox_disable_intr_mode(mbx);
++	} else {
++		ret = mailbox_enable_intr_mode(mbx);
++		if (ret != 0)
++			goto failed;
++	}
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_MAILBOX, &mailbox_ops);
++
++	connect_state_touch(mbx, MB_CONN_INIT);
++	mbx->mbx_prot_ver = MB_PROTOCOL_VER;
++
++	MBX_INFO(mbx, "successfully initialized");
++	return 0;
++
++failed:
++	mailbox_remove(pdev);
++	return ret;
++}
++
++struct platform_device_id mailbox_id_table[] = {
++	{ XOCL_MAILBOX, 0 },
++	{ },
++};
++
++static struct platform_driver mailbox_driver = {
++	.probe		= mailbox_probe,
++	.remove		= mailbox_remove,
++	.driver		= {
++		.name	= XOCL_MAILBOX,
++	},
++	.id_table = mailbox_id_table,
++};
++
++int __init xocl_init_mailbox(void)
++{
++	BUILD_BUG_ON(sizeof(struct mailbox_pkt) != sizeof(u32) * PACKET_SIZE);
++	return platform_driver_register(&mailbox_driver);
++}
++
++void xocl_fini_mailbox(void)
++{
++	platform_driver_unregister(&mailbox_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/mb_scheduler.c b/drivers/gpu/drm/xocl/subdev/mb_scheduler.c
+new file mode 100644
+index 000000000000..b3ed3ae0b41a
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/mb_scheduler.c
+@@ -0,0 +1,3059 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (C) 2018-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors:
++ *    Soren Soe <soren.soe@xilinx.com>
++ */
++
++/*
++ * Kernel Driver Scheduler (KDS) for XRT
++ *
++ * struct xocl_cmd
++ *  - wraps exec BOs create from user space
++ *  - transitions through a number of states
++ *  - initially added to pending command queue
++ *  - consumed by scheduler which manages its execution (state transition)
++ * struct xcol_cu
++ *  - compute unit for executing commands
++ *  - used only without embedded scheduler (ert)
++ *  - talks to HW compute units
++ * struct xocl_ert
++ *  - embedded scheduler for executing commands on ert
++ *  - talks to HW ERT
++ * struct exec_core
++ *  - execution core managing execution on one device
++ * struct xocl_scheduler
++ *  - manages execution of cmds on one or more exec cores
++ *  - executed in a separate kernel thread
++ *  - loops repeatedly when there is work to do
++ *  - moves pending commands into a scheduler command queue
++ *
++ * [new -> pending]. The xocl API adds exec BOs to KDS.	 The exec BOs are
++ * wrapped in a xocl_cmd object and added to a pending command queue.
++ *
++ * [pending -> queued]. Scheduler loops repeatedly and copies pending commands
++ * to its own command queue, then managaes command execution on one or more
++ * execution cores.
++ *
++ * [queued -> submitted]. Commands are submitted for execution on execution
++ * core when the core has room for new commands.
++ *
++ * [submitted -> running]. Once submitted, a command is transition by
++ * scheduler into running state when there is an available compute unit (no
++ * ert) or if ERT is used, then when ERT has room.
++ *
++ * [running -> complete]. Commands running on ERT complete by sending an
++ * interrupt to scheduler.  When ERT is not used, commands are running on a
++ * compute unit and are polled for completion.
++ */
++
++#include <linux/bitmap.h>
++#include <linux/list.h>
++#include <linux/eventfd.h>
++#include <linux/kthread.h>
++#include "../ert.h"
++#include "../xocl_drv.h"
++#include "../userpf/common.h"
++
++//#define SCHED_VERBOSE
++
++#if defined(__GNUC__)
++#define SCHED_UNUSED __attribute__((unused))
++#endif
++
++#define sched_debug_packet(packet, size)				\
++({									\
++	int i;								\
++	u32 *data = (u32 *)packet;					\
++	for (i = 0; i < size; ++i)					    \
++		DRM_INFO("packet(0x%p) data[%d] = 0x%x\n", data, i, data[i]); \
++})
++
++#ifdef SCHED_VERBOSE
++# define SCHED_DEBUG(msg) DRM_INFO(msg)
++# define SCHED_DEBUGF(format, ...) DRM_INFO(format, ##__VA_ARGS__)
++# define SCHED_PRINTF(format, ...) DRM_INFO(format, ##__VA_ARGS__)
++# define SCHED_DEBUG_PACKET(packet, size) sched_debug_packet(packet, size)
++#else
++# define SCHED_DEBUG(msg)
++# define SCHED_DEBUGF(format, ...)
++# define SCHED_PRINTF(format, ...) DRM_INFO(format, ##__VA_ARGS__)
++# define SCHED_DEBUG_PACKET(packet, size)
++#endif
++
++/* constants */
++static const unsigned int no_index = -1;
++
++/* FFA	handling */
++static const u32 AP_START    = 0x1;
++static const u32 AP_DONE     = 0x2;
++static const u32 AP_IDLE     = 0x4;
++static const u32 AP_READY    = 0x8;
++static const u32 AP_CONTINUE = 0x10;
++
++/* Forward declaration */
++struct exec_core;
++struct exec_ops;
++struct xocl_scheduler;
++
++static int validate(struct platform_device *pdev, struct client_ctx *client,
++		    const struct drm_xocl_bo *bo);
++static bool exec_is_flush(struct exec_core *exec);
++static void scheduler_wake_up(struct xocl_scheduler *xs);
++static void scheduler_intr(struct xocl_scheduler *xs);
++static void scheduler_decr_poll(struct xocl_scheduler *xs);
++
++/*
++ */
++static void
++xocl_bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits)
++{
++	unsigned int i, halfwords;
++
++	halfwords = DIV_ROUND_UP(nbits, 32);
++	for (i = 0; i < halfwords; i++) {
++		buf[i] = (u32) (bitmap[i/2] & UINT_MAX);
++		if (++i < halfwords)
++			buf[i] = (u32) (bitmap[i/2] >> 32);
++	}
++
++	/* Clear tail bits in last element of array beyond nbits. */
++	if (nbits % BITS_PER_LONG)
++		buf[halfwords - 1] &= (u32) (UINT_MAX >> ((-nbits) & 31));
++}
++
++static void
++xocl_bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned int nbits)
++{
++	unsigned int i, halfwords;
++
++	halfwords = DIV_ROUND_UP(nbits, 32);
++	for (i = 0; i < halfwords; i++) {
++		bitmap[i/2] = (unsigned long) buf[i];
++		if (++i < halfwords)
++			bitmap[i/2] |= ((unsigned long) buf[i]) << 32;
++	}
++
++	/* Clear tail bits in last word beyond nbits. */
++	if (nbits % BITS_PER_LONG)
++		bitmap[(halfwords - 1) / 2] &= BITMAP_LAST_WORD_MASK(nbits);
++}
++
++
++/**
++ * slot_mask_idx() - Slot mask idx index for a given slot_idx
++ *
++ * @slot_idx: Global [0..127] index of a CQ slot
++ * Return: Index of the slot mask containing the slot_idx
++ */
++static inline unsigned int
++slot_mask_idx(unsigned int slot_idx)
++{
++	return slot_idx >> 5;
++}
++
++/**
++ * slot_idx_in_mask() - Index of command queue slot within the mask that contains it
++ *
++ * @slot_idx: Global [0..127] index of a CQ slot
++ * Return: Index of slot within the mask that contains it
++ */
++static inline unsigned int
++slot_idx_in_mask(unsigned int slot_idx)
++{
++	return slot_idx - (slot_mask_idx(slot_idx) << 5);
++}
++
++/**
++ * Command data used by scheduler
++ *
++ * @list: command object moves from pending to commmand queue list
++ * @cu_list: command object is added to CU list when running (penguin only)
++ *
++ * @bo: underlying drm buffer object
++ * @exec: execution device associated with this command
++ * @client: client (user process) context that created this command
++ * @xs: command scheduler responsible for schedulint this command
++ * @state: state of command object per scheduling
++ * @id: unique id for an active command object
++ * @cu_idx: index of CU executing this cmd object; used in penguin mode only
++ * @slot_idx: command queue index of this command object
++ * @wait_count: number of commands that must trigger this command before it can start
++ * @chain_count: number of commands that this command must trigger when it completes
++ * @chain: list of commands to trigger upon completion; maximum chain depth is 8
++ * @deps: list of commands this object depends on, converted to chain when command is queued
++ * @packet: mapped ert packet object from user space
++ */
++struct xocl_cmd {
++	struct list_head cq_list; // scheduler command queue
++	struct list_head rq_list; // exec core running queue
++
++	/* command packet */
++	struct drm_xocl_bo *bo;
++	union {
++		struct ert_packet	    *ecmd;
++		struct ert_start_kernel_cmd *kcmd;
++	};
++
++	DECLARE_BITMAP(cu_bitmap, MAX_CUS);
++
++	struct xocl_dev	  *xdev;
++	struct exec_core  *exec;
++	struct client_ctx *client;
++	struct xocl_scheduler *xs;
++	enum ert_cmd_state state;
++
++	/* dependency handling */
++	unsigned int chain_count;
++	unsigned int wait_count;
++	union {
++		struct xocl_cmd *chain[8];
++		struct drm_xocl_bo *deps[8];
++	};
++
++	unsigned long uid;     // unique id for this command
++	unsigned int cu_idx;   // index of CU running this cmd (penguin mode)
++	unsigned int slot_idx; // index in exec core submit queue
++};
++
++/*
++ * List of free xocl_cmd objects.
++ *
++ * @free_cmds: populated with recycled xocl_cmd objects
++ * @cmd_mutex: mutex lock for cmd_list
++ *
++ * Command objects are recycled for later use and only freed when kernel
++ * module is unloaded.
++ */
++static LIST_HEAD(free_cmds);
++static DEFINE_MUTEX(free_cmds_mutex);
++
++/**
++ * delete_cmd_list() - reclaim memory for all allocated command objects
++ */
++static void
++cmd_list_delete(void)
++{
++	struct xocl_cmd *xcmd;
++	struct list_head *pos, *next;
++
++	mutex_lock(&free_cmds_mutex);
++	list_for_each_safe(pos, next, &free_cmds) {
++		xcmd = list_entry(pos, struct xocl_cmd, cq_list);
++		list_del(pos);
++		kfree(xcmd);
++	}
++	mutex_unlock(&free_cmds_mutex);
++}
++
++/*
++ * opcode() - Command opcode
++ *
++ * @cmd: Command object
++ * Return: Opcode per command packet
++ */
++static inline u32
++cmd_opcode(struct xocl_cmd *xcmd)
++{
++	return xcmd->ecmd->opcode;
++}
++
++/*
++ * type() - Command type
++ *
++ * @cmd: Command object
++ * Return: Type of command
++ */
++static inline u32
++cmd_type(struct xocl_cmd *xcmd)
++{
++	return xcmd->ecmd->type;
++}
++
++/*
++ * exec() - Get execution core
++ */
++static inline struct exec_core *
++cmd_exec(struct xocl_cmd *xcmd)
++{
++	return xcmd->exec;
++}
++
++/*
++ * uid() - Get unique id of command
++ */
++static inline unsigned long
++cmd_uid(struct xocl_cmd *xcmd)
++{
++	return xcmd->uid;
++}
++
++/*
++ */
++static inline unsigned int
++cmd_wait_count(struct xocl_cmd *xcmd)
++{
++	return xcmd->wait_count;
++}
++
++/**
++ * payload_size() - Command payload size
++ *
++ * @xcmd: Command object
++ * Return: Size in number of words of command packet payload
++ */
++static inline unsigned int
++cmd_payload_size(struct xocl_cmd *xcmd)
++{
++	return xcmd->ecmd->count;
++}
++
++/**
++ * cmd_packet_size() - Command packet size
++ *
++ * @xcmd: Command object
++ * Return: Size in number of words of command packet
++ */
++static inline unsigned int
++cmd_packet_size(struct xocl_cmd *xcmd)
++{
++	return cmd_payload_size(xcmd) + 1;
++}
++
++/**
++ * cu_masks() - Number of command packet cu_masks
++ *
++ * @xcmd: Command object
++ * Return: Total number of CU masks in command packet
++ */
++static inline unsigned int
++cmd_cumasks(struct xocl_cmd *xcmd)
++{
++	return 1 + xcmd->kcmd->extra_cu_masks;
++}
++
++/**
++ * regmap_size() - Size of regmap is payload size (n) minus the number of cu_masks
++ *
++ * @xcmd: Command object
++ * Return: Size of register map in number of words
++ */
++static inline unsigned int
++cmd_regmap_size(struct xocl_cmd *xcmd)
++{
++	return cmd_payload_size(xcmd) - cmd_cumasks(xcmd);
++}
++
++/*
++ */
++static inline struct ert_packet*
++cmd_packet(struct xocl_cmd *xcmd)
++{
++	return xcmd->ecmd;
++}
++
++/*
++ */
++static inline u32*
++cmd_regmap(struct xocl_cmd *xcmd)
++{
++	return xcmd->kcmd->data + xcmd->kcmd->extra_cu_masks;
++}
++
++/**
++ * cmd_set_int_state() - Set internal command state used by scheduler only
++ *
++ * @xcmd: command to change internal state on
++ * @state: new command state per ert.h
++ */
++static inline void
++cmd_set_int_state(struct xocl_cmd *xcmd, enum ert_cmd_state state)
++{
++	SCHED_DEBUGF("-> %s(%lu,%d)\n", __func__, xcmd->uid, state);
++	xcmd->state = state;
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/**
++ * cmd_set_state() - Set both internal and external state of a command
++ *
++ * The state is reflected externally through the command packet
++ * as well as being captured in internal state variable
++ *
++ * @xcmd: command object
++ * @state: new state
++ */
++static inline void
++cmd_set_state(struct xocl_cmd *xcmd, enum ert_cmd_state state)
++{
++	SCHED_DEBUGF("->%s(%lu,%d)\n", __func__, xcmd->uid, state);
++	xcmd->state = state;
++	xcmd->ecmd->state = state;
++	SCHED_DEBUGF("<-%s\n", __func__);
++}
++
++/*
++ * update_state() - Update command state if client has aborted
++ */
++static enum ert_cmd_state
++cmd_update_state(struct xocl_cmd *xcmd)
++{
++	if (xcmd->state != ERT_CMD_STATE_RUNNING && xcmd->client->abort) {
++		userpf_info(xcmd->xdev, "aborting stale client cmd(%lu)", xcmd->uid);
++		cmd_set_state(xcmd, ERT_CMD_STATE_ABORT);
++	}
++	if (exec_is_flush(xcmd->exec)) {
++		userpf_info(xcmd->xdev, "aborting stale exec cmd(%lu)", xcmd->uid);
++		cmd_set_state(xcmd, ERT_CMD_STATE_ABORT);
++	}
++	return xcmd->state;
++}
++
++/*
++ * release_gem_object_reference() -
++ */
++static inline void
++cmd_release_gem_object_reference(struct xocl_cmd *xcmd)
++{
++	if (xcmd->bo)
++		drm_gem_object_put_unlocked(&xcmd->bo->base);
++//PORT4_20
++//		drm_gem_object_unreference_unlocked(&xcmd->bo->base);
++}
++
++/*
++ */
++static inline void
++cmd_mark_active(struct xocl_cmd *xcmd)
++{
++	if (xcmd->bo)
++		xcmd->bo->metadata.active = xcmd;
++}
++
++/*
++ */
++static inline void
++cmd_mark_deactive(struct xocl_cmd *xcmd)
++{
++	if (xcmd->bo)
++		xcmd->bo->metadata.active = NULL;
++}
++
++/**
++ * chain_dependencies() - Chain this command to its dependencies
++ *
++ * @xcmd: Command to chain to its dependencies
++ *
++ * This function looks at all incoming explicit BO dependencies, checks if a
++ * corresponding xocl_cmd object exists (is active) in which case that command
++ * object must chain argument xcmd so that it (xcmd) can be triggered when
++ * dependency completes.  The chained command has a wait count corresponding to
++ * the number of dependencies that are active.
++ */
++static int
++cmd_chain_dependencies(struct xocl_cmd *xcmd)
++{
++	int didx;
++	int dcount = xcmd->wait_count;
++
++	SCHED_DEBUGF("-> chain_dependencies of xcmd(%lu)\n", xcmd->uid);
++	for (didx = 0; didx < dcount; ++didx) {
++		struct drm_xocl_bo *dbo = xcmd->deps[didx];
++		struct xocl_cmd *chain_to = dbo->metadata.active;
++		// release reference created in ioctl call when dependency was looked up
++		// see comments in xocl_ioctl.c:xocl_execbuf_ioctl()
++//PORT4_20
++//		drm_gem_object_unreference_unlocked(&dbo->base);
++		drm_gem_object_put_unlocked(&dbo->base);
++		xcmd->deps[didx] = NULL;
++		if (!chain_to) { /* command may have completed already */
++			--xcmd->wait_count;
++			continue;
++		}
++		if (chain_to->chain_count >= MAX_DEPS) {
++			DRM_INFO("chain count exceeded");
++			return 1;
++		}
++		SCHED_DEBUGF("+ xcmd(%lu)->chain[%d]=xcmd(%lu)", chain_to->uid, chain_to->chain_count, xcmd->uid);
++		chain_to->chain[chain_to->chain_count++] = xcmd;
++	}
++	SCHED_DEBUG("<- chain_dependencies\n");
++	return 0;
++}
++
++/**
++ * trigger_chain() - Trigger the execution of any commands chained to argument command
++ *
++ * @xcmd: Completed command that must trigger its chained (waiting) commands
++ *
++ * The argument command has completed and must trigger the execution of all
++ * chained commands whos wait_count is 0.
++ */
++static void
++cmd_trigger_chain(struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("-> trigger_chain xcmd(%lu)\n", xcmd->uid);
++	while (xcmd->chain_count) {
++		struct xocl_cmd *trigger = xcmd->chain[--xcmd->chain_count];
++
++		SCHED_DEBUGF("+ cmd(%lu) triggers cmd(%lu) with wait_count(%d)\n",
++			     xcmd->uid, trigger->uid, trigger->wait_count);
++		// decrement trigger wait count
++		// scheduler will submit when wait count reaches zero
++		--trigger->wait_count;
++	}
++	SCHED_DEBUG("<- trigger_chain\n");
++}
++
++
++/**
++ * cmd_get() - Get a free command object
++ *
++ * Get from free/recycled list or allocate a new command if necessary.
++ *
++ * Return: Free command object
++ */
++static struct xocl_cmd*
++cmd_get(struct xocl_scheduler *xs, struct exec_core *exec, struct client_ctx *client)
++{
++	struct xocl_cmd *xcmd;
++	static unsigned long count;
++
++	mutex_lock(&free_cmds_mutex);
++	xcmd = list_first_entry_or_null(&free_cmds, struct xocl_cmd, cq_list);
++	if (xcmd)
++		list_del(&xcmd->cq_list);
++	mutex_unlock(&free_cmds_mutex);
++	if (!xcmd)
++		xcmd = kmalloc(sizeof(struct xocl_cmd), GFP_KERNEL);
++	if (!xcmd)
++		return ERR_PTR(-ENOMEM);
++	xcmd->uid = count++;
++	xcmd->exec = exec;
++	xcmd->cu_idx = no_index;
++	xcmd->slot_idx = no_index;
++	xcmd->xs = xs;
++	xcmd->xdev = client->xdev;
++	xcmd->client = client;
++	xcmd->bo = NULL;
++	xcmd->ecmd = NULL;
++	atomic_inc(&client->outstanding_execs);
++	SCHED_DEBUGF("xcmd(%lu) xcmd(%p) [-> new ]\n", xcmd->uid, xcmd);
++	return xcmd;
++}
++
++/**
++ * cmd_free() - free a command object
++ *
++ * @xcmd: command object to free (move to freelist)
++ *
++ * The command *is* in some current list (scheduler command queue)
++ */
++static void
++cmd_free(struct xocl_cmd *xcmd)
++{
++	cmd_release_gem_object_reference(xcmd);
++
++	mutex_lock(&free_cmds_mutex);
++	list_move_tail(&xcmd->cq_list, &free_cmds);
++	mutex_unlock(&free_cmds_mutex);
++
++	atomic_dec(&xcmd->xdev->outstanding_execs);
++	atomic_dec(&xcmd->client->outstanding_execs);
++	SCHED_DEBUGF("xcmd(%lu) [-> free]\n", xcmd->uid);
++}
++
++/**
++ * abort_cmd() - abort command object before it becomes pending
++ *
++ * @xcmd: command object to abort (move to freelist)
++ *
++ * Command object is *not* in any current list
++ *
++ * Return: 0
++ */
++static void
++cmd_abort(struct xocl_cmd *xcmd)
++{
++	mutex_lock(&free_cmds_mutex);
++	list_add_tail(&xcmd->cq_list, &free_cmds);
++	mutex_unlock(&free_cmds_mutex);
++	SCHED_DEBUGF("xcmd(%lu) [-> abort]\n", xcmd->uid);
++}
++
++/*
++ * cmd_bo_init() - Initialize a command object with an exec BO
++ *
++ * In penguin mode, the command object caches the CUs available
++ * to execute the command.  When ERT is enabled, the CU info
++ * is not used.
++ */
++static void
++cmd_bo_init(struct xocl_cmd *xcmd, struct drm_xocl_bo *bo,
++	    int numdeps, struct drm_xocl_bo **deps, int penguin)
++{
++	SCHED_DEBUGF("%s(%lu,bo,%d,deps,%d)\n", __func__, xcmd->uid, numdeps, penguin);
++	xcmd->bo = bo;
++	xcmd->ecmd = (struct ert_packet *)bo->vmapping;
++
++	if (penguin && cmd_opcode(xcmd) == ERT_START_KERNEL) {
++		unsigned int i = 0;
++		u32 cumasks[4] = {0};
++
++		cumasks[0] = xcmd->kcmd->cu_mask;
++		SCHED_DEBUGF("+ xcmd(%lu) cumask[0]=0x%x\n", xcmd->uid, cumasks[0]);
++		for (i = 0; i < xcmd->kcmd->extra_cu_masks; ++i) {
++			cumasks[i+1] = xcmd->kcmd->data[i];
++			SCHED_DEBUGF("+ xcmd(%lu) cumask[%d]=0x%x\n", xcmd->uid, i+1, cumasks[i+1]);
++		}
++		xocl_bitmap_from_arr32(xcmd->cu_bitmap, cumasks, MAX_CUS);
++		SCHED_DEBUGF("cu_bitmap[0] = %lu\n", xcmd->cu_bitmap[0]);
++	}
++
++	// dependencies are copied here, the anticipated wait_count is number
++	// of specified dependencies.  The wait_count is adjusted when the
++	// command is queued in the scheduler based on whether or not a
++	// dependency is active (managed by scheduler)
++	memcpy(xcmd->deps, deps, numdeps*sizeof(struct drm_xocl_bo *));
++	xcmd->wait_count = numdeps;
++	xcmd->chain_count = 0;
++}
++
++/*
++ */
++static void
++cmd_packet_init(struct xocl_cmd *xcmd, struct ert_packet *packet)
++{
++	SCHED_DEBUGF("%s(%lu,packet)\n", __func__, xcmd->uid);
++	xcmd->ecmd = packet;
++}
++
++/*
++ * cmd_has_cu() - Check if this command object can execute on CU
++ *
++ * @cuidx: the index of the CU.	 Note that CU indicies start from 0.
++ */
++static int
++cmd_has_cu(struct xocl_cmd *xcmd, unsigned int cuidx)
++{
++	SCHED_DEBUGF("%s(%lu,%d) = %d\n", __func__, xcmd->uid, cuidx, test_bit(cuidx, xcmd->cu_bitmap));
++	return test_bit(cuidx, xcmd->cu_bitmap);
++}
++
++/*
++ * struct xocl_cu: Represents a compute unit in penguin mode
++ *
++ * @running_queue: a fifo representing commands running on this CU
++ * @xdev: the xrt device with this CU
++ * @idx: index of this CU
++ * @base: exec base address of this CU
++ * @addr: base address of this CU
++ * @ctrlreg: state of the CU (value of AXI-lite control register)
++ * @done_cnt: number of command that have completed (<=running_queue.size())
++ *
++ */
++struct xocl_cu {
++	struct list_head   running_queue;
++	unsigned int idx;
++	void __iomem *base;
++	u32 addr;
++
++	u32 ctrlreg;
++	unsigned int done_cnt;
++	unsigned int run_cnt;
++	unsigned int uid;
++};
++
++/*
++ */
++void
++cu_reset(struct xocl_cu *xcu, unsigned int idx, void __iomem *base, u32 addr)
++{
++	xcu->idx = idx;
++	xcu->base = base;
++	xcu->addr = addr;
++	xcu->ctrlreg = 0;
++	xcu->done_cnt = 0;
++	xcu->run_cnt = 0;
++	SCHED_DEBUGF("%s(uid:%d,idx:%d) @ 0x%x\n", __func__, xcu->uid, xcu->idx, xcu->addr);
++}
++
++/*
++ */
++struct xocl_cu *
++cu_create(void)
++{
++	struct xocl_cu *xcu = kmalloc(sizeof(struct xocl_cu), GFP_KERNEL);
++	static unsigned int uid;
++
++	INIT_LIST_HEAD(&xcu->running_queue);
++	xcu->uid = uid++;
++	SCHED_DEBUGF("%s(uid:%d)\n", __func__, xcu->uid);
++	return xcu;
++}
++
++static inline u32
++cu_base_addr(struct xocl_cu *xcu)
++{
++	return xcu->addr;
++}
++
++/*
++ */
++void
++cu_destroy(struct xocl_cu *xcu)
++{
++	SCHED_DEBUGF("%s(uid:%d)\n", __func__, xcu->uid);
++	kfree(xcu);
++}
++
++/*
++ */
++void
++cu_poll(struct xocl_cu *xcu)
++{
++	// assert !list_empty(&running_queue)
++	xcu->ctrlreg = ioread32(xcu->base + xcu->addr);
++	SCHED_DEBUGF("%s(%d) 0x%x done(%d) run(%d)\n", __func__, xcu->idx, xcu->ctrlreg, xcu->done_cnt, xcu->run_cnt);
++	if (xcu->ctrlreg & AP_DONE) {
++		++xcu->done_cnt; // assert done_cnt <= |running_queue|
++		--xcu->run_cnt;
++		// acknowledge done
++		iowrite32(AP_CONTINUE, xcu->base + xcu->addr);
++	}
++}
++
++/*
++ * cu_ready() - Check if CU is ready to start another command
++ *
++ * The CU is ready when AP_START is low
++ */
++static int
++cu_ready(struct xocl_cu *xcu)
++{
++	if (xcu->ctrlreg & AP_START)
++		cu_poll(xcu);
++
++	SCHED_DEBUGF("%s(%d) returns %d\n", __func__, xcu->idx, !(xcu->ctrlreg & AP_START));
++	return !(xcu->ctrlreg & AP_START);
++}
++
++/*
++ * cu_first_done() - Get the first completed command from the running queue
++ *
++ * Return: The first command that has completed or nullptr if none
++ */
++static struct xocl_cmd*
++cu_first_done(struct xocl_cu *xcu)
++{
++	if (!xcu->done_cnt)
++		cu_poll(xcu);
++
++	SCHED_DEBUGF("%s(%d) has done_cnt %d\n", __func__, xcu->idx, xcu->done_cnt);
++
++	return xcu->done_cnt
++		? list_first_entry(&xcu->running_queue, struct xocl_cmd, rq_list)
++		: NULL;
++}
++
++/*
++ * cu_pop_done() - Remove first element from running queue
++ */
++static void
++cu_pop_done(struct xocl_cu *xcu)
++{
++	struct xocl_cmd *xcmd;
++
++	if (!xcu->done_cnt)
++		return;
++	xcmd = list_first_entry(&xcu->running_queue, struct xocl_cmd, rq_list);
++	list_del(&xcmd->rq_list);
++	--xcu->done_cnt;
++	SCHED_DEBUGF("%s(%d) xcmd(%lu) done(%d) run(%d)\n", __func__, xcu->idx, xcmd->uid, xcu->done_cnt, xcu->run_cnt);
++}
++
++/*
++ * cu_start() - Start the CU with a new command.
++ *
++ * The command is pushed onto the running queue
++ */
++static int
++cu_start(struct xocl_cu *xcu, struct xocl_cmd *xcmd)
++{
++	// assert(!(ctrlreg & AP_START), "cu not ready");
++
++	// data past header and cu_masks
++	unsigned int size = cmd_regmap_size(xcmd);
++	u32 *regmap = cmd_regmap(xcmd);
++	unsigned int i;
++
++	// past header, past cumasks
++	SCHED_DEBUG_PACKET(regmap, size);
++
++	// write register map, starting at base + 0xC
++	// 0x4, 0x8 used for interrupt, which is initialized in setu
++	for (i = 1; i < size; ++i)
++		iowrite32(*(regmap + i), xcu->base + xcu->addr + (i << 2));
++
++	// start cu.  update local state as we may not be polling prior
++	// to next ready check.
++	xcu->ctrlreg |= AP_START;
++	iowrite32(AP_START, xcu->base + xcu->addr);
++
++	// add cmd to end of running queue
++	list_add_tail(&xcmd->rq_list, &xcu->running_queue);
++	++xcu->run_cnt;
++
++	SCHED_DEBUGF("%s(%d) started xcmd(%lu) done(%d) run(%d)\n",
++		     __func__, xcu->idx, xcmd->uid, xcu->done_cnt, xcu->run_cnt);
++
++	return true;
++}
++
++
++/*
++ * sruct xocl_ert: Represents embedded scheduler in ert mode
++ */
++struct xocl_ert {
++	void __iomem *base;
++	u32	     cq_addr;
++	unsigned int uid;
++
++	unsigned int slot_size;
++	unsigned int cq_intr;
++};
++
++/*
++ */
++struct xocl_ert *
++ert_create(void __iomem *base, u32 cq_addr)
++{
++	struct xocl_ert *xert = kmalloc(sizeof(struct xocl_ert), GFP_KERNEL);
++	static unsigned int uid;
++
++	xert->base = base;
++	xert->cq_addr = cq_addr;
++	xert->uid = uid++;
++	xert->slot_size = 0;
++	xert->cq_intr = false;
++	SCHED_DEBUGF("%s(%d,0x%x)\n", __func__, xert->uid, xert->cq_addr);
++	return xert;
++}
++
++/*
++ */
++static void
++ert_destroy(struct xocl_ert *xert)
++{
++	SCHED_DEBUGF("%s(%d)\n", __func__, xert->uid);
++	kfree(xert);
++}
++
++/*
++ */
++static void
++ert_cfg(struct xocl_ert *xert, unsigned int slot_size, unsigned int cq_intr)
++{
++	SCHED_DEBUGF("%s(%d) slot_size(%d) cq_intr(%d)\n", __func__, xert->uid, slot_size, cq_intr);
++	xert->slot_size = slot_size;
++	xert->cq_intr = cq_intr;
++}
++
++/*
++ */
++static bool
++ert_start_cmd(struct xocl_ert *xert, struct xocl_cmd *xcmd)
++{
++	u32 slot_addr = xert->cq_addr + xcmd->slot_idx * xert->slot_size;
++	struct ert_packet *ecmd = cmd_packet(xcmd);
++
++	SCHED_DEBUG_PACKET(ecmd, cmd_packet_size(xcmd));
++
++	SCHED_DEBUGF("-> %s(%d,%lu)\n", __func__, xert->uid, xcmd->uid);
++
++	// write packet minus header
++	SCHED_DEBUGF("++ slot_idx=%d, slot_addr=0x%x\n", xcmd->slot_idx, slot_addr);
++	memcpy_toio(xert->base + slot_addr + 4, ecmd->data, (cmd_packet_size(xcmd) - 1) * sizeof(u32));
++
++	// write header
++	iowrite32(ecmd->header, xert->base + slot_addr);
++
++	// trigger interrupt to embedded scheduler if feature is enabled
++	if (xert->cq_intr) {
++		u32 cq_int_addr = ERT_CQ_STATUS_REGISTER_ADDR + (slot_mask_idx(xcmd->slot_idx) << 2);
++		u32 mask = 1 << slot_idx_in_mask(xcmd->slot_idx);
++
++		SCHED_DEBUGF("++ mb_submit writes slot mask 0x%x to CQ_INT register at addr 0x%x\n",
++			     mask, cq_int_addr);
++		iowrite32(mask, xert->base + cq_int_addr);
++	}
++	SCHED_DEBUGF("<- %s returns true\n", __func__);
++	return true;
++}
++
++/*
++ */
++static void
++ert_read_custat(struct xocl_ert *xert, unsigned int num_cus, u32 *cu_usage, struct xocl_cmd *xcmd)
++{
++	u32 slot_addr = xert->cq_addr + xcmd->slot_idx*xert->slot_size;
++
++	memcpy_fromio(cu_usage, xert->base + slot_addr + 4, num_cus * sizeof(u32));
++}
++
++/**
++ * struct exec_ops: scheduler specific operations
++ *
++ * Scheduler can operate in MicroBlaze mode (mb/ert) or in penguin mode. This
++ * struct differentiates specific operations.  The struct is per device node,
++ * meaning that one device can operate in ert mode while another can operate
++ * in penguin mode.
++ */
++struct exec_ops {
++	bool (*start)(struct exec_core *exec, struct xocl_cmd *xcmd);
++	void (*query)(struct exec_core *exec, struct xocl_cmd *xcmd);
++};
++
++static struct exec_ops ert_ops;
++static struct exec_ops penguin_ops;
++
++/**
++ * struct exec_core: Core data structure for command execution on a device
++ *
++ * @ctx_list: Context list populated with device context
++ * @exec_lock: Lock for synchronizing external access
++ * @poll_wait_queue: Wait queue for device polling
++ * @scheduler: Command queue scheduler
++ * @submitted_cmds: Tracking of command submitted for execution on this device
++ * @num_slots: Number of command queue slots
++ * @num_cus: Number of CUs in loaded program
++ * @num_cdma: Number of CDMAs in hardware
++ * @polling_mode: If set then poll for command completion
++ * @cq_interrupt: If set then trigger interrupt to MB on new commands
++ * @configured: Flag to indicate that the core data structure has been initialized
++ * @stopped: Flag to indicate that the core data structure cannot be used
++ * @flush: Flag to indicate that commands for this device should be flushed
++ * @cu_usage: Usage count since last reset
++ * @slot_status: Bitmap to track status (busy(1)/free(0)) slots in command queue
++ * @ctrl_busy: Flag to indicate that slot 0 (ctrl commands) is busy
++ * @cu_status: Bitmap to track status (busy(1)/free(0)) of CUs. Unused in ERT mode.
++ * @sr0: If set, then status register [0..31] is pending with completed commands (ERT only).
++ * @sr1: If set, then status register [32..63] is pending with completed commands (ERT only).
++ * @sr2: If set, then status register [64..95] is pending with completed commands (ERT only).
++ * @sr3: If set, then status register [96..127] is pending with completed commands (ERT only).
++ * @ops: Scheduler operations vtable
++ */
++struct exec_core {
++	struct platform_device	   *pdev;
++
++	struct mutex		   exec_lock;
++
++	void __iomem		   *base;
++	u32			   intr_base;
++	u32			   intr_num;
++
++	wait_queue_head_t	   poll_wait_queue;
++
++	struct xocl_scheduler	   *scheduler;
++
++	uuid_t			   xclbin_id;
++
++	unsigned int		   num_slots;
++	unsigned int		   num_cus;
++	unsigned int		   num_cdma;
++	unsigned int		   polling_mode;
++	unsigned int		   cq_interrupt;
++	unsigned int		   configured;
++	unsigned int		   stopped;
++	unsigned int		   flush;
++
++	struct xocl_cu		   *cus[MAX_CUS];
++	struct xocl_ert		   *ert;
++
++	u32			   cu_usage[MAX_CUS];
++
++	// Bitmap tracks busy(1)/free(0) slots in cmd_slots
++	struct xocl_cmd		   *submitted_cmds[MAX_SLOTS];
++	DECLARE_BITMAP(slot_status, MAX_SLOTS);
++	unsigned int		   ctrl_busy;
++
++	// Status register pending complete.  Written by ISR,
++	// cleared by scheduler
++	atomic_t		   sr0;
++	atomic_t		   sr1;
++	atomic_t		   sr2;
++	atomic_t		   sr3;
++
++	// Operations for dynamic indirection dependt on MB
++	// or kernel scheduler
++	struct exec_ops		   *ops;
++
++	unsigned int		   uid;
++	unsigned int		   ip_reference[MAX_CUS];
++};
++
++/**
++ * exec_get_pdev() -
++ */
++static inline struct platform_device *
++exec_get_pdev(struct exec_core *exec)
++{
++	return exec->pdev;
++}
++
++/**
++ * exec_get_xdev() -
++ */
++static inline struct xocl_dev *
++exec_get_xdev(struct exec_core *exec)
++{
++	return xocl_get_xdev(exec->pdev);
++}
++
++/*
++ */
++static inline bool
++exec_is_ert(struct exec_core *exec)
++{
++	return exec->ops == &ert_ops;
++}
++
++/*
++ */
++static inline bool
++exec_is_polling(struct exec_core *exec)
++{
++	return exec->polling_mode;
++}
++
++/*
++ */
++static inline bool
++exec_is_flush(struct exec_core *exec)
++{
++	return exec->flush;
++}
++
++/*
++ */
++static inline u32
++exec_cu_base_addr(struct exec_core *exec, unsigned int cuidx)
++{
++	return cu_base_addr(exec->cus[cuidx]);
++}
++
++/*
++ */
++static inline u32
++exec_cu_usage(struct exec_core *exec, unsigned int cuidx)
++{
++	return exec->cu_usage[cuidx];
++}
++
++/*
++ */
++static void
++exec_cfg(struct exec_core *exec)
++{
++}
++
++/*
++ * to be automated
++ */
++static int
++exec_cfg_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	struct xocl_dev *xdev = exec_get_xdev(exec);
++	struct client_ctx *client = xcmd->client;
++	bool ert = xocl_mb_sched_on(xdev);
++	uint32_t *cdma = xocl_cdma_addr(xdev);
++	unsigned int dsa = xocl_dsa_version(xdev);
++	struct ert_configure_cmd *cfg;
++	int cuidx = 0;
++
++	/* Only allow configuration with one live ctx */
++	if (exec->configured) {
++		DRM_INFO("command scheduler is already configured for this device\n");
++		return 1;
++	}
++
++	DRM_INFO("ert per feature rom = %d\n", ert);
++	DRM_INFO("dsa per feature rom = %d\n", dsa);
++
++	cfg = (struct ert_configure_cmd *)(xcmd->ecmd);
++
++	/* Mark command as control command to force slot 0 execution */
++	cfg->type = ERT_CTRL;
++
++	if (cfg->count != 5 + cfg->num_cus) {
++		DRM_INFO("invalid configure command, count=%d expected 5+num_cus(%d)\n", cfg->count, cfg->num_cus);
++		return 1;
++	}
++
++	SCHED_DEBUG("configuring scheduler\n");
++	exec->num_slots = ERT_CQ_SIZE / cfg->slot_size;
++	exec->num_cus = cfg->num_cus;
++	exec->num_cdma = 0;
++
++	// skip this in polling mode
++	for (cuidx = 0; cuidx < exec->num_cus; ++cuidx) {
++		struct xocl_cu *xcu = exec->cus[cuidx];
++
++		if (!xcu)
++			xcu = exec->cus[cuidx] = cu_create();
++		cu_reset(xcu, cuidx, exec->base, cfg->data[cuidx]);
++		userpf_info(xdev, "%s cu(%d) at 0x%x\n", __func__, xcu->idx, xcu->addr);
++	}
++
++	if (cdma) {
++		uint32_t *addr = 0;
++
++		mutex_lock(&client->lock); /* for modification to client cu_bitmap */
++		for (addr = cdma; addr < cdma+4; ++addr) { /* 4 is from xclfeatures.h */
++			if (*addr) {
++				struct xocl_cu *xcu = exec->cus[cuidx];
++
++				if (!xcu)
++					xcu = exec->cus[cuidx] = cu_create();
++				cu_reset(xcu, cuidx, exec->base, *addr);
++				++exec->num_cus;
++				++exec->num_cdma;
++				++cfg->num_cus;
++				++cfg->count;
++				cfg->data[cuidx] = *addr;
++				set_bit(cuidx, client->cu_bitmap); /* cdma is shared */
++				userpf_info(xdev, "configure cdma as cu(%d) at 0x%x\n", cuidx, *addr);
++				++cuidx;
++			}
++		}
++		mutex_unlock(&client->lock);
++	}
++
++	if (ert && cfg->ert) {
++		SCHED_DEBUG("++ configuring embedded scheduler mode\n");
++		if (!exec->ert)
++			exec->ert = ert_create(exec->base, ERT_CQ_BASE_ADDR);
++		ert_cfg(exec->ert, cfg->slot_size, cfg->cq_int);
++		exec->ops = &ert_ops;
++		exec->polling_mode = cfg->polling;
++		exec->cq_interrupt = cfg->cq_int;
++		cfg->dsa52 = (dsa >= 52) ? 1 : 0;
++		cfg->cdma = cdma ? 1 : 0;
++	} else {
++		SCHED_DEBUG("++ configuring penguin scheduler mode\n");
++		exec->ops = &penguin_ops;
++		exec->polling_mode = 1;
++	}
++
++	// reserve slot 0 for control commands
++	set_bit(0, exec->slot_status);
++
++	DRM_INFO("scheduler config ert(%d) slots(%d), cudma(%d), cuisr(%d), cdma(%d), cus(%d)\n"
++		 , exec_is_ert(exec)
++		 , exec->num_slots
++		 , cfg->cu_dma ? 1 : 0
++		 , cfg->cu_isr ? 1 : 0
++		 , exec->num_cdma
++		 , exec->num_cus);
++
++	exec->configured = true;
++	return 0;
++}
++
++/**
++ * exec_reset() - Reset the scheduler
++ *
++ * @exec: Execution core (device) to reset
++ *
++ * TODO: Perform scheduler configuration based on current xclbin
++ *	 rather than relying of cfg command
++ */
++static void
++exec_reset(struct exec_core *exec)
++{
++	struct xocl_dev *xdev = exec_get_xdev(exec);
++	uuid_t *xclbin_id;
++
++	mutex_lock(&exec->exec_lock);
++
++	xclbin_id = (uuid_t *)xocl_icap_get_data(xdev, XCLBIN_UUID);
++
++	userpf_info(xdev, "%s(%d) cfg(%d)\n", __func__, exec->uid, exec->configured);
++
++	// only reconfigure the scheduler on new xclbin
++	if (!xclbin_id || (uuid_equal(&exec->xclbin_id, xclbin_id) && exec->configured)) {
++		exec->stopped = false;
++		exec->configured = false;  // TODO: remove, but hangs ERT because of in between AXI resets
++		goto out;
++	}
++
++	userpf_info(xdev, "exec->xclbin(%pUb),xclbin(%pUb)\n", &exec->xclbin_id, xclbin_id);
++	userpf_info(xdev, "%s resets for new xclbin", __func__);
++	memset(exec->cu_usage, 0, MAX_CUS * sizeof(u32));
++	uuid_copy(&exec->xclbin_id, xclbin_id);
++	exec->num_cus = 0;
++	exec->num_cdma = 0;
++
++	exec->num_slots = 16;
++	exec->polling_mode = 1;
++	exec->cq_interrupt = 0;
++	exec->configured = false;
++	exec->stopped = false;
++	exec->flush = false;
++	exec->ops = &penguin_ops;
++
++	bitmap_zero(exec->slot_status, MAX_SLOTS);
++	set_bit(0, exec->slot_status); // reserve for control command
++	exec->ctrl_busy = false;
++
++	atomic_set(&exec->sr0, 0);
++	atomic_set(&exec->sr1, 0);
++	atomic_set(&exec->sr2, 0);
++	atomic_set(&exec->sr3, 0);
++
++	exec_cfg(exec);
++
++out:
++	mutex_unlock(&exec->exec_lock);
++}
++
++/**
++ * exec_stop() - Stop the scheduler from scheduling commands on this core
++ *
++ * @exec:  Execution core (device) to stop
++ *
++ * Block access to current exec_core (device).	This API must be called prior
++ * to performing an AXI reset and downloading of a new xclbin.	Calling this
++ * API flushes the commands running on current device and prevents new
++ * commands from being scheduled on the device.	 This effectively prevents any
++ * further commands from running on the device
++ */
++static void
++exec_stop(struct exec_core *exec)
++{
++	int idx;
++	struct xocl_dev *xdev = exec_get_xdev(exec);
++	unsigned int outstanding = 0;
++	unsigned int wait_ms = 100;
++	unsigned int retry = 20;  // 2 sec
++
++	mutex_lock(&exec->exec_lock);
++	userpf_info(xdev, "%s(%p)\n", __func__, exec);
++	exec->stopped = true;
++	mutex_unlock(&exec->exec_lock);
++
++	// Wait for commands to drain if any
++	outstanding = atomic_read(&xdev->outstanding_execs);
++	while (--retry && outstanding) {
++		userpf_info(xdev, "Waiting for %d outstanding commands to finish", outstanding);
++		msleep(wait_ms);
++		outstanding = atomic_read(&xdev->outstanding_execs);
++	}
++
++	// Last gasp, flush any remaining commands for this device exec core
++	// This is an abnormal case.  All exec clients have been destroyed
++	// prior to exec_stop being called (per contract), this implies that
++	// all regular client commands have been flushed.
++	if (outstanding) {
++		// Wake up the scheduler to force one iteration flushing stale
++		// commands for this device
++		exec->flush = 1;
++		scheduler_intr(exec->scheduler);
++
++		// Wait a second
++		msleep(1000);
++	}
++
++	outstanding = atomic_read(&xdev->outstanding_execs);
++	if (outstanding)
++		userpf_err(xdev, "unexpected outstanding commands %d after flush", outstanding);
++
++	// Stale commands were flushed, reset submitted command state
++	for (idx = 0; idx < MAX_SLOTS; ++idx)
++		exec->submitted_cmds[idx] = NULL;
++
++	bitmap_zero(exec->slot_status, MAX_SLOTS);
++	set_bit(0, exec->slot_status); // reserve for control command
++	exec->ctrl_busy = false;
++}
++
++/*
++ */
++static irqreturn_t
++exec_isr(int irq, void *arg)
++{
++	struct exec_core *exec = (struct exec_core *)arg;
++
++	SCHED_DEBUGF("-> xocl_user_event %d\n", irq);
++	if (exec_is_ert(exec) && !exec->polling_mode) {
++
++		if (irq == 0)
++			atomic_set(&exec->sr0, 1);
++		else if (irq == 1)
++			atomic_set(&exec->sr1, 1);
++		else if (irq == 2)
++			atomic_set(&exec->sr2, 1);
++		else if (irq == 3)
++			atomic_set(&exec->sr3, 1);
++
++		/* wake up all scheduler ... currently one only */
++		scheduler_intr(exec->scheduler);
++	} else {
++		userpf_err(exec_get_xdev(exec), "Unhandled isr irq %d, is_ert %d, polling %d",
++			   irq, exec_is_ert(exec), exec->polling_mode);
++	}
++	SCHED_DEBUGF("<- xocl_user_event\n");
++	return IRQ_HANDLED;
++}
++
++/*
++ */
++struct exec_core *
++exec_create(struct platform_device *pdev, struct xocl_scheduler *xs)
++{
++	struct exec_core *exec = devm_kzalloc(&pdev->dev, sizeof(struct exec_core), GFP_KERNEL);
++	struct xocl_dev *xdev = xocl_get_xdev(pdev);
++	struct resource *res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	static unsigned int count;
++	unsigned int i;
++
++	if (!exec)
++		return NULL;
++
++	mutex_init(&exec->exec_lock);
++	exec->base = xdev->core.bar_addr;
++
++	exec->intr_base = res->start;
++	exec->intr_num = res->end - res->start + 1;
++	exec->pdev = pdev;
++
++	init_waitqueue_head(&exec->poll_wait_queue);
++	exec->scheduler = xs;
++	exec->uid = count++;
++
++	for (i = 0; i < exec->intr_num; i++) {
++		xocl_user_interrupt_reg(xdev, i+exec->intr_base, exec_isr, exec);
++		xocl_user_interrupt_config(xdev, i + exec->intr_base, true);
++	}
++
++	exec_reset(exec);
++	platform_set_drvdata(pdev, exec);
++
++	SCHED_DEBUGF("%s(%d)\n", __func__, exec->uid);
++
++	return exec;
++}
++
++/*
++ */
++static void
++exec_destroy(struct exec_core *exec)
++{
++	int idx;
++
++	SCHED_DEBUGF("%s(%d)\n", __func__, exec->uid);
++	for (idx = 0; idx < exec->num_cus; ++idx)
++		cu_destroy(exec->cus[idx]);
++	if (exec->ert)
++		ert_destroy(exec->ert);
++	devm_kfree(&exec->pdev->dev, exec);
++}
++
++/*
++ */
++static inline struct xocl_scheduler *
++exec_scheduler(struct exec_core *exec)
++{
++	return exec->scheduler;
++}
++
++/*
++ * acquire_slot_idx() - First available slot index
++ */
++static unsigned int
++exec_acquire_slot_idx(struct exec_core *exec)
++{
++	unsigned int idx = find_first_zero_bit(exec->slot_status, MAX_SLOTS);
++
++	SCHED_DEBUGF("%s(%d) returns %d\n", __func__, exec->uid, idx < exec->num_slots ? idx : no_index);
++	if (idx < exec->num_slots) {
++		set_bit(idx, exec->slot_status);
++		return idx;
++	}
++	return no_index;
++}
++
++
++/**
++ * acquire_slot() - Acquire a slot index for a command
++ *
++ * This function makes a special case for control commands which
++ * must always dispatch to slot 0, otherwise normal acquisition
++ */
++static int
++exec_acquire_slot(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	// slot 0 is reserved for ctrl commands
++	if (cmd_type(xcmd) == ERT_CTRL) {
++		SCHED_DEBUGF("%s(%d,%lu) ctrl cmd\n", __func__, exec->uid, xcmd->uid);
++		if (exec->ctrl_busy)
++			return -1;
++		exec->ctrl_busy = true;
++		return (xcmd->slot_idx = 0);
++	}
++
++	return (xcmd->slot_idx = exec_acquire_slot_idx(exec));
++}
++
++/*
++ * release_slot_idx() - Release specified slot idx
++ */
++static void
++exec_release_slot_idx(struct exec_core *exec, unsigned int slot_idx)
++{
++	clear_bit(slot_idx, exec->slot_status);
++}
++
++/**
++ * release_slot() - Release a slot index for a command
++ *
++ * Special case for control commands that execute in slot 0.  This
++ * slot cannot be marked free ever.
++ */
++static void
++exec_release_slot(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	if (xcmd->slot_idx == no_index)
++		return; // already released
++
++	SCHED_DEBUGF("%s(%d) xcmd(%lu) slotidx(%d)\n",
++		     __func__, exec->uid, xcmd->uid, xcmd->slot_idx);
++	if (cmd_type(xcmd) == ERT_CTRL) {
++		SCHED_DEBUG("+ ctrl cmd\n");
++		exec->ctrl_busy = false;
++	} else {
++		exec_release_slot_idx(exec, xcmd->slot_idx);
++	}
++	xcmd->slot_idx = no_index;
++}
++
++/*
++ * submit_cmd() - Submit command for execution on this core
++ *
++ * Return: true on success, false if command could not be submitted
++ */
++static bool
++exec_submit_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	unsigned int slotidx = exec_acquire_slot(exec, xcmd);
++
++	if (slotidx == no_index)
++		return false;
++	SCHED_DEBUGF("%s(%d,%lu) slotidx(%d)\n", __func__, exec->uid, xcmd->uid, slotidx);
++	exec->submitted_cmds[slotidx] = xcmd;
++	cmd_set_int_state(xcmd, ERT_CMD_STATE_SUBMITTED);
++	return true;
++}
++
++/*
++ * finish_cmd() - Special post processing of commands after execution
++ */
++static int
++exec_finish_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	if (cmd_opcode(xcmd) == ERT_CU_STAT && exec_is_ert(exec))
++		ert_read_custat(exec->ert, exec->num_cus, exec->cu_usage, xcmd);
++	return 0;
++}
++
++/*
++ * execute_write_cmd() - Execute ERT_WRITE commands
++ */
++static int
++exec_execute_write_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	struct ert_packet *ecmd = xcmd->ecmd;
++	unsigned int idx = 0;
++
++	SCHED_DEBUGF("-> %s(%d,%lu)\n", __func__, exec->uid, xcmd->uid);
++	for (idx = 0; idx < ecmd->count - 1; idx += 2) {
++		u32 addr = ecmd->data[idx];
++		u32 val = ecmd->data[idx+1];
++
++		SCHED_DEBUGF("+ exec_write_cmd base[0x%x] = 0x%x\n", addr, val);
++		iowrite32(val, exec->base + addr);
++	}
++	SCHED_DEBUG("<- exec_write\n");
++	return 0;
++}
++
++/*
++ * notify_host() - Notify user space that a command is complete.
++ */
++static void
++exec_notify_host(struct exec_core *exec)
++{
++	struct list_head *ptr;
++	struct client_ctx *entry;
++	struct xocl_dev *xdev = exec_get_xdev(exec);
++
++	SCHED_DEBUGF("-> %s(%d)\n", __func__, exec->uid);
++
++	/* now for each client update the trigger counter in the context */
++	mutex_lock(&xdev->ctx_list_lock);
++	list_for_each(ptr, &xdev->ctx_list) {
++		entry = list_entry(ptr, struct client_ctx, link);
++		atomic_inc(&entry->trigger);
++	}
++	mutex_unlock(&xdev->ctx_list_lock);
++	/* wake up all the clients */
++	wake_up_interruptible(&exec->poll_wait_queue);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/*
++ * exec_cmd_mark_complete() - Move a command to complete state
++ *
++ * Commands are marked complete in two ways
++ *  1. Through polling of CUs or polling of MB status register
++ *  2. Through interrupts from MB
++ *
++ * @xcmd: Command to mark complete
++ *
++ * The external command state is changed to complete and the host
++ * is notified that some command has completed.
++ */
++static void
++exec_mark_cmd_complete(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("-> %s(%d,%lu)\n", __func__, exec->uid, xcmd->uid);
++	if (cmd_type(xcmd) == ERT_CTRL)
++		exec_finish_cmd(exec, xcmd);
++
++	cmd_set_state(xcmd, ERT_CMD_STATE_COMPLETED);
++
++	if (exec->polling_mode)
++		scheduler_decr_poll(exec->scheduler);
++
++	exec_release_slot(exec, xcmd);
++	exec_notify_host(exec);
++
++	// Deactivate command and trigger chain of waiting commands
++	cmd_mark_deactive(xcmd);
++	cmd_trigger_chain(xcmd);
++
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/**
++ * mark_mask_complete() - Move all commands in mask to complete state
++ *
++ * @mask: Bitmask with queried statuses of commands
++ * @mask_idx: Index of the command mask. Used to offset the actual cmd slot index
++ *
++ * Used in ERT mode only.  Currently ERT submitted commands remain in exec
++ * submitted queue as ERT doesn't support data flow
++ */
++static void
++exec_mark_mask_complete(struct exec_core *exec, u32 mask, unsigned int mask_idx)
++{
++	int bit_idx = 0, cmd_idx = 0;
++
++	SCHED_DEBUGF("-> %s(0x%x,%d)\n", __func__, mask, mask_idx);
++	if (!mask)
++		return;
++
++	for (bit_idx = 0, cmd_idx = mask_idx<<5; bit_idx < 32; mask >>= 1, ++bit_idx, ++cmd_idx) {
++		// mask could be -1 when firewall trips, double check
++		// exec->submitted_cmds[cmd_idx] to make sure it's not NULL
++		if ((mask & 0x1) && exec->submitted_cmds[cmd_idx])
++			exec_mark_cmd_complete(exec, exec->submitted_cmds[cmd_idx]);
++	}
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/*
++ * penguin_start_cmd() - Start a command in penguin mode
++ */
++static bool
++exec_penguin_start_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	unsigned int cuidx;
++	u32 opcode = cmd_opcode(xcmd);
++
++	SCHED_DEBUGF("-> %s (%d,%lu) opcode(%d)\n", __func__, exec->uid, xcmd->uid, opcode);
++
++	if (opcode == ERT_WRITE && exec_execute_write_cmd(exec, xcmd)) {
++		cmd_set_state(xcmd, ERT_CMD_STATE_ERROR);
++		return false;
++	}
++
++	if (opcode != ERT_START_CU) {
++		SCHED_DEBUGF("<- %s -> true\n", __func__);
++		return true;
++	}
++
++	// Find a ready CU
++	for (cuidx = 0; cuidx < exec->num_cus; ++cuidx) {
++		struct xocl_cu *xcu = exec->cus[cuidx];
++
++		if (cmd_has_cu(xcmd, cuidx) && cu_ready(xcu) && cu_start(xcu, xcmd)) {
++			exec->submitted_cmds[xcmd->slot_idx] = NULL;
++			++exec->cu_usage[cuidx];
++			exec_release_slot(exec, xcmd);
++			xcmd->cu_idx = cuidx;
++			SCHED_DEBUGF("<- %s -> true\n", __func__);
++			return true;
++		}
++	}
++	SCHED_DEBUGF("<- %s -> false\n", __func__);
++	return false;
++}
++
++/**
++ * penguin_query() - Check command status of argument command
++ *
++ * @xcmd: Command to check
++ *
++ * Function is called in penguin mode (no embedded scheduler).
++ */
++static void
++exec_penguin_query_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	u32 cmdopcode = cmd_opcode(xcmd);
++	u32 cmdtype = cmd_type(xcmd);
++
++	SCHED_DEBUGF("-> %s(%lu) opcode(%d) type(%d) slot_idx=%d\n",
++		     __func__, xcmd->uid, cmdopcode, cmdtype, xcmd->slot_idx);
++
++	if (cmdtype == ERT_KDS_LOCAL || cmdtype == ERT_CTRL)
++		exec_mark_cmd_complete(exec, xcmd);
++	else if (cmdopcode == ERT_START_CU) {
++		struct xocl_cu *xcu = exec->cus[xcmd->cu_idx];
++
++		if (cu_first_done(xcu) == xcmd) {
++			cu_pop_done(xcu);
++			exec_mark_cmd_complete(exec, xcmd);
++		}
++	}
++
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++
++/*
++ * ert_start_cmd() - Start a command on ERT
++ */
++static bool
++exec_ert_start_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	// if (cmd_type(xcmd) == ERT_DATAFLOW)
++	//   exec_penguin_start_cmd(exec,xcmd);
++	return ert_start_cmd(exec->ert, xcmd);
++}
++
++/*
++ * ert_query_cmd() - Check command completion in ERT
++ *
++ * @xcmd: Command to check
++ *
++ * This function is for ERT mode.  In polling mode, check the command status
++ * register containing the slot assigned to the command.  In interrupt mode
++ * check the interrupting status register.  The function checks all commands
++ * in the same command status register as argument command so more than one
++ * command may be marked complete by this function.
++ */
++static void
++exec_ert_query_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	unsigned int cmd_mask_idx = slot_mask_idx(xcmd->slot_idx);
++
++	SCHED_DEBUGF("-> %s(%lu) slot_idx(%d), cmd_mask_idx(%d)\n", __func__, xcmd->uid, xcmd->slot_idx, cmd_mask_idx);
++
++	if (cmd_type(xcmd) == ERT_KDS_LOCAL) {
++		exec_mark_cmd_complete(exec, xcmd);
++		SCHED_DEBUGF("<- %s local command\n", __func__);
++		return;
++	}
++
++	if (exec->polling_mode
++	    || (cmd_mask_idx == 0 && atomic_xchg(&exec->sr0, 0))
++	    || (cmd_mask_idx == 1 && atomic_xchg(&exec->sr1, 0))
++	    || (cmd_mask_idx == 2 && atomic_xchg(&exec->sr2, 0))
++	    || (cmd_mask_idx == 3 && atomic_xchg(&exec->sr3, 0))) {
++		u32 csr_addr = ERT_STATUS_REGISTER_ADDR + (cmd_mask_idx<<2);
++		u32 mask = ioread32(xcmd->exec->base + csr_addr);
++
++		SCHED_DEBUGF("++ %s csr_addr=0x%x mask=0x%x\n", __func__, csr_addr, mask);
++		if (mask)
++			exec_mark_mask_complete(xcmd->exec, mask, cmd_mask_idx);
++	}
++
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/*
++ * start_cmd() - Start execution of a command
++ *
++ * Return: true if successfully started, false otherwise
++ *
++ * Function dispatches based on penguin vs ert mode
++ */
++static bool
++exec_start_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	// assert cmd had been submitted
++	SCHED_DEBUGF("%s(%d,%lu) opcode(%d)\n", __func__, exec->uid, xcmd->uid, cmd_opcode(xcmd));
++
++	if (exec->ops->start(exec, xcmd)) {
++		cmd_set_int_state(xcmd, ERT_CMD_STATE_RUNNING);
++		return true;
++	}
++
++	return false;
++}
++
++/*
++ * query_cmd() - Check status of command
++ *
++ * Function dispatches based on penguin vs ert mode.  In ERT mode
++ * multiple commands can be marked complete by this function.
++ */
++static void
++exec_query_cmd(struct exec_core *exec, struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("%s(%d,%lu)\n", __func__, exec->uid, xcmd->uid);
++	exec->ops->query(exec, xcmd);
++}
++
++
++
++/**
++ * ert_ops: operations for ERT scheduling
++ */
++static struct exec_ops ert_ops = {
++	.start = exec_ert_start_cmd,
++	.query = exec_ert_query_cmd,
++};
++
++/**
++ * penguin_ops: operations for kernel mode scheduling
++ */
++static struct exec_ops penguin_ops = {
++	.start = exec_penguin_start_cmd,
++	.query = exec_penguin_query_cmd,
++};
++
++/*
++ */
++static inline struct exec_core *
++pdev_get_exec(struct platform_device *pdev)
++{
++	return platform_get_drvdata(pdev);
++}
++
++/*
++ */
++static inline struct exec_core *
++dev_get_exec(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++
++	return pdev ? pdev_get_exec(pdev) : NULL;
++}
++
++/*
++ */
++static inline struct xocl_dev *
++dev_get_xdev(struct device *dev)
++{
++	struct exec_core *exec = dev_get_exec(dev);
++
++	return exec ? exec_get_xdev(exec) : NULL;
++}
++
++/**
++ * List of new pending xocl_cmd objects
++ *
++ * @pending_cmds: populated from user space with new commands for buffer objects
++ * @num_pending: number of pending commands
++ *
++ * Scheduler copies pending commands to its private queue when necessary
++ */
++static LIST_HEAD(pending_cmds);
++static DEFINE_MUTEX(pending_cmds_mutex);
++static atomic_t num_pending = ATOMIC_INIT(0);
++
++static void
++pending_cmds_reset(void)
++{
++	/* clear stale command objects if any */
++	while (!list_empty(&pending_cmds)) {
++		struct xocl_cmd *xcmd = list_first_entry(&pending_cmds, struct xocl_cmd, cq_list);
++
++		DRM_INFO("deleting stale pending cmd\n");
++		cmd_free(xcmd);
++	}
++	atomic_set(&num_pending, 0);
++}
++
++/**
++ * struct xocl_sched: scheduler for xocl_cmd objects
++ *
++ * @scheduler_thread: thread associated with this scheduler
++ * @use_count: use count for this scheduler
++ * @wait_queue: conditional wait queue for scheduler thread
++ * @error: set to 1 to indicate scheduler error
++ * @stop: set to 1 to indicate scheduler should stop
++ * @reset: set to 1 to reset the scheduler
++ * @command_queue: list of command objects managed by scheduler
++ * @intc: boolean flag set when there is a pending interrupt for command completion
++ * @poll: number of running commands in polling mode
++ */
++struct xocl_scheduler {
++	struct task_struct	  *scheduler_thread;
++	unsigned int		   use_count;
++
++	wait_queue_head_t	   wait_queue;
++	unsigned int		   error;
++	unsigned int		   stop;
++	unsigned int		   reset;
++
++	struct list_head	   command_queue;
++
++	unsigned int		   intc; /* pending intr shared with isr, word aligned atomic */
++	unsigned int		   poll; /* number of cmds to poll */
++};
++
++static struct xocl_scheduler scheduler0;
++
++static void
++scheduler_reset(struct xocl_scheduler *xs)
++{
++	xs->error = 0;
++	xs->stop = 0;
++	xs->poll = 0;
++	xs->reset = false;
++	xs->intc = 0;
++}
++
++static void
++scheduler_cq_reset(struct xocl_scheduler *xs)
++{
++	while (!list_empty(&xs->command_queue)) {
++		struct xocl_cmd *xcmd = list_first_entry(&xs->command_queue, struct xocl_cmd, cq_list);
++
++		DRM_INFO("deleting stale scheduler cmd\n");
++		cmd_free(xcmd);
++	}
++}
++
++static void
++scheduler_wake_up(struct xocl_scheduler *xs)
++{
++	wake_up_interruptible(&xs->wait_queue);
++}
++
++static void
++scheduler_intr(struct xocl_scheduler *xs)
++{
++	xs->intc = 1;
++	scheduler_wake_up(xs);
++}
++
++static inline void
++scheduler_decr_poll(struct xocl_scheduler *xs)
++{
++	--xs->poll;
++}
++
++
++/**
++ * scheduler_queue_cmds() - Queue any pending commands
++ *
++ * The scheduler copies pending commands to its internal command queue where
++ * is is now in queued state.
++ */
++static void
++scheduler_queue_cmds(struct xocl_scheduler *xs)
++{
++	struct xocl_cmd *xcmd;
++	struct list_head *pos, *next;
++
++	SCHED_DEBUGF("-> %s\n", __func__);
++	mutex_lock(&pending_cmds_mutex);
++	list_for_each_safe(pos, next, &pending_cmds) {
++		xcmd = list_entry(pos, struct xocl_cmd, cq_list);
++		if (xcmd->xs != xs)
++			continue;
++		SCHED_DEBUGF("+ queueing cmd(%lu)\n", xcmd->uid);
++		list_del(&xcmd->cq_list);
++		list_add_tail(&xcmd->cq_list, &xs->command_queue);
++
++		/* chain active dependencies if any to this command object */
++		if (cmd_wait_count(xcmd) && cmd_chain_dependencies(xcmd))
++			cmd_set_state(xcmd, ERT_CMD_STATE_ERROR);
++		else
++			cmd_set_int_state(xcmd, ERT_CMD_STATE_QUEUED);
++
++		/* this command is now active and can chain other commands */
++		cmd_mark_active(xcmd);
++		atomic_dec(&num_pending);
++	}
++	mutex_unlock(&pending_cmds_mutex);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/**
++ * queued_to_running() - Move a command from queued to running state if possible
++ *
++ * @xcmd: Command to start
++ *
++ * Upon success, the command is not necessarily running. In ert mode the
++ * command will have been submitted to the embedded scheduler, whereas in
++ * penguin mode the command has been started on a CU.
++ *
++ * Return: %true if command was submitted to device, %false otherwise
++ */
++static bool
++scheduler_queued_to_submitted(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	struct exec_core *exec = cmd_exec(xcmd);
++	bool retval = false;
++
++	if (cmd_wait_count(xcmd))
++		return false;
++
++	SCHED_DEBUGF("-> %s(%lu) opcode(%d)\n", __func__, xcmd->uid, cmd_opcode(xcmd));
++
++	// configure prior to using the core
++	if (cmd_opcode(xcmd) == ERT_CONFIGURE && exec_cfg_cmd(exec, xcmd)) {
++		cmd_set_state(xcmd, ERT_CMD_STATE_ERROR);
++		return false;
++	}
++
++	// submit the command
++	if (exec_submit_cmd(exec, xcmd)) {
++		if (exec->polling_mode)
++			++xs->poll;
++		retval = true;
++	}
++
++	SCHED_DEBUGF("<- queued_to_submitted returns %d\n", retval);
++
++	return retval;
++}
++
++static bool
++scheduler_submitted_to_running(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	return exec_start_cmd(cmd_exec(xcmd), xcmd);
++}
++
++/**
++ * running_to_complete() - Check status of running commands
++ *
++ * @xcmd: Command is in running state
++ *
++ * When ERT is enabled this function may mark more than just argument
++ * command as complete based on content of command completion register.
++ * Without ERT, only argument command is checked for completion.
++ */
++static void
++scheduler_running_to_complete(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	exec_query_cmd(cmd_exec(xcmd), xcmd);
++}
++
++/**
++ * complete_to_free() - Recycle a complete command objects
++ *
++ * @xcmd: Command is in complete state
++ */
++static void
++scheduler_complete_to_free(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("-> %s(%lu)\n", __func__, xcmd->uid);
++	cmd_free(xcmd);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++static void
++scheduler_error_to_free(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("-> %s(%lu)\n", __func__, xcmd->uid);
++	exec_notify_host(cmd_exec(xcmd));
++	scheduler_complete_to_free(xs, xcmd);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++static void
++scheduler_abort_to_free(struct xocl_scheduler *xs, struct xocl_cmd *xcmd)
++{
++	SCHED_DEBUGF("-> %s(%lu)\n", __func__, xcmd->uid);
++	scheduler_error_to_free(xs, xcmd);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/**
++ * scheduler_iterator_cmds() - Iterate all commands in scheduler command queue
++ */
++static void
++scheduler_iterate_cmds(struct xocl_scheduler *xs)
++{
++	struct list_head *pos, *next;
++
++	SCHED_DEBUGF("-> %s\n", __func__);
++	list_for_each_safe(pos, next, &xs->command_queue) {
++		struct xocl_cmd *xcmd = list_entry(pos, struct xocl_cmd, cq_list);
++
++		cmd_update_state(xcmd);
++		SCHED_DEBUGF("+ processing cmd(%lu)\n", xcmd->uid);
++
++		/* check running first since queued maybe we waiting for cmd slot */
++		if (xcmd->state == ERT_CMD_STATE_QUEUED)
++			scheduler_queued_to_submitted(xs, xcmd);
++		if (xcmd->state == ERT_CMD_STATE_SUBMITTED)
++			scheduler_submitted_to_running(xs, xcmd);
++		if (xcmd->state == ERT_CMD_STATE_RUNNING)
++			scheduler_running_to_complete(xs, xcmd);
++		if (xcmd->state == ERT_CMD_STATE_COMPLETED)
++			scheduler_complete_to_free(xs, xcmd);
++		if (xcmd->state == ERT_CMD_STATE_ERROR)
++			scheduler_error_to_free(xs, xcmd);
++		if (xcmd->state == ERT_CMD_STATE_ABORT)
++			scheduler_abort_to_free(xs, xcmd);
++	}
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
++
++/**
++ * scheduler_wait_condition() - Check status of scheduler wait condition
++ *
++ * Scheduler must wait (sleep) if
++ *   1. there are no pending commands
++ *   2. no pending interrupt from embedded scheduler
++ *   3. no pending complete commands in polling mode
++ *
++ * Return: 1 if scheduler must wait, 0 othewise
++ */
++static int
++scheduler_wait_condition(struct xocl_scheduler *xs)
++{
++	if (kthread_should_stop()) {
++		xs->stop = 1;
++		SCHED_DEBUG("scheduler wakes kthread_should_stop\n");
++		return 0;
++	}
++
++	if (atomic_read(&num_pending)) {
++		SCHED_DEBUG("scheduler wakes to copy new pending commands\n");
++		return 0;
++	}
++
++	if (xs->intc) {
++		SCHED_DEBUG("scheduler wakes on interrupt\n");
++		xs->intc = 0;
++		return 0;
++	}
++
++	if (xs->poll) {
++		SCHED_DEBUG("scheduler wakes to poll\n");
++		return 0;
++	}
++
++	SCHED_DEBUG("scheduler waits ...\n");
++	return 1;
++}
++
++/**
++ * scheduler_wait() - check if scheduler should wait
++ *
++ * See scheduler_wait_condition().
++ */
++static void
++scheduler_wait(struct xocl_scheduler *xs)
++{
++	wait_event_interruptible(xs->wait_queue, scheduler_wait_condition(xs) == 0);
++}
++
++/**
++ * scheduler_loop() - Run one loop of the scheduler
++ */
++static void
++scheduler_loop(struct xocl_scheduler *xs)
++{
++	static unsigned int loop_cnt;
++
++	SCHED_DEBUGF("%s\n", __func__);
++	scheduler_wait(xs);
++
++	if (xs->error)
++		DRM_INFO("scheduler encountered unexpected error\n");
++
++	if (xs->stop)
++		return;
++
++	if (xs->reset) {
++		SCHED_DEBUG("scheduler is resetting after timeout\n");
++		scheduler_reset(xs);
++	}
++
++	/* queue new pending commands */
++	scheduler_queue_cmds(xs);
++
++	/* iterate all commands */
++	scheduler_iterate_cmds(xs);
++
++	// loop 8 times before explicitly yielding
++	if (++loop_cnt == 8) {
++		loop_cnt = 0;
++		schedule();
++	}
++}
++
++/**
++ * scheduler() - Command scheduler thread routine
++ */
++static int
++scheduler(void *data)
++{
++	struct xocl_scheduler *xs = (struct xocl_scheduler *)data;
++
++	while (!xs->stop)
++		scheduler_loop(xs);
++	DRM_INFO("%s:%d %s thread exits with value %d\n", __FILE__, __LINE__, __func__, xs->error);
++	return xs->error;
++}
++
++
++
++/**
++ * add_xcmd() - Add initialized xcmd object to pending command list
++ *
++ * @xcmd: Command to add
++ *
++ * Scheduler copies pending commands to its internal command queue.
++ *
++ * Return: 0 on success
++ */
++static int
++add_xcmd(struct xocl_cmd *xcmd)
++{
++	struct exec_core *exec = xcmd->exec;
++	struct xocl_dev *xdev = xocl_get_xdev(exec->pdev);
++
++	// Prevent stop and reset
++	mutex_lock(&exec->exec_lock);
++
++	SCHED_DEBUGF("-> %s(%lu) pid(%d)\n", __func__, xcmd->uid, pid_nr(task_tgid(current)));
++	SCHED_DEBUGF("+ exec stopped(%d) configured(%d)\n", exec->stopped, exec->configured);
++
++	if (exec->stopped || (!exec->configured && cmd_opcode(xcmd) != ERT_CONFIGURE))
++		goto err;
++
++	cmd_set_state(xcmd, ERT_CMD_STATE_NEW);
++	mutex_lock(&pending_cmds_mutex);
++	list_add_tail(&xcmd->cq_list, &pending_cmds);
++	atomic_inc(&num_pending);
++	mutex_unlock(&pending_cmds_mutex);
++
++	/* wake scheduler */
++	atomic_inc(&xdev->outstanding_execs);
++	atomic64_inc(&xdev->total_execs);
++	scheduler_wake_up(xcmd->xs);
++
++	SCHED_DEBUGF("<- %s ret(0) opcode(%d) type(%d) num_pending(%d)\n",
++		     __func__, cmd_opcode(xcmd), cmd_type(xcmd), atomic_read(&num_pending));
++	mutex_unlock(&exec->exec_lock);
++	return 0;
++
++err:
++	SCHED_DEBUGF("<- %s ret(1) opcode(%d) type(%d) num_pending(%d)\n",
++		     __func__, cmd_opcode(xcmd), cmd_type(xcmd), atomic_read(&num_pending));
++	mutex_unlock(&exec->exec_lock);
++	return 1;
++}
++
++
++/**
++ * add_bo_cmd() - Add a new buffer object command to pending list
++ *
++ * @exec: Targeted device
++ * @client: Client context
++ * @bo: Buffer objects from user space from which new command is created
++ * @numdeps: Number of dependencies for this command
++ * @deps: List of @numdeps dependencies
++ *
++ * Scheduler copies pending commands to its internal command queue.
++ *
++ * Return: 0 on success, 1 on failure
++ */
++static int
++add_bo_cmd(struct exec_core *exec, struct client_ctx *client, struct drm_xocl_bo *bo,
++	   int numdeps, struct drm_xocl_bo **deps)
++{
++	struct xocl_cmd *xcmd = cmd_get(exec_scheduler(exec), exec, client);
++
++	if (!xcmd)
++		return 1;
++
++	SCHED_DEBUGF("-> %s(%lu)\n", __func__, xcmd->uid);
++
++	cmd_bo_init(xcmd, bo, numdeps, deps, !exec_is_ert(exec));
++
++	if (add_xcmd(xcmd))
++		goto err;
++
++	SCHED_DEBUGF("<- %s ret(0) opcode(%d) type(%d)\n", __func__, cmd_opcode(xcmd), cmd_type(xcmd));
++	return 0;
++err:
++	cmd_abort(xcmd);
++	SCHED_DEBUGF("<- %s ret(1) opcode(%d) type(%d)\n", __func__, cmd_opcode(xcmd), cmd_type(xcmd));
++	return 1;
++}
++
++static int
++add_ctrl_cmd(struct exec_core *exec, struct client_ctx *client, struct ert_packet *packet)
++{
++	struct xocl_cmd *xcmd = cmd_get(exec_scheduler(exec), exec, client);
++
++	if (!xcmd)
++		return 1;
++
++	SCHED_DEBUGF("-> %s(%lu)\n", __func__, xcmd->uid);
++
++	cmd_packet_init(xcmd, packet);
++
++	if (add_xcmd(xcmd))
++		goto err;
++
++	SCHED_DEBUGF("<- %s ret(0) opcode(%d) type(%d)\n", __func__, cmd_opcode(xcmd), cmd_type(xcmd));
++	return 0;
++err:
++	cmd_abort(xcmd);
++	SCHED_DEBUGF("<- %s ret(1) opcode(%d) type(%d)\n", __func__, cmd_opcode(xcmd), cmd_type(xcmd));
++	return 1;
++}
++
++
++/**
++ * init_scheduler_thread() - Initialize scheduler thread if necessary
++ *
++ * Return: 0 on success, -errno otherwise
++ */
++static int
++init_scheduler_thread(struct xocl_scheduler *xs)
++{
++	SCHED_DEBUGF("%s use_count=%d\n", __func__, xs->use_count);
++	if (xs->use_count++)
++		return 0;
++
++	init_waitqueue_head(&xs->wait_queue);
++	INIT_LIST_HEAD(&xs->command_queue);
++	scheduler_reset(xs);
++
++	xs->scheduler_thread = kthread_run(scheduler, (void *)xs, "xocl-scheduler-thread0");
++	if (IS_ERR(xs->scheduler_thread)) {
++		int ret = PTR_ERR(xs->scheduler_thread);
++
++		DRM_ERROR(__func__);
++		return ret;
++	}
++	return 0;
++}
++
++/**
++ * fini_scheduler_thread() - Finalize scheduler thread if unused
++ *
++ * Return: 0 on success, -errno otherwise
++ */
++static int
++fini_scheduler_thread(struct xocl_scheduler *xs)
++{
++	int retval = 0;
++
++	SCHED_DEBUGF("%s use_count=%d\n", __func__, xs->use_count);
++	if (--xs->use_count)
++		return 0;
++
++	retval = kthread_stop(xs->scheduler_thread);
++
++	/* clear stale command objects if any */
++	pending_cmds_reset();
++	scheduler_cq_reset(xs);
++
++	/* reclaim memory for allocate command objects */
++	cmd_list_delete();
++
++	return retval;
++}
++
++/**
++ * Entry point for exec buffer.
++ *
++ * Function adds exec buffer to the pending list of commands
++ */
++int
++add_exec_buffer(struct platform_device *pdev, struct client_ctx *client, void *buf,
++		int numdeps, struct drm_xocl_bo **deps)
++{
++	struct exec_core *exec = platform_get_drvdata(pdev);
++	// Add the command to pending list
++	return add_bo_cmd(exec, client, buf, numdeps, deps);
++}
++
++static int
++xocl_client_lock_bitstream_nolock(struct xocl_dev *xdev, struct client_ctx *client)
++{
++	int pid = pid_nr(task_tgid(current));
++	uuid_t *xclbin_id;
++
++	if (client->xclbin_locked)
++		return 0;
++
++	xclbin_id = (uuid_t *)xocl_icap_get_data(xdev, XCLBIN_UUID);
++	if (!xclbin_id || !uuid_equal(xclbin_id, &client->xclbin_id)) {
++		userpf_err(xdev,
++			   "device xclbin does not match context xclbin, cannot obtain lock for process %d",
++			   pid);
++		return 1;
++	}
++
++	if (xocl_icap_lock_bitstream(xdev, &client->xclbin_id, pid) < 0) {
++		userpf_err(xdev, "could not lock bitstream for process %d", pid);
++		return 1;
++	}
++
++	client->xclbin_locked = true;
++	userpf_info(xdev, "process %d successfully locked xcblin", pid);
++	return 0;
++}
++
++static int
++xocl_client_lock_bitstream(struct xocl_dev *xdev, struct client_ctx *client)
++{
++	int ret = 0;
++
++	mutex_lock(&client->lock);	   // protect current client
++	mutex_lock(&xdev->ctx_list_lock);  // protect xdev->xclbin_id
++	ret = xocl_client_lock_bitstream_nolock(xdev, client);
++	mutex_unlock(&xdev->ctx_list_lock);
++	mutex_unlock(&client->lock);
++	return ret;
++}
++
++
++static int
++create_client(struct platform_device *pdev, void **priv)
++{
++	struct client_ctx	*client;
++	struct xocl_dev		*xdev = xocl_get_xdev(pdev);
++	int			ret = 0;
++
++	client = devm_kzalloc(&pdev->dev, sizeof(*client), GFP_KERNEL);
++	if (!client)
++		return -ENOMEM;
++
++	mutex_lock(&xdev->ctx_list_lock);
++
++	if (!xdev->offline) {
++		client->pid = task_tgid(current);
++		mutex_init(&client->lock);
++		client->xclbin_locked = false;
++		client->abort = false;
++		atomic_set(&client->trigger, 0);
++		atomic_set(&client->outstanding_execs, 0);
++		client->num_cus = 0;
++		client->xdev = xocl_get_xdev(pdev);
++		list_add_tail(&client->link, &xdev->ctx_list);
++		*priv =	 client;
++	} else {
++		/* Do not allow new client to come in while being offline. */
++		devm_kfree(&pdev->dev, client);
++		ret = -EBUSY;
++	}
++
++	mutex_unlock(&xdev->ctx_list_lock);
++
++	DRM_INFO("creating scheduler client for pid(%d), ret: %d\n",
++		 pid_nr(task_tgid(current)), ret);
++
++	return ret;
++}
++
++static void destroy_client(struct platform_device *pdev, void **priv)
++{
++	struct client_ctx *client = (struct client_ctx *)(*priv);
++	struct exec_core *exec = platform_get_drvdata(pdev);
++	struct xocl_scheduler *xs = exec_scheduler(exec);
++	struct xocl_dev	*xdev = xocl_get_xdev(pdev);
++	unsigned int	outstanding = atomic_read(&client->outstanding_execs);
++	unsigned int	timeout_loops = 20;
++	unsigned int	loops = 0;
++	int pid = pid_nr(task_tgid(current));
++	unsigned int bit;
++	struct ip_layout *layout = XOCL_IP_LAYOUT(xdev);
++
++	bit = layout
++	  ? find_first_bit(client->cu_bitmap, layout->m_count)
++	  : MAX_CUS;
++
++	/*
++	 * This happens when application exists without formally releasing the
++	 * contexts on CUs. Give up our contexts on CUs and our lock on xclbin.
++	 * Note, that implicit CUs (such as CDMA) do not add to ip_reference.
++	 */
++	while (layout && (bit < layout->m_count)) {
++		if (exec->ip_reference[bit]) {
++			userpf_info(xdev, "CTX reclaim (%pUb, %d, %u)",
++				&client->xclbin_id, pid, bit);
++			exec->ip_reference[bit]--;
++		}
++		bit = find_next_bit(client->cu_bitmap, layout->m_count, bit + 1);
++	}
++	bitmap_zero(client->cu_bitmap, MAX_CUS);
++
++	// force scheduler to abort execs for this client
++	client->abort = true;
++
++	// wait for outstanding execs to finish
++	while (outstanding) {
++		unsigned int new;
++
++		userpf_info(xdev, "waiting for %d outstanding execs to finish", outstanding);
++		msleep(500);
++		new = atomic_read(&client->outstanding_execs);
++		loops = (new == outstanding ? (loops + 1) : 0);
++		if (loops == timeout_loops) {
++			userpf_err(xdev,
++				   "Giving up with %d outstanding execs, please reset device with 'xbutil reset'\n",
++				   outstanding);
++			xdev->needs_reset = true;
++			// reset the scheduler loop
++			xs->reset = true;
++			break;
++		}
++		outstanding = new;
++	}
++
++	DRM_INFO("client exits pid(%d)\n", pid);
++
++	mutex_lock(&xdev->ctx_list_lock);
++	list_del(&client->link);
++	mutex_unlock(&xdev->ctx_list_lock);
++
++	if (client->xclbin_locked)
++		xocl_icap_unlock_bitstream(xdev, &client->xclbin_id, pid);
++	mutex_destroy(&client->lock);
++	devm_kfree(&pdev->dev, client);
++	*priv = NULL;
++}
++
++static uint poll_client(struct platform_device *pdev, struct file *filp,
++	poll_table *wait, void *priv)
++{
++	struct client_ctx	*client = (struct client_ctx *)priv;
++	struct exec_core	*exec;
++	int			counter;
++	uint			ret = 0;
++
++	exec = platform_get_drvdata(pdev);
++
++	poll_wait(filp, &exec->poll_wait_queue, wait);
++
++	/*
++	 * Mutex lock protects from two threads from the same application
++	 * calling poll concurrently using the same file handle
++	 */
++	mutex_lock(&client->lock);
++	counter = atomic_read(&client->trigger);
++	if (counter > 0) {
++		/*
++		 * Use atomic here since the trigger may be incremented by
++		 * interrupt handler running concurrently.
++		 */
++		atomic_dec(&client->trigger);
++		ret = POLLIN;
++	}
++	mutex_unlock(&client->lock);
++
++	return ret;
++}
++
++static int client_ioctl_ctx(struct platform_device *pdev,
++			    struct client_ctx *client, void *data)
++{
++	bool acquire_lock = false;
++	struct drm_xocl_ctx *args = data;
++	int ret = 0;
++	int pid = pid_nr(task_tgid(current));
++	struct xocl_dev	*xdev = xocl_get_xdev(pdev);
++	struct exec_core *exec = platform_get_drvdata(pdev);
++	uuid_t *xclbin_id;
++
++	mutex_lock(&client->lock);
++	mutex_lock(&xdev->ctx_list_lock);
++	xclbin_id = (uuid_t *)xocl_icap_get_data(xdev, XCLBIN_UUID);
++	if (!xclbin_id || !uuid_equal(xclbin_id, &args->xclbin_id)) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	if (args->cu_index >= XOCL_IP_LAYOUT(xdev)->m_count) {
++		userpf_err(xdev, "cuidx(%d) >= numcus(%d)\n",
++			   args->cu_index, XOCL_IP_LAYOUT(xdev)->m_count);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (args->op == XOCL_CTX_OP_FREE_CTX) {
++		ret = test_and_clear_bit(args->cu_index, client->cu_bitmap) ? 0 : -EINVAL;
++		if (ret) // No context was previously allocated for this CU
++			goto out;
++
++		// CU unlocked explicitly
++		--exec->ip_reference[args->cu_index];
++		if (!--client->num_cus) {
++			// We just gave up the last context, unlock the xclbin
++			ret = xocl_icap_unlock_bitstream(xdev, xclbin_id, pid);
++			client->xclbin_locked = false;
++		}
++		userpf_info(xdev, "CTX del(%pUb, %d, %u)",
++			    xclbin_id, pid, args->cu_index);
++		goto out;
++	}
++
++	if (args->op != XOCL_CTX_OP_ALLOC_CTX) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (args->flags != XOCL_CTX_SHARED) {
++		userpf_err(xdev, "Only shared contexts are supported in this release");
++		ret = -EPERM;
++		goto out;
++	}
++
++	if (!client->num_cus && !client->xclbin_locked)
++		// Process has no other context on any CU yet, hence we need to
++		// lock the xclbin A process uses just one lock for all its ctxs
++		acquire_lock = true;
++
++	if (test_and_set_bit(args->cu_index, client->cu_bitmap)) {
++		userpf_info(xdev, "CTX already allocated by this process");
++		// Context was previously allocated for the same CU,
++		// cannot allocate again
++		ret = 0;
++		goto out;
++	}
++
++	if (acquire_lock) {
++		// This is the first context on any CU for this process,
++		// lock the xclbin
++		ret = xocl_client_lock_bitstream_nolock(xdev, client);
++		if (ret) {
++			// Locking of xclbin failed, give up our context
++			clear_bit(args->cu_index, client->cu_bitmap);
++			goto out;
++		} else {
++			uuid_copy(&client->xclbin_id, xclbin_id);
++		}
++	}
++
++	// Everything is good so far, hence increment the CU reference count
++	++client->num_cus; // explicitly acquired
++	++exec->ip_reference[args->cu_index];
++	xocl_info(&pdev->dev, "CTX add(%pUb, %d, %u, %d)",
++		  xclbin_id, pid, args->cu_index, acquire_lock);
++out:
++	mutex_unlock(&xdev->ctx_list_lock);
++	mutex_unlock(&client->lock);
++	return ret;
++}
++
++static int
++get_bo_paddr(struct xocl_dev *xdev, struct drm_file *filp,
++	     uint32_t bo_hdl, size_t off, size_t size, uint64_t *paddrp)
++{
++	struct drm_device *ddev = filp->minor->dev;
++	struct drm_gem_object *obj;
++	struct drm_xocl_bo *xobj;
++
++	obj = xocl_gem_object_lookup(ddev, filp, bo_hdl);
++	if (!obj) {
++		userpf_err(xdev, "Failed to look up GEM BO 0x%x\n", bo_hdl);
++		return -ENOENT;
++	}
++	xobj = to_xocl_bo(obj);
++
++	if (obj->size <= off || obj->size < off + size || !xobj->mm_node) {
++		userpf_err(xdev, "Failed to get paddr for BO 0x%x\n", bo_hdl);
++//PORT4_20
++//		drm_gem_object_unreference_unlocked(obj);
++		drm_gem_object_put_unlocked(obj);
++		return -EINVAL;
++	}
++
++	*paddrp = xobj->mm_node->start + off;
++//	drm_gem_object_unreference_unlocked(obj);
++	drm_gem_object_put_unlocked(obj);
++	return 0;
++}
++
++static int
++convert_execbuf(struct xocl_dev *xdev, struct drm_file *filp,
++		struct exec_core *exec, struct drm_xocl_bo *xobj)
++{
++	int i;
++	int ret;
++	size_t src_off;
++	size_t dst_off;
++	size_t sz;
++	uint64_t src_addr;
++	uint64_t dst_addr;
++	struct ert_start_copybo_cmd *scmd = (struct ert_start_copybo_cmd *)xobj->vmapping;
++
++	/* Only convert COPYBO cmd for now. */
++	if (scmd->opcode != ERT_START_COPYBO)
++		return 0;
++
++	sz = scmd->size * COPYBO_UNIT;
++
++	src_off = scmd->src_addr_hi;
++	src_off <<= 32;
++	src_off |= scmd->src_addr_lo;
++	ret = get_bo_paddr(xdev, filp, scmd->src_bo_hdl, src_off, sz, &src_addr);
++	if (ret != 0)
++		return ret;
++
++	dst_off = scmd->dst_addr_hi;
++	dst_off <<= 32;
++	dst_off |= scmd->dst_addr_lo;
++	ret = get_bo_paddr(xdev, filp, scmd->dst_bo_hdl, dst_off, sz, &dst_addr);
++	if (ret != 0)
++		return ret;
++
++	ert_fill_copybo_cmd(scmd, 0, 0, src_addr, dst_addr, sz);
++
++	for (i = exec->num_cus - exec->num_cdma; i < exec->num_cus; i++)
++		scmd->cu_mask[i / 32] |= 1 << (i % 32);
++
++	scmd->opcode = ERT_START_CU;
++
++	return 0;
++}
++
++static int
++client_ioctl_execbuf(struct platform_device *pdev,
++		     struct client_ctx *client, void *data, struct drm_file *filp)
++{
++	struct drm_xocl_execbuf *args = data;
++	struct drm_xocl_bo *xobj;
++	struct drm_gem_object *obj;
++	struct drm_xocl_bo *deps[8] = {0};
++	int numdeps = -1;
++	int ret = 0;
++	struct xocl_dev	*xdev = xocl_get_xdev(pdev);
++	struct drm_device *ddev = filp->minor->dev;
++
++	if (xdev->needs_reset) {
++		userpf_err(xdev, "device needs reset, use 'xbutil reset -h'");
++		return -EBUSY;
++	}
++
++	/* Look up the gem object corresponding to the BO handle.
++	 * This adds a reference to the gem object.  The refernece is
++	 * passed to kds or released here if errors occur.
++	 */
++	obj = xocl_gem_object_lookup(ddev, filp, args->exec_bo_handle);
++	if (!obj) {
++		userpf_err(xdev, "Failed to look up GEM BO %d\n",
++		args->exec_bo_handle);
++		return -ENOENT;
++	}
++
++	/* Convert gem object to xocl_bo extension */
++	xobj = to_xocl_bo(obj);
++	if (!xocl_bo_execbuf(xobj) || convert_execbuf(xdev, filp,
++		platform_get_drvdata(pdev), xobj) != 0) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	ret = validate(pdev, client, xobj);
++	if (ret) {
++		userpf_err(xdev, "Exec buffer validation failed\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Copy dependencies from user.	 It is an error if a BO handle specified
++	 * as a dependency does not exists. Lookup gem object corresponding to bo
++	 * handle.  Convert gem object to xocl_bo extension.  Note that the
++	 * gem lookup acquires a reference to the drm object, this reference
++	 * is passed on to the the scheduler via xocl_exec_add_buffer.
++	 */
++	for (numdeps = 0; numdeps < 8 && args->deps[numdeps]; ++numdeps) {
++		struct drm_gem_object *gobj =
++		  xocl_gem_object_lookup(ddev, filp, args->deps[numdeps]);
++		struct drm_xocl_bo *xbo = gobj ? to_xocl_bo(gobj) : NULL;
++
++		if (!gobj)
++			userpf_err(xdev, "Failed to look up GEM BO %d\n",
++				   args->deps[numdeps]);
++		if (!xbo) {
++			ret = -EINVAL;
++			goto out;
++		}
++		deps[numdeps] = xbo;
++	}
++
++	/* acquire lock on xclbin if necessary */
++	ret = xocl_client_lock_bitstream(xdev, client);
++	if (ret) {
++		userpf_err(xdev, "Failed to lock xclbin\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Add exec buffer to scheduler (kds).	The scheduler manages the
++	 * drm object references acquired by xobj and deps.  It is vital
++	 * that the references are released properly.
++	 */
++	ret = add_exec_buffer(pdev, client, xobj, numdeps, deps);
++	if (ret) {
++		userpf_err(xdev, "Failed to add exec buffer to scheduler\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Return here, noting that the gem objects passed to kds have
++	 * references that must be released by kds itself.  User manages
++	 * a regular reference to all BOs returned as file handles.  These
++	 * references are released with the BOs are freed.
++	 */
++	return ret;
++
++out:
++	for (--numdeps; numdeps >= 0; numdeps--)
++		drm_gem_object_put_unlocked(&deps[numdeps]->base);
++//PORT4_20
++//		drm_gem_object_unreference_unlocked(&deps[numdeps]->base);
++	drm_gem_object_put_unlocked(&xobj->base);
++//	drm_gem_object_unreference_unlocked(&xobj->base);
++	return ret;
++}
++
++int
++client_ioctl(struct platform_device *pdev, int op, void *data, void *drm_filp)
++{
++	struct drm_file *filp = drm_filp;
++	struct client_ctx *client = filp->driver_priv;
++	int ret;
++
++	switch (op) {
++	case DRM_XOCL_CTX:
++		ret = client_ioctl_ctx(pdev, client, data);
++		break;
++	case DRM_XOCL_EXECBUF:
++		ret = client_ioctl_execbuf(pdev, client, data, drm_filp);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	return ret;
++}
++/**
++ * reset() - Reset device exec data structure
++ *
++ * @pdev: platform device to reset
++ *
++ * [Current 2018.3 situation:]
++ * This function is currently called from mgmt icap on every AXI is
++ * freeze/unfreeze.  It ensures that the device exec_core state is reset to
++ * same state as was when scheduler was originally probed for the device.
++ * The callback from icap, ensures that scheduler resets the exec core when
++ * multiple processes are already attached to the device but AXI is reset.
++ *
++ * Even though the very first client created for this device also resets the
++ * exec core, it is possible that further resets are necessary.	 For example
++ * in multi-process case, there can be 'n' processes that attach to the
++ * device.  On first client attach the exec core is reset correctly, but now
++ * assume that 'm' of these processes finishes completely before any remaining
++ * (n-m) processes start using the scheduler.  In this case, the n-m clients have
++ * already been created, but icap resets AXI because the xclbin has no
++ * references (arguably this AXI reset is wrong)
++ *
++ * [Work-in-progress:]
++ * Proper contract:
++ *  Pre-condition: xocl_exec_stop has been called before xocl_exec_reset.
++ *  Pre-condition: new bitstream has been downloaded and AXI has been reset
++ */
++static int
++reset(struct platform_device *pdev)
++{
++	struct exec_core *exec = platform_get_drvdata(pdev);
++
++	exec_stop(exec);   // remove when upstream explicitly calls stop()
++	exec_reset(exec);
++	return 0;
++}
++
++/**
++ * stop() - Reset device exec data structure
++ *
++ * This API must be called prior to performing an AXI reset and downloading of
++ * a new xclbin.  Calling this API flushes the commands running on current
++ * device and prevents new commands from being scheduled on the device.	 This
++ * effectively prevents 'xbutil top' from issuing CU_STAT commands while
++ * programming is performed.
++ *
++ * Pre-condition: xocl_client_release has been called, e.g there are no
++ *		  current clients using the bitstream
++ */
++static int
++stop(struct platform_device *pdev)
++{
++	struct exec_core *exec = platform_get_drvdata(pdev);
++
++	exec_stop(exec);
++	return 0;
++}
++
++/**
++ * validate() - Check if requested cmd is valid in the current context
++ */
++static int
++validate(struct platform_device *pdev, struct client_ctx *client, const struct drm_xocl_bo *bo)
++{
++	struct ert_packet *ecmd = (struct ert_packet *)bo->vmapping;
++	struct ert_start_kernel_cmd *scmd = (struct ert_start_kernel_cmd *)bo->vmapping;
++	unsigned int i = 0;
++	u32 ctx_cus[4] = {0};
++	u32 cumasks = 0;
++	int err = 0;
++
++	SCHED_DEBUGF("-> %s(%d)\n", __func__, ecmd->opcode);
++
++	/* cus for start kernel commands only */
++	if (ecmd->opcode != ERT_START_CU)
++		return 0; /* ok */
++
++	/* client context cu bitmap may not change while validating */
++	mutex_lock(&client->lock);
++
++	/* no specific CUs selected, maybe ctx is not used by client */
++	if (bitmap_empty(client->cu_bitmap, MAX_CUS)) {
++		userpf_err(xocl_get_xdev(pdev), "%s found no CUs in ctx\n", __func__);
++		goto out; /* ok */
++	}
++
++	/* Check CUs in cmd BO against CUs in context */
++	cumasks = 1 + scmd->extra_cu_masks;
++	xocl_bitmap_to_arr32(ctx_cus, client->cu_bitmap, cumasks * 32);
++
++	for (i = 0; i < cumasks; ++i) {
++		uint32_t cmd_cus = ecmd->data[i];
++		/* cmd_cus must be subset of ctx_cus */
++		if (cmd_cus & ~ctx_cus[i]) {
++			SCHED_DEBUGF("<- %s(1), CU mismatch in mask(%d) cmd(0x%x) ctx(0x%x)\n",
++				     __func__, i, cmd_cus, ctx_cus[i]);
++			err = 1;
++			goto out; /* error */
++		}
++	}
++
++
++out:
++	mutex_unlock(&client->lock);
++	SCHED_DEBUGF("<- %s(%d) cmd and ctx CUs match\n", __func__, err);
++	return err;
++
++}
++
++struct xocl_mb_scheduler_funcs sche_ops = {
++	.create_client = create_client,
++	.destroy_client = destroy_client,
++	.poll_client = poll_client,
++	.client_ioctl = client_ioctl,
++	.stop = stop,
++	.reset = reset,
++};
++
++/* sysfs */
++static ssize_t
++kds_numcus_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct exec_core *exec = dev_get_exec(dev);
++	unsigned int cus = exec ? exec->num_cus - exec->num_cdma : 0;
++
++	return sprintf(buf, "%d\n", cus);
++}
++static DEVICE_ATTR_RO(kds_numcus);
++
++static ssize_t
++kds_numcdmas_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct xocl_dev *xdev = dev_get_xdev(dev);
++	uint32_t *cdma = xocl_cdma_addr(xdev);
++	unsigned int cdmas = cdma ? 1 : 0; //TBD
++
++	return sprintf(buf, "%d\n", cdmas);
++}
++static DEVICE_ATTR_RO(kds_numcdmas);
++
++static ssize_t
++kds_custat_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct exec_core *exec = dev_get_exec(dev);
++	struct xocl_dev *xdev = exec_get_xdev(exec);
++	struct client_ctx client;
++	struct ert_packet packet;
++	unsigned int count = 0;
++	ssize_t sz = 0;
++
++	// minimum required initialization of client
++	client.abort = false;
++	client.xdev = xdev;
++	atomic_set(&client.trigger, 0);
++	atomic_set(&client.outstanding_execs, 0);
++
++	packet.opcode = ERT_CU_STAT;
++	packet.type = ERT_CTRL;
++	packet.count = 1;  // data[1]
++
++	if (add_ctrl_cmd(exec, &client, &packet) == 0) {
++		int retry = 5;
++
++		SCHED_DEBUGF("-> custat waiting for command to finish\n");
++		// wait for command completion
++		while (--retry && atomic_read(&client.outstanding_execs))
++			msleep(100);
++		if (retry == 0 && atomic_read(&client.outstanding_execs))
++			userpf_info(xdev, "custat unexpected timeout\n");
++		SCHED_DEBUGF("<- custat retry(%d)\n", retry);
++	}
++
++	for (count = 0; count < exec->num_cus; ++count)
++		sz += sprintf(buf+sz, "CU[@0x%x] : %d\n",
++			      exec_cu_base_addr(exec, count),
++			      exec_cu_usage(exec, count));
++	if (sz)
++		buf[sz++] = 0;
++
++	return sz;
++}
++static DEVICE_ATTR_RO(kds_custat);
++
++static struct attribute *kds_sysfs_attrs[] = {
++	&dev_attr_kds_numcus.attr,
++	&dev_attr_kds_numcdmas.attr,
++	&dev_attr_kds_custat.attr,
++	NULL
++};
++
++static const struct attribute_group kds_sysfs_attr_group = {
++	.attrs = kds_sysfs_attrs,
++};
++
++static void
++user_sysfs_destroy_kds(struct platform_device *pdev)
++{
++	sysfs_remove_group(&pdev->dev.kobj, &kds_sysfs_attr_group);
++}
++
++static int
++user_sysfs_create_kds(struct platform_device *pdev)
++{
++	int err = sysfs_create_group(&pdev->dev.kobj, &kds_sysfs_attr_group);
++
++	if (err)
++		userpf_err(xocl_get_xdev(pdev), "create kds attr failed: 0x%x", err);
++	return err;
++}
++
++/**
++ * Init scheduler
++ */
++static int mb_scheduler_probe(struct platform_device *pdev)
++{
++	struct exec_core *exec = exec_create(pdev, &scheduler0);
++
++	if (!exec)
++		return -ENOMEM;
++
++	if (user_sysfs_create_kds(pdev))
++		goto err;
++
++	init_scheduler_thread(&scheduler0);
++	xocl_subdev_register(pdev, XOCL_SUBDEV_MB_SCHEDULER, &sche_ops);
++	platform_set_drvdata(pdev, exec);
++
++	DRM_INFO("command scheduler started\n");
++
++	return 0;
++
++err:
++	devm_kfree(&pdev->dev, exec);
++	return 1;
++}
++
++/**
++ * Fini scheduler
++ */
++static int mb_scheduler_remove(struct platform_device *pdev)
++{
++	struct xocl_dev *xdev;
++	int i;
++	struct exec_core *exec = platform_get_drvdata(pdev);
++
++	SCHED_DEBUGF("-> %s\n", __func__);
++	fini_scheduler_thread(exec_scheduler(exec));
++
++	xdev = xocl_get_xdev(pdev);
++	for (i = 0; i < exec->intr_num; i++) {
++		xocl_user_interrupt_config(xdev, i + exec->intr_base, false);
++		xocl_user_interrupt_reg(xdev, i + exec->intr_base,
++			NULL, NULL);
++	}
++	mutex_destroy(&exec->exec_lock);
++
++	user_sysfs_destroy_kds(pdev);
++	exec_destroy(exec);
++	platform_set_drvdata(pdev, NULL);
++
++	SCHED_DEBUGF("<- %s\n", __func__);
++	DRM_INFO("command scheduler removed\n");
++	return 0;
++}
++
++static struct platform_device_id mb_sche_id_table[] = {
++	{ XOCL_MB_SCHEDULER, 0 },
++	{ },
++};
++
++static struct platform_driver	mb_scheduler_driver = {
++	.probe		= mb_scheduler_probe,
++	.remove		= mb_scheduler_remove,
++	.driver		= {
++		.name = "xocl_mb_sche",
++	},
++	.id_table	= mb_sche_id_table,
++};
++
++int __init xocl_init_mb_scheduler(void)
++{
++	return platform_driver_register(&mb_scheduler_driver);
++}
++
++void xocl_fini_mb_scheduler(void)
++{
++	SCHED_DEBUGF("-> %s\n", __func__);
++	platform_driver_unregister(&mb_scheduler_driver);
++	SCHED_DEBUGF("<- %s\n", __func__);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/microblaze.c b/drivers/gpu/drm/xocl/subdev/microblaze.c
+new file mode 100644
+index 000000000000..38cfbdbb39ef
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/microblaze.c
+@@ -0,0 +1,722 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors: Lizhi.HOu@xilinx.com
 + *
 + */
 +
-+#ifndef __XDMA_BASE_API_H__
-+#define __XDMA_BASE_API_H__
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/vmalloc.h>
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++#define MAX_RETRY	50
++#define RETRY_INTERVAL	100	  //ms
++
++#define	MAX_IMAGE_LEN	0x20000
++
++#define	REG_VERSION		0
++#define	REG_ID			0x4
++#define	REG_STATUS		0x8
++#define	REG_ERR			0xC
++#define	REG_CAP			0x10
++#define	REG_CTL			0x18
++#define	REG_STOP_CONFIRM	0x1C
++#define	REG_CURR_BASE		0x20
++#define	REG_POWER_CHECKSUM	0x1A4
++
++#define	VALID_ID		0x74736574
++
++#define	GPIO_RESET		0x0
++#define	GPIO_ENABLED		0x1
++
++#define	SELF_JUMP(ins)		(((ins) & 0xfc00ffff) == 0xb8000000)
++
++enum ctl_mask {
++	CTL_MASK_CLEAR_POW	= 0x1,
++	CTL_MASK_CLEAR_ERR	= 0x2,
++	CTL_MASK_PAUSE		= 0x4,
++	CTL_MASK_STOP		= 0x8,
++};
++
++enum status_mask {
++	STATUS_MASK_INIT_DONE		= 0x1,
++	STATUS_MASK_STOPPED		= 0x2,
++	STATUS_MASK_PAUSE		= 0x4,
++};
++
++enum cap_mask {
++	CAP_MASK_PM			= 0x1,
++};
++
++enum {
++	MB_STATE_INIT = 0,
++	MB_STATE_RUN,
++	MB_STATE_RESET,
++};
++
++enum {
++	IO_REG,
++	IO_GPIO,
++	IO_IMAGE_MGMT,
++	IO_IMAGE_SCHE,
++	NUM_IOADDR
++};
++
++#define	READ_REG32(mb, off)		\
++	XOCL_READ_REG32(mb->base_addrs[IO_REG] + off)
++#define	WRITE_REG32(mb, val, off)	\
++	XOCL_WRITE_REG32(val, mb->base_addrs[IO_REG] + off)
++
++#define	READ_GPIO(mb, off)		\
++	XOCL_READ_REG32(mb->base_addrs[IO_GPIO] + off)
++#define	WRITE_GPIO(mb, val, off)	\
++	XOCL_WRITE_REG32(val, mb->base_addrs[IO_GPIO] + off)
++
++#define	READ_IMAGE_MGMT(mb, off)		\
++	XOCL_READ_REG32(mb->base_addrs[IO_IMAGE_MGMT] + off)
++
++#define	COPY_MGMT(mb, buf, len)		\
++	xocl_memcpy_toio(mb->base_addrs[IO_IMAGE_MGMT], buf, len)
++#define	COPY_SCHE(mb, buf, len)		\
++	xocl_memcpy_toio(mb->base_addrs[IO_IMAGE_SCHE], buf, len)
++
++struct xocl_mb {
++	struct platform_device	*pdev;
++	void __iomem		*base_addrs[NUM_IOADDR];
++
++	struct device		*hwmon_dev;
++	bool			enabled;
++	u32			state;
++	u32			cap;
++	struct mutex		mb_lock;
++
++	char			*sche_binary;
++	u32			sche_binary_length;
++	char			*mgmt_binary;
++	u32			mgmt_binary_length;
++};
++
++static int mb_stop(struct xocl_mb *mb);
++static int mb_start(struct xocl_mb *mb);
++
++/* sysfs support */
++static void safe_read32(struct xocl_mb *mb, u32 reg, u32 *val)
++{
++	mutex_lock(&mb->mb_lock);
++	if (mb->enabled && mb->state == MB_STATE_RUN)
++		*val = READ_REG32(mb, reg);
++	else
++		*val = 0;
++	mutex_unlock(&mb->mb_lock);
++}
++
++static void safe_write32(struct xocl_mb *mb, u32 reg, u32 val)
++{
++	mutex_lock(&mb->mb_lock);
++	if (mb->enabled && mb->state == MB_STATE_RUN)
++		WRITE_REG32(mb, val, reg);
++	mutex_unlock(&mb->mb_lock);
++}
++
++static ssize_t version_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_VERSION, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(version);
++
++static ssize_t id_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_ID, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(id);
++
++static ssize_t status_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_STATUS, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(status);
++
++static ssize_t error_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_ERR, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(error);
++
++static ssize_t capability_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_CAP, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(capability);
++
++static ssize_t power_checksum_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_POWER_CHECKSUM, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(power_checksum);
++
++static ssize_t pause_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(mb, REG_CTL, &val);
++
++	return sprintf(buf, "%d\n", !!(val & CTL_MASK_PAUSE));
++}
++
++static ssize_t pause_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	if (kstrtou32(buf, 10, &val) == -EINVAL || val > 1)
++		return -EINVAL;
++
++	val = val ? CTL_MASK_PAUSE : 0;
++	safe_write32(mb, REG_CTL, val);
++
++	return count;
++}
++static DEVICE_ATTR_RW(pause);
++
++static ssize_t reset_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct xocl_mb *mb = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	if (kstrtou32(buf, 10, &val) == -EINVAL || val > 1)
++		return -EINVAL;
++
++	if (val) {
++		mb_stop(mb);
++		mb_start(mb);
++	}
++
++	return count;
++}
++static DEVICE_ATTR_WO(reset);
++
++static struct attribute *mb_attrs[] = {
++	&dev_attr_version.attr,
++	&dev_attr_id.attr,
++	&dev_attr_status.attr,
++	&dev_attr_error.attr,
++	&dev_attr_capability.attr,
++	&dev_attr_power_checksum.attr,
++	&dev_attr_pause.attr,
++	&dev_attr_reset.attr,
++	NULL,
++};
++static struct attribute_group mb_attr_group = {
++	.attrs = mb_attrs,
++};
++
++static ssize_t show_mb_pw(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
++	struct xocl_mb *mb = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(mb, REG_CURR_BASE + attr->index * sizeof(u32), &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++
++static SENSOR_DEVICE_ATTR(curr1_highest, 0444, show_mb_pw, NULL, 0);
++static SENSOR_DEVICE_ATTR(curr1_average, 0444, show_mb_pw, NULL, 1);
++static SENSOR_DEVICE_ATTR(curr1_input, 0444, show_mb_pw, NULL, 2);
++static SENSOR_DEVICE_ATTR(curr2_highest, 0444, show_mb_pw, NULL, 3);
++static SENSOR_DEVICE_ATTR(curr2_average, 0444, show_mb_pw, NULL, 4);
++static SENSOR_DEVICE_ATTR(curr2_input, 0444, show_mb_pw, NULL, 5);
++static SENSOR_DEVICE_ATTR(curr3_highest, 0444, show_mb_pw, NULL, 6);
++static SENSOR_DEVICE_ATTR(curr3_average, 0444, show_mb_pw, NULL, 7);
++static SENSOR_DEVICE_ATTR(curr3_input, 0444, show_mb_pw, NULL, 8);
++static SENSOR_DEVICE_ATTR(curr4_highest, 0444, show_mb_pw, NULL, 9);
++static SENSOR_DEVICE_ATTR(curr4_average, 0444, show_mb_pw, NULL, 10);
++static SENSOR_DEVICE_ATTR(curr4_input, 0444, show_mb_pw, NULL, 11);
++static SENSOR_DEVICE_ATTR(curr5_highest, 0444, show_mb_pw, NULL, 12);
++static SENSOR_DEVICE_ATTR(curr5_average, 0444, show_mb_pw, NULL, 13);
++static SENSOR_DEVICE_ATTR(curr5_input, 0444, show_mb_pw, NULL, 14);
++static SENSOR_DEVICE_ATTR(curr6_highest, 0444, show_mb_pw, NULL, 15);
++static SENSOR_DEVICE_ATTR(curr6_average, 0444, show_mb_pw, NULL, 16);
++static SENSOR_DEVICE_ATTR(curr6_input, 0444, show_mb_pw, NULL, 17);
++
++static struct attribute *hwmon_mb_attributes[] = {
++	&sensor_dev_attr_curr1_highest.dev_attr.attr,
++	&sensor_dev_attr_curr1_average.dev_attr.attr,
++	&sensor_dev_attr_curr1_input.dev_attr.attr,
++	&sensor_dev_attr_curr2_highest.dev_attr.attr,
++	&sensor_dev_attr_curr2_average.dev_attr.attr,
++	&sensor_dev_attr_curr2_input.dev_attr.attr,
++	&sensor_dev_attr_curr3_highest.dev_attr.attr,
++	&sensor_dev_attr_curr3_average.dev_attr.attr,
++	&sensor_dev_attr_curr3_input.dev_attr.attr,
++	&sensor_dev_attr_curr4_highest.dev_attr.attr,
++	&sensor_dev_attr_curr4_average.dev_attr.attr,
++	&sensor_dev_attr_curr4_input.dev_attr.attr,
++	&sensor_dev_attr_curr5_highest.dev_attr.attr,
++	&sensor_dev_attr_curr5_average.dev_attr.attr,
++	&sensor_dev_attr_curr5_input.dev_attr.attr,
++	&sensor_dev_attr_curr6_highest.dev_attr.attr,
++	&sensor_dev_attr_curr6_average.dev_attr.attr,
++	&sensor_dev_attr_curr6_input.dev_attr.attr,
++	NULL
++};
++
++static const struct attribute_group hwmon_mb_attrgroup = {
++	.attrs = hwmon_mb_attributes,
++};
++
++static ssize_t show_name(struct device *dev, struct device_attribute *da,
++			 char *buf)
++{
++	return sprintf(buf, "%s\n", XCLMGMT_MB_HWMON_NAME);
++}
++
++static struct sensor_device_attribute name_attr =
++	SENSOR_ATTR(name, 0444, show_name, NULL, 0);
++
++static void mgmt_sysfs_destroy_mb(struct platform_device *pdev)
++{
++	struct xocl_mb *mb;
++
++	mb = platform_get_drvdata(pdev);
++
++	if (!mb->enabled)
++		return;
++
++	if (mb->hwmon_dev) {
++		device_remove_file(mb->hwmon_dev, &name_attr.dev_attr);
++		sysfs_remove_group(&mb->hwmon_dev->kobj,
++			&hwmon_mb_attrgroup);
++		hwmon_device_unregister(mb->hwmon_dev);
++		mb->hwmon_dev = NULL;
++	}
++
++	sysfs_remove_group(&pdev->dev.kobj, &mb_attr_group);
++}
++
++static int mgmt_sysfs_create_mb(struct platform_device *pdev)
++{
++	struct xocl_mb *mb;
++	struct xocl_dev_core *core;
++	int err;
++
++	mb = platform_get_drvdata(pdev);
++	core = XDEV(xocl_get_xdev(pdev));
++
++	if (!mb->enabled)
++		return 0;
++	err = sysfs_create_group(&pdev->dev.kobj, &mb_attr_group);
++	if (err) {
++		xocl_err(&pdev->dev, "create mb attrs failed: 0x%x", err);
++		goto create_attr_failed;
++	}
++	mb->hwmon_dev = hwmon_device_register(&core->pdev->dev);
++	if (IS_ERR(mb->hwmon_dev)) {
++		err = PTR_ERR(mb->hwmon_dev);
++		xocl_err(&pdev->dev, "register mb hwmon failed: 0x%x", err);
++		goto hwmon_reg_failed;
++	}
++
++	dev_set_drvdata(mb->hwmon_dev, mb);
++
++	err = device_create_file(mb->hwmon_dev, &name_attr.dev_attr);
++	if (err) {
++		xocl_err(&pdev->dev, "create attr name failed: 0x%x", err);
++		goto create_name_failed;
++	}
++
++	err = sysfs_create_group(&mb->hwmon_dev->kobj,
++		&hwmon_mb_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create pw group failed: 0x%x", err);
++		goto create_pw_failed;
++	}
++
++	return 0;
++
++create_pw_failed:
++	device_remove_file(mb->hwmon_dev, &name_attr.dev_attr);
++create_name_failed:
++	hwmon_device_unregister(mb->hwmon_dev);
++	mb->hwmon_dev = NULL;
++hwmon_reg_failed:
++	sysfs_remove_group(&pdev->dev.kobj, &mb_attr_group);
++create_attr_failed:
++	return err;
++}
++
++static int mb_stop(struct xocl_mb *mb)
++{
++	int retry = 0;
++	int ret = 0;
++	u32 reg_val = 0;
++
++	if (!mb->enabled)
++		return 0;
++
++	mutex_lock(&mb->mb_lock);
++	reg_val = READ_GPIO(mb, 0);
++	xocl_info(&mb->pdev->dev, "Reset GPIO 0x%x", reg_val);
++	if (reg_val == GPIO_RESET) {
++		/* MB in reset status */
++		mb->state = MB_STATE_RESET;
++		goto out;
++	}
++
++	xocl_info(&mb->pdev->dev,
++		"MGMT Image magic word, 0x%x, status 0x%x, id 0x%x",
++		READ_IMAGE_MGMT(mb, 0),
++		READ_REG32(mb, REG_STATUS),
++		READ_REG32(mb, REG_ID));
++
++	if (!SELF_JUMP(READ_IMAGE_MGMT(mb, 0))) {
++		/* non cold boot */
++		reg_val = READ_REG32(mb, REG_STATUS);
++		if (!(reg_val & STATUS_MASK_STOPPED)) {
++			// need to stop microblaze
++			xocl_info(&mb->pdev->dev, "stopping microblaze...");
++			WRITE_REG32(mb, CTL_MASK_STOP, REG_CTL);
++			WRITE_REG32(mb, 1, REG_STOP_CONFIRM);
++			while (retry++ < MAX_RETRY &&
++				!(READ_REG32(mb, REG_STATUS) &
++				STATUS_MASK_STOPPED)) {
++				msleep(RETRY_INTERVAL);
++			}
++			if (retry >= MAX_RETRY) {
++				xocl_err(&mb->pdev->dev,
++					"Failed to stop microblaze");
++				xocl_err(&mb->pdev->dev,
++					"Error Reg 0x%x",
++					READ_REG32(mb, REG_ERR));
++				ret = -EIO;
++				goto out;
++			}
++		}
++		xocl_info(&mb->pdev->dev, "Microblaze Stopped, retry %d",
++			retry);
++	}
++
++	/* hold reset */
++	WRITE_GPIO(mb, GPIO_RESET, 0);
++	mb->state = MB_STATE_RESET;
++out:
++	mutex_unlock(&mb->mb_lock);
++
++	return ret;
++}
++
++static int mb_start(struct xocl_mb *mb)
++{
++	int retry = 0;
++	u32 reg_val = 0;
++	int ret = 0;
++	void *xdev_hdl;
++
++	if (!mb->enabled)
++		return 0;
++
++	xdev_hdl = xocl_get_xdev(mb->pdev);
++
++	mutex_lock(&mb->mb_lock);
++	reg_val = READ_GPIO(mb, 0);
++	xocl_info(&mb->pdev->dev, "Reset GPIO 0x%x", reg_val);
++	if (reg_val == GPIO_ENABLED)
++		goto out;
++
++	xocl_info(&mb->pdev->dev, "Start Microblaze...");
++	xocl_info(&mb->pdev->dev, "MGMT Image magic word, 0x%x",
++		READ_IMAGE_MGMT(mb, 0));
++
++	if (xocl_mb_mgmt_on(xdev_hdl)) {
++		xocl_info(&mb->pdev->dev, "Copying mgmt image len %d",
++			mb->mgmt_binary_length);
++		COPY_MGMT(mb, mb->mgmt_binary, mb->mgmt_binary_length);
++	}
++
++	if (xocl_mb_sched_on(xdev_hdl)) {
++		xocl_info(&mb->pdev->dev, "Copying scheduler image len %d",
++			mb->sche_binary_length);
++		COPY_SCHE(mb, mb->sche_binary, mb->sche_binary_length);
++	}
++
++	WRITE_GPIO(mb, GPIO_ENABLED, 0);
++	xocl_info(&mb->pdev->dev,
++		"MGMT Image magic word, 0x%x, status 0x%x, id 0x%x",
++		READ_IMAGE_MGMT(mb, 0),
++		READ_REG32(mb, REG_STATUS),
++		READ_REG32(mb, REG_ID));
++	do {
++		msleep(RETRY_INTERVAL);
++	} while (retry++ < MAX_RETRY && (READ_REG32(mb, REG_STATUS) &
++		STATUS_MASK_STOPPED));
++
++	/* Extra pulse needed as workaround for axi interconnect issue in DSA */
++	if (retry >= MAX_RETRY) {
++		retry = 0;
++		WRITE_GPIO(mb, GPIO_RESET, 0);
++		WRITE_GPIO(mb, GPIO_ENABLED, 0);
++		do {
++			msleep(RETRY_INTERVAL);
++		} while (retry++ < MAX_RETRY && (READ_REG32(mb, REG_STATUS) &
++			STATUS_MASK_STOPPED));
++	}
++
++	if (retry >= MAX_RETRY) {
++		xocl_err(&mb->pdev->dev, "Failed to start microblaze");
++		xocl_err(&mb->pdev->dev, "Error Reg 0x%x",
++				READ_REG32(mb, REG_ERR));
++			ret = -EIO;
++	}
++
++	mb->cap = READ_REG32(mb, REG_CAP);
++	mb->state = MB_STATE_RUN;
++out:
++	mutex_unlock(&mb->mb_lock);
++
++	return ret;
++}
++
++static void mb_reset(struct platform_device *pdev)
++{
++	struct xocl_mb *mb;
++
++	xocl_info(&pdev->dev, "Reset Microblaze...");
++	mb = platform_get_drvdata(pdev);
++	if (!mb)
++		return;
++
++	mb_stop(mb);
++	mb_start(mb);
++}
++
++static int load_mgmt_image(struct platform_device *pdev, const char *image,
++	u32 len)
++{
++	struct xocl_mb *mb;
++	char *binary;
++
++	if (len > MAX_IMAGE_LEN)
++		return -EINVAL;
++
++	mb = platform_get_drvdata(pdev);
++	if (!mb)
++		return -EINVAL;
++
++	binary = mb->mgmt_binary;
++	mb->mgmt_binary = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!mb->mgmt_binary)
++		return -ENOMEM;
++
++	if (binary)
++		devm_kfree(&pdev->dev, binary);
++	memcpy(mb->mgmt_binary, image, len);
++	mb->mgmt_binary_length = len;
++
++	return 0;
++}
++
++static int load_sche_image(struct platform_device *pdev, const char *image,
++	u32 len)
++{
++	struct xocl_mb *mb;
++	char *binary = NULL;
++
++	if (len > MAX_IMAGE_LEN)
++		return -EINVAL;
++
++	mb = platform_get_drvdata(pdev);
++	if (!mb)
++		return -EINVAL;
++
++	binary = mb->sche_binary;
++	mb->sche_binary = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!mb->sche_binary)
++		return -ENOMEM;
++
++	if (binary)
++		devm_kfree(&pdev->dev, binary);
++	memcpy(mb->sche_binary, image, len);
++	mb->sche_binary_length = len;
++
++	return 0;
++}
++
++//Have a function stub but don't actually do anything when this is called
++static int mb_ignore(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static struct xocl_mb_funcs mb_ops = {
++	.load_mgmt_image	= load_mgmt_image,
++	.load_sche_image	= load_sche_image,
++	.reset			= mb_reset,
++	.stop			= mb_ignore,
++};
++
++
++
++static int mb_remove(struct platform_device *pdev)
++{
++	struct xocl_mb *mb;
++	int	i;
++
++	mb = platform_get_drvdata(pdev);
++	if (!mb)
++		return 0;
++
++	if (mb->mgmt_binary)
++		devm_kfree(&pdev->dev, mb->mgmt_binary);
++	if (mb->sche_binary)
++		devm_kfree(&pdev->dev, mb->sche_binary);
++
++	/*
++	 * It is more secure that MB keeps running even driver is unloaded.
++	 * Even user unload our driver and use their own stuff, MB will still
++	 * be able to monitor the board unless user stops it explicitly
++	 */
++	mb_stop(mb);
++
++	mgmt_sysfs_destroy_mb(pdev);
++
++	for (i = 0; i < NUM_IOADDR; i++) {
++		if (mb->base_addrs[i])
++			iounmap(mb->base_addrs[i]);
++	}
++
++	mutex_destroy(&mb->mb_lock);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, mb);
++
++	return 0;
++}
++
++static int mb_probe(struct platform_device *pdev)
++{
++	struct xocl_mb *mb;
++	struct resource *res;
++	void	*xdev_hdl;
++	int i, err;
++
++	mb = devm_kzalloc(&pdev->dev, sizeof(*mb), GFP_KERNEL);
++	if (!mb) {
++		xocl_err(&pdev->dev, "out of memory");
++		return -ENOMEM;
++	}
++
++	mb->pdev = pdev;
++	platform_set_drvdata(pdev, mb);
++
++	xdev_hdl = xocl_get_xdev(pdev);
++	if (xocl_mb_mgmt_on(xdev_hdl) || xocl_mb_sched_on(xdev_hdl)) {
++		xocl_info(&pdev->dev, "Microblaze is supported.");
++		mb->enabled = true;
++	} else {
++		xocl_info(&pdev->dev, "Microblaze is not supported.");
++		devm_kfree(&pdev->dev, mb);
++		platform_set_drvdata(pdev, NULL);
++		return 0;
++	}
++
++	for (i = 0; i < NUM_IOADDR; i++) {
++		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
++		xocl_info(&pdev->dev, "IO start: 0x%llx, end: 0x%llx",
++			res->start, res->end);
++		mb->base_addrs[i] =
++			ioremap_nocache(res->start, res->end - res->start + 1);
++		if (!mb->base_addrs[i]) {
++			err = -EIO;
++			xocl_err(&pdev->dev, "Map iomem failed");
++			goto failed;
++		}
++	}
++
++	err = mgmt_sysfs_create_mb(pdev);
++	if (err) {
++		xocl_err(&pdev->dev, "Create sysfs failed, err %d", err);
++		goto failed;
++	}
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_MB, &mb_ops);
++
++	mutex_init(&mb->mb_lock);
++
++	return 0;
++
++failed:
++	mb_remove(pdev);
++	return err;
++}
++
++struct platform_device_id mb_id_table[] = {
++	{ XOCL_MB, 0 },
++	{ },
++};
++
++static struct platform_driver	mb_driver = {
++	.probe		= mb_probe,
++	.remove		= mb_remove,
++	.driver		= {
++		.name = "xocl_mb",
++	},
++	.id_table = mb_id_table,
++};
++
++int __init xocl_init_mb(void)
++{
++	return platform_driver_register(&mb_driver);
++}
++
++void xocl_fini_mb(void)
++{
++	platform_driver_unregister(&mb_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/mig.c b/drivers/gpu/drm/xocl/subdev/mig.c
+new file mode 100644
+index 000000000000..5a574f7af796
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/mig.c
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2018-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors: Chien-Wei Lan <chienwei@xilinx.com>
++ *
++ */
++
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++/* Registers are defined in pg150-ultrascale-memory-ip.pdf:
++ * AXI4-Lite Slave Control/Status Register Map
++ */
++
++#define MIG_DEBUG
++#define	MIG_DEV2MIG(dev)	\
++	((struct xocl_mig *)platform_get_drvdata(to_platform_device(dev)))
++#define	MIG_DEV2BASE(dev)	(MIG_DEV2MIG(dev)->base)
++
++#define ECC_STATUS	0x0
++#define ECC_ON_OFF	0x8
++#define CE_CNT		0xC
++#define CE_ADDR_LO	0x1C0
++#define CE_ADDR_HI	0x1C4
++#define UE_ADDR_LO	0x2C0
++#define UE_ADDR_HI	0x2C4
++#define INJ_FAULT_REG	0x300
++
++struct xocl_mig {
++	void __iomem	*base;
++	struct device	*mig_dev;
++};
++
++static ssize_t ecc_ue_ffa_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	uint64_t val = ioread32(MIG_DEV2BASE(dev) + UE_ADDR_HI);
++
++	val <<= 32;
++	val |= ioread32(MIG_DEV2BASE(dev) + UE_ADDR_LO);
++	return sprintf(buf, "0x%llx\n", val);
++}
++static DEVICE_ATTR_RO(ecc_ue_ffa);
++
++
++static ssize_t ecc_ce_ffa_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	uint64_t val = ioread32(MIG_DEV2BASE(dev) + CE_ADDR_HI);
++
++	val <<= 32;
++	val |= ioread32(MIG_DEV2BASE(dev) + CE_ADDR_LO);
++	return sprintf(buf, "0x%llx\n", val);
++}
++static DEVICE_ATTR_RO(ecc_ce_ffa);
++
++
++static ssize_t ecc_ce_cnt_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%u\n", ioread32(MIG_DEV2BASE(dev) + CE_CNT));
++}
++static DEVICE_ATTR_RO(ecc_ce_cnt);
++
++
++static ssize_t ecc_status_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%u\n", ioread32(MIG_DEV2BASE(dev) + ECC_STATUS));
++}
++static DEVICE_ATTR_RO(ecc_status);
++
++
++static ssize_t ecc_reset_store(struct device *dev, struct device_attribute *da,
++	const char *buf, size_t count)
++{
++	iowrite32(0x3, MIG_DEV2BASE(dev) + ECC_STATUS);
++	iowrite32(0, MIG_DEV2BASE(dev) + CE_CNT);
++	return count;
++}
++static DEVICE_ATTR_WO(ecc_reset);
++
++
++static ssize_t ecc_enabled_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%u\n", ioread32(MIG_DEV2BASE(dev) + ECC_ON_OFF));
++}
++static ssize_t ecc_enabled_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	uint32_t val;
++
++	if (sscanf(buf, "%d", &val) != 1 || val > 1) {
++		xocl_err(&to_platform_device(dev)->dev,
++			"usage: echo [0|1] > ecc_enabled");
++		return -EINVAL;
++	}
++
++	iowrite32(val, MIG_DEV2BASE(dev) + ECC_ON_OFF);
++	return count;
++}
++static DEVICE_ATTR_RW(ecc_enabled);
++
++
++#ifdef MIG_DEBUG
++static ssize_t ecc_inject_store(struct device *dev, struct device_attribute *da,
++	const char *buf, size_t count)
++{
++	iowrite32(1, MIG_DEV2BASE(dev) + INJ_FAULT_REG);
++	return count;
++}
++static DEVICE_ATTR_WO(ecc_inject);
++#endif
++
++
++/* Standard sysfs entry for all dynamic subdevices. */
++static ssize_t name_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%s\n", XOCL_GET_SUBDEV_PRIV(dev));
++}
++static DEVICE_ATTR_RO(name);
++
++
++static struct attribute *mig_attributes[] = {
++	&dev_attr_name.attr,
++	&dev_attr_ecc_enabled.attr,
++	&dev_attr_ecc_status.attr,
++	&dev_attr_ecc_ce_cnt.attr,
++	&dev_attr_ecc_ce_ffa.attr,
++	&dev_attr_ecc_ue_ffa.attr,
++	&dev_attr_ecc_reset.attr,
++#ifdef MIG_DEBUG
++	&dev_attr_ecc_inject.attr,
++#endif
++	NULL
++};
++
++static const struct attribute_group mig_attrgroup = {
++	.attrs = mig_attributes,
++};
++
++static void mgmt_sysfs_destroy_mig(struct platform_device *pdev)
++{
++	struct xocl_mig *mig;
++
++	mig = platform_get_drvdata(pdev);
++	sysfs_remove_group(&pdev->dev.kobj, &mig_attrgroup);
++}
++
++static int mgmt_sysfs_create_mig(struct platform_device *pdev)
++{
++	struct xocl_mig *mig;
++	int err;
++
++	mig = platform_get_drvdata(pdev);
++	err = sysfs_create_group(&pdev->dev.kobj, &mig_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create pw group failed: 0x%x", err);
++		return err;
++	}
++
++	return 0;
++}
++
++static int mig_probe(struct platform_device *pdev)
++{
++	struct xocl_mig *mig;
++	struct resource *res;
++	int err;
++
++	mig = devm_kzalloc(&pdev->dev, sizeof(*mig), GFP_KERNEL);
++	if (!mig)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		xocl_err(&pdev->dev, "resource is NULL");
++		return -EINVAL;
++	}
++
++	xocl_info(&pdev->dev, "MIG name: %s, IO start: 0x%llx, end: 0x%llx",
++		XOCL_GET_SUBDEV_PRIV(&pdev->dev), res->start, res->end);
++
++	mig->base = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!mig->base) {
++		xocl_err(&pdev->dev, "Map iomem failed");
++		return -EIO;
++	}
++
++	platform_set_drvdata(pdev, mig);
++
++	err = mgmt_sysfs_create_mig(pdev);
++	if (err) {
++		platform_set_drvdata(pdev, NULL);
++		iounmap(mig->base);
++		return err;
++	}
++
++	return 0;
++}
++
++
++static int mig_remove(struct platform_device *pdev)
++{
++	struct xocl_mig	*mig;
++
++	mig = platform_get_drvdata(pdev);
++	if (!mig) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++
++	xocl_info(&pdev->dev, "MIG name: %s", XOCL_GET_SUBDEV_PRIV(&pdev->dev));
++
++	mgmt_sysfs_destroy_mig(pdev);
++
++	if (mig->base)
++		iounmap(mig->base);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, mig);
++
++	return 0;
++}
++
++struct platform_device_id mig_id_table[] = {
++	{ XOCL_MIG, 0 },
++	{ },
++};
++
++static struct platform_driver	mig_driver = {
++	.probe		= mig_probe,
++	.remove		= mig_remove,
++	.driver		= {
++		.name = "xocl_mig",
++	},
++	.id_table = mig_id_table,
++};
++
++int __init xocl_init_mig(void)
++{
++	return platform_driver_register(&mig_driver);
++}
++
++void xocl_fini_mig(void)
++{
++	platform_driver_unregister(&mig_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/sysmon.c b/drivers/gpu/drm/xocl/subdev/sysmon.c
+new file mode 100644
+index 000000000000..bb5c84485344
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/sysmon.c
+@@ -0,0 +1,385 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2018 Xilinx, Inc. All rights reserved.
++ *
++ * Authors:
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++#define TEMP		0x400		// TEMPOERATURE REGISTER ADDRESS
++#define VCCINT		0x404		// VCCINT REGISTER OFFSET
++#define VCCAUX		0x408		// VCCAUX REGISTER OFFSET
++#define VCCBRAM		0x418		// VCCBRAM REGISTER OFFSET
++#define	TEMP_MAX	0x480
++#define	VCCINT_MAX	0x484
++#define	VCCAUX_MAX	0x488
++#define	VCCBRAM_MAX	0x48c
++#define	TEMP_MIN	0x490
++#define	VCCINT_MIN	0x494
++#define	VCCAUX_MIN	0x498
++#define	VCCBRAM_MIN	0x49c
++
++#define	SYSMON_TO_MILLDEGREE(val)		\
++	(((int64_t)(val) * 501374 >> 16) - 273678)
++#define	SYSMON_TO_MILLVOLT(val)			\
++	((val) * 1000 * 3 >> 16)
++
++#define	READ_REG32(sysmon, off)		\
++	XOCL_READ_REG32(sysmon->base + off)
++#define	WRITE_REG32(sysmon, val, off)	\
++	XOCL_WRITE_REG32(val, sysmon->base + off)
++
++struct xocl_sysmon {
++	void __iomem		*base;
++	struct device		*hwmon_dev;
++};
++
++static int get_prop(struct platform_device *pdev, u32 prop, void *val)
++{
++	struct xocl_sysmon	*sysmon;
++	u32			tmp;
++
++	sysmon = platform_get_drvdata(pdev);
++	BUG_ON(!sysmon);
++
++	switch (prop) {
++	case XOCL_SYSMON_PROP_TEMP:
++		tmp = READ_REG32(sysmon, TEMP);
++		*(u32 *)val = SYSMON_TO_MILLDEGREE(tmp)/1000;
++		break;
++	case XOCL_SYSMON_PROP_TEMP_MAX:
++		tmp = READ_REG32(sysmon, TEMP_MAX);
++		*(u32 *)val = SYSMON_TO_MILLDEGREE(tmp);
++		break;
++	case XOCL_SYSMON_PROP_TEMP_MIN:
++		tmp = READ_REG32(sysmon, TEMP_MIN);
++		*(u32 *)val = SYSMON_TO_MILLDEGREE(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_INT:
++		tmp = READ_REG32(sysmon, VCCINT);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_INT_MAX:
++		tmp = READ_REG32(sysmon, VCCINT_MAX);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_INT_MIN:
++		tmp = READ_REG32(sysmon, VCCINT_MIN);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_AUX:
++		tmp = READ_REG32(sysmon, VCCAUX);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_AUX_MAX:
++		tmp = READ_REG32(sysmon, VCCAUX_MAX);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_AUX_MIN:
++		tmp = READ_REG32(sysmon, VCCAUX_MIN);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_BRAM:
++		tmp = READ_REG32(sysmon, VCCBRAM);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_BRAM_MAX:
++		tmp = READ_REG32(sysmon, VCCBRAM_MAX);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	case XOCL_SYSMON_PROP_VCC_BRAM_MIN:
++		tmp = READ_REG32(sysmon, VCCBRAM_MIN);
++		*(u32 *)val = SYSMON_TO_MILLVOLT(tmp);
++		break;
++	default:
++		xocl_err(&pdev->dev, "Invalid prop");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static struct xocl_sysmon_funcs sysmon_ops = {
++	.get_prop	= get_prop,
++};
++
++static ssize_t show_sysmon(struct platform_device *pdev, u32 prop, char *buf)
++{
++	u32 val;
++
++	(void) get_prop(pdev, prop, &val);
++	return sprintf(buf, "%u\n", val);
++}
++
++/* sysfs support */
++static ssize_t show_hwmon(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
++	struct platform_device *pdev = dev_get_drvdata(dev);
++
++	return show_sysmon(pdev, attr->index, buf);
++}
++
++static ssize_t show_name(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%s\n", XCLMGMT_SYSMON_HWMON_NAME);
++}
++
++static SENSOR_DEVICE_ATTR(temp1_input, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_TEMP);
++static SENSOR_DEVICE_ATTR(temp1_highest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_TEMP_MAX);
++static SENSOR_DEVICE_ATTR(temp1_lowest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_TEMP_MIN);
++
++static SENSOR_DEVICE_ATTR(in0_input, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_INT);
++static SENSOR_DEVICE_ATTR(in0_highest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_INT_MAX);
++static SENSOR_DEVICE_ATTR(in0_lowest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_INT_MIN);
++
++static SENSOR_DEVICE_ATTR(in1_input, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_AUX);
++static SENSOR_DEVICE_ATTR(in1_highest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_AUX_MAX);
++static SENSOR_DEVICE_ATTR(in1_lowest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_AUX_MIN);
++
++static SENSOR_DEVICE_ATTR(in2_input, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_BRAM);
++static SENSOR_DEVICE_ATTR(in2_highest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_BRAM_MAX);
++static SENSOR_DEVICE_ATTR(in2_lowest, 0444, show_hwmon, NULL,
++	XOCL_SYSMON_PROP_VCC_BRAM_MIN);
++
++static struct attribute *hwmon_sysmon_attributes[] = {
++	&sensor_dev_attr_temp1_input.dev_attr.attr,
++	&sensor_dev_attr_temp1_highest.dev_attr.attr,
++	&sensor_dev_attr_temp1_lowest.dev_attr.attr,
++	&sensor_dev_attr_in0_input.dev_attr.attr,
++	&sensor_dev_attr_in0_highest.dev_attr.attr,
++	&sensor_dev_attr_in0_lowest.dev_attr.attr,
++	&sensor_dev_attr_in1_input.dev_attr.attr,
++	&sensor_dev_attr_in1_highest.dev_attr.attr,
++	&sensor_dev_attr_in1_lowest.dev_attr.attr,
++	&sensor_dev_attr_in2_input.dev_attr.attr,
++	&sensor_dev_attr_in2_highest.dev_attr.attr,
++	&sensor_dev_attr_in2_lowest.dev_attr.attr,
++	NULL
++};
++
++static const struct attribute_group hwmon_sysmon_attrgroup = {
++	.attrs = hwmon_sysmon_attributes,
++};
++
++static struct sensor_device_attribute sysmon_name_attr =
++	SENSOR_ATTR(name, 0444, show_name, NULL, 0);
++
++static ssize_t temp_show(struct device *dev, struct device_attribute *da,
++			 char *buf)
++{
++	return show_sysmon(to_platform_device(dev), XOCL_SYSMON_PROP_TEMP, buf);
++}
++static DEVICE_ATTR_RO(temp);
++
++static ssize_t vcc_int_show(struct device *dev, struct device_attribute *da,
++			    char *buf)
++{
++	return show_sysmon(to_platform_device(dev), XOCL_SYSMON_PROP_VCC_INT, buf);
++}
++static DEVICE_ATTR_RO(vcc_int);
++
++static ssize_t vcc_aux_show(struct device *dev, struct device_attribute *da,
++			    char *buf)
++{
++	return show_sysmon(to_platform_device(dev), XOCL_SYSMON_PROP_VCC_AUX, buf);
++}
++static DEVICE_ATTR_RO(vcc_aux);
++
++static ssize_t vcc_bram_show(struct device *dev, struct device_attribute *da,
++			     char *buf)
++{
++	return show_sysmon(to_platform_device(dev), XOCL_SYSMON_PROP_VCC_BRAM, buf);
++}
++static DEVICE_ATTR_RO(vcc_bram);
++
++static struct attribute *sysmon_attributes[] = {
++	&dev_attr_temp.attr,
++	&dev_attr_vcc_int.attr,
++	&dev_attr_vcc_aux.attr,
++	&dev_attr_vcc_bram.attr,
++	NULL,
++};
++
++static const struct attribute_group sysmon_attrgroup = {
++	.attrs = sysmon_attributes,
++};
++
++static void mgmt_sysfs_destroy_sysmon(struct platform_device *pdev)
++{
++	struct xocl_sysmon *sysmon;
++
++	sysmon = platform_get_drvdata(pdev);
++
++	device_remove_file(sysmon->hwmon_dev, &sysmon_name_attr.dev_attr);
++	sysfs_remove_group(&sysmon->hwmon_dev->kobj, &hwmon_sysmon_attrgroup);
++	hwmon_device_unregister(sysmon->hwmon_dev);
++	sysmon->hwmon_dev = NULL;
++
++	sysfs_remove_group(&pdev->dev.kobj, &sysmon_attrgroup);
++}
++
++static int mgmt_sysfs_create_sysmon(struct platform_device *pdev)
++{
++	struct xocl_sysmon *sysmon;
++	struct xocl_dev_core *core;
++	int err;
++
++	sysmon = platform_get_drvdata(pdev);
++	core = XDEV(xocl_get_xdev(pdev));
++
++	sysmon->hwmon_dev = hwmon_device_register(&core->pdev->dev);
++	if (IS_ERR(sysmon->hwmon_dev)) {
++		err = PTR_ERR(sysmon->hwmon_dev);
++		xocl_err(&pdev->dev, "register sysmon hwmon failed: 0x%x", err);
++		goto hwmon_reg_failed;
++	}
++
++	dev_set_drvdata(sysmon->hwmon_dev, pdev);
++	err = device_create_file(sysmon->hwmon_dev,
++		&sysmon_name_attr.dev_attr);
++	if (err) {
++		xocl_err(&pdev->dev, "create attr name failed: 0x%x", err);
++		goto create_name_failed;
++	}
++
++	err = sysfs_create_group(&sysmon->hwmon_dev->kobj,
++		&hwmon_sysmon_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create hwmon group failed: 0x%x", err);
++		goto create_hwmon_failed;
++	}
++
++	err = sysfs_create_group(&pdev->dev.kobj, &sysmon_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create sysmon group failed: 0x%x", err);
++		goto create_sysmon_failed;
++	}
++
++	return 0;
++
++create_sysmon_failed:
++	sysfs_remove_group(&sysmon->hwmon_dev->kobj, &hwmon_sysmon_attrgroup);
++create_hwmon_failed:
++	device_remove_file(sysmon->hwmon_dev, &sysmon_name_attr.dev_attr);
++create_name_failed:
++	hwmon_device_unregister(sysmon->hwmon_dev);
++	sysmon->hwmon_dev = NULL;
++hwmon_reg_failed:
++	return err;
++}
++
++static int sysmon_probe(struct platform_device *pdev)
++{
++	struct xocl_sysmon *sysmon;
++	struct resource *res;
++	int err;
++
++	sysmon = devm_kzalloc(&pdev->dev, sizeof(*sysmon), GFP_KERNEL);
++	if (!sysmon)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		xocl_err(&pdev->dev, "resource is NULL");
++		return -EINVAL;
++	}
++	xocl_info(&pdev->dev, "IO start: 0x%llx, end: 0x%llx",
++		res->start, res->end);
++	sysmon->base = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!sysmon->base) {
++		err = -EIO;
++		xocl_err(&pdev->dev, "Map iomem failed");
++		goto failed;
++	}
++
++	platform_set_drvdata(pdev, sysmon);
++
++	err = mgmt_sysfs_create_sysmon(pdev);
++	if (err)
++		goto create_sysmon_failed;
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_SYSMON, &sysmon_ops);
++
++	return 0;
++
++create_sysmon_failed:
++	platform_set_drvdata(pdev, NULL);
++failed:
++	return err;
++}
++
++
++static int sysmon_remove(struct platform_device *pdev)
++{
++	struct xocl_sysmon	*sysmon;
++
++	sysmon = platform_get_drvdata(pdev);
++	if (!sysmon) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++
++	mgmt_sysfs_destroy_sysmon(pdev);
++
++	if (sysmon->base)
++		iounmap(sysmon->base);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, sysmon);
++
++	return 0;
++}
++
++struct platform_device_id sysmon_id_table[] = {
++	{ XOCL_SYSMON, 0 },
++	{ },
++};
++
++static struct platform_driver	sysmon_driver = {
++	.probe		= sysmon_probe,
++	.remove		= sysmon_remove,
++	.driver		= {
++		.name = "xocl_sysmon",
++	},
++	.id_table = sysmon_id_table,
++};
++
++int __init xocl_init_sysmon(void)
++{
++	return platform_driver_register(&sysmon_driver);
++}
++
++void xocl_fini_sysmon(void)
++{
++	platform_driver_unregister(&sysmon_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/xdma.c b/drivers/gpu/drm/xocl/subdev/xdma.c
+new file mode 100644
+index 000000000000..647a69f29a84
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/xdma.c
+@@ -0,0 +1,510 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based accelerators.
++ *
++ * Copyright (C) 2016-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors:
++ */
++
++/* XDMA version Memory Mapped DMA */
++
++#include <linux/version.h>
++#include <linux/eventfd.h>
++#include <drm/drmP.h>
++#include <drm/drm_gem.h>
++#include <drm/drm_mm.h>
++#include "../xocl_drv.h"
++#include "../xocl_drm.h"
++#include "../lib/libxdma_api.h"
++
++#define XOCL_FILE_PAGE_OFFSET   0x100000
++#ifndef VM_RESERVED
++#define VM_RESERVED (VM_DONTEXPAND | VM_DONTDUMP)
++#endif
++
++struct xdma_irq {
++	struct eventfd_ctx	*event_ctx;
++	bool			in_use;
++	bool			enabled;
++	irq_handler_t		handler;
++	void			*arg;
++};
++
++struct xocl_xdma {
++	void			*dma_handle;
++	u32			max_user_intr;
++	u32			start_user_intr;
++	struct xdma_irq		*user_msix_table;
++	struct mutex		user_msix_table_lock;
++
++	struct xocl_drm		*drm;
++	/* Number of bidirectional channels */
++	u32			channel;
++	/* Semaphore, one for each direction */
++	struct semaphore	channel_sem[2];
++	/*
++	 * Channel usage bitmasks, one for each direction
++	 * bit 1 indicates channel is free, bit 0 indicates channel is free
++	 */
++	unsigned long		channel_bitmap[2];
++	unsigned long long	*channel_usage[2];
++
++	struct mutex		stat_lock;
++};
++
++static ssize_t xdma_migrate_bo(struct platform_device *pdev,
++	struct sg_table *sgt, u32 dir, u64 paddr, u32 channel, u64 len)
++{
++	struct xocl_xdma *xdma;
++	struct page *pg;
++	struct scatterlist *sg = sgt->sgl;
++	int nents = sgt->orig_nents;
++	pid_t pid = current->pid;
++	int i = 0;
++	ssize_t ret;
++	unsigned long long pgaddr;
++
++	xdma = platform_get_drvdata(pdev);
++	xocl_dbg(&pdev->dev, "TID %d, Channel:%d, Offset: 0x%llx, Dir: %d",
++		pid, channel, paddr, dir);
++	ret = xdma_xfer_submit(xdma->dma_handle, channel, dir,
++		paddr, sgt, false, 10000);
++	if (ret >= 0) {
++		xdma->channel_usage[dir][channel] += ret;
++		return ret;
++	}
++
++	xocl_err(&pdev->dev, "DMA failed, Dumping SG Page Table");
++	for (i = 0; i < nents; i++, sg = sg_next(sg)) {
++		if (!sg)
++			break;
++		pg = sg_page(sg);
++		if (!pg)
++			continue;
++		pgaddr = page_to_phys(pg);
++		xocl_err(&pdev->dev, "%i, 0x%llx\n", i, pgaddr);
++	}
++	return ret;
++}
++
++static int acquire_channel(struct platform_device *pdev, u32 dir)
++{
++	struct xocl_xdma *xdma;
++	int channel = 0;
++	int result = 0;
++
++	xdma = platform_get_drvdata(pdev);
++	if (down_interruptible(&xdma->channel_sem[dir])) {
++		channel = -ERESTARTSYS;
++		goto out;
++	}
++
++	for (channel = 0; channel < xdma->channel; channel++) {
++		result = test_and_clear_bit(channel,
++			&xdma->channel_bitmap[dir]);
++		if (result)
++			break;
++	}
++	if (!result) {
++		// How is this possible?
++		up(&xdma->channel_sem[dir]);
++		channel = -EIO;
++	}
++
++out:
++	return channel;
++}
++
++static void release_channel(struct platform_device *pdev, u32 dir, u32 channel)
++{
++	struct xocl_xdma *xdma;
++
++
++	xdma = platform_get_drvdata(pdev);
++	set_bit(channel, &xdma->channel_bitmap[dir]);
++	up(&xdma->channel_sem[dir]);
++}
++
++static u32 get_channel_count(struct platform_device *pdev)
++{
++	struct xocl_xdma *xdma;
++
++	xdma = platform_get_drvdata(pdev);
++	BUG_ON(!xdma);
++
++	return xdma->channel;
++}
++
++static void *get_drm_handle(struct platform_device *pdev)
++{
++	struct xocl_xdma *xdma;
++
++	xdma = platform_get_drvdata(pdev);
++
++	return xdma->drm;
++}
++
++static u64 get_channel_stat(struct platform_device *pdev, u32 channel,
++	u32 write)
++{
++	struct xocl_xdma *xdma;
++
++	xdma = platform_get_drvdata(pdev);
++	BUG_ON(!xdma);
++
++	return xdma->channel_usage[write][channel];
++}
++
++static int user_intr_config(struct platform_device *pdev, u32 intr, bool en)
++{
++	struct xocl_xdma *xdma;
++	const unsigned int mask = 1 << intr;
++	int ret;
++
++	xdma = platform_get_drvdata(pdev);
++
++	if (intr >= xdma->max_user_intr) {
++		xocl_err(&pdev->dev, "Invalid intr %d, user start %d, max %d",
++			intr, xdma->start_user_intr, xdma->max_user_intr);
++		return -EINVAL;
++	}
++
++	mutex_lock(&xdma->user_msix_table_lock);
++	if (xdma->user_msix_table[intr].enabled == en) {
++		ret = 0;
++		goto end;
++	}
++
++	ret = en ? xdma_user_isr_enable(xdma->dma_handle, mask) :
++		xdma_user_isr_disable(xdma->dma_handle, mask);
++	if (!ret)
++		xdma->user_msix_table[intr].enabled = en;
++end:
++	mutex_unlock(&xdma->user_msix_table_lock);
++
++	return ret;
++}
++
++static irqreturn_t xdma_isr(int irq, void *arg)
++{
++	struct xdma_irq *irq_entry = arg;
++	int ret = IRQ_HANDLED;
++
++	if (irq_entry->handler)
++		ret = irq_entry->handler(irq, irq_entry->arg);
++
++	if (!IS_ERR_OR_NULL(irq_entry->event_ctx))
++		eventfd_signal(irq_entry->event_ctx, 1);
++
++	return ret;
++}
++
++static int user_intr_unreg(struct platform_device *pdev, u32 intr)
++{
++	struct xocl_xdma *xdma;
++	const unsigned int mask = 1 << intr;
++	int ret;
++
++	xdma = platform_get_drvdata(pdev);
++
++	if (intr >= xdma->max_user_intr)
++		return -EINVAL;
++
++	mutex_lock(&xdma->user_msix_table_lock);
++	if (!xdma->user_msix_table[intr].in_use) {
++		ret = -EINVAL;
++		goto failed;
++	}
++	xdma->user_msix_table[intr].handler = NULL;
++	xdma->user_msix_table[intr].arg = NULL;
++
++	ret = xdma_user_isr_register(xdma->dma_handle, mask, NULL, NULL);
++	if (ret) {
++		xocl_err(&pdev->dev, "xdma unregister isr failed");
++		goto failed;
++	}
++
++	xdma->user_msix_table[intr].in_use = false;
++
++failed:
++	mutex_unlock(&xdma->user_msix_table_lock);
++	return ret;
++}
++
++static int user_intr_register(struct platform_device *pdev, u32 intr,
++	irq_handler_t handler, void *arg, int event_fd)
++{
++	struct xocl_xdma *xdma;
++	struct eventfd_ctx *trigger = ERR_PTR(-EINVAL);
++	const unsigned int mask = 1 << intr;
++	int ret;
++
++	xdma = platform_get_drvdata(pdev);
++
++	if (intr >= xdma->max_user_intr ||
++			(event_fd >= 0 && intr < xdma->start_user_intr)) {
++		xocl_err(&pdev->dev, "Invalid intr %d, user start %d, max %d",
++			intr, xdma->start_user_intr, xdma->max_user_intr);
++		return -EINVAL;
++	}
++
++	if (event_fd >= 0) {
++		trigger = eventfd_ctx_fdget(event_fd);
++		if (IS_ERR(trigger)) {
++			xocl_err(&pdev->dev, "get event ctx failed");
++			return -EFAULT;
++		}
++	}
++
++	mutex_lock(&xdma->user_msix_table_lock);
++	if (xdma->user_msix_table[intr].in_use) {
++		xocl_err(&pdev->dev, "IRQ %d is in use", intr);
++		ret = -EPERM;
++		goto failed;
++	}
++	xdma->user_msix_table[intr].event_ctx = trigger;
++	xdma->user_msix_table[intr].handler = handler;
++	xdma->user_msix_table[intr].arg = arg;
++
++	ret = xdma_user_isr_register(xdma->dma_handle, mask, xdma_isr,
++			&xdma->user_msix_table[intr]);
++	if (ret) {
++		xocl_err(&pdev->dev, "IRQ register failed");
++		xdma->user_msix_table[intr].handler = NULL;
++		xdma->user_msix_table[intr].arg = NULL;
++		xdma->user_msix_table[intr].event_ctx = NULL;
++		goto failed;
++	}
++
++	xdma->user_msix_table[intr].in_use = true;
++
++	mutex_unlock(&xdma->user_msix_table_lock);
++
++
++	return 0;
++
++failed:
++	mutex_unlock(&xdma->user_msix_table_lock);
++	if (!IS_ERR(trigger))
++		eventfd_ctx_put(trigger);
++
++	return ret;
++}
++
++static struct xocl_dma_funcs xdma_ops = {
++	.migrate_bo = xdma_migrate_bo,
++	.ac_chan = acquire_channel,
++	.rel_chan = release_channel,
++	.get_chan_count = get_channel_count,
++	.get_chan_stat = get_channel_stat,
++	.user_intr_register = user_intr_register,
++	.user_intr_config = user_intr_config,
++	.user_intr_unreg = user_intr_unreg,
++	.get_drm_handle = get_drm_handle,
++};
++
++static ssize_t channel_stat_raw_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	u32 i;
++	ssize_t nbytes = 0;
++	struct platform_device *pdev = to_platform_device(dev);
++	u32 chs = get_channel_count(pdev);
++
++	for (i = 0; i < chs; i++) {
++		nbytes += sprintf(buf + nbytes, "%llu %llu\n",
++			get_channel_stat(pdev, i, 0),
++			get_channel_stat(pdev, i, 1));
++	}
++	return nbytes;
++}
++static DEVICE_ATTR_RO(channel_stat_raw);
++
++static struct attribute *xdma_attrs[] = {
++	&dev_attr_channel_stat_raw.attr,
++	NULL,
++};
++
++static struct attribute_group xdma_attr_group = {
++	.attrs = xdma_attrs,
++};
++
++static int set_max_chan(struct platform_device *pdev,
++		struct xocl_xdma *xdma)
++{
++	xdma->channel_usage[0] = devm_kzalloc(&pdev->dev, sizeof(u64) *
++		xdma->channel, GFP_KERNEL);
++	xdma->channel_usage[1] = devm_kzalloc(&pdev->dev, sizeof(u64) *
++		xdma->channel, GFP_KERNEL);
++	if (!xdma->channel_usage[0] || !xdma->channel_usage[1]) {
++		xocl_err(&pdev->dev, "failed to alloc channel usage");
++		return -ENOMEM;
++	}
++
++	sema_init(&xdma->channel_sem[0], xdma->channel);
++	sema_init(&xdma->channel_sem[1], xdma->channel);
++
++	/* Initialize bit mask to represent individual channels */
++	xdma->channel_bitmap[0] = BIT(xdma->channel);
++	xdma->channel_bitmap[0]--;
++	xdma->channel_bitmap[1] = xdma->channel_bitmap[0];
++
++	return 0;
++}
++
++static int xdma_probe(struct platform_device *pdev)
++{
++	struct xocl_xdma	*xdma = NULL;
++	int	ret = 0;
++	xdev_handle_t		xdev;
++
++	xdev = xocl_get_xdev(pdev);
++	BUG_ON(!xdev);
++
++	xdma = devm_kzalloc(&pdev->dev, sizeof(*xdma), GFP_KERNEL);
++	if (!xdma) {
++		ret = -ENOMEM;
++		goto failed;
++	}
++
++	xdma->dma_handle = xdma_device_open(XOCL_MODULE_NAME, XDEV(xdev)->pdev,
++			&xdma->max_user_intr,
++			&xdma->channel, &xdma->channel);
++	if (xdma->dma_handle == NULL) {
++		xocl_err(&pdev->dev, "XDMA Device Open failed");
++		ret = -EIO;
++		goto failed;
++	}
++
++	xdma->user_msix_table = devm_kzalloc(&pdev->dev,
++			xdma->max_user_intr *
++			sizeof(struct xdma_irq), GFP_KERNEL);
++	if (!xdma->user_msix_table) {
++		xocl_err(&pdev->dev, "alloc user_msix_table failed");
++		ret = -ENOMEM;
++		goto failed;
++	}
++
++	ret = set_max_chan(pdev, xdma);
++	if (ret) {
++		xocl_err(&pdev->dev, "Set max channel failed");
++		goto failed;
++	}
++
++	xdma->drm = xocl_drm_init(xdev);
++	if (!xdma->drm) {
++		ret = -EFAULT;
++		xocl_err(&pdev->dev, "failed to init drm mm");
++		goto failed;
++	}
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &xdma_attr_group);
++	if (ret) {
++		xocl_err(&pdev->dev, "create attrs failed: %d", ret);
++		goto failed;
++	}
++
++	mutex_init(&xdma->stat_lock);
++	mutex_init(&xdma->user_msix_table_lock);
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_DMA, &xdma_ops);
++	platform_set_drvdata(pdev, xdma);
++
++	return 0;
++
++failed:
++	if (xdma) {
++		if (xdma->drm)
++			xocl_drm_fini(xdma->drm);
++		if (xdma->dma_handle)
++			xdma_device_close(XDEV(xdev)->pdev, xdma->dma_handle);
++		if (xdma->channel_usage[0])
++			devm_kfree(&pdev->dev, xdma->channel_usage[0]);
++		if (xdma->channel_usage[1])
++			devm_kfree(&pdev->dev, xdma->channel_usage[1]);
++		if (xdma->user_msix_table)
++			devm_kfree(&pdev->dev, xdma->user_msix_table);
++
++		devm_kfree(&pdev->dev, xdma);
++	}
++
++	platform_set_drvdata(pdev, NULL);
++
++	return ret;
++}
++
++static int xdma_remove(struct platform_device *pdev)
++{
++	struct xocl_xdma *xdma = platform_get_drvdata(pdev);
++	xdev_handle_t xdev;
++	struct xdma_irq *irq_entry;
++	int i;
++
++	if (!xdma) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++
++	xdev = xocl_get_xdev(pdev);
++	BUG_ON(!xdev);
++
++	sysfs_remove_group(&pdev->dev.kobj, &xdma_attr_group);
++
++	if (xdma->drm)
++		xocl_drm_fini(xdma->drm);
++	if (xdma->dma_handle)
++		xdma_device_close(XDEV(xdev)->pdev, xdma->dma_handle);
++
++	for (i = 0; i < xdma->max_user_intr; i++) {
++		irq_entry = &xdma->user_msix_table[i];
++		if (irq_entry->in_use) {
++			if (irq_entry->enabled) {
++				xocl_err(&pdev->dev,
++					"ERROR: Interrupt %d is still on", i);
++			}
++			if (!IS_ERR_OR_NULL(irq_entry->event_ctx))
++				eventfd_ctx_put(irq_entry->event_ctx);
++		}
++	}
++
++	if (xdma->channel_usage[0])
++		devm_kfree(&pdev->dev, xdma->channel_usage[0]);
++	if (xdma->channel_usage[1])
++		devm_kfree(&pdev->dev, xdma->channel_usage[1]);
++
++	mutex_destroy(&xdma->stat_lock);
++	mutex_destroy(&xdma->user_msix_table_lock);
++
++	devm_kfree(&pdev->dev, xdma->user_msix_table);
++	platform_set_drvdata(pdev, NULL);
++
++	devm_kfree(&pdev->dev, xdma);
++
++	return 0;
++}
++
++static struct platform_device_id xdma_id_table[] = {
++	{ XOCL_XDMA, 0 },
++	{ },
++};
++
++static struct platform_driver	xdma_driver = {
++	.probe		= xdma_probe,
++	.remove		= xdma_remove,
++	.driver		= {
++		.name = "xocl_xdma",
++	},
++	.id_table	= xdma_id_table,
++};
++
++int __init xocl_init_xdma(void)
++{
++	return platform_driver_register(&xdma_driver);
++}
++
++void xocl_fini_xdma(void)
++{
++	return platform_driver_unregister(&xdma_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/xmc.c b/drivers/gpu/drm/xocl/subdev/xmc.c
+new file mode 100644
+index 000000000000..d9d620ac09b9
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/xmc.c
+@@ -0,0 +1,1480 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2018 Xilinx, Inc. All rights reserved.
++ *
++ * Authors: chienwei@xilinx.com
++ *
++ */
++
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/vmalloc.h>
++#include <linux/string.h>
++#include "../ert.h"
++#include "../xocl_drv.h"
++#include <drm/xmgmt_drm.h>
++
++#define MAX_XMC_RETRY       150	//Retry is set to 15s for XMC
++#define MAX_ERT_RETRY       10	//Retry is set to 1s for ERT
++#define RETRY_INTERVAL  100       //100ms
++
++#define	MAX_IMAGE_LEN	0x20000
++
++#define XMC_MAGIC_REG               0x0
++#define XMC_VERSION_REG             0x4
++#define XMC_STATUS_REG              0x8
++#define XMC_ERROR_REG               0xC
++#define XMC_FEATURE_REG             0x10
++#define XMC_SENSOR_REG              0x14
++#define XMC_CONTROL_REG             0x18
++#define XMC_STOP_CONFIRM_REG        0x1C
++#define XMC_12V_PEX_REG             0x20
++#define XMC_3V3_PEX_REG             0x2C
++#define XMC_3V3_AUX_REG             0x38
++#define XMC_12V_AUX_REG             0x44
++#define XMC_DDR4_VPP_BTM_REG        0x50
++#define XMC_SYS_5V5_REG             0x5C
++#define XMC_VCC1V2_TOP_REG          0x68
++#define XMC_VCC1V8_REG              0x74
++#define XMC_VCC0V85_REG             0x80
++#define XMC_DDR4_VPP_TOP_REG        0x8C
++#define XMC_MGT0V9AVCC_REG          0x98
++#define XMC_12V_SW_REG              0xA4
++#define XMC_MGTAVTT_REG             0xB0
++#define XMC_VCC1V2_BTM_REG          0xBC
++#define XMC_12V_PEX_I_IN_REG        0xC8
++#define XMC_12V_AUX_I_IN_REG        0xD4
++#define XMC_VCCINT_V_REG            0xE0
++#define XMC_VCCINT_I_REG            0xEC
++#define XMC_FPGA_TEMP               0xF8
++#define XMC_FAN_TEMP_REG            0x104
++#define XMC_DIMM_TEMP0_REG          0x110
++#define XMC_DIMM_TEMP1_REG          0x11C
++#define XMC_DIMM_TEMP2_REG          0x128
++#define XMC_DIMM_TEMP3_REG          0x134
++#define XMC_FAN_SPEED_REG           0x164
++#define XMC_SE98_TEMP0_REG          0x140
++#define XMC_SE98_TEMP1_REG          0x14C
++#define XMC_SE98_TEMP2_REG          0x158
++#define XMC_CAGE_TEMP0_REG          0x170
++#define XMC_CAGE_TEMP1_REG          0x17C
++#define XMC_CAGE_TEMP2_REG          0x188
++#define XMC_CAGE_TEMP3_REG          0x194
++#define XMC_SNSR_CHKSUM_REG         0x1A4
++#define XMC_SNSR_FLAGS_REG          0x1A8
++#define XMC_HOST_MSG_OFFSET_REG     0x300
++#define XMC_HOST_MSG_ERROR_REG      0x304
++#define XMC_HOST_MSG_HEADER_REG     0x308
++
++
++#define	VALID_ID		0x74736574
++
++#define	GPIO_RESET		0x0
++#define	GPIO_ENABLED		0x1
++
++#define	SELF_JUMP(ins)		(((ins) & 0xfc00ffff) == 0xb8000000)
++#define	XMC_PRIVILEGED(xmc)	((xmc)->base_addrs[0] != NULL)
++
++enum ctl_mask {
++	CTL_MASK_CLEAR_POW	= 0x1,
++	CTL_MASK_CLEAR_ERR	= 0x2,
++	CTL_MASK_PAUSE		= 0x4,
++	CTL_MASK_STOP		= 0x8,
++};
++
++enum status_mask {
++	STATUS_MASK_INIT_DONE		= 0x1,
++	STATUS_MASK_STOPPED		= 0x2,
++	STATUS_MASK_PAUSE		= 0x4,
++};
++
++enum cap_mask {
++	CAP_MASK_PM			= 0x1,
++};
++
++enum {
++	XMC_STATE_UNKNOWN,
++	XMC_STATE_ENABLED,
++	XMC_STATE_RESET,
++	XMC_STATE_STOPPED,
++	XMC_STATE_ERROR
++};
++
++enum {
++	IO_REG,
++	IO_GPIO,
++	IO_IMAGE_MGMT,
++	IO_IMAGE_SCHED,
++	IO_CQ,
++	NUM_IOADDR
++};
++
++enum {
++	VOLTAGE_MAX,
++	VOLTAGE_AVG,
++	VOLTAGE_INS,
++};
++
++#define	READ_REG32(xmc, off)		\
++	XOCL_READ_REG32(xmc->base_addrs[IO_REG] + off)
++#define	WRITE_REG32(xmc, val, off)	\
++	XOCL_WRITE_REG32(val, xmc->base_addrs[IO_REG] + off)
++
++#define	READ_GPIO(xmc, off)		\
++	XOCL_READ_REG32(xmc->base_addrs[IO_GPIO] + off)
++#define	WRITE_GPIO(xmc, val, off)	\
++	XOCL_WRITE_REG32(val, xmc->base_addrs[IO_GPIO] + off)
++
++#define	READ_IMAGE_MGMT(xmc, off)		\
++	XOCL_READ_REG32(xmc->base_addrs[IO_IMAGE_MGMT] + off)
++
++#define	READ_IMAGE_SCHED(xmc, off)		\
++	XOCL_READ_REG32(xmc->base_addrs[IO_IMAGE_SCHED] + off)
++
++#define	COPY_MGMT(xmc, buf, len)		\
++	xocl_memcpy_toio(xmc->base_addrs[IO_IMAGE_MGMT], buf, len)
++#define	COPY_SCHE(xmc, buf, len)		\
++	xocl_memcpy_toio(xmc->base_addrs[IO_IMAGE_SCHED], buf, len)
++
++struct xocl_xmc {
++	struct platform_device	*pdev;
++	void __iomem		*base_addrs[NUM_IOADDR];
++
++	struct device		*hwmon_dev;
++	bool			enabled;
++	u32			state;
++	u32			cap;
++	struct mutex		xmc_lock;
++
++	char			*sche_binary;
++	u32			sche_binary_length;
++	char			*mgmt_binary;
++	u32			mgmt_binary_length;
++};
++
++
++static int load_xmc(struct xocl_xmc *xmc);
++static int stop_xmc(struct platform_device *pdev);
++
++static void xmc_read_from_peer(struct platform_device *pdev, enum data_kind kind, void *resp, size_t resplen)
++{
++	struct mailbox_subdev_peer subdev_peer = {0};
++	size_t data_len = sizeof(struct mailbox_subdev_peer);
++	struct mailbox_req *mb_req = NULL;
++	size_t reqlen = sizeof(struct mailbox_req) + data_len;
++
++	mb_req = vmalloc(reqlen);
++	if (!mb_req)
++		return;
++
++	mb_req->req = MAILBOX_REQ_PEER_DATA;
++
++	subdev_peer.kind = kind;
++	memcpy(mb_req->data, &subdev_peer, data_len);
++
++	(void) xocl_peer_request(XOCL_PL_DEV_TO_XDEV(pdev),
++		mb_req, reqlen, resp, &resplen, NULL, NULL);
++	vfree(mb_req);
++}
++
++/* sysfs support */
++static void safe_read32(struct xocl_xmc *xmc, u32 reg, u32 *val)
++{
++	mutex_lock(&xmc->xmc_lock);
++	if (xmc->enabled && xmc->state == XMC_STATE_ENABLED)
++		*val = READ_REG32(xmc, reg);
++	else
++		*val = 0;
++
++	mutex_unlock(&xmc->xmc_lock);
++}
++
++static void safe_write32(struct xocl_xmc *xmc, u32 reg, u32 val)
++{
++	mutex_lock(&xmc->xmc_lock);
++	if (xmc->enabled && xmc->state == XMC_STATE_ENABLED)
++		WRITE_REG32(xmc, val, reg);
++
++	mutex_unlock(&xmc->xmc_lock);
++}
++
++static void safe_read_from_peer(struct xocl_xmc *xmc, struct platform_device *pdev, enum data_kind kind, u32 *val)
++{
++	mutex_lock(&xmc->xmc_lock);
++	if (xmc->enabled)
++		xmc_read_from_peer(pdev, kind, val, sizeof(u32));
++	else
++		*val = 0;
++
++	mutex_unlock(&xmc->xmc_lock);
++}
++
++static int xmc_get_data(struct platform_device *pdev, enum data_kind kind)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(pdev);
++	int val;
++
++	if (XMC_PRIVILEGED(xmc)) {
++		switch (kind) {
++		case VOL_12V_PEX:
++			safe_read32(xmc, XMC_12V_PEX_REG + sizeof(u32)*VOLTAGE_INS, &val);
++			break;
++		default:
++			break;
++		}
++	}
++	return val;
++}
++
++static ssize_t xmc_12v_pex_vol_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 pes_val;
++
++	if (XMC_PRIVILEGED(xmc))
++		safe_read32(xmc, XMC_12V_PEX_REG+sizeof(u32)*VOLTAGE_INS, &pes_val);
++	else
++		safe_read_from_peer(xmc, to_platform_device(dev), VOL_12V_PEX, &pes_val);
++
++	return sprintf(buf, "%d\n", pes_val);
++}
++static DEVICE_ATTR_RO(xmc_12v_pex_vol);
++
++static ssize_t xmc_12v_aux_vol_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_12V_AUX_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_12v_aux_vol);
++
++static ssize_t xmc_12v_pex_curr_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 pes_val;
++
++	safe_read32(xmc, XMC_12V_PEX_I_IN_REG+sizeof(u32)*VOLTAGE_INS, &pes_val);
++
++	return sprintf(buf, "%d\n", pes_val);
++}
++static DEVICE_ATTR_RO(xmc_12v_pex_curr);
++
++static ssize_t xmc_12v_aux_curr_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_12V_AUX_I_IN_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_12v_aux_curr);
++
++static ssize_t xmc_3v3_pex_vol_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_3V3_PEX_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_3v3_pex_vol);
++
++static ssize_t xmc_3v3_aux_vol_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_3V3_AUX_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_3v3_aux_vol);
++
++static ssize_t xmc_ddr_vpp_btm_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DDR4_VPP_BTM_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_ddr_vpp_btm);
++
++static ssize_t xmc_sys_5v5_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_SYS_5V5_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_sys_5v5);
++
++static ssize_t xmc_1v2_top_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCC1V2_TOP_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_1v2_top);
++
++static ssize_t xmc_1v8_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCC1V8_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_1v8);
++
++static ssize_t xmc_0v85_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCC0V85_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_0v85);
++
++static ssize_t xmc_ddr_vpp_top_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DDR4_VPP_TOP_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_ddr_vpp_top);
++
++
++static ssize_t xmc_mgt0v9avcc_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_MGT0V9AVCC_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_mgt0v9avcc);
++
++static ssize_t xmc_12v_sw_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_12V_SW_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_12v_sw);
++
++
++static ssize_t xmc_mgtavtt_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_MGTAVTT_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_mgtavtt);
++
++static ssize_t xmc_vcc1v2_btm_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCC1V2_BTM_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_vcc1v2_btm);
++
++static ssize_t xmc_vccint_vol_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCCINT_V_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_vccint_vol);
++
++static ssize_t xmc_vccint_curr_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_VCCINT_I_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_vccint_curr);
++
++static ssize_t xmc_se98_temp0_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_SE98_TEMP0_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_se98_temp0);
++
++static ssize_t xmc_se98_temp1_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_SE98_TEMP1_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_se98_temp1);
++
++static ssize_t xmc_se98_temp2_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_SE98_TEMP2_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_se98_temp2);
++
++static ssize_t xmc_fpga_temp_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_FPGA_TEMP, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_fpga_temp);
++
++static ssize_t xmc_fan_temp_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_FAN_TEMP_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_fan_temp);
++
++static ssize_t xmc_fan_rpm_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_FAN_SPEED_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_fan_rpm);
++
++
++static ssize_t xmc_dimm_temp0_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DIMM_TEMP0_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_dimm_temp0);
++
++static ssize_t xmc_dimm_temp1_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DIMM_TEMP1_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_dimm_temp1);
++
++static ssize_t xmc_dimm_temp2_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DIMM_TEMP2_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_dimm_temp2);
++
++static ssize_t xmc_dimm_temp3_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_DIMM_TEMP3_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_dimm_temp3);
++
++
++static ssize_t xmc_cage_temp0_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_CAGE_TEMP0_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_cage_temp0);
++
++static ssize_t xmc_cage_temp1_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_CAGE_TEMP1_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_cage_temp1);
++
++static ssize_t xmc_cage_temp2_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_CAGE_TEMP2_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_cage_temp2);
++
++static ssize_t xmc_cage_temp3_show(struct device *dev, struct device_attribute *attr,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_CAGE_TEMP3_REG+sizeof(u32)*VOLTAGE_INS, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(xmc_cage_temp3);
++
++
++static ssize_t version_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_VERSION_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(version);
++
++static ssize_t sensor_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_SENSOR_REG, &val);
++
++	return sprintf(buf, "0x%04x\n", val);
++}
++static DEVICE_ATTR_RO(sensor);
++
++
++static ssize_t id_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_MAGIC_REG, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(id);
++
++static ssize_t status_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_STATUS_REG, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(status);
++
++static ssize_t error_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_ERROR_REG, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(error);
++
++static ssize_t capability_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_FEATURE_REG, &val);
++
++	return sprintf(buf, "%x\n", val);
++}
++static DEVICE_ATTR_RO(capability);
++
++static ssize_t power_checksum_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_SNSR_CHKSUM_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(power_checksum);
++
++static ssize_t pause_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	safe_read32(xmc, XMC_CONTROL_REG, &val);
++
++	return sprintf(buf, "%d\n", !!(val & CTL_MASK_PAUSE));
++}
++
++static ssize_t pause_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	if (kstrtou32(buf, 10, &val) == -EINVAL || val > 1)
++		return -EINVAL;
++
++	val = val ? CTL_MASK_PAUSE : 0;
++	safe_write32(xmc, XMC_CONTROL_REG, val);
++
++	return count;
++}
++static DEVICE_ATTR_RW(pause);
++
++static ssize_t reset_store(struct device *dev,
++	struct device_attribute *da, const char *buf, size_t count)
++{
++	struct xocl_xmc *xmc = platform_get_drvdata(to_platform_device(dev));
++	u32 val;
++
++	if (kstrtou32(buf, 10, &val) == -EINVAL || val > 1)
++		return -EINVAL;
++
++	if (val)
++		load_xmc(xmc);
++
++	return count;
++}
++static DEVICE_ATTR_WO(reset);
++
++static ssize_t power_flag_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_SNSR_FLAGS_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(power_flag);
++
++static ssize_t host_msg_offset_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_HOST_MSG_OFFSET_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(host_msg_offset);
++
++static ssize_t host_msg_error_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_HOST_MSG_ERROR_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(host_msg_error);
++
++static ssize_t host_msg_header_show(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_HOST_MSG_HEADER_REG, &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++static DEVICE_ATTR_RO(host_msg_header);
++
++
++
++static int get_temp_by_m_tag(struct xocl_xmc *xmc, char *m_tag)
++{
++
++	/**
++	 *   m_tag get from xclbin must follow this format
++	 *   DDR[0] or bank1
++	 *   we check the index in m_tag to decide which temperature
++	 *   to get from XMC IP base address
++	 */
++	char *start = NULL, *left_parentness = NULL, *right_parentness = NULL;
++	long idx;
++	int ret = 0, digit_len = 0;
++	char temp[4];
++
++	if (!xmc)
++		return -ENODEV;
++
++
++	if (!strncmp(m_tag, "bank", 4)) {
++		start = m_tag;
++		// bank0, no left parentness
++		left_parentness = m_tag+3;
++		right_parentness = m_tag+strlen(m_tag)+1;
++		digit_len = right_parentness-(2+left_parentness);
++	} else if (!strncmp(m_tag, "DDR", 3)) {
++
++		start = m_tag;
++		left_parentness = strstr(m_tag, "[");
++		right_parentness = strstr(m_tag, "]");
++		digit_len = right_parentness-(1+left_parentness);
++	}
++
++	if (!left_parentness || !right_parentness)
++		return ret;
++
++	if (!strncmp(m_tag, "DDR", left_parentness-start) || !strncmp(m_tag, "bank", left_parentness-start)) {
++
++		strncpy(temp, left_parentness+1, digit_len);
++		//assumption, temperature won't higher than 3 digits, or the temp[digit_len] should be a null character
++		temp[digit_len] = '\0';
++		//convert to signed long, decimal base
++		if (kstrtol(temp, 10, &idx) == 0 && idx < 4 && idx >= 0)
++			safe_read32(xmc, XMC_DIMM_TEMP0_REG + (3*sizeof(int32_t)) * idx +
++				    sizeof(u32)*VOLTAGE_INS, &ret);
++		else
++			ret = 0;
++	}
++
++	return ret;
++
++}
++
++static struct attribute *xmc_attrs[] = {
++	&dev_attr_version.attr,
++	&dev_attr_id.attr,
++	&dev_attr_status.attr,
++	&dev_attr_sensor.attr,
++	&dev_attr_error.attr,
++	&dev_attr_capability.attr,
++	&dev_attr_power_checksum.attr,
++	&dev_attr_xmc_12v_pex_vol.attr,
++	&dev_attr_xmc_12v_aux_vol.attr,
++	&dev_attr_xmc_12v_pex_curr.attr,
++	&dev_attr_xmc_12v_aux_curr.attr,
++	&dev_attr_xmc_3v3_pex_vol.attr,
++	&dev_attr_xmc_3v3_aux_vol.attr,
++	&dev_attr_xmc_ddr_vpp_btm.attr,
++	&dev_attr_xmc_sys_5v5.attr,
++	&dev_attr_xmc_1v2_top.attr,
++	&dev_attr_xmc_1v8.attr,
++	&dev_attr_xmc_0v85.attr,
++	&dev_attr_xmc_ddr_vpp_top.attr,
++	&dev_attr_xmc_mgt0v9avcc.attr,
++	&dev_attr_xmc_12v_sw.attr,
++	&dev_attr_xmc_mgtavtt.attr,
++	&dev_attr_xmc_vcc1v2_btm.attr,
++	&dev_attr_xmc_fpga_temp.attr,
++	&dev_attr_xmc_fan_temp.attr,
++	&dev_attr_xmc_fan_rpm.attr,
++	&dev_attr_xmc_dimm_temp0.attr,
++	&dev_attr_xmc_dimm_temp1.attr,
++	&dev_attr_xmc_dimm_temp2.attr,
++	&dev_attr_xmc_dimm_temp3.attr,
++	&dev_attr_xmc_vccint_vol.attr,
++	&dev_attr_xmc_vccint_curr.attr,
++	&dev_attr_xmc_se98_temp0.attr,
++	&dev_attr_xmc_se98_temp1.attr,
++	&dev_attr_xmc_se98_temp2.attr,
++	&dev_attr_xmc_cage_temp0.attr,
++	&dev_attr_xmc_cage_temp1.attr,
++	&dev_attr_xmc_cage_temp2.attr,
++	&dev_attr_xmc_cage_temp3.attr,
++	&dev_attr_pause.attr,
++	&dev_attr_reset.attr,
++	&dev_attr_power_flag.attr,
++	&dev_attr_host_msg_offset.attr,
++	&dev_attr_host_msg_error.attr,
++	&dev_attr_host_msg_header.attr,
++	NULL,
++};
++
++
++static ssize_t read_temp_by_mem_topology(struct file *filp, struct kobject *kobj,
++	struct bin_attribute *attr, char *buffer, loff_t offset, size_t count)
++{
++	u32 nread = 0;
++	size_t size = 0;
++	u32 i;
++	struct mem_topology *memtopo = NULL;
++	struct xocl_xmc *xmc;
++	uint32_t temp[MAX_M_COUNT] = {0};
++	struct xclmgmt_dev *lro;
++
++	//xocl_icap_lock_bitstream
++	lro = (struct xclmgmt_dev *)dev_get_drvdata(container_of(kobj, struct device, kobj)->parent);
++	xmc = (struct xocl_xmc *)dev_get_drvdata(container_of(kobj, struct device, kobj));
++
++	memtopo = (struct mem_topology *)xocl_icap_get_data(lro, MEMTOPO_AXLF);
++
++	if (!memtopo)
++		return 0;
++
++	size = sizeof(u32)*(memtopo->m_count);
++
++	if (offset >= size)
++		return 0;
++
++	for (i = 0; i < memtopo->m_count; ++i)
++		*(temp+i) = get_temp_by_m_tag(xmc, memtopo->m_mem_data[i].m_tag);
++
++	if (count < size - offset)
++		nread = count;
++	else
++		nread = size - offset;
++
++	memcpy(buffer, temp, nread);
++	//xocl_icap_unlock_bitstream
++	return nread;
++}
++
++static struct bin_attribute bin_dimm_temp_by_mem_topology_attr = {
++	.attr = {
++		.name = "temp_by_mem_topology",
++		.mode = 0444
++	},
++	.read = read_temp_by_mem_topology,
++	.write = NULL,
++	.size = 0
++};
++
++static struct bin_attribute *xmc_bin_attrs[] = {
++	&bin_dimm_temp_by_mem_topology_attr,
++	NULL,
++};
++
++static struct attribute_group xmc_attr_group = {
++	.attrs = xmc_attrs,
++	.bin_attrs = xmc_bin_attrs,
++};
++static ssize_t show_mb_pw(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
++	struct xocl_xmc *xmc = dev_get_drvdata(dev);
++	u32 val;
++
++	safe_read32(xmc, XMC_12V_PEX_REG + attr->index * sizeof(u32), &val);
++
++	return sprintf(buf, "%d\n", val);
++}
++
++static SENSOR_DEVICE_ATTR(curr1_highest, 0444, show_mb_pw, NULL, 0);
++static SENSOR_DEVICE_ATTR(curr1_average, 0444, show_mb_pw, NULL, 1);
++static SENSOR_DEVICE_ATTR(curr1_input, 0444, show_mb_pw, NULL, 2);
++static SENSOR_DEVICE_ATTR(curr2_highest, 0444, show_mb_pw, NULL, 3);
++static SENSOR_DEVICE_ATTR(curr2_average, 0444, show_mb_pw, NULL, 4);
++static SENSOR_DEVICE_ATTR(curr2_input, 0444, show_mb_pw, NULL, 5);
++static SENSOR_DEVICE_ATTR(curr3_highest, 0444, show_mb_pw, NULL, 6);
++static SENSOR_DEVICE_ATTR(curr3_average, 0444, show_mb_pw, NULL, 7);
++static SENSOR_DEVICE_ATTR(curr3_input, 0444, show_mb_pw, NULL, 8);
++static SENSOR_DEVICE_ATTR(curr4_highest, 0444, show_mb_pw, NULL, 9);
++static SENSOR_DEVICE_ATTR(curr4_average, 0444, show_mb_pw, NULL, 10);
++static SENSOR_DEVICE_ATTR(curr4_input, 0444, show_mb_pw, NULL, 11);
++static SENSOR_DEVICE_ATTR(curr5_highest, 0444, show_mb_pw, NULL, 12);
++static SENSOR_DEVICE_ATTR(curr5_average, 0444, show_mb_pw, NULL, 13);
++static SENSOR_DEVICE_ATTR(curr5_input, 0444, show_mb_pw, NULL, 14);
++static SENSOR_DEVICE_ATTR(curr6_highest, 0444, show_mb_pw, NULL, 15);
++static SENSOR_DEVICE_ATTR(curr6_average, 0444, show_mb_pw, NULL, 16);
++static SENSOR_DEVICE_ATTR(curr6_input, 0444, show_mb_pw, NULL, 17);
++
++static struct attribute *hwmon_xmc_attributes[] = {
++	&sensor_dev_attr_curr1_highest.dev_attr.attr,
++	&sensor_dev_attr_curr1_average.dev_attr.attr,
++	&sensor_dev_attr_curr1_input.dev_attr.attr,
++	&sensor_dev_attr_curr2_highest.dev_attr.attr,
++	&sensor_dev_attr_curr2_average.dev_attr.attr,
++	&sensor_dev_attr_curr2_input.dev_attr.attr,
++	&sensor_dev_attr_curr3_highest.dev_attr.attr,
++	&sensor_dev_attr_curr3_average.dev_attr.attr,
++	&sensor_dev_attr_curr3_input.dev_attr.attr,
++	&sensor_dev_attr_curr4_highest.dev_attr.attr,
++	&sensor_dev_attr_curr4_average.dev_attr.attr,
++	&sensor_dev_attr_curr4_input.dev_attr.attr,
++	&sensor_dev_attr_curr5_highest.dev_attr.attr,
++	&sensor_dev_attr_curr5_average.dev_attr.attr,
++	&sensor_dev_attr_curr5_input.dev_attr.attr,
++	&sensor_dev_attr_curr6_highest.dev_attr.attr,
++	&sensor_dev_attr_curr6_average.dev_attr.attr,
++	&sensor_dev_attr_curr6_input.dev_attr.attr,
++	NULL
++};
++
++static const struct attribute_group hwmon_xmc_attrgroup = {
++	.attrs = hwmon_xmc_attributes,
++};
++
++static ssize_t show_name(struct device *dev, struct device_attribute *da,
++	char *buf)
++{
++	return sprintf(buf, "%s\n", XCLMGMT_MB_HWMON_NAME);
++}
++
++static struct sensor_device_attribute name_attr =
++	SENSOR_ATTR(name, 0444, show_name, NULL, 0);
++
++static void mgmt_sysfs_destroy_xmc(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++
++	xmc = platform_get_drvdata(pdev);
++
++	if (!xmc->enabled)
++		return;
++
++	if (xmc->hwmon_dev) {
++		device_remove_file(xmc->hwmon_dev, &name_attr.dev_attr);
++		sysfs_remove_group(&xmc->hwmon_dev->kobj,
++			&hwmon_xmc_attrgroup);
++		hwmon_device_unregister(xmc->hwmon_dev);
++		xmc->hwmon_dev = NULL;
++	}
++
++	sysfs_remove_group(&pdev->dev.kobj, &xmc_attr_group);
++}
++
++static int mgmt_sysfs_create_xmc(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++	struct xocl_dev_core *core;
++	int err;
++
++	xmc = platform_get_drvdata(pdev);
++	core = XDEV(xocl_get_xdev(pdev));
++
++	if (!xmc->enabled)
++		return 0;
++
++	err = sysfs_create_group(&pdev->dev.kobj, &xmc_attr_group);
++	if (err) {
++		xocl_err(&pdev->dev, "create xmc attrs failed: 0x%x", err);
++		goto create_attr_failed;
++	}
++	xmc->hwmon_dev = hwmon_device_register(&core->pdev->dev);
++	if (IS_ERR(xmc->hwmon_dev)) {
++		err = PTR_ERR(xmc->hwmon_dev);
++		xocl_err(&pdev->dev, "register xmc hwmon failed: 0x%x", err);
++		goto hwmon_reg_failed;
++	}
++
++	dev_set_drvdata(xmc->hwmon_dev, xmc);
++
++	err = device_create_file(xmc->hwmon_dev, &name_attr.dev_attr);
++	if (err) {
++		xocl_err(&pdev->dev, "create attr name failed: 0x%x", err);
++		goto create_name_failed;
++	}
++
++	err = sysfs_create_group(&xmc->hwmon_dev->kobj,
++		&hwmon_xmc_attrgroup);
++	if (err) {
++		xocl_err(&pdev->dev, "create pw group failed: 0x%x", err);
++		goto create_pw_failed;
++	}
++
++	return 0;
++
++create_pw_failed:
++	device_remove_file(xmc->hwmon_dev, &name_attr.dev_attr);
++create_name_failed:
++	hwmon_device_unregister(xmc->hwmon_dev);
++	xmc->hwmon_dev = NULL;
++hwmon_reg_failed:
++	sysfs_remove_group(&pdev->dev.kobj, &xmc_attr_group);
++create_attr_failed:
++	return err;
++}
++
++static int stop_xmc_nolock(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++	int retry = 0;
++	u32 reg_val = 0;
++	void *xdev_hdl;
++
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return -ENODEV;
++	else if (!xmc->enabled)
++		return -ENODEV;
++
++	xdev_hdl = xocl_get_xdev(xmc->pdev);
++
++	reg_val = READ_GPIO(xmc, 0);
++	xocl_info(&xmc->pdev->dev, "MB Reset GPIO 0x%x", reg_val);
++
++	//Stop XMC and ERT if its currently running
++	if (reg_val == GPIO_ENABLED) {
++		xocl_info(&xmc->pdev->dev,
++			"XMC info, version 0x%x, status 0x%x, id 0x%x",
++			READ_REG32(xmc, XMC_VERSION_REG),
++			READ_REG32(xmc, XMC_STATUS_REG),
++			READ_REG32(xmc, XMC_MAGIC_REG));
++
++		reg_val = READ_REG32(xmc, XMC_STATUS_REG);
++		if (!(reg_val & STATUS_MASK_STOPPED)) {
++			xocl_info(&xmc->pdev->dev, "Stopping XMC...");
++			WRITE_REG32(xmc, CTL_MASK_STOP, XMC_CONTROL_REG);
++			WRITE_REG32(xmc, 1, XMC_STOP_CONFIRM_REG);
++		}
++		//Need to check if ERT is loaded before we attempt to stop it
++		if (!SELF_JUMP(READ_IMAGE_SCHED(xmc, 0))) {
++			reg_val = XOCL_READ_REG32(xmc->base_addrs[IO_CQ]);
++			if (!(reg_val & ERT_STOP_ACK)) {
++				xocl_info(&xmc->pdev->dev, "Stopping scheduler...");
++				XOCL_WRITE_REG32(ERT_STOP_CMD, xmc->base_addrs[IO_CQ]);
++			}
++		}
++
++		retry = 0;
++		while (retry++ < MAX_XMC_RETRY &&
++			!(READ_REG32(xmc, XMC_STATUS_REG) & STATUS_MASK_STOPPED))
++			msleep(RETRY_INTERVAL);
++
++		//Wait for XMC to stop and then check that ERT has also finished
++		if (retry >= MAX_XMC_RETRY) {
++			xocl_err(&xmc->pdev->dev,
++				"Failed to stop XMC");
++			xocl_err(&xmc->pdev->dev,
++				"XMC Error Reg 0x%x",
++				READ_REG32(xmc, XMC_ERROR_REG));
++			xmc->state = XMC_STATE_ERROR;
++			return -ETIMEDOUT;
++		} else if (!SELF_JUMP(READ_IMAGE_SCHED(xmc, 0)) &&
++			 !(XOCL_READ_REG32(xmc->base_addrs[IO_CQ]) & ERT_STOP_ACK)) {
++			while (retry++ < MAX_ERT_RETRY &&
++				!(XOCL_READ_REG32(xmc->base_addrs[IO_CQ]) & ERT_STOP_ACK))
++				msleep(RETRY_INTERVAL);
++			if (retry >= MAX_ERT_RETRY) {
++				xocl_err(&xmc->pdev->dev,
++					"Failed to stop sched");
++				xocl_err(&xmc->pdev->dev,
++					"Scheduler CQ status 0x%x",
++					XOCL_READ_REG32(xmc->base_addrs[IO_CQ]));
++				//We don't exit if ERT doesn't stop since it can hang due to bad kernel
++				//xmc->state = XMC_STATE_ERROR;
++				//return -ETIMEDOUT;
++			}
++		}
++
++		xocl_info(&xmc->pdev->dev, "XMC/sched Stopped, retry %d",
++			retry);
++	}
++
++	// Hold XMC in reset now that its safely stopped
++	xocl_info(&xmc->pdev->dev,
++		"XMC info, version 0x%x, status 0x%x, id 0x%x",
++		READ_REG32(xmc, XMC_VERSION_REG),
++		READ_REG32(xmc, XMC_STATUS_REG),
++		READ_REG32(xmc, XMC_MAGIC_REG));
++	WRITE_GPIO(xmc, GPIO_RESET, 0);
++	xmc->state = XMC_STATE_RESET;
++	reg_val = READ_GPIO(xmc, 0);
++	xocl_info(&xmc->pdev->dev, "MB Reset GPIO 0x%x", reg_val);
++	if (reg_val != GPIO_RESET) {
++		//Shouldnt make it here but if we do then exit
++		xmc->state = XMC_STATE_ERROR;
++		return -EIO;
++	}
++
++	return 0;
++}
++static int stop_xmc(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++	int ret = 0;
++	void *xdev_hdl;
++
++	xocl_info(&pdev->dev, "Stop Microblaze...");
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return -ENODEV;
++	else if (!xmc->enabled)
++		return -ENODEV;
++
++	xdev_hdl = xocl_get_xdev(xmc->pdev);
++
++	mutex_lock(&xmc->xmc_lock);
++	ret = stop_xmc_nolock(pdev);
++	mutex_unlock(&xmc->xmc_lock);
++
++	return ret;
++}
++
++static int load_xmc(struct xocl_xmc *xmc)
++{
++	int retry = 0;
++	u32 reg_val = 0;
++	int ret = 0;
++	void *xdev_hdl;
++
++	if (!xmc->enabled)
++		return -ENODEV;
++
++	mutex_lock(&xmc->xmc_lock);
++
++	/* Stop XMC first */
++	ret = stop_xmc_nolock(xmc->pdev);
++	if (ret != 0)
++		goto out;
++
++	xdev_hdl = xocl_get_xdev(xmc->pdev);
++
++	/* Load XMC and ERT Image */
++	if (xocl_mb_mgmt_on(xdev_hdl)) {
++		xocl_info(&xmc->pdev->dev, "Copying XMC image len %d",
++			xmc->mgmt_binary_length);
++		COPY_MGMT(xmc, xmc->mgmt_binary, xmc->mgmt_binary_length);
++	}
++
++	if (xocl_mb_sched_on(xdev_hdl)) {
++		xocl_info(&xmc->pdev->dev, "Copying scheduler image len %d",
++			xmc->sche_binary_length);
++		COPY_SCHE(xmc, xmc->sche_binary, xmc->sche_binary_length);
++	}
++
++	/* Take XMC and ERT out of reset */
++	WRITE_GPIO(xmc, GPIO_ENABLED, 0);
++	reg_val = READ_GPIO(xmc, 0);
++	xocl_info(&xmc->pdev->dev, "MB Reset GPIO 0x%x", reg_val);
++	if (reg_val != GPIO_ENABLED) {
++		//Shouldnt make it here but if we do then exit
++		xmc->state = XMC_STATE_ERROR;
++		goto out;
++	}
++
++	/* Wait for XMC to start
++	 * Note that ERT will start long before XMC so we don't check anything
++	 */
++	reg_val = READ_REG32(xmc, XMC_STATUS_REG);
++	if (!(reg_val & STATUS_MASK_INIT_DONE)) {
++		xocl_info(&xmc->pdev->dev, "Waiting for XMC to finish init...");
++		retry = 0;
++		while (retry++ < MAX_XMC_RETRY &&
++			!(READ_REG32(xmc, XMC_STATUS_REG) & STATUS_MASK_INIT_DONE))
++			msleep(RETRY_INTERVAL);
++		if (retry >= MAX_XMC_RETRY) {
++			xocl_err(&xmc->pdev->dev,
++				"XMC did not finish init sequence!");
++			xocl_err(&xmc->pdev->dev,
++				"Error Reg 0x%x",
++				READ_REG32(xmc, XMC_ERROR_REG));
++			xocl_err(&xmc->pdev->dev,
++				"Status Reg 0x%x",
++				READ_REG32(xmc, XMC_STATUS_REG));
++			ret = -ETIMEDOUT;
++			xmc->state = XMC_STATE_ERROR;
++			goto out;
++		}
++	}
++	xocl_info(&xmc->pdev->dev, "XMC and scheduler Enabled, retry %d",
++			retry);
++	xocl_info(&xmc->pdev->dev,
++		"XMC info, version 0x%x, status 0x%x, id 0x%x",
++		READ_REG32(xmc, XMC_VERSION_REG),
++		READ_REG32(xmc, XMC_STATUS_REG),
++		READ_REG32(xmc, XMC_MAGIC_REG));
++	xmc->state = XMC_STATE_ENABLED;
++
++	xmc->cap = READ_REG32(xmc, XMC_FEATURE_REG);
++out:
++	mutex_unlock(&xmc->xmc_lock);
++
++	return ret;
++}
++
++static void xmc_reset(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++
++	xocl_info(&pdev->dev, "Reset Microblaze...");
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return;
++
++	load_xmc(xmc);
++}
++
++static int load_mgmt_image(struct platform_device *pdev, const char *image,
++	u32 len)
++{
++	struct xocl_xmc *xmc;
++	char *binary;
++
++	if (len > MAX_IMAGE_LEN)
++		return -EINVAL;
++
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return -EINVAL;
++
++	binary = xmc->mgmt_binary;
++	xmc->mgmt_binary = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!xmc->mgmt_binary)
++		return -ENOMEM;
++
++	if (binary)
++		devm_kfree(&pdev->dev, binary);
++	memcpy(xmc->mgmt_binary, image, len);
++	xmc->mgmt_binary_length = len;
++
++	return 0;
++}
++
++static int load_sche_image(struct platform_device *pdev, const char *image,
++	u32 len)
++{
++	struct xocl_xmc *xmc;
++	char *binary = NULL;
++
++	if (len > MAX_IMAGE_LEN)
++		return -EINVAL;
++
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return -EINVAL;
++
++	binary = xmc->sche_binary;
++	xmc->sche_binary = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!xmc->sche_binary)
++		return -ENOMEM;
++
++	if (binary)
++		devm_kfree(&pdev->dev, binary);
++	memcpy(xmc->sche_binary, image, len);
++	xmc->sche_binary_length = len;
++
++	return 0;
++}
++
++static struct xocl_mb_funcs xmc_ops = {
++	.load_mgmt_image	= load_mgmt_image,
++	.load_sche_image	= load_sche_image,
++	.reset			= xmc_reset,
++	.stop			= stop_xmc,
++	.get_data     = xmc_get_data,
++};
++
++static int xmc_remove(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++	int	i;
++
++	xmc = platform_get_drvdata(pdev);
++	if (!xmc)
++		return 0;
++
++	if (xmc->mgmt_binary)
++		devm_kfree(&pdev->dev, xmc->mgmt_binary);
++	if (xmc->sche_binary)
++		devm_kfree(&pdev->dev, xmc->sche_binary);
++
++	mgmt_sysfs_destroy_xmc(pdev);
++
++	for (i = 0; i < NUM_IOADDR; i++) {
++		if (xmc->base_addrs[i])
++			iounmap(xmc->base_addrs[i]);
++	}
++
++	mutex_destroy(&xmc->xmc_lock);
++
++	platform_set_drvdata(pdev, NULL);
++	devm_kfree(&pdev->dev, xmc);
++
++	return 0;
++}
++
++static int xmc_probe(struct platform_device *pdev)
++{
++	struct xocl_xmc *xmc;
++	struct resource *res;
++	void	*xdev_hdl;
++	int i, err;
++
++	xmc = devm_kzalloc(&pdev->dev, sizeof(*xmc), GFP_KERNEL);
++	if (!xmc) {
++		xocl_err(&pdev->dev, "out of memory");
++		return -ENOMEM;
++	}
++
++	xmc->pdev = pdev;
++	platform_set_drvdata(pdev, xmc);
++
++	xdev_hdl = xocl_get_xdev(pdev);
++	if (xocl_mb_mgmt_on(xdev_hdl) || xocl_mb_sched_on(xdev_hdl)) {
++		xocl_info(&pdev->dev, "Microblaze is supported.");
++		xmc->enabled = true;
++	} else {
++		xocl_err(&pdev->dev, "Microblaze is not supported.");
++		devm_kfree(&pdev->dev, xmc);
++		platform_set_drvdata(pdev, NULL);
++		return 0;
++	}
++
++	for (i = 0; i < NUM_IOADDR; i++) {
++		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
++		if (res) {
++			xocl_info(&pdev->dev, "IO start: 0x%llx, end: 0x%llx",
++				res->start, res->end);
++			xmc->base_addrs[i] =
++				ioremap_nocache(res->start, res->end - res->start + 1);
++			if (!xmc->base_addrs[i]) {
++				err = -EIO;
++				xocl_err(&pdev->dev, "Map iomem failed");
++				goto failed;
++			}
++		} else
++			break;
++	}
++
++	err = mgmt_sysfs_create_xmc(pdev);
++	if (err) {
++		xocl_err(&pdev->dev, "Create sysfs failed, err %d", err);
++		goto failed;
++	}
++
++	xocl_subdev_register(pdev, XOCL_SUBDEV_XMC, &xmc_ops);
++
++	mutex_init(&xmc->xmc_lock);
++
++	return 0;
++
++failed:
++	xmc_remove(pdev);
++	return err;
++}
++
++struct platform_device_id xmc_id_table[] = {
++	{ XOCL_XMC, 0 },
++	{ },
++};
++
++static struct platform_driver	xmc_driver = {
++	.probe		= xmc_probe,
++	.remove		= xmc_remove,
++	.driver		= {
++		.name = XOCL_XMC,
++	},
++	.id_table = xmc_id_table,
++};
++
++int __init xocl_init_xmc(void)
++{
++	return platform_driver_register(&xmc_driver);
++}
++
++void xocl_fini_xmc(void)
++{
++	platform_driver_unregister(&xmc_driver);
++}
+diff --git a/drivers/gpu/drm/xocl/subdev/xvc.c b/drivers/gpu/drm/xocl/subdev/xvc.c
+new file mode 100644
+index 000000000000..355dbad30b00
+--- /dev/null
++++ b/drivers/gpu/drm/xocl/subdev/xvc.c
+@@ -0,0 +1,461 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * A GEM style device manager for PCIe based OpenCL accelerators.
++ *
++ * Copyright (C) 2016-2019 Xilinx, Inc. All rights reserved.
++ *
++ * Authors:
++ *
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ":%s: " fmt, __func__
 +
 +#include <linux/types.h>
-+#include <linux/scatterlist.h>
-+#include <linux/interrupt.h>
++#include <linux/uaccess.h>
++#include <linux/vmalloc.h>
++#include <linux/slab.h>
++#include <linux/cdev.h>
++#include <linux/fs.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/ioctl.h>
++
++#include "../xocl_drv.h"
++
++/* IOCTL interfaces */
++#define XIL_XVC_MAGIC 0x58564344  // "XVCD"
++#define	MINOR_PUB_HIGH_BIT	0x00000
++#define	MINOR_PRI_HIGH_BIT	0x10000
++#define MINOR_NAME_MASK		0xffffffff
++
++enum xvc_algo_type {
++	XVC_ALGO_NULL,
++	XVC_ALGO_CFG,
++	XVC_ALGO_BAR
++};
++
++struct xil_xvc_ioc {
++	unsigned int opcode;
++	unsigned int length;
++	unsigned char *tms_buf;
++	unsigned char *tdi_buf;
++	unsigned char *tdo_buf;
++};
++
++struct xil_xvc_properties {
++	unsigned int xvc_algo_type;
++	unsigned int config_vsec_id;
++	unsigned int config_vsec_rev;
++	unsigned int bar_index;
++	unsigned int bar_offset;
++};
++
++#define XDMA_IOCXVC	     _IOWR(XIL_XVC_MAGIC, 1, struct xil_xvc_ioc)
++#define XDMA_RDXVC_PROPS _IOR(XIL_XVC_MAGIC, 2, struct xil_xvc_properties)
++
++#define COMPLETION_LOOP_MAX	100
++
++#define XVC_BAR_LENGTH_REG	0x0
++#define XVC_BAR_TMS_REG		0x4
++#define XVC_BAR_TDI_REG		0x8
++#define XVC_BAR_TDO_REG		0xC
++#define XVC_BAR_CTRL_REG	0x10
++
++#define XVC_DEV_NAME "xvc" SUBDEV_SUFFIX
++
++struct xocl_xvc {
++	void *__iomem base;
++	unsigned int instance;
++	struct cdev *sys_cdev;
++	struct device *sys_device;
++};
++
++static dev_t xvc_dev;
++
++static struct xil_xvc_properties xvc_pci_props;
++
++#ifdef __REG_DEBUG__
++/* SECTION: Function definitions */
++static inline void __write_register(const char *fn, u32 value, void *base,
++				unsigned int off)
++{
++	pr_info("%s: 0x%p, W reg 0x%lx, 0x%x.\n", fn, base, off, value);
++	iowrite32(value, base + off);
++}
++
++static inline u32 __read_register(const char *fn, void *base, unsigned int off)
++{
++	u32 v = ioread32(base + off);
++
++	pr_info("%s: 0x%p, R reg 0x%lx, 0x%x.\n", fn, base, off, v);
++	return v;
++}
++#define write_register(v, base, off) __write_register(__func__, v, base, off)
++#define read_register(base, off) __read_register(__func__, base, off)
++
++#else
++#define write_register(v, base, off) iowrite32(v, (base) + (off))
++#define read_register(base, off) ioread32((base) + (off))
++#endif /* #ifdef __REG_DEBUG__ */
++
++
++static int xvc_shift_bits(void *base, u32 tms_bits, u32 tdi_bits,
++			  u32 *tdo_bits)
++{
++	u32 control;
++	u32 write_reg_data;
++	int count;
++
++	/* set tms bit */
++	write_register(tms_bits, base, XVC_BAR_TMS_REG);
++	/* set tdi bits and shift data out */
++	write_register(tdi_bits, base, XVC_BAR_TDI_REG);
++
++	control = read_register(base, XVC_BAR_CTRL_REG);
++	/* enable shift operation */
++	write_reg_data = control | 0x01;
++	write_register(write_reg_data, base, XVC_BAR_CTRL_REG);
++
++	/* poll for completion */
++	count = COMPLETION_LOOP_MAX;
++	while (count) {
++		/* read control reg to check shift operation completion */
++		control = read_register(base, XVC_BAR_CTRL_REG);
++		if ((control & 0x01) == 0)
++			break;
++
++		count--;
++	}
++
++	if (!count)	{
++		pr_warn("XVC bar transaction timed out (0x%0X)\n", control);
++		return -ETIMEDOUT;
++	}
++
++	/* read tdo bits back out */
++	*tdo_bits = read_register(base, XVC_BAR_TDO_REG);
++
++	return 0;
++}
++
++static long xvc_ioctl_helper(struct xocl_xvc *xvc, const void __user *arg)
++{
++	struct xil_xvc_ioc xvc_obj;
++	unsigned int opcode;
++	unsigned int total_bits;
++	unsigned int total_bytes;
++	unsigned int bits, bits_left;
++	unsigned char *buffer = NULL;
++	unsigned char *tms_buf = NULL;
++	unsigned char *tdi_buf = NULL;
++	unsigned char *tdo_buf = NULL;
++	void __iomem *iobase = xvc->base;
++	u32 control_reg_data;
++	u32 write_reg_data;
++	int rv;
++
++	rv = copy_from_user((void *)&xvc_obj, arg,
++				sizeof(struct xil_xvc_ioc));
++	/* anything not copied ? */
++	if (rv) {
++		pr_info("copy_from_user xvc_obj failed: %d.\n", rv);
++		goto cleanup;
++	}
++
++	opcode = xvc_obj.opcode;
++
++	/* Invalid operation type, no operation performed */
++	if (opcode != 0x01 && opcode != 0x02) {
++		pr_info("UNKNOWN opcode 0x%x.\n", opcode);
++		return -EINVAL;
++	}
++
++	total_bits = xvc_obj.length;
++	total_bytes = (total_bits + 7) >> 3;
++
++	buffer = kmalloc(total_bytes * 3, GFP_KERNEL);
++	if (!buffer) {
++		pr_info("OOM %u, op 0x%x, len %u bits, %u bytes.\n",
++			3 * total_bytes, opcode, total_bits, total_bytes);
++		rv = -ENOMEM;
++		goto cleanup;
++	}
++	tms_buf = buffer;
++	tdi_buf = tms_buf + total_bytes;
++	tdo_buf = tdi_buf + total_bytes;
++
++	rv = copy_from_user((void *)tms_buf, xvc_obj.tms_buf, total_bytes);
++	if (rv) {
++		pr_info("copy tmfs_buf failed: %d/%u.\n", rv, total_bytes);
++		goto cleanup;
++	}
++	rv = copy_from_user((void *)tdi_buf, xvc_obj.tdi_buf, total_bytes);
++	if (rv) {
++		pr_info("copy tdi_buf failed: %d/%u.\n", rv, total_bytes);
++		goto cleanup;
++	}
++
++	// If performing loopback test, set loopback bit (0x02) in control reg
++	if (opcode == 0x02) {
++		control_reg_data = read_register(iobase, XVC_BAR_CTRL_REG);
++		write_reg_data = control_reg_data | 0x02;
++		write_register(write_reg_data, iobase, XVC_BAR_CTRL_REG);
++	}
++
++	/* set length register to 32 initially if more than one
++	 * word-transaction is to be done
++	 */
++	if (total_bits >= 32)
++		write_register(0x20, iobase, XVC_BAR_LENGTH_REG);
++
++	for (bits = 0, bits_left = total_bits; bits < total_bits; bits += 32,
++		bits_left -= 32) {
++		unsigned int bytes = bits >> 3;
++		unsigned int shift_bytes = 4;
++		u32 tms_store = 0;
++		u32 tdi_store = 0;
++		u32 tdo_store = 0;
++
++		if (bits_left < 32) {
++			/* set number of bits to shift out */
++			write_register(bits_left, iobase, XVC_BAR_LENGTH_REG);
++			shift_bytes = (bits_left + 7) >> 3;
++		}
++
++		memcpy(&tms_store, tms_buf + bytes, shift_bytes);
++		memcpy(&tdi_store, tdi_buf + bytes, shift_bytes);
++
++		/* Shift data out and copy to output buffer */
++		rv = xvc_shift_bits(iobase, tms_store, tdi_store, &tdo_store);
++		if (rv < 0)
++			goto cleanup;
++
++		memcpy(tdo_buf + bytes, &tdo_store, shift_bytes);
++	}
++
++	// If performing loopback test, reset loopback bit in control reg
++	if (opcode == 0x02) {
++		control_reg_data = read_register(iobase, XVC_BAR_CTRL_REG);
++		write_reg_data = control_reg_data & ~(0x02);
++		write_register(write_reg_data, iobase, XVC_BAR_CTRL_REG);
++	}
++
++	rv = copy_to_user((void *)xvc_obj.tdo_buf, tdo_buf, total_bytes);
++	if (rv) {
++		pr_info("copy back tdo_buf failed: %d/%u.\n", rv, total_bytes);
++		rv = -EFAULT;
++		goto cleanup;
++	}
++
++cleanup:
++	kfree(buffer);
++
++	mmiowb();
++
++	return rv;
++}
++
++static long xvc_read_properties(struct xocl_xvc *xvc, const void __user *arg)
++{
++	int status = 0;
++	struct xil_xvc_properties xvc_props_obj;
++
++	xvc_props_obj.xvc_algo_type   = (unsigned int) xvc_pci_props.xvc_algo_type;
++	xvc_props_obj.config_vsec_id  = xvc_pci_props.config_vsec_id;
++	xvc_props_obj.config_vsec_rev = xvc_pci_props.config_vsec_rev;
++	xvc_props_obj.bar_index		  = xvc_pci_props.bar_index;
++	xvc_props_obj.bar_offset	  = xvc_pci_props.bar_offset;
++
++	if (copy_to_user((void *)arg, &xvc_props_obj, sizeof(xvc_props_obj)))
++		status = -ENOMEM;
++
++	mmiowb();
++	return status;
++}
++
++static long xvc_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
++	struct xocl_xvc *xvc = filp->private_data;
++	long status = 0;
++
++	switch (cmd) {
++	case XDMA_IOCXVC:
++		status = xvc_ioctl_helper(xvc, (void __user *)arg);
++		break;
++	case XDMA_RDXVC_PROPS:
++		status = xvc_read_properties(xvc, (void __user *)arg);
++		break;
++	default:
++		status = -ENOIOCTLCMD;
++		break;
++	}
++
++	return status;
++}
++
++static int char_open(struct inode *inode, struct file *file)
++{
++	struct xocl_xvc *xvc = NULL;
++
++	xvc = xocl_drvinst_open(inode->i_cdev);
++	if (!xvc)
++		return -ENXIO;
++
++	/* create a reference to our char device in the opened file */
++	file->private_data = xvc;
++	return 0;
++}
 +
 +/*
-+ * functions exported by the xdma driver
++ * Called when the device goes from used to unused.
 + */
++static int char_close(struct inode *inode, struct file *file)
++{
++	struct xocl_xvc *xvc = file->private_data;
++
++	xocl_drvinst_close(xvc);
++	return 0;
++}
++
 +
 +/*
-+ * xdma_device_open - read the pci bars and configure the fpga
-+ *	should be called from probe()
-+ *    NOTE:
-+ *		user interrupt will not enabled until xdma_user_isr_enable()
-+ *		is called
-+ * @pdev: ptr to pci_dev
-+ * @mod_name: the module name to be used for request_irq
-+ * @user_max: max # of user/event (interrupts) to be configured
-+ * @channel_max: max # of c2h and h2c channels to be configured
-+ * NOTE: if the user/channel provisioned is less than the max specified,
-+ *	 libxdma will update the user_max/channel_max
-+ * returns
-+ *	a opaque handle (for libxdma to identify the device)
-+ *	NULL, in case of error
++ * character device file operations for the XVC
 + */
-+void *xdma_device_open(const char *mod_name, struct pci_dev *pdev,
-+		 int *user_max, int *h2c_channel_max, int *c2h_channel_max);
++static const struct file_operations xvc_fops = {
++	.owner = THIS_MODULE,
++	.open = char_open,
++	.release = char_close,
++	.unlocked_ioctl = xvc_ioctl,
++};
 +
-+/*
-+ * xdma_device_close - prepare fpga for removal: disable all interrupts (users
-+ * and xdma) and release all resources
-+ *	should called from remove()
-+ * @pdev: ptr to struct pci_dev
-+ * @tuples: from xdma_device_open()
-+ */
-+void xdma_device_close(struct pci_dev *pdev, void *dev_handle);
++static int xvc_probe(struct platform_device *pdev)
++{
++	struct xocl_xvc *xvc;
++	struct resource *res;
++	struct xocl_dev_core *core;
++	int err;
 +
-+/*
-+ * xdma_device_restart - restart the fpga
-+ * @pdev: ptr to struct pci_dev
-+ * TODO:
-+ *	may need more refining on the parameter list
-+ * return < 0 in case of error
-+ * TODO: exact error code will be defined later
-+ */
-+int xdma_device_restart(struct pci_dev *pdev, void *dev_handle);
++	xvc = xocl_drvinst_alloc(&pdev->dev, sizeof(*xvc));
++	if (!xvc)
++		return -ENOMEM;
 +
-+/*
-+ * xdma_user_isr_register - register a user ISR handler
-+ * It is expected that the xdma will register the ISR, and for the user
-+ * interrupt, it will call the corresponding handle if it is registered and
-+ * enabled.
-+ *
-+ * @pdev: ptr to the the pci_dev struct
-+ * @mask: bitmask of user interrupts (0 ~ 15)to be registered
-+ *		bit 0: user interrupt 0
-+ *		...
-+ *		bit 15: user interrupt 15
-+ *		any bit above bit 15 will be ignored.
-+ * @handler: the correspoinding handler
-+ *		a NULL handler will be treated as de-registeration
-+ * @name: to be passed to the handler, ignored if handler is NULL`
-+ * @dev: to be passed to the handler, ignored if handler is NULL`
-+ * return < 0 in case of error
-+ * TODO: exact error code will be defined later
-+ */
-+int xdma_user_isr_register(void *dev_hndl, unsigned int mask,
-+			 irq_handler_t handler, void *dev);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	xvc->base = ioremap_nocache(res->start, res->end - res->start + 1);
++	if (!xvc->base) {
++		err = -EIO;
++		xocl_err(&pdev->dev, "Map iomem failed");
++		goto failed;
++	}
 +
-+/*
-+ * xdma_user_isr_enable/disable - enable or disable user interrupt
-+ * @pdev: ptr to the the pci_dev struct
-+ * @mask: bitmask of user interrupts (0 ~ 15)to be registered
-+ * return < 0 in case of error
-+ * TODO: exact error code will be defined later
-+ */
-+int xdma_user_isr_enable(void *dev_hndl, unsigned int mask);
-+int xdma_user_isr_disable(void *dev_hndl, unsigned int mask);
++	core = xocl_get_xdev(pdev);
 +
-+/*
-+ * xdma_xfer_submit - submit data for dma operation (for both read and write)
-+ *	This is a blocking call
-+ * @channel: channle number (< channel_max)
-+ *	== channel_max means libxdma can pick any channel available:q
++	xvc->sys_cdev = cdev_alloc();
++	xvc->sys_cdev->ops = &xvc_fops;
++	xvc->sys_cdev->owner = THIS_MODULE;
++	xvc->instance = XOCL_DEV_ID(core->pdev) |
++		platform_get_device_id(pdev)->driver_data;
++	xvc->sys_cdev->dev = MKDEV(MAJOR(xvc_dev), core->dev_minor);
++	err = cdev_add(xvc->sys_cdev, xvc->sys_cdev->dev, 1);
++	if (err) {
++		xocl_err(&pdev->dev, "cdev_add failed, %d", err);
++		goto failed;
++	}
 +
-+ * @dir: DMA_FROM/TO_DEVICE
-+ * @offset: offset into the DDR/BRAM memory to read from or write to
-+ * @sg_tbl: the scatter-gather list of data buffers
-+ * @timeout: timeout in mili-seconds, *currently ignored
-+ * return # of bytes transfered or
-+ *	 < 0 in case of error
-+ * TODO: exact error code will be defined later
-+ */
-+ssize_t xdma_xfer_submit(void *dev_hndl, int channel, bool write, u64 ep_addr,
-+			struct sg_table *sgt, bool dma_mapped, int timeout_ms);
++	xvc->sys_device = device_create(xrt_class, &pdev->dev,
++					xvc->sys_cdev->dev,
++					NULL, "%s%d",
++					platform_get_device_id(pdev)->name,
++					xvc->instance & MINOR_NAME_MASK);
++	if (IS_ERR(xvc->sys_device)) {
++		err = PTR_ERR(xvc->sys_device);
++		goto failed;
++	}
 +
-+/*
-+ * xdma_device_online - bring device offline
-+ */
-+void xdma_device_online(struct pci_dev *pdev, void *dev_hndl);
++	xocl_drvinst_set_filedev(xvc, xvc->sys_cdev);
 +
-+/*
-+ * xdma_device_offline - bring device offline
-+ */
-+void xdma_device_offline(struct pci_dev *pdev, void *dev_hndl);
++	platform_set_drvdata(pdev, xvc);
++	xocl_info(&pdev->dev, "XVC device instance %d initialized\n",
++		xvc->instance);
 +
-+/*
-+ * xdma_get_userio - get user bar information
-+ */
-+int xdma_get_userio(void *dev_hndl, void * __iomem *base_addr,
-+		    u64 *len, u32 *bar_idx);
++	// Update PCIe BAR properties in a global structure
++	xvc_pci_props.xvc_algo_type   = XVC_ALGO_BAR;
++	xvc_pci_props.config_vsec_id  = 0;
++	xvc_pci_props.config_vsec_rev = 0;
++	xvc_pci_props.bar_index	      = core->bar_idx;
++	xvc_pci_props.bar_offset      = (unsigned int) res->start - (unsigned int)
++									pci_resource_start(core->pdev, core->bar_idx);
 +
-+/*
-+ * xdma_get_bypassio - get bypass bar information
-+ */
-+int xdma_get_bypassio(void *dev_hndl, u64 *len, u32 *bar_idx);
++	return 0;
++failed:
++	if (!IS_ERR(xvc->sys_device))
++		device_destroy(xrt_class, xvc->sys_cdev->dev);
++	if (xvc->sys_cdev)
++		cdev_del(xvc->sys_cdev);
++	if (xvc->base)
++		iounmap(xvc->base);
++	xocl_drvinst_free(xvc);
 +
-+#endif
++	return err;
++}
++
++
++static int xvc_remove(struct platform_device *pdev)
++{
++	struct xocl_xvc	*xvc;
++
++	xvc = platform_get_drvdata(pdev);
++	if (!xvc) {
++		xocl_err(&pdev->dev, "driver data is NULL");
++		return -EINVAL;
++	}
++	device_destroy(xrt_class, xvc->sys_cdev->dev);
++	cdev_del(xvc->sys_cdev);
++	if (xvc->base)
++		iounmap(xvc->base);
++
++	platform_set_drvdata(pdev, NULL);
++	xocl_drvinst_free(xvc);
++
++	return 0;
++}
++
++struct platform_device_id xvc_id_table[] = {
++	{ XOCL_XVC_PUB, MINOR_PUB_HIGH_BIT },
++	{ XOCL_XVC_PRI, MINOR_PRI_HIGH_BIT },
++	{ },
++};
++
++static struct platform_driver	xvc_driver = {
++	.probe		= xvc_probe,
++	.remove		= xvc_remove,
++	.driver		= {
++		.name = XVC_DEV_NAME,
++	},
++	.id_table = xvc_id_table,
++};
++
++int __init xocl_init_xvc(void)
++{
++	int err = 0;
++
++	err = alloc_chrdev_region(&xvc_dev, 0, XOCL_MAX_DEVICES, XVC_DEV_NAME);
++	if (err < 0)
++		goto err_register_chrdev;
++
++	err = platform_driver_register(&xvc_driver);
++	if (err)
++		goto err_driver_reg;
++	return 0;
++
++err_driver_reg:
++	unregister_chrdev_region(xvc_dev, XOCL_MAX_DEVICES);
++err_register_chrdev:
++	return err;
++}
++
++void xocl_fini_xvc(void)
++{
++	unregister_chrdev_region(xvc_dev, XOCL_MAX_DEVICES);
++	platform_driver_unregister(&xvc_driver);
++}
 -- 
 2.17.0
 
