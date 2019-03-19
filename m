@@ -2,159 +2,83 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0881C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E97C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CABF2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC702146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553028842;
+	bh=1zoo+BRS/GB8kWjsXTpn0+HuEOeH90GfdroGPUJtKUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wSfQtqH0kKIUELO18U9bUVPjUtgR5o3MTCJLqYlKXtYS+6HgqxjuJIhSPZLgU96jQ
+	 ienVbSQ0ZH+Mns2W+r8GeWCb/5FFbLFdQeATcnrHAWn+F9jn5M6QKHNGbxG1R9s1sT
+	 v55jWZWtr79+UzYVZHbO5diCe/35nsHWM4Jz52gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfCSUvE (ORCPT
+        id S1727154AbfCSUyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:51:04 -0400
-Received: from p3plsmtpa11-01.prod.phx3.secureserver.net ([68.178.252.102]:50334
-        "EHLO p3plsmtpa11-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbfCSUvE (ORCPT
+        Tue, 19 Mar 2019 16:54:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35865 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfCSUyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:51:04 -0400
-Received: from [10.10.38.206] ([139.138.146.66])
-        by :SMTPAUTH: with ESMTPSA
-        id 6LaKhOUO4K1jK6LaKhFqDp; Tue, 19 Mar 2019 13:43:46 -0700
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-To:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Jerome Glisse <jglisse@redhat.com>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20190308213633.28978-1-jhubbard@nvidia.com>
- <20190308213633.28978-2-jhubbard@nvidia.com>
- <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
- <20190319134724.GB3437@redhat.com> <20190319141416.GA3879@redhat.com>
- <20190319142918.6a5vom55aeojapjp@kshutemo-mobl1>
- <20190319153644.GB26099@quack2.suse.cz>
- <20190319090322.GE7485@iweiny-DESK2.sc.intel.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <f9195df4-66ca-95f6-874e-d19cd775794d@talpey.com>
-Date:   Tue, 19 Mar 2019 15:43:44 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 19 Mar 2019 16:54:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y13so395590wrd.3;
+        Tue, 19 Mar 2019 13:53:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DI7b4vbc/Sliz3fIo8bDUCfSigtpseBZ+fp0B3j934s=;
+        b=enAisG266unW62NOq08fRae5pwQH7MYz3SSitpAkJxXx8fTaNe2cy61gGwO7+9zbQh
+         C9A6kgxQqRCZVSpPnLWRUahQ89wZcq2mWBW7mK9UQMHWw2bT148wqvzvbgFtarGPu0lx
+         +QMEUS3v2EEOAXemKT+n0nV+/OzFQNAzBXi8VJ7Rg210Z1qGFpFfM6wbbJzj7xqVnwlw
+         bIv+o8unmW3SQKzdTjxyioMFbrN+i8o3PgM9UjIO1WeB4YFQE46OzGIPQcMhl99lF+9G
+         OvxWfCziwi7LGcqjkKz8NHRFdrUiP9pJ9Am98cRCAY8fy/aWG7oLZFtqHUO9L3CQ7Z2t
+         1dfw==
+X-Gm-Message-State: APjAAAXnPP+1ntt/1C1DTqOKizVhlYeQLVfHnRDLNMmQWSrINMg68er8
+        +IV5LnFvAQghXH19bzQbHmM=
+X-Google-Smtp-Source: APXvYqzwoP2xKU2vE1pnz6kpMxIuC00ueIlyUiM8eEyyFdPTyIq3I9s2sRmIoH+RaOdnNjaHW5WI9g==
+X-Received: by 2002:a5d:6681:: with SMTP id l1mr16838098wru.186.1553028838730;
+        Tue, 19 Mar 2019 13:53:58 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.153])
+        by smtp.googlemail.com with ESMTPSA id h131sm8221773wmh.1.2019.03.19.13.53.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 13:53:57 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 21:53:55 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     kgene@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: exynos: Fix audio routing on
+ exynos5422-odroidxu3
+Message-ID: <20190319205355.GC16150@kozik-lap>
+References: <CGME20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06@epcas1p4.samsung.com>
+ <20190306104056.7603-1-s.nawrocki@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319090322.GE7485@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN68ogHI//w010AOOp/HiIKMI+WedmJjAfCUDtxFhhDVGnjPk04WBXY2mLLWMKbpDReApTSBOCQizPAeuLqpYMbwcbWkdCv0lExYdkQDqOgifQ1qlW81
- eUAFG+FD7SEdo0ezn5Tu+wBkJdLBZ5+6oUIhCUnhEDCHPYua5JMWgzd3pgerrhRgr9EMHq74vwzcr2HhGrdhj+alNY3YKk3JEGq2VfUIqCsybjvNmj1Tc8V0
- bTQLXZTtHQGzuY+EKmgTSSGcvmr77Cm2vbGY6JS0ezq3fwtYtHMHjOhkwhDaYFfqXNbdkDxeqlrIMi/ANE95sVSnhvosYwZIvzA6rmfgVLpPk/7aVr4eI7dp
- eMdSB2AZyUs064blgdnsUFcBU/JjxfQLkYvtEoJv1GEzxdnccd5Nkw//roQAG5GLEvFQ47pv16cEIVT0AO2IoOriZjpLkLOav1tNInyTwF6SfyKRxcoVanm5
- Dp6l/ldmndbSQ+9j60cRk46Pe4R6nMQodYQpycFFLOg5hz13Y4aHT7wbHYQpWcdpL0DiJp2KXWZQJMbfEhvGzpLS9EdsrjRrelNCOiwvck7ZLp6nLamI4Gge
- hh4ATvQ3Su6XlUfHNMFIYy1M9MiqrkCFoy+bvsl05dCIyuiW6u7tvkSPVoearPn6QB5TKdq4eqRzx8Br3yQ5Qb02SUiDuf+eStUeL77EwlBpQdhacDgV/wmn
- oComaDWsXh/deXq+4YMXFVIdDssWLqVkEwb//dTjelTadR3jEVhg99VvK3uW21t37iCwfC7oPfIvsCeRZza7ltQlgnQqqrijMJxISVg7/cOdfLC9likn+n6B
- OblLK/zKLJCXVSM6a03oyWXPDXfqD8pBGqJABh9Ps/X5Gun8efR3ulUTARJSMG4yW6DGFGsHfT0PcoCcZw7CUE4EMlGkyP916b0Ppu4z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190306104056.7603-1-s.nawrocki@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/2019 4:03 AM, Ira Weiny wrote:
-> On Tue, Mar 19, 2019 at 04:36:44PM +0100, Jan Kara wrote:
->> On Tue 19-03-19 17:29:18, Kirill A. Shutemov wrote:
->>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
->>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
->>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
->>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
->>>>>>> From: John Hubbard <jhubbard@nvidia.com>
->>>>>
->>>>> [...]
->>>>>
->>>>>>> diff --git a/mm/gup.c b/mm/gup.c
->>>>>>> index f84e22685aaa..37085b8163b1 100644
->>>>>>> --- a/mm/gup.c
->>>>>>> +++ b/mm/gup.c
->>>>>>> @@ -28,6 +28,88 @@ struct follow_page_context {
->>>>>>>   	unsigned int page_mask;
->>>>>>>   };
->>>>>>>   
->>>>>>> +typedef int (*set_dirty_func_t)(struct page *page);
->>>>>>> +
->>>>>>> +static void __put_user_pages_dirty(struct page **pages,
->>>>>>> +				   unsigned long npages,
->>>>>>> +				   set_dirty_func_t sdf)
->>>>>>> +{
->>>>>>> +	unsigned long index;
->>>>>>> +
->>>>>>> +	for (index = 0; index < npages; index++) {
->>>>>>> +		struct page *page = compound_head(pages[index]);
->>>>>>> +
->>>>>>> +		if (!PageDirty(page))
->>>>>>> +			sdf(page);
->>>>>>
->>>>>> How is this safe? What prevents the page to be cleared under you?
->>>>>>
->>>>>> If it's safe to race clear_page_dirty*() it has to be stated explicitly
->>>>>> with a reason why. It's not very clear to me as it is.
->>>>>
->>>>> The PageDirty() optimization above is fine to race with clear the
->>>>> page flag as it means it is racing after a page_mkclean() and the
->>>>> GUP user is done with the page so page is about to be write back
->>>>> ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
->>>>> call while a split second after TestClearPageDirty() happens then
->>>>> it means the racing clear is about to write back the page so all
->>>>> is fine (the page was dirty and it is being clear for write back).
->>>>>
->>>>> If it does call the sdf() while racing with write back then we
->>>>> just redirtied the page just like clear_page_dirty_for_io() would
->>>>> do if page_mkclean() failed so nothing harmful will come of that
->>>>> neither. Page stays dirty despite write back it just means that
->>>>> the page might be write back twice in a row.
->>>>
->>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
->>>> about set_page_dirty() and Andrea had the good idea of maybe doing
->>>> the set_page_dirty() at GUP time (when GUP with write) not when the
->>>> GUP user calls put_page(). We can do that by setting the dirty bit
->>>> in the pte for instance. They are few bonus of doing things that way:
->>>>      - amortize the cost of calling set_page_dirty() (ie one call for
->>>>        GUP and page_mkclean()
->>>>      - it is always safe to do so at GUP time (ie the pte has write
->>>>        permission and thus the page is in correct state)
->>>>      - safe from truncate race
->>>>      - no need to ever lock the page
->>>>
->>>> Extra bonus from my point of view, it simplify thing for my generic
->>>> page protection patchset (KSM for file back page).
->>>>
->>>> So maybe we should explore that ? It would also be a lot less code.
->>>
->>> Yes, please. It sounds more sensible to me to dirty the page on get, not
->>> on put.
->>
->> I fully agree this is a desirable final state of affairs.
+On Wed, Mar 06, 2019 at 11:40:56AM +0100, Sylwester Nawrocki wrote:
+> Add missing audio routing entry for the capture stream, this change
+> is required to fix audio recording on Odroid XU3.
 > 
-> I'm glad to see this presented because it has crossed my mind more than once
-> that effectively a GUP pinned page should be considered "dirty" at all times
-> until the pin is removed.  This is especially true in the RDMA case.
+> Fixes: 885b005d232c ("ARM: dts: exynos: Add support for secondary DAI to Odroid XU3")
 
-But, what if the RDMA registration is readonly? That's not uncommon, and
-marking dirty unconditonally would add needless overhead to such pages.
+Thanks, applied.
 
-Tom.
+Best regards,
+Krzysztof
+
