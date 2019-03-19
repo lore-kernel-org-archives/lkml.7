@@ -2,116 +2,79 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39942C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9145FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC9620685
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="FpWGh1nI"
+	by mail.kernel.org (Postfix) with ESMTP id 5F77B20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfCSMuI (ORCPT
+        id S1727099AbfCSMxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:50:08 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:47345 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfCSMuI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:50:08 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 14BF725BE0A;
-        Tue, 19 Mar 2019 23:50:06 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1552999806; bh=Trn5wbqGz4FJIxPnNY0CKGbjouA+Sz4+3WION/EDIXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FpWGh1nIheR/+y7Ct1T09r0UT+yosoHaLu+JoHkQODhT610bx9g3tDy+bFcG2ryhl
-         pP88InG3iMod6WGkpfjqT3ZBQv9gmu05xzlFoLIoc8TmA5FzmvPxai44zxgX3F8dGM
-         +TL0H4UJg0HVJUc4QIgl/18Arab/mWTAtKw7//uk=
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 85CDB940663; Tue, 19 Mar 2019 13:50:04 +0100 (CET)
-Date:   Tue, 19 Mar 2019 13:50:04 +0100
-From:   Simon Horman <horms@verge.net.au>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 6/6] regulator: da9063: platform_data is gone, depend on
- OF
-Message-ID: <20190319125004.bpx3jcxqiajeupiy@verge.net.au>
-References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
- <20190318154759.21978-7-wsa+renesas@sang-engineering.com>
+        Tue, 19 Mar 2019 08:53:03 -0400
+Received: from foss.arm.com ([217.140.101.70]:51108 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfCSMxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:53:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7707D1596;
+        Tue, 19 Mar 2019 05:53:02 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204D33F59C;
+        Tue, 19 Mar 2019 05:53:00 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 12:52:58 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "Zhang, Lei" <zhang.lei@jp.fujitsu.com>,
+        "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be applied
+ on A64FX v1r0
+Message-ID: <20190319125258.GD59586@arrakis.emea.arm.com>
+References: <5FA513F682BE7F4EAAB8EE035D5B08E44E9363CC@G01JPEXMBKW02>
+ <20190315151241.GC48314@lakrids.cambridge.arm.com>
+ <8898674D84E3B24BA3A2D289B872026A6A35627D@G01JPEXMBKW03>
+ <20190318120454.GA3697@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318154759.21978-7-wsa+renesas@sang-engineering.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190318120454.GA3697@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 04:47:58PM +0100, Wolfram Sang wrote:
-> With OF being the only configuration possibility left, depend on it to
-> simplify some code.
+On Mon, Mar 18, 2019 at 12:06:06PM +0000, Mark Rutland wrote:
+> From 6439e9c0b1525e9d4c7be65552e6f2b1f9d1dbe0 Mon Sep 17 00:00:00 2001
+> From: "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>
+> Date: Fri, 15 Mar 2019 12:22:36 +0000
+> Subject: [PATCH] arm64: apply workaround on A64FX v1r0
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Fujitsu erratum 010001 applies to A64FX v0r0 and v1r0, and we try to
+> handle either by masking MIDR with MIDR_FUJITSU_ERRATUM_010001_MASK
+> before comparing it to MIDR_FUJITSU_ERRATUM_010001.
+> 
+> Unfortunately, MIDR_FUJITSU_ERRATUM_010001 is constructed incorrectly
+> using MIDR_VARIANT(), which is intended to extract the variant field
+> from MIDR_EL1, rather than generate the field in-place. This results in
+> MIDR_FUJITSU_ERRATUM_010001 being all-ones, and we only match A64FX
+> v0r0.
+> 
+> This patch uses MIDR_CPU_VAR_REV() to generate an in-place mask for the
+> variant field, ensuring the we match both v0r0 and v1r0.
+> 
+> Fixes: 3e32131abc311a5c ("arm64: Add workaround for Fujitsu A64FX erratum 010001")
+> Signed-off-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
+> [Mark: use MIDR_CPU_VAR_REV(), reword commit message]
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Thanks. Mark's variant queued for 5.1-rc2.
 
-> ---
->  drivers/regulator/Kconfig            |  2 +-
->  drivers/regulator/da9063-regulator.c | 10 ----------
->  2 files changed, 1 insertion(+), 11 deletions(-)
-> 
-> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> index b7f249ee5e68..6663cd6cb96c 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -256,7 +256,7 @@ config REGULATOR_DA9062
->  
->  config REGULATOR_DA9063
->  	tristate "Dialog Semiconductor DA9063 regulators"
-> -	depends on MFD_DA9063
-> +	depends on MFD_DA9063 && OF
->  	help
->  	  Say y here to support the BUCKs and LDOs regulators found on
->  	  DA9063 PMICs.
-> diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-> index c05859ad63d8..2eda8d985756 100644
-> --- a/drivers/regulator/da9063-regulator.c
-> +++ b/drivers/regulator/da9063-regulator.c
-> @@ -681,7 +681,6 @@ static const struct regulator_init_data *da9063_get_regulator_initdata(
->  	return NULL;
->  }
->  
-> -#ifdef CONFIG_OF
->  static struct of_regulator_match da9063_matches[] = {
->  	[DA9063_ID_BCORE1]           = { .name = "bcore1"           },
->  	[DA9063_ID_BCORE2]           = { .name = "bcore2"           },
-> @@ -759,15 +758,6 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
->  	*da9063_reg_matches = da9063_matches;
->  	return pdata;
->  }
-> -#else
-> -static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
-> -		struct platform_device *pdev,
-> -		struct of_regulator_match **da9063_reg_matches)
-> -{
-> -	*da9063_reg_matches = NULL;
-> -	return ERR_PTR(-ENODEV);
-> -}
-> -#endif
->  
->  static int da9063_regulator_probe(struct platform_device *pdev)
->  {
-> -- 
-> 2.11.0
-> 
+-- 
+Catalin
