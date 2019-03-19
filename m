@@ -2,65 +2,248 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E5CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41643C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B02E20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFD620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfCSJDc (ORCPT
+        id S1727188AbfCSJIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:03:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52656 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfCSJDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:03:32 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3FE0630FE5BA;
-        Tue, 19 Mar 2019 09:03:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9871614C1;
-        Tue, 19 Mar 2019 09:03:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAK7LNAS4zVusQRQLFNmmza9U_zbNBrjyx4qyDcH8g1oL0AzHTQ@mail.gmail.com>
-References: <CAK7LNAS4zVusQRQLFNmmza9U_zbNBrjyx4qyDcH8g1oL0AzHTQ@mail.gmail.com> <23500.1552920217@warthog.procyon.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     dhowells@redhat.com, Liz Zhang <lizzha@microsoft.com>,
-        Lili Deng <v-lide@microsoft.com>,
-        Manoj Srivastava <srivasta@debian.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Commit seems to prevent use of GNUmakefile wrappers
+        Tue, 19 Mar 2019 05:08:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45046 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726703AbfCSJIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 05:08:13 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ED06B4D81E64B95264A1;
+        Tue, 19 Mar 2019 17:08:10 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 17:08:03 +0800
+Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
+To:     Suzuki K Poulose <Suzuki.Poulose@arm.com>
+CC:     <zhengxiang9@huawei.com>, <marc.zyngier@arm.com>,
+        <christoffer.dall@arm.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <james.morse@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, <lious.lilei@hisilicon.com>,
+        <lishuo1@hisilicon.com>
+References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
+ <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
+ <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
+ <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
+ <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
+ <20190314105537.GA15323@en101>
+ <368bd218-ac1d-19b2-6e92-960b91afee8b@huawei.com>
+ <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
+ <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
+ <f6639daa-cfba-c65a-7320-c9dcc1ef8377@huawei.com>
+ <20190318173405.GA31412@en101>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <25971fd5-3774-3389-a82a-04707480c1e0@huawei.com>
+Date:   Tue, 19 Mar 2019 17:05:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4206.1552986209.1@warthog.procyon.org.uk>
-Date:   Tue, 19 Mar 2019 09:03:29 +0000
-Message-ID: <4207.1552986209@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 19 Mar 2019 09:03:32 +0000 (UTC)
+In-Reply-To: <20190318173405.GA31412@en101>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+Hi Suzuki,
 
-> How about this patch?
-> https://patchwork.kernel.org/patch/10858809/
+On 2019/3/19 1:34, Suzuki K Poulose wrote:
+> Hi !
+> On Sun, Mar 17, 2019 at 09:34:11PM +0800, Zenghui Yu wrote:
+>> Hi Suzuki,
+>>
+>> ---8<---
+>>
+>> test: kvm: arm: Maybe two more fixes
+>>
+>> Applied based on Suzuki's patch.
+>>
+>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>>   virt/kvm/arm/mmu.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>> index 05765df..ccd5d5d 100644
+>> --- a/virt/kvm/arm/mmu.c
+>> +++ b/virt/kvm/arm/mmu.c
+>> @@ -1089,7 +1089,9 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct
+>> kvm_mmu_memory_cache
+>>   		 * Normal THP split/merge follows mmu_notifier
+>>   		 * callbacks and do get handled accordingly.
+>>   		 */
+>> -			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
+>> +			addr &= S2_PMD_MASK;
+>> +			unmap_stage2_ptes(kvm, pmd, addr, addr + S2_PMD_SIZE);
+>> +			get_page(virt_to_page(pmd));
+>>   		} else {
+>>
+>>   			/*
+>> @@ -1138,7 +1140,9 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct
+>> kvm_mmu_memory_cache *cac
+>>   	if (stage2_pud_present(kvm, old_pud)) {
+>>   		/* If we have PTE level mapping, unmap the entire range */
+>>   		if (WARN_ON_ONCE(!stage2_pud_huge(kvm, old_pud))) {
+>> -			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
+>> +			addr &= S2_PUD_MASK;
+>> +			unmap_stage2_pmds(kvm, pudp, addr, addr + S2_PUD_SIZE);
+>> +			get_page(virt_to_page(pudp));
+>>   		} else {
+>>   			stage2_pud_clear(kvm, pudp);
+>>   			kvm_tlb_flush_vmid_ipa(kvm, addr);
 > 
-> I hope you will be able to wrap the top Makefile again.
+> This makes it a bit tricky to follow the code. The other option is to
+> do something like :
 
-That works for me.
+Yes.
 
-Tested-by: David Howells <dhowells@redhat.com>
+> 
+> 
+> ---8>---
+> 
+> kvm: arm: Fix handling of stage2 huge mappings
+> 
+> We rely on the mmu_notifier call backs to handle the split/merging
+> of huge pages and thus we are guaranteed that while creating a
+> block mapping, the entire block is unmapped at stage2. However,
+> we miss a case where the block mapping is split for dirty logging
+> case and then could later be made block mapping, if we cancel the
+> dirty logging. This not only creates inconsistent TLB entries for
+> the pages in the the block, but also leakes the table pages for
+> PMD level.
+> 
+> Handle these corner cases for the huge mappings at stage2 by
+> unmapping the PTE level mapping. This could potentially release
+> the upper level table. So we need to restart the table walk
+> once we unmap the range.
+> 
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   virt/kvm/arm/mmu.c | 57 +++++++++++++++++++++++++++++++++++++++---------------
+>   1 file changed, 41 insertions(+), 16 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index fce0983..a38a3f1 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1060,25 +1060,41 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+>   {
+>   	pmd_t *pmd, old_pmd;
+>   
+> +retry:
+>   	pmd = stage2_get_pmd(kvm, cache, addr);
+>   	VM_BUG_ON(!pmd);
+>   
+>   	old_pmd = *pmd;
+> +	/*
+> +	 * Multiple vcpus faulting on the same PMD entry, can
+> +	 * lead to them sequentially updating the PMD with the
+> +	 * same value. Following the break-before-make
+> +	 * (pmd_clear() followed by tlb_flush()) process can
+> +	 * hinder forward progress due to refaults generated
+> +	 * on missing translations.
+> +	 *
+> +	 * Skip updating the page table if the entry is
+> +	 * unchanged.
+> +	 */
+> +	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+> +		return 0;
+> +
+>   	if (pmd_present(old_pmd)) {
+>   		/*
+> -		 * Multiple vcpus faulting on the same PMD entry, can
+> -		 * lead to them sequentially updating the PMD with the
+> -		 * same value. Following the break-before-make
+> -		 * (pmd_clear() followed by tlb_flush()) process can
+> -		 * hinder forward progress due to refaults generated
+> -		 * on missing translations.
+> -		 *
+> -		 * Skip updating the page table if the entry is
+> -		 * unchanged.
+> +		 * If we already have PTE level mapping for this block,
+> +		 * we must unmap it to avoid inconsistent TLB
+> +		 * state. We could end up in this situation if
+> +		 * the memory slot was marked for dirty logging
+> +		 * and was reverted, leaving PTE level mappings
+> +		 * for the pages accessed during the period.
+> +		 * Normal THP split/merge follows mmu_notifier
+> +		 * callbacks and do get handled accordingly.
+> +		 * Unmap the PTE level mapping and retry.
+>   		 */
+> -		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+> -			return 0;
+> -
+> +		if (!pmd_thp_or_huge(old_pmd)) {
+> +			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
+Nit: we can get rid of the parentheses around "addr & S2_PMD_MASK" to
+make it looks the same as PUD level (but it is not necessary).
+> +			goto retry;
+> +		}
+>   		/*
+>   		 * Mapping in huge pages should only happen through a
+>   		 * fault.  If a page is merged into a transparent huge
+> @@ -1090,8 +1106,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+>   		 * should become splitting first, unmapped, merged,
+>   		 * and mapped back in on-demand.
+>   		 */
+> -		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+> -
+> +		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+>   		pmd_clear(pmd);
+>   		kvm_tlb_flush_vmid_ipa(kvm, addr);
+>   	} else {
+> @@ -1107,6 +1122,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+>   {
+>   	pud_t *pudp, old_pud;
+>   
+> +retry:
+>   	pudp = stage2_get_pud(kvm, cache, addr);
+>   	VM_BUG_ON(!pudp);
+>   
+> @@ -1122,8 +1138,17 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+>   		return 0;
+>   
+>   	if (stage2_pud_present(kvm, old_pud)) {
+> -		stage2_pud_clear(kvm, pudp);
+> -		kvm_tlb_flush_vmid_ipa(kvm, addr);
+> +		/*
+> +		 * If we already have PTE level mapping, unmap the entire
+> +		 * range and retry.
+> +		 */
+> +		if (!stage2_pud_huge(kvm, old_pud)) {
+> +			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
+> +			goto retry;
+> +		} else {
+> +			stage2_pud_clear(kvm, pudp);
+> +			kvm_tlb_flush_vmid_ipa(kvm, addr);
+> +		}
+>   	} else {
+>   		get_page(virt_to_page(pudp));
+>   	}
+> 
+
+It look much better, and works fine now!
+
+
+thanks,
+
+zenghui
+
+
