@@ -7,118 +7,124 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A207C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5805320857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEF52146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ROUZPLjJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vNE8NWAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfCSLpX (ORCPT
+        id S1727642AbfCSLpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:45:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41988 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfCSLpW (ORCPT
+        Tue, 19 Mar 2019 07:45:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36690 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfCSLpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:45:22 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u7so21598444qtg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 04:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+CK9gfyg06N1FdsFONPK8CGgHJvRc6A4h/2r6Ru0BaU=;
-        b=ROUZPLjJ/+O5ZPOeqd38mHfyJseLUi7az/3QF7fp2V9cLOSuZHmQaG/2nd6AoEtAsk
-         CipT/OSvvdfHwSNQr2leQuWJRB5UZw6vEVxkN/hJUg+YiEdOyWwRli+hT4OGGCQYcr+Y
-         uhv/Gq+UvTyRTuuDd+z7vqO8yk1vV2iSAxtEw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+CK9gfyg06N1FdsFONPK8CGgHJvRc6A4h/2r6Ru0BaU=;
-        b=diyxArapJxw79dhz1VWj7GiVPrRNn0wUXVFJ+6Thwmkh9cs2ArU5u9sGtRaSi6QmSJ
-         FCYnG8FPJqfvnubJIYhKvbaUdBE9bjQNgH2D/PPCQkOvfYecPar5oTqORtZH05fRCQnq
-         2YAdh0ORe6hkIDGVA2rw4uIYGfTcQVzX/edWar4/UAfw29JaHLEDJ42xIzx9pZ/Lf76O
-         DX5mNsxEJJxQkFtdzd3gaaWyUhtE10xcqbSizu3NwiwdAuYIjApWIbsJmeB7r0G96Q5G
-         JMjsD5wSMZSLLnuWzPEyofzpEnLztkvCYowU5rvLzHlA7eYxO66UrxXCY7QyXz7BV9Ph
-         vMPQ==
-X-Gm-Message-State: APjAAAWCOppvSVJwpUGH3KU6vjC47paxFkwdW3p5wigmPIx8vIKBf5gw
-        xxuKuR4aTnby2mwNGgIDw5K6lQO7MukwvGF4XAGnUg==
-X-Google-Smtp-Source: APXvYqxnoKuOBKaePJ7W63F8IS2n0VSWzbkETBhP6VEGiprRvQPPPgFQIoE7peZJ1yfrR2nlRs94iwjM+8PztmAB8H0=
-X-Received: by 2002:ac8:1884:: with SMTP id s4mr1545896qtj.339.1552995921737;
- Tue, 19 Mar 2019 04:45:21 -0700 (PDT)
+        Tue, 19 Mar 2019 07:45:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2JBjXwt073849;
+        Tue, 19 Mar 2019 06:45:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552995933;
+        bh=oCwrapSIcYjb5JnXkJkpsOKYaG2eWaskLlJhrT5tQfQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vNE8NWAAiHzbhm9AFnNeZFd0KCEROw4L7yXe6dkqEKii81ywdXCTeeevi8hU7HVyA
+         oT7nVq0rMz7/XR7BsoXIPbvGnGGNtJ84WTYZfUfTNOnjYikxbq8uguOlGt0a79G5+u
+         69L2Pj00CSOHy/z9WhQ+9deaf9pKkmKbXGlK/a4A=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2JBjXg2091125
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 06:45:33 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 19
+ Mar 2019 06:45:33 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Tue, 19 Mar 2019 06:45:33 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2JBjUpM026317;
+        Tue, 19 Mar 2019 06:45:31 -0500
+Subject: Re: [PATCH v3 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
+ error during tuning
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>
+References: <20190319063533.12171-1-faiz_abbas@ti.com>
+ <20190319063533.12171-3-faiz_abbas@ti.com>
+ <8261c01f-fd8e-0930-fee5-793b02071542@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <b52277dd-39aa-b6ea-313e-55ed65afba1e@ti.com>
+Date:   Tue, 19 Mar 2019 17:15:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190319080140.24055-1-weiyi.lu@mediatek.com> <20190319080140.24055-5-weiyi.lu@mediatek.com>
-In-Reply-To: <20190319080140.24055-5-weiyi.lu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 19 Mar 2019 19:45:10 +0800
-Message-ID: <CANMq1KCLQaFg3bOrHnXzbjU9KM5Ny2rRX9bP4xg17jOYirxxig@mail.gmail.com>
-Subject: Re: [PATCH v5 04/14] soc: mediatek: Refactor polling timeout and documentation
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8261c01f-fd8e-0930-fee5-793b02071542@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 4:02 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
->
-> Use USEC_PER_SEC to indicate the polling timeout directly.
-> And add documentation of scp_domain_data.
->
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-scpsys.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index 9f52f501178b..2855111b221a 100644
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -21,7 +21,7 @@
->  #include <dt-bindings/power/mt8173-power.h>
->
->  #define MTK_POLL_DELAY_US   10
-> -#define MTK_POLL_TIMEOUT    (jiffies_to_usecs(HZ))
-> +#define MTK_POLL_TIMEOUT    USEC_PER_SEC
->
->  #define MTK_SCPD_ACTIVE_WAKEUP         BIT(0)
->  #define MTK_SCPD_FWAIT_SRAM            BIT(1)
-> @@ -108,6 +108,18 @@ static const char * const clk_names[] = {
->
->  #define MAX_CLKS       3
->
-> +/**
-> + * struct scp_domain_data - scp domain data for power on/off flow
-> + * @name: The domain name.
-> + * @sta_mask: The mask for power on/off status bit.
-> + * @ctl_offs: The offset for main power control register.
-> + * @sram_pdn_bits: The mask for sram power control bits.
-> + * @sram_pdn_ack_bits: The mask for sram power control acked bits.
-> + * @bus_prot_mask: The mask for single step bus protection.
-> + * @clk_id: The basic clock needs to be enabled before enabling certain
-> + *          power domains.
+Hi Kishon,
 
-I assume these are the clock*s* that *this* scp_domain requires?
+On 19/03/19 1:37 PM, Kishon Vijay Abraham I wrote:
+> Hi Faiz,
+> 
+> On 19/03/19 12:05 PM, Faiz Abbas wrote:
+>> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+>> callback") skips data resets during tuning operation. Because of this,
+>> a data error or data finish interrupt might still arrive after a command
+>> error has been handled and the mrq ended. This ends up with a "mmc0: Got
+>> data interrupt 0x00000002 even though no data operation was in progress"
+>> error message.
+>>
+>> Fix this by adding a platform specific callback for sdhci_irq. Mark the
+>> mrq as a failure but wait for a data interrupt instead of calling
+>> finish_mrq().
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  drivers/mmc/host/sdhci-omap.c | 36 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 36 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+>> index b1a66ca3821a..765873dff7ca 100644
+>> --- a/drivers/mmc/host/sdhci-omap.c
+>> +++ b/drivers/mmc/host/sdhci-omap.c
+>> @@ -797,6 +797,41 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
+>>  	sdhci_reset(host, mask);
+>>  }
+>>  
+>> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+>> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
+>> +
+>> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	if (omap_host->is_tuning && (intmask & CMD_ERR_MASK)) {
+>> +
+>> +		/*
+>> +		 * Since we are not resetting data lines during tuning
+>> +		 * operation, data error or data complete interrupts
+>> +		 * might still arrive. Mark this request as a failure
+>> +		 * but still wait for the data interrupt
+>> +		 */
+>> +		if (intmask & SDHCI_INT_TIMEOUT)
+> 
+> CMD_ERR_MASK doesn't have SDHCI_INT_TIMEOUT. So this will never be true.
+> 
 
-So maybe just: "The basic clocks required by this power domain." ?
+Yeah, need to SDHCI_INT_TIMEOUT to CMD_ERR_MASK.
 
-> + * @caps: The flag for active wake-up action.
-> + */
->  struct scp_domain_data {
->         const char *name;
->         u32 sta_mask;
-> --
-> 2.18.0
->
+Thanks,
+Faiz
