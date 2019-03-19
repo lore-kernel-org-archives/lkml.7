@@ -2,149 +2,162 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D062AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3631E20850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1D3217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAIGJe8s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWpvVzXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfCSWgV (ORCPT
+        id S1727054AbfCSWhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:36:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37468 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCSWgV (ORCPT
+        Tue, 19 Mar 2019 18:37:53 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44517 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSWhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:36:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y15so616525wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:36:20 -0700 (PDT)
+        Tue, 19 Mar 2019 18:37:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n18so501075ljg.11;
+        Tue, 19 Mar 2019 15:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=71cG6l5GTA/71CCX4+CFrV/JbL1WCVvp+ptkx8iiESY=;
-        b=uAIGJe8sLoeqcv9sisFtcBr49/lpRTY6Xk+STGp5rwQZkWPOC0yYmHq53YIgOxiP4O
-         n/e6QrgxstHYTEmn5+xO3Lo38p8WzlMmVjPThiFhB/EQvCZRwbipxyms9S45iBsdxmpA
-         F7Ad2o5uuk54M9OpjzafQMysr3K9hpAlhsk871TgR/XBwx1OrMZ02tEzsJexIjYyPOhh
-         VoqGrXB/xKhv+gBG8xP6lqxgYJ9rR8oDNKSWrs6QUN3uWR2prebl5fJF+rRPcSH7wSG0
-         F0eD5kz7w6KUQNF8gsAfFanTHi8e6YiclIJ11SavigAg6J4Ok3IcNnwFjjoVSPrRHkVT
-         SWdQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d2uS3JYGyQ73AUhjSqp6WbiOn0rKDAb2enK7Ui9OG1k=;
+        b=EWpvVzXrXBYLmg4ieBzv3cl784Xf9T968WwgPowvJKcHSmFbwGgIcs6Of9Z4/tz/7s
+         EZeoucooRipWxBcUbTnfXUFLV1+ZrWulSBMXOUEACygIoWjxo3UgbJYkyKYQvWsMGleR
+         QriXZGfH7BvlyVeeAhMg5RVYoJsg+lssZlpsynrchTqGeOoetgP20B/PD0yOWsHY3blE
+         +hS1HiGrTaVyVpWjTndgKqUXm+AB5XlxI457V+dt1y8mbJbOnvWNY2vbc83X/V5h14gK
+         ypUF7jpoGhrBag36xsFshcHgLBMlEaSTF89VAGrTw8A8QAllZ7LdI0YfCVkYIXinxYtb
+         PskA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=71cG6l5GTA/71CCX4+CFrV/JbL1WCVvp+ptkx8iiESY=;
-        b=iOYPjyZC6cWTBkwsoFXEV8PsLhYcIFcK+23QtdGf/yVWRVc4cU2O3Q9GIQTX/Hp8aw
-         9mR6UT0BmM+SQy3jV3zfx882NV/8A75IyYoFDWvmw68doiKc7zvezL1+v+VgTkp5ZhKs
-         UGV/OQl0fh8Fm1zV5hmn+O4gm4Ge0WV7KdUNZhbKrSI95gP3n8qOpuXG5htf+mcGDwoK
-         JF+AzgbVcbTJSPNmFCa+QY+6A4UgpbmBCGR/E84p0mts41EYeftZTfEOWgvMZSAse5iW
-         CrbehpreYBkJsxuGLtW/NE+5DRQUUZ5fuBrkzNufxyQ94bHZO/YAD07IArPHm606zocC
-         gO4w==
-X-Gm-Message-State: APjAAAUzu/s7TXeosbBe9kjjhMz9ClVGc1Q8xTfj2ZLlgArHIDbd6baM
-        GvKZzpfyOD2VC1ImyRXeGM143zqNE5qt5PecMRSyRg==
-X-Google-Smtp-Source: APXvYqwaHqPhnL61INkOyi6PAct/Paz87bcRyWCg8G+nXbKY+OB7xkf+eGiBdyfWgaM1YLX5S8scoadfXtH4rQGkXrM=
-X-Received: by 2002:adf:c543:: with SMTP id s3mr18154285wrf.192.1553034979529;
- Tue, 19 Mar 2019 15:36:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d2uS3JYGyQ73AUhjSqp6WbiOn0rKDAb2enK7Ui9OG1k=;
+        b=epJ+chQsvO8Zq8jQAxWnowyl0xI48M091vYKjM+Q4eA/im/jtxEO3yElqf1UCFbnSX
+         rmQe/7JLPdrONyFRUUwazlcedCXUye0ZjxBD4wIOGPGJYQEJGLLLddKG0xbce+nhCBly
+         Q8tCpCNMf4NngZiU5Yc0wfWxPctxU6Z3MtsxW7RNyPszhT6vYc8t4wKLouM9R0A5LVvR
+         k67UbDIbCHO68PkX9HHxh+rb2zzMzwC0FL6N+9bgnrum91+CdNk8xUoa5YLLdU4P6jf3
+         MXJ/O5/PTIHRd+tZGm+r4Qi/0z5bCiEDjWuw2re8JWSNtTuu8eI5fWZ7tZrbPZvf20b9
+         7PEw==
+X-Gm-Message-State: APjAAAVD4W81H98Tq+ERUS2vPkY2urDr/QRARy9n+jJIM2d9KyCzqzuU
+        dNvXJeHoxo0uKr0jtfIop4M3TtBU
+X-Google-Smtp-Source: APXvYqxRGGAMBczbx5QCobRazLvMcrQnc58m6gR2XMzSf0XUPwTAHtOEYTkf0qZQql0G5AidHWzl0w==
+X-Received: by 2002:a2e:5b44:: with SMTP id p65mr15344283ljb.182.1553035070683;
+        Tue, 19 Mar 2019 15:37:50 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id t18sm51192ljg.64.2019.03.19.15.37.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 15:37:49 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH] mtd: rawnand: ams-delta: Drop board specific partition info
+Date:   Tue, 19 Mar 2019 23:37:18 +0100
+Message-Id: <20190319223718.26131-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
- <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
- <CA+M3ks7q8QnNirk_WkaE5CmFWkEPn4uu5Hfb2kP+4d5qapHvrA@mail.gmail.com>
- <c51be371-086a-bd5b-b70a-5579f5b95320@ti.com> <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
-In-Reply-To: <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 19 Mar 2019 15:36:06 -0700
-Message-ID: <CALAqxLVbdpj+T4u3jZ_5Uqda5La1Py-ZGpXSep_CCoLzWyap8A@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Alistair Strachan <astrachan@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Chenbo Feng <fengc@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Marissa Wall <marissaw@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 2:58 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Tue, Mar 19, 2019 at 1:00 PM Andrew F. Davis <afd@ti.com> wrote:
-> >
-> > On 3/19/19 11:54 AM, Benjamin Gaignard wrote:
-> > > Le mer. 13 mars 2019 =C3=A0 23:31, John Stultz <john.stultz@linaro.or=
-g> a =C3=A9crit :
-> > >>
-> > >> On Wed, Mar 13, 2019 at 1:11 PM Liam Mark <lmark@codeaurora.org> wro=
-te:
-> > >>> On Tue, 5 Mar 2019, John Stultz wrote:
-> > >>>>
-> > >>>> Eventual TODOS:
-> > >>>> * Reimplement page-pool for system heap (working on this)
-> > >>>> * Add stats accounting to system/cma heaps
-> > >>>> * Make the kselftest actually useful
-> > >>>> * Add other heaps folks see as useful (would love to get
-> > >>>>   some help from actual carveout/chunk users)!
-> > >>>
-> > >>> We use a modified carveout heap for certain secure use cases.
-> > >>
-> > >> Cool! It would be great to see if you have any concerns about adding
-> > >> such a secure-carveout heap to this framework. I suspect it would be
-> > >> fairly similar to how its integrated into ION, but particularly I'd =
-be
-> > >> interested in issues around the lack of private flags and other
-> > >> allocation arguments like alignment.
-> > >>
-> > >>> Although there would probably be some benefit in discssing how the =
-dma-buf
-> > >>> heap framework may want to support
-> > >>> secure heaps in the future it is a large topic which I assume you d=
-on't
-> > >>> want to tackle now.
-> > >>
-> > >> So I suspect others (Benjamin?) would have a more informed opinion o=
-n
-> > >> the details, but the intent is to allow secure heap implementations.
-> > >> I'm not sure what areas of concern you have for this allocation
-> > >> framework in particular?
-> > >
-> > > yes I would be great to understand how you provide the information to
-> > > tell that a dmabuf
-> > > is secure (or not) since we can't add flag in dmabuf structure itself=
-.
-> > > An option is manage
-> > > the access rights when a device attach itself to the dmabuf but in
-> > > this case you need define
-> > > a list of allowed devices per heap...
-> > > If you have a good solution for secure heaps you are welcome :-)
-> > >
-> >
-> > Do we really need any of that? A secure buffer is secured by the
-> > hardware firewalls that keep out certain IP (including often the
-> > processor running Linux). So the only thing we need to track internally
-> > is that we should not allow mmap/kmap on the buffer. That can be done i=
-n
-> > the per-heap layer, everything else stays the same as a standard
-> > carveout heap.
->
-> For at least some hw the importing driver needs to configure things
-> differently for secure buffers :-/
+After recent modifications, only a hardcoded partition info makes
+the driver device specific.  Other than that, the driver uses GPIO
+exclusively and can be used on any hardware.
 
-Does the import ioctl need/use a flag for that then? Userland already
-has to keep meta-data about dmabufs around.
+Drop the partition info and use MTD partition parser with default
+list of partition types instead.
 
-thanks
--john
+Amstrad Delta users should append the followig partition info to their
+kernel command line, possibly by embedding it in CONFIG_CMDLINE:
+mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),\
+256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved).  For their
+convenience, select CONFIG_MTD_CMDLINE_PARTS  symbol from that board
+Kconfig automatically if this NAND driver is also selected.
+
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/mach-omap1/Kconfig      |  1 +
+ drivers/mtd/nand/raw/ams-delta.c | 28 +---------------------------
+ 2 files changed, 2 insertions(+), 27 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
+index c4694f26b5c4..62cf20f22828 100644
+--- a/arch/arm/mach-omap1/Kconfig
++++ b/arch/arm/mach-omap1/Kconfig
+@@ -171,6 +171,7 @@ config MACH_AMS_DELTA
+ 	select LEDS_GPIO_REGISTER
+ 	select REGULATOR
+ 	select REGULATOR_FIXED_VOLTAGE
++	select MTD_CMDLINE_PARTS if MTD_NAND_AMS_DELTA
+ 	help
+ 	  Support for the Amstrad E3 (codename Delta) videophone. Say Y here
+ 	  if you have such a device.
+diff --git a/drivers/mtd/nand/raw/ams-delta.c b/drivers/mtd/nand/raw/ams-delta.c
+index 8312182088c1..2e8e37ea549a 100644
+--- a/drivers/mtd/nand/raw/ams-delta.c
++++ b/drivers/mtd/nand/raw/ams-delta.c
+@@ -41,31 +41,6 @@ struct ams_delta_nand {
+ 	bool			data_in;
+ };
+ 
+-/*
+- * Define partitions for flash devices
+- */
+-
+-static const struct mtd_partition partition_info[] = {
+-	{ .name		= "Kernel",
+-	  .offset	= 0,
+-	  .size		= 3 * SZ_1M + SZ_512K },
+-	{ .name		= "u-boot",
+-	  .offset	= 3 * SZ_1M + SZ_512K,
+-	  .size		= SZ_256K },
+-	{ .name		= "u-boot params",
+-	  .offset	= 3 * SZ_1M + SZ_512K + SZ_256K,
+-	  .size		= SZ_256K },
+-	{ .name		= "Amstrad LDR",
+-	  .offset	= 4 * SZ_1M,
+-	  .size		= SZ_256K },
+-	{ .name		= "File system",
+-	  .offset	= 4 * SZ_1M + 1 * SZ_256K,
+-	  .size		= 27 * SZ_1M },
+-	{ .name		= "PBL reserved",
+-	  .offset	= 32 * SZ_1M - 3 * SZ_256K,
+-	  .size		=  3 * SZ_256K },
+-};
+-
+ static void ams_delta_write_commit(struct ams_delta_nand *priv)
+ {
+ 	gpiod_set_value(priv->gpiod_nwe, 0);
+@@ -315,8 +290,7 @@ static int ams_delta_init(struct platform_device *pdev)
+ 		return err;
+ 
+ 	/* Register the partitions */
+-	err = mtd_device_register(mtd, partition_info,
+-				  ARRAY_SIZE(partition_info));
++	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
+ 	if (err)
+ 		goto err_nand_cleanup;
+ 
+-- 
+2.19.2
+
