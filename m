@@ -2,389 +2,100 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF21C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFFB20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275B92082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfCSSOX (ORCPT
+        id S1727957AbfCSSOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:14:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41694 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbfCSSOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:14:22 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 19 Mar 2019 14:14:46 -0400
+Received: from pinero.vault24.org ([69.164.212.126]:48300 "EHLO
+        pinero.vault24.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbfCSSOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 14:14:46 -0400
+X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Mar 2019 14:14:46 EDT
+Received: from feynman.vault24.org (feynman.vault24.org [IPv6:2001:470:1f11:7b5::14])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 023CE859FE;
-        Tue, 19 Mar 2019 18:14:22 +0000 (UTC)
-Received: from x1.home (ovpn-116-218.phx2.redhat.com [10.3.116.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC1506248D;
-        Tue, 19 Mar 2019 18:14:16 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 12:14:16 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     kwankhede@nvidia.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, yi.y.sun@intel.com, joro@8bytes.org,
-        jean-philippe.brucker@arm.com, peterx@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-Message-ID: <20190319121416.27495651@x1.home>
-In-Reply-To: <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
-References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
-        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
-Organization: Red Hat
+        by pinero.vault24.org (Postfix) with ESMTPS id 9A7D0603D;
+        Tue, 19 Mar 2019 14:08:42 -0400 (EDT)
+Received: by feynman.vault24.org (Postfix, from userid 1000)
+        id DE566302DD18; Tue, 19 Mar 2019 14:08:41 -0400 (EDT)
+From:   Jon DeVree <nuxi@vault24.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     tytso@mit.edu, Jason@zx2c4.com, Jon DeVree <nuxi@vault24.org>
+Subject: [PATCH] random: fix CRNG initialization when random.trust_cpu=1
+Date:   Tue, 19 Mar 2019 13:28:47 -0400
+Message-Id: <20190319172846.30741-1-nuxi@vault24.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 19 Mar 2019 18:14:22 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 16:18:22 +0800
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+When the system boots with random.trust_cpu=1 it doesn't initialize the
+per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
+means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
+for silly userspace programs") is not used when random.trust_cpu=1.
 
-> This patch exports the following symbols from vfio-pci driver
-> for vfio-pci alike driver. e.g. vfio-pci-mdev driver
-> 
-> *) vfio_pci_set_vga_decode();
-> *) vfio_pci_release();
-> *) vfio_pci_open();
-> *) vfio_pci_register_dev_region();
-> *) vfio_pci_ioctl();
-> *) vfio_pci_rw();
-> *) vfio_pci_mmap();
-> *) vfio_pci_request();
-> *) vfio_pci_probe_misc();
-> *) vfio_pci_remove_misc();
-> *) vfio_err_handlers;
-> *) vfio_pci_reflck_attach();
-> *) vfio_pci_reflck_put();
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314029] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$6 = (struct crng_state **) 0x0
 
-Exporting all these symbols scares me a bit.  They're GPL and we don't
-guarantee a kernel ABI, but I don't really want to support arbitrary
-use cases either.  What if we re-factored the shared bits into a common
-file and just linked them together?  Thanks,
+After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
+initialized again:
 
-Alex
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314031] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$1 = (struct crng_state **) 0xffff9a915f4014a0
 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c         | 101 ++++++++++++++++++++++--------------
->  drivers/vfio/pci/vfio_pci_private.h |  17 ++++++
->  2 files changed, 78 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index ff60bd1..e36b922 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -73,7 +73,7 @@ static inline bool vfio_vga_disabled(void)
->   * has no way to get to it and routing can be disabled externally at the
->   * bridge.
->   */
-> -static unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
-> +unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
->  {
->  	struct vfio_pci_device *vdev = opaque;
->  	struct pci_dev *tmp = NULL, *pdev = vdev->pdev;
-> @@ -103,6 +103,7 @@ static unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
->  
->  	return decodes;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_set_vga_decode);
->  
->  static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
->  {
-> @@ -410,7 +411,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  		pci_set_power_state(pdev, PCI_D3hot);
->  }
->  
-> -static void vfio_pci_release(void *device_data)
-> +void vfio_pci_release(void *device_data)
->  {
->  	struct vfio_pci_device *vdev = device_data;
->  
-> @@ -425,8 +426,9 @@ static void vfio_pci_release(void *device_data)
->  
->  	module_put(THIS_MODULE);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_release);
->  
-> -static int vfio_pci_open(void *device_data)
-> +int vfio_pci_open(void *device_data)
->  {
->  	struct vfio_pci_device *vdev = device_data;
->  	int ret = 0;
-> @@ -450,6 +452,7 @@ static int vfio_pci_open(void *device_data)
->  		module_put(THIS_MODULE);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_open);
->  
->  static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
->  {
-> @@ -634,9 +637,10 @@ int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_register_dev_region);
->  
-> -static long vfio_pci_ioctl(void *device_data,
-> -			   unsigned int cmd, unsigned long arg)
-> +long vfio_pci_ioctl(void *device_data,
-> +		   unsigned int cmd, unsigned long arg)
->  {
->  	struct vfio_pci_device *vdev = device_data;
->  	unsigned long minsz;
-> @@ -1079,8 +1083,9 @@ static long vfio_pci_ioctl(void *device_data,
->  
->  	return -ENOTTY;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_ioctl);
->  
-> -static ssize_t vfio_pci_rw(void *device_data, char __user *buf,
-> +ssize_t vfio_pci_rw(void *device_data, char __user *buf,
->  			   size_t count, loff_t *ppos, bool iswrite)
->  {
->  	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-> @@ -1111,6 +1116,7 @@ static ssize_t vfio_pci_rw(void *device_data, char __user *buf,
->  
->  	return -EINVAL;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_rw);
->  
->  static ssize_t vfio_pci_read(void *device_data, char __user *buf,
->  			     size_t count, loff_t *ppos)
-> @@ -1130,7 +1136,7 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
->  	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
->  }
->  
-> -static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> +int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
->  {
->  	struct vfio_pci_device *vdev = device_data;
->  	struct pci_dev *pdev = vdev->pdev;
-> @@ -1173,7 +1179,7 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
->  	 */
->  	if (!vdev->barmap[index]) {
->  		ret = pci_request_selected_regions(pdev,
-> -						   1 << index, "vfio-pci");
-> +						   1 << index, vdev->name);
->  		if (ret)
->  			return ret;
->  
-> @@ -1191,8 +1197,9 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
->  	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
->  			       req_len, vma->vm_page_prot);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_mmap);
->  
-> -static void vfio_pci_request(void *device_data, unsigned int count)
-> +void vfio_pci_request(void *device_data, unsigned int count)
->  {
->  	struct vfio_pci_device *vdev = device_data;
->  
-> @@ -1211,6 +1218,7 @@ static void vfio_pci_request(void *device_data, unsigned int count)
->  
->  	mutex_unlock(&vdev->igate);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_request);
->  
->  static const struct vfio_device_ops vfio_pci_ops = {
->  	.name		= "vfio-pci",
-> @@ -1223,8 +1231,31 @@ static const struct vfio_device_ops vfio_pci_ops = {
->  	.request	= vfio_pci_request,
->  };
->  
-> -static int vfio_pci_reflck_attach(struct vfio_pci_device *vdev);
-> -static void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck);
-> +int vfio_pci_probe_misc(struct pci_dev *pdev, struct vfio_pci_device *vdev)
-> +{
-> +	if (vfio_pci_is_vga(pdev)) {
-> +		vga_client_register(pdev, vdev, NULL, vfio_pci_set_vga_decode);
-> +		vga_set_legacy_decoding(pdev,
-> +					vfio_pci_set_vga_decode(vdev, false));
-> +	}
-> +
-> +	if (!disable_idle_d3) {
-> +		/*
-> +		 * pci-core sets the device power state to an unknown value at
-> +		 * bootup and after being removed from a driver.  The only
-> +		 * transition it allows from this unknown state is to D0, which
-> +		 * typically happens when a driver calls pci_enable_device().
-> +		 * We're not ready to enable the device yet, but we do want to
-> +		 * be able to get to D3.  Therefore first do a D0 transition
-> +		 * before going to D3.
-> +		 */
-> +		pci_set_power_state(pdev, PCI_D0);
-> +		pci_set_power_state(pdev, PCI_D3hot);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_pci_probe_misc);
->  
->  static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> @@ -1259,6 +1290,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	}
->  
->  	vdev->pdev = pdev;
-> +	vdev->name = "vfio-pci";
->  	vdev->irq_type = VFIO_PCI_NUM_IRQS;
->  	mutex_init(&vdev->igate);
->  	spin_lock_init(&vdev->irqlock);
-> @@ -1280,28 +1312,23 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return ret;
->  	}
->  
-> +	ret = vfio_pci_probe_misc(pdev, vdev);
-> +	return ret;
-> +}
-> +
-> +void vfio_pci_remove_misc(struct pci_dev *pdev)
-> +{
->  	if (vfio_pci_is_vga(pdev)) {
-> -		vga_client_register(pdev, vdev, NULL, vfio_pci_set_vga_decode);
-> +		vga_client_register(pdev, NULL, NULL, NULL);
->  		vga_set_legacy_decoding(pdev,
-> -					vfio_pci_set_vga_decode(vdev, false));
-> +				VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
-> +				VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM);
->  	}
->  
-> -	if (!disable_idle_d3) {
-> -		/*
-> -		 * pci-core sets the device power state to an unknown value at
-> -		 * bootup and after being removed from a driver.  The only
-> -		 * transition it allows from this unknown state is to D0, which
-> -		 * typically happens when a driver calls pci_enable_device().
-> -		 * We're not ready to enable the device yet, but we do want to
-> -		 * be able to get to D3.  Therefore first do a D0 transition
-> -		 * before going to D3.
-> -		 */
-> +	if (!disable_idle_d3)
->  		pci_set_power_state(pdev, PCI_D0);
-> -		pci_set_power_state(pdev, PCI_D3hot);
-> -	}
-> -
-> -	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_remove_misc);
->  
->  static void vfio_pci_remove(struct pci_dev *pdev)
->  {
-> @@ -1317,16 +1344,7 @@ static void vfio_pci_remove(struct pci_dev *pdev)
->  	kfree(vdev->region);
->  	mutex_destroy(&vdev->ioeventfds_lock);
->  	kfree(vdev);
-> -
-> -	if (vfio_pci_is_vga(pdev)) {
-> -		vga_client_register(pdev, NULL, NULL, NULL);
-> -		vga_set_legacy_decoding(pdev,
-> -				VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
-> -				VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM);
-> -	}
-> -
-> -	if (!disable_idle_d3)
-> -		pci_set_power_state(pdev, PCI_D0);
-> +	vfio_pci_remove_misc(pdev);
->  }
->  
->  static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
-> @@ -1357,9 +1375,10 @@ static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
->  	return PCI_ERS_RESULT_CAN_RECOVER;
->  }
->  
-> -static const struct pci_error_handlers vfio_err_handlers = {
-> +const struct pci_error_handlers vfio_err_handlers = {
->  	.error_detected = vfio_pci_aer_err_detected,
->  };
-> +EXPORT_SYMBOL_GPL(vfio_err_handlers);
->  
->  static struct pci_driver vfio_pci_driver = {
->  	.name		= "vfio-pci",
-> @@ -1418,7 +1437,7 @@ static int vfio_pci_reflck_find(struct pci_dev *pdev, void *data)
->  	return 0;
->  }
->  
-> -static int vfio_pci_reflck_attach(struct vfio_pci_device *vdev)
-> +int vfio_pci_reflck_attach(struct vfio_pci_device *vdev)
->  {
->  	bool slot = !pci_probe_reset_slot(vdev->pdev->slot);
->  
-> @@ -1433,6 +1452,7 @@ static int vfio_pci_reflck_attach(struct vfio_pci_device *vdev)
->  
->  	return PTR_ERR_OR_ZERO(vdev->reflck);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_reflck_attach);
->  
->  static void vfio_pci_reflck_release(struct kref *kref)
->  {
-> @@ -1444,10 +1464,11 @@ static void vfio_pci_reflck_release(struct kref *kref)
->  	mutex_unlock(&reflck_lock);
->  }
->  
-> -static void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck)
-> +void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck)
->  {
->  	kref_put_mutex(&reflck->kref, vfio_pci_reflck_release, &reflck_lock);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_reflck_put);
->  
->  struct vfio_devices {
->  	struct vfio_device **devices;
-> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-> index 8c0009f..da9afe5 100644
-> --- a/drivers/vfio/pci/vfio_pci_private.h
-> +++ b/drivers/vfio/pci/vfio_pci_private.h
-> @@ -90,6 +90,7 @@ struct vfio_pci_reflck {
->  struct vfio_pci_device {
->  	struct pci_dev		*pdev;
->  	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-> +	char			*name;
->  	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
->  	u8			*pci_config_map;
->  	u8			*vconfig;
-> @@ -125,6 +126,8 @@ struct vfio_pci_device {
->  	struct list_head	ioeventfds_list;
->  };
->  
-> +extern const struct pci_error_handlers vfio_err_handlers;
-> +
->  #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
->  #define is_msi(vdev) (vdev->irq_type == VFIO_PCI_MSI_IRQ_INDEX)
->  #define is_msix(vdev) (vdev->irq_type == VFIO_PCI_MSIX_IRQ_INDEX)
-> @@ -154,6 +157,20 @@ extern long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
->  extern int vfio_pci_init_perm_bits(void);
->  extern void vfio_pci_uninit_perm_bits(void);
->  
-> +int vfio_pci_open(void *device_data);
-> +void vfio_pci_release(void *device_data);
-> +long vfio_pci_ioctl(void *device_data,
-> +			   unsigned int cmd, unsigned long arg);
-> +ssize_t vfio_pci_rw(void *device_data, char __user *buf,
-> +			   size_t count, loff_t *ppos, bool iswrite);
-> +int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma);
-> +void vfio_pci_request(void *device_data, unsigned int count);
-> +int vfio_pci_reflck_attach(struct vfio_pci_device *vdev);
-> +void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck);
-> +unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga);
-> +int vfio_pci_probe_misc(struct pci_dev *pdev, struct vfio_pci_device *vdev);
-> +void vfio_pci_remove_misc(struct pci_dev *pdev);
-> +
->  extern int vfio_config_init(struct vfio_pci_device *vdev);
->  extern void vfio_config_free(struct vfio_pci_device *vdev);
->  
+The call to invalidate_batched_entropy() was also missing. This is
+important for architectures like PPC and S390 which only have the
+arch_get_random_seed_* functions.
+
+Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
+Signed-off-by: Jon DeVree <nuxi@vault24.org>
+---
+ drivers/char/random.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38c6d1af6d1c..d4d45ccfeefc 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -777,6 +777,7 @@ static struct crng_state **crng_node_pool __read_mostly;
+ #endif
+ 
+ static void invalidate_batched_entropy(void);
++static void numa_crng_init(void);
+ 
+ static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
+ static int __init parse_trust_cpu(char *arg)
+@@ -805,7 +806,9 @@ static void crng_initialize(struct crng_state *crng)
+ 		}
+ 		crng->state[i] ^= rv;
+ 	}
+-	if (trust_cpu && arch_init) {
++	if (trust_cpu && arch_init && crng == &primary_crng) {
++		invalidate_batched_entropy();
++		numa_crng_init();
+ 		crng_init = 2;
+ 		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
+ 	}
+-- 
+2.20.1
 
