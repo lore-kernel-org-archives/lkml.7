@@ -2,95 +2,88 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2387CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE7B20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D24920811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxw6ss8L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ommez+kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfCSXis (ORCPT
+        id S1727257AbfCSXlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:38:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35933 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCSXis (ORCPT
+        Tue, 19 Mar 2019 19:41:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52076 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfCSXlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:38:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t206so365150oib.3;
-        Tue, 19 Mar 2019 16:38:47 -0700 (PDT)
+        Tue, 19 Mar 2019 19:41:40 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n19so18616363wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:41:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NDRtOZ+acBN+uU5aUd6XsYoQMrcl+FASNQzPXm/qy64=;
-        b=Gxw6ss8LRMeQCMgkGbHnbieNAbueSSLHeBHV0Du44tR0jVjoj9Jv6wq0tTyKDEQZxB
-         5pqerog3iRna5t/u6dLk7Ro5D9qwpcBVO7YYriCqHVy5IRaayrICSulOcVUCDHIrJUKn
-         dv1Ngc7oKivCLU6KjeDxNxpEYW/ySKl3c+kVduCAXPCDdzimfAMNn28EPFuZR2lkMYAO
-         aRiabbjUnWKfk1j++CdJ8/WC5QhGqMXl2IaN1afCnVpFS2S8y459MssFjUBBOsAM7FJs
-         LF/60Wl5MBpHmVxfEkTbPeAUbMe28Kgp4up28SHVFloNAwq401ye31i709hvr//ptSF/
-         27pQ==
+        bh=Rg9mK1kJOMuRsY9leXe20xar5bspdwa24vDi2J1Vf1c=;
+        b=Ommez+kcjBwgvEjMbDspXwG4H7XJE4ef2dHHdqNUYscI9IMD7gQeOtKFP2rM3QQQpa
+         AlYohY0EWfsyYTT+hGYhY13kIwZij4NRvH/cc+2qNjD/lj3LzQ3FMrN29QdltxOrM511
+         Hta16ow/I6OzFfyOa/JWoZI8YnKbrUSXBoGx/dRwm97yNgQJMN7UVCbR92GPHaOI15vm
+         uRGOoU6aMocp83Q2prRY/z9qsbktyE3O8HZMx95i9EvHOEe7F9VCoX5yWPyEJx873ouj
+         It0LvVH/P7+Hh5JELKBRoj61oJYVMGhJDre2/08r7bH6QJR5SgUshFrrGIlTOfuQs20P
+         0ptQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NDRtOZ+acBN+uU5aUd6XsYoQMrcl+FASNQzPXm/qy64=;
-        b=iPOvlzvss9QeXq1sj7gOD6KktrfIVSpL5hGaUeMhkedaa+8q6CQbR9pI0/Nla1dFw/
-         WADOnhVJFa4AixHy4RiX7+F+3SdYsMh7bg9TEf4BlcQZKoOvRZrYXV7wCW8AtEhf60rF
-         QoTjapPTtt5CgfqPllkbPiR2uJ8DTd5knDX/jbE1YpHI26MemS6h18ih0ocRllMrpUg1
-         REmM3Zyjp6krrrOgQoWOb1FjaUHgfkG6PDYJnwrxgAC1/wOUuuFPH2tr2HLA+3wXlFR3
-         HYeH1/zXhPgMqFd993yhnx7fejypOITbHTn2rxVXsagRxawE+4bB2NcVXwGnVLIWeMAd
-         tTHQ==
-X-Gm-Message-State: APjAAAV389xOyA5bk6pZ48n+E9QGZViU3NBY9LnH/BXupT6rlDJQmEKX
-        f09mS1lVDf/WVj34ReuDQZgjx9TbM4OaWqmfyqc=
-X-Google-Smtp-Source: APXvYqxq545xEnWCf/qVTky6QcrEep4O2gGcfBubpdDCiN0zRlSJL4c2TVbjk8MdSNKBRJVR+C1Y97/I5+xjARZaz/8=
-X-Received: by 2002:aca:b904:: with SMTP id j4mr3337945oif.128.1553038727308;
- Tue, 19 Mar 2019 16:38:47 -0700 (PDT)
+        bh=Rg9mK1kJOMuRsY9leXe20xar5bspdwa24vDi2J1Vf1c=;
+        b=neUxbScF7STY6tQ35KCbpy/DhFCE0RjB1JJ0naWq1A7cnYDDk6K7XvvBNqG/Fi7+7K
+         UkGG3/sar8pp33T722bNdTxXgf7q0zfL/XGZXkKK9dKVNui+Sad9ea86XvKiZrFHsRKr
+         JRc95v37ovKqBwBxDcTcQKVkSa6UdiVFc9X6GqbG0ihWYCVwPv71/TtBbxIOc6muJWT5
+         LH/2gmt3GWhrUkqvffuwxOHLAHAXccZYAB5vOysSL0TgaMznnpJO5dwr+FB9I+0KjCHX
+         hP4El4b0h2WSsX4VQgcPzRUfQIeJGlXptr3u2eGsCFBZ7CdfOh0LBQCyrVDmoCfGDD/7
+         cCvw==
+X-Gm-Message-State: APjAAAWkOkU5+H+s/TWwhXCqafy8Mq/t05gU49AZjREIFq/udLMaqGbi
+        iMFSYDMMwe85n8lF5kW8WkquDOpJhveMsx1fuS4ZfQ==
+X-Google-Smtp-Source: APXvYqx/oOcnJ7uTguAakb4WelxkrdfKhQIu4kgJTAWIfI1Z5Pc4ZnWBEm/GOlY+bYcCHRbS9Aq2XR/XNOZv5cINSEI=
+X-Received: by 2002:a7b:cb8e:: with SMTP id m14mr5279503wmi.64.1553038898217;
+ Tue, 19 Mar 2019 16:41:38 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a9d:628c:0:0:0:0:0 with HTTP; Tue, 19 Mar 2019 16:38:46
- -0700 (PDT)
-In-Reply-To: <57195909-b18b-8490-e1b8-043ff9727e5a@gmx.de>
-References: <20190318190557.21599-1-timschumi@gmx.de> <CAKR_QV+wjuOZVfv9awX5bRLYC8xkoAy0h22LSPvL0DX6yg4-yw@mail.gmail.com>
- <57195909-b18b-8490-e1b8-043ff9727e5a@gmx.de>
-From:   Tom Psyborg <pozega.tomislav@gmail.com>
-Date:   Wed, 20 Mar 2019 00:38:46 +0100
-Message-ID: <CAKR_QVKWbrx2EmcaCBhyuaYRd+T3pFW0i2jVcDZG6=wee=DaMA@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
-To:     Tim Schumacher <timschumi@gmx.de>
-Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <1553037915-85931-1-git-send-email-fei.yang@intel.com>
+In-Reply-To: <1553037915-85931-1-git-send-email-fei.yang@intel.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 19 Mar 2019 16:41:24 -0700
+Message-ID: <CALAqxLXaUAfz8n6Cpux7XBhHVHifTQhM_wnz4L3DzrmQ0GoCHg@mail.gmail.com>
+Subject: Re: [PATCH] usb: gadget: f_fs: don't free buffer prematurely
+To:     fei.yang@intel.com
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jerry Zhang <zhangjerry@google.com>, andrzej.p@collabora.com,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        jingx.shen@intel.com, Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019, Tim Schumacher <timschumi@gmx.de> wrote:
+On Tue, Mar 19, 2019 at 4:25 PM <fei.yang@intel.com> wrote:
 >
-> The case in where the revision succeeded to read, but it simply
-> isn't supported by the driver, is untouched and it still prints
-> the original message.
+> From: Fei Yang <fei.yang@intel.com>
 >
+> The following kernel panic happens due to the io_data buffer gets deallocated
+> before the async io is completed. Add a check for the case where io_data buffer
+> should be deallocated by ffs_user_copy_worker.
 
-In that case this change is fine.
+Yay!  Perfect! I was up late last night chasing this crash, but
+couldn't de-thread what the problem was.
+So very happy to see this patch!
 
-> I don't know why it fails to read the SREV register in my specific
-> case (I tracked it down to a WMI command timeout, which seems to
-> only happen on a Raspberry Pi 3), but having the SREV error message
-> (which points to the actual issue) instead of the false-positive
-> "Rev not supported" message would have saved me quite some time that
-> I spent with debugging the issue, searching for the source of the
-> wrong value.
->
+I'll test it here shortly!
 
-Did you try some other device than RPI3 ? I've noticed that on router
-and laptop while doing some htc fw builds.
+thanks
+-john
