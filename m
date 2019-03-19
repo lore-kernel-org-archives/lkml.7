@@ -2,180 +2,107 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69082C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B195CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD0720850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F502133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553008360;
+	bh=3X5AiXiKaQ+A7ubiTxZxyJQbo3bdfQ8VWacuD0Hg3bA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fE70/xrt2hLK7XUe4Jg+X28mM/egFV/91dHGeO85cDU1cHeEEsTZORXZFZ5zyspeJ
+	 3CsGy3lEw0BPsJ4XGk3Uco253yX3tQMP9C5oi8QFsH0YGwbqiSikyWj88AHmlE1lnn
+	 RLsabpXIrKYRJoh6syf3q0tTa3AMAKzCw1Hv6OPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCSPMY (ORCPT
+        id S1727611AbfCSPMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:12:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43028 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726661AbfCSPMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:12:24 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 00CBACE3CBBB3A038346;
-        Tue, 19 Mar 2019 23:12:19 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 23:12:16 +0800
-Subject: Re: [PATCH] perf tools: return errcode in
- cs_etm__process_auxtrace_info
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-References: <20190315022649.17848-1-yuehaibing@huawei.com>
- <20190318171518.GH22548@kernel.org>
- <CANLsYkzU25wAx0dMQqMVZ2asx+z-taOfffLO7DMd6mkDXc7D9A@mail.gmail.com>
- <20190319144631.GE3029@kernel.org> <20190319145525.GA7394@xps15>
-CC:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <a006e535-67a3-073b-b556-b6d3a4c31749@huawei.com>
-Date:   Tue, 19 Mar 2019 23:12:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 19 Mar 2019 11:12:39 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35847 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfCSPMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:12:38 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e4so16935482edi.3;
+        Tue, 19 Mar 2019 08:12:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AS3EvV7rlYAaswBBgvJO/ZK6uOlgHoPPO+mfzZyVHjA=;
+        b=rRTInG0YQgxaYPUIHiRgPJcWQuyCzU6oAafO7wtqrE0MbNGwod5zcecQV3ZE6FhyUq
+         2bfy0e3gS92LM7CrycN0iMyV5IKrG6s0+3D+fELKbwjGc+HPV/EtA9cpPGYpM6mgNYjz
+         MgxE8rufbE10GAiXFUHPvcehw1pm6HwUcOR7KIWflnHBO/KBAQ0shWSCvRBfD88ym039
+         E0gcTw8jTIsaY6wFMAhI4TugMmVcFKbrva/E0JGJZxb34R0/ipGf7XoodXcAeFNwb2iV
+         GhbwLoUZjTIq0qujPzo+x/JswkCkqZKlcurAe56GSJnEUtgmsCvQgnKQR6YvFLPldvb3
+         RLoA==
+X-Gm-Message-State: APjAAAW38b1nnKh2lCpDTTsK0G96GCNA9I/x9q92D4iz1v2NI5Md81oZ
+        s6KbWt/8jzV21KQ9fk7ApXSt+WMqa0pt+Xpjkxw=
+X-Google-Smtp-Source: APXvYqzF5AHid8X6We1iIp/73ILAM4ji6Y2hi29Khf4Hj/a/tqEcsTfPuucR+V42BZ+CVFFw2EJUo9+GB74bcTvIVrk=
+X-Received: by 2002:a17:906:7854:: with SMTP id p20mr14245685ejm.29.1553008356832;
+ Tue, 19 Mar 2019 08:12:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190319145525.GA7394@xps15>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <1549982079-23516-1-git-send-email-darcari@redhat.com> <1365e035-3218-aff5-6d86-05215ce25073@redhat.com>
+In-Reply-To: <1365e035-3218-aff5-6d86-05215ce25073@redhat.com>
+From:   Len Brown <lenb@kernel.org>
+Date:   Tue, 19 Mar 2019 08:12:25 -0700
+Message-ID: <CAJvTdKnzLgx35KSxaZQt+YnTqSHZAX_maNu2D0R9ds8xYwW6NA@mail.gmail.com>
+Subject: Re: [PATCH] tools/power turbostat: return the exit status of a command
+To:     David Arcari <darcari@redhat.com>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Jirka Hladky <jhladky@redhat.com>,
+        linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Acked-by: Len Brown <len.brown@intel.com>
 
-On 2019/3/19 22:55, Mathieu Poirier wrote:
-> On Tue, Mar 19, 2019 at 11:46:31AM -0300, Arnaldo Carvalho de Melo wrote:
->> Em Tue, Mar 19, 2019 at 08:38:32AM -0600, Mathieu Poirier escreveu:
->>> On Mon, 18 Mar 2019 at 11:15, Arnaldo Carvalho de Melo
->>> <arnaldo.melo@gmail.com> wrote:
->>>>
->>>> Em Fri, Mar 15, 2019 at 10:26:49AM +0800, Yue Haibing escreveu:
->>>>> From: YueHaibing <yuehaibing@huawei.com>
->>>>>
->>>>> 'err' is set in err path, but it's not returned to callers.
->>>>> Also fix a pass zero to PTR_ERR issue.
->>>>
->>>> Next time please submit two patches, one for the PTR_ERR and another for
->>>> not throwing away the err = -E!INVAL and returning just -EINVAL, I'm
->>>> doing it this time.
->>>>
->>>
->>> Please hold off on that - I've asked for other modifications to be
->>> done on this patch.
->>
->> Do you really think that it is necessary to hold? The fixes are trivial
->> and I already have them split and applied, see them below, I think
->> whatever other changes can be done in further patches, no?
-> 
-> Proceeding with the patches below would created two new bugs, hence asking Yue
-> for modifications.
+On Wed, Feb 20, 2019 at 5:55 AM David Arcari <darcari@redhat.com> wrote:
+>
+>
+> ping -- just want to make sure this doesn't get lost.
+>
+> Thanks!
+>
+> On 02/12/2019 09:34 AM, David Arcari wrote:
+> > turbostat failed to return a non-zero exit status even though the
+> > supplied command (turbostat <command>) failed.  Currently when turbostat
+> > forks a command it returns zero instead of the actual exit status of the
+> > command.  Modify the code to return the exit status.
+> >
+> > Signed-off-by: David Arcari <darcari@redhat.com>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Jirka Hladky <jhladky@redhat.com>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  tools/power/x86/turbostat/turbostat.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+> > index 9327c0d..c3fad06 100644
+> > --- a/tools/power/x86/turbostat/turbostat.c
+> > +++ b/tools/power/x86/turbostat/turbostat.c
+> > @@ -5077,6 +5077,9 @@ int fork_it(char **argv)
+> >               signal(SIGQUIT, SIG_IGN);
+> >               if (waitpid(child_pid, &status, 0) == -1)
+> >                       err(status, "waitpid");
+> > +
+> > +             if (WIFEXITED(status))
+> > +                     status = WEXITSTATUS(status);
+> >       }
+> >       /*
+> >        * n.b. fork_it() does not check for errors from for_all_cpus()
+> >
+>
 
 
-Sorry for late, then I can send a new patch to fix the two new bugs.
-
-> 
-> Mathieu  
-> 
->>
->> - Arnaldo
->>
->> From 6c5c248935a4da12a582b1518a38ec35044833ee Mon Sep 17 00:00:00 2001
->> From: YueHaibing <yuehaibing@huawei.com>
->> Date: Fri, 15 Mar 2019 10:26:49 +0800
->> Subject: [PATCH 24/42] perf cs-etm: return errcode in
->>  cs_etm__process_auxtrace_info()
->>
->> 'err' is set in err path, but it's not returned to callers. Don't always return
->> -EINVAL, return err.
->>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
->> Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
->> [ split from a larger patch ]
->> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->> ---
->>  tools/perf/util/cs-etm.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->> index 110804936fc3..2257ac4dbff2 100644
->> --- a/tools/perf/util/cs-etm.c
->> +++ b/tools/perf/util/cs-etm.c
->> @@ -2023,5 +2023,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->>  err_free_hdr:
->>  	zfree(&hdr);
->>  
->> -	return -EINVAL;
->> +	return err;
->>  }
->> -- 
->> 2.20.1
->>
->> From 4ab1e71e45a91220bdca7fc3b79c600df81d9234 Mon Sep 17 00:00:00 2001
->> From: YueHaibing <yuehaibing@huawei.com>
->> Date: Fri, 15 Mar 2019 10:26:49 +0800
->> Subject: [PATCH 25/42] perf cs-etm: Remove errnoeous ERR_PTR() usage in in
->>  cs_etm__process_auxtrace_info
->>
->> intlist__findnew() doesn't uses ERR_PTR() as a return mechanism so its callers
->> shouldn't try to extract the error using PTR_ERR(ret-from-intlist__findnew()),
->> make cs_etm__process_auxtrace_info9) return -ENOMEM instead.
->>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
->> Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
->> [ split from a larger patch ]
->> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->> ---
->>  tools/perf/util/cs-etm.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->> index 2257ac4dbff2..111f33cd1204 100644
->> --- a/tools/perf/util/cs-etm.c
->> +++ b/tools/perf/util/cs-etm.c
->> @@ -1908,7 +1908,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->>  
->>  		/* Something went wrong, no need to continue */
->>  		if (!inode) {
->> -			err = PTR_ERR(inode);
->> +			err = -ENOMEM;
->>  			goto err_free_metadata;
->>  		}
->>  
->> -- 
->> 2.20.1
->>
-> 
-> .
-> 
-
+-- 
+Len Brown, Intel Open Source Technology Center
