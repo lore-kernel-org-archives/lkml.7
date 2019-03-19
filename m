@@ -2,226 +2,960 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EF0C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C5C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790D22147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642AC2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552999528;
-	bh=XrujEbovMqbGs068VRjJnH+7HiH3ic1/wmRXcq4nBCY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YWf9r+FhshjLuZjj5jOR2QE7eDd5Sgf6/l+7y8UuDWCJ3POZ4ClPiw4BdlFIp8yzm
-	 /2I/B5HkmQ/uHJDcIA6R8nQpSjPy+99+zdFIbbwnOztOlRfkEg/pEuMfX+IcIKlgPe
-	 OSVXycxMXtNBlxxnABbCXvmmeMq+RT/p3GgYcsmA=
+	s=default; t=1552999534;
+	bh=KJZqTLPq03g52HewWv+GhB1v8rxA5VDrWFBxeQzPnl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uoVLojYUOWcBR+vBFTA6V7IU/PtZDc/hnhrJ2gOqR8NMTm7wfIuvU77DbqamxEWQr
+	 zLMm4Clx8Kjf81aS1ZM3ZQMkMzDGxWkKGGl1chf9n7vyZZO1lNoX1e6fsWiZLDiISx
+	 nvqmO+fX/L9JLRcMWYUSDbbgYlXdOgWNideeXj3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfCSMp1 (ORCPT
+        id S1727643AbfCSMpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57926 "EHLO mail.kernel.org"
+        Tue, 19 Mar 2019 08:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727552AbfCSMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:45:26 -0400
+        id S1726053AbfCSMpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:45:32 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6982147C;
-        Tue, 19 Mar 2019 12:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2FA2173C;
+        Tue, 19 Mar 2019 12:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552999525;
-        bh=XrujEbovMqbGs068VRjJnH+7HiH3ic1/wmRXcq4nBCY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=z/OcgVFKQB0wzeggJmU3ZrFOkXjLtQgaoHOkhi88GeGjefzzR6My71GPekG6TSk+l
-         8YVb4JggfFA3bRdxXWPJstBKm+5T2kVRPWMHusirKKRtqZL1VR72++MV1tIsnckHRx
-         5aZq2LH5XJhu7NxHniTIPyOHOSmawlqeMc7oR8K4=
-Date:   Tue, 19 Mar 2019 13:45:21 +0100
+        s=default; t=1552999530;
+        bh=KJZqTLPq03g52HewWv+GhB1v8rxA5VDrWFBxeQzPnl8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MO8LR5oOn9LbjByZsn4RFDzZMqgBA6rtK50j/XaeucY93KbF5eFU4Xo1jniSC6agd
+         eReOfjLSthc6AKzJwqov7ATDwhw1ZvnkOsrM6SjfSefSo1hakkC/fl+SSqcQA99Pg/
+         6XreMmKYH1MV7p4ZkzRKKPzG0LY3LrQvMiJHWrOs=
+Date:   Tue, 19 Mar 2019 13:45:27 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.14.107
-Message-ID: <20190319124521.GA9730@kroah.com>
+Subject: Re: Linux 4.14.107
+Message-ID: <20190319124527.GB9730@kroah.com>
+References: <20190319124521.GA9730@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190319124521.GA9730@kroah.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-I'm announcing the release of the 4.14.107 kernel.
-
-All users of the 4.14 kernel series must upgrade.
-
-The updated 4.14.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.14.y
-and can be browsed at the normal kernel.org git web browser:
-	http://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Dsu=
-mmary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                              |    2=20
- arch/x86/events/intel/core.c                          |    4 -
- arch/x86/events/perf_event.h                          |    4 -
- drivers/md/raid10.c                                   |    1=20
- drivers/net/bonding/bond_main.c                       |   35 ++++-------
- drivers/net/ethernet/mellanox/mlx4/cmd.c              |    9 ++
- drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |    6 -
- drivers/net/ethernet/renesas/ravb_main.c              |    2=20
- drivers/net/ipvlan/ipvlan_main.c                      |    9 ++
- drivers/net/phy/mdio_bus.c                            |    1=20
- drivers/net/ppp/pptp.c                                |    1=20
- drivers/net/vxlan.c                                   |   14 ++++
- drivers/vhost/vsock.c                                 |    2=20
- include/acpi/acconfig.h                               |    2=20
- net/core/gro_cells.c                                  |   22 +++++-
- net/hsr/hsr_device.c                                  |   18 ++---
- net/hsr/hsr_framereg.c                                |   12 +++
- net/hsr/hsr_framereg.h                                |    1=20
- net/ipv4/route.c                                      |   13 ++--
- net/ipv4/syncookies.c                                 |    7 +-
- net/ipv4/tcp_input.c                                  |    8 ++
- net/ipv4/tcp_ipv4.c                                   |    9 --
- net/ipv6/route.c                                      |    2=20
- net/ipv6/sit.c                                        |    5 -
- net/l2tp/l2tp_ip6.c                                   |    4 -
- net/rxrpc/conn_client.c                               |    4 -
- net/unix/af_unix.c                                    |   57 ++++++++++---=
------
- net/unix/diag.c                                       |    3=20
- net/x25/af_x25.c                                      |   20 ++++--
- security/lsm_audit.c                                  |   10 +--
- sound/firewire/bebob/bebob.c                          |   14 ++++
- sound/firewire/motu/amdtp-motu.c                      |    4 -
- tools/perf/arch/x86/util/unwind-libunwind.c           |    2=20
- 33 files changed, 198 insertions(+), 109 deletions(-)
-
-Al Viro (1):
-      missing barriers in some of unix_sock ->addr and ->path accesses
-
-Christoph Paasch (1):
-      tcp: Don't access TCP_SKB_CB before initializing it
-
-Daniel Borkmann (1):
-      ipvlan: disallow userns cap_net_admin to change global mode/flags
-
-David Howells (1):
-      rxrpc: Fix client call queueing, waiting for channel
-
-Eric Dumazet (7):
-      gro_cells: make sure device is up in gro_cells_receive()
-      l2tp: fix infoleak in l2tp_ip6_recvmsg()
-      net/hsr: fix possible crash in add_timer()
-      net/x25: fix use-after-free in x25_device_event()
-      net/x25: reset state in x25_connect()
-      vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
-      net/x25: fix a race in x25_bind()
-
-Erik Schmauss (1):
-      ACPICA: Reference Counts: increase max to 0x4000 for large servers
-
-Greg Kroah-Hartman (1):
-      Linux 4.14.107
-
-Guillaume Nault (1):
-      tcp: handle inet_csk_reqsk_queue_add() failures
-
-Jack Morgenstein (3):
-      net/mlx4_core: Fix reset flow when in command polling mode
-      net/mlx4_core: Fix locking in SRIOV mode when switching between event=
-s and polling
-      net/mlx4_core: Fix qp mtt size calculation
-
-Kalash Nainwal (1):
-      net: Set rtm_table to RT_TABLE_COMPAT for ipv6 for tables > 255
-
-Mao Wenan (1):
-      net: hsr: fix memory leak in hsr_dev_finalize()
-
-Masaru Nagai (1):
-      ravb: Decrease TxFIFO depth of Q3 and Q2 to one
-
-Miaohe Lin (1):
-      net: sit: fix UBSAN Undefined behaviour in check_6rd
-
-Michal Soltys (1):
-      bonding: fix PACKET_ORIGDEV regression
-
-Paolo Abeni (1):
-      ipv4/route: fail early when inet dev is missing
-
-Peter Zijlstra (2):
-      perf/x86: Fixup typo in stub functions
-      perf/x86/intel: Fix memory corruption
-
-Stefano Brivio (1):
-      vxlan: Fix GRO cells race condition between receive and link delete
-
-Takashi Sakamoto (2):
-      ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O agai=
-nst Liquid Saffire 56
-      ALSA: firewire-motu: fix construction of PCM frame for capture direct=
-ion
-
-Wang Nan (1):
-      perf tools: Fix compile error with libunwind x86
-
-Xiao Ni (1):
-      It's wrong to add len to sector_nr in raid10 reshape twice
-
-Xin Long (2):
-      pptp: dst_release sk_dst_cache in pptp_sock_destruct
-      route: set the deleted fnhe fnhe_daddr to 0 in ip_del_fnhe to fix a r=
-ace
-
-YueHaibing (1):
-      mdio_bus: Fix use-after-free on device_register fails
-
-Zha Bin (1):
-      vhost/vsock: fix vhost vsock cid hashing inconsistent
-
-kbuild test robot (1):
-      perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
-
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlyQ5GEACgkQONu9yGCS
-aT5PLg/9GtWyz1i18vTj/VSokEc+RPysWulIalWeZSKLN93oEOs0yqkCBRjtZrZs
-DUILQPBjgxuRUtmtrcR3IUpVe7jZQ1g3XlvLzK+g7S0yj78rYs7zBbNSd5EDGvQg
-Ff1xkY1XSnW2b5IK5B6CA0Blbr2kQ6hSDsAXxxO1SKEkeTv6svpTRQlRDUtGYd9x
-EOo5GPxV19XSRpEJuu/idWITg7TGOP6EvBnQyUhTcirA+Tj1F4xKQTs2hAUOZjMV
-lu/mPmJ/AWIOy/JKE31XJxdl82p6mSiLMTrUfwnwGoT3Z4RPHnGG6MZQm/QUOyEG
-Y0LeqPfQ9VhDDb0+AEHTkzLEGctBkUD9nREInnSWiOiUKqpVlBaENwamwogXrGzU
-WXik1gqVSK3+cLOChkSEPbMGqPSw/CxAb99I37OtCWHGHqv4/yt/OSzIa9YkEu8t
-pL3zSOv/xQg8WwhDs+S2l5z86HHXewHUV3SOodUrE8Nf4b2qcTDYg5k7CmdAHbAS
-fhyrlhHU6clzAxW+/s7NPIWtXrY4TvMXpWnyWomyK/DiMnolUFs559PzDNZhJfRa
-zMu7+g5EnEIoln5h+YuNQbuXlhLHWsIYr72wYhHHZGesGgNmfJ6gll8TZTmVbTnA
-u2stzjSjyCKOFe8suePm6dL91UPvIvPqd/yki8UMZd/snZc+Y7M=
-=T65i
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
+diff --git a/Makefile b/Makefile
+index ecc3a2a82a49..e3e2121718a8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 14
+-SUBLEVEL = 106
++SUBLEVEL = 107
+ EXTRAVERSION =
+ NAME = Petit Gorille
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 65a369a42338..dc8f8b3e6cec 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3262,7 +3262,7 @@ tfa_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 	/*
+ 	 * Without TFA we must not use PMC3.
+ 	 */
+-	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
++	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
+ 		c = dyn_constraint(cpuc, c, idx);
+ 		c->idxmsk64 &= ~(1ULL << 3);
+ 		c->weight--;
+@@ -3968,7 +3968,7 @@ static struct attribute *intel_pmu_caps_attrs[] = {
+        NULL
+ };
+ 
+-DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 9702f4ed4748..84b3841c131d 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1021,12 +1021,12 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
+ 
+-static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
+ {
+ 	return 0;
+ }
+ 
+-static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
++static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+ }
+ 
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 2ce079a0b0bd..ed1b7bf1ec0e 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4495,7 +4495,6 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
+ 	atomic_inc(&r10_bio->remaining);
+ 	read_bio->bi_next = NULL;
+ 	generic_make_request(read_bio);
+-	sector_nr += nr_sectors;
+ 	sectors_done += nr_sectors;
+ 	if (sector_nr <= last)
+ 		goto read_more;
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 65c5a65af0ba..99e60bb5fe07 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1177,29 +1177,22 @@ static rx_handler_result_t bond_handle_frame(struct sk_buff **pskb)
+ 		}
+ 	}
+ 
+-	/* Link-local multicast packets should be passed to the
+-	 * stack on the link they arrive as well as pass them to the
+-	 * bond-master device. These packets are mostly usable when
+-	 * stack receives it with the link on which they arrive
+-	 * (e.g. LLDP) they also must be available on master. Some of
+-	 * the use cases include (but are not limited to): LLDP agents
+-	 * that must be able to operate both on enslaved interfaces as
+-	 * well as on bonds themselves; linux bridges that must be able
+-	 * to process/pass BPDUs from attached bonds when any kind of
+-	 * STP version is enabled on the network.
++	/*
++	 * For packets determined by bond_should_deliver_exact_match() call to
++	 * be suppressed we want to make an exception for link-local packets.
++	 * This is necessary for e.g. LLDP daemons to be able to monitor
++	 * inactive slave links without being forced to bind to them
++	 * explicitly.
++	 *
++	 * At the same time, packets that are passed to the bonding master
++	 * (including link-local ones) can have their originating interface
++	 * determined via PACKET_ORIGDEV socket option.
+ 	 */
+-	if (is_link_local_ether_addr(eth_hdr(skb)->h_dest)) {
+-		struct sk_buff *nskb = skb_clone(skb, GFP_ATOMIC);
+-
+-		if (nskb) {
+-			nskb->dev = bond->dev;
+-			nskb->queue_mapping = 0;
+-			netif_rx(nskb);
+-		}
+-		return RX_HANDLER_PASS;
+-	}
+-	if (bond_should_deliver_exact_match(skb, slave, bond))
++	if (bond_should_deliver_exact_match(skb, slave, bond)) {
++		if (is_link_local_ether_addr(eth_hdr(skb)->h_dest))
++			return RX_HANDLER_PASS;
+ 		return RX_HANDLER_EXACT;
++	}
+ 
+ 	skb->dev = bond->dev;
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx4/cmd.c b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+index 6a9086dc1e92..4c2ee9fd9e57 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+@@ -2642,6 +2642,8 @@ int mlx4_cmd_use_events(struct mlx4_dev *dev)
+ 	if (!priv->cmd.context)
+ 		return -ENOMEM;
+ 
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	for (i = 0; i < priv->cmd.max_cmds; ++i) {
+ 		priv->cmd.context[i].token = i;
+@@ -2667,6 +2669,8 @@ int mlx4_cmd_use_events(struct mlx4_dev *dev)
+ 	down(&priv->cmd.poll_sem);
+ 	priv->cmd.use_events = 1;
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ 
+ 	return err;
+ }
+@@ -2679,6 +2683,8 @@ void mlx4_cmd_use_polling(struct mlx4_dev *dev)
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i;
+ 
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	priv->cmd.use_events = 0;
+ 
+@@ -2686,9 +2692,12 @@ void mlx4_cmd_use_polling(struct mlx4_dev *dev)
+ 		down(&priv->cmd.event_sem);
+ 
+ 	kfree(priv->cmd.context);
++	priv->cmd.context = NULL;
+ 
+ 	up(&priv->cmd.poll_sem);
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ }
+ 
+ struct mlx4_cmd_mailbox *mlx4_alloc_cmd_mailbox(struct mlx4_dev *dev)
+diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+index a5381b091710..53ca6cf316dc 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -2717,13 +2717,13 @@ static int qp_get_mtt_size(struct mlx4_qp_context *qpc)
+ 	int total_pages;
+ 	int total_mem;
+ 	int page_offset = (be32_to_cpu(qpc->params2) >> 6) & 0x3f;
++	int tot;
+ 
+ 	sq_size = 1 << (log_sq_size + log_sq_sride + 4);
+ 	rq_size = (srq|rss|xrc) ? 0 : (1 << (log_rq_size + log_rq_stride + 4));
+ 	total_mem = sq_size + rq_size;
+-	total_pages =
+-		roundup_pow_of_two((total_mem + (page_offset << 6)) >>
+-				   page_shift);
++	tot = (total_mem + (page_offset << 6)) >> page_shift;
++	total_pages = !tot ? 1 : roundup_pow_of_two(tot);
+ 
+ 	return total_pages;
+ }
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index ff3a293ffe36..ce79af4a7f6f 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -458,7 +458,7 @@ static int ravb_dmac_init(struct net_device *ndev)
+ 		   RCR_EFFS | RCR_ENCF | RCR_ETS0 | RCR_ESF | 0x18000000, RCR);
+ 
+ 	/* Set FIFO size */
+-	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00222200, TGC);
++	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00112200, TGC);
+ 
+ 	/* Timestamp enable */
+ 	ravb_write(ndev, TCCR_TFEN, TCCR);
+diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+index 2222ed63d055..d629dddb0e89 100644
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -482,7 +482,12 @@ static int ipvlan_nl_changelink(struct net_device *dev,
+ 	struct ipvl_port *port = ipvlan_port_get_rtnl(ipvlan->phy_dev);
+ 	int err = 0;
+ 
+-	if (data && data[IFLA_IPVLAN_MODE]) {
++	if (!data)
++		return 0;
++	if (!ns_capable(dev_net(ipvlan->phy_dev)->user_ns, CAP_NET_ADMIN))
++		return -EPERM;
++
++	if (data[IFLA_IPVLAN_MODE]) {
+ 		u16 nmode = nla_get_u16(data[IFLA_IPVLAN_MODE]);
+ 
+ 		err = ipvlan_set_port_mode(port, nmode);
+@@ -551,6 +556,8 @@ int ipvlan_link_new(struct net *src_net, struct net_device *dev,
+ 		struct ipvl_dev *tmp = netdev_priv(phy_dev);
+ 
+ 		phy_dev = tmp->phy_dev;
++		if (!ns_capable(dev_net(phy_dev)->user_ns, CAP_NET_ADMIN))
++			return -EPERM;
+ 	} else if (!netif_is_ipvlan_port(phy_dev)) {
+ 		err = ipvlan_port_create(phy_dev);
+ 		if (err < 0)
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 1ece41277993..c545fb1f82bd 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -347,7 +347,6 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
+ 	err = device_register(&bus->dev);
+ 	if (err) {
+ 		pr_err("mii_bus %s failed to register\n", bus->id);
+-		put_device(&bus->dev);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/net/ppp/pptp.c b/drivers/net/ppp/pptp.c
+index 9b70a3af678e..68b274b3e448 100644
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -539,6 +539,7 @@ static void pptp_sock_destruct(struct sock *sk)
+ 		pppox_unbind_sock(sk);
+ 	}
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+ }
+ 
+ static int pptp_create(struct net *net, struct socket *sock, int kern)
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index a1b40b9c4906..df48f65c4f90 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1468,6 +1468,14 @@ static int vxlan_rcv(struct sock *sk, struct sk_buff *skb)
+ 		goto drop;
+ 	}
+ 
++	rcu_read_lock();
++
++	if (unlikely(!(vxlan->dev->flags & IFF_UP))) {
++		rcu_read_unlock();
++		atomic_long_inc(&vxlan->dev->rx_dropped);
++		goto drop;
++	}
++
+ 	stats = this_cpu_ptr(vxlan->dev->tstats);
+ 	u64_stats_update_begin(&stats->syncp);
+ 	stats->rx_packets++;
+@@ -1475,6 +1483,9 @@ static int vxlan_rcv(struct sock *sk, struct sk_buff *skb)
+ 	u64_stats_update_end(&stats->syncp);
+ 
+ 	gro_cells_receive(&vxlan->gro_cells, skb);
++
++	rcu_read_unlock();
++
+ 	return 0;
+ 
+ drop:
+@@ -2462,6 +2473,8 @@ static void vxlan_uninit(struct net_device *dev)
+ {
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 
++	gro_cells_destroy(&vxlan->gro_cells);
++
+ 	vxlan_fdb_delete_default(vxlan, vxlan->cfg.vni);
+ 
+ 	free_percpu(dev->tstats);
+@@ -3523,7 +3536,6 @@ static void vxlan_dellink(struct net_device *dev, struct list_head *head)
+ 
+ 	vxlan_flush(vxlan, true);
+ 
+-	gro_cells_destroy(&vxlan->gro_cells);
+ 	list_del(&vxlan->next);
+ 	unregister_netdevice_queue(dev, head);
+ }
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index 831758335e2c..d0cf3d5aa570 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -642,7 +642,7 @@ static int vhost_vsock_set_cid(struct vhost_vsock *vsock, u64 guest_cid)
+ 		hash_del_rcu(&vsock->hash);
+ 
+ 	vsock->guest_cid = guest_cid;
+-	hash_add_rcu(vhost_vsock_hash, &vsock->hash, guest_cid);
++	hash_add_rcu(vhost_vsock_hash, &vsock->hash, vsock->guest_cid);
+ 	spin_unlock_bh(&vhost_vsock_lock);
+ 
+ 	return 0;
+diff --git a/include/acpi/acconfig.h b/include/acpi/acconfig.h
+index 6db3b4668b1a..707ce8aca824 100644
+--- a/include/acpi/acconfig.h
++++ b/include/acpi/acconfig.h
+@@ -123,7 +123,7 @@
+ 
+ /* Maximum object reference count (detects object deletion issues) */
+ 
+-#define ACPI_MAX_REFERENCE_COUNT        0x1000
++#define ACPI_MAX_REFERENCE_COUNT        0x4000
+ 
+ /* Default page size for use in mapping memory for operation regions */
+ 
+diff --git a/net/core/gro_cells.c b/net/core/gro_cells.c
+index acf45ddbe924..e095fb871d91 100644
+--- a/net/core/gro_cells.c
++++ b/net/core/gro_cells.c
+@@ -13,22 +13,36 @@ int gro_cells_receive(struct gro_cells *gcells, struct sk_buff *skb)
+ {
+ 	struct net_device *dev = skb->dev;
+ 	struct gro_cell *cell;
++	int res;
+ 
+-	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev))
+-		return netif_rx(skb);
++	rcu_read_lock();
++	if (unlikely(!(dev->flags & IFF_UP)))
++		goto drop;
++
++	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
++		res = netif_rx(skb);
++		goto unlock;
++	}
+ 
+ 	cell = this_cpu_ptr(gcells->cells);
+ 
+ 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
++drop:
+ 		atomic_long_inc(&dev->rx_dropped);
+ 		kfree_skb(skb);
+-		return NET_RX_DROP;
++		res = NET_RX_DROP;
++		goto unlock;
+ 	}
+ 
+ 	__skb_queue_tail(&cell->napi_skbs, skb);
+ 	if (skb_queue_len(&cell->napi_skbs) == 1)
+ 		napi_schedule(&cell->napi);
+-	return NET_RX_SUCCESS;
++
++	res = NET_RX_SUCCESS;
++
++unlock:
++	rcu_read_unlock();
++	return res;
+ }
+ EXPORT_SYMBOL(gro_cells_receive);
+ 
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index 172d8309f89e..cfe20f15f618 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -94,9 +94,8 @@ static void hsr_check_announce(struct net_device *hsr_dev,
+ 			&& (old_operstate != IF_OPER_UP)) {
+ 		/* Went up */
+ 		hsr->announce_count = 0;
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer,
++			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
+ 	}
+ 
+ 	if ((hsr_dev->operstate != IF_OPER_UP) && (old_operstate == IF_OPER_UP))
+@@ -332,6 +331,7 @@ static void hsr_announce(unsigned long data)
+ {
+ 	struct hsr_priv *hsr;
+ 	struct hsr_port *master;
++	unsigned long interval;
+ 
+ 	hsr = (struct hsr_priv *) data;
+ 
+@@ -343,18 +343,16 @@ static void hsr_announce(unsigned long data)
+ 				hsr->protVersion);
+ 		hsr->announce_count++;
+ 
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
++		interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+ 	} else {
+ 		send_hsr_supervision_frame(master, HSR_TLV_LIFE_CHECK,
+ 				hsr->protVersion);
+ 
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
++		interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
+ 	}
+ 
+ 	if (is_admin_up(master->dev))
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer, jiffies + interval);
+ 
+ 	rcu_read_unlock();
+ }
+@@ -487,7 +485,7 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+ 
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		return res;
++		goto err_add_port;
+ 
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+@@ -507,6 +505,8 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+ fail:
+ 	hsr_for_each_port(hsr, port)
+ 		hsr_del_port(port);
++err_add_port:
++	hsr_del_node(&hsr->self_node_db);
+ 
+ 	return res;
+ }
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 284a9b820df8..6705420b3111 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_head *self_node_db,
+ 	return 0;
+ }
+ 
++void hsr_del_node(struct list_head *self_node_db)
++{
++	struct hsr_node *node;
++
++	rcu_read_lock();
++	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
++	rcu_read_unlock();
++	if (node) {
++		list_del_rcu(&node->mac_list);
++		kfree(node);
++	}
++}
+ 
+ /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
+  * seq_out is used to initialize filtering of outgoing duplicate frames
+diff --git a/net/hsr/hsr_framereg.h b/net/hsr/hsr_framereg.h
+index 4e04f0e868e9..43958a338095 100644
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -16,6 +16,7 @@
+ 
+ struct hsr_node;
+ 
++void hsr_del_node(struct list_head *self_node_db);
+ struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
+ 			      u16 seq_out);
+ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index cb30f4e4e553..a1bf87711bfa 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1315,6 +1315,10 @@ static void ip_del_fnhe(struct fib_nh *nh, __be32 daddr)
+ 		if (fnhe->fnhe_daddr == daddr) {
+ 			rcu_assign_pointer(*fnhe_p, rcu_dereference_protected(
+ 				fnhe->fnhe_next, lockdep_is_held(&fnhe_lock)));
++			/* set fnhe_daddr to 0 to ensure it won't bind with
++			 * new dsts in rt_bind_exception().
++			 */
++			fnhe->fnhe_daddr = 0;
+ 			fnhe_flush_routes(fnhe);
+ 			kfree_rcu(fnhe, rcu);
+ 			break;
+@@ -2123,12 +2127,13 @@ int ip_route_input_rcu(struct sk_buff *skb, __be32 daddr, __be32 saddr,
+ 		int our = 0;
+ 		int err = -EINVAL;
+ 
+-		if (in_dev)
+-			our = ip_check_mc_rcu(in_dev, daddr, saddr,
+-					      ip_hdr(skb)->protocol);
++		if (!in_dev)
++			return err;
++		our = ip_check_mc_rcu(in_dev, daddr, saddr,
++				      ip_hdr(skb)->protocol);
+ 
+ 		/* check l3 master if no match yet */
+-		if ((!in_dev || !our) && netif_is_l3_slave(dev)) {
++		if (!our && netif_is_l3_slave(dev)) {
+ 			struct in_device *l3_in_dev;
+ 
+ 			l3_in_dev = __in_dev_get_rcu(skb->dev);
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index 77cf32a80952..2f871424925e 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -216,7 +216,12 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, struct sk_buff *skb,
+ 		refcount_set(&req->rsk_refcnt, 1);
+ 		tcp_sk(child)->tsoffset = tsoff;
+ 		sock_rps_save_rxhash(child, skb);
+-		inet_csk_reqsk_queue_add(sk, req, child);
++		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
++			bh_unlock_sock(child);
++			sock_put(child);
++			child = NULL;
++			reqsk_put(req);
++		}
+ 	} else {
+ 		reqsk_free(req);
+ 	}
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index e24c0d7adf65..c8227e07d574 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6406,7 +6406,13 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
+ 				    &foc, TCP_SYNACK_FASTOPEN);
+ 		/* Add the child socket directly into the accept queue */
+-		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
++		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
++			reqsk_fastopen_remove(fastopen_sk, req, false);
++			bh_unlock_sock(fastopen_sk);
++			sock_put(fastopen_sk);
++			reqsk_put(req);
++			goto drop;
++		}
+ 		sk->sk_data_ready(sk);
+ 		bh_unlock_sock(fastopen_sk);
+ 		sock_put(fastopen_sk);
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index e593301f442f..97a414dbdaf4 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1578,15 +1578,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
+ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcphdr *th = (struct tcphdr *)skb->data;
+-	unsigned int eaten = skb->len;
+-	int err;
+ 
+-	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
+-	if (!err) {
+-		eaten -= skb->len;
+-		TCP_SKB_CB(skb)->end_seq -= eaten;
+-	}
+-	return err;
++	return sk_filter_trim_cap(sk, skb, th->doff * 4);
+ }
+ EXPORT_SYMBOL(tcp_filter);
+ 
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index fafecdc06900..00f8fe8cebd5 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -3495,7 +3495,7 @@ static int rt6_fill_node(struct net *net,
+ 		table = rt->rt6i_table->tb6_id;
+ 	else
+ 		table = RT6_TABLE_UNSPEC;
+-	rtm->rtm_table = table;
++	rtm->rtm_table = table < 256 ? table : RT_TABLE_COMPAT;
+ 	if (nla_put_u32(skb, RTA_TABLE, table))
+ 		goto nla_put_failure;
+ 	if (rt->rt6i_flags & RTF_REJECT) {
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index c5b60190b1db..e23190725244 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -767,8 +767,9 @@ static bool check_6rd(struct ip_tunnel *tunnel, const struct in6_addr *v6dst,
+ 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
+ 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
+ 
+-		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+-		    tunnel->ip6rd.relay_prefixlen;
++		d = tunnel->ip6rd.relay_prefixlen < 32 ?
++			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
++		    tunnel->ip6rd.relay_prefixlen : 0;
+ 
+ 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
+ 		if (pbi1 > 0)
+diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
+index 3c77507601c7..bec13226ce4f 100644
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -684,9 +684,6 @@ static int l2tp_ip6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	if (flags & MSG_OOB)
+ 		goto out;
+ 
+-	if (addr_len)
+-		*addr_len = sizeof(*lsa);
+-
+ 	if (flags & MSG_ERRQUEUE)
+ 		return ipv6_recv_error(sk, msg, len, addr_len);
+ 
+@@ -716,6 +713,7 @@ static int l2tp_ip6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		lsa->l2tp_conn_id = 0;
+ 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
+ 			lsa->l2tp_scope_id = inet6_iif(skb);
++		*addr_len = sizeof(*lsa);
+ 	}
+ 
+ 	if (np->rxopt.all)
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index 78a154173d90..0aa4bf09fb9c 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -351,7 +351,7 @@ static int rxrpc_get_client_conn(struct rxrpc_call *call,
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+ 
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -430,7 +430,7 @@ static int rxrpc_get_client_conn(struct rxrpc_call *call,
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+ 	call->service_id = conn->service_id;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 7f46bab4ce5c..2adfcc6dec5a 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -892,7 +892,7 @@ static int unix_autobind(struct socket *sock)
+ 	addr->hash ^= sk->sk_type;
+ 
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
+ 	spin_unlock(&unix_table_lock);
+ 	err = 0;
+@@ -1062,7 +1062,7 @@ static int unix_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 
+ 	err = 0;
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(list, sk);
+ 
+ out_unlock:
+@@ -1333,15 +1333,29 @@ static int unix_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
+ 	otheru = unix_sk(other);
+ 
+-	/* copy address information from listening to new sock*/
+-	if (otheru->addr) {
+-		refcount_inc(&otheru->addr->refcnt);
+-		newu->addr = otheru->addr;
+-	}
++	/* copy address information from listening to new sock
++	 *
++	 * The contents of *(otheru->addr) and otheru->path
++	 * are seen fully set up here, since we have found
++	 * otheru in hash under unix_table_lock.  Insertion
++	 * into the hash chain we'd found it in had been done
++	 * in an earlier critical area protected by unix_table_lock,
++	 * the same one where we'd set *(otheru->addr) contents,
++	 * as well as otheru->path and otheru->addr itself.
++	 *
++	 * Using smp_store_release() here to set newu->addr
++	 * is enough to make those stores, as well as stores
++	 * to newu->path visible to anyone who gets newu->addr
++	 * by smp_load_acquire().  IOW, the same warranties
++	 * as for unix_sock instances bound in unix_bind() or
++	 * in unix_autobind().
++	 */
+ 	if (otheru->path.dentry) {
+ 		path_get(&otheru->path);
+ 		newu->path = otheru->path;
+ 	}
++	refcount_inc(&otheru->addr->refcnt);
++	smp_store_release(&newu->addr, otheru->addr);
+ 
+ 	/* Set credentials */
+ 	copy_peercred(sk, other);
+@@ -1455,7 +1469,7 @@ static int unix_accept(struct socket *sock, struct socket *newsock, int flags,
+ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int *uaddr_len, int peer)
+ {
+ 	struct sock *sk = sock->sk;
+-	struct unix_sock *u;
++	struct unix_address *addr;
+ 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
+ 	int err = 0;
+ 
+@@ -1470,19 +1484,15 @@ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int *uaddr_
+ 		sock_hold(sk);
+ 	}
+ 
+-	u = unix_sk(sk);
+-	unix_state_lock(sk);
+-	if (!u->addr) {
++	addr = smp_load_acquire(&unix_sk(sk)->addr);
++	if (!addr) {
+ 		sunaddr->sun_family = AF_UNIX;
+ 		sunaddr->sun_path[0] = 0;
+ 		*uaddr_len = sizeof(short);
+ 	} else {
+-		struct unix_address *addr = u->addr;
+-
+ 		*uaddr_len = addr->len;
+ 		memcpy(sunaddr, addr->name, *uaddr_len);
+ 	}
+-	unix_state_unlock(sk);
+ 	sock_put(sk);
+ out:
+ 	return err;
+@@ -2075,11 +2085,11 @@ static int unix_seqpacket_recvmsg(struct socket *sock, struct msghdr *msg,
+ 
+ static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
+ {
+-	struct unix_sock *u = unix_sk(sk);
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+-	if (u->addr) {
+-		msg->msg_namelen = u->addr->len;
+-		memcpy(msg->msg_name, u->addr->name, u->addr->len);
++	if (addr) {
++		msg->msg_namelen = addr->len;
++		memcpy(msg->msg_name, addr->name, addr->len);
+ 	}
+ }
+ 
+@@ -2583,15 +2593,14 @@ static int unix_open_file(struct sock *sk)
+ 	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+-	unix_state_lock(sk);
++	if (!smp_load_acquire(&unix_sk(sk)->addr))
++		return -ENOENT;
++
+ 	path = unix_sk(sk)->path;
+-	if (!path.dentry) {
+-		unix_state_unlock(sk);
++	if (!path.dentry)
+ 		return -ENOENT;
+-	}
+ 
+ 	path_get(&path);
+-	unix_state_unlock(sk);
+ 
+ 	fd = get_unused_fd_flags(O_CLOEXEC);
+ 	if (fd < 0)
+@@ -2831,7 +2840,7 @@ static int unix_seq_show(struct seq_file *seq, void *v)
+ 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
+ 			sock_i_ino(s));
+ 
+-		if (u->addr) {
++		if (u->addr) {	// under unix_table_lock here
+ 			int i, len;
+ 			seq_putc(seq, ' ');
+ 
+diff --git a/net/unix/diag.c b/net/unix/diag.c
+index 384c84e83462..3183d9b8ab33 100644
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -10,7 +10,8 @@
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+-	struct unix_address *addr = unix_sk(sk)->addr;
++	/* might or might not have unix_table_lock */
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+ 	if (!addr)
+ 		return 0;
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index 47f600564f24..1b830a6ee3ff 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -678,8 +678,7 @@ static int x25_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 	struct sockaddr_x25 *addr = (struct sockaddr_x25 *)uaddr;
+ 	int len, i, rc = 0;
+ 
+-	if (!sock_flag(sk, SOCK_ZAPPED) ||
+-	    addr_len != sizeof(struct sockaddr_x25) ||
++	if (addr_len != sizeof(struct sockaddr_x25) ||
+ 	    addr->sx25_family != AF_X25) {
+ 		rc = -EINVAL;
+ 		goto out;
+@@ -694,9 +693,13 @@ static int x25_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 	}
+ 
+ 	lock_sock(sk);
+-	x25_sk(sk)->source_addr = addr->sx25_addr;
+-	x25_insert_socket(sk);
+-	sock_reset_flag(sk, SOCK_ZAPPED);
++	if (sock_flag(sk, SOCK_ZAPPED)) {
++		x25_sk(sk)->source_addr = addr->sx25_addr;
++		x25_insert_socket(sk);
++		sock_reset_flag(sk, SOCK_ZAPPED);
++	} else {
++		rc = -EINVAL;
++	}
+ 	release_sock(sk);
+ 	SOCK_DEBUG(sk, "x25_bind: socket is bound\n");
+ out:
+@@ -812,8 +815,13 @@ static int x25_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	sock->state = SS_CONNECTED;
+ 	rc = 0;
+ out_put_neigh:
+-	if (rc)
++	if (rc) {
++		read_lock_bh(&x25_list_lock);
+ 		x25_neigh_put(x25->neighbour);
++		x25->neighbour = NULL;
++		read_unlock_bh(&x25_list_lock);
++		x25->state = X25_STATE_0;
++	}
+ out_put_route:
+ 	x25_route_put(rt);
+ out:
+diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+index 67703dbe29ea..3a8916aa73c4 100644
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -321,6 +321,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 		if (a->u.net->sk) {
+ 			struct sock *sk = a->u.net->sk;
+ 			struct unix_sock *u;
++			struct unix_address *addr;
+ 			int len = 0;
+ 			char *p = NULL;
+ 
+@@ -351,14 +352,15 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ #endif
+ 			case AF_UNIX:
+ 				u = unix_sk(sk);
++				addr = smp_load_acquire(&u->addr);
++				if (!addr)
++					break;
+ 				if (u->path.dentry) {
+ 					audit_log_d_path(ab, " path=", &u->path);
+ 					break;
+ 				}
+-				if (!u->addr)
+-					break;
+-				len = u->addr->len-sizeof(short);
+-				p = &u->addr->name->sun_path[0];
++				len = addr->len-sizeof(short);
++				p = &addr->name->sun_path[0];
+ 				audit_log_format(ab, " path=");
+ 				if (*p)
+ 					audit_log_untrustedstring(ab, p);
+diff --git a/sound/firewire/bebob/bebob.c b/sound/firewire/bebob/bebob.c
+index de4af8a41ff0..5636e89ce5c7 100644
+--- a/sound/firewire/bebob/bebob.c
++++ b/sound/firewire/bebob/bebob.c
+@@ -474,7 +474,19 @@ static const struct ieee1394_device_id bebob_id_table[] = {
+ 	/* Focusrite, SaffirePro 26 I/O */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
+ 	/* Focusrite, SaffirePro 10 I/O */
+-	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
++	{
++		// The combination of vendor_id and model_id is the same as the
++		// same as the one of Liquid Saffire 56.
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID |
++				  IEEE1394_MATCH_SPECIFIER_ID |
++				  IEEE1394_MATCH_VERSION,
++		.vendor_id	= VEN_FOCUSRITE,
++		.model_id	= 0x000006,
++		.specifier_id	= 0x00a02d,
++		.version	= 0x010001,
++		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
++	},
+ 	/* Focusrite, Saffire(no label and LE) */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
+ 			    &saffire_spec),
+diff --git a/sound/firewire/motu/amdtp-motu.c b/sound/firewire/motu/amdtp-motu.c
+index 96f0091144bb..2cf18bedb91e 100644
+--- a/sound/firewire/motu/amdtp-motu.c
++++ b/sound/firewire/motu/amdtp-motu.c
+@@ -136,7 +136,9 @@ static void read_pcm_s32(struct amdtp_stream *s,
+ 		byte = (u8 *)buffer + p->pcm_byte_offset;
+ 
+ 		for (c = 0; c < channels; ++c) {
+-			*dst = (byte[0] << 24) | (byte[1] << 16) | byte[2];
++			*dst = (byte[0] << 24) |
++			       (byte[1] << 16) |
++			       (byte[2] << 8);
+ 			byte += 3;
+ 			dst++;
+ 		}
+diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+index 9c917f80c906..05920e3edf7a 100644
+--- a/tools/perf/arch/x86/util/unwind-libunwind.c
++++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-#ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <errno.h>
++#ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <libunwind.h>
+ #include "perf_regs.h"
+ #include "../../util/unwind.h"
