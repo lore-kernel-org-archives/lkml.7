@@ -2,64 +2,87 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180B1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E537C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7F8213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF5E213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="smBPvWlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfCSVqu (ORCPT
+        id S1727267AbfCSVq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:46:50 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54224 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfCSVqt (ORCPT
+        Tue, 19 Mar 2019 17:46:58 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:56282 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSVq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:46:49 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BAF3A146A0A18;
-        Tue, 19 Mar 2019 14:46:48 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 14:46:48 -0700 (PDT)
-Message-Id: <20190319.144648.2244362851338248970.davem@davemloft.net>
-To:     arnd@arndb.de
-Cc:     linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, labbott@redhat.com, fw@deneb.enyo.de,
-        pburton@wavecomp.com, deepa.kernel@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190319165123.3967889-1-arnd@arndb.de>
-References: <20190319165123.3967889-1-arnd@arndb.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Mar 2019 14:46:49 -0700 (PDT)
+        Tue, 19 Mar 2019 17:46:57 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2JLiQSi066041;
+        Tue, 19 Mar 2019 21:46:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=WMZxH7v5PRCokWswEgVnQ/VfyHJeXpHy9ie6uneJdOs=;
+ b=smBPvWlt38+XIDSrHQl7RTL91pC8ukOYylqvjWYj92obnhDtOgvDse5ncr/XJeov1aab
+ uRgZmSkLHBUG8jm06U7kuO1HgXCQYggLScRjvUNVVGT+KSnb7PShFXmM+wb7VRziEb1E
+ KxITMBWChntyv/enumZdJWDLR3Nr8Tj6Y/isvnZxxRXVl96mkJ6PwfNb25XAuaWsvpY4
+ PSLHGiQ4tBCT/flzVqO9v6NA/QbA1UVSD8hYU2L95uPzYEuns79IFxt5VokjMogCkPRc
+ AoDE48OZDLe5dgLAl/FOgm96kLVM0c9dqmO8/ZfLz3SiNKzlpaFn09UmrXIKEcUuKz3w pw== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2r8pneqmdn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 21:46:51 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2JLkoqa019366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 21:46:51 GMT
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2JLkoZn010339;
+        Tue, 19 Mar 2019 21:46:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Mar 2019 14:46:50 -0700
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH -next] scsi: mvumi: Using plain integer as NULL pointer
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190216100130.19396-1-yuehaibing@huawei.com>
+Date:   Tue, 19 Mar 2019 17:46:48 -0400
+In-Reply-To: <20190216100130.19396-1-yuehaibing@huawei.com> (YueHaibing's
+        message of "Sat, 16 Feb 2019 18:01:30 +0800")
+Message-ID: <yq136nibkqf.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=801 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Tue, 19 Mar 2019 17:51:09 +0100
 
-> Florian Weimer points out an issue with including linux/posix_types.h
-> from arbitrary other headers: if an application has defined a macro
-> named 'fds_bits', it may stop compiling after a change in the kernel
-> headers. Since fds_bits is a non-reserved identifier in C, that is
-> considered a bug in the kernel headers.
-> 
-> The structure definition does not really seem to be helpful here,
-> as the kernel no longer provides macros to manipulate it.
- ...
-> Fixes: a623a7a1a567 ("y2038: fix socket.h header inclusion")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+YueHaibing,
 
-Acked-by: David S. Miller <davem@davemloft.net>
+> Fix following sparse warning:
+>
+> drivers/scsi/mvumi.c:1797:48: warning: Using plain integer as NULL pointer
+> drivers/scsi/mvumi.c:2143:50: warning: Using plain integer as NULL pointer
+> drivers/scsi/mvumi.c:755:58: warning: Using plain integer as NULL pointer
+
+Applied to 5.2/scsi-queue.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
