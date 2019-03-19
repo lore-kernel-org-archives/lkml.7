@@ -2,95 +2,116 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F95C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05539C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E6E20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA80C20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sd6erl5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfCSRci (ORCPT
+        id S1727188AbfCSReK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:32:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44130 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfCSRci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:32:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D31DD81E09;
-        Tue, 19 Mar 2019 17:32:37 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.34])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5E04B5DA2A;
-        Tue, 19 Mar 2019 17:32:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 19 Mar 2019 18:32:37 +0100 (CET)
-Date:   Tue, 19 Mar 2019 18:32:33 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
- handle _TIF_SYSCALL_EMU
-Message-ID: <20190319173233.GB11525@redhat.com>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-5-sudeep.holla@arm.com>
- <20190318172024.GB23521@redhat.com>
- <20190318172457.GD18196@e107155-lin>
- <20190318173341.GD23521@redhat.com>
- <20190318174028.GE18196@e107155-lin>
- <20190319170804.GA11525@redhat.com>
+        Tue, 19 Mar 2019 13:34:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37736 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfCSReJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:34:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c16so7098285otn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z8tMgR2jQ7qbI4Vk8rLBRaN7IkiS+UfqkL6XnvCw5WA=;
+        b=sd6erl5p90ODa4X9rLL5PNnefwn2xpM5rzFHYDKW1il9SN+IjS81qvSWCiqL2a5zsG
+         e6/jqjSFEdTp8yJcUzeafS4mbluGKJ4a2IEWQLXByCp6ERcA/W36tCuRJ+bO4jSRRVHG
+         bYGgHwt85rtSYnJCptdiIpLo8DyJdLTM+daZgZOPO76M1mdIgUnPenogjSrtepNx9zXD
+         BrgRfsSSEqFrGZ8DgZzweqxKmbP0iE4cXKRoW88XW0rlbWBXBp+SKGA/Ja2UsxehsCg/
+         6CAHyNXw+DiwWe5PE1T/se5S+4uD2ijnKv0u1xqCInsGYhemYbH2NfHic9scwW78vL5i
+         BK9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z8tMgR2jQ7qbI4Vk8rLBRaN7IkiS+UfqkL6XnvCw5WA=;
+        b=Cx/q6o7nOxAE2Zz3AJS7z+3mVQ3kUjjCYBPvoiP9fL5ICoWcqVIhhHJ5EhAhyqR5n/
+         2yVpxgfzSYZQh2lre3o7tPt/7Eo2KQLfylSK2CLyp0356XxfXPFTaS7wzYTx5OwF+6FE
+         cLz9B1g5jq0IeFlc0TC1pCZa4JTeKVrtUJN0D3QynahyLnN0ucKiyG9eOQAKXQCS0LFu
+         4okm8amv1HP/WKyfg2/R0WHyOYKvk+nWi46DRrBkp6LgbExpl8bLJ+BnwXYX/Dl/9Sua
+         U1KqfA3fgzfkYkjkrCTwSZMcMzJyTrWoRh1vrDIH92vs0w8nBojemn3xwAHjAULigCBf
+         yxNw==
+X-Gm-Message-State: APjAAAXLJhGBFoLMb4fqkorXt5xUXJUx4jSECDjXimxsQCuezW8aDBPF
+        32YctaT8Kmz3KFmhxm/WDkHI1DL8RvKpjN3Z2Nl0NA==
+X-Google-Smtp-Source: APXvYqwzgOn/nZ0ayGb5IqIAEXhqaIOpkNKvk+7zxMCPkmOTNxfkdseeIENR3VAu8FM7ml93AzeEPa6VcEXGk835FT4=
+X-Received: by 2002:a9d:2c23:: with SMTP id f32mr2407745otb.353.1553016848952;
+ Tue, 19 Mar 2019 10:34:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319170804.GA11525@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 19 Mar 2019 17:32:38 +0000 (UTC)
+References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
+ <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+ <20190318170404.GA6786@redhat.com> <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+ <20190319165802.GA3656@redhat.com> <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+ <20190319171847.GC3656@redhat.com>
+In-Reply-To: <20190319171847.GC3656@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 Mar 2019 10:33:57 -0700
+Message-ID: <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/19, Oleg Nesterov wrote:
+On Tue, Mar 19, 2019 at 10:19 AM Jerome Glisse <jglisse@redhat.com> wrote:
 >
-> Well, personally I see no point... Again, after the trivial simplification
-> x86 does
+> On Tue, Mar 19, 2019 at 10:12:49AM -0700, Andrew Morton wrote:
+> > On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+[..]
+> > Also, the discussion regarding [07/10] is substantial and is ongoing so
+> > please let's push along wth that.
 >
-> 	if (work & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
-> 		ret = tracehook_report_syscall_entry(regs);
-> 		if (ret || (work & _TIF_SYSCALL_EMU))
-> 			return -1L;
-> 	}
->
-> this looks simple enough for copy-and-paste.
->
-> > If there's a better way to achieve the same
->
-> I can only say that if we add a common helper, I think it should absorb
-> tracehook_report_syscall_entry() and handle both TIF's just like the code
-> above does. Not sure this makes any sense.
+> I can move it as last patch in the serie but it is needed for ODP RDMA
+> convertion too. Otherwise i will just move that code into the ODP RDMA
+> code and will have to move it again into HMM code once i am done with
+> the nouveau changes and in the meantime i expect other driver will want
+> to use this 2 helpers too.
 
-this won't work, looking at 6/6 I see that arm64 needs to distinguish
-_TRACE and _EMU ... I don't understand this code, but it looks suspicious.
-If tracehook_report_syscall_entry() returns nonzero the tracee was killed,
-syscall_trace_enter() should just return.
+I still hold out hope that we can find a way to have productive
+discussions about the implementation of this infrastructure.
+Threatening to move the code elsewhere to bypass the feedback is not
+productive.
 
-To me this is another indication that consolidation makes no sense ;)
+>
+> >
+> > What is the review/discussion status of "[PATCH 09/10] mm/hmm: allow to
+> > mirror vma of a file on a DAX backed filesystem"?
+>
+> I explained that this is needed for the ODP RDMA convertion as ODP RDMA
+> does supported DAX today and thus i can not push that convertion without
+> that support as otherwise i would regress RDMA ODP.
+>
+> Also this is to be use by nouveau which is upstream and there is no
+> reasons to not support vma that happens to be mmap of a file on a file-
+> system that is using a DAX block device.
+>
+> I do not think Dan had any comment code wise, i think he was complaining
+> about the wording of the commit not being clear and i proposed an updated
+> wording that he seemed to like.
 
-Oleg.
-
+Yes, please resend with the updated changelog and I'll ack.
