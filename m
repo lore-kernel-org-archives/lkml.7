@@ -2,138 +2,112 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB82EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781BCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52952085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C2E20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cqvwo9pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfCSVUK (ORCPT
+        id S1727376AbfCSVVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:20:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9348 "EHLO mga01.intel.com"
+        Tue, 19 Mar 2019 17:21:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:56403 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbfCSVUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:20:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 14:20:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,246,1549958400"; 
-   d="scan'208";a="215631438"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 19 Mar 2019 14:20:06 -0700
-Received: from [10.254.88.173] (kliang2-mobl1.ccr.corp.intel.com [10.254.88.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726712AbfCSVVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:21:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id C90795804B6;
-        Tue, 19 Mar 2019 14:20:05 -0700 (PDT)
-Subject: Re: [PATCH 03/22] perf/x86/intel: Support adaptive PEBSv4
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190318214144.4639-1-kan.liang@linux.intel.com>
- <20190318214144.4639-4-kan.liang@linux.intel.com>
- <20190319144748.GH5996@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <948ed187-bfe8-c8f2-83b1-88db7af88c03@linux.intel.com>
-Date:   Tue, 19 Mar 2019 17:20:04 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44P5ZT2wF6z9sBV;
+        Wed, 20 Mar 2019 08:21:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553030465;
+        bh=fkVJTjx4UaiqbcGLLsAzWU+Eu1DAMpqTHLfGqqW2QHE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cqvwo9pznO1iOUcO/SFx/uKwf1NOkGEtXdXfwCcTwbkV2kg45DAva4Q4/3Hqb9pVA
+         xcgqXvvIUj69+aILO+SMWoMcbjIztxlMGoIJkgwHmrY1JeVa7PmCOWoOQCoGEsvexa
+         P35kHn9Ycy1GUdv+xNiKUiCommjHGLi0NzJJM5r5ojMxTHFiLJUolAqhd+OSgGy/oC
+         6O4f8zUDyVZRWefMsU34C7Ow4r+p6Q1s4AbggGBxeDGIqSeu1+2mV0UuRpT/eLRy53
+         W0iu+W8BVzKwNb1psauz3ostE+ZSwD1PVLUAXp5YGS2S7zLEIPkhfGuOMy2/EBW42Q
+         lEa+HOz7nkLnQ==
+Date:   Wed, 20 Mar 2019 08:21:03 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: linux-next: Fixes tags need some work in the v4l-dvb tree
+Message-ID: <20190320082103.33faecc9@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190319144748.GH5996@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/CvF6ijSEHOPcIWeUBaffbQU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/CvF6ijSEHOPcIWeUBaffbQU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 3/19/2019 10:47 AM, Peter Zijlstra wrote:
->> @@ -933,6 +998,19 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc, struct pmu *pmu)
->>   		update = true;
->>   	}
->>   
->> +	if (x86_pmu.intel_cap.pebs_baseline && add) {
->> +		u64 pebs_data_cfg;
->> +
->> +		pebs_data_cfg = pebs_update_adaptive_cfg(event);
->> +
->> +		/* Update pebs_record_size if new event requires more data. */
->> +		if (pebs_data_cfg & ~cpuc->pebs_data_cfg) {
->> +			cpuc->pebs_data_cfg |= pebs_data_cfg;
->> +			adaptive_pebs_record_size_update();
->> +			update = true;
->> +		}
->> +	}
->> +
->>   	if (update)
->>   		pebs_update_threshold(cpuc);
->>   }
-> Hurmph.. this only grows the PEBS record.
->
+In commit
 
-Yes, the PEBS record doesn't shrink on the del. Because we have to go 
-through all the existing pebs events for an accurate config. I think it 
-doesn't worth it. There is no harmful for a bigger PEBS record, except 
-little performance impacts. But that's rare case. For most cases, we 
-usually apply the same pebs config for all pebs events.
+  e6f8bd59c28f ("media: gspca: do not resubmit URBs when streaming has stop=
+ped")
 
-> 
->> @@ -947,7 +1025,7 @@ void intel_pmu_pebs_add(struct perf_event *event)
->>   	if (hwc->flags & PERF_X86_EVENT_LARGE_PEBS)
->>   		cpuc->n_large_pebs++;
->>   
->> -	pebs_update_state(needed_cb, cpuc, event->ctx->pmu);
->> +	pebs_update_state(needed_cb, cpuc, event, true);
->>   }
->>   
->>   void intel_pmu_pebs_enable(struct perf_event *event)
->> @@ -965,6 +1043,14 @@ void intel_pmu_pebs_enable(struct perf_event *event)
->>   	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
->>   		cpuc->pebs_enabled |= 1ULL << 63;
->>   
->> +	if (x86_pmu.intel_cap.pebs_baseline) {
->> +		hwc->config |= ICL_EVENTSEL_ADAPTIVE;
->> +		if (cpuc->pebs_data_cfg != cpuc->active_pebs_data_cfg) {
->> +			wrmsrl(MSR_PEBS_DATA_CFG, cpuc->pebs_data_cfg);
->> +			cpuc->active_pebs_data_cfg = cpuc->pebs_data_cfg;
->> +		}
->> +	}
->> +
->>   	/*
->>   	 * Use auto-reload if possible to save a MSR write in the PMI.
->>   	 * This must be done in pmu::start(), because PERF_EVENT_IOC_PERIOD.
->> @@ -991,7 +1077,12 @@ void intel_pmu_pebs_del(struct perf_event *event)
->>   	if (hwc->flags & PERF_X86_EVENT_LARGE_PEBS)
->>   		cpuc->n_large_pebs--;
->>   
->> -	pebs_update_state(needed_cb, cpuc, event->ctx->pmu);
->> +	/* Clear both pebs_data_cfg and pebs_record_size for first PEBS. */
-> Weird comment..
-> 
->> +	if (x86_pmu.intel_cap.pebs_baseline && !cpuc->n_pebs) {
->> +		cpuc->pebs_data_cfg = 0;
->> +		cpuc->pebs_record_size = sizeof(struct pebs_basic);
->> +	}
->> +	pebs_update_state(needed_cb, cpuc, event, false);
-> Why do we have to reset record_size? That'll be updated in
-> pebs_update_state() on the next add.
-> 
+Fixes tag
 
-The record_size should be reset for the first PEBS events.
-Right, I can move the reset in pebs_update_state().
+  Fixes: 6992effe5344 ("gspca: Kill all URBs before releasing any of them")
 
+has these problem(s):
 
-Thanks,
-Kan
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h (%s)'
 
+In commit
 
+  904371f90b2c ("media: imx: csi: Allow unknown nearest upstream entities")
+
+Fixes tag
+
+  Fixes: bf3cfaa712e5c ("media: staging/imx: get CSI bus type from nearest
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not wrap Fixes tags onto more that one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CvF6ijSEHOPcIWeUBaffbQU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyRXT8ACgkQAVBC80lX
+0GxVOQf6AlwmkMC9S5hkHasfSbyvpZN5Xj9+m/NXEU1SL0eRK9yGBzv2EpxVsQ6o
+faeg+LTxJaJ0wOhZsgPNbMwX+APSylZepn+jG1JrEYAGOSgrrR9oJFaNj0ln+hew
+d/cqEnmjsMVI4F6xHV53vfrJgfFO6SS/KRjL4VGKHLEKRw3Xs5rVPSs8J8Z7h1h9
+iYv1h40F16sAji9d3Ci+i1nhP+YcXhzYwHkcLQGZm1Nz/mWEvhJ72tcG3vmJujJs
+r0URmYqe1D1jif89+PNlvgGoNfgbr1lfOiQ7hSZJc0fSUCFjUSTHtNLa7kXBOJ7v
+pA5FSMHyEBD822pv03pjmBxyjCB2yQ==
+=UTpX
+-----END PGP SIGNATURE-----
+
+--Sig_/CvF6ijSEHOPcIWeUBaffbQU--
