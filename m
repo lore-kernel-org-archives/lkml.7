@@ -2,135 +2,78 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F620C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E132C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F1920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D2F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553026082;
+	bh=o4UyRz6g93ADtjVq/HClaAK+YTpkWMBIqC7PYkximTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0KbJiZz6ZX7hXhLh5pIBT/sdXmSOKdq5ExDEGeCnJhNtauWhWjaLmjx5ezxGUatGu
+	 dHk7NtIzPiuMAqCrZRxsSvgK154qpDHQDycvjTYKyYxwAw66NemBGlGqPU4UyCiE6D
+	 uKKZsWBiP3oY3tHuBSo3zSgL5wquDMxjVRVs32lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCSUDb (ORCPT
+        id S1727267AbfCSUIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:03:31 -0400
-Received: from smtp03.citrix.com ([162.221.156.55]:60580 "EHLO
-        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfCSUDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:03:30 -0400
-X-IronPort-AV: E=Sophos;i="5.60,245,1549929600"; 
-   d="scan'208";a="81060873"
-From:   Jennifer Herbert <jennifer.herbert@citrix.com>
-To:     <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jennifer Herbert <jennifer.herbert@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] xen/pv: Add PV specific legacy_pic struct to expose legacy IRQs.
-Date:   Tue, 19 Mar 2019 20:02:19 +0000
-Message-ID: <1553025739-92245-1-git-send-email-jennifer.herbert@citrix.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 19 Mar 2019 16:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726824AbfCSUIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 16:08:00 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C72692075C;
+        Tue, 19 Mar 2019 20:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553026080;
+        bh=o4UyRz6g93ADtjVq/HClaAK+YTpkWMBIqC7PYkximTE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OppUbOy3Yxbrq4Ejx3FzSarYWcNIqYpa6VwBHrlz+dGVfK6C4cyxs83eorktVVnV2
+         PbzVWpCwhCKkXVHeuldE1Y+FduNIXlXq48fi0qYq9rKQopCv/JD7T7Xa9rpUFhTIqj
+         5GE+qs+Zmc13CTOGhSDvHc+go1wtk3nx5JMWo8uo=
+Date:   Tue, 19 Mar 2019 16:07:57 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH AUTOSEL 4.20 37/60] tmpfs: fix link accounting when a
+ tmpfile is linked in
+Message-ID: <20190319200757.GB25262@sasha-vm>
+References: <20190313191021.158171-1-sashal@kernel.org>
+ <20190313191021.158171-37-sashal@kernel.org>
+ <alpine.LSU.2.11.1903131248210.1629@eggly.anvils>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.1903131248210.1629@eggly.anvils>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACPI tables doesn't always contain all IRQs for legacy devices
-such as RTC.  Since no PIC controller is visible for a PV linux guest,
-under Xen, legacy_pic currently defaults to the null_legacy_pic - with
-reports no legacy IRQs.  Since the commit "rtc: cmos: Do not assume
-irq 8 for rtc when there are no legacy irqs" by Hans de Goede
-(commit id: a1e23a42f1bdc00e32fc4869caef12e4e6272f26), the rtc now
-incorrectly decides it has no irq it can use, for some hardware.
+On Wed, Mar 13, 2019 at 12:58:26PM -0700, Hugh Dickins wrote:
+>AUTOSEL is wrong to select this commit without also selecting
+>29b00e609960 ("tmpfs: fix uninitialized return value in shmem_link")
+>which contains the tag
+>Fixes: 1062af920c07 ("tmpfs: fix link accounting when a tmpfile is linked in")
+>Please add 29b00e609960 for those 6 trees, or else omit 1062af920c07 for now.
 
-This patch rectifies the problem by providing a xen legacy_pic
-struct, which is much like the null_legacy_pic except that it
-reports NR_IRQS_LEGACY irqs.
+I usually look up relevant "Fixes" tags right before I queue patches up
+to avoid missing things that came up recently.
 
-Signed-off-by: Jennifer Herbert <jennifer.herbert@citrix.com>
----
- arch/x86/xen/enlighten_pv.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+I've queued 29b00e609960 on top for all trees, thank you!
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index c54a493..7644bdf 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -33,6 +33,7 @@
- #include <linux/gfp.h>
- #include <linux/edd.h>
- #include <linux/frame.h>
-+#include <linux/irq.h>
- 
- #include <xen/xen.h>
- #include <xen/events.h>
-@@ -49,6 +50,7 @@
- #include <xen/acpi.h>
- 
- #include <asm/paravirt.h>
-+#include <asm/i8259.h>
- #include <asm/apic.h>
- #include <asm/page.h>
- #include <asm/xen/pci.h>
-@@ -1188,6 +1190,41 @@ static void __init xen_dom0_set_legacy_features(void)
- 	x86_platform.legacy.rtc = 1;
- }
- 
-+/*
-+ * The ACPI tables doesn't always contain all IRQ's for legacy devices
-+ * such as RTC.  Since no PIC controller is visible, we'd otherwise
-+ * default to the null_legacy_pic - with no legacy IRQs.  To allow drivers
-+ * to use these IRQs despite this, provide a xen specific legacy_pic
-+ * structure, which is noop, other then reporting NR_IRQS_LEGACY irqs.
-+ */
-+
-+static void xen_legacy_pic_noop(void) { };
-+static void xen_legacy_pic_uint_noop(unsigned int unused) { };
-+static void xen_legacy_pic_int_noop(int unused) { };
-+static int xen_legacy_pic_irq_pending_noop(unsigned int irq)
-+{
-+	return 0;
-+}
-+
-+static int xen_legacy_pic_probe(void)
-+{
-+	pr_info("Using Xen legacy PIC\n");
-+	return nr_legacy_irqs();
-+}
-+
-+struct legacy_pic xen_legacy_pic = {
-+	.nr_legacy_irqs = NR_IRQS_LEGACY,
-+	.chip = &dummy_irq_chip,
-+	.mask = xen_legacy_pic_uint_noop,
-+	.unmask = xen_legacy_pic_uint_noop,
-+	.mask_all = xen_legacy_pic_noop,
-+	.restore_mask = xen_legacy_pic_noop,
-+	.init = xen_legacy_pic_int_noop,
-+	.probe = xen_legacy_pic_probe,
-+	.irq_pending = xen_legacy_pic_irq_pending_noop,
-+	.make_irq = xen_legacy_pic_uint_noop,
-+};
-+
- /* First C function to be called on Xen boot */
- asmlinkage __visible void __init xen_start_kernel(void)
- {
-@@ -1267,6 +1304,8 @@ asmlinkage __visible void __init xen_start_kernel(void)
- 
- 	xen_init_capabilities();
- 
-+	legacy_pic = &xen_legacy_pic;
-+
- #ifdef CONFIG_X86_LOCAL_APIC
- 	/*
- 	 * set up the basic apic ops.
--- 
-1.8.3.1
-
+--
+Thanks,
+Sasha
