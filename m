@@ -2,257 +2,149 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C8C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA77C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA682146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BF42077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="A2gNd4cL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLf3fEdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfCSW04 (ORCPT
+        id S1727102AbfCSWaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:26:56 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35085 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfCSW04 (ORCPT
+        Tue, 19 Mar 2019 18:30:18 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42319 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfCSWaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:26:56 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h39so344564qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:26:55 -0700 (PDT)
+        Tue, 19 Mar 2019 18:30:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so191547pgh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HzoYzrsLg5B5gLgKw7GHM9JbUp9EVXgL6mdkso+jioQ=;
-        b=A2gNd4cLJocGajWw4GyY+/GHddeivArYInHbh3QIoc3viu0SEoXje37+SKbckdtf15
-         GH8GRMiNxYwzTx7YQR7rCXuC140wfyc02yiDTW4dhU2FtrSI0fmZuXJqym4oiEFQPsJo
-         HKglpYCUHvJtDZApXm7JFkx2GI3MpxWI8cVhA=
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1ihOMB6tDzEVpgHcmcETXwu68mh/dUNctOqaps6UdPQ=;
+        b=oLf3fEddkJv3m4cXDJyXbNexoEZnAZPnc0Y1dxXaKnfAbgeBxVA+IcE0KvEsBqHoLw
+         W3z6XGjPMO2XzwUrqIuS9UhFHe7GyjE/WCTLjQnnUOfRIjGL2FtUf4uNze2wGI9icT4k
+         Cwq12/W23/0YLmHTckgEtwg8wihBQu4IqSLkc7trVASKaQbEuHlxpvAhED9DHSZx01R7
+         eQLaEbHQdbSwaNpfm5gcing69ezM50kcDU2DiBo09Dbe6TyzptizgEGoVjGudLnt7v5V
+         Hi2Z6eRectmj5bWKW2TQpDoc9zwEf24uSuZoF4TOjMQgM7hvJNw+jym76KJDUj4nNmYM
+         T6AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HzoYzrsLg5B5gLgKw7GHM9JbUp9EVXgL6mdkso+jioQ=;
-        b=recsx3tBkROzJ+ClDDSyBr6kWmen7dbV4iw8SVxeSrFiKTmckS0m/acjf3HxKJ6c/E
-         RsDndYkdHcMPfdA5CFCm/xX5xuP8NNZCEhqWk49+VRPyMQYQg5DIOqDndrimLUzSe0wN
-         QS0zrYMu8x+lRTLe3nDpRxTUc8X659OOs3BNniPRLHd/X/zMwZERrE1XjrxGS/WvBN/9
-         T/uVwk/tsnIhY/gaJni7LEPn5izx+qVfKNfqr5OzLmPKo+7TaO6bQBcIHoQ5PYEJwvfH
-         UkHuIBeOXRGc1ZVL4CzBenacwdiWLy8YuM2GMEFVXfq3RmEG61zLJQzm7ZY9TK3BXl5X
-         blMw==
-X-Gm-Message-State: APjAAAXN6mQYzvUC619vcokD1VYW3vrgh5EK3vIXNb4a8StRgoTrV2XF
-        pQhhjcauICN2lPAiHVHvBmm6cA==
-X-Google-Smtp-Source: APXvYqzr1avXNk2G8iCIYQjiNez5QEKz1m/olPEdcCKuQ42svHTeNzHGPGAsJX7yX46WpKAuKK1WRA==
-X-Received: by 2002:a0c:d07b:: with SMTP id d56mr3903106qvh.89.1553034414443;
-        Tue, 19 Mar 2019 15:26:54 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id n24sm159631qtc.21.2019.03.19.15.26.52
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1ihOMB6tDzEVpgHcmcETXwu68mh/dUNctOqaps6UdPQ=;
+        b=L2hi+sPzlDPbzGKjABRu4fL6wFSU1lWiDrXMhC3yzcLYrwJl7Z5Jsx3AHGGDs1Z3IS
+         o22eJ+yOvv0E4zrKAgWG2iY/YzfUgpcLHCZji4fOrQvrj/L+r0OSVr6vrECujzCv3Dst
+         AneWeER4oAfgG0Cpyvlszwb8/pa2zJ9JorG0zEi+fskiJUYtmg918KMGLSO4MhF8+5s7
+         v6QzViCAyBTVXwPrj/yEO96IoaYxbpXL+Rq0Uqm0dk4fMgKsIHnNEJ1SPzaEujuaID4d
+         9YQE1MgLR1X/wdQxIoBarDGOgfDrdCFUxLXA/qV4R+9S9+J8iMwc5OktpeDPMpFvBdxq
+         UfMg==
+X-Gm-Message-State: APjAAAU2YDDw/RbfolGSeOpdZCX7VKfjpT5MzaDXnikz2Z9SqfD6wyeU
+        XXxcfQMap4hVVv+h5XViROCA8g==
+X-Google-Smtp-Source: APXvYqxUcbamGUbqDXKB5i6Nu6No79qCWq2b2Ukg75KJdTrYg4JfzfLZ7d6B/7ofMVhbtn/nDEysBg==
+X-Received: by 2002:a65:6498:: with SMTP id e24mr4020537pgv.346.1553034616957;
+        Tue, 19 Mar 2019 15:30:16 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id l84sm103253pfb.113.2019.03.19.15.30.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 15:26:53 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 18:26:52 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Serge E. Hallyn" <serge@hallyn.com>, keescook@chromium.org
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190319222652.GA105485@google.com>
-References: <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
- <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
- <20190316185726.jc53aqq5ph65ojpk@brauner.io>
- <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
- <20190317015306.GA167393@google.com>
- <20190317114238.ab6tvvovpkpozld5@brauner.io>
- <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
- <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
+        Tue, 19 Mar 2019 15:30:16 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 16:30:14 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Solomon Tan <solomonbstoner@protonmail.ch>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH] perf tools: Add missing case value
+Message-ID: <20190319223014.GA22834@xps15>
+References: <3nn0Oz_O4h6XtTJG1laQxwROZTgcDRxgu5Cq-bAgZNZsSDHYZzofDlIOMhBzkh1KAXok8Ekqk9Ev68umhEZPS7SyRgoJ-eA02GFC2QNbaLs=@protonmail.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190319221415.baov7x6zoz7hvsno@brauner.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3nn0Oz_O4h6XtTJG1laQxwROZTgcDRxgu5Cq-bAgZNZsSDHYZzofDlIOMhBzkh1KAXok8Ekqk9Ev68umhEZPS7SyRgoJ-eA02GFC2QNbaLs=@protonmail.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 11:14:17PM +0100, Christian Brauner wrote:
-[snip] 
-> > 
-> > ---8<-----------------------
-> > 
-> > From: Joel Fernandes <joelaf@google.com>
-> > Subject: [PATCH] Partial skeleton prototype of pidfd_wait frontend
-> > 
-> > Signed-off-by: Joel Fernandes <joelaf@google.com>
-> > ---
-> >  arch/x86/entry/syscalls/syscall_32.tbl |  1 +
-> >  arch/x86/entry/syscalls/syscall_64.tbl |  1 +
-> >  include/linux/syscalls.h               |  1 +
-> >  include/uapi/asm-generic/unistd.h      |  4 +-
-> >  kernel/signal.c                        | 62 ++++++++++++++++++++++++++
-> >  kernel/sys_ni.c                        |  3 ++
-> >  6 files changed, 71 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> > index 1f9607ed087c..2a63f1896b63 100644
-> > --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> > +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> > @@ -433,3 +433,4 @@
-> >  425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
-> >  426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
-> >  427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
-> > +428	i386	pidfd_wait		sys_pidfd_wait			__ia32_sys_pidfd_wait
-> > diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> > index 92ee0b4378d4..cf2e08a8053b 100644
-> > --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> > +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> > @@ -349,6 +349,7 @@
-> >  425	common	io_uring_setup		__x64_sys_io_uring_setup
-> >  426	common	io_uring_enter		__x64_sys_io_uring_enter
-> >  427	common	io_uring_register	__x64_sys_io_uring_register
-> > +428	common	pidfd_wait		__x64_sys_pidfd_wait
-> >  
-> >  #
-> >  # x32-specific system call numbers start at 512 to avoid cache impact
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index e446806a561f..62160970ed3f 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -988,6 +988,7 @@ asmlinkage long sys_rseq(struct rseq __user *rseq, uint32_t rseq_len,
-> >  asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
-> >  				       siginfo_t __user *info,
-> >  				       unsigned int flags);
-> > +asmlinkage long sys_pidfd_wait(int pidfd);
-> >  
-> >  /*
-> >   * Architecture-specific system calls
-> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> > index dee7292e1df6..137aa8662230 100644
-> > --- a/include/uapi/asm-generic/unistd.h
-> > +++ b/include/uapi/asm-generic/unistd.h
-> > @@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
-> >  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
-> >  #define __NR_io_uring_register 427
-> >  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-> > +#define __NR_pidfd_wait 428
-> > +__SYSCALL(__NR_pidfd_wait, sys_pidfd_wait)
-> >  
-> >  #undef __NR_syscalls
-> > -#define __NR_syscalls 428
-> > +#define __NR_syscalls 429
-> >  
-> >  /*
-> >   * 32 bit systems traditionally used different
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index b7953934aa99..ebb550b87044 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -3550,6 +3550,68 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
-> >  	return copy_siginfo_from_user(kinfo, info);
-> >  }
-> >  
-> > +static ssize_t pidfd_wait_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> > +{
-> > +	/*
-> > +	 * This is just a test string, it will contain the actual
-> > +	 * status of the pidfd in the future.
-> > +	 */
-> > +	char buf[] = "status";
-> > +
-> > +	return copy_to_iter(buf, strlen(buf)+1, to);
-> > +}
-> > +
-> > +static const struct file_operations pidfd_wait_file_ops = {
-> > +	.read_iter	= pidfd_wait_read_iter,
-> > +};
-> > +
-> > +static struct inode *pidfd_wait_get_inode(struct super_block *sb)
-> > +{
-> > +	struct inode *inode = new_inode(sb);
-> > +
-> > +	inode->i_ino = get_next_ino();
-> > +	inode_init_owner(inode, NULL, S_IFREG);
-> > +
-> > +	inode->i_op		= &simple_dir_inode_operations;
-> > +	inode->i_fop		= &pidfd_wait_file_ops;
-> > +
-> > +	return inode;
-> > +}
-> > +
-> > +SYSCALL_DEFINE1(pidfd_wait, int, pidfd)
-> > +{
-> > +	struct fd f;
-> > +	struct inode *inode;
-> > +	struct file *file;
-> > +	int new_fd;
-> > +	struct pid_namespace *pid_ns;
-> > +	struct super_block *sb;
-> > +	struct vfsmount *mnt;
-> > +
-> > +	f = fdget_raw(pidfd);
-> > +	if (!f.file)
-> > +		return -EBADF;
-> > +
-> > +	sb = file_inode(f.file)->i_sb;
-> > +	pid_ns = sb->s_fs_info;
-> > +
-> > +	inode = pidfd_wait_get_inode(sb);
-> > +
-> > +	mnt = pid_ns->proc_mnt;
-> > +
-> > +	file = alloc_file_pseudo(inode, mnt, "pidfd_wait", O_RDONLY,
-> > +			&pidfd_wait_file_ops);
+Hi Solomon,
+
+On Tue, Mar 19, 2019 at 04:11:37PM +0000, Solomon Tan wrote:
+> This patch fixes the following error message during compilation of `tools/perf`, as seen in https://github.com/Linaro/OpenCSD/issues/17.
+
+The rule for changelogs is the same as it is for patches, i.e lines should be
+wrapped at 80 characters.  Also it is not a good idea to reference a github
+issue since it is bound to disappear over time.  Just mentioning you
+encountered a compilation error will do just fine.
+
 > 
-> So I dislike the idea of allocating new inodes from the procfs super
-> block. I would like to avoid pinning the whole pidfd concept exclusively
-> to proc. The idea is that the pidfd API will be useable through procfs
-> via open("/proc/<pid>") because that is what users expect and really
-> wanted to have for a long time. So it makes sense to have this working.
-> But it should really be useable without it. That's why translate_pid()
-> and pidfd_clone() are on the table.  What I'm saying is, once the pidfd
-> api is "complete" you should be able to set CONFIG_PROCFS=N - even
-> though that's crazy - and still be able to use pidfds. This is also a
-> point akpm asked about when I did the pidfd_send_signal work.
+> ```
+>   CC       util/intel-pt-decoder/intel-pt-log.o
+>   CC       util/cs-etm-decoder/cs-etm-decoder.o
+> util/cs-etm-decoder/cs-etm-decoder.c: In function ‘cs_etm_decoder__buffer_range’:
+> util/cs-etm-decoder/cs-etm-decoder.c:370:2: error: enumeration value ‘OCSD_INSTR_WFI_WFE’ not handled in switch [-Werror=switch-enum]
+>   switch (elem->last_i_type) {
+>   ^~~~~~
 
-Oh, ok. Somehow 'proc' and 'pid' sound very similar in terminology so
-naturally I felt the proc fs superblock would be a fit, but I see your point.
+The above is over 80 characters but it should be kept that way because this is
+what you got from the compiler.
 
-> So instead of going throught proc we should probably do what David has
-> been doing in the mount API and come to rely on anone_inode. So
-> something like:
+
+>   CC       util/intel-pt-decoder/intel-pt-decoder.o
+> cc1: all warnings being treated as errors
+> ```
 > 
-> fd = anon_inode_getfd("pidfd", &pidfd_fops, file_priv_data, flags);
+> Signed-off-by: solomon-ubuntu <solomonbstoner@protonmail.ch>
+> ---
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> and stash information such as pid namespace etc. in a pidfd struct or
-> something that we then can stash file->private_data of the new file.
-> This also lets us avoid all this open coding done here.
-> Another advantage is that anon_inodes is its own kernel-internal
-> filesystem.
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index 8c155575c6c5..2a8bf6b45a30 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -374,6 +374,7 @@ cs_etm_decoder__buffer_range(struct cs_etm_decoder *decoder,
+>  		break;
+>  	case OCSD_INSTR_ISB:
+>  	case OCSD_INSTR_DSB_DMB:
+> +	case OCSD_INSTR_WFI_WFE:
 
-Thanks for the suggestion! Agreed this is better and will do it this way then. 
+Perfect.
 
-thanks,
+Because we are using an enumeration that can only be found in version 11 of the
+library, compiling with version 10 will also give us an error.  As such we need
+to bump the mandatory version number in "tools/build/feature/test-libopencsd.c".
 
- - Joel
+Your next revision should read [PATCH v3], because it will be the third
+iteration of it.
+
+Mathieu
+
+>  	case OCSD_INSTR_OTHER:
+>  	default:
+>  		packet->last_instr_taken_branch = false;
+> -- 
+> 
+> 2.17.1
+
+
+
