@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D43C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43656C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E72120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C64420854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:17:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="S2IlJaR1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nRJZhfnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfCSQQw (ORCPT
+        id S1727674AbfCSQRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:16:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42486 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSQQw (ORCPT
+        Tue, 19 Mar 2019 12:17:08 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33100 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfCSQRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:16:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r15so11284826pfn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:16:52 -0700 (PDT)
+        Tue, 19 Mar 2019 12:17:08 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b12so480967pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=AVUDGAKMXL02had+OfqDpgrMI7oxWdy7jajLhNkrmyE=;
-        b=S2IlJaR1xm8sukVefIyGyCJ1F5AE9+cotz3qtiXFXWrsLH+KitmIjXSdkZoh5Rdhzq
-         Ckog4x47NulvYgX7aCLITngufAINlgwtcHFdkg3brS+iEuwYCU9Fh09+N0iZ6hrzEata
-         QsrtXvd9BQJmVq7TTrYluKxCFWQ/MtO9yq+PBBRitBlOVIl2MT/XOXW4JWm088KsPc0d
-         e3KiWhmxt0AYeiSngftqkFvzpPqud5k2lx/dJeZN6jXEqbLMaYEGacDpKGTbHpBeL4PQ
-         4pWKRZuiOrjAtlqYggy8gn34ePLQIXv3Bx3fRih/t/nQcUn3cCK10b34OxdI8+1dbFj3
-         Vt6g==
+        bh=r6fCR0Ba++QOuxz6R+4A4oS+Zt54avu6KSLhTyIAJSc=;
+        b=nRJZhfnmhnyP7yqNTqtX3dofQ4Nk5Qo+78ekVgNnrD9jiAwtEz7IMyldhperXeOLpz
+         4undoaMb7UkqX6bIns/qvuN+JwTIB5ez0XYuOFXInz1an8AaZtdztOsaMqJeuD9aGCE1
+         NVFN89pcvnjGLDhHNWsgVIOr1h6X30Hs0l0Sn1Qsg1oFmgX4R+/RR1q2dGJezoJOn79j
+         ekxaNlly32/WoWzq5hoykBT9l9IAKOMzUCmEcL6+LyBhc10yRgEwqxlTVrArQZiAjXjt
+         KeGsASAEgoXp0a1cfeNnMLCmzjd/jq2IcqfuvWObJZAplvoBmK9KZzG87kghFNXJmLo/
+         Ovyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=AVUDGAKMXL02had+OfqDpgrMI7oxWdy7jajLhNkrmyE=;
-        b=PDQ4ud1fDMZKiXlo28tIQHQU3R07ZaUABNXVsVsaa6gbPj60dY86VKwIS4iKkpEkN9
-         rM5xwSlrxAPBhPA7F+FY7oR5JpYKQn/z7uZVilTAIf1GTJ2w9CLh1m+lpySog2EhQzp9
-         N55H3VnYM7dfn5yJH5X0C+kOeg5bs+g1wg9DVUTQ7UuFr1cZUa5N5ZAP7mqfZlQPYqLC
-         v0llu2cco8DfEA9Y/sobC3ZE4XwFzW6CBDKvJWMdeXP68UwDV4wWaHBFpQEw0aUM5qw2
-         +fASZKeEdBE1pD8EKqAfKtR+x4OO2wKqG9293mW4dBZ0mpAKYqjI0OQb5N7TQqIzsxxt
-         ppeA==
-X-Gm-Message-State: APjAAAXRp8hWP6vn0GeuZp/+1E6rqnhcTrh3nbaCojpYhWZDFQdDEQTQ
-        nipT9pEspbKkfdGp7RyHgSzNJQ==
-X-Google-Smtp-Source: APXvYqwj6y8yzmHlW8DfzTGUVXLjBxzZQpe+ovEtdOmKaOCF/pwWJ4ULKIWhqbt0hTzt/Eotj3fscw==
-X-Received: by 2002:a63:ed0a:: with SMTP id d10mr2580885pgi.452.1553012211556;
-        Tue, 19 Mar 2019 09:16:51 -0700 (PDT)
+        bh=r6fCR0Ba++QOuxz6R+4A4oS+Zt54avu6KSLhTyIAJSc=;
+        b=QM7UlwlQYb8RSl7skKMgG1VfnADiIAB/GGcG568o2obS3rzXxHMRju9l+7o3U93O1A
+         C2XsVawiEN7eme04KwCWtAVrrTpcEZJARm2W0B7ew6HstI9AZWDsQAwEveY8aWa9Wo+S
+         iVv1dEriWs/gxGrQdN62G2SXFVhF05tr+P86rAtQKp/xkkZjiPdCAkX5MEzkaQ4LLEof
+         JJLFEZ3WOqxod6eCRr/Hfc1e4FUPCNvcXz5jxtXv7YrLWY0uX/zpMHMCM9xbHEovwb3g
+         QHxxHEYfoDUf0TwahUrFcR8kpojMn9PN7MkW6P7lOxDRHOArz62svqW+sw19G7ye6zeR
+         semQ==
+X-Gm-Message-State: APjAAAUdmQ2AS99kB6v2HBKOyWU1dWkGmlhfOjBBYLGBlgXkPumOwh+S
+        rQk6G8HY6ZNinusEBivhuRpvSA==
+X-Google-Smtp-Source: APXvYqyTh4Rz3ZIjKty65iBaLCRjboFLLl+hqSEPoWui2KPGhH4GS2c3aIqkV3tGPbTvLDzMR2P+wQ==
+X-Received: by 2002:a65:6154:: with SMTP id o20mr2557086pgv.205.1553012227183;
+        Tue, 19 Mar 2019 09:17:07 -0700 (PDT)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id x5sm16510833pgp.68.2019.03.19.09.16.50
+        by smtp.googlemail.com with ESMTPSA id i72sm29114760pfj.147.2019.03.19.09.17.06
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 09:16:50 -0700 (PDT)
+        Tue, 19 Mar 2019 09:17:06 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, linux-mtd@lists.infradead.org,
@@ -62,11 +62,11 @@ To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
 Cc:     liang.yang@amlogic.com, richard@nod.at, jianxin.pan@amlogic.com,
         linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 1/2] mtd: rawnand: meson: add missing ENOMEM check in meson_nfc_read_buf()
-In-Reply-To: <20190318204722.9901-2-martin.blumenstingl@googlemail.com>
-References: <20190318204722.9901-1-martin.blumenstingl@googlemail.com> <20190318204722.9901-2-martin.blumenstingl@googlemail.com>
-Date:   Tue, 19 Mar 2019 09:16:50 -0700
-Message-ID: <7hy35ag7pp.fsf@baylibre.com>
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: meson: fix a potential memory leak in meson_nfc_read_buf
+In-Reply-To: <20190318204722.9901-3-martin.blumenstingl@googlemail.com>
+References: <20190318204722.9901-1-martin.blumenstingl@googlemail.com> <20190318204722.9901-3-martin.blumenstingl@googlemail.com>
+Date:   Tue, 19 Mar 2019 09:17:05 -0700
+Message-ID: <7hva0eg7pa.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,9 +76,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> kzalloc() can return NULL if memory could not be allocated. Check the
-> return value of the kzalloc() call in meson_nfc_read_buf() to make it
-> consistent with other memory allocations within the meson_nand driver.
+> meson_nfc_dma_buffer_setup() is called with the "info" buffer which is
+> allocated a few lines before using kzalloc(). If
+> meson_nfc_dma_buffer_setup() fails we need to free the allocated "info"
+> buffer instead of only freeing it upon success.
 >
 > Fixes: 8fae856c53500a ("mtd: rawnand: meson: add support for Amlogic NAND flash controller")
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
