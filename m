@@ -2,211 +2,154 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBA5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49DC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F84F20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28B32146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="BX3y2Ik9"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cEUH3Lqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfCSS66 (ORCPT
+        id S1727192AbfCSTCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:58:58 -0400
-Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:26863 "EHLO
-        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfCSS65 (ORCPT
+        Tue, 19 Mar 2019 15:02:35 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12311 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfCSTCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:58:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=5762; q=dns/txt; s=iport;
-  t=1553021937; x=1554231537;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=D0ic8t9YQG0FE69Ze9uqsg8+HQwii9+DcwRCgK6ja1s=;
-  b=BX3y2Ik9jSCbjjD4yUIVRfsxrQoUIl2nwqWzSblyW49K34QweTuB1dNY
-   vaPi+bUCqxXo55qRf36Rtmjp/HqhAS3M0U8pAIuBLwpGsaVPpTpeGejpS
-   L0BVHRk79VpfjjDyOcwWSd/aMb+nxldJrPcZEvN7fBUv0iQQFVspjpt95
-   E=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AHAADCO5Fc/4gNJK1jGQEBAQEBAQE?=
- =?us-ascii?q?BAQEBAQcBAQEBAQGBUwIBAQEBAQsBghBoUDMnl1OCDY4/iXOBewsBASOERAM?=
- =?us-ascii?q?CAoRrIjYHDQEBAwEBCQEDAm0cDIVLAQUyAUYQCxIGCSUPLQ0OBoM2gXUPrAS?=
- =?us-ascii?q?KLxQOgQ0BizEXgUA/gRGDEoMeBBiHKAOKHIIahWaSTQmCS4USi0MlDIFwhXK?=
- =?us-ascii?q?LcIwjhGSNCAIEBgUCFYFNATGBVjMaCBsVO4JsCYINF4hfhV8fAzCNFCqCIwE?=
- =?us-ascii?q?B?=
-X-IronPort-AV: E=Sophos;i="5.60,245,1549929600"; 
-   d="scan'208";a="537168065"
-Received: from alln-core-3.cisco.com ([173.36.13.136])
-  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 19 Mar 2019 18:58:56 +0000
-Received: from zorba ([10.41.50.85])
-        by alln-core-3.cisco.com (8.15.2/8.15.2) with ESMTPS id x2JIws9T032440
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 19 Mar 2019 18:58:56 GMT
-Date:   Tue, 19 Mar 2019 11:58:56 -0700
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        xe-linux-external@cisco.com, linux-kernel@vger.kernel.org,
-        Maksym Kokhan <maksym.kokhan@globallogic.com>,
-        Daniel Walker <dwalker@fifo99.com>,
+        Tue, 19 Mar 2019 15:02:35 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c913cb90000>; Tue, 19 Mar 2019 12:02:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 19 Mar 2019 12:02:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 19 Mar 2019 12:02:33 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Mar
+ 2019 19:02:32 +0000
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+To:     Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Jerome Glisse <jglisse@redhat.com>, <john.hubbard@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 2/3] powerpc: convert to generic builtin command line
-Message-ID: <20190319185856.zncq3f7naymoeobu@zorba>
-References: <1551469472-53043-3-git-send-email-danielwa@cisco.com>
- <e6dc6500-0e33-da0c-c975-0d9125e38c0e@c-s.fr>
+        <linux-mm@kvack.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com> <20190319141416.GA3879@redhat.com>
+ <20190319142918.6a5vom55aeojapjp@kshutemo-mobl1>
+ <20190319153644.GB26099@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <99882bf1-1db8-fd2c-cc72-2a6ea8ea4f89@nvidia.com>
+Date:   Tue, 19 Mar 2019 12:02:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e6dc6500-0e33-da0c-c975-0d9125e38c0e@c-s.fr>
-User-Agent: NeoMutt/20170609 (1.8.3)
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.41.50.85, [10.41.50.85]
-X-Outbound-Node: alln-core-3.cisco.com
+In-Reply-To: <20190319153644.GB26099@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553022138; bh=NZoJbC8WOTr0NdLPHDxUPPIt9/DJYfgztYt8n26Np0U=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cEUH3Lqw9UBui8Fl9HmBEvNVfx73iPEdZqVl+LLKqXgHVwB0VcSbDy385l75xJqu5
+         331YZ/UQtFcSBuZnrKiQz6kQOIs07Y/L9OVI0ot2hjFtbEzxLPlHH6RHrAxg5oRzHy
+         7jnl03iZU4oMHJiDR4HmuuR04+8nBrMtK1y4qb3b38mhnm4ZNsfBH9v88Pw5q+3XHh
+         1L4YW/u593GRa+5uQQo71uYfBXVoLojpt+lxUXMJKnsIY9pWVT/vLyfF57No+6qBeJ
+         RUvCPIT0OiytlsDBsz/EGmWiyI2RDo/55GN4obyJ++mj4Ll3E8oWcXLEgy2jbDWpZd
+         8AHmcW7zcs33g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 03:26:59PM +0100, Christophe Leroy wrote:
+On 3/19/19 8:36 AM, Jan Kara wrote:
+> On Tue 19-03-19 17:29:18, Kirill A. Shutemov wrote:
+>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
+>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
+>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
+>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+>>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>> [...]
+>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
+>>> about set_page_dirty() and Andrea had the good idea of maybe doing
+>>> the set_page_dirty() at GUP time (when GUP with write) not when the
+>>> GUP user calls put_page(). We can do that by setting the dirty bit
+>>> in the pte for instance. They are few bonus of doing things that way:
+>>>     - amortize the cost of calling set_page_dirty() (ie one call for
+>>>       GUP and page_mkclean()
+>>>     - it is always safe to do so at GUP time (ie the pte has write
+>>>       permission and thus the page is in correct state)
+>>>     - safe from truncate race
+>>>     - no need to ever lock the page
+>>>
+>>> Extra bonus from my point of view, it simplify thing for my generic
+>>> page protection patchset (KSM for file back page).
+>>>
+>>> So maybe we should explore that ? It would also be a lot less code.
+>>
+>> Yes, please. It sounds more sensible to me to dirty the page on get, not
+>> on put.
 > 
+> I fully agree this is a desirable final state of affairs. And with changes
+> to how we treat pinned pages during writeback there won't have to be any
+> explicit dirtying at all in the end because the page is guaranteed to be
+> dirty after a write page fault and pin would make sure it stays dirty until
+> unpinned. However initially I want the helpers to be as close to code they
+> are replacing as possible. Because it will be hard to catch all the bugs
+> due to driver conversions even in that situation. So I still think that
+> these helpers as they are a good first step. Then we need to convert
+> GUP users to use them and then it is much easier to modify the behavior
+> since it is no longer opencoded in two hudred or how many places...
 > 
-> Le 01/03/2019 à 20:44, Daniel Walker a écrit :
-> > This updates the powerpc code to use the CONFIG_GENERIC_CMDLINE
-> > option.
-> 
-> Please explain more in details how each powerpc option is replaced by one of
-> the generic options.
+> 								Honza
 
-CMDLINE is replace by two options to either which allow static options to either
-be appended or prepended to the boot loader arguemnts. If you wanted a lateral
-changes you would only fill in CONFIG_CMDLINE_PREPEND. CONFIG_CMDLINE_OVERRIDE
-does the same as CMDLINE_FORCE, only with the append and prepend arguemnts
-merged without the boot loader arguments.
+In fact, we had this very same question come up last month [1]: I was also
+wondering if we should just jump directly to the final step, and not
+do the dirtying call, but it is true that during the conversion process,
+(which effectively wraps put_page(), without changing anything else),
+it's safer to avoid changing things. 
 
-> > --- a/arch/powerpc/kernel/prom.c
-> > +++ b/arch/powerpc/kernel/prom.c
-> > @@ -34,6 +34,7 @@
-> >   #include <linux/of_fdt.h>
-> >   #include <linux/libfdt.h>
-> >   #include <linux/cpu.h>
-> > +#include <linux/cmdline.h>
-> >   #include <asm/prom.h>
-> >   #include <asm/rtas.h>
-> > @@ -716,6 +717,9 @@ void __init early_init_devtree(void *params)
-> >   	 */
-> >   	of_scan_flat_dt(early_init_dt_scan_chosen_ppc, boot_command_line);
-> > +	/* append and prepend any arguments built into the kernel. */
-> > +	cmdline_add_builtin(boot_command_line, NULL, COMMAND_LINE_SIZE);
-> > +
-> 
-> I don't think it is worth an implementation as complex as in the previous
-> patch just for the above line.
-> Could easily define the temporary buffer in this file directely, then just
-> locally do:
-> 
-> strlcpy(temp_buff, CONFIG_CMDLINE_PREPEND, COMMAND_LINE_SIZE);
-> strlcat(temp_buff, boot_command_line, COMMAND_LINE_SIZE);
-> strlcat(temp_buff, CONFIG_CMDLINE_APPEND, COMMAND_LINE_SIZE);
-> strlcpy(boot_command_line, temp_buff, COMMAND_LINE_SIZE);
- 
-The point of the code is to have an implementation that other architecture can
-use. If we open code it in powerpc we're no better off.
-
-> 
-> 
-> >   	/* Scan memory nodes and rebuild MEMBLOCKs */
-> >   	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> >   	of_scan_flat_dt(early_init_dt_scan_memory_ppc, NULL);
-> > diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-> > index f33ff4163a51..e8e9fca22470 100644
-> > --- a/arch/powerpc/kernel/prom_init.c
-> > +++ b/arch/powerpc/kernel/prom_init.c
-> > @@ -30,6 +30,7 @@
-> >   #include <linux/delay.h>
-> >   #include <linux/initrd.h>
-> >   #include <linux/bitops.h>
-> > +#include <linux/cmdline.h>
-> >   #include <asm/prom.h>
-> >   #include <asm/rtas.h>
-> >   #include <asm/page.h>
-> > @@ -637,11 +638,10 @@ static void __init early_cmdline_parse(void)
-> >   	p = prom_cmd_line;
-> >   	if ((long)prom.chosen > 0)
-> >   		l = prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
-> > -#ifdef CONFIG_CMDLINE
-> > +
-> >   	if (l <= 0 || p[0] == '\0') /* dbl check */
-> > -		strlcpy(prom_cmd_line,
-> > -			CONFIG_CMDLINE, sizeof(prom_cmd_line));
-> > -#endif /* CONFIG_CMDLINE */
-> > +		cmdline_add_builtin_section(prom_cmd_line, NULL, sizeof(prom_cmd_line), __prombss);
-> > +
-> 
-> You don't need something as complex as what your generic code does for that.
-> It could be done with the following simple line:
-> 
-> strlcpy(prom_cmd_line, CONFIG_CMDLINE_PREPEND " " CONFIG_CMDLINE_APPEND,
-> sizeof(prom_cmd_line));
-> 
-> >   	prom_printf("command line: %s\n", prom_cmd_line);
-> >   #ifdef CONFIG_PPC64
-> > diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-> > index 667df97d2595..ab2acc8d8b5a 100644
-> > --- a/arch/powerpc/kernel/prom_init_check.sh
-> > +++ b/arch/powerpc/kernel/prom_init_check.sh
-> > @@ -18,7 +18,7 @@
-> >   WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
-> >   _end enter_prom memcpy memset reloc_offset __secondary_hold
-> > -__secondary_hold_acknowledge __secondary_hold_spinloop __start
-> > +__secondary_hold_acknowledge __secondary_hold_spinloop __start strlcat
-> 
-> The above is a big issue. In the scope of KASAN implementation, we are
-> getting rid of generic string functions from prom_init because they are
-> KASAN instrumented and that's far too early for prom_init. See series
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=94949 and
-> especially patch [v9,03/11] powerpc/prom_init: don't use string functions
-> from lib/
-
-You already re-implemented a number of string functions, seem easy enough to add
-another one.
-
-What your doing here is exactly what I'm trying to prevent in my implementation.
-Say there is a small, but horrific defect in one of the string functions. Some
-other architecture fixes it in lib/strings.c , woops , you just missed it and
-now prom_init.c is stuck with it unless powerpc maintainers are watching closely
-to keep up with the fixes to the string functions.
-
-You could move these functions into the include/linux/string.h as static
-inlines, then use them in lib/strings.c and in prom_init.c. Then you have a
-unified implementation. I assume you would regard that as ugly tho.
-
-Something else you would regard as ugly , your not adding an #ifdef on KASAN in
-prom_init.c for the string functions. If you have that then any buggy string
-functions which you may add (or forget to update) would only cause problems
-if you had KASAN enabled. That then isolates any problems you cause to only
-debug kernels with KASAN enabled, instead of unilaterally all platforms which
-use prom_init.c. That would also only increase the size if KASAN is enabled.
-Very desirable, but ugly. I think most of us kernel hackers will take the ugly.
-
-#ifdef CONFIG_KASAN
-...
-#else
-#define prom_strcmp strcmp
-...
-#endif /* !CONFIG_KASAN */ 
-
-(you would have to change arch/powerpc/kernel/prom_init_check.sh , but that
-shouldn't be too hard)
+The whole system is fragile because it's running something that has some 
+latent bugs in this area, so probably best to do it the way Jan says, and 
+avoid causing any new instances of reproducing this problem, even though 
+there is a bit more churn involved.
 
 
-Daniel
+[1] https://lore.kernel.org/r/20190205112107.GB3872@quack2.suse.cz
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
