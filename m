@@ -2,302 +2,201 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9447C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969E52133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C285C20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfCSKBz (ORCPT
+        id S1727557AbfCSKBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:01:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43668 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727500AbfCSKBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 06:01:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:48478 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727407AbfCSKBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 06:01:53 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9xChc154520
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 06:01:52 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2raw2rv46r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 06:01:51 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 19 Mar 2019 10:01:47 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 10:01:44 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JA1jG522872132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 10:01:45 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2737EAE059;
-        Tue, 19 Mar 2019 10:01:45 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71DEFAE045;
-        Tue, 19 Mar 2019 10:01:44 +0000 (GMT)
-Received: from [9.145.41.62] (unknown [9.145.41.62])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Mar 2019 10:01:44 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, borntraeger@de.ibm.com,
-        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
- <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
- <20190315112032.13b259c2.cohuck@redhat.com>
- <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
- <20190315182839.4f7c0a73@oc2783563651>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 19 Mar 2019 11:01:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 965481650;
+        Tue, 19 Mar 2019 03:01:52 -0700 (PDT)
+Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A993F575;
+        Tue, 19 Mar 2019 03:01:48 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 10:01:41 +0000
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <eric.auger@redhat.com>, "Raslan, KarimAllah" <karahmed@amazon.de>,
+        <christoffer.dall@arm.com>, <andre.przywara@arm.com>,
+        <james.morse@arm.com>, <julien.thierry@arm.com>,
+        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
+        <mst@redhat.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <kvm@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <guoheyi@huawei.com>
+Subject: Re: [RFC PATCH] KVM: arm/arm64: Enable direct irqfd MSI injection
+Message-ID: <20190319100141.69821f8b@why.wild-wind.fr.eu.org>
+In-Reply-To: <428b2aac-5a0f-e9da-8d74-8045f99a8c74@huawei.com>
+References: <1552833373-19828-1-git-send-email-yuzenghui@huawei.com>
+        <86o969z42z.wl-marc.zyngier@arm.com>
+        <428b2aac-5a0f-e9da-8d74-8045f99a8c74@huawei.com>
+Organization: ARM Ltd
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190315182839.4f7c0a73@oc2783563651>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031910-0008-0000-0000-000002CF120A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031910-0009-0000-0000-0000223B2453
-Message-Id: <0351d631-b756-dd22-0848-6f30747dc5e2@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190076
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 18:28, Halil Pasic wrote:
-> On Fri, 15 Mar 2019 14:26:34 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Tue, 19 Mar 2019 09:09:43 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+
+> Hi all,
 > 
->> On 15/03/2019 11:20, Cornelia Huck wrote:
->>> On Wed, 13 Mar 2019 17:04:58 +0100
->>> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>>
->>>> +/*
->>>> + * handle_pqap: Handling pqap interception
->>>> + * @vcpu: the vcpu having issue the pqap instruction
->>>> + *
->>>> + * We now support PQAP/AQIC instructions and we need to correctly
->>>> + * answer the guest even if no dedicated driver's hook is available.
->>>> + *
->>>> + * The intercepting code calls a dedicated callback for this instruction
->>>> + * if a driver did register one in the CRYPTO satellite of the
->>>> + * SIE block.
->>>> + *
->>>> + * For PQAP/AQIC instructions only, verify privilege and specifications.
->>>> + *
->>>> + * If no callback available, the queues are not available, return this to
->>>> + * the caller.
->>>> + * Else return the value returned by the callback.
->>>> + */
->>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +	uint8_t fc;
->>>> +	struct ap_queue_status status = {};
->>>> +	int ret;
->>>> +	/* Verify that the AP instruction are available */
->>>> +	if (!ap_instructions_available())
->>>> +		return -EOPNOTSUPP;
->>>> +	/* Verify that the guest is allowed to use AP instructions */
->>>> +	if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->>>> +		return -EOPNOTSUPP;
->>>> +	/* Verify that the function code is AQIC */
->>>> +	fc = vcpu->run->s.regs.gprs[0] >> 24;
->>>> +	/* We do not want to change the behavior we had before this patch*/
->>>> +	if (fc != 0x03)
->>>> +		return -EOPNOTSUPP;
->>>> +
->>>> +	/* PQAP instructions are allowed for guest kernel only */
->>>> +	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
->>>> +		return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
->>>> +	/* AQIC instruction is allowed only if facility 65 is available */
->>>> +	if (!test_kvm_facility(vcpu->kvm, 65))
->>>> +		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
->>>> +	/* Verify that the hook callback is registered and call it */
->>>> +	if (vcpu->kvm->arch.crypto.pqap_hook) {
->>>> +		if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
->>>> +			return -EOPNOTSUPP;
->>>> +		ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
->>>> +		module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
->>>> +		return ret;
->>>> +	}
->>>> +	/*
->>>> +	 * It is the duty of the vfio_driver to register a hook
->>>> +	 * If it does not and we get an exception on AQIC we must
->>>> +	 * guess that there is no vfio_ap_driver at all and no one
->>>> +	 * to handle the guests's CRYCB and the CRYCB is empty.
->>>> +	 */
->>>> +	status.response_code = 0x01;
->>>
->>> I'm still confused here, sorry. From previous discussions I recall that
->>> this indicates "no crypto device" (please correct me if I'm wrong.)
->>>
->>> Before this patch, we had:
->>> - guest issues PQAP/AQIC -> drop to userspace
->>>
->>> With a correct implementation, we get:
->>> - guest issues PQAP/AQIC -> callback does what needs to be done
->>>
->>> With an incorrect implementation (no callback), we get:
->>> - guest issues PQAP/AQIC -> guest gets response code 0x01
->>>
->>> Why not drop to userspace in that case?
->>
->> This is what I had in the previous patches.
->> Hum, I do not remember which discussion lead me to modify this.
->>
->> Anyway, now that you put the finger on this problem, I think the problem
->> is worse.
->>
->> The behavior with old / new Linux, vfio driver and qemu is:
->>
->> LINUX	VFIO_AP	QEMU	PGM
->> OLD	x	x	OPERATION
+> On 2019/3/18 3:35, Marc Zyngier wrote:
+> > On Sun, 17 Mar 2019 14:36:13 +0000,
+> > Zenghui Yu <yuzenghui@huawei.com> wrote:  
+> >>
+> >> Currently, IRQFD on arm still uses the deferred workqueue mechanism
+> >> to inject interrupts into guest, which will likely lead to a busy
+> >> context-switching from/to the kworker thread. This overhead is for
+> >> no purpose (only in my view ...) and will result in an interrupt
+> >> performance degradation.
+> >>
+> >> Implement kvm_arch_set_irq_inatomic() for arm/arm64 to support direct
+> >> irqfd MSI injection, by which we can get rid of the annoying latency.
+> >> As a result, irqfd MSI intensive scenarios (e.g., DPDK with high packet
+> >> processing workloads) will benefit from it.
+> >>
+> >> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> >> ---
+> >>
+> >> It seems that only MSI will follow the IRQFD path, did I miss something?
+> >>
+> >> This patch is still under test and sent out for early feedback. If I have
+> >> any mis-understanding, please fix me up and let me know. Thanks!  
+> > 
+> > As mentioned by other folks in the thread, this is clearly wrong. The
+> > first thing kvm_inject_msi does is to lock the corresponding ITS using
+> > a mutex. So the "no purpose" bit was a bit too quick.
+> > 
+> > When doing this kind of work, I suggest you enable lockdep and all the
+> > related checkers. Also, for any optimisation, please post actual
+> > numbers for the relevant benchmarks. Saying "application X will
+> > benefit from it" is meaningless without any actual data.
+> >   
+> >>
+> >> ---
+> >>   virt/kvm/arm/vgic/trace.h      | 22 ++++++++++++++++++++++
+> >>   virt/kvm/arm/vgic/vgic-irqfd.c | 21 +++++++++++++++++++++
+> >>   2 files changed, 43 insertions(+)
+> >>
+> >> diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
+> >> index 55fed77..bc1f4db 100644
+> >> --- a/virt/kvm/arm/vgic/trace.h
+> >> +++ b/virt/kvm/arm/vgic/trace.h
+> >> @@ -27,6 +27,28 @@
+> >>   		  __entry->vcpu_id, __entry->irq, __entry->level)
+> >>   );  
+> >>   >> +TRACE_EVENT(kvm_arch_set_irq_inatomic,  
+> >> +	TP_PROTO(u32 gsi, u32 type, int level, int irq_source_id),
+> >> +	TP_ARGS(gsi, type, level, irq_source_id),
+> >> +
+> >> +	TP_STRUCT__entry(
+> >> +		__field(	u32,	gsi		)
+> >> +		__field(	u32,	type		)
+> >> +		__field(	int,	level		)
+> >> +		__field(	int,	irq_source_id	)
+> >> +	),
+> >> +
+> >> +	TP_fast_assign(
+> >> +		__entry->gsi		= gsi;
+> >> +		__entry->type		= type;
+> >> +		__entry->level		= level;
+> >> +		__entry->irq_source_id	= irq_source_id;
+> >> +	),
+> >> +
+> >> +	TP_printk("gsi %u type %u level %d source %d", __entry->gsi,
+> >> +		  __entry->type, __entry->level, __entry->irq_source_id)
+> >> +);
+> >> +
+> >>   #endif /* _TRACE_VGIC_H */  
+> >>   >>   #undef TRACE_INCLUDE_PATH  
+> >> diff --git a/virt/kvm/arm/vgic/vgic-irqfd.c b/virt/kvm/arm/vgic/vgic-irqfd.c
+> >> index 99e026d..4cfc3f4 100644
+> >> --- a/virt/kvm/arm/vgic/vgic-irqfd.c
+> >> +++ b/virt/kvm/arm/vgic/vgic-irqfd.c
+> >> @@ -19,6 +19,7 @@
+> >>   #include <trace/events/kvm.h>
+> >>   #include <kvm/arm_vgic.h>
+> >>   #include "vgic.h"
+> >> +#include "trace.h"  
+> >>   >>   /**  
+> >>    * vgic_irqfd_set_irq: inject the IRQ corresponding to the
+> >> @@ -105,6 +106,26 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
+> >>   	return vgic_its_inject_msi(kvm, &msi);
+> >>   }  
+> >>   >> +/**  
+> >> + * kvm_arch_set_irq_inatomic: fast-path for irqfd injection
+> >> + *
+> >> + * Currently only direct MSI injecton is supported.
+> >> + */
+> >> +int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
+> >> +			      struct kvm *kvm, int irq_source_id, int level,
+> >> +			      bool line_status)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	trace_kvm_arch_set_irq_inatomic(e->gsi, e->type, level, irq_source_id);
+> >> +
+> >> +	if (unlikely(e->type != KVM_IRQ_ROUTING_MSI))
+> >> +		return -EWOULDBLOCK;
+> >> +
+> >> +	ret = kvm_set_msi(e, kvm, irq_source_id, level, line_status);
+> >> +	return ret;
+> >> +}
+> >> +  
+> > 
+> > Although we've established that the approach is wrong, maybe we can
+> > look at improving this aspect.
+> > 
+> > A first approach would be to keep a small cache of the last few
+> > successful translations for this ITS, cache that could be looked-up by
+> > holding a spinlock instead. A hit in this cache could directly be
+> > injected. Any command that invalidates or changes anything (DISCARD,
+> > INV, INVALL, MAPC with V=0, MAPD with V=0, MOVALL, MOVI) should nuke
+> > the cache altogether.
+> > 
+> > Of course, all of that needs to be quantified.  
 > 
-> Isn't OPERATION a bad answer if ap=on? It should not happen
-> with a well behaved guest because facility 65 is not indicated,
-> but if it does, I guess we give the wrong answer.
+> Thanks for all of your explanations, especially for Marc's suggestions!
+> It took me long time to figure out my mistakes, since I am not very
+> familiar with the locking stuff. Now I have to apologize for my noise.
 
-It is clearly wrong but we can not change the past :)
+No need to apologize. The whole point of this list is to have
+discussions. Although your approach wasn't working, you did
+identify potential room for improvement.
 
-> 
->> NEW	-	OLD	SPECIFICATION
->> NEW	-	NEW/aqic=off	SPECIFICATION
->> NEW	x	NEW/aqic=on	-
->>
-> 
-> AFAICT with LINUX == NEW we get the correct answer. OPERATION exception
-> is only good if ap=off.
+> As for the its-translation-cache code (a really good news to us), we
+> have a rough look at it and start testing now!
 
-Exact.
+Please let me know about your findings. My initial test doesn't show
+any improvement, but that could easily be attributed to the system I
+running this on (a tiny and slightly broken dual A53 system). The sizing
+of the cache is also important: too small, and you have the overhead of
+the lookup for no benefit; too big, and you waste memory.
 
-> 
->> x = whatever
->> - = absent/none
->>
->> So yes there is a change in behavior for the userland for the case QEMU
->> do not set the AQIC facility 65, OLD QEMU or NEW QEMU wanting to behave
->> like an older one.
->>
->> I fear we have the same problem with the privileged operation...
->>
-> 
-> IMHO this boils down to:
-> * either OLD QEMU or
-> * OLD LINUX
-> should have taken care of handling the mandatory intercept for PQAP/AQIC
-> if ap=on (i.e. guest has AP instructions), and does not have facility 65
-> which was the case for OLD.
+Having thought about it a bit more, I think we can drop the
+invalidation on MOVI/MOVALL, as the LPI is still perfectly valid, and
+we don't cache the target vcpu. On the other hand, the cache must be
+nuked when the ITS is turned off.
 
-yes
+Thanks,
 
-> 
-> Things get complicated when one considers that ECA.28 is an effective
-> control.
-
-I don't think so, ECA_28 is not really a problem.
-We do not propagate ECA_AIV in VSIE and ECA_AIV is tested in the vfio 
-driver to support GISA.
-So that the guest 3 will not support interrupt.
-
-> 
->> For the last case, when the kvm_facility(65) is set, the explication is
->> the following:
->>
->> This is related to the handling of PQAP AQIC which is now authorized by
->> this patch series.
->> If we authorize PQAP AQIC, by setting the bit for facility 65, the guest
->> can use this instruction.
->> If the instruction follows the specifications we must answer something
->> realistic and since there is nothing in the CRYCB (no driver) we answer
->> that there is no queue.
->>
->> Conclusion:  we must handle this in userland, it will have the benefit
->> to keep old behavior when there is no callback.
->> OLD QEMU will not see change as they will not set aqic facility
-> 
-> That would mean we remain quirky.
-
-Yes, the alternative is:
-
-1) We do things right but this mean we change the ABI (SPECIFICATION 
-instead of OPERATION)
-
-I thing this is the best thing to do, it is the implementation proposed 
-by this patch where all is done in Kernel, so that we are right what 
-ever the userland user is (QEMU or other).
-
-2) We want to preserve the old ABI for old QEMU
-Then I proposed the implementation here under.
-
-
-My personal opinion, is that we should change the ABI and do things 
-right now.
-We should also do it right for TAPQ with t bit set. I remember Christian 
-already warned about this but we did not implement it.
-
-> 
->> NEW QEMU will handle this correctly.
->>
->> In this case we also do not need to handle all other tests here but can
->> move it to the callback as Tony wanted.
->>
->> Would you agree with something simple like:
->>
->> static int handle_pqap(struct kvm_vcpu *vcpu)
->> {
->>           int ret = -EOPNOTSUPP;
->>
->>           /* Verify that the hook callback is registered and call it */
->>           if (pqap_hook)
->>                   if (try_module_get(pqap_hook->owner)) {
->>                           ret = pqap_hook->hook(vcpu);
->>                           module_put(pqap_hook->owner);
->>                   }
->>           return ret;
->> }
->>
->> All other tests in QEMU and in the callback.
->>
-> 
-> You stated in another email that the conclusion is wrong. I'm not sure
-
-Forget it, I do not understand what I wanted to say there /o\ .
-
-> what is the cleanest solution here. This effective control thing does
-> make my head spin.
-
-As I said I do not thing any effective control do interfere here.
-IMHO Alternative 1 is the cleanest solution
-
-Regards,
-Pierre
-
-
-
+	M.
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+Without deviation from the norm, progress is not possible.
