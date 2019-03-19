@@ -2,180 +2,155 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3277BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF838C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF290217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCF52085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8ffQgdK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bu0f2xgG";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="U3T4G/4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfCSX5C (ORCPT
+        id S1727664AbfCSX5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:57:02 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:52376 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCSX4l (ORCPT
+        Tue, 19 Mar 2019 19:57:10 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:59745 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSX4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:56:41 -0400
-Received: by mail-qk1-f202.google.com with SMTP id k21so19348384qkg.19
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:56:40 -0700 (PDT)
+        Tue, 19 Mar 2019 19:56:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1553039795; x=1584575795;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=t/HTHPvkjJ1accV8t6iMADgZGwTgz6CH005jmTXlcQ8=;
+  b=bu0f2xgG2i0+aCSJw3p09DSztHqdPCnQPJpo90+8UGRg2dN2ebQaTB6H
+   Yn8H/exfyBuFBJ4ZQD79Cs3RDvhC2EKL41tjspnTXtfHnRDGpMG0cifAm
+   j0g23Kbfh1fQwWoPShKb8Q3qlfmus5FJj+/QYTU/1AX60NXwJB79GuDMp
+   s1k4XmVkSskgZKr5aulvF+kMhJZvI9EEjC1/K8JqaEHNNw7eMoDwqsRmy
+   ABF2zLgUsWKbQ2pkeYuOlqNLAee/brBS/oIBmLPe8Q+ZfJTKgbDPIcBkZ
+   GCv8FIlnt5v9vhlnFYVyRzLUCEhpkammpXOXrjHEgumYqNkXj4Kf25zHX
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,246,1549900800"; 
+   d="scan'208";a="105528985"
+Received: from mail-by2nam03lp2053.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.53])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2019 07:56:34 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/1f+k74gk1272nyZAYvhUzZCD+eEvuFJDJVbOJgy+wk=;
-        b=Q8ffQgdK/wkTC+TdacBpBr7s7ZA+ibEdwudd2fRpPvrcaC/Z4LqJTNqtLCyv8fay3Q
-         chiHW354Gbcen71ue0RFArhXaTYhUvFlgw847q/e4JvbmuxVF1URZSS4uI5/2AOq95Tg
-         EUZGBIm5ffQd2Ig8HQTcV4Ga4AwlViHgtFeDDiCPhfHDPO06IXDNPK9KlA6EzFdtzCZw
-         XIpSvnBo/nnTQIl706MCfwLeDFb6UkMXt7TLQ9AlMLikpSRMRfuJ/IfBREdiXgcI3pzN
-         Tqwh1wtk3Mfv6veI944tZm831+Y/Nmg0Yiy3lc4aslJlMD8H+RAAp6Z3buACiQNjY+Pi
-         ZHIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/1f+k74gk1272nyZAYvhUzZCD+eEvuFJDJVbOJgy+wk=;
-        b=jB1pb7Kw7DgQRF1N3Jz58Ov21g0uxNZhw0ZdA2wRtQA0RPo/N2woSEl4Ac7DaoeyGz
-         P7nu0DHWtEhpwDsCPvPMbEo0Xt1oLfu22PAa5/nTSzEVnia31X/i+50RUqjYwPUEat0v
-         ji1rw6T8X8iyTeQF5SnzX32Y0hgdwFCnNButFqaslE+kH3jRU5nu/k2LOM9FJ35Juja1
-         IgmYSpweQDicsBjZm7tiCZDS/z2xa0da4irOUmffonb7wfaGF2EyqFfu11/tWaBeGvl6
-         ebwVEzrqs6IbgjJ+mwtoPWYxUHEvZsEAV6Api9BKwblfayXprVctufhvGxlsvLZwQP8I
-         ZrQA==
-X-Gm-Message-State: APjAAAXzMeIRSr+/irIIAuepD2qmWunZSrequ5zeWPMnkkhSPQBrTiV0
-        JIYnEfZBNlhOuQhrflgyM+ni2ra85Sg=
-X-Google-Smtp-Source: APXvYqw+3rmGmXN+0NOE9KYUNNYevZu09CHWRK5dGTsF91CDis8OUSyXsZ9D4hzjIdVioTkn+fpmgfJUK48=
-X-Received: by 2002:ac8:1410:: with SMTP id k16mr13547779qtj.58.1553039800238;
- Tue, 19 Mar 2019 16:56:40 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 16:56:17 -0700
-In-Reply-To: <20190319235619.260832-1-surenb@google.com>
-Message-Id: <20190319235619.260832-6-surenb@google.com>
-Mime-Version: 1.0
-References: <20190319235619.260832-1-surenb@google.com>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v6 5/7] psi: track changed states
-From:   Suren Baghdasaryan <surenb@google.com>
-To:     gregkh@linuxfoundation.org
-Cc:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
-        axboe@kernel.dk, dennis@kernel.org, dennisszhou@gmail.com,
-        mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
-        corbet@lwn.net, cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Suren Baghdasaryan <surenb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WTBjFExEcFw3x6yRH1zxBbh36Xf3VUlYXe4tJ658uto=;
+ b=U3T4G/4kKo2pFaWJ8LRg41MIuaywxBzNDEDjh0wnoh/f+T39atmatFq1kDyp6emOcta6C5A3/q2OIoG0pCkIi/ae4qeb7PJcZt0eappD0JHBvYE3o2llz8xMuv/Mo29zKCmv26nEOrqA1S+8Sm2jdnUKaCSc5Qju2to+Kya/lME=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB4294.namprd04.prod.outlook.com (20.176.251.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 23:56:32 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::7c30:6437:71e2:e32e]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::7c30:6437:71e2:e32e%3]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 23:56:32 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Atish Patra <Atish.Patra@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+CC:     Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: Re: [v1 PATCH 4/4] RISC-V: Support nr_cpus command line option.
+Thread-Topic: [v1 PATCH 4/4] RISC-V: Support nr_cpus command line option.
+Thread-Index: AQHU3qIAiA88vIkHh0W9ePhVGAezdw==
+Date:   Tue, 19 Mar 2019 23:56:32 +0000
+Message-ID: <BYAPR04MB5816217E1BD06F0EB68E15A7E7400@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190319222028.4293-1-atish.patra@wdc.com>
+ <20190319222028.4293-4-atish.patra@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cbf02de8-2a08-430b-1298-08d6acc68349
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:BYAPR04MB4294;
+x-ms-traffictypediagnostic: BYAPR04MB4294:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <BYAPR04MB4294AF403E3048DFA69ED966E7400@BYAPR04MB4294.namprd04.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(376002)(396003)(346002)(39860400002)(189003)(199004)(6116002)(97736004)(74316002)(7736002)(305945005)(105586002)(2906002)(106356001)(99286004)(110136005)(86362001)(8676002)(54906003)(186003)(68736007)(7696005)(3846002)(2501003)(26005)(76176011)(52536014)(53546011)(102836004)(6506007)(14454004)(81156014)(81166006)(478600001)(316002)(66066001)(229853002)(72206003)(9686003)(53936002)(8936002)(486006)(71190400001)(71200400001)(33656002)(6436002)(55016002)(256004)(5660300002)(4326008)(25786009)(14444005)(446003)(6246003)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4294;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5/x+dTKIXlW26M5t18ppBPL6SM4+F6SvINA+ETv9aZz5O+bzLwJc4iw3tOiT/JiUT/Okuez63EaUjCPVs3cS23Q6xXwqDAV0rqWkNRleosu8IaUfWdJTBhppx6+KtsJ3Fp3feJbjC16zW+FWr9hXC2QPyuut501Lv6r++251xBpmXP1JSeiGN1q9D9myO+GmRLLqUXq1dwanaN5W3rNrt0BQ7SY1hQMtl4sRuxzeFb6LcMeUEe0iR1gIS4+8+4NoTlTWhQIPaUpAg+t/qubWj+RztTtfuXO7P9tYOcvHwAB6XscR5GsL2dl6tUPRmreMZZ9ELSJ0N3WlFyGtAFPrtGlQ3Uscj7JEBAesGtNS4GZK9e7QARyB3aRhi/1K+bEHRXYcuYw/VCD1hQxYWTfEJZ/EDHK1+rbj3HvCciu/eYA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbf02de8-2a08-430b-1298-08d6acc68349
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 23:56:32.4289
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce changed_states parameter into collect_percpu_times to track
-the states changed since the last update.
-
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- kernel/sched/psi.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index ace5ed97b186..1b99eeffaa25 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -210,7 +210,8 @@ static bool test_state(unsigned int *tasks, enum psi_states state)
- 	}
- }
- 
--static void get_recent_times(struct psi_group *group, int cpu, u32 *times)
-+static void get_recent_times(struct psi_group *group, int cpu, u32 *times,
-+			     u32 *pchanged_states)
- {
- 	struct psi_group_cpu *groupc = per_cpu_ptr(group->pcpu, cpu);
- 	u64 now, state_start;
-@@ -218,6 +219,8 @@ static void get_recent_times(struct psi_group *group, int cpu, u32 *times)
- 	unsigned int seq;
- 	u32 state_mask;
- 
-+	*pchanged_states = 0;
-+
- 	/* Snapshot a coherent view of the CPU state */
- 	do {
- 		seq = read_seqcount_begin(&groupc->seq);
-@@ -246,6 +249,8 @@ static void get_recent_times(struct psi_group *group, int cpu, u32 *times)
- 		groupc->times_prev[s] = times[s];
- 
- 		times[s] = delta;
-+		if (delta)
-+			*pchanged_states |= (1 << s);
- 	}
- }
- 
-@@ -269,10 +274,11 @@ static void calc_avgs(unsigned long avg[3], int missed_periods,
- 	avg[2] = calc_load(avg[2], EXP_300s, pct);
- }
- 
--static bool collect_percpu_times(struct psi_group *group)
-+static void collect_percpu_times(struct psi_group *group, u32 *pchanged_states)
- {
- 	u64 deltas[NR_PSI_STATES - 1] = { 0, };
- 	unsigned long nonidle_total = 0;
-+	u32 changed_states = 0;
- 	int cpu;
- 	int s;
- 
-@@ -287,8 +293,11 @@ static bool collect_percpu_times(struct psi_group *group)
- 	for_each_possible_cpu(cpu) {
- 		u32 times[NR_PSI_STATES];
- 		u32 nonidle;
-+		u32 cpu_changed_states;
- 
--		get_recent_times(group, cpu, times);
-+		get_recent_times(group, cpu, times,
-+				&cpu_changed_states);
-+		changed_states |= cpu_changed_states;
- 
- 		nonidle = nsecs_to_jiffies(times[PSI_NONIDLE]);
- 		nonidle_total += nonidle;
-@@ -313,7 +322,8 @@ static bool collect_percpu_times(struct psi_group *group)
- 	for (s = 0; s < NR_PSI_STATES - 1; s++)
- 		group->total[s] += div_u64(deltas[s], max(nonidle_total, 1UL));
- 
--	return nonidle_total;
-+	if (pchanged_states)
-+		*pchanged_states = changed_states;
- }
- 
- static u64 update_averages(struct psi_group *group, u64 now)
-@@ -373,6 +383,7 @@ static void psi_avgs_work(struct work_struct *work)
- {
- 	struct delayed_work *dwork;
- 	struct psi_group *group;
-+	u32 changed_states;
- 	bool nonidle;
- 	u64 now;
- 
-@@ -383,7 +394,8 @@ static void psi_avgs_work(struct work_struct *work)
- 
- 	now = sched_clock();
- 
--	nonidle = collect_percpu_times(group);
-+	collect_percpu_times(group, &changed_states);
-+	nonidle = changed_states & (1 << PSI_NONIDLE);
- 	/*
- 	 * If there is task activity, periodically fold the per-cpu
- 	 * times and feed samples into the running averages. If things
-@@ -719,7 +731,7 @@ int psi_show(struct seq_file *m, struct psi_group *group, enum psi_res res)
- 	/* Update averages before reporting them */
- 	mutex_lock(&group->avgs_lock);
- 	now = sched_clock();
--	collect_percpu_times(group);
-+	collect_percpu_times(group, NULL);
- 	if (now >= group->avg_next_update)
- 		group->avg_next_update = update_averages(group, now);
- 	mutex_unlock(&group->avgs_lock);
--- 
-2.21.0.225.g810b269d1ac-goog
-
+On 2019/03/20 7:20, Atish Patra wrote:=0A=
+> If nr_cpus command line option is set, maximum possible cpu should be=0A=
+> set to that value.=0A=
+> =0A=
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>=0A=
+> ---=0A=
+>  arch/riscv/kernel/smpboot.c | 10 +++++++++-=0A=
+>  1 file changed, 9 insertions(+), 1 deletion(-)=0A=
+> =0A=
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c=0A=
+> index 609475c5..a8fe590c 100644=0A=
+> --- a/arch/riscv/kernel/smpboot.c=0A=
+> +++ b/arch/riscv/kernel/smpboot.c=0A=
+> @@ -86,11 +86,19 @@ void __init setup_smp(void)=0A=
+>  		}=0A=
+>  =0A=
+>  		cpuid_to_hartid_map(cpuid) =3D hart;=0A=
+> -		set_cpu_possible(cpuid, true);=0A=
+=0A=
+This looks weird: the code being changed does not match what patch 3/4 did.=
+=0A=
+=0A=
+>  		cpuid++;=0A=
+>  	}=0A=
+>  =0A=
+>  	BUG_ON(!found_boot_cpu);=0A=
+> +=0A=
+> +	if (cpuid > nr_cpu_ids)=0A=
+> +		pr_warn("Total number of cpus [%d] are greater than configured via nr_=
+cpus [%d]\n",=0A=
+=0A=
+"The total number of cpus [%d] is greater than nr_cpus option value [%d]\n"=
+=0A=
+=0A=
+> +			cpuid, nr_cpu_ids);=0A=
+> +=0A=
+> +	for (cpuid =3D 1; cpuid < nr_cpu_ids; cpuid++) {=0A=
+> +		if (cpuid_to_hartid_map(cpuid) !=3D INVALID_HARTID)=0A=
+> +			set_cpu_possible(cpuid, true);=0A=
+> +	}=0A=
+>  }=0A=
+>  =0A=
+>  int __cpu_up(unsigned int cpu, struct task_struct *tidle)=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
