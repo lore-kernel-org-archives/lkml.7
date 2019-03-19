@@ -3,98 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFB1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978DBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6885E20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDAD2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfCSDsc (ORCPT
+        id S1727526AbfCSDtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 23:48:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbfCSDsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 23:48:31 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B6C19FAF18200A2EA63;
-        Tue, 19 Mar 2019 11:48:29 +0800 (CST)
-Received: from [127.0.0.1] (10.184.227.228) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 11:48:25 +0800
-Subject: Re: [PATCH] net-sysfs: Fix memory leak in netdev_register_kobject
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
-        <idosch@mellanox.com>, <alexander.h.duyck@intel.com>,
-        <tyhicks@canonical.com>, <f.fainelli@gmail.com>
-CC:     <amritha.nambiar@intel.com>, <joe@perches.com>,
-        <dmitry.torokhov@gmail.com>, <andriy.shevchenko@linux.intel.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190319050657.61327-1-wanghai26@huawei.com>
- <81c3db69-4589-97c7-960b-96812e6901d0@gmail.com>
-From:   "wanghai (M)" <wanghai26@huawei.com>
-Message-ID: <4336653d-c89d-316f-a4a3-cf5438cd6715@huawei.com>
-Date:   Tue, 19 Mar 2019 11:47:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 18 Mar 2019 23:49:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59810 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726884AbfCSDtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 23:49:24 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J3n6f8024043
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 23:49:22 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rarjg8nk4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 23:49:22 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 19 Mar 2019 03:49:16 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 03:49:14 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J3nHwq32899216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 03:49:17 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DDDB4C058;
+        Tue, 19 Mar 2019 03:49:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15FEA4C04A;
+        Tue, 19 Mar 2019 03:49:15 +0000 (GMT)
+Received: from [9.124.31.199] (unknown [9.124.31.199])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Mar 2019 03:49:14 +0000 (GMT)
+Subject: Re: [PATCH]perf:Remove P8 HW events which are not supported
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        peterz@infradead.org, mpe@ellerman.id.au,
+        alexander.shishkin@linux.intel.com, mingo@redhat.com,
+        namhyung@kernel.org, jolsa@redhat.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <154953186583.11022.14819560028300370163.stgit@localhost.localdomain>
+ <d185d075-8589-5ec0-f3d7-4d5c79d12aed@linux.ibm.com>
+ <20190318181430.GA3967@kernel.org> <20190318182655.GB3967@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Tue, 19 Mar 2019 09:19:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <81c3db69-4589-97c7-960b-96812e6901d0@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.227.228]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190318182655.GB3967@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031903-0020-0000-0000-00000324F52B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031903-0021-0000-0000-000021770BB3
+Message-Id: <0b9269aa-f178-4adc-5f00-65cc2d396a3e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-在 2019/3/19 2:02, Eric Dumazet 写道:
->
-> On 03/18/2019 10:06 PM, Wang Hai wrote:
->> When registering struct net_device, it will call
->> 	register_netdevice ->
->> 		netdev_register_kobject ->
->> 			device_add(dev)
->> 			register_queue_kobjects(ndev)
->>
->> If device_add(dev) or register_queue_kobjects(ndev) fails.
->> Register_netdevice() will return error, causing netdev_freemem(ndev)
->> to be called to free net_device, however (&ndev->dev)->kobj.name will
->> not be freed, resulting in a memory leak.
->>
->> syzkaller report this:
->> BUG: memory leak
->> unreferenced object 0xffff8881f4fad168 (size 8):
->> comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
->> hex dump (first 8 bytes):
->>    77 70 61 6e 30 00 ff ff                          wpan0...
->> backtrace:
->>    [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
->>    [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
->>    [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:281
->>    [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
->>    [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/net-sysfs.c:1727
->>    [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:8711
->>    [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [ieee802154]
->>    [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee802154]
->>    [<00000000e4b3df51>] 0xffffffffc1500e0e
->>    [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/platform.c:614
->>    [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
->>    [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd.c:671
->>    [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/dd.c:945
->>    [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:1022
->>    [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.c:304
->>    [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:645
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
-> The bug was there before this commit, right ?
->
-> .
 
-Sorry, I read the code carefully, this is a mistake, the correct fix commit is 1fa5ae857bb1(driver core: get rid of struct device's bus_id string array). I will send a patch v2
-
+On 3/18/19 11:56 PM, Arnaldo Carvalho de Melo wrote:
+> I added this:
+> 
+> Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+> Fixes: 2a81fa3bb5ed ("perf vendor events: Add power8 PMU events")
+> 
+> - Arnaldo
+Sure. Thanks a lot Arnaldo!
 
