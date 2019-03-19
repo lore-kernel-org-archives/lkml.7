@@ -2,169 +2,144 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF78C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB57AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FD52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6D52075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="w98mG47Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfCSOBv (ORCPT
+        id S1727600AbfCSOCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:01:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42907 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCSOBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:01:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 07:01:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,498,1544515200"; 
-   d="scan'208";a="153098151"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2019 07:01:46 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h6FJJ-0005o1-KM; Tue, 19 Mar 2019 16:01:45 +0200
-Date:   Tue, 19 Mar 2019 16:01:45 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Abramov <st5pub@yandex.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Don Mullis <don.mullis@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [RESEND PATCH v2 0/5] lib/sort & lib/list_sort: faster and
- smaller
-Message-ID: <20190319140145.GH9224@smile.fi.intel.com>
-References: <cover.1552704199.git.lkml@sdf.org>
- <cover.1552704200.git.lkml@sdf.org>
+        Tue, 19 Mar 2019 10:02:18 -0400
+Received: from mail-eopbgr800083.outbound.protection.outlook.com ([40.107.80.83]:13332
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726935AbfCSOCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:02:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C1LnOqfUsxY8LbcVF+6OQhU9p3cYpEMi+ZV7T3TVSBk=;
+ b=w98mG47Q7AWA+IUjjHyhlBJ81qdyH9jpuqmkEbHAjwzDMQbvjyIzQez3CSNMS697WHLjHjim3MS7lxFUCbQ7mCOPc1sf3RY2OHhPjRxfwRuPEp/lXyT0kUM+uuP9m+8Z3QrDG5643IFfXQK+X0BlCLLc12Gv2tz1hm+LzyS2e6A=
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
+ BL0PR02MB3761.namprd02.prod.outlook.com (52.132.8.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 14:02:13 +0000
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::dc07:4b0:4a82:392a]) by BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::dc07:4b0:4a82:392a%6]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 14:02:13 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     gregkh <gregkh@linuxfoundation.org>,
+        Michal Simek <michals@xilinx.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH 08/12] misc: xilinx_sdfec: Add ability to get/set config
+Thread-Topic: [PATCH 08/12] misc: xilinx_sdfec: Add ability to get/set config
+Thread-Index: AQHU3kvwaLYIrJ5fl0ia+cFuErscN6YS7FOAgAALFOA=
+Date:   Tue, 19 Mar 2019 14:02:12 +0000
+Message-ID: <BL0PR02MB568116E14DE884145B641504CB400@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1552997064-432700-9-git-send-email-dragan.cvetic@xilinx.com>
+ <CAK8P3a0E_eZb1rSb9suv65n8WUnz-cXhk24aGoR8eNKcHVPtFw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0E_eZb1rSb9suv65n8WUnz-cXhk24aGoR8eNKcHVPtFw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3067047c-b5da-4d4c-0b5e-08d6ac737ca1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:BL0PR02MB3761;
+x-ms-traffictypediagnostic: BL0PR02MB3761:
+x-microsoft-antispam-prvs: <BL0PR02MB37616ADD6F7269F67655FE89CB400@BL0PR02MB3761.namprd02.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(136003)(396003)(39860400002)(199004)(189003)(13464003)(66066001)(4326008)(105586002)(86362001)(6916009)(5660300002)(54906003)(25786009)(106356001)(6116002)(3846002)(97736004)(71200400001)(71190400001)(7696005)(2906002)(316002)(14444005)(256004)(99286004)(8936002)(229853002)(102836004)(186003)(81166006)(81156014)(76176011)(7736002)(6506007)(74316002)(68736007)(305945005)(9686003)(55016002)(52536014)(14454004)(478600001)(8676002)(486006)(26005)(107886003)(6246003)(53936002)(446003)(11346002)(53546011)(6436002)(33656002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB3761;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Wn/nY7V3HYyZZ+VV4kWB/TRpztmwAChT/3K9wZQFcwgwKCaxl6sO668Z6F6fyiZYDjNTH9QzU1x4kAorx1hkSl+EP2k5JKRzU9/C5Gb0YfP5ulsoj+NBqw6t5eAfz3LdiUaTvREjl6caTtPspoNmh0+10WWJPJABmYhf16j/MkIQX8j1HfMQbZOw2BMvpmLpttV7tAsTP8Wacu9WqQKsnGWvm72Izen/GZvm7S+kQBMBpdbcSdXTkai649768ZbnmjYpI0rTVNA3gIFK1LdeM5+zeDHSbMhzfHrwM+oF7Lhu57FL1SlZTp95QTdVZdM/XhJxxLvC7PSzz6VEW/qUkgXPdmy5GeE8V1RwIA+XOC6K+IHQFdC06AdEHD6aHMXkYoQBtfX1L1w4qhO3vBlC0igR9fu51PnEtEM/70ZFIlU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1552704200.git.lkml@sdf.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3067047c-b5da-4d4c-0b5e-08d6ac737ca1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 14:02:12.9407
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3761
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 08:15:56AM +0000, George Spelvin wrote:
-> (Resend because earlier send had GIT_AUTHOR_DATE in the e-mail
-> headers and got filed with last month's archives.  And probably
-> tripped a few spam filters.)
-
-I got both.
-
-> 
-> v1->v2:	Various spelling, naming and code style cleanups.
-> 	Generally positive and no negative responses to the
-> 	goals and algorithms used.
-> 
-> 	I'm running these patches, with CONFIG_TEST_SORT and
-> 	CONFIG_TEST_LIST_SORT, on the machine I'm sending this from.
-> 	I have tweaked the comments further, but I have verified
-> 	the compiled object code is identical to a snapshot I took
-> 	when I rebooted.
-> 
-> 	As far as I'm concerned, this is ready to be merged.
-> 	As there is no owner in MAINTAINERS, I was thinking of
-> 	sending it via AKPM, like the recent lib/lzo changes.
-> 	Andrew, is that okay with you?
-> 
-
-Thanks for this improvement. I like when academic work is used in real life!
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Because CONFIG_RETPOLINE has made indirect calls much more expensive,
-> I thought I'd try to reduce the number made by the library sort
-> functions.
-> 
-> The first three patches apply to lib/sort.c.
-> 
-> Patch #1 is a simple optimization.  The built-in swap has special cases
-> for aligned 4- and 8-byte objects.  But those are almost never used;
-> most calls to sort() work on larger structures, which fall back to the
-> byte-at-a-time loop.  This generalizes them to aligned *multiples* of 4
-> and 8 bytes.  (If nothing else, it saves an awful lot of energy by not
-> thrashing the store buffers as much.)
-> 
-> Patch #2 grabs a juicy piece of low-hanging fruit.  I agree that
-> nice simple solid heapsort is preferable to more complex algorithms
-> (sorry, Andrey), but it's possible to implement heapsort with far fewer
-> comparisons (50% asymptotically, 25-40% reduction for realistic sizes)
-> than the way it's been done up to now.  And with some care, the code
-> ends up smaller, as well.  This is the "big win" patch.
-> 
-> Patch #3 adds the same sort of indirect call bypass that has been added
-> to the net code of late.  The great majority of the callers use the
-> builtin swap functions, so replace the indirect call to sort_func with a
-> (highly preditable) series of if() statements.  Rather surprisingly,
-> this decreased code size, as the swap functions were inlined and their
-> prologue & epilogue code eliminated.
-> 
-> lib/list_sort.c is a bit trickier, as merge sort is already close to
-> optimal, and we don't want to introduce triumphs of theory over
-> practicality like the Ford-Johnson merge-insertion sort.
-> 
-> Patch #4, without changing the algorithm, chops 32% off the code size and
-> removes the part[MAX_LIST_LENGTH+1] pointer array (and the corresponding
-> upper limit on efficiently sortable input size).
-> 
-> Patch #5 improves the algorithm.  The previous code is already optimal
-> for power-of-two (or slightly smaller) size inputs, but when the input
-> size is just over a power of 2, there's a very unbalanced final merge.
-> 
-> There are, in the literature, several algorithms which solve this, but
-> they all depend on the "breadth-first" merge order which was replaced
-> by commit 835cc0c8477f with a more cache-friendly "depth-first" order.
-> Some hard thinking came up with a depth-first algorithm which defers
-> merges as little as possible while avoiding bad merges.  This saves
-> 0.2*n compares, averaged over all sizes.
-> 
-> The code size increase is minimal (64 bytes on x86-64, reducing the net
-> savings to 26%), but the comments expanded significantly to document
-> the clever algorithm.
-> 
-> 
-> TESTING NOTES: I have some ugly user-space benchmarking code
-> which I used for testing before moving this code into the kernel.
-> Shout if you want a copy.
-> 
-> I'm running this code right now, with CONFIG_TEST_SORT and
-> CONFIG_TEST_LIST_SORT, but I confess I haven't rebooted since
-> the last round of minor edits to quell checkpatch.  I figure there
-> will be at least one round of comments and final testing.
-> 
-> George Spelvin (5):
->   lib/sort: Make swap functions more generic
->   lib/sort: Use more efficient bottom-up heapsort variant
->   lib/sort: Avoid indirect calls to built-in swap
->   lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
->   lib/list_sort: Optimize number of calls to comparison function
-> 
->  include/linux/list_sort.h |   1 +
->  lib/list_sort.c           | 244 +++++++++++++++++++++++++---------
->  lib/sort.c                | 266 +++++++++++++++++++++++++++++---------
->  3 files changed, 387 insertions(+), 124 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFubiBb
+bWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFR1ZXNkYXkgMTkgTWFyY2ggMjAxOSAxMzow
+Ng0KPiBUbzogRHJhZ2FuIEN2ZXRpYyA8ZHJhZ2FuY0B4aWxpbnguY29tPg0KPiBDYzogZ3JlZ2to
+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxp
+bnguY29tPjsgTGludXggQVJNIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+
+Ow0KPiBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnPjsgRGVyZWsgS2llcm5hbiA8ZGtpZXJuYW5AeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCAwOC8xMl0gbWlzYzogeGlsaW54X3NkZmVjOiBBZGQgYWJpbGl0eSB0byBnZXQvc2V0
+IGNvbmZpZw0KPiANCj4gT24gVHVlLCBNYXIgMTksIDIwMTkgYXQgMTowNiBQTSBEcmFnYW4gQ3Zl
+dGljIDxkcmFnYW4uY3ZldGljQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IC0gQWRkIGNhcGFiaWxp
+dHkgdG8gZ2V0IFNELUZFQyBjb25maWcgZGF0YSB1c2luZyBpb2N0bA0KPiA+IFhTREZFQ19HRVRf
+Q09ORklHLg0KPiA+DQo+ID4gLSBBZGQgY2FwYWJpbGl0eSB0byBzZXQgU0QtRkVDIGRhdGEgb3Jk
+ZXIgdXNpbmcgaW9jdGwNCj4gPiBTREZFQ19TRVRfT1JERVIuIFRoZSBvcmRlciBvZiBkYXRhIGJs
+b2NrcyBjYW4gY2hhbmdlDQo+ID4gZnJvbSBpbnB1dCB0byBvdXRwdXQgb3IgdG8gYmUgbWFpbnRh
+aW5lZC4NCj4gDQo+IENvbW1lbnRpbmcgaGVyZSBvbmx5IG9uIHRoZSBBQkksIG5vdCB0aGUgYWN0
+dWFsIGJlaGF2aW9yIG9mIHRoZSBkcml2ZXI6DQoNCldpbGwgYmUgcmVtb3ZlZC4NCg0KPiANCj4g
+PiArc3RhdGljIGludCB4c2RmZWNfZ2V0X2NvbmZpZyhzdHJ1Y3QgeHNkZmVjX2RldiAqeHNkZmVj
+LCB2b2lkIF9fdXNlciAqYXJnKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpbnQgZXJyOw0KPiA+ICsN
+Cj4gPiArICAgICAgIGVyciA9IGNvcHlfdG9fdXNlcihhcmcsICZ4c2RmZWMtPmNvbmZpZywgc2l6
+ZW9mKHhzZGZlYy0+Y29uZmlnKSk7DQo+ID4gKyAgICAgICBpZiAoZXJyKSB7DQo+ID4gKyAgICAg
+ICAgICAgICAgIGRldl9lcnIoeHNkZmVjLT5kZXYsICIlcyBmYWlsZWQgZm9yIFNERkVDJWQiLCBf
+X2Z1bmNfXywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB4c2RmZWMtPmNvbmZpZy5mZWNf
+aWQpOw0KPiA+ICsgICAgICAgICAgICAgICBlcnIgPSAtRUZBVUxUOw0KPiA+ICsgICAgICAgfQ0K
+PiANCj4gVHJ5IHRvIGF2b2lkIHByaW50aW5nIGVycm9yIG1lc3NhZ2VzIGZvciB0aGluZ3MgdGhh
+dCBjYW4gYmUgdHJpZ2dlcmVkIGZyb20NCj4gdXNlciBzcGFjZS4NCg0KV2lsbCBiZSByZW1vdmVk
+Lg0KDQo+IA0KPiA+ICBzdGF0aWMgaW50IHhzZGZlY19zZXRfdHVyYm8oc3RydWN0IHhzZGZlY19k
+ZXYgKnhzZGZlYywgdm9pZCBfX3VzZXIgKmFyZykNCj4gPiAgew0KPiA+ICAgICAgICAgc3RydWN0
+IHhzZGZlY190dXJibyB0dXJibzsNCj4gPiBAQCAtNjcwLDYgKzY4Myw2NyBAQCBzdGF0aWMgaW50
+IHhzZGZlY19hZGRfbGRwYyhzdHJ1Y3QgeHNkZmVjX2RldiAqeHNkZmVjLCB2b2lkIF9fdXNlciAq
+YXJnKQ0KPiA+ICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBp
+bnQgeHNkZmVjX3NldF9vcmRlcihzdHJ1Y3QgeHNkZmVjX2RldiAqeHNkZmVjLCB2b2lkIF9fdXNl
+ciAqYXJnKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBib29sIG9yZGVyX2ludmFsaWQ7DQo+ID4gKyAg
+ICAgICBlbnVtIHhzZGZlY19vcmRlciBvcmRlciA9ICooKGVudW0geHNkZmVjX29yZGVyICopYXJn
+KTsNCj4gDQo+IEdlbmVyYWxseSBzcGVha2luZywgeW91IHNob3VsZCBuZXZlciBjYXN0IGJldHdl
+ZW4gX191c2VyIHBvaW50ZXJzDQo+IGFuZCBrZXJuZWwgcG9pbnRlcnMuIEl0IGxvb2tzIGxpa2Ug
+dGhpcyB3aWxsIGFjdHVhbGx5IGRlcmVmZXJlbmNlIGENCj4gX191c2VyIHBvaW50ZXIsIHdoaWNo
+IGlzIGEgc2VjdXJpdHkgaXNzdWUuDQo+IA0KPiBBbm90aGVyIHByb2JsZW0gaXMgdGhhdCB0aGUg
+Y29tbWFuZCBpcyBkZWZpbmVkIGFzDQo+IA0KPiAjZGVmaW5lIFhTREZFQ19TRVRfT1JERVIgX0lP
+VyhYU0RGRUNfTUFHSUMsIDgsIHVuc2lnbmVkIGxvbmcgKikNCj4gDQo+IHdoaWNoIHdvdWxkIGlu
+ZGljYXRlIGFuIGFyZ3VtZW50IG9mIHR5cGUgJ3Vuc2lnbmVkIGxvbmcgX191c2VyICogX191c2Vy
+IConLA0KPiB3aGljaCBpcyBpbmNvbXBhdGlibGUgd2l0aCAnZW51bSB4c2RmZWNfb3JkZXIgX191
+c2VyIConLiBCb3RoIGVudW0NCj4gYW5kIHBvaW50ZXIgdHlwZXMgYXJlIHZhcmlhYmxlIGxlbmd0
+aCBhbmQgc2hvdWxkIGJlIGF2b2lkZWQgaW4NCj4gaW9jdGwgY29tbWFuZHMuIEJlc3QgbWFrZSB0
+aGlzIGEgJ19fdTY0IF9fdXNlciAqJyBvciAnX191MzIgX191c2VyIConLg0KDQpXaWxsIGJlIHVw
+ZGF0ZWQgYXMgcHJvcG9zZWQuDQoNCj4gDQo+ID4gKyAqLw0KPiA+ICsjZGVmaW5lIFhTREZFQ19H
+RVRfQ09ORklHIF9JT1IoWFNERkVDX01BR0lDLCA2LCBzdHJ1Y3QgeHNkZmVjX2NvbmZpZyAqKQ0K
+PiA+ICsvKioNCj4gPiAgICogRE9DOiBYU0RGRUNfR0VUX1RVUkJPDQo+ID4gICAqIEBQYXJhbWV0
+ZXJzDQo+ID4gICAqDQo+ID4gQEAgLTMyMiw0ICszMzUsNDggQEAgeHNkZmVjX2NhbGN1bGF0ZV9z
+aGFyZWRfbGRwY190YWJsZV9lbnRyeV9zaXplKHN0cnVjdCB4c2RmZWNfbGRwY19wYXJhbXMgKmxk
+cGMsDQo+ID4gICAqIGlvY3RsIHRoYXQgcmV0dXJucyBTRC1GRUMgdHVyYm8gcGFyYW0gdmFsdWVz
+DQo+ID4gICAqLw0KPiA+ICAjZGVmaW5lIFhTREZFQ19HRVRfVFVSQk8gX0lPUihYU0RGRUNfTUFH
+SUMsIDcsIHN0cnVjdCB4c2RmZWNfdHVyYm8gKikNCj4gDQo+IEFsc28gd3JvbmcgdHlwZSwgdGhl
+IGZ1bmN0aW9uIHRha2VzIGEgJ3N0cnVjdCB4c2RmZWNfdHVyYm8gX191c2VyIConLCBub3QgYQ0K
+PiAnc3RydWN0IHhzZGZlY190dXJibyBfX3VzZXIgKiBfX3VzZXIgKicsDQoNCldpbGwgYmUgdXBk
+YXRlZCBhcyBwcm9wb3NlZA0KDQo+IA0KPiAgICAgICAgIEFybmQNCg0KVGhhbmsgeW91DQpEcmFn
+YW4NCg==
