@@ -2,71 +2,138 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840C1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C695FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503282075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7542075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfCSQvt (ORCPT
+        id S1727805AbfCSQwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:51:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33054 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSQvs (ORCPT
+        Tue, 19 Mar 2019 12:52:05 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:51607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfCSQwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:51:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i19so14122243pfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:51:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/f64lzHrYZFKV+ReOEeRcDJDyKm3d+6RzF2Rb5xxhB8=;
-        b=o1uK1kgI9X3f3wXslLw59L2lqfIKpZGuyfjosLTvy1W6iI7LL8Q8vGhSznI8AxLK1x
-         GklapWhom9/WcEgyZY+4s7QJGXAcRBZkHDvWsbGC+kDuxOdrHgUoFyEIGTczJ4bbN2wR
-         Jdkk61ntD7PRp/Z+mCow/WdYd2qAo7kkjkHaUFXiI5+j2ByLlgMt/6vLQ0qGE8ADsxRX
-         IYd1+EMx1kGcf6e4NzHNxpnrlfEH3GMvOFtVjqcVYyfWE803BwBRgENQ/RtjBqELbf13
-         cGqLXvF5yMUS8IJIFKdwWlObX8h2w2VKayFa0UvtLn+CaJLgeW+nh0baSWvatTuBCWUQ
-         wirw==
-X-Gm-Message-State: APjAAAWAaxxRxcfX1A8FFGb2TI9KvLt0bcIrM2aA2LljEDb28tpNbwwg
-        MdPzvQTSehjquHZgCotKUYo=
-X-Google-Smtp-Source: APXvYqyx65zEFE5X+SdYhDbK+/6NkjOYRQzZWZmRgB4Vmhn3FZrfwhTOGTmcrSyUS24UE7phppQBgQ==
-X-Received: by 2002:aa7:8d17:: with SMTP id j23mr2934173pfe.62.1553014308104;
-        Tue, 19 Mar 2019 09:51:48 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id h184sm31697774pfc.78.2019.03.19.09.51.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 09:51:47 -0700 (PDT)
-Message-ID: <1553014306.65329.7.camel@acm.org>
-Subject: Re: [PATCH v2 14/19] locking/lockdep: Change type of the element
- field in circular_queue
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Yuyang Du <duyuyang@gmail.com>, peterz@infradead.org,
-        will.deacon@arm.com, mingo@kernel.org
-Cc:     ming.lei@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 09:51:46 -0700
-In-Reply-To: <20190318085733.3143-15-duyuyang@gmail.com>
-References: <20190318085733.3143-1-duyuyang@gmail.com>
-         <20190318085733.3143-15-duyuyang@gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Mar 2019 12:52:04 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N6bo8-1gx9Gh3uwg-0185ri; Tue, 19 Mar 2019 17:51:54 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-api@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+        Laura Abbott <labbott@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Paul Burton <pburton@wavecomp.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
+Date:   Tue, 19 Mar 2019 17:51:09 +0100
+Message-Id: <20190319165123.3967889-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9c6ua1+avFyWCBxiOJ8wr7i2NCjA9m8sxVPnpzEziAPVOqkO9TB
+ jH94v4CaVDwDy2nhKbcoqr2MpO7GnCR1WEiwf3PVc2jX9g55Tw8pndUzp7817pW8cwIcH7f
+ 1l1u+p2vIXD1V+qlThaq6H7uVBIoZBGIasl3cYp2+jst0OeDAQxXMoORN0CxC91tZAQr9XX
+ 0g3vkGop8l6gVFn/V9BZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yN9VZMfyfjw=:tojk5vDX75dpWby3Z9wnf1
+ oBTmAuEbS7qqnmpeEEoeY+wWGsdwOCoNb8jW+sg9BrENNb71xGLUyZO8eoFEu5hJfv9UVGlC8
+ OCy48YS4FY+RLTzbzR1WcBBe3gsLHkq4KSosaV6vPZRQvDepSEFRiWkakK04z6Mu9DjV0fNp7
+ 6HMaOfUmY/vDjnw25FAcOr/iShPOvrJc7+s4veAlV6Xhvig2phEMCWh22XTspo+CtO5bcEFS4
+ rAlJGWYX2+UFcfMwsIKn56PsnkOM+6ZxAZueaGr2gR8knIw2Hg5WsjpZ05Z0qDb4gfdAAP3yS
+ iD1o7op7rFlEu0k/Em3tvEHZR0iRy+thn0L9NoQz54cLV25VTx+kYpTomkz0oJpvK8+fSzJin
+ 9xoDZHl9v8Dm5PIFFcPPIxzL56nPyhH2pXRNV+PxbVN7bBmZPc4VXSXvM5WxSVoLiiWSYO7+N
+ iEqQ/vQs9QxlPB6XIIG3XMCfGECcDuqG5jN4BiKl3/hkNJlw+ucadM/4OvM+Z5tijtHDPLMqJ
+ vmTJMUrfODtiLMlxabMTUBNGFW9UXr6l1pzOOINZWfisncjooX1mJsfkgeAXiJ+wa6kBC47Yp
+ 8FusZPRFE3sGhK/A3b4JBp1gvjie5L9VLprb1xeunv7Zve97k9a0P06bx+lclFBZ/mSP6uFX+
+ JTzuaCiobgZeqHhcrxiLXPMVaaTzLHYZS996H4abmAjM99ruC/0dupN8XeRu3plTUb39+ZZma
+ Rd5wsDQeEQdpgKVV9M1OLV4PjijNOtu3YMkwFA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 16:57 +-0800, Yuyang Du wrote:
-+AD4 The element field is an array in struct circular+AF8-queue to keep track of locks
-+AD4 in the search. Making it the same type as the locks avoids type cast.  Also
-+AD4 fix a typo.
+Florian Weimer points out an issue with including linux/posix_types.h
+from arbitrary other headers: if an application has defined a macro
+named 'fds_bits', it may stop compiling after a change in the kernel
+headers. Since fds_bits is a non-reserved identifier in C, that is
+considered a bug in the kernel headers.
 
-BTW, your patch does more than fixing a typo. This patch elaborates the comment
-above struct circular+AF8-queue. I think the commit message should mention that.
+The structure definition does not really seem to be helpful here,
+as the kernel no longer provides macros to manipulate it.
 
-Bart.
+The only user of the structure that we could find was in libsanitize.
+This usage is actually broken, as discussed in the email thread,
+but this means we cannot just remove the definition from the exported
+headers, but we can use the __kernel_* namespace for it, to avoid
+the namespace conflict. The kernel itself just uses bit operations
+on the typedef without accessing the field by name.
+This change should also help with the many other kernel headers that
+include linux/posix_types.h directly or through linux/types.h.
+
+Similarly, the definition of __kernel_fsid_t uses a structure with
+field identifier 'val' that may have the same problem. Again, user
+space should not rely on the specific field name but instead treat
+an fsid_t as an opaque identifier. I'm using an #ifdef __KERNEL__
+guard here to save us from having to change all kernel code accessing
+the field.
+Glibc has changed this from 'val' to '__val' back in 1996/97 when
+they moved away from using the kernel types directly, it it
+is likely that nothing uses __kernel_fsid_t any more. MIPS still
+has another copy of __kernel_fsid_t, but that is in the process
+of being removed as well.
+
+Link: https://lore.kernel.org/lkml/87a7hvded7.fsf@mid.deneb.enyo.de/
+Link: https://lore.kernel.org/lkml/20190314173900.25454-1-paul.burton@mips.com/
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: Paul Burton <pburton@wavecomp.com>
+Fixes: a623a7a1a567 ("y2038: fix socket.h header inclusion")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+There was another bug report for the same change just now, so
+I wouldn't apply this patch yet before we have fully understood
+the other issue. Sending this for review now since the two
+problems are most likely independent.
+---
+ include/uapi/asm-generic/posix_types.h | 4 ++++
+ include/uapi/linux/posix_types.h       | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/uapi/asm-generic/posix_types.h b/include/uapi/asm-generic/posix_types.h
+index f0733a26ebfc..2a8c68ac88ca 100644
+--- a/include/uapi/asm-generic/posix_types.h
++++ b/include/uapi/asm-generic/posix_types.h
+@@ -77,7 +77,11 @@ typedef __kernel_long_t	__kernel_ptrdiff_t;
+ 
+ #ifndef __kernel_fsid_t
+ typedef struct {
++#ifdef __KERNEL__
+ 	int	val[2];
++#else
++	int	__kernel_val[2];
++#endif
+ } __kernel_fsid_t;
+ #endif
+ 
+diff --git a/include/uapi/linux/posix_types.h b/include/uapi/linux/posix_types.h
+index 9a7a740b35a2..a5a5cfc38bbf 100644
+--- a/include/uapi/linux/posix_types.h
++++ b/include/uapi/linux/posix_types.h
+@@ -23,7 +23,7 @@
+ #define __FD_SETSIZE	1024
+ 
+ typedef struct {
+-	unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
++	unsigned long __kernel_fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
+ } __kernel_fd_set;
+ 
+ /* Type of a signal handler.  */
+-- 
+2.20.0
+
