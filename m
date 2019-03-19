@@ -2,195 +2,159 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EA1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB5820835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AF320857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9OWub+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfCSBKY (ORCPT
+        id S1727251AbfCSBMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 21:10:24 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59520 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726487AbfCSBKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 21:10:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F16309200FB58420DCD5;
-        Tue, 19 Mar 2019 09:10:20 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 09:10:10 +0800
-Subject: Re: [RFC PATCH] KVM: arm/arm64: Enable direct irqfd MSI injection
-To:     Marc Zyngier <marc.zyngier@arm.com>, <eric.auger@redhat.com>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>
-CC:     <christoffer.dall@arm.com>, <andre.przywara@arm.com>,
-        <james.morse@arm.com>, <julien.thierry@arm.com>,
-        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
-        <mst@redhat.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <kvm@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <guoheyi@huawei.com>
-References: <1552833373-19828-1-git-send-email-yuzenghui@huawei.com>
- <86o969z42z.wl-marc.zyngier@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <428b2aac-5a0f-e9da-8d74-8045f99a8c74@huawei.com>
-Date:   Tue, 19 Mar 2019 09:09:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Mon, 18 Mar 2019 21:12:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35778 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfCSBMc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 21:12:32 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j132so11680896oib.2;
+        Mon, 18 Mar 2019 18:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5ewgNApBOMFmKFh+iKZs3KgqIE0F4/W418nT0I54kEY=;
+        b=h9OWub+BErazz2+pibTai77gQV3cnND/vunX2ONcJleEgvNSpI6QdLNjpEBuPvk+tF
+         gXEPRr8QfPUvxKUiK7iLZHJEljsdZFyFqrlert+hPNR76SyZcIMRe3mpNooDAaF4nlP0
+         Zz9Rt5phMOnHTPk3c/DPorpWC+WW+scYPPvj1n6PkVzywD/1kxC+kUdWDEMh+lVir2ux
+         /xB0AJ8JCyT76+On1+ta0IXNLMTAuz6cJi+g7dUlOMHlSV+3KFV86tUVM1R0euwWW9Ni
+         fYV29jRwo8aO6KFLwlWwNhOsZZmNdiKgb2f/oCNJKs2yr1FfaE+iPYMYtNF+u6UFIDOT
+         a07A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5ewgNApBOMFmKFh+iKZs3KgqIE0F4/W418nT0I54kEY=;
+        b=Vc1q3Pnxmowym1Py3xCURvPe1WL/FFlBdpF9FFTr5lwKNX0Ld/4YIui2RPGOYRwoXe
+         7gGs12A0paBVCT7XrWtd5FI3bpjxEZxFAol14S1UfxfdIaMtFjbvpyVr07OncJKeMI3h
+         A+jp2jXSQXgkZTAm0cjMTAX+vnDIDEHoAUsClBlP+lADAAYzC5cJKVUcbMjU5dmkNZ+m
+         g8c2zr0W8usxetd8GVeD2CQfy0X5/e3AExIClBLaEacM0NTmZUcSRE47lhekLu3IJYEJ
+         Pq/Z17mMWJ30mbvDTE0taENtvmG8xpuXRDXewnc+IyEvjzki0gEBFkQSlKG9eSxNLSU4
+         B0kA==
+X-Gm-Message-State: APjAAAVqm7jjgdRNO51k5RwCxG38pgQqtREZuTVfo2EbQfZ7Ew/XHLwf
+        K9lbMtD+Xd5gU3wmD/TS9cA=
+X-Google-Smtp-Source: APXvYqxPv3SQNVha1YP9zXUhrNV6/FKSQhqwOd5Ft8RTwv8hKgl8Kr/RO4RzAGVnQrNimxzbNYLBGQ==
+X-Received: by 2002:aca:d513:: with SMTP id m19mr245407oig.73.1552957951926;
+        Mon, 18 Mar 2019 18:12:31 -0700 (PDT)
+Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id j18sm1722353otq.68.2019.03.18.18.12.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 18:12:30 -0700 (PDT)
+From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To:     bhelgaas@google.com
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/LINK: bw_notification: Do not leave interrupt handler NULL
+Date:   Mon, 18 Mar 2019 20:12:04 -0500
+Message-Id: <20190319011214.7847-1-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <CAHk-=wgM-5WfPW9LNHGfc1RxjVbDvHZqNfxyLVRSPP0R4jetDg@mail.gmail.com>
+References: <CAHk-=wgM-5WfPW9LNHGfc1RxjVbDvHZqNfxyLVRSPP0R4jetDg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <86o969z42z.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+A threaded IRQ with a NULL handler does not work with level-triggered
+interrupts. request_threaded_irq() will return an error:
 
-On 2019/3/18 3:35, Marc Zyngier wrote:
-> On Sun, 17 Mar 2019 14:36:13 +0000,
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
->>
->> Currently, IRQFD on arm still uses the deferred workqueue mechanism
->> to inject interrupts into guest, which will likely lead to a busy
->> context-switching from/to the kworker thread. This overhead is for
->> no purpose (only in my view ...) and will result in an interrupt
->> performance degradation.
->>
->> Implement kvm_arch_set_irq_inatomic() for arm/arm64 to support direct
->> irqfd MSI injection, by which we can get rid of the annoying latency.
->> As a result, irqfd MSI intensive scenarios (e.g., DPDK with high packet
->> processing workloads) will benefit from it.
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>
->> It seems that only MSI will follow the IRQFD path, did I miss something?
->>
->> This patch is still under test and sent out for early feedback. If I have
->> any mis-understanding, please fix me up and let me know. Thanks!
-> 
-> As mentioned by other folks in the thread, this is clearly wrong. The
-> first thing kvm_inject_msi does is to lock the corresponding ITS using
-> a mutex. So the "no purpose" bit was a bit too quick.
-> 
-> When doing this kind of work, I suggest you enable lockdep and all the
-> related checkers. Also, for any optimisation, please post actual
-> numbers for the relevant benchmarks. Saying "application X will
-> benefit from it" is meaningless without any actual data.
-> 
->>
->> ---
->>   virt/kvm/arm/vgic/trace.h      | 22 ++++++++++++++++++++++
->>   virt/kvm/arm/vgic/vgic-irqfd.c | 21 +++++++++++++++++++++
->>   2 files changed, 43 insertions(+)
->>
->> diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
->> index 55fed77..bc1f4db 100644
->> --- a/virt/kvm/arm/vgic/trace.h
->> +++ b/virt/kvm/arm/vgic/trace.h
->> @@ -27,6 +27,28 @@
->>   		  __entry->vcpu_id, __entry->irq, __entry->level)
->>   );
->>   
->> +TRACE_EVENT(kvm_arch_set_irq_inatomic,
->> +	TP_PROTO(u32 gsi, u32 type, int level, int irq_source_id),
->> +	TP_ARGS(gsi, type, level, irq_source_id),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(	u32,	gsi		)
->> +		__field(	u32,	type		)
->> +		__field(	int,	level		)
->> +		__field(	int,	irq_source_id	)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->gsi		= gsi;
->> +		__entry->type		= type;
->> +		__entry->level		= level;
->> +		__entry->irq_source_id	= irq_source_id;
->> +	),
->> +
->> +	TP_printk("gsi %u type %u level %d source %d", __entry->gsi,
->> +		  __entry->type, __entry->level, __entry->irq_source_id)
->> +);
->> +
->>   #endif /* _TRACE_VGIC_H */
->>   
->>   #undef TRACE_INCLUDE_PATH
->> diff --git a/virt/kvm/arm/vgic/vgic-irqfd.c b/virt/kvm/arm/vgic/vgic-irqfd.c
->> index 99e026d..4cfc3f4 100644
->> --- a/virt/kvm/arm/vgic/vgic-irqfd.c
->> +++ b/virt/kvm/arm/vgic/vgic-irqfd.c
->> @@ -19,6 +19,7 @@
->>   #include <trace/events/kvm.h>
->>   #include <kvm/arm_vgic.h>
->>   #include "vgic.h"
->> +#include "trace.h"
->>   
->>   /**
->>    * vgic_irqfd_set_irq: inject the IRQ corresponding to the
->> @@ -105,6 +106,26 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
->>   	return vgic_its_inject_msi(kvm, &msi);
->>   }
->>   
->> +/**
->> + * kvm_arch_set_irq_inatomic: fast-path for irqfd injection
->> + *
->> + * Currently only direct MSI injecton is supported.
->> + */
->> +int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
->> +			      struct kvm *kvm, int irq_source_id, int level,
->> +			      bool line_status)
->> +{
->> +	int ret;
->> +
->> +	trace_kvm_arch_set_irq_inatomic(e->gsi, e->type, level, irq_source_id);
->> +
->> +	if (unlikely(e->type != KVM_IRQ_ROUTING_MSI))
->> +		return -EWOULDBLOCK;
->> +
->> +	ret = kvm_set_msi(e, kvm, irq_source_id, level, line_status);
->> +	return ret;
->> +}
->> +
-> 
-> Although we've established that the approach is wrong, maybe we can
-> look at improving this aspect.
-> 
-> A first approach would be to keep a small cache of the last few
-> successful translations for this ITS, cache that could be looked-up by
-> holding a spinlock instead. A hit in this cache could directly be
-> injected. Any command that invalidates or changes anything (DISCARD,
-> INV, INVALL, MAPC with V=0, MAPD with V=0, MOVALL, MOVI) should nuke
-> the cache altogether.
-> 
-> Of course, all of that needs to be quantified.
+  genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 16
+  pcie_bw_notification: probe of 0000:00:1b.0:pcie010 failed with error -22
 
-Thanks for all of your explanations, especially for Marc's suggestions!
-It took me long time to figure out my mistakes, since I am not very
-familiar with the locking stuff. Now I have to apologize for my noise.
+For level interrupts we need to silence the interrupt before exiting
+the IRQ handler, so just clear the PCI_EXP_LNKSTA_LBMS bit there.
 
-As for the its-translation-cache code (a really good news to us), we
-have a rough look at it and start testing now!
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+---
 
+OOPS! I'm sorry for the noise. Here's the fix.
 
-thanks,
+I was able to test this on edge-triggered interrupts. None of my
+machines have PCIe ports that use level-triggered interrupts. This
+might not be too straightforward to test without a hardware yanker,
+but if there's a way to force a specific interrupt to be level
+triggered, I could do the testing on my end.
 
-zenghui
+ drivers/pci/pcie/bw_notification.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-> 
-> Thanks,
-> 
-> 	M.
-> 
+diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
+index d2eae3b7cc0f..001d6253ad48 100644
+--- a/drivers/pci/pcie/bw_notification.c
++++ b/drivers/pci/pcie/bw_notification.c
+@@ -44,11 +44,10 @@ static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
+ 	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
+ }
+ 
+-static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
++static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
+ {
+ 	struct pcie_device *srv = context;
+ 	struct pci_dev *port = srv->port;
+-	struct pci_dev *dev;
+ 	u16 link_status, events;
+ 	int ret;
+ 
+@@ -58,6 +57,17 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+ 	if (ret != PCIBIOS_SUCCESSFUL || !events)
+ 		return IRQ_NONE;
+ 
++	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
++	return IRQ_WAKE_THREAD;
++}
++
++static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
++{
++	struct pcie_device *srv = context;
++	struct pci_dev *port = srv->port;
++	struct pci_dev *dev;
++	u16 link_status;
++
+ 	/*
+ 	 * Print status from downstream devices, not this root port or
+ 	 * downstream switch port.
+@@ -67,8 +77,8 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+ 		__pcie_print_link_status(dev, false);
+ 	up_read(&pci_bus_sem);
+ 
++	pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
+ 	pcie_update_link_speed(port->subordinate, link_status);
+-	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -80,7 +90,8 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
+ 	if (!pcie_link_bandwidth_notification_supported(srv->port))
+ 		return -ENODEV;
+ 
+-	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
++	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
++				   pcie_bw_notification_handler,
+ 				   IRQF_SHARED, "PCIe BW notif", srv);
+ 	if (ret)
+ 		return ret;
+-- 
+2.19.2
 
