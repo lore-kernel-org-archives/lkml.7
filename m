@@ -2,274 +2,147 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1950AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E68C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04DB2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32352075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfCSTPu (ORCPT
+        id S1727177AbfCSTSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 15:15:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:65137 "EHLO mga01.intel.com"
+        Tue, 19 Mar 2019 15:18:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48942 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbfCSTPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 15:15:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 12:15:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
-   d="scan'208";a="153189212"
-Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2019 12:15:47 -0700
-Subject: [PATCH] x86/mpx: fix recursive munmap() corruption
-To:     linux-kernel@vger.kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>
-From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Tue, 19 Mar 2019 12:09:17 -0700
-Message-Id: <20190319190917.4FD4E77C@viggo.jf.intel.com>
+        id S1726753AbfCSTSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 15:18:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8069C307EA87;
+        Tue, 19 Mar 2019 19:18:52 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CA676ACE0;
+        Tue, 19 Mar 2019 19:18:51 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 15:18:49 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+Message-ID: <20190319191849.GA4310@redhat.com>
+References: <20190318170404.GA6786@redhat.com>
+ <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+ <20190319165802.GA3656@redhat.com>
+ <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+ <20190319171847.GC3656@redhat.com>
+ <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
+ <20190319174552.GA3769@redhat.com>
+ <CAPcyv4hFPOO0-=v3ZCNFA=LgE_QCvyFXGqF24Crveoj_NTbq0Q@mail.gmail.com>
+ <20190319190528.GA4012@redhat.com>
+ <CAPcyv4hg5Y_NC1iu56zcznYkCRnwg+_7bGFr==7=AC6ii=O=Ng@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4hg5Y_NC1iu56zcznYkCRnwg+_7bGFr==7=AC6ii=O=Ng@mail.gmail.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 19 Mar 2019 19:18:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 12:13:40PM -0700, Dan Williams wrote:
+> On Tue, Mar 19, 2019 at 12:05 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Tue, Mar 19, 2019 at 11:42:00AM -0700, Dan Williams wrote:
+> > > On Tue, Mar 19, 2019 at 10:45 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > >
+> > > > On Tue, Mar 19, 2019 at 10:33:57AM -0700, Dan Williams wrote:
+> > > > > On Tue, Mar 19, 2019 at 10:19 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > > >
+> > > > > > On Tue, Mar 19, 2019 at 10:12:49AM -0700, Andrew Morton wrote:
+> > > > > > > On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > > [..]
+> > > > > > > Also, the discussion regarding [07/10] is substantial and is ongoing so
+> > > > > > > please let's push along wth that.
+> > > > > >
+> > > > > > I can move it as last patch in the serie but it is needed for ODP RDMA
+> > > > > > convertion too. Otherwise i will just move that code into the ODP RDMA
+> > > > > > code and will have to move it again into HMM code once i am done with
+> > > > > > the nouveau changes and in the meantime i expect other driver will want
+> > > > > > to use this 2 helpers too.
+> > > > >
+> > > > > I still hold out hope that we can find a way to have productive
+> > > > > discussions about the implementation of this infrastructure.
+> > > > > Threatening to move the code elsewhere to bypass the feedback is not
+> > > > > productive.
+> > > >
+> > > > I am not threatening anything that code is in ODP _today_ with that
+> > > > patchset i was factering it out so that i could also use it in nouveau.
+> > > > nouveau is built in such way that right now i can not use it directly.
+> > > > But i wanted to factor out now in hope that i can get the nouveau
+> > > > changes in 5.2 and then convert nouveau in 5.3.
+> > > >
+> > > > So when i said that code will be in ODP it just means that instead of
+> > > > removing it from ODP i will keep it there and it will just delay more
+> > > > code sharing for everyone.
+> > >
+> > > The point I'm trying to make is that the code sharing for everyone is
+> > > moving the implementation closer to canonical kernel code and use
+> > > existing infrastructure. For example, I look at 'struct hmm_range' and
+> > > see nothing hmm specific in it. I think we can make that generic and
+> > > not build up more apis and data structures in the "hmm" namespace.
+> >
+> > Right now i am trying to unify driver for device that have can support
+> > the mmu notifier approach through HMM. Unify to a superset of driver
+> > that can not abide by mmu notifier is on my todo list like i said but
+> > it comes after. I do not want to make the big jump in just one go. So
+> > i doing thing under HMM and thus in HMM namespace, but once i tackle
+> > the larger set i will move to generic namespace what make sense.
+> >
+> > This exact approach did happen several time already in the kernel. In
+> > the GPU sub-system we did it several time. First do something for couple
+> > devices that are very similar then grow to a bigger set of devices and
+> > generalise along the way.
+> >
+> > So i do not see what is the problem of me repeating that same pattern
+> > here again. Do something for a smaller set before tackling it on for
+> > a bigger set.
+> 
+> All of that is fine, but when I asked about the ultimate trajectory
+> that replaces hmm_range_dma_map() with an updated / HMM-aware GUP
+> implementation, the response was that hmm_range_dma_map() is here to
+> stay. The issue is not with forking off a small side effort, it's the
+> plan to absorb that capability into a common implementation across
+> non-HMM drivers where possible.
 
-This is a bit of a mess, to put it mildly.  But, it's a bug
-that seems to have gone unticked up to now, probably because
-nobody uses MPX.  The other alternative to this fix is to just
-deprecate MPX, even in -stable kernels.
+hmm_range_dma_map() is a superset of gup_range_dma_map() because on
+top of gup_range_dma_map() the hmm version deals with mmu notifier.
 
-MPX has the arch_unmap() hook inside of munmap() because MPX
-uses bounds tables that protect other areas of memory.  When
-memory is unmapped, there is also a need to unmap the MPX
-bounds tables.  Barring this, unused bounds tables can eat 80%
-of the address space.
+But everything that is not mmu notifier related can be share through
+gup_range_dma_map() so plan is to end up with:
+    hmm_range_dma_map(hmm_struct) {
+        hmm_mmu_notifier_specific_prep_step();
+        gup_range_dma_map(hmm_struct->common_base_struct);
+        hmm_mmu_notifier_specific_post_step();
+    }
 
-But, the recursive do_munmap() that gets called vi arch_unmap()
-wreaks havoc with __do_munmap()'s state.  It can result in
-freeing populated page tables, accessing bogus VMA state,
-double-freed VMAs and more.
+ie share as much as possible. Does that not make sense ? To get
+there i will need to do non trivial addition to GUP and so i went
+first to get HMM bits working and then work on common gup API.
 
-To fix this, call arch_unmap() before __do_unmap() has a chance
-to do anything meaningful.  Also, remove the 'vma' argument
-and force the MPX code to do its own, independent VMA lookup.
-
-For the common success case this is functionally identical to
-what was there before.  For the munmap() failure case, it's
-possible that some MPX tables will be zapped for memory that
-continues to be in use.  But, this is an extraordinarily
-unlikely scenario and the harm would be that MPX provides no
-protection since the bounds table got reset (zeroed).
-
-I can't imagine anyone doing this:
-
-	ptr = mmap();
-	// use ptr
-	ret = munmap(ptr);
-	if (ret)
-		// oh, there was an error, I'll
-		// keep using ptr.
-
-Because if you're doing munmap(), you are *done* with the
-memory.  There's probably no good data in there _anyway_.
-
-This passes the original reproducer from Richard Biener as
-well as the existing mpx selftests/.
-
-====
-
-The long story:
-
-munmap() has a couple of pieces:
-1. Find the affected VMA(s)
-2. Split the start/end one(s) if neceesary
-3. Pull the VMAs out of the rbtree
-4. Actually zap the memory via unmap_region(), including
-   freeing page tables (or queueing them to be freed).
-5. Fixup some of the accounting (like fput()) and actually
-   free the VMA itself.
-
-I decided to put the arch_unmap() call right afer #3.  This
-was *just* before mmap_sem looked like it might get downgraded
-(it won't in this context), but it looked right.  It wasn't.
-
-Richard Biener reported a test that shows this in dmesg:
-
-[1216548.787498] BUG: Bad rss-counter state mm:0000000017ce560b idx:1 val:551
-[1216548.787500] BUG: non-zero pgtables_bytes on freeing mm: 24576
-
-What triggered this was the recursive do_munmap() called via
-arch_unmap().  It was freeing page tables that has not been
-properly zapped.
-
-But, the problem was bigger than this.  For one, arch_unmap()
-can free VMAs.  But, the calling __do_munmap() has variables
-that *point* to VMAs and obviously can't handle them just
-getting freed while the pointer is still valid.
-
-I tried a couple of things here.  First, I tried to fix the page
-table freeing problem in isolation, but I then found the VMA
-issue.  I also tried having the MPX code return a flag if it
-modified the rbtree which would force __do_munmap() to re-walk
-to restart.  That spiralled out of control in complexity pretty
-fast.
-
-Just moving arch_unmap() and accepting that the bonkers failure
-case might eat some bounds tables seems like the simplest viable
-fix.
-
-Reported-by: Richard Biener <rguenther@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-
-
----
-
- b/arch/x86/include/asm/mmu_context.h |    6 +++---
- b/arch/x86/include/asm/mpx.h         |    5 ++---
- b/arch/x86/mm/mpx.c                  |   10 ++++++----
- b/include/asm-generic/mm_hooks.h     |    1 -
- b/mm/mmap.c                          |   15 ++++++++-------
- 5 files changed, 19 insertions(+), 18 deletions(-)
-
-diff -puN mm/mmap.c~mpx-rss-pass-no-vma mm/mmap.c
---- a/mm/mmap.c~mpx-rss-pass-no-vma	2019-03-19 08:25:53.632199040 -0700
-+++ b/mm/mmap.c	2019-03-19 08:36:39.847197428 -0700
-@@ -2731,9 +2731,17 @@ int __do_munmap(struct mm_struct *mm, un
- 		return -EINVAL;
- 
- 	len = PAGE_ALIGN(len);
-+	end = start + len;
- 	if (len == 0)
- 		return -EINVAL;
- 
-+	/*
-+	 * arch_unmap() might do unmaps itself.  It must be called
-+	 * and finish any rbtree manipulation before this code
-+	 * runs and also starts to manipulate the rbtree.
-+	 */
-+	arch_unmap(mm, start, end);
-+
- 	/* Find the first overlapping VMA */
- 	vma = find_vma(mm, start);
- 	if (!vma)
-@@ -2742,7 +2750,6 @@ int __do_munmap(struct mm_struct *mm, un
- 	/* we have  start < vma->vm_end  */
- 
- 	/* if it doesn't overlap, we have nothing.. */
--	end = start + len;
- 	if (vma->vm_start >= end)
- 		return 0;
- 
-@@ -2812,12 +2819,6 @@ int __do_munmap(struct mm_struct *mm, un
- 	/* Detach vmas from rbtree */
- 	detach_vmas_to_be_unmapped(mm, vma, prev, end);
- 
--	/*
--	 * mpx unmap needs to be called with mmap_sem held for write.
--	 * It is safe to call it before unmap_region().
--	 */
--	arch_unmap(mm, vma, start, end);
--
- 	if (downgrade)
- 		downgrade_write(&mm->mmap_sem);
- 
-diff -puN arch/x86/include/asm/mmu_context.h~mpx-rss-pass-no-vma arch/x86/include/asm/mmu_context.h
---- a/arch/x86/include/asm/mmu_context.h~mpx-rss-pass-no-vma	2019-03-19 08:25:53.636199040 -0700
-+++ b/arch/x86/include/asm/mmu_context.h	2019-03-19 08:26:28.367198953 -0700
-@@ -277,8 +277,8 @@ static inline void arch_bprm_mm_init(str
- 	mpx_mm_init(mm);
- }
- 
--static inline void arch_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
--			      unsigned long start, unsigned long end)
-+static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
-+			      unsigned long end)
- {
- 	/*
- 	 * mpx_notify_unmap() goes and reads a rarely-hot
-@@ -298,7 +298,7 @@ static inline void arch_unmap(struct mm_
- 	 * consistently wrong.
- 	 */
- 	if (unlikely(cpu_feature_enabled(X86_FEATURE_MPX)))
--		mpx_notify_unmap(mm, vma, start, end);
-+		mpx_notify_unmap(mm, start, end);
- }
- 
- /*
-diff -puN include/asm-generic/mm_hooks.h~mpx-rss-pass-no-vma include/asm-generic/mm_hooks.h
---- a/include/asm-generic/mm_hooks.h~mpx-rss-pass-no-vma	2019-03-19 08:25:53.638199040 -0700
-+++ b/include/asm-generic/mm_hooks.h	2019-03-19 08:26:36.291198934 -0700
-@@ -18,7 +18,6 @@ static inline void arch_exit_mmap(struct
- }
- 
- static inline void arch_unmap(struct mm_struct *mm,
--			struct vm_area_struct *vma,
- 			unsigned long start, unsigned long end)
- {
- }
-diff -puN arch/x86/mm/mpx.c~mpx-rss-pass-no-vma arch/x86/mm/mpx.c
---- a/arch/x86/mm/mpx.c~mpx-rss-pass-no-vma	2019-03-19 08:25:53.639199040 -0700
-+++ b/arch/x86/mm/mpx.c	2019-03-19 08:29:11.161198547 -0700
-@@ -881,9 +881,10 @@ static int mpx_unmap_tables(struct mm_st
-  * the virtual address region start...end have already been split if
-  * necessary, and the 'vma' is the first vma in this range (start -> end).
-  */
--void mpx_notify_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
--		unsigned long start, unsigned long end)
-+void mpx_notify_unmap(struct mm_struct *mm, unsigned long start,
-+		      unsigned long end)
- {
-+       	struct vm_area_struct *vma;
- 	int ret;
- 
- 	/*
-@@ -902,11 +903,12 @@ void mpx_notify_unmap(struct mm_struct *
- 	 * which should not occur normally. Being strict about it here
- 	 * helps ensure that we do not have an exploitable stack overflow.
- 	 */
--	do {
-+	vma = find_vma(mm, start);
-+	while (vma && vma->vm_start < end) {
- 		if (vma->vm_flags & VM_MPX)
- 			return;
- 		vma = vma->vm_next;
--	} while (vma && vma->vm_start < end);
-+	}
- 
- 	ret = mpx_unmap_tables(mm, start, end);
- 	if (ret)
-diff -puN arch/x86/include/asm/mpx.h~mpx-rss-pass-no-vma arch/x86/include/asm/mpx.h
---- a/arch/x86/include/asm/mpx.h~mpx-rss-pass-no-vma	2019-03-19 08:29:14.788198538 -0700
-+++ b/arch/x86/include/asm/mpx.h	2019-03-19 08:29:43.974198466 -0700
-@@ -78,8 +78,8 @@ static inline void mpx_mm_init(struct mm
- 	 */
- 	mm->context.bd_addr = MPX_INVALID_BOUNDS_DIR;
- }
--void mpx_notify_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
--		      unsigned long start, unsigned long end);
-+void mpx_notify_unmap(struct mm_struct *mm, unsigned long start,
-+		unsigned long end);
- 
- unsigned long mpx_unmapped_area_check(unsigned long addr, unsigned long len,
- 		unsigned long flags);
-@@ -100,7 +100,6 @@ static inline void mpx_mm_init(struct mm
- {
- }
- static inline void mpx_notify_unmap(struct mm_struct *mm,
--				    struct vm_area_struct *vma,
- 				    unsigned long start, unsigned long end)
- {
- }
-_
+Cheers,
+Jérôme
