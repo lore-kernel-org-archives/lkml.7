@@ -2,110 +2,117 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7CEC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA73C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BC220811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A02120811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BPIH7qym"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="CDRaOIDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfCSSjG (ORCPT
+        id S1727079AbfCSSmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:39:06 -0400
-Received: from mail-eopbgr770077.outbound.protection.outlook.com ([40.107.77.77]:36233
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726707AbfCSSjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:39:06 -0400
+        Tue, 19 Mar 2019 14:42:11 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39812 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfCSSmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 14:42:11 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f10so11271748otb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dDWNT5ZqH82SeoEY+Q4G+44H2sk0nwdhJLWcgtYgzLE=;
- b=BPIH7qym84Si+nYt+rDUYpTnRWWzpmVpZuMuJHyoeacmnbhi7m03g7sbdWTvcJ3twYH07CSuXe8rJQJ+CrT4lsXJOmHqckONaGUj4L5/t1xtHxXBRP4htiyi2iEtmTwGRTg+uSpzha71w9qUp/Dvf8SdM71pFSA4GEP8GSi10xw=
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.38.138) by
- DM5PR12MB1609.namprd12.prod.outlook.com (10.172.40.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Tue, 19 Mar 2019 18:39:03 +0000
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::890d:8adb:6785:6ca1]) by DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::890d:8adb:6785:6ca1%4]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 18:39:03 +0000
-From:   Gary R Hook <ghook@amd.com>
-To:     Yue Haibing <yuehaibing@huawei.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH -next] crypto: ccp - Make ccp_register_rsa_alg static
-Thread-Topic: [PATCH -next] crypto: ccp - Make ccp_register_rsa_alg static
-Thread-Index: AQHU3lrX/0EQ9IIfOketOsF+tKHOnKYTSVMA
-Date:   Tue, 19 Mar 2019 18:39:03 +0000
-Message-ID: <595b4fe4-acf1-97fc-c49d-5d3be2d83284@amd.com>
-References: <20190319135035.22056-1-yuehaibing@huawei.com>
-In-Reply-To: <20190319135035.22056-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR06CA0019.namprd06.prod.outlook.com
- (2603:10b6:805:8e::32) To DM5PR12MB1449.namprd12.prod.outlook.com
- (2603:10b6:4:d::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bdacd4c4-0fc6-4f99-1bd9-08d6ac9a28b0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DM5PR12MB1609;
-x-ms-traffictypediagnostic: DM5PR12MB1609:
-x-microsoft-antispam-prvs: <DM5PR12MB1609ABD67E2522F6E4884984FD400@DM5PR12MB1609.namprd12.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(366004)(39860400002)(136003)(189003)(199004)(2501003)(7736002)(53546011)(76176011)(36756003)(81166006)(26005)(81156014)(8676002)(8936002)(305945005)(110136005)(4326008)(97736004)(25786009)(102836004)(3846002)(186003)(6506007)(6116002)(54906003)(52116002)(316002)(386003)(14454004)(68736007)(53936002)(2906002)(105586002)(6246003)(99286004)(478600001)(446003)(66066001)(229853002)(486006)(72206003)(6486002)(31686004)(106356001)(4744005)(5660300002)(6512007)(71200400001)(6436002)(31696002)(14444005)(71190400001)(2616005)(256004)(476003)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1609;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fvxyf9vWlev6ljOf6RR9WTFJW2YVhxvVaWks71uVg33v5N/rGjgaVyPqRF/4HnVMlRPyoQhM77B+K7cNrFwQSsIB+Wwd9PblvtK4vtF5hQsU1bBsKcebnBvy1BCrmx4uCV7T+VMkZppq/FprTEXas7LDZufeKGpQTj+7lAq+mH5Cm4u8FlP8jOSkvFK0gGtE4Kuf1v7sp1xxWTvZnhpPuKcXQdwhmsgzy7pP+zUzSLwqxh9ZHrF6+uszLqNXEH3aCg3nWmSf9xjlqSxMw1rAt6hz/pbe+0AvMKcL+oNCfmWnjwmjE5hWUgjeHozLkGKokevYhquTeHBHIrNHgPx4IjQ4gtE2HZ666Mvvg8CERveB5MWC4H0wYARRQktG6OCT+56JkEXlWzKxDzc3EPsufuI6zJx108Ou2cXOGJf7dWY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4E212AAE6B8538458CD8A73859BCB65C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FWxmWiMBWpI9PbQuON8dITDlnyzakUDvlB+9hBH1Ids=;
+        b=CDRaOIDr7xEbWdkSWHxkSt92zwgalV46Gy1oD8i1LIvOi7IbJAf6KZa6N+ffH9Y8vP
+         xttdPrp5cEdzGBKDYbSE0mqgkFZXnu6mnC4uTzRWIUsFOcVCQnSoX+/BJ+yB8sxj0crp
+         WHtiyXiOP51RdMLhdhqQ65UDDyPeZHHLpSElmKfrWJL53Ukntprdm52hpjnoYnHpPGNF
+         jrP5MMkZT4/+HDIXeuG3a0k+sa+gcalCFRuEA9qOCuvRKxtzkr/X4zIfEhDcM8Lo+QDR
+         ySabqrj0PvLlNkldased5jAwHXmzaW+EXT+zkIaKWEIpD+S1kEHQmENLzU9DFKi7//b/
+         xjhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FWxmWiMBWpI9PbQuON8dITDlnyzakUDvlB+9hBH1Ids=;
+        b=FyoWV1FztaFm71j+R74coWVH5HLmATp01XuCEHJgt403/0K6+aOhg39NnNHEWYn23H
+         9AdmUYRZb3u15ozmRSzNBHGRI7MEOI4+wzI9PRDntQxIXS+15jKBgSYYUi5f2P9v6o9x
+         Ir5tprZ5qMRcmA1SsHa1yHsv3Tuf6hfo5du2YA4dHfTikzdTtYxzWM2//mzJt0t11QtU
+         Of9jxPU6+t7bfOfgPi0/uTzU58vueoTpuTqJ0Cql7tJesallriO1f6OFFuoc2Bs2G79E
+         cS1EUZVFP1y6Hed3VBFtlV2NRcAEnPZzuRzQazvw6rJ27o22Uyn30wd1oSMxbJY6qtxu
+         IkRA==
+X-Gm-Message-State: APjAAAXagveMUl8S5B/iJPExexNuiFNcEiluCZ2WIMpYQ2pTRUz9DN9b
+        w4fttsuQ9FFLAWqGqHde+Dkmw/hquG0zCH8yDYOHXA==
+X-Google-Smtp-Source: APXvYqyahvBwQYIcUDTqr0Q4YyUcML89NFCLSqd+Kz3QIKSS3JZTj1jVT4LvJzG7zKr8/In8vsgYSeZhBPIbrQOkTBI=
+X-Received: by 2002:a9d:4d0b:: with SMTP id n11mr2080569otf.98.1553020930814;
+ Tue, 19 Mar 2019 11:42:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdacd4c4-0fc6-4f99-1bd9-08d6ac9a28b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 18:39:03.3229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1609
+References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
+ <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+ <20190318170404.GA6786@redhat.com> <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+ <20190319165802.GA3656@redhat.com> <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+ <20190319171847.GC3656@redhat.com> <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
+ <20190319174552.GA3769@redhat.com>
+In-Reply-To: <20190319174552.GA3769@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 Mar 2019 11:42:00 -0700
+Message-ID: <CAPcyv4hFPOO0-=v3ZCNFA=LgE_QCvyFXGqF24Crveoj_NTbq0Q@mail.gmail.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy8xOS8xOSA4OjUwIEFNLCBZdWUgSGFpYmluZyB3cm90ZToNCj4gRnJvbTogWXVlSGFpYmlu
-ZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KPiANCj4gRml4IHNwYXJzZSB3YXJuaW5nOg0KPiAN
-Cj4gZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1jcnlwdG8tcnNhLmM6MjUxOjU6DQo+ICAgd2Fybmlu
-Zzogc3ltYm9sICdjY3BfcmVnaXN0ZXJfcnNhX2FsZycgd2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxk
-IGl0IGJlIHN0YXRpYz8NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJp
-bmdAaHVhd2VpLmNvbT4NCg0KQWNrZWQtYnk6IEdhcnkgUiBIb29rIDxnYXJ5Lmhvb2tAYW1kLmNv
-bS4NCg0KPiAtLS0NCj4gICBkcml2ZXJzL2NyeXB0by9jY3AvY2NwLWNyeXB0by1yc2EuYyB8IDMg
-KystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL2NjcC9jY3AtY3J5cHRvLXJzYS5jIGIv
-ZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1jcnlwdG8tcnNhLmMNCj4gaW5kZXggMDU4NTBkZi4uMGI4
-YWFiMDAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY3J5cHRvL2NjcC9jY3AtY3J5cHRvLXJzYS5j
-DQo+ICsrKyBiL2RyaXZlcnMvY3J5cHRvL2NjcC9jY3AtY3J5cHRvLXJzYS5jDQo+IEBAIC0yNDgs
-NyArMjQ4LDggQEAgc3RhdGljIHN0cnVjdCBjY3BfcnNhX2RlZiByc2FfYWxnc1tdID0gew0KPiAg
-IAl9DQo+ICAgfTsNCj4gICANCj4gLWludCBjY3BfcmVnaXN0ZXJfcnNhX2FsZyhzdHJ1Y3QgbGlz
-dF9oZWFkICpoZWFkLCBjb25zdCBzdHJ1Y3QgY2NwX3JzYV9kZWYgKmRlZikNCj4gK3N0YXRpYyBp
-bnQgY2NwX3JlZ2lzdGVyX3JzYV9hbGcoc3RydWN0IGxpc3RfaGVhZCAqaGVhZCwNCj4gKwkJCSAg
-ICAgICAgY29uc3Qgc3RydWN0IGNjcF9yc2FfZGVmICpkZWYpDQo+ICAgew0KPiAgIAlzdHJ1Y3Qg
-Y2NwX2NyeXB0b19ha2NpcGhlcl9hbGcgKmNjcF9hbGc7DQo+ICAgCXN0cnVjdCBha2NpcGhlcl9h
-bGcgKmFsZzsNCj4gDQoNCg==
+On Tue, Mar 19, 2019 at 10:45 AM Jerome Glisse <jglisse@redhat.com> wrote:
+>
+> On Tue, Mar 19, 2019 at 10:33:57AM -0700, Dan Williams wrote:
+> > On Tue, Mar 19, 2019 at 10:19 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > >
+> > > On Tue, Mar 19, 2019 at 10:12:49AM -0700, Andrew Morton wrote:
+> > > > On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+> > [..]
+> > > > Also, the discussion regarding [07/10] is substantial and is ongoing so
+> > > > please let's push along wth that.
+> > >
+> > > I can move it as last patch in the serie but it is needed for ODP RDMA
+> > > convertion too. Otherwise i will just move that code into the ODP RDMA
+> > > code and will have to move it again into HMM code once i am done with
+> > > the nouveau changes and in the meantime i expect other driver will want
+> > > to use this 2 helpers too.
+> >
+> > I still hold out hope that we can find a way to have productive
+> > discussions about the implementation of this infrastructure.
+> > Threatening to move the code elsewhere to bypass the feedback is not
+> > productive.
+>
+> I am not threatening anything that code is in ODP _today_ with that
+> patchset i was factering it out so that i could also use it in nouveau.
+> nouveau is built in such way that right now i can not use it directly.
+> But i wanted to factor out now in hope that i can get the nouveau
+> changes in 5.2 and then convert nouveau in 5.3.
+>
+> So when i said that code will be in ODP it just means that instead of
+> removing it from ODP i will keep it there and it will just delay more
+> code sharing for everyone.
+
+The point I'm trying to make is that the code sharing for everyone is
+moving the implementation closer to canonical kernel code and use
+existing infrastructure. For example, I look at 'struct hmm_range' and
+see nothing hmm specific in it. I think we can make that generic and
+not build up more apis and data structures in the "hmm" namespace.
