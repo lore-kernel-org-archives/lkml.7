@@ -2,186 +2,110 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69466C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CEDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4208E20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C493120854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MIGKVcui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCSJj2 (ORCPT
+        id S1727557AbfCSJjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:39:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725906AbfCSJj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:39:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69C54ADCC;
-        Tue, 19 Mar 2019 09:39:25 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-References: <20190315111107.15154-1-lhenriques@suse.com>
-        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
-        <87r2b4zd2q.fsf@suse.com>
-        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
-        <87lg1c17b2.fsf@suse.com>
-        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
-Date:   Tue, 19 Mar 2019 09:39:24 +0000
-In-Reply-To: <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
-        (Zheng Yan's message of "Tue, 19 Mar 2019 11:13:35 +0800")
-Message-ID: <87a7hr19v7.fsf@suse.com>
+        Tue, 19 Mar 2019 05:39:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50986 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfCSJjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 05:39:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z11so7382538wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=j4LluMz8zBVBlBijmLUX6TcBWQHn83DSqbxHhxWrKV8=;
+        b=MIGKVcuik3tM5vzjuN4/C2+SPU/FXaaOp74zzb60EgZ4QeJgaw8MFw/tk93p1VfH1P
+         XOwjY7bq1gr1b3UmQkbJQ5kaWtAgJC0MYWZDTHH7SDgTzLkvXkZBirX/6USFtL250XY/
+         EWnyvnPDsUEKqqzjeQ9MlIm5cio1OzNDXLlqRc1xuAmMHB2A0881JpZDYmEDojL8J2YZ
+         RNGh5qOtMbAzTqLiZ16TJxNax7L9OavEHLLO8KFYg6jNvSB2idgSkJi+M+YwTexL9ASG
+         7lSvq+pHVf/wAWrdtRZ1vmR6hGzFTk59UxjwapJUXPDpgKbXhxQ28v17jeu/dXNdrDqR
+         2SYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=j4LluMz8zBVBlBijmLUX6TcBWQHn83DSqbxHhxWrKV8=;
+        b=sjKeFuKgVPcTSmK6OvjCD4I8Yam1UJxlbUdVIJ+I0GFfHqySBmqQkdGH+mJhZ2HmrI
+         FWobbCHXXwPWcA3XjJv6E9pktw7fbOFEZyFxueQb2VASvcvG8q7pDjsgbruio8VLCyB0
+         2JIkVlgMnjVtvikjFJWkUTdSW9NF56xibG77QeCEIjp+mr7R5cEe56QApYzRzc+NWnCA
+         70RNMtN/xzRNp0EV6xFoWTKTfIh9PX/SJkb3tu7WtU+m0VKkWOHaO4Xd3DPi6k+5cUgX
+         Y4NO3xPXrf2HdkARiQZyaIQguSgD+g7oonnqVXC9Qb9dMauopLf8smTlkX/16lqTzwAq
+         0MLg==
+X-Gm-Message-State: APjAAAXjtOEiGcYumFCJXh4Jib5vy/SDtdA+zFKTnlzlacIaklGJkCD2
+        DRWwmWshZ6SfN+DTQCSDG98DbQ==
+X-Google-Smtp-Source: APXvYqwpTR8XfsZzMwNp41YJa6kGiyx/NyZGDsveoP2x0c498jnspqeKsy9vFoBMmX4ucJQobuYjOQ==
+X-Received: by 2002:a7b:c3d7:: with SMTP id t23mr2599671wmj.62.1552988383839;
+        Tue, 19 Mar 2019 02:39:43 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id w12sm10432604wrt.97.2019.03.19.02.39.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 19 Mar 2019 02:39:43 -0700 (PDT)
+Message-ID: <e9e5644385fb0ac45faceec5ba005dc20ab65989.camel@baylibre.com>
+Subject: Re: [PATCH v2 0/2] clk: meson: g12a: Add CPU Clock support
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 19 Mar 2019 10:39:41 +0100
+In-Reply-To: <20190304131129.7762-1-narmstrong@baylibre.com>
+References: <20190304131129.7762-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Yan, Zheng" <ukernel@gmail.com> writes:
+On Mon, 2019-03-04 at 14:11 +0100, Neil Armstrong wrote:
+> This patchset adds support for the clock tree feeding the 4xCortex A53
+> cpu cluster.
+> 
+> This patchet does not handle clock changing, this will be added in a
+> secondary patchset.
+> 
+> The CPU clock can either use the SYS_PLL for > 1GHz frequencies or
+> use a couple of div+mux from 1GHz/667MHz/24MHz source with 2 non-glitch
+> muxes.
+> 
+> The CPU clock must be switched to a safe clock while changing the clocks
+> before the non-glitch muxes. Proper support will be added later.
+> 
+> In this patchset, clocks are set read-only.
+> 
+> Changes since v1:
+> - moved to clk_regmap_gate_ro_ops for R/O gates
+> - added comments with datasheet field names
+> - moved pribate bindings changes to driver patch
+> - removed invalid PCIE IDs
+> 
+> Neil Armstrong (2):
+>   clk: meson-g12a: add cpu clock bindings
+>   clk: meson: g12a: add cpu clocks
+> 
+>  drivers/clk/meson/g12a.c              | 350 ++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h              |  22 +-
+>  include/dt-bindings/clock/g12a-clkc.h |   1 +
+>  3 files changed, 372 insertions(+), 1 deletion(-)
+> 
 
-> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
->>
->> "Yan, Zheng" <ukernel@gmail.com> writes:
->>
->> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
->> >>
->> >> "Yan, Zheng" <ukernel@gmail.com> writes:
->> >>
->> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
->> >> >>
->> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
->> >> >>
->> >> >> unreferenced object 0xffff8881fccca940 (size 32):
->> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
->> >> >>   hex dump (first 32 bytes):
->> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
->> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->> >> >>   backtrace:
->> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
->> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
->> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
->> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
->> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
->> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
->> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
->> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
->> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
->> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
->> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
->> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
->> >> >>
->> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
->> >> >> for example, umounting the filesystem.  In that case, we can simply drop
->> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
->> >> >>
->> >> >> Link: https://tracker.ceph.com/issues/38224
->> >> >> Cc: stable@vger.kernel.org
->> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> >> >> ---
->> >> >>  fs/ceph/caps.c | 7 +++++++
->> >> >>  1 file changed, 7 insertions(+)
->> >> >>
->> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> >> >> index 36a8dc699448..208f4dc6f574 100644
->> >> >> --- a/fs/ceph/caps.c
->> >> >> +++ b/fs/ceph/caps.c
->> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
->> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >> >>  {
->> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
->> >> >> +
->> >> >>         spin_lock(&realm->inodes_with_caps_lock);
->> >> >>         list_del_init(&ci->i_snap_realm_item);
->> >> >>         ci->i_snap_realm_counter++;
->> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
->> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->> >> >>                             realm);
->> >> >> +       /*
->> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
->> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
->> >> >> +        * ceph_snap_context and we need to drop it.
->> >> >> +        */
->> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
->> >> >>  }
->> >> >>
->> >> >>  /*
->> >> >
->> >> > This does not seem right.  i_head_snapc is cleared when
->> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
->> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
->> >> > Did you see 'reconnect denied' during the test? If you did, the fix
->> >> > should be in iterate_session_caps()
->> >> >
->> >>
->> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
->> >> seems to execute fine, except from the memory leak.
->> >>
->> >> It's very difficult to reproduce this issue, but last time I managed to
->> >> get this memory leak to trigger I actually had some debugging code in
->> >> drop_inode_snap_realm, something like:
->> >>
->> >>   if (ci->i_head_snapc)
->> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
->> >
->> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
->> > i_flushing_caps. and try reproducing it again.
->> >
->>
->> Ok, it took me a few hours, but I managed to reproduce the bug, with
->> those extra printks.  All those values are set to 0 when the bug
->> triggers (and i_head_snapc != NULL).
->>
->
-> Thanks, which test triggers this bug?
+With the small naming comment on patch 2
 
-That's generic/013.  It usually triggers after a few hours of running it
-in a loop (I'm using a vstart cluster for that).
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
 
->
-> I searched that code, found we may fail to cleanup i_head_snap in two
-> places. One is in ceph_queue_cap_snap, Another is in
-> remove_session_caps_cb().
-
-Ah, great!  I spent a lot of time looking but I couldn't really find it.
-My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
-and that the corresponding ceph_put_snap_context would be done in
-handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
-MDS.
-
-Cheers,
--- 
-Luis
-
-
->
->> Cheers,
->> --
->> Luis
->>
->>
->> >
->> >>
->> >> This printk was only executed when the bug triggered (during a
->> >> filesystem umount) and the address shown was the same as in the kmemleak
->> >> warning.
->> >>
->> >> After spending some time looking, I assumed this to be a missing call to
->> >> handle_cap_flush_ack, which would do the i_head_snapc cleanup.
->> >>
->> >> Cheers,
->> >> --
->> >> Luis
->> >
->
