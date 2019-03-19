@@ -2,123 +2,97 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92211C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA01C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E57A2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434FA2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSM8bcfn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdmnXcSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfCSCU5 (ORCPT
+        id S1727764AbfCSCVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:20:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40996 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbfCSCUy (ORCPT
+        Mon, 18 Mar 2019 22:21:06 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:34742 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbfCSCUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:20:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k11so12726242pgb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:53 -0700 (PDT)
+        Mon, 18 Mar 2019 22:20:42 -0400
+Received: by mail-it1-f196.google.com with SMTP id l4so11288994ite.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=naB3KMuHNTCaDD6/Z64EGJGrk7XQ7GW1pzVQ9Q3Vf6s=;
-        b=WSM8bcfnzprJdWx5H+Bbv4NvzZb7wmLUkYvEXRdyRIA5Wek38wiyF5fe3XVDp6HxhT
-         SvVyViH+yOhwKt5+i0vurYanvZ8p+7/XaZT+N/09Z4mb0j1ffPYCdO/VV/Rmg1j8OXR6
-         l6vfFMjD9dK320LX88jeEMALCpeYCU+OZQFHRrJB7BYXIx+Wf/mTqJevt5oMTgUEhjNO
-         HhGi9v8uHsnhCYu4jocHvOqIx1oxeMs3wYpDBpUnKWFzF2ByzT1hFXJfEWfMxZ9sjOVQ
-         qa2yU0L1O2tZ7bhBxG+k+KBlp+I2vnJMt0+oDT36Q/jj6m8hTO9q1IET22Be90zWrdWm
-         P+lg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=opQU8mLcrkdsLOJBAGLatk/nt77mIDZMo/hGDIXaxL0=;
+        b=qdmnXcScKYJTJXZAHR6Qpx2Lrr52Tjm4zHamWUqJ3LRwTmyiBvGONi6435fFVeVP2Z
+         j/3bZubAUtzZg3DTfUbKo4d9h+Hw7nqHVNQV+KlP4eDlrBh+f7tioNzhhf7hO9KTlZsX
+         H/eQazyk/IuwA0EakFmAiU8sOEsxPgK9wx91GfSRJPsjZ+jYbLvYijlA0QOHAJAi0pMj
+         p1AbORPZsylgTE6RAr2NyKOgGHwvmOX8pGIi7Yv+Qc4L9vo+0u5mayJGBr4RzO3vydOm
+         SUhemOXU3w4KFv6SXFn/2bp+tD1hg2VW0phFNVQx2dc67d4es2VrKuc9X4oPRFJ0aM4L
+         +MfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=naB3KMuHNTCaDD6/Z64EGJGrk7XQ7GW1pzVQ9Q3Vf6s=;
-        b=iBlF8y58TYsweP/KFyKFfh8PI+dA38mchijtFlL4GO11m2Mx6NKaqkudFOS4ey/4kb
-         aSGjBgE9x/2TFfvliG5TBcfoH6sNH2jD0eVSpJD9WFCbRf5p9mosxjwbN7P70sFnz2C3
-         fHatLpE80xqDpEgVZasY897tCRyBuR62pn+K4E13M450BHVDGHELD9W57RadMe539GhX
-         HjrjEwky8uI1nPTyTKfac897mlWBwOW551JJlR7n59NT7Kd3569nYSToVlcrQF0ls0KJ
-         GqioiT5X9m1J+kHFv05a+6XxANuwuwCJRXa6FOYyUUahijiDtOIn7Vzfe4ozFqsQrNVr
-         hHJw==
-X-Gm-Message-State: APjAAAURdSlpz+teBCzJW6C/NSt1cDHTAtL8xCZ5RqNW4b/mWvoFJ2Bn
-        zn974LPo2Ca8+MBCxV+xzqA=
-X-Google-Smtp-Source: APXvYqydjAiDuBrPLoPLHvLscIhaXBUi7pdqSp5G6oVnWTJMUlOMWrMZhOnpVN474rtNeCUPGWjaAg==
-X-Received: by 2002:a63:4550:: with SMTP id u16mr20189420pgk.73.1552962053552;
-        Mon, 18 Mar 2019 19:20:53 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC ([106.51.22.39])
-        by smtp.gmail.com with ESMTPSA id m3sm13043728pgp.85.2019.03.18.19.20.52
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 19:20:52 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 07:55:27 +0530
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
-        stefanr@s5r6.in-berlin.de, linux@armlinux.org.uk,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net
-Subject: [RESEND PATCH v4 3/9] drivers/firewire/core-iso.c: Convert to use
- vm_map_pages_zero()
-Message-ID: <88645f5ea8202784a8baaf389e592aeb8c505e8e.1552921225.git.jrdr.linux@gmail.com>
-References: <cover.1552921225.git.jrdr.linux@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=opQU8mLcrkdsLOJBAGLatk/nt77mIDZMo/hGDIXaxL0=;
+        b=Mfaoes0Vr0zYIw+sZCTZYxehQcRiZHTbM+6ViDK3GDBCSUkuEFamOzODsK54Gg8P0z
+         ifRBhGA44DLWNKZbkOQYNSkCZSBZWWfHekJPTOg9i2L8+Yjd40Daqmr9FMpt54sOKzho
+         dltqP7e0fQZEUzvP2YP6eqlp6yJFo4gY6O1JOE9JG8aeZF6cgu7OBATXWxVBnMLjo4BQ
+         UYaO0V1lEzLd3rd46Bv4L/LSwHkZpzBhZVPWwp8rwj0A3b+kR5dCWpqkM/zkshXxJaJd
+         LEeOro24j1ot8gxkxcqBFJLb3HYbcsn3jqIh8R2/UdnjIzZfvmeK6B9pUmshkCHVUupP
+         GmBQ==
+X-Gm-Message-State: APjAAAVG/+jRZFAJPaqmDKVZ1AFDHL+2JA3o8VcGy8b0s2wnmILxKxK4
+        DFQa96ySIlDkpjJfEcYWkpY=
+X-Google-Smtp-Source: APXvYqyqvk3OcES9dEFjKFQvcw1BIUp5XNJ3HM7Eb9V31ToqgxaGjkMFA5MoZmlUSGYUy99bQ/1hAA==
+X-Received: by 2002:a05:660c:46:: with SMTP id p6mr37759itk.93.1552962041606;
+        Mon, 18 Mar 2019 19:20:41 -0700 (PDT)
+Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
+        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 19:20:41 -0700 (PDT)
+From:   George Hilliard <thirtythreeforty@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
+        George Hilliard <thirtythreeforty@gmail.com>
+Subject: [PATCH v2 08/11] staging: mt7621-mmc: Remove redundant host->mmc->f_max write
+Date:   Mon, 18 Mar 2019 20:20:09 -0600
+Message-Id: <20190319022012.11051-9-thirtythreeforty@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190319022012.11051-1-thirtythreeforty@gmail.com>
+References: <20190319022012.11051-1-thirtythreeforty@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert to use vm_map_pages_zero() to map range of kernel memory
-to user vma.
+This is set once during initialization and never changed.  Don't bother
+setting it again in the interrupt handler.
 
-This driver has ignored vm_pgoff and mapped the entire pages. We
-could later "fix" these drivers to behave according to the normal
-vm_pgoff offsetting simply by removing the _zero suffix on the
-function name and if that causes regressions, it gives us an easy
-way to revert.
-
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- drivers/firewire/core-iso.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ drivers/staging/mt7621-mmc/sd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
-index 35e784c..5414eb1 100644
---- a/drivers/firewire/core-iso.c
-+++ b/drivers/firewire/core-iso.c
-@@ -107,19 +107,8 @@ int fw_iso_buffer_init(struct fw_iso_buffer *buffer, struct fw_card *card,
- int fw_iso_buffer_map_vma(struct fw_iso_buffer *buffer,
- 			  struct vm_area_struct *vma)
- {
--	unsigned long uaddr;
--	int i, err;
--
--	uaddr = vma->vm_start;
--	for (i = 0; i < buffer->page_count; i++) {
--		err = vm_insert_page(vma, uaddr, buffer->pages[i]);
--		if (err)
--			return err;
--
--		uaddr += PAGE_SIZE;
--	}
--
--	return 0;
-+	return vm_map_pages_zero(vma, buffer->pages,
-+					buffer->page_count);
- }
+diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
+index 31c5b44bd29f..df85888f3a03 100644
+--- a/drivers/staging/mt7621-mmc/sd.c
++++ b/drivers/staging/mt7621-mmc/sd.c
+@@ -209,7 +209,6 @@ static void msdc_tasklet_card(struct work_struct *work)
+ 	host->card_inserted = inserted;
  
- void fw_iso_buffer_destroy(struct fw_iso_buffer *buffer,
+ 	if (!host->suspend) {
+-		host->mmc->f_max = HOST_MAX_MCLK;
+ 		mmc_detect_change(host->mmc, msecs_to_jiffies(20));
+ 	}
+ 
 -- 
-1.9.1
+2.21.0
 
