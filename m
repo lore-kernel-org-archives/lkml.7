@@ -2,228 +2,155 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD72C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B9BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6427120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5D42085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gwxkMPxz"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iSPqysmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfCSNwn (ORCPT
+        id S1727127AbfCSNzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:52:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44933 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfCSNwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:52:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id u12so17833771iop.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 06:52:42 -0700 (PDT)
+        Tue, 19 Mar 2019 09:55:38 -0400
+Received: from mail-eopbgr800080.outbound.protection.outlook.com ([40.107.80.80]:24704
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726612AbfCSNzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:55:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jsfKp09Yioy1UBUpxcVVheydY08Ch0hjKGYCdU+3zyg=;
-        b=gwxkMPxzOwXcSXsjIZ5qH5uHJGNOTtlRQU6KIDHxbagTUvQsOxwr9ZVuB8umMbtdC6
-         wFparzy6CmXYARh8p9OLMTxGxJEUtpl+EcAipMUMMzCdVCnVcRfL0uSX7+m35T75Wu83
-         VDJI9eGRAoxXvEJgQOvFm+xyw0V9QL6bsrJUpuH8LO7+XW+j6lYeC+bS0A5FBxdX+E86
-         Ltdu4DUUaXsAWiiFURwIa3o4thVJh5NKn+///aPEIouOj2b8Txj/eELXai98W+e+BaYz
-         Q/tdtoEoNGzoXGtY4zQERQNiOEkL/NlJqX6ypH+eUCx0lYQlWCdbGA+pTBZYHhA8pogD
-         nwfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jsfKp09Yioy1UBUpxcVVheydY08Ch0hjKGYCdU+3zyg=;
-        b=edZznpRM4QW3it6+yEuEvLmE+7k+JcaN2LzlhDJwpKGl2eUdbW29WBHmRMdxt+xQOk
-         3rY9eOZxEDBhB2DcWor7TnVd01nJVVlrx87hK8DV+kd7S3aBtEYsDBoq8it0FSApOkRC
-         J4HPtP9/akGMs5bPXjavyLBGF9uaI2aZAE0030m0PtC1stmQdC4C0JiQoA7IgeaSAWQ0
-         dv3p3TR36HxIMdYm+dCwrClvWJYxlFc19SjYhpwshYSjNztXLSrvikhryhnSANsnY8Wg
-         IwcqVtG/lm2gIiCMtzgwV+UatpBMliXDDrYRql5RRZcUJ6oBCpLIG/B4GagMCOG/aFik
-         VG9Q==
-X-Gm-Message-State: APjAAAU5abfwe5CBxQsIkjC+Ajo1YdlyrA7aEmpTLXKqU9ZmlaDuiSGj
-        P2Cl84yXDCutCiIkW2l9kmYLaE/I0QpFU/sZBdlzsQ==
-X-Google-Smtp-Source: APXvYqzc47rJNfqOpUG68KO6cKD2G064gCBBagBhqdbHA8G1gHXWkEWFbseKEGCT5DmyqnKtdxjcf1nTnuANVu51DSo=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr1406490ior.271.1553003561331;
- Tue, 19 Mar 2019 06:52:41 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJaHzcIsVr12YcH9Odvn5EbzKtQFtzB9y2kprPWvoFM=;
+ b=iSPqysmuiH0WJoHji0+mIdvg7gXPDMRiI34Wud4FGASw44Pw/JIYRiPWEH8/NNPJGoxbD1gO1ZG2aRbSgIEKT8KxzVpwq+S8uQZ1/SM2uRJcJLlMBStlo0b/g5NacGAq5gUKDovrPQiYMcDyOzoJ6l/9n6z1SJH0NL6Sg/s5VKc=
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
+ BL0PR02MB4947.namprd02.prod.outlook.com (52.132.14.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 13:55:32 +0000
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::dc07:4b0:4a82:392a]) by BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::dc07:4b0:4a82:392a%6]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 13:55:32 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Michal Simek <michals@xilinx.com>, "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH 00/12] misc: xilinx sd-fec driver
+Thread-Topic: [PATCH 00/12] misc: xilinx sd-fec driver
+Thread-Index: AQHU3kvsu+uLIqR4m069yWggySo2BaYS3vGAgAAXsFCAAAJ0gIAAAMBg
+Date:   Tue, 19 Mar 2019 13:55:32 +0000
+Message-ID: <BL0PR02MB5681EAE893965806808A442CCB400@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com>
+ <5f1d4915-27ad-0cdc-a174-98f88f36a762@xilinx.com>
+ <BL0PR02MB56812FE00104090D02A1B1B5CB400@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <fadca342-1ef6-97e7-1399-929dbf5b69f2@xilinx.com>
+In-Reply-To: <fadca342-1ef6-97e7-1399-929dbf5b69f2@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 26f7892b-264e-466d-90c0-08d6ac728de6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:BL0PR02MB4947;
+x-ms-traffictypediagnostic: BL0PR02MB4947:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BL0PR02MB49479E485C0924D800327F1FCB400@BL0PR02MB4947.namprd02.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(136003)(366004)(39860400002)(13464003)(199004)(189003)(2201001)(6116002)(3846002)(45080400002)(102836004)(26005)(186003)(52536014)(4326008)(81166006)(2501003)(6246003)(8676002)(8936002)(25786009)(66066001)(107886003)(86362001)(81156014)(14454004)(93886005)(74316002)(54906003)(305945005)(99286004)(7696005)(7736002)(68736007)(71200400001)(229853002)(5660300002)(446003)(966005)(11346002)(476003)(76176011)(53936002)(6436002)(486006)(106356001)(2906002)(6506007)(478600001)(105586002)(33656002)(55016002)(6306002)(53546011)(9686003)(71190400001)(97736004)(256004)(14444005)(316002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4947;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XoOz4ETkk5hQdLltNQPn0jVo2O1/WdXfu5ve9MyT8cBFKiB79TtsJ1xsypDe/DfJEE3vayoLUSkCkIBUG2C9s4XdQ1qZP9dwycPQEUtspIs+FKVLNIHHXHM8KB+uIo4rnAj3qc3LU/Z5kh+aZiFmVk/KEBmM9deHzp/pLqxRbeAUM+qmB8rKcCYdVRKm7uOLnhdarU9jWAX22i0c6KhRxuVN3jHWP9BHvqEiohjeWWZk/+RRC3QGKayhNNcYgY+n/hY4wxKh6OlnVmi7FeRrkDCVbq0gFjdYW4+yY5+CBN4ud/B0ug4WM5ti1XOug+hSfEIfmNn3NRm9SPkZvl3nMRtOcEfWmehK+tlJBb5t2KJS1ThEv6TBi9QJbbvkUeYGxGlysM0kjGa8mCPdmu1o/t9Gzg7iA1F+UGuyMVM1hXE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <0000000000001fd5780583d1433f@google.com> <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
- <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
- <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
- <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com>
- <20190312225044.GB38846@gmail.com> <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
- <20190313181649.GA10169@gmail.com>
-In-Reply-To: <20190313181649.GA10169@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 19 Mar 2019 14:52:28 +0100
-Message-ID: <CACT4Y+aHBB7U+Rkng7ufsG4doSzV_M1ijbMA1RErjquoNf-aUA@mail.gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26f7892b-264e-466d-90c0-08d6ac728de6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 13:55:32.4419
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4947
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 7:16 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Wed, Mar 13, 2019 at 09:24:21AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > On Tue, Mar 12, 2019 at 11:50 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > >
-> > > On Tue, Mar 12, 2019 at 09:33:44AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > > > On Tue, Mar 12, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > > >
-> > > > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > > >
-> > > > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
-> > > > > > <akpm@linux-foundation.org> wrote:
-> > > > > > >
-> > > > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
-> > > > > > >
-> > > > > > > > syzbot has bisected this bug to:
-> > > > > > > >
-> > > > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > > > > > > > Author: Shakeel Butt <shakeelb@google.com>
-> > > > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
-> > > > > > > >
-> > > > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
-> > > > > > > >
-> > > > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
-> > > > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
-> > > > > > > > git tree:       linux-next
-> > > > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
-> > > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
-> > > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
-> > > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > > > > > > > userspace arch: amd64
-> > > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
-> > > > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
-> > > > > > > >
-> > > > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
-> > > > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
-> > > > > > > > high_work")
-> > > > > > >
-> > > > > > > The following patch
-> > > > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > > > > might have fixed this.  Was it applied?
-> > > > > >
-> > > > > > Hi Andrew,
-> > > > > >
-> > > > > > You mean if the patch was applied during the bisection?
-> > > > > > No, it wasn't. Bisection is very specifically done on the same tree
-> > > > > > where the bug was hit. There are already too many factors that make
-> > > > > > the result flaky/wrong/inconclusive without changing the tree state.
-> > > > > > Now, if syzbot would know about any pending fix for this bug, then it
-> > > > > > would not do the bisection at all. But it have not seen any patch in
-> > > > > > upstream/linux-next with the Reported-by tag, nor it received any syz
-> > > > > > fix commands for this bugs. Should have been it aware of the fix? How?
-> > > > >
-> > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
-> > > > > added to linux-next on Jan 10.  I take it that this bug was hit when
-> > > > > testing the entire linux-next tree, so we can assume that
-> > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > > does not fix it, correct?
-> > > > > In which case, over to Shakeel!
-> > > >
-> > > > Jan 10 is exactly when this bug was reported:
-> > > > https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
-> > > > https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > > >
-> > > > We don't know if that patch fixed the bug or not because nobody tested
-> > > > the reproducer with that patch.
-> > > >
-> > > > It seems that the problem here is that nobody associated the fix with
-> > > > the bug report. So people looking at open bug reports will spend time
-> > > > again and again debugging this just to find that this was fixed months
-> > > > ago. syzbot also doesn't have a chance to realize that this is fixed
-> > > > and bisection is not necessary anymore. It also won't confirm/disprove
-> > > > that the fix actually fixes the bug because even if the crash will
-> > > > continue to happen it will look like the old crash just continues to
-> > > > happen, so nothing to notify about.
-> > > >
-> > > > Associating fixes with bug reports solves all these problems for
-> > > > humans and bots.
-> > > >
-> > >
-> > > I think syzbot needs to be more aggressive about invalidating old bug reports on
-> > > linux-next, e.g. automatically invalidate linux-next bugs that no longer occur
-> > > after a few weeks even if there is a reproducer.  Patches get added, changed,
-> > > and removed in linux-next every day.  Bugs that syzbot runs into on linux-next
-> > > are often obvious enough that they get reported by other people too, resulting
-> > > in bugs being fixed or dropped without people ever seeing the syzbot report.
-> > > How do you propose that people associate fixes with syzbot reports when they
-> > > never saw the syzbot report in the first place?
-> > >
-> > > This is a problem on mainline too, of course.  But we *know* it's a more severe
-> > > problem on linux-next, and that a bug like this that only ever happened on
-> > > linux-next and stopped happening 2 months ago, is much less likely to be
-> > > relevant than a bug in mainline.  Kernel developers don't have time to examine
-> > > every single syzbot report so you need to help them out by reducing the noise.
-> >
-> > Please file an issue for this at https://github.com/google/syzkaller/issues
->
-> I filed https://github.com/google/syzkaller/issues/1054
-
-Thanks.
-
-> > I also wonder how does this work for all other kernel bugs reports?
-> > syzbot is not the only one reporting kernel bugs and we don't want to
-> > invent new rules here.
->
-> Well, I think you already know the answer to that.  There's no unified bug
-> tracking system for all kernel subsystems, so in the worst case bugs/features
-> just get ignored until someone cares to bring it up again.  I know you want to
-> change that, but the larger problem is that there aren't enough people able and
-> funded to do the work.  For the kernel overall (some subsystems are better, OFC)
-> there so many low-quality, duplicate, or irrelevant reports/requests that no one
-> can keep up.  That means maintainers have to focus on the highest priority
-
-Interesting point in "distributed" kernel testing versus "the" kernel testing.
-Obviously if we have 50 dispersed testing efforts we do get tons of
-duplicates. And these reports are of low quality because nobody wants
-to invest into 1/50-th of testing with unclear future nor duplicate
-work 50x. This results in tons of unproductive work for everybody.
-E.g. all the work on syzbot bisection. All of this was already done
-multiple times. And I am sure Linus already explained everything he
-explains to me multiple times before. But this still does not get us
-anywhere because it's just syzbot, so does not benefit anything else
-and Linus will need to explain the same again and again...
-
-> reports/requests, such as the ones that are clearly relevant and get continued
-> discussion, vs. some random problem someone had 2 years ago.  Just putting stuff
-> on a bug tracker does not magically make people work on it.
->
-> I think the reality is that until people can actually be funded to immediately
-> analyze every syzbot report, syzbot needs to be designed to help developers
-> focus on the reports most likely to still be actual bugs.  That means
-> automatically closing bugs where the crash is no longer occurring, especially if
-> it was on linux-next; and sending reminders if the crash is still occurring.
-> >
-> > Also note that what happens now may be not representative of what will
-> > happen in a steady mode later. Now syzbot bisects old bugs accumulated
-> > over 1+ year. Later if it reports a bug, it should bisect sooner. So
-> > all of what happens in this bug report won't take place.
-> >
->
-> Sure, but I think there will continue to be syzbot reports that the relevant
-> people either don't see, or don't have time or expertise to look into.  This is
-> especially true when the same bug is filed as many different bug reports.
->
-> - Eric
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGFsIFNpbWVrIFtt
+YWlsdG86bWljaGFsLnNpbWVrQHhpbGlueC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXkgMTkgTWFyY2gg
+MjAxOSAxMzo1MQ0KPiBUbzogRHJhZ2FuIEN2ZXRpYyA8ZHJhZ2FuY0B4aWxpbnguY29tPjsgYXJu
+ZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+RGVyZWsgS2llcm5hbiA8ZGtpZXJuYW5AeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SCAwMC8xMl0gbWlzYzogeGlsaW54IHNkLWZlYyBkcml2ZXINCj4gDQo+IE9uIDE5LiAwMy4gMTkg
+MTQ6NDQsIERyYWdhbiBDdmV0aWMgd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBNaWNoYWwgU2ltZWsgW21haWx0bzptaWNoYWwuc2lt
+ZWtAeGlsaW54LmNvbV0NCj4gPj4gU2VudDogVHVlc2RheSAxOSBNYXJjaCAyMDE5IDEyOjE4DQo+
+ID4+IFRvOiBEcmFnYW4gQ3ZldGljIDxkcmFnYW5jQHhpbGlueC5jb20+OyBhcm5kQGFybmRiLmRl
+OyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlu
+eC5jb20+Ow0KPiBsaW51eC0NCj4gPj4gYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
+ID4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBEZXJlayBLaWVybmFuIDxka2ll
+cm5hbkB4aWxpbnguY29tPg0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIDAwLzEyXSBtaXNjOiB4
+aWxpbnggc2QtZmVjIGRyaXZlcg0KPiA+Pg0KPiA+PiBPbiAxOS4gMDMuIDE5IDEzOjA0LCBEcmFn
+YW4gQ3ZldGljIHdyb3RlOg0KPiA+Pj4gVGhpcyBwYXRjaHNldCBpcyBhZGRpbmcgdGhlIGZ1bGwg
+U29mdCBEZWNpc2lvbiBGb3J3YXJkIEVycm9yDQo+ID4+PiBDb3JyZWN0aW9uIChTRC1GRUMpIGRy
+aXZlciBpbXBsZW1lbnRhdGlvbiwgZHJpdmVyIERUIGJpbmRpbmcgYW5kDQo+ID4+PiBkcml2ZXIg
+ZG9jdW1lbnRhdGlvbi4NCj4gPj4+DQo+ID4+PiBGb3J3YXJkIEVycm9yIENvcnJlY3Rpb24gKEZF
+QykgY29kZXMgc3VjaCBhcyBMb3cgRGVuc2l0eSBQYXJpdHkNCj4gPj4+IENoZWNrIChMRFBDKSBh
+bmQgdHVyYm8gY29kZXMgcHJvdmlkZSBhIG1lYW5zIHRvIGNvbnRyb2wgZXJyb3JzIGluDQo+ID4+
+PiBkYXRhIHRyYW5zbWlzc2lvbnMgb3ZlciB1bnJlbGlhYmxlIG9yIG5vaXN5IGNvbW11bmljYXRp
+b24NCj4gPj4+IGNoYW5uZWxzLiBUaGUgU0QtRkVDIEludGVncmF0ZWQgQmxvY2sgaXMgYW4gb3B0
+aW1pemVkIGJsb2NrIGZvcg0KPiA+Pj4gc29mdC1kZWNpc2lvbiBkZWNvZGluZyBvZiB0aGVzZSBj
+b2Rlcy4gRml4ZWQgdHVyYm8gY29kZXMgYXJlDQo+ID4+PiBzdXBwb3J0ZWQgZGlyZWN0bHksIHdo
+ZXJlYXMgY3VzdG9tIGFuZCBzdGFuZGFyZGl6ZWQgTERQQyBjb2Rlcw0KPiA+Pj4gYXJlIHN1cHBv
+cnRlZCB0aHJvdWdoIHRoZSBhYmlsaXR5IHRvIHNwZWNpZnkgdGhlIHBhcml0eSBjaGVjaw0KPiA+
+Pj4gbWF0cml4IHRocm91Z2ggYW4gQVhJNC1MaXRlIGJ1cyBvciB1c2luZyB0aGUgb3B0aW9uYWwg
+cHJvZ3JhbW1hYmxlDQo+ID4+PiAoUEwpLWJhc2VkIHN1cHBvcnQgbG9naWMuIEZvciB0aGUgZnVy
+dGhlciBpbmZvcm1hdGlvbiBzZWUNCj4gPj4+IGh0dHBzOi8vd3d3LnhpbGlueC5jb20vc3VwcG9y
+dC9kb2N1bWVudGF0aW9uL2lwX2RvY3VtZW50YXRpb24vDQo+ID4+PiBzZF9mZWMvdjFfMS9wZzI1
+Ni1zZGZlYy1pbnRlZ3JhdGVkLWJsb2NrLnBkZg0KPiA+Pj4NCj4gPj4+IFRoaXMgZHJpdmVyIGlz
+IGEgcGxhdGZvcm0gZGV2aWNlIGRyaXZlciB3aGljaCBzdXBwb3J0cyBTREZFQzE2DQo+ID4+PiAo
+MTZubSkgSVAuIFNELUZFQyBkcml2ZXIgc3VwcG9ydHMgTERQQyBkZWNvZGluZyBhbmQgZW5jb2Rp
+bmcgYW5kDQo+ID4+PiBUdXJibyBjb2RlIGRlY29kaW5nLiBMRFBDIGNvZGVzIGNhbiBiZSBzcGVj
+aWZpZWQgb24NCj4gPj4+IGEgY29kZXdvcmQtYnktY29kZXdvcmQgYmFzaXMsIGFsc28gYSBjdXN0
+b20gTERQQyBjb2RlIGNhbiBiZSB1c2VkLg0KPiA+Pj4NCj4gPj4+IFRoZSBTRC1GRUMgZHJpdmVy
+IGV4cG9zZXMgYSBjaGFyIGRldmljZSBpbnRlcmZhY2UgYW5kIHN1cHBvcnRzDQo+ID4+PiBmaWxl
+IG9wZXJhdGlvbnM6IG9wZW4oKSwgY2xvc2UoKSwgcG9sbCgpIGFuZCBpb2N0bCgpLiBUaGUgZHJp
+dmVyDQo+ID4+PiBhbGxvd3Mgb25seSBvbmUgdXNhZ2Ugb2YgdGhlIGRldmljZSwgb3BlbigpIGxp
+bWl0cyB0aGUgbnVtYmVyIG9mDQo+ID4+PiBkcml2ZXIgaW5zdGFuY2VzLiBUaGUgZHJpdmVyIGFs
+c28gdXRpbGl6ZSBDb21tb24gQ2xvY2sgRnJhbWV3b3JrDQo+ID4+PiAoQ0NGKS4NCj4gPj4+DQo+
+ID4+PiBUaGUgY29udHJvbCBhbmQgbW9uaXRvcmluZyBpcyBzdXBwb3J0ZWQgb3ZlciBpb2N0bCBz
+eXN0ZW0gY2FsbC4NCj4gPj4+IFRoZSBmZWF0dXJlcyBzdXBwb3J0ZWQgYnkgaW9jdGwoKToNCj4g
+Pj4+IC0gZW5hYmxlIG9yIGRpc2FibGUgZGF0YSBwaXBlcyB0by9mcm9tIGRldmljZQ0KPiA+Pj4g
+LSBjb25maWd1cmUgdGhlIEZFQyBhbGdvcml0aG0gcGFyYW1ldGVycw0KPiA+Pj4gLSBzZXQgdGhl
+IG9yZGVyIG9mIGRhdGENCj4gPj4+IC0gcHJvdmlkZSBhIGNvbnRyb2wgb2YgYSBTREZFQyBieXBh
+c3Mgb3B0aW9uDQo+ID4+PiAtIGFjdGl2YXRlcy9kZWFjdGl2YXRlcyBTRC1GRUMNCj4gPj4+IC0g
+Y29sbGVjdCBhbmQgcHJvdmlkZSBzdGF0aXN0aWNhbCBkYXRhDQo+ID4+PiAtIGVuYWJsZS9kaXNh
+YmxlIGludGVycnVwdCBtb2RlDQo+ID4+Pg0KPiA+Pj4gUG9sbCBjYW4gYmUgdXRpbGl6ZWQgdG8g
+ZGV0ZWN0IGVycm9ycyBvbiBJUlEgdHJpZ2dlciByYXRoZXIgdGhhbg0KPiA+Pj4gdXNpbmcgbG9v
+cGluZyBzdGF0dXMgYW5kIHN0YXRzIGlvY3RsJ3MuDQo+ID4+Pg0KPiA+Pj4gUmV2aWV3ZWQtYnk6
+IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+DQo+ID4+DQo+ID4+IEkgYW0g
+bm90IHVzaW5nIHRoaXMgdGFnIGEgbG90IHRoYXQncyB3aHkgSSBhbSBjdXJpb3VzIHdoZXJlIHlv
+dSBnb3QgaXQNCj4gPj4gZnJvbT8gSSBjYW4ndCBzZWUgaXQgaW4gWGlsaW54IHRyZWUgdG9vLg0K
+PiA+Pg0KPiA+PiBUaGFua3MsDQo+ID4+IE1pY2hhbA0KPiA+DQo+ID4gSXQgaXMgY29waWVkIGZy
+b20gdGhlIGVtYWlsIGFkZHJlc3MgaW4gT3V0bG9vay4gSSdsbCBjb3JyZWN0IHRoaXMgdG8gbWlj
+aGFsc0B4aWxpbnguY29tLg0KPiANCj4gSXQgaXMgbm90IGFib3V0IGVtYWlsIGFkZHJlc3MuIEl0
+IGlzIGFib3V0IG1lYW5pbmcgb2YgdGhhdCBsaW5lLg0KPiBJIGhhdmUgbmV2ZXIgZG9uZSBkZWVw
+IHJldmlldyBvZiB0aGlzIGRyaXZlciB0aGF0IHlvdSBjYW4gcHV0IGhlcmUgbXkNCj4gdGFnIHRo
+YXQgSSBoYXZlIHJldmlld2VkIHRoYXQuDQo+IEl0IG1lYW5zIHlvdSBzaG91bGQgcmVtb3ZlIGFs
+bCB0aGVzZSBsaW5lcyBmcm9tIGFsbCBwYXRjaGVzIHdlcmUgeW91IHB1dA0KPiBpdCBiZWNhdXNl
+IEkgaGF2ZSBuZXZlciBnYXZlIHlvdSB0aGlzIHRhZy4NCj4gDQo+IFRoYW5rcywNCj4gTWljaGFs
+DQoNCkknbGwgcmVtb3ZlIHlvdXIgbmFtZS4NCg0K
