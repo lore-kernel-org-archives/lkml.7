@@ -2,104 +2,113 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A6EC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E2FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABBA20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FA720854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQDjPx98"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yaPyH6x3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfCSJcC (ORCPT
+        id S1727358AbfCSJc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:32:02 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38671 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCSJcC (ORCPT
+        Tue, 19 Mar 2019 05:32:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32822 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfCSJc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:32:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e80so11946613ote.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=iqS0mD2DkpD+ki4OIwDG5Tufv1Vltf3JG5TtzYwAJaQ=;
-        b=IQDjPx98/it3WTI1P1wn4ptXAPDKpO99H8tMiZ5yS0rw6fQtDerjKjLOVE3OcB6/H7
-         Y0hsSPTXZHutkEpWqLyt6pPWK7DlGrVwlQAIVFY4qle4XiMCen64rfv/kAheuvIi/KsH
-         T/yq07jkbU1nPaLUtuV+QgZ1WSQoR1tFZX9VKdi7L62nuhBZUvwHnPfEW/f4ozg+z16k
-         ZgaHhoEsmsR4qMEBi1ieBFuSfFytN/1ObzcyQtt2Y1TeUbCiEX/DJD0BO3B39++nIj6n
-         iD6khJ4zb4g2GbBuWfilu9iMpvKBEIEN/9tip+Nu6SgdEgkxSdLhYo5O+4E+/i7EmLkl
-         Cy0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iqS0mD2DkpD+ki4OIwDG5Tufv1Vltf3JG5TtzYwAJaQ=;
-        b=ctHTxAWUIhoyhTe6/rK+CFQtnglOqKdhm4DAPeoBi6HqCX6mwVJG26HRZx+6wal7+e
-         A4mhOHxZN6n8ZzBBm0yEjcdvtOPjrgqGiAHvHzgZpsF1xIiI238hct1/2E/xClYs682E
-         nlKk1klZKsk7LUjlvTAHECFqdzT4WJOYFUjlvxQpnK2X3gV2IlVmDjgCquQhNH+xQMuY
-         KTcTiTjHO6gv45EKHSZWDIGw671ZnUhK38eKKAl/xV6lYEry8mYGjhh5r+cK0mpm15dT
-         xeGo8sEmdeDKecbaW+sAr2wmFKubys19tDG0g8wlg8zme9J033OKxnkOqIOVRSZxkJS9
-         /XzA==
-X-Gm-Message-State: APjAAAUH/OshAZ8F8T/WjxJqCLIRCwboJEcy/70xCBDTC/KMmkzp2mvW
-        tR9qvt+KgRFJIaLo8JYtUvs6yA==
-X-Google-Smtp-Source: APXvYqywx0YgPF/s2pgrbZCRIsLrGu21OCrcWPMSUAsmF007QCmybINk51gyABh1Y2urb14uMvFM7A==
-X-Received: by 2002:a9d:6857:: with SMTP id c23mr923448oto.62.1552987921852;
-        Tue, 19 Mar 2019 02:32:01 -0700 (PDT)
-Received: from localhost.localdomain (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id n12sm4864065otl.22.2019.03.19.02.31.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 02:32:01 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, stable@vger.kernel.org,
-        Zhong Kaihua <zhongkaihua@huawei.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [RESEND PATCH] clk: hi3660: Mark clk_gate_ufs_subsys as critical
-Date:   Tue, 19 Mar 2019 17:31:48 +0800
-Message-Id: <20190319093148.1909-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 Mar 2019 05:32:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J9NkwT157652;
+        Tue, 19 Mar 2019 09:32:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Hj1oBNh9dfc5D/uVx5TUhTCoSX2HTt+XaXsG30sxQQc=;
+ b=yaPyH6x3R4HJD0+ey30v28sztfqxnSwDh5Bx1J/83Jf0kmyg4m9mzXZzUfLTB5Rdehn6
+ 4NQnIDQfMCiXGTRSy4zinCTrrRVxTANCsWcXljHK3jhTSuQTibwZcl3HotLu/e2FblgT
+ 3o7DEKcnKT1PtBHDSI60RdPhvMYZXr7PhdRkhp04V1S0UtKkf8VT9bTKTbBCPRgUqVO4
+ vkvQKRgzmEoyHIMUFoL/tZ6dammDcVCwftlLKWRuXCRhF+mGmoYmHG7NuSosH1oicaAe
+ puhVGR74lQGdNNZSFKYbae/IMUQs+LWxkFevlqAaYjZ/nEaeH+aYPd/HG8s9k3iMA7/j 7Q== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2r8rjukgt5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 09:32:47 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2J9WklZ030556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 09:32:46 GMT
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2J9WkHq016793;
+        Tue, 19 Mar 2019 09:32:46 GMT
+Received: from kadam (/197.157.0.59)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Mar 2019 02:32:45 -0700
+Date:   Tue, 19 Mar 2019 12:32:37 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Emanuel Bennici <benniciemanuel78@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH 05/10] staging: rtl8723bs: Remove unreachable Code in
+ core/rtw_cmd.c
+Message-ID: <20190319093237.GO2227@kadam>
+References: <20190317183115.32393-1-benniciemanuel78@gmail.com>
+ <20190317183115.32393-5-benniciemanuel78@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190317183115.32393-5-benniciemanuel78@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clk_gate_ufs_subsys is a system bus clock, turning off it will
-introduce lockup issue during system suspend flow.  Let's mark
-clk_gate_ufs_subsys as critical clock, thus keeps it on during
-system suspend and resume.
+On Sun, Mar 17, 2019 at 07:31:08PM +0100, Emanuel Bennici wrote:
+> The `case INTEl_WIDI_WK_CID`-Statement in Function `u8 rtw_drvextra_cmd_hdl`
+> wouldn't be used because of CONFIG_INTEL_WIDI.
+> 
+> Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_cmd.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> index 91520ca3bbad..6c6ddf461590 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> @@ -2007,11 +2007,6 @@ u8 rtw_drvextra_cmd_hdl(struct adapter *padapter, unsigned char *pbuf)
+>  	case CHECK_HIQ_WK_CID:
+>  		rtw_chk_hi_queue_hdl(padapter);
+>  		break;
+> -#ifdef CONFIG_INTEL_WIDI
+> -	case INTEl_WIDI_WK_CID:
+> -		intel_widi_wk_hdl(padapter, pdrvextra_cmd->type, pdrvextra_cmd->pbuf);
+> -		break;
+> -#endif /* CONFIG_INTEL_WIDI */
 
-Fixes: d374e6fd5088 ("clk: hisilicon: Add clock driver for hi3660 SoC")
-Cc: stable@vger.kernel.org
-Cc: Zhong Kaihua <zhongkaihua@huawei.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
-Suggested-by: Dong Zhang <zhangdong46@hisilicon.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- drivers/clk/hisilicon/clk-hi3660.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could you just remove all the CONFIG_INTEL_WIDI at once?  That would be
+easier to review.
 
-diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-index f40419959656..32ba80181cc6 100644
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -164,7 +164,7 @@ static const struct hisi_gate_clock hi3660_crgctrl_gate_sep_clks[] = {
- 	{ HI3660_CLK_GATE_ISP_SNCLK2, "clk_gate_isp_snclk2",
- 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 18, 0, },
- 	{ HI3660_CLK_GATE_UFS_SUBSYS, "clk_gate_ufs_subsys", "clk_div_sysbus",
--	  CLK_SET_RATE_PARENT, 0x50, 21, 0, },
-+	  CLK_SET_RATE_PARENT|CLK_IS_CRITICAL, 0x50, 21, 0, },
- 	{ HI3660_PCLK_GATE_DSI0, "pclk_gate_dsi0", "clk_div_cfgbus",
- 	  CLK_SET_RATE_PARENT, 0x50, 28, 0, },
- 	{ HI3660_PCLK_GATE_DSI1, "pclk_gate_dsi1", "clk_div_cfgbus",
--- 
-2.17.1
+(I don't know where the other patches from this series are.  Maybe gmail
+ate them).
+
+regards,
+dan carpenter
 
