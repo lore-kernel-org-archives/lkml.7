@@ -2,89 +2,102 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9208FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0CFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FA3213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553003774;
-	bh=8t8/3Cwy38Eu38/Is7aZyv/pQQNZSsCulps/l3FJCok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=psZUMEWGUC+UG9Vhwo98JVWZIkXciSgfy1lP5zP1oTfQBOHdP3rf/BLuUxWZOXNww
-	 swcAof7UY3tljLiDmUXspOQbT7ltkygA4lzp5bKkBHjLmqHYf+kliFf5b9gQV3fU0n
-	 QdaEWf0znlNCrnl0U7i8M1uYAmwTExpfUmJmOvLk=
+	by mail.kernel.org (Postfix) with ESMTP id EAD6A2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfCSN4M (ORCPT
+        id S1727468AbfCSN4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCSN4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:56:12 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74BDA2085A;
-        Tue, 19 Mar 2019 13:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553003772;
-        bh=8t8/3Cwy38Eu38/Is7aZyv/pQQNZSsCulps/l3FJCok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OBSi7nmTh2q5l7s/1GdaO7rNHZNBWCNV5wUsVTe2jm59Z2d7iPaJpXWcYfh/cGxOQ
-         uLBLYco6dlajZ21bDIrrLBNhLi1ZBBwDFEEjISUZHWRHHJPPIXwKrqDn+cX78IyrpB
-         dsFTkck6YR73YMbTEtLMSTNE9FKBXNAr1V+U7jtg=
-Date:   Tue, 19 Mar 2019 14:56:09 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Colin Ian King <colin.king@canonical.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: u132-hcd: fix potential NULL pointer dereference
-Message-ID: <20190319135609.GA16254@kroah.com>
-References: <20190314072713.20666-1-kjlu@umn.edu>
+        Tue, 19 Mar 2019 09:56:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726612AbfCSN4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:56:13 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BF1103A20C294E252168;
+        Tue, 19 Mar 2019 21:56:08 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 21:56:01 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <rrichter@cavium.com>, <jglauber@cavium.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: zip - Make some functions static
+Date:   Tue, 19 Mar 2019 21:55:07 +0800
+Message-ID: <20190319135507.18764-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314072713.20666-1-kjlu@umn.edu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 02:27:11AM -0500, Kangjie Lu wrote:
-> In case create_singlethread_workqueue fails, the fix notifies
-> callers the error to avoid potential NULL pointer dereferences.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/usb/host/u132-hcd.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-> index 934584f0a20a..6d5b532b03f8 100644
-> --- a/drivers/usb/host/u132-hcd.c
-> +++ b/drivers/usb/host/u132-hcd.c
-> @@ -3203,6 +3203,8 @@ static int __init u132_hcd_init(void)
->  		return -ENODEV;
->  	printk(KERN_INFO "driver %s\n", hcd_name);
->  	workqueue = create_singlethread_workqueue("u132");
-> +	if (unlikely(!workqueue))
+From: YueHaibing <yuehaibing@huawei.com>
 
-You only ever use unlikely/likely if you can actually measure the
-difference with and without it.  For stuff like this, it is not needed
-at all, and in fact, the compiler and CPU already know this type of
-thing, so it is going to be faster without it.
+Fix following sparse warnings:
 
-And are you sure you properly unwound from anything that was
-created/initialized above these lines?
+drivers/crypto/cavium/zip/zip_crypto.c:72:5: warning: symbol 'zip_ctx_init' was not declared. Should it be static?
+drivers/crypto/cavium/zip/zip_crypto.c:110:6: warning: symbol 'zip_ctx_exit' was not declared. Should it be static?
+drivers/crypto/cavium/zip/zip_crypto.c:122:5: warning: symbol 'zip_compress' was not declared. Should it be static?
+drivers/crypto/cavium/zip/zip_crypto.c:158:5: warning: symbol 'zip_decompress' was not declared. Should it be static?
 
-thanks,
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/crypto/cavium/zip/zip_crypto.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-greg k-h
+diff --git a/drivers/crypto/cavium/zip/zip_crypto.c b/drivers/crypto/cavium/zip/zip_crypto.c
+index b92b6e7..4985bc8 100644
+--- a/drivers/crypto/cavium/zip/zip_crypto.c
++++ b/drivers/crypto/cavium/zip/zip_crypto.c
+@@ -69,7 +69,7 @@ static void zip_static_init_zip_ops(struct zip_operation *zip_ops,
+ 	zip_ops->csum	      = 1; /* Adler checksum desired */
+ }
+ 
+-int zip_ctx_init(struct zip_kernel_ctx *zip_ctx, int lzs_flag)
++static int zip_ctx_init(struct zip_kernel_ctx *zip_ctx, int lzs_flag)
+ {
+ 	struct zip_operation  *comp_ctx   = &zip_ctx->zip_comp;
+ 	struct zip_operation  *decomp_ctx = &zip_ctx->zip_decomp;
+@@ -107,7 +107,7 @@ int zip_ctx_init(struct zip_kernel_ctx *zip_ctx, int lzs_flag)
+ 	return -ENOMEM;
+ }
+ 
+-void zip_ctx_exit(struct zip_kernel_ctx *zip_ctx)
++static void zip_ctx_exit(struct zip_kernel_ctx *zip_ctx)
+ {
+ 	struct zip_operation  *comp_ctx   = &zip_ctx->zip_comp;
+ 	struct zip_operation  *dec_ctx = &zip_ctx->zip_decomp;
+@@ -119,7 +119,7 @@ void zip_ctx_exit(struct zip_kernel_ctx *zip_ctx)
+ 	zip_data_buf_free(dec_ctx->output, MAX_OUTPUT_BUFFER_SIZE);
+ }
+ 
+-int zip_compress(const u8 *src, unsigned int slen,
++static int zip_compress(const u8 *src, unsigned int slen,
+ 		 u8 *dst, unsigned int *dlen,
+ 		 struct zip_kernel_ctx *zip_ctx)
+ {
+@@ -155,7 +155,7 @@ int zip_compress(const u8 *src, unsigned int slen,
+ 	return ret;
+ }
+ 
+-int zip_decompress(const u8 *src, unsigned int slen,
++static int zip_decompress(const u8 *src, unsigned int slen,
+ 		   u8 *dst, unsigned int *dlen,
+ 		   struct zip_kernel_ctx *zip_ctx)
+ {
+-- 
+2.7.4
+
+
