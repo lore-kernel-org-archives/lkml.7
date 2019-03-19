@@ -2,130 +2,110 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291DFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5CBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F265A20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8B12146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LC2w0Rol"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="dcvnkaxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfCSSie (ORCPT
+        id S1727631AbfCSSij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:38:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46317 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfCSSid (ORCPT
+        Tue, 19 Mar 2019 14:38:39 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:60276 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbfCSSij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:38:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s23so14292961pfe.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:38:33 -0700 (PDT)
+        Tue, 19 Mar 2019 14:38:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id D5228707
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 18:38:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sx5Pa72Whr_N for <linux-kernel@vger.kernel.org>;
+        Tue, 19 Mar 2019 13:38:37 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id A1FE965C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:38:37 -0500 (CDT)
+Received: by mail-io1-f70.google.com with SMTP id p17so16875114ios.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Ydzzh2vp8qLAp+1aPO8su/zx9revbTEm1ZSk87G2Mwo=;
-        b=LC2w0RolgAlPG0Cd5in3X5I8KMVBJUM64CF8HbRVayP52YEdO6KTKKwUvhNNnPyqho
-         4Dly0PwzBxf78tadJTfLSG7GiyZPJ1SvpnVqIN4YYw/ei4jeGUcngeFxtg/ZwSeVn4JX
-         4axNpZ/9NpVGtIsK7svj2SOvuIt1d0ixSJWWY=
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=I6qRup8VMPuct1r1QJUlHwRd45kwJLJuSXVIrTNz1B0=;
+        b=dcvnkaxbmJPEPFpty5Xz1NhbtHEXkYx6wV2NFy46yZkxoMQuC7pWi9uViUWTSB7vSf
+         L7chlqodKtAGNLrDKxTztsNm6YWjnKN4N95anxBzQA0iKGmUJFiESD8uh4BwGAUTLvJh
+         XMpT8sqdCPtWsJ+++5jj2Kzz8dFNG4dPMOO/OEH7spTJEFicl3enhARNcjukDUsg+hLd
+         E23qJFrf1Pr8rvxyrYgvjTVbp0tiaFGU6AMVVITUARqRsBSxjE6wg98jRQk/JNJfOoes
+         KlECP/v/jDMAgnvT9QkRvgem6y6xI/A5ZYq3Ew8e9cbqA4y9OwZoFkf2zyB7R8bAvKbl
+         6Eqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Ydzzh2vp8qLAp+1aPO8su/zx9revbTEm1ZSk87G2Mwo=;
-        b=tcH43XyBXWOz8Pw2ckp5/92llKW5bUgwrtb8lwhOI1j7GLwl+INBmqVDiMBNO5r8L7
-         JtJv/BUJfOf6nvODphuzYhnGQhctTQubr8Ij5i19lTkAye6anAIjpdnSvHeMogy7zpjJ
-         kbTVuE9HRjyKABMSV3C9IXBpGBhhTZa3tnHuhDnLS4QB3lUbMjyHOxREcpvMM7OTfcRa
-         GSZGAftEM/GyFDp9sHIZYB2NVh4/v2/BbUSCMAeecZfzeVAkFd3XggAbkpg4R3LVA9xn
-         X7QLnNZuZUcLLZesFShdZFeU0rYAJvnlxmr+3/yiYWHTJ4NLmpKegNDcFPHO8D6A+Oqd
-         ihng==
-X-Gm-Message-State: APjAAAVlZVU6VRDKhRR91RyKNnj2sIBAvGo9Fa5cTSbl5yEr2yv3g3/X
-        Lr3f9j6gro05/jPwU4g8HvyTWA==
-X-Google-Smtp-Source: APXvYqwdX09re8gQr40yKoR/6PxbNTxqPQNJhTH1ST1l/Dw4nbnZCcCSLLZGbKs6QcTv9fNKbpXj+g==
-X-Received: by 2002:a63:f146:: with SMTP id o6mr3550312pgk.360.1553020712829;
-        Tue, 19 Mar 2019 11:38:32 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id t8sm16189435pgp.5.2019.03.19.11.38.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=I6qRup8VMPuct1r1QJUlHwRd45kwJLJuSXVIrTNz1B0=;
+        b=FQWfeRjsn0f+AdA3RgHqXCd/ExrBMfhcJfHkNJokq2zD7DDxuJxQtbI6bwczIbwjjn
+         1SAV9gbS3ltEN/7BGLJAReydCDfE3wubqzPfNINGHPz6p9ma6VAOrQX6bAH2nO3Eoa8b
+         GoGG8nAMH/2PUvQdfC9ry1tWzvhUJIc+BwL/xeI5xrjt4j9RnEmB+ushDFt3GosikDrn
+         IB6UMurIx38WywxDMQmHnH59Q45XheEFvx2svGK/zgngk8YRynzP9ubU129Lbo4n91Zg
+         wbDrYw/sjZ50pst51jxt61R8pOWXMccob8ElX38JvTPZUmZgetvoZe2gq4TKtyG1FsAw
+         MtTw==
+X-Gm-Message-State: APjAAAV46zKnERHeTSm1Nv6uFBCdcwXCzjIBq7+b+A0OJKVSg8pk8QBk
+        x/9OeQtssN0TpXLNXa7JuRO63ovpVM8suaFtfxe9pPPyvvhx6WI96EGgghrhW3SDbqFOvmQEfn1
+        Sxy1kZPqyUH114EC5qYITEnI4hJ1H
+X-Received: by 2002:a6b:e317:: with SMTP id u23mr2393802ioc.206.1553020717319;
+        Tue, 19 Mar 2019 11:38:37 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyanw6flQJSQvz4oz4Jb+6T4oWb+tybh90WMO4DV8uC/BI6jCrzkemopeETWskc0vQakimiZw==
+X-Received: by 2002:a6b:e317:: with SMTP id u23mr2393791ioc.206.1553020717166;
+        Tue, 19 Mar 2019 11:38:37 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id d184sm1847400itc.17.2019.03.19.11.38.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 11:38:32 -0700 (PDT)
-Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
-To:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Jayachandran C <jnair@caviumnetworks.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
-Date:   Tue, 19 Mar 2019 11:38:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 19 Mar 2019 11:38:36 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] thunderbolt: Fix to check the return value of kmemdup
+Date:   Tue, 19 Mar 2019 13:38:34 -0500
+Message-Id: <20190319183834.14503-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Srinath and Rob - patch series looks good now.
+uuid in add_switch is allocted via kmemdup which can fail. The patch
+logs the error in such a scenario.
 
-patch series,
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/thunderbolt/icm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Scott Branden <scott.branden@broadcom.com>
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index e3fc920af682..8df8057cd79e 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -473,6 +473,7 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
+ 		goto out;
+ 
+ 	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
++	WARN_ONCE(!sw->uuid, "%s: sw->uuid = NULL", __func__);
+ 	sw->connection_id = connection_id;
+ 	sw->connection_key = connection_key;
+ 	sw->link = link;
+-- 
+2.17.1
 
-
-On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
-> These patches add Stingray USB PHY driver and its corresponding
-> DT nodes with documentation.
->
-> This patch set is based on Linux-5.0-rc2.
->
-> Changes from v5:
->    - Removed redundant address and size cells in DT nodes.
->
-> Changes from v4:
->    - Addressed Rob Herring review comments
->       - Removed child nodes and added #phy-cells 1
->       - Added xlate function to get phy using phandle argument.
->
-> Changes from v3:
->    - Addressed Rob Herring review comments
->       - Changed compatible strings.
->       - updated driver based on new compatible strings.
->
-> Changes from v2:
->    - Addressed Kishon review comments
->    - Updated patchset to Linux-5.0-rc2
->
-> Changes from v1:
->    - Addressed Kishon review comments
->    - phy init call return value handle
->    
-> Srinath Mannam (3):
->    dt-bindings: phy: Add Stingray USB PHY binding document
->    phy: sr-usb: Add Stingray USB PHY driver
->    arm64: dts: Add USB DT nodes for Stingray SoC
->
->   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
->   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
->   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
->   drivers/phy/broadcom/Kconfig                       |  11 +
->   drivers/phy/broadcom/Makefile                      |   1 +
->   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393 +++++++++++++++++++++
->   6 files changed, 510 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
->   create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
->   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
->
