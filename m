@@ -2,60 +2,87 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B26C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C9C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777362083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4702133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfCSNfl (ORCPT
+        id S1727399AbfCSNhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:35:41 -0400
-Received: from ms.lwn.net ([45.79.88.28]:56570 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfCSNfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:35:40 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1E2AD2B4;
-        Tue, 19 Mar 2019 13:35:40 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 07:35:39 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: add translation disclaimer
-Message-ID: <20190319073539.1f16831a@lwn.net>
-In-Reply-To: <14381941.zoZXB8H0OD@pcbe13614>
-References: <20190314204516.10890-1-federico.vaga@vaga.pv.it>
-        <20190318113534.43fb94f3@lwn.net>
-        <14381941.zoZXB8H0OD@pcbe13614>
-Organization: LWN.net
+        Tue, 19 Mar 2019 09:37:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5268 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726661AbfCSNhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:37:16 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A99D5A3974735930077A;
+        Tue, 19 Mar 2019 21:37:13 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 21:37:05 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <george.cherian@cavium.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: cavium - remove unused fucntions
+Date:   Tue, 19 Mar 2019 21:37:00 +0800
+Message-ID: <20190319133700.22864-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 09:03:53 +0100
-Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+From: YueHaibing <yuehaibing@huawei.com>
 
-> > Oh well, I went ahead and applied it.  I do think that it might make sense
-> > to move the TOC *above* the disclaimer, though, since that's what readers
-> > are really going to be interested in.  
-> 
-> No, problem I can do it and send a new version
+cptvf_mbox_send_ack and cptvf_mbox_send_nack are never
+used since introdution in commit c694b233295b ("crypto: cavium
+- Add the Virtual Function driver for CPT")
 
-Note that I said I applied the patch, so "a new version" isn't quite
-what's needed here.  If you feel so inclined, a patch to reorder that file
-would be good, though.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/crypto/cavium/cpt/cptvf_mbox.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-Thanks,
+diff --git a/drivers/crypto/cavium/cpt/cptvf_mbox.c b/drivers/crypto/cavium/cpt/cptvf_mbox.c
+index d5ec3b8..4f438ec 100644
+--- a/drivers/crypto/cavium/cpt/cptvf_mbox.c
++++ b/drivers/crypto/cavium/cpt/cptvf_mbox.c
+@@ -17,23 +17,6 @@ static void cptvf_send_msg_to_pf(struct cpt_vf *cptvf, struct cpt_mbox *mbx)
+ 			mbx->data);
+ }
+ 
+-/* ACKs PF's mailbox message
+- */
+-void cptvf_mbox_send_ack(struct cpt_vf *cptvf, struct cpt_mbox *mbx)
+-{
+-	mbx->msg = CPT_MBOX_MSG_TYPE_ACK;
+-	cptvf_send_msg_to_pf(cptvf, mbx);
+-}
+-
+-/* NACKs PF's mailbox message that VF is not able to
+- * complete the action
+- */
+-void cptvf_mbox_send_nack(struct cpt_vf *cptvf, struct cpt_mbox *mbx)
+-{
+-	mbx->msg = CPT_MBOX_MSG_TYPE_NACK;
+-	cptvf_send_msg_to_pf(cptvf, mbx);
+-}
+-
+ /* Interrupt handler to handle mailbox messages from VFs */
+ void cptvf_handle_mbox_intr(struct cpt_vf *cptvf)
+ {
+-- 
+2.7.4
 
-jon
+
