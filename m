@@ -2,89 +2,186 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2EDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5593CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC1F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:00:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="dL8Ar8Mh"
+	by mail.kernel.org (Postfix) with ESMTP id 2EEE82146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfCSO77 (ORCPT
+        id S1727815AbfCSPAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:59:59 -0400
-Received: from canardo.mork.no ([148.122.252.1]:33931 "EHLO canardo.mork.no"
+        Tue, 19 Mar 2019 11:00:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41509 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfCSO77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:59:59 -0400
-Received: from miraculix.mork.no ([IPv6:2a02:2121:288:b97:1c73:e9ff:fe7f:e01b])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x2JExgZg030715
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 19 Mar 2019 15:59:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1553007583; bh=NLo3Eqvh+LuCiP8bfsSoNSwQV9/09fbjfZEBj1mKbSo=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=dL8Ar8Mh1IC66ZsTvSDqmk3dcVZ0JGgm5yMAxzEJrR5voTUU4YuPs+mj3IRy2ycP/
-         S+0F2MCRgW6sJOLhVtPH7jv1rDanl2NSm6NRzbs5NE48NAJ6/qx4OMsHiZXvC/0hdq
-         3pfp98AMCNdBXnSJxnffH/UYga7joHbcNveUhUqg=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
-        (envelope-from <bjorn@mork.no>)
-        id 1h6GDI-00022w-O3; Tue, 19 Mar 2019 15:59:36 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@mansr.com>
-Cc:     Dan Williams <dcbw@redhat.com>, Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
-Organization: m
-References: <20190226170710.12709-1-mans@mansr.com>
-        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
-        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
-        <20190319102840.GI6124@localhost> <yw1xd0mn16ev.fsf@mansr.com>
-        <20190319110819.GB3178@localhost> <yw1x8sxb125q.fsf@mansr.com>
-        <20190319122719.GC3178@localhost> <20190319124358.GK6124@localhost>
-        <6c89938b00ad289e1802f675bd00e288b1458d73.camel@redhat.com>
-        <yw1xr2b3ylsp.fsf@mansr.com>
-Date:   Tue, 19 Mar 2019 15:59:36 +0100
-In-Reply-To: <yw1xr2b3ylsp.fsf@mansr.com> (=?utf-8?Q?=22M=C3=A5ns_Rullg?=
- =?utf-8?Q?=C3=A5rd=22's?= message of "Tue,
-        19 Mar 2019 14:35:18 +0000")
-Message-ID: <878sxa9ag7.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1726579AbfCSPAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:00:08 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 08:00:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,498,1544515200"; 
+   d="scan'208";a="215528954"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga001.jf.intel.com with ESMTP; 19 Mar 2019 07:59:59 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h6GDe-0006Gl-4O; Tue, 19 Mar 2019 16:59:58 +0200
+Date:   Tue, 19 Mar 2019 16:59:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] Input: add Apple SPI keyboard and trackpad driver.
+Message-ID: <20190319145958.GI9224@smile.fi.intel.com>
+References: <20190221105609.5710-1-ronald@innovation.ch>
+ <20190221105609.5710-3-ronald@innovation.ch>
+ <20190226092059.GV9224@smile.fi.intel.com>
+ <20190227072958.GA10349@innovation.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.100.2 at canardo
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190227072958.GA10349@innovation.ch>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> writes:
-> Dan Williams <dcbw@redhat.com> writes:
->
->> TLDR; some firmware uses the DTR signal as an indicator to come out of
->> low-power mode. Without doing so you cannot talk to the modem over any
->> of it's ports, QMI, net, or serial.
->
-> I must be missing something, but how does a network interface have a DTR
-> signal?
+On Tue, Feb 26, 2019 at 11:29:58PM -0800, Life is hard, and then you die wrote:
+> On Tue, Feb 26, 2019 at 11:20:59AM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 21, 2019 at 02:56:09AM -0800, Ronald Tschalär wrote:
 
-It does not.  But the network function is (ab)using the Comm class USB
-control message "SetControlLineState" to signal "wake up" from the host
-to the device.  Which is perfectly fine since the USB function in
-question is vendor specific.  The vendor can define any USB control
-message to mean anything they want. Reusing a Comm class message
-probably made sense to the firmware engineer designing this.  We can
-only note and adapt.
+> > > +config KEYBOARD_APPLESPI
+> > > +	tristate "Apple SPI keyboard and trackpad"
+> > 
+> > > +	depends on ACPI && SPI && EFI
+> > 
+> > I would rather want to see separate line for SPI...
+> > 
+> > > +	depends on X86 || COMPILE_TEST
+> > 
+> > ...like here
+> > 
+> > 	depends on SPI
+> 
+> Sure. Generally, what is the criteria/rule here for splitting
+> conjunctions into separate 'depends'?
 
-It doesn't have anything to do with DTR.
+Rule of common sense.
+
+For example UEFI and ACPI may have some relations, SPI and ACPI kinda
+orthogonal.
+
+> > + #define DEV(applespi)           (&(applespi)->spi->dev)
+
+> > > +	if (memcmp(applespi->tx_status, status_ok, APPLESPI_STATUS_SIZE)) {
+> > 
+> > > +		dev_warn(DEV(applespi), "Error writing to device: %*ph\n",
+> > 
+> > Hmm... DEV() is too generic name for custom macro. And frankly I don't think
+> > it's good to have in the first place.
+> 
+> Yeah, I've been having trouble coming up with a better (but still
+> succinct) name - CORE_DEV()? RAW_DEV()? DEV_OF()? However, because
+> this expression is used in many places throughout the driver (mostly,
+> but not only, for logging statements) I feel like it's good to factor
+> it out. But I'll defer to your .
+
+Please remove this macro for good. Otherwise big subsystems / drivers usually do something like
+
+#define foo_err(...)	dev_err(...)
+...
+
+Don't know if it would help here, the driver is standalone and not so big.
+
+> > > +static void
+> > > +applespi_remap_fn_key(struct keyboard_protocol *keyboard_protocol)
+> > > +{
+> > > +	unsigned char tmp;
+> > 
+> > > +	unsigned long *modifiers =
+> > > +			(unsigned long *)&keyboard_protocol->modifiers;
+> > 
+> > I would leave it on one online despite checkpatch warning (also, instead of
+> > (unsigned long *) the (void *) might be used as a small trick).
+> > 
+> > > +
+> > > +	if (!fnremap || fnremap > ARRAY_SIZE(applespi_controlcodes) ||
+> > > +	    !applespi_controlcodes[fnremap - 1])
+> > > +		return;
+> > > +
+> > > +	tmp = keyboard_protocol->fn_pressed;
+> > > +	keyboard_protocol->fn_pressed = test_bit(fnremap - 1, modifiers);
+> > > +	if (tmp)
+> > 
+> > > +		__set_bit(fnremap - 1, modifiers);
+> > > +	else
+> > > +		__clear_bit(fnremap - 1, modifiers);
+> > 
+> > Oh, this is not good. modifiers should be really unsigned long bounary,
+> > otherwise it is potential overflow.
+> > 
+> > Best to fix is to define them as unsigned long in the first place.
+> 
+> Can't do that directly, because keyboard_protocol->modifiers is a
+> field in the data received from the device, i.e. defined by that
+> protocol. Instead I could make a copy of the modifiers and pass that
+> around separately (i.e. in addition to the keyboard_protocol struct).
+> 
+> However, the implied size assertions here would basically still apply:
+> 
+>   MAX_MODIFIERS == sizeof(keyboard_protocol->modifiers) * 8
+>   ARRAY_SIZE(applespi_controlcodes) == sizeof(keyboard_protocol->modifiers) * 8
+> 
+> (hmm, MAX_MODIFIERS is really redundant - getting rid of it...)
+> 
+> Would using compiletime_assert()'s be an acceptable alternate approach
+> here? It would serve to both document the size constraint and to
+> protect against overflow due to an error in some future edit. E.g.
+> 
+>  applespi_remap_fn_key(struct keyboard_protocol *keyboard_protocol)
+>  {
+>         unsigned char tmp;
+>         unsigned long *modifiers = (void *)&keyboard_protocol->modifiers;
+> +
+> +       compiletime_assert(ARRAY_SIZE(applespi_controlcodes) ==
+> +                          sizeof_field(struct keyboard_protocol, modifiers) * 8,
+> +                          "applespi_controlcodes has wrong number of entries");
+>  
+>         if (!fnremap || fnremap > ARRAY_SIZE(applespi_controlcodes) ||
+>             !applespi_controlcodes[fnremap - 1])
+>  		return;
+>  
+>  	tmp = keyboard_protocol->fn_pressed;
+>  	keyboard_protocol->fn_pressed = test_bit(fnremap - 1, modifiers);
+>  	if (tmp)
+>  
+>  		__set_bit(fnremap - 1, modifiers);
+>  	else
+>  		__clear_bit(fnremap - 1, modifiers);
+>  }
+
+Perhaps, simple
+
+	__set_bit(b, x)		->	x |= BIT(b);
+	__clear_bit(b, x)	->	x &= ~BIT(b);
+
+?
+
+> > > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Bj=C3=B8rn
