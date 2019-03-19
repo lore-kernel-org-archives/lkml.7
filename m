@@ -2,164 +2,104 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A10C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1534AC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32BC20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC70420989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="jFML4Hgk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zvr/+mH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfCSHsf (ORCPT
+        id S1727140AbfCSHwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:48:35 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36458 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCSHse (ORCPT
+        Tue, 19 Mar 2019 03:52:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40093 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfCSHwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:48:34 -0400
-Received: by mail-it1-f193.google.com with SMTP id h9so3330086itl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:48:33 -0700 (PDT)
+        Tue, 19 Mar 2019 03:52:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x8so16839482otg.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g+xr/SOAxOJeQKx7fzIkY/QbRd/ireuzdXNkxy00mmQ=;
-        b=jFML4HgkEkwOMNvHtm7ji3p51vOwO6uKXoGBk0r8ig/O/Sm1TtvluNX7fCjJjj9YRn
-         Nyq8Js0Ab9tl2ZEaHM+vmc8f86FwLizix+FgFgUt8c5zPFz5gq45ULqhw3EDXucrwSyQ
-         hKN4qFaULzAubwq1yavDSu2Oia6xbCHLqJ+ZM=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=iqS0mD2DkpD+ki4OIwDG5Tufv1Vltf3JG5TtzYwAJaQ=;
+        b=Zvr/+mH9ntX/IUd8XbK5tTWRysrJ0bUUH71hlw4jh7X6JpBDONMBXdmVs6GaAg/iAC
+         XQfefILIzmPvCxp8jhsP3TjGIroSwYyJ1KQBFhUmi3663eK83B35j/V4EM6Ex40XepQd
+         PHtL5V+wEKJeVFsypf698f1VpwnPe8HDmVHQxUg3xQWhAvyDCPlj10i3fypfGBvTM41w
+         MGnrKHewGBiQQiZLUE2VKm7E3NcSjkVW5GrbUFxxKzQArmr5C/z+uh0J8mcqf4dmIGyy
+         K5aoYeAyQgKjl2Pcf/gyjudALDs3KwNC7mgK753vyjsGfMA/ifYu8SLhX0q2CZrX5f1Q
+         Feew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g+xr/SOAxOJeQKx7fzIkY/QbRd/ireuzdXNkxy00mmQ=;
-        b=JQk9DZmp4d5fw5Z9HlIVhMfna9BiqzsSA0TCJ07lRDORPFMHDS2Xk9u4MJ2SUIpPgm
-         UpmDCNdyiSY/5wXSwFGjVumu8WuuTPWH82ok3sXtYveMQ1b2KGyJjedTE3MFWcI443pp
-         mH010B3BPG1MmYt75It1fKe/yF9ybvq9fhT3Nlr0IMwxxuR8xrG51ptaz35DqyTp7C+f
-         J+a3Nc6K1f8Czd2tR5AIP+TXwM5o4VrJ+LiJbjy7xSfo2oMN2L1xCkGENQK+eMAmvKG/
-         brFgX84BQFP4ww4o1vO4echo6KKOTQEw1KzNI3D4mebi6c1PwwJVIsPTdSV8ImzNvHX2
-         2Pcg==
-X-Gm-Message-State: APjAAAWr3yN9/n7ervCV3ekiOViT6wq4uXhR3YybG3TijMBG8uR+7ssf
-        Q2oq7ipjUmnNiMFgQzbVVsv/dcI0yaFuAtK+U0W8LA==
-X-Google-Smtp-Source: APXvYqyb68UUVVNyi4p1YGb2ynJmkDsaofw4xmpWiajE+2dNzUY9v+BKcOX/KIp+Gz0HiLYofu/c2C0OiozRYPV1Hzs=
-X-Received: by 2002:a05:660c:252:: with SMTP id t18mr545368itk.173.1552981712770;
- Tue, 19 Mar 2019 00:48:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190315130825.9005-1-jagan@amarulasolutions.com>
- <20190315130825.9005-5-jagan@amarulasolutions.com> <20190315133414.5zwc5qtrivrbrzow@flea>
- <CAMty3ZBn=MjB-VxwadkEDaM_==hGu1pzTv2A47cKitv0Vb5VXw@mail.gmail.com> <CAGb2v66mkSTxhR_p4iRYR-hqzxw2QFK9iv3WsQ7NOQ2mT2mSiw@mail.gmail.com>
-In-Reply-To: <CAGb2v66mkSTxhR_p4iRYR-hqzxw2QFK9iv3WsQ7NOQ2mT2mSiw@mail.gmail.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 19 Mar 2019 13:18:21 +0530
-Message-ID: <CAMty3ZCB6MV+dyOM71mAP7=+KVb8Ym12Y-j8FFZf4YknLKhc4A@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] dt-bindings: display: bridge: Add
- ICN6211 MIPI-DSI to RGB convertor bridge
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula@amarulasolutions.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iqS0mD2DkpD+ki4OIwDG5Tufv1Vltf3JG5TtzYwAJaQ=;
+        b=cMFTI/WGBInbvOFLBPA/yIexPpZK1ZTvUFgD5qCd/iI85xxw6l/M/R+TQbYtcVDx83
+         Y2VvQD9oNcUtgjIxyYZvhSWb2S3OxfWzxdPXWUA4mrlz8LbtXRzPNuc8vaipmdqjvQLL
+         IsilQespqdGGOa4zlLHG5DMw/Yx1cjDT8pn5XyP0T7Wz1TuF78LN8uxgPt+Z+6SmaY37
+         CZp9lnpcUgs9ICg39OzLzVMkN8jPEbiI9v6yZIdz0U/Q3LCZvyPwGi2ruFmCZzXPaS9n
+         8LHoKSUjtuocyhxEvbEjMldp5J9e4aQT6q0msp7WYLLBaC/gnpC4JhNWOXCIwCrofOgk
+         oQ6Q==
+X-Gm-Message-State: APjAAAU2iO6GMkSOvaRpIjDEGop/vschUTiz6dVOgtU0UTRUQaQuCz+L
+        D3GqN2AjbYGs3dpldD5es+NCPA==
+X-Google-Smtp-Source: APXvYqxLecB5Qq2OdyfErVl3NSOhJPNRMBsJGA/gAx35jWSEVPwtP0DfZHORphZWkdYx/3KoyK37YA==
+X-Received: by 2002:a9d:7597:: with SMTP id s23mr663856otk.25.1552981944068;
+        Tue, 19 Mar 2019 00:52:24 -0700 (PDT)
+Received: from localhost.localdomain (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id a14sm5032730otl.46.2019.03.19.00.52.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 00:52:22 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>, stable@vger.kernel.org,
+        Zhong Kaihua <zhongkaihua@huawei.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH] clk: hi3660: clk: Mark clk_gate_ufs_subsys as critical
+Date:   Tue, 19 Mar 2019 15:52:06 +0800
+Message-Id: <20190319075206.30740-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 8:29 AM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Tue, Mar 19, 2019 at 12:58 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > On Fri, Mar 15, 2019 at 7:04 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
-> > > > ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> > > > It has a flexible configuration of MIPI DSI signal input
-> > > > and produce RGB565, RGB666, RGB888 output format.
-> > > >
-> > > > Add dt-bingings for it.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
-> > > >  1 file changed, 36 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> > > > new file mode 100644
-> > > > index 000000000000..7f13efd7ee7f
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> > > > @@ -0,0 +1,36 @@
-> > > > +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
-> > > > +
-> > > > +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> > > > +It has a flexible configuration of MIPI DSI signal input
-> > > > +and produce RGB565, RGB666, RGB888 output format.
-> > > > +
-> > > > +Required properties for RGB:
-> > > > +- compatible: must be "chipone,icn6211" and one of:
-> > > > +  * "bananapi,icn6211"
-> > >
-> > > Why is that compatible needed?
-> >
-> > chipone,icn6211 - generic compatible bridge controller IC
-> > bananapi,icn6211 -  compatible for icn6211 bridge using on bananapi panel
-> >
-> > I hope this would be proper bindings in terms of controller IC with
-> > associate device, anything wrong? Infact I used similar reference from
-> > Ilitek Bananapi panel from here
-> > Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.txt
-> >
-> > This is what I understood based on dt-binding, correct if I'm wrong.
-> >
-> > ilitek,ili9881c - generic ilitek,ili9881c compatable
-> > bananapi,lhr050h41 - compatible for bananapi panel associated with
-> > this ilitek IC
->
-> ili9881c is an LCD driver chip with a MIPI DSI interface. It directly
-> drives the LCD panel, not outputting some RGB stuff. So it is a binding
-> and driver for a panel, not a bridge in your case.
->
-> > >
-> > > > +- reg: the virtual channel number of a DSI peripheral
-> > > > +- reset-gpios: a GPIO phandle for the reset pin
-> > > > +
-> > > > +The device node can contain following 'port' child nodes,
-> > > > +according to the OF graph bindings defined in [1]:
-> > > > +  0: DSI Input, not required, if the bridge is DSI controlled
-> > > > +  1: RGB Output, mandatory
-> > >
-> > > Your example doesn't have that input port
-> >
-> > Yes, I intentionally did this by referring existing bridge binding.
-> > Documentation/devicetree/bindings/display/bridge/toshiba,tc35876*.txt
-> >
-> > Do we really need? since the input port can be part of panel binding.
->
-> How could the input port of _your_ _bridge_ be part of the panel binding?
+clk_gate_ufs_subsys is a system bus clock, turning off it will
+introduce lockup issue during system suspend flow.  Let's mark
+clk_gate_ufs_subsys as critical clock, thus keeps it on during
+system suspend and resume.
 
-Here the panel is from another vendor say bananapi, so the binding of
-that part could be already covered ie is what I mean.
+Fixes: d374e6fd5088 ("clk: hisilicon: Add clock driver for hi3660 SoC")
+Cc: stable@vger.kernel.org
+Cc: Zhong Kaihua <zhongkaihua@huawei.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Suggested-by: Dong Zhang <zhangdong46@hisilicon.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ drivers/clk/hisilicon/clk-hi3660.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Since I mentioned I took the reference binding from another bridge. It
-has similar structure of binding / example.
-arch/arm/boot/dts/exynos5250-arndale.dts
-Bridge example binding:
-Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-Panel example binding mentioned here
-Documentation/devicetree/bindings/display/panel/boe,hv070wsa-100.txt
+diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
+index f40419959656..32ba80181cc6 100644
+--- a/drivers/clk/hisilicon/clk-hi3660.c
++++ b/drivers/clk/hisilicon/clk-hi3660.c
+@@ -164,7 +164,7 @@ static const struct hisi_gate_clock hi3660_crgctrl_gate_sep_clks[] = {
+ 	{ HI3660_CLK_GATE_ISP_SNCLK2, "clk_gate_isp_snclk2",
+ 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 18, 0, },
+ 	{ HI3660_CLK_GATE_UFS_SUBSYS, "clk_gate_ufs_subsys", "clk_div_sysbus",
+-	  CLK_SET_RATE_PARENT, 0x50, 21, 0, },
++	  CLK_SET_RATE_PARENT|CLK_IS_CRITICAL, 0x50, 21, 0, },
+ 	{ HI3660_PCLK_GATE_DSI0, "pclk_gate_dsi0", "clk_div_cfgbus",
+ 	  CLK_SET_RATE_PARENT, 0x50, 28, 0, },
+ 	{ HI3660_PCLK_GATE_DSI1, "pclk_gate_dsi1", "clk_div_cfgbus",
+-- 
+2.17.1
+
