@@ -2,259 +2,204 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C548C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3DBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84E72085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844EC2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqrY87qO"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WJ95YjG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfCSV64 (ORCPT
+        id S1728001AbfCSV7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:58:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42479 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfCSV6y (ORCPT
+        Tue, 19 Mar 2019 17:59:09 -0400
+Received: from us01smtprelay-2.synopsys.com ([198.182.47.9]:58456 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbfCSV6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:58:54 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j89so227006edb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 14:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ncs3bAUx8AfzAxdAQTuTe7JsEGRRFAYLs1ydkd4n6C4=;
-        b=GqrY87qO336qzu0Ujh2noUyzq++R48002MqCNm+FS7e8VB8odIrPBNbkqhbun1ZbQr
-         pswOwAFfkLryJ4tOJ3vdURxtvqATLAzflJ+JdrFdxNK82cx/p/fmTLW5zSXr6RAoOdhK
-         naT0C2LqQwwkdq3XJP0QZ2Vs5BF9lGB8l7iwy21VD6jLqD/8gI6CfOaf7OtrNygxiY38
-         xzMcZlX7ySbAPKVTgDaoJ+BqIsj1rDGBmgVQTSf77oo0XTk66GS8UTC67PHRXCFc+hKs
-         iwygG59cFpj9qdvX9wmPbGGFhbdDXBBl6b9nAVHygQMdtes5ibQXv7MvfYz8AvXmUSgH
-         y5Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ncs3bAUx8AfzAxdAQTuTe7JsEGRRFAYLs1ydkd4n6C4=;
-        b=G6kmZ5p2SLrHAV9BQIQBL+XJsS3NfTRH7LFRH/gS7MMe/0zLgoc7qAsgXv7rtjqdAe
-         qtpIfNQZ5efiIeP1Il2RLA41Fa+xc12Eu1c7Z71YAC3FQxGuGeXFC45BDGakIbPUw5As
-         WCmAV30pZlMP/piAMktwQ2ik7AsgGvylpMY4JTLUmCa+iguNQGFnCWjmBdDZ4TOX3X1g
-         ObSOXsri/9kHYDYvAkc1m/mrK0Cn5YQ/hTJ6lWCljvcL7uGrtK3hBO8B013jkPusIbCq
-         pzbb1cnAz/1bq8jU4Kt7AENybOj2QOAnaoW3emdUwnjKKOfns0xRfQwdYbdiK9/tPHOB
-         RVNg==
-X-Gm-Message-State: APjAAAX4qYONcnAmqIakevtdSwlj9jLTHJveoGgUHHocCNLerXWMB3g1
-        Sr4SIhiGMikHslQYS2CLLYLFgsIPREFB5m6ubcE=
-X-Google-Smtp-Source: APXvYqyTi+h761HD6UlsOWW/o7MqEcfHB133RehnD27w4aI2gBLgjPx1KBOYqCirTt4C2bBouCoEGHFLIG4pxwXkjq8=
-X-Received: by 2002:a50:d8ce:: with SMTP id y14mr17768752edj.101.1553032732274;
- Tue, 19 Mar 2019 14:58:52 -0700 (PDT)
+        Tue, 19 Mar 2019 17:58:08 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id 4CC0724E1171;
+        Tue, 19 Mar 2019 14:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1553032688; bh=d03+R3a2KvseDL9pr4c2ZwIPVATSzMlpV+uaW3BYJT0=;
+        h=To:CC:From:Subject:Date:From;
+        b=WJ95YjG0KjB/6b5qjhGEMrZp5BY+lCpC35yN/L1naI+4RUjKisW/pnyz8RoDg04tJ
+         G2ZndiL8VloTg/wd6yuMoNGGVGAmR6LWP5sIfrr2Kt1wARUbavOKMPUJWVKWo7KJEH
+         KDrBcvwwti2jKjD3HMhAK9u0GsUy3LCYv8PW5IlAhI1bqq7lYa6vh4DvVgdjdeM9rJ
+         w4cwXvlL+NEufco+Ie9X2KCwtM+zmF91i6p2Dh+QzNGi90V3ssRYwUdnlrzsL6UR7d
+         DcnU3oWRkjn9S3hsHT8+b6ARShjCXa1oWPSX2V9wUccnmJcz/GwIsIjugdJfhG5mdX
+         72tKjkeLUr5fw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D966CA0067;
+        Tue, 19 Mar 2019 21:58:07 +0000 (UTC)
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.104) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 19 Mar 2019 14:58:07 -0700
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.105) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.103) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 20 Mar 2019 03:28:12 +0530
+Received: from [10.10.161.89] (10.10.161.89) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 20 Mar 2019 03:28:11 +0530
+X-Mozilla-News-Host: news://gmane.comp.lib.uclibc.buildroot:119
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+From:   Vineet Gupta <vineet.gupta1@synopsys.com>
+Subject: [GIT PULL] ARC updates for 5.1-rc2
+Openpgp: preference=signencrypt
+Autocrypt: addr=vgupta@synopsys.com; keydata=
+ mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
+ B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
+ lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
+ zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
+ cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
+ 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
+ nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
+ dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
+ JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
+ F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
+ dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
+ jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
+ xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
+ NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
+ HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
+ djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
+ XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
+ hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
+ d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
+ cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
+ tf3ClCidHNaGky9KcNSQuQINBFEffBMBEADXZ2pWw4Regpfw+V+Vr6tvZFRl245PV9rWFU72
+ xNuvZKq/WE3xMu+ZE7l2JKpSjrEoeOHejtT0cILeQ/Yhf2t2xAlrBLlGOMmMYKK/K0Dc2zf0
+ MiPRbW/NCivMbGRZdhAAMx1bpVhInKjU/6/4mT7gcE57Ep0tl3HBfpxCK8RRlZc3v8BHOaEf
+ cWSQD7QNTZK/kYJo+Oyux+fzyM5TTuKAaVE63NHCgWtFglH2vt2IyJ1XoPkAMueLXay6enSK
+ Nci7qAG2UwicyVDCK9AtEub+ps8NakkeqdSkDRp5tQldJbfDaMXuWxJuPjfSojHIAbFqP6Qa
+ ANXvTCSuBgkmGZ58skeNopasrJA4z7OsKRUBvAnharU82HGemtIa4Z83zotOGNdaBBOHNN2M
+ HyfGLm+kEoccQheH+my8GtbH1a8eRBtxlk4c02ONkq1Vg1EbIzvgi4a56SrENFx4+4sZcm8o
+ ItShAoKGIE/UCkj/jPlWqOcM/QIqJ2bR8hjBny83ONRf2O9nJuEYw9vZAPFViPwWG8tZ7J+R
+ euXKai4DDr+8oFOi/40mIDe/Bat3ftyd+94Z1RxDCngd3Q85bw13t2ttNLw5eHufLIpoEyAh
+ TCLNQ58eT91YGVGvFs39IuH0b8ovVvdkKGInCT59Vr0MtfgcsqpDxWQXJXYZYTFHd3/RswAR
+ AQABiQIlBBgBAgAPAhsMBQJbBYpwBQkLx0HdAAoJEGnX8d3iisJewe8P/36pkZrVTfO+U+Gl
+ 1OQh4m6weozuI8Y98/DHLMxEujKAmRzy+zMHYlIl3WgSih1UMOZ7U84yVZQwXQkLItcwXoih
+ ChKD5D2BKnZYEOLM+7f9DuJuWhXpee80aNPzEaubBYQ7dYt8rcmB7SdRz/yZq3lALOrF/zb6
+ SRleBh0DiBLP/jKUV74UAYV3OYEDHN9blvhWUEFFE0Z+j96M4/kuRdxvbDmp04Nfx79AmJEn
+ fv1Vvc9CFiWVbBrNPKomIN+JV7a7m2lhbfhlLpUk0zGFDTWcWejl4qz/pCYSoIUU4r/VBsCV
+ ZrOun4vd4cSi/yYJRY4kaAJGCL5k7qhflL2tgldUs+wERH8ZCzimWVDBzHTBojz0Ff3w2+gY
+ 6FUbAJBrBZANkymPpdAB/lTsl8D2ZRWyy90f4VVc8LB/QIWY/GiS2towRXQBjHOfkUB1JiEX
+ YH/i93k71mCaKfzKGXTVxObU2I441w7r4vtNlu0sADRHCMUqHmkpkjV1YbnYPvBPFrDBS1V9
+ OfD9SutXeDjJYe3N+WaLRp3T3x7fYVnkfjQIjDSOdyPWlTzqQv0I3YlUk7KjFrh1rxtrpoYS
+ IQKf5HuMowUNtjyiK2VhA5V2XDqd+ZUT3RqfAPf3Y5HjkhKJRqoIDggUKMUKmXaxCkPGi91T
+ hhqBJlyU6MVUa6vZNv8E
+Message-ID: <84416b56-150b-1725-30de-6ae563862a87@synopsys.com>
+Date:   Tue, 19 Mar 2019 14:58:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
- <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
- <CA+M3ks7q8QnNirk_WkaE5CmFWkEPn4uu5Hfb2kP+4d5qapHvrA@mail.gmail.com> <c51be371-086a-bd5b-b70a-5579f5b95320@ti.com>
-In-Reply-To: <c51be371-086a-bd5b-b70a-5579f5b95320@ti.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 19 Mar 2019 17:58:40 -0400
-Message-ID: <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Alistair Strachan <astrachan@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Chenbo Feng <fengc@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Marissa Wall <marissaw@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.161.89]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 1:00 PM Andrew F. Davis <afd@ti.com> wrote:
->
-> On 3/19/19 11:54 AM, Benjamin Gaignard wrote:
-> > Le mer. 13 mars 2019 =C3=A0 23:31, John Stultz <john.stultz@linaro.org>=
- a =C3=A9crit :
-> >>
-> >> On Wed, Mar 13, 2019 at 1:11 PM Liam Mark <lmark@codeaurora.org> wrote=
-:
-> >>> On Tue, 5 Mar 2019, John Stultz wrote:
-> >>>>
-> >>>> Eventual TODOS:
-> >>>> * Reimplement page-pool for system heap (working on this)
-> >>>> * Add stats accounting to system/cma heaps
-> >>>> * Make the kselftest actually useful
-> >>>> * Add other heaps folks see as useful (would love to get
-> >>>>   some help from actual carveout/chunk users)!
-> >>>
-> >>> We use a modified carveout heap for certain secure use cases.
-> >>
-> >> Cool! It would be great to see if you have any concerns about adding
-> >> such a secure-carveout heap to this framework. I suspect it would be
-> >> fairly similar to how its integrated into ION, but particularly I'd be
-> >> interested in issues around the lack of private flags and other
-> >> allocation arguments like alignment.
-> >>
-> >>> Although there would probably be some benefit in discssing how the dm=
-a-buf
-> >>> heap framework may want to support
-> >>> secure heaps in the future it is a large topic which I assume you don=
-'t
-> >>> want to tackle now.
-> >>
-> >> So I suspect others (Benjamin?) would have a more informed opinion on
-> >> the details, but the intent is to allow secure heap implementations.
-> >> I'm not sure what areas of concern you have for this allocation
-> >> framework in particular?
-> >
-> > yes I would be great to understand how you provide the information to
-> > tell that a dmabuf
-> > is secure (or not) since we can't add flag in dmabuf structure itself.
-> > An option is manage
-> > the access rights when a device attach itself to the dmabuf but in
-> > this case you need define
-> > a list of allowed devices per heap...
-> > If you have a good solution for secure heaps you are welcome :-)
-> >
->
-> Do we really need any of that? A secure buffer is secured by the
-> hardware firewalls that keep out certain IP (including often the
-> processor running Linux). So the only thing we need to track internally
-> is that we should not allow mmap/kmap on the buffer. That can be done in
-> the per-heap layer, everything else stays the same as a standard
-> carveout heap.
+Hi Linus,
 
-For at least some hw the importing driver needs to configure things
-differently for secure buffers :-/
+please pull. This is rc1 material but I was away from my computer much of last week.
 
-BR,
--R
+Thx,
+-Vineet
+---------------->
+The following changes since commit 5908e6b738e3357af42c10e1183753c70a0117a9:
 
->
-> Andrew
->
-> > Benjamin
-> >>
-> >>> We don't have any non-secure carveout heap use cases but the client u=
-se
-> >>> case I have seen usually revolve around
-> >>> wanting large allocations to succeed very quickly.
-> >>> For example I have seen camera use cases which do very large allocati=
-ons
-> >>> on camera bootup from the carveout heap, these allocations would come=
- from
-> >>> the carveout heap and fallback to the system heap when the carveout h=
-eap
-> >>> was full.
-> >>> Actual non-secure carveout heap can perhaps provide more detail.
-> >>
-> >> Yea, I'm aware that folks still see carveout as preferable to CMA due
-> >> to more consistent/predictable allocation latency.  I think we still
-> >> have the issue that we don't have bindings to establish/configure
-> >> carveout regions w/ dts, and I'm not really wanting to hold up the
-> >> allocation API on that issue.
-> >>
-> >>
-> >>> Since we are making some fundamental changes to how ION worked and si=
-nce
-> >>> Android is likely also be the largest user of the dma-buf heaps frame=
-work
-> >>> I think it would be good
-> >>> to have a path to resolve the issues which are currently preventing
-> >>> commercial Android releases from moving to the upstream version of IO=
-N.
-> >>
-> >> Yea, I do see solving the cache management efficiency issues as
-> >> critical for the dmabuf heaps to be actually usable (my previous
-> >> version of this patchset accidentally had my hacks to improve
-> >> performance rolled in!).  And there are discussions going on in
-> >> various channels to try to figure out how to either change Android to
-> >> use dma-bufs more in line with how upstream expects, or what more
-> >> generic dma-buf changes we may need to allow Android to use dmabufs
-> >> with the expected performance they need.
-> >>
-> >>> I can understand if you don't necessarily want to put all/any of thes=
-e
-> >>> changes into the dma-buf heaps framework as part of this series, but =
-my
-> >>> hope is we can get
-> >>> the upstream community and the Android framework team to agree on wha=
-t
-> >>> upstreamable changes to dma-buf heaps framework, and/or the Android
-> >>> framework, would be required in order for Android to move to the upst=
-ream
-> >>> dma-buf heaps framework for commercial devices.
-> >>
-> >> Yes. Though I also don't want to get the bigger dma-buf usage
-> >> discussion (which really affects all dmabuf exporters) too tied up
-> >> with this patch sets attempt to provide a usable allocation interface.
-> >> Part of the problem that I think we've seen with ION is that there is
-> >> a nest of of related issues, and the entire thing is just too big to
-> >> address at once, which I think is part of why ION has sat in staging
-> >> for so long. This patchset just tries to provide an dmabuf allocation
-> >> interface, and a few example exporter heap types.
-> >>
-> >>> I don't mean to make this specific to Android, but my assumption is t=
-hat
-> >>> many of the ION/dma-buf heaps issues which affect Android would likel=
-y
-> >>> affect other new large users of the dma-buf heaps framework, so if we
-> >>> resolve it for Android we would be helping these future users as well=
-.
-> >>> And I do understand that some the issues facing Android may need to b=
-e
-> >>> resolved by making changes to Android framework.
-> >>
-> >> While true, I also think some of the assumptions in how the dma-bufs
-> >> are used (pre-attachment of all devices, etc) are maybe not so
-> >> realistic given how Android is using them.  I do want to explore if
-> >> Android can change how they use dma-bufs, but I also worry that we
-> >> need to think about how we could loosen the expectations for dma-bufs,
-> >> as well as trying to figure out how to support things folks have
-> >> brought up like partial cache maintenance.
-> >>
-> >>> I think it would be helpful to try and get as much of this agreed upo=
-n as
-> >>> possible before the dma-buf heaps framework moves out of staging.
-> >>>
-> >>> As part of my review I will highlight some of the issues which would
-> >>> affect Android.
-> >>> In my comments I will apply them to the system heap since that is wha=
-t
-> >>> Android currently uses for a lot of its use cases.
-> >>> I realize that this new framework provides more flexibility to heaps,=
- so
-> >>> perhaps some of these issues can be solved by creating a new type of
-> >>> system heap which Android can use, but even if the solution involves
-> >>> creating a new system heap I would like to make sure that this "new"
-> >>> system heap is upstreamable.
-> >>
-> >> So yea, I do realize I'm dodging the hard problem here, but I think
-> >> the cache-management/usage issue is far more generic.
-> >>
-> >> You're right that this implementation give a lot of flexibility to the
-> >> exporter heaps in how they implement the dmabuf ops (just like how
-> >> other device drivers that are dmabuf exporters have the same
-> >> flexibility), but I very much agree we don't want to add a system and
-> >> then later a "system-android" heap. So yea, a reasonable amount of
-> >> caution is warranted here.
-> >>
-> >> Thanks so much for the review and feedback! I'll try to address things
-> >> as I can as I'm traveling this week (so I may be a bit spotty).
-> >>
-> >> thanks
-> >> -john
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+  Linux 5.0-rc8 (2019-02-24 16:46:45 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git/ tags/arc-5.1-rc2
+
+for you to fetch changes up to 9a18b5a412baf23137c8fddb4ea7f0c14087f31c:
+
+  arch: arc: Kconfig: pedantic formatting (2019-03-11 22:03:18 -0700)
+
+----------------------------------------------------------------
+ARC updates for 5.1-rc2
+
+ - unaligned access support for HS cores
+
+ - Removed extra memory barrier around spinlock code
+
+ - HSDK platform updates: enable dmac, reset
+
+ - some more boot logging updates
+
+ - misclleneous minor fixes
+
+----------------------------------------------------------------
+Alexey Brodkin (1):
+      ARC: DTB: [scripted] fix node name and address spelling
+
+Corentin Labbe (1):
+      arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
+
+Enrico Weigelt, metux IT consult (1):
+      arch: arc: Kconfig: pedantic formatting
+
+Eugeniy Paltsev (5):
+      ARC: [plat-hsdk]: Add reset controller handle to manage USB reset
+      ARC: [plat-hsdk]: Enable AXI DW DMAC support
+      ARCv2: lib: introduce memcpy optimized for unaligned access
+      ARCv2: Add explcit unaligned access support (and ability to disable too)
+      ARC: u-boot args: check that magic number is correct
+
+Vineet Gupta (5):
+      ARC: perf: bpok condition only exists for ARCompact
+      ARCv2: boot log: refurbish HS core/release identification
+      ARC: boot log: cut down on verbosity
+      ARC: unaligned: relax the check for gcc supporting -mno-unaligned-access
+      ARCv2: spinlock: remove the extra smp_mb before lock, after unlock
+
+ arch/arc/Kconfig                       |  21 +++-
+ arch/arc/Makefile                      |   6 +
+ arch/arc/boot/dts/abilis_tb100.dtsi    |  58 ++++-----
+ arch/arc/boot/dts/abilis_tb100_dvk.dts |  14 +--
+ arch/arc/boot/dts/abilis_tb101.dtsi    |  58 ++++-----
+ arch/arc/boot/dts/abilis_tb101_dvk.dts |  14 +--
+ arch/arc/boot/dts/abilis_tb10x.dtsi    |  60 +++++-----
+ arch/arc/boot/dts/axc001.dtsi          |   6 +-
+ arch/arc/boot/dts/axc003.dtsi          |  16 +--
+ arch/arc/boot/dts/axc003_idu.dtsi      |  16 +--
+ arch/arc/boot/dts/axs10x_mb.dtsi       |  22 ++--
+ arch/arc/boot/dts/hsdk.dts             |  33 +++++-
+ arch/arc/boot/dts/vdk_axc003.dtsi      |   4 +-
+ arch/arc/boot/dts/vdk_axc003_idu.dtsi  |   4 +-
+ arch/arc/boot/dts/vdk_axs10x_mb.dtsi   |  18 +--
+ arch/arc/configs/hsdk_defconfig        |   1 +
+ arch/arc/include/asm/arcregs.h         |  12 +-
+ arch/arc/include/asm/irqflags-arcv2.h  |   8 +-
+ arch/arc/include/asm/perf_event.h      |   2 +-
+ arch/arc/include/asm/spinlock.h        |  49 +++-----
+ arch/arc/kernel/head.S                 |   6 +
+ arch/arc/kernel/intc-arcv2.c           |   2 +-
+ arch/arc/kernel/setup.c                | 211 +++++++++++++++++----------------
+ arch/arc/kernel/troubleshoot.c         |   5 +-
+ arch/arc/lib/Makefile                  |   8 +-
+ arch/arc/lib/memcpy-archs-unaligned.S  |  47 ++++++++
+ arch/arc/plat-eznps/Kconfig            |  12 +-
+ 27 files changed, 399 insertions(+), 314 deletions(-)
+ create mode 100644 arch/arc/lib/memcpy-archs-unalig
