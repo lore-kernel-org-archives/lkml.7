@@ -2,207 +2,88 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DC5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A9E20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F3E20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfCSJln (ORCPT
+        id S1727208AbfCSJtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:41:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48026 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbfCSJlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:41:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7C62AADCC;
-        Tue, 19 Mar 2019 09:41:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C6E911E428E; Tue, 19 Mar 2019 10:41:36 +0100 (CET)
-Date:   Tue, 19 Mar 2019 10:41:36 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com>,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        penguin-kernel@i-love.sakura.ne.jp
-Subject: Re: general protection fault in loop_validate_file (2)
-Message-ID: <20190319094136.GE17334@quack2.suse.cz>
-References: <00000000000098bf7d05845616d7@google.com>
- <cb7aa6d1-6d1e-a9ac-239a-1b5d8160f8cd@oracle.com>
+        Tue, 19 Mar 2019 05:49:39 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59377 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCSJtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 05:49:39 -0400
+X-Originating-IP: 90.88.22.102
+Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 19C6D240007;
+        Tue, 19 Mar 2019 09:49:33 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:49:33 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     jernej.skrabec@siol.net, wens@csie.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH 6/6] arm64: dts: allwinner: h6: Add Video
+ Engine node
+Message-ID: <20190319094933.24n7kfluasfmmsps@flea>
+References: <20190128205504.11225-1-jernej.skrabec@siol.net>
+ <20190128205504.11225-7-jernej.skrabec@siol.net>
+ <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kfjmam5vgios3kkp"
 Content-Disposition: inline
-In-Reply-To: <cb7aa6d1-6d1e-a9ac-239a-1b5d8160f8cd@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel@bootlin.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18-03-19 20:27:02, Dongli Zhang wrote:
-> Hi Jan,
-> 
-> Indeed there is another issue implicitly reported by below console output from
-> syzkaller:
-> 
-> [  245.524424][ T9455] loop_reread_partitions: partition scan of loop0 () failed
-> (rc=-13)
-> [  245.563340][ T9499] kasan: CONFIG_KASAN_INLINE enabled
-> [  245.576412][ T9489] __loop_clr_fd: partition scan of loop0 failed (rc=-13)
-> [  245.581275][ T9499] kasan: GPF could be caused by NULL-ptr deref or user
-> memory access
-> [  245.602596][ T9499] general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> 
-> I think rc=-13 is because of below code at line 168:
-> 
-> 162 int __blkdev_reread_part(struct block_device *bdev)
-> 163 {
-> 164         struct gendisk *disk = bdev->bd_disk;
-> 165
-> 166         if (!disk_part_scan_enabled(disk) || bdev != bdev->bd_contains)
-> 167                 return -EINVAL;
-> 168         if (!capable(CAP_SYS_ADMIN))
-> 169                 return -EACCES;
-> 170
-> 171         lockdep_assert_held(&bdev->bd_mutex);
-> 172
-> 173         return rescan_partitions(disk, bdev);
-> 174 }
-> 175 EXPORT_SYMBOL(__blkdev_reread_part);
-> 
-> I can reproduce this by 'chown username /dev/loop0' on my test machine.
-> 
-> Taking 'losetup -d /dev/loop0' as sample, as /dev/loop0 belongs to my username,
-> I am able to detach the loop without 'su'.
-> 
-> However, because of above line 168, the partition scan would fail.
-> 
-> Should we always assume the user should have admin privilege to detach
-> the loop and this is not a bug?
 
-Firstly, __blkdev_reread_part() is used for all devices so we have to be
-*very* careful when we relax the permission checks there.
+--kfjmam5vgios3kkp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Secondly, I'm not convinced it is always safe to allow non-priviledged user
-to force repartitioning of a device. That exposes the whole partition table
-parsing code to non-priviledged user and thus increases possible attack
-surface.
+On Tue, Mar 19, 2019 at 09:50:24AM +0100, Paul Kocialkowski wrote:
+> Le lundi 28 janvier 2019 =E0 21:55 +0100, Jernej Skrabec a =E9crit :
+> > This adds the Video engine node for H6. It can use whole DRAM range so
+> > there is no need for reserved memory node.
+>
+> Looks like the patch adding SRAM support made it through but this one
+> didn't. It looks ready to be picked up though.
+>
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-But in this specific case we call __blkdev_reread_part() only to tear down
-partitions. So in this specific case calling it by unpriviledged user is
-fine plus leaving stale partitions behind is certainly not nice. What we
-could do is:
+Merged, thanks
 
-Export drop_partitions() functionality as a function like
-__blkdev_drop_part() that would call drop_partitions(bdev->bd_disk, bdev).
-It would expect (and assert) that &bdev->bd_mutex is already locked. It
-should probably also replicate the check:
+Maxime
 
-        if (!disk_part_scan_enabled(disk) || bdev != bdev->bd_contains)
-                return -EINVAL;
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-from __blkdev_reread_part(). And we can call this from __loop_clr_fd().
+--kfjmam5vgios3kkp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Then we can just unexport __blkdev_reread_part() (since only loop.c is
-using it) and fold it inside blkdev_reread_part().
+-----BEGIN PGP SIGNATURE-----
 
-What do you think?
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJC7LQAKCRDj7w1vZxhR
+xUa5AP9yN3BG1WTRK91lIW2v82LQoUgZ4L5x2MVTMyKeG3AYlQD/TN3dDewW4BvS
+92gox0YISyvfZwSL449hK1GpddohFgc=
+=Rinj
+-----END PGP SIGNATURE-----
 
-								Honza
-
-> On 03/18/2019 11:36 AM, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    9c7dc824 Merge tag '5.1-rc-smb3' of git://git.samba.org/sf..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=148a35fb200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1aaa1cfbfe1abf
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9bdc1adc1c55e7fe765b
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > 
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com
-> > 
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 1 PID: 9499 Comm: syz-executor.4 Not tainted 5.0.0+ #25
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
-> > 01/01/2011
-> > RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
-> > Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24 f0 00
-> > 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 a8 00
-> > 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
-> > RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
-> > RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
-> > RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
-> > RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
-> > R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
-> > R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
-> > FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
-> > Call Trace:
-> >  loop_set_fd drivers/block/loop.c:930 [inline]
-> >  lo_ioctl+0x99d/0x2150 drivers/block/loop.c:1542
-> >  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
-> >  blkdev_ioctl+0xee8/0x1c40 block/ioctl.c:605
-> >  block_ioctl+0xee/0x130 fs/block_dev.c:1931
-> >  vfs_ioctl fs/ioctl.c:46 [inline]
-> >  file_ioctl fs/ioctl.c:509 [inline]
-> >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x458079
-> > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89
-> > d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b
-> > b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f04b0c90c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
-> > RDX: 0000000000000004 RSI: 0000000000004c00 RDI: 0000000000000003
-> > RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007f04b0c916d4
-> > R13: 00000000004c1252 R14: 00000000004d3160 R15: 00000000ffffffff
-> > Modules linked in:
-> > ---[ end trace 81b29486bae7280a ]---
-> > RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
-> > Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24 f0 00
-> > 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 a8 00
-> > 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
-> > RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
-> > RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
-> > RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
-> > RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
-> > R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
-> > R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
-> > FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
-> > 
-> > 
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+--kfjmam5vgios3kkp--
