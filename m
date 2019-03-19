@@ -2,125 +2,208 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E32C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425CF2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26AE20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h9jZDqw3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WAKky9MU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfCSAtz (ORCPT
+        id S1727183AbfCSAv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 20:49:55 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36153 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfCSAtx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 20:49:53 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y36so10487160qtb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 17:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=asrXCS/6vWeWFF7aW3/oea2sdTVH2vDaZZYBDhZyzCk=;
-        b=h9jZDqw39onoRVGAKgdRyNfvVUbW6tPxBrTNpweHbiLUOt3AV1Ian32a1eBggv1B8P
-         FlzxQB6PrF2KFKP/Jeycu8ROs0nqRddL+5AKE+WgeKfsksvm4QRUDCmFYZASC5a0JtJP
-         +LecE1BJj2Ohp4tMbvdFbNDhk4A3INd7l0am8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=asrXCS/6vWeWFF7aW3/oea2sdTVH2vDaZZYBDhZyzCk=;
-        b=IFDng1eKYjcowSjOK5StaFPi1atujSaAb3StPxFYoD1RlgTgVU4aRzMOQ19eUQXyCr
-         RObeb9SSAcqd1CJA9EcP6IshKLY9N3m5DHMDWxzLJmY9mN4b9Zexepq19bAv08M6UAe8
-         Zd93fGs9yMTtfq+vLOUDFUeqjuWvdk/A3wjYezqNLj+tv/p4hGns/JckSY/e7tD81yMq
-         PBAuWGGWWJ6S6F/qvpWFmR5Skdp9KLkvqcEtVnFbuPsD/pF+wSMYNCuyIpqxHkL5DkZy
-         2TsyU93JJDcGA0g26IvJNH4r4RAVZKStzqaiaAcY36ijrly1xt8Q2wI4om+b/yF7srVz
-         T7sw==
-X-Gm-Message-State: APjAAAWoOwPJBZx1JXMpiVnoJ0lXZgpz1sEXIbw7BUqJmN2mZSaaudRE
-        rI/ap2pYdL9dpXIBewNODDqzwBSpSXo5k+/rb5ndMA==
-X-Google-Smtp-Source: APXvYqyrZKawXwTd7SynWZzNSMUKyFOK4pkT+9dqHa/h/ryTaJslvISzZkjcwsJTCKj38h0TjNim9tIMSkDhhTmiBao=
-X-Received: by 2002:a0c:9319:: with SMTP id d25mr2436197qvd.99.1552956592546;
- Mon, 18 Mar 2019 17:49:52 -0700 (PDT)
+        Mon, 18 Mar 2019 20:51:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:38015 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbfCSAv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 20:51:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44NZHc2qWRz9s5c;
+        Tue, 19 Mar 2019 11:51:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1552956685;
+        bh=3+0VJVvQZQzP6jTOmh1QmYYo/8rSeUzwMQrdP/UDIX8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WAKky9MUMqTp4Ne8ZhWP10duWq+pVaDnAywQfkhvl6RcKiCkig3Fylf4kNqGR72bC
+         tR9uLo5agjF5X5qI60VVvfhM4TZU80wBDmDhhv23IvWvOZEU0k4qa2Ud9O4mloEcIK
+         zTWWA7J90zoaewKaRZ0lp2WsHMX3nmTWZBQkft6HpM7MqJt+EEogAWAvZg8DFKV5h1
+         lDWFIvY02T1wMLA7zCNoCJoN5mrF2WvwHTSvWI440FOqJAPY6piMBoP2aT6RKrxvSW
+         xqfeTVVoztr6oiMxiF4InYpkKob447EQal4IpsHwh9RVKANcAVGnSvDS7CUflf7qB2
+         NzuDXrZ/GbWAA==
+Date:   Tue, 19 Mar 2019 11:51:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: linux-next: manual merge of the drm-misc tree with the drm-intel
+ tree
+Message-ID: <20190319115116.5b5892fd@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190306162113.8585-1-bgodavar@codeaurora.org>
- <155191158734.20095.15990837191526416248@swboyd.mtv.corp.google.com>
- <a22894cea091ee9945af9c22d6e42051@codeaurora.org> <82fdfbd3dc4dbc1b6258dd470afff589@codeaurora.org>
-In-Reply-To: <82fdfbd3dc4dbc1b6258dd470afff589@codeaurora.org>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 19 Mar 2019 08:49:41 +0800
-Message-ID: <CANMq1KDrGYTrYi1UxyfM2ZMw_GmFpFrrTC6acZkKRHtizAT8OA@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Give enough time to ROME
- controller to bootup.
-To:     rjliao@codeaurora.org
-Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, johan.hedberg@gmail.com,
-        marcel@holtmann.org, Matthias Kaehlcke <mka@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, Claire Chang <tientzu@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/pUnUBgG_2I692jZXpr+YLiI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 5:45 PM <rjliao@codeaurora.org> wrote:
->
-> =E5=9C=A8 2019-03-07 14:49=EF=BC=8CBalakrishna Godavarthi =E5=86=99=E9=81=
-=93=EF=BC=9A
-> > Hi Stepen,
-> >
-> > On 2019-03-07 04:03, Stephen Boyd wrote:
-> >> Quoting Balakrishna Godavarthi (2019-03-06 08:21:13)
-> >>> This patch enables enough time to ROME controller to bootup
-> >>> after we bring the enable ping out of reset.
-> >>>
-> >>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> >>> ---
-> >>
-> >> Any Fixes tag? And maybe some more explanation or background on where
-> >> 150 ms sleep comes from would be useful. Was it determined
-> >> experimentally or did it come from a datasheet somewhere? Does the
-> >> time
-> >> differ between boards?
-> >>
-> > [Bala]: this was observed in our stress testing and even the CHIP
-> > firmware team
-> >         confirmed that BT chip required at least 150 ms to boot up.
-> >
-> > @Rocky to confirm my statement.
-> >
-> >>>  drivers/bluetooth/hci_qca.c | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/drivers/bluetooth/hci_qca.c
-> >>> b/drivers/bluetooth/hci_qca.c
-> >>> index 237aea34b69f..1953b13511e7 100644
-> >>> --- a/drivers/bluetooth/hci_qca.c
-> >>> +++ b/drivers/bluetooth/hci_qca.c
-> >>> @@ -508,6 +508,8 @@ static int qca_open(struct hci_uart *hu)
-> >>>                 qcadev =3D serdev_device_get_drvdata(hu->serdev);
-> >>>                 if (qcadev->btsoc_type !=3D QCA_WCN3990) {
-> >>>                         gpiod_set_value_cansleep(qcadev->bt_en, 1);
-> >>> +                       /* Controller needs time to bootup. */
-> >>> +                       msleep(150);
-> >>>                 } else {
-> >>>                         hu->init_speed =3D qcadev->init_speed;
-> >>>                         hu->oper_speed =3D qcadev->oper_speed;
->
-> Hello,
->
-> Any concern to merge this change? Without this change the Rome cannot up
-> while running the serdev way, we should mainline this change ASAP.
+--Sig_/pUnUBgG_2I692jZXpr+YLiI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Stephen was also asking about a Fixes tag, maybe we should add this?
-Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support")
+Hi all,
+
+Today's linux-next merge of the drm-misc tree got a conflict in:
+
+  drivers/gpu/drm/i915/intel_hdmi.c
+
+between commit:
+
+  fbf08556ed43 ("drm/i915: Precompute HDMI infoframes")
+
+from the drm-intel tree and commit:
+
+  2f146b78d5a9 ("drm/i915: Attach colorspace property and enable modeset")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/intel_hdmi.c
+index ecfec5d3292e,765718b606d8..000000000000
+--- a/drivers/gpu/drm/i915/intel_hdmi.c
++++ b/drivers/gpu/drm/i915/intel_hdmi.c
+@@@ -638,70 -469,39 +638,72 @@@ static void intel_write_infoframe(struc
+  	buffer[3] =3D 0;
+  	len++;
+ =20
+ -	intel_dig_port->write_infoframe(encoder,
+ -					crtc_state,
+ -					frame->any.type, buffer, len);
+ +	intel_dig_port->write_infoframe(encoder, crtc_state, type, buffer, len);
+  }
+ =20
+ -static void intel_hdmi_set_avi_infoframe(struct intel_encoder *encoder,
+ -					 const struct intel_crtc_state *crtc_state,
+ -					 const struct drm_connector_state *conn_state)
+ +void intel_read_infoframe(struct intel_encoder *encoder,
+ +			  const struct intel_crtc_state *crtc_state,
+ +			  enum hdmi_infoframe_type type,
+ +			  union hdmi_infoframe *frame)
+  {
+ +	struct intel_digital_port *intel_dig_port =3D enc_to_dig_port(&encoder->=
+base);
+ +	u8 buffer[VIDEO_DIP_DATA_SIZE];
+ +	int ret;
+ +
+ +	if ((crtc_state->infoframes.enable &
+ +	     intel_hdmi_infoframe_enable(type)) =3D=3D 0)
+ +		return;
+ +
+ +	intel_dig_port->read_infoframe(encoder, crtc_state,
+ +				       type, buffer, sizeof(buffer));
+ +
+ +	/* Fill the 'hole' (see big comment above) at position 3 */
+ +	memmove(&buffer[1], &buffer[0], 3);
+ +
+ +	/* see comment above for the reason for this offset */
+ +	ret =3D hdmi_infoframe_unpack(frame, buffer + 1, sizeof(buffer) - 1);
+ +	if (ret) {
+ +		DRM_DEBUG_KMS("Failed to unpack infoframe type 0x%02x\n", type);
+ +		return;
+ +	}
+ +
+ +	if (frame->any.type !=3D type)
+ +		DRM_DEBUG_KMS("Found the wrong infoframe type 0x%x (expected 0x%02x)\n",
+ +			      frame->any.type, type);
+ +}
+ +
+ +static bool
+ +intel_hdmi_compute_avi_infoframe(struct intel_encoder *encoder,
+ +				 struct intel_crtc_state *crtc_state,
+ +				 struct drm_connector_state *conn_state)
+ +{
+ +	struct hdmi_avi_infoframe *frame =3D &crtc_state->infoframes.avi.avi;
+  	const struct drm_display_mode *adjusted_mode =3D
+  		&crtc_state->base.adjusted_mode;
+ -	union hdmi_infoframe frame;
+ +	struct drm_connector *connector =3D conn_state->connector;
+  	int ret;
+ =20
+ -	ret =3D drm_hdmi_avi_infoframe_from_display_mode(&frame.avi,
+ -						       conn_state->connector,
+ +	if (!crtc_state->has_infoframe)
+ +		return true;
+ +
+ +	crtc_state->infoframes.enable |=3D
+ +		intel_hdmi_infoframe_enable(HDMI_INFOFRAME_TYPE_AVI);
+ +
+ +	ret =3D drm_hdmi_avi_infoframe_from_display_mode(frame, connector,
+  						       adjusted_mode);
+ -	if (ret < 0) {
+ -		DRM_ERROR("couldn't fill AVI infoframe\n");
+ -		return;
+ -	}
+ +	if (ret)
+ +		return false;
+ =20
+  	if (crtc_state->output_format =3D=3D INTEL_OUTPUT_FORMAT_YCBCR420)
+ -		frame.avi.colorspace =3D HDMI_COLORSPACE_YUV420;
+ +		frame->colorspace =3D HDMI_COLORSPACE_YUV420;
+  	else if (crtc_state->output_format =3D=3D INTEL_OUTPUT_FORMAT_YCBCR444)
+ -		frame.avi.colorspace =3D HDMI_COLORSPACE_YUV444;
+ +		frame->colorspace =3D HDMI_COLORSPACE_YUV444;
+  	else
+ -		frame.avi.colorspace =3D HDMI_COLORSPACE_RGB;
+ +		frame->colorspace =3D HDMI_COLORSPACE_RGB;
+ =20
+ -	drm_hdmi_avi_infoframe_colorspace(&frame.avi, conn_state);
+++	drm_hdmi_avi_infoframe_colorspace(frame, conn_state);
++=20
+ -	drm_hdmi_avi_infoframe_quant_range(&frame.avi,
+ -					   conn_state->connector,
+ +	drm_hdmi_avi_infoframe_quant_range(frame, connector,
+  					   adjusted_mode,
+  					   crtc_state->limited_color_range ?
+  					   HDMI_QUANTIZATION_RANGE_LIMITED :
+
+--Sig_/pUnUBgG_2I692jZXpr+YLiI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyQPQQACgkQAVBC80lX
+0GwcOwf+NWXUXmOYQAgH7YS/rY2UXvv9tQnq/BMB3Am4MkpV4j2QOgZ9wLiCzaTY
+VdkMbEXDk4FCwhO5hJ9hSX5G3w6Ilm9IxFf8AjdrAD8aQ8fpHQcw50FvgcnZgc6b
+xENKPbJ5cW81LcUoeaFo7zZXNDwWYsLhxaJUbv6bYfneUlLt31fSl7KGsO/Zx+es
+8A4BErsvPwnYzqE4mKdFbLLS61DTQjpuDc4tBv3HvxUXXWv08pUFtVR7p2sfsoJ3
+0yZ4vCyuBwbAdlQt1qwoR8Nq0AXEN15TzATYyIhWPCklNMeGXcsPyq4x7DB5/IuT
+wE1RFKqO1El7g6p0BKSJb/gubiXCSw==
+=icGM
+-----END PGP SIGNATURE-----
+
+--Sig_/pUnUBgG_2I692jZXpr+YLiI--
