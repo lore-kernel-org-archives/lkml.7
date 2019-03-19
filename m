@@ -3,35 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0EEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC484C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3695820850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFD820850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfCSPRb (ORCPT
+        id S1727645AbfCSPTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:17:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48004 "EHLO huawei.com"
+        Tue, 19 Mar 2019 11:19:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5271 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726703AbfCSPRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:17:31 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D565B5CE23D265A9A0E7;
-        Tue, 19 Mar 2019 23:17:28 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 23:17:18 +0800
+        id S1726612AbfCSPTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:19:44 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CFF72F1832997C0B44B5;
+        Tue, 19 Mar 2019 23:19:40 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 23:19:30 +0800
 From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+To:     <davem@davemloft.net>, <pkshih@realtek.com>, <kvalo@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] serial: 8250_fintek: Make fintek_8250_set_termios static
-Date:   Tue, 19 Mar 2019 23:16:46 +0800
-Message-ID: <20190319151646.17988-1-yuehaibing@huawei.com>
+Subject: [PATCH] rtl8723ae: Make rtl8723e_dm_refresh_rate_adaptive_mask static
+Date:   Tue, 19 Mar 2019 23:19:27 +0800
+Message-ID: <20190319151927.19392-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -46,30 +47,27 @@ From: YueHaibing <yuehaibing@huawei.com>
 
 Fix sparse warning:
 
-drivers/tty/serial/8250/8250_fintek.c:306:6: warning:
- symbol 'fintek_8250_set_termios' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:666:6:
+ warning: symbol 'rtl8723e_dm_refresh_rate_adaptive_mask' was not declared. Should it be static?
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/tty/serial/8250/8250_fintek.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_fintek.c b/drivers/tty/serial/8250/8250_fintek.c
-index 79a4958..31c91c2 100644
---- a/drivers/tty/serial/8250/8250_fintek.c
-+++ b/drivers/tty/serial/8250/8250_fintek.c
-@@ -303,8 +303,9 @@ static void fintek_8250_goto_highspeed(struct uart_8250_port *uart,
- 	}
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+index 514891e..d8260c7 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+@@ -663,7 +663,7 @@ void rtl8723e_dm_init_rate_adaptive_mask(struct ieee80211_hw *hw)
+ 
  }
  
--void fintek_8250_set_termios(struct uart_port *port, struct ktermios *termios,
--			struct ktermios *old)
-+static void fintek_8250_set_termios(struct uart_port *port,
-+				    struct ktermios *termios,
-+				    struct ktermios *old)
+-void rtl8723e_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
++static void rtl8723e_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
  {
- 	struct fintek_8250 *pdata = port->private_data;
- 	unsigned int baud = tty_termios_baud_rate(termios);
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_hal *rtlhal = rtl_hal(rtl_priv(hw));
 -- 
 2.7.4
 
