@@ -2,143 +2,118 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E3EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0AFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3340020811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A1D20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JNJCga+i"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ks5GhSCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfCSRwQ (ORCPT
+        id S1727521AbfCSRyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:52:16 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:33669 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfCSRwP (ORCPT
+        Tue, 19 Mar 2019 13:54:06 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:37352 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCSRyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:52:15 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z6so12263694vsc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:52:14 -0700 (PDT)
+        Tue, 19 Mar 2019 13:54:06 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id AB997C7A
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:54:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id W0PjlnEYJYS2 for <linux-kernel@vger.kernel.org>;
+        Tue, 19 Mar 2019 12:54:04 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 755E2CAC
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:54:04 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id i4so18044072itb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ujmk147faWtjPzsKh7iCqt+9xCD/NBZvc9Bqu3/KOQ8=;
-        b=JNJCga+ijl20TUPqrF5QLh9DhZZlB8zlL5q0LjqGEJtjZA/Pkh4D6v/8XVzSycXJ5O
-         +lYrmdUo6HYanvf2N20ujXL10j49dDAdCzCttzhFKcHmLOVW1rOP1pqjSLVkFZAE25Ey
-         xdSoXuKG8MQ41nVa8HC+7kT9pBa56B4bh34yqVydae8WxVYUlq85LEWrYuHqsv2N2TMs
-         THGA2CgV1qHQnX0bqeLHa2can9OHSTjNRN87H2GlXR8ptsId09MyQs4lUH8Fj7J5HFLL
-         EZXZ7U0HS55xCDWXT6o2wuqRXZDY+7YZUiGv5zcFQxSsygS94+w7ORUklABpsKJEn7Rb
-         z9xA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=K6nd7rHuf5jkq4Vkom/yzCR+WfV8SUCoSAXMWbiPRCk=;
+        b=ks5GhSCjom+9cY8Xzi6+xcX2cIxRwD+I3USt1SkqZZWUAySjZ+7D3AwoOWGSuBDoBe
+         GudjHENIqABCznBNrwvYBk0za7FxvfwtIiR0AsLqI1xPFEqMzyO3DE4vLJj9BaYNgfNY
+         jigQmPiYUqUzYwkFi4MaX4ls66bpL2HPv3nmss+QWcBIHoZ0AylxNmlLn9ROg/Ok229m
+         YAEYrOQOpfEvb1ITd9+rBCgq5K4Y/5eHzPB48YySXAOhN2DcKHovV2AR0c9eFZSMKFUD
+         t7US+dMkxL+hEJ979JVrx8BA+7Sn/FZFv7ZeQMrlLJKbfQsDRfnyXmr8BmBJcqqC54bQ
+         EAog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ujmk147faWtjPzsKh7iCqt+9xCD/NBZvc9Bqu3/KOQ8=;
-        b=uZ5emIHBZ/t5y9b+NuyRh1EZwmbUD3qPYnLGGmHUL6iJShqQuVdRd2eF0dtYdAr28c
-         QIbxL4TYuKOR+azMk9JqTt4+CIilZOPal5R08YsC6VqYb/rXMOWGsmjluL3adG5ehSQa
-         533ssWzPnRydIN1c7fmg0dM6WXspftE/ijEBgIMPf1taJD2/n3xs08kCPf3u3s6AAgE5
-         VorsarHJwfwRMDvSJVhKmxLTp4XVju9uc339zy3CbV7QTuSQq7oxqMjYDcM7Dl+Oculk
-         UDCs23h7VjdDnymVc4gjDcs6x158he16X3WZmoOguolXGArMIrqbyH8vLGdWtLqCxS8p
-         2ZcQ==
-X-Gm-Message-State: APjAAAVbFBccmSZRpCnTxyWvn8GMo6B/SqKRUXJJbiHy3qzDbR3OmYZa
-        B8hAN6TXjxtXYVn12Q2fgQ8pGPesAknEr3hqy02V8A==
-X-Google-Smtp-Source: APXvYqwXDxZS8YVzeS88aSnYi6ELHJVoHB5h3wvpDRzR4pPs9CFUbBXCWDaSGaRBqXQdY7fpvRs7nezKnbj6FcQ9mVI=
-X-Received: by 2002:a67:ff07:: with SMTP id v7mr2176894vsp.231.1553017933859;
- Tue, 19 Mar 2019 10:52:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190314130113.919278615@infradead.org> <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com> <20190319110549.GC5996@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190319110549.GC5996@hirez.programming.kicks-ass.net>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 19 Mar 2019 10:52:01 -0700
-Message-ID: <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=K6nd7rHuf5jkq4Vkom/yzCR+WfV8SUCoSAXMWbiPRCk=;
+        b=WAWx+rRhDi0us4UmEIyaeLAu1vLP8LQ8bP40lTuMysGEuUlTqHoao0IVcqYxEPsswS
+         8v8a1vkGb+z/J3UdbXJ0wzB5KDDOSvpZDWGkMSfvQoqum17oWU0xCFmw17AhEb6KyKRD
+         xIPvrmPPEfLeYo1bZ+0OM29mltiUVmZgwoPGlIqEsZFrTK17vCkqgr9jsAxNC22QKBiB
+         KWVuZShwEh/Pd0R0nQZFc6F1/dOTxWn1ysdVg1MmGDrBuDlGpjuTMTr010kuvX4AL0vR
+         AsbT7VGB4VVpJQwGTSD2WHg2DYIpMtlYTBSFpWgODJ/BCchHfbWzkX6oV9lX91Fa8QgT
+         65JA==
+X-Gm-Message-State: APjAAAUPXt/wXIC+yLJFHC3b5y986r0lzfJhRx6QQF7PW8iP3RxzDXlS
+        iU8TFjHOgnT7LQKa1/yqBxrW6mgMpb2MKURJrNcgaYy+Yo4wCsU2gvTHvIwGko55ulmAV9K6c+F
+        /lCUO/akghN1CI7wY+jGOkTmLANkz
+X-Received: by 2002:a6b:7f49:: with SMTP id m9mr2381935ioq.288.1553018044072;
+        Tue, 19 Mar 2019 10:54:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwF73fhVyakf/sSjEcNKkGHg115LOSwXYk89kzxJXQdt7PsXZK9px+0gGNtLniEpZiZw+Cwjw==
+X-Received: by 2002:a6b:7f49:: with SMTP id m9mr2381917ioq.288.1553018043854;
+        Tue, 19 Mar 2019 10:54:03 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id l8sm1879836itl.26.2019.03.19.10.53.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 10:53:50 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rapidio: fix a NULL pointer dereference when create_workqueue fails
+Date:   Tue, 19 Mar 2019 12:53:45 -0500
+Message-Id: <20190319175345.8082-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <002201d4dddc62129a02637ce0gmail.com>
+References: <002201d4dddc62129a02637ce0gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 4:05 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Mar 18, 2019 at 11:29:25PM -0700, Stephane Eranian wrote:
->
-> > > --- a/arch/x86/events/intel/core.c
-> > > +++ b/arch/x86/events/intel/core.c
-> > > @@ -3410,7 +3410,7 @@ tfa_get_event_constraints(struct cpu_hw_
-> > >         /*
-> > >          * Without TFA we must not use PMC3.
-> > >          */
-> > > -       if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
-> > > +       if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
-> > >                 c = dyn_constraint(cpuc, c, idx);
-> > >                 c->idxmsk64 &= ~(1ULL << 3);
-> > >                 c->weight--;
-> > >
-> > >
->
-> > I was not cc'd on the patch that added  allow_tsx_force_abort, so I
->
-> Yeah, that never was public :-( I didn't particularly like that, but
-> that's the way it is.
->
-> > will give some comments here.
->
-> > If I understand the goal of the control parameter it is to turn on/off
-> > the TFA workaround and thus determine whether or not PMC3 is
-> > available. I don't know why you would need to make this a runtime
-> > tunable.
->
-> Not quite; the control on its own doesn't directly write the MSR. And
-> even when the work-around is allowed, we'll not set the MSR unless there
-> is also demand for PMC3.
->
-Trying to understand this better here. When the workaround is enabled
-(tfa=0), you lose
-PMC3 and transactions operate normally. When it is disabled (tfa=1),
-transactions are
-all aborted and PMC3 is available. If you are saying that when there
-is a PMU event
-requesting PMC3, then you need PMC3 avail, so you set the MSR so that
-tfa=1 forcing
-all transactions to abort. But in that case, you are modifying the
-execution of the workload
-when you are monitoring it, assuming it uses TSX.  You want lowest
-overhead and no
-modifications to how the workload operates, otherwise how
-representative is the data you are
-collecting? I understand that there is no impact on apps not using
-TSX, well, except on context
-switch where you have to toggle that MSR. But for workloads using TSX,
-there is potentially
-an impact.
+In case create_workqueue fails, the fix releases resources and
+returns -ENOMEM to avoid NULL pointer dereference.
 
-> It is a runtime tunable because boot parameters suck.
->
-> > That seems a bit dodgy. But given the code you have here right now, we
-> > have to deal with it. A sysadmin could flip the control at any time,
-> > including when PMC3 is already in used by some events. I do not see
-> > the code that schedules out all the events on all CPUs once PMC3
-> > becomes unavailable. You cannot just rely on the next context-switch
-> > or timer tick for multiplexing.
->
-> Yeah, meh. You're admin, you can 'fix' it. In practise I don't expect
-> most people to care about the knob, and the few people that do, should
-> be able to make it work.
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/rapidio/rio_cm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I don't understand how this can work reliably. You have a knob to toggle
-that MSR. Then, you have another one inside perf_events and then the sysadmin
-has to make sure nobody (incl. NMI watchdog) is using the PMU when
-this all happens.
-How can this be a practical solution? Am I missing something here?
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index cf45829585cb..b29fc258eeba 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -2147,6 +2147,14 @@ static int riocm_add_mport(struct device *dev,
+ 	mutex_init(&cm->rx_lock);
+ 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
+ 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
++	if (!cm->rx_wq) {
++		riocm_error("failed to allocate IBMBOX_%d on %s",
++			    cmbox, mport->name);
++		rio_release_outb_mbox(mport, cmbox);
++		kfree(cm);
++		return -ENOMEM;
++	}
++
+ 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
+ 
+ 	cm->tx_slot = 0;
+-- 
+2.17.1
+
