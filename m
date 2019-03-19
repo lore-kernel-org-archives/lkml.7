@@ -2,199 +2,105 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C70C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA033C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA418213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9014A213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="V4rtM+Am"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfCSNGk (ORCPT
+        id S1727018AbfCSNL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:06:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54121 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfCSNGj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:06:39 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6ERv-000712-Hq; Tue, 19 Mar 2019 14:06:35 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6ERt-0007fB-SK; Tue, 19 Mar 2019 14:06:33 +0100
-Date:   Tue, 19 Mar 2019 14:06:33 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V6 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190319130633.2kiwwxqhyttizf3h@pengutronix.de>
-References: <1552977898-5590-1-git-send-email-Anson.Huang@nxp.com>
- <1552977898-5590-3-git-send-email-Anson.Huang@nxp.com>
- <20190319080400.shcsnsyyjcwijsg3@pengutronix.de>
- <DB3PR0402MB3916E87140DE4A4242E879E9F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190319101641.45sztmodp4pgz5uu@pengutronix.de>
- <DB3PR0402MB39167AAC67468C6D89AA81A3F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Tue, 19 Mar 2019 09:11:26 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:45039 "EHLO mail1.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbfCSNL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1553001085; x=1584537085;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=YZ4J5UTncLJ/PTFt2yYwAjChO7oWMvH/+rMsTnRSgfw=;
+  b=V4rtM+AmerDXPPGQIeVtvjSqr6XaqAIG2LBM0vwmVgUpYkOtd/0Mue79
+   FbCjwInPRAvGKWJXEHuZ6U7Efhdrw0BV8xJ0xvAGjKYbVxOycB6fFDlFr
+   Auppo1Atvax65Z06Yve1+F3vC60+8F++1qLNA9dVjgh/Lsa4xZ/Vg7LuM
+   xpd7UPIvEd8Ab+o50kG4jl85/d+yTd94zwl6i2edPih8qW1F8G4MLpu4M
+   J8j6cPt5NKXEZ7PQKFnaY757lbI9wmRxlfZJHD4m7ZG6C+Fh169HrLkON
+   yTyOmVgX0ieZY2T4k03Zoz9RT8z07oIpvegTkJCSoLMMELfmKauJBN9zQ
+   Q==;
+IronPort-SDR: 5j2gXmfIar4y/PK4X+4aMPH0oLHne63aFz8r1AihWn59PVIvIuiYdsJYaat5I7hg1rSjjyQl0T
+ iVQmYhbo47DUcX8Ousg9Pr8sl7+eqmkl69PMMkL3zIR6UamJFjK+kuIwDekHG5K0uaGZPPcHah
+ Oiz9p4mXVnSucZSlrPuM6CKwFhoHj7kyn73v0/bhQqbRlJFwJWfCrw6LDs4nEaxcsmNWx9HTgF
+ 40LzYNyWzlRrlSrA1JiP4oHNb0eYs4SKdSGbLlmq1rOVWhlHSY/uF1DICln9UrI4SVcPo38ml7
+ zag=
+X-IronPort-AV: E=Sophos;i="5.58,498,1544482800"; 
+   d="scan'208";a="15841402"
+Subject: Re: [PATCH] usb: usb251xb: fix to avoid potential NULL pointer
+ dereference
+To:     Aditya Pakki <pakki001@umn.edu>
+CC:     <kjlu@umn.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190318235605.11055-1-pakki001@umn.edu>
+From:   Richard Leitner <richard.leitner@skidata.com>
+Message-ID: <3579fc19-dde7-968b-3918-39f1cc4ee3bc@skidata.com>
+Date:   Tue, 19 Mar 2019 14:11:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB39167AAC67468C6D89AA81A3F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190318235605.11055-1-pakki001@umn.edu>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.111.22]
+X-ClientProxiedBy: sdex5srv.skidata.net (192.168.111.83) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Tue, Mar 19, 2019 at 11:49:32AM +0000, Anson Huang wrote:
-> > On Tue, Mar 19, 2019 at 09:08:26AM +0000, Anson Huang wrote:
-> > > > On Tue, Mar 19, 2019 at 06:50:12AM +0000, Anson Huang wrote:
-> > > > > +	}
-> > > > > +
-> > > > > +	/* if no valid prescale found, use MAX instead */
-> > > > > +	if ((!FIELD_FIT(PWM_IMX_TPM_SC_PS, prescale)))
-> > > > > +		prescale = PWM_IMX_TPM_SC_PS >> __bf_shf(PWM_IMX_TPM_SC_PS);
-> > > >
-> > > > 		prescale = FIELD_PREP(PWM_IMX_TPM_SC_PS, PWM_IMX_TPM_SC_PS)
-> > > >
-> > > > What is the consequence if the calculated prescale isn't valid? I
-> > > > assume this yields a greatly different period? If yes, this should result in
-> > > > an error.
-> > >
-> > > Yes, that is what I intend to do, if a request period is too large and
-> > > the prescale Can NOT meet the requirement, I force it to the largest
-> > > value that hardware can Provide, I am NOT sure if it is the correct
-> > > solution, if no, I can make it return error If round period returns an invalid
-> > > result.
-> > 
-> > I'd say for sure it is not correct to configure for a period of 3 s if
-> > 20 s are requested. Where to draw the line exactly I don't know either.
-> > 
-> > In my opinion we need a general guideline like:
-> > 
-> > 	If the requested period + duty_cycle combo isn't supported use
-> > 	the biggest available period that is not bigger than requested,
-> > 	scale duty cycle accordingly and pick the biggest available duty
-> > 	cycle that is not bigger than the scaled value.
-> > 	If the requested period is shorter than possible, return
-> > 	-ERANGE.
-> > 
-> > I think the above is sensible, but that's something that IMHO must first be
-> > declared to be "official" as it doesn't make sense if a single driver implements
-> > this and the other still do their own stuff.
+On 19/03/2019 00:56, Aditya Pakki wrote:
+> of_match_device in usb251xb_probe can fail and returns a NULL pointer.
+> The patch avoids a potential NULL pointer dereference in this scenario.
 > 
-> As for now, do you agree if I make TPM driver ONLY support those period/duty
-> Setting that HW can support, for other request, just return -ERANGE to make it
-> Simple until there is a general guideline available?
-
-I would be surprised if that would result in something that is actually
-usable. But feel free to try.
-
-> > Additionally I would consider it beneficial to have something like:
-> > 
-> > 	int pwm_round_state(pwm, &state)
-> > 
-> > that modifies state according to the above rules without affecting the
-> > hardware. With the respective driver callback the framework could then
-> > implement stuff like: "If the resulting configuration deviates too much from
-> > the requested state, return an error to the consumer." with having the
-> > definition of "too much" in a single place. It would also allow a consumer
-> > who cares much about the resulting waveform to determine the effects
-> > without testing.
-> > 
-> > The framework could then add additional checks like:
-> > 
-> > 	int pwm_apply_state(pwm, state)
-> > 	{
-> > 		struct pwm_state rounded_state;
-> > 
-> > 		if IS_ENABLED(CONFIG_PWM_EXTRA_CHECKS):
-> > 			rounded_state = pwm->ops->round_state(state);
-> > 
-> > 	if !was_rounded_according_to_the_rules(round_state):
-> > 				warn(...)
-> > 
-> > 		pwm->ops->apply(pwm, state)
-> > 
-> > 		if IS_ENABLED(CONFIG_PWM_EXTRA_CHECKS):
-> > 			actual_state = pwm->ops->get_state(state);
-> > 			if actual_state != round_state:
-> > 				warn(...)
-> > 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>   drivers/usb/misc/usb251xb.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> As for now, do you agree if I add the "round state" function to make sure every time
-> the newly requested state applied, the HW outputs the expected result? I can merge
-> the "config" and "enable" function into 1 function and make sure of that.
+> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> index 4d72b7d1d383..fe5266dc8864 100644
+> --- a/drivers/usb/misc/usb251xb.c
+> +++ b/drivers/usb/misc/usb251xb.c
+> @@ -612,6 +612,8 @@ static int usb251xb_probe(struct usb251xb *hub)
+>   							   dev);
+>   	int err;
+>   
+> +	if (!of_id)
+> +		return -ENODEV;
 
-Yeah, that sounds right. Splitting into enable and config is a thing
-from the past and makes it hard to provide the needed atomicity.
+Hi Aditya,
+thanks for finding this issue!
 
-> > > > > +	/*
-> > > > > +	 * polarity settings will enabled/disable output status
-> > > > > +	 * immediately, so here ONLY save the config and write
-> > > > > +	 * it into register when channel is enabled/disabled.
-> > > > > +	 */
-> > > > > +	chan->config = val;
-> > > >
-> > > > This function's behaviour is strange. It configures the hardware
-> > > > with the right the duty_cycle but not the polarity. I cannot imagine that
-> > > > this not buggy.
-> > >
-> > > I think that is hardware limitation here, I used the polarity setting
-> > > to enable/disable the channel, if we set the polarity here directly,
-> > > the output status may NOT reflect the real state, if eventually the
-> > > status is disabled, setting the polarity directly into register will
-> > > make the output active, that is NOT expected, right? And that is why I put
-> > > comments here.
-> > 
-> > The frameworks expectation is that .apply results in the hardware switches
-> > to the new configuration directly after completing a previously configured
-> > period. So if you change the period, get preempted and then change the
-> > polarity three periods later that is a bug. If it's impossible to fix this in
-> > software please do as good as possible (whatever that means) and add this
-> > problem to the list of limitations at the top of the driver.
+Nonetheless I'd prefer to change this to not return here but rather do 
+something like:
+
+	if (np && of_id) {
+
+So we still may bring up the hub in its default config in scenarios 
+without dt/of...
+
+Any comments/objections on that?
+
+regards;Richard.L
+
+>   	if (np) {
+>   		err = usb251xb_get_ofdata(hub,
+>   					  (struct usb251xb_data *)of_id->data);
 > 
-> I think after merging the "config" and "enable" function into ONE function, the
-> output result should can be expected and no "polarity setting late" issue, talking
-> about the preempt between the period setting and polarity settings, should we
-> use the spin_lock_irqsave() instead of mutex() for .apply?
-
-No, I think mutexes are fine.
- 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
