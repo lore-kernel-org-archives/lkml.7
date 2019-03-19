@@ -2,102 +2,115 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AEEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ADC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F3D20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402AB20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRdv/K0a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axQ01i8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfCSC0F (ORCPT
+        id S1727670AbfCSC0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:26:05 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:34018 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfCSC0F (ORCPT
+        Mon, 18 Mar 2019 22:26:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44624 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfCSC0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:26:05 -0400
-Received: by mail-pf1-f181.google.com with SMTP id v64so12610923pfb.1;
-        Mon, 18 Mar 2019 19:26:04 -0700 (PDT)
+        Mon, 18 Mar 2019 22:26:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a3so12592386pff.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BJVdEsQwZZJCtbo/HrRHA1ZgB54q5sGlswTQWhaArbs=;
-        b=mRdv/K0a0tq3pg6vwrjxjUTDcCmYnDfRZDUzziWxrDaDDV4Xzy9+bnz+djWz50lp1F
-         Y58VKj9UT7HAB1KECkyxfxADE8OWjBxapDWmM8+SElyyAAMaN3L8sjPk+PDV5TptO6ta
-         KMFSEUMaq8B0yxFtOu9joKUEYIOhJr1xUaJpWAFS5MHuXama3NCdf/lvoJc/eSIkwcBq
-         PBgLY2VYAtoDsQ+1XffI8mvw2fgCFbJyDKe29W9/NNUNE2PBDO+Nh2cHMd6zWKIjFweT
-         57caZ/w6TA63bs1DiwrgUxbhAEimfehqmIDefNSFmp0uNXxI7hqeKjeCM9yQQc3JDVXD
-         yDnw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F9hIq6OqtC1SVS2O3U7ZkPoLnNclA70DsapCWy7Q+lE=;
+        b=axQ01i8IBZi45x8kocMbwsCnxyGWV2J6KPZD0Kvgs2/Yaw/Le0kbKh4v6TjS8TlLN/
+         Fp1i11g2wUSy9AxXfQGRlmcKVs6D+8q5JgaGppoXZDWZ6E08ke8uQygcG2EGAEoCtGsx
+         UFLiaLRZlpLGEKiubhXWZ/PmRqC3+92ojBfVO/yWdt0kFn/ZAPUhGKykq5XnL7GFNyle
+         wwduJrwn8QRqkDXVKxcrG+gP4/1dGOKT1a0MvDM0uxgedBI0PBb86jSFen+JBmyPEcp5
+         OtUtOsoojCEt6asjiBR1//iQ0mQm9kT1vJjSfz2yiTcGpUHiyQD6dTVTpKpFvR5WdtUP
+         RHDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BJVdEsQwZZJCtbo/HrRHA1ZgB54q5sGlswTQWhaArbs=;
-        b=ORLwXWiJ+r9P9oKC8bp+OVCbYNWN6PWyvgRUYjzseaZrGwz0t+DD7/PorM4ZiYjq3/
-         pqrsxSJwcu3SWns9/KFebS1NZvb0HLzbhE8PpKutjenvMrImb6Zz+Ks/JnAAtlD3JZJ0
-         BTdYoAnvFONtjqYkALdBlo2FheKkobg3kOEI9eZ2Q+lmuvUqOalo3LZRnXnXwaV04wr5
-         9YMenBIjAcmNlW/Vd8EmCow4RtSqi6+2O1mKzXqiXWIrIR7aiEehK7maJEkziKHXWzRi
-         vGLIRIXxdDwzsghLDwVWejMktlrlJckdvdwMfPYiMc9n5Q6geHu8PzKUHQWTSo4DR0Ru
-         AG5g==
-X-Gm-Message-State: APjAAAXjUJQ3/ez0SCDB5fJaAKhHeuSOpNX3jEUbo6Lj86k9eGHq0YUr
-        e60HVBrYRFsy3QLcNmSPiX1oBB9U
-X-Google-Smtp-Source: APXvYqzkzjqklP9rq5fIgSP8rOkhg1YKuFv4jtiR/cvFaADhYF9VAbyrhX8IfcD2XnX8rCfXSKz+Iw==
-X-Received: by 2002:a62:5c87:: with SMTP id q129mr21815791pfb.180.1552962364278;
-        Mon, 18 Mar 2019 19:26:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i10sm13977816pgs.26.2019.03.18.19.26.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:26:03 -0700 (PDT)
-Subject: Re: [PATCH 4.20 00/52] 4.20.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190318083843.398913295@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c00e74f6-b539-aaec-3754-58cdc934eb4a@roeck-us.net>
-Date:   Mon, 18 Mar 2019 19:26:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F9hIq6OqtC1SVS2O3U7ZkPoLnNclA70DsapCWy7Q+lE=;
+        b=B87s+VofwPsS2gNXyBRTVZIUtrvz3xiCFrCNJWM410cenHMmFuxTUCafea3Rsx88Yy
+         NE3f/ntYlgoGB5GoLfo8U59/gw59755t0lFlIgxahfO42V4qMs0Ytga6bgjlm4dHPaRy
+         0psPvuTNwXS7jYdRR1DbbA9j0BeOBmid/JCNVT7daX+Vq6pF1C+BKG58HBGcGU9l5/Qf
+         SHkYSHwk4Ui8va+kiFTRIbPYfQtjd7GPN+dVwJyVXYVIoFqafB1SoZywaWybm59TpWyF
+         ALETC0pIUMa2Rqc5td1JeVZjueHQO6LWD6U2cmQ7HDqBgvmefLWLUd7fNnWkUaIAte4t
+         oGmQ==
+X-Gm-Message-State: APjAAAVbMLYZpDC1M3BKyG8oV0Ck8nd5046cPzLzGSqinnjdbZMUJtFV
+        3OfkyGf7TGYgc4hU5YKk+8c=
+X-Google-Smtp-Source: APXvYqzT+r2qSiocZjhBB5Mm80gaR6+7Ywju7MjSzVTtt6VaSEqofhbQuEZfX4U+yLgEjsULEq7Ykw==
+X-Received: by 2002:a63:f74c:: with SMTP id f12mr75210pgk.124.1552962376538;
+        Mon, 18 Mar 2019 19:26:16 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC ([106.51.22.39])
+        by smtp.gmail.com with ESMTPSA id u13sm18812634pfa.169.2019.03.18.19.26.15
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 18 Mar 2019 19:26:15 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 08:00:51 +0530
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
+        boris.ostrovsky@oracle.com, jgross@suse.com, linux@armlinux.org.uk,
+        robin.murphy@arm.com
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [RESEND PATCH v4 9/9] xen/privcmd-buf.c: Convert to use
+ vm_map_pages_zero()
+Message-ID: <acf678e81d554d01a9b590716ac0ccbdcdf71c25.1552921225.git.jrdr.linux@gmail.com>
+References: <cover.1552921225.git.jrdr.linux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 2:24 AM, Greg Kroah-Hartman wrote:
-> ------------------
-> NOTE, this is going to be the LAST 4.20.y release.  After this one, 4.20
-> will be end-of-life.  Please move to the 5.0.y tree at this point in
-> time, or let me know why that is not possible.
-> ------------------
-> 
-> This is the start of the stable review cycle for the 4.20.17 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Mar 20 08:38:27 UTC 2019.
-> Anything received after that time might be too late.
-> 
+Convert to use vm_map_pages_zero() to map range of kernel
+memory to user vma.
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 345 pass: 345 fail: 0
+This driver has ignored vm_pgoff. We could later "fix" these drivers
+to behave according to the normal vm_pgoff offsetting simply by
+removing the _zero suffix on the function name and if that causes
+regressions, it gives us an easy way to revert.
 
-Guenter
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ drivers/xen/privcmd-buf.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/xen/privcmd-buf.c b/drivers/xen/privcmd-buf.c
+index de01a6d..d02dc43 100644
+--- a/drivers/xen/privcmd-buf.c
++++ b/drivers/xen/privcmd-buf.c
+@@ -166,12 +166,8 @@ static int privcmd_buf_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (vma_priv->n_pages != count)
+ 		ret = -ENOMEM;
+ 	else
+-		for (i = 0; i < vma_priv->n_pages; i++) {
+-			ret = vm_insert_page(vma, vma->vm_start + i * PAGE_SIZE,
+-					     vma_priv->pages[i]);
+-			if (ret)
+-				break;
+-		}
++		ret = vm_map_pages_zero(vma, vma_priv->pages,
++						vma_priv->n_pages);
+ 
+ 	if (ret)
+ 		privcmd_buf_vmapriv_free(vma_priv);
+-- 
+1.9.1
+
