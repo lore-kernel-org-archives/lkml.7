@@ -2,133 +2,111 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A92C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FF6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54426213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F71213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfCSLf4 (ORCPT
+        id S1727275AbfCSLi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:35:56 -0400
-Received: from foss.arm.com ([217.140.101.70]:49892 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfCSLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:35:55 -0400
+        Tue, 19 Mar 2019 07:38:28 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49942 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfCSLi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:38:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D00B1596;
-        Tue, 19 Mar 2019 04:35:55 -0700 (PDT)
-Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33A583F614;
-        Tue, 19 Mar 2019 04:35:53 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 11:35:48 +0000
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/9] PCI: keystone: Convert to using hierarchy domain
- for legacy interrupts
-Message-ID: <20190319113548.2a5b77a7@why.wild-wind.fr.eu.org>
-In-Reply-To: <737e20d6-b389-522e-7e04-a381601fb128@ti.com>
-References: <20190221101518.22604-1-kishon@ti.com>
-        <20190221101518.22604-4-kishon@ti.com>
-        <20190221162413.GA5815@e107981-ln.cambridge.arm.com>
-        <20190223121143.14c1f150@why.wild-wind.fr.eu.org>
-        <4c55487d-213f-f5f5-6d67-93a417d2a0d7@ti.com>
-        <867eda28qh.wl-marc.zyngier@arm.com>
-        <73780998-919e-1a1c-7b8d-0bf8e33df015@ti.com>
-        <20190318111635.7eab3a97@why.wild-wind.fr.eu.org>
-        <737e20d6-b389-522e-7e04-a381601fb128@ti.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD6D1A78;
+        Tue, 19 Mar 2019 04:38:27 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E74E3F614;
+        Tue, 19 Mar 2019 04:38:26 -0700 (PDT)
+Subject: Re: [PATCH] sched: Do not re-read h_load_next during hierarchical
+ load calculation
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190319091709.lqrtbn76sjx73hnv@techsingularity.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <7de2aa1d-ab22-e7ab-ed9d-06acdbfbde7a@arm.com>
+Date:   Tue, 19 Mar 2019 11:38:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190319091709.lqrtbn76sjx73hnv@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 16:22:39 +0530
-Kishon Vijay Abraham I <kishon@ti.com> wrote:
+Hi,
 
-Hi Kishon,
-
-> Hi Marc,
+On 19/03/2019 09:35, Mel Gorman wrote:
+> A NULL pointer dereference bug was reported on a distribution kernel but
+> the same issue should be present on mainline kernel. It occured on s390
+> but should not be arch-specific.  A partial oops looks like
 > 
-> On 18/03/19 4:46 PM, Marc Zyngier wrote:
-> > On Mon, 18 Mar 2019 11:03:07 +0530
-> > Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >   
-> >> Hi Marc,
-> >>
-> >> On 07/03/19 5:32 PM, Marc Zyngier wrote:  
-> >>> On Thu, 07 Mar 2019 09:12:30 +0000,
-> >>> Kishon Vijay Abraham I <kishon@ti.com> wrote:    
-
-
-[...]
-
-> >>>> It is pulse triggered at subsystem level. Quoting the TRM
-> >>>> "The interrupt request signal at the PCIe SS boundary is a pulse signal that is
-> >>>> triggered each time an assert interrupt message is received." The PCIe
-> >>>> subsystem also has a level signal (interrupt pending signal) but the interrupt
-> >>>> request signal is the one that is connected to GIC.    
-> >>>
-> >>> This looks completely wrong. MSIs are always edge, and legacy always
-> >>> level, end of story. If your HW is any different, then it doesn't seem
-> >>> to be compliant with PCI.    
-> >>
-> >> Agree that Legacy interrupts ought to be level-triggered. I checked this with
-> >> HW team and I've copy-pasted the response.
-> >>
-> >> "The legacy interrupts from the PCIe controller are still level. The PCIe
-> >> controller will hold the legacy interrupt lines high until a de-assert message
-> >> is sent back. The pulse interrupt is only to send the interrupt from the PCIe
-> >> sub-system to the SoC interrupt controller. This should not impact the
-> >> operation of the legacy interrupt on the PCIe side."
-> >>
-> >> Looks like the interrupts are propagated multiple levels and only the last
-> >> level to the interrupt controller is pulse.  
-> > 
-> > Let's take an example: My device (let's assume a network controller of
-> > some sort) generates an interrupt. Level is high, and you observe an
-> > edge. The driver handles the interrupt, but due to a race, the line
-> > stays high (the device has received a new packet).
-> > 
-> > How is a *new* edge generated? The line never transited to low, and we
-> > have more packet to process. With a level triggered interrupt, you just
-> > take the interrupt again. With an edge interrupt, you need to actively
-> > resample the level and retrigger the interrupt. How is this done?  
+> [775277.408564] Unable to handle kernel pointer dereference in virtual kernel address space
+> ...
+> [775277.408759] Call Trace:
+> [775277.408763] ([<0002c11c56899c61>] 0x2c11c56899c61)
+> [775277.408766]  [<0000000000177bb4>] try_to_wake_up+0xfc/0x450
+> [775277.408773]  [<000003ff81ede872>] vhost_poll_wakeup+0x3a/0x50 [vhost]
+> [775277.408777]  [<0000000000194ae4>] __wake_up_common+0xbc/0x178
+> [775277.408779]  [<0000000000194f86>] __wake_up_common_lock+0x9e/0x160
+> [775277.408780]  [<00000000001950de>] __wake_up_sync_key+0x4e/0x60
+> [775277.408785]  [<00000000005d911e>] sock_def_readable+0x5e/0x98
 > 
-> There might be an actual issue in the HW while converting from level to edge
-> where new edge interrupt might not be generated in the case you just mentioned.
-> I am checking this with HW folks.
+> The bug hits any time between 1 hour to 3 days. The dereference occurs
+> in update_cfs_rq_h_load when accumulating h_load. The problem is that
+> cfq_rq->h_load_next is not protected by any locking and can be updated
+> by parallel calls to task_h_load. Depending on the compiler, code may be
+> generated that re-reads cfq_rq->h_load_next after the check for NULL and
+> then oops when reading se->avg.load_avg. The dissassembly showed that it
+> was possible to reread h_load_next after the check for NULL.
+> 
+> While this does not appear to be an issue for later compilers, it's still
+> an accident if the correct code is generated. Full locking in this path
+> would have high overhead so this patch uses READ_ONCE to read h_load_next
+> only once and check for NULL before dereferencing. It was confirmed that
+> there were no further oops after 10 days of testing.
+> 
 
-There is (non-PCI) HW that does that. On EOI, they force the interrupt
-controller to resample the level, which results in a new edge to be
-generated if the level is high. This of course require some HW, usually
-a register taking the ID of the line that needs resampling. I'd be
-surprised if there wasn't something along those lines in your HW, at
-least as a debug mechanism.
+Does that also want a
 
-> Since this might take time, I'll remove this patch and resend only the MSI
-> cleanup in order to make progress.
+Fixes: 685207963be9 ("sched: Move h_load calculation to task_h_load()")
+Cc: stable@vger.kernel.org
 
-OK.
+?
 
-Thanks,
+Other than that, the change looks sane to me.
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 310d0637fe4b..34aeb40e69d2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7726,7 +7726,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+>  		cfs_rq->last_h_load_update = now;
+>  	}
+>  
+> -	while ((se = cfs_rq->h_load_next) != NULL) {
+> +	while ((se = READ_ONCE(cfs_rq->h_load_next)) != NULL) {
+>  		load = cfs_rq->h_load;
+>  		load = div64_ul(load * se->avg.load_avg,
+>  			cfs_rq_load_avg(cfs_rq) + 1);
+> 
