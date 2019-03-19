@@ -2,198 +2,132 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D11C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5FFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2F520857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFA82077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="HI+uK3Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfCSQX7 (ORCPT
+        id S1727924AbfCSQYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:23:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727810AbfCSQX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:23:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 19 Mar 2019 12:24:15 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:34666 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbfCSQYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:24:13 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 263D0150
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:24:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nXEXkEGM6-ES for <linux-kernel@vger.kernel.org>;
+        Tue, 19 Mar 2019 11:24:12 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0EE593082231;
-        Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A07A129175;
-        Tue, 19 Mar 2019 16:23:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 4/4] fuse: Move the subtype parameter into fuse
-From:   David Howells <dhowells@redhat.com>
-To:     miklos@szeredi.hu, viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com, anprice@redhat.com
-Date:   Tue, 19 Mar 2019 16:23:53 +0000
-Message-ID: <155301263386.7556.6722703415894365051.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
-References: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id F265313D
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:24:11 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id z6so16142180ioh.16
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=0R6wmKmuCV/v68BfRZs1XhLMkHB4bEg8KvGWPZiRy/s=;
+        b=HI+uK3Uej3cavH6sZzy2MyPaxX5RirHln3IcweIr6ct1TmoKvd+yW8ppLNgR+IAVVu
+         BdPFrIU5K8foCNEBX3Vuaji4ZFpUN0GK4EjXsVoQCGcOp79sWvJSjnWG7bMP3XDEiOt9
+         D7ycAQqYICY6eW0teK3/zEP9DXNkw1sAtMHS8clQHujt++EFAfYC6Jz1ChU4k1A29Sgn
+         RcinQQGsn0EuyrD8LBHz0iez1WD9PZt2y+ewtuXnjaMwKs6PDU59xRpJkrJ2mVrbZoqO
+         VRvwT17JiszwGqsDmwWPHluIJrseArWXrMwsHNda1mdfT51XU75L8WueFO7FERrqMrL8
+         vInw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0R6wmKmuCV/v68BfRZs1XhLMkHB4bEg8KvGWPZiRy/s=;
+        b=gxTUJImbmU8ult1NvQHoYJQFmYo2OOqFoux4AKprnGHh91zf46+D55SqXPAiVQZFGz
+         Gzp9+0Nth52hEWgKdLC+Nf75tOH08RMZVRbixlvATIjpZHG1tC6WJ+/9H3sk0qmnWj9F
+         MMWkne8MC9pY94pArCZEShnbcFVLkWVGtpA7czYXlWwJRxJ8HPqSrXj5P+7kuV1d78FV
+         c7oa73Qy9qRKPdCF/mkEpsWNi5vP9NZdRqg35LmpvWqsvs+UngPldYVSxUDE7dHp/TEd
+         DgM9/DKqqWssYuwWY/Xw8AoPyVAivc7whzEvrUx1erT5x2Ey7Ksbz0NncJ7e50laYzcJ
+         xVqQ==
+X-Gm-Message-State: APjAAAXqwBFzTV3W6Du+CPLJZqhC2ojSTLz3/bptSKUyXlWks6+i+Gz8
+        finW9670yoYky2a9suf5L91aaxtQ/hRORyANdq49olWMdC/WCCfTCqZPa5/lXH1zkhEvlri/vCH
+        ShBjo1rJRG8mpzZwo9hwU5o7pY0bv
+X-Received: by 2002:a24:678f:: with SMTP id u137mr1809098itc.126.1553012650823;
+        Tue, 19 Mar 2019 09:24:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxqmqST5Gpu2P4/fRa2MSCvyTeZdByPwNeiJoTYBFuO9tlvAXXI4xVRMTOeIh9FnfhrdKQvlQ==
+X-Received: by 2002:a24:678f:: with SMTP id u137mr1809082itc.126.1553012650647;
+        Tue, 19 Mar 2019 09:24:10 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id p79sm1707330itb.7.2019.03.19.09.24.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 09:24:09 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ilya Lesokhin <ilyal@mellanox.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] net: mlx5: Add a missing check on idr_find, free buf
+Date:   Tue, 19 Mar 2019 11:24:02 -0500
+Message-Id: <20190319162406.7525-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move as much as possible of the mount subtype apparatus into the fuse
-driver.  The bits that are left involve determining whether it's permitted
-to split the filesystem type string passed in to mount(2).  Consequently,
-this means that we cannot get rid of the FS_HAS_SUBTYPE flag unless we
-define that a type string with a dot in in always indicates a subtype
-specification.
+idr_find() can return a NULL value to 'flow' which is used without a check.
+The patch adds a check to avoid potential NULL pointer dereference.
+In case of mlx5_fpga_sbu_conn_sendmsg() failure, free buf allocated
+using kzalloc.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
 ---
+Fixes: ab412e1dd7db ('net/mlx5: Accel, add TLS rx offload routines')
+v2: failure to return in case of flow failure.
+v1: Failed to free buf in case of flow failure.
 
- fs/fs_context.c            |   12 ------------
- fs/fuse/inode.c            |   21 +++++++++++++++++++--
- fs/super.c                 |    5 -----
- include/linux/fs_context.h |    1 -
- 4 files changed, 19 insertions(+), 20 deletions(-)
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/fs_context.c b/fs/fs_context.c
-index ea027762c0b2..3325b435cb6f 100644
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -432,7 +432,6 @@ void put_fs_context(struct fs_context *fc)
- 	put_net(fc->net_ns);
- 	put_user_ns(fc->user_ns);
- 	put_cred(fc->cred);
--	kfree(fc->subtype);
- 	put_filesystem(fc->fs_type);
- 	kfree(fc->source);
- 	kfree(fc);
-@@ -498,17 +497,6 @@ static int legacy_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		return 0;
- 	}
- 
--	if ((fc->fs_type->fs_flags & FS_HAS_SUBTYPE) &&
--	    strcmp(param->key, "subtype") == 0) {
--		if (param->type != fs_value_is_string)
--			return invalf(fc, "VFS: Legacy: Non-string subtype");
--		if (fc->subtype)
--			return invalf(fc, "VFS: Legacy: Multiple subtype");
--		fc->subtype = param->string;
--		param->string = NULL;
--		return 0;
--	}
--
- 	if (ctx->param_type == LEGACY_FS_MONOLITHIC_PARAMS)
- 		return invalf(fc, "VFS: Legacy: Can't mix monolithic and individual options");
- 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 3aebff5b902a..d830b20252f7 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -65,6 +65,7 @@ static struct file_system_type fuseblk_fs_type;
- #endif
- 
- struct fuse_fs_context {
-+	const char	*subtype;
- 	bool		is_bdev;
- 	int fd;
- 	unsigned rootmode;
-@@ -455,6 +456,7 @@ static int fuse_statfs(struct dentry *dentry, struct kstatfs *buf)
- 
- enum {
- 	OPT_SOURCE,
-+	OPT_SUBTYPE,
- 	OPT_FD,
- 	OPT_ROOTMODE,
- 	OPT_USER_ID,
-@@ -468,6 +470,7 @@ enum {
- 
- static const struct fs_parameter_spec fuse_param_specs[] = {
- 	fsparam_string	("source",		OPT_SOURCE),
-+	fsparam_string	("subtype",		OPT_SUBTYPE),
- 	fsparam_fd	("fd",			OPT_FD),
- 	fsparam_u32oct	("rootmode",		OPT_ROOTMODE),
- 	fsparam_u32	("user_id",		OPT_USER_ID),
-@@ -496,11 +499,19 @@ static int fuse_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 
- 	switch (opt) {
- 	case OPT_SOURCE:
--		kfree(fc->source);
-+		if (fc->source)
-+			return invalf(fc, "fuse: Multiple sources specified");
- 		fc->source = param->string;
- 		param->string = NULL;
- 		break;
- 
-+	case OPT_SUBTYPE:
-+		if (ctx->subtype)
-+			return invalf(fc, "fuse: Multiple subtypes specified");
-+		ctx->subtype = param->string;
-+		param->string = NULL;
-+		return 0;
-+
- 	case OPT_FD:
- 		ctx->fd = result.uint_32;
- 		ctx->fd_present = 1;
-@@ -556,7 +567,10 @@ static void fuse_free_fc(struct fs_context *fc)
- {
- 	struct fuse_fs_context *ctx = fc->fs_private;
- 
--	kfree(ctx);
-+	if (ctx) {
-+		kfree(ctx->subtype);
-+		kfree(ctx);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+index 5cf5f2a9d51f..224e0d7f6489 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+@@ -226,6 +226,11 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_core_dev *mdev, u32 handle, u32 seq,
+ 	rcu_read_lock();
+ 	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
+ 	rcu_read_unlock();
++	if (!flow) {
++		WARN_ONCE(1, "Received NULL pointer for handle\n");
++		kfree(buf);
++		return -EINVAL;
 +	}
+ 	mlx5_fpga_tls_flow_to_cmd(flow, cmd);
+ 
+ 	MLX5_SET(tls_cmd, cmd, swid, ntohl(handle));
+@@ -238,6 +243,8 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_core_dev *mdev, u32 handle, u32 seq,
+ 	buf->complete = mlx_tls_kfree_complete;
+ 
+ 	ret = mlx5_fpga_sbu_conn_sendmsg(mdev->fpga->tls->conn, buf);
++	if (ret < 0)
++		kfree(buf);
+ 
+ 	return ret;
  }
- 
- static int fuse_show_options(struct seq_file *m, struct dentry *root)
-@@ -1099,6 +1113,9 @@ static int fuse_fill_super(struct super_block *sb, struct fs_context *fsc)
- 		sb->s_blocksize = PAGE_SIZE;
- 		sb->s_blocksize_bits = PAGE_SHIFT;
- 	}
-+
-+	sb->s_subtype = ctx->subtype;
-+	ctx->subtype = NULL;
- 	sb->s_magic = FUSE_SUPER_MAGIC;
- 	sb->s_op = &fuse_super_operations;
- 	sb->s_xattr = fuse_xattr_handlers;
-diff --git a/fs/super.c b/fs/super.c
-index 85851adb0f19..6d8dbf309241 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1536,11 +1536,6 @@ int vfs_get_tree(struct fs_context *fc)
- 	sb = fc->root->d_sb;
- 	WARN_ON(!sb->s_bdi);
- 
--	if (fc->subtype && !sb->s_subtype) {
--		sb->s_subtype = fc->subtype;
--		fc->subtype = NULL;
--	}
--
- 	/*
- 	 * Write barrier is for super_cache_count(). We place it before setting
- 	 * SB_BORN as the data dependency between the two functions is the
-diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-index cb49b92f02af..524963c0cedb 100644
---- a/include/linux/fs_context.h
-+++ b/include/linux/fs_context.h
-@@ -82,7 +82,6 @@ struct fs_context {
- 	struct net		*net_ns;	/* The network namespace for this mount */
- 	const struct cred	*cred;		/* The mounter's credentials */
- 	const char		*source;	/* The source name (eg. dev path) */
--	const char		*subtype;	/* The subtype to set on the superblock */
- 	void			*security;	/* Linux S&M options */
- 	void			*s_fs_info;	/* Proposed s_fs_info */
- 	fmode_t			bdev_mode;	/* File open mode for bdev */
+-- 
+2.17.1
 
