@@ -2,109 +2,140 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC1BC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F509C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3EA2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB691213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AuNkqTaW"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cypYyimQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfCSASD (ORCPT
+        id S1726616AbfCSATZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 20:18:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39478 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfCSASD (ORCPT
+        Mon, 18 Mar 2019 20:19:25 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:50264 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfCSATZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 20:18:03 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J04vYj144116;
-        Tue, 19 Mar 2019 00:17:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Lldu1vG/QH2WxFVnpbDniVg4v7Xl0DVSsToxUgGZAEY=;
- b=AuNkqTaWgAsBO97qvRjuPcAPyrz2oYRov0fO+QB5qRQvEEc8oYPvd5frhBaootArwSNO
- hftVfJmnQVg4vbXgVWqyWEDxgcBurBeX8FOVnMag5s0w0HSI5j/oFdQ9iKTgXRJcxDbq
- u880Vuub4Pir02Z1wPsX5L9u0uJSpRB5l8I5BYFjJ2y4FAMfzQSiodtZh+SBuIbIfem9
- qsLMij9K8eNb9Yyrf+bPPkqtIrZWDm6y36mTPvKLotUX739qcjYz1rscLFdwi0RENMqp
- mm5H7nC99QoaJVfrTQByW864c6RVko+5R2NUIwF0vCN5BQ76GZzcUIJTfIjsIYEo5Gd0 iA== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2r8ssr9gys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 00:17:46 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2J0Hkca030025
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 00:17:46 GMT
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2J0HjDJ020737;
-        Tue, 19 Mar 2019 00:17:45 GMT
-Received: from [192.168.1.222] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Mar 2019 17:17:45 -0700
-Subject: Re: [PATCH] include/linux/hugetlb.h: Convert to use vm_fault_t
-To:     Souptick Joarder <jrdr.linux@gmail.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-References: <20190318162604.GA31553@jordon-HP-15-Notebook-PC>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <08a039da-6bc2-0da9-e83e-46cce6d7264b@oracle.com>
-Date:   Mon, 18 Mar 2019 17:17:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190318162604.GA31553@jordon-HP-15-Notebook-PC>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903180166
+        Mon, 18 Mar 2019 20:19:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 065EA9B4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:19:24 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jn4oGsSoQamt for <linux-kernel@vger.kernel.org>;
+        Mon, 18 Mar 2019 19:19:23 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id C3292B1F
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:19:23 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id m132so2297152ita.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 17:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=IerYCDeB9TUNcf3mJgdeuvGQvGHk5l68wN82k8yc5jI=;
+        b=cypYyimQ4ouOXbcROqDLMSWIw+DyVB6yiq8FVwsCI7Y4K8q6fvYeCWiB9ETJiKCux1
+         p/gVos3+MH1/3czkj+0qB6Z+n34IZ2JG0IYK2nbMEmWs6yKaGTYjEUWrAv/E7Ghknmha
+         DSjTdyh6FZyqgPHqIb4r8efEJaqXIisPD7BaV/ayV7xVd972rQDalnwuEJoWZ3AwA316
+         TwjgKIVDtvi+CY9Uc6ESlG2gtPktvNkgWmzjVMRhMuvYaeY1wQrGY+xFa8b486QBAcTn
+         Ys+Wv9SvQfvTv7rUHuOOmOBAZu7knmqi0rHfUG/Cwmk0HSxqsTx7Y54275LDPOdtfuRE
+         LIlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IerYCDeB9TUNcf3mJgdeuvGQvGHk5l68wN82k8yc5jI=;
+        b=IfrHbDZuBfLueNwFXPo+43RHk7aXZcvcS5AjAkYz/1AZn8S1yWCdzgWJVgyAzswY9r
+         Z8xN3jGFYEmktH9hyF1dWFLp2AxCb6fTievggwu64wBmI3XLviocIh0jgP/F12gCpXnw
+         WBnGkeoV3eC+2rU8ORIkCGIv6lJGw3eUH9f1D0DrnFnPXm1Pt6QAlL3Xs25/hPsp8kcT
+         O7DGDPqQUah36LjAVOA12Oll0sjKJbUYyTBcHNCnf4AMg5ODmvtUca8iY3fYJe/MF893
+         rycfqLWQWrnIgWdrxqOOKfbA57RT20BP2GD1XBT+30a5U/FaXyHtLay1UgxXeOgOI9zm
+         pTJw==
+X-Gm-Message-State: APjAAAVNCR/O69M2ctRrkcBXsz5J2EfiQVfCyBbs2W7ugzQY9NLdXGnp
+        mz1EliOmS7Xiuya6BmClAUoxbpdvr8PXpvM3Q8XG7pENdemuFqjQZvaP2C2G0L9GFuPYgFGEEwX
+        CWskZciRmOG1hLBAVwrzj6qcl9W24
+X-Received: by 2002:a24:2101:: with SMTP id e1mr945168ita.151.1552954763035;
+        Mon, 18 Mar 2019 17:19:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxBPih/zzyV1BknGrI0f2gjRWlXtsTcThUiwmT8Y8feEyUfod5kz9QYo3B4WzwiXXTPuS8P5A==
+X-Received: by 2002:a24:2101:: with SMTP id e1mr945163ita.151.1552954762836;
+        Mon, 18 Mar 2019 17:19:22 -0700 (PDT)
+Received: from lenovo-1.hsd1.mn.comcast.net (c-73-242-25-233.hsd1.mn.comcast.net. [73.242.25.233])
+        by smtp.googlemail.com with ESMTPSA id u14sm570898itb.3.2019.03.18.17.19.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 17:19:22 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: dw_mmc: Fix to avoid potential NULL pointer dereference
+Date:   Mon, 18 Mar 2019 19:19:18 -0500
+Message-Id: <20190319001918.12042-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+of_match_node can fail and return NULL in case no matching structure.
+The patches checks for such a scenario and returns -ENXIO.
 
-On 3/18/19 9:26 AM, Souptick Joarder wrote:
-> kbuild produces the below warning ->
-> 
-> tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   5453a3df2a5eb49bc24615d4cf0d66b2aae05e5f
-> commit 3d3539018d2c ("mm: create the new vm_fault_t type")
-> reproduce:
->         # apt-get install sparse
->         git checkout 3d3539018d2cbd12e5af4a132636ee7fd8d43ef0
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> 
->>> mm/memory.c:3968:21: sparse: incorrect type in assignment (different
->>> base types) @@    expected restricted vm_fault_t [usertype] ret @@
->>> got e] ret @@
->    mm/memory.c:3968:21:    expected restricted vm_fault_t [usertype] ret
->    mm/memory.c:3968:21:    got int
-> 
-> This patch will convert to return vm_fault_t type for hugetlb_fault()
-> when CONFIG_HUGETLB_PAGE =n.
-> 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/mmc/host/dw_mmc-exynos.c | 2 ++
+ drivers/mmc/host/dw_mmc-k3.c     | 2 ++
+ drivers/mmc/host/dw_mmc-pltfm.c  | 2 ++
+ 3 files changed, 6 insertions(+)
 
-Thanks for fixing this.
-
-The BUG() here and in several other places in this file is unnecessary
-and IMO should be cleaned up.  But that is beyond the scope of this fix.
-Added to my to do list.
-
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+index d46c3439b508..8a75d7314606 100644
+--- a/drivers/mmc/host/dw_mmc-exynos.c
++++ b/drivers/mmc/host/dw_mmc-exynos.c
+@@ -554,6 +554,8 @@ static int dw_mci_exynos_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	match = of_match_node(dw_mci_exynos_match, pdev->dev.of_node);
++	if (!match)
++		return -ENXIO;
+ 	drv_data = match->data;
+ 
+ 	pm_runtime_get_noresume(&pdev->dev);
+diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
+index 89cdb3d533bb..cc50b7546a20 100644
+--- a/drivers/mmc/host/dw_mmc-k3.c
++++ b/drivers/mmc/host/dw_mmc-k3.c
+@@ -459,6 +459,8 @@ static int dw_mci_k3_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 
+ 	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
++	if (!match)
++		return -ENXIO;
+ 	drv_data = match->data;
+ 
+ 	return dw_mci_pltfm_register(pdev, drv_data);
+diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+index 58c13e21bd5a..b1948989f617 100644
+--- a/drivers/mmc/host/dw_mmc-pltfm.c
++++ b/drivers/mmc/host/dw_mmc-pltfm.c
+@@ -82,6 +82,8 @@ static int dw_mci_pltfm_probe(struct platform_device *pdev)
+ 
+ 	if (pdev->dev.of_node) {
+ 		match = of_match_node(dw_mci_pltfm_match, pdev->dev.of_node);
++		if (!match)
++			return -ENXIO;
+ 		drv_data = match->data;
+ 	}
+ 
 -- 
-Mike Kravetz
+2.17.1
+
