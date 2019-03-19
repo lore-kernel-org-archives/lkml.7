@@ -2,115 +2,138 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408F1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA288C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E655213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDB420651
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpOpiK9F"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="a9q+XmUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfCSOZx (ORCPT
+        id S1727623AbfCSO0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:25:53 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34074 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfCSOZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:25:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k2so22341781qtm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BHr58bZTK/dW8lcPjGA4iNyjw75zsiEtuluqMZdQBi8=;
-        b=MpOpiK9FdBWh9rzuSW9ybpDMsuqbEFaSOZWUzPo98kb84xMzbVlyGraOCNqzzRWyDz
-         HKBb+PIcUN0B8BaCdk1JoloHc18APzxp0woA1c4avBb+T9w6r9AhzEZGZuUDz3ZIbhKA
-         3tbV1HPUmOg25i1h/Kt/bubpvgsTiP5Sywe7fKw0fx6or5hbXaMzeAiJph/sJMupOLV9
-         Xcq4tOWX5rx/WlgpLGAL83t2GUW64CuBdhUeqoOH9sNa7su5XovQaImTvvBiheog4YZM
-         hV8JPiyvyc/ee2UBXa+4pY9YDikA8+mUkJ8+LRcA58+CmsmIiCqK6hshx+fzLYJYqar9
-         reHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BHr58bZTK/dW8lcPjGA4iNyjw75zsiEtuluqMZdQBi8=;
-        b=rY7CN+BsRl2VVh1zQUDWBMmVWHYlprHAtWtpbaP7SWUKBXKxYYuYc+HjpySGQ+S4gA
-         DSysOI1bkHcoW9kg/c55tdtXPI6BQLJJ9BOVLaaZKvvvcEeu3ZMQr20BHmpYEizc/H4h
-         S1ZJDpC7nQKJpYQuXVSzGuvvWf3EOFUVA8RndDl8t5vxTgQviXGBm9n4N17yh/eHHebe
-         c66gzL4HNfyYwB3fc9jQ7c2QCMyra0wozw4GGxnKPek+2gvhhvArdUpfKWiDFohbw/+k
-         xFnXx/z6kVs9AaEBPMAyKEU26SUzXdsJEXF0Ny/xkvBOYjzMBbXkV32NFhfJ6I6MDMvS
-         u6oA==
-X-Gm-Message-State: APjAAAUhO4nfm6sOVjz37Y/1NIvPY03UjT2/ZkY2/rumixz5xkzq1fLR
-        t+0W6LOzvZHCDH9R49NnyuE=
-X-Google-Smtp-Source: APXvYqycB/tI/vXqf282ay8IUvNpHU13BzY5SaCdNiO4cTNmpK58Vp/FsYGEQr60nj/LuOg1PUoFrA==
-X-Received: by 2002:ac8:2f98:: with SMTP id l24mr2214895qta.261.1553005552158;
-        Tue, 19 Mar 2019 07:25:52 -0700 (PDT)
-Received: from jfdmac.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id s17sm7009508qtc.15.2019.03.19.07.25.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 07:25:51 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/2] w1: ds2408: add a missing reset when retrying in
- output_write()
-From:   Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-In-Reply-To: <DF2ABF87-116D-4287-8A18-89C2C59124AF@gmail.com>
-Date:   Tue, 19 Mar 2019 10:25:50 -0400
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <greg@kroah.com>
+        Tue, 19 Mar 2019 10:26:08 -0400
+Received: from mail-eopbgr50068.outbound.protection.outlook.com ([40.107.5.68]:58689
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726763AbfCSO0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:26:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QnWp0qZgwast77phnzar2zM6q7GrowXZv5JfvECzEWk=;
+ b=a9q+XmUHLggZvGheKeqnB2exIdYwJuz+EfpDTnNNVlIYMQfSa98k5SzyrU0iPcanRZM2wkAXwqCIOiwxeQZgnNJSBc7zJC7qIQxqgmiX8J81jS9X889GU382ONBLVyM0juuLQPYOogWDw5dws9BJ4tSM83+yqEfet0Y1Ga7gZKo=
+Received: from AM0PR08MB3025.eurprd08.prod.outlook.com (52.134.93.10) by
+ AM0PR08MB5124.eurprd08.prod.outlook.com (10.255.30.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 14:26:05 +0000
+Received: from AM0PR08MB3025.eurprd08.prod.outlook.com
+ ([fe80::7e:6dfb:116b:befd]) by AM0PR08MB3025.eurprd08.prod.outlook.com
+ ([fe80::7e:6dfb:116b:befd%2]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 14:26:05 +0000
+From:   Brian Starkey <Brian.Starkey@arm.com>
+To:     John Stultz <john.stultz@linaro.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+Subject: Re: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
+Thread-Topic: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
+Thread-Index: AQHU05WrkUl096+RLU6lpJhX2SYydaYTGDIA
+Date:   Tue, 19 Mar 2019 14:26:05 +0000
+Message-ID: <20190319142604.f6puq3ugxrcxsrjs@DESKTOP-E1NTVVP.localdomain>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-3-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <1551819273-640-3-git-send-email-john.stultz@linaro.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: NeoMutt/20180716-849-147d51-dirty
+x-originating-ip: [217.140.106.54]
+x-clientproxiedby: LO2P265CA0106.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::22) To AM0PR08MB3025.eurprd08.prod.outlook.com
+ (2603:10a6:208:5c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Brian.Starkey@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 64b42786-6fc7-46c7-028c-08d6ac76d200
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR08MB5124;
+x-ms-traffictypediagnostic: AM0PR08MB5124:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM0PR08MB5124F1A4C2C58BC19FC3E218F0400@AM0PR08MB5124.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(39860400002)(376002)(136003)(189003)(199004)(9686003)(11346002)(25786009)(7416002)(5660300002)(6916009)(386003)(52116002)(102836004)(186003)(26005)(6512007)(76176011)(53936002)(3846002)(44832011)(6246003)(8936002)(4744005)(1076003)(4326008)(229853002)(6116002)(6506007)(71200400001)(81166006)(54906003)(81156014)(71190400001)(106356001)(6436002)(105586002)(446003)(2906002)(68736007)(7736002)(86362001)(478600001)(72206003)(486006)(99286004)(6486002)(8676002)(256004)(476003)(305945005)(66066001)(14454004)(97736004)(316002)(58126008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB5124;H:AM0PR08MB3025.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u5BXbpR1VkpH+Nu80r+Ipv7mT2fStayjn8u62OemAwizxjq8rTgDBV2V+hKTR+2XMgfatCjqD4lYQ5b7NRmrEC8aX20ajSpHdt+8i/WNl+HcIbLXH9xjOfjOp1T9tnEUtiwSLZxZ2eUczznPcZLAjW2GoEjmdBKmexf/PmWA0KNeN0xFLhpUsQEBW18TOMvn63vU3TpJ8eUpgjv+osehuvbQTtWc3tV6oeelEpyS+y0DlhwviE5LDUS0pPNB+g1TN+n8aB3Pf2OkcJl8dj5PWbr530g95/UvYozCymqQ0RL9GCgJ7eCdGHYdIOqjgjJ63PBrERIjM0xYalYLeRBSRbe4u6ccpX+oBm0vYmE7g7kDTSg9GyB/3cJlIotSSGZVGsCfrJ9SZunpxuPU8K2U8Hqcs8PeR5OfYLjvWGyZq7U=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D01BE0455B90EB46A48E7E9C442B13CB@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <3E9B4A8B-6409-4102-A3A2-40853AD04DB1@gmail.com>
-References: <20190318092737.8170-1-manio@skyboo.net>
- <20190318092737.8170-2-manio@skyboo.net>
- <DF2ABF87-116D-4287-8A18-89C2C59124AF@gmail.com>
-To:     Mariusz Bialonczyk <manio@skyboo.net>
-X-Mailer: Apple Mail (2.3445.102.3)
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64b42786-6fc7-46c7-028c-08d6ac76d200
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 14:26:05.2000
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
 
+On Tue, Mar 05, 2019 at 12:54:30PM -0800, John Stultz wrote:
 
-> On Mar 19, 2019, at 10:21, Jean-Francois Dagenais =
-<jeff.dagenais@gmail.com> wrote:
->=20
-> I can do a proper patch submission if you guys provide positive =
-response on this
-> early RFC. Or better yet, you can take it and own it yourself as your =
-v2
-> Mariusz. ;)
+...
 
-Just FYI, here's what the retry loop looks like after this suggested =
-patch:
+> +
+> +void dma_heap_buffer_destroy(struct dma_heap_buffer *heap_buffer)
+> +{
+> +	struct heap_helper_buffer *buffer =3D to_helper_buffer(heap_buffer);
+> +
+> +	if (buffer->kmap_cnt > 0) {
+> +		pr_warn_once("%s: buffer still mapped in the kernel\n",
+> +			     __func__);
 
-	do {
-		w1_buf[0] =3D W1_F29_FUNC_CHANN_ACCESS_WRITE;
-		w1_buf[1] =3D *buf;
-		w1_buf[2] =3D ~(*buf);
-		w1_write_block(sl->master, w1_buf, 3);
+Could be worth something louder like a full WARN.
 
-		readBack =3D w1_read_8(sl->master);
+> +		vunmap(buffer->vaddr);
+> +	}
+> +
+> +	buffer->free(buffer);
+> +}
+> +
 
-		if (readBack =3D=3D W1_F29_SUCCESS_CONFIRM_BYTE &&
-		    optional_read_back_valid(sl, *buf)) {
-			bytes_written =3D 1;
-			goto out;
-		}
+...
 
-		if (w1_reset_resume_command(sl->master))
-			goto out; /* unrecoverable error */
-		/* try again, the slave is ready for a command */
-	} while (--retries);
+> +
+> +static void *dma_heap_dma_buf_kmap(struct dma_buf *dmabuf,
+> +					unsigned long offset)
+> +{
+> +	struct dma_heap_buffer *heap_buffer =3D dmabuf->priv;
+> +	struct heap_helper_buffer *buffer =3D to_helper_buffer(heap_buffer);
+> +
+> +	return buffer->vaddr + offset * PAGE_SIZE;
 
+I think it'd be good to check for NULL vaddr and return NULL in that
+case. Less chance of an invalid pointer being accidentally used then.
 
-Much better on the eyes.=
+Thanks,
+-Brian
