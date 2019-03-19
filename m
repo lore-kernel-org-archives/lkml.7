@@ -5,77 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1431CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D023B2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56112064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfCSQan (ORCPT
+        id S1727528AbfCSQbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:30:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42732 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSQan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:30:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p6so1383776pgh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:30:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8nnejzbaMmTvdcrG4k+TdjLblgZ1H17843Qm9AZxlM4=;
-        b=GpIy94XIYwSyb+DvpxlQXb/6J0jAFT+99v2MbOQ3pLvbG6t0CyrNw/U+Q11J7Q/OdW
-         S6Ih+fzA+oknnqI9/jcRb1c8gfKCJWqGi++FjW8vuSH3x1fMrKOWw87pixcFpwpGUwOz
-         zn1/sAVQrN7RHOXInENCn+osOFndzabUDmDfRXLa3eeL2KzCggXLkkCMNzhAQmelBlvj
-         /0nxKhuAtqzlb3XoZdzY7Yz2b8iUkdAD3dm0R1Qd0uib9b20Jh6fWeoJ0TFzPl9kdc95
-         i0RBbCkI0AGE8+o+cIyw7AY8On0zsdFgI0lhwkczKdbxL+45Pta6LOipvtkE4PI/Ewel
-         B93Q==
-X-Gm-Message-State: APjAAAWbHvo1YSOFwwq71CNcV43rZxucXfclFJ4wl1TBJDQj4juzCi+h
-        1JtCRrXtUwdiW2PEnnFtwbM=
-X-Google-Smtp-Source: APXvYqwjQ2oW8txCgAqzNJ92ipImJqzqQY7HmjPArO22fJszu7WDBGWlV6DraNhrzyNYq7p9jzzdAw==
-X-Received: by 2002:aa7:864a:: with SMTP id a10mr3003709pfo.181.1553013042456;
-        Tue, 19 Mar 2019 09:30:42 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id u4sm10185113pgp.59.2019.03.19.09.30.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 09:30:41 -0700 (PDT)
-Message-ID: <1553013040.152266.49.camel@acm.org>
-Subject: Re: [PATCH v2 01/19] locking/lockdep: Change all print_*() return
- type to void
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Joe Perches <joe@perches.com>, Yuyang Du <duyuyang@gmail.com>,
-        peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     ming.lei@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 09:30:40 -0700
-In-Reply-To: <494746a793619dd9b43fb152de811a6e7de77cce.camel@perches.com>
-References: <20190318085733.3143-1-duyuyang@gmail.com>
-         <20190318085733.3143-2-duyuyang@gmail.com>
-         <494746a793619dd9b43fb152de811a6e7de77cce.camel@perches.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
+        Tue, 19 Mar 2019 12:31:48 -0400
+Received: from www.llwyncelyn.cymru ([82.70.14.225]:37448 "EHLO fuzix.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfCSQbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:31:48 -0400
+Received: from alans-desktop (82-70-14-226.dsl.in-addr.zen.co.uk [82.70.14.226])
+        by fuzix.org (8.15.2/8.15.2) with ESMTP id x2JGVLNb025570;
+        Tue, 19 Mar 2019 16:31:22 GMT
+Date:   Tue, 19 Mar 2019 16:31:21 +0000
+From:   Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc:     Chris Brannon <chris@the-brannons.com>,
+        Okash Khawaja <okash.khawaja@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Kirk Reiser <kirk@reisers.ca>, linux-kernel@vger.kernel.org
+Subject: Re: Staging status of speakup
+Message-ID: <20190319163121.5e7ab8c7@alans-desktop>
+In-Reply-To: <20190316093543.w4i6djt5uuqtx5xr@function>
+References: <20190315130035.6a8f16e9@narunkot>
+        <87ef77obtg.fsf@cmbmachine.messageid.invalid>
+        <20190316093543.w4i6djt5uuqtx5xr@function>
+Organization: Intel Corporation
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 02:45 -0700, Joe Perches wrote:
-+AD4 +AD4 -static void
-+AD4 +AD4 -print+AF8-circular+AF8-lock+AF8-scenario(struct held+AF8-lock +ACo-src,
-+AD4 +AD4 -			     struct held+AF8-lock +ACo-tgt,
-+AD4 +AD4 -			     struct lock+AF8-list +ACo-prt)
-+AD4 +AD4 +-static void print+AF8-circular+AF8-lock+AF8-scenario(struct held+AF8-lock +ACo-src,
-+AD4 +AD4 +-					 struct held+AF8-lock +ACo-tgt,
-+AD4 +AD4 +-					 struct lock+AF8-list +ACo-prt)
-+AD4 
-+AD4 trivia:
-+AD4 
-+AD4 This style change seems superfluous as many
-+AD4 other existing functions use the previous style.
+On Sat, 16 Mar 2019 10:35:43 +0100
+Samuel Thibault <samuel.thibault@ens-lyon.org> wrote:
 
-I share Joe's opinion. 
+> Chris Brannon, le ven. 15 mars 2019 18:19:39 -0700, a ecrit:
+> > Okash Khawaja <okash.khawaja@gmail.com> writes:  
+> > > Finally there is an issue where text in output buffer sometimes gets
+> > > garbled on SMP systems, but we can continue working on it after the
+> > > driver is moved out of staging, if that's okay. Basically we need a
+> > > reproducer of this issue.  
+> > 
+> > What kind of reproducer do you need here?  It's straightforward to
+> > reproduce in casual use, at least with a software synthesizer.  
+> 
+> The problem is that neither Okash nor I are even casual users of
+> speakup, so we need a walk-through of the kind of operation that
+> produces the issue. It does not have to be reproducible each time it is
+> done. Perhaps (I really don't know what that bug is about actually) it
+> is a matter of putting text in the selection buffer, and try to paste it
+> 100 times, and once every 10 times it will be garbled, for instance.
 
-Bart.
+paste_selection still says
+
+/* Insert the contents of the selection buffer into the
+ * queue of the tty associated with the current console.
+ * Invoked by ioctl().
+ *
+ * Locking: called without locks. Calls the ldisc wrongly with
+ * unsafe methods,
+ */
+
+from which I deduce that with everyone using X nobody ever bothered to
+fix it. So before you look too hard at the speakup code you might want to
+review the interaction with selection.c too.
+
+Alan
