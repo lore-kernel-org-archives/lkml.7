@@ -2,231 +2,266 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC29C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA100C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A2D2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F13020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UxNSvKyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfCSJ4B (ORCPT
+        id S1726776AbfCSJ4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:56:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60278 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725862AbfCSJ4A (ORCPT
+        Tue, 19 Mar 2019 05:56:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36269 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSJ4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:56:00 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9sU6q136085
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:55:58 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2raw2ruqh6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:55:58 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 19 Mar 2019 09:55:52 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 09:55:48 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J9tpBx49348820
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 09:55:51 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6341CAE058;
-        Tue, 19 Mar 2019 09:55:51 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A68EBAE045;
-        Tue, 19 Mar 2019 09:55:50 +0000 (GMT)
-Received: from [9.145.41.62] (unknown [9.145.41.62])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Mar 2019 09:55:50 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
- <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
- <20190315112032.13b259c2.cohuck@redhat.com>
- <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
- <9302bd83-44e6-eb60-3e39-dcb3fc33f280@linux.ibm.com>
-Date:   Tue, 19 Mar 2019 10:55:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 05:56:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id h18so7311797wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=NrP4Mi9oeJxxGsdJ7+Eiov2NQ2xo2XxCE9zjWrUOj+k=;
+        b=UxNSvKyuApAmuff+KKZx9ep1+B2y80nsXl42EDjuURnJccuEsQuXtlmUid+0kgMA3r
+         +MrlswW2uyVznivOM77mj5b2BLmpmeVaSGA/rHDo/X0pYpuIS0JURSscKq/UuPCHzGQ8
+         W7Ljc9mcepJ7wwEFo/ZBH3oegPYKeReZ53xekj+2RB0v1QXMCEnJZHMyc/iCoSowEKBT
+         P7JvKFZtUklOzqxSel+8eI6kddf/IMONuy6qLB17Qt3GhIvw3GKVL+lVK95MtCLhpefp
+         7lgCmzLDMkjc6kH8OcBekwiuJyjtfnhRr4xm9yKDdzkDfvEQ9qh2dADnvMPvmWvUSxkq
+         Y/wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=NrP4Mi9oeJxxGsdJ7+Eiov2NQ2xo2XxCE9zjWrUOj+k=;
+        b=r4RZadUL/SD4RG8aF4LPHuo7VYxiHFcdKwHylEj/UwZ3Ur2CL/EZZKSxcoT73WcqyA
+         Ty3ayVeCBRKeTdvJtN0xJWLBqaqPWB6psHAq7X0bzmNzNfl5PNnXaL2DQXYbO9EPZzD7
+         R+jpM4PTecmBj5+t4tZmE3hphAmit0OiEUvZVrg2EpMen7cCwH+WskVC3cgnNS5J31cl
+         zN1ZalPkeMtLbDL4OYVvgJllPD/JaAo34xa4kvhgmHh8X3lbDIq+peqKLiedVbTN+e7F
+         JocufDdIi55jgqCkKQTJb6dTT7qY634LRVz28azGGXqy5IaRe6ahkFlm9VQ6pkAtmrA/
+         2e3A==
+X-Gm-Message-State: APjAAAU5YNEDvTijMdVxT7v9p/LKxEGa39nfgB+Cr5KWPJ9vhsSp2s0M
+        XoUoChRZCUq+MIL8BLFQWl2yoQ==
+X-Google-Smtp-Source: APXvYqw9XNFgfMyTb59DlP+RsgWiv+jG45b3uMwXygdijh3aGekXr1kcNtoqxB2AIwABPaB0SAvk8Q==
+X-Received: by 2002:a1c:eb1a:: with SMTP id j26mr2678872wmh.43.1552989358684;
+        Tue, 19 Mar 2019 02:55:58 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id d9sm25841879wrn.72.2019.03.19.02.55.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 19 Mar 2019 02:55:57 -0700 (PDT)
+Message-ID: <f160590677d4eb03c31c7cb81fbca20d8916c460.camel@baylibre.com>
+Subject: Re: [PATCH 3/3] clk: meson-g12a: add PCIE PLL clocks
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 19 Mar 2019 10:55:56 +0100
+In-Reply-To: <20190307141455.23879-4-narmstrong@baylibre.com>
+References: <20190307141455.23879-1-narmstrong@baylibre.com>
+         <20190307141455.23879-4-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <9302bd83-44e6-eb60-3e39-dcb3fc33f280@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031909-0020-0000-0000-000003251552
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031909-0021-0000-0000-000021772D8E
-Message-Id: <fa584953-e0e9-2282-16c3-00a0b6e8db2f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190075
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 15:10, Pierre Morel wrote:
-> On 15/03/2019 14:26, Pierre Morel wrote:
->> On 15/03/2019 11:20, Cornelia Huck wrote:
->>> On Wed, 13 Mar 2019 17:04:58 +0100
->>> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>>
->>>> +/*
->>>> + * handle_pqap: Handling pqap interception
->>>> + * @vcpu: the vcpu having issue the pqap instruction
->>>> + *
->>>> + * We now support PQAP/AQIC instructions and we need to correctly
->>>> + * answer the guest even if no dedicated driver's hook is available.
->>>> + *
->>>> + * The intercepting code calls a dedicated callback for this 
->>>> instruction
->>>> + * if a driver did register one in the CRYPTO satellite of the
->>>> + * SIE block.
->>>> + *
->>>> + * For PQAP/AQIC instructions only, verify privilege and 
->>>> specifications.
->>>> + *
->>>> + * If no callback available, the queues are not available, return 
->>>> this to
->>>> + * the caller.
->>>> + * Else return the value returned by the callback.
->>>> + */
->>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +    uint8_t fc;
->>>> +    struct ap_queue_status status = {};
->>>> +    int ret;
->>>> +    /* Verify that the AP instruction are available */
->>>> +    if (!ap_instructions_available())
->>>> +        return -EOPNOTSUPP;
->>>> +    /* Verify that the guest is allowed to use AP instructions */
->>>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->>>> +        return -EOPNOTSUPP;
->>>> +    /* Verify that the function code is AQIC */
->>>> +    fc = vcpu->run->s.regs.gprs[0] >> 24;
->>>> +    /* We do not want to change the behavior we had before this 
->>>> patch*/
->>>> +    if (fc != 0x03)
->>>> +        return -EOPNOTSUPP;
->>>> +
->>>> +    /* PQAP instructions are allowed for guest kernel only */
->>>> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
->>>> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
->>>> +    /* AQIC instruction is allowed only if facility 65 is available */
->>>> +    if (!test_kvm_facility(vcpu->kvm, 65))
->>>> +        return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
->>>> +    /* Verify that the hook callback is registered and call it */
->>>> +    if (vcpu->kvm->arch.crypto.pqap_hook) {
->>>> +        if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
->>>> +            return -EOPNOTSUPP;
->>>> +        ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
->>>> +        module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
->>>> +        return ret;
->>>> +    }
->>>> +    /*
->>>> +     * It is the duty of the vfio_driver to register a hook
->>>> +     * If it does not and we get an exception on AQIC we must
->>>> +     * guess that there is no vfio_ap_driver at all and no one
->>>> +     * to handle the guests's CRYCB and the CRYCB is empty.
->>>> +     */
->>>> +    status.response_code = 0x01;
->>>
->>> I'm still confused here, sorry. From previous discussions I recall that
->>> this indicates "no crypto device" (please correct me if I'm wrong.)
->>>
->>> Before this patch, we had:
->>> - guest issues PQAP/AQIC -> drop to userspace
->>>
->>> With a correct implementation, we get:
->>> - guest issues PQAP/AQIC -> callback does what needs to be done
->>>
->>> With an incorrect implementation (no callback), we get:
->>> - guest issues PQAP/AQIC -> guest gets response code 0x01
->>>
->>> Why not drop to userspace in that case?
->>
->> This is what I had in the previous patches.
->> Hum, I do not remember which discussion lead me to modify this.
->>
->> Anyway, now that you put the finger on this problem, I think the 
->> problem is worse.
->>
->> The behavior with old / new Linux, vfio driver and qemu is:
->>
->> LINUX    VFIO_AP    QEMU    PGM
->> OLD    x    x    OPERATION
->> NEW    -    OLD    SPECIFICATION
->> NEW    -    NEW/aqic=off    SPECIFICATION
->> NEW    x    NEW/aqic=on    -
->>
->> x = whatever
->> - = absent/none
->>
->> So yes there is a change in behavior for the userland for the case 
->> QEMU do not set the AQIC facility 65, OLD QEMU or NEW QEMU wanting to 
->> behave like an older one.
->>
->> I fear we have the same problem with the privileged operation...
->>
->> For the last case, when the kvm_facility(65) is set, the explication 
->> is the following:
->>
->> This is related to the handling of PQAP AQIC which is now authorized 
->> by this patch series.
->> If we authorize PQAP AQIC, by setting the bit for facility 65, the 
->> guest can use this instruction.
->> If the instruction follows the specifications we must answer something 
->> realistic and since there is nothing in the CRYCB (no driver) we 
->> answer that there is no queue.
->>
->> Conclusion:  we must handle this in userland, it will have the benefit 
->> to keep old behavior when there is no callback.
->> OLD QEMU will not see change as they will not set aqic facility
->> NEW QEMU will handle this correctly.
->>
+On Thu, 2019-03-07 at 15:14 +0100, Neil Armstrong wrote:
+> Add the PCIe reference clock feeding the USB3 + PCIE combo PHY.
 > 
-> Sorry, wrong conclusion, handling this in userland will bring us much 
-> too far if we want to answer correctly for the case the hook is not 
-> there but QEMU accepted the facility for AQIC.
-
-Sorry, forget it, I was tired.
-
-Pierre
-
+> This PLL needs a very precise register sequence to permit to be locked,
+> thus using the specific clk-pll pcie ops.
 > 
-> The alternative is easier, we just continue to respond with the 
-> OPERATION exception here and only handle the specification and 
-> privileged exception cases in QEMU and in the hook.
+> The PLL is then followed by :
+> - a fixed /2 divider
+> - a 5-bit 1-based divider
+> - a final /2 divider
 > 
-> So, I think the discussion will go on until you come back :)
+> This reference clock is fixed to 100MHz, thus only a single PLL setup
+> is added.
 > 
-> Regards,
-> Pierre
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a.c | 118 +++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h |   5 +-
+>  2 files changed, 122 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 80a7172df2a6..d382c21a29e5 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -614,6 +614,118 @@ static struct clk_regmap g12a_hifi_pll = {
+>  	},
+>  };
+>  
+> +/*
+> + * The Meson G12A PCIE PLL is fined tuned to deliver a very precise
+> + * 100MHz reference clock for the PCIe Analog PHY, and thus requires
+> + * a strict register sequence to enable the PLL.
+> + */
+> +static const struct reg_sequence g12a_pcie_pll_init_regs[] = {
+> +	{ .reg = HHI_PCIE_PLL_CNTL0,	.def = 0x20090496 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL0,	.def = 0x30090496 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL1,	.def = 0x00000000 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL2,	.def = 0x00001100 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL3,	.def = 0x10058e00 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL4,	.def = 0x000100c0 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL5,	.def = 0x68000048 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL5,	.def = 0x68000068, .delay_us = 20 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL4,	.def = 0x008100c0, .delay_us = 10 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL0,	.def = 0x34090496 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL0,	.def = 0x14090496, .delay_us = 10 },
+> +	{ .reg = HHI_PCIE_PLL_CNTL2,	.def = 0x00001000 },
+> +};
+> +
+> +/* Keep a single entry table for recalc/round_rate() ops */
+> +static const struct pll_params_table g12a_pcie_pll_table[] = {
+> +	PLL_PARAMS(150, 1),
+> +	{0, 0},
+> +};
+> +
+> +static struct clk_regmap g12a_pcie_pll_dco = {
+> +	.data = &(struct meson_clk_pll_data){
+> +		.en = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL0,
+> +			.shift   = 28,
+> +			.width   = 1,
+> +		},
+> +		.m = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL0,
+> +			.shift   = 0,
+> +			.width   = 8,
+> +		},
+> +		.n = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL0,
+> +			.shift   = 10,
+> +			.width   = 5,
+> +		},
+> +		.frac = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL1,
+> +			.shift   = 0,
+> +			.width   = 12,
+> +		},
+> +		.l = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL0,
+> +			.shift   = 31,
+> +			.width   = 1,
+> +		},
+> +		.rst = {
+> +			.reg_off = HHI_PCIE_PLL_CNTL0,
+> +			.shift   = 29,
+> +			.width   = 1,
+> +		},
+> +		.table = g12a_pcie_pll_table,
+> +		.init_regs = g12a_pcie_pll_init_regs,
+> +		.init_count = ARRAY_SIZE(g12a_pcie_pll_init_regs),
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "pcie_pll_dco",
+> +		.ops = &meson_clk_pcie_pll_ops,
+> +		.parent_names = (const char *[]){ IN_PREFIX "xtal" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_pcie_pll_dco_div2 = {
+> +	.mult = 1,
+> +	.div = 2,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "pcie_pll_dco_div2",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "pcie_pll_dco" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_pcie_pll_od = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_PCIE_PLL_CNTL0,
+> +		.shift = 16,
+> +		.width = 5,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST |
+> +			 CLK_DIVIDER_ONE_BASED |
+> +			 CLK_DIVIDER_ALLOW_ZERO,
 
+That's unusual !
+Ods have always been power of two divider so far. I suppose you have noticed
+and checked this as well ?
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+That being said, the doc seems to imply that the global post divider will
+divide by 36, which seems difficult to reach with powers of two.
+
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "pcie_pll_od",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "pcie_pll_dco_div2" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_pcie_pll = {
+> +	.mult = 1,
+> +	.div = 2,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "pcie_pll_pll",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "pcie_pll_od" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+>  static struct clk_regmap g12a_hdmi_pll_dco = {
+>  	.data = &(struct meson_clk_pll_data){
+>  		.en = {
+> @@ -2499,6 +2611,10 @@ static struct clk_hw_onecell_data g12a_hw_onecell_data = {
+>  		[CLKID_CPU_CLK_AXI]		= &g12a_cpu_clk_axi.hw,
+>  		[CLKID_CPU_CLK_TRACE_DIV]	= &g12a_cpu_clk_trace_div.hw,
+>  		[CLKID_CPU_CLK_TRACE]		= &g12a_cpu_clk_trace.hw,
+> +		[CLKID_PCIE_PLL_DCO]		= &g12a_pcie_pll_dco.hw,
+> +		[CLKID_PCIE_PLL_DCO_DIV2]	= &g12a_pcie_pll_dco_div2.hw,
+> +		[CLKID_PCIE_PLL_OD]		= &g12a_pcie_pll_od.hw,
+> +		[CLKID_PCIE_PLL]		= &g12a_pcie_pll.hw,
+>  		[NR_CLKS]			= NULL,
+>  	},
+>  	.num = NR_CLKS,
+> @@ -2685,6 +2801,8 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
+>  	&g12a_cpu_clk_axi,
+>  	&g12a_cpu_clk_trace_div,
+>  	&g12a_cpu_clk_trace,
+> +	&g12a_pcie_pll_od,
+> +	&g12a_pcie_pll_dco,
+>  };
+>  
+>  static const struct meson_eeclkc_data g12a_clkc_data = {
+> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
+> index 70aa469ca1cf..1393a09730a6 100644
+> --- a/drivers/clk/meson/g12a.h
+> +++ b/drivers/clk/meson/g12a.h
+> @@ -186,8 +186,11 @@
+>  #define CLKID_CPU_CLK_AXI			195
+>  #define CLKID_CPU_CLK_TRACE_DIV			196
+>  #define CLKID_CPU_CLK_TRACE			197
+> +#define CLKID_PCIE_PLL_DCO			198
+> +#define CLKID_PCIE_PLL_DCO_DIV2			199
+> +#define CLKID_PCIE_PLL_OD			200
+>  
+> -#define NR_CLKS					198
+> +#define NR_CLKS					202
+>  
+>  /* include the CLKIDs that have been made part of the DT binding */
+>  #include <dt-bindings/clock/g12a-clkc.h>
+
 
