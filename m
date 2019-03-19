@@ -2,142 +2,96 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7ABC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC8EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440EB20850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E7D2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p0q2a5Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfCSVXx (ORCPT
+        id S1727536AbfCSVYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:23:53 -0400
-Received: from ipmail03.adl2.internode.on.net ([150.101.137.141]:12174 "EHLO
-        ipmail03.adl2.internode.on.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726712AbfCSVXx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:23:53 -0400
-Received: from ppp59-167-129-252.static.internode.on.net (HELO dastard) ([59.167.129.252])
-  by ipmail03.adl2.internode.on.net with ESMTP; 20 Mar 2019 07:53:49 +1030
-Received: from dave by dastard with local (Exim 4.80)
-        (envelope-from <david@fromorbit.com>)
-        id 1h6MD4-0003Pg-M8; Wed, 20 Mar 2019 08:23:46 +1100
-Date:   Wed, 20 Mar 2019 08:23:46 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190319212346.GA26298@dastard>
-References: <20190308213633.28978-1-jhubbard@nvidia.com>
- <20190308213633.28978-2-jhubbard@nvidia.com>
- <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
- <20190319134724.GB3437@redhat.com>
- <20190319141416.GA3879@redhat.com>
+        Tue, 19 Mar 2019 17:24:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:38475 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfCSVYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:24:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44P5dv744Rz9s47;
+        Wed, 20 Mar 2019 08:24:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553030644;
+        bh=hI3BoP2da3uLkkrhAANQQJUWI1Nceb6fy4c6gXF2p+A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p0q2a5Lzvl68EetzZUds7fe0yYqV2UXuKt7UFq/mrY5gV4laMrYFdhKRKDjJJtAOk
+         o85WGp+5iHGPuPTtt+kiuWJufyPvtbsmbMUrBC89MFivePSdpqh2EY5xr/3SVelqtk
+         YeOW5CUZ0fJKLKOEzNAD/8gwRbK8J68FzxKULiQ2gzfVVFLElf1Wy8+/Gx9kEOm82T
+         wBc8Nuuvc4nl7oiL4cC0G4PLUK6axZrrDn5VuozmCaa8zJVP5UCI2Xajw6CIHoIUkY
+         3duQ2pL8eAdDKoYT39w0SJNyxtsXtBTodFbF0mNVWc+mTgvkoankh78TQAtj8ed1Yq
+         V0lSQ2pj1n2xQ==
+Date:   Wed, 20 Mar 2019 08:24:02 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the gfs2 tree
+Message-ID: <20190320082402.5af7812e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319141416.GA3879@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/dJcu8/ISlMk0rINfVKju5Rq"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
-> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
-> > On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
-> > > On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
-> > > > From: John Hubbard <jhubbard@nvidia.com>
-> > 
-> > [...]
-> > 
-> > > > diff --git a/mm/gup.c b/mm/gup.c
-> > > > index f84e22685aaa..37085b8163b1 100644
-> > > > --- a/mm/gup.c
-> > > > +++ b/mm/gup.c
-> > > > @@ -28,6 +28,88 @@ struct follow_page_context {
-> > > >  	unsigned int page_mask;
-> > > >  };
-> > > >  
-> > > > +typedef int (*set_dirty_func_t)(struct page *page);
-> > > > +
-> > > > +static void __put_user_pages_dirty(struct page **pages,
-> > > > +				   unsigned long npages,
-> > > > +				   set_dirty_func_t sdf)
-> > > > +{
-> > > > +	unsigned long index;
-> > > > +
-> > > > +	for (index = 0; index < npages; index++) {
-> > > > +		struct page *page = compound_head(pages[index]);
-> > > > +
-> > > > +		if (!PageDirty(page))
-> > > > +			sdf(page);
-> > > 
-> > > How is this safe? What prevents the page to be cleared under you?
-> > > 
-> > > If it's safe to race clear_page_dirty*() it has to be stated explicitly
-> > > with a reason why. It's not very clear to me as it is.
-> > 
-> > The PageDirty() optimization above is fine to race with clear the
-> > page flag as it means it is racing after a page_mkclean() and the
-> > GUP user is done with the page so page is about to be write back
-> > ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
-> > call while a split second after TestClearPageDirty() happens then
-> > it means the racing clear is about to write back the page so all
-> > is fine (the page was dirty and it is being clear for write back).
-> > 
-> > If it does call the sdf() while racing with write back then we
-> > just redirtied the page just like clear_page_dirty_for_io() would
-> > do if page_mkclean() failed so nothing harmful will come of that
-> > neither. Page stays dirty despite write back it just means that
-> > the page might be write back twice in a row.
-> 
-> Forgot to mention one thing, we had a discussion with Andrea and Jan
-> about set_page_dirty() and Andrea had the good idea of maybe doing
-> the set_page_dirty() at GUP time (when GUP with write) not when the
-> GUP user calls put_page(). We can do that by setting the dirty bit
-> in the pte for instance. They are few bonus of doing things that way:
->     - amortize the cost of calling set_page_dirty() (ie one call for
->       GUP and page_mkclean()
->     - it is always safe to do so at GUP time (ie the pte has write
->       permission and thus the page is in correct state)
->     - safe from truncate race
->     - no need to ever lock the page
+--Sig_/dJcu8/ISlMk0rINfVKju5Rq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I seem to have missed this conversation, so please excuse me for
-asking a stupid question: if it's a file backed page, what prevents
-background writeback from cleaning the dirty page ~30s into a long
-term pin? i.e. I don't see anything in this proposal that prevents
-the page from being cleaned by writeback and putting us straight
-back into the situation where a long term RDMA is writing to a clean
-page....
+Hi all,
 
+In commit
+
+  31b13f0abfa6 ("gfs2: Fix loop in gfs2_rbm_find (v2)")
+
+Fixes tag
+
+  Fixes: e579ed4f44 ("GFS2: Introduce rbm field bii")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/dJcu8/ISlMk0rINfVKju5Rq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyRXfIACgkQAVBC80lX
+0GzccQgAlFsa8NGGfgojG2MKSN3pjdgxlNyww8zmdJDQ5mkJwmBOJaVJ/UxZKGLL
+3zpMF63AfU9Ynp3zlaCh6J5C/2f/E+LfBv5SxPWMvpMneF22HVmHCFI70VI2FMVm
+wBvduapkUAPtmHsV0C9sDSKSV4CaDsD1SjAAuDj8E0QSMi9R08YzObd/JAHhXg+B
+QRWndVx1yxHaEtA6CPuelK/WjkD5OpnxTnTAI/PhEocYbhKhqHyeKyQq5QqRggtB
+YOBUsLZgMuzhHyWN/JquqqldRAEyHZ2Gr7BnwkMZoILrezRTzaozMeHQhnjONG8K
+mKPQP4rOWzTSDIKMV+lLEG65+zO3Bg==
+=DKaH
+-----END PGP SIGNATURE-----
+
+--Sig_/dJcu8/ISlMk0rINfVKju5Rq--
