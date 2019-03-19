@@ -2,112 +2,96 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E72C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535AEC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91F22147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CEF20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7fWh3XQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2ySonx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfCSCXq (ORCPT
+        id S1727568AbfCSCYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:23:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34167 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfCSCXp (ORCPT
+        Mon, 18 Mar 2019 22:24:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46592 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfCSCYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:23:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v12so12778880pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:23:45 -0700 (PDT)
+        Mon, 18 Mar 2019 22:24:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s23so12581151pfe.13;
+        Mon, 18 Mar 2019 19:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XQSNSZywn2J5tIibcMqEyCRYg0DoENdsUd09NDa1qxo=;
-        b=h7fWh3XQpVCLdL4ftW6K8821+fJbEx9xiv4LfYg8iyWm8RxxMuoyzBhxnRKFxjxUcq
-         T00TBWmApNpUpw4//HK7pQV+dp2QRHXRCZqdh0C4p/XOt0vMVPqv8y9pxYhS5XaLRXY0
-         xbmZqlxg6214GIOQaYXE7n82moU19epkFZRVWW6xQE6lGim/TRg5EoDRPgyHXH2mKts7
-         x2gkkiNvERV3obQbyAvupx4A+T4a5Nf2iXPzS6etde+Tm1wXD7oEWNRmbHfKYuitdgwx
-         RomL7+lV4OdxCefjaQnh0zE7naaN78p9NgU11I1wQeM3wEg2qFNj9J40w0uky0Bn7ogr
-         AmXw==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IasbJbDldjnyQsNLMx1pXj5kuEe1IYJC9iNv/m837Yo=;
+        b=U2ySonx48xyPKxjVW1Q22Ed1SquMbqAg1TzImgnNGuWCAgehI8OVyrA7O1XLBedEAW
+         TjVtJ9SMlsgy5Th4dLKbaqMBWEa9ysAKoHT4dh/8o3jPK/GqKqSbDtC6jHcob7tGjaZh
+         dsitvu9X0YrwKBbjsG2TCLzv2a69R0HdPp5UluJrbk26reLRKO6tedMZdIiXdLrRMjK0
+         BlUmByWLxzOBCJBoyiNRw1bclVLb7u8rFtXyhKp29/P2bm6OjndvGneluvX913uMDv0A
+         dNrYBgu97Yg/A889+39foWyBKehTJIY3dPZmjU31S6K8xHZUqZYy3Co8E+oAvzJ9DP9g
+         6ioQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQSNSZywn2J5tIibcMqEyCRYg0DoENdsUd09NDa1qxo=;
-        b=r04s6ZQxrM5deRDigKHaOLXHRsOhNT/qXqRNhs2Aqu6tzWc+hdcZgEUaC0ZXzh84vQ
-         J1Efc71CjjoBWgprj7lwfj3i+FZbndr4wXyJHsSYmLanUPTvuOwuvCTt2VqWnWR28Sjc
-         Q1GXXkgzGJnk1NG0AvZIIAM8sDyBT/s/OfIk6/Q8stwl3ewA8owVk8mTrjQJZUG2x4o6
-         +C+d0tVT6/HSMOSLo4pWzM07JfwFhKP7awGy+IC+O63RNQBo0KOTSj2nSME0u6euYxP2
-         Gr2Na+kuoUva7OsG6qCgQKbFIQTjTh2jNWjRzksfyJ4evpGkdmi1FKviUHw3MlRCM3I6
-         +Vqg==
-X-Gm-Message-State: APjAAAWe0qSXJSQNOofuQSL2eWi2imx20tgtlG+IRE7ptBps0wgbOlUi
-        7QV2wUgP7GEilKeYyCjxzXk=
-X-Google-Smtp-Source: APXvYqwa8wXt+mz7i6FijqBLeIp49F1z3IgvodvcaTTDVoxNESr8D3k+zbgwuMkbbyfNEcSvmrRV0A==
-X-Received: by 2002:a62:ab13:: with SMTP id p19mr2373901pff.131.1552962224852;
-        Mon, 18 Mar 2019 19:23:44 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC ([106.51.22.39])
-        by smtp.gmail.com with ESMTPSA id p6sm18728397pgd.69.2019.03.18.19.23.43
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 19:23:44 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 07:58:19 +0530
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
-        joro@8bytes.org, linux@armlinux.org.uk, robin.murphy@arm.com
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [RESEND PATCH v4 6/9] iommu/dma-iommu.c: Convert to use
- vm_map_pages()
-Message-ID: <80c3d220fc6ada73a88ce43ca049afb55a889258.1552921225.git.jrdr.linux@gmail.com>
-References: <cover.1552921225.git.jrdr.linux@gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IasbJbDldjnyQsNLMx1pXj5kuEe1IYJC9iNv/m837Yo=;
+        b=rzHAZrR8dUq1vBlXMEf1bO9ZWpFB7jUf+c4xigCMMC8iTi8B3G4tNDNvp6Kj83V3Mh
+         887kTAiF8/IdQ7jtFWYaTIfHlZsnIeZvjXhHdygm4v1u44gV8Tcqu3zvqyWCa3/gMRe6
+         1plETCOoG+wnWHVV22Xxst0fkaByC9FVdpqDBli/5UVoFnh+cB8b3Au2wC0UdW3OpWZZ
+         v1gE1cLK9dk9ROrGiXPG7IP1iU+tPVTdfMsZyIXXd4o0fl/BU92Ij0YOhWkY2wZP5AXA
+         6iW6vd/t7v5RHiPlbrn+jM9wIWwIFbpeIlK9P7mUMbniR7nd+I28p84Hw1lWEbhnwoyP
+         GYkw==
+X-Gm-Message-State: APjAAAU7LAJVKOXst1KBGQ4VqrU9tJyFAeJjPN74ovKvUMlw5eSG+xWD
+        RW8aUGzfesD61uZXwxVUpdD0WvlI
+X-Google-Smtp-Source: APXvYqz8y5PgwHeaK8P5LQQ47hfR9VjpuN1O9uSHXbvYfxnrMasNOBtXqvDA8ZeYIyjh/j5XhSAhXg==
+X-Received: by 2002:aa7:8186:: with SMTP id g6mr11540pfi.138.1552962273984;
+        Mon, 18 Mar 2019 19:24:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i13sm13962338pgq.17.2019.03.18.19.24.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 19:24:32 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/31] 4.9.164-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190318084210.397476003@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <a1b42807-3b70-6141-890b-2056786b3b06@roeck-us.net>
+Date:   Mon, 18 Mar 2019 19:24:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert to use vm_map_pages() to map range of kernel
-memory to user vma.
+On 3/18/19 2:25 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.164 release.
+> There are 31 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed Mar 20 08:42:01 UTC 2019.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/iommu/dma-iommu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 316 pass: 316 fail: 0
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index d19f3d6..bacebff 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -620,17 +620,7 @@ struct page **iommu_dma_alloc(struct device *dev, size_t size, gfp_t gfp,
- 
- int iommu_dma_mmap(struct page **pages, size_t size, struct vm_area_struct *vma)
- {
--	unsigned long uaddr = vma->vm_start;
--	unsigned int i, count = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	int ret = -ENXIO;
--
--	for (i = vma->vm_pgoff; i < count && uaddr < vma->vm_end; i++) {
--		ret = vm_insert_page(vma, uaddr, pages[i]);
--		if (ret)
--			break;
--		uaddr += PAGE_SIZE;
--	}
--	return ret;
-+	return vm_map_pages(vma, pages, PAGE_ALIGN(size) >> PAGE_SHIFT);
- }
- 
- static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
--- 
-1.9.1
-
+Guenter
