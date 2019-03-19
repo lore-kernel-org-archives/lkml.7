@@ -2,149 +2,195 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C285FC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E004C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4E42075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147972075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="v2phUKFb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bu0tP29A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfCSI2o (ORCPT
+        id S1727368AbfCSI3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:28:44 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:63654 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSI2o (ORCPT
+        Tue, 19 Mar 2019 04:29:07 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35529 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSI3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:28:44 -0400
-X-IronPort-AV: E=Sophos;i="5.58,497,1544511600"; 
-   d="scan'208";a="26489338"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 19 Mar 2019 01:28:44 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 19 Mar 2019 01:28:42 -0700
+        Tue, 19 Mar 2019 04:29:07 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f8so806751wmh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 01:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XP7GbjqoTrHUSk4y2XVVwkva9JUZHtoIiNTmajJpnf8=;
- b=v2phUKFbNvf0nIPycAd8q/S/Ac2rNuOAAxYifkqYAKAtbd2zSIJK1LfWPtZbx+tAOhkxLC5f3cVIIFJgTPsPc097me2IzsFNEx13yip7B22d7gxslBoJzjmGWnNDjLZwBFSTzdc2/Fb5zJw+8EyYtYhgNIw3IN4At9hwTy2YzL8=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1822.namprd11.prod.outlook.com (10.175.53.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Tue, 19 Mar 2019 08:28:40 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44%8]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 08:28:40 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <sboyd@kernel.org>, <linux-clk@vger.kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <Claudiu.Beznea@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mturquette@baylibre.com>,
-        <matthias.wieloch@few-bauer.de>, <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] clk: at91: fix programmable clock for sama5d2
-Thread-Topic: [PATCH v2] clk: at91: fix programmable clock for sama5d2
-Thread-Index: AQHU3cRmvy5YfEm4i0SwVvQtqxhIlqYSn+sA
-Date:   Tue, 19 Mar 2019 08:28:40 +0000
-Message-ID: <dd4a32fe-4942-83a8-a2c4-336e3c6e55b3@microchip.com>
-References: <20190318105045.26943-1-nicolas.ferre@microchip.com>
- <155293884206.20095.9858756917267939797@swboyd.mtv.corp.google.com>
-In-Reply-To: <155293884206.20095.9858756917267939797@swboyd.mtv.corp.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0339.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::15) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.6.168.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41b2ad4a-cbde-4346-1a5f-08d6ac44e3cf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB1822;
-x-ms-traffictypediagnostic: MWHPR11MB1822:
-x-microsoft-antispam-prvs: <MWHPR11MB18228A30C693B0389A1FE695E0400@MWHPR11MB1822.namprd11.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(189003)(199004)(51914003)(4326008)(6486002)(6436002)(14454004)(36756003)(6512007)(31696002)(76176011)(52116002)(71190400001)(446003)(97736004)(26005)(110136005)(6506007)(2906002)(229853002)(86362001)(6246003)(186003)(386003)(72206003)(99286004)(54906003)(102836004)(53546011)(53936002)(6346003)(11346002)(71200400001)(25786009)(498600001)(105586002)(5660300002)(81156014)(256004)(14444005)(8676002)(81166006)(6116002)(2501003)(2616005)(7736002)(476003)(31686004)(305945005)(66066001)(106356001)(486006)(8936002)(68736007)(3846002)(138113003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1822;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicolas.Ferre@microchip.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HD/1H6xTndoK8UxEMb5N/AuEcJtcChz7E24NzIfHJC+xVqNnsJPbXYwSFzzOS7Mf6l5ndVljr0saHcbA8fck3ANIsI5Nfa3+DQrwBO6VSJ9NC5bZoKZNoJwz8rOf0Fq8dKIAFJDSbUbss3yXEFL0uWU61Md4je1p77AoG1k6WQPPWkOwKl5desXf7ZqDKsgYxiaYMM3kjqzMSkitGjTU/la+pxyVO+B7Fl/KoPqaHR1PiPnlPhGnz+tH0WohyMQyRwgQf2D3xTOa9rJNaSL704o14EJi/0t9zUs2e+EkKFxXHDoyq3PvxvAIicCOZmBOXKjQ2D9wfmzTg9M3/P7qHdU0ofwZQAuSvrZVGKLNutrv1xv7oX+lTjCgra2fDMUHF/Sbam0BeWqud83teUuIHHIkUcWPSwE4eVc60wzYnJ4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A1CD5ABD98BD984798EF6E11B4DFF797@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ctJZHSds0hf4vzWO8bdqiZY60BC3vzw8UB+A+5HMctw=;
+        b=bu0tP29AS/2YT1h8+qCXzsmm0O9gio1tAJPzgFsZst3ebeckplW2KLTrNsV0bBebB0
+         m/UPCDB1Q0ZpXNpKoDrYGHs+FpWk3CY2PN+8OFGKNB6wFezNDIoQdIfacKfkJxGwWZnh
+         ydyR7z7HUvDVVRlyJQ9tQEohLMlPPjZAz9gcM9z+VzfbNvCyvMU86hCWAnKc+z2b9LHu
+         0YGXzYst/xye5DgJ+pWUffb05/ExPXykmyiIn6Bl75TiaGc89zqzftsglKWycopuvu9g
+         6Y5t8FjLSIHRWK0C9PIu0XKSC8XGzdR1XAwjyx2tThI+FNYytO7NoY+9KgYMxxdZJvuZ
+         YiMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ctJZHSds0hf4vzWO8bdqiZY60BC3vzw8UB+A+5HMctw=;
+        b=oKv+bZ32PiQnM8Cw+6iWHL2hk+2ADr1OpYH7ZO4o9+m6W6+aq51EGS6cpfSLWoFr5Q
+         3Ka1P7XFJp4TZxluMKKUea4O6ytV3ASqj+Zofk/1Mqs0cDCtMdrhlQcU6ryygbUpF0c8
+         jsk05LRA9UptPY/cNj5gUopPAEmVBqExS9kkdN4GzOEsEP/VYoj1nfV4N6NUu5T/alGe
+         8yL6XKeT1y8UU5axaYMvmFiHUQ1fhWa4ADPf6px+anEpkzaX47FGhmp40zrfFMX3MeJC
+         Ore0lRW9oqGaxb0yo8OEoW44VK3Uo0MLouNerw/+EbUxNW+nNraSiur2ImbiMSqvhssu
+         v1ZQ==
+X-Gm-Message-State: APjAAAX+GVXV+uA/CEIbvuUxcmN4sUG+Zf9VFL0Ve7Ij9sgESyAkCNJ1
+        8szzz19bjU8bU8Tds2kVECqM6Q==
+X-Google-Smtp-Source: APXvYqxEnweyymg82jk1eHa+OC+OD8j+/BNpUmOYH6SFr8CKLp1PmqywCvgKfC4Qg3cMBQGzHIE+KQ==
+X-Received: by 2002:a1c:7008:: with SMTP id l8mr2364498wmc.63.1552984144606;
+        Tue, 19 Mar 2019 01:29:04 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id b134sm3865654wmd.26.2019.03.19.01.29.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 01:29:04 -0700 (PDT)
+Subject: Re: [PATCH v2 06/11] arm64: dts: meson-g12a-x96-max: add regulators
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190318100458.5619-1-narmstrong@baylibre.com>
+ <20190318100458.5619-7-narmstrong@baylibre.com>
+ <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <c13bc57b-82ea-8f48-75a7-417941b08a11@baylibre.com>
+Date:   Tue, 19 Mar 2019 09:29:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41b2ad4a-cbde-4346-1a5f-08d6ac44e3cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 08:28:40.3551
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1822
-X-OriginatorOrg: microchip.com
+In-Reply-To: <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U3RlcGhlbiwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3DQoNCk9uIDE4LzAzLzIwMTkgYXQgMjA6
-NTQsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBOaWNvbGFzIEZlcnJlICgyMDE5LTAz
-LTE4IDAzOjUwOjQ1KQ0KPj4gRnJvbTogTWF0dGhpYXMgV2llbG9jaCA8bWF0dGhpYXMud2llbG9j
-aEBmZXctYmF1ZXIuZGU+DQo+Pg0KPj4gVGhlIHByZXNjYWxlciBmb3JtdWxhIG9mIHRoZSBwcm9n
-cmFtbWFibGUgY2xvY2sgaGFzIGNoYW5nZWQgZm9yIHNhbWE1ZDIuIFVwZGF0ZQ0KPj4gdGhlIGRy
-aXZlciBhY2NvcmRpbmdseS4NCj4+DQo+PiBGaXhlczogYTIwMzgwNzdkZTlhICgiY2xrOiBhdDkx
-OiBhZGQgc2FtYTVkMiBQTUMgZHJpdmVyIikNCj4+IENjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9y
-Zz4gIyB2NC4yMCsNCj4+IFNpZ25lZC1vZmYtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVy
-cmVAbWljcm9jaGlwLmNvbT4NCj4+IFtuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb206IGFkYXB0
-IHRoZSBwcmVzY2FsZXIgcmFuZ2UsDQo+PiAgICAgICAgICAgICAgICAgIGZpeCBjbGtfcHJvZ3Jh
-bW1hYmxlX3JlY2FsY19yYXRlLCBzcGxpdCBwYXRjaF0NCj4+IFNpZ25lZC1vZmYtYnk6IE1hdHRo
-aWFzIFdpZWxvY2ggPG1hdHRoaWFzLndpZWxvY2hAZmV3LWJhdWVyLmRlPg0KPj4gU2lnbmVkLW9m
-Zi1ieTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0K
-Pj4gLS0tDQo+PiB2MjogYWRhcHQgdG8gdjUuMS1yYzENCj4+ICAgICAgcmVtb3ZlIHVubmVlZGVk
-IHNlbnRlbmNlIGFib3V0IERUIGluIGNvbW1pdCBtZXNzYWdlDQo+Pg0KPj4gU3RlcGhlbiwNCj4+
-DQo+PiBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgdG8gc2VlIHRoaXMgZml4IGdvaW5nIHVwc3Ry
-ZWFtIGR1cmluZyB2NS4xLXJjIHBoYXNlLg0KPiANCj4gT2suIEkgY2FuIGFwcGx5IHRoaXMgY2xr
-LWZpeGVzLiBJIHByZXN1bWUgdGhhdCB0aGluZ3MgYXJlIHJlYWwgYmFkIGFuZA0KPiBpdCBjYW4n
-dCB3YWl0IHVudGlsIHY1LjI/DQoNClRvIGJlIHBlcmZlY3RseSBjbGVhciwgaXQncyBub3QgYSBy
-ZWdyZXNzaW9uLg0KQnV0IGFzIHdlJ3JlIGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBvZiB0aGUgJy1y
-YycgcGhhc2UgYW5kIGFzIGl0J3MgYSBidWcsIA0KSSB3YXMgdGhpbmtpbmcgYWJvdXQgYWRkaW5n
-IGl0IG5vdy4gQnV0IHlvdSB0byBjaG9vc2UsIG5vIHByb2JsZW0gZWl0aGVyIA0Kd2F5Lg0KDQo+
-PiBAQCAtNjAsMTAgKzY4LDE4IEBAIHN0YXRpYyBpbnQgY2xrX3Byb2dyYW1tYWJsZV9kZXRlcm1p
-bmVfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICBj
-b250aW51ZTsNCj4+ICAgDQo+PiAgICAgICAgICAgICAgICAgIHBhcmVudF9yYXRlID0gY2xrX2h3
-X2dldF9yYXRlKHBhcmVudCk7DQo+PiAtICAgICAgICAgICAgICAgZm9yIChzaGlmdCA9IDA7IHNo
-aWZ0IDwgUFJPR19QUkVTX01BU0s7IHNoaWZ0KyspIHsNCj4+IC0gICAgICAgICAgICAgICAgICAg
-ICAgIHRtcF9yYXRlID0gcGFyZW50X3JhdGUgPj4gc2hpZnQ7DQo+PiAtICAgICAgICAgICAgICAg
-ICAgICAgICBpZiAodG1wX3JhdGUgPD0gcmVxLT5yYXRlKQ0KPj4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBicmVhazsNCj4+ICsgICAgICAgICAgICAgICBpZiAobGF5b3V0LT5pc19w
-cmVzX2RpcmVjdCkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZm9yIChzaGlmdCA9IDA7
-IHNoaWZ0IDw9IGxheW91dC0+cHJlc19tYXNrOyBzaGlmdCsrKSB7DQo+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHRtcF9yYXRlID0gcGFyZW50X3JhdGUgLyAoc2hpZnQgKyAxKTsN
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKHRtcF9yYXRlIDw9IHJlcS0+
-cmF0ZSkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsN
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH0NCj4+ICsgICAgICAgICAgICAgICB9IGVsc2Ug
-ew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZm9yIChzaGlmdCA9IDA7IHNoaWZ0IDwgbGF5
-b3V0LT5wcmVzX21hc2s7IHNoaWZ0KyspIHsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgdG1wX3JhdGUgPSBwYXJlbnRfcmF0ZSA+PiBzaGlmdDsNCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgaWYgKHRtcF9yYXRlIDw9IHJlcS0+cmF0ZSkNCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsNCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIH0NCj4gDQo+IFRoaXMgbG9va3MgbGlrZSBhIGxvdCBvZiBjb3B5IHBhc3RlIHdo
-ZW4gdGhlIGlmIHN0YXRlbWVudCBjb3VsZCBoYXZlIGJlZW4NCj4gcHVsbGVkIGludG8gdGhlIGZv
-ciBsb29wIGluc3RlYWQgb2YgZHVwbGljYXRpbmcgdGhlIGxvb3BzIGFuZA0KPiBzdXJyb3VuZGlu
-ZyBpZiBjb25kaXRpb24gY2hlY2sgZm9yIHRtcF9yYXRlLg0KDQpTdG9wIGNvbmRpdGlvbiBvZiBs
-b29wcyBub3QgYmVpbmcgdGhlIHNhbWUgbWFkZSBtZSBzZXBhcmF0ZSB0aGVtIGluc3RlYWQgDQpv
-ZiBhZGRpbmcgYXJ0aWZpY2lhbCB0ZXN0IGNvbmRpdGlvbnMgZm9yIHNoaWZ0ID09IGxheW91dC0+
-cHJlc19tYXNrLiBJJ20gDQpub3Qgc3VyZSB0aGUgb3RoZXIgd2F5IGFyb3VuZCBpcyBtb3JlIG9i
-dmlvdXMgdGhlbi4uLg0KDQo+IA0KPj4gICAgICAgICAgICAgICAgICB9DQo+PiAgIA0KPj4gICAg
-ICAgICAgICAgICAgICBpZiAodG1wX3JhdGUgPiByZXEtPnJhdGUpDQoNCg0KLS0gDQpOaWNvbGFz
-IEZlcnJlDQo=
+On 18/03/2019 21:13, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> From: Guillaume La Roque <glaroque@baylibre.com>
+>>
+>> Add system regulators for the X96 Max Set-Top-Box.
+>>
+>> Still missing
+>> * VDD_EE (0.8V - PWM controlled)
+>> * VDD_CPU (PWM controlled)
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>> index 0edbd00b358f..5c37930b09e2 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> [...]
+>> +       vcc_5v: regulator-vcc_5v {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "VCC_5V";
+>> +               regulator-min-microvolt = <5000000>;
+>> +               regulator-max-microvolt = <5000000>;
+>> +               vin-supply = <&dc_in>;
+>> +
+>> +               gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
+>> +               enable-active-high;
+> is there any way to test whether this GPIO is the right one?
+> I couldn't find a reference to a GPIOH_8 regulator in
+> buildroot_openlinux_kernel_4.9_fbdev_20180706
+
+The x96 is based on the U212 reference design, and the GPIOH_8 controls the 5V_EN signal,
+but you are right, it's the wrong polarity here, it should be enable-active-low instead.
+(FYI The SEI510 does not use this at all, 5V is always enabled)
+
+The schematics describes :
+VCC5V_EN (GPIOH_8-Hiz OD): 5V_EN
+L: Enable
+Hiz: Disable
+
+FYI, the GPIOH_8 is Open-Drain only, this means this pin cannot pull to TTL 1, only to TTL 0
+or set as input. We need to add a way to describe this in the pinctrl driver somehow....
+
+I will send a fix on v3
+
+I didn't notice because I power the board using a Type-A to Type-A connector,
+and the 5V from the USB port bypasses this regulator...
+
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
+
