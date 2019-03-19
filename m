@@ -2,148 +2,237 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6E0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626A1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FEE213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC4920857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfCSLJx (ORCPT
+        id S1727532AbfCSLLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:09:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49618 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbfCSLJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:09:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACCA21650;
-        Tue, 19 Mar 2019 04:09:52 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E4B53F614;
-        Tue, 19 Mar 2019 04:09:50 -0700 (PDT)
-Subject: Re: [PATCH v2] mmc: dw_mmc: Fix to avoid potential NULL pointer
- dereference
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org,
-        kjlu@umn.edu, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190319014551.16559-1-pakki001@umn.edu>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f3363524-f764-6652-9b16-3a8b0d30e6df@arm.com>
-Date:   Tue, 19 Mar 2019 11:09:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 07:11:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46157 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfCSLLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:11:41 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2JBAqpt3395563
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 19 Mar 2019 04:10:52 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2JBAofk3395560;
+        Tue, 19 Mar 2019 04:10:51 -0700
+Date:   Tue, 19 Mar 2019 04:10:51 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
+Message-ID: <tip-a23314e9d88d89d49e69db08f60b7caa470f04e1@git.kernel.org>
+Cc:     rafael.j.wysocki@intel.com, riel@surriel.com,
+        dave.hansen@linux.intel.com, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, quentin.perret@arm.com, bp@alien8.de,
+        peterz@infradead.org, hpa@zytor.com, luto@kernel.org,
+        zhang.lyra@gmail.com, mingo@kernel.org, tglx@linutronix.de,
+        torvalds@linux-foundation.org, vincent.wang@unisoc.com
+Reply-To: vincent.wang@unisoc.com, mingo@kernel.org,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          zhang.lyra@gmail.com, luto@kernel.org, bp@alien8.de,
+          peterz@infradead.org, quentin.perret@arm.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+          rafael.j.wysocki@intel.com, dave.hansen@linux.intel.com,
+          riel@surriel.com
+In-Reply-To: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
+References: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/urgent] sched/cpufreq: Fix 32-bit math overflow
+Git-Commit-ID: a23314e9d88d89d49e69db08f60b7caa470f04e1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190319014551.16559-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019 01:45, Aditya Pakki wrote:
-> of_match_node can fail and return NULL in case no matching structure.
-> The patches checks for such a scenario and returns -ENXIO.
+Commit-ID:  a23314e9d88d89d49e69db08f60b7caa470f04e1
+Gitweb:     https://git.kernel.org/tip/a23314e9d88d89d49e69db08f60b7caa470f04e1
+Author:     Peter Zijlstra <peterz@infradead.org>
+AuthorDate: Tue, 5 Mar 2019 09:32:02 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 19 Mar 2019 12:06:11 +0100
 
-FWIW, it looks like most of these instances could be cleaned up even 
-more with of_device_get_match_data().
+sched/cpufreq: Fix 32-bit math overflow
 
-In general, do bear in mind that adding these NULL checks *everywhere* 
-will in many cases just amount to useless dead code - a pure DT-based 
-driver can usually freely assume of_match_node() returns non-NULL for 
-its own device and match table in its probe routine, because that probe 
-routine only ever gets called if of_driver_match_device() has already 
-made the same match in the first place.
+Vincent Wang reported that get_next_freq() has a mult overflow bug on
+32-bit platforms in the IOWAIT boost case, since in that case {util,max}
+are in freq units instead of capacity units.
 
-Robin.
+Solve this by moving the IOWAIT boost to capacity units. And since this
+means @max is constant; simplify the code.
 
-> ---
-> V1: Added files dw_mmc-zx.c and dw_mmc-rockchip.c
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->   drivers/mmc/host/dw_mmc-exynos.c   | 2 ++
->   drivers/mmc/host/dw_mmc-k3.c       | 2 ++
->   drivers/mmc/host/dw_mmc-pltfm.c    | 2 ++
->   drivers/mmc/host/dw_mmc-rockchip.c | 2 ++
->   drivers/mmc/host/dw_mmc-zx.c       | 2 ++
->   5 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-> index d46c3439b508..8a75d7314606 100644
-> --- a/drivers/mmc/host/dw_mmc-exynos.c
-> +++ b/drivers/mmc/host/dw_mmc-exynos.c
-> @@ -554,6 +554,8 @@ static int dw_mci_exynos_probe(struct platform_device *pdev)
->   	int ret;
->   
->   	match = of_match_node(dw_mci_exynos_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -ENXIO;
->   	drv_data = match->data;
->   
->   	pm_runtime_get_noresume(&pdev->dev);
-> diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-> index 89cdb3d533bb..cc50b7546a20 100644
-> --- a/drivers/mmc/host/dw_mmc-k3.c
-> +++ b/drivers/mmc/host/dw_mmc-k3.c
-> @@ -459,6 +459,8 @@ static int dw_mci_k3_probe(struct platform_device *pdev)
->   	const struct of_device_id *match;
->   
->   	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -ENXIO;
->   	drv_data = match->data;
->   
->   	return dw_mci_pltfm_register(pdev, drv_data);
-> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-> index 58c13e21bd5a..b1948989f617 100644
-> --- a/drivers/mmc/host/dw_mmc-pltfm.c
-> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
-> @@ -82,6 +82,8 @@ static int dw_mci_pltfm_probe(struct platform_device *pdev)
->   
->   	if (pdev->dev.of_node) {
->   		match = of_match_node(dw_mci_pltfm_match, pdev->dev.of_node);
-> +		if (!match)
-> +			return -ENXIO;
->   		drv_data = match->data;
->   	}
->   
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-> index 8c86a800a8fd..20e3471260ea 100644
-> --- a/drivers/mmc/host/dw_mmc-rockchip.c
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -344,6 +344,8 @@ static int dw_mci_rockchip_probe(struct platform_device *pdev)
->   		return -ENODEV;
->   
->   	match = of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -ENXIO;
->   	drv_data = match->data;
->   
->   	pm_runtime_get_noresume(&pdev->dev);
-> diff --git a/drivers/mmc/host/dw_mmc-zx.c b/drivers/mmc/host/dw_mmc-zx.c
-> index c06b5393312f..abea35431045 100644
-> --- a/drivers/mmc/host/dw_mmc-zx.c
-> +++ b/drivers/mmc/host/dw_mmc-zx.c
-> @@ -213,6 +213,8 @@ static int dw_mci_zx_probe(struct platform_device *pdev)
->   	const struct of_device_id *match;
->   
->   	match = of_match_node(dw_mci_zx_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -ENXIO;
->   	drv_data = match->data;
->   
->   	return dw_mci_pltfm_register(pdev, drv_data);
-> 
+Reported-by: Vincent Wang <vincent.wang@unisoc.com>
+Tested-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190305083202.GU32494@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/cpufreq_schedutil.c | 59 +++++++++++++++++-----------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
+
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 033ec7c45f13..1ccf77f6d346 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -48,10 +48,10 @@ struct sugov_cpu {
+ 
+ 	bool			iowait_boost_pending;
+ 	unsigned int		iowait_boost;
+-	unsigned int		iowait_boost_max;
+ 	u64			last_update;
+ 
+ 	unsigned long		bw_dl;
++	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -303,8 +303,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost
+-		? sg_cpu->sg_policy->policy->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -344,14 +343,13 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+ 
+ 	/* Double the boost at each request */
+ 	if (sg_cpu->iowait_boost) {
+-		sg_cpu->iowait_boost <<= 1;
+-		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
+-			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
++		sg_cpu->iowait_boost =
++			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+ 		return;
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
++	sg_cpu->iowait_boost = sg_cpu->min;
+ }
+ 
+ /**
+@@ -373,47 +371,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+  * This mechanism is designed to boost high frequently IO waiting tasks, while
+  * being more conservative on tasks which does sporadic IO operations.
+  */
+-static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+-			       unsigned long *util, unsigned long *max)
++static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
++					unsigned long util, unsigned long max)
+ {
+-	unsigned int boost_util, boost_max;
++	unsigned long boost;
+ 
+ 	/* No boost currently required */
+ 	if (!sg_cpu->iowait_boost)
+-		return;
++		return util;
+ 
+ 	/* Reset boost if the CPU appears to have been idle enough */
+ 	if (sugov_iowait_reset(sg_cpu, time, false))
+-		return;
++		return util;
+ 
+-	/*
+-	 * An IO waiting task has just woken up:
+-	 * allow to further double the boost value
+-	 */
+-	if (sg_cpu->iowait_boost_pending) {
+-		sg_cpu->iowait_boost_pending = false;
+-	} else {
++	if (!sg_cpu->iowait_boost_pending) {
+ 		/*
+-		 * Otherwise: reduce the boost value and disable it when we
+-		 * reach the minimum.
++		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
++		if (sg_cpu->iowait_boost < sg_cpu->min) {
+ 			sg_cpu->iowait_boost = 0;
+-			return;
++			return util;
+ 		}
+ 	}
+ 
++	sg_cpu->iowait_boost_pending = false;
++
+ 	/*
+-	 * Apply the current boost value: a CPU is boosted only if its current
+-	 * utilization is smaller then the current IO boost level.
++	 * @util is already in capacity scale; convert iowait_boost
++	 * into the same scale so we can compare.
+ 	 */
+-	boost_util = sg_cpu->iowait_boost;
+-	boost_max = sg_cpu->iowait_boost_max;
+-	if (*util * boost_max < *max * boost_util) {
+-		*util = boost_util;
+-		*max = boost_max;
+-	}
++	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
++	return max(boost, util);
+ }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+@@ -460,7 +449,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+-	sugov_iowait_apply(sg_cpu, time, &util, &max);
++	util = sugov_iowait_apply(sg_cpu, time, util, max);
+ 	next_f = get_next_freq(sg_policy, util, max);
+ 	/*
+ 	 * Do not reduce the frequency if the CPU has not been idle
+@@ -500,7 +489,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+ 
+ 		j_util = sugov_get_util(j_sg_cpu);
+ 		j_max = j_sg_cpu->max;
+-		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
++		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+ 
+ 		if (j_util * max > j_max * util) {
+ 			util = j_util;
+@@ -837,7 +826,9 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
++		sg_cpu->min			=
++			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
++			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
