@@ -2,74 +2,138 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8DAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E057BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67EA2213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LSyfaQGT"
+	by mail.kernel.org (Postfix) with ESMTP id B74A02133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfCSOOI (ORCPT
+        id S1727601AbfCSOOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:14:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54150 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSOOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:14:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ggpmEi/tz48S76kwN3kqs6AHjU/+w6TOvQ5t1vMmBu0=; b=LSyfaQGTQz6zC0t9R3T+kbTEm
-        JbuDIO6wxLMB3f1i/92m7xKg32noIfu/gQSaQFVA/XV23qJB70+jUqoGRhZ1G8PAOPLQR/QhirKlI
-        jaZqW0ijWQtBCpwjr7Wo1qcLFVzm7uECdL8NhaHGpsWHYKOExVTb7Gh/jCMCHgbyDqRvEEcSR4HPL
-        RUxzyomyFQKKIxM1wH2QAxSVRQiSmusxUUSH4HuQVQDjr3XQcMgbmXIANpyjuXomHUt06AehLufHl
-        C9YxKO5xu5qPWty7gKzBosb4LwS5lSimbQy+udSMy9YjCB1VlobzlJq4HTWJcM5qyMciMPFI0U9aG
-        PBPknQwXQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6FVD-0005oA-89; Tue, 19 Mar 2019 14:14:03 +0000
-Subject: Re: linux-next: Tree for Mar 19 (sound/soc/codecs/nau8810.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Lin <ctlin0@nuvoton.com>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-References: <20190319161236.214675f6@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <00f5cef0-4024-caf2-7f98-52b1e92b13b2@infradead.org>
-Date:   Tue, 19 Mar 2019 07:13:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 10:14:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfCSOOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:14:20 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52ADC3082B42;
+        Tue, 19 Mar 2019 14:14:20 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 21C83611C2;
+        Tue, 19 Mar 2019 14:14:18 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:14:16 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190319141416.GA3879@redhat.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319161236.214675f6@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319134724.GB3437@redhat.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 19 Mar 2019 14:14:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 10:12 PM, Stephen Rothwell wrote:
-> Hi all,
+On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
+> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
+> > On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+> > > From: John Hubbard <jhubbard@nvidia.com>
 > 
-> Changes since 20190318:
+> [...]
 > 
+> > > diff --git a/mm/gup.c b/mm/gup.c
+> > > index f84e22685aaa..37085b8163b1 100644
+> > > --- a/mm/gup.c
+> > > +++ b/mm/gup.c
+> > > @@ -28,6 +28,88 @@ struct follow_page_context {
+> > >  	unsigned int page_mask;
+> > >  };
+> > >  
+> > > +typedef int (*set_dirty_func_t)(struct page *page);
+> > > +
+> > > +static void __put_user_pages_dirty(struct page **pages,
+> > > +				   unsigned long npages,
+> > > +				   set_dirty_func_t sdf)
+> > > +{
+> > > +	unsigned long index;
+> > > +
+> > > +	for (index = 0; index < npages; index++) {
+> > > +		struct page *page = compound_head(pages[index]);
+> > > +
+> > > +		if (!PageDirty(page))
+> > > +			sdf(page);
+> > 
+> > How is this safe? What prevents the page to be cleared under you?
+> > 
+> > If it's safe to race clear_page_dirty*() it has to be stated explicitly
+> > with a reason why. It's not very clear to me as it is.
+> 
+> The PageDirty() optimization above is fine to race with clear the
+> page flag as it means it is racing after a page_mkclean() and the
+> GUP user is done with the page so page is about to be write back
+> ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
+> call while a split second after TestClearPageDirty() happens then
+> it means the racing clear is about to write back the page so all
+> is fine (the page was dirty and it is being clear for write back).
+> 
+> If it does call the sdf() while racing with write back then we
+> just redirtied the page just like clear_page_dirty_for_io() would
+> do if page_mkclean() failed so nothing harmful will come of that
+> neither. Page stays dirty despite write back it just means that
+> the page might be write back twice in a row.
 
-on i386:
+Forgot to mention one thing, we had a discussion with Andrea and Jan
+about set_page_dirty() and Andrea had the good idea of maybe doing
+the set_page_dirty() at GUP time (when GUP with write) not when the
+GUP user calls put_page(). We can do that by setting the dirty bit
+in the pte for instance. They are few bonus of doing things that way:
+    - amortize the cost of calling set_page_dirty() (ie one call for
+      GUP and page_mkclean()
+    - it is always safe to do so at GUP time (ie the pte has write
+      permission and thus the page is in correct state)
+    - safe from truncate race
+    - no need to ever lock the page
 
-ld: sound/soc/codecs/nau8810.o: in function `nau8810_set_pll':
-nau8810.c:(.text+0x6e7): undefined reference to `__udivdi3'
+Extra bonus from my point of view, it simplify thing for my generic
+page protection patchset (KSM for file back page).
 
+So maybe we should explore that ? It would also be a lot less code.
 
--- 
-~Randy
+Cheers,
+Jérôme
