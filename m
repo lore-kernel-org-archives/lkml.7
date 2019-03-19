@@ -2,101 +2,126 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C28C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F3DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1B62085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7115820857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJv0jEpt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fyMBb/WR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfCSQMs (ORCPT
+        id S1727329AbfCSQOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:12:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41014 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfCSQMr (ORCPT
+        Tue, 19 Mar 2019 12:14:46 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45688 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfCSQOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:12:47 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k11so14166715pgb.8;
-        Tue, 19 Mar 2019 09:12:47 -0700 (PDT)
+        Tue, 19 Mar 2019 12:14:46 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 5so2861316lft.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RkN43YXASvxNV4AGGWiA3z/xXIWpybddoKdSjGJiHwo=;
-        b=RJv0jEptpPL6IX+y4Fjohrm1viavXwUopLxZomzKhU6OgIkiPXMcRjvlYMcECUvxn5
-         WChz+1VDMZn2t2MiL7jglJsH8MSsK8TGUlKNNLUWooV2hkXjT2O33J462mBM4McZv2bm
-         eVs2aaGcg2CoRpR/8oHqgME2Eo+X0FcdmKo1/iUCsg1sWK37qlmweBPTXNbQ6Kx5Vdc+
-         JMhLAb9OaVKkn5Nbe/Eze9Rr2D5qcOty61dKJICASMTpp8FHzpk1ENFl4EOAMY4GQlfM
-         vFzM8md8VmKO4rCKPwRmGEN9Sl+ENQHyVjhmj7cx0UOZPzFxKHGpsuqlIl4o81oLdbk2
-         Kn9A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tDMxXgo0eVAtSrDg7SeO+qv8r/MSb+PeMGzIW9OaYbA=;
+        b=fyMBb/WRe1vN63Trs5ZnAJE5pgGjJdY6T6feBivzEyVlf8ieRmD6P72+BmoGZ2pLtL
+         tSd/ED+dfYn/qp1+ji7yrDfa7ek7Go3HX55iTKagJCssCDRtGSlx78IXrjoKb/ijRkZL
+         kGsX4qHuGEvrHXE4bz7R8enBNqj1s1du5K1heEvBLRCbpAa0Q3lfq3vJgv2LR/CedW01
+         s/G+0ZG5ZUpc+mLxKDvSNcigQdHw+42STmdsQTJzP7tcRQoeosRlYyjd0RDN9Gj42D9y
+         BtjoAMo3IedI244UKNtoq53u3iek3p+PZzd3n2DL+sSM4uNJ8d+ave/vx7bxZbw7twp8
+         Lb1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RkN43YXASvxNV4AGGWiA3z/xXIWpybddoKdSjGJiHwo=;
-        b=DMt/T4XpClHqOOMgaIAKPKvzILzxg4cxEurexIR7MisdAzLicyvT5uRnkSUfiHY1w3
-         h1hf9gYqwadyy4nnt+3mc8vAWtDcj0ZOcItH6ZLGUjvSUFAZPbtrDX5GMRFYEhrWQiTQ
-         IrcZz0YsxnebjrtjVq1cB7mM8Kz3U3HSvmMD4zkqrQNbpJCAcqHYxoag6Lk5UqD0s1nB
-         4bI7uuP9vtyw5/8AeeNGuLbNzqlA0Py0VR1C4iJNM8reAeJC5XGxVxvpyzXiDSPE5I/z
-         9guAYIT87AS2sKpMvqYFFEtpP4gK4j2d1i4EVZnHt3BFgxmq/CN+R8Im4es+Pzh3YB/k
-         7r6w==
-X-Gm-Message-State: APjAAAUrU3RCXkJpPgfiOZ5Sy6Jh6BVDXhZUADpmzMcHEmRpM47WThAz
-        Lj12yx2nyXHcud4NfTuxKus=
-X-Google-Smtp-Source: APXvYqzSffzTChDRFzjaJ/065QyCtIuKXFTSkz9APiYc3ebB/ZG+m3R6QbUuW6z1pYT8rB74DCRhKg==
-X-Received: by 2002:a62:ee13:: with SMTP id e19mr2741277pfi.224.1553011967014;
-        Tue, 19 Mar 2019 09:12:47 -0700 (PDT)
-Received: from localhost.localdomain ([47.91.249.165])
-        by smtp.gmail.com with ESMTPSA id v4sm19233635pff.181.2019.03.19.09.12.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 19 Mar 2019 09:12:46 -0700 (PDT)
-From:   Jeff Xie <chongguiguzi@gmail.com>
-To:     chwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc:     rppt@linux.vnet.ibm.com, akpm@linux-foundation.org,
-        mhocko@suse.com, keescook@chromium.org, chongguiguzi@gmail.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] s390:tty3270:move spin_lock_bh to spin_lock in tasklet
-Date:   Wed, 20 Mar 2019 00:12:36 +0800
-Message-Id: <1553011956-28747-1-git-send-email-chongguiguzi@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tDMxXgo0eVAtSrDg7SeO+qv8r/MSb+PeMGzIW9OaYbA=;
+        b=CyVzBzYseb/iNtCLWNSYDSMnlVslX6bK7W5DwRedh/9+H5/HZKYS17OWn8kAwGaW1A
+         vihJxsgLMOn+tSa7siZOoBX3Hu05TjZr7jvvXWQ1ZfcKUmUklc7auSH3KfpuDH1YYV7z
+         V2DH+K42chUyVj2IR5vgOXuJLx6BR6Rto3cBHdQggQH0JQ0kgwW7od7xffHviGvsnwLI
+         6gUHOwmrc50i4pC5E4sFcAWOEPz+gfpJBzkY3UqgRwTR1kt/akZWgmx2K7p2MnMntCxz
+         Bc/M3avOclpubDIzEbZ2ozFIdqUwIv2fc4QpThXlKjRxzr28cvIf/Po51qBb7KiKu5fQ
+         DuVQ==
+X-Gm-Message-State: APjAAAWNa/pEPGm3i5FuDwGfhXfztTx1MWMg0Zzj3qy3yC9AuraJr7Np
+        0G88ze82NnGFKGgdi1KTqRAL1sPAvQDSAPDaZvTMUw==
+X-Google-Smtp-Source: APXvYqzBXS6UZ0gdyPGcRrJOJJ2OOp/SAAYjxhy5Y7m1hu6S0ckWsuIwTzv+m6RwFfDCbYwmPWweTWuA7CMRLhifODk=
+X-Received: by 2002:a19:6a0b:: with SMTP id u11mr14003332lfu.13.1553012084167;
+ Tue, 19 Mar 2019 09:14:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <alpine.DEB.2.21.1903191529010.2537@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1903191529010.2537@nanos.tec.linutronix.de>
+From:   Roman Kiryanov <rkir@google.com>
+Date:   Tue, 19 Mar 2019 09:14:32 -0700
+Message-ID: <CAOGAQepj=yW4uQSRHpvnQz71+D8a7+H71XtrApp8YGU65XgoqA@mail.gmail.com>
+Subject: Re: [PATCH] drivers: power: supply: goldfish_battery: Fix bogus SPDX identifier
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unnecessary to call spin_lock_bh in a tasklet.
+Hi, I am sorry for this warning. I remember I checked all changes I
+sent, maybe missed this one.
 
-Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
----
- drivers/s390/char/tty3270.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+At the bottom the file says
 
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index 2b0c36c2..2963396 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -563,7 +563,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
- 	char *input;
- 	int len;
- 
--	spin_lock_bh(&tp->view.lock);
-+	spin_lock(&tp->view.lock);
- 	/*
- 	 * Two AID keys are special: For 0x7d (enter) the input line
- 	 * has to be emitted to the tty and for 0x6d the screen
-@@ -590,7 +590,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
- 		tp->update_flags = TTY_UPDATE_ALL;
- 		tty3270_set_timer(tp, 1);
- 	}
--	spin_unlock_bh(&tp->view.lock);
-+	spin_unlock(&tp->view.lock);
- 
- 	/* Start keyboard reset command. */
- 	raw3270_request_reset(tp->kreset);
--- 
-2.7.4
+MODULE_LICENSE("GPL");
 
+and
+
+// SPDX-License-Identifier: GPL-2.0
+
+makes it inconsistent.
+
+Regards,
+Roman.
+
+On Tue, Mar 19, 2019 at 7:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> spdxcheck.py complains:
+>
+>  drivers/power/supply/goldfish_battery.c: 1:28 Invalid License ID: GPL
+>
+> which is correct because GPL is not a valid identifier. Of course this
+> could have been caught by checkpatch.pl _before_ submitting or merging the
+> patch.
+>
+>  WARNING: 'SPDX-License-Identifier: GPL' is not supported in LICENSES/...
+>  #19: FILE: drivers/power/supply/goldfish_battery.c:1:
+>  +// SPDX-License-Identifier: GPL
+>
+> Which is absolutely hillarious as the commit introducing this wreckage says
+> in the changelog:
+>
+>   There was a checkpatch complain:
+>
+>     "Missing or malformed SPDX-License-Identifier tag".
+>
+> Oh well. Replacing a checkpatch warning by a different checkpatch warning
+> is a really useful exercise.
+>
+> Use the proper GPL-2.0 identifier which is what the boiler plate in the
+> file had originally.
+>
+> Fixes: e75e3a125b40 ("drivers: power: supply: goldfish_battery: Put an SPDX tag")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> diff --git a/drivers/power/supply/goldfish_battery.c b/drivers/power/supply/goldfish_battery.c
+> index ad969d9fc981..c2644a9fe80f 100644
+> --- a/drivers/power/supply/goldfish_battery.c
+> +++ b/drivers/power/supply/goldfish_battery.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Power supply driver for the goldfish emulator
+>   *
