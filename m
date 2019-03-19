@@ -2,117 +2,81 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA73C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4261C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A02120811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="CDRaOIDr"
+	by mail.kernel.org (Postfix) with ESMTP id 7EE5F2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfCSSmL (ORCPT
+        id S1727267AbfCSSna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:42:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39812 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfCSSmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:42:11 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f10so11271748otb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FWxmWiMBWpI9PbQuON8dITDlnyzakUDvlB+9hBH1Ids=;
-        b=CDRaOIDr7xEbWdkSWHxkSt92zwgalV46Gy1oD8i1LIvOi7IbJAf6KZa6N+ffH9Y8vP
-         xttdPrp5cEdzGBKDYbSE0mqgkFZXnu6mnC4uTzRWIUsFOcVCQnSoX+/BJ+yB8sxj0crp
-         WHtiyXiOP51RdMLhdhqQ65UDDyPeZHHLpSElmKfrWJL53Ukntprdm52hpjnoYnHpPGNF
-         jrP5MMkZT4/+HDIXeuG3a0k+sa+gcalCFRuEA9qOCuvRKxtzkr/X4zIfEhDcM8Lo+QDR
-         ySabqrj0PvLlNkldased5jAwHXmzaW+EXT+zkIaKWEIpD+S1kEHQmENLzU9DFKi7//b/
-         xjhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FWxmWiMBWpI9PbQuON8dITDlnyzakUDvlB+9hBH1Ids=;
-        b=FyoWV1FztaFm71j+R74coWVH5HLmATp01XuCEHJgt403/0K6+aOhg39NnNHEWYn23H
-         9AdmUYRZb3u15ozmRSzNBHGRI7MEOI4+wzI9PRDntQxIXS+15jKBgSYYUi5f2P9v6o9x
-         Ir5tprZ5qMRcmA1SsHa1yHsv3Tuf6hfo5du2YA4dHfTikzdTtYxzWM2//mzJt0t11QtU
-         Of9jxPU6+t7bfOfgPi0/uTzU58vueoTpuTqJ0Cql7tJesallriO1f6OFFuoc2Bs2G79E
-         cS1EUZVFP1y6Hed3VBFtlV2NRcAEnPZzuRzQazvw6rJ27o22Uyn30wd1oSMxbJY6qtxu
-         IkRA==
-X-Gm-Message-State: APjAAAXagveMUl8S5B/iJPExexNuiFNcEiluCZ2WIMpYQ2pTRUz9DN9b
-        w4fttsuQ9FFLAWqGqHde+Dkmw/hquG0zCH8yDYOHXA==
-X-Google-Smtp-Source: APXvYqyahvBwQYIcUDTqr0Q4YyUcML89NFCLSqd+Kz3QIKSS3JZTj1jVT4LvJzG7zKr8/In8vsgYSeZhBPIbrQOkTBI=
-X-Received: by 2002:a9d:4d0b:: with SMTP id n11mr2080569otf.98.1553020930814;
- Tue, 19 Mar 2019 11:42:10 -0700 (PDT)
+        Tue, 19 Mar 2019 14:43:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18381 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbfCSSna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 14:43:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 11:43:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
+   d="scan'208";a="135648401"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Mar 2019 11:43:28 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2F825154; Tue, 19 Mar 2019 20:43:26 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 0/7] x86/boot: Enable earlyprintk for HS UARTs
+Date:   Tue, 19 Mar 2019 21:43:18 +0300
+Message-Id: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
- <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
- <20190318170404.GA6786@redhat.com> <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
- <20190319165802.GA3656@redhat.com> <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
- <20190319171847.GC3656@redhat.com> <CAPcyv4iesGET_PV-QcdBbxJGgmJ_HhoGczyvb=0+SnLkFDhRuQ@mail.gmail.com>
- <20190319174552.GA3769@redhat.com>
-In-Reply-To: <20190319174552.GA3769@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 Mar 2019 11:42:00 -0700
-Message-ID: <CAPcyv4hFPOO0-=v3ZCNFA=LgE_QCvyFXGqF24Crveoj_NTbq0Q@mail.gmail.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:45 AM Jerome Glisse <jglisse@redhat.com> wrote:
->
-> On Tue, Mar 19, 2019 at 10:33:57AM -0700, Dan Williams wrote:
-> > On Tue, Mar 19, 2019 at 10:19 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> > >
-> > > On Tue, Mar 19, 2019 at 10:12:49AM -0700, Andrew Morton wrote:
-> > > > On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
-> > [..]
-> > > > Also, the discussion regarding [07/10] is substantial and is ongoing so
-> > > > please let's push along wth that.
-> > >
-> > > I can move it as last patch in the serie but it is needed for ODP RDMA
-> > > convertion too. Otherwise i will just move that code into the ODP RDMA
-> > > code and will have to move it again into HMM code once i am done with
-> > > the nouveau changes and in the meantime i expect other driver will want
-> > > to use this 2 helpers too.
-> >
-> > I still hold out hope that we can find a way to have productive
-> > discussions about the implementation of this infrastructure.
-> > Threatening to move the code elsewhere to bypass the feedback is not
-> > productive.
->
-> I am not threatening anything that code is in ODP _today_ with that
-> patchset i was factering it out so that i could also use it in nouveau.
-> nouveau is built in such way that right now i can not use it directly.
-> But i wanted to factor out now in hope that i can get the nouveau
-> changes in 5.2 and then convert nouveau in 5.3.
->
-> So when i said that code will be in ODP it just means that instead of
-> removing it from ODP i will keep it there and it will just delay more
-> code sharing for everyone.
+Newer Intel platforms sometimes have only HS UART enabled and
+accessible via MMIO on high addresses.
 
-The point I'm trying to make is that the code sharing for everyone is
-moving the implementation closer to canonical kernel code and use
-existing infrastructure. For example, I look at 'struct hmm_range' and
-see nothing hmm specific in it. I think we can make that generic and
-not build up more apis and data structures in the "hmm" namespace.
+For now, earlyprintk doesn't handle such cases and always rely
+on the legacy serial port to be present.
+
+This series fills the gap and enables earlyprintk on HS UARTs.
+
+Since v2:
+- rebase on top of v5.1-rc1
+- parse 'mmio' keyword instead of port range check (Ingo)
+- deduplicate code wherever it's possible (Ingo)
+
+Andy Shevchenko (7):
+  x86/boot: Convert early_serial_base to unsigned long
+  x86/boot: Introduce helpers for serial I/O
+  x86/boot: Split out parse_serial_port() helper for earlyprintk
+  x86/boot: Allow longer parameter list for earlyprintk
+  x86/boot: Add MMIO byte accessors
+  x86/boot: Introduce MMIO accessors and their support in earlyprintk
+  x86/boot: Support nocfg parameter for earlyprintk
+
+ arch/x86/boot/boot.h                          |  16 ++-
+ .../boot/compressed/early_serial_console.c    |   5 +-
+ arch/x86/boot/compressed/misc.c               |   4 +-
+ arch/x86/boot/compressed/misc.h               |   8 +-
+ arch/x86/boot/early_serial_console.c          | 135 ++++++++++++++----
+ arch/x86/boot/tty.c                           |   9 +-
+ 6 files changed, 140 insertions(+), 37 deletions(-)
+
+-- 
+2.20.1
+
