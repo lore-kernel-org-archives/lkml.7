@@ -2,146 +2,255 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8664C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45A1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782E020857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmDAK/SR"
+	by mail.kernel.org (Postfix) with ESMTP id 7B1DE2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfCSLxJ (ORCPT
+        id S1727196AbfCSLyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:53:09 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53392 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCSLxI (ORCPT
+        Tue, 19 Mar 2019 07:54:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725951AbfCSLyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:53:08 -0400
-Received: by mail-it1-f195.google.com with SMTP id w85so1350194itc.3;
-        Tue, 19 Mar 2019 04:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xcafNnHHdbcpX/bRqQlKFp5EIosE0272N1uHCfgd0R0=;
-        b=mmDAK/SRI8lgY1NqEbHt6Rl2tWWD6pka5LOCSRiej5FBpkijXDlw0sEo45MKGINagD
-         BtlbWqwziNxe+9LOeMd5BWGVuKLeABAVPFxvL6J4BlPl7TDzN/3knKr/UcJYTu7O8nY7
-         NNn4W4a/3FR1KvY7h3nmOABQRgqqTHwB1gKV9tNxvOIH2SckKDBnWLPvZ3FpjSpG4Rbq
-         8fR+np/4rfTBhTNMhI3r4o4vfCO06fjPMIThF/NocJTPcY3RpgesA9stO1ZM4jpRjGhu
-         4ohbMJK4iE6fvxkE+wqLmxqiIwGM08VFKWm3Op0E3hg6pW/HClCzSxY8krCVfHDHAaZT
-         k4kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xcafNnHHdbcpX/bRqQlKFp5EIosE0272N1uHCfgd0R0=;
-        b=CwxmuxOgREwBGt2za7pBM/snVvpp1TcYHg3okpM+f4ftzSItidLbhgn3O+uOlkdzgG
-         woLzt/nSyXYzqs7e3LwUV935v5ZNuOWu8llXREJT4WoD+bGfaAJ/2PxmS/aOiR0Yv8G7
-         iFkda3HsYiL0kQ0hYduM+ml75wVb+97YuaqgTuWakiQ/eTg/157PDN46JTUPnroiRVfD
-         0MCpp5qOaVelpTX7TDYTPobeh1c4zWwPCpmO433YR6AdtNzkaknY7J7Fx+gd5sWuwDs6
-         EUUQB2BA8ukF1yxZqjDW1wiHjSudJAPQSdphkHl+FXOQyG4sCMjlsB23i4SX0tIjXVuZ
-         jnpw==
-X-Gm-Message-State: APjAAAUVTVk8YJF9BBigMw7eA3hN8iZRfIhxrz7uyCxIe6O39pS2iTD5
-        cZ8rfZA0pK18afA4ZI0haBuGqfgvAWfROtu/PXw=
-X-Google-Smtp-Source: APXvYqxX2gIdPzY89M4pHKPi2yDJWHBBJ6cNtZY0gXKmdX+1Vx/NKbk8cvjp/qkmep88JpCRobLfuq+lIQZnp9my18Y=
-X-Received: by 2002:a02:8a13:: with SMTP id j19mr1124991jak.21.1552996387501;
- Tue, 19 Mar 2019 04:53:07 -0700 (PDT)
+        Tue, 19 Mar 2019 07:54:36 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JBnfSg094991
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:54:34 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rayt50ft7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:54:34 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 19 Mar 2019 11:54:29 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 11:54:25 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JBsRr260358880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 11:54:27 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34CCE52050;
+        Tue, 19 Mar 2019 11:54:27 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.98.162])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id CD7EA52052;
+        Tue, 19 Mar 2019 11:54:26 +0000 (GMT)
+Date:   Tue, 19 Mar 2019 12:54:25 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v5 4/7] s390: ap: setup relation betwen KVM and mediated
+ device
+In-Reply-To: <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+        <1552493104-30510-5-git-send-email-pmorel@linux.ibm.com>
+        <20190315191557.6c8d7668@oc2783563651>
+        <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1550928949-11879-1-git-send-email-laoar.shao@gmail.com> <20190319104030.GA20138@quack2.suse.cz>
-In-Reply-To: <20190319104030.GA20138@quack2.suse.cz>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 19 Mar 2019 19:52:31 +0800
-Message-ID: <CALOAHbAp5XSABEGU6dnvYWFzO179TtonhLjuXQ5xvt645HVaig@mail.gmail.com>
-Subject: Re: [PATCH] writeback: expose cgroup info in trace_writeback_pages_written()
-To:     Jan Kara <jack@suse.cz>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031911-0008-0000-0000-000002CF1C42
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031911-0009-0000-0000-0000223B2F08
+Message-Id: <20190319125425.0cf5324e@oc2783563651>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 6:40 PM Jan Kara <jack@suse.cz> wrote:
->
-> On Sat 23-02-19 21:35:49, Yafang Shao wrote:
-> > With cgroup v2 writeback, we can know these pages are written from which
-> > cgroup.
-> > So expose the cgroup_ino for better tracking.
-> >
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
->
-> Fine by me. You can add:
->
-> Acked-by: Jan Kara <jack@suse.cz>
->
+On Tue, 19 Mar 2019 10:38:42 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Thanks for your review :-)
+> On 15/03/2019 19:15, Halil Pasic wrote:
+> > On Wed, 13 Mar 2019 17:05:01 +0100
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+> > 
+> >> When the mediated device is open we setup the relation with KVM unset it
+> >> when the mediated device is released.
+> >>
+> >> We ensure KVM is present on opening of the mediated device.
+> >>
+> >> We ensure that KVM survives the mediated device, and establish a direct
+> > 
+> > survives?
+> 
+> what alternative do you prefer?
+> 
 
->
-> > ---
-> >  fs/fs-writeback.c                | 4 ++--
-> >  include/trace/events/writeback.h | 9 ++++++---
-> >  2 files changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> > index 36855c1..e98a33e 100644
-> > --- a/fs/fs-writeback.c
-> > +++ b/fs/fs-writeback.c
-> > @@ -1973,7 +1973,7 @@ void wb_workfn(struct work_struct *work)
-> >                */
-> >               do {
-> >                       pages_written = wb_do_writeback(wb);
-> > -                     trace_writeback_pages_written(pages_written);
-> > +                     trace_writeback_pages_written(wb, pages_written);
-> >               } while (!list_empty(&wb->work_list));
-> >       } else {
-> >               /*
-> > @@ -1983,7 +1983,7 @@ void wb_workfn(struct work_struct *work)
-> >                */
-> >               pages_written = writeback_inodes_wb(wb, 1024,
-> >                                                   WB_REASON_FORKER_THREAD);
-> > -             trace_writeback_pages_written(pages_written);
-> > +             trace_writeback_pages_written(wb, pages_written);
-> >       }
-> >
-> >       if (!list_empty(&wb->work_list))
-> > diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> > index 32db72c..a806713 100644
-> > --- a/include/trace/events/writeback.h
-> > +++ b/include/trace/events/writeback.h
-> > @@ -255,15 +255,18 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  DEFINE_WRITEBACK_WORK_EVENT(writeback_wait);
-> >
-> >  TRACE_EVENT(writeback_pages_written,
-> > -     TP_PROTO(long pages_written),
-> > -     TP_ARGS(pages_written),
-> > +     TP_PROTO(struct bdi_writeback *wb, long pages_written),
-> > +     TP_ARGS(wb, pages_written),
-> >       TP_STRUCT__entry(
-> >               __field(long,           pages)
-> > +             __field(unsigned int,   cgroup_ino)
-> >       ),
-> >       TP_fast_assign(
-> >               __entry->pages          = pages_written;
-> > +             __entry->cgroup_ino     = __trace_wb_assign_cgroup(wb);
-> >       ),
-> > -     TP_printk("%ld", __entry->pages)
-> > +     TP_printk("pages=%ld cgroup_ino=%u",
-> > +                __entry->pages, __entry->cgroup_ino)
-> >  );
-> >
-> >  DECLARE_EVENT_CLASS(writeback_class,
-> > --
-> > 1.8.3.1
-> >
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Increase kvm's refcount to ensure the guest is alive when the
+ap_matrix_mdev is active. An ap mp_matrix becomes active with
+a successful open() and ceases to be active with a release().
+
+Your sentence was materially wrong as the mdev is allowed to outlive
+the KVM. BTW survive tends to have an 'in spite of' note to it, which
+outlive does not. vfio-ap is, I hope, not a calamity that threatens
+the life of KVM ;). https://en.oxforddictionaries.com/definition/survive
+
+> > 
+> >> link from KVM to the mediated device to simplify the relationship.
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> ---
+> 
+> ...snip...
+> 
+> >>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+> >>   				       unsigned long action, void *data)
+> >>   {
+> >> -	int ret;
+> >>   	struct ap_matrix_mdev *matrix_mdev;
+> >>   
+> >>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+> >>   		return NOTIFY_OK;
+> >>   
+> >>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+> >> -
+> >> -	if (!data) {
+> >> -		matrix_mdev->kvm = NULL;
+> >> -		return NOTIFY_OK;
+> >> -	}
+> >> -
+> >> -	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+> >> -	if (ret)
+> >> -		return NOTIFY_DONE;
+> >> -
+> >> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+> >> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+> >> -		return NOTIFY_DONE;
+> >> -
+> >> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+> >> -				  matrix_mdev->matrix.aqm,
+> >> -				  matrix_mdev->matrix.adm);
+> >> +	matrix_mdev->kvm = data;
+> >>   
+> >>   	return NOTIFY_OK;
+> >>   }
+> >> @@ -888,6 +873,12 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+> >>   	if (ret)
+> >>   		goto err_group;
+> >>   
+> >> +	/* We do not support opening the mediated device without KVM */
+> >> +	if (!matrix_mdev->kvm) {
+> >> +		ret = -ENODEV;
+> >> +		goto err_group;
+> >> +	}
+> >> +
+> >>   	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
+> >>   	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> >>   
+> >> @@ -896,8 +887,15 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+> >>   	if (ret)
+> >>   		goto err_iommu;
+> >>   
+> >> +	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
+> > 
+> > At this point the matrix_mdev->kvm ain't guaranteed to be valid IMHO. Or
+> > am I wrong? If I'm right kvm_get_kvm(matrix_mdev->kvm) could be too late.
+> 
+> What about the if (!matrix_mdev->kvm) 10 lines above ?
+> 
+
+That check is not sufficient.
+
+You should do the kvm_get_kvm() in vfio_ap_mdev_group_notifier(). VFIO
+must ensure that the kvm pointer you get is valid, in a sense that it
+points to a valid struct kvm and the kvm object is alive, while you are
+in the callback. But not beyond.
+
+If another thread were to decrement the refcount of the kvm object you
+would end up with matrix_mdev->kvm pointing to an object that has already
+died.
+
+Does my analysis make sense to you?
+
+> > 
+> >> +	if (ret)
+> >> +		goto err_kvm;
+> >> +
+> >>   	return 0;
+> >>   
+> >> +err_kvm:
+> >> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> >> +				 &matrix_mdev->iommu_notifier);
+> >>   err_iommu:
+> >>   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+> >>   				 &matrix_mdev->group_notifier);
+> >> @@ -906,19 +904,33 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+> >>   	return ret;
+> >>   }
+> >>   
+> >> -static void vfio_ap_mdev_release(struct mdev_device *mdev)
+> >> +static int vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
+> >>   {
+> >> -	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> >> +	struct kvm *kvm = matrix_mdev->kvm;
+> >>   
+> >>   	if (matrix_mdev->kvm)
+> >>   		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> > 
+> > This still conditional?
+> 
+> Yes, nothing to clear if there is no KVM.
+> 
+
+Since we have ensured the open only works if there is a KVM at that
+point in time, and we have taken a reference to KVM, I would expect
+KVM can not go away before we give up our reference.
+
+> > 
+> >> -
+> >> +	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
+> > 
+> > I guess your intention was to move vfio_ap_mdev_reset_queues()
+> > here from vfio_ap_mdev_release(), but you still have a
+> > vfio_ap_mdev_reset_queues() call in vfio_ap_mdev_release().
+> > 
+> >> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> >>   	matrix_mdev->kvm = NULL;
+> >> +
+> >> +	kvm_put_kvm(kvm);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static void vfio_ap_mdev_release(struct mdev_device *mdev)
+> >> +{
+> >> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> >> +
+> >> +	mutex_lock(&matrix_dev->lock);
+> >> +
+> >>   	vfio_ap_mdev_reset_queues(mdev);
+> 
+> right, this one will go away.
+> Thanks for reviewing.
+> 
+
+yw
+
+Regards,
+Halil
+
