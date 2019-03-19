@@ -2,159 +2,104 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41594C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A58C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0451C2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF858213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nBPWCPPZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vgWVQkT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfCSL34 (ORCPT
+        id S1727420AbfCSLaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:29:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47130 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSL34 (ORCPT
+        Tue, 19 Mar 2019 07:30:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41466 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSLaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:29:56 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2JBTl4w093726;
-        Tue, 19 Mar 2019 06:29:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552994987;
-        bh=Es6vVtWdeJw30D9IEs+AiNyE0v+OEBRQ3nwhlu3+zcc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nBPWCPPZYiQU2K4IoDaIcFfUX0coZ7qeeDkfbudf19LAn9vRosAtzS6tEUmVCZ0xA
-         yiPihtICQB7RlkRILhFEiSYSTBFaxPVw17lTce3DzB+niQcRFO6lP4oAP9CRhbRfMP
-         eIu95rgz9xqQr+v297bxhhhAQgQe3eVj7NqN2LeM=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2JBTlAm038920
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 06:29:47 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 19
- Mar 2019 06:29:46 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Tue, 19 Mar 2019 06:29:46 -0500
-Received: from [172.22.111.142] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2JBTkKb012195;
-        Tue, 19 Mar 2019 06:29:46 -0500
-Subject: Re: [PATCH v10 1/4] can: m_can: Create a m_can platform framework
-To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190315170257.12847-1-dmurphy@ti.com>
- <0b9fc85a-25bc-d85e-83c9-bc974e0b44e5@grandegger.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <455ea343-818a-e647-6315-e8855ca43ad2@ti.com>
-Date:   Tue, 19 Mar 2019 06:29:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 19 Mar 2019 07:30:12 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a25so9049928edc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 04:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ytHiib+dnGUjJNmKYiMd5LJAkJRVvfEmWqPaX2cg7Dc=;
+        b=vgWVQkT6WaD1fCwIhWAZjTRVUkhAK3uBmMQq8jHkpV6NoG+RqkmeuUd1jUeVqyl+/c
+         PQkCTOaZ/FzJTPWEOb0+wL8o42i6B50KIZZZazwpFvAuly4Un9B7yIG73C97IOE2Mwmx
+         sIHxJiYGDG6S1Ml0X1cs0JBBueec0g8hFHBfi/odtkTEngZ0JtkN8JbbIXirn+iN3y09
+         6S06BugYgpXHVelgiB0pfQm3gnNK1OtbGSwpWw70MMefe/yKBxIAr+UHzqcmJKm1YH4f
+         YYno5K8KZ7+1B9KYTnrjZ+ElaEsHCAf4j3cFt3K0oDW7meP0inX2rcSLOtmWHjmTIOGk
+         IU4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ytHiib+dnGUjJNmKYiMd5LJAkJRVvfEmWqPaX2cg7Dc=;
+        b=lAp5+M4h4X5KYj+Hb8/MAKMvxQi5mhV3aqZlo8WCrvmypL7jGNNrdZW4d41dePFpwX
+         lNuyYR3znJImWc+UPH7+891ZnB+t7M2cm/Me+ZzdKjZwZVhQDIrdauGXnTMk8E7HUjFJ
+         vwyrr/7IwecX1aFSR1ICv8ejoTuG2w6IUgMeAuWptU4voK//pF5ReJRYAtHPYLixYKML
+         T9ywD0mFlnylhWkfIBUjcd7XcjorFAR1r/7CWMu4B70fSTg2pli9yxBlZt874MWn7zDc
+         MHiTCM5U0f345+1g+qzrsJ6Re6kvy4XtxbQn/X1SMXdLSjw/vzb9tLygwaNIMg6+h7Ae
+         tDag==
+X-Gm-Message-State: APjAAAWgA2GyzCmkqfI/z8RKm56yZePApn7ZNIOn9kf5dm8W1xBRRM8H
+        rzB0hlw0XJSqx8E/NkUFhK2dAw==
+X-Google-Smtp-Source: APXvYqzqCtfAR1UaYNdxT+SMXKeJpltVoYKpXbk1V/X8yGyYuAQcW4B3Z8d0SS72llhHHLYoBbJz1w==
+X-Received: by 2002:a17:906:453:: with SMTP id e19mr14021837eja.197.1552995010701;
+        Tue, 19 Mar 2019 04:30:10 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id c9sm4066660eds.92.2019.03.19.04.30.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 04:30:09 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 11:30:08 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] tracing: Add trace_total_entries() /
+ trace_total_entries_cpu()
+Message-ID: <20190319113008.gpd3xtdtrbqytcr2@holly.lan>
+References: <20190318204741.116550-1-dianders@chromium.org>
+ <20190318204741.116550-2-dianders@chromium.org>
+ <20190318171846.2b4fd8dd@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <0b9fc85a-25bc-d85e-83c9-bc974e0b44e5@grandegger.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318171846.2b4fd8dd@gandalf.local.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-
-On 3/19/19 1:24 AM, Wolfgang Grandegger wrote:
-> Hello Dan,
+On Mon, Mar 18, 2019 at 05:18:46PM -0400, Steven Rostedt wrote:
+> On Mon, 18 Mar 2019 13:47:40 -0700
+> Douglas Anderson <dianders@chromium.org> wrote:
 > 
-> checkpatch still reports one "line over 80 characters".
+> > These two new exported functions will be used in a future patch by
+> > kdb_ftdump() to quickly skip all but the last few trace entries.
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > 
+> Actually, I guess only this email needs the ack from Daniel.
 
-Yes I saw that one before I submitted I was not happy with how it was to be resolved.
-It made the line unreadable I will see how to fix it.
+I skipped this patch in v4 since I misunderstood and thought it was just
+tweaking an existing trace API (which wouldn't really need an ack from
+me).
 
-<snip>
-
->> +
->> +	if (priv->is_peripheral) {
->> +		if (priv->tx_skb) {
->> +			netdev_err(dev, "hard_xmit called while tx busy\n");
->> +			return NETDEV_TX_BUSY;
->> +		}
->> +
->> +		if (priv->can.state == CAN_STATE_BUS_OFF) {
->> +			m_can_clean(dev);
->> +		} else {
-> 
-> Could you please add a comment here about stopping the queue early. I
-> would also mention that an improved version may use an array of tx_skbs
->  to support queueing of outgoing messages.
-> 
-
-Ack
-
->> +			priv->tx_skb = skb;
->> +			netif_stop_queue(priv->net);
->> +			queue_work(priv->tx_wq, &priv->tx_work);
->> +		}
->> +	} else {
->> +		priv->tx_skb = skb;
->> +		return m_can_tx_handler(priv);
->>  	}
->>  
->>  	return NETDEV_TX_OK;
->>  }
-> 
-> At the next respin, you can then add my
-> 
->   Acked-by: Wolfgang Grandegger <wg@grandegger.com>
-> 
-> to the Patch 1/1, 1/2 and 1/4.
-> 
-> Thanks for your contribution and patience.
-> 
-
-No worries.  I am wrapping up tests on our side and see if there is any customer
-feedback on this version.  So far the tests look fine no changes.
-
-I should have v11 out by the end of the week.
-
-Latest cangen data for tcan is below.
-
-bitrate 500000 dbitrate 2000000
-cangen can0 -g 0 -i  -f &
-
-    11118 transmitted frames (TXF)                                                                                                                                
-    11118 received frames (RXF)                                                                                                                                   
-        0 matched frames (RXMF)                                                                                                                                   
-                                                                                                                                                                  
-        0 % total match ratio (RXMR)                                                                                                                              
-      442 frames/s total tx rate (TXR)                                                                                                                            
-      442 frames/s total rx rate (RXR)                                                                                                                            
-                                                                                                                                                                  
-        0 % current match ratio (CRXMR)                                                                                                                           
-      117 frames/s current tx rate (CTXR)                                                                                                                         
-      123 frames/s current rx rate (CRXR)                                                                                                                         
-                                                                                                                                                                  
-        0 % max match ratio (MRXMR)                                                                                                                               
-      498 frames/s max tx rate (MTXR)                                                                                                                             
-      488 frames/s max rx rate (MRXR)                                                                                                                             
-                                                                                                                                                                  
-        0 current receive list entries (CRCV)                                                                                                                     
-        0 maximum receive list entries (MRCV)   
-
-> Wolfgang
-> 
+I did offer a bit of feedback after reading it but TBH even if the
+feedback is rejected I'm ok to ack:
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
--- 
-------------------
-Dan Murphy
+Daniel.
