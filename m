@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD0C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22826C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D7C2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E628C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqWAN5Rz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZKaonyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfCSCUp (ORCPT
+        id S1727711AbfCSCUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:20:45 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53945 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbfCSCUn (ORCPT
+        Mon, 18 Mar 2019 22:20:48 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35260 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727673AbfCSCUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:20:43 -0400
-Received: by mail-it1-f196.google.com with SMTP id w85so6998047itc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:43 -0700 (PDT)
+        Mon, 18 Mar 2019 22:20:44 -0400
+Received: by mail-io1-f68.google.com with SMTP id x4so16343157ion.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=C+t0zVHPs47I9d5tL5665ViF1svCSYXr8jg/veuOUcY=;
-        b=WqWAN5Rz5lBIJcgbTmM4h/p3YBYrUvY4I7d/T0u5efY5EkCD+YWBmsPunaga/9C1YT
-         h3vUL6wIPTrDqNUhPDKiQ8jbpgkxqKcXrLLSMBUm8+r8kqy+eDwOmtFCsOHcw0jMB9GD
-         A4q2lSIQ2U5kCnrZILo0FlJfgF3Cp5c6mSH2jBBf8+HY3uuXSYkU39PfC8BkvbmLdYGW
-         NPTccUncIp90/P7bHOyh4pxabW6UnIRFQrbLopFU0GUbxbM4Zlu/qEyNl1g/MXrZXyZN
-         MhuGXDqlv5H4JQbV5K0NLDVcjtAFlM+FmFtNBcJ0QzzQ7jnkRYWrhPZBFDzrdK9hZAvT
-         AyAQ==
+        bh=SB3yE8I5nx2bmDKKeMxxFCegct/omwRR6io2Pjhj+Hc=;
+        b=IZKaonyEyLFbGLxf2j83euGbbx8tjYnIyqnCVJD7jRsV8bCl6zq4HB8kLHHdGjnkP2
+         0AVGQxeI5TyTMOD42+HrEqZGbY1MNGYMA6XXioe2+AX/yiEYwu9QxGd278nptZvwjoFo
+         Q88xDgfws7JqC4T1D9+FnqlWEA3lN3Oou0w/+hUWcE7mVyxSBIFXoF8oCTi59KBzFD0C
+         H3WrZmcGLwCqQWeASTmML6Klg/fR496QsR1YA/KLwdW9CrZ94sglzi36mr8UyhkWn8pd
+         IMBhRAELtKBfZXh6RqqSy10GB3ap/oUQbFFO5KaYEZXjG3Rpb6Emy9E2LAUgSsrfy7H4
+         aK/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=C+t0zVHPs47I9d5tL5665ViF1svCSYXr8jg/veuOUcY=;
-        b=buni78ReENeZQOyWvJxpQtBt1cMmSyW9HIeC5EQC25mLD5c2VS+kDJQVBnvTwC2wFH
-         OyhZqDJVibZW9m9rk0TGV6X5fvxBvJoCBFzqE3M99XvnUWBAFA6rWEVVNZ9B9xSo+iil
-         4c/ixZdgSEyYLSIR0w2ABop3cQU11V3kEliJOh5Ec1NNaIL6EL1AgIe3vqXYllXloWFX
-         dq0uSsB77/PGmoBNe1NfgDnlsA4soNZFsXHf9ftmNEPhRHfMlt+IluvGkV1Xz0GvWddb
-         b8LcscWwOvkxRKGqi8fPnDhaKRnt62F4KVTLAEsPrgueShrxWtlU3dm1zTZ40SUF9XfP
-         /VCQ==
-X-Gm-Message-State: APjAAAWLYvjZcGHvWgUysNXnnzlDCWtST4kLaY2UBJexfRymkVll1Udk
-        x9aI1GNBhejx5CWy3o6cv8E=
-X-Google-Smtp-Source: APXvYqxURWfkTndIruTHJ8Kv+xJNDAYk6k9lM4YyDybdd38vmqXq24DjoABWPlyc2UlsyaWD+WXMXQ==
-X-Received: by 2002:a24:f001:: with SMTP id s1mr39803ith.60.1552962042682;
-        Mon, 18 Mar 2019 19:20:42 -0700 (PDT)
+        bh=SB3yE8I5nx2bmDKKeMxxFCegct/omwRR6io2Pjhj+Hc=;
+        b=sNYNeWVUYQl9bPQAgXffqpVqh8vQVffHpc5sOZ3BUHrHt1sp8fJ6wP1ufekqgSLKUB
+         6lFXlC3KU8ZlDStxqcrHqM8CJ9ir04Bc+diVzcxTzJjGDIFAZpBnz9LFavOVx5DoYyG0
+         11PHSYVjo1IDwSC1gV+wJXih248extKKnvROcXZrwCs3WuShTtSaWpxhzC8zsAQfLwi9
+         ZqkdWjX5hAleQPbHnsjJOrf006vw5QfTggUDKxE6jO8v2fGykPX4q6x7i2dftwZEzvYc
+         47oXjd9lHEzPqTgpxKjC8zxaDlDeRulIj+PDbu9CS2kWv4bZRDCDzFLX1BRb0IUhxyKR
+         Cg0Q==
+X-Gm-Message-State: APjAAAWT10yOn8Mkhb75FqOTCEite0vi+tGgL9YBgwAkuf2oxpeJ2UL3
+        B1b0CoKfS4iB6EW1wFrv9zg=
+X-Google-Smtp-Source: APXvYqw7b2RBiyL8ltVHdr8e/j0QTo3vV2eiIM1sXJWGyA22Yyoqc9WQXJOQLm/3yk7yr0Ou9n08ww==
+X-Received: by 2002:a5e:c24b:: with SMTP id w11mr30758iop.264.1552962043680;
+        Mon, 18 Mar 2019 19:20:43 -0700 (PDT)
 Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.41
+        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:20:42 -0700 (PDT)
+        Mon, 18 Mar 2019 19:20:43 -0700 (PDT)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
         George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v2 09/11] staging: mt7621-mmc: Immediately notify mmc layer of card change detection
-Date:   Mon, 18 Mar 2019 20:20:10 -0600
-Message-Id: <20190319022012.11051-10-thirtythreeforty@gmail.com>
+Subject: [PATCH v2 10/11] staging: mt7621-mmc: Fix BRUST -> BURST typo
+Date:   Mon, 18 Mar 2019 20:20:11 -0600
+Message-Id: <20190319022012.11051-11-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190319022012.11051-1-thirtythreeforty@gmail.com>
 References: <20190319022012.11051-1-thirtythreeforty@gmail.com>
@@ -73,27 +73,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to delay notifying the mmc layer.  Schedule the delayed
-work to run immediately.
+Obvious typo.  It is specified as BURST in the datasheet.
 
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- drivers/staging/mt7621-mmc/sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/mt7621-mmc/mt6575_sd.h | 10 +++++-----
+ drivers/staging/mt7621-mmc/sd.c        |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/staging/mt7621-mmc/mt6575_sd.h b/drivers/staging/mt7621-mmc/mt6575_sd.h
+index 8b6cf17175cd..7ee3a9ed328a 100644
+--- a/drivers/staging/mt7621-mmc/mt6575_sd.h
++++ b/drivers/staging/mt7621-mmc/mt6575_sd.h
+@@ -53,10 +53,10 @@
+ #define MSDC_BUS_4BITS          (1)
+ #define MSDC_BUS_8BITS          (2)
+ 
+-#define MSDC_BRUST_8B           (3)
+-#define MSDC_BRUST_16B          (4)
+-#define MSDC_BRUST_32B          (5)
+-#define MSDC_BRUST_64B          (6)
++#define MSDC_BURST_8B           (3)
++#define MSDC_BURST_16B          (4)
++#define MSDC_BURST_32B          (5)
++#define MSDC_BURST_64B          (6)
+ 
+ #define MSDC_PIN_PULL_NONE      (0)
+ #define MSDC_PIN_PULL_DOWN      (1)
+@@ -280,7 +280,7 @@ enum {
+ #define MSDC_DMA_CTRL_RESUME    (0x1  << 2)     /* W */
+ #define MSDC_DMA_CTRL_MODE      (0x1  << 8)     /* RW */
+ #define MSDC_DMA_CTRL_LASTBUF   (0x1  << 10)    /* RW */
+-#define MSDC_DMA_CTRL_BRUSTSZ   (0x7  << 12)    /* RW */
++#define MSDC_DMA_CTRL_BURSTSZ   (0x7  << 12)    /* RW */
+ #define MSDC_DMA_CTRL_XFERSZ    (0xffffUL << 16)/* RW */
+ 
+ /* MSDC_DMA_CFG mask */
 diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-index df85888f3a03..f64d51c8bd42 100644
+index f64d51c8bd42..b52e0284ea8e 100644
 --- a/drivers/staging/mt7621-mmc/sd.c
 +++ b/drivers/staging/mt7621-mmc/sd.c
-@@ -1352,7 +1352,7 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
- 	if (intsts & MSDC_INT_CDSC) {
- 		if (host->mmc->caps & MMC_CAP_NEEDS_POLL)
- 			return IRQ_HANDLED;
--		schedule_delayed_work(&host->card_delaywork, HZ);
-+		schedule_delayed_work(&host->card_delaywork, 0);
- 		/* tuning when plug card ? */
+@@ -626,8 +626,8 @@ static void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
  	}
  
+ 	sdr_set_field(host->base + MSDC_DMA_CFG, MSDC_DMA_CFG_DECSEN, 1);
+-	sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_BRUSTSZ,
+-		      MSDC_BRUST_64B);
++	sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_BURSTSZ,
++		      MSDC_BURST_64B);
+ 	sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_MODE, 1);
+ 
+ 	writel(PHYSADDR((u32)dma->gpd_addr), host->base + MSDC_DMA_SA);
 -- 
 2.21.0
 
