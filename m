@@ -2,211 +2,219 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECE6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83031C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E8020643
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4936F20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:07:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VaJ3+dSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfCSMH3 (ORCPT
+        id S1727720AbfCSMHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:07:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5267 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726743AbfCSMH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:07:28 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CB93C4BD417CBBD05B1F;
-        Tue, 19 Mar 2019 20:07:23 +0800 (CST)
-Received: from [127.0.0.1] (10.142.63.192) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 20:07:14 +0800
-CC:     <liuyu712@hisilicon.com>, <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
-        <kongfei@hisilicon.com>, <wanghu17@hisilicon.com>,
-        <butao@hisilicon.com>, <chenyao11@huawei.com>,
-        <fangshengzhou@hisilicon.com>, <lipengcheng8@huawei.com>,
-        <songxiaowei@hisilicon.com>, <xuyiping@hisilicon.com>,
-        <xuyoujun4@huawei.com>, <yudongbin@hisilicon.com>,
-        <zangleigang@hisilicon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 08/12] usb: roles: Add usb role switch notifier.
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-References: <20190316035342.77998-1-chenyu56@huawei.com>
- <20190316035342.77998-9-chenyu56@huawei.com>
- <20190319115651.GT7752@kuha.fi.intel.com>
-From:   Chen Yu <chenyu56@huawei.com>
-Message-ID: <68d036a7-aad6-ff7f-ccf6-2e54c503e51a@huawei.com>
-Date:   Tue, 19 Mar 2019 20:07:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Tue, 19 Mar 2019 08:07:41 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44059 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfCSMHl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:07:41 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w5so13431032qtb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MPDV2qSug5rQAsRc5/0BwfhIaVV1mkLcVtAlJwstDms=;
+        b=VaJ3+dSDOoaKxrGoJotnqNx81weGxD+/x0D2/7yj/dPRzCvLlx9Z8qSpDZVKZPleVL
+         3GsMIgMxudR4kalsXKgHm3frCS1tKsrmpnOvByoD+yd1fXl2znSTWAge45oslxipMoK2
+         ugySAHHiGln8Yc9f25GPedmrNgPNFZfkBZZTw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MPDV2qSug5rQAsRc5/0BwfhIaVV1mkLcVtAlJwstDms=;
+        b=Yh3JBYqHeTkQp5xnCYKvcM9+fuli8XssCrsfItCc4Tg8b9V0X53aP8C0ciZdISBVmD
+         t5btYuJHcfDNFnnGpbomFXnrqgSKYMsw3UKtTsQfzK1MlXXAR+WYBXQGqxbGdc0N7c6B
+         XM4mLB6ndpBmLq9UAnfSh2OEvXK0ShMijBzaEaZgFDHmliVHNfXoUXSEiuPHzkh9umJg
+         UWcag078bilEJ4uE4VymaRMgZU0aCWSbS67oQWz6FOifDbXG8ZtyBvUGQ4Fh3WEXKzj1
+         y2n35lYWq4YNJGNuvFFtRdWFRwB0TrqWxsqQxoVcDyg2Qo/K2+Q7Ad3BbA2AJuoCYB2A
+         SXiw==
+X-Gm-Message-State: APjAAAWVvds1PfUHqITy7V7JLTKj9rIpP9xWf5WfLgVsTV8SNGfwP5FY
+        IHPwRIR6sMNTeRPcL8/gWEv7PXs7soEAUTQGgkLtww==
+X-Google-Smtp-Source: APXvYqy4QMgvhLtn0yULQ1Wub2vlz3HjialuTafXubZYDKXQH4jB49F84JGUuCwULc3+SGi6ERGcwJZQPLN47MqfW5M=
+X-Received: by 2002:ac8:f3c:: with SMTP id e57mr1604279qtk.75.1552997259736;
+ Tue, 19 Mar 2019 05:07:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190319115651.GT7752@kuha.fi.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.142.63.192]
-X-CFilter-Loop: Reflected
+References: <20190319080140.24055-1-weiyi.lu@mediatek.com> <20190319080140.24055-8-weiyi.lu@mediatek.com>
+In-Reply-To: <20190319080140.24055-8-weiyi.lu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 19 Mar 2019 20:07:28 +0800
+Message-ID: <CANMq1KAYU8xVcdhYBDwy8Nh+=naH5bDYyJ2seZWHzvNHW=eDvw@mail.gmail.com>
+Subject: Re: [PATCH v5 07/14] soc: mediatek: Refactor sram control
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 19, 2019 at 4:02 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+>
+> Put sram enable and disable control in separate functions.
+>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 
-On 2019/3/19 19:56, Heikki Krogerus wrote:
-> On Sat, Mar 16, 2019 at 11:53:38AM +0800, Yu Chen wrote:
->> This patch adds notifier for drivers want to be informed of the usb role switch.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->>  drivers/usb/roles/class.c | 20 +++++++++++++++++++-
->>  include/linux/usb/role.h  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 65 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
->> index f45d8df5cfb8..e2caaa665d6e 100644
->> --- a/drivers/usb/roles/class.c
->> +++ b/drivers/usb/roles/class.c
->> @@ -20,6 +20,7 @@ struct usb_role_switch {
->>  	struct device dev;
->>  	struct mutex lock; /* device lock*/
->>  	enum usb_role role;
->> +	struct blocking_notifier_head nh;
->>  
->>  	/* From descriptor */
->>  	struct device *usb2_port;
->> @@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
->>  	mutex_lock(&sw->lock);
->>  
->>  	ret = sw->set(sw->dev.parent, role);
->> -	if (!ret)
->> +	if (!ret) {
->>  		sw->role = role;
->> +		blocking_notifier_call_chain(&sw->nh, role, NULL);
->> +	}
->>  
->>  	mutex_unlock(&sw->lock);
->>  
->> @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
->>  }
->>  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
->>  
->> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
->> +				      struct notifier_block *nb)
->> +{
->> +	return blocking_notifier_chain_register(&sw->nh, nb);
->> +}
->> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
->> +
->> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
->> +					struct notifier_block *nb)
->> +{
->> +	return blocking_notifier_chain_unregister(&sw->nh, nb);
->> +}
->> +EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
->> +
->>  /**
->>   * usb_role_switch_get_role - Get the USB role for a switch
->>   * @sw: USB role switch
->> @@ -271,6 +288,7 @@ usb_role_switch_register(struct device *parent,
->>  		return ERR_PTR(-ENOMEM);
->>  
->>  	mutex_init(&sw->lock);
->> +	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
->>  
->>  	sw->allow_userspace_control = desc->allow_userspace_control;
->>  	sw->usb2_port = desc->usb2_port;
->> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
->> index c05ffa6abda9..99d8b8e4fe61 100644
->> --- a/include/linux/usb/role.h
->> +++ b/include/linux/usb/role.h
->> @@ -42,6 +42,8 @@ struct usb_role_switch_desc {
->>  	bool allow_userspace_control;
->>  };
->>  
->> +
->> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
->>  int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
->>  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
->>  struct usb_role_switch *usb_role_switch_get(struct device *dev);
->> @@ -51,5 +53,49 @@ struct usb_role_switch *
->>  usb_role_switch_register(struct device *parent,
->>  			 const struct usb_role_switch_desc *desc);
->>  void usb_role_switch_unregister(struct usb_role_switch *sw);
->> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
->> +				      struct notifier_block *nb);
->> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
->> +					struct notifier_block *nb);
->> +#else
->> +static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
->> +		enum usb_role role)
->> +{
->> +	return 0;
->> +}
->> +
->> +static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
->> +{
->> +	return USB_ROLE_NONE;
->> +}
->> +
->> +static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
->> +{
->> +	return ERR_PTR(-ENODEV);
->> +}
->> +
->> +static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
->> +
->> +static inline struct usb_role_switch *
->> +usb_role_switch_register(struct device *parent,
->> +			 const struct usb_role_switch_desc *desc)
->> +{
->> +	return ERR_PTR(-ENODEV);
->> +}
->> +
->> +static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
->> +
->> +static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
->> +				      struct notifier_block *nb)
->> +{
->> +	return -ENODEV;
->> +}
->> +
->> +static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
->> +					struct notifier_block *nb)
->> +{
->> +	return -ENODEV;
->> +}
->> +#endif
->>  
->>  #endif /* __LINUX_USB_ROLE_H */
-> 
-> Sorry for the late response, but since you are providing a stub for
-> all the functions, not just the new ones, could you please introduce
-> them in a separate patch.
-> 
-> Add a patch where you introduce stubs for the exiting functions, and
-> this patch can then add the stubs for just the new notifier functions.
-> 
-> 
-> thanks,
-> 
+Refactoring looks ok, just a small comment.
 
-OK.
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 
-Thanks
-Yu Chen
+> ---
+>  drivers/soc/mediatek/mtk-scpsys.c | 79 ++++++++++++++++++++-----------
+>  1 file changed, 51 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index 3e9be07a2627..65b734b40098 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -235,12 +235,55 @@ static void scpsys_clk_disable(struct clk *clk[], int max_num)
+>         }
+>  }
+>
+> +static int scpsys_sram_enable(struct scp_domain *scpd, void __iomem *ctl_addr)
+> +{
+> +       u32 val;
+> +       u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
+> +       int tmp;
+> +
+> +       val = readl(ctl_addr) & ~scpd->data->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
+> +       if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
+> +               /*
+> +                * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
+> +                * MT7622_POWER_DOMAIN_WB and thus just a trivial setup
+> +                * is applied here.
+> +                */
+> +               usleep_range(12000, 12100);
 
+Does the range really need to be so tight? Would 12000, 13000 also be ok?
+
+> +       } else {
+> +               /* Either wait until SRAM_PDN_ACK all 1 or 0 */
+> +               int ret = readl_poll_timeout(ctl_addr, tmp,
+> +                               (tmp & pdn_ack) == 0,
+> +                               MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int scpsys_sram_disable(struct scp_domain *scpd, void __iomem *ctl_addr)
+> +{
+> +       u32 val;
+> +       u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
+> +       int tmp;
+> +
+> +       val = readl(ctl_addr) | scpd->data->sram_pdn_bits;
+> +       writel(val, ctl_addr);
+> +
+> +       /* Either wait until SRAM_PDN_ACK all 1 or 0 */
+> +       return readl_poll_timeout(ctl_addr, tmp,
+> +                       (tmp & pdn_ack) == pdn_ack,
+> +                       MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+> +}
+> +
+>  static int scpsys_power_on(struct generic_pm_domain *genpd)
+>  {
+>         struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+>         struct scp *scp = scpd->scp;
+>         void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
+> -       u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
+>         u32 val;
+>         int ret, tmp;
+>
+> @@ -252,6 +295,7 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+>         if (ret)
+>                 goto err_clk;
+>
+> +       /* subsys power on */
+>         val = readl(ctl_addr);
+>         val |= PWR_ON_BIT;
+>         writel(val, ctl_addr);
+> @@ -273,24 +317,9 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+>         val |= PWR_RST_B_BIT;
+>         writel(val, ctl_addr);
+>
+> -       val &= ~scpd->data->sram_pdn_bits;
+> -       writel(val, ctl_addr);
+> -
+> -       /* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
+> -       if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
+> -               /*
+> -                * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
+> -                * MT7622_POWER_DOMAIN_WB and thus just a trivial setup is
+> -                * applied here.
+> -                */
+> -               usleep_range(12000, 12100);
+> -
+> -       } else {
+> -               ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
+> -                                        MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+> -               if (ret < 0)
+> -                       goto err_pwr_ack;
+> -       }
+> +       ret = scpsys_sram_enable(scpd, ctl_addr);
+> +       if (ret < 0)
+> +               goto err_pwr_ack;
+>
+>         if (scpd->data->bus_prot_mask) {
+>                 ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+> @@ -317,7 +346,6 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>         struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+>         struct scp *scp = scpd->scp;
+>         void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
+> -       u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
+>         u32 val;
+>         int ret, tmp;
+>
+> @@ -329,17 +357,12 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>                         goto out;
+>         }
+>
+> -       val = readl(ctl_addr);
+> -       val |= scpd->data->sram_pdn_bits;
+> -       writel(val, ctl_addr);
+> -
+> -       /* wait until SRAM_PDN_ACK all 1 */
+> -       ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == pdn_ack,
+> -                                MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+> +       ret = scpsys_sram_disable(scpd, ctl_addr);
+>         if (ret < 0)
+>                 goto out;
+>
+> -       val |= PWR_ISO_BIT;
+> +       /* subsys power off */
+> +       val = readl(ctl_addr) | PWR_ISO_BIT;
+>         writel(val, ctl_addr);
+>
+>         val &= ~PWR_RST_B_BIT;
+> --
+> 2.18.0
+>
