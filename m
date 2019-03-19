@@ -2,101 +2,74 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB1CC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A983FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0927C2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfmZbSOY"
+	by mail.kernel.org (Postfix) with ESMTP id 785D620854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfCSQYS (ORCPT
+        id S1727970AbfCSQYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:24:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41987 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbfCSQYP (ORCPT
+        Tue, 19 Mar 2019 12:24:36 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33461 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbfCSQYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:24:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p6so1371298pgh.9;
-        Tue, 19 Mar 2019 09:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nriVN6CznBWnvaz1cniK33cl59dItJ09H9B96QgY3HE=;
-        b=NfmZbSOY4jmzet2MQdvs9yXkhWN07iLrvtK3IKNjVHdUFHLNTQUBRCKXgGfI0Lyhh8
-         lmnaURKctCpM/Y5eBLdclkxPUHVuz7pmRivFuRv3b3Z65Xi1ld4S4573U9sY5OwAt/h5
-         0qbhtApyk1oOLIYpxeOL/wLuXm4A/hOsnqjxSW8IDx8vu1UZKTtLSjOi5JuKmZ9kPJms
-         kyvHtTDzTZUb8NSIb9Ty+nPvLeR4FpQyGgQf9ga3YbWB7VCSLbukjWp+kA7taBFSl88l
-         eLVYPyOWVIg6HZ668HAChT9JElcwTf+1qLfOZaUJhcBU5RDue+sfZC5YYtviTt2I0Tod
-         a53w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nriVN6CznBWnvaz1cniK33cl59dItJ09H9B96QgY3HE=;
-        b=pEoYZfnbnVwlV2SALFWBWUzoLlqoa3n4AeQ5WwOHYLbicp1j9WiOLaRSBHmoWp2wu/
-         5bvDwl+vEkGM/e0FN+NNAGOQvA2mqq4TuPMgBHMlFmpUACx5whl52L1DeBbb3nRI69HB
-         uipeJF8CJmNyHAifURJh+CAKtpQVDQS13GaEesSuDvWWtpGwVqQDqz/TTYBr46IJyveA
-         C64h8dKvpZUPAJRSgdNw6wq6Osuw0jIZ0Naf85TulXVfnYZ27MAldAxqNTOiedj2FkkE
-         dP92PX8wjEP++JyiaR2MgjmWc1rcvTrCPiYi8VbwmVquoQrnz4YjP89lcRRunS7Kh0za
-         hcQg==
-X-Gm-Message-State: APjAAAWX0oQRBnK7am9UhmSLeJeMPCKX5YtUCNoMX1VToH0OXE+lFzYv
-        JRzdG3Wo+AAMgpQUBva/+hM=
-X-Google-Smtp-Source: APXvYqyvtLCFs69v5GTy8No+vMEiIx/2wbmjJ2Qvl8xCS/DPTG9nCSjZZqpHwvjfUAImpdxhcxvFxA==
-X-Received: by 2002:a63:4718:: with SMTP id u24mr23764938pga.381.1553012654464;
-        Tue, 19 Mar 2019 09:24:14 -0700 (PDT)
-Received: from localhost.localdomain ([47.91.249.165])
-        by smtp.gmail.com with ESMTPSA id h23sm17626689pfn.68.2019.03.19.09.24.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 19 Mar 2019 09:24:13 -0700 (PDT)
-From:   Jeff Xie <chongguiguzi@gmail.com>
-To:     buytenh@wantstofly.org, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, chongguiguzi@gmail.com,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net:mwl8k:move spin_lock_bh to spin_lock in tasklet
-Date:   Wed, 20 Mar 2019 00:24:05 +0800
-Message-Id: <1553012645-28989-1-git-send-email-chongguiguzi@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Mar 2019 12:24:35 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h6HXT-0001Me-I6; Tue, 19 Mar 2019 17:24:31 +0100
+Date:   Tue, 19 Mar 2019 17:24:31 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
+        Mike Galbraith <efault@gmx.de>
+Subject: Re: [PATCH v2] rcu: Allow to eliminate softirq processing from
+ rcutree
+Message-ID: <20190319162431.4w2dqtssqkx6t4pq@linutronix.de>
+References: <20190315111130.4902-1-bigeasy@linutronix.de>
+ <20190318022434.GE4102@linux.ibm.com>
+ <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
+ <20190319155923.GY4102@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190319155923.GY4102@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unnecessary to call spin_lock_bh in a tasklet.
+On 2019-03-19 08:59:23 [-0700], Paul E. McKenney wrote:
+> I doubt that there is any code left from my original, so I set you as
+> author.  
 
-Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
----
- drivers/net/wireless/marvell/mwl8k.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I always forward ported it the patch over the years. So if it is no
+longer what it was once so be it. 
 
-diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-index 8e4e9b6..21a86cc 100644
---- a/drivers/net/wireless/marvell/mwl8k.c
-+++ b/drivers/net/wireless/marvell/mwl8k.c
-@@ -4631,7 +4631,7 @@ static void mwl8k_tx_poll(unsigned long data)
- 
- 	limit = 32;
- 
--	spin_lock_bh(&priv->tx_lock);
-+	spin_lock(&priv->tx_lock);
- 
- 	for (i = 0; i < mwl8k_tx_queues(priv); i++)
- 		limit -= mwl8k_txq_reclaim(hw, i, limit, 0);
-@@ -4641,7 +4641,7 @@ static void mwl8k_tx_poll(unsigned long data)
- 		priv->tx_wait = NULL;
- 	}
- 
--	spin_unlock_bh(&priv->tx_lock);
-+	spin_unlock(&priv->tx_lock);
- 
- 	if (limit) {
- 		writel(~MWL8K_A2H_INT_TX_DONE,
--- 
-2.7.4
+> I queued this and am starting tests without setting rcunosoftirq,
+> and will run more later setting it, courtesy of --bootargs.
 
+oki.
+
+> Steve Rostedt did raise a good question about adding event tracing to
+> the park functions.  I haven't really settled on an answer yet.  Thoughts?
+
+It should trigger CPU hotplug events. If there was something similar for
+the softirq processing then the threaded processing should also have it.
+Please tell me which one should be added and I'm happy to add one.
+
+> 							Thanx, Paul
+> 
+
+Sebastian
