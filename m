@@ -2,89 +2,167 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF80C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AD2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5DA20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB1220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aj4nFUHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfCSRMT (ORCPT
+        id S1727766AbfCSRMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:12:19 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:57152 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfCSRMS (ORCPT
+        Tue, 19 Mar 2019 13:12:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37499 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfCSRMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:12:18 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1h6IHO-0002bp-KA; Tue, 19 Mar 2019 18:11:58 +0100
-Date:   Tue, 19 Mar 2019 18:11:58 +0100
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Chris Brannon <chris@the-brannons.com>,
-        Okash Khawaja <okash.khawaja@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Kirk Reiser <kirk@reisers.ca>, linux-kernel@vger.kernel.org
-Subject: Re: Staging status of speakup
-Message-ID: <20190319171158.GA6807@angband.pl>
-References: <20190315130035.6a8f16e9@narunkot>
- <87ef77obtg.fsf@cmbmachine.messageid.invalid>
- <20190316093543.w4i6djt5uuqtx5xr@function>
- <20190319163121.5e7ab8c7@alans-desktop>
+        Tue, 19 Mar 2019 13:12:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q206so14295332pgq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2EVCGjLunh4Ujsx7thL4ucW6QhsgQL44dQaD0UOsMh8=;
+        b=Aj4nFUHxcdHBnl2CjbhSkp7Qwf4+8ku6Rj2imsoIByydzqUfXX6dS4GryRQiacX7Xt
+         2gBwYtn2b4zigkUxhfiAAdmOXHB/UAEl6iwfPQGt19DUIYIL1PKw9U9L3e/yfOTFhQgV
+         QN+66id6eyz3zl239x31hQ6SlrB3nwMfGgXZI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2EVCGjLunh4Ujsx7thL4ucW6QhsgQL44dQaD0UOsMh8=;
+        b=ibOrpliTc/0+5yzKFEANZU2uiDITRVcYEWHQRbE//nP0NFlthQ4veIHNCuPP+hg2ZD
+         YOwDveyCg9wrCf5/h5s7vRMRYJkm8xeLqNwfaiwrjj6hQ8zcLPTuhnp/r1hdnaHFTcKg
+         lFMAJMPxudBHBHlI4IhOcWy8f1Dupco/d3XZY486kuDmXecXmxJTNzAah2Xuwuk1qvYf
+         WUysFIEmTXk9gSuVYPYY0Ct/bY4Ayn1XDaIfxN2A0eN0vj9hA+9+Q1ey14aQGo3XoRI2
+         V9vRNbRQ7rg3pJusKBjVPAtfbJL21u6Ps5EKZCj3o7Nj9/MaWO0pNufiG3DwGOLtmK5y
+         ltlQ==
+X-Gm-Message-State: APjAAAVt89lRCeOYV+arsius0h/nX9+A6eSjLdQleMLd3JK4+V/Zqcyg
+        kBBtXGo0YlfKJwwg+N+5kIgSVQ==
+X-Google-Smtp-Source: APXvYqxBOoFoQLvHN3yplwlPLtibd03oyxQ9Mq6CMNnxmqLCTe1+hLBhBdn/P37jwvLf/ORN+Hd7XA==
+X-Received: by 2002:a17:902:801:: with SMTP id 1mr3049391plk.299.1553015553163;
+        Tue, 19 Mar 2019 10:12:33 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id g6sm18293918pgq.54.2019.03.19.10.12.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 10:12:32 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/3] tracing: kdb: The skip_lines parameter should have been skip_entries
+Date:   Tue, 19 Mar 2019 10:12:04 -0700
+Message-Id: <20190319171206.97107-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190319163121.5e7ab8c7@alans-desktop>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 04:31:21PM +0000, Alan Cox wrote:
-> On Sat, 16 Mar 2019 10:35:43 +0100
-> Samuel Thibault <samuel.thibault@ens-lyon.org> wrote:
-> > Chris Brannon, le ven. 15 mars 2019 18:19:39 -0700, a ecrit:
-> > > What kind of reproducer do you need here?  It's straightforward to
-> > > reproduce in casual use, at least with a software synthesizer.  
-> > 
-> > we need a walk-through of the kind of operation that
-> > produces the issue. It does not have to be reproducible each time it is
-> > done. Perhaps (I really don't know what that bug is about actually) it
-> > is a matter of putting text in the selection buffer, and try to paste it
-> > 100 times, and once every 10 times it will be garbled, for instance.
-> 
-> paste_selection still says
-> 
-> /* Insert the contents of the selection buffer into the
->  * queue of the tty associated with the current console.
->  * Invoked by ioctl().
->  *
->  * Locking: called without locks. Calls the ldisc wrongly with
->  * unsafe methods,
->  */
-> 
-> from which I deduce that with everyone using X nobody ever bothered to
-> fix it. So before you look too hard at the speakup code you might want to
-> review the interaction with selection.c too.
+The things skipped by kdb's "ftdump" command when you pass it a
+parameter has always been entries, not lines.  The difference usually
+doesn't matter but when the trace buffer has multi-line entries (like
+a stack dump) it can matter.
 
-This looks like https://bugs.debian.org/849474 which causes a lockup, and
-for which Bill Allombert wrote a nice reproducer.
+Let's fix this both in the help text for ftdump and also in the local
+variable names.
 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
 
-Meow!
+Changes in v6: None
+Changes in v5:
+- Add Daniel Thompson Ack.
+
+Changes in v4:
+- skip_lines => skip_entries new for v4.
+
+Changes in v3: None
+
+ kernel/trace/trace_kdb.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 810d78a8d14c..4b666643d69f 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -17,7 +17,7 @@
+ #include "trace.h"
+ #include "trace_output.h"
+ 
+-static void ftrace_dump_buf(int skip_lines, long cpu_file)
++static void ftrace_dump_buf(int skip_entries, long cpu_file)
+ {
+ 	/* use static because iter can be a bit big for the stack */
+ 	static struct trace_iterator iter;
+@@ -70,11 +70,11 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 			kdb_printf("---------------------------------\n");
+ 		cnt++;
+ 
+-		if (!skip_lines) {
++		if (!skip_entries) {
+ 			print_trace_line(&iter);
+ 			trace_printk_seq(&iter.seq);
+ 		} else {
+-			skip_lines--;
++			skip_entries--;
+ 		}
+ 
+ 		if (KDB_FLAG(CMD_INTERRUPT))
+@@ -106,7 +106,7 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+  */
+ static int kdb_ftdump(int argc, const char **argv)
+ {
+-	int skip_lines = 0;
++	int skip_entries = 0;
+ 	long cpu_file;
+ 	char *cp;
+ 
+@@ -114,9 +114,9 @@ static int kdb_ftdump(int argc, const char **argv)
+ 		return KDB_ARGCOUNT;
+ 
+ 	if (argc) {
+-		skip_lines = simple_strtol(argv[1], &cp, 0);
++		skip_entries = simple_strtol(argv[1], &cp, 0);
+ 		if (*cp)
+-			skip_lines = 0;
++			skip_entries = 0;
+ 	}
+ 
+ 	if (argc == 2) {
+@@ -129,7 +129,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 	}
+ 
+ 	kdb_trap_printk++;
+-	ftrace_dump_buf(skip_lines, cpu_file);
++	ftrace_dump_buf(skip_entries, cpu_file);
+ 	kdb_trap_printk--;
+ 
+ 	return 0;
+@@ -137,7 +137,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 
+ static __init int kdb_ftrace_register(void)
+ {
+-	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
++	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#entries] [cpu]",
+ 			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
+ 	return 0;
+ }
 -- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁ Did ya know that typing "test -j8" instead of "ctest -j8"
-⢿⡄⠘⠷⠚⠋⠀ will make your testsuite pass much faster, and fix bugs?
-⠈⠳⣄⠀⠀⠀⠀
+2.21.0.225.g810b269d1ac-goog
+
