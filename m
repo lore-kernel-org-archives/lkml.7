@@ -2,74 +2,122 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B2CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B25E2133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEDB2133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfCSOku (ORCPT
+        id S1727688AbfCSOl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:40:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726612AbfCSOku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:40:50 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2A5E5CC1D6BFA3BF465D;
-        Tue, 19 Mar 2019 22:40:46 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 22:40:35 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <pablo@netfilter.org>,
-        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <coreteam@netfilter.org>, <netfilter-devel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] netfilter: nft_redir: Make nft_redir_dump static
-Date:   Tue, 19 Mar 2019 22:40:21 +0800
-Message-ID: <20190319144021.21720-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Tue, 19 Mar 2019 10:41:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfCSOl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:41:57 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D1A455946E;
+        Tue, 19 Mar 2019 14:41:56 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (dhcp-4-67.tlv.redhat.com [10.35.4.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C9BA35C641;
+        Tue, 19 Mar 2019 14:41:50 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney " <paulmck@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Fam Zheng <fam@euphon.net>, Amnon Ilan <ailan@redhat.com>,
+        John Ferlan <jferlan@redhat.com>
+Subject: [PATCH 1/9] vfio/mdev: add .request callback
+Date:   Tue, 19 Mar 2019 16:41:08 +0200
+Message-Id: <20190319144116.400-2-mlevitsk@redhat.com>
+In-Reply-To: <20190319144116.400-1-mlevitsk@redhat.com>
+References: <20190319144116.400-1-mlevitsk@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 19 Mar 2019 14:41:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+This will allow the hotplug to be enabled for mediated devices
 
-Fix sparse warning:
-
-net/netfilter/nft_redir.c:85:5:
- warning: symbol 'nft_redir_dump' was not declared. Should it be static?
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- net/netfilter/nft_redir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/mdev/vfio_mdev.c | 11 +++++++++++
+ include/linux/mdev.h          |  4 ++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/net/netfilter/nft_redir.c b/net/netfilter/nft_redir.c
-index a340cd8..02f4b4a 100644
---- a/net/netfilter/nft_redir.c
-+++ b/net/netfilter/nft_redir.c
-@@ -82,7 +82,7 @@ static int nft_redir_init(const struct nft_ctx *ctx,
- 	return nf_ct_netns_get(ctx->net, ctx->family);
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index d230620fe02d..17aa76de0764 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -101,6 +101,16 @@ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
+ 	return parent->ops->mmap(mdev, vma);
  }
  
--int nft_redir_dump(struct sk_buff *skb, const struct nft_expr *expr)
-+static int nft_redir_dump(struct sk_buff *skb, const struct nft_expr *expr)
- {
- 	const struct nft_redir *priv = nft_expr_priv(expr);
++static void vfio_mdev_request(void *device_data, unsigned int count)
++{
++	struct mdev_device *mdev = device_data;
++	struct mdev_parent *parent = mdev->parent;
++
++	if (unlikely(!parent->ops->request))
++		return;
++	parent->ops->request(mdev, count);
++}
++
+ static const struct vfio_device_ops vfio_mdev_dev_ops = {
+ 	.name		= "vfio-mdev",
+ 	.open		= vfio_mdev_open,
+@@ -109,6 +119,7 @@ static const struct vfio_device_ops vfio_mdev_dev_ops = {
+ 	.read		= vfio_mdev_read,
+ 	.write		= vfio_mdev_write,
+ 	.mmap		= vfio_mdev_mmap,
++	.request	= vfio_mdev_request,
+ };
  
+ static int vfio_mdev_probe(struct device *dev)
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index b6e048e1045f..24887cd56962 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -13,6 +13,9 @@
+ #ifndef MDEV_H
+ #define MDEV_H
+ 
++#include <linux/uuid.h>
++#include <linux/device.h>
++
+ struct mdev_device;
+ 
+ /**
+@@ -81,6 +84,7 @@ struct mdev_parent_ops {
+ 	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
+ 			 unsigned long arg);
+ 	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
++	void	(*request)(struct mdev_device *mdev, unsigned int count);
+ };
+ 
+ /* interface for exporting mdev supported type attributes */
 -- 
-2.7.4
-
+2.17.2
 
