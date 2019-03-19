@@ -2,36 +2,37 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382C6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C24206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FB1206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfCSKfM (ORCPT
+        id S1727694AbfCSKfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:35:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26066 "EHLO mga06.intel.com"
+        Tue, 19 Mar 2019 06:35:18 -0400
+Received: from mga09.intel.com ([134.134.136.24]:59955 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbfCSKfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727670AbfCSKfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 06:35:10 -0400
-X-Amp-Result: UNSCANNABLE
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 03:35:09 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 03:35:09 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
-   d="scan'208";a="141929703"
+   d="scan'208";a="328595067"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Mar 2019 03:35:05 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 19 Mar 2019 03:35:07 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1h6C5L-0004Kb-9z; Tue, 19 Mar 2019 18:35:07 +0800
-Date:   Tue, 19 Mar 2019 18:34:34 +0800
+        id 1h6C5L-0004Jy-8l; Tue, 19 Mar 2019 18:35:07 +0800
+Date:   Tue, 19 Mar 2019 18:34:36 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Shawn Landden <shawn@git.icu>
 Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
@@ -39,8 +40,8 @@ Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
         Joe Perches <joe@perches.com>,
         Andy Whitcroft <apw@canonical.com>,
         Shawn Landden <shawn@git.icu>
-Subject: Re: [PATCH] Use fall-through attribute rather than magic comments
-Message-ID: <201903191849.kFLSqS7A%lkp@intel.com>
+Subject: [PATCH] fix semicolon.cocci warnings
+Message-ID: <20190319103436.GA43269@lkp-hsx03>
 References: <20190316033841.7659-1-shawn@git.icu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,37 +53,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+From: kbuild test robot <lkp@intel.com>
 
-Thank you for the patch! Perhaps something to improve:
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11123:48-49: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11124:48-49: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11125:47-48: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11126:47-48: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11127:48-49: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11128:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11139:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11276:39-40: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11278:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11279:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11313:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11314:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11232:40-41: Unneeded semicolon
+drivers/media/dvb-frontends/drx39xyj/drxj.c:11233:40-41: Unneeded semicolon
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.1-rc1]
-[cannot apply to next-20190319]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+ Remove unneeded semicolon.
+
+Generated by: scripts/coccinelle/misc/semicolon.cocci
+
+Fixes: 5cf7e99ecb7d ("Use fall-through attribute rather than magic comments")
+CC: Shawn Landden <shawn@git.icu>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
 
 url:    https://github.com/0day-ci/linux/commits/Shawn-Landden/Use-fall-through-attribute-rather-than-magic-comments/20190318-194548
 
+ drxj.c |   28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/media/dvb-frontends/drx39xyj/drxj.c:11123:48-49: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11124:48-49: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11125:47-48: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11126:47-48: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11127:48-49: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11128:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11139:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11276:39-40: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11278:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11279:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11313:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11314:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11232:40-41: Unneeded semicolon
-   drivers/media/dvb-frontends/drx39xyj/drxj.c:11233:40-41: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--- a/drivers/media/dvb-frontends/drx39xyj/drxj.c
++++ b/drivers/media/dvb-frontends/drx39xyj/drxj.c
+@@ -11120,12 +11120,12 @@ ctrl_power_mode(struct drx_demod_instanc
+ 				goto rw_error;
+ 			}
+ 			break;
+-		case DRX_STANDARD_PAL_SECAM_BG:	__fallthrough;;
+-		case DRX_STANDARD_PAL_SECAM_DK:	__fallthrough;;
+-		case DRX_STANDARD_PAL_SECAM_I:	__fallthrough;;
+-		case DRX_STANDARD_PAL_SECAM_L:	__fallthrough;;
+-		case DRX_STANDARD_PAL_SECAM_LP:	__fallthrough;;
+-		case DRX_STANDARD_NTSC:	__fallthrough;;
++		case DRX_STANDARD_PAL_SECAM_BG:	__fallthrough;
++		case DRX_STANDARD_PAL_SECAM_DK:	__fallthrough;
++		case DRX_STANDARD_PAL_SECAM_I:	__fallthrough;
++		case DRX_STANDARD_PAL_SECAM_L:	__fallthrough;
++		case DRX_STANDARD_PAL_SECAM_LP:	__fallthrough;
++		case DRX_STANDARD_NTSC:	__fallthrough;
+ 		case DRX_STANDARD_FM:
+ 			rc = power_down_atv(demod, ext_attr->standard, true);
+ 			if (rc != 0) {
+@@ -11136,7 +11136,7 @@ ctrl_power_mode(struct drx_demod_instanc
+ 		case DRX_STANDARD_UNKNOWN:
+ 			/* Do nothing */
+ 			break;
+-		case DRX_STANDARD_AUTO:	__fallthrough;;
++		case DRX_STANDARD_AUTO:	__fallthrough;
+ 		default:
+ 			return -EIO;
+ 		}
+@@ -11229,8 +11229,8 @@ ctrl_set_cfg_pre_saw(struct drx_demod_in
+ 		ext_attr->vsb_pre_saw_cfg = *pre_saw;
+ 		break;
+ #ifndef DRXJ_VSB_ONLY
+-	case DRX_STANDARD_ITU_A:	__fallthrough;;
+-	case DRX_STANDARD_ITU_B:	__fallthrough;;
++	case DRX_STANDARD_ITU_A:	__fallthrough;
++	case DRX_STANDARD_ITU_B:	__fallthrough;
+ 	case DRX_STANDARD_ITU_C:
+ 		ext_attr->qam_pre_saw_cfg = *pre_saw;
+ 		break;
+@@ -11273,10 +11273,10 @@ ctrl_set_cfg_afe_gain(struct drx_demod_i
+ 	ext_attr = (struct drxj_data *) demod->my_ext_attr;
+ 
+ 	switch (afe_gain->standard) {
+-	case DRX_STANDARD_8VSB:	__fallthrough;;
++	case DRX_STANDARD_8VSB:	__fallthrough;
+ #ifndef DRXJ_VSB_ONLY
+-	case DRX_STANDARD_ITU_A:	__fallthrough;;
+-	case DRX_STANDARD_ITU_B:	__fallthrough;;
++	case DRX_STANDARD_ITU_A:	__fallthrough;
++	case DRX_STANDARD_ITU_B:	__fallthrough;
+ 	case DRX_STANDARD_ITU_C:
+ #endif
+ 		/* Do nothing */
+@@ -11310,8 +11310,8 @@ ctrl_set_cfg_afe_gain(struct drx_demod_i
+ 		ext_attr->vsb_pga_cfg = gain * 13 + 140;
+ 		break;
+ #ifndef DRXJ_VSB_ONLY
+-	case DRX_STANDARD_ITU_A:	__fallthrough;;
+-	case DRX_STANDARD_ITU_B:	__fallthrough;;
++	case DRX_STANDARD_ITU_A:	__fallthrough;
++	case DRX_STANDARD_ITU_B:	__fallthrough;
+ 	case DRX_STANDARD_ITU_C:
+ 		ext_attr->qam_pga_cfg = gain * 13 + 140;
+ 		break;
