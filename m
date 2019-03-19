@@ -2,88 +2,95 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C108C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF17E20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552987416;
-	bh=0d3F1lEaIVNUwHo9E0LOPr2LOXSklUe7KHejJ9H77TY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C1AG3O/Oh44cPRmYcKdNeziRNIEy6Sc23luKqwaDczwKvICGjMyqc3AuPJoTPlh8i
-	 sl8Z8ZPyIMtEfsAYgB1PEaGePe/uKXx+Tjn3sTWumpALl7zK7Et3ASz1wXenr5sTMu
-	 Tg3WVfWQM6Muk6UCboe8S12H5o3F/UGwlNfgsSWI=
+	by mail.kernel.org (Postfix) with ESMTP id 6B06C20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfCSJXe (ORCPT
+        id S1727514AbfCSJYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfCSJXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:23:34 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3907220857;
-        Tue, 19 Mar 2019 09:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552987413;
-        bh=0d3F1lEaIVNUwHo9E0LOPr2LOXSklUe7KHejJ9H77TY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M6XZbxPQQ+ytlg9F+qW299agTzTey988XUHrjTP8KO3cK5A1a8t+SvHGvX3Li3qwl
-         +/d8xENPUD4VkzowvLOjy2MxrJZB3mds8UjUHhBcOtDARa6XYSm4+izjpvb1FfM1A1
-         ajf7ojwU7rg0V8T/hT3HPTMsPohbTDFyaW2A3sh8=
-Date:   Tue, 19 Mar 2019 10:23:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Johan Hovold <johan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Matteo Croce <mcroce@redhat.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
-Message-ID: <20190319092331.GA21652@kroah.com>
-References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
- <1552982059.10179.143.camel@mhfsdcap03>
+        Tue, 19 Mar 2019 05:24:49 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:50733 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfCSJYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 05:24:48 -0400
+X-Originating-IP: 182.72.246.220
+Received: from localhost (unknown [182.72.246.220])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 060C440003;
+        Tue, 19 Mar 2019 09:24:43 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:24:38 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nicolas.Ferre@microchip.com
+Cc:     sboyd@kernel.org, linux-clk@vger.kernel.org,
+        Ludovic.Desroches@microchip.com, Claudiu.Beznea@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, matthias.wieloch@few-bauer.de,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] clk: at91: fix programmable clock for sama5d2
+Message-ID: <20190319092438.GC29054@piout.net>
+References: <20190318105045.26943-1-nicolas.ferre@microchip.com>
+ <155293884206.20095.9858756917267939797@swboyd.mtv.corp.google.com>
+ <dd4a32fe-4942-83a8-a2c4-336e3c6e55b3@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552982059.10179.143.camel@mhfsdcap03>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <dd4a32fe-4942-83a8-a2c4-336e3c6e55b3@microchip.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 03:54:19PM +0800, Chunfeng Yun wrote:
+On 19/03/2019 08:28:40+0000, Nicolas Ferre wrote:
+> > Ok. I can apply this clk-fixes. I presume that things are real bad and
+> > it can't wait until v5.2?
 > 
-> Hi Felipe & Mathias,
+> To be perfectly clear, it's not a regression.
+> But as we're at the very beginning of the '-rc' phase and as it's a bug, 
+> I was thinking about adding it now. But you to choose, no problem either 
+> way.
 > 
-> Could you please comment this patch, if there is some-effect on dwc3 and
-> xhci, I'll remove its change.
+> >> @@ -60,10 +68,18 @@ static int clk_programmable_determine_rate(struct clk_hw *hw,
+> >>                          continue;
+> >>   
+> >>                  parent_rate = clk_hw_get_rate(parent);
+> >> -               for (shift = 0; shift < PROG_PRES_MASK; shift++) {
+> >> -                       tmp_rate = parent_rate >> shift;
+> >> -                       if (tmp_rate <= req->rate)
+> >> -                               break;
+> >> +               if (layout->is_pres_direct) {
+> >> +                       for (shift = 0; shift <= layout->pres_mask; shift++) {
+> >> +                               tmp_rate = parent_rate / (shift + 1);
+> >> +                               if (tmp_rate <= req->rate)
+> >> +                                       break;
+> >> +                       }
+> >> +               } else {
+> >> +                       for (shift = 0; shift < layout->pres_mask; shift++) {
+> >> +                               tmp_rate = parent_rate >> shift;
+> >> +                               if (tmp_rate <= req->rate)
+> >> +                                       break;
+> >> +                       }
+> > 
+> > This looks like a lot of copy paste when the if statement could have been
+> > pulled into the for loop instead of duplicating the loops and
+> > surrounding if condition check for tmp_rate.
+> 
+> Stop condition of loops not being the same made me separate them instead 
+> of adding artificial test conditions for shift == layout->pres_mask. I'm 
+> not sure the other way around is more obvious then...
+> 
 
-To be specific, you are changing the string values for things that might
-care about it and are seen by userspace.
+I also tried different ways (e.g. setting up a different determine_rate
+for the sama5d2) but this ended up being the more concise one.
 
-Please be explicit about this, as it could cause problems.
-
-greg k-h
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
