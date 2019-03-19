@@ -2,152 +2,215 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3946C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FB1206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6874F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e6iJkLuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfCSKfS (ORCPT
+        id S1727707AbfCSKfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:35:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59955 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727670AbfCSKfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 06:35:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 03:35:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
-   d="scan'208";a="328595067"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Mar 2019 03:35:07 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1h6C5L-0004Jy-8l; Tue, 19 Mar 2019 18:35:07 +0800
-Date:   Tue, 19 Mar 2019 18:34:36 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Shawn Landden <shawn@git.icu>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Shawn Landden <shawn@git.icu>
-Subject: [PATCH] fix semicolon.cocci warnings
-Message-ID: <20190319103436.GA43269@lkp-hsx03>
-References: <20190316033841.7659-1-shawn@git.icu>
+        Tue, 19 Mar 2019 06:35:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52525 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbfCSKfc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 06:35:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a184so2091301wma.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VU5Iewt29LxU+E6Gz65Vgx/F8lFV8UAkxK8E9VVAukQ=;
+        b=e6iJkLuU0a59xu2ouKNTzTVBUrcI+MWAq0CkN/rB2rxoz57qoJjRBg+Y84SN6nuDKB
+         x5p45oivBVd2O36xVOjH0H9UHKNgeuTE8lF0h696ZQhlDKiaUCQrAwOhQd6WRpQnUIrt
+         HN/iCqLo3CiLnNsJkM3bbknYjZ8fswMDWoOIr8ZrUqeESjX5dGefCABaP73vZubUxAxk
+         Mvd/iBpmxSP1Q8STxocyN3uVxXb5zyHChafZOYB0k87IVegzRYyK8i9TstQCDpgRscAI
+         OcOFtOGs1UqpJLPuziltrqGYY8/9fmIrQ1QIZtZ7G6WQgl/JfVavfXiBGvzPKvWQ/uzp
+         fcpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VU5Iewt29LxU+E6Gz65Vgx/F8lFV8UAkxK8E9VVAukQ=;
+        b=YcOtZWkAeCGAeaGmTKnP8pxnu1EUIjR0cSQX98FDbYBap16Hyf5+SXfVgJwh0H6d73
+         y4MxE+ae0Ooch214vfn3MgdJzSER0nRjLzxoVUqobSKqqc/8XeeU2OOhcXt19WDMZf7C
+         ZZlLzLNyVAukt6zKBrCDg2KOwegyFwH6U1Oy54GMLQ5vdEcvXnalYLsFaZL9LPsPygFl
+         4HqHOrQCmCb9wiORFqhLoWJ6uhiyfOwtDSfNmsEogy3efECj/C55a6YynBta+QH8ARR8
+         ybhgt1+F/MDUVrlyUn8V9dD/HrY6S7gM+4lCHOHy/rrbHlkw7N+QI9AhliM7CN/W5kyN
+         rz4A==
+X-Gm-Message-State: APjAAAWvDsxJtv+IbOGNTTS/TtWmSfCgf4u4HDr5QCVFDggIgciP1F4X
+        g2lCBUymq6WHEApRGd2CQ+lZBytZoTi1BUNmj9Hg0A==
+X-Google-Smtp-Source: APXvYqxmPoouj1fCb7SQdjrVtimD5Dqmz0LEKARejptDcu3fmvi+USXZvCN1U6Pafj3qo7PFciTAV3AnBexJopJGdZg=
+X-Received: by 2002:a1c:2407:: with SMTP id k7mr2860702wmk.137.1552991730522;
+ Tue, 19 Mar 2019 03:35:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316033841.7659-1-shawn@git.icu>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1549022873-40549-1-git-send-email-narmstrong@baylibre.com> <1549022873-40549-8-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1549022873-40549-8-git-send-email-narmstrong@baylibre.com>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Tue, 19 Mar 2019 11:35:19 +0100
+Message-ID: <CAMO6nayWKDfcsQtrPK7-Pki75F5tAYO-0B=D=TAbGvQmt=gwrw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] drm/meson: Add YUV420 output support
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        p.zabel@pengutronix.de, Sandy Huang <hjc@rock-chips.com>,
+        heiko@sntech.de, maxime.ripard@bootlin.com,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+Hi Neil,
 
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11123:48-49: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11124:48-49: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11125:47-48: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11126:47-48: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11127:48-49: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11128:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11139:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11276:39-40: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11278:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11279:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11313:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11314:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11232:40-41: Unneeded semicolon
-drivers/media/dvb-frontends/drx39xyj/drxj.c:11233:40-41: Unneeded semicolon
+On Fri, Feb 1, 2019 at 1:08 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This patch adds support for the YUV420 output from the Amlogic Meson SoCs
+> Video Processing Unit to the HDMI Controller.
+>
+> The YUV420 is obtained by generating a YUV444 pixel stream like
+> the classic HDMI display modes, but then the Video Encoder output
+> can be configured to down-sample the YUV444 pixel stream to a YUV420
+> stream.
+> In addition if pixel stream down-sampling, the Y Cb Cr components must
+> also be mapped differently to align with the HDMI2.0 specifications.
+>
+> This mode needs a different clock generation scheme since the TMDS PHY
+> clock must match the 10x ration with the YUV420 pixel clock, but
+> the video encoder must run at 2x the pixel clock.
+>
+> This patch adds the TMDS PHY clock value in all the video clock setup
+> in order to better support these specific uses cases and switch
+> to the Common Clock framework for clocks handling in the future.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/meson/meson_dw_hdmi.c   | 110 ++++++++++++++++++++++++++------
+>  drivers/gpu/drm/meson/meson_vclk.c      |  93 ++++++++++++++++++++-------
+>  drivers/gpu/drm/meson/meson_vclk.h      |   7 +-
+>  drivers/gpu/drm/meson/meson_venc.c      |   6 +-
+>  drivers/gpu/drm/meson/meson_venc.h      |  11 ++++
+>  drivers/gpu/drm/meson/meson_venc_cvbs.c |   3 +-
+>  6 files changed, 184 insertions(+), 46 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> index e28814f..540971a 100644
+> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> @@ -141,6 +141,8 @@ struct meson_dw_hdmi {
+>         struct regulator *hdmi_supply;
+>         u32 irq_stat;
+>         struct dw_hdmi *hdmi;
+> +       unsigned long input_bus_format;
+> +       unsigned long output_bus_format;
+>  };
+>  #define encoder_to_meson_dw_hdmi(x) \
+>         container_of(x, struct meson_dw_hdmi, encoder)
+> @@ -323,25 +325,36 @@ static void dw_hdmi_set_vclk(struct meson_dw_hdmi *dw_hdmi,
+>  {
+>         struct meson_drm *priv = dw_hdmi->priv;
+>         int vic = drm_match_cea_mode(mode);
+> +       unsigned int phy_freq;
+>         unsigned int vclk_freq;
+>         unsigned int venc_freq;
+>         unsigned int hdmi_freq;
+>
+>         vclk_freq = mode->clock;
+>
+> +       /* For 420, pixel clock is half unlike venc clock */
+> +       if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
+> +               vclk_freq /= 2;
+> +
+> +       /* TMDS clock is pixel_clock * 10 */
+> +       phy_freq = vclk_freq * 10;
+> +
+>         if (!vic) {
+> -               meson_vclk_setup(priv, MESON_VCLK_TARGET_DMT, vclk_freq,
+> -                                vclk_freq, vclk_freq, false);
+> +               meson_vclk_setup(priv, MESON_VCLK_TARGET_DMT, phy_freq,
+> +                                vclk_freq, vclk_freq, vclk_freq, false);
+>                 return;
+>         }
+>
+> +       /* 480i/576i needs global pixel doubling */
+>         if (mode->flags & DRM_MODE_FLAG_DBLCLK)
+>                 vclk_freq *= 2;
+>
+>         venc_freq = vclk_freq;
+>         hdmi_freq = vclk_freq;
+>
+> -       if (meson_venc_hdmi_venc_repeat(vic))
+> +       /* VENC double pixels for 1080i, 720p and YUV420 modes */
+> +       if (meson_venc_hdmi_venc_repeat(vic) ||
+> +           dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
+>                 venc_freq *= 2;
+>
+>         vclk_freq = max(venc_freq, hdmi_freq);
+> @@ -349,11 +362,11 @@ static void dw_hdmi_set_vclk(struct meson_dw_hdmi *dw_hdmi,
+>         if (mode->flags & DRM_MODE_FLAG_DBLCLK)
+>                 venc_freq /= 2;
+>
+> -       DRM_DEBUG_DRIVER("vclk:%d venc=%d hdmi=%d enci=%d\n",
+> -               vclk_freq, venc_freq, hdmi_freq,
+> +       DRM_DEBUG_DRIVER("vclk:%d phy=%d venc=%d hdmi=%d enci=%d\n",
+> +               phy_freq, vclk_freq, venc_freq, hdmi_freq,
+>                 priv->venc.hdmi_use_enci);
+>
+> -       meson_vclk_setup(priv, MESON_VCLK_TARGET_HDMI, vclk_freq,
+> +       meson_vclk_setup(priv, MESON_VCLK_TARGET_HDMI, phy_freq, vclk_freq,
+>                          venc_freq, hdmi_freq, priv->venc.hdmi_use_enci);
+>  }
+>
+> @@ -386,8 +399,9 @@ static int dw_hdmi_phy_init(struct dw_hdmi *hdmi, void *data,
+>         /* Enable normal output to PHY */
+>         dw_hdmi_top_write(dw_hdmi, HDMITX_TOP_BIST_CNTL, BIT(12));
+>
+> -       /* TMDS pattern setup (TOFIX Handle the YUV420 case) */
+> -       if (mode->clock > 340000) {
+> +       /* TMDS pattern setup */
+> +       if (mode->clock > 340000 &&
+> +           dw_hdmi->input_bus_format == MEDIA_BUS_FMT_YUV8_1X24) {
+>                 dw_hdmi_top_write(dw_hdmi, HDMITX_TOP_TMDS_CLK_PTTN_01, 0);
+>                 dw_hdmi_top_write(dw_hdmi, HDMITX_TOP_TMDS_CLK_PTTN_23,
+>                                   0x03ff03ff);
+> @@ -560,6 +574,8 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+>                    const struct drm_display_mode *mode)
+>  {
+>         struct meson_drm *priv = connector->dev->dev_private;
+> +       bool is_hdmi2_sink = connector->display_info.hdmi.scdc.supported;
+> +       unsigned int phy_freq;
+>         unsigned int vclk_freq;
+>         unsigned int venc_freq;
+>         unsigned int hdmi_freq;
+> @@ -568,8 +584,10 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+>
+>         DRM_DEBUG_DRIVER("Modeline " DRM_MODE_FMT "\n", DRM_MODE_ARG(mode));
+>
+> -       /* If sink max TMDS clock, we reject the mode */
+> -       if (mode->clock > connector->display_info.max_tmds_clock)
+> +       /* If sink does not support 540MHz, reject the non-420 HDMI2 modes */
+> +       if (mode->clock > connector->display_info.max_tmds_clock &&
+> +           !drm_mode_is_420_only(&connector->display_info, mode) &&
+> +           !drm_mode_is_420_also(&connector->display_info, mode))
+>                 return MODE_BAD;
+>
 
+This part makes all the modes identified as BAD on my TV, on G12A and
+GXL, which in turn breaks HDMI output (no signal detected).
 
- Remove unneeded semicolon.
+Here is the dmesg with drm debug: https://pastebin.com/t3XESC2w
 
-Generated by: scripts/coccinelle/misc/semicolon.cocci
+Cheers,
+Maxime
 
-Fixes: 5cf7e99ecb7d ("Use fall-through attribute rather than magic comments")
-CC: Shawn Landden <shawn@git.icu>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-url:    https://github.com/0day-ci/linux/commits/Shawn-Landden/Use-fall-through-attribute-rather-than-magic-comments/20190318-194548
-
- drxj.c |   28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
---- a/drivers/media/dvb-frontends/drx39xyj/drxj.c
-+++ b/drivers/media/dvb-frontends/drx39xyj/drxj.c
-@@ -11120,12 +11120,12 @@ ctrl_power_mode(struct drx_demod_instanc
- 				goto rw_error;
- 			}
- 			break;
--		case DRX_STANDARD_PAL_SECAM_BG:	__fallthrough;;
--		case DRX_STANDARD_PAL_SECAM_DK:	__fallthrough;;
--		case DRX_STANDARD_PAL_SECAM_I:	__fallthrough;;
--		case DRX_STANDARD_PAL_SECAM_L:	__fallthrough;;
--		case DRX_STANDARD_PAL_SECAM_LP:	__fallthrough;;
--		case DRX_STANDARD_NTSC:	__fallthrough;;
-+		case DRX_STANDARD_PAL_SECAM_BG:	__fallthrough;
-+		case DRX_STANDARD_PAL_SECAM_DK:	__fallthrough;
-+		case DRX_STANDARD_PAL_SECAM_I:	__fallthrough;
-+		case DRX_STANDARD_PAL_SECAM_L:	__fallthrough;
-+		case DRX_STANDARD_PAL_SECAM_LP:	__fallthrough;
-+		case DRX_STANDARD_NTSC:	__fallthrough;
- 		case DRX_STANDARD_FM:
- 			rc = power_down_atv(demod, ext_attr->standard, true);
- 			if (rc != 0) {
-@@ -11136,7 +11136,7 @@ ctrl_power_mode(struct drx_demod_instanc
- 		case DRX_STANDARD_UNKNOWN:
- 			/* Do nothing */
- 			break;
--		case DRX_STANDARD_AUTO:	__fallthrough;;
-+		case DRX_STANDARD_AUTO:	__fallthrough;
- 		default:
- 			return -EIO;
- 		}
-@@ -11229,8 +11229,8 @@ ctrl_set_cfg_pre_saw(struct drx_demod_in
- 		ext_attr->vsb_pre_saw_cfg = *pre_saw;
- 		break;
- #ifndef DRXJ_VSB_ONLY
--	case DRX_STANDARD_ITU_A:	__fallthrough;;
--	case DRX_STANDARD_ITU_B:	__fallthrough;;
-+	case DRX_STANDARD_ITU_A:	__fallthrough;
-+	case DRX_STANDARD_ITU_B:	__fallthrough;
- 	case DRX_STANDARD_ITU_C:
- 		ext_attr->qam_pre_saw_cfg = *pre_saw;
- 		break;
-@@ -11273,10 +11273,10 @@ ctrl_set_cfg_afe_gain(struct drx_demod_i
- 	ext_attr = (struct drxj_data *) demod->my_ext_attr;
- 
- 	switch (afe_gain->standard) {
--	case DRX_STANDARD_8VSB:	__fallthrough;;
-+	case DRX_STANDARD_8VSB:	__fallthrough;
- #ifndef DRXJ_VSB_ONLY
--	case DRX_STANDARD_ITU_A:	__fallthrough;;
--	case DRX_STANDARD_ITU_B:	__fallthrough;;
-+	case DRX_STANDARD_ITU_A:	__fallthrough;
-+	case DRX_STANDARD_ITU_B:	__fallthrough;
- 	case DRX_STANDARD_ITU_C:
- #endif
- 		/* Do nothing */
-@@ -11310,8 +11310,8 @@ ctrl_set_cfg_afe_gain(struct drx_demod_i
- 		ext_attr->vsb_pga_cfg = gain * 13 + 140;
- 		break;
- #ifndef DRXJ_VSB_ONLY
--	case DRX_STANDARD_ITU_A:	__fallthrough;;
--	case DRX_STANDARD_ITU_B:	__fallthrough;;
-+	case DRX_STANDARD_ITU_A:	__fallthrough;
-+	case DRX_STANDARD_ITU_B:	__fallthrough;
- 	case DRX_STANDARD_ITU_C:
- 		ext_attr->qam_pga_cfg = gain * 13 + 140;
- 		break;
+|snip]
