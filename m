@@ -2,110 +2,124 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CEDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C493120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MIGKVcui"
+	by mail.kernel.org (Postfix) with ESMTP id 697E220989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfCSJjr (ORCPT
+        id S1727597AbfCSJk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:39:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50986 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCSJjp (ORCPT
+        Tue, 19 Mar 2019 05:40:27 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:50942 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725862AbfCSJk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:39:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z11so7382538wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=j4LluMz8zBVBlBijmLUX6TcBWQHn83DSqbxHhxWrKV8=;
-        b=MIGKVcuik3tM5vzjuN4/C2+SPU/FXaaOp74zzb60EgZ4QeJgaw8MFw/tk93p1VfH1P
-         XOwjY7bq1gr1b3UmQkbJQ5kaWtAgJC0MYWZDTHH7SDgTzLkvXkZBirX/6USFtL250XY/
-         EWnyvnPDsUEKqqzjeQ9MlIm5cio1OzNDXLlqRc1xuAmMHB2A0881JpZDYmEDojL8J2YZ
-         RNGh5qOtMbAzTqLiZ16TJxNax7L9OavEHLLO8KFYg6jNvSB2idgSkJi+M+YwTexL9ASG
-         7lSvq+pHVf/wAWrdtRZ1vmR6hGzFTk59UxjwapJUXPDpgKbXhxQ28v17jeu/dXNdrDqR
-         2SYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=j4LluMz8zBVBlBijmLUX6TcBWQHn83DSqbxHhxWrKV8=;
-        b=sjKeFuKgVPcTSmK6OvjCD4I8Yam1UJxlbUdVIJ+I0GFfHqySBmqQkdGH+mJhZ2HmrI
-         FWobbCHXXwPWcA3XjJv6E9pktw7fbOFEZyFxueQb2VASvcvG8q7pDjsgbruio8VLCyB0
-         2JIkVlgMnjVtvikjFJWkUTdSW9NF56xibG77QeCEIjp+mr7R5cEe56QApYzRzc+NWnCA
-         70RNMtN/xzRNp0EV6xFoWTKTfIh9PX/SJkb3tu7WtU+m0VKkWOHaO4Xd3DPi6k+5cUgX
-         Y4NO3xPXrf2HdkARiQZyaIQguSgD+g7oonnqVXC9Qb9dMauopLf8smTlkX/16lqTzwAq
-         0MLg==
-X-Gm-Message-State: APjAAAXjtOEiGcYumFCJXh4Jib5vy/SDtdA+zFKTnlzlacIaklGJkCD2
-        DRWwmWshZ6SfN+DTQCSDG98DbQ==
-X-Google-Smtp-Source: APXvYqwpTR8XfsZzMwNp41YJa6kGiyx/NyZGDsveoP2x0c498jnspqeKsy9vFoBMmX4ucJQobuYjOQ==
-X-Received: by 2002:a7b:c3d7:: with SMTP id t23mr2599671wmj.62.1552988383839;
-        Tue, 19 Mar 2019 02:39:43 -0700 (PDT)
-Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
-        by smtp.gmail.com with ESMTPSA id w12sm10432604wrt.97.2019.03.19.02.39.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 19 Mar 2019 02:39:43 -0700 (PDT)
-Message-ID: <e9e5644385fb0ac45faceec5ba005dc20ab65989.camel@baylibre.com>
-Subject: Re: [PATCH v2 0/2] clk: meson: g12a: Add CPU Clock support
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 10:39:41 +0100
-In-Reply-To: <20190304131129.7762-1-narmstrong@baylibre.com>
-References: <20190304131129.7762-1-narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 19 Mar 2019 05:40:27 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9cSE4006273;
+        Tue, 19 Mar 2019 04:40:24 -0500
+Authentication-Results: ppops.net;
+        spf=pass smtp.mailfrom=lucas.tanure@cirrus.com
+Received: from mail4.cirrus.com ([87.246.98.35])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2ratnq09h1-1;
+        Tue, 19 Mar 2019 04:40:24 -0500
+Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
+        by mail4.cirrus.com (Postfix) with ESMTP id 8A687611C8B2;
+        Tue, 19 Mar 2019 04:41:26 -0500 (CDT)
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EX17.ad.cirrus.com
+ (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 09:40:23 +0000
+Received: from ArchLinux.ad.cirrus.com (unknown [198.90.202.153])       by
+ ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3C86747E;      Tue, 19 Mar 2019
+ 09:40:23 +0000 (GMT)
+From:   Lucas Tanure <tanureal@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <patches@opensource.cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>
+Subject: [PATCH 2/2] regmap: debugfs: Jump to the next readable register
+Date:   Tue, 19 Mar 2019 09:41:33 +0000
+Message-ID: <20190319094133.8843-2-tanureal@opensource.cirrus.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190319094133.8843-1-tanureal@opensource.cirrus.com>
+References: <20190319094133.8843-1-tanureal@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com ip4:141.131.128.20
+ ip4:141.131.3.20 ip4:213.128.236.230 ip4:87.246.98.25 ip4:87.246.78.26
+ ip4:87.246.76.56 ip4:87.246.98.35 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-04 at 14:11 +0100, Neil Armstrong wrote:
-> This patchset adds support for the clock tree feeding the 4xCortex A53
-> cpu cluster.
-> 
-> This patchet does not handle clock changing, this will be added in a
-> secondary patchset.
-> 
-> The CPU clock can either use the SYS_PLL for > 1GHz frequencies or
-> use a couple of div+mux from 1GHz/667MHz/24MHz source with 2 non-glitch
-> muxes.
-> 
-> The CPU clock must be switched to a safe clock while changing the clocks
-> before the non-glitch muxes. Proper support will be added later.
-> 
-> In this patchset, clocks are set read-only.
-> 
-> Changes since v1:
-> - moved to clk_regmap_gate_ro_ops for R/O gates
-> - added comments with datasheet field names
-> - moved pribate bindings changes to driver patch
-> - removed invalid PCIE IDs
-> 
-> Neil Armstrong (2):
->   clk: meson-g12a: add cpu clock bindings
->   clk: meson: g12a: add cpu clocks
-> 
->  drivers/clk/meson/g12a.c              | 350 ++++++++++++++++++++++++++
->  drivers/clk/meson/g12a.h              |  22 +-
->  include/dt-bindings/clock/g12a-clkc.h |   1 +
->  3 files changed, 372 insertions(+), 1 deletion(-)
-> 
+Improve the speed of the loop jumping to the next
+available register
 
-With the small naming comment on patch 2
+Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+---
+ drivers/base/regmap/regmap-debugfs.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 9b3f49ffc4a5f..b5b1cf5aa1f96 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -190,6 +190,28 @@ static inline void regmap_calc_tot_len(struct regmap *map,
+ 	}
+ }
+ 
++static int regmap_next_readable_reg(struct regmap *map, int reg)
++{
++	struct regmap_debugfs_off_cache *c;
++	int ret = -EINVAL;
++
++	if (regmap_printable(map, reg + map->reg_stride)) {
++		ret = reg + map->reg_stride;
++	} else {
++		mutex_lock(&map->cache_lock);
++		list_for_each_entry(c, &map->debugfs_off_cache, list) {
++			if (reg > c->max_reg)
++				continue;
++			if (reg < c->base_reg) {
++				ret = c->base_reg;
++				break;
++			}
++		}
++		mutex_unlock(&map->cache_lock);
++	}
++	return ret;
++}
++
+ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 				   unsigned int to, char __user *user_buf,
+ 				   size_t count, loff_t *ppos)
+@@ -213,9 +235,8 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 	/* Work out which register we're starting at */
+ 	start_reg = regmap_debugfs_get_dump_start(map, from, *ppos, &p);
+ 
+-	for (i = start_reg; i <= to; i += map->reg_stride) {
+-		if (!regmap_printable(map, i))
+-			continue;
++	for (i = start_reg; i >= 0 && i <= to;
++	     i = regmap_next_readable_reg(map, i)) {
+ 
+ 		/* If we're in the region the user is trying to read */
+ 		if (p >= *ppos) {
+-- 
+2.21.0
 
