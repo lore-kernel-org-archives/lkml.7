@@ -2,87 +2,73 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE79C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460EDC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4613520850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cckEmUwk"
+	by mail.kernel.org (Postfix) with ESMTP id 1BC192184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfCSVLR (ORCPT
+        id S1727618AbfCSVLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:11:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46268 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfCSVLQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:11:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2JL93Zq006028;
-        Tue, 19 Mar 2019 21:11:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=BXBiuNnuOJTvK+ZNYMKV9Ix9ByasG3XEt/Y5HWeSJcM=;
- b=cckEmUwk3qynkZoA8Xf/FZ1pV3StsMqp2NCs9j2AO83kJYmTuoq9dGaJOb5JWiq8FipB
- fmzjkA6nrFTWmNZtZtjz6NGOBQJ6y0eouDC41pZhUdII/MhUqvf1eutZ0Rks2d/ArBMr
- 85RPRuvLcshxuPwJg0+hIr12U0jHSnaXjtb3wBgfNgYYlpVxObjZXSyJBxS3a8wXYTvK
- YhLvKaTOZm7tsuIFL3WA9u7O1UG2HqIpndLjtf7934s30I75+5YrNAuc+oJeyryih4Gt
- yQlhsBAVvIcc1mHsrbFsJn+mCHLGzVb+EdWal3hMkOl8iN4aAaG29+a+j5Tp1WCDkTQW nA== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2120.oracle.com with ESMTP id 2r8ssrf5vc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 21:11:11 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2JLB6e0023901
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 21:11:06 GMT
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2JLB5hB004351;
-        Tue, 19 Mar 2019 21:11:05 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Mar 2019 14:11:05 -0700
-To:     Colin King <colin.king@canonical.com>
-Cc:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: dpt_i2o: clean up indentation issues, remove spaces
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190123125319.17193-1-colin.king@canonical.com>
-Date:   Tue, 19 Mar 2019 17:11:02 -0400
-In-Reply-To: <20190123125319.17193-1-colin.king@canonical.com> (Colin King's
-        message of "Wed, 23 Jan 2019 12:53:19 +0000")
-Message-ID: <yq11s32d0yh.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 Mar 2019 17:11:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41338 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726627AbfCSVL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:11:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 96729B607;
+        Tue, 19 Mar 2019 21:11:27 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     linux-mm@kvack.org
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: [RFC 0/2] guarantee natural alignment for kmalloc()
+Date:   Tue, 19 Mar 2019 22:11:06 +0100
+Message-Id: <20190319211108.15495-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=714 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903190148
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The recent thread [1] inspired me to look into guaranteeing alignment for
+kmalloc() for power-of-two sizes. Turns out it's not difficult and in most
+configuration nothing really changes as it happens implicitly. More details in
+the first patch. If we agree we want to do this, I will see where to update
+documentation and perhaps if there are any workarounds in the tree that can be
+converted to plain kmalloc() afterwards.
 
-Colin,
+The second patch is quick and dirty selftest for the alignment. Suggestions
+welcome whether and how to include this kind of selftest that has to be
+in-kernel.
 
-> There are several lines where the indentation has an extra space, fix
-> this by removing the spaces.
+[1] https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/T/#u
 
-Applied to 5.2/scsi-queue.
+Vlastimil Babka (2):
+  mm, sl[aou]b: guarantee natural alignment for kmalloc(power-of-two)
+  mm, sl[aou]b: test whether kmalloc() alignment works as expected
+
+ mm/slab_common.c | 30 +++++++++++++++++++++++++++++-
+ mm/slob.c        | 42 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 60 insertions(+), 12 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.21.0
+
