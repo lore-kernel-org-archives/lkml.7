@@ -2,98 +2,85 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24970C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3BE20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553015576;
-	bh=yb7rlhAOyr2DIgzIdNxF8fTby0EHadFxRYY0HkyNJDk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=apGQQtOntANvZ6DoQ5bedhMVSMcJdFOCY9QyQpqCFSDs2UtoIhcnwpL9nTzv2SrY6
-	 qFmGPPHG3Gt0fxINhr7M5M87u2eI56W35Gg24hu/mTjEP+71mVFAuHnQup88khnHqK
-	 dxBhOAVHCi3BarRzTEsaOtwzJsBEycgQuFWMT3dI=
+	by mail.kernel.org (Postfix) with ESMTP id C1A2B20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="SuwF7J6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfCSRMy (ORCPT
+        id S1727385AbfCSRPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:12:54 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:56572 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfCSRMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:12:54 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 9E79E3B2C;
-        Tue, 19 Mar 2019 17:12:52 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 10:12:49 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-Message-Id: <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
-In-Reply-To: <20190319165802.GA3656@redhat.com>
-References: <20190129165428.3931-1-jglisse@redhat.com>
-        <20190313012706.GB3402@redhat.com>
-        <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
-        <20190318170404.GA6786@redhat.com>
-        <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
-        <20190319165802.GA3656@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Mar 2019 13:15:47 -0400
+Received: from canardo.mork.no ([148.122.252.1]:38623 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbfCSRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:15:47 -0400
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x2JHFZpI016403
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 19 Mar 2019 18:15:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1553015735; bh=H06E65+uwfvBFSExCJWalew4YKXcmLvx2l2JcOPU5dQ=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=SuwF7J6MuULRmsm6gNLThKmVAAgm9sl33M1rCRf/z2VcLtwCq28Z3cDRR0iDQHGw8
+         bAMeiX4lOok5KUoisaDFYH7iCUAWtPHcyjA7p++tf04uI/zwQPFNlqOanL1ryLG7cQ
+         3FbLavGGndGgF0F/I+WlCMBwpPxPXkJJaFFPvv4k=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
+        (envelope-from <bjorn@mork.no>)
+        id 1h6IKs-0002TJ-UO; Tue, 19 Mar 2019 18:15:34 +0100
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@mansr.com>
+Cc:     Dan Williams <dcbw@redhat.com>, Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
+Organization: m
+References: <20190226170710.12709-1-mans@mansr.com>
+        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
+        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
+        <20190319102840.GI6124@localhost> <yw1xd0mn16ev.fsf@mansr.com>
+        <20190319110819.GB3178@localhost> <yw1x8sxb125q.fsf@mansr.com>
+        <20190319122719.GC3178@localhost> <20190319124358.GK6124@localhost>
+        <6c89938b00ad289e1802f675bd00e288b1458d73.camel@redhat.com>
+        <yw1xr2b3ylsp.fsf@mansr.com> <878sxa9ag7.fsf@miraculix.mork.no>
+        <yw1xmulqzv7k.fsf@mansr.com>
+Date:   Tue, 19 Mar 2019 18:15:34 +0100
+In-Reply-To: <yw1xmulqzv7k.fsf@mansr.com> (=?utf-8?Q?=22M=C3=A5ns_Rullg?=
+ =?utf-8?Q?=C3=A5rd=22's?= message of "Tue,
+        19 Mar 2019 16:26:39 +0000")
+Message-ID: <87r2b27pl5.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.100.2 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> writes:
 
-> > So I think I'll throw up my hands, drop them all and shall await
-> > developments :(
-> 
-> What more do you want to see ? I can repost with the ack already given
-> and the improve commit wording on some of the patch. But from user point
-> of view nouveau is already upstream, ODP RDMA depends on this patchset
-> and is posted and i have given link to it. amdgpu is queue up. What more
-> do i need ?
+> Every time you think USB can't get any worse, it does.
 
-I guess I can ignore linux-next for a few days.  
+You can't blame vendor creativity on the bus spec.  Look at what the
+same vendors do to e.g. SCSI to make these firmwares appear as different
+USB devices.  The fact that some of then use "eject" as a signal to
+reboot the firmware into some other mode is not a SCSI problem.
 
-Yes, a resend against mainline with those various updates will be
-helpful.  Please go through the various fixes which we had as well:
+But I do agree that USB should have dropped "vendor specific" and
+mandated class functions for everything.  In theory. In practice, that
+would probably have casued USB to lose to some other competing spec with
+vendor specific as an option...
 
 
-mm-hmm-use-reference-counting-for-hmm-struct.patch
-mm-hmm-do-not-erase-snapshot-when-a-range-is-invalidated.patch
-mm-hmm-improve-and-rename-hmm_vma_get_pfns-to-hmm_range_snapshot.patch
-mm-hmm-improve-and-rename-hmm_vma_fault-to-hmm_range_fault.patch
-mm-hmm-improve-driver-api-to-work-and-wait-over-a-range.patch
-mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix.patch
-mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix-fix.patch
-mm-hmm-add-default-fault-flags-to-avoid-the-need-to-pre-fill-pfns-arrays.patch
-mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device.patch
-mm-hmm-support-hugetlbfs-snap-shoting-faulting-and-dma-mapping.patch
-mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem.patch
-mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix.patch
-mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix-2.patch
-mm-hmm-add-helpers-for-driver-to-safely-take-the-mmap_sem.patch
 
-Also, the discussion regarding [07/10] is substantial and is ongoing so
-please let's push along wth that.
-
-What is the review/discussion status of "[PATCH 09/10] mm/hmm: allow to
-mirror vma of a file on a DAX backed filesystem"?
-
+Bj=C3=B8rn
