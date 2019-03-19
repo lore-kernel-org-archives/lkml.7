@@ -2,115 +2,134 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFA6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBC3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4D62070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F702070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="owdfHLZk"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gwYPEonT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfCSReR (ORCPT
+        id S1727689AbfCSReh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:34:17 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:58418 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfCSReQ (ORCPT
+        Tue, 19 Mar 2019 13:34:37 -0400
+Received: from mail.efficios.com ([167.114.142.138]:37816 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfCSReh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:34:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id B1ED71AF
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:34:14 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ihylXwzIJMSV for <linux-kernel@vger.kernel.org>;
-        Tue, 19 Mar 2019 12:34:14 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 6D878C94
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:34:14 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id j127so18004320itj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IHtAHbP+J9rk/HCsvQZ/OREEVmI9PQysYpbFZPNW7oc=;
-        b=owdfHLZkR5fCbENNseTAksuJ6rsIBmDo8LZJtse/SdgML+YcmrTZytcwZt0aKCy83o
-         rWFRmlMPOaEBLNRVYaIUErRxOuwgsGTJzwV1epTJapMhjOv1c1R3rhJY9dZTOPnC/9Xk
-         o9qwgMDRlE4rZB84MJ9z5ZJw/oVpA/EUoZ0JuUZvuzIikVdNomP/VQclaLWyOu2H5OGC
-         RI4XX0RQyFfn+a2weBPJeEcLBQ421OfYDgxIn9S4DA6+OalH3GGrfkHq2FDAReT3dj7H
-         xyHLz8BYJPbmIPWsrx/9Jov0SlGdHVXwRxTPyZIxcz+AHBoDmm5u/x9sytLkAYH+U1xs
-         9S9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IHtAHbP+J9rk/HCsvQZ/OREEVmI9PQysYpbFZPNW7oc=;
-        b=k8vC4CxWVYosochFwPTfRzoGkyS772LOdhECTWA83wl70WlOlrXjzu4kH8IaTcbyeL
-         CQlb32bsiM2NQrfEVkQNDVVTLEVzIPVypHY7GD1xmhbSVDQCE9cMVWkA08rTEGACpcMw
-         LHkH4oRoB593LbzWzzD9hERXgm9kgYslu9FSyAX4imd3kojyhh8iOdSGtUNg5S06wqYJ
-         8aux2STBGrHq7fwbP1gzdr9r4U5pNMBr6jFjpl4Vloi3LZM/OyviEK25xr2zyrlyjdIt
-         sj71aBbv4YjyAA7vQxO8aiCGmOpp4wsK4nN6wyI+x28+onEdT4w+9PRNg6RzN1hLAv53
-         6kGw==
-X-Gm-Message-State: APjAAAWvSSWTOhcsYTx9ra59pRm5oyvlRI7Nk1hNtKWFzrOEADknuk3L
-        WyZlcdxEqM5mZbEGtX41vvYERn0bnM6YT0bJhtPz8c8o1I1pHmgV+U7vybM13a6dNDXn0jOHWvX
-        jXkzIzVKa5+pBcemfWL6/1kBmUGZw
-X-Received: by 2002:a24:c301:: with SMTP id s1mr1989828itg.112.1553016853987;
-        Tue, 19 Mar 2019 10:34:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqykk2EesaIbzRo8XM+d/y+gYsI0TBfxSAtf9FwIDBmN5wRjS1MX0brQ3WnJUh8lU1/ieIaiNA==
-X-Received: by 2002:a24:c301:: with SMTP id s1mr1989807itg.112.1553016853656;
-        Tue, 19 Mar 2019 10:34:13 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id p11sm5777562ios.15.2019.03.19.10.34.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 10:34:12 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: u132-hcd: fix potential NULL pointer dereference
-Date:   Tue, 19 Mar 2019 12:34:06 -0500
-Message-Id: <20190319173407.7279-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190319135609.GA16254@kroah.com>
-References: <20190319135609.GA16254@kroah.com>
+        Tue, 19 Mar 2019 13:34:37 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 882E51CAAC9;
+        Tue, 19 Mar 2019 13:34:35 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id rVUSaBWLRnDy; Tue, 19 Mar 2019 13:34:35 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0B37A1CAAC1;
+        Tue, 19 Mar 2019 13:34:35 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0B37A1CAAC1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1553016875;
+        bh=/8CBk1am8WoG2uZKCO58bIGV21nb86z8tzPqXUImc+4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=gwYPEonTloILKq/XMRP/GbRGR7kjYjfYgJSI3n0UkLlnVYPf9PcDf8OM+S1K2+OvT
+         ndh4nATV4ak2sMql6XZICRh2BKsHkaIhEoQdH3/J6g8dMEVH2brCYe7JXZbEYmIhGl
+         622d7e1L25afLmxmXXbhP8RtHS9iK6rGQ8iyme/vteIzvWXBNTPfL70/bdtuMA+BOS
+         lcYx0cKy6u6uj5+vpj4lSMt76tMkVwp+rRBpt1XjKduX3z+Gsa8BGQKEUzWFhiUK6s
+         xFav/itfSZhoLQYRK5OQNsrQGN1pserm3IB/Rnvi/CeaZtDH56gdBMgGqrOOb5KTLZ
+         g7crOm5XMOaIQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 23kUdoVHoyZ2; Tue, 19 Mar 2019 13:34:34 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id CC7271CAAB6;
+        Tue, 19 Mar 2019 13:34:34 -0400 (EDT)
+Date:   Tue, 19 Mar 2019 13:34:34 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     diamon-discuss@lists.linuxfoundation.org,
+        lttng-dev <lttng-dev@lists.lttng.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1199524058.2398.1553016874435.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAJWu+ooEbjOXgVeq+g4MGEve9PTo7p7UUKjYYHhq-Wz6UbUhfg@mail.gmail.com>
+References: <60988959.4070.1541112982406.JavaMail.zimbra@efficios.com> <CAJWu+ooEbjOXgVeq+g4MGEve9PTo7p7UUKjYYHhq-Wz6UbUhfg@mail.gmail.com>
+Subject: Re: [diamon-discuss] [RELEASE] LTTng-modules 2.9.11, 2.10.8,
+ 2.11.0-rc2 (Linux kernel tracer)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - FF65 (Linux)/8.8.11_GA_3780)
+Thread-Topic: LTTng-modules 2.9.11, 2.10.8, 2.11.0-rc2 (Linux kernel tracer)
+Thread-Index: tgwNY09wEmX1ohnS9162MFfWx+mRHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case create_singlethread_workqueue fails, the fix notifies
-callers the error to avoid potential NULL pointer dereferences.
+----- On Nov 1, 2018, at 7:33 PM, Joel Fernandes via diamon-discuss diamon-discuss@lists.linuxfoundation.org wrote:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
-removed "unlikely"
----
- drivers/usb/host/u132-hcd.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Thu, Nov 1, 2018 at 3:56 PM Mathieu Desnoyers
+> <mathieu.desnoyers@efficios.com> wrote:
+>>
+>> Hi,
+>>
+>> This is a set of bugfix releases of the LTTng modules kernel tracer.
+>> It covers the three currently active lttng-modules branches: the
+>> 2.9 and 2.10 stable branches, as well as the 2.11 branch in release
+>> candidate cycle.
+>>
+>> Those releases add support for kernel 4.19.
+>>
+>> One important improvement is to prevent allocation of buffers larger
+>> than the available memory, which can cause the OOM killer to trigger.
+>> Even if the OOM killer end up having to trigger, the current OOM kill
+>> target is set to the current thread while allocating buffers.
+> 
+> This is interesting. Me and Steve were looking at exactly this issue
+> with the ftrace ring buffer a few months ago. Turns out that even
+> setting the OOM kill target may not be enough to prevent all OOMs. I
+> don't remember the reason why not, I'll have to dig out those threads
+> but that's what the -mm folks said at the time. I did remember vaguely
+> that I tested it and the kill target doesn't always get killed.. its
+> possible that something *other* parallel allocation can be victimized
+> AFAIR, even though the culprit is the kill target.
+> 
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index 934584f0a20a..6d5b532b03f8 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -3203,6 +3203,8 @@ static int __init u132_hcd_init(void)
- 		return -ENODEV;
- 	printk(KERN_INFO "driver %s\n", hcd_name);
- 	workqueue = create_singlethread_workqueue("u132");
-+	if (!workqueue)
-+		return -ENOMEM;
- 	retval = platform_driver_register(&u132_platform_driver);
- 	return retval;
- }
+Hi Joel,
+
+Sorry for the late reply. Thanks for your input!
+
+Here is a description of the solution we implemented:
+
+"   Get an estimate of the number of available pages and return ENOMEM if
+    there are not enough pages to cover the needs of the caller. Also, mark
+    the calling user thread as the first target for the OOM killer in case
+    the estimate of available pages was wrong.
+    
+    This greatly reduces the attack surface of this issue as well as reducing
+    its potential impact.
+    
+    This approach is inspired by the one taken by the Linux kernel
+    trace ring buffer[1]."
+
+This is implemented in commit 1f0ab1eb040 "Prevent allocation of buffers if exceeding available memory"
+within lttng-modules.
+
+Are you aware of another way to achieve this that would prevent the incorrect
+OOM victimization scenario you describe above ?
+
+Thanks,
+
+Mathieu
+
+
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
