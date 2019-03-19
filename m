@@ -6,224 +6,89 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ABDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22562077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E0F2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfCSQXe (ORCPT
+        id S1727803AbfCSQXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:23:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53630 "EHLO mx1.redhat.com"
+        Tue, 19 Mar 2019 12:23:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52898 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfCSQXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:23:34 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1727488AbfCSQXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:23:40 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7CBBA307D983;
-        Tue, 19 Mar 2019 16:23:33 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 827FE821E2;
+        Tue, 19 Mar 2019 16:23:40 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 907DD19C6A;
-        Tue, 19 Mar 2019 16:23:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68D57100194A;
+        Tue, 19 Mar 2019 16:23:39 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 1/4] vfs: Create fs_context-aware mount_bdev()
- replacement
+Subject: [RFC PATCH 2/4] vfs: Make fs_parse() handle fs_param_is_fd-type
+ params better
 From:   David Howells <dhowells@redhat.com>
 To:     miklos@szeredi.hu, viro@zeniv.linux.org.uk
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com, anprice@redhat.com
-Date:   Tue, 19 Mar 2019 16:23:30 +0000
-Message-ID: <155301261082.7556.2558480789011010142.stgit@warthog.procyon.org.uk>
+Date:   Tue, 19 Mar 2019 16:23:38 +0000
+Message-ID: <155301261872.7556.14287203880762974502.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
 References: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 19 Mar 2019 16:23:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 19 Mar 2019 16:23:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a function, vfs_get_block_super(), that is fs_context-aware and a
-replacement for mount_bdev().  It caches the block device pointer and file
-open mode in the fs_context struct so that this information can be passed
-into sget_fc()'s test and set functions.
+Make fs_parse() handle fs_param_is_fd-type parameters that are passed a
+string by converting it to an integer (in addition to handling direct fd
+specification).
+
+Also range check the integer.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- fs/fs_context.c            |    2 +
- fs/super.c                 |  106 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/fs_context.h |    6 ++
- 3 files changed, 114 insertions(+)
+ fs/fs_parser.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fs_context.c b/fs/fs_context.c
-index 87e3546b9a52..ea027762c0b2 100644
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -425,6 +425,8 @@ void put_fs_context(struct fs_context *fc)
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index be86703ec371..bd59e1725c50 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -208,9 +208,20 @@ int fs_parse(struct fs_context *fc,
+ 		goto okay;
  
- 	if (fc->need_free && fc->ops && fc->ops->free)
- 		fc->ops->free(fc);
-+	if (fc->bdev)
-+		blkdev_put(fc->bdev, fc->bdev_mode);
- 
- 	security_free_mnt_opts(&fc->security);
- 	put_net(fc->net_ns);
-diff --git a/fs/super.c b/fs/super.c
-index f27ee08fb26f..85851adb0f19 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1211,6 +1211,112 @@ int vfs_get_super(struct fs_context *fc,
- EXPORT_SYMBOL(vfs_get_super);
- 
- #ifdef CONFIG_BLOCK
-+static int set_bdev_super_fc(struct super_block *s, struct fs_context *fc)
-+{
-+	s->s_bdev = fc->bdev;
-+	s->s_dev = s->s_bdev->bd_dev;
-+	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
-+	fc->bdev = NULL;
-+	return 0;
-+}
-+
-+static int test_bdev_super_fc(struct super_block *s, struct fs_context *fc)
-+{
-+	return s->s_bdev == fc->bdev;
-+}
-+
-+/**
-+ * vfs_get_block_super - Get a superblock based on a single block device
-+ * @fc: The filesystem context holding the parameters
-+ * @keying: How to distinguish superblocks
-+ * @fill_super: Helper to initialise a new superblock
-+ */
-+int vfs_get_block_super(struct fs_context *fc,
-+			int (*fill_super)(struct super_block *,
-+					  struct fs_context *))
-+{
-+	struct block_device *bdev;
-+	struct super_block *s;
-+	int error = 0;
-+
-+	fc->bdev_mode = FMODE_READ | FMODE_EXCL;
-+	if (!(fc->sb_flags & SB_RDONLY))
-+		fc->bdev_mode |= FMODE_WRITE;
-+
-+	if (!fc->source)
-+		return invalf(fc, "No source specified");
-+
-+	bdev = blkdev_get_by_path(fc->source, fc->bdev_mode, fc->fs_type);
-+	if (IS_ERR(bdev)) {
-+		errorf(fc, "%s: Can't open blockdev", fc->source);
-+		return PTR_ERR(bdev);
-+	}
-+
-+	/* Once the superblock is inserted into the list by sget_fc(), s_umount
-+	 * will protect the lockfs code from trying to start a snapshot while
-+	 * we are mounting
-+	 */
-+	mutex_lock(&bdev->bd_fsfreeze_mutex);
-+	if (bdev->bd_fsfreeze_count > 0) {
-+		mutex_unlock(&bdev->bd_fsfreeze_mutex);
-+		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
-+		error = -EBUSY;
-+		goto error_bdev;
-+	}
-+
-+	fc->bdev = bdev;
-+	fc->sb_flags |= SB_NOSEC;
-+	s = sget_fc(fc, test_bdev_super_fc, set_bdev_super_fc);
-+	mutex_unlock(&bdev->bd_fsfreeze_mutex);
-+	if (IS_ERR(s)) {
-+		error = PTR_ERR(s);
-+		goto error_bdev;
-+	}
-+
-+	if (s->s_root) {
-+		/* Don't summarily change the RO/RW state. */
-+		if ((fc->sb_flags ^ s->s_flags) & SB_RDONLY) {
-+			warnf(fc, "%pg: Can't mount, would change RO state", bdev);
-+			error = -EBUSY;
-+			goto error_sb;
+ 	case fs_param_is_fd: {
+-		if (param->type != fs_value_is_file)
++		switch (param->type) {
++		case fs_value_is_string:
++			ret = kstrtouint(param->string, 0, &result->uint_32);
++			break;
++		case fs_value_is_file:
++			result->uint_32 = param->dirfd;
++			ret = 0;
++		default:
+ 			goto bad_value;
+-		goto okay;
 +		}
 +
-+		/* s_umount nests inside bd_mutex during __invalidate_device().
-+		 * blkdev_put() acquires bd_mutex and can't be called under
-+		 * s_umount.  Drop s_umount temporarily.  This is safe as we're
-+		 * holding an active reference.
-+		 */
-+		up_write(&s->s_umount);
-+		blkdev_put(bdev, fc->bdev_mode);
-+		down_write(&s->s_umount);
-+	} else {
-+		s->s_mode = fc->bdev_mode;
-+		snprintf(s->s_id, sizeof(s->s_id), "%pg", bdev);
-+		sb_set_blocksize(s, block_size(bdev));
-+		error = fill_super(s, fc);
-+		if (error)
-+			goto error_sb;
-+
-+		s->s_flags |= SB_ACTIVE;
-+		bdev->bd_super = s;
-+	}
-+
-+	BUG_ON(fc->root);
-+	fc->root = dget(s->s_root);
-+	return 0;
-+
-+error_sb:
-+	deactivate_locked_super(s);
-+error_bdev:
-+	if (fc->bdev) {
-+		blkdev_put(fc->bdev, fc->bdev_mode);
-+		fc->bdev = NULL;
-+	}
-+	return error;
-+}
-+EXPORT_SYMBOL(vfs_get_block_super);
-+
-+
- static int set_bdev_super(struct super_block *s, void *data)
- {
- 	s->s_bdev = data;
-diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-index a779022d06f5..cb49b92f02af 100644
---- a/include/linux/fs_context.h
-+++ b/include/linux/fs_context.h
-@@ -76,6 +76,7 @@ struct fs_context {
- 	const struct fs_context_operations *ops;
- 	struct file_system_type	*fs_type;
- 	void			*fs_private;	/* The filesystem's context */
-+	struct block_device	*bdev;		/* The backing blockdev (if applicable) */
- 	struct dentry		*root;		/* The root and superblock */
- 	struct user_namespace	*user_ns;	/* The user namespace for this mount */
- 	struct net		*net_ns;	/* The network namespace for this mount */
-@@ -84,6 +85,7 @@ struct fs_context {
- 	const char		*subtype;	/* The subtype to set on the superblock */
- 	void			*security;	/* Linux S&M options */
- 	void			*s_fs_info;	/* Proposed s_fs_info */
-+	fmode_t			bdev_mode;	/* File open mode for bdev */
- 	unsigned int		sb_flags;	/* Proposed superblock flags (SB_*) */
- 	unsigned int		sb_flags_mask;	/* Superblock flags that were changed */
- 	unsigned int		s_iflags;	/* OR'd with sb->s_iflags */
-@@ -141,6 +143,10 @@ extern int vfs_get_super(struct fs_context *fc,
- 			 int (*fill_super)(struct super_block *sb,
- 					   struct fs_context *fc));
++		if (result->uint_32 > INT_MAX)
++			goto bad_value;
++		goto maybe_okay;
+ 	}
  
-+extern int vfs_get_block_super(struct fs_context *fc,
-+			       int (*fill_super)(struct super_block *sb,
-+						 struct fs_context *fc));
-+
- extern const struct file_operations fscontext_fops;
- 
- #ifdef CONFIG_PRINTK
+ 	case fs_param_is_blockdev:
 
