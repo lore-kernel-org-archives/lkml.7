@@ -2,165 +2,128 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879B6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB664C10F0D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCFF2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3A220854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="1tE+0ECS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f5okvv0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfCSHjl (ORCPT
+        id S1727109AbfCSHl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:39:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47078 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSHjl (ORCPT
+        Tue, 19 Mar 2019 03:41:56 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46038 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSHl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:39:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a22so13249005pgg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:39:40 -0700 (PDT)
+        Tue, 19 Mar 2019 03:41:56 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v20so21018308qtv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=ysj5yLkRVgCUvVwY5iH5Jac/AWM65O0IxwMcV/9Lgvk=;
-        b=1tE+0ECSeA7MJM4AkEnYox4GdY75jjn+lnbsREJ7YnnTfRVKHc8ekwEdoVcG92SPFH
-         1EU/jPS+PdLKkovuHxoKQNp7gqjzsbO8/W84ZKJJauqRFsLZPFCpOwfFTfP2SHqybvLt
-         qKW1Jom4oBcb0pvkGKqnHhqvA+Ty/35TAq2r3xrKvhKDL1ik3bLe5qxs/V0anR5w4J5o
-         CCVWlNQ1sL53eoBLDQBmt/TPY1+aEOwtwf/HN7Y7+zMjKQkaX/NXuYL7ncIbgG4Kp4vj
-         hONIa0oC+L390X5pNoRokA2kvJfjCpHADxpkzNCogRW1qZ+2ZEe5kSc5qNBkhNI9ZfIj
-         2Peg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AKuHIe0ez2D49edy2KdVchoqrAYgE3HPWmIWLCE09Ec=;
+        b=f5okvv0YSXxOiGUhQw4iUOiBvM7CzNsYObuRbwBbb5LZOQ22iMLJe/k0BWAt1X4JF+
+         vJejcZXJLYJ7IKLJb0R1XafrsZfg4HbSbgSVVMjygdD/NM1WQiu0EI0zFNMZ6pEXQFxR
+         O0XuP2fLYqaGOOVqUlpYfmFxEegaKF1d6aEtw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ysj5yLkRVgCUvVwY5iH5Jac/AWM65O0IxwMcV/9Lgvk=;
-        b=S06C7elI64kG86M/t2XgPOK4KMvZwzFPTRgh7fYq2qqcZsikSwGTZnfFY3/UOb9g0+
-         rAaMYMZ69z4R3IkZlfnfovCJ95+FVhuz5uRAeuWioaZGHP6gnUujDosYECkjbPhZbDwW
-         9ionNTRJxpkYAPfAD5VRUDI+S3tjE4zIxrBeCR6R3L3hmTpmmYYrsOoZ8NKBLOD+bFnE
-         iy0vnjoOZqYmNw/5Vrn7L9uJrO9obNPql8jJtJQ8Eir9uiRPmtdsOwDbP4OR87PcoYa3
-         lKSdvgkmT7KS2N5JLJy/5gfGEEapfIcCoPV2Uu2JAtWYdsClrfa/pjVA5gitOFovq2CZ
-         B32w==
-X-Gm-Message-State: APjAAAV6TNB+udh+h5XNmJ7fkEMbQaKsMtB2tfaB63aGzkvZ24eS23sM
-        x+wyeMBFSccN1mlp0CcMKLUROw==
-X-Google-Smtp-Source: APXvYqwoZuUMztoCoa5JpbUqmjuTtXHY1Jh9l1z96dKJQUKk8ZKaUipG2oWuLDbD0QBTYDP2yAy8Rg==
-X-Received: by 2002:a62:41cc:: with SMTP id g73mr991519pfd.145.1552981180361;
-        Tue, 19 Mar 2019 00:39:40 -0700 (PDT)
-Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
-        by smtp.gmail.com with ESMTPSA id k75sm38375443pfj.46.2019.03.19.00.39.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 00:39:39 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Haojian Zhuang <haojian.zhuang@gmail.com>,
-        "Jett . Zhou" <jtzhou@marvell.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: 88pm8607: Convert to regulator core's simplified DT parsing code
-Date:   Tue, 19 Mar 2019 15:39:27 +0800
-Message-Id: <20190319073927.11436-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AKuHIe0ez2D49edy2KdVchoqrAYgE3HPWmIWLCE09Ec=;
+        b=Q6Gre1Fxx9T63aswrvmoyqMYMDIt3au9c2Hkpfx7jTMWzU4JcnHOgsU1ThgyAYccwT
+         1P1Y7ej71Gzd5MS6lvgIJHN239Wx6MEQb0X8btj9vnwvnnKEBZ5QVDPJHUAU9zbdVaaq
+         LValUafEwmmUwQnmnz/+8KkzNP4hQEQzrta1Cw6ZcLVIkm/2WUnzq2JZENKHpnSxnXJV
+         Mx88T79We7i23Tz9xoqAqI9yeETj6e9oriJ3EeakWJQa2YPTuy8tFZoyKY3GF0c78xaH
+         dtuyQkpBJ3RbeV1LhDQD3K5X24bFJD5vBLq365dU5+0hmQtZAdQaziTc/NBr4YrmX5hB
+         e1QQ==
+X-Gm-Message-State: APjAAAVXo+SYMCJPHAlUgc0Gmj3O+OFm+wnG/ifZqKJhPjYFR+9Rk/eZ
+        2jhns5WJyi5X0fT+BtRljx596UwCYid3+eU5vrbXog==
+X-Google-Smtp-Source: APXvYqyTzjT1x47abBKr7srSawj1xAGftoqEUHu5HMf3q6pGjpDjpfkE6S5BUwrjCQsPa7PeAuixzWkMplru36AMRRI=
+X-Received: by 2002:a0c:9319:: with SMTP id d25mr706464qvd.99.1552981314960;
+ Tue, 19 Mar 2019 00:41:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20181210011504.122604-1-drinkcat@chromium.org>
+ <CANMq1KAmFKpcxi49wJyfP4N01A80B2d-2RGY2Wrwg0BvaFxAxg@mail.gmail.com>
+ <20190111102155.in5rctq5krs4ewfi@8bytes.org> <CANMq1KCq7wEYXKLZGCZczZ_yQrmK=MkHbUXESKhHnx5G_CMNVg@mail.gmail.com>
+ <789fb2e6-0d80-b6de-adf3-57180a50ec3e@suse.cz> <CANMq1KCfhWdWtXP_PRd_LEEcWV8SQg=hOy4V7_grqtL873uUCg@mail.gmail.com>
+In-Reply-To: <CANMq1KCfhWdWtXP_PRd_LEEcWV8SQg=hOy4V7_grqtL873uUCg@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 19 Mar 2019 15:41:43 +0800
+Message-ID: <CANMq1KBKF9aRj+8t+AQusNLOF5jrHJ4qY5C00AKXkO6e-8wKuQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Levin Alexander <Alexander.Levin@microsoft.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>, hch@infradead.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, stable@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regulator core's simplified DT parsing code to simply the driver
-implementation.
+On Mon, Feb 25, 2019 at 8:23 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> On Thu, Feb 14, 2019 at 1:12 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> >
+> > On 1/22/19 11:51 PM, Nicolas Boichat wrote:
+> > > Hi Andrew,
+> > >
+> > > On Fri, Jan 11, 2019 at 6:21 PM Joerg Roedel <joro@8bytes.org> wrote:
+> > >>
+> > >> On Wed, Jan 02, 2019 at 01:51:45PM +0800, Nicolas Boichat wrote:
+> > >> > Does anyone have any further comment on this series? If not, which
+> > >> > maintainer is going to pick this up? I assume Andrew Morton?
+> > >>
+> > >> Probably, yes. I don't like to carry the mm-changes in iommu-tree, so
+> > >> this should go through mm.
+> > >
+> > > Gentle ping on this series, it seems like it's better if it goes
+> > > through your tree.
+> > >
+> > > Series still applies cleanly on linux-next, but I'm happy to resend if
+> > > that helps.
+> >
+> > Ping, Andrew?
+>
+> Another gentle ping, I still don't see these patches in mmot[ms]. Thanks.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/88pm8607.c | 43 ++++++++----------------------------
- 1 file changed, 9 insertions(+), 34 deletions(-)
+Andrew: AFAICT this still applies cleanly on linux-next/master, so I
+don't plan to resend... is there any other issues with this series?
 
-diff --git a/drivers/regulator/88pm8607.c b/drivers/regulator/88pm8607.c
-index 753a6a1b30c3..35d767aeeb57 100644
---- a/drivers/regulator/88pm8607.c
-+++ b/drivers/regulator/88pm8607.c
-@@ -235,6 +235,8 @@ static const struct regulator_ops pm8606_preg_ops = {
- {									\
- 	.desc	= {							\
- 		.name	= "PREG",					\
-+		.of_match = of_match_ptr("PREG"),			\
-+		.regulators_node = of_match_ptr("regulators"),		\
- 		.ops	= &pm8606_preg_ops,				\
- 		.type	= REGULATOR_CURRENT,				\
- 		.id	= PM8606_ID_PREG,				\
-@@ -249,6 +251,8 @@ static const struct regulator_ops pm8606_preg_ops = {
- {									\
- 	.desc	= {							\
- 		.name	= #vreg,					\
-+		.of_match = of_match_ptr(#vreg),			\
-+		.regulators_node = of_match_ptr("regulators"),		\
- 		.ops	= &pm8607_regulator_ops,			\
- 		.type	= REGULATOR_VOLTAGE,				\
- 		.id	= PM8607_ID_##vreg,				\
-@@ -270,6 +274,8 @@ static const struct regulator_ops pm8606_preg_ops = {
- {									\
- 	.desc	= {							\
- 		.name	= "LDO" #_id,					\
-+		.of_match = of_match_ptr("LDO" #_id),			\
-+		.regulators_node = of_match_ptr("regulators"),		\
- 		.ops	= &pm8607_regulator_ops,			\
- 		.type	= REGULATOR_VOLTAGE,				\
- 		.id	= PM8607_ID_LDO##_id,				\
-@@ -309,36 +315,6 @@ static struct pm8607_regulator_info pm8606_regulator_info[] = {
- 	PM8606_PREG(PREREGULATORB, 5),
- };
- 
--#ifdef CONFIG_OF
--static int pm8607_regulator_dt_init(struct platform_device *pdev,
--				    struct pm8607_regulator_info *info,
--				    struct regulator_config *config)
--{
--	struct device_node *nproot, *np;
--	nproot = pdev->dev.parent->of_node;
--	if (!nproot)
--		return -ENODEV;
--	nproot = of_get_child_by_name(nproot, "regulators");
--	if (!nproot) {
--		dev_err(&pdev->dev, "failed to find regulators node\n");
--		return -ENODEV;
--	}
--	for_each_child_of_node(nproot, np) {
--		if (of_node_name_eq(np, info->desc.name)) {
--			config->init_data =
--				of_get_regulator_init_data(&pdev->dev, np,
--							   &info->desc);
--			config->of_node = np;
--			break;
--		}
--	}
--	of_node_put(nproot);
--	return 0;
--}
--#else
--#define pm8607_regulator_dt_init(x, y, z)	(-1)
--#endif
--
- static int pm8607_regulator_probe(struct platform_device *pdev)
- {
- 	struct pm860x_chip *chip = dev_get_drvdata(pdev->dev.parent);
-@@ -373,12 +349,11 @@ static int pm8607_regulator_probe(struct platform_device *pdev)
- 	if ((i == PM8607_ID_BUCK3) && chip->buck3_double)
- 		info->slope_double = 1;
- 
--	config.dev = &pdev->dev;
-+	config.dev = chip->dev;
- 	config.driver_data = info;
- 
--	if (pm8607_regulator_dt_init(pdev, info, &config))
--		if (pdata)
--			config.init_data = pdata;
-+	if (pdata)
-+		config.init_data = pdata;
- 
- 	if (chip->id == CHIP_PM8607)
- 		config.regmap = chip->regmap;
--- 
-2.17.1
+This is a regression, so it'd be nice to have it fixed in mainline, eventually.
 
+Thanks,
+
+> > > Thanks!
+> > >
+> > >> Regards,
+> > >>
+> > >>         Joerg
+> > >
+> >
