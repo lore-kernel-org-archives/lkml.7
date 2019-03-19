@@ -2,94 +2,113 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B4BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A93C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542972171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1ED2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 00:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Qxg6Tqxg"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="lh76zgbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfCSAaf (ORCPT
+        id S1727197AbfCSAaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 20:30:35 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36867 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfCSAae (ORCPT
+        Mon, 18 Mar 2019 20:30:46 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:50278 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfCSAap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 20:30:34 -0400
-Received: by mail-it1-f196.google.com with SMTP id z124so24331022itc.2;
-        Mon, 18 Mar 2019 17:30:34 -0700 (PDT)
+        Mon, 18 Mar 2019 20:30:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 25D2FAB3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 00:30:44 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Lz_8fJ2Nh-ym for <linux-kernel@vger.kernel.org>;
+        Mon, 18 Mar 2019 19:30:44 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id E074D92C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:30:43 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id z190so6100085itc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 17:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/ll+wfkPgCAihfYwAbpjE59r2Ng0HLVXKbeuh1xw3Qo=;
-        b=Qxg6TqxgJeCYvIAGo8HPfdAH2out7/jIYue07LhXyev8pyrpLo+qSg/0WyPp/kVR8R
-         5VNvdCWZD/LvnH5vyNyT4uzj0+EBfvMFL7lgSXvJsGQ7t+3sWRACikaVHvG2FExR+WiM
-         40bSGBNdzZi5PsV31zXr7/I25L9ugDFtzWtdwWeXrFcV8xrdrQB2W2bBYVPVa1aI9kVF
-         ruEFVAJK682ceUS1F2D3L+j2bJkg8ExzVy/bDP74OLOmiajzljeoQVP32XrWWUDd5Rt7
-         mhHlhBNgcSFyjXXUslBS8JQ/FLfVjmaKukW69aY9KQFOYXPD5f0BBFcRlyl1yp9osNgi
-         YDWA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ooq4r/ebCnnXAe3/oQpav9WVOiGj8D+f04S8WUhRVzw=;
+        b=lh76zgbc0mav3MUfU+qFag4uNnA8mal1nx7+n9/EsuuPXr/aAcS9wq0/+3v1QNUbkl
+         LNxxgqG/XDhxhHlcNksIkw3YCSnMoKLDBTm4Or++aKyDZBaXlv0D0XtSvYqREbPdUtgt
+         LB7QpDPQroOeUv1yop1n2TaocKgyTotypcN3urISSaoF3IRdgOPTyJ81XjBKzF+3G0sY
+         wTAuvMU40b0pOQBwkPUqxHwZbaCTWV9EMlBmBvkG1ROOLomI03qax+8wyvKsV8/8aC4h
+         Bw/Fp05uPwPCLYDg2I9sw9rWl4PcfJbe0lykzv0nVfWAMK8i47fLj9/mIILXtoVf8NEi
+         5WkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/ll+wfkPgCAihfYwAbpjE59r2Ng0HLVXKbeuh1xw3Qo=;
-        b=LC+mJAqH6et7w66jI/hfY3AokKKrbkvDRHX2PrMyjUMPTIXaIrUkWyhfR5dHaAW8EI
-         hDTV2woYFNmBDZAF7Dr93aarZwOr0zSXk4SEyDIbR2pcW7kDnpsXwhuHhOigQsW9S7Sb
-         IdGizuud6F0i8+qzp7W5b7EyjVgQpj7IByyW5dYvM1H7O0XSyo3TbehsChTu/qrUVYdz
-         qhoMrarj+BomsVXGKelvF6XUi7u4V8mfBfeJJI/EpiJLWev9XJdVEF0wo11PN5gNlznf
-         FruUW1HCmuawfBfi4VHIDy6alQlFv/YKl/YY7AMwlRNn4WJMlwwnbnZd6XKKFogqBH85
-         yVug==
-X-Gm-Message-State: APjAAAWSg+5H1c0U8Fc6MkD9O+FYDgBvUXYfFXVo+BojE9mAln/RwHt+
-        aY4owuJNxXzFyZp/PzJexbjvzpIWWao8Ehj3on+hlsi+nupS5w==
-X-Google-Smtp-Source: APXvYqzLlLZkwlcyrq+OqFniPoPkLCf8z7ITQFMA+nVblSM05CdF23WClDPkJbffJJ81NHYqNfrHTLya9KzpsetwX0U=
-X-Received: by 2002:a24:21d5:: with SMTP id e204mr1043379ita.56.1552955433622;
- Mon, 18 Mar 2019 17:30:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
- <1552955080.2785.26.camel@linux.ibm.com>
-In-Reply-To: <1552955080.2785.26.camel@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 Mar 2019 17:30:22 -0700
-Message-ID: <CAA9_cmcOD2zPaaNbkYAaH5DRDRAebPkW+hwPA0zPKY4kU8R-rg@mail.gmail.com>
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware TPM
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ooq4r/ebCnnXAe3/oQpav9WVOiGj8D+f04S8WUhRVzw=;
+        b=HjxeMVWxFcVeBcgP94pP/53s1NCjoRg/G8oidJuT965Mq6ClW+EX/Ghw0k/1D89B9g
+         yc1JU0KlvtFjH5IZ1WsrjOSo6YKat4gz72Qfg9SvSOtcWulkrIkY03a4THBjjpDAXYug
+         hxuzk1GIzF8vquUtirXenNRvGLyAK8ceeiehDtxSSSqOrnbZqxSQXt4WjGqXkfwusOvU
+         uWjdS/JqDw4sygiSOgFpmJ8ctn5KbQd2P04Ev0nIm9nll/F0kISre22XkdjsnFYPBk5b
+         BmIkclVcCZFClHPI4MsGiUCTagLGDl6mk50KgIWawzpNNlRGmJM9X7kqCT8yHtHkmArf
+         UlXQ==
+X-Gm-Message-State: APjAAAUBLy6p+bnd3uoN/0dCG55pHlNk6q2IjnU4rQiIPVlTFnCYdctJ
+        krtcgx2KZ8Dtvxji8jAnHmxXngaJOQ/pfzoVu2PYwHb/KFN+HzgpceNT6ODp+y1qKc/KZfrgXlb
+        IIS3nP/YlQlFGndDCIytt5J/DUlCS
+X-Received: by 2002:a24:e502:: with SMTP id g2mr969845iti.78.1552955443538;
+        Mon, 18 Mar 2019 17:30:43 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwcIHFoZRgcNpgUZVwSaoHsKrh63C/yYMg3hbRGXhPoRErNIDkoD2D8T5qL1TvnvPqK3HIsHQ==
+X-Received: by 2002:a24:e502:: with SMTP id g2mr969834iti.78.1552955443357;
+        Mon, 18 Mar 2019 17:30:43 -0700 (PDT)
+Received: from lenovo-1.hsd1.mn.comcast.net (c-73-242-25-233.hsd1.mn.comcast.net. [73.242.25.233])
+        by smtp.googlemail.com with ESMTPSA id r2sm456894itk.5.2019.03.18.17.30.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 17:30:42 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs: Fix to avoid a potential NULL pointer dereference
+Date:   Mon, 18 Mar 2019 19:30:38 -0500
+Message-Id: <20190319003038.12896-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 5:24 PM James Bottomley <jejb@linux.ibm.com> wrote:
->
-> On Mon, 2019-03-18 at 16:45 -0700, Dan Williams wrote:
-> > Rather than fail initialization of the trusted.ko module, arrange for
-> > the module to load, but rely on trusted_instantiate() to fail
-> > trusted-key operations.
->
-> What actual problem is this fixing?  To me it would seem like an
-> enhancement to make the trusted module fail at load time if there's no
-> TPM rather than waiting until first use to find out it can never work.
-> Is there some piece of user code that depends on the successful
-> insertion of trusted.ko?
+In tc_dwc_g210_pltfm_probe, of_match_node can return a NULL pointer
+in case of failure. The patch avoids a potential NULL pointer dereference
+in such scenarios.
 
-The module dependency chain relies on it. If that can be broken that
-would also be an acceptable fix.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/scsi/ufs/tc-dwc-g210-pltfrm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I found this through the following dependency chain: libnvdimm.ko ->
-encrypted_keys.ko -> trusted.ko.
+diff --git a/drivers/scsi/ufs/tc-dwc-g210-pltfrm.c b/drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
+index 6dfe5a9206e9..2b5bc6bd715e 100644
+--- a/drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
++++ b/drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
+@@ -61,6 +61,8 @@ static int tc_dwc_g210_pltfm_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 
+ 	of_id = of_match_node(tc_dwc_g210_pltfm_match, dev->of_node);
++	if (!of_id)
++		return -ENXIO;
+ 	vops = (struct ufs_hba_variant_ops *)of_id->data;
+ 
+ 	/* Perform generic probe */
+-- 
+2.17.1
 
-"key_type_trusted" is the symbol that encrypted_keys needs regardless
-of whether the tpm is present.
