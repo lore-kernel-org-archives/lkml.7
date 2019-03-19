@@ -2,396 +2,69 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3DDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4349AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BA52133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fQ1ARGcR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xn7hfW6F"
+	by mail.kernel.org (Postfix) with ESMTP id 06D77213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCSMVS (ORCPT
+        id S1727535AbfCSMZz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:21:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56284 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfCSMVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:21:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 78A5960ACA; Tue, 19 Mar 2019 12:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552998076;
-        bh=gJ4At3Dx4VG2GuHlmgY//wxscomSJqOl3WrQE20f6/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQ1ARGcReMEenp3ToRFyyPt6Dv1TfccxA198i8aUyTxcsD3KwSPVYTHnybgxGFTXh
-         ze17FZTuHsz1dxustBXHImtWpY01Aooztf/oMZzq8M79VlLXosIsGNaLqcHKo0YqSq
-         okCeRB9uaIMvy6yUCbSg6cEjuXN/3+j308pOMTi8=
-Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1402860C72;
-        Tue, 19 Mar 2019 12:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552998074;
-        bh=gJ4At3Dx4VG2GuHlmgY//wxscomSJqOl3WrQE20f6/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xn7hfW6FpXdRSd5NsnxJ4HiNgbbm4bVWCQbhakQFlgEDD1Dl5M2rW5s02Yu6gOwSN
-         kkXOs32nCz0Ajl433u04BupLQGCS5bbX/lfzpNs9boEBABTneJJbQ8Z5GETXd37AKV
-         l9vgq1DHh7XM97Xuh+4dDUNz3QEHIo1ifzJf0xZI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1402860C72
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     rostedt@goodmis.org, mingo@redhat.com
-Cc:     linux-kernel@vger.kernel.org, sramana@codeaurora.org,
-        fweisbec@gmail.com, jolsa@redhat.com,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: [PATCH] perf: fix use after free of perf_trace_buf
-Date:   Tue, 19 Mar 2019 17:51:00 +0530
-Message-Id: <1552998060-5735-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <20190318151529.GT6058@hirez.programming.kicks-ass.net>
-References: <20190318151529.GT6058@hirez.programming.kicks-ass.net>
+        Tue, 19 Mar 2019 08:25:55 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:38040 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbfCSMZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:25:55 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 4966F14CEB; Tue, 19 Mar 2019 12:25:53 +0000 (GMT)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
+References: <20190226170710.12709-1-mans@mansr.com>
+        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
+        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
+        <20190319102840.GI6124@localhost> <yw1xd0mn16ev.fsf@mansr.com>
+        <20190319110819.GB3178@localhost>
+Date:   Tue, 19 Mar 2019 12:25:53 +0000
+In-Reply-To: <20190319110819.GB3178@localhost> (Johan Hovold's message of
+        "Tue, 19 Mar 2019 12:08:19 +0100")
+Message-ID: <yw1x8sxb125q.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SyS_perf_event_open()
-  free_event()
-    _free_event()
-      tp_perf_event_destroy()
-        perf_trace_destroy()
-          perf_trace_event_unreg() //free perf_trace_buf
+Johan Hovold <johan@kernel.org> writes:
 
-trace_cpu_frequency()
-  perf_trace_cpu()
-    perf_trace_buf_alloc() //access perf_trace_buf
+> On Tue, Mar 19, 2019 at 10:54:00AM +0000, Måns Rullgård wrote:
+>> Johan Hovold <johan@kernel.org> writes:
+>
+>> >> Regardless, setting the NCTRL flag should be harmless.
+>> >
+>> > Well, there are devices that depend on getting these requests, at least
+>> > for the QMI interface. But we can always revert if anyone complains.
+>> 
+>> The QMI interface doesn't even pretend to be a uart.  The other ones do,
+>> but there isn't actually any real uart behind them.  For instance, it
+>> doesn't matter what baud rate one sets.
+>
+> Sure, but some devices still require "DTR" to be set for the QMI
+> interface, so there not being any real uart is no guarantee that there
+> is no firmware that expects these calls.
 
-	CPU0					CPU1
-perf_trace_event_unreg()                perf_trace_cpu()
-					head = (event_call->perf_events)
+Now I'm thoroughly confused.  The QMI interface has a completely
+separate driver that creates a network device (if I'm reading the code
+correctly).
 
-free_percpu(tp_event->perf_events)
-tp_event->perf_events = NULL
---total_ref_count
-free_percpu(perf_trace_buf[i])
-perf_trace_buf[i] = NULL
-
-					raw_data = perf_trace_buf[rctx]
-					memset(raw_data)
-
-A potential race exists between access of perf_trace_buf from
-perf_trace_buf_alloc() and perf_trace_event_unreg(). This can
-result in perf_trace_buf[rctx] being NULL during access from memset()
-in perf_trace_buf_alloc().
-
-Change-Id: I95ae774b9fcc653aa808f2d9f3e4359b3605e909
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
----
- include/linux/trace_events.h    |  2 ++
- include/trace/perf.h            |  5 +++-
- kernel/trace/trace_event_perf.c | 63 ++++++++++++++++++++++++++++++++++-------
- kernel/trace/trace_kprobe.c     | 10 +++++--
- kernel/trace/trace_syscalls.c   | 14 ++++++---
- kernel/trace/trace_uprobe.c     |  2 ++
- 6 files changed, 79 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 8a62731..dbdad19 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -591,6 +591,8 @@ extern int  ftrace_profile_set_filter(struct perf_event *event, int event_id,
- extern void ftrace_profile_free_filter(struct perf_event *event);
- void perf_trace_buf_update(void *record, u16 type);
- void *perf_trace_buf_alloc(int size, struct pt_regs **regs, int *rctxp);
-+void get_perf_trace_buf(void);
-+void put_perf_trace_buf(void);
- 
- void bpf_trace_run1(struct bpf_prog *prog, u64 arg1);
- void bpf_trace_run2(struct bpf_prog *prog, u64 arg1, u64 arg2);
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index dbc6c74..f808c33 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -55,9 +55,10 @@
- 			     sizeof(u64));				\
- 	__entry_size -= sizeof(u32);					\
- 									\
-+	get_perf_trace_buf();						\
- 	entry = perf_trace_buf_alloc(__entry_size, &__regs, &rctx);	\
- 	if (!entry)							\
--		return;							\
-+		goto out;						\
- 									\
- 	perf_fetch_caller_regs(__regs);					\
- 									\
-@@ -68,6 +69,8 @@
- 	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
- 				  event_call, __count, __regs,		\
- 				  head, __task);			\
-+out:									\
-+	put_perf_trace_buf();						\
- }
- 
- /*
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index 4629a61..6caca88 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -21,7 +21,8 @@ typedef typeof(unsigned long [PERF_MAX_TRACE_SIZE / sizeof(unsigned long)])
- 	perf_trace_t;
- 
- /* Count the events in use (per event id, not per instance) */
--static int	total_ref_count;
-+static int alloc_ref_count;
-+static atomic_t access_ref_count[PERF_NR_CONTEXTS];
- 
- static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 				 struct perf_event *p_event)
-@@ -88,6 +89,34 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 	return 0;
- }
- 
-+void get_perf_trace_buf(void)
-+{
-+	int rctx;
-+
-+	rctx = perf_swevent_get_recursion_context();
-+	if (rctx < 0)
-+		return;
-+
-+	atomic_inc(&access_ref_count[rctx]);
-+	perf_swevent_put_recursion_context(rctx);
-+}
-+EXPORT_SYMBOL_GPL(get_perf_trace_buf);
-+NOKPROBE_SYMBOL(get_perf_trace_buf);
-+
-+void put_perf_trace_buf(void)
-+{
-+	int rctx;
-+
-+	rctx = perf_swevent_get_recursion_context();
-+	if (rctx < 0)
-+		return;
-+
-+	atomic_dec(&access_ref_count[rctx]);
-+	perf_swevent_put_recursion_context(rctx);
-+}
-+EXPORT_SYMBOL_GPL(put_perf_trace_buf);
-+NOKPROBE_SYMBOL(put_perf_trace_buf);
-+
- static int perf_trace_event_reg(struct trace_event_call *tp_event,
- 				struct perf_event *p_event)
- {
-@@ -108,7 +137,7 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
- 
- 	tp_event->perf_events = list;
- 
--	if (!total_ref_count) {
-+	if (!alloc_ref_count) {
- 		char __percpu *buf;
- 		int i;
- 
-@@ -125,11 +154,11 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
- 	if (ret)
- 		goto fail;
- 
--	total_ref_count++;
-+	alloc_ref_count++;
- 	return 0;
- 
- fail:
--	if (!total_ref_count) {
-+	if (!alloc_ref_count) {
- 		int i;
- 
- 		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
-@@ -150,6 +179,7 @@ static void perf_trace_event_unreg(struct perf_event *p_event)
- {
- 	struct trace_event_call *tp_event = p_event->tp_event;
- 	int i;
-+	bool retry;
- 
- 	if (--tp_event->perf_refcount > 0)
- 		goto out;
-@@ -165,10 +195,21 @@ static void perf_trace_event_unreg(struct perf_event *p_event)
- 	free_percpu(tp_event->perf_events);
- 	tp_event->perf_events = NULL;
- 
--	if (!--total_ref_count) {
--		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
--			free_percpu(perf_trace_buf[i]);
--			perf_trace_buf[i] = NULL;
-+	if (!--alloc_ref_count) {
-+again:
-+		retry = false;
-+		for (i = 0; (i < PERF_NR_CONTEXTS) && perf_trace_buf[i]; i++) {
-+			if (!atomic_read(&access_ref_count[i])) {
-+				free_percpu(perf_trace_buf[i]);
-+				perf_trace_buf[i] = NULL;
-+			} else
-+				retry = true;
-+		}
-+
-+		if (retry) {
-+			set_current_state(TASK_INTERRUPTIBLE);
-+			schedule_timeout(msecs_to_jiffies(1));
-+			goto again;
- 		}
- 	}
- out:
-@@ -453,15 +494,17 @@ void perf_trace_buf_update(void *record, u16 type)
- 	memset(&regs, 0, sizeof(regs));
- 	perf_fetch_caller_regs(&regs);
- 
-+	get_perf_trace_buf();
- 	entry = perf_trace_buf_alloc(ENTRY_SIZE, NULL, &rctx);
- 	if (!entry)
--		return;
-+		goto out;
- 
- 	entry->ip = ip;
- 	entry->parent_ip = parent_ip;
- 	perf_trace_buf_submit(entry, ENTRY_SIZE, rctx, TRACE_FN,
- 			      1, &regs, &head, NULL);
--
-+out:
-+	put_perf_trace_buf();
- #undef ENTRY_SIZE
- }
- 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 5d5129b..7830190 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1166,15 +1166,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
- 	size = ALIGN(__size + sizeof(u32), sizeof(u64));
- 	size -= sizeof(u32);
- 
-+	get_perf_trace_buf();
- 	entry = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!entry)
--		return 0;
-+		goto out;
- 
- 	entry->ip = (unsigned long)tk->rp.kp.addr;
- 	memset(&entry[1], 0, dsize);
- 	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
- 	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
- 			      head, NULL);
-+out:
-+	put_perf_trace_buf();
- 	return 0;
- }
- NOKPROBE_SYMBOL(kprobe_perf_func);
-@@ -1202,15 +1205,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
- 	size = ALIGN(__size + sizeof(u32), sizeof(u64));
- 	size -= sizeof(u32);
- 
-+	get_perf_trace_buf();
- 	entry = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!entry)
--		return;
-+		goto out;
- 
- 	entry->func = (unsigned long)tk->rp.kp.addr;
- 	entry->ret_ip = (unsigned long)ri->ret_addr;
- 	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
- 	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
- 			      head, NULL);
-+out:
-+	put_perf_trace_buf();
- }
- NOKPROBE_SYMBOL(kretprobe_perf_func);
- 
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index f93a56d..a08110f 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -608,9 +608,10 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
- 	size = ALIGN(size + sizeof(u32), sizeof(u64));
- 	size -= sizeof(u32);
- 
-+	get_perf_trace_buf();
- 	rec = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!rec)
--		return;
-+		goto out;
- 
- 	rec->nr = syscall_nr;
- 	syscall_get_arguments(current, regs, 0, sys_data->nb_args,
-@@ -620,12 +621,14 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
- 	     !perf_call_bpf_enter(sys_data->enter_event, regs, sys_data, rec)) ||
- 	    hlist_empty(head)) {
- 		perf_swevent_put_recursion_context(rctx);
--		return;
-+		goto out;
- 	}
- 
- 	perf_trace_buf_submit(rec, size, rctx,
- 			      sys_data->enter_event->event.type, 1, regs,
- 			      head, NULL);
-+out:
-+	put_perf_trace_buf();
- }
- 
- static int perf_sysenter_enable(struct trace_event_call *call)
-@@ -706,9 +709,10 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
- 	size = ALIGN(sizeof(*rec) + sizeof(u32), sizeof(u64));
- 	size -= sizeof(u32);
- 
-+	get_perf_trace_buf();
- 	rec = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!rec)
--		return;
-+		goto out;
- 
- 	rec->nr = syscall_nr;
- 	rec->ret = syscall_get_return_value(current, regs);
-@@ -717,11 +721,13 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
- 	     !perf_call_bpf_exit(sys_data->exit_event, regs, rec)) ||
- 	    hlist_empty(head)) {
- 		perf_swevent_put_recursion_context(rctx);
--		return;
-+		goto out;
- 	}
- 
- 	perf_trace_buf_submit(rec, size, rctx, sys_data->exit_event->event.type,
- 			      1, regs, head, NULL);
-+out:
-+	put_perf_trace_buf();
- }
- 
- static int perf_sysexit_enable(struct trace_event_call *call)
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index be78d99..c931b22 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1116,6 +1116,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 	if (hlist_empty(head))
- 		goto out;
- 
-+	get_perf_trace_buf();
- 	entry = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!entry)
- 		goto out;
-@@ -1140,6 +1141,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
- 			      head, NULL);
-  out:
-+	put_perf_trace_buf();
- 	preempt_enable();
- }
- 
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Måns Rullgård
