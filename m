@@ -2,104 +2,147 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992A5C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9CEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6BD2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhZYE8vc"
+	by mail.kernel.org (Postfix) with ESMTP id 908822133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553005934;
+	bh=z79PqI2Xm3jJUWYj8ie8fuE2Nwiyrm790VwkqP6oY28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VpyQ6TUTkIpdmMKPOjUlaUPjEs/Ark3i+Kzz+dbLn3tVGHXLtJNbFLNLTL5dzJ+JU
+	 i9FKJjq+RA4T0r/s72iJjL1dw43vOHs7GZLJ88m1Lh2QV/Y0F9pqxWVxXUlUrN7gdF
+	 sZfZ7YTa8/c90SmpVKheLLHsUtlq2gKoyNvRTHyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfCSObW (ORCPT
+        id S1727605AbfCSOcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:31:22 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35207 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfCSObV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:31:21 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so3322971pgf.2;
-        Tue, 19 Mar 2019 07:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pXyy2XHMRXdAboB3MaHiFHNZNQs1N3M7YhVrRSI+uBE=;
-        b=fhZYE8vcjy3XP2SayoF6sCH4JnUBNKUpDRCrLWplNMd7V8Ptjp6TtEWEZ/iAngJ0f8
-         VTjdorw0ojy5q9Vw3AJ9ApdBTyu3nFjR5WkXgYvx4MDWMqYmNc5Wqn3Tksp4USxpYHOi
-         FrMGR8vZLI3foBSTblKuK5FIeuXn6cvZMQWXnaFgQUuc/RaSMZunrg2PrnLxFk1aHUsu
-         /xgpPWVrXA83GUH6Iq1zA5Ax0LUt4s0nEqzn2CZPrQTQVv9Qe5N5a4OAhy39sM6GWMRl
-         bqeaQEdyhFsu1L9VLLlILVanCRcGPhWdXShLYpWZXcssao0H2lKHRfAIuWOCNk9II5IR
-         67Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pXyy2XHMRXdAboB3MaHiFHNZNQs1N3M7YhVrRSI+uBE=;
-        b=a/aLaM/xnkIVH4tffuXIZ0NgtaDS35rWbfnMkWPSbho3GFOAtLOqypnl0GDSzJxf74
-         72rz/9b+AliH+F6G+o44x6gd53UkjoSOPm0e/ahL9qtxmPrS/SnPXvcIliQ3aSHN9JUY
-         5YB/dar7n2Qp6IxdHL1U9hM4x2EkfRVHtgUhoW1t4O0ZrTyeSi3wQYl3CWuzU0PaigXD
-         F7/g6Nv8p58kOB5yAd5GGnVnmlUvBk68pWN5HztNkzEQLJqfjxkFrxXTauKuukvpexVC
-         GngJKcod6hvZ9w9mCQl0no3Ak5wVFkFDzaKd1u3ykOz2OHIh/F2NlLqnAYTc4NdJ2GTa
-         0RrQ==
-X-Gm-Message-State: APjAAAUpUDxyv9qvGZCiA56oJtPjJZJlhr4ZGoCuvU/+sb7e/frDY6hj
-        HaWcLLzAJqWt36ccSIk3YHc=
-X-Google-Smtp-Source: APXvYqwGjxWurLHDOcF2Rda1fE6VmYzruBeTGkW6QsyKNaJJbKF0lo8D2R8gQVR03qUGi0hy/u7NHg==
-X-Received: by 2002:a65:4385:: with SMTP id m5mr2067440pgp.406.1553005880760;
-        Tue, 19 Mar 2019 07:31:20 -0700 (PDT)
-Received: from localhost.localdomain ([47.91.249.165])
-        by smtp.gmail.com with ESMTPSA id f10sm15839243pgo.55.2019.03.19.07.31.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 19 Mar 2019 07:31:20 -0700 (PDT)
-From:   Jeff Xie <chongguiguzi@gmail.com>
-To:     pkshih@realtek.com, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chongguiguzi@gmail.com
-Subject: [PATCH] net:rtlwifi:move spin_lock_bh to spin_lock in tasklet
-Date:   Tue, 19 Mar 2019 22:31:10 +0800
-Message-Id: <1553005870-28018-1-git-send-email-chongguiguzi@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Mar 2019 10:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbfCSOcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:32:12 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 334492085A;
+        Tue, 19 Mar 2019 14:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553005931;
+        bh=z79PqI2Xm3jJUWYj8ie8fuE2Nwiyrm790VwkqP6oY28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qc4ZakmafugOe5+ofvx/zIYJUqZvfFEUhb1bgJw5oFt2bdWe9RIyJvMmm9jVPvTMR
+         she+Qx3y8CIZMxqiOkyPXYFR+xd9fRxa0E1jX9+bd4Q7EpmSlpcyqJWKreSArXlh+d
+         uWK1dFjeAhE3m0gFJIUnmP9bzBdcaHgq5YKrVo6Y=
+Date:   Tue, 19 Mar 2019 22:31:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "spencercw@gmail.com" <spencercw@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Subject: Re: [PATCH v6 1/4] arm64: dts: imx8mq: Add SDMA nodes
+Message-ID: <20190319143139.GA24315@dragon>
+References: <20190308120141.3698-1-daniel.baluta@nxp.com>
+ <20190308120141.3698-2-daniel.baluta@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190308120141.3698-2-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unnecessary to call spin_lock_bh in a tasklet.
+On Fri, Mar 08, 2019 at 12:02:22PM +0000, Daniel Baluta wrote:
+> SDMA1 is part of AIPS-3 region and SDMA2 is part
+> of AIPS-1 region.
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
+Reviewed-by tag should go after your SoB, since that's the sequence of
+how they come. 
 
----
- drivers/net/wireless/realtek/rtlwifi/pci.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> [initial submit in i.MX internal tree]
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> [adaptation for linux-next]
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index 48ca521..4055e0a 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -499,16 +499,16 @@ static void _rtl_pci_tx_chk_waitq(struct ieee80211_hw *hw)
- 
- 			memset(&tcb_desc, 0, sizeof(struct rtl_tcb_desc));
- 
--			spin_lock_bh(&rtlpriv->locks.waitq_lock);
-+			spin_lock(&rtlpriv->locks.waitq_lock);
- 			if (!skb_queue_empty(&mac->skb_waitq[tid]) &&
- 			    (ring->entries - skb_queue_len(&ring->queue) >
- 			     rtlhal->max_earlymode_num)) {
- 				skb = skb_dequeue(&mac->skb_waitq[tid]);
- 			} else {
--				spin_unlock_bh(&rtlpriv->locks.waitq_lock);
-+				spin_unlock(&rtlpriv->locks.waitq_lock);
- 				break;
- 			}
--			spin_unlock_bh(&rtlpriv->locks.waitq_lock);
-+			spin_unlock(&rtlpriv->locks.waitq_lock);
- 
- 			/* Some macaddr can't do early mode. like
- 			 * multicast/broadcast/no_qos data
--- 
-2.7.4
+I would see these notes in commit log or even just cover letter.
 
+Shawn
+
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 9155bd4784eb..9d48450453fb 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -234,6 +234,17 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			sdma2: sdma@302c0000 {
+> +				compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
+> +				reg = <0x302c0000 0x10000>;
+> +				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
+> +					 <&clk IMX8MQ_CLK_SDMA2_ROOT>;
+> +				clock-names = "ipg", "ahb";
+> +				#dma-cells = <3>;
+> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+> +			};
+> +
+>  			iomuxc: iomuxc@30330000 {
+>  				compatible = "fsl,imx8mq-iomuxc";
+>  				reg = <0x30330000 0x10000>;
+> @@ -575,6 +586,17 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			sdma1: sdma@30bd0000 {
+> +				compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+> +				reg = <0x30bd0000 0x10000>;
+> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SDMA1_ROOT>,
+> +					 <&clk IMX8MQ_CLK_SDMA1_ROOT>;
+> +				clock-names = "ipg", "ahb";
+> +				#dma-cells = <3>;
+> +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+> +			};
+> +
+>  			fec1: ethernet@30be0000 {
+>  				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+>  				reg = <0x30be0000 0x10000>;
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
