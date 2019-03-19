@@ -2,76 +2,209 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8DFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3592133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552993195;
-	bh=ovqFhIl8Wav12H/0A9w1/UhSD/IQTNxRcCh8i6YY9Lg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Eyw9BG56Yerg3HdY8SXjrk7UpBlNU21rRzo2v4UVhguIEPwlGZEVkeM6bNpLL1zdz
-	 ucTh6W4979ZF6nt9YGGEkKQn6D45cLvgg9WjLSFGGm1zn3q29Z03wKXcRucg01raFR
-	 N7cWtzkL3myhBE8oPmEoIdv311gFfmx5KYnfvMMI=
+	by mail.kernel.org (Postfix) with ESMTP id 295A12133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfCSK7y (ORCPT
+        id S1727638AbfCSLAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
+        Tue, 19 Mar 2019 07:00:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62322 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbfCSK7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 06:59:53 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE61920828;
-        Tue, 19 Mar 2019 10:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552993192;
-        bh=ovqFhIl8Wav12H/0A9w1/UhSD/IQTNxRcCh8i6YY9Lg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=u2m5dU2rDH452mfL4Gvh65wgQege1W32YgSBj9ZzKTc7dArn075jzOX9cgLcv4r0Z
-         VQuOcdKSVgnoM4iNBKsfhjfhqbD+6AtMPse0G4R05FI7+FZvpNx7B5XiOkdP61rvLE
-         /2MgOXWRxMiSgv6k4sSB7y+EhAxEZhag3l2CxVNQ=
-Date:   Tue, 19 Mar 2019 11:59:49 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] HID: intel-ish-hid: Clean up external
- interfaces
-In-Reply-To: <20190318191428.6527-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <nycvar.YFH.7.76.1903191158230.19912@cbobk.fhfr.pm>
-References: <20190318191428.6527-1-srinivas.pandruvada@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1727606AbfCSLAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:00:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 03:59:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
+   d="scan'208";a="156306568"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2019 03:59:57 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 09D3B492; Tue, 19 Mar 2019 12:59:56 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] platform/x86: Add support for Basin Cove power button
+Date:   Tue, 19 Mar 2019 12:59:56 +0200
+Message-Id: <20190319105956.71672-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019, Srinivas Pandruvada wrote:
+This provides a new input driver for supporting the power button on
+Basin Cove PMIC, found on Intel Merrifield-based devices.
 
-> NOT FOR kernel v5.1.
-> 
-> v2
-> - Rebased on the top of
-> "HID: intel-ish: enable raw interface to HID devices on ISH"
-> which Jiri already applied.
-> - Also exported devc pointer for DMA
+The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
 
-I've already reviewed v1 before, so I just went through these highlighted 
-changes above, and applied.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig              |  11 +++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
 
-Thanks,
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a1ed13183559..85b92a95e4c8 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_chtdc_ti_pwrbtn.
+ 
++config INTEL_MRFLD_PWRBTN
++	tristate "Intel Merrifield Basin Cove power button driver"
++	depends on INTEL_SOC_PMIC_MRFLD
++	depends on INPUT
++	---help---
++	  This option adds a power button driver for Basin Cove PMIC
++	  on Intel Merrifield devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_mrfld_pwrbtn.
++
+ config I2C_MULTI_INSTANTIATE
+ 	tristate "I2C multi instantiate pseudo device driver"
+ 	depends on I2C && ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 86cb76677bc8..87b0069bd781 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
++obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
+ obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
+ obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
+diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+new file mode 100644
+index 000000000000..d58fea51747e
+--- /dev/null
++++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Power-button driver for Basin Cove PMIC
++ *
++ * Copyright (c) 2019, Intel Corporation.
++ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++ */
++
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/mfd/intel_soc_pmic_mrfld.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/slab.h>
++
++#define BCOVE_PBSTATUS		0x27
++#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
++
++static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
++{
++	struct input_dev *input = dev_id;
++	struct device *dev = input->dev.parent;
++	struct regmap *regmap = dev_get_drvdata(dev);
++	unsigned int state;
++	int ret;
++
++	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
++	if (ret)
++		return IRQ_NONE;
++
++	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
++	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
++	input_sync(input);
++
++	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	return IRQ_HANDLED;
++}
++
++static int mrfld_pwrbtn_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
++	struct input_dev *input;
++	int irq, ret;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++	input->name = pdev->name;
++	input->phys = "power-button/input0";
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = dev;
++	input_set_capability(input, EV_KEY, KEY_POWER);
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	dev_set_drvdata(dev, pmic->regmap);
++
++	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
++					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
++					input);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
++
++	device_init_wakeup(dev, true);
++	dev_pm_set_wake_irq(dev, irq);
++	return 0;
++}
++
++static int mrfld_pwrbtn_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	dev_pm_clear_wake_irq(dev);
++	device_init_wakeup(dev, false);
++	return 0;
++}
++
++static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
++	{ .name = "mrfld_bcove_pwrbtn" },
++	{}
++};
++MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
++
++static struct platform_driver mrfld_pwrbtn_driver = {
++	.driver = {
++		.name	= "mrfld_bcove_pwrbtn",
++	},
++	.probe		= mrfld_pwrbtn_probe,
++	.remove		= mrfld_pwrbtn_remove,
++	.id_table	= mrfld_pwrbtn_id_table,
++};
++module_platform_driver(mrfld_pwrbtn_driver);
++
++MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
++MODULE_LICENSE("GPL v2");
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.1
 
