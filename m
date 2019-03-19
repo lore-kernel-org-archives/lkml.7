@@ -6,85 +6,65 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D30FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBE9C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FAC20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10612075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553025294;
-	bh=+USuLGAVfj14nrnBqSIcBSk7vFbU2E8ZesZxqqH4cEY=;
+	s=default; t=1553025591;
+	bh=KOwOkhbz8WmBoAiT/wnLZx0PFhrFTU6iLPHTKe2BIzw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijz7VQXkBNf4e9FSNawYuzH3OlYsFy/fpPLjw8b3liKcLPHh2gEPtl65Ffi5ydbSE
-	 mp/l28A6HklBZV1zgScjIE6AlJf4lniZTl6bHNJwrh3KJ53/zq48ArFTx2sChjiWFm
-	 suvqaM/t8hzJcCf3SpEbhbnqnoZdVy46R3FSa9nI=
+	b=czo+hcLNyNH0Xl68N+MDgrj3xDUVcMOlLHA1wmRdl75mPL3GGo01g7jmp16Ou2NaG
+	 LPpLuKOVxWgVI4MEQd1HYtgwYBsQjrZn79DjFdy189ZRhH0tYKWDcF/mUz5/DkVe9m
+	 8Ao4XgftURBzja4/5OCskMO4ALRK7WA4ivq2QvUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfCSTyw (ORCPT
+        id S1727359AbfCST7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 15:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
+        Tue, 19 Mar 2019 15:59:50 -0400
+Received: from mga18.intel.com ([134.134.136.126]:17220 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfCSTyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 15:54:52 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2FB2075C;
-        Tue, 19 Mar 2019 19:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553025291;
-        bh=+USuLGAVfj14nrnBqSIcBSk7vFbU2E8ZesZxqqH4cEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TJ1Okd/PYOkUgkbR/iUGyt4k369MptFf1PmSSdUE7mxvMof0KCwjc1wuYqhv0w4oF
-         9bZRkzSUnARPXhNosSWp0M/f2TZW2lIF/k6qVWD+0KJr2BGYKp59nlyuu6LMze0Lb/
-         hxK35lScQlBDmpZmFzqkato2hAAXgHaO0NaIkIF0=
-Date:   Tue, 19 Mar 2019 15:54:48 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH AUTOSEL 4.14 22/33] kasan, slab: make freelist stored
- without tags
-Message-ID: <20190319195448.GA25262@sasha-vm>
-References: <20190313191506.159677-1-sashal@kernel.org>
- <20190313191506.159677-22-sashal@kernel.org>
- <CAAeHK+xMxX3Baou=W914tbbPhuPGCBd4wJdgS3O459JEwxw5OQ@mail.gmail.com>
+        id S1726925AbfCST7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 15:59:50 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 12:59:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
+   d="scan'208";a="330084538"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Mar 2019 12:59:48 -0700
+Date:   Tue, 19 Mar 2019 14:00:44 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc:     bhelgaas@google.com, austin_bolen@dell.com,
+        alex_gagniuc@dellteam.com, keith.busch@intel.com,
+        Shyam_Iyer@Dell.com, lukas@wunner.de, okaya@kernel.org,
+        torvalds@linux-foundation.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/LINK: bw_notification: Do not leave interrupt
+ handler NULL
+Message-ID: <20190319200044.GE24176@localhost.localdomain>
+References: <CAHk-=wgM-5WfPW9LNHGfc1RxjVbDvHZqNfxyLVRSPP0R4jetDg@mail.gmail.com>
+ <20190319011214.7847-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+xMxX3Baou=W914tbbPhuPGCBd4wJdgS3O459JEwxw5OQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190319011214.7847-1-mr.nuke.me@gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 08:18:24PM +0100, Andrey Konovalov wrote:
->On Wed, Mar 13, 2019 at 8:16 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> From: Andrey Konovalov <andreyknvl@google.com>
->>
->> [ Upstream commit 51dedad06b5f6c3eea7ec1069631b1ef7796912a ]
->
->Hi Sasha,
->
->None of the 4.9, 4.14, 4.19 or 4.20 have tag-based KASAN, so
->backporting these 3 KASAN related patches doesn't make much sense.
->
->Thanks!
+On Mon, Mar 18, 2019 at 08:12:04PM -0500, Alexandru Gagniuc wrote:
+> I was able to test this on edge-triggered interrupts. None of my
+> machines have PCIe ports that use level-triggered interrupts. This
+> might not be too straightforward to test without a hardware yanker,
+> but if there's a way to force a specific interrupt to be level
+> triggered, I could do the testing on my end.
 
-Dropped, thank you!
-
---
-Thanks,
-Sasha
+Spec says INTx emulation is required, so I think it ought to be possible
+to force them to level-triggered if you disable MSI. The kernel parameter
+'pci=nomsi' can force everything to INTx.
