@@ -2,209 +2,105 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14336C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295A12133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D523120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="boBr3bnV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfCSLAC (ORCPT
+        id S1727452AbfCSLGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:00:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62322 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfCSLAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:00:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 03:59:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
-   d="scan'208";a="156306568"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2019 03:59:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 09D3B492; Tue, 19 Mar 2019 12:59:56 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] platform/x86: Add support for Basin Cove power button
-Date:   Tue, 19 Mar 2019 12:59:56 +0200
-Message-Id: <20190319105956.71672-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 19 Mar 2019 07:06:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39120 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCSLGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:06:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aDUQb474lJl6A0Toj8sTsjQtApQ99VaLei1vd61Z9Yo=; b=boBr3bnVuEMACnZ6SvUpq5FNM
+        m7wuAztr7rZoahTvV21/Oqo8tvAj613ANwCMaDz/jaGl1XhA6Nc4bwS1n3KAiGR6jayTU7onpJgJL
+        Ebq2Xa2KCIW12V6zLdhW3KiD/FzaqpY/XCg1cM/K1Lcf2GLaSKtrWR0+r1zjnqLIza3rJq2VWqQB2
+        bZCPRSwqVq57iYS8YHrE3Jh4yRHfIebiIhdxc3I0LWk+WiUUHCZK9lwKPK0QhEiNspElO8kuZp1+q
+        x+f56inQrAvjQed21wDthDEcjP8wFAz77WZ+JxZScOM/bjbmz3Z8riMi9UuRMh0dVNzXXQi+Gcmo7
+        cnrj1xTsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6CZ5-0008Lr-K5; Tue, 19 Mar 2019 11:05:51 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1E9B123E8CA31; Tue, 19 Mar 2019 12:05:49 +0100 (CET)
+Date:   Tue, 19 Mar 2019 12:05:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
+Message-ID: <20190319110549.GC5996@hirez.programming.kicks-ass.net>
+References: <20190314130113.919278615@infradead.org>
+ <20190314130705.441549378@infradead.org>
+ <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This provides a new input driver for supporting the power button on
-Basin Cove PMIC, found on Intel Merrifield-based devices.
+On Mon, Mar 18, 2019 at 11:29:25PM -0700, Stephane Eranian wrote:
 
-The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -3410,7 +3410,7 @@ tfa_get_event_constraints(struct cpu_hw_
+> >         /*
+> >          * Without TFA we must not use PMC3.
+> >          */
+> > -       if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
+> > +       if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
+> >                 c = dyn_constraint(cpuc, c, idx);
+> >                 c->idxmsk64 &= ~(1ULL << 3);
+> >                 c->weight--;
+> >
+> >
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/Kconfig              |  11 +++
- drivers/platform/x86/Makefile             |   1 +
- drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
- create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
+> I was not cc'd on the patch that added  allow_tsx_force_abort, so I
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a1ed13183559..85b92a95e4c8 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_chtdc_ti_pwrbtn.
- 
-+config INTEL_MRFLD_PWRBTN
-+	tristate "Intel Merrifield Basin Cove power button driver"
-+	depends on INTEL_SOC_PMIC_MRFLD
-+	depends on INPUT
-+	---help---
-+	  This option adds a power button driver for Basin Cove PMIC
-+	  on Intel Merrifield devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_mrfld_pwrbtn.
-+
- config I2C_MULTI_INSTANTIATE
- 	tristate "I2C multi instantiate pseudo device driver"
- 	depends on I2C && ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 86cb76677bc8..87b0069bd781 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-+obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
- obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
-diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-new file mode 100644
-index 000000000000..d58fea51747e
---- /dev/null
-+++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Power-button driver for Basin Cove PMIC
-+ *
-+ * Copyright (c) 2019, Intel Corporation.
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/device.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/mfd/intel_soc_pmic_mrfld.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/slab.h>
-+
-+#define BCOVE_PBSTATUS		0x27
-+#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
-+
-+static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
-+{
-+	struct input_dev *input = dev_id;
-+	struct device *dev = input->dev.parent;
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+	unsigned int state;
-+	int ret;
-+
-+	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
-+	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
-+	input_sync(input);
-+
-+	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	return IRQ_HANDLED;
-+}
-+
-+static int mrfld_pwrbtn_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-+	struct input_dev *input;
-+	int irq, ret;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+	input->name = pdev->name;
-+	input->phys = "power-button/input0";
-+	input->id.bustype = BUS_HOST;
-+	input->dev.parent = dev;
-+	input_set_capability(input, EV_KEY, KEY_POWER);
-+	ret = input_register_device(input);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(dev, pmic->regmap);
-+
-+	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
-+					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
-+					input);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
-+
-+	device_init_wakeup(dev, true);
-+	dev_pm_set_wake_irq(dev, irq);
-+	return 0;
-+}
-+
-+static int mrfld_pwrbtn_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	dev_pm_clear_wake_irq(dev);
-+	device_init_wakeup(dev, false);
-+	return 0;
-+}
-+
-+static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
-+	{ .name = "mrfld_bcove_pwrbtn" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
-+
-+static struct platform_driver mrfld_pwrbtn_driver = {
-+	.driver = {
-+		.name	= "mrfld_bcove_pwrbtn",
-+	},
-+	.probe		= mrfld_pwrbtn_probe,
-+	.remove		= mrfld_pwrbtn_remove,
-+	.id_table	= mrfld_pwrbtn_id_table,
-+};
-+module_platform_driver(mrfld_pwrbtn_driver);
-+
-+MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+Yeah, that never was public :-( I didn't particularly like that, but
+that's the way it is.
 
+> will give some comments here.
+
+> If I understand the goal of the control parameter it is to turn on/off
+> the TFA workaround and thus determine whether or not PMC3 is
+> available. I don't know why you would need to make this a runtime
+> tunable.
+
+Not quite; the control on its own doesn't directly write the MSR. And
+even when the work-around is allowed, we'll not set the MSR unless there
+is also demand for PMC3.
+
+It is a runtime tunable because boot parameters suck.
+
+> That seems a bit dodgy. But given the code you have here right now, we
+> have to deal with it. A sysadmin could flip the control at any time,
+> including when PMC3 is already in used by some events. I do not see
+> the code that schedules out all the events on all CPUs once PMC3
+> becomes unavailable. You cannot just rely on the next context-switch
+> or timer tick for multiplexing.
+
+Yeah, meh. You're admin, you can 'fix' it. In practise I don't expect
+most people to care about the knob, and the few people that do, should
+be able to make it work.
