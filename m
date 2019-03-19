@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950C0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A31C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C26E20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB7020989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DCkHyQci"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kXwgu0+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfCSHKU (ORCPT
+        id S1727482AbfCSHK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:10:20 -0400
-Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:34116
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Tue, 19 Mar 2019 03:10:26 -0400
+Received: from mail-eopbgr70048.outbound.protection.outlook.com ([40.107.7.48]:20579
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727274AbfCSHKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:10:17 -0400
+        id S1726916AbfCSHKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 03:10:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=12B47s41r6WVMjNwY2Bys+/e8IDF2fW1ux+7yBvMVWs=;
- b=DCkHyQciplSbVEl/CoQB6WW6gsutMYCOadBGNL5DLM92+w5/aMeoKX1LByc5H+N+hjAABkA1sbPT4LvEOwYA8ikZXKbNDelB8wZAIjR4mGcZ5F5790L4kVPlWMPsyeaBb7sFcYHC044RXpaTov3NYJ6ZUuiJC0p4RYuY6zO7+tA=
+ bh=/q/jHYIXee5xLCazm1ZVpIjhPFGb5wQu6PoxNdJNRRk=;
+ b=kXwgu0+MPsazSsrqUbuYyyqHO6VJz1B+8zbh9MEvhCXccjj5u/T8VktsEQ2nMJZkXX1zFwy49QYeukwPkSauYi8vsIA8c9ZzXrx7NWgWlHViZeLAxBdrFKd2qUeSbNtSL4EnrWNaIGWTGGHlGI+Tinz23BJ5P+A9aEfWTyjwnDc=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
  DB3PR0402MB3884.eurprd04.prod.outlook.com (52.134.71.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 19 Mar 2019 07:10:15 +0000
+ 15.20.1709.13; Tue, 19 Mar 2019 07:10:21 +0000
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 07:10:15 +0000
+ 07:10:21 +0000
 From:   Anson Huang <anson.huang@nxp.com>
 To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -57,13 +57,11 @@ To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
 CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH RESEND V6 3/5] ARM: imx_v6_v7_defconfig: Add TPM PWM support
- by default
-Thread-Topic: [PATCH RESEND V6 3/5] ARM: imx_v6_v7_defconfig: Add TPM PWM
- support by default
-Thread-Index: AQHU3iLNBitcEBT3h0+kGT3ni0XWDA==
-Date:   Tue, 19 Mar 2019 07:10:15 +0000
-Message-ID: <1552979097-5814-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V6 4/5] ARM: dts: imx7ulp: Add pwm0 support
+Thread-Topic: [PATCH RESEND V6 4/5] ARM: dts: imx7ulp: Add pwm0 support
+Thread-Index: AQHU3iLQ4glW8M+L8kyPGsW7a35pQQ==
+Date:   Tue, 19 Mar 2019 07:10:21 +0000
+Message-ID: <1552979097-5814-5-git-send-email-Anson.Huang@nxp.com>
 References: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
 In-Reply-To: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
@@ -79,23 +77,23 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e885119e-3579-41ac-6405-08d6ac39ef44
+x-ms-office365-filtering-correlation-id: 846ca5f0-3d2f-4576-fcef-08d6ac39f2fd
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3884;
 x-ms-traffictypediagnostic: DB3PR0402MB3884:
-x-microsoft-antispam-prvs: <DB3PR0402MB3884A500B7D164AF12775D5DF5400@DB3PR0402MB3884.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB3PR0402MB3884654480503D2F73E26F34F5400@DB3PR0402MB3884.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(86362001)(25786009)(7736002)(305945005)(7416002)(4326008)(50226002)(256004)(14454004)(102836004)(110136005)(2201001)(8936002)(316002)(11346002)(476003)(2616005)(2501003)(446003)(99286004)(478600001)(97736004)(81156014)(81166006)(6512007)(53936002)(186003)(8676002)(2906002)(68736007)(71190400001)(71200400001)(6116002)(3846002)(66066001)(76176011)(52116002)(36756003)(6506007)(386003)(6436002)(26005)(106356001)(5660300002)(105586002)(486006)(4744005)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3884;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(86362001)(25786009)(7736002)(305945005)(7416002)(4326008)(14444005)(50226002)(256004)(14454004)(102836004)(110136005)(2201001)(8936002)(316002)(11346002)(476003)(2616005)(2501003)(446003)(99286004)(478600001)(97736004)(81156014)(81166006)(6512007)(53936002)(186003)(8676002)(2906002)(68736007)(71190400001)(71200400001)(6116002)(3846002)(66066001)(76176011)(52116002)(36756003)(6506007)(386003)(6436002)(26005)(106356001)(5660300002)(105586002)(486006)(4744005)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3884;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4z8u+JjNTD4hhSJ3QFxQas/CEaRXCl95Jzu7k0X5LuQ6H27+4AkUzPogmxXOU70ExhvJGfQrA51ImY4dYtHOiDW69/Zr5FnEg37+8cniyff5V2r/36j2OfijM7Tm8QyEUMaX/MZ/FYBP9QeBRluCytHRGK8DPVuAFnmznGU3qw3GL57f+wPEyZLWm2vDe1JQUhGrxP/UTbqjBNH4MvYSB69nNJX3tD77Oag8J5xWCwu5wXorecTnujkyeEgFxHaDDlDKdU+6Yn8rGpn4wb7tYXaXA/uIS2nLxfRYN6Xf0J1XBZcg0+FwTiwGBoYvkSIQq3rWvFoPkhMi/eS+pHrH7W4KassjWwn+uzHMf4+ahcFIyDtmMvNNZli47YtZISgyn4r15iF1CqB9m6PXjm1mwaAHQ/n6gM1S93qNIZN57kg=
+x-microsoft-antispam-message-info: L7l29Gq05f+scs/t/ry1ZuMoEVWaG4iQxtKDxLVgl15zMlpG7Z6bfmGGjmS2FqCL6PqfpCA/qaToRJDNlFLmD7r35fhU8uJ3jVajob9I+8ifjKk+POqNSIqN9vauTxjgpgFMnPuNBxiOBZ5K9lO/5Bk0lD44WuGfG63flHOq3YJJO71uU41KznBhRJGB4I9Y6wjIGKyEwZoZn08yKcFMdNd3kYkn0ntHuGxZdnkysQMUHqXDDAIAaIZextR5mH1O+LvB+LJD7VXELG4mTnGT3owXA3j1zaj9X3OaAp2xK+je08zoS5d+3eamLvdcfrUY7rjVIuPfA5ShW7I3rL5s9+BAgzKE/CxlEtBVq4tGJKYHYHatqX5gF+OZ/Rx6nQXN+U3XrXdVyEjLijLL9VVLNNeF71eK0djTiT/ewrerGJg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e885119e-3579-41ac-6405-08d6ac39ef44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 07:10:15.1347
+X-MS-Exchange-CrossTenant-Network-Message-Id: 846ca5f0-3d2f-4576-fcef-08d6ac39f2fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 07:10:21.4172
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -106,29 +104,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select CONFIG_PWM_IMX_TPM by default to support i.MX7ULP
-TPM PWM.
+Add i.MX7ULP EVK board PWM0 support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No changes.
+Changes since V5:
+	- change #pwm-cells to 3.
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6=
-_v7_defconfig
-index 5586a50..57862c6 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -399,6 +399,7 @@ CONFIG_MPL3115=3Dy
- CONFIG_PWM=3Dy
- CONFIG_PWM_FSL_FTM=3Dy
- CONFIG_PWM_IMX=3Dy
-+CONFIG_PWM_IMX_TPM=3Dy
- CONFIG_NVMEM_IMX_OCOTP=3Dy
- CONFIG_NVMEM_VF610_OCOTP=3Dy
- CONFIG_TEE=3Dy
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
+i
+index eb349fd..15d04fb 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -124,6 +124,16 @@
+ 			status =3D "disabled";
+ 		};
+=20
++		pwm0: pwm@40250000 {
++			compatible =3D "fsl,imx-tpm";
++			reg =3D <0x40250000 0x1000>;
++			assigned-clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
++			assigned-clock-parents =3D <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
++			clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
++			#pwm-cells =3D <3>;
++			status =3D "disabled";
++		};
++
+ 		tpm5: tpm@40260000 {
+ 			compatible =3D "fsl,imx7ulp-tpm";
+ 			reg =3D <0x40260000 0x1000>;
 --=20
 2.7.4
 
