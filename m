@@ -2,110 +2,115 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E54C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4934C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257EC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552984401;
-	bh=jjSqJUBachI3OkoOnRR731pkIsic5VXZ2MyMB0BSh8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C7Nh2n3bh4a7amZR1cKirnxhZIOfUrXxaIxBjYyjIA27CEDtnfciHcBSb6Xo4T2Tm
-	 I0/qxhO1gGiLKHBDBh3cKRjqh2DCnOBxlyZ6Np66fpthcY5MpTlCLYFwbTny8K/kkX
-	 3+q4Tq5tJieA5jrxddSAH3W66/wv2y+KXEgPjUWU=
+	by mail.kernel.org (Postfix) with ESMTP id 84D9320828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfCSIdU (ORCPT
+        id S1727560AbfCSIdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:33:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32962 "EHLO mx1.suse.de"
+        Tue, 19 Mar 2019 04:33:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33112 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbfCSIdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:33:19 -0400
+        id S1727452AbfCSIdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:33:44 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 43236AFDF;
-        Tue, 19 Mar 2019 08:33:18 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 09:33:16 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
-        "Serge E . Hallyn" <serge.hallyn@ubuntu.com>,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH] device_cgroup: fix RCU imbalance in error case
-Message-ID: <20190319083316.GQ8924@dhcp22.suse.cz>
-References: <20190319013659.86199-1-jannh@google.com>
+        by mx1.suse.de (Postfix) with ESMTP id EA194AFDF;
+        Tue, 19 Mar 2019 08:33:42 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 8B6BB1E428E; Tue, 19 Mar 2019 09:33:42 +0100 (CET)
+Date:   Tue, 19 Mar 2019 09:33:42 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Cc:     Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
+        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Updated locking documentation for transaction_t
+Message-ID: <20190319083342.GC17334@quack2.suse.cz>
+References: <20190318184237.20677-1-alexander.lochmann@tu-dortmund.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190319013659.86199-1-jannh@google.com>
+In-Reply-To: <20190318184237.20677-1-alexander.lochmann@tu-dortmund.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19-03-19 02:36:59, Jann Horn wrote:
-> When dev_exception_add() returns an error (due to a failed memory
-> allocation), make sure that we move the RCU preemption count back to where
-> it was before we were called. We dropped the RCU read lock inside the loop
-> body, so we can't just "break".
+On Mon 18-03-19 19:42:37, Alexander Lochmann wrote:
+> We used LockDoc to derive locking rules for each member
+> of struct transaction_t.
+> Based on those results, we extended the existing documentation
+> by more members of struct inode, and updated the existing
+> documentation.
 > 
-> sparse complains about this, too:
-> 
-> $ make -s C=2 security/device_cgroup.o
-> ./include/linux/rcupdate.h:647:9: warning: context imbalance in
-> 'propagate_exception' - unexpected unlock
-> 
-> Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+> Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
 
-FWIW looks good to me.
-Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks! You can add:
 
-Thanks
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
 
 > ---
-> Compile-tested only.
+>  include/linux/jbd2.h | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> I'm not entirely sure who's supposed to be the maintainer for this thing.
-> The sign-offs on the commits to this file come from Tejun, but MAINTAINERS
-> claims it's part of security/, so I'm just sending this to both the
-> security folks and the cgroup folks, you can figure out whose tree you want
-> to take this through. :P
-> If the cgroup folks feel responsible for this file, maybe you could fix up
-> MAINTAINERS?
-> 
->  security/device_cgroup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-> index cd97929fac66..dc28914fa72e 100644
-> --- a/security/device_cgroup.c
-> +++ b/security/device_cgroup.c
-> @@ -560,7 +560,7 @@ static int propagate_exception(struct dev_cgroup *devcg_root,
->  		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
->  			rc = dev_exception_add(devcg, ex);
->  			if (rc)
-> -				break;
-> +				return rc;
->  		} else {
->  			/*
->  			 * in the other possible cases:
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 0f919d5fe84f..72f689746340 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -534,6 +534,7 @@ struct transaction_chp_stats_s {
+>   * The transaction keeps track of all of the buffers modified by a
+>   * running transaction, and all of the buffers committed but not yet
+>   * flushed to home for finished transactions.
+> + * (Locking Documentation improved by LockDoc)
+>   */
+>  
+>  /*
+> @@ -585,7 +586,8 @@ struct transaction_s
+>  	}			t_state;
+>  
+>  	/*
+> -	 * Where in the log does this transaction's commit start? [no locking]
+> +	 * Where in the log does this transaction's commit start?
+> +	 * [journal_t.j_state_lock]
+>  	 */
+>  	unsigned long		t_log_start;
+>  
+> @@ -647,17 +649,17 @@ struct transaction_s
+>  	unsigned long		t_max_wait;
+>  
+>  	/*
+> -	 * When transaction started
+> +	 * When transaction started [journal_t.j_state_lock]
+>  	 */
+>  	unsigned long		t_start;
+>  
+>  	/*
+> -	 * When commit was requested
+> +	 * When commit was requested [journal_t.j_state_lock]
+>  	 */
+>  	unsigned long		t_requested;
+>  
+>  	/*
+> -	 * Checkpointing stats [j_checkpoint_sem]
+> +	 * Checkpointing stats [journal_t.j_list_lock]
+>  	 */
+>  	struct transaction_chp_stats_s t_chp_stats;
+>  
 > -- 
-> 2.21.0.225.g810b269d1ac-goog
-
+> 2.20.1
+> 
+> 
 -- 
-Michal Hocko
-SUSE Labs
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
