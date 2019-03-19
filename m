@@ -2,517 +2,230 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A65920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bg9AAbSk"
+	by mail.kernel.org (Postfix) with ESMTP id AEE2B20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfCSJi0 (ORCPT
+        id S1727472AbfCSJix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:38:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42671 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSJi0 (ORCPT
+        Tue, 19 Mar 2019 05:38:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56444 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbfCSJiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:38:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so16119211wrr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=gEE78NY0aTh2V53BRXs7Vb1AT4RS/39YUxjOKHpK8ck=;
-        b=bg9AAbSkwjF88ALNpomLOiA7hfHd+zyPw8EMoC8OPgvcl7MJO1GjxdkL/LLYuL+qpq
-         fc/wcZsiW2nMHf0xWG3KfkLVCn27C0xTBQIhs8MFhhm+PIRnx8IPHJaXPFZ9mfooUcms
-         CJsUvEupx3bYizsUmQHcCLD8SNhTpGnz2F1ETSCP3NePuuY7/2zi/2AhqTSO4zRygIHO
-         TsVRnhPJ3lcWpTwxX0up65Vxnpyjy3H723WAOQYz3Cm2lwl3wci7F5szjIh7bt1H4o9l
-         KudQrBlAKxTzEZgu8v4TvxNmlbI9ak3CrdIgSBJ1YZUnOqj9R/S2KEq67gLS1IFFjvDi
-         q7+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=gEE78NY0aTh2V53BRXs7Vb1AT4RS/39YUxjOKHpK8ck=;
-        b=RrAKci6jfIguUfZELDw5OAB4eE/4A+Bmvzpv/tGZKdQFELOrppH+DNTY029vJM5o8k
-         rPxstxqwzDY4Z3Ag1Vy67TJGr9BLfGcUw4Yf2Vu0fMrK1lFttPQKa/ZtWGxhmgknpuj3
-         mwEQ/Vt2zlnIaxrLsFN+kJPlPk07QO8NePcr8LbBeLz7/GFqf11N6k7a7PkggCfQuQji
-         UgDMGoliU5VPmY+ReYoXbuMR45xkUrEz2FLGA5a2J2HFqpKQRJIYijE6/KSWTbpfV1ik
-         upcXCvgKVjigQWM5pLbl4vm3/Eo16rs3zOedxK7+OQ87WiGM/ZBQDaQGSte3cc0WWd5m
-         tjrA==
-X-Gm-Message-State: APjAAAUfQoIQe9BC6Suw7f7tzYPmLh6W5K40F4Xw0YJIGMB2tNIBe0Fc
-        yFOXKfeTRi3Ekji12z6mJdGj/w==
-X-Google-Smtp-Source: APXvYqyGC9pRd6FBea480Ckbu3+eq+E95jFx3u46HPwDS/fu+yS7YetE6jJd/VuI/eXFZIen7MHJeQ==
-X-Received: by 2002:a5d:6b4c:: with SMTP id x12mr16215008wrw.14.1552988302801;
-        Tue, 19 Mar 2019 02:38:22 -0700 (PDT)
-Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
-        by smtp.gmail.com with ESMTPSA id v6sm2432049wme.24.2019.03.19.02.38.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 19 Mar 2019 02:38:22 -0700 (PDT)
-Message-ID: <77aff3b53a931f0a55e66694ac8578fc0eb00b1c.camel@baylibre.com>
-Subject: Re: [PATCH v2 2/2] clk: meson: g12a: add cpu clocks
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 10:38:19 +0100
-In-Reply-To: <20190304131129.7762-3-narmstrong@baylibre.com>
-References: <20190304131129.7762-1-narmstrong@baylibre.com>
-         <20190304131129.7762-3-narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 19 Mar 2019 05:38:52 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9Y6lN079401
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:38:51 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ravmgc902-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:38:50 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 19 Mar 2019 09:38:45 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 09:38:41 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J9chAl32374824
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 09:38:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A3A3AE056;
+        Tue, 19 Mar 2019 09:38:43 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C32B5AE04D;
+        Tue, 19 Mar 2019 09:38:42 +0000 (GMT)
+Received: from [9.145.41.62] (unknown [9.145.41.62])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Mar 2019 09:38:42 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 4/7] s390: ap: setup relation betwen KVM and mediated
+ device
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-5-git-send-email-pmorel@linux.ibm.com>
+ <20190315191557.6c8d7668@oc2783563651>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 19 Mar 2019 10:38:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190315191557.6c8d7668@oc2783563651>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031909-4275-0000-0000-0000031CC22D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031909-4276-0000-0000-0000382B41B1
+Message-Id: <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-04 at 14:11 +0100, Neil Armstrong wrote:
-> Add the Amlogic G12A Family CPU Clock tree in read/only for now.
+On 15/03/2019 19:15, Halil Pasic wrote:
+> On Wed, 13 Mar 2019 17:05:01 +0100
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> The CPU clock can either use the SYS_PLL for > 1GHz frequencies or
-> use a couple of div+mux from 1GHz/667MHz/24MHz source with 2 non-glitch
-> muxes.
+>> When the mediated device is open we setup the relation with KVM unset it
+>> when the mediated device is released.
+>>
+>> We ensure KVM is present on opening of the mediated device.
+>>
+>> We ensure that KVM survives the mediated device, and establish a direct
 > 
-> Proper DVFS support will come in a second time.
+> survives?
+
+what alternative do you prefer?
+
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/clk/meson/g12a.c | 350 +++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/g12a.h |  22 ++-
->  2 files changed, 371 insertions(+), 1 deletion(-)
+>> link from KVM to the mediated device to simplify the relationship.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+
+...snip...
+
+>>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   				       unsigned long action, void *data)
+>>   {
+>> -	int ret;
+>>   	struct ap_matrix_mdev *matrix_mdev;
+>>   
+>>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+>>   		return NOTIFY_OK;
+>>   
+>>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>> -
+>> -	if (!data) {
+>> -		matrix_mdev->kvm = NULL;
+>> -		return NOTIFY_OK;
+>> -	}
+>> -
+>> -	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+>> -	if (ret)
+>> -		return NOTIFY_DONE;
+>> -
+>> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+>> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+>> -		return NOTIFY_DONE;
+>> -
+>> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+>> -				  matrix_mdev->matrix.aqm,
+>> -				  matrix_mdev->matrix.adm);
+>> +	matrix_mdev->kvm = data;
+>>   
+>>   	return NOTIFY_OK;
+>>   }
+>> @@ -888,6 +873,12 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>   	if (ret)
+>>   		goto err_group;
+>>   
+>> +	/* We do not support opening the mediated device without KVM */
+>> +	if (!matrix_mdev->kvm) {
+>> +		ret = -ENODEV;
+>> +		goto err_group;
+>> +	}
+>> +
+>>   	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
+>>   	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+>>   
+>> @@ -896,8 +887,15 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>   	if (ret)
+>>   		goto err_iommu;
+>>   
+>> +	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
 > 
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 0e1ce8c03259..80a7172df2a6 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -150,6 +150,318 @@ static struct clk_regmap g12a_sys_pll = {
->  	},
->  };
->  
-> +static struct clk_regmap g12a_sys_pll_div16_en = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 24,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sys_pll_div16_en",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "sys_pll" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is used to debug the sys_pll range
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
-> +static struct clk_fixed_factor g12a_sys_pll_div16 = {
-> +	.mult = 1,
-> +	.div = 16,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sys_pll_div16",
-> +		.ops = &clk_fixed_factor_ops,
-> +		.parent_names = (const char *[]){ "sys_pll_div16_en" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "premux0" */
-> +static struct clk_regmap g12a_cpu_clk_dyn0_sel = {
+> At this point the matrix_mdev->kvm ain't guaranteed to be valid IMHO. Or
+> am I wrong? If I'm right kvm_get_kvm(matrix_mdev->kvm) could be too late.
 
-called premux0 so g12a_cpu_clk_premux0 ?
+What about the if (!matrix_mdev->kvm) 10 lines above ?
 
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x3,
-> +		.shift = 0,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn0_sel",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ IN_PREFIX "xtal",
-> +						  "fclk_div2",
-> +						  "fclk_div3" },
-> +		.num_parents = 3,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "mux0_divn_tcnt" */
-> +static struct clk_regmap g12a_cpu_clk_dyn0_div = {
+> 
+>> +	if (ret)
+>> +		goto err_kvm;
+>> +
+>>   	return 0;
+>>   
+>> +err_kvm:
+>> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+>> +				 &matrix_mdev->iommu_notifier);
+>>   err_iommu:
+>>   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+>>   				 &matrix_mdev->group_notifier);
+>> @@ -906,19 +904,33 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>   	return ret;
+>>   }
+>>   
+>> -static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>> +static int vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
+>>   {
+>> -	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>> +	struct kvm *kvm = matrix_mdev->kvm;
+>>   
+>>   	if (matrix_mdev->kvm)
+>>   		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> 
+> This still conditional?
 
-g12a_cpu_clk_mux0_div ?
+Yes, nothing to clear if there is no KVM.
 
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.shift = 4,
-> +		.width = 6,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn0_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn0_sel" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "postmux0" */
-> +static struct clk_regmap g12a_cpu_clk_dyn0 = {
+> 
+>> -
+>> +	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
+> 
+> I guess your intention was to move vfio_ap_mdev_reset_queues()
+> here from vfio_ap_mdev_release(), but you still have a
+> vfio_ap_mdev_reset_queues() call in vfio_ap_mdev_release().
+> 
+>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+>>   	matrix_mdev->kvm = NULL;
+>> +
+>> +	kvm_put_kvm(kvm);
+>> +	return 0;
+>> +}
+>> +
+>> +static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>> +{
+>> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>> +
+>> +	mutex_lock(&matrix_dev->lock);
+>> +
+>>   	vfio_ap_mdev_reset_queues(mdev);
 
-g12a_cpu_clk_postmux0 ?
+right, this one will go away.
+Thanks for reviewing.
 
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x1,
-> +		.shift = 2,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn0",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn0_sel",
-> +						  "cpu_clk_dyn0_div" },
-> +		.num_parents = 2,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "premux1" */
-> +static struct clk_regmap g12a_cpu_clk_dyn1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x3,
-> +		.shift = 16,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn1_sel",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ IN_PREFIX "xtal",
-> +						  "fclk_div2",
-> +						  "fclk_div3" },
-> +		.num_parents = 3,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "Mux1_divn_tcnt" */
-> +static struct clk_regmap g12a_cpu_clk_dyn1_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.shift = 20,
-> +		.width = 6,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn1_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn1_sel" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "postmux1" */
-> +static struct clk_regmap g12a_cpu_clk_dyn1 = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x1,
-> +		.shift = 18,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn1",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn1_sel",
-> +						  "cpu_clk_dyn1_div" },
-> +		.num_parents = 2,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "Final_dyn_mux_sel" */
-> +static struct clk_regmap g12a_cpu_clk_dyn = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x1,
-> +		.shift = 10,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_dyn",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn0",
-> +						  "cpu_clk_dyn1" },
-> +		.num_parents = 2,
-> +	},
-> +};
-> +
-> +/* Datasheet names this field as "Final_mux_sel" */
-> +static struct clk_regmap g12a_cpu_clk = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL0,
-> +		.mask = 0x1,
-> +		.shift = 11,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk",
-> +		.ops = &clk_regmap_mux_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_dyn",
-> +						  "sys_pll" },
-> +		.num_parents = 2,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_div16_en = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 1,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "cpu_clk_div16_en",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is used to debug the cpu_clk range
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
-> +static struct clk_fixed_factor g12a_cpu_clk_div16 = {
-> +	.mult = 1,
-> +	.div = 16,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_div16",
-> +		.ops = &clk_fixed_factor_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_div16_en" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_apb_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.shift = 3,
-> +		.width = 3,
-> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_apb_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_apb = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 1,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "cpu_clk_apb",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_apb_div" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is set by the ROM monitor code,
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_atb_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.shift = 6,
-> +		.width = 3,
-> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_atb_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_atb = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 17,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "cpu_clk_atb",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_atb_div" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is set by the ROM monitor code,
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_axi_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.shift = 9,
-> +		.width = 3,
-> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_axi_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_axi = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 18,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "cpu_clk_axi",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_axi_div" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is set by the ROM monitor code,
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_trace_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.shift = 20,
-> +		.width = 3,
-> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "cpu_clk_trace_div",
-> +		.ops = &clk_regmap_divider_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_cpu_clk_trace = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 23,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "cpu_clk_trace",
-> +		.ops = &clk_regmap_gate_ro_ops,
-> +		.parent_names = (const char *[]){ "cpu_clk_trace_div" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is set by the ROM monitor code,
-> +		 * Linux should not change it at runtime
-> +		 */
-> +	},
-> +};
-> +
->  static const struct pll_mult_range g12a_gp0_pll_mult_range = {
->  	.min = 55,
->  	.max = 255,
-> @@ -2167,6 +2479,26 @@ static struct clk_hw_onecell_data g12a_hw_onecell_data = {
->  		[CLKID_MALI]			= &g12a_mali.hw,
->  		[CLKID_MPLL_5OM_DIV]		= &g12a_mpll_50m_div.hw,
->  		[CLKID_MPLL_5OM]		= &g12a_mpll_50m.hw,
-> +		[CLKID_SYS_PLL_DIV16_EN]	= &g12a_sys_pll_div16_en.hw,
-> +		[CLKID_SYS_PLL_DIV16]		= &g12a_sys_pll_div16.hw,
-> +		[CLKID_CPU_CLK_DYN0_SEL]	= &g12a_cpu_clk_dyn0_sel.hw,
-> +		[CLKID_CPU_CLK_DYN0_DIV]	= &g12a_cpu_clk_dyn0_div.hw,
-> +		[CLKID_CPU_CLK_DYN0]		= &g12a_cpu_clk_dyn0.hw,
-> +		[CLKID_CPU_CLK_DYN1_SEL]	= &g12a_cpu_clk_dyn1_sel.hw,
-> +		[CLKID_CPU_CLK_DYN1_DIV]	= &g12a_cpu_clk_dyn1_div.hw,
-> +		[CLKID_CPU_CLK_DYN1]		= &g12a_cpu_clk_dyn1.hw,
-> +		[CLKID_CPU_CLK_DYN]		= &g12a_cpu_clk_dyn.hw,
-> +		[CLKID_CPU_CLK]			= &g12a_cpu_clk.hw,
-> +		[CLKID_CPU_CLK_DIV16_EN]	= &g12a_cpu_clk_div16_en.hw,
-> +		[CLKID_CPU_CLK_DIV16]		= &g12a_cpu_clk_div16.hw,
-> +		[CLKID_CPU_CLK_APB_DIV]		= &g12a_cpu_clk_apb_div.hw,
-> +		[CLKID_CPU_CLK_APB]		= &g12a_cpu_clk_apb.hw,
-> +		[CLKID_CPU_CLK_ATB_DIV]		= &g12a_cpu_clk_atb_div.hw,
-> +		[CLKID_CPU_CLK_ATB]		= &g12a_cpu_clk_atb.hw,
-> +		[CLKID_CPU_CLK_AXI_DIV]		= &g12a_cpu_clk_axi_div.hw,
-> +		[CLKID_CPU_CLK_AXI]		= &g12a_cpu_clk_axi.hw,
-> +		[CLKID_CPU_CLK_TRACE_DIV]	= &g12a_cpu_clk_trace_div.hw,
-> +		[CLKID_CPU_CLK_TRACE]		= &g12a_cpu_clk_trace.hw,
->  		[NR_CLKS]			= NULL,
->  	},
->  	.num = NR_CLKS,
-> @@ -2335,6 +2667,24 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
->  	&g12a_mali_1,
->  	&g12a_mali,
->  	&g12a_mpll_50m,
-> +	&g12a_sys_pll_div16_en,
-> +	&g12a_cpu_clk_dyn0_sel,
-> +	&g12a_cpu_clk_dyn0_div,
-> +	&g12a_cpu_clk_dyn0,
-> +	&g12a_cpu_clk_dyn1_sel,
-> +	&g12a_cpu_clk_dyn1_div,
-> +	&g12a_cpu_clk_dyn1,
-> +	&g12a_cpu_clk_dyn,
-> +	&g12a_cpu_clk,
-> +	&g12a_cpu_clk_div16_en,
-> +	&g12a_cpu_clk_apb_div,
-> +	&g12a_cpu_clk_apb,
-> +	&g12a_cpu_clk_atb_div,
-> +	&g12a_cpu_clk_atb,
-> +	&g12a_cpu_clk_axi_div,
-> +	&g12a_cpu_clk_axi,
-> +	&g12a_cpu_clk_trace_div,
-> +	&g12a_cpu_clk_trace,
->  };
->  
->  static const struct meson_eeclkc_data g12a_clkc_data = {
-> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
-> index f399dfe1401c..70aa469ca1cf 100644
-> --- a/drivers/clk/meson/g12a.h
-> +++ b/drivers/clk/meson/g12a.h
-> @@ -50,6 +50,7 @@
->  #define HHI_GCLK_MPEG2			0x148
->  #define HHI_GCLK_OTHER			0x150
->  #define HHI_GCLK_OTHER2			0x154
-> +#define HHI_SYS_CPU_CLK_CNTL1		0x15c
->  #define HHI_VID_CLK_DIV			0x164
->  #define HHI_MPEG_CLK_CNTL		0x174
->  #define HHI_AUD_CLK_CNTL		0x178
-> @@ -166,8 +167,27 @@
->  #define CLKID_MALI_0_DIV			170
->  #define CLKID_MALI_1_DIV			173
->  #define CLKID_MPLL_5OM_DIV			176
-> +#define CLKID_SYS_PLL_DIV16_EN			178
-> +#define CLKID_SYS_PLL_DIV16			179
-> +#define CLKID_CPU_CLK_DYN0_SEL			180
-> +#define CLKID_CPU_CLK_DYN0_DIV			181
-> +#define CLKID_CPU_CLK_DYN0			182
-> +#define CLKID_CPU_CLK_DYN1_SEL			183
-> +#define CLKID_CPU_CLK_DYN1_DIV			184
-> +#define CLKID_CPU_CLK_DYN1			185
-> +#define CLKID_CPU_CLK_DYN			186
-> +#define CLKID_CPU_CLK_DIV16_EN			188
-> +#define CLKID_CPU_CLK_DIV16			189
-> +#define CLKID_CPU_CLK_APB_DIV			190
-> +#define CLKID_CPU_CLK_APB			191
-> +#define CLKID_CPU_CLK_ATB_DIV			192
-> +#define CLKID_CPU_CLK_ATB			193
-> +#define CLKID_CPU_CLK_AXI_DIV			194
-> +#define CLKID_CPU_CLK_AXI			195
-> +#define CLKID_CPU_CLK_TRACE_DIV			196
-> +#define CLKID_CPU_CLK_TRACE			197
->  
-> -#define NR_CLKS					178
-> +#define NR_CLKS					198
->  
->  /* include the CLKIDs that have been made part of the DT binding */
->  #include <dt-bindings/clock/g12a-clkc.h>
+Regards,
+Pierre
 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
