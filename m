@@ -2,154 +2,137 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7441C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34546C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE35B2133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VFJqqWo4"
+	by mail.kernel.org (Postfix) with ESMTP id 0F18F213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfCSMSJ (ORCPT
+        id S1727727AbfCSMSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:18:09 -0400
-Received: from mail-eopbgr790080.outbound.protection.outlook.com ([40.107.79.80]:58944
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726743AbfCSMSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:18:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRP77eQxjaqRWmlZ1LHy00gMoU+DT2aJ/qXmySgDmyg=;
- b=VFJqqWo43YYaKLv2oNwv/nOJamJF/1bvr5bXhu5i4fagrQLJnXYu5D/aN278Fat03Ss7AVuEOxao0DRSLWzACl7H/nlnRNJBBbF7hsiISx958AJuWGwHkCT84cUIihZeABS6Cgao37a1uXCC1JmRs3dp7BBWOVveN7mILiOsLRg=
-Received: from MWHPR0201CA0059.namprd02.prod.outlook.com
- (2603:10b6:301:73::36) by BYAPR02MB5542.namprd02.prod.outlook.com
- (2603:10b6:a03:9b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.14; Tue, 19 Mar
- 2019 12:18:05 +0000
-Received: from CY1NAM02FT048.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by MWHPR0201CA0059.outlook.office365.com
- (2603:10b6:301:73::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
- Transport; Tue, 19 Mar 2019 12:18:05 +0000
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- CY1NAM02FT048.mail.protection.outlook.com (10.152.74.227) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
- via Frontend Transport; Tue, 19 Mar 2019 12:18:05 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:41647 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1h6Dgy-0005Me-Qt; Tue, 19 Mar 2019 05:18:04 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1h6Dgt-0000QT-MI; Tue, 19 Mar 2019 05:17:59 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2JCHq2u031431;
-        Tue, 19 Mar 2019 05:17:52 -0700
-Received: from [172.30.17.111]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1h6Dgl-0000PZ-QX; Tue, 19 Mar 2019 05:17:52 -0700
-Subject: Re: [PATCH 00/12] misc: xilinx sd-fec driver
-To:     Dragan Cvetic <dragan.cvetic@xilinx.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <michal.simek@xilinx.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-References: <1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <5f1d4915-27ad-0cdc-a174-98f88f36a762@xilinx.com>
-Date:   Tue, 19 Mar 2019 13:17:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 08:18:15 -0400
+Received: from foss.arm.com ([217.140.101.70]:50612 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726743AbfCSMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:18:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69DF71596;
+        Tue, 19 Mar 2019 05:18:14 -0700 (PDT)
+Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BF373F59C;
+        Tue, 19 Mar 2019 05:18:12 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 12:18:07 +0000
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex
+ initialisation
+Message-ID: <20190319121807.68c858f7@why.wild-wind.fr.eu.org>
+In-Reply-To: <20190319114511.GS7752@kuha.fi.intel.com>
+References: <20190318174906.10429-1-marc.zyngier@arm.com>
+        <20190319114511.GS7752@kuha.fi.intel.com>
+Organization: ARM Ltd
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(136003)(346002)(2980300002)(199004)(189003)(107886003)(6246003)(23676004)(50466002)(966005)(6346003)(36386004)(5660300002)(229853002)(478600001)(446003)(486006)(44832011)(426003)(126002)(336012)(186003)(2616005)(476003)(230700001)(11346002)(2486003)(76176011)(106002)(26005)(77096007)(4326008)(81166006)(356004)(64126003)(31686004)(36756003)(8676002)(8936002)(6666004)(305945005)(63266004)(2906002)(31696002)(65806001)(65956001)(6306002)(110136005)(81156014)(47776003)(2201001)(58126008)(54906003)(14444005)(65826007)(9786002)(316002)(106466001)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5542;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c66b4216-c8ef-4db3-0996-08d6ac64f0c6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BYAPR02MB5542;
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5542:
-X-MS-Exchange-PUrlCount: 1
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BYAPR02MB554245409E32659287DB000BC6400@BYAPR02MB5542.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 0981815F2F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ZHJasGkVC925xV3Y81yfuSAYow+eBGT6J3oz+BoKJLf9Uqte2IqYtjwwhA1LduHQWr1pUfPFtA3dC4Vb2MCUQAA0wDZpW5UrxXhNOK40FMeGfBIoJrNFPu6XYJJAbEYVmcpRbfd3h9soJ63yYcmIcrqD+HBau7amSQ4/5FcGdbRYB9qPCHesFY3IZ+MHVKJOKZyTC+sBiNDTDQDBJK9k8Ps1R85j/mZWKL+f7GtezmwJBcm7t+GvJD2mlF3fCafXY1Ps0M0+Ttkbqv9ZA+R5w3qldbFQ9QwHfxWqezowTpM98bYcs2H8e2WcSiHYmBUiHy/YukgVRnc8m0YX/9J49nHL+0NFev4nQQZc22Yot1Lm2nMN31q428oZoF1xwShrNt1CCoNduHxUr6IXbM2hXP3ot63MtSiPYDFbG4fzEag=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 12:18:05.2748
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c66b4216-c8ef-4db3-0996-08d6ac64f0c6
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5542
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 03. 19 13:04, Dragan Cvetic wrote:
-> This patchset is adding the full Soft Decision Forward Error
-> Correction (SD-FEC) driver implementation, driver DT binding and
-> driver documentation.
-> 
-> Forward Error Correction (FEC) codes such as Low Density Parity
-> Check (LDPC) and turbo codes provide a means to control errors in
-> data transmissions over unreliable or noisy communication
-> channels. The SD-FEC Integrated Block is an optimized block for
-> soft-decision decoding of these codes. Fixed turbo codes are
-> supported directly, whereas custom and standardized LDPC codes
-> are supported through the ability to specify the parity check
-> matrix through an AXI4-Lite bus or using the optional programmable
-> (PL)-based support logic. For the further information see
-> https://www.xilinx.com/support/documentation/ip_documentation/
-> sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-> 
-> This driver is a platform device driver which supports SDFEC16
-> (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-> Turbo code decoding. LDPC codes can be specified on
-> a codeword-by-codeword basis, also a custom LDPC code can be used.
-> 
-> The SD-FEC driver exposes a char device interface and supports
-> file operations: open(), close(), poll() and ioctl(). The driver
-> allows only one usage of the device, open() limits the number of
-> driver instances. The driver also utilize Common Clock Framework
-> (CCF).
-> 
-> The control and monitoring is supported over ioctl system call.
-> The features supported by ioctl():
-> - enable or disable data pipes to/from device
-> - configure the FEC algorithm parameters
-> - set the order of data
-> - provide a control of a SDFEC bypass option
-> - activates/deactivates SD-FEC
-> - collect and provide statistical data
-> - enable/disable interrupt mode
-> 
-> Poll can be utilized to detect errors on IRQ trigger rather than
-> using looping status and stats ioctl's.
-> 
-> Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+On Tue, 19 Mar 2019 13:45:11 +0200
+Heikki Krogerus <heikki.krogerus@linux.intel.com> wrote:
 
-I am not using this tag a lot that's why I am curious where you got it
-from? I can't see it in Xilinx tree too.
+> On Mon, Mar 18, 2019 at 05:49:06PM +0000, Marc Zyngier wrote:
+> > Running a kernel with the fusb302 driver and lockdep enabled
+> > leads to an unpleasant warning:
+> > 
+> > [    4.617477] INFO: trying to register non-static key.
+> > [    4.617930] the code is fine but needs lockdep annotation.
+> > [    4.618418] turning off the locking correctness validator.
+> > [    4.618913] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc1-00007-g3542533f3fc9 #13
+> > [    4.619620] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+> > [    4.620454] Call trace:
+> > [    4.620693]  dump_backtrace+0x0/0x138
+> > [    4.621028]  show_stack+0x24/0x30
+> > [    4.621336]  dump_stack+0xbc/0x104
+> > [    4.621649]  register_lock_class+0x594/0x598
+> > [    4.622036]  __lock_acquire+0x80/0x11b8
+> > [    4.622384]  lock_acquire+0xdc/0x260
+> > [    4.622711]  __mutex_lock+0x90/0x8a0
+> > [    4.623037]  mutex_lock_nested+0x3c/0x50
+> > [    4.623394]  _fusb302_log+0x88/0x1f0
+> > [    4.623721]  fusb302_log+0x7c/0xa0
+> > [    4.624033]  tcpm_init+0x5c/0x190
+> > [    4.624336]  tcpm_init+0x3c/0x130
+> > [    4.624640]  tcpm_register_port+0x574/0x878
+> > [    4.625019]  fusb302_probe+0x2c8/0x590
+> > 
+> > Despite what the message says, the code isn't fine, as it tries to
+> > make use of the fusb302_log facility pretty early. This requires the
+> > logbuffer_lock mutex to be initialised, but that only happens much
+> > later. Boo.
+> > 
+> > Hoist the fusb302_debugfs_init call before tcpm_register_port so that
+> > we can enjoy a working mutex. At Guenter's request, also add teardown
+> > of the debugfs facility on the error path.
+> > 
+> > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>  
+> 
+> After applying this there was no more "fusb302" debugfs directory, and
+> attempt to unload the fusb302 module dead locked. Also, attempt to
+> reboot caused this to happen on my GDPWin board after applying the
+> patch:
+> 
+>         BUG: Dentry 0000000012f2a05d{i=149,n=i2c-fusb302}  still in use (1) [unmount of sysfs sysfs]
+>         WARNING: CPU: 3 PID: 1639 at fs/dcache.c:1529 umount_check.cold.55+0x2e/0x3a
+>         Modules linked in: intel_xhci_usb_role_switch roles pi3usb30532 typec i915 intel_gtt intel_cht_int33fe [last unloaded: tcpm]
+>         CPU: 3 PID: 1639 Comm: umount Not tainted 5.1.0-rc1-heikki+ #916
+>         Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
+>         RIP: 0010:umount_check.cold.55+0x2e/0x3a
+>         ...
+
+OK, that's interesting. On my system, I do have the debugfs file:
+
+root@city-of-tiny-lites:~# cat /sys/kernel/debug/fusb302/4-0022 
+[    4.517682] sw reset
+[    4.520379] fusb302 device ID: 0x81
+[    4.523544] pd := off
+[    4.523593] vbus is already Off
+[    4.523603] charge is already Off
+[    4.523615] vconn is already Off
+[    4.524274] pd header := Sink, Device
+[    4.525948] cc1=Open, cc2=Open
+[    4.530345] pd := off
+[    4.530378] vbus is already Off
+[    4.530388] charge is already Off
+[    4.530405] vconn is already Off
+[    4.530931] pd header := Sink, Device
+[    4.533773] cc := Open
+[    4.642347] start drp toggling
+
+I don't use any module though, so maybe there is something there. I'll
+investigate.
+ 
+> Note. Your patch has also a conflict with patches from Hans, I
+> think with this one: https://patchwork.kernel.org/patch/10847275/
+> I can take care of that, but you can also rebase the next version on
+> top of my typec-next branch to solve that problem:
+> https://github.com/krohei/linux/commits/typec-next
+> 
+> I think I need to add that to the MAINTAINERS file.
+
+Fair enough. I'll come back once I know what happens here...
 
 Thanks,
-Michal
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
