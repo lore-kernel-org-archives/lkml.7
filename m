@@ -3,35 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF6FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DAAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F9820854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BE22075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfCSIXD (ORCPT
+        id S1727557AbfCSIXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:23:03 -0400
-Received: from mx.sdf.org ([205.166.94.20]:55372 "EHLO mx.sdf.org"
+        Tue, 19 Mar 2019 04:23:07 -0400
+Received: from mx.sdf.org ([205.166.94.20]:55365 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbfCSIXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:23:03 -0400
+        id S1727143AbfCSIXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:23:05 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2J8Mf4U020790
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2J8MgWm004029
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Tue, 19 Mar 2019 08:22:41 GMT
+        Tue, 19 Mar 2019 08:22:42 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2J8MfAh005224;
-        Tue, 19 Mar 2019 08:22:41 GMT
-Message-Id: <2de8348635a1a421a72620677898c7fd5bd4b19d.1552704200.git.lkml@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id x2J8MgPv021399;
+        Tue, 19 Mar 2019 08:22:42 GMT
+Message-Id: <f63c410e0ff76009c9b58e01027e751ff7fdb749.1552704200.git.lkml@sdf.org>
 In-Reply-To: <cover.1552704200.git.lkml@sdf.org>
 References: <cover.1552704200.git.lkml@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Tue, 19 Mar 2019 08:15:58 +0000
-Subject: [RESEND PATCH v2 2/5] lib/sort: Use more efficient bottom-up heapsort variant
+Date:   Tue, 19 Mar 2019 08:16:00 +0000
+Subject: [RESEND PATCH v2 4/5] lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
 To:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     George Spelvin <lkml@sdf.org>, Andrey Abramov <st5pub@yandex.ru>,
@@ -46,208 +46,292 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This uses fewer comparisons than the previous code (approaching half
-as many for large random inputs), but produces identical results;
-it actually performs the exact same series of swap operations.
+Rather than a fixed-size array of pending sorted runs, use the ->prev
+links to keep track of things.  This reduces stack usage, eliminates
+some ugly overflow handling, and reduces the code size.
 
-Specifically, it reduces the average number of compares from
-2*n*log2(n) - 3*n + o(n)  to  n*log2(n) + 0.37*n + o(n).
+Also:
+* merge() no longer needs to handle NULL inputs, so simplify.
+* The same applies to merge_and_restore_back_links(), which is renamed
+  to the less ponderous merge_final().  (It's a static helper function,
+  so we don't need a super-descriptive name; comments will do.)
+* Document the actual return value requirements on the (*cmp)()
+  function; some callers are already using this feature.
 
-This is still 1.63*n worse than glibc qsort() which manages
-n*log2(n) - 1.26*n, but at least the leading coefficient is correct.
+x86-64 code size 1086 -> 739 bytes (-347)
 
-Standard heapsort, when sifting down, performs two comparisons
-per level: one to find the greater child, and a second to see
-if the current node should be exchanged with that child.
-
-Bottom-up heapsort observes that it's better to postpone the second
-comparison and search for the leaf where -infinity would be sent
-to, then search back *up* for the current node's destination.
-
-Since sifting down usually proceeds to the leaf level (that's where
-half the nodes are), this does O(1) second comparisons rather
-than log2(n).  That saves a lot of (expensive since Spectre)
-indirect function calls.
-
-The one time it's worse than the previous code is if there are
-large numbers of duplicate keys, when the top-down algorithm is
-O(n) and bottom-up is O(n log n).  For distinct keys, it's provably
-always better, doing 1.5*n*log2(n) + O(n) in the worst case.
-
-(The code is not significantly more complex.  This patch also
-merges the heap-building and -extracting sift-down loops,
-resulting in a net code size savings.)
-
-x86-64 code size 885 -> 767 bytes (-118)
-
-(I see the checkpatch complaint about "else if (n -= size)".
-The alternative is significantly uglier.)
+(Yes, I see checkpatch complaining about no space after comma in
+"__attribute__((nonnull(2,3,4,5)))".  Checkpatch is wrong.)
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
 Acked-by: Andrey Abramov <st5pub@yandex.ru>
+Feedback-from: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Feedback-from: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Feedback-from: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- lib/sort.c | 110 ++++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 80 insertions(+), 30 deletions(-)
+ include/linux/list_sort.h |   1 +
+ lib/list_sort.c           | 169 ++++++++++++++++++++++++--------------
+ 2 files changed, 109 insertions(+), 61 deletions(-)
 
-diff --git a/lib/sort.c b/lib/sort.c
-index ec79eac85e21..0d24d0c5c0fc 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -1,8 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * A fast, small, non-recursive O(nlog n) sort for the Linux kernel
-+ * A fast, small, non-recursive O(n log n) sort for the Linux kernel
-  *
-- * Jan 23 2005  Matt Mackall <mpm@selenic.com>
-+ * This performs n*log2(n) + 0.37*n + o(n) comparisons on average,
-+ * and 1.5*n*log2(n) + O(n) in the (very contrived) worst case.
-+ *
-+ * Glibc qsort() manages n*log2(n) - 1.26*n for random inputs (1.63*n
-+ * better) at the expense of stack usage and much larger code to avoid
-+ * quicksort's O(n^2) worst case.
-  */
+diff --git a/include/linux/list_sort.h b/include/linux/list_sort.h
+index ba79956e848d..20f178c24e9d 100644
+--- a/include/linux/list_sort.h
++++ b/include/linux/list_sort.h
+@@ -6,6 +6,7 @@
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -15,7 +20,7 @@
-  * is_aligned - is this pointer & size okay for word-wide copying?
-  * @base: pointer to data
-  * @size: size of each element
-- * @align: required aignment (typically 4 or 8)
-+ * @align: required alignment (typically 4 or 8)
-  *
-  * Returns true if elements can be copied using word loads and stores.
-  * The size must be a multiple of the alignment, and the base address must
-@@ -115,6 +120,32 @@ static void swap_bytes(void *a, void *b, int size)
- 	} while (n);
- }
+ struct list_head;
  
-+/**
-+ * parent - given the offset of the child, find the offset of the parent.
-+ * @i: the offset of the heap element whose parent is sought.  Non-zero.
-+ * @lsbit: a precomputed 1-bit mask, equal to "size & -size"
-+ * @size: size of each element
-+ *
-+ * In terms of array indexes, the parent of element j = @i/@size is simply
-+ * (j-1)/2.  But when working in byte offsets, we can't use implicit
-+ * truncation of integer divides.
-+ *
-+ * Fortunately, we only need one bit of the quotient, not the full divide.
-+ * @size has a least significant bit.  That bit will be clear if @i is
-+ * an even multiple of @size, and set if it's an odd multiple.
-+ *
-+ * Logically, we're doing "if (i & lsbit) i -= size;", but since the
-+ * branch is unpredictable, it's done with a bit of clever branch-free
-+ * code instead.
++__attribute__((nonnull(2,3)))
+ void list_sort(void *priv, struct list_head *head,
+ 	       int (*cmp)(void *priv, struct list_head *a,
+ 			  struct list_head *b));
+diff --git a/lib/list_sort.c b/lib/list_sort.c
+index 85759928215b..fc807dd60a51 100644
+--- a/lib/list_sort.c
++++ b/lib/list_sort.c
+@@ -7,33 +7,47 @@
+ #include <linux/list_sort.h>
+ #include <linux/list.h>
+ 
+-#define MAX_LIST_LENGTH_BITS 20
++/*
++ * By declaring the compare function with the __pure attribute, we give
++ * the compiler more opportunity to optimize.  Ideally, we'd use this in
++ * the prototype of list_sort(), but that would involve a lot of churn
++ * at all call sites, so just cast the function pointer passed in.
 + */
-+__attribute_const__ __always_inline
-+static size_t parent(size_t i, unsigned int lsbit, size_t size)
-+{
-+	i -= size;
-+	i -= size & -(i & lsbit);
-+	return i / 2;
-+}
-+
- /**
-  * sort - sort an array of elements
-  * @base: pointer to data to sort
-@@ -129,17 +160,20 @@ static void swap_bytes(void *a, void *b, int size)
-  * isn't usually a bottleneck.
-  *
-  * Sorting time is O(n log n) both on average and worst-case. While
-- * qsort is about 20% faster on average, it suffers from exploitable
-+ * quicksort is slightly faster on average, it suffers from exploitable
-  * O(n*n) worst-case behavior and extra memory requirements that make
-  * it less suitable for kernel use.
++typedef int __pure __attribute__((nonnull(2,3))) (*cmp_func)(void *,
++		struct list_head const *, struct list_head const *);
+ 
+ /*
+  * Returns a list organized in an intermediate format suited
+  * to chaining of merge() calls: null-terminated, no reserved or
+  * sentinel head node, "prev" links not maintained.
   */
--
- void sort(void *base, size_t num, size_t size,
- 	  int (*cmp_func)(const void *, const void *),
- 	  void (*swap_func)(void *, void *, int size))
+-static struct list_head *merge(void *priv,
+-				int (*cmp)(void *priv, struct list_head *a,
+-					struct list_head *b),
++__attribute__((nonnull(2,3,4)))
++static struct list_head *merge(void *priv, cmp_func cmp,
+ 				struct list_head *a, struct list_head *b)
  {
- 	/* pre-scale counters for performance */
--	int i = (num/2 - 1) * size, n = num * size, c, r;
-+	size_t n = num * size, a = (num/2) * size;
-+	const unsigned int lsbit = size & -size;  /* Used to find parent */
-+
-+	if (!a)		/* num < 2 || size == 0 */
-+		return;
+-	struct list_head head, *tail = &head;
++	struct list_head *head, **tail = &head;
  
- 	if (!swap_func) {
- 		if (is_aligned(base, size, 8))
-@@ -150,32 +184,48 @@ void sort(void *base, size_t num, size_t size,
- 			swap_func = swap_bytes;
- 	}
- 
--	/* heapify */
--	for ( ; i >= 0; i -= size) {
--		for (r = i; r * 2 + size < n; r  = c) {
--			c = r * 2 + size;
--			if (c < n - size &&
--					cmp_func(base + c, base + c + size) < 0)
--				c += size;
--			if (cmp_func(base + r, base + c) >= 0)
--				break;
--			swap_func(base + r, base + c, size);
--		}
--	}
-+	/*
-+	 * Loop invariants:
-+	 * 1. elements [a,n) satisfy the heap property (compare greater than
-+	 *    all of their children),
-+	 * 2. elements [n,num*size) are sorted, and
-+	 * 3. a <= b <= c <= d <= n (whenever they are valid).
-+	 */
+-	while (a && b) {
 +	for (;;) {
-+		size_t b, c, d;
- 
--	/* sort */
--	for (i = n - size; i > 0; i -= size) {
--		swap_func(base, base + i, size);
--		for (r = 0; r * 2 + size < i; r = c) {
--			c = r * 2 + size;
--			if (c < i - size &&
--					cmp_func(base + c, base + c + size) < 0)
--				c += size;
--			if (cmp_func(base + r, base + c) >= 0)
--				break;
--			swap_func(base + r, base + c, size);
-+		if (a)			/* Building heap: sift down --a */
-+			a -= size;
-+		else if (n -= size)	/* Sorting: Extract root to --n */
-+			swap_func(base, base + n, size);
-+		else			/* Sort complete */
-+			break;
-+
-+		/*
-+		 * Sift element at "a" down into heap.  This is the
-+		 * "bottom-up" variant, which significantly reduces
-+		 * calls to cmp_func(): we find the sift-down path all
-+		 * the way to the leaves (one compare per level), then
-+		 * backtrack to find where to insert the target element.
-+		 *
-+		 * Because elements tend to sift down close to the leaves,
-+		 * this uses fewer compares than doing two per level
-+		 * on the way down.  (A bit more than half as many on
-+		 * average, 3/4 worst-case.)
-+		 */
-+		for (b = a; c = 2*b + size, (d = c + size) < n;)
-+			b = cmp_func(base + c, base + d) >= 0 ? c : d;
-+		if (d == n)	/* Special case last leaf with no sibling */
-+			b = c;
-+
-+		/* Now backtrack from "b" to the correct location for "a" */
-+		while (b != a && cmp_func(base + a, base + b) >= 0)
-+			b = parent(b, lsbit, size);
-+		c = b;			/* Where "a" belongs */
-+		while (b != a) {	/* Shift it into place */
-+			b = parent(b, lsbit, size);
-+			swap_func(base + b, base + c, size);
+ 		/* if equal, take 'a' -- important for sort stability */
+-		if ((*cmp)(priv, a, b) <= 0) {
+-			tail->next = a;
++		if (cmp(priv, a, b) <= 0) {
++			*tail = a;
++			tail = &a->next;
+ 			a = a->next;
++			if (!a) {
++				*tail = b;
++				break;
++			}
+ 		} else {
+-			tail->next = b;
++			*tail = b;
++			tail = &b->next;
+ 			b = b->next;
++			if (!b) {
++				*tail = a;
++				break;
++			}
  		}
+-		tail = tail->next;
  	}
+-	tail->next = a?:b;
+-	return head.next;
++	return head;
  }
+ 
+ /*
+@@ -43,44 +57,52 @@ static struct list_head *merge(void *priv,
+  * prev-link restoration pass, or maintaining the prev links
+  * throughout.
+  */
+-static void merge_and_restore_back_links(void *priv,
+-				int (*cmp)(void *priv, struct list_head *a,
+-					struct list_head *b),
+-				struct list_head *head,
+-				struct list_head *a, struct list_head *b)
++__attribute__((nonnull(2,3,4,5)))
++static void merge_final(void *priv, cmp_func cmp, struct list_head *head,
++			struct list_head *a, struct list_head *b)
+ {
+ 	struct list_head *tail = head;
+ 	u8 count = 0;
+ 
+-	while (a && b) {
++	for (;;) {
+ 		/* if equal, take 'a' -- important for sort stability */
+-		if ((*cmp)(priv, a, b) <= 0) {
++		if (cmp(priv, a, b) <= 0) {
+ 			tail->next = a;
+ 			a->prev = tail;
++			tail = a;
+ 			a = a->next;
++			if (!a)
++				break;
+ 		} else {
+ 			tail->next = b;
+ 			b->prev = tail;
++			tail = b;
+ 			b = b->next;
++			if (!b) {
++				b = a;
++				break;
++			}
+ 		}
+-		tail = tail->next;
+ 	}
+-	tail->next = a ? : b;
+ 
++	/* Finish linking remainder of list b on to tail */
++	tail->next = b;
+ 	do {
+ 		/*
+-		 * In worst cases this loop may run many iterations.
++		 * If the merge is highly unbalanced (e.g. the input is
++		 * already sorted), this loop may run many iterations.
+ 		 * Continue callbacks to the client even though no
+ 		 * element comparison is needed, so the client's cmp()
+ 		 * routine can invoke cond_resched() periodically.
+ 		 */
+-		if (unlikely(!(++count)))
+-			(*cmp)(priv, tail->next, tail->next);
 -
- EXPORT_SYMBOL(sort);
+-		tail->next->prev = tail;
+-		tail = tail->next;
+-	} while (tail->next);
++		if (unlikely(!++count))
++			cmp(priv, b, b);
++		b->prev = tail;
++		tail = b;
++		b = b->next;
++	} while (b);
+ 
++	/* And the final links to make a circular doubly-linked list */
+ 	tail->next = head;
+ 	head->prev = tail;
+ }
+@@ -91,55 +113,80 @@ static void merge_and_restore_back_links(void *priv,
+  * @head: the list to sort
+  * @cmp: the elements comparison function
+  *
+- * This function implements "merge sort", which has O(nlog(n))
+- * complexity.
++ * This function implements a bottom-up merge sort, which has O(nlog(n))
++ * complexity.  We use depth-first order to take advantage of cacheing.
++ * (E.g. when we get to the fourth element, we immediately merge the
++ * first two 2-element lists.)
+  *
+- * The comparison function @cmp must return a negative value if @a
+- * should sort before @b, and a positive value if @a should sort after
+- * @b. If @a and @b are equivalent, and their original relative
+- * ordering is to be preserved, @cmp must return 0.
++ * The comparison funtion @cmp must return > 0 if @a should sort after
++ * @b ("@a > @b" if you want an ascending sort), and <= 0 if @a should
++ * sort before @b *or* their original order should be preserved.  It is
++ * always called with the element that came first in the input in @a,
++ * and list_sort is a stable sort, so it is not necessary to distinguish
++ * the @a < @b and @a == @b cases.
++ *
++ * This is compatible with two styles of @cmp function:
++ * - The traditional style which returns <0 / =0 / >0, or
++ * - Returning a boolean 0/1.
++ * The latter offers a chance to save a few cycles in the comparison
++ * (which is used by e.g. plug_ctx_cmp() in block/blk-mq.c).
++ *
++ * A good way to write a multi-word comparison is
++ *	if (a->high != b->high)
++ *		return a->high > b->high;
++ *	if (a->middle != b->middle)
++ *		return a->middle > b->middle;
++ *	return a->low > b->low;
+  */
++__attribute__((nonnull(2,3)))
+ void list_sort(void *priv, struct list_head *head,
+ 		int (*cmp)(void *priv, struct list_head *a,
+ 			struct list_head *b))
+ {
+-	struct list_head *part[MAX_LIST_LENGTH_BITS+1]; /* sorted partial lists
+-						-- last slot is a sentinel */
+-	int lev;  /* index into part[] */
+-	int max_lev = 0;
+-	struct list_head *list;
++	struct list_head *list = head->next, *pending = NULL;
++	size_t count = 0;	/* Count of pending */
+ 
+-	if (list_empty(head))
++	if (list == head->prev)	/* Zero or one elements */
+ 		return;
+ 
+-	memset(part, 0, sizeof(part));
+-
++	/* Convert to a null-terminated singly-linked list. */
+ 	head->prev->next = NULL;
+-	list = head->next;
+ 
+-	while (list) {
++	/*
++	 * Data structure invariants:
++	 * - All lists are singly linked and null-terminated; prev
++	 *   pointers are not maintained.
++	 * - pending is a prev-linked "list of lists" of sorted
++	 *   sublists awaiting further merging.
++	 * - Each of the sorted sublists is power-of-two in size,
++	 *   corresponding to bits set in "count".
++	 * - Sublists are sorted by size and age, smallest & newest at front.
++	 */
++	do {
++		size_t bits;
+ 		struct list_head *cur = list;
++
++		/* Extract the head of "list" as a single-element list "cur" */
+ 		list = list->next;
+ 		cur->next = NULL;
+ 
+-		for (lev = 0; part[lev]; lev++) {
+-			cur = merge(priv, cmp, part[lev], cur);
+-			part[lev] = NULL;
++		/* Do merges corresponding to set lsbits in count */
++		for (bits = count; bits & 1; bits >>= 1) {
++			cur = merge(priv, (cmp_func)cmp, pending, cur);
++			pending = pending->prev;  /* Untouched by merge() */
+ 		}
+-		if (lev > max_lev) {
+-			if (unlikely(lev >= ARRAY_SIZE(part)-1)) {
+-				printk_once(KERN_DEBUG "list too long for efficiency\n");
+-				lev--;
+-			}
+-			max_lev = lev;
+-		}
+-		part[lev] = cur;
++		/* And place the result at the head of "pending" */
++		cur->prev = pending;
++		pending = cur;
++		count++;
++	} while (list->next);
++
++	/* Now merge together last element with all pending lists */
++	while (pending->prev) {
++		list = merge(priv, (cmp_func)cmp, pending, list);
++		pending = pending->prev;
+ 	}
+-
+-	for (lev = 0; lev < max_lev; lev++)
+-		if (part[lev])
+-			list = merge(priv, cmp, part[lev], list);
+-
+-	merge_and_restore_back_links(priv, cmp, head, part[max_lev], list);
++	/* The final merge, rebuilding prev links */
++	merge_final(priv, (cmp_func)cmp, head, pending, list);
+ }
+ EXPORT_SYMBOL(list_sort);
 -- 
 2.20.1
 
