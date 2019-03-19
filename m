@@ -2,104 +2,88 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D42C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D813CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386E3206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A770F20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfCSQm1 (ORCPT
+        id S1727559AbfCSQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:42:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55554 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727054AbfCSQm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:42:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4118AED8;
-        Tue, 19 Mar 2019 16:42:25 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hendrik Peyerl <hpeyerl@plusline.net>
-Subject: Re: [PATCH v2 2/2] ceph: quota: fix quota subdir mounts
-References: <20190312142019.30936-1-lhenriques@suse.com>
-        <20190312142019.30936-3-lhenriques@suse.com>
-        <CAAM7YAkksn_w6Nsm0D7HVGh59ysAJyHptXQ886xD9DAVGhxNEQ@mail.gmail.com>
-Date:   Tue, 19 Mar 2019 16:42:24 +0000
-In-Reply-To: <CAAM7YAkksn_w6Nsm0D7HVGh59ysAJyHptXQ886xD9DAVGhxNEQ@mail.gmail.com>
-        (Zheng Yan's message of "Mon, 18 Mar 2019 21:06:28 +0800")
-Message-ID: <8736nin7db.fsf@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 19 Mar 2019 12:43:42 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37261 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfCSQnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:43:42 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1h6Hpx-0006hq-D6; Tue, 19 Mar 2019 17:43:37 +0100
+Message-ID: <1553013817.6482.8.camel@pengutronix.de>
+Subject: Re: [PATCH 3/5] reset: Add acquire/release support for arrays
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 19 Mar 2019 17:43:37 +0100
+In-Reply-To: <20190221152557.8534-3-thierry.reding@gmail.com>
+References: <20190221152557.8534-1-thierry.reding@gmail.com>
+         <20190221152557.8534-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Yan, Zheng" <ukernel@gmail.com> writes:
+On Thu, 2019-02-21 at 16:25 +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Add implementations that apply acquire and release operations to all
+> reset controls part of a reset control array.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-> On Tue, Mar 12, 2019 at 10:22 PM Luis Henriques <lhenriques@suse.com> wrote:
-...
->> +static struct inode *lookup_quotarealm_inode(struct ceph_mds_client *mdsc,
->> +                                            struct super_block *sb,
->> +                                            struct ceph_snap_realm *realm)
->> +{
->> +       struct inode *in;
->> +
->> +       in = ceph_lookup_inode(sb, realm->ino);
->> +       if (IS_ERR(in)) {
->> +               pr_warn("Can't lookup inode %llx (err: %ld)\n",
->> +                       realm->ino, PTR_ERR(in));
->> +               return in;
->> +       }
->> +
->> +       spin_lock(&mdsc->quotarealms_inodes_lock);
->> +       list_add(&ceph_inode(in)->i_quotarealms_inode_item,
->> +                &mdsc->quotarealms_inodes_list);
->> +       spin_unlock(&mdsc->quotarealms_inodes_lock);
->> +
-> Multiple threads can call this function for the same inode at the same
-> time. need to handle this. Besides, client needs to record lookupino
-> error. Otherwise, client may repeatedly send useless request.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Good point.  So, the only way I see to fix this is to drop the
-mdsc->quotarealms_inodes_list and instead use an ordered list/tree of
-structs that would either point to the corresponding ceph inode or to
-NULL if there was an error in the lookup:
+> ---
+>  drivers/reset/core.c  | 36 +++++++++++++++++++++++++++++++++++-
+>  include/linux/reset.h |  6 ++++++
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> index f94da91c22af..81ea77cba123 100644
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -245,6 +245,34 @@ static int reset_control_array_deassert(struct reset_control_array *resets)
+>  	return ret;
+>  }
+>  
+> +static int reset_control_array_acquire(struct reset_control_array *resets)
+> +{
+> +	unsigned int i;
+> +	int err;
+> +
+> +	for (i = 0; i < resets->num_rstcs; i++) {
+> +		err = reset_control_acquire(resets->rstc[i]);
+> +		if (err < 0)
+> +			goto release;
+> +	}
 
-	struct ceph_realm_inode {
-                u64 ino;
-		struct ceph_inode_info *ci;
-		spinlock_t lock;
-		unsigned long timeout;
-	}
+This could be done under a single mutex lock by extracting a free
+version of of reset_control_acquire. Just an idea though, not sure if
+that would have any measurable benefit.
 
-The 'timeout' field would be used to try to do the lookup again if the
-error occurred long time ago.
-
-The code would then create a new struct for the realm->ino (if one is
-not found in the mdsc list), lock it and do the lookupino; if there's a
-struct already on the list, it either means there's a lookupino in
-progress or there was an error in the last lookup.
-
-This sounds overly complicated so I may be missing the obvious simple
-fix.  Any ideas?
-
->> +       spin_lock(&realm->inodes_with_caps_lock);
->> +       realm->inode = in;
->
-> reply of lookup_ino should alreadly set realm->inode
-
-Yes, of course.  This was silly.
-
-Cheers,
--- 
-Luis
+regards
+Philipp
