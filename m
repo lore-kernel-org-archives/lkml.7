@@ -2,98 +2,98 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ADDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24970C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6410520863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pados.hu header.i=@pados.hu header.b="ie5x6XrD"
+	by mail.kernel.org (Postfix) with ESMTP id EA3BE20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553015576;
+	bh=yb7rlhAOyr2DIgzIdNxF8fTby0EHadFxRYY0HkyNJDk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=apGQQtOntANvZ6DoQ5bedhMVSMcJdFOCY9QyQpqCFSDs2UtoIhcnwpL9nTzv2SrY6
+	 qFmGPPHG3Gt0fxINhr7M5M87u2eI56W35Gg24hu/mTjEP+71mVFAuHnQup88khnHqK
+	 dxBhOAVHCi3BarRzTEsaOtwzJsBEycgQuFWMT3dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfCSRMp (ORCPT
+        id S1727924AbfCSRMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:12:45 -0400
-Received: from erza.pados.hu ([176.9.136.194]:38136 "EHLO erza.pados.hu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbfCSRMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:12:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=pados.hu;
-         s=february2016; h=To:Subject:From:Content-Type:Date:MIME-Version:From:
-        Subject:To; bh=ZxE5l2rXv7JEJCLBCLrJK1Kr4qnavi9EiNGJ48Oj7iY=; b=ie5x6XrDcoPHbz
-        7opKQWkJGF6MJX8zCmgRCP2JFX2HJlOjY//asbEB/6aMExtAR1O2nKz+rKym/Wgzj+x2u9jS3hp4C
-        wfWO7I32d5ku4SGU5n0rxQOEYPlEn1QcmfIT/fsta2U8n5+sjKhwvF1VlKx3jceG2r0jLyWnUdc0f
-        ygKUCJImxKFUkmQHqVV+eNkmAnfwh2BPWBXLqTVgokRYG6aiIrScfb+KdixSjjquW97YbsGLax5eD
-        przrsmiqzzchewllGst35j3X750dxmH/qfB8RevXv4PrGuLWfSpyQLrQZ4RDgHCm95RsGpxEjJMeV
-        hruvvxckOWYtku4Vcm6g==;
-Received: from localhost ([127.0.0.1] helo=webmail.pados.hu)
-        by erza with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <pados@pados.hu>)
-        id 1h6IHr-0006ws-N7; Tue, 19 Mar 2019 18:12:28 +0100
-MIME-Version: 1.0
-Date:   Tue, 19 Mar 2019 17:12:25 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: RainLoop/1.12.0
-From:   "Karoly Pados" <pados@pados.hu>
-Message-ID: <c936ea8404f192276e0a42d9da0b7863@pados.hu>
-Subject: Re: [PATCH v2] USB: serial: cp210x: Fix GPIO in autosuspend
-To:     "Oliver Neukum" <oneukum@suse.com>,
-        "Johan Hovold" <johan@kernel.org>
-Cc:     "Loic Poulain" <loic.poulain@linaro.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-In-Reply-To: <1552994106.14757.34.camel@suse.com>
-References: <1552994106.14757.34.camel@suse.com>
- <20190217175901.3986-1-pados@pados.hu> <1550481432.11088.4.camel@suse.com>
- <20190319103659.GA3178@localhost>
-X-Spam_score: -2.9
-X-Spam_report: Spam detection software, running on the system "erza",
- has NOT identified this incoming email as spam.  The original
- message has been attached to this so you can view it or label
- similar future email.  If you have any questions, see
- the administrator of that system for details.
- Content preview:  Hi Oliver, USB suspend does not turn off power. Your concerns
-    about the situations you list are valid, but my patch is for another problem.
-    Not for what happens when power is lost, but because the user couldn't [...]
- Content analysis details:   (-2.9 points, 5.0 required)
-  pts rule name              description
- ---- ---------------------- --------------------------------------------------
-  0.0 URIBL_BLOCKED          ADMINISTRATOR NOTICE: The query to URIBL was
-                             blocked.  See
-                             http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-                              for more information.
-                             [URIs: suse.com]
- -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
- -1.9 BAYES_00               BODY: Bayes spam probability is 0 to 1%
-                             [score: 0.0000]
+        Tue, 19 Mar 2019 13:12:54 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:56572 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbfCSRMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:12:54 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 9E79E3B2C;
+        Tue, 19 Mar 2019 17:12:52 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:12:49 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+Message-Id: <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+In-Reply-To: <20190319165802.GA3656@redhat.com>
+References: <20190129165428.3931-1-jglisse@redhat.com>
+        <20190313012706.GB3402@redhat.com>
+        <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+        <20190318170404.GA6786@redhat.com>
+        <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+        <20190319165802.GA3656@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oliver,=0A=0AUSB suspend does not turn off power. Your concerns about =
-the situations you list=0Aare valid, but my patch is for another problem.=
- Not for what happens=0Awhen power is lost, but because the user couldn't=
- use the GPIO lines even if=0Apower was on and continous, due to the kern=
-el automatically putting the device into=0Asuspend and then all usb messa=
-ges failed in this case.=0A=0AKaroly=0A=0AMarch 19, 2019 12:26 PM, "Olive=
-r Neukum" <oneukum@suse.com> wrote:=0A=0A> On Di, 2019-03-19 at 11:36 +01=
-00, Johan Hovold wrote:=0A> =0A>> On Mon, Feb 18, 2019 at 10:17:12AM +010=
-0, Oliver Neukum wrote:=0A>> On So, 2019-02-17 at 18:59 +0100, Karoly Pad=
-os wrote:=0A>>> Current GPIO code in cp210x fails to take USB autosuspend=
- into account,=0A>>> making it practically impossible to use GPIOs with a=
-utosuspend enabled=0A>>> without user configuration. Fix this like for ft=
-di_sio in a previous patch.=0A>>> Tested on a CP2102N.=0A>> your patch is=
- looking good to me, but I am afraid there are issues.=0A>> How do the GP=
-IO lines on the device interact with USB reset and system=0A>> suspend?=
-=0A>> =0A>> What was your concern here, Oliver?=0A> =0A> If you have a de=
-vice resetting or losing power (for reset_resume) the=0A> GPIO lines will=
- revert to the default. But that change is not reported=0A> to user space=
-, is it?=0A> So the original patch is correct, but there are more situati=
-ons rather=0A> than suspend which could trigger the problem.=0A> =0A> Reg=
-ards=0A> Oliver
+On Tue, 19 Mar 2019 12:58:02 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+
+> > So I think I'll throw up my hands, drop them all and shall await
+> > developments :(
+> 
+> What more do you want to see ? I can repost with the ack already given
+> and the improve commit wording on some of the patch. But from user point
+> of view nouveau is already upstream, ODP RDMA depends on this patchset
+> and is posted and i have given link to it. amdgpu is queue up. What more
+> do i need ?
+
+I guess I can ignore linux-next for a few days.  
+
+Yes, a resend against mainline with those various updates will be
+helpful.  Please go through the various fixes which we had as well:
+
+
+mm-hmm-use-reference-counting-for-hmm-struct.patch
+mm-hmm-do-not-erase-snapshot-when-a-range-is-invalidated.patch
+mm-hmm-improve-and-rename-hmm_vma_get_pfns-to-hmm_range_snapshot.patch
+mm-hmm-improve-and-rename-hmm_vma_fault-to-hmm_range_fault.patch
+mm-hmm-improve-driver-api-to-work-and-wait-over-a-range.patch
+mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix.patch
+mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix-fix.patch
+mm-hmm-add-default-fault-flags-to-avoid-the-need-to-pre-fill-pfns-arrays.patch
+mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device.patch
+mm-hmm-support-hugetlbfs-snap-shoting-faulting-and-dma-mapping.patch
+mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem.patch
+mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix.patch
+mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix-2.patch
+mm-hmm-add-helpers-for-driver-to-safely-take-the-mmap_sem.patch
+
+Also, the discussion regarding [07/10] is substantial and is ongoing so
+please let's push along wth that.
+
+What is the review/discussion status of "[PATCH 09/10] mm/hmm: allow to
+mirror vma of a file on a DAX backed filesystem"?
+
