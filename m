@@ -2,279 +2,295 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C5C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD34C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E99213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VnkKiAhv"
+	by mail.kernel.org (Postfix) with ESMTP id 173FB213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfCSOQ7 (ORCPT
+        id S1727270AbfCSOSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:16:59 -0400
-Received: from mail-eopbgr60043.outbound.protection.outlook.com ([40.107.6.43]:42620
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726466AbfCSOQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:16:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5JikXJu++oeN813EiwHNRgPvDqfhkTQQuq+MwSs2EsA=;
- b=VnkKiAhvE2QjF88MyHljtRtdhes6IkJzXGJ+1SqV/q5RxjgiAunCCUR0keFt1U0SuF8570TVOBZrNL+eJR7kjcbGiytTEccchbqrN2uj08tEHx3DHty9tZANZkMGWpV3eLU+a0jtHYs1rBHBKATxw13bMFV6CLenpviTLKN2JCk=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB5652.eurprd04.prod.outlook.com (20.178.118.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 19 Mar 2019 14:16:51 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79%2]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 14:16:51 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     =?utf-8?B?Sm9uYXRoYW4gTmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RESEND] clk: imx5: Fix i.MX50 clock registers
-Thread-Topic: [PATCH RESEND] clk: imx5: Fix i.MX50 clock registers
-Thread-Index: AQHU3eDaNsWmaTlI8kWRNtiHiZquoKYS+U6A
-Date:   Tue, 19 Mar 2019 14:16:51 +0000
-Message-ID: <AM0PR04MB4211990282677EEB9D3928F380400@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190318231737.8459-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20190318231737.8459-1-j.neuschaefer@gmx.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 749902ea-771f-40e5-ba76-08d6ac758842
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5652;
-x-ms-traffictypediagnostic: AM0PR04MB5652:
-x-microsoft-antispam-prvs: <AM0PR04MB5652293C1E57B3F4E585A65580400@AM0PR04MB5652.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(136003)(396003)(366004)(199004)(189003)(71190400001)(74316002)(229853002)(316002)(71200400001)(446003)(476003)(2906002)(11346002)(6436002)(486006)(8936002)(25786009)(44832011)(2501003)(7416002)(478600001)(5660300002)(6116002)(7736002)(305945005)(52536014)(3846002)(102836004)(81166006)(14454004)(26005)(99286004)(81156014)(76176011)(7696005)(6506007)(106356001)(4326008)(6246003)(9686003)(86362001)(55016002)(8676002)(66066001)(54906003)(256004)(33656002)(110136005)(97736004)(105586002)(68736007)(53936002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5652;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 79jf9xtpbYnZNApyjyQ4l3kcpsnyNxmmsSJPoxtTrHCe2hxilCqaoywJ7AeGO5waF+oPWOVXUk/RBp5wZ6zJVbAaLf8NvC1qeMHOCvPj0PflacXwyp5HU1b3JAkLr7HzT3FllNL2SUyxPX9OE2hYYsTS5JTUytAkbwnTNbvR5ZqXhWNTPNKjH+zQ/masnTvpaCCeMdVoO4Qj9WTB7aRa10yR8D0GVuL9u3Gz+sZctJzihBUW70wno8cdWdoobJhtGUv8wL7aoaFulofsMfZ+MAXj1THAJD8JsWP3O8YB3rFBo+NkqXNRAM0ZUM91jhph9hxf9AXP2GKMuWaN1EnRGWY4XuVlsX4nSzYE2jV1y1zfFJFU3/DCuXbiJ26hI43UDcsP2N6SmcUaOeORlzIx7sczVGZlSHpo+9shdKCaaq0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 19 Mar 2019 10:18:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44885 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfCSOSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:18:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 07:18:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,498,1544515200"; 
+   d="scan'208";a="135582333"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Mar 2019 07:18:35 -0700
+Date:   Tue, 19 Mar 2019 07:18:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        chao.gao@intel.com
+Subject: Re: [PATCH v2 1/2] kvm/vmx: avoid CPUID faulting leaking to guest
+Message-ID: <20190319141836.GA25575@linux.intel.com>
+References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
+ <20190318114324.14198-2-xiaoyao.li@linux.intel.com>
+ <20190318162336.GA13528@linux.intel.com>
+ <676340c3796e588900658475dbbcb7d1c6e8ecfe.camel@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 749902ea-771f-40e5-ba76-08d6ac758842
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 14:16:51.5648
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5652
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <676340c3796e588900658475dbbcb7d1c6e8ecfe.camel@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBKb25hdGhhbiBOZXVzY2jDpGZlciBbbWFpbHRvOmoubmV1c2NoYWVmZXJAZ214Lm5l
-dF0NCj4gDQo+IFRoZXJlIGFyZSBhIGZldyBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSBpLk1YNTAg
-Y2xvY2sgdHJlZSBhbmQgdGhvc2Ugb2YNCj4gaS5NWDUxIGFuZCBpLk1YNTMgdGhhdCBhcmUgbm90
-IHlldCBoYW5kbGVkIGluIGNsay1pbXg1MS1pbXg1My5jLg0KPiBUaGlzIHBhdGNoIGhhbmRsZXMg
-dGhlIGZvbGxvd2luZyBkaWZmZXJlbmNlczoNCj4gDQo+IC0gaS5NWDUwIGRvZXMgbm90IGhhdmUg
-YSBwZXJpcGhfYXBtIGNsb2NrLiBJbnN0ZWFkLCB0aGUgbWFpbiBidXMgY2xvY2sNCj4gICAoYS5r
-LmEuIHBlcmlwaF9jbGspIGNvbWVzIGRpcmVjdGx5IGZyb20gYSBNVVggYmV0d2VlbiBwbGwxX3N3
-LA0KPiAgIHBsbDJfc3csIHBsbDNfc3csIGFuZCBscF9hcG0uDQo+IC0gVGhlIE1VWCBiaXRzIGZv
-ciBlc2RoY197YSxjLGR9X3NlbCBhcmUgc2hpZnRlZCBieSBvbmUgYml0IHdpdGhpbg0KPiAgIENT
-Q01SMS4NCj4gDQoNCkNhbiB5b3UgcGxlYXNlIHNwbGl0IHRoZW0gaW50byB0d28gcGF0Y2hlcz8N
-Ck90aGVyd2lzZSwgdGhlIGZpeCBzZWVtcyBnb29kIHRvIG1lLg0KDQpSZWdhcmRzDQpEb25nIEFp
-c2hlbmcNCg0KPiBTaWduZWQtb2ZmLWJ5OiBKb25hdGhhbiBOZXVzY2jDpGZlciA8ai5uZXVzY2hh
-ZWZlckBnbXgubmV0Pg0KPiAtLS0NCj4gDQo+IEknZCBhcHByZWNpYXRlIHNvbWUgdGVzdGluZyBm
-cm9tIG93bmVycyBvZiBpLk1YNTEgb3IgaS5NWDUzIGJhc2VkIGJvYXJkcyB0bw0KPiBlbnN1cmUg
-dGhhdCBJIGRpZG4ndCBicmVhayB0aGUgZHJpdmVyIGZvciB0aGVzZSBTb0NzLg0KPiANCj4gUHJl
-dmlvdXMgY29weSBvZiB2MToNCj4gLS0tDQo+ICBkcml2ZXJzL2Nsay9pbXgvY2xrLWlteDUxLWlt
-eDUzLmMgfCA1OSArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg1MS1pbXg1My5jDQo+IGIvZHJpdmVycy9jbGsvaW14
-L2Nsay1pbXg1MS1pbXg1My5jDQo+IGluZGV4IGU5MWM4MjZiY2U3MC4uYzg1ZWJkNzRhOGE1IDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDUxLWlteDUzLmMNCj4gKysrIGIv
-ZHJpdmVycy9jbGsvaW14L2Nsay1pbXg1MS1pbXg1My5jDQo+IEBAIC0xNjQsMTAgKzE2NCw2IEBA
-IHN0YXRpYyB2b2lkIF9faW5pdCBteDVfY2xvY2tzX2NvbW1vbl9pbml0KHZvaWQNCj4gX19pb21l
-bSAqY2NtX2Jhc2UpDQo+ICAJY2xrW0lNWDVfQ0xLX0NLSUgxXQkJPSBpbXhfb2J0YWluX2ZpeGVk
-X2Nsb2NrKCJja2loMSIsIDApOw0KPiAgCWNsa1tJTVg1X0NMS19DS0lIMl0JCT0gaW14X29idGFp
-bl9maXhlZF9jbG9jaygiY2tpaDIiLCAwKTsNCj4gDQo+IC0JY2xrW0lNWDVfQ0xLX1BFUklQSF9B
-UE1dCT0gaW14X2Nsa19tdXgoInBlcmlwaF9hcG0iLA0KPiBNWENfQ0NNX0NCQ01SLCAxMiwgMiwN
-Cj4gLQkJCQkJCXBlcmlwaF9hcG1fc2VsLCBBUlJBWV9TSVpFKHBlcmlwaF9hcG1fc2VsKSk7DQo+
-IC0JY2xrW0lNWDVfQ0xLX01BSU5fQlVTXQkJPSBpbXhfY2xrX211eCgibWFpbl9idXMiLA0KPiBN
-WENfQ0NNX0NCQ0RSLCAyNSwgMSwNCj4gLQkJCQkJCW1haW5fYnVzX3NlbCwgQVJSQVlfU0laRSht
-YWluX2J1c19zZWwpKTsNCj4gIAljbGtbSU1YNV9DTEtfUEVSX0xQX0FQTV0JPSBpbXhfY2xrX211
-eCgicGVyX2xwX2FwbSIsDQo+IE1YQ19DQ01fQ0JDTVIsIDEsIDEsDQo+ICAJCQkJCQlwZXJfbHBf
-YXBtX3NlbCwgQVJSQVlfU0laRShwZXJfbHBfYXBtX3NlbCkpOw0KPiAgCWNsa1tJTVg1X0NMS19Q
-RVJfUFJFRDFdCQk9IGlteF9jbGtfZGl2aWRlcigicGVyX3ByZWQxIiwNCj4gInBlcl9scF9hcG0i
-LCBNWENfQ0NNX0NCQ0RSLCA2LCAyKTsNCj4gQEAgLTE5MSwxNiArMTg3LDEwIEBAIHN0YXRpYyB2
-b2lkIF9faW5pdCBteDVfY2xvY2tzX2NvbW1vbl9pbml0KHZvaWQNCj4gX19pb21lbSAqY2NtX2Jh
-c2UpDQo+ICAJY2xrW0lNWDVfQ0xLX1VBUlRfUFJFRF0JCT0gaW14X2Nsa19kaXZpZGVyKCJ1YXJ0
-X3ByZWQiLA0KPiAidWFydF9zZWwiLCBNWENfQ0NNX0NTQ0RSMSwgMywgMyk7DQo+ICAJY2xrW0lN
-WDVfQ0xLX1VBUlRfUk9PVF0JCT0gaW14X2Nsa19kaXZpZGVyKCJ1YXJ0X3Jvb3QiLA0KPiAidWFy
-dF9wcmVkIiwgTVhDX0NDTV9DU0NEUjEsIDAsIDMpOw0KPiANCj4gLQljbGtbSU1YNV9DTEtfRVNE
-SENfQV9TRUxdCT0gaW14X2Nsa19tdXgoImVzZGhjX2Ffc2VsIiwNCj4gTVhDX0NDTV9DU0NNUjEs
-IDIwLCAyLA0KPiAtCQkJCQkJc3RhbmRhcmRfcGxsX3NlbCwgQVJSQVlfU0laRShzdGFuZGFyZF9w
-bGxfc2VsKSk7DQo+IC0JY2xrW0lNWDVfQ0xLX0VTREhDX0JfU0VMXQk9IGlteF9jbGtfbXV4KCJl
-c2RoY19iX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIxLCAxNiwgMiwNCj4gLQkJCQkJCXN0YW5kYXJk
-X3BsbF9zZWwsIEFSUkFZX1NJWkUoc3RhbmRhcmRfcGxsX3NlbCkpOw0KPiAgCWNsa1tJTVg1X0NM
-S19FU0RIQ19BX1BSRURdCT0gaW14X2Nsa19kaXZpZGVyKCJlc2RoY19hX3ByZWQiLA0KPiAiZXNk
-aGNfYV9zZWwiLCBNWENfQ0NNX0NTQ0RSMSwgMTYsIDMpOw0KPiAgCWNsa1tJTVg1X0NMS19FU0RI
-Q19BX1BPREZdCT0gaW14X2Nsa19kaXZpZGVyKCJlc2RoY19hX3BvZGYiLA0KPiAiZXNkaGNfYV9w
-cmVkIiwgTVhDX0NDTV9DU0NEUjEsIDExLCAzKTsNCj4gIAljbGtbSU1YNV9DTEtfRVNESENfQl9Q
-UkVEXQk9IGlteF9jbGtfZGl2aWRlcigiZXNkaGNfYl9wcmVkIiwNCj4gImVzZGhjX2Jfc2VsIiwg
-TVhDX0NDTV9DU0NEUjEsIDIyLCAzKTsNCj4gIAljbGtbSU1YNV9DTEtfRVNESENfQl9QT0RGXQk9
-IGlteF9jbGtfZGl2aWRlcigiZXNkaGNfYl9wb2RmIiwNCj4gImVzZGhjX2JfcHJlZCIsIE1YQ19D
-Q01fQ1NDRFIxLCAxOSwgMyk7DQo+IC0JY2xrW0lNWDVfQ0xLX0VTREhDX0NfU0VMXQk9IGlteF9j
-bGtfbXV4KCJlc2RoY19jX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIxLCAxOSwgMSwgZXNkaGNfY19z
-ZWwsIEFSUkFZX1NJWkUoZXNkaGNfY19zZWwpKTsNCj4gLQljbGtbSU1YNV9DTEtfRVNESENfRF9T
-RUxdCT0gaW14X2Nsa19tdXgoImVzZGhjX2Rfc2VsIiwNCj4gTVhDX0NDTV9DU0NNUjEsIDE4LCAx
-LCBlc2RoY19kX3NlbCwgQVJSQVlfU0laRShlc2RoY19kX3NlbCkpOw0KPiANCj4gIAljbGtbSU1Y
-NV9DTEtfRU1JX1NFTF0JCT0gaW14X2Nsa19tdXgoImVtaV9zZWwiLA0KPiBNWENfQ0NNX0NCQ0RS
-LCAyNiwgMSwNCj4gIAkJCQkJCWVtaV9zbG93X3NlbCwgQVJSQVlfU0laRShlbWlfc2xvd19zZWwp
-KTsgQEANCj4gLTMxMSwxMCArMzAxLDYgQEAgc3RhdGljIHZvaWQgX19pbml0IG14NV9jbG9ja3Nf
-Y29tbW9uX2luaXQodm9pZCBfX2lvbWVtDQo+ICpjY21fYmFzZSkNCj4gIAljbGtfcmVnaXN0ZXJf
-Y2xrZGV2KGNsa1tJTVg1X0NMS19DUFVfUE9ERl0sIE5VTEwsICJjcHUwIik7DQo+ICAJY2xrX3Jl
-Z2lzdGVyX2Nsa2RldihjbGtbSU1YNV9DTEtfR1BDX0RWRlNdLCAiZ3BjX2R2ZnMiLCBOVUxMKTsN
-Cj4gDQo+IC0JLyogU2V0IFNESEMgcGFyZW50cyB0byBiZSBQTEwyICovDQo+IC0JY2xrX3NldF9w
-YXJlbnQoY2xrW0lNWDVfQ0xLX0VTREhDX0FfU0VMXSwgY2xrW0lNWDVfQ0xLX1BMTDJfU1ddKTsN
-Cj4gLQljbGtfc2V0X3BhcmVudChjbGtbSU1YNV9DTEtfRVNESENfQl9TRUxdLCBjbGtbSU1YNV9D
-TEtfUExMMl9TV10pOw0KPiAtDQo+ICAJLyogbW92ZSB1c2IgcGh5IGNsayB0byAyNE1IeiAqLw0K
-PiAgCWNsa19zZXRfcGFyZW50KGNsa1tJTVg1X0NMS19VU0JfUEhZX1NFTF0sIGNsa1tJTVg1X0NM
-S19PU0NdKTsgIH0NCj4gQEAgLTM0Miw4ICszMjgsMjEgQEAgc3RhdGljIHZvaWQgX19pbml0IG14
-NTBfY2xvY2tzX2luaXQoc3RydWN0DQo+IGRldmljZV9ub2RlICpucCkNCj4gDQo+ICAJbXg1X2Ns
-b2Nrc19jb21tb25faW5pdChjY21fYmFzZSk7DQo+IA0KPiArCS8qDQo+ICsJICogVGhpcyBjbG9j
-ayBpcyBjYWxsZWQgcGVyaXBoX2NsayBpbiB0aGUgaS5NWDUwIFJlZmVyZW5jZSBNYW51YWwsIGJ1
-dA0KPiArCSAqIGl0IGNvbWVzIGNsb3Nlc3QgaW4gc2NvcGUgdG8gdGhlIG1haW5fYnVzX2NsayBv
-ZiBpLk1YNTEgYW5kIGkuTVg1Mw0KPiArCSAqLw0KPiArCWNsa1tJTVg1X0NMS19NQUlOX0JVU10g
-ICAgICAgICAgPSBpbXhfY2xrX211eCgibWFpbl9idXMiLA0KPiBNWENfQ0NNX0NCQ0RSLCAyNSwg
-MiwNCj4gKwkJCQkJCXN0YW5kYXJkX3BsbF9zZWwsIEFSUkFZX1NJWkUoc3RhbmRhcmRfcGxsX3Nl
-bCkpOw0KPiArDQo+ICAJY2xrW0lNWDVfQ0xLX0xQX0FQTV0JCT0gaW14X2Nsa19tdXgoImxwX2Fw
-bSIsIE1YQ19DQ01fQ0NTUiwNCj4gMTAsIDEsDQo+ICAJCQkJCQlscF9hcG1fc2VsLCBBUlJBWV9T
-SVpFKGxwX2FwbV9zZWwpKTsNCj4gKwljbGtbSU1YNV9DTEtfRVNESENfQV9TRUxdCT0gaW14X2Ns
-a19tdXgoImVzZGhjX2Ffc2VsIiwNCj4gTVhDX0NDTV9DU0NNUjEsIDIxLCAyLA0KPiArCQkJCQkJ
-c3RhbmRhcmRfcGxsX3NlbCwgQVJSQVlfU0laRShzdGFuZGFyZF9wbGxfc2VsKSk7DQo+ICsJY2xr
-W0lNWDVfQ0xLX0VTREhDX0JfU0VMXQk9IGlteF9jbGtfbXV4KCJlc2RoY19iX3NlbCIsDQo+IE1Y
-Q19DQ01fQ1NDTVIxLCAxNiwgMiwNCj4gKwkJCQkJCXN0YW5kYXJkX3BsbF9zZWwsIEFSUkFZX1NJ
-WkUoc3RhbmRhcmRfcGxsX3NlbCkpOw0KPiArCWNsa1tJTVg1X0NMS19FU0RIQ19DX1NFTF0JPSBp
-bXhfY2xrX211eCgiZXNkaGNfY19zZWwiLA0KPiBNWENfQ0NNX0NTQ01SMSwgMjAsIDEsIGVzZGhj
-X2Nfc2VsLCBBUlJBWV9TSVpFKGVzZGhjX2Nfc2VsKSk7DQo+ICsJY2xrW0lNWDVfQ0xLX0VTREhD
-X0RfU0VMXQk9IGlteF9jbGtfbXV4KCJlc2RoY19kX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIxLCAx
-OSwgMSwgZXNkaGNfZF9zZWwsIEFSUkFZX1NJWkUoZXNkaGNfZF9zZWwpKTsNCj4gIAljbGtbSU1Y
-NV9DTEtfRVNESEMxX1BFUl9HQVRFXQk9DQo+IGlteF9jbGtfZ2F0ZTIoImVzZGhjMV9wZXJfZ2F0
-ZSIsICJlc2RoY19hX3BvZGYiLCBNWENfQ0NNX0NDR1IzLCAyKTsNCj4gIAljbGtbSU1YNV9DTEtf
-RVNESEMyX1BFUl9HQVRFXQk9DQo+IGlteF9jbGtfZ2F0ZTIoImVzZGhjMl9wZXJfZ2F0ZSIsICJl
-c2RoY19jX3NlbCIsIE1YQ19DQ01fQ0NHUjMsIDYpOw0KPiAgCWNsa1tJTVg1X0NMS19FU0RIQzNf
-UEVSX0dBVEVdCT0NCj4gaW14X2Nsa19nYXRlMigiZXNkaGMzX3Blcl9nYXRlIiwgImVzZGhjX2Jf
-cG9kZiIsIE1YQ19DQ01fQ0NHUjMsIDEwKTsNCj4gQEAgLTM3Miw2ICszNzEsMTAgQEAgc3RhdGlj
-IHZvaWQgX19pbml0IG14NTBfY2xvY2tzX2luaXQoc3RydWN0DQo+IGRldmljZV9ub2RlICpucCkN
-Cj4gIAljbGtfZGF0YS5jbGtfbnVtID0gQVJSQVlfU0laRShjbGspOw0KPiAgCW9mX2Nsa19hZGRf
-cHJvdmlkZXIobnAsIG9mX2Nsa19zcmNfb25lY2VsbF9nZXQsICZjbGtfZGF0YSk7DQo+IA0KPiAr
-CS8qIFNldCBTREhDIHBhcmVudHMgdG8gYmUgUExMMiAqLw0KPiArCWNsa19zZXRfcGFyZW50KGNs
-a1tJTVg1X0NMS19FU0RIQ19BX1NFTF0sIGNsa1tJTVg1X0NMS19QTEwyX1NXXSk7DQo+ICsJY2xr
-X3NldF9wYXJlbnQoY2xrW0lNWDVfQ0xLX0VTREhDX0JfU0VMXSwgY2xrW0lNWDVfQ0xLX1BMTDJf
-U1ddKTsNCj4gKw0KPiAgCS8qIHNldCBTREhDIHJvb3QgY2xvY2sgdG8gMjAwTUhaKi8NCj4gIAlj
-bGtfc2V0X3JhdGUoY2xrW0lNWDVfQ0xLX0VTREhDX0FfUE9ERl0sIDIwMDAwMDAwMCk7DQo+ICAJ
-Y2xrX3NldF9yYXRlKGNsa1tJTVg1X0NMS19FU0RIQ19CX1BPREZdLCAyMDAwMDAwMDApOyBAQCAt
-NDEwLDYNCj4gKzQxMywxMCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgbXg1MV9jbG9ja3NfaW5pdChz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiANCj4gIAlteDVfY2xvY2tzX2NvbW1vbl9pbml0KGNj
-bV9iYXNlKTsNCj4gDQo+ICsJY2xrW0lNWDVfQ0xLX1BFUklQSF9BUE1dCT0gaW14X2Nsa19tdXgo
-InBlcmlwaF9hcG0iLA0KPiBNWENfQ0NNX0NCQ01SLCAxMiwgMiwNCj4gKwkJCQkJCXBlcmlwaF9h
-cG1fc2VsLCBBUlJBWV9TSVpFKHBlcmlwaF9hcG1fc2VsKSk7DQo+ICsJY2xrW0lNWDVfQ0xLX01B
-SU5fQlVTXQkJPSBpbXhfY2xrX211eCgibWFpbl9idXMiLA0KPiBNWENfQ0NNX0NCQ0RSLCAyNSwg
-MSwNCj4gKwkJCQkJCW1haW5fYnVzX3NlbCwgQVJSQVlfU0laRShtYWluX2J1c19zZWwpKTsNCj4g
-IAljbGtbSU1YNV9DTEtfTFBfQVBNXQkJPSBpbXhfY2xrX211eCgibHBfYXBtIiwgTVhDX0NDTV9D
-Q1NSLA0KPiA5LCAxLA0KPiAgCQkJCQkJbHBfYXBtX3NlbCwgQVJSQVlfU0laRShscF9hcG1fc2Vs
-KSk7DQo+ICAJY2xrW0lNWDVfQ0xLX0lQVV9ESTBfU0VMXQk9IGlteF9jbGtfbXV4X2ZsYWdzKCJp
-cHVfZGkwX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIyLCAyNiwgMywNCj4gQEAgLTQyMiw2ICs0Mjks
-MTIgQEAgc3RhdGljIHZvaWQgX19pbml0IG14NTFfY2xvY2tzX2luaXQoc3RydWN0DQo+IGRldmlj
-ZV9ub2RlICpucCkNCj4gIAkJCQkJCW14NTFfdHZlX3NlbCwgQVJSQVlfU0laRShteDUxX3R2ZV9z
-ZWwpKTsNCj4gIAljbGtbSU1YNV9DTEtfVFZFX0dBVEVdCQk9IGlteF9jbGtfZ2F0ZTIoInR2ZV9n
-YXRlIiwgInR2ZV9zZWwiLA0KPiBNWENfQ0NNX0NDR1IyLCAzMCk7DQo+ICAJY2xrW0lNWDVfQ0xL
-X1RWRV9QUkVEXQkJPSBpbXhfY2xrX2RpdmlkZXIoInR2ZV9wcmVkIiwgInBsbDNfc3ciLA0KPiBN
-WENfQ0NNX0NEQ0RSLCAyOCwgMyk7DQo+ICsJY2xrW0lNWDVfQ0xLX0VTREhDX0FfU0VMXQk9IGlt
-eF9jbGtfbXV4KCJlc2RoY19hX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIxLCAyMCwgMiwNCj4gKwkJ
-CQkJCXN0YW5kYXJkX3BsbF9zZWwsIEFSUkFZX1NJWkUoc3RhbmRhcmRfcGxsX3NlbCkpOw0KPiAr
-CWNsa1tJTVg1X0NMS19FU0RIQ19CX1NFTF0JPSBpbXhfY2xrX211eCgiZXNkaGNfYl9zZWwiLA0K
-PiBNWENfQ0NNX0NTQ01SMSwgMTYsIDIsDQo+ICsJCQkJCQlzdGFuZGFyZF9wbGxfc2VsLCBBUlJB
-WV9TSVpFKHN0YW5kYXJkX3BsbF9zZWwpKTsNCj4gKwljbGtbSU1YNV9DTEtfRVNESENfQ19TRUxd
-CT0gaW14X2Nsa19tdXgoImVzZGhjX2Nfc2VsIiwNCj4gTVhDX0NDTV9DU0NNUjEsIDE5LCAxLCBl
-c2RoY19jX3NlbCwgQVJSQVlfU0laRShlc2RoY19jX3NlbCkpOw0KPiArCWNsa1tJTVg1X0NMS19F
-U0RIQ19EX1NFTF0JPSBpbXhfY2xrX211eCgiZXNkaGNfZF9zZWwiLA0KPiBNWENfQ0NNX0NTQ01S
-MSwgMTgsIDEsIGVzZGhjX2Rfc2VsLCBBUlJBWV9TSVpFKGVzZGhjX2Rfc2VsKSk7DQo+ICAJY2xr
-W0lNWDVfQ0xLX0VTREhDMV9QRVJfR0FURV0JPQ0KPiBpbXhfY2xrX2dhdGUyKCJlc2RoYzFfcGVy
-X2dhdGUiLCAiZXNkaGNfYV9wb2RmIiwgTVhDX0NDTV9DQ0dSMywgMik7DQo+ICAJY2xrW0lNWDVf
-Q0xLX0VTREhDMl9QRVJfR0FURV0JPQ0KPiBpbXhfY2xrX2dhdGUyKCJlc2RoYzJfcGVyX2dhdGUi
-LCAiZXNkaGNfYl9wb2RmIiwgTVhDX0NDTV9DQ0dSMywgNik7DQo+ICAJY2xrW0lNWDVfQ0xLX0VT
-REhDM19QRVJfR0FURV0JPQ0KPiBpbXhfY2xrX2dhdGUyKCJlc2RoYzNfcGVyX2dhdGUiLCAiZXNk
-aGNfY19zZWwiLCBNWENfQ0NNX0NDR1IzLCAxMCk7DQo+IEBAIC00NTIsNiArNDY1LDEwIEBAIHN0
-YXRpYyB2b2lkIF9faW5pdCBteDUxX2Nsb2Nrc19pbml0KHN0cnVjdA0KPiBkZXZpY2Vfbm9kZSAq
-bnApDQo+ICAJLyogc2V0IHRoZSB1c2JvaDMgcGFyZW50IHRvIHBsbDJfc3cgKi8NCj4gIAljbGtf
-c2V0X3BhcmVudChjbGtbSU1YNV9DTEtfVVNCT0gzX1NFTF0sIGNsa1tJTVg1X0NMS19QTEwyX1NX
-XSk7DQo+IA0KPiArCS8qIFNldCBTREhDIHBhcmVudHMgdG8gYmUgUExMMiAqLw0KPiArCWNsa19z
-ZXRfcGFyZW50KGNsa1tJTVg1X0NMS19FU0RIQ19BX1NFTF0sIGNsa1tJTVg1X0NMS19QTEwyX1NX
-XSk7DQo+ICsJY2xrX3NldF9wYXJlbnQoY2xrW0lNWDVfQ0xLX0VTREhDX0JfU0VMXSwgY2xrW0lN
-WDVfQ0xLX1BMTDJfU1ddKTsNCj4gKw0KPiAgCS8qIHNldCBTREhDIHJvb3QgY2xvY2sgdG8gMTY2
-LjI1TUhaKi8NCj4gIAljbGtfc2V0X3JhdGUoY2xrW0lNWDVfQ0xLX0VTREhDX0FfUE9ERl0sIDE2
-NjI1MDAwMCk7DQo+ICAJY2xrX3NldF9yYXRlKGNsa1tJTVg1X0NMS19FU0RIQ19CX1BPREZdLCAx
-NjYyNTAwMDApOyBAQCAtNTA2LDYNCj4gKzUyMywxMCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgbXg1
-M19jbG9ja3NfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiANCj4gIAlteDVfY2xvY2tz
-X2NvbW1vbl9pbml0KGNjbV9iYXNlKTsNCj4gDQo+ICsJY2xrW0lNWDVfQ0xLX1BFUklQSF9BUE1d
-CT0gaW14X2Nsa19tdXgoInBlcmlwaF9hcG0iLA0KPiBNWENfQ0NNX0NCQ01SLCAxMiwgMiwNCj4g
-KwkJCQkJCXBlcmlwaF9hcG1fc2VsLCBBUlJBWV9TSVpFKHBlcmlwaF9hcG1fc2VsKSk7DQo+ICsJ
-Y2xrW0lNWDVfQ0xLX01BSU5fQlVTXQkJPSBpbXhfY2xrX211eCgibWFpbl9idXMiLA0KPiBNWENf
-Q0NNX0NCQ0RSLCAyNSwgMSwNCj4gKwkJCQkJCW1haW5fYnVzX3NlbCwgQVJSQVlfU0laRShtYWlu
-X2J1c19zZWwpKTsNCj4gIAljbGtbSU1YNV9DTEtfTFBfQVBNXQkJPSBpbXhfY2xrX211eCgibHBf
-YXBtIiwgTVhDX0NDTV9DQ1NSLA0KPiAxMCwgMSwNCj4gIAkJCQkJCWxwX2FwbV9zZWwsIEFSUkFZ
-X1NJWkUobHBfYXBtX3NlbCkpOw0KPiAgCWNsa1tJTVg1X0NMS19MREJfREkxX0RJVl8zXzVdCT0N
-Cj4gaW14X2Nsa19maXhlZF9mYWN0b3IoImxkYl9kaTFfZGl2XzNfNSIsICJsZGJfZGkxX3NlbCIs
-IDIsIDcpOw0KPiBAQCAtNTI3LDYgKzU0OCwxMiBAQCBzdGF0aWMgdm9pZCBfX2luaXQgbXg1M19j
-bG9ja3NfaW5pdChzdHJ1Y3QNCj4gZGV2aWNlX25vZGUgKm5wKQ0KPiAgCQkJCQkJbXg1M190dmVf
-ZXh0X3NlbCwNCj4gQVJSQVlfU0laRShteDUzX3R2ZV9leHRfc2VsKSwgQ0xLX1NFVF9SQVRFX1BB
-UkVOVCk7DQo+ICAJY2xrW0lNWDVfQ0xLX1RWRV9HQVRFXQkJPSBpbXhfY2xrX2dhdGUyKCJ0dmVf
-Z2F0ZSIsICJ0dmVfcHJlZCIsDQo+IE1YQ19DQ01fQ0NHUjIsIDMwKTsNCj4gIAljbGtbSU1YNV9D
-TEtfVFZFX1BSRURdCQk9IGlteF9jbGtfZGl2aWRlcigidHZlX3ByZWQiLA0KPiAidHZlX2V4dF9z
-ZWwiLCBNWENfQ0NNX0NEQ0RSLCAyOCwgMyk7DQo+ICsJY2xrW0lNWDVfQ0xLX0VTREhDX0FfU0VM
-XQk9IGlteF9jbGtfbXV4KCJlc2RoY19hX3NlbCIsDQo+IE1YQ19DQ01fQ1NDTVIxLCAyMCwgMiwN
-Cj4gKwkJCQkJCXN0YW5kYXJkX3BsbF9zZWwsIEFSUkFZX1NJWkUoc3RhbmRhcmRfcGxsX3NlbCkp
-Ow0KPiArCWNsa1tJTVg1X0NMS19FU0RIQ19CX1NFTF0JPSBpbXhfY2xrX211eCgiZXNkaGNfYl9z
-ZWwiLA0KPiBNWENfQ0NNX0NTQ01SMSwgMTYsIDIsDQo+ICsJCQkJCQlzdGFuZGFyZF9wbGxfc2Vs
-LCBBUlJBWV9TSVpFKHN0YW5kYXJkX3BsbF9zZWwpKTsNCj4gKwljbGtbSU1YNV9DTEtfRVNESENf
-Q19TRUxdCT0gaW14X2Nsa19tdXgoImVzZGhjX2Nfc2VsIiwNCj4gTVhDX0NDTV9DU0NNUjEsIDE5
-LCAxLCBlc2RoY19jX3NlbCwgQVJSQVlfU0laRShlc2RoY19jX3NlbCkpOw0KPiArCWNsa1tJTVg1
-X0NMS19FU0RIQ19EX1NFTF0JPSBpbXhfY2xrX211eCgiZXNkaGNfZF9zZWwiLA0KPiBNWENfQ0NN
-X0NTQ01SMSwgMTgsIDEsIGVzZGhjX2Rfc2VsLCBBUlJBWV9TSVpFKGVzZGhjX2Rfc2VsKSk7DQo+
-ICAJY2xrW0lNWDVfQ0xLX0VTREhDMV9QRVJfR0FURV0JPQ0KPiBpbXhfY2xrX2dhdGUyKCJlc2Ro
-YzFfcGVyX2dhdGUiLCAiZXNkaGNfYV9wb2RmIiwgTVhDX0NDTV9DQ0dSMywgMik7DQo+ICAJY2xr
-W0lNWDVfQ0xLX0VTREhDMl9QRVJfR0FURV0JPQ0KPiBpbXhfY2xrX2dhdGUyKCJlc2RoYzJfcGVy
-X2dhdGUiLCAiZXNkaGNfY19zZWwiLCBNWENfQ0NNX0NDR1IzLCA2KTsNCj4gIAljbGtbSU1YNV9D
-TEtfRVNESEMzX1BFUl9HQVRFXQk9DQo+IGlteF9jbGtfZ2F0ZTIoImVzZGhjM19wZXJfZ2F0ZSIs
-ICJlc2RoY19iX3BvZGYiLCBNWENfQ0NNX0NDR1IzLCAxMCk7DQo+IEBAIC01ODksNiArNjE2LDEw
-IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBteDUzX2Nsb2Nrc19pbml0KHN0cnVjdA0KPiBkZXZpY2Vf
-bm9kZSAqbnApDQo+ICAJY2xrX2RhdGEuY2xrX251bSA9IEFSUkFZX1NJWkUoY2xrKTsNCj4gIAlv
-Zl9jbGtfYWRkX3Byb3ZpZGVyKG5wLCBvZl9jbGtfc3JjX29uZWNlbGxfZ2V0LCAmY2xrX2RhdGEp
-Ow0KPiANCj4gKwkvKiBTZXQgU0RIQyBwYXJlbnRzIHRvIGJlIFBMTDIgKi8NCj4gKwljbGtfc2V0
-X3BhcmVudChjbGtbSU1YNV9DTEtfRVNESENfQV9TRUxdLCBjbGtbSU1YNV9DTEtfUExMMl9TV10p
-Ow0KPiArCWNsa19zZXRfcGFyZW50KGNsa1tJTVg1X0NMS19FU0RIQ19CX1NFTF0sIGNsa1tJTVg1
-X0NMS19QTEwyX1NXXSk7DQo+ICsNCj4gIAkvKiBzZXQgU0RIQyByb290IGNsb2NrIHRvIDIwME1I
-WiovDQo+ICAJY2xrX3NldF9yYXRlKGNsa1tJTVg1X0NMS19FU0RIQ19BX1BPREZdLCAyMDAwMDAw
-MDApOw0KPiAgCWNsa19zZXRfcmF0ZShjbGtbSU1YNV9DTEtfRVNESENfQl9QT0RGXSwgMjAwMDAw
-MDAwKTsNCj4gLS0NCj4gMi4yMC4xDQoNCg==
+On Tue, Mar 19, 2019 at 12:26:55PM +0800, Xiaoyao Li wrote:
+> Hi, Sean,
+> 
+> On Mon, 2019-03-18 at 09:23 -0700, Sean Christopherson wrote:
+> > On Mon, Mar 18, 2019 at 07:43:23PM +0800, Xiaoyao Li wrote:
+> > > cpuid faulting is a feature about CPUID instruction. When cpuif faulting
+> > 
+> >                                                             ^^^^^
+> >                                                             cpuid
+> > > is enabled, all execution of the CPUID instruction outside system-management
+> > > mode (SMM) cause a general-protection (#GP) if the CPL > 0.
+> > > 
+> > > About this feature, detailed information can be found at
+> > > 
+> https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
+> > > 
+> > > Current KVM provides software emulation of this feature for guest.
+> > > However, because cpuid faulting takes higher priority over CPUID vm exit
+> > > (Intel
+> > > SDM vol3.25.1.1), there is a risk of leaking cpuid faulting to guest when
+> > > host
+> > > enables it. If host enables cpuid faulting by setting the bit 0 of
+> > > MSR_MISC_FEATURES_ENABLES, it will pass to guest since there is no handling
+> > > of
+> > > MSR_MISC_FEATURES_ENABLES yet. As a result, when guest calls CPUID
+> > > instruction
+> > > in CPL > 0, it will generate a #GP instead of CPUID vm eixt.
+> > > 
+> > > This issue will cause guest boot failure when guest uses *modprobe*
+> > > to load modules. *modprobe* calls CPUID instruction, thus causing #GP in
+> > > guest. Since there is no handling of cpuid faulting in #GP handler, guest
+> > > fails boot.
+> > > 
+> > > To fix this issue, we should switch cpuid faulting bit between host and
+> > > guest.
+> > > Since MSR_MISC_FEATURES_ENABLES is intel-specific, this patch implement the
+> > > switching only in vmx. It clears the cpuid faulting bit and save host's
+> > > value before switching to guest, and restores the cpuid faulting settings of
+> > > host before switching to host.
+> > > 
+> > > Because kvm provides the software emulation of cpuid faulting, we can
+> > > just clear the cpuid faulting bit in hardware MSR when switching to
+> > > guest.
+> > > 
+> > > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> > > ---
+> > > Changes in v2:
+> > > - move the save/restore of cpuid faulting bit to
+> > > vmx_prepare_swich_to_guest/vmx_prepare_swich_to_host to avoid every
+> > > vmentry RDMSR, based on Paolo's comment.
+> > > 
+> > > ---
+> > >  arch/x86/kvm/vmx/vmx.c | 34 ++++++++++++++++++++++++++++++++++
+> > >  arch/x86/kvm/vmx/vmx.h |  2 ++
+> > >  2 files changed, 36 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index 541d442edd4e..2c59e0209e36 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -1035,6 +1035,23 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
+> > >  	wrmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
+> > >  }
+> > >  
+> > > +static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
+> > 
+> > Maybe vmx_load_guest_misc_features_enables()?  See below for reasoning.
+> > Alternatively you can drop the helpers altogether.
+> > 
+> > > +{
+> > > +	u64 host_val;
+> > > +
+> > > +	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
+> > > +		return;
+> > > +
+> > > +	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
+> > > +	vmx->host_msr_misc_features_enables = host_val;
+> > 
+> > There's no need to cache the host value in struct vcpu_vmx, just use the
+> > kernel's shadow value.
+> 
+> you're right, thanks for pointing out this.
+> 
+> > > +
+> > > +	/* clear cpuid fault bit to avoid it leak to guest */
+> > 
+> > Personally I find the comment unnecessary and somewhat misleading.
+> > 
+> > > +	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
+> > > +		wrmsrl(MSR_MISC_FEATURES_ENABLES,
+> > > +		       host_val & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
+> > 
+> > I think we can also skip WRMSR if CPUID faulting is also enabled in the
+> 
+> Right, the initial purpose of this patch is to clear hardware cpuid faulting bit
+> for guest and just let guest use the kvm emulation of cpuid faulting.
+> Using hardware cpuid faulting instead of kvm emulation is what the next patch
+> doing.
+> 
+> It's Paolo's suggestion that splits it into 2 patches.
+
+Agreed, two patches is better. 
+
+> > guest.  It probably doesn't make sense to install the guest's value if
+> > CPUID faulting is enabled in the guest and not host since intercepting
+> > CPUID likely provides better overall performance than switching the MSR
+> > on entry and exit.  And last but not least, since there are other bits
+> 
+> Actually, this MSR switching is not happening on every entry and exit, it clears
+> host cpuid faulting only when vmx->loaded_cpu_state == NULL, and load host cpuid
+> faulting only when vmx->loaded_cpu_state != NULL. Usually, in the vcpu_run loop,
+> it switchs for once.
+
+Whoops, yeah, every save/restore cycle.
+
+> However, there indeed is a tradeoff between switching the MSR and intercepting
+> CPUID. Using hardware cpuid faulting for guest, it needs to switch related MSR,
+> which incurs wrmsr overhead. But using emulation, it has to suffer the overhead
+> of vmexit with intercepting CPUID instruction.
+> And I don't know which is better.
+> 
+> At this point, I think it makes sense to use 2 patches. One for fixing potential
+> leaking issue that just clears cpuid faulting bit for guest, and the other
+> writes guest cpuid faulting value to hardware bit to optimize performance (maybe
+> it doesn't).   
+> 
+> > in the MSR that we don't want to expose to the guest, e.g. RING3MWAIT,
+> > checking for a non-zero host value is probably better than checking for
+> > individual feature bits.  Same reasoning for writing the guest's value
+> > instead of clearing just the CPUID faulting bit.
+> 
+> About RING3MWAIT, I just let it go as without this patch.
+> Since you pointed out *we* don't want to expose other bits in the MSR to the
+> guest, I will clear the both bits in next version.
+
+Clear all bits, i.e. write 0.  That way KVM doesn't need to be updated
+if/when hardware introduces another bit.
+
+> > 
+> > So something like:
+> > 
+> > 	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+> > 
+> > 	if (!msrval || msrval == vcpu->arch.msr_misc_features_enables)
+> > 		return;
+> > 
+> > 	wrmsrl(MSR_MISC_FEATURES_ENABLES, vcpu->arch.msr_misc_features_enables);
+> > 
+> > 
+> > or if you drop the helpers:
+> > 
+> > 	msrval = this_cpu_read(msr_misc_features_shadow);
+> > 	if (msrval && msrval != vcpu->arch.msr_misc_features_enables)
+> > 		wrmsrl(MSR_MISC_FEATURES_ENABLES,
+> > 		       vcpu->arch.msr_misc_features_enables);
+> > 
+> > > +	}
+> > > +}
+> > > +
+> > >  void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+> > >  {
+> > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > @@ -1068,6 +1085,8 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu
+> > > *vcpu)
+> > >  	vmx->loaded_cpu_state = vmx->loaded_vmcs;
+> > >  	host_state = &vmx->loaded_cpu_state->host_state;
+> > >  
+> > > +	vmx_save_host_cpuid_fault(vmx);
+> > > +
+> > >  	/*
+> > >  	 * Set host fs and gs selectors.  Unfortunately, 22.2.3 does not
+> > >  	 * allow segment selectors with cpl > 0 or ti == 1.
+> > > @@ -1124,6 +1143,19 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu
+> > > *vcpu)
+> > >  	}
+> > >  }
+> > >  
+> > > +static void vmx_restore_host_cpuid_fault(struct vcpu_vmx *vmx)
+> > 
+> > If you keep the helpers, maybe vmx_load_host_misc_features_enables()
+> > to pair with the new function name for loading guest state?
+> > 
+> > > +{
+> > > +	u64 msrval;
+> > > +
+> > > +	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
+> > > +		return;
+> > > +
+> > > +	rdmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+> > > +	msrval |= vmx->host_msr_misc_features_enables &
+> > > +		MSR_MISC_FEATURES_ENABLES_CPUID_FAULT;
+> > 
+> > Again, there's no need for RDMSR, the host's value can be pulled from
+> > msr_misc_features_shadow, and the WRMSR can be skipped if the host and
+> > guest have the same value, i.e. we didn't install the guest's value.
+> > 
+> > 	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+> > 
+> > 	if (!msrval || msrval == vcpu->arch.msr_misc_features_enables)
+> > 		return;
+> > 
+> > 	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+> > 	
+> > > +	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+> > > +}
+> > > +
+> > >  static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+> > >  {
+> > >  	struct vmcs_host_state *host_state;
+> > > @@ -1137,6 +1169,8 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx
+> > > *vmx)
+> > >  	++vmx->vcpu.stat.host_state_reload;
+> > >  	vmx->loaded_cpu_state = NULL;
+> > >  
+> > > +	vmx_restore_host_cpuid_fault(vmx);
+> > > +
+> > >  #ifdef CONFIG_X86_64
+> > >  	rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+> > >  #endif
+> > > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> > > index 5df73b36fa49..ba867bbc5676 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.h
+> > > +++ b/arch/x86/kvm/vmx/vmx.h
+> > > @@ -268,6 +268,8 @@ struct vcpu_vmx {
+> > >  	u64 msr_ia32_feature_control_valid_bits;
+> > >  	u64 ept_pointer;
+> > >  
+> > > +	u64 host_msr_misc_features_enables;
+> > 
+> > As mentioned above, this isn't needed.
+> 
+> Sure, I will remove this and use msr_misc_features_shadow.
+> 
+> > > +
+> > >  	struct pt_desc pt_desc;
+> > >  };
+> > >  
+> > > -- 
+> > > 2.19.1
+> > > 
+> 
