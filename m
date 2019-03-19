@@ -2,42 +2,40 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD21C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E54BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D07420857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91A520857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AoGJLYEO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dlDoRUUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfCSHBQ (ORCPT
+        id S1727000AbfCSHKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:01:16 -0400
-Received: from mail-eopbgr60070.outbound.protection.outlook.com ([40.107.6.70]:49886
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Tue, 19 Mar 2019 03:10:01 -0400
+Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:62788
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbfCSHBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:01:16 -0400
+        id S1725996AbfCSHKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 03:10:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o+jceISxVvo59cSfoeUUsw2oa+EOjTjSTzrvLkf21hE=;
- b=AoGJLYEO3HS3W0yfsVqYhdOR4cUWOevwgwIRCeHS9mwjL4Y00/zkts9/QAzEJF1jporO4h49nxUVQOyvLT3/ibqpl9DKK2m+W1Busqh8QOCJYlhrzi2zvxZJO+iFdMvtoLdWH5Z/4ys3h1usxQYiDMNLfjV4b3fplbA1q2M7z/M=
+ bh=Flo/JzCU8aGrMQwiflXgdDVRwLZWMoWjW/R05fJBQoY=;
+ b=dlDoRUUma6tfFXbPl3dbDQnIVOWBopTSXifYSt+GYI0rSdO2iKmouZ9MFe5k0NC7SgGVpF6uJ7U1IauhsQcPQctKkpyNKPejv0BNF+3L5VZfTKZ3Q7dYbwz27WwBd8xvXycdtClq/BTOtIeU5nAsqDJPIt3vAQ7klHxu+2FlR1k=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3945.eurprd04.prod.outlook.com (52.134.65.149) with Microsoft SMTP
+ DB3PR0402MB3884.eurprd04.prod.outlook.com (52.134.71.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Tue, 19 Mar 2019 07:01:11 +0000
+ 15.20.1709.13; Tue, 19 Mar 2019 07:09:56 +0000
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 07:01:11 +0000
+ 07:09:56 +0000
 From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
@@ -56,82 +54,76 @@ CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V6 4/5] ARM: dts: imx7ulp: Add pwm0 support
-Thread-Topic: [PATCH V6 4/5] ARM: dts: imx7ulp: Add pwm0 support
-Thread-Index: AQHU3iAIM+6v/EpQHU6qvziWi0cYL6YShPgAgAABfFA=
-Date:   Tue, 19 Mar 2019 07:01:11 +0000
-Message-ID: <DB3PR0402MB3916C788E11BB4C43B685AF5F5400@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552977898-5590-1-git-send-email-Anson.Huang@nxp.com>
- <1552977898-5590-5-git-send-email-Anson.Huang@nxp.com>
- <20190319065434.mbadba7fi2hdncf4@pengutronix.de>
-In-Reply-To: <20190319065434.mbadba7fi2hdncf4@pengutronix.de>
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Topic: [PATCH RESEND V6 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Index: AQHU3iLBE3J6DkOMWUeqgsrQO1bJTg==
+Date:   Tue, 19 Mar 2019 07:09:56 +0000
+Message-ID: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0013.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:92::25) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cad4129f-1ee5-4b7b-8f07-08d6ac38ab9b
+x-ms-office365-filtering-correlation-id: 66df55e7-99dc-450d-87ac-08d6ac39e416
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3945;
-x-ms-traffictypediagnostic: DB3PR0402MB3945:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0402MB3945F9F3AF64E36708E929C4F5400@DB3PR0402MB3945.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3884;
+x-ms-traffictypediagnostic: DB3PR0402MB3884:
+x-microsoft-antispam-prvs: <DB3PR0402MB388463A3D8D25C4F261D3A07F5400@DB3PR0402MB3884.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(366004)(136003)(39860400002)(199004)(189003)(13464003)(99286004)(66574012)(5660300002)(3846002)(6116002)(97736004)(14454004)(2906002)(71190400001)(71200400001)(478600001)(66066001)(966005)(256004)(33656002)(106356001)(8936002)(86362001)(486006)(6506007)(44832011)(11346002)(7696005)(446003)(54906003)(53546011)(102836004)(476003)(105586002)(316002)(76176011)(186003)(26005)(229853002)(7736002)(53936002)(68736007)(52536014)(6916009)(25786009)(9686003)(6246003)(81166006)(81156014)(7416002)(55016002)(8676002)(74316002)(6306002)(4326008)(305945005)(6436002)(45080400002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3945;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(86362001)(25786009)(7736002)(305945005)(7416002)(4326008)(50226002)(256004)(14454004)(102836004)(110136005)(2201001)(8936002)(316002)(476003)(2616005)(2501003)(99286004)(478600001)(97736004)(81156014)(81166006)(6512007)(53936002)(186003)(8676002)(2906002)(68736007)(71190400001)(71200400001)(6116002)(3846002)(66066001)(52116002)(36756003)(6506007)(386003)(6436002)(26005)(106356001)(5660300002)(105586002)(486006)(4744005)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3884;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2LWEOZm1T3YqcWi6/LRd7bTiY+4+wQS0HpeXpttMD03szoQHIpDzb0NSfH2Z6vsWK71kKGtpauJeLWrQt1B6x73lHSuty1xAjVKL6dfP64iVIx5RDMyyLaZwMEfH+msnwJM3cwfLdNlZQfjfImnGGt6dmb49CM7rLiGGkmMSXfEyuYq6qzrD3Cdur0D0THi9b0HksrdxLRw6eL5MvjC5SxrDkznYoDKhgtJs52UAz07hb4myhlkoxwmkJbZpop1fhF0FO7AsVIA0EB3p2wbPKqzW/pEINrKF5soH02okA3h59aBOu1yFMQdU7HHm3E6LMsf5ld+mBX5xSQNiaRUEpbgvbzAZ6iNTU6GYRZb/OQeN8Ohqfwiw+Asr3+cZAh1vKJvz98jYHkwMBCcgpKJTHgQ0MLNd27gy3SYbYtKiLKE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: YCY5hR8wtT657BKCZXRvaapbphb8ovF2QP68CPReejrveXRtN+P2oMqtUHLQZ2TaugbPTkOURaybTYk3rGvMXCozbERDsbeN2IAgArm97K/Hi/nN8CYag+ABi1W5tUNzfZ8pn0hcuOZ3xR39grW+ziU2BAi8J10Rmc7iV89quCe5PJxdilBE/qkwnwOLebtgffQKi8ZPSPIfHAJig6XQ4xigsSaVq8VG8w2ZUtyvlassS804F6cjzqvklLpI42nPiWRuf1dq6dmXaccRdyxNnvt5vxlw3+3xbXI4Ka6/U3liSXxGTQfMB09EXQRjw1goElv1bdv1NHGqoXeIhMmW0q77AneL5Il5zuMFuXPMODxeiMiIwg7DKndfuvapEjf4Hj2fC3tH58/D85KAi4Xo7BdSFG0pPRdAu+QfKBuWgDw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cad4129f-1ee5-4b7b-8f07-08d6ac38ab9b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 07:01:11.6418
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66df55e7-99dc-450d-87ac-08d6ac39e416
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 07:09:56.4302
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3945
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3884
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogVXdlIEtsZWluZS1Lw7ZuaWcgW21haWx0bzp1LmtsZWluZS1rb2VuaWdA
-cGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IDIwMTnlubQz5pyIMTnml6UgMTQ6NTUNCj4gVG86IEFu
-c29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogdGhpZXJyeS5yZWRpbmdAZ21h
-aWwuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBzaGF3
-bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9u
-aXguZGU7DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgbGludXhAYXJtbGludXgub3JnLnVrOyBzdGVm
-YW5AYWduZXIuY2g7DQo+IG90YXZpb0Bvc3N5c3RlbXMuY29tLmJyOyBMZW9uYXJkIENyZXN0ZXog
-PGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsNCj4gc2Nobml0emVsdG9ueUBnbWFpbC5jb207IGph
-bi50dWVya0BlbXRyaW9uLmNvbTsgUm9iaW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29tPjsg
-bGludXgtcHdtQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggVjYgNC81XSBBUk06IGR0czogaW14N3VscDogQWRkIHB3bTAgc3VwcG9y
-dA0KPiANCj4gT24gVHVlLCBNYXIgMTksIDIwMTkgYXQgMDY6NTA6MjZBTSArMDAwMCwgQW5zb24g
-SHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVg3VUxQIEVWSyBib2FyZCBQV00wIHN1cHBvcnQuDQo+
-ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
-Cj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFY1Og0KPiA+IAktIGNoYW5nZSAjcHdtLWNlbGxz
-IHRvIDMuDQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAtZXZrLmR0cyB8
-IDEyICsrKysrKysrKysrKw0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kgICAg
-fCAxMCArKysrKysrKysrDQo+IA0KPiBJTUhPIHRoZSBjaGFuZ2UgdG8gdGhlIGV2ay5kdHMgYmVs
-b25ncyBpbnRvIHRoZSBsYXN0IHBhdGNoLg0KDQpBaCwgeWVzLCB0aGUgUFdNIHBpbiBzZXR0aW5n
-cyBpbiBib2FyZCBkdHMgc2hvdWxkIGJlbG9uZ3MgaW50byB0aGUgYmFja2xpZ2h0IHBhdGNoLA0K
-SSB3aWxsIHJlc2VuZCBWNiwgdGhhbmtzLg0KDQpBbnNvbi4NCg0KPiANCj4gQmVzdCByZWdhcmRz
-DQo+IFV3ZQ0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgVXdlIEtsZWluZS1Lw7ZuaWcgICAgICAgICAgICB8DQo+IEluZHVzdHJpYWwgTGlu
-dXggU29sdXRpb25zICAgICAgICAgICAgICAgICB8DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtz
-LnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3LnANCj4gZW5ndXRy
-b25peC5kZSUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDZTMN
-Cj4gNjQ1YTZkNGQ2NjQzYTFmODBmMDhkNmFjMzdjNzI1JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNk
-OTljNWMzMDE2MzUNCj4gJTdDMCU3QzAlN0M2MzY4ODU3NTI4OTcyMDg1NzImYW1wO3NkYXRhPU42
-N3NtczlsWDZhc1hwWWFxJTJGdGYNCj4gVE5wTnolMkJlRElLTng4OSUyRjU3Q1lRQXdBJTNEJmFt
-cDtyZXNlcnZlZD0wICB8DQo=
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
+TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
+and also add backlight support for MIPI-DSI display.
+
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add pwm0 support
+  ARM: dts: imx7ulp-evk: Add backlight support
+
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  19 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  20 +
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  10 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 436 +++++++++++++++++=
+++++
+ 7 files changed, 498 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
+
+--=20
+2.7.4
+
