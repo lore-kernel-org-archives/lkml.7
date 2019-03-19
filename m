@@ -2,69 +2,66 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DATE_IN_FUTURE_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A30C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685002083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD012083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfCSOu5 (ORCPT
+        id S1727696AbfCSOvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:50:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52772 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726466AbfCSOu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:50:56 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D22A8398B73B5E98FBEF;
-        Tue, 19 Mar 2019 22:50:52 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 22:50:51 +0800
-From:   Wang Hai <wanghai26@huawei.com>
-To:     <alex.williamson@redhat.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] vfio/spapr_tce: Make symbol 'tce_iommu_driver_ops' static
-Date:   Wed, 20 Mar 2019 02:47:23 -0400
-Message-ID: <20190320064723.46604-1-wanghai26@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 Mar 2019 10:51:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52928 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbfCSOvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:51:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 516421650;
+        Tue, 19 Mar 2019 07:51:15 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC8513F71A;
+        Tue, 19 Mar 2019 07:51:13 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 14:51:11 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>,
+        Zhang Lei <zhang.lei@jp.fujitsu.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the arm64-fixes
+ tree
+Message-ID: <20190319145111.GH59586@arrakis.emea.arm.com>
+References: <20190320014312.562c8f6d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320014312.562c8f6d@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following sparse warning:
+Hi Stephen,
 
-drivers/vfio/vfio_iommu_spapr_tce.c:1401:36: warning:
- symbol 'tce_iommu_driver_ops' was not declared. Should it be static?
+On Wed, Mar 20, 2019 at 01:43:12AM +1100, Stephen Rothwell wrote:
+> Commit
+> 
+>   a4d17a19c493 ("arm64: apply workaround on A64FX v1r0")
+> 
+> is missing a Signed-off-by from its author.
 
-Fixes: 5ffd229c0273 ("powerpc/vfio: Implement IOMMU driver for VFIO")
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
----
- drivers/vfio/vfio_iommu_spapr_tce.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for this. The patch is indeed confusing, sent by Takayuki with a
+signed-off-by from Zhang and re-written by Mark while keeping the
+original text.
 
-diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
-index 8dbb270..6b64e45 100644
---- a/drivers/vfio/vfio_iommu_spapr_tce.c
-+++ b/drivers/vfio/vfio_iommu_spapr_tce.c
-@@ -1398,7 +1398,7 @@ static void tce_iommu_detach_group(void *iommu_data,
- 	mutex_unlock(&container->lock);
- }
- 
--const struct vfio_iommu_driver_ops tce_iommu_driver_ops = {
-+static const struct vfio_iommu_driver_ops tce_iommu_driver_ops = {
- 	.name		= "iommu-vfio-powerpc",
- 	.owner		= THIS_MODULE,
- 	.open		= tce_iommu_open,
+I'm going to make Mark the author while keeping Takayuki as reported-by.
+
 -- 
-1.8.3.1
-
+Catalin
