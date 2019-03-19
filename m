@@ -2,125 +2,99 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8A6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F85EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83821217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MGqV+q41"
+	by mail.kernel.org (Postfix) with ESMTP id 178CA2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfCSOzZ (ORCPT
+        id S1728025AbfCSOza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:55:25 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60292 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfCSOyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:54:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553007253; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+Ld060qOCQAlGtqrjW9/lzI368o/Ic91/b/f+CupLRw=;
-        b=MGqV+q41Wuwetwye6Hq4FWHVhSP48lBO4LDBCm3FfreMrfKzNKyTfAXVEHX7Sqrnvzh91q
-        zmtnPfEkvvDG8Al9Qk+l3sgF/XOKgVs9X9UDiTLeXbRtqnZpdgfAImLFF+QymXqjpZxPXp
-        qXHjuY2oUnDg2Q09fheXCW6NWoBL9VM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 05/13] mtd: rawnand: ingenic: Use SPDX license notifiers
-Date:   Tue, 19 Mar 2019 15:53:55 +0100
-Message-Id: <20190319145403.31627-6-paul@crapouillou.net>
-In-Reply-To: <20190319145403.31627-1-paul@crapouillou.net>
-References: <20190319145403.31627-1-paul@crapouillou.net>
+        Tue, 19 Mar 2019 10:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbfCSOz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:55:27 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A85217F9;
+        Tue, 19 Mar 2019 14:55:26 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:55:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] tracing: Add trace_total_entries() /
+ trace_total_entries_cpu()
+Message-ID: <20190319105525.7686763b@gandalf.local.home>
+In-Reply-To: <CAD=FV=UJNED79Oc3ge3_JXZdJcADm_B9N-asymGrwZvKew2Wzw@mail.gmail.com>
+References: <20190318204741.116550-1-dianders@chromium.org>
+        <20190318204741.116550-2-dianders@chromium.org>
+        <20190319112537.5yi7gelkk4ixswmu@holly.lan>
+        <CAD=FV=UJNED79Oc3ge3_JXZdJcADm_B9N-asymGrwZvKew2Wzw@mail.gmail.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX license notifiers instead of GPLv2 license text in the headers.
+On Tue, 19 Mar 2019 07:45:38 -0700
+Doug Anderson <dianders@chromium.org> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
----
+> > > +unsigned long trace_total_entries_cpu(struct trace_array *tr, int cpu)
+> > > +{
+> > > +     unsigned long total, entries;
+> > > +
+> > > +     if (!tr)
+> > > +             tr = &global_trace;  
+> >
+> > This function is only ever called with tr set to NULL which means tr is
+> > an argument looking for a user.
+> >
+> > I wouldn't mind except if this was following copying prior art to keep
+> > the API feel the same but I can't find any other trace function where
+> > the trace_array can be substituted for NULL. AFAICT all the existing
+> > sites where global_trace is used will use it unconditionally.  
 
-Notes:
-    v2: No changes
-    
-    v3: No changes
-    
-    v4: No changes
-    
-    v5: No changes
-    
-    v6: No change
+I'm in the process of making everything work better with tracing
+instances. Which means, making all the APIs use the tr pointer (which is
+the descriptor for the instance).
 
- drivers/mtd/nand/raw/ingenic/jz4780_bch.c  | 5 +----
- drivers/mtd/nand/raw/ingenic/jz4780_bch.h  | 5 +----
- drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 5 +----
- 3 files changed, 3 insertions(+), 12 deletions(-)
+All new APIs added to the tracing infrastructure should reference a "tr"
+pointer, and not use the global_trace directly. We can default it if tr
+is NULL.
 
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-index c5f74ed85862..fdf483a49f7b 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * JZ4780 BCH controller
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
- 
- #include <linux/bitops.h>
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-index bf4718088a3a..451e0c770160 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-@@ -1,12 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * JZ4780 BCH controller
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
- 
- #ifndef __DRIVERS_MTD_NAND_JZ4780_BCH_H__
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-index 22e58975f0d5..7f55358b860f 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * JZ4780 NAND driver
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
- 
- #include <linux/delay.h>
--- 
-2.11.0
+There are currently lots of cases in the code that do so, but I'm
+trying to get rid of them.
 
+> 
+> Happy to change this if you guys want.  At the moment the
+> trace_total_entries() comes straight from Steven's suggestion at:
+> 
+> https://lkml.kernel.org/r/20190315144130.1aa36931@gandalf.local.home
+> 
+> Ugh, but while looking at this it looks like I totally forgot one
+> piece of feedback from Steven: to move the disabling of the tracing
+> out so it's not re-enabled after counting but before dumping.  Not
+> sure how I missed that.  :(
+> 
+> I'll wait to spin until I hear from Steven if he wants me to remove
+> the "struct trace_array *tr" argument, then I'll post out a v6 with
+> the fix I forgot...
+
+Please keep the tr argument.
+
+Thanks!
+
+-- Steve
