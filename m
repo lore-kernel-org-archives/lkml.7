@@ -2,206 +2,74 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50313C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A46C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2DB2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDA72085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfCSO2v (ORCPT
+        id S1727707AbfCSO2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:28:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45138 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCSO2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:28:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 07:28:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,498,1544515200"; 
-   d="scan'208";a="132883414"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Mar 2019 07:28:49 -0700
-Date:   Tue, 19 Mar 2019 07:28:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        chao.gao@intel.com
-Subject: Re: [PATCH v2 2/2] kvm/vmx: Using hardware cpuid faulting to avoid
- emulation overhead
-Message-ID: <20190319142849.GB25575@linux.intel.com>
-References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
- <20190318114324.14198-3-xiaoyao.li@linux.intel.com>
- <20190318163832.GB13528@linux.intel.com>
- <085cc389df4d734ee173bb4c199776591d197a21.camel@linux.intel.com>
+        Tue, 19 Mar 2019 10:28:55 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33038 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfCSO2w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:28:52 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h6FjT-00074w-QH; Tue, 19 Mar 2019 15:28:47 +0100
+Date:   Tue, 19 Mar 2019 15:28:47 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Enrico Weigelt <info@metux.net>
+cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: [PATCH] gpio: amd-fch: Fix bogus SPDX identifier
+Message-ID: <alpine.DEB.2.21.1903191513170.2537@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <085cc389df4d734ee173bb4c199776591d197a21.camel@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 12:37:23PM +0800, Xiaoyao Li wrote:
-> On Mon, 2019-03-18 at 09:38 -0700, Sean Christopherson wrote:
-> > On Mon, Mar 18, 2019 at 07:43:24PM +0800, Xiaoyao Li wrote:
-> > > Current cpuid faulting of guest is purely emulated in kvm, which exploits
-> > > CPUID vm exit to inject #GP to guest. However, if host hardware cpu has
-> > > X86_FEATURE_CPUID_FAULT, we can just use the hardware cpuid faulting for
-> > > guest to avoid the vm exit overhead.
-> > 
-> > Heh, I obviously didn't look at this patch before responding to patch 1/2.
-> > 
-> > > Note: cpuid faulting takes higher priority over CPUID instruction vm
-> > > exit (Intel SDM vol3.25.1.1).
-> > > 
-> > > Since cpuid faulting only exists on some Intel's cpu, just apply this
-> > > optimization to vmx.
-> > > 
-> > > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > > ---
-> > >  arch/x86/include/asm/kvm_host.h |  2 ++
-> > >  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++++----
-> > >  arch/x86/kvm/x86.c              | 15 ++++++++++++---
-> > >  3 files changed, 29 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/include/asm/kvm_host.h
-> > > b/arch/x86/include/asm/kvm_host.h
-> > > index ce79d7bfe1fd..14cad587b804 100644
-> > > --- a/arch/x86/include/asm/kvm_host.h
-> > > +++ b/arch/x86/include/asm/kvm_host.h
-> > > @@ -1339,6 +1339,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long
-> > > msw);
-> > >  void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
-> > >  int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
-> > >  
-> > > +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64
-> > > data);
-> > > +
-> > >  int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > >  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > >  
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index 2c59e0209e36..6b413e471dca 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -1037,7 +1037,7 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
-> > >  
-> > >  static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
-> > >  {
-> > > -	u64 host_val;
-> > > +	u64 host_val, guest_val;
-> > >  
-> > >  	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
-> > >  		return;
-> > > @@ -1045,10 +1045,12 @@ static void vmx_save_host_cpuid_fault(struct
-> > > vcpu_vmx *vmx)
-> > >  	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
-> > >  	vmx->host_msr_misc_features_enables = host_val;
-> > >  
-> > > -	/* clear cpuid fault bit to avoid it leak to guest */
-> > > -	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > > +	guest_val = vmx->vcpu.arch.msr_misc_features_enables;
-> > > +
-> > > +	/* we can use the hardware cpuid faulting to avoid emulation overhead */
-> > > +	if ((host_val ^ guest_val) & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > >  		wrmsrl(MSR_MISC_FEATURES_ENABLES,
-> > > -		       host_val & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > > +		       host_val ^ MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > >  	}
-> > >  }
-> > >  
-> > > @@ -2057,6 +2059,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct
-> > > msr_data *msr_info)
-> > >  		else
-> > >  			vmx->pt_desc.guest.addr_a[index / 2] = data;
-> > >  		break;
-> > > +	case MSR_MISC_FEATURES_ENABLES:
-> > > +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
-> > > +			return 1;
-> > > +		if (boot_cpu_has(X86_FEATURE_CPUID_FAULT)) {
-> > > +			if (vmx->loaded_cpu_state)
-> > 
-> > No need for two separate if statements.  And assuming we're checking the
-> > existing shadow value when loading guest/host state, the WRMSR should
-> > only be done if the host's value is non-zero.
-> 
-> I'll combine these two if statements into one.
-> 
-> I cannot understand why the WRMSR should only be done if the host's value is
-> non-zero. I think there is no depedency with host's value, if using the hardware
-> cpuid faulting. We just need to set the value to real hardware MSR.
+spdxcheck.py complains:
 
-What I was trying to say in patch 1/2 regarding save/restore, is that I
-don't think it is worthwhile to voluntarily switch hardware's value.  In
-other words, do the WRMSR if and only if it's absolutely necessary.  And
-that means only installing the guest's value if the host's value is
-non-zero and host_val != guest_val.  If the host's value is zero, then
-the guest's value is irrelevant as CPUID faulting behavior will naturally
-be taken care of when intercepting CPUID.  And for obvious reasons the
-WRMSR can be skipped if host and guest want the same value.
+ include/linux/platform_data/gpio/gpio-amd-fch.h: 1:28 Invalid License ID: GPL+
 
-As it pertains to this code, we should not modify any hardware value that
-isn't saved/restored.  If we go with the above approach, then we're only
-switching the hardware MSR when the host's value is non-zero.  Ergo this
-code should not write the actual MSR if the host value is zero as the MSR
-will not be restored to the host's value when putting the vCPU.
+which is correct because GPL+ is not a valid identifier. Of course this
+could have been caught by checkpatch.pl _before_ submitting or merging the
+patch.
 
-> > > +				wrmsrl(MSR_MISC_FEATURES_ENABLES, data);
-> > > +		}
-> > > +		vcpu->arch.msr_misc_features_enables = data;
-> > > +		break;
-> > >  	case MSR_TSC_AUX:
-> > >  		if (!msr_info->host_initiated &&
-> > >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index 434ec113cc79..33a8c95b2f2e 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -2449,6 +2449,17 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
-> > >  		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-> > >  }
-> > >  
-> > > +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64
-> > > data)
-> > > +{
-> > > +	if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> > > +	    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> > > +	     !supports_cpuid_fault(vcpu)))
-> > > +		return 0;
-> > > +	else
-> > > +		return 1;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(kvm_supported_msr_misc_features_enables);
-> > > +
-> > >  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> > >  {
-> > >  	bool pr = false;
-> > > @@ -2669,9 +2680,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct
-> > > msr_data *msr_info)
-> > >  		vcpu->arch.msr_platform_info = data;
-> > >  		break;
-> > >  	case MSR_MISC_FEATURES_ENABLES:
-> > > -		if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> > > -		    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> > > -		     !supports_cpuid_fault(vcpu)))
-> > > +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
-> > >  			return 1;
-> > >  		vcpu->arch.msr_misc_features_enables = data;
-> > >  		break;
-> > > -- 
-> > > 2.19.1
-> > > 
-> 
+ WARNING: 'SPDX-License-Identifier: GPL+ */' is not supported in LICENSES/...
+ #271: FILE: include/linux/platform_data/gpio/gpio-amd-fch.h:1:
+ +/* SPDX-License-Identifier: GPL+ */
+
+Fix it under the assumption that the author meant GPL-2.0+, which makes
+sense as the corresponding C file is using that identifier.
+
+Fixes: e09d168f13f0 ("gpio: AMD G-Series PCH gpio driver")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+
+diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
+index a867637e172d..7290ec40a71e 100644
+--- a/include/linux/platform_data/gpio/gpio-amd-fch.h
++++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL+ */
++/* SPDX-License-Identifier: GPL2.0+ */
+ 
+ /*
+  * AMD FCH gpio driver platform-data
+
