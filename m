@@ -2,123 +2,210 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7BBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235BC20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:57:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Edeopl6i"
+	by mail.kernel.org (Postfix) with ESMTP id 9E07820835
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfCSQ5z (ORCPT
+        id S1727771AbfCSQ6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:57:55 -0400
-Received: from mail-eopbgr130071.outbound.protection.outlook.com ([40.107.13.71]:65006
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726778AbfCSQ5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:57:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vI8qnMBpSrEUPQycO4f2/4r1PKRryw3hNNqJvuLgYoE=;
- b=Edeopl6ikM0lvKAGdJy7uearu1jonwyge3EEFaAuhDD/j8kMjGHNj6fBf2AydaYmS0S/OOZgSkXt8XSYZ0auMJhFpR9FsdSdtktbNTJMAWf2SzWskHwesJGw8NaLDD8a+mGwr8vGiZyg466qlJzWJkVNfkF3LH0gCQXH3GWZVBI=
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com (20.179.9.32) by
- DB8PR05MB5964.eurprd05.prod.outlook.com (20.179.9.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 19 Mar 2019 16:57:47 +0000
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660]) by DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660%2]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 16:57:47 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "pakki001@umn.edu" <pakki001@umn.edu>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Ilya Lesokhin <ilyal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [PATCH v3] net: mlx5: Add a missing check on idr_find, free buf
-Thread-Topic: [PATCH v3] net: mlx5: Add a missing check on idr_find, free buf
-Thread-Index: AQHU3mwu5Tvmra2r5kC9JK5INJWvzaYTLOUA
-Date:   Tue, 19 Mar 2019 16:57:47 +0000
-Message-ID: <010498dc10890e09c18ab6941fa2abcde6a7b28e.camel@mellanox.com>
-References: <20190319155524.6978-1-pakki001@umn.edu>
-In-Reply-To: <20190319155524.6978-1-pakki001@umn.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 06b277d9-8270-45ef-d8df-08d6ac8c03d8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB8PR05MB5964;
-x-ms-traffictypediagnostic: DB8PR05MB5964:
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-microsoft-antispam-prvs: <DB8PR05MB596495140EB6BF460FFF9068BE400@DB8PR05MB5964.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(366004)(39860400002)(136003)(199004)(189003)(118296001)(8676002)(26005)(106356001)(68736007)(86362001)(105586002)(229853002)(2171002)(36756003)(186003)(53936002)(486006)(5640700003)(8936002)(6512007)(2351001)(316002)(446003)(2616005)(476003)(11346002)(7736002)(6436002)(256004)(305945005)(71200400001)(71190400001)(81156014)(81166006)(2906002)(54906003)(58126008)(6916009)(14444005)(6116002)(14454004)(5660300002)(478600001)(3846002)(66066001)(97736004)(102836004)(4326008)(6246003)(99286004)(25786009)(6506007)(2501003)(6486002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB5964;H:DB8PR05MB5898.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SMmyWT3DdN0+dfwMlGlnDKDXBH4vvLcaFtbFIbJTE1ZVwCz8alpNmLFbq4kU4NDDqY9FVDQ9lINA2Mxr6pUaprkVrK97hXcKfPCd8g+lx+r6BP6a3aLsbXDcR9XOn2IJP0+87QGKM3vsxHUu451SnoVNdwxkg+xeQUmgpdxWqEzORXkjLLg58gt9s1LmbXGmG6fH76xrqd/wLCSQc5c48EaiIQe7dy8XUVtuD4Du58co9hwlH5rUeBR2+uIuY6Z9srkLpVJXn0TLfGujcIhFsJNOd/oUgToj86AAFq4Ogaj+2fnHsjt9PflV6tgkpzWhsYILyywpXG0vb7DM/nB1qgNz0Q1ylLqUs+PeH6UtCZfGGEggsGGXqKt5qhIAbHa1DZrcx4ONkc8CZxmRt0acoZBZbOkRThe0HeMNFar/Llk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <252F3ABE701D5744BFB0FF6E3863C8A9@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06b277d9-8270-45ef-d8df-08d6ac8c03d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 16:57:47.7464
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB5964
+        Tue, 19 Mar 2019 12:58:03 -0400
+Received: from foss.arm.com ([217.140.101.70]:55360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726778AbfCSQ6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:58:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 348951650;
+        Tue, 19 Mar 2019 09:58:02 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433083F614;
+        Tue, 19 Mar 2019 09:57:58 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 16:57:55 +0000
+Message-ID: <86h8byztrg.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <eric.auger@redhat.com>, "Raslan, KarimAllah" <karahmed@amazon.de>,
+        <christoffer.dall@arm.com>, <andre.przywara@arm.com>,
+        <james.morse@arm.com>, <julien.thierry@arm.com>,
+        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
+        <mst@redhat.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <kvm@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <guoheyi@huawei.com>
+Subject: Re: [RFC PATCH] KVM: arm/arm64: Enable direct irqfd MSI injection
+In-Reply-To: <4fedabbe-b2d0-c04c-e8ce-a1adbf419f8a@huawei.com>
+References: <1552833373-19828-1-git-send-email-yuzenghui@huawei.com>
+        <86o969z42z.wl-marc.zyngier@arm.com>
+        <428b2aac-5a0f-e9da-8d74-8045f99a8c74@huawei.com>
+        <20190319100141.69821f8b@why.wild-wind.fr.eu.org>
+        <4fedabbe-b2d0-c04c-e8ce-a1adbf419f8a@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTAzLTE5IGF0IDEwOjU1IC0wNTAwLCBBZGl0eWEgUGFra2kgd3JvdGU6DQo+
-IGlkcl9maW5kKCkgY2FuIHJldHVybiBhIE5VTEwgdmFsdWUgdG8gJ2Zsb3cnIHdoaWNoIGlzIHVz
-ZWQgd2l0aG91dCBhDQo+IGNoZWNrLg0KPiBUaGUgcGF0Y2ggYWRkcyBhIGNoZWNrIHRvIGF2b2lk
-IHBvdGVudGlhbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UuDQo+IEluIGNhc2Ugb2YgbWx4NV9m
-cGdhX3NidV9jb25uX3NlbmRtc2coKSBmYWlsdXJlLCBmcmVlIGJ1ZiBhbGxvY2F0ZWQNCj4gdXNp
-bmcga3phbGxvYy4NCj4gDQo+IC0tLQ0KPiB2MjogZmFpbHVyZSB0byByZXR1cm4gaW4gY2FzZSBv
-ZiBmbG93IGZhaWx1cmUuDQo+IHYxOiBGYWlsZWQgdG8gZnJlZSBidWYgaW4gY2FzZSBvZiBmbG93
-IGZhaWx1cmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBZGl0eWEgUGFra2kgPHBha2tpMDAxQHVt
-bi5lZHU+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3Jl
-L2ZwZ2EvdGxzLmMgfCA3ICsrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1
-L2NvcmUvZnBnYS90bHMuYw0KPiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUv
-Y29yZS9mcGdhL3Rscy5jDQo+IGluZGV4IDVjZjVmMmE5ZDUxZi4uMjI0ZTBkN2Y2NDg5IDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnBnYS90
-bHMuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnBn
-YS90bHMuYw0KPiBAQCAtMjI2LDYgKzIyNiwxMSBAQCBpbnQgbWx4NV9mcGdhX3Rsc19yZXN5bmNf
-cngoc3RydWN0IG1seDVfY29yZV9kZXYNCj4gKm1kZXYsIHUzMiBoYW5kbGUsIHUzMiBzZXEsDQo+
-ICAJcmN1X3JlYWRfbG9jaygpOw0KPiAgCWZsb3cgPSBpZHJfZmluZCgmbWRldi0+ZnBnYS0+dGxz
-LT5yeF9pZHIsIG50b2hsKGhhbmRsZSkpOw0KPiAgCXJjdV9yZWFkX3VubG9jaygpOw0KPiArCWlm
-ICghZmxvdykgew0KPiArCQlXQVJOX09OQ0UoMSwgIlJlY2VpdmVkIE5VTEwgcG9pbnRlciBmb3Ig
-aGFuZGxlXG4iKTsNCj4gKwkJa2ZyZWUoYnVmKTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJ
-fQ0KDQpKdXN0IGEgc21hbGwgbml0LCBpdCB3b3VsZCBoYXZlIGJlZW4gc2ltcGxlciBpZiB5b3Ug
-anVzdCBjaGFuZ2VkIHRoZQ0Kb3JkZXIgYmV0d2VlbiBidWYgPSBremFsbG9jKC4uLikgYW5kIGZs
-b3cgPSBpZHJfZmluZCwgdG8gYXZvaWQNCmtmcmVlKGJ1Zikgb24gZXJyIGZsb3cuDQoNClBsZWFz
-ZSBhZGQgdGhlIGZpeGVzIHRhZyBhcyBFcmljIHN1Z2dlc3RlZC4NCg0KPiAgCW1seDVfZnBnYV90
-bHNfZmxvd190b19jbWQoZmxvdywgY21kKTsNCj4gIA0KPiAgCU1MWDVfU0VUKHRsc19jbWQsIGNt
-ZCwgc3dpZCwgbnRvaGwoaGFuZGxlKSk7DQo+IEBAIC0yMzgsNiArMjQzLDggQEAgaW50IG1seDVf
-ZnBnYV90bHNfcmVzeW5jX3J4KHN0cnVjdCBtbHg1X2NvcmVfZGV2DQo+ICptZGV2LCB1MzIgaGFu
-ZGxlLCB1MzIgc2VxLA0KPiAgCWJ1Zi0+Y29tcGxldGUgPSBtbHhfdGxzX2tmcmVlX2NvbXBsZXRl
-Ow0KPiAgDQo+ICAJcmV0ID0gbWx4NV9mcGdhX3NidV9jb25uX3NlbmRtc2cobWRldi0+ZnBnYS0+
-dGxzLT5jb25uLCBidWYpOw0KPiArCWlmIChyZXQgPCAwKQ0KPiArCQlrZnJlZShidWYpOw0KPiAg
-DQo+ICAJcmV0dXJuIHJldDsNCj4gIH0NCg==
+On Tue, 19 Mar 2019 15:59:00 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> Hi Marc,
+> 
+> On 2019/3/19 18:01, Marc Zyngier wrote:
+> > On Tue, 19 Mar 2019 09:09:43 +0800
+> > Zenghui Yu <yuzenghui@huawei.com> wrote:
+> > 
+> >> Hi all,
+> >> 
+> >> On 2019/3/18 3:35, Marc Zyngier wrote:
+> >>> A first approach would be to keep a small cache of the last few
+> >>> successful translations for this ITS, cache that could be looked-up by
+> >>> holding a spinlock instead. A hit in this cache could directly be
+> >>> injected. Any command that invalidates or changes anything (DISCARD,
+> >>> INV, INVALL, MAPC with V=0, MAPD with V=0, MOVALL, MOVI) should nuke
+> >>> the cache altogether.
+> >>> 
+> >>> Of course, all of that needs to be quantified.
+> >> 
+> >> Thanks for all of your explanations, especially for Marc's suggestions!
+> >> It took me long time to figure out my mistakes, since I am not very
+> >> familiar with the locking stuff. Now I have to apologize for my noise.
+> > 
+> > No need to apologize. The whole point of this list is to have
+> > discussions. Although your approach wasn't working, you did
+> > identify potential room for improvement.
+> > 
+> >> As for the its-translation-cache code (a really good news to us), we
+> >> have a rough look at it and start testing now!
+> > 
+> > Please let me know about your findings. My initial test doesn't show
+> > any improvement, but that could easily be attributed to the system I
+> > running this on (a tiny and slightly broken dual A53 system). The sizing
+> > of the cache is also important: too small, and you have the overhead of
+> > the lookup for no benefit; too big, and you waste memory.
+> 
+> Not smoothly as expected. With below config (in the form of XML):
+
+The good news is that nothing was expected at all.
+
+> ---8<---
+>     <interface type='vhostuser'>
+>       <source type='unix' path='/var/run/vhost-user/tap_0' mode='client'/>
+>       <model type='virtio'/>
+>       <driver name='vhost' queues='32' vringbuf='4096'/>
+>     </interface>
+> ---8<---
+
+Sorry, I don't read XML, and I have zero idea what this represent.
+
+> 
+> VM can't even get to boot successfully!
+> 
+> 
+> Kernel version is -stable 4.19.28. And *dmesg* on host shows:
+
+Please don't test on any other thing but mainline. The only thing I'm
+interested in at the moment is 5.1-rc1.
+
+> 
+> ---8<---
+> [  507.908330] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [  507.908338] rcu:     35-...0: (0 ticks this GP)
+> idle=d06/1/0x4000000000000000 softirq=72150/72150 fqs=6269
+> [  507.908341] rcu:     41-...0: (0 ticks this GP)
+> idle=dee/1/0x4000000000000000 softirq=68144/68144 fqs=6269
+> [  507.908342] rcu:     (detected by 23, t=15002 jiffies, g=68929, q=408641)
+> [  507.908350] Task dump for CPU 35:
+> [  507.908351] qemu-kvm        R  running task        0 66789      1
+> 0x00000002
+> [  507.908354] Call trace:
+> [  507.908360]  __switch_to+0x94/0xe8
+> [  507.908363]  _cond_resched+0x24/0x68
+> [  507.908366]  __flush_work+0x58/0x280
+> [  507.908369]  free_unref_page_commit+0xc4/0x198
+> [  507.908370]  free_unref_page+0x84/0xa0
+> [  507.908371]  __free_pages+0x58/0x68
+> [  507.908372]  free_pages.part.21+0x34/0x40
+> [  507.908373]  free_pages+0x2c/0x38
+> [  507.908375]  poll_freewait+0xa8/0xd0
+> [  507.908377]  do_sys_poll+0x3d0/0x560
+> [  507.908378]  __arm64_sys_ppoll+0x180/0x1e8
+> [  507.908380]  0xa48990
+> [  507.908381] Task dump for CPU 41:
+> [  507.908382] kworker/41:1    R  running task        0   647      2
+> 0x0000002a
+> [  507.908387] Workqueue: events irqfd_inject
+> [  507.908389] Call trace:
+> [  507.908391]  __switch_to+0x94/0xe8
+> [  507.908392]  0x200000131
+> [... ...]
+> [  687.928330] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [  687.928339] rcu:     35-...0: (0 ticks this GP)
+> idle=d06/1/0x4000000000000000 softirq=72150/72150 fqs=25034
+> [  687.928341] rcu:     41-...0: (0 ticks this GP)
+> idle=dee/1/0x4000000000000000 softirq=68144/68144 fqs=25034
+> [  687.928343] rcu:     (detected by 16, t=60007 jiffies, g=68929,
+> q=1601093)
+> [  687.928351] Task dump for CPU 35:
+> [  687.928352] qemu-kvm        R  running task        0 66789      1
+> 0x00000002
+> [  687.928355] Call trace:
+> [  687.928360]  __switch_to+0x94/0xe8
+> [  687.928364]  _cond_resched+0x24/0x68
+> [  687.928367]  __flush_work+0x58/0x280
+> [  687.928369]  free_unref_page_commit+0xc4/0x198
+> [  687.928370]  free_unref_page+0x84/0xa0
+> [  687.928372]  __free_pages+0x58/0x68
+> [  687.928373]  free_pages.part.21+0x34/0x40
+> [  687.928374]  free_pages+0x2c/0x38
+> [  687.928376]  poll_freewait+0xa8/0xd0
+> [  687.928378]  do_sys_poll+0x3d0/0x560
+> [  687.928379]  __arm64_sys_ppoll+0x180/0x1e8
+> [  687.928381]  0xa48990
+> [  687.928382] Task dump for CPU 41:
+> [  687.928383] kworker/41:1    R  running task        0   647      2
+> 0x0000002a
+> [  687.928389] Workqueue: events irqfd_inject
+> [  687.928391] Call trace:
+> [  687.928392]  __switch_to+0x94/0xe8
+> [  687.928394]  0x200000131
+> [...]
+> ---8<---   endlessly ...
+> 
+> It seems that we've suffered from some locking related issues. Any
+> suggestions for debugging?
+
+None at the moment. And this doesn't seem quite related to the problem
+at hand, does it?
+
+> And could you please provide your test steps ? So that I can run
+> some tests on my HW to see improvement hopefully.
+
+Here you go:
+
+qemu-system-aarch64 -m 512M -smp 2 -cpu host,aarch64=on -machine virt,accel=kvm,gic_version=3,its -nographic -drive if=pflash,format=raw,readonly,file=/usr/share/AAVMF/AAVMF_CODE.fd -drive if=pflash,format=raw,file=buster/GXnkZdHqG4e7o4pC.fd -netdev tap,fds=128:129,id=hostnet0,vhost=on,vhostfds=130:131 -device virtio-net-pci,mac=5a:fe:00:e5:b1:30,netdev=hostnet0,mq=on,vectors=6 -drive if=none,format=raw,file=buster/GXnkZdHqG4e7o4pC.img,id=disk0 -device virtio-blk-pci,drive=disk0 -drive file=debian-testing-arm64-DVD-1-preseed.iso,id=cdrom,if=none,media=cdrom -device virtio-scsi-pci -device scsi-cd,drive=cdrom 128<>/dev/tap7 129<>/dev/tap7 130<>/dev/vhost-net 131<>/dev/vhost-net
+
+> > Having thought about it a bit more, I think we can drop the
+> > invalidation on MOVI/MOVALL, as the LPI is still perfectly valid, and
+> > we don't cache the target vcpu. On the other hand, the cache must be
+> > nuked when the ITS is turned off.
+> 
+> All of these are valuable. But it might be early for me to consider
+> about them (I have to get the above problem solved first ...)
+
+I'm not asking you to consider them. I jumped in this thread
+explaining what could be done instead. These are ideas on top of what
+I've already offered.
+
+     M.
+
+-- 
+Jazz is not dead, it just smell funny.
