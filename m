@@ -2,88 +2,78 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D813CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C07C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A770F20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B87F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightbitslabs-com.20150623.gappssmtp.com header.i=@lightbitslabs-com.20150623.gappssmtp.com header.b="huaPCnBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfCSQnm (ORCPT
+        id S1727810AbfCSQny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:43:42 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37261 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfCSQnm (ORCPT
+        Tue, 19 Mar 2019 12:43:54 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40641 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbfCSQny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:43:42 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1h6Hpx-0006hq-D6; Tue, 19 Mar 2019 17:43:37 +0100
-Message-ID: <1553013817.6482.8.camel@pengutronix.de>
-Subject: Re: [PATCH 3/5] reset: Add acquire/release support for arrays
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 17:43:37 +0100
-In-Reply-To: <20190221152557.8534-3-thierry.reding@gmail.com>
-References: <20190221152557.8534-1-thierry.reding@gmail.com>
-         <20190221152557.8534-3-thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
+        Tue, 19 Mar 2019 12:43:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u9so14229037pgo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightbitslabs-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=huaPCnBuQR0aj7ToSKosp/PQQB7PVl5vKRXYkzd1vIwrmSFzvaIdAefIXpTiNbaWss
+         y41GXIMNWTfkTVUq3OPm7lGhDNbE5olBhAwR7/GI03ezHPXs+GpSoutM63pkwb4NxmGn
+         2hGryboSqYlr6sWPwFIuaq9DMU8V2Zh4DEzBsyr57HotwdwA2Ni+iwx5Xu0e88AgXJng
+         J9xHKiGBg8MCTC8s7WFOGX1P32KyhtVHRIJXWO44EaAzhec71RUrfBXIsKnw6ADAHQ4s
+         pRS/8B5uzaiqBCUT703shXXgtmMRTNl5GAYbbCWwOI3xpDSA0K/47Ndopzc6b81E2joS
+         VZEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=m4VFqGS1hp2qVlFYTITdH6P9y+V10V8+ZHGl57D8qKWOqz8OlfVGUEgECnLeS8muhy
+         JYcVwrrX3Q752PPJQ1Bxvd4mgqrJb3k6/nDo8/xjBzxbLGK6ulTs05Pn7JuQWXzmwVYj
+         55FkxWxi3VRd8uZlQwAydbyJlFA3XBJwn/NFMLezJAP50dWKLJKAioufS78X8vvIyl2b
+         xxCrV0rFbzLIog+hrQdSPaoObh0tjnCjGssMgMaXFX+4adJtm/B4l1CzI5c8mdwLieOo
+         nVADmZRBD/Ncl7SMbIyT44A9UBetVKeqVV3isu/xrp3rbx2KPDfG/9AMCvliAVDhz7iX
+         vEsw==
+X-Gm-Message-State: APjAAAWa6kgcJSUsveSxoiraU8EDmEVlZgUTzZqbMnu+tZy/5xmxgAAD
+        rAbwpbohsg7KX341EX+xqbR2pQ==
+X-Google-Smtp-Source: APXvYqx2L0uPd72Z7iTE+VE7A/41iM+wB8JwIfUnJUcVJanss8ntkLdDUI0HOFs5R3v+2JkOqylcaA==
+X-Received: by 2002:a63:5622:: with SMTP id k34mr23852433pgb.123.1553013833338;
+        Tue, 19 Mar 2019 09:43:53 -0700 (PDT)
+Received: from [172.20.40.56] (50-207-206-41-static.hfc.comcastbusiness.net. [50.207.206.41])
+        by smtp.gmail.com with ESMTPSA id q7sm22281704pfa.119.2019.03.19.09.43.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 09:43:52 -0700 (PDT)
+Subject: Re: [PATCH net-next] datagram: Make __skb_datagram_iter static
+To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        xiyou.wangcong@gmail.com, kgraul@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190319145946.20504-1-yuehaibing@huawei.com>
+From:   Sagi Grimberg <sagi@lightbitslabs.com>
+Message-ID: <7bc20b05-ff45-2d00-98bf-77fc24cdaf7f@lightbitslabs.com>
+Date:   Tue, 19 Mar 2019 09:43:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190319145946.20504-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-21 at 16:25 +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Add implementations that apply acquire and release operations to all
-> reset controls part of a reset control array.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-> ---
->  drivers/reset/core.c  | 36 +++++++++++++++++++++++++++++++++++-
->  include/linux/reset.h |  6 ++++++
->  2 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index f94da91c22af..81ea77cba123 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -245,6 +245,34 @@ static int reset_control_array_deassert(struct reset_control_array *resets)
->  	return ret;
->  }
->  
-> +static int reset_control_array_acquire(struct reset_control_array *resets)
-> +{
-> +	unsigned int i;
-> +	int err;
-> +
-> +	for (i = 0; i < resets->num_rstcs; i++) {
-> +		err = reset_control_acquire(resets->rstc[i]);
-> +		if (err < 0)
-> +			goto release;
-> +	}
-
-This could be done under a single mutex lock by extracting a free
-version of of reset_control_acquire. Just an idea though, not sure if
-that would have any measurable benefit.
-
-regards
-Philipp
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
