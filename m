@@ -2,61 +2,77 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA1C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7540DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F310720857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC2F20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="R8WaPvHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfCSK4j (ORCPT
+        id S1727515AbfCSK4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:56:39 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:39525 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfCSK4j (ORCPT
+        Tue, 19 Mar 2019 06:56:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35460 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbfCSK4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 06:56:39 -0400
-Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2JAuPJR072932;
-        Tue, 19 Mar 2019 19:56:25 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
- Tue, 19 Mar 2019 19:56:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126065253096.bbtec.net [126.65.253.96])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2JAuIZn072901
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 19 Mar 2019 19:56:25 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: mount.nfs: Protocol error after upgrade to linux/master
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190315110555.0807d015@cakuba.netronome.com>
- <20190315120105.5541ad46@cakuba.netronome.com>
- <20190315165440.53b9db3c@cakuba.netronome.com>
- <CAGXu5jKHRPuaALQcPXvpDeuVgZR+EeRqo9Qj4j3kYatb3HUSSA@mail.gmail.com>
- <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
- <f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp>
- <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp>
-Date:   Tue, 19 Mar 2019 19:56:15 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 19 Mar 2019 06:56:43 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u21so4073971lfu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TrTp/SXGuiH4p0VEUNoj9eUCKnAnXN9z+Kw92eHSV+0=;
+        b=R8WaPvHYw7YwXTCJDOClMRlmFxid40JZKCcmeJVEz2Q8873xGqoCWc7eEcAKjzritR
+         Apn8zV0lBtV0GZFJz/vsd/2QflraaY2Zk0YAvnprTP4bLnXh42Q19h3XUHnDur2z6iAz
+         82C4I/tLPy6GdPZh4Cgt5r9IIIhyDRqZW/0UQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TrTp/SXGuiH4p0VEUNoj9eUCKnAnXN9z+Kw92eHSV+0=;
+        b=i+PWkX/TuWY89Ut/YcI2MzIgpFaqlFDvLCKZazidD4MpTeGDS5ZoJgmYavbZkYQuRK
+         hvfbEcr3K4EoBxSZMD7yoLlXZIJ5nVR10PM9v91rUXEI/MEu2gFZlUDQdlS4PvjrLsTr
+         mxoTQ8ihr97G3S3g6mYMoi37JN2et60GTbcmzgmB0uBY8wnTMpPKoUVVpoKxFT7YgAbE
+         1TrgUM1hABCA6r95o+Exev/rSftzu7JIzS2FJrV3PdeEttCLfXdJWfTxjtRij9sOt3jn
+         +Y0nvmsVs14fM0r/gBd7+b1zlMplKDtvmhShxD+8NrdVicfXg8B4hH33K0FUJJRFQhRN
+         fAaQ==
+X-Gm-Message-State: APjAAAW+/Hpo4Y4Z1PYCzD+IbSnPJl1xhs7wKvirxSYPy3Qvbv20kP+A
+        VPDrDTO2eg0oTDdl94IzkI7vvg==
+X-Google-Smtp-Source: APXvYqy/CsRFvfY87iaaI2SNyDSLsMQN2/bVfXwFtOe8nPJ0LuZZG8ApZmy8sJtbKv9MDdzXVx1tiA==
+X-Received: by 2002:a19:8c1e:: with SMTP id o30mr12049192lfd.137.1552993001168;
+        Tue, 19 Mar 2019 03:56:41 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id z7sm2750032ljk.34.2019.03.19.03.56.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 03:56:40 -0700 (PDT)
+Subject: Re: [RESEND PATCH v2 0/5] lib/sort & lib/list_sort: faster and
+ smaller
+To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrey Abramov <st5pub@yandex.ru>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Don Mullis <don.mullis@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <cover.1552704199.git.lkml@sdf.org>
+ <cover.1552704200.git.lkml@sdf.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <fb5ef3c2-2346-bbe8-351c-67f6b8735f19@rasmusvillemoes.dk>
+Date:   Tue, 19 Mar 2019 11:56:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com>
+In-Reply-To: <cover.1552704200.git.lkml@sdf.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,81 +81,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Kees Cook seems to be busy now, here is my version...
+On 19/03/2019 09.15, George Spelvin wrote:
+> 
+> Because CONFIG_RETPOLINE has made indirect calls much more expensive,
+> I thought I'd try to reduce the number made by the library sort
+> functions.
 
-From 885553e4793d9af2d4e9e99c7d137b0ec7b5f8ad Mon Sep 17 00:00:00 2001
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date: Tue, 19 Mar 2019 19:52:31 +0900
-Subject: [PATCH] LSM: Revive CONFIG_DEFAULT_SECURITY_* for "make oldconfig"
+For the series,
 
-Commit 70b62c25665f636c ("LoadPin: Initialize as ordered LSM") removed
-CONFIG_DEFAULT_SECURITY_{SELINUX,SMACK,TOMOYO,APPARMOR,DAC} from
-security/Kconfig and changed CONFIG_LSM to provide a fixed ordering as a
-default value. That commit expected that existing users (upgrading from
-Linux 5.0 and earlier) will edit CONFIG_LSM value in accordance with
-their CONFIG_DEFAULT_SECURITY_* choice in their old kernel configs. But
-since users might forget to edit CONFIG_LSM value, this patch revives
-the choice (only for providing the default value for CONFIG_LSM) in order
-to make sure that CONFIG_LSM reflects CONFIG_DEFAULT_SECURITY_* from their
-old kernel configs.
+Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- security/Kconfig | 36 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
-
-diff --git a/security/Kconfig b/security/Kconfig
-index 1d6463f..743e594 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -239,9 +239,43 @@ source "security/safesetid/Kconfig"
- 
- source "security/integrity/Kconfig"
- 
-+choice
-+	prompt "Default security module [superseded by 'Ordered list of enabled LSMs' below]"
-+	default DEFAULT_SECURITY_SELINUX if SECURITY_SELINUX
-+	default DEFAULT_SECURITY_SMACK if SECURITY_SMACK
-+	default DEFAULT_SECURITY_TOMOYO if SECURITY_TOMOYO
-+	default DEFAULT_SECURITY_APPARMOR if SECURITY_APPARMOR
-+	default DEFAULT_SECURITY_DAC
-+
-+	help
-+	  This choice is there only for converting CONFIG_DEFAULT_SECURITY in old
-+	  kernel config to CONFIG_LSM in new kernel config. Don't change this choice
-+	  unless you are creating a fresh kernel config, for this choice will be
-+	  ignored after CONFIG_LSM is once defined.
-+
-+	config DEFAULT_SECURITY_SELINUX
-+		bool "SELinux" if SECURITY_SELINUX=y
-+
-+	config DEFAULT_SECURITY_SMACK
-+		bool "Simplified Mandatory Access Control" if SECURITY_SMACK=y
-+
-+	config DEFAULT_SECURITY_TOMOYO
-+		bool "TOMOYO" if SECURITY_TOMOYO=y
-+
-+	config DEFAULT_SECURITY_APPARMOR
-+		bool "AppArmor" if SECURITY_APPARMOR=y
-+	config DEFAULT_SECURITY_DAC
-+		bool "Unix Discretionary Access Controls"
-+
-+endchoice
-+
- config LSM
- 	string "Ordered list of enabled LSMs"
--	default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
-+	default "yama,loadpin,safesetid,integrity,selinux" if DEFAULT_SECURITY_SELINUX
-+	default "yama,loadpin,safesetid,integrity,smack" if DEFAULT_SECURITY_SMACK
-+	default "yama,loadpin,safesetid,integrity,tomoyo" if DEFAULT_SECURITY_TOMOYO
-+	default "yama,loadpin,safesetid,integrity,apparmor" if DEFAULT_SECURITY_APPARMOR
-+	default "yama,loadpin,safesetid,integrity"
- 	help
- 	  A comma-separated list of LSMs, in initialization order.
- 	  Any LSMs left off this list will be ignored. This can be
--- 
-1.8.3.1
-
-
+and let's have more commits with such detailed changelogs and references
+to academic work combined with "but in the real world we have to do this
+and that tradeoff..." :)
