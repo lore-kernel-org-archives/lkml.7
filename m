@@ -2,177 +2,116 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A048C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97469C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249F920828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFDC20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552999448;
+	bh=yy+NjBQpVl1nbxJ5l+cho0MSdRL0pZ6dR3SV7dmiiro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LptI/Rn1dqnzyS1Imr7aINhvYl249A98cRiWKW7jJC+2ZZmc+si6XlgPG2KbS+J7t
+	 ae95pAaWMBsr+vpxaX04JGTUgczZMIyrTmzqZNBfWSU5NhQmwLuPeIyp3abY/Z5dgX
+	 PYdwwHHuRREWTPWPXWAc1iyI2WrHnUFHMQUwDaJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfCSMhK (ORCPT
+        id S1726969AbfCSMoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:37:10 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:57413 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfCSMhK (ORCPT
+        Tue, 19 Mar 2019 08:44:06 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38627 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfCSMoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:37:10 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 53663240003;
-        Tue, 19 Mar 2019 12:37:03 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 13:37:02 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     Philipp Rossak <embed3d@gmail.com>, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com,
-        rdunlap@infradead.org, vilhelm.gray@gmail.com,
-        clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com,
-        geert+renesas@glider.be, lukas@wunner.de, icenowy@aosc.io,
-        arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 00/30] IIO-based thermal sensor driver for Allwinner
- H3 and A83T SoC
-Message-ID: <20190319123702.om4uh32noys4nwxv@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <yw1xzhpryrku.fsf@mansr.com>
+        Tue, 19 Mar 2019 08:44:06 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a6so11912953lfl.5;
+        Tue, 19 Mar 2019 05:44:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=FcULlnaHiC6hq6LKuqWjCzK3UvY6QxCaEvk/2142440=;
+        b=uInCrmJU2Qk75nRuag7tzuPlbVR1dynQSvRBZY7t4MdIY/ZhWorNZ3O/YgBqeUf2sS
+         Q3ZRMN/1yV6evE8j6G6ondrxy/Qm/L2SJO3FNtyHdbz64SSi4q6o2xc2riVjooicIVZv
+         pdrXQR8ObV9aIpL0DeMH1JzAnDJ+2Pg9fI1ysqU3/ALova/NRj01jdYGd+sXoySboFMF
+         6ulMveqpja3DycDZIgFbB0sWYhK2xFwsJZvgKOUFX+hC0UliL0xTwLIWH1kh0A/iCUoY
+         s/wnzgWRj4qcXR9DcIeXpVS3QCusbrYnNBdVUdZVaPh6foma3Qbo3QiQTDIJ/nmW3ryf
+         mLUg==
+X-Gm-Message-State: APjAAAU702eqjJ6wiVHla7G5cae5ikEIx5BW0A6zEWpKuDc/fcYP7Vf4
+        bqUWxNTfdWt/Zg/PQB+DbaI=
+X-Google-Smtp-Source: APXvYqzeW3HN/EHhyB0IjakA6kUdrtLBOcc6j1HIeBawt9p2OZV6nmqxdkcHRuTTWFsaUuMccpX5+A==
+X-Received: by 2002:ac2:424e:: with SMTP id m14mr10516575lfl.4.1552999443976;
+        Tue, 19 Mar 2019 05:44:03 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id y22sm2760695ljh.12.2019.03.19.05.44.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 05:44:03 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1h6E62-0001XE-Mj; Tue, 19 Mar 2019 13:43:58 +0100
+Date:   Tue, 19 Mar 2019 13:43:58 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and
+ compatibles
+Message-ID: <20190319124358.GK6124@localhost>
+References: <20190226170710.12709-1-mans@mansr.com>
+ <20190227083342.GJ4747@localhost>
+ <yw1xpnrdv3z7.fsf@mansr.com>
+ <20190227131315.GO4747@localhost>
+ <yw1xlg21uwrp.fsf@mansr.com>
+ <20190319102840.GI6124@localhost>
+ <yw1xd0mn16ev.fsf@mansr.com>
+ <20190319110819.GB3178@localhost>
+ <yw1x8sxb125q.fsf@mansr.com>
+ <20190319122719.GC3178@localhost>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gcgv6druw6g6ewb2"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <yw1xzhpryrku.fsf@mansr.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319122719.GC3178@localhost>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 01:27:19PM +0100, Johan Hovold wrote:
+> On Tue, Mar 19, 2019 at 12:25:53PM +0000, Måns Rullgård wrote:
+> > Johan Hovold <johan@kernel.org> writes:
+> > 
+> > > On Tue, Mar 19, 2019 at 10:54:00AM +0000, Måns Rullgård wrote:
+> > >> Johan Hovold <johan@kernel.org> writes:
+> > >
+> > >> >> Regardless, setting the NCTRL flag should be harmless.
+> > >> >
+> > >> > Well, there are devices that depend on getting these requests, at least
+> > >> > for the QMI interface. But we can always revert if anyone complains.
+> > >> 
+> > >> The QMI interface doesn't even pretend to be a uart.  The other ones do,
+> > >> but there isn't actually any real uart behind them.  For instance, it
+> > >> doesn't matter what baud rate one sets.
+> > >
+> > > Sure, but some devices still require "DTR" to be set for the QMI
+> > > interface, so there not being any real uart is no guarantee that there
+> > > is no firmware that expects these calls.
+> > 
+> > Now I'm thoroughly confused.  The QMI interface has a completely
+> > separate driver that creates a network device (if I'm reading the code
+> > correctly).
+> 
+> I was just giving an example of firmware sometimes doing unexpected
+> things.
 
---gcgv6druw6g6ewb2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+See 93725149794d ("net: qmi_wwan: MDM9x30 specific power management")
+for some background.
 
-On Tue, Mar 19, 2019 at 12:30:25PM +0000, M=E5ns Rullg=E5rd wrote:
-> Philipp Rossak <embed3d@gmail.com> writes:
->
-> > Allwiner H3 and A83T SoCs have a thermal sensor, which is a large refac=
-tored
-> > version of the old Allwinner "GPADC" (although it have already only
-> > thermal part left in A33).
-> >
-> > This patch tried to add support for the sensor in H3 and A83T based on
-> >
-> > This Patchtseries was in the beginning based on Icenowy Zengs v4 patchs=
-eries [1]. Since we decided to merge the mfd driver into the GPADC this cha=
-nged. So only one patch could be reused.
-> >
-> > Patches that adds support for H5, A64, A80 and H6 SoCs are allready pre=
-pared,
-> > and will be upstreamed if this patchseries is applied and the testing i=
-s done.
-> >
-> > Sorry for delaying this.
-> >
-> > Regards,
-> > Philipp
-> >
-> > changes since v2:
-> > 	* mfd driver is now merged into the gpadc driver
-> > 	* complete rework
-> >
-> > changes since v1:
-> > 	* collecting all acks
-> > 	* rewording commits/fix typos
-> > 	* move code in place where it is used
-> > 	* fix naming conventions of defines
-> > 	* clarify commits
-> > 	* update documentation to cover the new nvmem calibraion
-> > 	* change nvmem calibration
-> >
-> > Icenowy Zheng (1):
-> >   iio: adc: sun4i-gpadc-iio: rename A33-specified registers to contain
-> >     A33
-> >
-> > Philipp Rossak (29):
-> >   mfd: Makefile: Remove build option for MFD:sun4i-gpadc
-> >   mfd: Kconfig: Remove MFD_SUN4I_GPADC config option
-> >   iio: adc: Remove ID table
-> >   iio: adc: Kconfig: Update Kconfig to new build options
-> >   iio: adc: move SUN4I_GPADC_CHANNEL define to header file
-> >   iio: adc: remove ofnode options
-> >   iio: adc: remove mfd_probe & sunwi_irq_init function
-> >   iio: adc: remove hwmon structure
-> >   iio: adc: Threat A33 as thermal sensor and remove non thermal sun4i
-> >     channel
-> >   iio: adc: rework irq and adc_channel handling
-> >   iio: adc: add new compatibles
-> >   mfd: Remove old mfd driver & Move sun4i-gpadc.h to iio/adc/
-> >   arm: config: Enable SUN4I_GPADC in defconfig
-> >   dt-bindings: update the Allwinner GPADC device tree binding for H3 &
-> >     A83T
-> >   iio: adc: sun4i-gpadc-iio: rework: readout temp_data
-> >   iio: adc: sun4i-gpadc-iio: rework: support clocks and reset
-> >   iio: adc: sun4i-gpadc-iio: rework: support multiple sensors
-> >   iio: adc: sun4i-gpadc-iio: rework: support nvmem calibration data
-> >   iio: adc: sun4i-gpadc-iio: rework: device specific suspend & resume
-> >   iio: adc: sun4i-gpadc-iio: add support for H3 thermal sensor
-> >   iio: adc: sun4i-gpadc-iio: add support for A83T thermal sensor
-> >   ARM: dts: sunxi-h3-h5: add support for the thermal sensor in H3 and H5
-> >   ARM: dts: sun8i: h3: add support for the thermal sensor in H3
-> >   ARM: dts: sun8i: h3: add thermal zone to H3
-> >   ARM: dts: sun8i: h3: enable H3 sid controller
-> >   ARM: dts: sun8i: h3: use calibration for ths
-> >   ARM: dts: sun8i: a83t: add support for the thermal sensor in A83T
-> >   ARM: dts: sun8i: a83t: add thermal zone to A83T
-> >   ARM: sun8i: a83t: full range OPP tables and CPUfreq
-> >
-> >  .../devicetree/bindings/iio/adc/sun4i-gpadc.txt    |  41 +-
-> >  arch/arm/boot/dts/sun8i-a83t.dtsi                  | 143 +++++
-> >  arch/arm/boot/dts/sun8i-h3.dtsi                    |  52 ++
-> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  10 +
-> >  arch/arm/configs/sunxi_defconfig                   |   1 +
-> >  drivers/iio/adc/Kconfig                            |  11 +-
-> >  drivers/iio/adc/sun4i-gpadc-iio.c                  | 617 +++++++++++++=
---------
-> >  drivers/mfd/Kconfig                                |  17 -
-> >  drivers/mfd/Makefile                               |   1 -
-> >  drivers/mfd/sun4i-gpadc.c                          | 181 ------
-> >  include/linux/{mfd =3D> iio/adc}/sun4i-gpadc.h       |  47 +-
-> >  11 files changed, 681 insertions(+), 440 deletions(-)
-> >  delete mode 100644 drivers/mfd/sun4i-gpadc.c
-> >  rename include/linux/{mfd =3D> iio/adc}/sun4i-gpadc.h (72%)
->
-> What became of these patches?  I can't seem to find any follow-ups.  Was
-> the approach abandoned in favour of something else?
-
-It didn't, I don't think we ever got any follow-up to that series so
-that's the main reason it's been held back.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---gcgv6druw6g6ewb2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJDibgAKCRDj7w1vZxhR
-xRFxAP47IAHJtijOx3jGPvMAuz0BDBCkuoVSLPJG66txr9x1aAD49LZbowh5lJEs
-1iqVdhU6VYAfwYkwNsuzFySBPfs4CA==
-=knWg
------END PGP SIGNATURE-----
-
---gcgv6druw6g6ewb2--
+Johan
