@@ -2,101 +2,75 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5C1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ECAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E502064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462912064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZznNJAtS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eTQ3F8s1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfCSQgv (ORCPT
+        id S1727958AbfCSQgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:36:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44468 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbfCSQgs (ORCPT
+        Tue, 19 Mar 2019 12:36:55 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43068 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfCSQgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:36:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i2so730240pgj.11;
-        Tue, 19 Mar 2019 09:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=o/hu19s9IE7P/1X2IZsAaNo1mAHXce/eUIJAnIIL4nw=;
-        b=ZznNJAtSuS8zs3O9UxyG7Tg6zio0hm57xVWXvvuQ1Uqb37ViJHuF7E43AVLturz/Rw
-         vnd6ozm1Ode0yQUKkfsDsnLf5C/GbRcmDYgmv3mdtgUYAC3OwhKKDafQ2bffhj8rqMeu
-         i+xjwUD2o14y7GPeGkZS/ddWxDzN/Y76tY5Cneu4SblU5QGSe5mzABBWVTL1/6wOgEMG
-         kgUY7OoDnusLnCKZCrebEC+uEGGgOj5VvKr0SNhdWjd7EeokMMEo+CA47m9Cok2KGImX
-         k5a1ckQxtLAfpXrusnstyxD++O1TTAkIpCrj4VV+9GM5sw07KwZEnyc/Sz72N9Qq4N8V
-         ZgXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o/hu19s9IE7P/1X2IZsAaNo1mAHXce/eUIJAnIIL4nw=;
-        b=CLBxonmYK/VWvAQMfDrkE33ny1YnHyCrjDoNbj8lHrEYTIuKD+nhZb7+H+qY4AQKIz
-         QT3IBFdCDrVVypX2S+ixVFHmM19Ff+8fumUvpWvQwCX+iVHf9ELoWCF1+f5xY0chjZLO
-         7eGU4btSo+tGzkc7j4rLd0uK/CapemDDtLXojNW28+8EDWkW8809keeQAuryBUh6OsPF
-         bUy+3TDEya1IlDJIxLKuRSodlQ+tFlYcWfLJwr8dNwZ4KCFMnhpPmDAVBxWY475SpSib
-         E3No51muS43TV2t+xgkHVhxKQg8zd66Xb5WP+fcLABp3hbmV871RYccP05GdrDj9+gUP
-         eLPQ==
-X-Gm-Message-State: APjAAAXX6M3TfshQn65eyZ+VaL7YHnjcT6OaUe/AmMMuQJDrqzTnf4IE
-        PrUvL+mxhWQ+aLAh9cOZGSc=
-X-Google-Smtp-Source: APXvYqxL5gpZRRUhom2v85PXQDxti0OlQMd0MKaTKP5vG/fimfKSt8R77CK43KmksJ9/GBDyZKYPkA==
-X-Received: by 2002:a17:902:b404:: with SMTP id x4mr3475338plr.232.1553013407823;
-        Tue, 19 Mar 2019 09:36:47 -0700 (PDT)
-Received: from localhost.localdomain ([47.91.249.165])
-        by smtp.gmail.com with ESMTPSA id x6sm11238198pfm.140.2019.03.19.09.36.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 19 Mar 2019 09:36:47 -0700 (PDT)
-From:   Jeff Xie <chongguiguzi@gmail.com>
-To:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com
-Cc:     somnath.kotur@broadcom.com, chongguiguzi@gmail.com,
-        sriharsha.basavapatna@broadcom.com, dledford@redhat.com,
-        jgg@ziepe.ca, nux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] infiniband:qplib_fp:move spin_lock_bh to spin_lock in tasklet
-Date:   Wed, 20 Mar 2019 00:36:37 +0800
-Message-Id: <1553013397-29263-1-git-send-email-chongguiguzi@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Mar 2019 12:36:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uiJXh23wIeh7CYR5HuWi5dhCXeQ+OAoWHakHkOf5iuc=; b=eTQ3F8s1jsRgHWTi0rsMNbpcb
+        CAM/dlj738vqeeySkjD68djE/jT+O/XiVug7Sp5UqSXOAzpQgjxi9PWOegNWuWjtUoveFtYOVS2UG
+        So8GXTLMh1z+5wyBZz02NI32VnGnFdKDMq7AMyuMqzp9iztUMAKKDPpGFAXH2Taufl/IiqzDrlB+s
+        PaYJeedvWPM8LEc8M4Z+QS5sYDI3NxOncmqozNzn7DwqUnwRazBOq7w5MNC/FnWaFMQcHd2YFuqzz
+        WlJ4LbzczePeGd9XK1K4qjRioAO2zg/aUpCzNqblIaDi8Atzk3hwMZCAmfTGYAaG2nNMmueOidXQ/
+        t1d8HP5GA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6HjG-0002CW-50; Tue, 19 Mar 2019 16:36:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B53FC200F9310; Tue, 19 Mar 2019 17:36:38 +0100 (CET)
+Date:   Tue, 19 Mar 2019 17:36:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Yuyang Du <duyuyang@gmail.com>, will.deacon@arm.com,
+        mingo@kernel.org, ming.lei@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/19] locking/lockdep: Adjust indents for function
+ definitions
+Message-ID: <20190319163638.GC6058@hirez.programming.kicks-ass.net>
+References: <20190318085733.3143-1-duyuyang@gmail.com>
+ <20190318085733.3143-6-duyuyang@gmail.com>
+ <1553013180.152266.51.camel@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553013180.152266.51.camel@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unnecessary to call spin_lock_bh in a tasklet.
+On Tue, Mar 19, 2019 at 09:33:00AM -0700, Bart Van Assche wrote:
+> On Mon, 2019-03-18 at 16:57 +0800, Yuyang Du wrote:
+> > Being paranoid to see function arguments lines are aligned.
+> 
+> This patch changes code that conforms to the kernel coding style into
+> code that does not conform to the kernel coding style. If you have a
+> look at the c-lineup-arglist-tabs-only function in
+> Documentation/process/coding-style.rst you will see that only tabs and
+> no spaces should be used to indent function arguments.
 
-Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
----
- drivers/infiniband/hw/bnxt_re/qplib_fp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-index 71c34d5..e2541c9 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -273,14 +273,14 @@ static void bnxt_qplib_service_nq(unsigned long data)
- 						     << 32;
- 			cq = (struct bnxt_qplib_cq *)(unsigned long)q_handle;
- 			bnxt_qplib_arm_cq_enable(cq);
--			spin_lock_bh(&cq->compl_lock);
-+			spin_lock(&cq->compl_lock);
- 			atomic_set(&cq->arm_state, 0);
- 			if (!nq->cqn_handler(nq, (cq)))
- 				num_cqne_processed++;
- 			else
- 				dev_warn(&nq->pdev->dev,
- 					 "cqn - type 0x%x not handled\n", type);
--			spin_unlock_bh(&cq->compl_lock);
-+			spin_unlock(&cq->compl_lock);
- 			break;
- 		}
- 		case NQ_BASE_TYPE_SRQ_EVENT:
--- 
-2.7.4
+So while I generally do align things with tabs and spaces, but have no
+strong opinions either way as longs as its readable; I do hate pure
+whitespaces patches. They make git-blame so much harder to use :/
 
