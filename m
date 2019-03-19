@@ -2,163 +2,144 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35F7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6698C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7703320989
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552991331;
-	bh=7uru8hEoahmypSdyu9vk2O13cSiCTDja0FgNEgQYI5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Apvg49WsznBVIWppgB0Q0uLzYbebt5oDOcD9+JAKfmWW4CNMfQFTc9/BabmURCPH
-	 lZ1LTxywRRNPCVYtTX0T2BALbmnXyV+Gt/cbFan4wqQ9P45McjZ33Ws9iwUW5IFk22
-	 MQl9sJIm9CXKrLxKYTSgHqOTpA3d/rlKnLxn1xDM=
+	by mail.kernel.org (Postfix) with ESMTP id 9087520989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="oRVwzzyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfCSK2u (ORCPT
+        id S1727399AbfCSKaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:28:50 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45353 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCSK2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 06:28:49 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y6so8586647ljd.12;
-        Tue, 19 Mar 2019 03:28:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=tyI6rgnC+UpX8sancHSdmZtqijH+Q9qbvNjNb20gOVI=;
-        b=nixmaBxyfT1n7djg0LLYAUDpjS62z2LxGgamLkZlkcHmbOvDeUC5/YeKG/g0ea5yoL
-         1w8KzS2CLFR73naXGMeNiV/EJMbyVgb3yM3Ik4TYmxHef+l2Z0YpEnwdk8OmAQyPEPUl
-         DUITOugqObpDdpnCrTAgqKeh2+O8SwSqHCG9tkGAEhme3DkVB92r21SsvLcoda+f/RRj
-         q6cAfncfwiUsw4uLzqYZ+z9kEfS/DgeTgPEggZlh/JvyVTvf15p/cBphVx+e5W+3i7ZJ
-         En6uMF1Jop5LLK+yBnRNR9ly6EHNpFbjPdjb0mIwGIODpR9nDLy8dWdxwW3eputza4bD
-         bB5g==
-X-Gm-Message-State: APjAAAVgjnUEMUyeofeRNMTV+TwzFWS8l8nN/nf+zgwxqkxe7IZEFNej
-        5wKinqpoqbGYe3la1/xcc9s=
-X-Google-Smtp-Source: APXvYqylX9wN06FgrUuSENkAa8joWU0FuvfIBE86jeRduZbY9UTOPhaS36gyC/rBicnU+oZXFLcwJA==
-X-Received: by 2002:a2e:5b44:: with SMTP id p65mr13515470ljb.182.1552991327510;
-        Tue, 19 Mar 2019 03:28:47 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id t18sm2730737ljg.64.2019.03.19.03.28.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 03:28:46 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1h6Bz6-0007yw-Q5; Tue, 19 Mar 2019 11:28:41 +0100
-Date:   Tue, 19 Mar 2019 11:28:40 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and
- compatibles
-Message-ID: <20190319102840.GI6124@localhost>
-References: <20190226170710.12709-1-mans@mansr.com>
- <20190227083342.GJ4747@localhost>
- <yw1xpnrdv3z7.fsf@mansr.com>
- <20190227131315.GO4747@localhost>
- <yw1xlg21uwrp.fsf@mansr.com>
+        Tue, 19 Mar 2019 06:30:01 -0400
+Received: from mail-eopbgr1310085.outbound.protection.outlook.com ([40.107.131.85]:18144
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfCSKaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 06:30:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jQl7/78edH7yLD5G0CT1U9U8IhbAPTO5XuOLXV5a4WE=;
+ b=oRVwzzykwxT02ZsOGtzXqR0BACDolHMLukHDd11hTox2Q6GDFddvIwWKUB4zb81IsqEAFo9sfqZ2No5BzzY6S9928ktJPPCq2VtJAta0PWuNC3H1HIcNb2xWj0lpjC2pPn4004cXAoJJiH+AbYjZbC/m5YOKVp1wVOj1c+WcTFk=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB2527.apcprd02.prod.outlook.com (10.170.141.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Tue, 19 Mar 2019 10:29:55 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 10:29:55 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
+Thread-Topic: [External] Re: mm/cma.c: High latency for cma allocation
+Thread-Index: AQHU3YpG7XMhet9mv0+1ZFJR3Y1R16YRXCGAgAACGm2AAAebAIAABP0wgAAIBgCAAU6K1g==
+Date:   Tue, 19 Mar 2019 10:29:55 +0000
+Message-ID: <SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098E44824F5AA69BC04F935E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190318130757.GG8924@dhcp22.suse.cz>
+ <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190318134242.GI8924@dhcp22.suse.cz>
+ <SG2PR02MB30986F43403B92F31499E42AE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190318142916.GK8924@dhcp22.suse.cz>
+In-Reply-To: <20190318142916.GK8924@dhcp22.suse.cz>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 12e0e1bc-2895-425b-f9ae-08d6ac55d47e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2527;
+x-ms-traffictypediagnostic: SG2PR02MB2527:|SG2PR02MB2527:
+x-microsoft-antispam-prvs: <SG2PR02MB2527EFAA505129018FE4AED7E8400@SG2PR02MB2527.apcprd02.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(39850400004)(396003)(189003)(199004)(14454004)(71190400001)(5024004)(305945005)(66066001)(26005)(93886005)(99286004)(256004)(8936002)(81156014)(5660300002)(14444005)(52536014)(6436002)(9686003)(97736004)(3846002)(54906003)(33656002)(7736002)(6246003)(74316002)(2906002)(81166006)(78486014)(6116002)(53546011)(102836004)(8676002)(6506007)(55016002)(105586002)(229853002)(316002)(53936002)(44832011)(25786009)(4326008)(478600001)(476003)(7696005)(66574012)(486006)(55236004)(71200400001)(186003)(6916009)(76176011)(86362001)(11346002)(446003)(106356001)(68736007)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2527;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JQeeIFxDRRZf2zSfjen3AyGVAx0B+LCLCJYr4024lsVX7/szQtqhvRLrEr7cI/i9nUpl/UMQ2aC7CYBt/xAc8VLOs4mtVTMtrRK4foVMM3PRUnfTPPLdsZbUN2bpgjDMHUOdAbcEGpU6EOkJRxTwiXpah9MmGS2uiOEipthv3NbXrArs63B1mO8NnhWPnFwPtD8eisrVu0QquIA1hfFRPMc54TEJM8qPyYr+ImBZKYdh8XQSCA2VfYCaN7526rxWJvvmvLNk8Rfem56cLP4eD1S9u0JyuoLtCd7x4b7BjPCqLwvNBNGXcE2a8YDqK0SrUv5hUYQzLA9NjuHPH8JxclULROz/uzd1nA/McZW/57X30Va5oa+qeSwx1obEMJCdbwt1KrOlZSV37rmYk1hORP8kjjAGCyak0tyPjyzZ7qs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yw1xlg21uwrp.fsf@mansr.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12e0e1bc-2895-425b-f9ae-08d6ac55d47e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 10:29:55.6312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2527
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 02:32:58PM +0000, Måns Rullgård wrote:
-> Johan Hovold <johan@kernel.org> writes:
-> 
-> > Adding Bjørn.
-> >
-> > On Wed, Feb 27, 2019 at 11:57:16AM +0000, Måns Rullgård wrote:
-> >> Johan Hovold <johan@kernel.org> writes:
-> >> 
-> >> > On Tue, Feb 26, 2019 at 05:07:10PM +0000, Mans Rullgard wrote:
-> >> >> The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
-> >> >> of which are serial ports.  The fifth is a network interface supported
-> >> >> by the qmi-wwan driver.  Furthermore, the serial ports do not support
-> >> >> modem control signals.  Add driver_info flags to reflect this.
-> >> >> 
-> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> >> >> ---
-> >> >>  drivers/usb/serial/option.c | 3 ++-
-> >> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >> >> 
-> >> >> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-> >> >> index fb544340888b..af4cbfecc3ff 100644
-> >> >> --- a/drivers/usb/serial/option.c
-> >> >> +++ b/drivers/usb/serial/option.c
-> >> >> @@ -1066,7 +1066,8 @@ static const struct usb_device_id option_ids[] = {
-> >> >>  	  .driver_info = RSVD(3) },
-> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
-> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
-> >> >> -	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
-> >> >> +	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
-> >> >> +	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
-> >> >>  	/* Quectel products using Qualcomm vendor ID */
-> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
-> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
-> >> >
-> >> > Could you please provide the output of usb-devices (or lsusb -v) for
-> >> > this device?
-> >> 
-> >> lsusb -v:
-> >> [...]
-> 
-> > So the patch looks fine to me. The fifth interface is QMI, but hasn't
-> > been available for use until now then, and this seems to have been the
-> > vendors idea from the start:
-> >
-> > 	http://www.microchip.ua/simcom/WCDMA/APPNOTES/SIMCom_3G_Linux_driver_Application%20Note_V1.00.pdf
-> 
-> That document predates the qmi-wwan driver in the kernel.  Note that
-> this driver has an ID table entry for interface 4 of this device.  Right
-> now, whichever driver is probed first claims that interface.  I haven't
-> actually tried using the QMI interface, though.
 
-I didn't say it was correct, just that the vendor proposed binding to it
-anyway.
+________________________________________
+From: Michal Hocko <mhocko@kernel.org>
+Sent: 18 March 2019 19:59
+To: Pankaj Suryawanshi
+Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org; minchan@kernel.org; K=
+irill Tkhai
+Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
 
-> > And you're seeing errors when opening ports 0-3 due to the DTR calls
-> > which I guess no one noticed or cared about before?
-> 
-> Right, some userspace tools complain about this.
+On Mon 18-03-19 14:02:09, Pankaj Suryawanshi wrote:
+>> > I have the system(vanilla kernel) with 2GB of RAM, reserved 1GB for CM=
+A. No swap or zram.
+>> > Sorry, I don't have information where the time is spent.
+>> > time is calculated in between cma_alloc call.
+>> > I have just cma_alloc trace information/function graph.
+>
+>> Then please collect that data because it is really hard to judge
+>> anything from the numbers you have provided.
+>
+> Any pointers from which i can get this details ?
 
-Hmm. You shouldn't see any errors on open (they're not even logged), but
-I guess your user space tools complains on receiving -EPROTO instead of
--EINVAL when trying to manage these signals directly?
+I would start by enabling built in tracepoints for the migration or use
+a system wide perf monitoring with call graph data.
 
-> > Before you sent me the lsusb I searched for it and came across the below
-> > thread where Bjørn's having a go at SIMCom. In it there's output from a
-> > second device using the same id but with entirely different descriptors.
-> >
-> > 	https://forum.openwrt.org/t/lte-wireless-module-support-by-openwrt-led-on-tplink/13586?page=3
-> >
-> > If this is a common theme with this vendor we may need to be extra
-> > careful when making changes.
-> 
-> Isn't this a common theme with most USB vendors, especially wireless things?
-> 
-> Regardless, setting the NCTRL flag should be harmless.
+Calling Sequence is as below.
 
-Well, there are devices that depend on getting these requests, at least
-for the QMI interface. But we can always revert if anyone complains.
+cma_alloc() -->
+alloc_contig_range() -->
+start_isolate_page_range() -->
+__alloc_contig_migrate_range() -->
+isolate_migratepages_range() -->
+reclaim_clean_pages_from_list() -->
+shrink_page_list()
 
-Now applied, thanks.
+There is no built in tracepoints except cma_alloc.
+How to know where it taking time ?
 
-Johan
+--
+Michal Hocko
+SUSE Labs
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
