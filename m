@@ -2,216 +2,85 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C396C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948A0C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486462082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SjAxkf7c"
+	by mail.kernel.org (Postfix) with ESMTP id 644462082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfCSUaX (ORCPT
+        id S1727384AbfCSUbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:30:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50753 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfCSUaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:30:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z11so9812880wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bSLQ8FK4Z1ngI7JlYt25VxWOyR3pz1WKo9ZRMM3iPO4=;
-        b=SjAxkf7ch9JAWR3fdQuROTs9aIl4ZU0v/uFi4Ht3Mt9hEURDrx+0eqabju7E23p0vP
-         eRno6WQoSy6njvlDOGVUuM6gcrkcwlK+gn2jB5nLJofhRVnm+Tb6ovTTUaXAuYTYdrrl
-         bajEvqBauj3Bmo2VdtuWC16PkLoLEK7J3JxNqlMq7x99t8ghvZ9QGNJqGTxAHo+4gZN4
-         S7aQ5ibh68zBUf++hRg0Pq6iDOyB+iNhCEpySyXw+XMQXUtX/HcfY4lI6x0RO1ILzNz+
-         kuHN/yxgZDy6/wsJp2D2H/llKIvM2oZEgxHfC6mBkFbeq6KNXffw6fFg/JkNCZxLFDYY
-         0qgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bSLQ8FK4Z1ngI7JlYt25VxWOyR3pz1WKo9ZRMM3iPO4=;
-        b=Rs5mI0dpgHjp6Wn6E8ajI6Pxw2zJiUhc1DHJUTptGa11Q0j4zfuBIdwgxfJHE3kZus
-         37WqRWjg0cmhSQ2M7gRpQLPE4MPKaT/7FM1e6VIttSYahDVykrnDYFop0psc0y4RE4Wh
-         O4yAhvpCT3zrlMwQmp7okhaxrtYkQBhIzXjukymjUpcLjus9+dlZJOQ++kBsCCypfWzI
-         ntmSAjSL5wXRuY0hkgNmT7WAdpxjqkZVpGt+iss7v7wGCljfGQmJYVrvcP3NAh2+828T
-         hnTzfgrsR1n4TuF7w/kjRnR/LHYFKZUcNnTk26M+VAM4M0RkAgdlGObE6Cvag4XtG+tU
-         4gew==
-X-Gm-Message-State: APjAAAUBgM9YZUCEqUZqgNW5sUPXP9P5ezQ/75LBd9TbqYNwqRLglYDL
-        QT8+c5JIS9HlRgapfrOvIn7o6g==
-X-Google-Smtp-Source: APXvYqw2lyJLq4DbMOD857Wq8c+XlMfaYDGUKjb8YX5rz2XG1CemxXU1tLcorCP6wF2g07RxtItHwQ==
-X-Received: by 2002:a1c:a8d3:: with SMTP id r202mr5422527wme.106.1553027419681;
-        Tue, 19 Mar 2019 13:30:19 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id z1sm12502125wrw.28.2019.03.19.13.30.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 13:30:18 -0700 (PDT)
-Subject: Re: [PATCH v2 06/11] arm64: dts: meson-g12a-x96-max: add regulators
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190318100458.5619-1-narmstrong@baylibre.com>
- <20190318100458.5619-7-narmstrong@baylibre.com>
- <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
- <c13bc57b-82ea-8f48-75a7-417941b08a11@baylibre.com>
- <CAFBinCDj=5VpoJGKVGw5bG50EaBHgKz=WLtSwNVVWXtzfoiQ9A@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
- GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
- RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
- NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
- 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
- ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
- YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
- GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
- coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
- SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
- YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
- mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
- zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
- 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
- 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
- RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
- C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
- Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
- GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
- 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
- 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
- zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
- wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
- 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
- 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
- xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
- K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
- AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
- AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
- n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
- 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
- 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
- EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
- /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
- NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
- 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
- yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
- bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
- KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
- KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
- WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
- VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <56b69e23-6844-eb89-7198-fd2ecf307391@baylibre.com>
-Date:   Tue, 19 Mar 2019 21:30:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 16:31:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19688 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726740AbfCSUbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 16:31:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 13:31:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
+   d="scan'208";a="126830422"
+Received: from tstruk-mobl1.jf.intel.com ([10.7.196.61])
+  by orsmga008.jf.intel.com with ESMTP; 19 Mar 2019 13:31:34 -0700
+Subject: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tadeusz.struk@intel.com
+Date:   Tue, 19 Mar 2019 13:31:34 -0700
+Message-ID: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDj=5VpoJGKVGw5bG50EaBHgKz=WLtSwNVVWXtzfoiQ9A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019 21:13, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Tue, Mar 19, 2019 at 9:29 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 18/03/2019 21:13, Martin Blumenstingl wrote:
->>> Hi Neil,
->>>
->>> On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> From: Guillaume La Roque <glaroque@baylibre.com>
->>>>
->>>> Add system regulators for the X96 Max Set-Top-Box.
->>>>
->>>> Still missing
->>>> * VDD_EE (0.8V - PWM controlled)
->>>> * VDD_CPU (PWM controlled)
->>>>
->>>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>> ---
->>>>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
->>>>  1 file changed, 67 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->>>> index 0edbd00b358f..5c37930b09e2 100644
->>>> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->>>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->>> [...]
->>>> +       vcc_5v: regulator-vcc_5v {
->>>> +               compatible = "regulator-fixed";
->>>> +               regulator-name = "VCC_5V";
->>>> +               regulator-min-microvolt = <5000000>;
->>>> +               regulator-max-microvolt = <5000000>;
->>>> +               vin-supply = <&dc_in>;
->>>> +
->>>> +               gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
->>>> +               enable-active-high;
->>> is there any way to test whether this GPIO is the right one?
->>> I couldn't find a reference to a GPIOH_8 regulator in
->>> buildroot_openlinux_kernel_4.9_fbdev_20180706
->>
->> The x96 is based on the U212 reference design, and the GPIOH_8 controls the 5V_EN signal,
->> but you are right, it's the wrong polarity here, it should be enable-active-low instead.
->> (FYI The SEI510 does not use this at all, 5V is always enabled)
->>
->> The schematics describes :
->> VCC5V_EN (GPIOH_8-Hiz OD): 5V_EN
->> L: Enable
->> Hiz: Disable
-> thank you for this explanation!
-> 
->> FYI, the GPIOH_8 is Open-Drain only, this means this pin cannot pull to TTL 1, only to TTL 0
->> or set as input. We need to add a way to describe this in the pinctrl driver somehow....
-> as far as I understand the pinctrl driver changes would result in an
-> error when the GPIO is used with "active high" (making incompatible
-> drivers or .dts easier to see). is this correct?
+The poll condition should only check response_length,
+because reads should only be issued if there is data to read.
+The response_read flag only prevents double writes.
+The problem was that the write set the response_read to false,
+enqued a tpm job, and returned. Then application called poll
+which checked the response_read flag and returned EPOLLIN.
+Then the application called read, but got nothing.
+After all that the async_work kicked in.
+Added also mutex_lock around the poll check to prevent
+other possible race conditions.
 
-I don't have a clear view of that, since it's really GPIO related.
-I don't know if we can really disable non-opendrain support for a
-specific gpio.
+Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
+Reported-by: Mantas Mikulėnas <grawity@gmail.com>
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+---
+ drivers/char/tpm/tpm-dev-common.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-We will need to investigate ! Anyway, using GPIO_OPEN_DRAIN in DT
-is the correct way to handle these GPIO lines.
-
-Neil
-
-> 
->> I will send a fix on v3
->>
->> I didn't notice because I power the board using a Type-A to Type-A connector,
->> and the 5V from the USB port bypasses this regulator...
-> this is good to know.
-> I'm also powering some of my boards using a Type-A to Type-A
-> connector. I'll need to remember this and this whether boards are
-> still booting with the DC plug
-> 
-> 
-> Regards
-> Martin
-> 
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 5eecad233ea1..7312d3214381 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -203,12 +203,14 @@ __poll_t tpm_common_poll(struct file *file, poll_table *wait)
+ 	__poll_t mask = 0;
+ 
+ 	poll_wait(file, &priv->async_wait, wait);
++	mutex_lock(&priv->buffer_mutex);
+ 
+-	if (!priv->response_read || priv->response_length)
++	if (priv->response_length)
+ 		mask = EPOLLIN | EPOLLRDNORM;
+ 	else
+ 		mask = EPOLLOUT | EPOLLWRNORM;
+ 
++	mutex_unlock(&priv->buffer_mutex);
+ 	return mask;
+ }
+ 
 
