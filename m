@@ -2,166 +2,95 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C116EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CE2C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5F820643
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6D220643
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GeV00N6Y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="WkSaC6+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfCSMJ1 (ORCPT
+        id S1727676AbfCSMJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:09:27 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44512 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbfCSMJ1 (ORCPT
+        Tue, 19 Mar 2019 08:09:55 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:46749 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbfCSMJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:09:27 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m65so4032952qkl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UMI5Cgc11e2yU8u3j1DQCbpem4FZZKd0yljARClXFro=;
-        b=GeV00N6YFNcSkdveLp3qbBsP25FpiClQyosN8YpStzmygrX9G0ko+F80dXzXIolrwp
-         L9b7XW+t3wXDX8eNHpPDrCRb5gsHeoqLvRkhdsWwdJUlGpbMvPiQFng0q2R1FTpOm9dV
-         Uq86ESLpoUR4Px3rhBWah3eoYPuPUCOfl3+0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UMI5Cgc11e2yU8u3j1DQCbpem4FZZKd0yljARClXFro=;
-        b=MC/i/vTQYH0I4lYNkuJtJYnRc1nvgvqT1xMoN+3NX+m1g4XbFSjzaA9amdmzSFKUz/
-         4Iuz2D7hm0jXCiNmNRmmE1enybZ5dupcjum/nhKROfTwt4KoQ+uhTjXynYQGDs/vORcb
-         aa3e/450URY4Wnt2pB+kUxgdLwFA/NEWxjTNEQA2NqzvOo46AaN0gmLj9V9spgH5DIPp
-         BoiGvOipVr87Ql5xRfKXw1lHfxkusraot+r3GfHwuxhAK0nhlP3N0PgCYc1KOPUEMLNK
-         26nDHqpkCBe3ZLxCxa2qIjX0iG6j9T0Hfve16Mq+fptunYykJMVgLySmnKncEBauXJm+
-         fu9A==
-X-Gm-Message-State: APjAAAXrYCldGc3/IQunf/chKB5y9KRkLBcU59qnlQ5hM1sKafi/JY0U
-        F4iawyahi08khh1Zwl/g9J4gZNeL6raR2MWrrsSepw==
-X-Google-Smtp-Source: APXvYqzDZ3VEY8iiJcPcWsfrtadH33SNqnqU817R+1Gz8ZBnrcakW2/2MK5sZSC33b3xoOrgJyDKJ+USzG2Ant1QDTk=
-X-Received: by 2002:a05:620a:1428:: with SMTP id k8mr1452326qkj.185.1552997366008;
- Tue, 19 Mar 2019 05:09:26 -0700 (PDT)
+        Tue, 19 Mar 2019 08:09:55 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 9988925AD6C;
+        Tue, 19 Mar 2019 23:09:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
+        t=1552997392; bh=sq09idYA6etiUJXOWgEwzGF/lH22KPwTJZqKwbK7c7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WkSaC6+emQdglpI0x7YVqxx45C3cTHC7yHDnEvmvyTPn/24KFdsW3GDMKpQ3DDm4L
+         QwUTdY79Te/S6IbNOHveAdF1adYjWt35f4lm0PRNlPyQD/BkNlU86etgDzUBm4ztrc
+         0l/IIT9UOVQgg8mQIhZO4x/F675+pEWMhlH6R5/c=
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 01491940663; Tue, 19 Mar 2019 13:09:50 +0100 (CET)
+Date:   Tue, 19 Mar 2019 13:09:50 +0100
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 3/4] input: da9063_onkey: convert header to SPDX
+Message-ID: <20190319120950.cu3vpuximogjzdtz@verge.net.au>
+References: <20190318155728.28365-1-wsa+renesas@sang-engineering.com>
+ <20190318155728.28365-4-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-References: <20190319080140.24055-1-weiyi.lu@mediatek.com> <20190319080140.24055-9-weiyi.lu@mediatek.com>
-In-Reply-To: <20190319080140.24055-9-weiyi.lu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 19 Mar 2019 20:09:14 +0800
-Message-ID: <CANMq1KDkzWk-CSib7NBtc-2zqmoW31vFrO5sOj1up-vFvnmhjQ@mail.gmail.com>
-Subject: Re: [PATCH v5 08/14] soc: mediatek: Refactor bus protection control
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318155728.28365-4-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 4:02 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
->
-> Put bus protection enable and disable control in separate functions.
->
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+On Mon, Mar 18, 2019 at 04:57:26PM +0100, Wolfram Sang wrote:
+> Covnert the header of the source file to SPDX.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
 > ---
->  drivers/soc/mediatek/mtk-scpsys.c | 48 ++++++++++++++++++++++---------
->  1 file changed, 34 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index 65b734b40098..6bf846cb1893 100644
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -279,6 +279,34 @@ static int scpsys_sram_disable(struct scp_domain *scpd, void __iomem *ctl_addr)
->                         MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
->  }
->
-> +static int scpsys_bus_protect_enable(struct scp_domain *scpd)
-> +{
-> +       struct scp *scp = scpd->scp;
-> +       int ret = 0;
-> +
-> +       if (scpd->data->bus_prot_mask) {
-> +               ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-> +                               scpd->data->bus_prot_mask,
-> +                               scp->bus_prot_reg_update);
-> +       }
-> +
-> +       return ret;
-
-Maybe other people have different opinions, but I prefer:
-
-if (!scpd->data->bus_prot_mask)
-    return 0;
-
-return mtk_infracfg_set_bus_protection(...);
-
-> +}
-> +
-> +static int scpsys_bus_protect_disable(struct scp_domain *scpd)
-> +{
-> +       struct scp *scp = scpd->scp;
-> +       int ret = 0;
-> +
-> +       if (scpd->data->bus_prot_mask) {
-> +               ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-> +                               scpd->data->bus_prot_mask,
-> +                               scp->bus_prot_reg_update);
-> +       }
-> +
-> +       return ret;
-> +}
-> +
->  static int scpsys_power_on(struct generic_pm_domain *genpd)
->  {
->         struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
-> @@ -321,13 +349,9 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
->         if (ret < 0)
->                 goto err_pwr_ack;
->
-> -       if (scpd->data->bus_prot_mask) {
-> -               ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-> -                               scpd->data->bus_prot_mask,
-> -                               scp->bus_prot_reg_update);
-> -               if (ret)
-> -                       goto err_pwr_ack;
-> -       }
-> +       ret = scpsys_bus_protect_disable(scpd);
-> +       if (ret < 0)
-> +               goto err_pwr_ack;
->
->         return 0;
->
-> @@ -349,13 +373,9 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
->         u32 val;
->         int ret, tmp;
->
-> -       if (scpd->data->bus_prot_mask) {
-> -               ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-> -                               scpd->data->bus_prot_mask,
-> -                               scp->bus_prot_reg_update);
-> -               if (ret)
-> -                       goto out;
-> -       }
-> +       ret = scpsys_bus_protect_enable(scpd);
-> +       if (ret < 0)
-> +               goto out;
->
->         ret = scpsys_sram_disable(scpd, ctl_addr);
->         if (ret < 0)
-> --
-> 2.18.0
->
+>  drivers/input/misc/da9063_onkey.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/drivers/input/misc/da9063_onkey.c b/drivers/input/misc/da9063_onkey.c
+> index 3e9c353d82ef..7b8ae905a6fb 100644
+> --- a/drivers/input/misc/da9063_onkey.c
+> +++ b/drivers/input/misc/da9063_onkey.c
+> @@ -1,16 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   * OnKey device driver for DA9063, DA9062 and DA9061 PMICs
+>   * Copyright (C) 2015  Dialog Semiconductor Ltd.
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  
+>  #include <linux/module.h>
+> -- 
+> 2.11.0
+> 
