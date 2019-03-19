@@ -2,169 +2,154 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5967C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4A7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9685620854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9037C2183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UubPae+1";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="nUjRuYVI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMq59NM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfCSXtW (ORCPT
+        id S1727145AbfCSXz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:49:22 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:51526 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfCSXtW (ORCPT
+        Tue, 19 Mar 2019 19:55:29 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40368 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSXz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1553039362; x=1584575362;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=aSIfXEjGr+H+yJEQhoeWLmWUOlmMPv13fo9lQzK/6W0=;
-  b=UubPae+1wnjza5vCOQf4aD7vSN3fu0HQ+YiDU/GWbFoyZFfvYM1XF5DL
-   1N5GYzxOIU2rGGQUKWbdWGltgqwDxzlwr4IQhJ46a9f8+eNZFHLr7OsNH
-   Yc0XHEiuY6SpkkyUWhlHGh1ymeIt9L+Mfk15ol9jvxQcVza2sBWSilmVi
-   4VEUYl8x6J05pjtzl1DJXcloB5d72ia3i53NCDMyl+iq5/gzE0EnIAndZ
-   GDoU2kEHz8dbM4PLhfHP8ldl8CyvLI7QWWm5ZNP4H6QQP42V6xslG5i7d
-   JEqYVHOsQGAgqKLIFfdEMiN5tahkd8y6Avsamz6Rb7g6XgQSAHN67VhpD
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,246,1549900800"; 
-   d="scan'208";a="103783037"
-Received: from mail-bl2nam02lp2059.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.59])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2019 07:49:19 +0800
+        Tue, 19 Mar 2019 19:55:28 -0400
+Received: by mail-ua1-f68.google.com with SMTP id b8so205855uaq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fb0oJ4+6O+X4GKuk2gVDGAqBmr+WPM1aLBad9M7raF8=;
- b=nUjRuYVIcO0gDmXcTFwsSfjRTDBznatFZyg9HGccBEEdkBckv0C+Qkat9XtjTNrfkhch+1JkILTIa3SpnGCnsKOVlgt6sGbYtASPpc7L06ZPrTWHWdUKxEgxOuMd2pqxmDZzPU9qU2uTNYfIqVQzDW5QHgTjxcnuiYN60sI4MtU=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB3949.namprd04.prod.outlook.com (52.135.82.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 19 Mar 2019 23:49:16 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::7db4:149f:d1a5:e3fd]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::7db4:149f:d1a5:e3fd%4]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 23:49:16 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Keith Busch <kbusch@kernel.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-CC:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney " <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        John Ferlan <jferlan@redhat.com>
-Subject: Re: your mail
-Thread-Topic: your mail
-Thread-Index: AQHU3mHuoIn8Kh/6t06bcOG9+hP0nA==
-Date:   Tue, 19 Mar 2019 23:49:16 +0000
-Message-ID: <SN6PR04MB4527810F605C8ADE388E958286400@SN6PR04MB4527.namprd04.prod.outlook.com>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
- <20190319152212.GC24176@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 426e0a2f-4b6b-4692-e544-08d6acc57f7d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR04MB3949;
-x-ms-traffictypediagnostic: SN6PR04MB3949:
-x-ms-exchange-purlcount: 1
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB3949C300B686B892F1F0E9EA86400@SN6PR04MB3949.namprd04.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(346002)(376002)(39860400002)(199004)(189003)(8936002)(186003)(71190400001)(71200400001)(9686003)(81166006)(81156014)(2906002)(102836004)(5660300002)(66066001)(221733001)(305945005)(53936002)(6246003)(110136005)(7116003)(26005)(86362001)(97736004)(105586002)(8676002)(76176011)(74316002)(52536014)(6306002)(7736002)(53546011)(99286004)(7696005)(106356001)(3480700005)(54906003)(7416002)(478600001)(4326008)(68736007)(25786009)(229853002)(55016002)(72206003)(316002)(6506007)(446003)(6116002)(3846002)(6436002)(966005)(33656002)(476003)(256004)(14444005)(486006)(14454004)(111123002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB3949;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RgqfyMTT7d8URDCbLGFQ6e/huMCd9ofHDOTq7SQ2fc8iWmHBWfHoE7ZgScVEmbfdwkDz0wh8Q5vrRTXG8dInZFUlKStGq2JEg7v6Bzai2fuPRhe0YxIj1iLup6+hUmt5XY3MPyPAESLSPr3gTT9I2i6f9RzpzHVL0fQuFy0wOyTu1zPrYr7DZNA/vqiOut2amwj2b24tz4WXlA2dOBM1xPV0AtWP7O0eeZCwKKpHT+Vvxq3sxUyeQ1skIjxjcQKWJNqQGeJXKtscasskfFywkl82f5P7RarT768T2hUp/0338ORcSsor3E70Biv8hGkRt4yaxfHUpaFthmjofZFTqVkmtuwjRxcVcXtMjgsayo/lXQmq9QM2+G4yv5JzpjjVrH6ieT+MTuiGV+m4LS0aqUaaYuYt4Sxd+BdpIeaVYHs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Uo8/7TYT9iFgR0+P4tx7d6/0m83KYczJ7RAbix01Nw=;
+        b=FMq59NM9fQiCuzKEQKDzjmmn4lQeU77bUKVQ0kuLK5luT81fq+ZH6ap1kLv7cptnEP
+         cix72py5P9Mt1Cpeu2RgBGC/KUjjBirsk0rKhLxoqS1j8UZu5fGqo89dZMraKZ15MD3r
+         DbCn8huwXPdIxqz1AuXn1EMsckuumPkfd0G1EuJxk+Mf59jq/7aIBG7l22WjbvzYA9I8
+         1vk7cq8UZ/Q4Ek00YjCSMLgkaQq4Sd+Ph0koxEi5IMPC56ZmoMvbaNrSL3mAbuEsNCY1
+         OKTY1FbhkT/PO11ethT/Fg9BeeJREpIn7bbDw4I8U30bVQYhzTne1lTDo4F1YHwDmN0o
+         /DpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Uo8/7TYT9iFgR0+P4tx7d6/0m83KYczJ7RAbix01Nw=;
+        b=P2/X/ZZZoKxGu4JmoRO0Kp7P9KR1zNEvZHOiWVLDSxpiepo0O13D5gsWeripFbyLYZ
+         wqb7XRxgmItgpXdbbYfoSs3DzZbYheEf2sNvh8ZhsbOv7xKL4n6DI8aJkxBqm24Kzx4v
+         P+LCJ7NSHpdGDQVczZqZCG14ePHEAXmjCkqRehSCr2yqto8fLi0QffTMKE7QiwnsNOKw
+         F2rLTjc6C1YRCHNCcarQQMsMGeXW5w6G/4sx0H/i3YA1pcsaX6shvJBcUXzo/24pPA8s
+         CiFzUYMHQ0AL0SohwakFo9FNE5X83hJ1rQHh27xph6E7qU7/j06I28Zpoel+i83elr2z
+         lUVA==
+X-Gm-Message-State: APjAAAXp5B66y0+CXTYTigXtqEgiIsI5tahoOtV8towucPTigNGAhGtK
+        svxfKonjX+gvHncktf36Ellp/n2D2qInREGICNJafw==
+X-Google-Smtp-Source: APXvYqxUx37mcsQyBMnf5Y4fBVK9Q/anTndBUFS0dOX0TSR6mFyjLoAsiBVTLNpN4AKUW57SWZMQUMqnnCqhvg0fX4Y=
+X-Received: by 2002:ab0:6787:: with SMTP id v7mr2916443uar.38.1553039727431;
+ Tue, 19 Mar 2019 16:55:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 426e0a2f-4b6b-4692-e544-08d6acc57f7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 23:49:16.4754
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3949
+References: <20190314130113.919278615@infradead.org> <20190314130706.061994422@infradead.org>
+In-Reply-To: <20190314130706.061994422@infradead.org>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Tue, 19 Mar 2019 16:55:16 -0700
+Message-ID: <CABPqkBSH5UBaV7+0JKgr4YmEke8Tu4Hry9GAFYT5C_gsncqf3A@mail.gmail.com>
+Subject: Re: [RFC][PATCH 7/8] perf/x86: Optimize x86_schedule_events()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Keith,=0A=
-On 03/19/2019 08:21 AM, Keith Busch wrote:=0A=
-> On Tue, Mar 19, 2019 at 04:41:07PM +0200, Maxim Levitsky wrote:=0A=
->>    -> Share the NVMe device between host and guest.=0A=
->>       Even in fully virtualized configurations,=0A=
->>       some partitions of nvme device could be used by guests as block de=
-vices=0A=
->>       while others passed through with nvme-mdev to achieve balance betw=
-een=0A=
->>       all features of full IO stack emulation and performance.=0A=
->>=0A=
->>    -> NVME-MDEV is a bit faster due to the fact that in-kernel driver=0A=
->>       can send interrupts to the guest directly without a context=0A=
->>       switch that can be expensive due to meltdown mitigation.=0A=
->>=0A=
->>    -> Is able to utilize interrupts to get reasonable performance.=0A=
->>       This is only implemented=0A=
->>       as a proof of concept and not included in the patches,=0A=
->>       but interrupt driven mode shows reasonable performance=0A=
->>=0A=
->>    -> This is a framework that later can be used to support NVMe devices=
-=0A=
->>       with more of the IO virtualization built-in=0A=
->>       (IOMMU with PASID support coupled with device that supports it)=0A=
->=0A=
-> Would be very interested to see the PASID support. You wouldn't even=0A=
-> need to mediate the IO doorbells or translations if assigning entire=0A=
-> namespaces, and should be much faster than the shadow doorbells.=0A=
->=0A=
-> I think you should send 6/9 "nvme/pci: init shadow doorbell after each=0A=
-> reset" separately for immediate inclusion.=0A=
->=0A=
-> I like the idea in principle, but it will take me a little time to get=0A=
-> through reviewing your implementation. I would have guessed we could=0A=
-> have leveraged something from the existing nvme/target for the mediating=
-=0A=
-> controller register access and admin commands. Maybe even start with=0A=
-> implementing an nvme passthrough namespace target type (we currently=0A=
-> have block and file).=0A=
-=0A=
-I have the code for the NVMeOf target passthru-ctrl, I think we can use =0A=
-that as it is if you are looking for the passthru for NVMeOF.=0A=
-=0A=
-I'll post patch-series based on the latest code base soon.=0A=
->=0A=
-> _______________________________________________=0A=
-> Linux-nvme mailing list=0A=
-> Linux-nvme@lists.infradead.org=0A=
-> http://lists.infradead.org/mailman/listinfo/linux-nvme=0A=
->=0A=
-=0A=
+On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Now that cpuc->event_constraint[] is retained, we can avoid calling
+> get_event_constraints() over and over again.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/events/core.c       |   25 +++++++++++++++++++++----
+>  arch/x86/events/intel/core.c |    3 ++-
+>  2 files changed, 23 insertions(+), 5 deletions(-)
+>
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -844,6 +844,12 @@ int perf_assign_events(struct event_cons
+>  }
+>  EXPORT_SYMBOL_GPL(perf_assign_events);
+>
+> +static inline bool is_ht_workaround_active(struct cpu_hw_events *cpuc)
+> +{
+> +       return is_ht_workaround_enabled() && !cpuc->is_fake &&
+> +              READ_ONCE(cpuc->excl_cntrs->exclusive_present);
+> +}
+> +
+>  int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+>  {
+>         struct event_constraint *c;
+> @@ -858,8 +864,20 @@ int x86_schedule_events(struct cpu_hw_ev
+>                 x86_pmu.start_scheduling(cpuc);
+>
+>         for (i = 0, wmin = X86_PMC_IDX_MAX, wmax = 0; i < n; i++) {
+> -               c = x86_pmu.get_event_constraints(cpuc, i, cpuc->event_list[i]);
+> -               cpuc->event_constraint[i] = c;
+> +               c = cpuc->event_constraint[i];
+> +
+> +               /*
+> +                * Request constraints for new events; or for those events that
+> +                * have a dynamic constraint due to the HT workaround -- for
+> +                * those the constraint can change due to scheduling activity
+> +                * on the other sibling.
+> +                */
+> +               if (!c || ((c->flags & PERF_X86_EVENT_DYNAMIC) &&
+> +                          is_ht_workaround_active(cpuc))) {
+> +
+> +                       c = x86_pmu.get_event_constraints(cpuc, i, cpuc->event_list[i]);
+> +                       cpuc->event_constraint[i] = c;
+> +               }
+On this one, I think there may be a problem with events with
+shared_regs constraints.
+Constraint is dynamic as it depends on other events which share the
+same MSR, yet it
+is not marked as DYNAMIC. But this may be okay because these other
+events are all
+on the same CPU and thus scheduled during the same ctx_sched_in(). Yet with the
+swapping in intel_alt_er(), we need to double-check that we cannot
+reuse a constraint
+which could be stale. I believe this is okay, just double-check.
+
+>
+>                 wmin = min(wmin, c->weight);
+>                 wmax = max(wmax, c->weight);
+> @@ -903,8 +921,7 @@ int x86_schedule_events(struct cpu_hw_ev
+>                  * N/2 counters can be used. This helps with events with
+>                  * specific counter constraints.
+>                  */
+> -               if (is_ht_workaround_enabled() && !cpuc->is_fake &&
+> -                   READ_ONCE(cpuc->excl_cntrs->exclusive_present))
+> +               if (is_ht_workaround_active(cpuc))
+>                         gpmax /= 2;
+>
+>                 unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -2945,7 +2945,8 @@ intel_get_event_constraints(struct cpu_h
+>          * - dynamic constraint: handled by intel_get_excl_constraints()
+>          */
+>         c2 = __intel_get_event_constraints(cpuc, idx, event);
+> -       if (c1 && (c1->flags & PERF_X86_EVENT_DYNAMIC)) {
+> +       if (c1) {
+> +               WARN_ON_ONCE(!(c1->flags & PERF_X86_EVENT_DYNAMIC));
+>                 bitmap_copy(c1->idxmsk, c2->idxmsk, X86_PMC_IDX_MAX);
+>                 c1->weight = c2->weight;
+>                 c2 = c1;
+>
+>
