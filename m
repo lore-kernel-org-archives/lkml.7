@@ -2,79 +2,77 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D83C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DC0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491E217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Z07DzWWM"
+	by mail.kernel.org (Postfix) with ESMTP id 124562175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfCSOy0 (ORCPT
+        id S1727691AbfCSOyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:54:26 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60346 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbfCSOyV (ORCPT
+        Tue, 19 Mar 2019 10:54:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33127 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbfCSOyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 10:54:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553007260; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=txBGNL3WV5PLBSLwOCKqka4x+d588iuGk/YjkJGGM6U=;
-        b=Z07DzWWMw60WSjcJu+9E1fnMfKEvoFHfbQHOuVCkGICEO+4A93QSM6PzeJoou5758KEgoZ
-        Zyqfp2vKpkVq6NXRk+r5EnZJ3DgGdnRYTn2pJQjMB8/A+JJJGxIfQQ7nRJFEEhQHI0jDe7
-        iyKKRVwcT4HFXZKGT7Mu1wKiPT7pmkA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 13/13] mtd: rawnand: ingenic: Move BBTs out of ECC area
-Date:   Tue, 19 Mar 2019 15:54:03 +0100
-Message-Id: <20190319145403.31627-14-paul@crapouillou.net>
-In-Reply-To: <20190319145403.31627-1-paul@crapouillou.net>
-References: <20190319145403.31627-1-paul@crapouillou.net>
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h6G89-0007eH-6d; Tue, 19 Mar 2019 15:54:17 +0100
+Date:   Tue, 19 Mar 2019 15:54:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Enrico Weigelt <info@metux.net>
+cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: [PATCH V2] gpio: amd-fch: Fix bogus SPDX identifier
+In-Reply-To: <alpine.DEB.2.21.1903191513170.2537@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1903191552550.2537@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1903191513170.2537@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic layout for BBT markers will most likely overlap with our
-ECC bytes in the OOB, so move the BBT markers outside the OOB area.
+spdxcheck.py complains:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+ include/linux/platform_data/gpio/gpio-amd-fch.h: 1:28 Invalid License ID: GPL+
+
+which is correct because GPL+ is not a valid identifier. Of course this
+could have been caught by checkpatch.pl _before_ submitting or merging the
+patch.
+
+ WARNING: 'SPDX-License-Identifier: GPL+ */' is not supported in LICENSES/...
+ #271: FILE: include/linux/platform_data/gpio/gpio-amd-fch.h:1:
+ +/* SPDX-License-Identifier: GPL+ */
+
+Fix it under the assumption that the author meant GPL-2.0+, which makes
+sense as the corresponding C file is using that identifier.
+
+Fixes: e09d168f13f0 ("gpio: AMD G-Series PCH gpio driver")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-
-Notes:
-    v6: New patch
-
- drivers/mtd/nand/raw/ingenic/ingenic_nand.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-index d32d68ef0dc7..ad0c905a03ba 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-@@ -282,6 +282,13 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
- 		return -EINVAL;
- 	}
+Stupid me should refresh patches before sending them. Blush!
+---
+diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
+index a867637e172d..7290ec40a71e 100644
+--- a/include/linux/platform_data/gpio/gpio-amd-fch.h
++++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL+ */
++/* SPDX-License-Identifier: GPL-2.0+ */
  
-+	/*
-+	 * The generic layout for BBT markers will most likely overlap with our
-+	 * ECC bytes in the OOB, so move the BBT markers outside the OOB area.
-+	 */
-+	if (chip->bbt_options & NAND_BBT_USE_FLASH)
-+		chip->bbt_options |= NAND_BBT_NO_OOB;
-+
- 	/* For legacy reasons we use a different layout on the qi,lb60 board. */
- 	if (of_machine_is_compatible("qi,lb60"))
- 		mtd_set_ooblayout(mtd, &qi_lb60_ooblayout_ops);
--- 
-2.11.0
+ /*
+  * AMD FCH gpio driver platform-data
 
