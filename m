@@ -2,88 +2,231 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC29C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F3E20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A2D2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfCSJtj (ORCPT
+        id S1727017AbfCSJ4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:49:39 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59377 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCSJtj (ORCPT
+        Tue, 19 Mar 2019 05:56:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60278 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725862AbfCSJ4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:49:39 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 19C6D240007;
-        Tue, 19 Mar 2019 09:49:33 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 10:49:33 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     jernej.skrabec@siol.net, wens@csie.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH 6/6] arm64: dts: allwinner: h6: Add Video
- Engine node
-Message-ID: <20190319094933.24n7kfluasfmmsps@flea>
-References: <20190128205504.11225-1-jernej.skrabec@siol.net>
- <20190128205504.11225-7-jernej.skrabec@siol.net>
- <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel@bootlin.com>
+        Tue, 19 Mar 2019 05:56:00 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9sU6q136085
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:55:58 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2raw2ruqh6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:55:58 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 19 Mar 2019 09:55:52 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 09:55:48 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J9tpBx49348820
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 09:55:51 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6341CAE058;
+        Tue, 19 Mar 2019 09:55:51 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A68EBAE045;
+        Tue, 19 Mar 2019 09:55:50 +0000 (GMT)
+Received: from [9.145.41.62] (unknown [9.145.41.62])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Mar 2019 09:55:50 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
+ <20190315112032.13b259c2.cohuck@redhat.com>
+ <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+ <9302bd83-44e6-eb60-3e39-dcb3fc33f280@linux.ibm.com>
+Date:   Tue, 19 Mar 2019 10:55:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kfjmam5vgios3kkp"
-Content-Disposition: inline
-In-Reply-To: <83d5db0b3e40cbd541ed8084d8a8052ce95887b7.camel@bootlin.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <9302bd83-44e6-eb60-3e39-dcb3fc33f280@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031909-0020-0000-0000-000003251552
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031909-0021-0000-0000-000021772D8E
+Message-Id: <fa584953-e0e9-2282-16c3-00a0b6e8db2f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15/03/2019 15:10, Pierre Morel wrote:
+> On 15/03/2019 14:26, Pierre Morel wrote:
+>> On 15/03/2019 11:20, Cornelia Huck wrote:
+>>> On Wed, 13 Mar 2019 17:04:58 +0100
+>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>>
+>>>> +/*
+>>>> + * handle_pqap: Handling pqap interception
+>>>> + * @vcpu: the vcpu having issue the pqap instruction
+>>>> + *
+>>>> + * We now support PQAP/AQIC instructions and we need to correctly
+>>>> + * answer the guest even if no dedicated driver's hook is available.
+>>>> + *
+>>>> + * The intercepting code calls a dedicated callback for this 
+>>>> instruction
+>>>> + * if a driver did register one in the CRYPTO satellite of the
+>>>> + * SIE block.
+>>>> + *
+>>>> + * For PQAP/AQIC instructions only, verify privilege and 
+>>>> specifications.
+>>>> + *
+>>>> + * If no callback available, the queues are not available, return 
+>>>> this to
+>>>> + * the caller.
+>>>> + * Else return the value returned by the callback.
+>>>> + */
+>>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +    uint8_t fc;
+>>>> +    struct ap_queue_status status = {};
+>>>> +    int ret;
+>>>> +    /* Verify that the AP instruction are available */
+>>>> +    if (!ap_instructions_available())
+>>>> +        return -EOPNOTSUPP;
+>>>> +    /* Verify that the guest is allowed to use AP instructions */
+>>>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
+>>>> +        return -EOPNOTSUPP;
+>>>> +    /* Verify that the function code is AQIC */
+>>>> +    fc = vcpu->run->s.regs.gprs[0] >> 24;
+>>>> +    /* We do not want to change the behavior we had before this 
+>>>> patch*/
+>>>> +    if (fc != 0x03)
+>>>> +        return -EOPNOTSUPP;
+>>>> +
+>>>> +    /* PQAP instructions are allowed for guest kernel only */
+>>>> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
+>>>> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
+>>>> +    /* AQIC instruction is allowed only if facility 65 is available */
+>>>> +    if (!test_kvm_facility(vcpu->kvm, 65))
+>>>> +        return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+>>>> +    /* Verify that the hook callback is registered and call it */
+>>>> +    if (vcpu->kvm->arch.crypto.pqap_hook) {
+>>>> +        if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
+>>>> +            return -EOPNOTSUPP;
+>>>> +        ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
+>>>> +        module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
+>>>> +        return ret;
+>>>> +    }
+>>>> +    /*
+>>>> +     * It is the duty of the vfio_driver to register a hook
+>>>> +     * If it does not and we get an exception on AQIC we must
+>>>> +     * guess that there is no vfio_ap_driver at all and no one
+>>>> +     * to handle the guests's CRYCB and the CRYCB is empty.
+>>>> +     */
+>>>> +    status.response_code = 0x01;
+>>>
+>>> I'm still confused here, sorry. From previous discussions I recall that
+>>> this indicates "no crypto device" (please correct me if I'm wrong.)
+>>>
+>>> Before this patch, we had:
+>>> - guest issues PQAP/AQIC -> drop to userspace
+>>>
+>>> With a correct implementation, we get:
+>>> - guest issues PQAP/AQIC -> callback does what needs to be done
+>>>
+>>> With an incorrect implementation (no callback), we get:
+>>> - guest issues PQAP/AQIC -> guest gets response code 0x01
+>>>
+>>> Why not drop to userspace in that case?
+>>
+>> This is what I had in the previous patches.
+>> Hum, I do not remember which discussion lead me to modify this.
+>>
+>> Anyway, now that you put the finger on this problem, I think the 
+>> problem is worse.
+>>
+>> The behavior with old / new Linux, vfio driver and qemu is:
+>>
+>> LINUX    VFIO_AP    QEMU    PGM
+>> OLD    x    x    OPERATION
+>> NEW    -    OLD    SPECIFICATION
+>> NEW    -    NEW/aqic=off    SPECIFICATION
+>> NEW    x    NEW/aqic=on    -
+>>
+>> x = whatever
+>> - = absent/none
+>>
+>> So yes there is a change in behavior for the userland for the case 
+>> QEMU do not set the AQIC facility 65, OLD QEMU or NEW QEMU wanting to 
+>> behave like an older one.
+>>
+>> I fear we have the same problem with the privileged operation...
+>>
+>> For the last case, when the kvm_facility(65) is set, the explication 
+>> is the following:
+>>
+>> This is related to the handling of PQAP AQIC which is now authorized 
+>> by this patch series.
+>> If we authorize PQAP AQIC, by setting the bit for facility 65, the 
+>> guest can use this instruction.
+>> If the instruction follows the specifications we must answer something 
+>> realistic and since there is nothing in the CRYCB (no driver) we 
+>> answer that there is no queue.
+>>
+>> Conclusion:  we must handle this in userland, it will have the benefit 
+>> to keep old behavior when there is no callback.
+>> OLD QEMU will not see change as they will not set aqic facility
+>> NEW QEMU will handle this correctly.
+>>
+> 
+> Sorry, wrong conclusion, handling this in userland will bring us much 
+> too far if we want to answer correctly for the case the hook is not 
+> there but QEMU accepted the facility for AQIC.
 
---kfjmam5vgios3kkp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry, forget it, I was tired.
 
-On Tue, Mar 19, 2019 at 09:50:24AM +0100, Paul Kocialkowski wrote:
-> Le lundi 28 janvier 2019 =E0 21:55 +0100, Jernej Skrabec a =E9crit :
-> > This adds the Video engine node for H6. It can use whole DRAM range so
-> > there is no need for reserved memory node.
->
-> Looks like the patch adding SRAM support made it through but this one
-> didn't. It looks ready to be picked up though.
->
-> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Pierre
 
-Merged, thanks
+> 
+> The alternative is easier, we just continue to respond with the 
+> OPERATION exception here and only handle the specification and 
+> privileged exception cases in QEMU and in the hook.
+> 
+> So, I think the discussion will go on until you come back :)
+> 
+> Regards,
+> Pierre
+> 
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
---kfjmam5vgios3kkp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJC7LQAKCRDj7w1vZxhR
-xUa5AP9yN3BG1WTRK91lIW2v82LQoUgZ4L5x2MVTMyKeG3AYlQD/TN3dDewW4BvS
-92gox0YISyvfZwSL449hK1GpddohFgc=
-=Rinj
------END PGP SIGNATURE-----
-
---kfjmam5vgios3kkp--
