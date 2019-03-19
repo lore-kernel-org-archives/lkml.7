@@ -2,156 +2,118 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BFCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABEB2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0180A2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfCSOax (ORCPT
+        id S1727760AbfCSObN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:30:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63108 "EHLO mga12.intel.com"
+        Tue, 19 Mar 2019 10:31:13 -0400
+Received: from sauhun.de ([88.99.104.3]:45220 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727618AbfCSOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:30:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 07:30:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,498,1544515200"; 
-   d="scan'208";a="308501809"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 07:30:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 30B1CFA; Tue, 19 Mar 2019 16:30:43 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/2] extcon: intel: Split out some definitions to a common header
-Date:   Tue, 19 Mar 2019 16:30:41 +0200
-Message-Id: <20190319143042.66606-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190319143042.66606-1-andriy.shevchenko@linux.intel.com>
-References: <20190319143042.66606-1-andriy.shevchenko@linux.intel.com>
+        id S1726703AbfCSObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:31:12 -0400
+Received: from localhost (p5486CE21.dip0.t-ipconnect.de [84.134.206.33])
+        by pokefinder.org (Postfix) with ESMTPSA id 911AD2C3F83;
+        Tue, 19 Mar 2019 15:31:09 +0100 (CET)
+Date:   Tue, 19 Mar 2019 15:31:09 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Hoan Tran <hotran@apm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 10/61] gpio: simplify getting .drvdata
+Message-ID: <20190319143109.djd5z4pw5twom3og@ninjato>
+References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+ <20180419140641.27926-11-wsa+renesas@sang-engineering.com>
+ <b0c1e303-ca95-8bc8-a5d4-65e75dc8398a@ti.com>
+ <CACRpkday+d9iGeX+CRHTEyC=w+oNUK-8oTy0HqugO5PRhHn62w@mail.gmail.com>
+ <20180430092947.GC2270@ulmo>
+ <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
+ <20190307201807.GA950@kunai>
+ <e7cadedc-b8ca-36d5-88dd-447fbeaac27a@metux.net>
+ <20190307205814.GB950@kunai>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kg3zuuvvtizrfheo"
+Content-Disposition: inline
+In-Reply-To: <20190307205814.GB950@kunai>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are going to use some definitions in the other Intel extcon drivers,
-thus, split out them to a common header file.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/extcon/extcon-intel-cht-wc.c | 21 +++++++--------------
- drivers/extcon/extcon-intel.h        | 20 ++++++++++++++++++++
- 2 files changed, 27 insertions(+), 14 deletions(-)
- create mode 100644 drivers/extcon/extcon-intel.h
+--kg3zuuvvtizrfheo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-index 53b28ecc4ad1..9d32150e68db 100644
---- a/drivers/extcon/extcon-intel-cht-wc.c
-+++ b/drivers/extcon/extcon-intel-cht-wc.c
-@@ -17,6 +17,8 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- 
-+#include "extcon-intel.h"
-+
- #define CHT_WC_PHYCTRL			0x5e07
- 
- #define CHT_WC_CHGRCTRL0		0x5e16
-@@ -80,15 +82,6 @@
- #define CHT_WC_VBUS_GPIO_CTLO_DRV_OD	BIT(4)
- #define CHT_WC_VBUS_GPIO_CTLO_DIR_OUT	BIT(5)
- 
--enum cht_wc_usb_id {
--	USB_ID_OTG,
--	USB_ID_GND,
--	USB_ID_FLOAT,
--	USB_RID_A,
--	USB_RID_B,
--	USB_RID_C,
--};
--
- enum cht_wc_mux_select {
- 	MUX_SEL_PMIC = 0,
- 	MUX_SEL_SOC,
-@@ -116,9 +109,9 @@ static int cht_wc_extcon_get_id(struct cht_wc_extcon_data *ext, int pwrsrc_sts)
- {
- 	switch ((pwrsrc_sts & CHT_WC_PWRSRC_USBID_MASK) >> CHT_WC_PWRSRC_USBID_SHIFT) {
- 	case CHT_WC_PWRSRC_RID_GND:
--		return USB_ID_GND;
-+		return INTEL_USB_ID_GND;
- 	case CHT_WC_PWRSRC_RID_FLOAT:
--		return USB_ID_FLOAT;
-+		return INTEL_USB_ID_FLOAT;
- 	case CHT_WC_PWRSRC_RID_ACA:
- 	default:
- 		/*
-@@ -126,7 +119,7 @@ static int cht_wc_extcon_get_id(struct cht_wc_extcon_data *ext, int pwrsrc_sts)
- 		 * the USBID GPADC channel here and determine ACA role
- 		 * based on that.
- 		 */
--		return USB_ID_FLOAT;
-+		return INTEL_USB_ID_FLOAT;
- 	}
- }
- 
-@@ -260,7 +253,7 @@ static void cht_wc_extcon_pwrsrc_event(struct cht_wc_extcon_data *ext)
- 	}
- 
- 	id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
--	if (id == USB_ID_GND) {
-+	if (id == INTEL_USB_ID_GND) {
- 		cht_wc_extcon_enable_charging(ext, false);
- 		cht_wc_extcon_set_otgmode(ext, true);
- 
-@@ -293,7 +286,7 @@ static void cht_wc_extcon_pwrsrc_event(struct cht_wc_extcon_data *ext)
- 		ext->previous_cable = cable;
- 	}
- 
--	ext->usb_host = ((id == USB_ID_GND) || (id == USB_RID_A));
-+	ext->usb_host = ((id == INTEL_USB_ID_GND) || (id == INTEL_USB_RID_A));
- 	extcon_set_state_sync(ext->edev, EXTCON_USB_HOST, ext->usb_host);
- }
- 
-diff --git a/drivers/extcon/extcon-intel.h b/drivers/extcon/extcon-intel.h
-new file mode 100644
-index 000000000000..0ad645ec7b33
---- /dev/null
-+++ b/drivers/extcon/extcon-intel.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Header file for Intel extcon hardware
-+ *
-+ * Copyright (C) 2019 Intel Corporation. All rights reserved.
-+ */
-+
-+#ifndef __EXTCON_INTEL_H__
-+#define __EXTCON_INTEL_H__
-+
-+enum extcon_intel_usb_id {
-+	INTEL_USB_ID_OTG,
-+	INTEL_USB_ID_GND,
-+	INTEL_USB_ID_FLOAT,
-+	INTEL_USB_RID_A,
-+	INTEL_USB_RID_B,
-+	INTEL_USB_RID_C,
-+};
-+
-+#endif	/* __EXTCON_INTEL_H__ */
--- 
-2.20.1
+On Thu, Mar 07, 2019 at 09:58:14PM +0100, Wolfram Sang wrote:
+> On Thu, Mar 07, 2019 at 09:53:50PM +0100, Enrico Weigelt, metux IT consul=
+t wrote:
+> > On 07.03.19 21:18, Wolfram Sang wrote:
+> > >=20
+> > >> It's been almost a year later, and several Linux revisions, and this
+> > >> still seems stuck somewhere/somehow.
+> > >=20
+> > > I wanted to respin this series once rc1 is released.
+> > >=20
+> > Maybe just rebase and repost ?
+>=20
+> Then I'd miss all the new drivers which may need this fixed. Coccinelle
+> makes respinning a breeze, so no problem with that.
 
+Because coccinelle didn't find anything in drivers/gpio, I wondered what
+case you are referring to? Invoking this (as of v5.1-rc1) gives:
+
+$ git log --oneline --grep "simplify getting" drivers/gpio
+7ddb7dce0ab6 gpio: gpio-tegra: simplify getting .driver_data
+38ccad0243f9 gpio: gpio-zynq: simplify getting .driver_data
+a3f4f728d3bb gpio: gpio-omap: simplify getting .driver_data
+11868645c5b5 gpio: gpio-mxc: simplify getting .driver_data
+ea5ec5e3aeab gpio: gpio-lynxpoint: simplify getting .driver_data
+deb19ac533ac gpio: gpio-dwapb: simplify getting .driver_data
+
+
+--kg3zuuvvtizrfheo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyQ/SgACgkQFA3kzBSg
+Kbad6w/8DIvvd6HUXyP6xnHWqariF69h83z8gzbiUlkDkSFgIjTJ5f3SadnJfyOX
+6Q0F6rpp6rRSObAf5hkqej0mH5sAb9qynPGfnvmNr9bLQACtVv2CoKKncHR0BCGr
+6IMGySJSZjE3rgQVA1BB0Q4Dx+DJV4t2IRWEfOdSB75ZCbkSeoivaPpoHiiHEhMT
+DTJzP+qPF1hBE2vqjrjUrWCddubCd5S8iWOCSmdqz0OCKaChHvAlVzqWwjR0W4rF
+uk/cU0VKvgFJicf/kaWo1g20KQvmOAajfqKUYA3nhVBdON9JsqIB8lAGAG+rTeUV
+VaDNwUBMyTQYIGAO13dqGB9lGzs7Hm6lFJn/I9aT4Wt+Mdt25GflU02+oZzmA37m
+et1CARlq+dl9J7DV0iNTAdfqx6egH/pXSYoHDghGLNjbIaLLSQB8VBTnuUWee51/
+FmshV6qcg0qiM06+Q+CXvhvINzL/6YqCg73f3KKqtYYZ6MRL0h7sGguykbsTj3Z1
+bTgDsDe8EsjdigRUoY7PB1+db79MMDLP9TcnPx1s5WAZaQogOxWt3kxbUII2eqss
+ZfQL+of3tntrs2n/CGuN+ic9H+BRsavpr3oAsib2ZUZDNZlmTd0jgCG8mj1XXCmY
++dUsy643lIPeKzgaYV+T3nLvHTv2oH3iMTpmBq994pM8Bysn6s4=
+=AXa/
+-----END PGP SIGNATURE-----
+
+--kg3zuuvvtizrfheo--
