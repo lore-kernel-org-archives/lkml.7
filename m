@@ -2,230 +2,186 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69466C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE2B20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4208E20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 09:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfCSJix (ORCPT
+        id S1727532AbfCSJj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 05:38:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56444 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725906AbfCSJiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 05:38:52 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J9Y6lN079401
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:38:51 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ravmgc902-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:38:50 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 19 Mar 2019 09:38:45 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 09:38:41 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J9chAl32374824
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 09:38:43 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A3A3AE056;
-        Tue, 19 Mar 2019 09:38:43 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C32B5AE04D;
-        Tue, 19 Mar 2019 09:38:42 +0000 (GMT)
-Received: from [9.145.41.62] (unknown [9.145.41.62])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Mar 2019 09:38:42 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v5 4/7] s390: ap: setup relation betwen KVM and mediated
- device
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
- <1552493104-30510-5-git-send-email-pmorel@linux.ibm.com>
- <20190315191557.6c8d7668@oc2783563651>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 19 Mar 2019 10:38:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 05:39:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47642 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725906AbfCSJj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 05:39:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 69C54ADCC;
+        Tue, 19 Mar 2019 09:39:25 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan\, Zheng" <ukernel@gmail.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+References: <20190315111107.15154-1-lhenriques@suse.com>
+        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+        <87r2b4zd2q.fsf@suse.com>
+        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+        <87lg1c17b2.fsf@suse.com>
+        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
+Date:   Tue, 19 Mar 2019 09:39:24 +0000
+In-Reply-To: <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
+        (Zheng Yan's message of "Tue, 19 Mar 2019 11:13:35 +0800")
+Message-ID: <87a7hr19v7.fsf@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20190315191557.6c8d7668@oc2783563651>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031909-4275-0000-0000-0000031CC22D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031909-4276-0000-0000-0000382B41B1
-Message-Id: <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190072
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 19:15, Halil Pasic wrote:
-> On Wed, 13 Mar 2019 17:05:01 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> When the mediated device is open we setup the relation with KVM unset it
->> when the mediated device is released.
+"Yan, Zheng" <ukernel@gmail.com> writes:
+
+> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
 >>
->> We ensure KVM is present on opening of the mediated device.
+>> "Yan, Zheng" <ukernel@gmail.com> writes:
 >>
->> We ensure that KVM survives the mediated device, and establish a direct
-> 
-> survives?
-
-what alternative do you prefer?
-
-> 
->> link from KVM to the mediated device to simplify the relationship.
+>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
+>> >>
+>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
+>> >>
+>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+>> >> >>
+>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+>> >> >>
+>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
+>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+>> >> >>   hex dump (first 32 bytes):
+>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>> >> >>   backtrace:
+>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
+>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
+>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+>> >> >>
+>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
+>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
+>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+>> >> >>
+>> >> >> Link: https://tracker.ceph.com/issues/38224
+>> >> >> Cc: stable@vger.kernel.org
+>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> >> >> ---
+>> >> >>  fs/ceph/caps.c | 7 +++++++
+>> >> >>  1 file changed, 7 insertions(+)
+>> >> >>
+>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>> >> >> index 36a8dc699448..208f4dc6f574 100644
+>> >> >> --- a/fs/ceph/caps.c
+>> >> >> +++ b/fs/ceph/caps.c
+>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>> >> >>  {
+>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+>> >> >> +
+>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
+>> >> >>         list_del_init(&ci->i_snap_realm_item);
+>> >> >>         ci->i_snap_realm_counter++;
+>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
+>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>> >> >>                             realm);
+>> >> >> +       /*
+>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+>> >> >> +        * ceph_snap_context and we need to drop it.
+>> >> >> +        */
+>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
+>> >> >>  }
+>> >> >>
+>> >> >>  /*
+>> >> >
+>> >> > This does not seem right.  i_head_snapc is cleared when
+>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
+>> >> > should be in iterate_session_caps()
+>> >> >
+>> >>
+>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
+>> >> seems to execute fine, except from the memory leak.
+>> >>
+>> >> It's very difficult to reproduce this issue, but last time I managed to
+>> >> get this memory leak to trigger I actually had some debugging code in
+>> >> drop_inode_snap_realm, something like:
+>> >>
+>> >>   if (ci->i_head_snapc)
+>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
+>> >
+>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
+>> > i_flushing_caps. and try reproducing it again.
+>> >
 >>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
+>> Ok, it took me a few hours, but I managed to reproduce the bug, with
+>> those extra printks.  All those values are set to 0 when the bug
+>> triggers (and i_head_snapc != NULL).
+>>
+>
+> Thanks, which test triggers this bug?
 
-...snip...
+That's generic/013.  It usually triggers after a few hours of running it
+in a loop (I'm using a vstart cluster for that).
 
->>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->>   				       unsigned long action, void *data)
->>   {
->> -	int ret;
->>   	struct ap_matrix_mdev *matrix_mdev;
->>   
->>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
->>   		return NOTIFY_OK;
->>   
->>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
->> -
->> -	if (!data) {
->> -		matrix_mdev->kvm = NULL;
->> -		return NOTIFY_OK;
->> -	}
->> -
->> -	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
->> -	if (ret)
->> -		return NOTIFY_DONE;
->> -
->> -	/* If there is no CRYCB pointer, then we can't copy the masks */
->> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
->> -		return NOTIFY_DONE;
->> -
->> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
->> -				  matrix_mdev->matrix.aqm,
->> -				  matrix_mdev->matrix.adm);
->> +	matrix_mdev->kvm = data;
->>   
->>   	return NOTIFY_OK;
->>   }
->> @@ -888,6 +873,12 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
->>   	if (ret)
->>   		goto err_group;
->>   
->> +	/* We do not support opening the mediated device without KVM */
->> +	if (!matrix_mdev->kvm) {
->> +		ret = -ENODEV;
->> +		goto err_group;
->> +	}
->> +
->>   	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
->>   	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
->>   
->> @@ -896,8 +887,15 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
->>   	if (ret)
->>   		goto err_iommu;
->>   
->> +	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
-> 
-> At this point the matrix_mdev->kvm ain't guaranteed to be valid IMHO. Or
-> am I wrong? If I'm right kvm_get_kvm(matrix_mdev->kvm) could be too late.
+>
+> I searched that code, found we may fail to cleanup i_head_snap in two
+> places. One is in ceph_queue_cap_snap, Another is in
+> remove_session_caps_cb().
 
-What about the if (!matrix_mdev->kvm) 10 lines above ?
+Ah, great!  I spent a lot of time looking but I couldn't really find it.
+My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
+and that the corresponding ceph_put_snap_context would be done in
+handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
+MDS.
 
-> 
->> +	if (ret)
->> +		goto err_kvm;
->> +
->>   	return 0;
->>   
->> +err_kvm:
->> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
->> +				 &matrix_mdev->iommu_notifier);
->>   err_iommu:
->>   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
->>   				 &matrix_mdev->group_notifier);
->> @@ -906,19 +904,33 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
->>   	return ret;
->>   }
->>   
->> -static void vfio_ap_mdev_release(struct mdev_device *mdev)
->> +static int vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
->>   {
->> -	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->> +	struct kvm *kvm = matrix_mdev->kvm;
->>   
->>   	if (matrix_mdev->kvm)
->>   		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-> 
-> This still conditional?
-
-Yes, nothing to clear if there is no KVM.
-
-> 
->> -
->> +	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
-> 
-> I guess your intention was to move vfio_ap_mdev_reset_queues()
-> here from vfio_ap_mdev_release(), but you still have a
-> vfio_ap_mdev_reset_queues() call in vfio_ap_mdev_release().
-> 
->> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
->>   	matrix_mdev->kvm = NULL;
->> +
->> +	kvm_put_kvm(kvm);
->> +	return 0;
->> +}
->> +
->> +static void vfio_ap_mdev_release(struct mdev_device *mdev)
->> +{
->> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->> +
->> +	mutex_lock(&matrix_dev->lock);
->> +
->>   	vfio_ap_mdev_reset_queues(mdev);
-
-right, this one will go away.
-Thanks for reviewing.
-
-Regards,
-Pierre
-
-
-
+Cheers,
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+Luis
 
+
+>
+>> Cheers,
+>> --
+>> Luis
+>>
+>>
+>> >
+>> >>
+>> >> This printk was only executed when the bug triggered (during a
+>> >> filesystem umount) and the address shown was the same as in the kmemleak
+>> >> warning.
+>> >>
+>> >> After spending some time looking, I assumed this to be a missing call to
+>> >> handle_cap_flush_ack, which would do the i_head_snapc cleanup.
+>> >>
+>> >> Cheers,
+>> >> --
+>> >> Luis
+>> >
+>
