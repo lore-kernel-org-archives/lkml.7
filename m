@@ -2,96 +2,153 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A5AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36A7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4952146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553000282;
-	bh=NFCLKBs9iJn/N9j1xH2sTW9luHMOgL20jf/3zOYC2Iw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aioz89jqzMcvDrAFuo4TtrGxzh7/TCqsdOuTVGl635AzvwWRVFCahGV2jl1J2htyW
-	 3btpYtAl3RkPobV6f5ysq//Rx4D3i3/Xx/AGsTkTnh5R03SQpl6Dh28HMDHNgs76/u
-	 +KKQ+Va5FOjBcVY26ip0Ef7BytDxGs3a/NOjVsHY=
+	by mail.kernel.org (Postfix) with ESMTP id 76DC0213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yYQ5RRNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfCSM6B (ORCPT
+        id S1727227AbfCSM70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:58:01 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50532 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfCSM6A (ORCPT
+        Tue, 19 Mar 2019 08:59:26 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60212 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfCSM7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:58:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NFCLKBs9iJn/N9j1xH2sTW9luHMOgL20jf/3zOYC2Iw=; b=guAx8QjRBVN8Y1Xf9VEa2xwsX
-        48rloH0xhYqP++/DGjTz1PsTJgY+bgM17XYPiuXzApSTekO3t1aKPwq3X66mLFf9SQhbgOLiuolOK
-        wry2sVFqBrsCbunmsYP6NCV9lsRGJmjSmBx4haRIQYNHiX/Svl27SZkVALNOiwQ9KVkNY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h6EJU-0002ww-RL; Tue, 19 Mar 2019 12:57:52 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 62C0F11288DF; Tue, 19 Mar 2019 12:57:47 +0000 (GMT)
-Date:   Tue, 19 Mar 2019 12:57:47 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] dmaengine: idma64: Use actual device for DMA transfers
-Message-ID: <20190319125747.GC5514@sirena.org.uk>
-References: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
+        Tue, 19 Mar 2019 08:59:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1553000363; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u5gNti1iwgWA7OmzGmfCX9MLZ19j1HiI4dfTQ4uPYug=;
+        b=yYQ5RRNFLOn/99ERfY2i61SGemsAtUe4NwmXItzVNfNVdQnNjy73W1eAodaCnrfsD5adL3
+        nLSafz9bHLr/QeknRFayoxYl4lm45h823Xaz0WevbVDY2ILNRtGq2iwhWauJu2Gu7Bzr11
+        Za91CR382ERUexyomVS/4b06htYIANM=
+Date:   Tue, 19 Mar 2019 13:59:20 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 4/4] memory: jz4780_nemc: Add support for the JZ4740
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Boris Brezillon <bbrezillon@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1553000360.2015.0@crapouillou.net>
+In-Reply-To: <20190205035240.31410-5-paul@crapouillou.net>
+References: <20190205035240.31410-1-paul@crapouillou.net>
+        <20190205035240.31410-5-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Content-Disposition: inline
-In-Reply-To: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
-X-Cookie: PURGE COMPLETE.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Any feedback on this patchset? Should I resend?
 
-On Mon, Mar 18, 2019 at 06:39:30PM +0300, Andy Shevchenko wrote:
-> Intel IOMMU, when enabled, tries to find the domain of the device,
-> assuming it's a PCI one, during DMA operations, such as mapping or
-> unmapping. Since we are splitting the actual PCI device to couple of
+Thanks,
+-Paul
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Le mar. 5 f=E9vr. 2019 =E0 4:52, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Add support for the JZ4740 SoC from Ingenic.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+> ---
+>=20
+> v2: No change
+>=20
+> v3: Support the JZ4740 instead of the JZ4725B (exact same=20
+> functionality
+>     but JZ4740 is already fully upstream)
+>=20
+>  drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/memory/jz4780-nemc.c=20
+> b/drivers/memory/jz4780-nemc.c
+> index 66b8b43eaeff..f3a19b9b76ac 100644
+> --- a/drivers/memory/jz4780-nemc.c
+> +++ b/drivers/memory/jz4780-nemc.c
+> @@ -44,9 +44,14 @@
+>  #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
+>  #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
+>=20
+> +struct jz_soc_info {
+> +	u8 tas_tah_cycles_max;
+> +};
+> +
+>  struct jz4780_nemc {
+>  	spinlock_t lock;
+>  	struct device *dev;
+> +	const struct jz_soc_info *soc_info;
+>  	void __iomem *base;
+>  	struct clk *clk;
+>  	uint32_t clk_period;
+> @@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct=20
+> jz4780_nemc *nemc,
+>  	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) =3D=3D 0) {
+>  		smcr &=3D ~NEMC_SMCR_TAS_MASK;
+>  		cycles =3D jz4780_nemc_ns_to_cycles(nemc, val);
+> -		if (cycles > 15) {
+> +		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
+>  			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
+>  				val, cycles);
+>  			return false;
+> @@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct=20
+> jz4780_nemc *nemc,
+>  	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) =3D=3D 0) {
+>  		smcr &=3D ~NEMC_SMCR_TAH_MASK;
+>  		cycles =3D jz4780_nemc_ns_to_cycles(nemc, val);
+> -		if (cycles > 15) {
+> +		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
+>  			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
+>  				val, cycles);
+>  			return false;
+> @@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct=20
+> platform_device *pdev)
+>  	if (!nemc)
+>  		return -ENOMEM;
+>=20
+> +	nemc->soc_info =3D device_get_match_data(dev);
+> +	if (!nemc->soc_info)
+> +		return -EINVAL;
+> +
+>  	spin_lock_init(&nemc->lock);
+>  	nemc->dev =3D dev;
+>=20
+> @@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct=20
+> platform_device *pdev)
+>  	return 0;
+>  }
+>=20
+> +static const struct jz_soc_info jz4740_soc_info =3D {
+> +	.tas_tah_cycles_max =3D 7,
+> +};
+> +
+> +static const struct jz_soc_info jz4780_soc_info =3D {
+> +	.tas_tah_cycles_max =3D 15,
+> +};
+> +
+>  static const struct of_device_id jz4780_nemc_dt_match[] =3D {
+> -	{ .compatible =3D "ingenic,jz4780-nemc" },
+> +	{ .compatible =3D "ingenic,jz4740-nemc", .data =3D &jz4740_soc_info, },
+> +	{ .compatible =3D "ingenic,jz4780-nemc", .data =3D &jz4780_soc_info, },
+>  	{},
+>  };
+>=20
+> --
+> 2.11.0
+>=20
+=
 
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyQ50oACgkQJNaLcl1U
-h9BWoQf6AikcRK0ln1GJY2lTfUMdPnWYgLla9DdKl8DY9TMEK8UIvOJLkOPFkkgZ
-8MBJdiL+2II3x3nDJmkz+LgVghlFukCuHRTEHjcY4fKeFX5Dbqcm0/KQhgJTD0NW
-XrHhGP7Bm1FIyC9q5fSsTnpmiKyVsizCmShnC0/rqPfihoC69a7KQJ7L9PxTyQkT
-Sg7nq+Qo2JqE18YiI4YRrqOlnfQ7Ref1yf5zxViZwH2UEFFhnjJT/PcBrun2o2zc
-rlBbnNRpHo/8qJEvhjwG9A8ulx5Ofvvj3v8pa9AR5R2iFU4EzVSeVCZhQXEBk5ak
-gvQD1TxaTtRxk33YEyZBR7RElp3wZg==
-=yBp4
------END PGP SIGNATURE-----
-
---Pk6IbRAofICFmK5e--
