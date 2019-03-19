@@ -2,361 +2,191 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C358AC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AB6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860CC2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C2320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="uqJznoMu"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4h6mdrDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfCSME0 (ORCPT
+        id S1727466AbfCSMEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:04:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44502 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfCSMEY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:04:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i2so203082pgj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:04:23 -0700 (PDT)
+        Tue, 19 Mar 2019 08:04:36 -0400
+Received: from mail-eopbgr720059.outbound.protection.outlook.com ([40.107.72.59]:43574
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727361AbfCSMEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 08:04:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Zgr9l9vFtMckpomHDmXxh5bQX/YD3f/Lbmy6cvF9P3E=;
-        b=uqJznoMur6KVtluxllHSTMtLsmbXgtR6F/GqhjSsGj4wXKwnGvKiSKl5zAF/ilK+E2
-         i2k5GmUGBMUTa3I46PDdjHdXrbyi+cgv1AnNt2K3KOoDvQJaHoHZvaJR5pYAR42vlEw7
-         UIWkgdTGvxODpYZKuGhaCe0Yf7/8jG6Hr5tDMv81n027U6eP/SKhuCOwqDc/R9x1nLa+
-         W+Ily/RA6E3P68zWuDGWNXYZDoII51WsATxbuyQ8YbSv/lFRdhaRYnDhdYc/P5cLWxMN
-         Ucmn5CuA50W+hjNK1LW/PV92MDPQfYdzyF9sEQ1AHTmThzu8WwNmjqYyN/I81JgMe2Ae
-         4MSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Zgr9l9vFtMckpomHDmXxh5bQX/YD3f/Lbmy6cvF9P3E=;
-        b=VrfBDk4zOnUMcn12iCcBRzrfZ2evT1m1qVC+7b02vlPNfu+3ZsVn2DobkKfjymsrXG
-         sHzcRJk7tp6PhozDbUsoQ0MdSyxjQ6u5YpUd4bxc5xtF1jGoNSjMvtXAOotU4K+MgcFJ
-         YMG0zRlBESS56Z2mJ//kZqbQAIWrtVWm+rYPJ+c4dcSrska/t5pkmNjWBiPNJttGqS7O
-         VjHqsnZ/BHW+wqrfbdddPTbfgSD6Zb9AqckEwpWjypoD8KGCRBBKZJPfJhwmn/Nm0GXa
-         kDa3QRaIHXOO7uoFmx9Bb0cyagjws09k+gwrnypEGy0rSiYfmlyL1SjDbL+2KHIQAAtk
-         KLCw==
-X-Gm-Message-State: APjAAAU98QiGIwsFCzw/lzQusi5hjYtsz/NHlztfWOc+6P94vnSXjpMY
-        ZgV5AQl5DiTFBWTuyXyPR71EIg==
-X-Google-Smtp-Source: APXvYqxF1h7pQA9SbXH4i0EHQvYqTodac3jez6r/o4a5QGCCaAGXGZyJJ9eLnT8hPP8mCtbSWgy5MQ==
-X-Received: by 2002:a17:902:2963:: with SMTP id g90mr2175435plb.182.1552997062703;
-        Tue, 19 Mar 2019 05:04:22 -0700 (PDT)
-Received: from kshutemo-mobl1.localdomain (fmdmzpr04-ext.fm.intel.com. [192.55.54.39])
-        by smtp.gmail.com with ESMTPSA id o14sm17438540pgn.65.2019.03.19.05.04.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 05:04:21 -0700 (PDT)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id 871C23011DA; Tue, 19 Mar 2019 15:04:17 +0300 (+03)
-Date:   Tue, 19 Mar 2019 15:04:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
-References: <20190308213633.28978-1-jhubbard@nvidia.com>
- <20190308213633.28978-2-jhubbard@nvidia.com>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mEU9qYTO03vHt/EIt0nrRCo9bzbj9L9MWW0g/e7t0nI=;
+ b=4h6mdrDlsiFN0As1G6i5aMwsZlJLaSb5gMmOvpZykb/wpFWKlN2WVVHcUwSHxdMl1JCWnHtA1WZuhrAMnPthCKHTg+t5LaY6IiOsFPy0eecobNy+W2CWbdE6Hyu9ycGM4I9G/T1Ln5pMWEy59WdHMnpcD3ppRV8tUGxqpTFLIyM=
+Received: from BL0PR02CA0051.namprd02.prod.outlook.com (2603:10b6:207:3d::28)
+ by CY4PR02MB2199.namprd02.prod.outlook.com (2603:10b6:903:9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.14; Tue, 19 Mar
+ 2019 12:04:32 +0000
+Received: from BL2NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::203) by BL0PR02CA0051.outlook.office365.com
+ (2603:10b6:207:3d::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
+ Transport; Tue, 19 Mar 2019 12:04:32 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.80.198)
+ smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.80.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.80.198; helo=xir-pvapexch01.xlnx.xilinx.com;
+Received: from xir-pvapexch01.xlnx.xilinx.com (149.199.80.198) by
+ BL2NAM02FT016.mail.protection.outlook.com (10.152.77.171) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.1730.9 via Frontend Transport; Tue, 19 Mar 2019 12:04:31 +0000
+Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
+ xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1531.3; Tue, 19 Mar 2019 12:04:30 +0000
+Received: from smtp.xilinx.com (172.21.105.198) by
+ xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Tue, 19 Mar 2019 12:04:30 +0000
+Envelope-to: arnd@arndb.de,
+ gregkh@linuxfoundation.org,
+ michal.simek@xilinx.com,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ dragan.cvetic@xilinx.com,
+ derek.kiernan@xilinx.com
+Received: from [149.199.110.15] (port=43674 helo=xirdraganc40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <dragan.cvetic@xilinx.com>)
+        id 1h6DTq-0003Ch-TF; Tue, 19 Mar 2019 12:04:30 +0000
+From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>
+Subject: [PATCH 00/12] misc: xilinx sd-fec driver
+Date:   Tue, 19 Mar 2019 12:04:12 +0000
+Message-ID: <1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190308213633.28978-2-jhubbard@nvidia.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(136003)(39860400002)(2980300002)(199004)(189003)(336012)(478600001)(26826003)(356004)(966005)(110136005)(486006)(36906005)(476003)(9786002)(316002)(126002)(956004)(44832011)(2201001)(60926002)(2616005)(7636002)(47776003)(305945005)(71366001)(36756003)(6306002)(426003)(6666004)(5660300002)(14444005)(8676002)(107886003)(5024004)(106466001)(246002)(48376002)(54906003)(28376004)(50466002)(93146003)(51416003)(2906002)(4326008)(8746002)(7696005)(8936002)(50226002)(186003)(26005)(106002)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2199;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e04c32e5-ea76-4b35-6eab-08d6ac630be9
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:CY4PR02MB2199;
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2199:
+X-MS-Exchange-PUrlCount: 1
+Content-Transfer-Encoding: quoted-printable
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <CY4PR02MB21999787A701DFCAA1F52642CB400@CY4PR02MB2199.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0981815F2F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: ABO+P3i1J2CqhBaZTKQVK48i0xVEzaYgzNCYB30Cye15xNVq9MFillDJUIfJR30HyKc4r68fm3xTpl4VKFpT0PstA86Ew5mzLkbb82lKUd29QxC2VzyF9z+r9ecKxBUEYB2Kc9WdtWmf8LiXj+Pt24QaJFDhqq44X7F+ZUpORvwNnEjnPJXuvOiCi9Ng56gwZSdAnhWPvt5+3/vQnRcJ2XB0nGDV6B1zVyaDm/mYCP1k9Fx6/MUrX2Ualommywu7ako3XHsFpAmrVRx3tUav2WLSZw+F/NdeYsrlNt20lXY3fVk6AUoI6bPXltCwNIKlYNJsqm7qJfEUDg4Ent8A9//x7BOdMhzX8Zeq2sK5hFrKPVV2RzM0FM8EjUsu9aZop+0MeEeg4arijsomfpK3u+tTgzKtJJ2ZI/DyFVUJ8uo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 12:04:31.9469
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e04c32e5-ea76-4b35-6eab-08d6ac630be9
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2199
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> Introduces put_user_page(), which simply calls put_page().
-> This provides a way to update all get_user_pages*() callers,
-> so that they call put_user_page(), instead of put_page().
-> 
-> Also introduces put_user_pages(), and a few dirty/locked variations,
-> as a replacement for release_pages(), and also as a replacement
-> for open-coded loops that release multiple pages.
-> These may be used for subsequent performance improvements,
-> via batching of pages to be released.
-> 
-> This is the first step of fixing a problem (also described in [1] and
-> [2]) with interactions between get_user_pages ("gup") and filesystems.
-> 
-> Problem description: let's start with a bug report. Below, is what happens
-> sometimes, under memory pressure, when a driver pins some pages via gup,
-> and then marks those pages dirty, and releases them. Note that the gup
-> documentation actually recommends that pattern. The problem is that the
-> filesystem may do a writeback while the pages were gup-pinned, and then the
-> filesystem believes that the pages are clean. So, when the driver later
-> marks the pages as dirty, that conflicts with the filesystem's page
-> tracking and results in a BUG(), like this one that I experienced:
-> 
->     kernel BUG at /build/linux-fQ94TU/linux-4.4.0/fs/ext4/inode.c:1899!
->     backtrace:
->         ext4_writepage
->         __writepage
->         write_cache_pages
->         ext4_writepages
->         do_writepages
->         __writeback_single_inode
->         writeback_sb_inodes
->         __writeback_inodes_wb
->         wb_writeback
->         wb_workfn
->         process_one_work
->         worker_thread
->         kthread
->         ret_from_fork
-> 
-> ...which is due to the file system asserting that there are still buffer
-> heads attached:
-> 
->         ({                                                      \
->                 BUG_ON(!PagePrivate(page));                     \
->                 ((struct buffer_head *)page_private(page));     \
->         })
-> 
-> Dave Chinner's description of this is very clear:
-> 
->     "The fundamental issue is that ->page_mkwrite must be called on every
->     write access to a clean file backed page, not just the first one.
->     How long the GUP reference lasts is irrelevant, if the page is clean
->     and you need to dirty it, you must call ->page_mkwrite before it is
->     marked writeable and dirtied. Every. Time."
-> 
-> This is just one symptom of the larger design problem: real filesystems
-> that actually write to a backing device, do not actually support
-> get_user_pages() being called on their pages, and letting hardware write
-> directly to those pages--even though that pattern has been going on since
-> about 2005 or so.
-> 
-> The steps are to fix it are:
-> 
-> 1) (This patch): provide put_user_page*() routines, intended to be used
->    for releasing pages that were pinned via get_user_pages*().
-> 
-> 2) Convert all of the call sites for get_user_pages*(), to
->    invoke put_user_page*(), instead of put_page(). This involves dozens of
->    call sites, and will take some time.
-> 
-> 3) After (2) is complete, use get_user_pages*() and put_user_page*() to
->    implement tracking of these pages. This tracking will be separate from
->    the existing struct page refcounting.
-> 
-> 4) Use the tracking and identification of these pages, to implement
->    special handling (especially in writeback paths) when the pages are
->    backed by a filesystem.
-> 
-> [1] https://lwn.net/Articles/774411/ : "DMA and get_user_pages()"
-> [2] https://lwn.net/Articles/753027/ : "The Trouble with get_user_pages()"
-> 
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Christopher Lameter <cl@linux.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jerome Glisse <jglisse@redhat.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Ralph Campbell <rcampbell@nvidia.com>
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>    # docs
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  include/linux/mm.h | 24 ++++++++++++++
->  mm/gup.c           | 82 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 106 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5801ee849f36..353035c8b115 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -993,6 +993,30 @@ static inline void put_page(struct page *page)
->  		__put_page(page);
->  }
->  
-> +/**
-> + * put_user_page() - release a gup-pinned page
-> + * @page:            pointer to page to be released
-> + *
-> + * Pages that were pinned via get_user_pages*() must be released via
-> + * either put_user_page(), or one of the put_user_pages*() routines
-> + * below. This is so that eventually, pages that are pinned via
-> + * get_user_pages*() can be separately tracked and uniquely handled. In
-> + * particular, interactions with RDMA and filesystems need special
-> + * handling.
-> + *
-> + * put_user_page() and put_page() are not interchangeable, despite this early
-> + * implementation that makes them look the same. put_user_page() calls must
-> + * be perfectly matched up with get_user_page() calls.
-> + */
-> +static inline void put_user_page(struct page *page)
-> +{
-> +	put_page(page);
-> +}
-> +
-> +void put_user_pages_dirty(struct page **pages, unsigned long npages);
-> +void put_user_pages_dirty_lock(struct page **pages, unsigned long npages);
-> +void put_user_pages(struct page **pages, unsigned long npages);
-> +
->  #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
->  #define SECTION_IN_PAGE_FLAGS
->  #endif
-> diff --git a/mm/gup.c b/mm/gup.c
-> index f84e22685aaa..37085b8163b1 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -28,6 +28,88 @@ struct follow_page_context {
->  	unsigned int page_mask;
->  };
->  
-> +typedef int (*set_dirty_func_t)(struct page *page);
-> +
-> +static void __put_user_pages_dirty(struct page **pages,
-> +				   unsigned long npages,
-> +				   set_dirty_func_t sdf)
-> +{
-> +	unsigned long index;
-> +
-> +	for (index = 0; index < npages; index++) {
-> +		struct page *page = compound_head(pages[index]);
-> +
-> +		if (!PageDirty(page))
-> +			sdf(page);
+This patchset is adding the full Soft Decision Forward Error
+Correction (SD-FEC) driver implementation, driver DT binding and
+driver documentation.
 
-How is this safe? What prevents the page to be cleared under you?
+Forward Error Correction (FEC) codes such as Low Density Parity
+Check (LDPC) and turbo codes provide a means to control errors in
+data transmissions over unreliable or noisy communication
+channels. The SD-FEC Integrated Block is an optimized block for
+soft-decision decoding of these codes. Fixed turbo codes are
+supported directly, whereas custom and standardized LDPC codes
+are supported through the ability to specify the parity check
+matrix through an AXI4-Lite bus or using the optional programmable
+(PL)-based support logic. For the further information see
+https://www.xilinx.com/support/documentation/ip_documentation/
+sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
 
-If it's safe to race clear_page_dirty*() it has to be stated explicitly
-with a reason why. It's not very clear to me as it is.
+This driver is a platform device driver which supports SDFEC16
+(16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
+Turbo code decoding. LDPC codes can be specified on
+a codeword-by-codeword basis, also a custom LDPC code can be used.
 
-> +
-> +		put_user_page(page);
-> +	}
-> +}
-> +
-> +/**
-> + * put_user_pages_dirty() - release and dirty an array of gup-pinned pages
-> + * @pages:  array of pages to be marked dirty and released.
-> + * @npages: number of pages in the @pages array.
-> + *
-> + * "gup-pinned page" refers to a page that has had one of the get_user_pages()
-> + * variants called on that page.
-> + *
-> + * For each page in the @pages array, make that page (or its head page, if a
-> + * compound page) dirty, if it was previously listed as clean. Then, release
-> + * the page using put_user_page().
-> + *
-> + * Please see the put_user_page() documentation for details.
-> + *
-> + * set_page_dirty(), which does not lock the page, is used here.
-> + * Therefore, it is the caller's responsibility to ensure that this is
-> + * safe. If not, then put_user_pages_dirty_lock() should be called instead.
-> + *
-> + */
-> +void put_user_pages_dirty(struct page **pages, unsigned long npages)
-> +{
-> +	__put_user_pages_dirty(pages, npages, set_page_dirty);
+The SD-FEC driver exposes a char device interface and supports
+file operations: open(), close(), poll() and ioctl(). The driver
+allows only one usage of the device, open() limits the number of
+driver instances. The driver also utilize Common Clock Framework
+(CCF).
 
-Have you checked if compiler is clever enough eliminate indirect function
-call here? Maybe it's better to go with an opencodded approach and get rid
-of callbacks?
+The control and monitoring is supported over ioctl system call.
+The features supported by ioctl():
+- enable or disable data pipes to/from device
+- configure the FEC algorithm parameters
+- set the order of data
+- provide a control of a SDFEC bypass option
+- activates/deactivates SD-FEC
+- collect and provide statistical data
+- enable/disable interrupt mode
 
+Poll can be utilized to detect errors on IRQ trigger rather than
+using looping status and stats ioctl's.
 
-> +}
-> +EXPORT_SYMBOL(put_user_pages_dirty);
-> +
-> +/**
-> + * put_user_pages_dirty_lock() - release and dirty an array of gup-pinned pages
-> + * @pages:  array of pages to be marked dirty and released.
-> + * @npages: number of pages in the @pages array.
-> + *
-> + * For each page in the @pages array, make that page (or its head page, if a
-> + * compound page) dirty, if it was previously listed as clean. Then, release
-> + * the page using put_user_page().
-> + *
-> + * Please see the put_user_page() documentation for details.
-> + *
-> + * This is just like put_user_pages_dirty(), except that it invokes
-> + * set_page_dirty_lock(), instead of set_page_dirty().
-> + *
-> + */
-> +void put_user_pages_dirty_lock(struct page **pages, unsigned long npages)
-> +{
-> +	__put_user_pages_dirty(pages, npages, set_page_dirty_lock);
-> +}
-> +EXPORT_SYMBOL(put_user_pages_dirty_lock);
-> +
-> +/**
-> + * put_user_pages() - release an array of gup-pinned pages.
-> + * @pages:  array of pages to be marked dirty and released.
-> + * @npages: number of pages in the @pages array.
-> + *
-> + * For each page in the @pages array, release the page using put_user_page().
-> + *
-> + * Please see the put_user_page() documentation for details.
-> + */
-> +void put_user_pages(struct page **pages, unsigned long npages)
-> +{
-> +	unsigned long index;
-> +
-> +	for (index = 0; index < npages; index++)
-> +		put_user_page(pages[index]);
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
+Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Tested-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 
-I believe there's an room for improvement for compound pages.
+Dragan Cvetic (12):
+  dt-bindings: xilinx-sdfec: Add SDFEC binding
+  misc: xilinx-sdfec: add core driver
+  misc: xilinx_sdfec: Add CCF support
+  misc: xilinx_sdfec: Add open, close and ioctl
+  misc: xilinx_sdfec: Store driver config and state
+  misc: xilinx_sdfec: Add ability to configure turbo mode
+  misc: xilinx_sdfec: Add ability to configure LDPC
+  misc: xilinx_sdfec: Add ability to get/set config
+  misc: xilinx_sdfec: Support poll file operation
+  misc: xilinx_sdfec: Add stats & status ioctls
+  Docs: misc: xilinx_sdfec: Add documentation
+  MAINTAINERS: add maintainer for SD-FEC support
 
-If there's multiple consequential pages in the array that belong to the
-same compound page we can get away with a single atomic operation to
-handle them all.
+ .../devicetree/bindings/misc/xlnx,sd-fec.txt       |   58 +
+ Documentation/misc-devices/index.rst               |    1 +
+ Documentation/misc-devices/xilinx_sdfec.rst        |  286 ++++
+ MAINTAINERS                                        |   12 +
+ drivers/misc/Kconfig                               |   12 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/xilinx_sdfec.c                        | 1683 ++++++++++++++++=
+++++
+ include/uapi/misc/xilinx_sdfec.h                   |  470 ++++++
+ 8 files changed, 2523 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+ create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
+ create mode 100644 drivers/misc/xilinx_sdfec.c
+ create mode 100644 include/uapi/misc/xilinx_sdfec.h
 
-> +}
-> +EXPORT_SYMBOL(put_user_pages);
-> +
->  static struct page *no_page_table(struct vm_area_struct *vma,
->  		unsigned int flags)
->  {
-> -- 
-> 2.21.0
-> 
+--
+2.7.4
 
--- 
- Kirill A. Shutemov
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
