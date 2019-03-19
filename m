@@ -2,47 +2,46 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22175C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF26C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28ED20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A332720854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfCSGSz (ORCPT
+        id S1727000AbfCSGTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 02:18:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25636 "EHLO mga18.intel.com"
+        Tue, 19 Mar 2019 02:19:01 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8988 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfCSGSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 02:18:55 -0400
+        id S1725996AbfCSGTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 02:19:00 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 23:18:54 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 23:18:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,496,1544515200"; 
-   d="scan'208";a="128177379"
+   d="scan'208";a="126620568"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2019 23:18:54 -0700
-Subject: [PATCH 0/6] security/keys/encrypted: Break module dependency chain
+  by orsmga008.jf.intel.com with ESMTP; 18 Mar 2019 23:18:59 -0700
+Subject: [PATCH 1/6] security/keys/encrypted: Allow operation without
+ trusted.ko
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     keyrings@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, ecryptfs@vger.kernel.org,
+Cc:     James Bottomley <jejb@linux.ibm.com>,
         Roberto Sassu <roberto.sassu@huawei.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>, vishal.l.verma@intel.com,
         linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Date:   Mon, 18 Mar 2019 23:06:15 -0700
-Message-ID: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 18 Mar 2019 23:06:20 -0700
+Message-ID: <155297558061.2276575.9485856950730059730.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,41 +51,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With v5.1-rc1 all the nvdimm sub-system regression tests started failing
-because the libnvdimm module failed to load in the qemu-kvm test
-environment.  Critically that environment does not have a TPM. Commit
-240730437deb "KEYS: trusted: explicitly use tpm_chip structure..."
-started to require a TPM to be present for the trusted.ko module to load
-where there was no requirement for that before.
+The trusted.ko module may fail to load. In the common case this failure
+is simply due to the platform missing a TPM. Teach the encrypted_keys
+implementation to lookup the key type by name rather than having a
+module dependency.
 
-Rather than undo the "fail if no hardware" behavior James points out
-that the module dependencies can be broken by looking up the key-type by
-name. Remove the dependencies on the "key_type_trusted" and
-"key_type_encrypted" symbol exports, and clean up other boilerplate that
-supported those exports in different configurations.
-
+Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+Suggested-by: James Bottomley <jejb@linux.ibm.com>
+Cc: Roberto Sassu <roberto.sassu@huawei.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
+ security/keys/encrypted-keys/masterkey_trusted.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Dan Williams (6):
-      security/keys/encrypted: Allow operation without trusted.ko
-      security/keys/encrypted: Clean up request_trusted_key()
-      libnvdimm/security: Drop direct dependency on key_type_encrypted
-      security/keys/ecryptfs: Drop direct dependency on key_type_encrypted
-      security/integrity/evm: Drop direct dependency on key_type_encrypted
-      security/keys/encrypted: Drop export of key_type_encrypted
+diff --git a/security/keys/encrypted-keys/masterkey_trusted.c b/security/keys/encrypted-keys/masterkey_trusted.c
+index dc3d18cae642..7560aea6438d 100644
+--- a/security/keys/encrypted-keys/masterkey_trusted.c
++++ b/security/keys/encrypted-keys/masterkey_trusted.c
+@@ -19,6 +19,7 @@
+ #include <keys/trusted-type.h>
+ #include <keys/encrypted-type.h>
+ #include "encrypted.h"
++#include "../internal.h"
+ 
+ /*
+  * request_trusted_key - request the trusted key
+@@ -31,9 +32,15 @@ struct key *request_trusted_key(const char *trusted_desc,
+ 				const u8 **master_key, size_t *master_keylen)
+ {
+ 	struct trusted_key_payload *tpayload;
++	struct key_type *type;
+ 	struct key *tkey;
+ 
+-	tkey = request_key(&key_type_trusted, trusted_desc, NULL);
++	type = key_type_lookup("trusted");
++	if (IS_ERR(type)) {
++		tkey = (struct key *)type;
++		goto error;
++	}
++	tkey = request_key(type, trusted_desc, NULL);
+ 	if (IS_ERR(tkey))
+ 		goto error;
+ 
+@@ -44,3 +51,5 @@ struct key *request_trusted_key(const char *trusted_desc,
+ error:
+ 	return tkey;
+ }
++
++MODULE_SOFTDEP("pre: trusted");
 
-
- drivers/nvdimm/security.c                        |   11 ++++-
- fs/ecryptfs/ecryptfs_kernel.h                    |   22 -----------
- fs/ecryptfs/keystore.c                           |   12 ++++++
- include/keys/encrypted-type.h                    |    2 -
- include/linux/key.h                              |    1 
- security/integrity/evm/evm_crypto.c              |    9 ++++
- security/keys/encrypted-keys/Makefile            |    3 -
- security/keys/encrypted-keys/encrypted.c         |   35 ++++++++++++++++-
- security/keys/encrypted-keys/encrypted.h         |   12 ------
- security/keys/encrypted-keys/masterkey_trusted.c |   46 ----------------------
- security/keys/internal.h                         |    2 -
- security/keys/key.c                              |    1 
- 12 files changed, 65 insertions(+), 91 deletions(-)
- delete mode 100644 security/keys/encrypted-keys/masterkey_trusted.c
