@@ -2,189 +2,117 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E82C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC3CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B2E2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FEB20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="M+ReO8ag"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="f5824T8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfCSXK3 (ORCPT
+        id S1727270AbfCSXSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:10:29 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39903 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfCSXK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:10:29 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t28so418191qte.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:10:28 -0700 (PDT)
+        Tue, 19 Mar 2019 19:18:25 -0400
+Received: from mail-eopbgr750135.outbound.protection.outlook.com ([40.107.75.135]:4221
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726801AbfCSXSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 19:18:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6FWypQkapP8gnmtBtLQAKuuE6zk0IbVIm8LRbFhdYXc=;
-        b=M+ReO8agDfxcUZE1BC6jIroXPpA/3rFDw7WL2eBF6QPi8+fe4q1yfE3cc0ZNNln0tP
-         3Dutwt74X0Mb9BEPu7GbrMZZWOuKVdH78KU+HAbkslsG02wo4iK6ObbXFZIoJvse5hPt
-         +mNSLNRsZHvFLQ4ytrymOevkVA91aSIXV02lVyagkwxkXhUuYamp7vkRAOrO2Z+riYjx
-         7iDcO0ceMht3+Sfv53hEyNRAiX3hMmxRqjcgVLTi/UdEAQ7Fpt8Na61DjVKqaRKcg0ZT
-         c6uHvd7we28+D1ALMCmPsoULQb1zPqsGc8VZi23DjfCjNIdsYvHONVsI2or/qGNiNMh1
-         BQEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6FWypQkapP8gnmtBtLQAKuuE6zk0IbVIm8LRbFhdYXc=;
-        b=Zy+1x0UVxRVWBeA+trapVSD5xkaTLeMJ5AYnl91WPVReOpWA4am2tYFJr9+UUD9yt2
-         Bn+1yT0UgCZ0PXV+MtC/J+btCdb52gMdnxdVPydGW5SzQdyo84uGae/+2Zw1FffReY0P
-         zjWp+qvPf/lzntSrtXU9VW1JiRp10mlRDHNEE/MTJQynAYqX6dWGtE1niK5d4A6OXdrD
-         dpOOjUpH6ZVhVmBsTqLLeP44FmFDCi16JPFBTVtwMvNKNwUMzTgk6EhNb4QlNlv6P2pB
-         KkjoFCMmRlR2T/8IOO1CJ+eyBvXf51dvV6meYCGer3H6lmC7Nz4oGNm5ZxXGVAl7/nO9
-         1tDA==
-X-Gm-Message-State: APjAAAVHy6D37uieRYl9rR6il0NMyeaB+I74o7NLKLMH1f0CvIrE7zcl
-        yJ6Fa/08+ksB+E77B17umEViFQ==
-X-Google-Smtp-Source: APXvYqxwNsa8SsSdl8LqERXal6FHQWmFo7gdTiOZy3amFeU+WySgqgoRQgKFw4lJtMZx/FhDpN1fcQ==
-X-Received: by 2002:ac8:2850:: with SMTP id 16mr4256446qtr.84.1553037028006;
-        Tue, 19 Mar 2019 16:10:28 -0700 (PDT)
-Received: from brauner.io ([38.127.230.10])
-        by smtp.gmail.com with ESMTPSA id j10sm59557qth.14.2019.03.19.16.10.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 16:10:27 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 00:10:23 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190319231020.tdcttojlbmx57gke@brauner.io>
-References: <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
- <20190316185726.jc53aqq5ph65ojpk@brauner.io>
- <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
- <20190317015306.GA167393@google.com>
- <20190317114238.ab6tvvovpkpozld5@brauner.io>
- <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
- <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
- <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=izcBs2hzVnuTrlWdwtG4mzAiI0ExusZxmkq/Wz+kO+0=;
+ b=f5824T8AnAcmDnT1pIIK6ir8lbj/7DmiuWaBYEihRdZMNR+Enw+K1yQIUhuSyJQVXg4SPCrvaBMR4YVY8S2o/myLE5JTzXkzrc6wo4QF29P5CHvulNOjeHegTiAzPHdZo2izgnu3qH4kVeDfJJSqaDnlesbkTu3q6brC92aL+EE=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1741.namprd22.prod.outlook.com (10.164.206.159) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.15; Tue, 19 Mar 2019 23:18:20 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 23:18:20 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Hassan Naveed <hnaveed@wavecomp.com>
+CC:     Paul Burton <pburton@wavecomp.com>, "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Paul Burton <pburton@wavecomp.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "open list:MIPS" <linux-mips@linux-mips.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] MIPS: uasm: Add div, mul and sel instructions for
+  mipsr6
+Thread-Topic: [PATCH v2 1/3] MIPS: uasm: Add div, mul and sel instructions for
+  mipsr6
+Thread-Index: AQHU3qoKnky1nrL8HkiECGsISOYoxg==
+Date:   Tue, 19 Mar 2019 23:18:20 +0000
+Message-ID: <MWHPR2201MB12775596A8378F6FA7EFCDD0C1400@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190312224706.6121-1-hnaveed@wavecomp.com>
+In-Reply-To: <20190312224706.6121-1-hnaveed@wavecomp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0020.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::33) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e3f6291e-bbcb-4418-1308-08d6acc12cde
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1741;
+x-ms-traffictypediagnostic: MWHPR2201MB1741:
+x-microsoft-antispam-prvs: <MWHPR2201MB17410E4C175FD4D8AB6BD552C1400@MWHPR2201MB1741.namprd22.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(346002)(39850400004)(376002)(199004)(189003)(68736007)(446003)(316002)(105586002)(256004)(71190400001)(66066001)(7736002)(486006)(25786009)(97736004)(74316002)(54906003)(106356001)(71200400001)(52536014)(305945005)(4326008)(52116002)(6862004)(5660300002)(6506007)(33656002)(102836004)(11346002)(6436002)(2906002)(14454004)(4744005)(229853002)(7416002)(55016002)(6116002)(26005)(386003)(186003)(478600001)(99286004)(8676002)(3846002)(476003)(7696005)(44832011)(81156014)(76176011)(81166006)(8936002)(53936002)(9686003)(6246003)(42882007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1741;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2iXll+a5JpuhvBaEvCfbkTtbTSAj2cYCDjqdxhh38MHVBl/ygusfkveBGL13njUrXdwlF9VYkAnzCiM/5p9znIeNLOwArAKQOQiWA/8cm9WVbDMzJpAvPRsuiZ9cMEdrZbUyNB3jiiRp9s9wkhB2l4Gca/KLet29n347QrPHZvRonzMfgVQd8lWgQiJwyPvbPki/KlWLQGZnDEdbCVaO7M6WlmwgsJo+mte2CMXkdV10iXSf/OZaO96v2i9yzyBdcjlfgMyzMXbHA29dmLdmfIVOr682B0AFH85z9W0B63XRSwhMu8hqeJOmCtQxVYtn6NiqwIjHzCVCQ6OZ3OyuKv+E5eCvUyBzKKgGIsz/28paVzYKVUck2I13/gjJuhe4/0lmmLb4bDF1RP5uj0UY+EX+AFEF9zJGIAC3n/yG6+U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3f6291e-bbcb-4418-1308-08d6acc12cde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 23:18:20.5444
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1741
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 03:48:32PM -0700, Daniel Colascione wrote:
-> On Tue, Mar 19, 2019 at 3:14 PM Christian Brauner <christian@brauner.io> wrote:
-> > So I dislike the idea of allocating new inodes from the procfs super
-> > block. I would like to avoid pinning the whole pidfd concept exclusively
-> > to proc. The idea is that the pidfd API will be useable through procfs
-> > via open("/proc/<pid>") because that is what users expect and really
-> > wanted to have for a long time. So it makes sense to have this working.
-> > But it should really be useable without it. That's why translate_pid()
-> > and pidfd_clone() are on the table.  What I'm saying is, once the pidfd
-> > api is "complete" you should be able to set CONFIG_PROCFS=N - even
-> > though that's crazy - and still be able to use pidfds. This is also a
-> > point akpm asked about when I did the pidfd_send_signal work.
-> 
-> I agree that you shouldn't need CONFIG_PROCFS=Y to use pidfds. One
-> crazy idea that I was discussing with Joel the other day is to just
-> make CONFIG_PROCFS=Y mandatory and provide a new get_procfs_root()
-> system call that returned, out of thin air and independent of the
-> mount table, a procfs root directory file descriptor for the caller's
-> PID namspace and suitable for use with openat(2).
+Hello,
 
-Even if this works I'm pretty sure that Al and a lot of others will not
-be happy about this. A syscall to get an fd to /proc? That's not going
-to happen and I don't see the need for a separate syscall just for that.
-(I do see the point of making CONFIG_PROCFS=y the default btw.)
+Hassan Naveed wrote:
+> Add the following instructions for use by eBPF on mipsr6:
+> insn_ddivu_r6, insn_divu_r6, insn_dmodu, insn_dmulu, insn_modu,
+> insn_mulu, insn_seleqz, insn_selnez
+>=20
+> Signed-off-by: Hassan Naveed <hnaveed@wavecomp.com>
+> Reviewed-by: Paul Burton <paul.burton@mips.com>
 
-Inode allocation from the procfs mount for the file descriptors Joel
-wants is not correct. Their not really procfs file descriptors so this
-is a nack. We can't just hook into proc that way.
+Series applied to mips-next.
 
-> 
-> C'mon: /proc is used by everyone today and almost every program breaks
-> if it's not around. The string "/proc" is already de facto kernel ABI.
-> Let's just drop the pretense of /proc being optional and bake it into
-> the kernel proper, then give programs a way to get to /proc that isn't
-> tied to any particular mount configuration. This way, we don't need a
-> translate_pid(), since callers can just use procfs to do the same
-> thing. (That is, if I understand correctly what translate_pid does.)
+Thanks,
+    Paul
 
-I'm not sure what you think translate_pid() is doing since you're not
-saying what you think it does.
-Examples from the old patchset:
-translate_pid(pid, ns, -1)      - get pid in our pid namespace
-translate_pid(pid, -1, ns)      - get pid in other pid namespace
-translate_pid(1, ns, -1)        - get pid of init task for namespace
-translate_pid(pid, -1, ns) > 0  - is pid is reachable from ns?
-translate_pid(1, ns1, ns2) > 0  - is ns1 inside ns2?
-translate_pid(1, ns1, ns2) == 0 - is ns1 outside ns2?
-translate_pid(1, ns1, ns2) == 1 - is ns1 equal ns2?
-
-Allowing this syscall to yield pidfds as proper regular file fds and
-also taking pidfds as argument is an excellent way to kill a few
-problems at once:
-- cheap pid namespace introspection
-- creates a bridge between the "old" pid-based api and the "new" pidfd api
-- allows us to get proper non-directory file descriptors for any pids we
-  like
-
-The additional advantage is that people are already happy to add this
-syscall so simply extending it and routing it through the pidfd tree or
-Eric's tree is reasonable. (It should probably grow a flag argument. I
-need to start prototyping this.)
-
-> 
-> We still need a pidfd_clone() for atomicity reasons, but that's a
-> separate story. My goal is to be able to write a library that
-
-Yes, on my todo list and I have a ported patch based on prior working
-rotting somehwere on my git server.
-
-> transparently creates and manages a helper child process even in a
-> "hostile" process environment in which some other uncoordinated thread
-> is constantly doing a waitpid(-1) (e.g., the JVM).
-> 
-> > So instead of going throught proc we should probably do what David has
-> > been doing in the mount API and come to rely on anone_inode. So
-> > something like:
-> >
-> > fd = anon_inode_getfd("pidfd", &pidfd_fops, file_priv_data, flags);
-> >
-> > and stash information such as pid namespace etc. in a pidfd struct or
-> > something that we then can stash file->private_data of the new file.
-> > This also lets us avoid all this open coding done here.
-> > Another advantage is that anon_inodes is its own kernel-internal
-> > filesystem.
-> 
-> Sure. That works too.
-
-Great.
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
