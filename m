@@ -4,85 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB5EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291DFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B522173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F265A20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eK7U2MBy"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LC2w0Rol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfCSSht (ORCPT
+        id S1727572AbfCSSie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:37:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45766 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfCSSht (ORCPT
+        Tue, 19 Mar 2019 14:38:34 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46317 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbfCSSid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:37:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2JISlkG063128;
-        Tue, 19 Mar 2019 18:37:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=cvcsuesv40EeW/nlGhgFXZq/Ge7gh0asgjnrOwR/CAc=;
- b=eK7U2MBysAY9l7S2YUNEig3SkGAUxzmRn7iyJTBO7EPjXLD0NMAFn25jGupHchV/vBYX
- ZAke5kRcZ/b9VqEwiKr8UycuFgzehbE2goag1cqu2/oMzsExA5oUE9+VBP60TjdC/Wkn
- AomthRbLTdnVxbnGJemMoA887i4d8KdGOAe62hy+7ZJwMzDs15hdTNjZ2C39YB+fddPa
- u7eHyVFZ8WO6R/8jI6aPdj09cefEtv4i7guRU/kpLMV0NhxZY80i+/rHw+tk05rXl1c+
- gYjb4mA1rp/wtqQIibBiDZtR3O90YyBdzXxZ+PYdMymJCJxiOtyd4fU+V/qidivX330E cQ== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2r8rjupmb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 18:37:45 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2JIbcjt011450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 18:37:39 GMT
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2JIbc5a016302;
-        Tue, 19 Mar 2019 18:37:38 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Mar 2019 11:37:37 -0700
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Vinayak Holikatti <vinholikatti@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ufs: fix a missing check of devm_reset_control_get
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <SN6PR04MB4925DB2652FAED5F3AED27CCFC4B0@SN6PR04MB4925.namprd04.prod.outlook.com>
-        <20190315071156.21588-1-kjlu@umn.edu>
-Date:   Tue, 19 Mar 2019 14:37:35 -0400
-In-Reply-To: <20190315071156.21588-1-kjlu@umn.edu> (Kangjie Lu's message of
-        "Fri, 15 Mar 2019 02:11:56 -0500")
-Message-ID: <yq1y35ad828.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 Mar 2019 14:38:33 -0400
+Received: by mail-pf1-f194.google.com with SMTP id s23so14292961pfe.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Ydzzh2vp8qLAp+1aPO8su/zx9revbTEm1ZSk87G2Mwo=;
+        b=LC2w0RolgAlPG0Cd5in3X5I8KMVBJUM64CF8HbRVayP52YEdO6KTKKwUvhNNnPyqho
+         4Dly0PwzBxf78tadJTfLSG7GiyZPJ1SvpnVqIN4YYw/ei4jeGUcngeFxtg/ZwSeVn4JX
+         4axNpZ/9NpVGtIsK7svj2SOvuIt1d0ixSJWWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Ydzzh2vp8qLAp+1aPO8su/zx9revbTEm1ZSk87G2Mwo=;
+        b=tcH43XyBXWOz8Pw2ckp5/92llKW5bUgwrtb8lwhOI1j7GLwl+INBmqVDiMBNO5r8L7
+         JtJv/BUJfOf6nvODphuzYhnGQhctTQubr8Ij5i19lTkAye6anAIjpdnSvHeMogy7zpjJ
+         kbTVuE9HRjyKABMSV3C9IXBpGBhhTZa3tnHuhDnLS4QB3lUbMjyHOxREcpvMM7OTfcRa
+         GSZGAftEM/GyFDp9sHIZYB2NVh4/v2/BbUSCMAeecZfzeVAkFd3XggAbkpg4R3LVA9xn
+         X7QLnNZuZUcLLZesFShdZFeU0rYAJvnlxmr+3/yiYWHTJ4NLmpKegNDcFPHO8D6A+Oqd
+         ihng==
+X-Gm-Message-State: APjAAAVlZVU6VRDKhRR91RyKNnj2sIBAvGo9Fa5cTSbl5yEr2yv3g3/X
+        Lr3f9j6gro05/jPwU4g8HvyTWA==
+X-Google-Smtp-Source: APXvYqwdX09re8gQr40yKoR/6PxbNTxqPQNJhTH1ST1l/Dw4nbnZCcCSLLZGbKs6QcTv9fNKbpXj+g==
+X-Received: by 2002:a63:f146:: with SMTP id o6mr3550312pgk.360.1553020712829;
+        Tue, 19 Mar 2019 11:38:32 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id t8sm16189435pgp.5.2019.03.19.11.38.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 11:38:32 -0700 (PDT)
+Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
+To:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
+Date:   Tue, 19 Mar 2019 11:38:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=937 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903190132
+In-Reply-To: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Srinath and Rob - patch series looks good now.
 
-Kangjie,
+patch series,
 
-> devm_reset_control_get could fail, so the fix checks its return value
-> and passes the error code upstream in case it fails.
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 
-Applied to 5.2/scsi-queue, thanks.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
+> These patches add Stingray USB PHY driver and its corresponding
+> DT nodes with documentation.
+>
+> This patch set is based on Linux-5.0-rc2.
+>
+> Changes from v5:
+>    - Removed redundant address and size cells in DT nodes.
+>
+> Changes from v4:
+>    - Addressed Rob Herring review comments
+>       - Removed child nodes and added #phy-cells 1
+>       - Added xlate function to get phy using phandle argument.
+>
+> Changes from v3:
+>    - Addressed Rob Herring review comments
+>       - Changed compatible strings.
+>       - updated driver based on new compatible strings.
+>
+> Changes from v2:
+>    - Addressed Kishon review comments
+>    - Updated patchset to Linux-5.0-rc2
+>
+> Changes from v1:
+>    - Addressed Kishon review comments
+>    - phy init call return value handle
+>    
+> Srinath Mannam (3):
+>    dt-bindings: phy: Add Stingray USB PHY binding document
+>    phy: sr-usb: Add Stingray USB PHY driver
+>    arm64: dts: Add USB DT nodes for Stingray SoC
+>
+>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+>   drivers/phy/broadcom/Kconfig                       |  11 +
+>   drivers/phy/broadcom/Makefile                      |   1 +
+>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393 +++++++++++++++++++++
+>   6 files changed, 510 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+>   create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+>
