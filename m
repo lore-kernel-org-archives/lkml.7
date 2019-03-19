@@ -2,235 +2,112 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA8BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A2C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FB320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC7B2133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553018202;
+	bh=tjp0SsFl9thEqEjmKhXPi8SQ6eM9/xr7wxqxxgMlHsQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YcAT6Tmv3u4jrG33vuiZW8xyMSfLF5HlZf+vJYyapB1Sz4wt0xytQ8fyHpwJ0BQNH
+	 cEe7g3rL0lPBpJXHsSONowai8wxxWf0g9oaGCx74Dswc9L00nnHfQU4IKubo58jZO5
+	 XbzISOcMvuAnC/AuW9gyrRbhJUH5T1T2bzGeduuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfCSRyz (ORCPT
+        id S1727418AbfCSR4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:54:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:26544 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbfCSRyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:54:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 10:54:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,245,1549958400"; 
-   d="scan'208";a="328708716"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Mar 2019 10:54:51 -0700
-Message-ID: <73fefa02cafb0e94de0c2928185560e092fe137e.camel@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] kvm/vmx: Using hardware cpuid faulting to avoid
- emulation overhead
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        chao.gao@intel.com
-Date:   Wed, 20 Mar 2019 01:51:28 +0800
-In-Reply-To: <20190319142849.GB25575@linux.intel.com>
-References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
-         <20190318114324.14198-3-xiaoyao.li@linux.intel.com>
-         <20190318163832.GB13528@linux.intel.com>
-         <085cc389df4d734ee173bb4c199776591d197a21.camel@linux.intel.com>
-         <20190319142849.GB25575@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+        Tue, 19 Mar 2019 13:56:41 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:58536 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfCSR4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 13:56:41 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id C383B3A59;
+        Tue, 19 Mar 2019 17:56:38 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 10:56:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Levin Alexander <Alexander.Levin@microsoft.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>, hch@infradead.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, stable@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v6 0/3] iommu/io-pgtable-arm-v7s: Use DMA32 zone for
+ page tables
+Message-Id: <20190319105637.4949b00b854e955d61c0359d@linux-foundation.org>
+In-Reply-To: <CANMq1KBKF9aRj+8t+AQusNLOF5jrHJ4qY5C00AKXkO6e-8wKuQ@mail.gmail.com>
+References: <20181210011504.122604-1-drinkcat@chromium.org>
+        <CANMq1KAmFKpcxi49wJyfP4N01A80B2d-2RGY2Wrwg0BvaFxAxg@mail.gmail.com>
+        <20190111102155.in5rctq5krs4ewfi@8bytes.org>
+        <CANMq1KCq7wEYXKLZGCZczZ_yQrmK=MkHbUXESKhHnx5G_CMNVg@mail.gmail.com>
+        <789fb2e6-0d80-b6de-adf3-57180a50ec3e@suse.cz>
+        <CANMq1KCfhWdWtXP_PRd_LEEcWV8SQg=hOy4V7_grqtL873uUCg@mail.gmail.com>
+        <CANMq1KBKF9aRj+8t+AQusNLOF5jrHJ4qY5C00AKXkO6e-8wKuQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 07:28 -0700, Sean Christopherson wrote:
-> On Tue, Mar 19, 2019 at 12:37:23PM +0800, Xiaoyao Li wrote:
-> > On Mon, 2019-03-18 at 09:38 -0700, Sean Christopherson wrote:
-> > > On Mon, Mar 18, 2019 at 07:43:24PM +0800, Xiaoyao Li wrote:
-> > > > Current cpuid faulting of guest is purely emulated in kvm, which
-> > > > exploits
-> > > > CPUID vm exit to inject #GP to guest. However, if host hardware cpu has
-> > > > X86_FEATURE_CPUID_FAULT, we can just use the hardware cpuid faulting for
-> > > > guest to avoid the vm exit overhead.
-> > > 
-> > > Heh, I obviously didn't look at this patch before responding to patch 1/2.
-> > > 
-> > > > Note: cpuid faulting takes higher priority over CPUID instruction vm
-> > > > exit (Intel SDM vol3.25.1.1).
-> > > > 
-> > > > Since cpuid faulting only exists on some Intel's cpu, just apply this
-> > > > optimization to vmx.
-> > > > 
-> > > > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > > > ---
-> > > >  arch/x86/include/asm/kvm_host.h |  2 ++
-> > > >  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++++----
-> > > >  arch/x86/kvm/x86.c              | 15 ++++++++++++---
-> > > >  3 files changed, 29 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/arch/x86/include/asm/kvm_host.h
-> > > > b/arch/x86/include/asm/kvm_host.h
-> > > > index ce79d7bfe1fd..14cad587b804 100644
-> > > > --- a/arch/x86/include/asm/kvm_host.h
-> > > > +++ b/arch/x86/include/asm/kvm_host.h
-> > > > @@ -1339,6 +1339,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long
-> > > > msw);
-> > > >  void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
-> > > >  int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
-> > > >  
-> > > > +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64
-> > > > data);
-> > > > +
-> > > >  int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > > >  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > > >  
-> > > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > > index 2c59e0209e36..6b413e471dca 100644
-> > > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > > @@ -1037,7 +1037,7 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
-> > > >  
-> > > >  static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
-> > > >  {
-> > > > -	u64 host_val;
-> > > > +	u64 host_val, guest_val;
-> > > >  
-> > > >  	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
-> > > >  		return;
-> > > > @@ -1045,10 +1045,12 @@ static void vmx_save_host_cpuid_fault(struct
-> > > > vcpu_vmx *vmx)
-> > > >  	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
-> > > >  	vmx->host_msr_misc_features_enables = host_val;
-> > > >  
-> > > > -	/* clear cpuid fault bit to avoid it leak to guest */
-> > > > -	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > > > +	guest_val = vmx->vcpu.arch.msr_misc_features_enables;
-> > > > +
-> > > > +	/* we can use the hardware cpuid faulting to avoid emulation
-> > > > overhead */
-> > > > +	if ((host_val ^ guest_val) &
-> > > > MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > > >  		wrmsrl(MSR_MISC_FEATURES_ENABLES,
-> > > > -		       host_val &
-> > > > ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > > > +		       host_val ^
-> > > > MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > > >  	}
-> > > >  }
-> > > >  
-> > > > @@ -2057,6 +2059,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu,
-> > > > struct
-> > > > msr_data *msr_info)
-> > > >  		else
-> > > >  			vmx->pt_desc.guest.addr_a[index / 2] = data;
-> > > >  		break;
-> > > > +	case MSR_MISC_FEATURES_ENABLES:
-> > > > +		if (!kvm_supported_msr_misc_features_enables(vcpu,
-> > > > data))
-> > > > +			return 1;
-> > > > +		if (boot_cpu_has(X86_FEATURE_CPUID_FAULT)) {
-> > > > +			if (vmx->loaded_cpu_state)
-> > > 
-> > > No need for two separate if statements.  And assuming we're checking the
-> > > existing shadow value when loading guest/host state, the WRMSR should
-> > > only be done if the host's value is non-zero.
-> > 
-> > I'll combine these two if statements into one.
-> > 
-> > I cannot understand why the WRMSR should only be done if the host's value is
-> > non-zero. I think there is no depedency with host's value, if using the
-> > hardware
-> > cpuid faulting. We just need to set the value to real hardware MSR.
+On Tue, 19 Mar 2019 15:41:43 +0800 Nicolas Boichat <drinkcat@chromium.org> wrote:
+
+> On Mon, Feb 25, 2019 at 8:23 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > On Thu, Feb 14, 2019 at 1:12 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> > >
+> > > On 1/22/19 11:51 PM, Nicolas Boichat wrote:
+> > > > Hi Andrew,
+> > > >
+> > > > On Fri, Jan 11, 2019 at 6:21 PM Joerg Roedel <joro@8bytes.org> wrote:
+> > > >>
+> > > >> On Wed, Jan 02, 2019 at 01:51:45PM +0800, Nicolas Boichat wrote:
+> > > >> > Does anyone have any further comment on this series? If not, which
+> > > >> > maintainer is going to pick this up? I assume Andrew Morton?
+> > > >>
+> > > >> Probably, yes. I don't like to carry the mm-changes in iommu-tree, so
+> > > >> this should go through mm.
+> > > >
+> > > > Gentle ping on this series, it seems like it's better if it goes
+> > > > through your tree.
+> > > >
+> > > > Series still applies cleanly on linux-next, but I'm happy to resend if
+> > > > that helps.
+> > >
+> > > Ping, Andrew?
+> >
+> > Another gentle ping, I still don't see these patches in mmot[ms]. Thanks.
 > 
-> What I was trying to say in patch 1/2 regarding save/restore, is that I
-> don't think it is worthwhile to voluntarily switch hardware's value.  In
-> other words, do the WRMSR if and only if it's absolutely necessary.  And
-> that means only installing the guest's value if the host's value is
-> non-zero and host_val != guest_val.  If the host's value is zero, then
-> the guest's value is irrelevant as CPUID faulting behavior will naturally
-> be taken care of when intercepting CPUID.  And for obvious reasons the
-> WRMSR can be skipped if host and guest want the same value.
-
-The purpose of this patch is always using hardware cpuid fault if hardware cpu
-has this feature. Because emuated cpuid faulting needs entire vmexit process,
-but using hardware cpuid faulting just adds two WRMSR in save/restore cycle only
-when host_val != guest_val.
-
-Also I conclude the handling ou said as below:
-When host's value is zero, we do nothing to this MSR, and let guest ues emulated
-cpuid faulting through CPUID intercepting.
-When host's value is non-zero, we load the guest'value into hardware MSR, which
-means we use hardware cpuid faulting.
-
-So the difference is when host value is zero, you choose to use emulated cpuid
-faulting. What's meaning of chooseing emualtion or hardware feature based on
-host's value?
-
-> As it pertains to this code, we should not modify any hardware value that
-> isn't saved/restored.  If we go with the above approach, then we're only
-> switching the hardware MSR when the host's value is non-zero.  Ergo this
-> code should not write the actual MSR if the host value is zero as the MSR
-> will not be restored to the host's value when putting the vCPU.
+> Andrew: AFAICT this still applies cleanly on linux-next/master, so I
+> don't plan to resend... is there any other issues with this series?
 > 
-> > > > +				wrmsrl(MSR_MISC_FEATURES_ENABLES, data);
-> > > > +		}
-> > > > +		vcpu->arch.msr_misc_features_enables = data;
-> > > > +		break;
-> > > >  	case MSR_TSC_AUX:
-> > > >  		if (!msr_info->host_initiated &&
-> > > >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > index 434ec113cc79..33a8c95b2f2e 100644
-> > > > --- a/arch/x86/kvm/x86.c
-> > > > +++ b/arch/x86/kvm/x86.c
-> > > > @@ -2449,6 +2449,17 @@ static void record_steal_time(struct kvm_vcpu
-> > > > *vcpu)
-> > > >  		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-> > > >  }
-> > > >  
-> > > > +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64
-> > > > data)
-> > > > +{
-> > > > +	if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> > > > +	    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> > > > +	     !supports_cpuid_fault(vcpu)))
-> > > > +		return 0;
-> > > > +	else
-> > > > +		return 1;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(kvm_supported_msr_misc_features_enables);
-> > > > +
-> > > >  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data
-> > > > *msr_info)
-> > > >  {
-> > > >  	bool pr = false;
-> > > > @@ -2669,9 +2680,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu,
-> > > > struct
-> > > > msr_data *msr_info)
-> > > >  		vcpu->arch.msr_platform_info = data;
-> > > >  		break;
-> > > >  	case MSR_MISC_FEATURES_ENABLES:
-> > > > -		if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> > > > -		    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> > > > -		     !supports_cpuid_fault(vcpu)))
-> > > > +		if (!kvm_supported_msr_misc_features_enables(vcpu,
-> > > > data))
-> > > >  			return 1;
-> > > >  		vcpu->arch.msr_misc_features_enables = data;
-> > > >  		break;
-> > > > -- 
-> > > > 2.19.1
-> > > > 
+> This is a regression, so it'd be nice to have it fixed in mainline, eventually.
 
+Sorry, seeing "iommu" and "arm" made these escape my gimlet eye.
+
+I'm only seeing acks on [1/3].  What's the review status of [2/3] and [3/3]?
