@@ -2,102 +2,91 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6953CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A7520850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eekPoUhm"
+	by mail.kernel.org (Postfix) with ESMTP id 88CBF20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfCSVQG (ORCPT
+        id S1727546AbfCSVQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:16:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:51437 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbfCSVQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:16:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44P5Sf17DLz9s55;
-        Wed, 20 Mar 2019 08:16:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553030162;
-        bh=E2wnzAReI1ubftwHCLcpe6Rlm+ZuHN9i1cLy4wUZBe8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eekPoUhmOSbZLE9DPk+jIfIZzcDuioPxjt6QEov2y9joSgpgBF9uYl+k+ktniMZE0
-         tiNKpzm1LA2jibUgc1AYjHrPd4rPLigS4Xla/wkRMN+TZONpmd8NNDOoIFcqwBh+3/
-         h1huPlPESdYUgZ941iWoaeoqDli1KqCyReL7O4F5VA+q2BHYZKZSwGiMtKjwymf9JS
-         YfHxZ78h6JJsar1qZvMwoKDCSvxiHPi3HRlK71gQfxsobbvY/y2xWwFQdhNSqJje+S
-         wkhXVY06bIsENwS4yMUl7rauuFbk4MM6Z/97TMXzLVI/KB8b4lSOJjGKZPOZKYWfp3
-         EffD57ld1wMfw==
-Date:   Wed, 20 Mar 2019 08:15:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20190320081549.7112c33c@canb.auug.org.au>
+        Tue, 19 Mar 2019 17:16:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:40313 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfCSVQ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:16:29 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N01hu-1gm3aw2RhG-00x1eV; Tue, 19 Mar 2019 22:16:24 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] 3c515: fix integer overflow warning
+Date:   Tue, 19 Mar 2019 22:15:58 +0100
+Message-Id: <20190319211621.3466443-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/618FRZgG7M0vaLQeL9_GrKU"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Br1gpG0HzUNciC09SPVA7dwsqMQJVJxDJB1m72WcRRx1Em5zUa/
+ OC+CWkRvGR/bpqzo6I/UHerAO8gExi8T7J2E806P0Fl9+copCKrCig4gci8qg99Q2dGYOIr
+ ZMYEVmGAMLLsp0+mDW5rwXckNuoc2DiNLo4TheWGcRnoXH+aGa5lV7awnLl4QeW1ql0fNYi
+ PQLvp4CWZcqYJVoweuq8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nQ/zHLbCGm8=:N1aJuCA7ITCWYTSuQ2dLfB
+ 1W7dEYlSbdCcWk0pNXc6V4g73fSZDRzD7QNS4gtGfnuk6OHhmygyqhUrVf0vDQimoS7iE3prX
+ nBfVyNUcCxQ1mQXm0Bhp+dXuFvY0pIYHZvay56iZY7l/iV44qJ1bA3NqeGhB5ceTsBuZvdmyX
+ B5lpEfV5qam/RTiCpBkh48x4796egXmbOmbHpsiiSZ7FO+xAOKK3/vnf6TAzjDZqRITByMjyG
+ W9GW9tebTnxgkkaLwtSrsGoYyCU7FbwUQ6aHKydKBBMtaGHLDgrnVvQcRMhEOXrI4QVj5EwkG
+ HdjAC5a0t/JKWtRMBJM3h7GpVfrQM8tokD3Rc3eFhSD4PcpqkWYCdCELTIIhGd3H+oVeRrryz
+ aqckJpP4zmLzpOkraf71xX3/wsfqtfl4S6bh6b9zXyI5kwNG3qzYi4wXQBuYUVAzQoGsPeSg3
+ dKSbYiob481TupAxel6ODuytou5HSHK3XqUhkzLR7RQo/bppM95GiTgtrVKgN8pxTl1Vsp4Bu
+ LCYpNvSfYsCTQvlsnl6LJH6nSKroUMUnpzHce1B94JP1QzjNm4iSjuismqMVCQWR7RZcw1YWE
+ U+uwGPWlRCM04K31qgeFPt53HiR4uiAbegZjD5T9Qwnz7VWip1d9vXRfbeCt845hJ6RU7isOm
+ QXTGug0V1cbTblouKZWDEyhn3gio6hKzhocJNDfXr6z9PTItvte194kh2MWd0l3Jwtp4qt5is
+ hkowFjjsGA9gfPxYfflAQFjY+NwXRxnlt8EIUg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/618FRZgG7M0vaLQeL9_GrKU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+clang points out a harmless signed integer overflow:
 
-Hi all,
+drivers/net/ethernet/3com/3c515.c:1530:66: error: implicit conversion from 'int' to 'short' changes value from 32783 to -32753 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxMulticast | RxBroadcast | RxProm;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+drivers/net/ethernet/3com/3c515.c:1532:52: error: implicit conversion from 'int' to 'short' changes value from 32775 to -32761 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxMulticast | RxBroadcast;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+drivers/net/ethernet/3com/3c515.c:1534:38: error: implicit conversion from 'int' to 'short' changes value from 32773 to -32763 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxBroadcast;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
 
-In commit
+Make the variable unsigned to avoid the overflow.
 
-  13f61dfc5235 ("mt76: fix schedule while atomic in mt76x02_reset_state")
+Fixes: Linux-2.1.128pre1
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/3com/3c515.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fixes tag
+diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
+index 808abb6b3671..b15752267c8d 100644
+--- a/drivers/net/ethernet/3com/3c515.c
++++ b/drivers/net/ethernet/3com/3c515.c
+@@ -1521,7 +1521,7 @@ static void update_stats(int ioaddr, struct net_device *dev)
+ static void set_rx_mode(struct net_device *dev)
+ {
+ 	int ioaddr = dev->base_addr;
+-	short new_mode;
++	unsigned short new_mode;
+ 
+ 	if (dev->flags & IFF_PROMISC) {
+ 		if (corkscrew_debug > 3)
+-- 
+2.20.0
 
-  Fixes: e4ebb8b403d1 ("mt76: mt76x2: implement full device restart on watc=
-hdog reset")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean:
-
-  004960423fe1 ("mt76: mt76x2: implement full device restart on watchdog re=
-set")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/618FRZgG7M0vaLQeL9_GrKU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyRXAUACgkQAVBC80lX
-0Gxf9wf+JlXe6uuNvIIy847vnW2S26JD8fXZxuO8/hiNsfGjqH9q4OMjSjbT0V0U
-meColBd+i51f0QTX7PBiaaRVx80/VZ8y3C2NhvDJ28ZFuyNFsf9lS8GL7HvArGYa
-VfF5cEgcjR7ehJjO1hgfgKOGpBMvzhoWouxJFv1GQ5EAJxUAKZp/66E0uD9XR4dE
-dJMpqdaCAVt+M8wqDdQyr4ArV0L14zoAxupOmpR9DvwcOu4TtHsKbIGYIlaXs4Ax
-UvpyTMtJhwc56Pfq+q7gvWJ+AWqe6IJKgGip5Q7rdeXrNayDzfot8qIqFWJ1v3+N
-tnD+KNDDbc+1+iYCSnom4K1wQ5K4KQ==
-=GNw9
------END PGP SIGNATURE-----
-
---Sig_/618FRZgG7M0vaLQeL9_GrKU--
