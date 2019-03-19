@@ -2,99 +2,114 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8877C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52B7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D2920857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552993708;
-	bh=UuyGva1xXd6X9Pz9TBMJgUNeqND5yoGv6dRLG0KlbLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s1swvtXv5RGeq69wg0iol2qzdSiii5N92yiSvOiG47QxK/zK3Fv8vN2RuglF0Pssw
-	 SrEYNXKLbwApjXWidcMx7glcksbGZfebyzLk20P5Wm9s6Bt06O9BzQ5msRVS83g8vs
-	 QpgjplIog/J4Y2ocp1zxpRFLMjrntImXpAZROB4k=
+	by mail.kernel.org (Postfix) with ESMTP id 7058620857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:09:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Od9APY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfCSLI1 (ORCPT
+        id S1727623AbfCSLJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:08:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41909 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfCSLI0 (ORCPT
+        Tue, 19 Mar 2019 07:09:19 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:32914 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCSLJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:08:26 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 10so14067224lfr.8;
-        Tue, 19 Mar 2019 04:08:25 -0700 (PDT)
+        Tue, 19 Mar 2019 07:09:18 -0400
+Received: by mail-yw1-f66.google.com with SMTP id a199so15517800ywa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 04:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xoYjlvnioKJdWjqh1fvscub8avvNRWXM6KyaAxS+5ew=;
+        b=T+Od9APYbZT9h/NEKbYlrQhou6AMOsZa/xmnW11fAy0KEOadOuBQH2SaA6+A3zQzGG
+         c0EpmwMryptK8xs/grj4Onw8qlfnDv3wtJac3o14Isjcb8bR6sODgbA9FSMPjrEthOhC
+         CxiVnyq9lrYrorvxcQQvShoiVbBDzQuporOZQztCraT38jkF8uvPr4ueXUDYEshU+G08
+         vKc+1ckrrkBQ8rt4qU1S2MegT94p8mh9YmwgkobF3lU/4FahbXNTUp3KTX5qKdh+qhHq
+         uCYpsIFZkQKsZuWBPtQH5a1JDSj78tWfVp5dUsRReRBZKhY+QcoH+wWk+NLH6RMbxv/8
+         O6Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nfNx76vxw5o8cvcXHmGlsBwNAKsYgzGyz/rzkq8VcPY=;
-        b=rMWBadvOLF48YP6LuEcypWMxT42E7pdDZHtF7SjyRCFTzFniaARd541XQSlOs6kkSX
-         z/9CbR2syp07Mpn+NFn//haU5MGWMIab3cKxE+ojMlqjd5oWnWE9Ucxm3KNhEuMQRv93
-         3ruipanSF7c5r6XLjMHs0jnevE8FdDQOzT3NCQhLJuzu5RZX89Afp1fm4XE7FRuCI2pz
-         xM5N1V27HzxPIYL1OvgXjyRIVu6IsRZXl4Jdok6HTsYyPb8kavSBS/n9ugKOTCptwNJb
-         M1DbLRL1r3QZrzGFiLyDXWnDEx6l2Qmv2VEhrlufHbU/NX5bMs6MsKmU6Bhc1hlCsXr1
-         hEVw==
-X-Gm-Message-State: APjAAAVg14tu9RLoN9bZrgtc7GnrD2OEhtWrBLMzCGq7SZVE3tN9aSft
-        D0WH6VxJiK3tVN6BlXz6l/PKWjgm
-X-Google-Smtp-Source: APXvYqxYdFK16GVM3ag8QNToy/KR9H8ruifm0URA8AlT7LrjjPKzbGNqO27SJs52eIZBibuR6Ej8+w==
-X-Received: by 2002:a19:4c41:: with SMTP id z62mr12708071lfa.9.1552993704585;
-        Tue, 19 Mar 2019 04:08:24 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id b15sm2748635ljj.70.2019.03.19.04.08.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 04:08:23 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1h6CbT-00010H-9i; Tue, 19 Mar 2019 12:08:19 +0100
-Date:   Tue, 19 Mar 2019 12:08:19 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and
- compatibles
-Message-ID: <20190319110819.GB3178@localhost>
-References: <20190226170710.12709-1-mans@mansr.com>
- <20190227083342.GJ4747@localhost>
- <yw1xpnrdv3z7.fsf@mansr.com>
- <20190227131315.GO4747@localhost>
- <yw1xlg21uwrp.fsf@mansr.com>
- <20190319102840.GI6124@localhost>
- <yw1xd0mn16ev.fsf@mansr.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xoYjlvnioKJdWjqh1fvscub8avvNRWXM6KyaAxS+5ew=;
+        b=YyCBKRmJgbifxq0jNiXmEIdZFYGApvDxs7MdWbyGZfwKx+xloWVx9Dp74xkYKf8eiu
+         jtky4Vb52WIguX5WE8sgqJ0EYxmJJSuv/W2r9t0mmOtG2rwZm3bWzGQZU7nei+RJvyjc
+         E4TNirRV+viF16uMV1j6/0OaBGI3xbyEdeLo9OL4zaA58O/2vY/xZcgH/kykocxx8qI4
+         iKJn8rs+yhQ8QSxPQVmjrGP98gae4YFBjMgQTvwKpgltIs6p8POEpTvLqyuQLLYAaJCD
+         /X4P2htSz+PXtv3WBWc2XyNVmj/FwLSDnjQmdTL4AY0XVWswXrmS0LChGmFX76ghD5tX
+         svhQ==
+X-Gm-Message-State: APjAAAVteiqTqRvR7qD/NFGpGupL5u6D3RvaYk60fzIFB9clHWK9vOD2
+        M8Ue7wj2uuc+WTwp9RPwKH4hRhp7VXXHNxa4Fn0=
+X-Google-Smtp-Source: APXvYqytYlM3MCbBRqXUC3DiS+Lax0NJ8O7bmJLdVp7nj5h0ct5OMV7jdBzpel8C5dG2JQe7AcGDsfJCFQ2TS184hdU=
+X-Received: by 2002:a25:2d6b:: with SMTP id s43mr1359991ybe.68.1552993757842;
+ Tue, 19 Mar 2019 04:09:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yw1xd0mn16ev.fsf@mansr.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190319025755.15394-1-tsu.yubo@gmail.com> <20190319102216.ylrkd6vxm77pq553@shell.armlinux.org.uk>
+In-Reply-To: <20190319102216.ylrkd6vxm77pq553@shell.armlinux.org.uk>
+From:   Bo YU <tsu.yubo@gmail.com>
+Date:   Tue, 19 Mar 2019 19:09:06 +0800
+Message-ID: <CAKq8=3JYGYWOnJYaQg5eguMjTo2c+dcCdj0WcKp+t4Oy=eYUFA@mail.gmail.com>
+Subject: Re: [PATCH] drm: etnaviv: fix strncpy sizeof argument
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     l.stach@pengutronix.de,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        airlied@linux.ie, Daniel Vetter <daniel@ffwll.ch>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        open list <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?5LqO5rOi?= <yuzibode@126.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:54:00AM +0000, Måns Rullgård wrote:
-> Johan Hovold <johan@kernel.org> writes:
-
-> >> Regardless, setting the NCTRL flag should be harmless.
+On Tue, Mar 19, 2019 at 6:22 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Mar 18, 2019 at 10:57:55PM -0400, Bo YU wrote:
+> > Calling strncpy with a maximum size argument of 64 bytes on destination
+> > array "domain->name" of size 64 bytes might leave the destination string
+> > unterminated.
 > >
-> > Well, there are devices that depend on getting these requests, at least
-> > for the QMI interface. But we can always revert if anyone complains.
-> 
-> The QMI interface doesn't even pretend to be a uart.  The other ones do,
-> but there isn't actually any real uart behind them.  For instance, it
-> doesn't matter what baud rate one sets.
-
-Sure, but some devices still require "DTR" to be set for the QMI
-interface, so there not being any real uart is no guarantee that there
-is no firmware that expects these calls.
-
-Johan
+> > Detected by CoverityScan, CID# 1443992:  Memory - illegal accesses
+> > (BUFFER_SIZE_WARNING)
+> >
+> > Fixes: 9e2c2e2730126 (drm/etnaviv: add infrastructure to query perf counter)
+> > Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+> > ---
+> >  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > index 4227a4006c34..08ca3c44be48 100644
+> > --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > @@ -414,7 +414,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+> >
+> >       domain->id = domain->iter;
+> >       domain->nr_signals = dom->nr_signals;
+> > -     strncpy(domain->name, dom->name, sizeof(domain->name));
+> > +     strncpy(domain->name, dom->name, sizeof(dom->name));
+>
+> This introduces an overflow bug if sizeof(dom->name) >
+> sizeof(domain->name).  If both sizes are the same, then there is no
+> effect.
+Oops,It seems more worse than original code.
+>
+> strlcpy() would be a better replacement, it guarantees that the
+> destination will be correctly terminated.
+But there are too many strcpy like usage in kernel, Does it matter?
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
