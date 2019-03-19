@@ -2,88 +2,100 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97B9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F70EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEB62133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F49A204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:10:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QG3kAGNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfCSIJ6 (ORCPT
+        id S1727453AbfCSIKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:09:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59775 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSIJ5 (ORCPT
+        Tue, 19 Mar 2019 04:10:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39807 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSIKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:09:57 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h69ok-00082l-Ul; Tue, 19 Mar 2019 09:09:50 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h69ok-0006Ko-A2; Tue, 19 Mar 2019 09:09:50 +0100
-Date:   Tue, 19 Mar 2019 09:09:50 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v10 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Message-ID: <20190319080950.4nsgzvkz5iwbkb24@pengutronix.de>
-References: <1552909634-18757-1-git-send-email-yash.shah@sifive.com>
- <1552909634-18757-3-git-send-email-yash.shah@sifive.com>
- <20190318214640.ob2ldr3tpn2vsfkl@pengutronix.de>
- <CAJ2_jOHqGBB=eej6KkdspTNiCU_uJ8deHN3O=BQmyu=GtrTT7w@mail.gmail.com>
+        Tue, 19 Mar 2019 04:10:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id e13so6739917ioq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 01:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=55JpN7h5Cm1wdHGXAMw2S4e/Hdymfa+JelMv9Ti/sbE=;
+        b=QG3kAGNLbyq85ujdMaXiqMwjfehuwZ81+bJ8I9c/6v053fzGoNFXQ0ufhaMfDj0z1t
+         vQYBqbPlPuYDziKjUNgLZq5aeCc8/zsFCKebyzSVf4sMamzJGWc5IsNNpLKAf5fBRFUA
+         nCAJi5ULyolQX2LJ+2g9jbLk0yD+DfhRdHgvo0pDgBLrLJFHcyA5Y6z4p1KTjticyrWG
+         MLSO4XJjsV4NpyHHIEQ7UFkghKgRNM7TbCoUI/g3ZSpsuQxFogoY2VL+KgG+zqXkOgAa
+         5bvQ88aSvIK3P0AEtu5UFurBuCST9/+EMdTvqHGPrfYhgEyIJ0Owzg9W8YpEAl/Y7e1P
+         oL8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=55JpN7h5Cm1wdHGXAMw2S4e/Hdymfa+JelMv9Ti/sbE=;
+        b=TQ+Njz5RIvCURUo12Xbm3Z1ez5gsi3kjAUz4MtwqcdxCOlVMhzXHUuq4UlbuAkW1wF
+         5A5ab0BYyDMWJb6WRYTC2LAZqjMq22pw+WTWZyz4e/UOADXWW0cOVhaihU3OXc5GVb2F
+         owWGpdGvRaZA+TqhaMItl1HQPbjp9c/HEJ3bXQWsep+vSdZIMYnPCDcKug/JkSgqbX12
+         VS+jIqEmiU1luuDW9zLZMd1t+ufQ4TD0Z2fXXCOLjsZUXL8mwpEi3DlzaNdxag/VSBT5
+         GSkNQ00/24pTfn0n1AnKl8W0aP3TcLAumnwe7a+syjEdBjesbc+F2qensI8mqsD3MqJp
+         7z3Q==
+X-Gm-Message-State: APjAAAUmNN1LYEd1V+yymVuvKGY/T3GoH7ejglz3i9Xmd6tU0PzeBtiX
+        7omFFK5WjyoMYHFKf3JM/IolXuE0JJ0HCZZaaKUiMQ==
+X-Google-Smtp-Source: APXvYqz0I8yoSsJxT+RbjlzMYlv9ljXdxfdfr5YpAA4VQrUGhsoR8/0d1i8nTKGaDIjcB9urAVgrBwDD2z8iqLeox24=
+X-Received: by 2002:a5d:834a:: with SMTP id q10mr562496ior.271.1552983036690;
+ Tue, 19 Mar 2019 01:10:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ2_jOHqGBB=eej6KkdspTNiCU_uJ8deHN3O=BQmyu=GtrTT7w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <2a48dee7-b649-65a4-be5d-8b3374013cee@i-love.sakura.ne.jp>
+ <CACT4Y+ay7nuT-7y2JARozV1s0VisuLdN6VT+w9OsEDs1PeBRoA@mail.gmail.com>
+ <201903180527.x2I5RQVp009981@www262.sakura.ne.jp> <CACT4Y+bosgWpJ=s9_hQ-Jg_XJoSHR9S-zC3es-2F=FTRppEncA@mail.gmail.com>
+ <CACT4Y+aM0P-G-Oza-oYbyq2firAjvb-nJ0NX21p8U9TL3-FExQ@mail.gmail.com>
+ <20190318125019.GA2686@tigerII.localdomain> <CACT4Y+ZedhD+=-YyvphZvLCcCF3FM0YAjXX54K2kMkhNmV4axw@mail.gmail.com>
+ <20190318140937.GA29374@tigerII.localdomain>
+In-Reply-To: <20190318140937.GA29374@tigerII.localdomain>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 19 Mar 2019 09:10:25 +0100
+Message-ID: <CACT4Y+Z_+H09iOPzSzJfs=_D=dczk22gL02FjuZ6HXO+p0kRyA@mail.gmail.com>
+Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
+ panic - not syncing: panic_on_warn set ..."
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 12:52:12PM +0530, Yash Shah wrote:
-> On Tue, Mar 19, 2019 at 3:16 AM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Mar 18, 2019 at 05:17:14PM +0530, Yash Shah wrote:
-> > > +     val = PWM_SIFIVE_PWMCFG_EN_ALWAYS |
-> > > +           FIELD_PREP(PWM_SIFIVE_PWMCFG_SCALE, scale);
-> > > +     writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
+On Mon, Mar 18, 2019 at 3:09 PM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> On (03/18/19 14:42), Dmitry Vyukov wrote:
+> > > There is also SYSLOG_ACTION_CONSOLE_OFF, which disables logging.
 > >
-> > Starting with this write the new period length might be active with the
-> > previous duty cycle. Is this worth a comment? I think the window where
-> > this can actually happen should be made as small as possible, so it
-> > would be great to first calculate both register values and then write
-> > them in two consecutive writels.
-> 
-> The comment for this scenario has already been mentioned under the
-> limitation on top of this driver.
-> Anyway, I will try to implement your suggestion of consecutive writes
+> > That one I somehow figured earlier, here is the exact check:
+> > https://github.com/google/syzkaller/blob/61f9c92f3a465025d2b9d91f429aaec968aeaa2a/sys/linux/init.go#L152-L155
+>
+> OK, cool.
+> You probably would also want to add SYSLOG_ACTION_CLEAR to the list.
 
-Yeah, the comment at the top is for general information about the
-shortcomings. The comment here would be to say: The problem occurs *here*.
+It's not hard to add, but I would like to understand why exactly.
+syzkaller reads out console output from qemu, GCE VM, android phone
+all the time. So if something was already written and we read it out
+right away, it seems that clearing won't affect things. Does
+SYSLOG_ACTION_CLEAR affect only reading output via syslog syscall,
+/dev/something?
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+In some setups we read out output with "dmesg -w" (should stream
+output as well) in absence of a better solution. Will this be affected
+by SYSLOG_ACTION_CLEAR?
