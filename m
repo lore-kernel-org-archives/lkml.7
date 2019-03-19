@@ -6,62 +6,52 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A71C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DB9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753002146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F3F2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfCSUqr (ORCPT
+        id S1727415AbfCSUs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:46:47 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53312 "EHLO
+        Tue, 19 Mar 2019 16:48:27 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53332 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfCSUqq (ORCPT
+        with ESMTP id S1726627AbfCSUs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:46:46 -0400
+        Tue, 19 Mar 2019 16:48:27 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CAF0214691762;
-        Tue, 19 Mar 2019 13:46:45 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 13:46:45 -0700 (PDT)
-Message-Id: <20190319.134645.1866261157636933653.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     idosch@mellanox.com, alexander.h.duyck@intel.com,
-        tyhicks@canonical.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] net-sysfs: call dev_hold if kobject_init_and_add
- success
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 49A0714691772;
+        Tue, 19 Mar 2019 13:48:26 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 13:48:25 -0700 (PDT)
+Message-Id: <20190319.134825.713783757593858293.davem@davemloft.net>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, sameo@linux.intel.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: Fix to check for kmemdup failure
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190319021653.2584-1-yuehaibing@huawei.com>
-References: <20190319021653.2584-1-yuehaibing@huawei.com>
+In-Reply-To: <20190319031944.18984-1-pakki001@umn.edu>
+References: <20190319031944.18984-1-pakki001@umn.edu>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Mar 2019 13:46:46 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Mar 2019 13:48:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Haibing <yuehaibing@huawei.com>
-Date: Tue, 19 Mar 2019 10:16:53 +0800
+From: Aditya Pakki <pakki001@umn.edu>
+Date: Mon, 18 Mar 2019 22:19:44 -0500
 
-> From: YueHaibing <yuehaibing@huawei.com>
+> In case of kmemdup failure while setting the service name the patch
+> returns -ENOMEM upstream for processing.
 > 
-> In netdev_queue_add_kobject and rx_queue_add_kobject,
-> if sysfs_create_group failed, kobject_put will call
-> netdev_queue_release to decrease dev refcont, however
-> dev_hold has not be called. So we will see this while
-> unregistering dev:
-> 
-> unregister_netdevice: waiting for bcsh0 to become free. Usage count = -1
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: d0d668371679 ("net: don't decrement kobj reference count on init failure")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Applied and queued up for -stable.
+Applied.
