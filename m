@@ -2,149 +2,96 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA77C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64136C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BF42077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLf3fEdd"
+	by mail.kernel.org (Postfix) with ESMTP id 23F692077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfCSWaS (ORCPT
+        id S1727116AbfCSWc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:30:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42319 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfCSWaR (ORCPT
+        Tue, 19 Mar 2019 18:32:56 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:47046 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCSWc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:30:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p6so191547pgh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1ihOMB6tDzEVpgHcmcETXwu68mh/dUNctOqaps6UdPQ=;
-        b=oLf3fEddkJv3m4cXDJyXbNexoEZnAZPnc0Y1dxXaKnfAbgeBxVA+IcE0KvEsBqHoLw
-         W3z6XGjPMO2XzwUrqIuS9UhFHe7GyjE/WCTLjQnnUOfRIjGL2FtUf4uNze2wGI9icT4k
-         Cwq12/W23/0YLmHTckgEtwg8wihBQu4IqSLkc7trVASKaQbEuHlxpvAhED9DHSZx01R7
-         eQLaEbHQdbSwaNpfm5gcing69ezM50kcDU2DiBo09Dbe6TyzptizgEGoVjGudLnt7v5V
-         Hi2Z6eRectmj5bWKW2TQpDoc9zwEf24uSuZoF4TOjMQgM7hvJNw+jym76KJDUj4nNmYM
-         T6AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1ihOMB6tDzEVpgHcmcETXwu68mh/dUNctOqaps6UdPQ=;
-        b=L2hi+sPzlDPbzGKjABRu4fL6wFSU1lWiDrXMhC3yzcLYrwJl7Z5Jsx3AHGGDs1Z3IS
-         o22eJ+yOvv0E4zrKAgWG2iY/YzfUgpcLHCZji4fOrQvrj/L+r0OSVr6vrECujzCv3Dst
-         AneWeER4oAfgG0Cpyvlszwb8/pa2zJ9JorG0zEi+fskiJUYtmg918KMGLSO4MhF8+5s7
-         v6QzViCAyBTVXwPrj/yEO96IoaYxbpXL+Rq0Uqm0dk4fMgKsIHnNEJ1SPzaEujuaID4d
-         9YQE1MgLR1X/wdQxIoBarDGOgfDrdCFUxLXA/qV4R+9S9+J8iMwc5OktpeDPMpFvBdxq
-         UfMg==
-X-Gm-Message-State: APjAAAU2YDDw/RbfolGSeOpdZCX7VKfjpT5MzaDXnikz2Z9SqfD6wyeU
-        XXxcfQMap4hVVv+h5XViROCA8g==
-X-Google-Smtp-Source: APXvYqxUcbamGUbqDXKB5i6Nu6No79qCWq2b2Ukg75KJdTrYg4JfzfLZ7d6B/7ofMVhbtn/nDEysBg==
-X-Received: by 2002:a65:6498:: with SMTP id e24mr4020537pgv.346.1553034616957;
-        Tue, 19 Mar 2019 15:30:16 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id l84sm103253pfb.113.2019.03.19.15.30.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 15:30:16 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 16:30:14 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Solomon Tan <solomonbstoner@protonmail.ch>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: Re: [PATCH] perf tools: Add missing case value
-Message-ID: <20190319223014.GA22834@xps15>
-References: <3nn0Oz_O4h6XtTJG1laQxwROZTgcDRxgu5Cq-bAgZNZsSDHYZzofDlIOMhBzkh1KAXok8Ekqk9Ev68umhEZPS7SyRgoJ-eA02GFC2QNbaLs=@protonmail.ch>
+        Tue, 19 Mar 2019 18:32:56 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 1BDF872CCAC;
+        Wed, 20 Mar 2019 01:32:53 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 0E1F27CC74C; Wed, 20 Mar 2019 01:32:53 +0300 (MSK)
+Date:   Wed, 20 Mar 2019 01:32:53 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [RESEND PATCH] ptrace: take into account saved_sigmask in
+ PTRACE_{GET,SET}SIGMASK
+Message-ID: <20190319223252.GA19424@altlinux.org>
+References: <20190319191957.27156-1-avagin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3nn0Oz_O4h6XtTJG1laQxwROZTgcDRxgu5Cq-bAgZNZsSDHYZzofDlIOMhBzkh1KAXok8Ekqk9Ev68umhEZPS7SyRgoJ-eA02GFC2QNbaLs=@protonmail.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190319191957.27156-1-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Solomon,
 
-On Tue, Mar 19, 2019 at 04:11:37PM +0000, Solomon Tan wrote:
-> This patch fixes the following error message during compilation of `tools/perf`, as seen in https://github.com/Linaro/OpenCSD/issues/17.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The rule for changelogs is the same as it is for patches, i.e lines should be
-wrapped at 80 characters.  Also it is not a good idea to reference a github
-issue since it is bound to disappear over time.  Just mentioning you
-encountered a compilation error will do just fine.
+On Tue, Mar 19, 2019 at 12:19:57PM -0700, Andrei Vagin wrote:
+> There are a few system calls (pselect, ppoll, etc) which replace a task
+> sigmask while they are running in a kernel-space
+>=20
+> When a task calls one of these syscalls, the kernel saves a current
+> sigmask in task->saved_sigmask and sets a syscall sigmask.
+>=20
+> On syscall-exit-stop, ptrace traps a task before restoring the
+> saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
+> PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
+> saved_sigmask, when the task returns to user-space.
+>=20
+> This patch fixes this problem.  PTRACE_GET_SIGMASK returns saved_sigmask
+> is it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
 
-> 
-> ```
->   CC       util/intel-pt-decoder/intel-pt-log.o
->   CC       util/cs-etm-decoder/cs-etm-decoder.o
-> util/cs-etm-decoder/cs-etm-decoder.c: In function ‘cs_etm_decoder__buffer_range’:
-> util/cs-etm-decoder/cs-etm-decoder.c:370:2: error: enumeration value ‘OCSD_INSTR_WFI_WFE’ not handled in switch [-Werror=switch-enum]
->   switch (elem->last_i_type) {
->   ^~~~~~
-
-The above is over 80 characters but it should be kept that way because this is
-what you got from the compiler.
-
-
->   CC       util/intel-pt-decoder/intel-pt-decoder.o
-> cc1: all warnings being treated as errors
-> ```
-> 
-> Signed-off-by: solomon-ubuntu <solomonbstoner@protonmail.ch>
-> ---
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index 8c155575c6c5..2a8bf6b45a30 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -374,6 +374,7 @@ cs_etm_decoder__buffer_range(struct cs_etm_decoder *decoder,
->  		break;
->  	case OCSD_INSTR_ISB:
->  	case OCSD_INSTR_DSB_DMB:
-> +	case OCSD_INSTR_WFI_WFE:
-
-Perfect.
-
-Because we are using an enumeration that can only be found in version 11 of the
-library, compiling with version 10 will also give us an error.  As such we need
-to bump the mandatory version number in "tools/build/feature/test-libopencsd.c".
-
-Your next revision should read [PATCH v3], because it will be the third
-iteration of it.
-
-Mathieu
-
->  	case OCSD_INSTR_OTHER:
->  	default:
->  		packet->last_instr_taken_branch = false;
-> -- 
-> 
-> 2.17.1
+If it's not too late, could somebody tweak the commit message so that
+PTRACE_GET_SIGMASK becomes PTRACE_GETSIGMASK and "is it's set" is changed
+to "if it's set", please?
 
 
+--=20
+ldv
 
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJckW4UAAoJEAVFT+BVnCUItfsP/R6/j0iRF6lVA67Vlb3yafBM
+w5nk7j1eV0Pm/gKALaGVrB6rwJC7ghD05S64uqca9vX8oKJLSTayP6e3Xy1WqP1c
+EymLkosU9869M95+3EN/zfKyRUzrVOdvSdMNgl1WGMRSs3txCub3PuWJ8QHq6EBi
+bCzLbK5V15tJs3yOn/yqR3AXKLvt+/ZVWhHUHkbf/DcMMYs3Ycjt6BSM27pExvg9
+rDxPoxtEC63bzgDSSY3fbaFbRScGS1X2Pl+PNiCaTCuyP+oULXLDPPXExZDHZTP2
+hsS7ID5FIXhYAzLfvrN9tRQmqHC+fQdDMIDf15zUKl8XaoCwnf43gyNZPWIxTe+H
+k7/UIoOBHYPD50HX9+al7S1QfGX2E7fyinmBl0mT+X9eMORxNoWFMbI3WmmJZkDE
+ZR/weOis2GpeDtev+aBOTS9k0csY6/hhVFtC8/OULHExr01EdImA37NKlkQbwXEq
+HKW7b60sPqSVeYAoF5o00UjfzTL/eAHxSJWI/2/6XfHhbde6XzDfuPEwuBU6bC+O
+XIRLV1EShd64cgfaskThMMivjB3gnJpaukC01MfzUJi+xZWAzdnJme56kJ5xS12j
+OtgL3Zv9V18Nq/SIOlE2bIIQKYFMZopM/b4Y70tKA4R2swNFSzmcxRli7YgxY09i
+umENVJldGMUEyoVrGYTV
+=29F8
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
