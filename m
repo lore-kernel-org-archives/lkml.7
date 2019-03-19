@@ -2,121 +2,98 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ECBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6124CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB90E20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C70B20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="geqOPfn2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ke5ruura"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfCST3H (ORCPT
+        id S1727237AbfCSTdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 15:29:07 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:59690 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfCST3G (ORCPT
+        Tue, 19 Mar 2019 15:33:52 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39565 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCSTdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 15:29:06 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 2520DA47
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 19:29:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id g5KKR0P5l8KZ for <linux-kernel@vger.kernel.org>;
-        Tue, 19 Mar 2019 14:29:04 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id E1524630
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 14:29:04 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id e72so10938601iof.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:29:04 -0700 (PDT)
+        Tue, 19 Mar 2019 15:33:51 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t28so23588558qte.6;
+        Tue, 19 Mar 2019 12:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=y/tB3Hj9rCjdWkHuo74jSL5n65DGfxsSA5Xnf+8aO4I=;
-        b=geqOPfn2EaHcJZStz/LV3xZjCFQt16R7G4X5Zm5KEPSzuIebs2Cb4hGeICxgsuPdeN
-         wK48CCea8/KZEO8Rfk7s1d0qbNczno9jVTB0Nb2mXRBX/ui3lYw+6CNOiWLJP+RU+AuZ
-         IFGMiIx81NJqyFYmBTmdUrG3Zt9SYcay7R8xoTAUufVjbBIt5VnE9zBVLLV6Q7Z8mX4y
-         TDEvsPNUWW8e0Nz4VF7/u4l5BPE6DPpzRhHhSYZaVcm/Ws8XFewBcw9/uFAq/8WYf1F5
-         evIX3heZU7UxgdjRVkNiWxRwN0o2gFPKmzPR3z/40v4o4+4z9vymcK7Jz4yLWJfavGkT
-         fiFA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VDy6gkd9L4loaZEot7GoaFR+pmnyWSvVlrzb6EJpcVQ=;
+        b=ke5ruura3de485lapj5+CBOjLmjwsS0gp/snVbxt0cNVfeh1FHoBdH/lyD2gsf8CHQ
+         uHmrPvUN6SDGzkPdB6P1u92ZgSR6a+69TfNd9i0cWqchW3iJLIht8jHJDj+H+CBnppjx
+         A0bVdo3RIbatBNtcoPmvz4MLccaE6lbeFdNThY/5vSigLWs+st8ETcRDJqBj141jRXEW
+         qAqumwbQKwXSIIvSM1HTPYEkEyCFHtbDk+nQ3pPsne5jBIPm4TbcjVGnZPy0bkyRFpdB
+         kUBU007YbutmvjRkgnuujwR3ZqS01dRF0/wZdBhlJLqPIg4u0QvOD4yJTVUZ4WAef4YM
+         Q0oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y/tB3Hj9rCjdWkHuo74jSL5n65DGfxsSA5Xnf+8aO4I=;
-        b=Z4qEsya1nQ4oBzFCVtAMvjwq15P03urL8WkEp0ogQdLFZXkpsGLOO9fwW5CKP02hcW
-         A+iJuCZfSX91FuWomQBKuWNIUh7ofWllyUdZ/EKplZigb0wJDdxRNUGTIb3r9Qh2RWzQ
-         lUK3P+J6H2hi5C1OzcIzELcow7hKDf8P2O8Paw5qdb/t7gx5qgLj2w39v4KxZwkoaHkl
-         2rHKqeq/4o92Mu8WCTHdDvJodRAiYU/RSryep1R42Re8vEmUlvlR9WX4t4r2qvzp7WZI
-         Ic7hyCrlcNoAfFjPEY2AI9eh2CW2w7CmFEFEQOgW9d8WQndyO8thJ9t1Qa0uBIEC/vkp
-         6KIA==
-X-Gm-Message-State: APjAAAUIz0mKJA3BRNyFKjz1e0VlFv38gIjTNj/sYZhkxAXvksXZ2a5n
-        q8/k81BKNqp93oK+4WaPM4U/7e9o4k7V415yE3JYYRXkwSMWRLPCfAkYur/CYWjCTOQvQ1Kutal
-        /mFaiCgJe4/EbjNfFwafjm7L54dpb
-X-Received: by 2002:a24:2a88:: with SMTP id w130mr2333912itw.95.1553023744478;
-        Tue, 19 Mar 2019 12:29:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwNlpf0smzKoTRFb1YFWT+g00Ru5l27rylxL/XHr3miOZ0EVPMfhEbf/gLMU1ts+mDovsELxw==
-X-Received: by 2002:a24:2a88:: with SMTP id w130mr2333896itw.95.1553023744290;
-        Tue, 19 Mar 2019 12:29:04 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id k2sm6407239ion.11.2019.03.19.12.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 12:29:03 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Alessandro Rubini <rubini@gnudd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fmc: fix to avoid NULL pointer dereference
-Date:   Tue, 19 Mar 2019 14:28:59 -0500
-Message-Id: <20190319192859.15290-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VDy6gkd9L4loaZEot7GoaFR+pmnyWSvVlrzb6EJpcVQ=;
+        b=pk7srKgcBa+HnREs7t2rknn1m/z7bwJnUyQKkDourXRkhweh87f5BLmjSY8gWAmDKQ
+         uw9aFY/Jwjht5wRUselmxOq5Q+9XrshsTqJyG8sA1R2AIIpp7JQiIco5Rct37otCm0CD
+         LlQoysOtsc+KadD6sJQGkDnlbwk8UNhUME8v/Fo0c51mz4LMNIylUDgbIImbRetesguQ
+         LH13/2vTOYoDZhPWKYuiOEIkgZ8VItviFGg1Gk731IaCjLI5sK7gtJqiKHlJTjjwOBd+
+         HK/sJUNldUDFdwm/u/zToTT7tY/OiByjXEZgvMdsdXSl5PivSy0lP/ZPjm5kSKyUpHWM
+         o4eQ==
+X-Gm-Message-State: APjAAAUuqp43yTq47ePv0eHMC/mjp7YqF6K5sqe4E/ToeUfAQ6/j8sm6
+        RQRphrYhNYwPtzSDwDOKff3ZrLJO
+X-Google-Smtp-Source: APXvYqxZkzarALvolyrbLHxywFHoLE0BQ8hBgKM8X6uSpAeIbN+qfxDnb5qk46o2lmjJUqVU1WM58g==
+X-Received: by 2002:ac8:1be6:: with SMTP id m35mr3456897qtk.258.1553024030521;
+        Tue, 19 Mar 2019 12:33:50 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id k33sm8510651qte.8.2019.03.19.12.33.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 12:33:49 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 528FC4039C; Tue, 19 Mar 2019 16:33:46 -0300 (-03)
+Date:   Tue, 19 Mar 2019 16:33:46 -0300
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/10] perf, tools, stat: Avoid memory overrun with -r
+Message-ID: <20190319193346.GN3029@kernel.org>
+References: <20190314225002.30108-1-andi@firstfloor.org>
+ <20190314225002.30108-2-andi@firstfloor.org>
+ <20190319191452.GM3029@kernel.org>
+ <20190319192023.GX24002@tassilo.jf.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319192023.GX24002@tassilo.jf.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup can fail to allocate memory and result in a NULL pointer
-dereference. The patches avoids such a scenario.
+Em Tue, Mar 19, 2019 at 12:20:23PM -0700, Andi Kleen escreveu:
+> > mmap size 8192B
+> > perf: util/evlist.c:533: perf_evlist__id_add: Assertion `evsel->ids < evsel->sample_id->max_x * evsel->sample_id->max_y' failed.
+> 
+> I suspect this is a latent bug just caught by my assert.
+> 
+> So it was already broken.
+> 
+> You could of course remove the assert, but it would merely
+> hide it.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/fmc/fmc-fakedev.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I'm removing it just for the moment, I'll definetely revisit this.
 
-diff --git a/drivers/fmc/fmc-fakedev.c b/drivers/fmc/fmc-fakedev.c
-index 941d0930969a..d634c901b4f3 100644
---- a/drivers/fmc/fmc-fakedev.c
-+++ b/drivers/fmc/fmc-fakedev.c
-@@ -282,6 +282,8 @@ static struct ff_dev *ff_dev_create(void)
- 	for (i = 0; i < ff_nr_dev; i++) {
- 		fmc = kmemdup(&ff_template_fmc, sizeof(ff_template_fmc),
- 			      GFP_KERNEL);
-+		if (!fmc)
-+			goto rollback;
- 		fmc->hwdev = &ff->dev;
- 		fmc->carrier_data = ff;
- 		fmc->nr_slots = ff_nr_dev;
-@@ -294,6 +296,12 @@ static struct ff_dev *ff_dev_create(void)
- 		ff_template_fmc.device_id++;
- 	}
- 	return ff;
-+
-+rollback:
-+	for (i--; i >= 0; i--)
-+		kfree(ff->fmc[i]);
-+	kfree(ff);
-+	return ERR_PTR(-ENOMEM);
- }
- 
- /* init and exit */
--- 
-2.17.1
-
+- Arnaldo
