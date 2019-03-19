@@ -2,105 +2,115 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA033C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C29C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9014A213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="V4rtM+Am"
+	by mail.kernel.org (Postfix) with ESMTP id A10662146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553001223;
+	bh=0ScjT3AT/QiQulqfdAIfBTI5mEuso9T5dQjPP8NH8i0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=R3y18J76VtP81EHTlMc4X5xASVcF43ESOddgpLp7Wi5NyhlLfqFoPl1tW1bLW8Dgt
+	 qgTEzqB1NApQaBJIn89k3bPfdhUNMXLYBCPJyovlFusoZrmziR5PlxA+B94A6G3uK6
+	 bdd5LLqRxooKx/YNMIedRkbIrzN8C2mdU/A5ooxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfCSNL0 (ORCPT
+        id S1727073AbfCSNNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:11:26 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:45039 "EHLO mail1.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCSNL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:11:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1553001085; x=1584537085;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=YZ4J5UTncLJ/PTFt2yYwAjChO7oWMvH/+rMsTnRSgfw=;
-  b=V4rtM+AmerDXPPGQIeVtvjSqr6XaqAIG2LBM0vwmVgUpYkOtd/0Mue79
-   FbCjwInPRAvGKWJXEHuZ6U7Efhdrw0BV8xJ0xvAGjKYbVxOycB6fFDlFr
-   Auppo1Atvax65Z06Yve1+F3vC60+8F++1qLNA9dVjgh/Lsa4xZ/Vg7LuM
-   xpd7UPIvEd8Ab+o50kG4jl85/d+yTd94zwl6i2edPih8qW1F8G4MLpu4M
-   J8j6cPt5NKXEZ7PQKFnaY757lbI9wmRxlfZJHD4m7ZG6C+Fh169HrLkON
-   yTyOmVgX0ieZY2T4k03Zoz9RT8z07oIpvegTkJCSoLMMELfmKauJBN9zQ
-   Q==;
-IronPort-SDR: 5j2gXmfIar4y/PK4X+4aMPH0oLHne63aFz8r1AihWn59PVIvIuiYdsJYaat5I7hg1rSjjyQl0T
- iVQmYhbo47DUcX8Ousg9Pr8sl7+eqmkl69PMMkL3zIR6UamJFjK+kuIwDekHG5K0uaGZPPcHah
- Oiz9p4mXVnSucZSlrPuM6CKwFhoHj7kyn73v0/bhQqbRlJFwJWfCrw6LDs4nEaxcsmNWx9HTgF
- 40LzYNyWzlRrlSrA1JiP4oHNb0eYs4SKdSGbLlmq1rOVWhlHSY/uF1DICln9UrI4SVcPo38ml7
- zag=
-X-IronPort-AV: E=Sophos;i="5.58,498,1544482800"; 
-   d="scan'208";a="15841402"
-Subject: Re: [PATCH] usb: usb251xb: fix to avoid potential NULL pointer
- dereference
-To:     Aditya Pakki <pakki001@umn.edu>
-CC:     <kjlu@umn.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190318235605.11055-1-pakki001@umn.edu>
-From:   Richard Leitner <richard.leitner@skidata.com>
-Message-ID: <3579fc19-dde7-968b-3918-39f1cc4ee3bc@skidata.com>
-Date:   Tue, 19 Mar 2019 14:11:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190318235605.11055-1-pakki001@umn.edu>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.111.22]
-X-ClientProxiedBy: sdex5srv.skidata.net (192.168.111.83) To
- sdex5srv.skidata.net (192.168.111.83)
+        Tue, 19 Mar 2019 09:13:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48772 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfCSNNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:13:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=dp45jNXyoYbfR1g7f0VLfv9Vj5pIyWjumGy63fsWeuI=; b=RyRoK0l2Kbkj
+        Yhsjw9AH0qKWcKGkpdRsg5uMIRk7Y5MPNKiBMAXElTDuHESTiqfG1LoHqULFdKPFIEx69jXn7spem
+        mIqF+uz4ngFF7yZ07RSbUxy+nYWox7dquVUPRlhWY7kwimrSompDjvw5bMpzKrZ0U5urS6/Yiudui
+        qRYKU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h6EYk-00039U-4M; Tue, 19 Mar 2019 13:13:38 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 9905511288DF; Tue, 19 Mar 2019 13:13:37 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regmap: debugfs: Replace code by already existing function" to the regmap tree
+In-Reply-To: 
+X-Patchwork-Hint: ignore
+Message-Id: <20190319131337.9905511288DF@debutante.sirena.org.uk>
+Date:   Tue, 19 Mar 2019 13:13:37 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019 00:56, Aditya Pakki wrote:
-> of_match_device in usb251xb_probe can fail and returns a NULL pointer.
-> The patch avoids a potential NULL pointer dereference in this scenario.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->   drivers/usb/misc/usb251xb.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-> index 4d72b7d1d383..fe5266dc8864 100644
-> --- a/drivers/usb/misc/usb251xb.c
-> +++ b/drivers/usb/misc/usb251xb.c
-> @@ -612,6 +612,8 @@ static int usb251xb_probe(struct usb251xb *hub)
->   							   dev);
->   	int err;
->   
-> +	if (!of_id)
-> +		return -ENODEV;
+The patch
 
-Hi Aditya,
-thanks for finding this issue!
+   regmap: debugfs: Replace code by already existing function
 
-Nonetheless I'd prefer to change this to not return here but rather do 
-something like:
+has been applied to the regmap tree at
 
-	if (np && of_id) {
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
-So we still may bring up the hub in its default config in scenarios 
-without dt/of...
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Any comments/objections on that?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-regards;Richard.L
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
->   	if (np) {
->   		err = usb251xb_get_ofdata(hub,
->   					  (struct usb251xb_data *)of_id->data);
-> 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From a1c67d65df0b5a3858741a144cd43f8e62c5c175 Mon Sep 17 00:00:00 2001
+From: Lucas Tanure <tanureal@opensource.cirrus.com>
+Date: Tue, 19 Mar 2019 09:41:32 +0000
+Subject: [PATCH] regmap: debugfs: Replace code by already existing function
+
+Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap-debugfs.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 19eb454f26c3..648779e6df88 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -219,10 +219,7 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 	start_reg = regmap_debugfs_get_dump_start(map, from, *ppos, &p);
+ 
+ 	for (i = start_reg; i <= to; i += map->reg_stride) {
+-		if (!regmap_readable(map, i) && !regmap_cached(map, i))
+-			continue;
+-
+-		if (regmap_precious(map, i))
++		if (!regmap_printable(map, i))
+ 			continue;
+ 
+ 		/* If we're in the region the user is trying to read */
+-- 
+2.20.1
+
