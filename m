@@ -2,80 +2,86 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D860C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73771C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062972064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FC22064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfCSQfw (ORCPT
+        id S1727554AbfCSQgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:35:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35450 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSQfw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:35:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j5so14099666pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:35:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=j8iCJ0cMpwgCdtoCoT1ZKVV69uNY2z7tYXnK+yTMauY=;
-        b=OjXQagzAASdjJ4FuVeOYG6tP4n16irtq9dByXJWmR1qVFGMsDnR1ENXTCqDNSIvuod
-         x7sSM2s+qSoC/V8qDl0l1MNb6u5Xc4IVRxbs+Tg1D8kducy9BTLwGUYI5lSzr5hn33Ch
-         8x2Cz/+2mAvM9jcNNA+QfbTT0yxTaWnZOEyrxK1ECm2/trZePj9a5mMuuAk06Uc2gf4Q
-         qnjjWFtgLjeb/C6G4uFtaYOOE5THGqKfhG0qXTIysaBfSHx1to5BVdb9OwOZtf6Ge3N9
-         lmhRnfouWDEQYC71Btudr5Z9H84JlyEPWyo9UIGCbCjFbMam93PoZ1U17ASMUvllCD3A
-         6JDw==
-X-Gm-Message-State: APjAAAWgZDZYpI6rCrHp+6XpWTlGfRiOckXpK62QasJuJfJzmP9wHAU6
-        Ofslr2P6wKupJ7R9WG4z+zE=
-X-Google-Smtp-Source: APXvYqybijhsdaOeWxqe46FOX6D1SVHDYnCpGh8SSVbcAbwiWjBXwhVZpQG8XMCqKhuQUUi7B7QKEw==
-X-Received: by 2002:aa7:8384:: with SMTP id u4mr2757410pfm.190.1553013351630;
-        Tue, 19 Mar 2019 09:35:51 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id b15sm25416390pfj.167.2019.03.19.09.35.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 09:35:50 -0700 (PDT)
-Message-ID: <1553013349.65329.0.camel@acm.org>
-Subject: Re: [PATCH v2 07/19] locking/lockdep: Update obsolete struct field
- description
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Yuyang Du <duyuyang@gmail.com>, peterz@infradead.org,
-        will.deacon@arm.com, mingo@kernel.org
-Cc:     ming.lei@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 19 Mar 2019 09:35:49 -0700
-In-Reply-To: <20190318085733.3143-8-duyuyang@gmail.com>
-References: <20190318085733.3143-1-duyuyang@gmail.com>
-         <20190318085733.3143-8-duyuyang@gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Mar 2019 12:36:32 -0400
+Received: from sauhun.de ([88.99.104.3]:46062 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfCSQgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:36:32 -0400
+Received: from localhost (p5486CE21.dip0.t-ipconnect.de [84.134.206.33])
+        by pokefinder.org (Postfix) with ESMTPSA id A74A02C3F83;
+        Tue, 19 Mar 2019 17:36:28 +0100 (CET)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/1] staging: media: imx: imx7-mipi-csis: simplify getting .driver_data
+Date:   Tue, 19 Mar 2019 17:36:22 +0100
+Message-Id: <20190319163622.30607-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 16:57 +-0800, Yuyang Du wrote:
-+AD4  struct lock+AF8-chain +AHs
-+AD4 -       /+ACo see BUILD+AF8-BUG+AF8-ON()s in lookup+AF8-chain+AF8-cache() +ACo-/
-+AD4 +-       /+ACo
-+AD4 +-        +ACo irq+AF8-context: the same as irq+AF8-context in held+AF8-lock below
-+AD4 +-        +ACo depth:       the number of held locks in this chain
-+AD4 +-        +ACo base:        the index in chain+AF8-hlocks for this chain
-+AD4 +-        +ACo-/
-+AD4         unsigned int                    irq+AF8-context :  2,
-+AD4                                         depth       :  6,
-+AD4                                         base        : 24+ADs
+We should get 'driver_data' from 'struct device' directly. Going via
+platform_device is an unneeded step back and forth.
 
-Have you considered to use the kernel-doc style for documenting these
-structure members?
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
-Thanks,
+Build tested only. buildbot is happy.
 
-Bart.
+ drivers/staging/media/imx/imx7-mipi-csis.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index 2ddcc42ab8ff..44569c63e4de 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -1039,8 +1039,7 @@ static int mipi_csis_probe(struct platform_device *pdev)
+ 
+ static int mipi_csis_pm_suspend(struct device *dev, bool runtime)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
++	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
+ 	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+ 	int ret = 0;
+ 
+@@ -1064,8 +1063,7 @@ static int mipi_csis_pm_suspend(struct device *dev, bool runtime)
+ 
+ static int mipi_csis_pm_resume(struct device *dev, bool runtime)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
++	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
+ 	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+ 	int ret = 0;
+ 
+-- 
+2.11.0
+
