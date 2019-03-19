@@ -2,494 +2,342 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4608BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C38C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33B2217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IDJLNf7y"
+	by mail.kernel.org (Postfix) with ESMTP id 9B8702085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfCSWAY (ORCPT
+        id S1727412AbfCSWGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:00:24 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36167 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbfCSWAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:00:22 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h18so9635622wml.1;
-        Tue, 19 Mar 2019 15:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w2XSCB6pbSoqCmk4AB1xIf/wFsjrxIhmtQekLeAUKQc=;
-        b=IDJLNf7yznk8cQ3EKrwA3kC4rNOJVZBqpLFy5kwI5qOKzhx6uOuFNesVj0kayMOqOp
-         Plz93HqxYFgp1HKmZPNcYq7qpklQ8Zo9/rRBSmkTPfWS08ZdWcZw3ENBr23Di8YT2O3P
-         em3XlM+T5i1Xn2y+b493yqknLltC4LNSI2BV+G1G2gBljEp1EHk8alsxJxl7sck93P51
-         xkHmnFjQ0C0bU524MaGmT3yT8Ov1d74wVqs4K8U3rwmdLlxFUuFLxA6YN+GLQIfhis5g
-         ubEeh0orxCU3BSqYuwFwF9Lv5emvofP2UTVey5QAFanfN00XfYu6cw3vptOO6q43U5AU
-         naow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w2XSCB6pbSoqCmk4AB1xIf/wFsjrxIhmtQekLeAUKQc=;
-        b=DwKAm0Wl355n+kjf2MdmQcTSPzMZNHeJG2Y6goRItIMWXLM7ENNLUL4OTxCM2uvFuL
-         e4G5p5Nb+EW+XiN1iUAQ1uqvYUVEtOcX5cxOVVZMbT8JkCdbzIDeddKD+5NAQ/+umq2H
-         pdv23A7bhm3S3H7agsC7FldEZ+m6v6xZ/6sxCZjvUtmSHWhRR41XwzHyQbi43EFESNHB
-         NglV9epPF+ejwffxjJbiVuCmFl1PRG1bYbmZCet80r/qhMddu59u0aeiy3VM/pfnzDzX
-         mnjQgq8uDS4Se1uaL01XZa6zKklD1oYTcH3FJ/huXALm8oKi8v1fg6oev+sK6rpa4TOo
-         WycQ==
-X-Gm-Message-State: APjAAAWGO8BIkJs5tyYeD28bZZki2l2eQgdm8OwcPfh4kWAnDsaug3nk
-        jiHNl+09tfEjBCy1Xt2fmRg=
-X-Google-Smtp-Source: APXvYqxOo5gv0+NQjUBZIf71kaGq0EtpUIGemhebsJklSR+dQXXrTnkve7P5b3rg1v2k+LjlXsVVbw==
-X-Received: by 2002:a7b:c382:: with SMTP id s2mr5298026wmj.56.1553032819373;
-        Tue, 19 Mar 2019 15:00:19 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300DCD739990039EE738515149D3E.dip0.t-ipconnect.de. [2003:dc:d739:9900:39ee:7385:1514:9d3e])
-        by smtp.googlemail.com with ESMTPSA id t2sm188762wra.9.2019.03.19.15.00.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 15:00:18 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] clk: meson: meson8b: add the video decoder clock trees
-Date:   Tue, 19 Mar 2019 23:00:12 +0100
-Message-Id: <20190319220012.31065-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
-References: <20190319220012.31065-1-martin.blumenstingl@googlemail.com>
+        Tue, 19 Mar 2019 18:06:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727000AbfCSWGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 18:06:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 887FD89C33;
+        Tue, 19 Mar 2019 22:06:53 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 240224D9F7;
+        Tue, 19 Mar 2019 22:06:40 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 18:06:38 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     containers@lists.linux-foundation.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+Cc:     nhorman@tuxdriver.com, dhowells@redhat.com, ebiederm@xmission.com,
+        simo@redhat.com, eparis@parisplace.org, serge@hallyn.com
+Subject: Re: [PATCH ghak90 V5 00/10] audit: implement container identifier
+Message-ID: <20190319220638.4hc5jnelb6wwmsid@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1552665316.git.rgb@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 19 Mar 2019 22:06:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the four video decoder clock trees.
+On 2019-03-15 14:29, Richard Guy Briggs wrote:
+> Implement kernel audit container identifier.
+> 
+> This patchset is a fifth based on the proposal document (V3)
+> posted:
+> 	https://www.redhat.com/archives/linux-audit/2018-January/msg00014.html
+> 
+> The first patch was the last patch from ghak81 that was absorbed into
+> this patchset since its primary justification is the rest of this
+> patchset.
+> 
+> The second patch implements the proc fs write to set the audit container
+> identifier of a process, emitting an AUDIT_CONTAINER_OP record to announce the
+> registration of that audit container identifier on that process.  This patch
+> requires userspace support for record acceptance and proper type
+> display.
+> 
+> The third implements reading the audit container identifier from the proc
+> filesystem for debugging.  This patch wasn't planned for upstream
+> inclusion but is starting to become more likely.
+> 
+> The fourth implements the auxiliary record AUDIT_CONTAINER if an
+> audit container identifier is associated with an event.  This patch
+> requires userspace support for proper type display.
+> 
+> The 5th adds signal and ptrace support.
+> 
+> The 6th creates a local audit context to be able to bind a standalone
+> record with a locally created auxiliary record.
 
-VDEC_1 is split into two paths on Meson8b and Meson8m2:
-- input mux called "vdec_1_sel"
-- two dividers ("vdec_1_1_div" and "vdec_1_2_div") and gates ("vdec_1_1"
-  and "vdec_1_2")
-- and an output mux (probably glitch-free) called "vdec_1"
-On Meson8 the VDEC_1 tree is simpler because there's only one path:
-- input mux called "vdec_1_sel"
-- divider ("vdec_1_1_div") and gate ("vdec_1_1")
-- (the gate is used as output directly, there's no mux)
+Paul, we had discussed this briefly previously...  Adding an auxiliary
+record to *any* audit event when CONFIG_AUDITSYSCALL is *not* enabled
+will cause those records to be detached and not associated as one event.
+Currently, CONFIG_AUDITSYSCALL is automatically enabled when
+CONFIG_AUDIT is enabled on any architecture that supports
+syscall auditing so the only time this is an issue is on an
+architecture that does not support syscall auditing.  This is a known
+bug/tradeoff in architectures that don't support syscall auditing with
+audit container identifier records only at this point.
 
-The VDEC_HCODEC and VDEC_2 clocks are simple composite clocks each
-consisting of an input mux, divider and a gate.
+This affects the AUDIT_CONTAINER_ID record associated with
+AUDIT_NETFILTER_PKT, AUDIT_*USER* records and any other records that are
+issued regardless of the state of the audit syscall rules (AVCs, ANOM_*,
+etc...)
 
-The VDEC_HEVC clock seems to have two paths similar to the VDEC_1 clock.
-However, the register offsets of the second clock path is not known.
-Amlogic's 3.10 kernel (which is used as reference) sets
-HHI_VDEC2_CLK_CNTL[31] to 1 before changing the VDEC_HEVC clock and back
-to 0 afterwards. For now, leave a TODO comment and only add the first
-path.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/meson8b.c | 312 ++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/meson8b.h |  17 +-
- 2 files changed, 328 insertions(+), 1 deletion(-)
+I had this contid patchset ready to post a couple of weeks ago, but I
+started investigating separating out the concept of an audit event from
+the audit context due to the issue raised above.  The only thing
+required to tie records together in an event is the mesage timestamp and
+message serial number.  The rest of the context is unnecessary.
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 8e091c2d10e6..37cf0f01bb5d 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1902,6 +1902,257 @@ static struct clk_regmap meson8b_vpu = {
- 	},
- };
- 
-+static const char * const meson8b_vdec_parent_names[] = {
-+	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7", "mpll2", "mpll1"
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 9,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_1_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_1_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_1_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_1 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_1_1",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_1_1_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_2_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1_2_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_1_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1_2 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_1_2",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_1_2_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_1 = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC3_CLK_CNTL,
-+		.mask = 0x1,
-+		.shift = 15,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_1",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = (const char *[]){ "vdec_1_1", "vdec_1_2" },
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 25,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hcodec_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.shift = 16,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hcodec_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_hcodec_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hcodec = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC_CLK_CNTL,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_hcodec",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_hcodec_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 9,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_2_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_2_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_2_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_2 = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_2",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_2_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x3,
-+		.shift = 25,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc_sel",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = meson8b_vdec_parent_names,
-+		.num_parents = ARRAY_SIZE(meson8b_vdec_parent_names),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.shift = 16,
-+		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc_div",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "vdec_hevc_sel" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc_en = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "vdec_hevc_en",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "vdec_hevc_div" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap meson8b_vdec_hevc = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_VDEC2_CLK_CNTL,
-+		.mask = 0x1,
-+		.shift = 31,
-+		.flags = CLK_MUX_ROUND_CLOSEST,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "vdec_hevc",
-+		.ops = &clk_regmap_mux_ops,
-+		/* TODO: The second parent is currently unknown */
-+		.parent_names = (const char *[]){ "vdec_hevc_en" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
- /* Everything Else (EE) domain gates */
- 
- static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-@@ -2168,6 +2419,19 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
- 		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
- 		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1]	   	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2361,6 +2625,22 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
- 		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
- 		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
-+		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
-+		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2556,6 +2836,22 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
- 		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
- 		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
- 		[CLKID_VPU]		    = &meson8b_vpu.hw,
-+		[CLKID_VDEC_1_SEL]	    = &meson8b_vdec_1_sel.hw,
-+		[CLKID_VDEC_1_1_DIV]	    = &meson8b_vdec_1_1_div.hw,
-+		[CLKID_VDEC_1_1]	    = &meson8b_vdec_1_1.hw,
-+		[CLKID_VDEC_1_2_DIV]	    = &meson8b_vdec_1_2_div.hw,
-+		[CLKID_VDEC_1_2]	    = &meson8b_vdec_1_2.hw,
-+		[CLKID_VDEC_1]	    	    = &meson8b_vdec_1.hw,
-+		[CLKID_VDEC_HCODEC_SEL]	    = &meson8b_vdec_hcodec_sel.hw,
-+		[CLKID_VDEC_HCODEC_DIV]	    = &meson8b_vdec_hcodec_div.hw,
-+		[CLKID_VDEC_HCODEC]	    = &meson8b_vdec_hcodec.hw,
-+		[CLKID_VDEC_2_SEL]	    = &meson8b_vdec_2_sel.hw,
-+		[CLKID_VDEC_2_DIV]	    = &meson8b_vdec_2_div.hw,
-+		[CLKID_VDEC_2]	    	    = &meson8b_vdec_2.hw,
-+		[CLKID_VDEC_HEVC_SEL]	    = &meson8b_vdec_hevc_sel.hw,
-+		[CLKID_VDEC_HEVC_DIV]	    = &meson8b_vdec_hevc_div.hw,
-+		[CLKID_VDEC_HEVC_EN]	    = &meson8b_vdec_hevc_en.hw,
-+		[CLKID_VDEC_HEVC]	    = &meson8b_vdec_hevc.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2729,6 +3025,22 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- 	&meson8b_vpu_1_div,
- 	&meson8b_vpu_1,
- 	&meson8b_vpu,
-+	&meson8b_vdec_1_sel,
-+	&meson8b_vdec_1_1_div,
-+	&meson8b_vdec_1_1,
-+	&meson8b_vdec_1_2_div,
-+	&meson8b_vdec_1_2,
-+	&meson8b_vdec_1,
-+	&meson8b_vdec_hcodec_sel,
-+	&meson8b_vdec_hcodec_div,
-+	&meson8b_vdec_hcodec,
-+	&meson8b_vdec_2_sel,
-+	&meson8b_vdec_2_div,
-+	&meson8b_vdec_2,
-+	&meson8b_vdec_hevc_sel,
-+	&meson8b_vdec_hevc_div,
-+	&meson8b_vdec_hevc_en,
-+	&meson8b_vdec_hevc,
- };
- 
- static const struct meson8b_clk_reset_line {
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index e775f91ccce9..ed37196187e6 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -37,6 +37,9 @@
- #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
- #define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
- #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
-+#define HHI_VDEC_CLK_CNTL		0x1e0 /* 0x78 offset in data sheet */
-+#define HHI_VDEC2_CLK_CNTL		0x1e4 /* 0x79 offset in data sheet */
-+#define HHI_VDEC3_CLK_CNTL		0x1e8 /* 0x7a offset in data sheet */
- #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
- #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
- #define HHI_SYS_PLL_CNTL		0x300 /* 0xc0 offset in data sheet */
-@@ -156,8 +159,20 @@
- #define CLKID_VPU_1_SEL		186
- #define CLKID_VPU_1_DIV		187
- #define CLKID_VPU_1		189
-+#define CLKID_VDEC_1_SEL	191
-+#define CLKID_VDEC_1_1_DIV	192
-+#define CLKID_VDEC_1_1		193
-+#define CLKID_VDEC_1_2_DIV	194
-+#define CLKID_VDEC_1_2		195
-+#define CLKID_VDEC_HCODEC_SEL	197
-+#define CLKID_VDEC_HCODEC_DIV	198
-+#define CLKID_VDEC_2_SEL	200
-+#define CLKID_VDEC_2_DIV	201
-+#define CLKID_VDEC_HEVC_SEL	203
-+#define CLKID_VDEC_HEVC_DIV	204
-+#define CLKID_VDEC_HEVC_EN	205
- 
--#define CLK_NR_CLKS		191
-+#define CLK_NR_CLKS		207
- 
- /*
-  * include the CLKID and RESETID that have
--- 
-2.21.0
+This should not be necessary if audit events and syscall context are
+separated.  I've been working on a patchset which was experimental
+looking to see if it would work.  It is working so that contid is no
+longer dependant on audit syscall auditing, but the patches need a bit
+of cleanup to be presentable.  This would solve the problem for
+architectures that don't support syscall auditing.  This wasn't the
+motivation for doing this work, but more the desire to separate the
+concepts of audit events from audit context.  audit_log_start() doesn't
+need audit context information, but only minimal audit event
+information.  The very small hitch I've run into was how to define the
+start of an event.  This is taken care of explicitly in AUDIT_*USER* and
+AUDIT_NETFILTER_PKT events by a local context/event allocation.  It is
+taken care of in the syscall case in the call to
+__audit_syscall_entry(), but when auditing is not enabled for a task and
+an unconditional record such as AUDIT_AVC is issued, we still want the
+event information present.  The timestamp function call of
+__audit_syscall_entry() could be moved to audit_syscall_entry() or
+another lighter function such as audit_event_entry() in kernel/audit.c
+to take care of only the event parameters and not context.
 
+I acknowledge it was a risk to dive into it without explicit
+conversations and work items to proceed with it.  I like the results,
+but I'd be curious what your outlook are on this general idea and
+approach.  Hard to say, I know, without seeing actual code, but I'll 
+keep poking at it.  I like it because it finally makes a clear
+distinction between events and syscalls, which hasn't been much of a
+technical, and only a conceptual issue up until now.
+
+> The 7th patch adds audit container identifier records to the user
+> standalone records.
+> 
+> The 8th adds audit container identifier filtering to the exit,
+> exclude and user lists.  This patch adds the AUDIT_CONTID field and
+> requires auditctl userspace support for the --contid option.
+> 
+> The 9th adds network namespace audit container identifier labelling
+> based on member tasks' audit container identifier labels.
+> 
+> The 10th adds audit container identifier support to standalone netfilter
+> records that don't have a task context and lists each container to which
+> that net namespace belongs.
+> 
+> Example: Set an audit container identifier of 123456 to the "sleep" task:
+> 
+>   sleep 2&  
+>   child=$!
+>   echo 123456 > /proc/$child/audit_containerid; echo $?
+>   ausearch -ts recent -m container_op
+>   echo child:$child contid:$( cat /proc/$child/audit_containerid)
+> 
+> This should produce a record such as:
+> 
+>   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 old-contid=18446744073709551615 contid=123456 pid=628 auid=root uid=root tty=ttyS0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=bash exe=/usr/bin/bash res=yes 
+> 
+> 
+> Example: Set a filter on an audit container identifier 123459 on /tmp/tmpcontainerid:
+> 
+>   contid=123459
+>   key=tmpcontainerid
+>   auditctl -a exit,always -F dir=/tmp -F perm=wa -F contid=$contid -F key=$key
+>   perl -e "sleep 1; open(my \$tmpfile, '>', \"/tmp/$key\"); close(\$tmpfile);" &
+>   child=$!
+>   echo $contid > /proc/$child/audit_containerid
+>   sleep 2
+>   ausearch -i -ts recent -k $key
+>   auditctl -d exit,always -F dir=/tmp -F perm=wa -F contid=$contid -F key=$key
+>   rm -f /tmp/$key
+> 
+> This should produce an event such as:
+> 
+>   type=CONTAINER_ID msg=audit(2018-06-06 12:46:31.707:26953) : contid=123459 
+>   type=PROCTITLE msg=audit(2018-06-06 12:46:31.707:26953) : proctitle=perl -e sleep 1; open(my $tmpfile, '>', "/tmp/tmpcontainerid"); close($tmpfile); 
+>   type=PATH msg=audit(2018-06-06 12:46:31.707:26953) : item=1 name=/tmp/tmpcontainerid inode=25656 dev=00:26 mode=file,644 ouid=root ogid=root rdev=00:00 obj=unconfined_u:object_r:user_tmp_t:s0 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+>   type=PATH msg=audit(2018-06-06 12:46:31.707:26953) : item=0 name=/tmp/ inode=8985 dev=00:26 mode=dir,sticky,777 ouid=root ogid=root rdev=00:00 obj=system_u:object_r:tmp_t:s0 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+>   type=CWD msg=audit(2018-06-06 12:46:31.707:26953) : cwd=/root 
+>   type=SYSCALL msg=audit(2018-06-06 12:46:31.707:26953) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffffffffffff9c a1=0x5621f2b81900 a2=O_WRONLY|O_CREAT|O_TRUNC a3=0x1b6 items=2 ppid=628 pid=2232 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=1 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=tmpcontainerid 
+> 
+> Example: Test multiple containers on one netns:
+> 
+>   sleep 5 &
+>   child1=$!
+>   containerid1=123451
+>   echo $containerid1 > /proc/$child1/audit_containerid
+>   sleep 5 &
+>   child2=$!
+>   containerid2=123452
+>   echo $containerid2 > /proc/$child2/audit_containerid
+>   iptables -I INPUT -i lo -p icmp --icmp-type echo-request -j AUDIT --type accept
+>   iptables -I INPUT  -t mangle -i lo -p icmp --icmp-type echo-request -j MARK --set-mark 0x12345555
+>   sleep 1;
+>   bash -c "ping -q -c 1 127.0.0.1 >/dev/null 2>&1"
+>   sleep 1;
+>   ausearch -i -m NETFILTER_PKT -ts boot|grep mark=0x12345555
+>   ausearch -i -m NETFILTER_PKT -ts boot|grep contid=|grep $containerid1|grep $containerid2
+> 
+> This should produce an event such as:
+> 
+>   type=NETFILTER_PKT msg=audit(03/15/2019 14:16:13.369:244) : mark=0x12345555 saddr=127.0.0.1 daddr=127.0.0.1 proto=icmp 
+>   type=CONTAINER_ID msg=audit(03/15/2019 14:16:13.369:244) : contid=123452,123451
+> 
+> 
+> Includes the last patch of https://github.com/linux-audit/audit-kernel/issues/81
+> See the github issue for the kernel code https://github.com/linux-audit/audit-kernel/issues/90
+> See: https://github.com/linux-audit/audit-userspace/issues/40
+> See: https://github.com/linux-audit/audit-testsuite/issues/64
+> See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> 
+> Changelog:
+> 
+> v5
+> - address loginuid and sessionid syscall scope in ghak104
+> - address audit_context in CONFIG_AUDIT vs CONFIG_AUDITSYSCALL in ghak105
+> - remove tty patch, addressed in ghak106
+> - rebase on audit/next v5.0-rc1
+>   w/ghak59/ghak104/ghak103/ghak100/ghak107/ghak105/ghak106/ghak105sup
+> - update CONTAINER_ID to CONTAINER_OP in patch description
+> - move audit_context in audit_task_info to CONFIG_AUDITSYSCALL
+> - move audit_alloc() and audit_free() out of CONFIG_AUDITSYSCALL and into
+>   CONFIG_AUDIT and create audit_{alloc,free}_syscall
+> - use plain kmem_cache_alloc() rather than kmem_cache_zalloc() in audit_alloc()
+> - fix audit_get_contid() declaration type error
+> - move audit_set_contid() from auditsc.c to audit.c
+> - audit_log_contid() returns void
+> - audit_log_contid() handed contid rather than tsk
+> - switch from AUDIT_CONTAINER to AUDIT_CONTAINER_ID for aux record
+> - move audit_log_contid(tsk/contid) & audit_contid_set(tsk)/audit_contid_valid(contid)
+> - switch from tsk to current
+> - audit_alloc_local() calls audit_log_lost() on failure to allocate a context
+> - add AUDIT_USER* non-syscall contid record
+> - cosmetic cleanup double parens, goto out on err
+> - ditch audit_get_ns_contid_list_lock(), fix aunet lock race
+> - switch from all-cpu read spinlock to rcu, keep spinlock for write
+> - update audit_alloc_local() to use ktime_get_coarse_real_ts64()
+> - add nft_log support
+> - add call from do_exit() in audit_free() to remove contid from netns
+> - relegate AUDIT_CONTAINER ref= field (was op=) to debug patch
+> 
+> v4
+> - preface set with ghak81:"collect audit task parameters"
+> - add shallyn and sgrubb acks
+> - rename feature bitmap macro
+> - rename cid_valid() to audit_contid_valid()
+> - rename AUDIT_CONTAINER_ID to AUDIT_CONTAINER_OP
+> - delete audit_get_contid_list() from headers
+> - move work into inner if, delete "found"
+> - change netns contid list function names
+> - move exports for audit_log_contid audit_alloc_local audit_free_context to non-syscall patch
+> - list contids CSV
+> - pass in gfp flags to audit_alloc_local() (fix audit_alloc_context callers)
+> - use "local" in lieu of abusing in_syscall for auditsc_get_stamp()
+> - read_lock(&tasklist_lock) around children and thread check
+> - task_lock(tsk) should be taken before first check of tsk->audit
+> - add spin lock to contid list in aunet
+> - restrict /proc read to CAP_AUDIT_CONTROL
+> - remove set again prohibition and inherited flag
+> - delete contidion spelling fix from patchset, send to netdev/linux-wireless
+> 
+> v3
+> - switched from containerid in task_struct to audit_task_info (depends on ghak81)
+> - drop INVALID_CID in favour of only AUDIT_CID_UNSET
+> - check for !audit_task_info, throw -ENOPROTOOPT on set
+> - changed -EPERM to -EEXIST for parent check
+> - return AUDIT_CID_UNSET if !audit_enabled
+> - squash child/thread check patch into AUDIT_CONTAINER_ID patch
+> - changed -EPERM to -EBUSY for child check
+> - separate child and thread checks, use -EALREADY for latter
+> - move addition of op= from ptrace/signal patch to AUDIT_CONTAINER patch
+> - fix && to || bashism in ptrace/signal patch
+> - uninline and export function for audit_free_context()
+> - drop CONFIG_CHANGE, FEATURE_CHANGE, ANOM_ABEND, ANOM_SECCOMP patches
+> - move audit_enabled check (xt_AUDIT)
+> - switched from containerid list in struct net to net_generic's struct audit_net
+> - move containerid list iteration into audit (xt_AUDIT)
+> - create function to move namespace switch into audit
+> - switched /proc/PID/ entry from containerid to audit_containerid
+> - call kzalloc with GFP_ATOMIC on in_atomic() in audit_alloc_context()
+> - call kzalloc with GFP_ATOMIC on in_atomic() in audit_log_container_info()
+> - use xt_net(par) instead of sock_net(skb->sk) to get net
+> - switched record and field names: initial CONTAINER_ID, aux CONTAINER, field CONTID
+> - allow to set own contid
+> - open code audit_set_containerid
+> - add contid inherited flag
+> - ccontainerid and pcontainerid eliminated due to inherited flag
+> - change name of container list funcitons
+> - rename containerid to contid
+> - convert initial container record to syscall aux
+> - fix spelling mistake of contidion in net/rfkill/core.c to avoid contid name collision
+> 
+> v2
+> - add check for children and threads
+> - add network namespace container identifier list
+> - add NETFILTER_PKT audit container identifier logging
+> - patch description and documentation clean-up and example
+> - reap unused ppid
+> 
+> Richard Guy Briggs (10):
+>   audit: collect audit task parameters
+>   audit: add container id
+>   audit: read container ID of a process
+>   audit: log container info of syscalls
+>   audit: add containerid support for ptrace and signals
+>   audit: add support for non-syscall auxiliary records
+>   audit: add containerid support for user records
+>   audit: add containerid filtering
+>   audit: add support for containerid to network namespaces
+>   audit: NETFILTER_PKT: record each container ID associated with a netNS
+> 
+>  fs/proc/base.c             |  55 +++++++++
+>  include/linux/audit.h      | 107 +++++++++++++---
+>  include/linux/sched.h      |   7 +-
+>  include/uapi/linux/audit.h |   8 +-
+>  init/init_task.c           |   3 +-
+>  init/main.c                |   2 +
+>  kernel/audit.c             | 300 +++++++++++++++++++++++++++++++++++++++++++--
+>  kernel/audit.h             |   9 ++
+>  kernel/auditfilter.c       |  47 +++++++
+>  kernel/auditsc.c           |  89 ++++++++++----
+>  kernel/fork.c              |   1 -
+>  kernel/nsproxy.c           |   4 +
+>  net/netfilter/nft_log.c    |  11 +-
+>  net/netfilter/xt_AUDIT.c   |  11 +-
+>  14 files changed, 592 insertions(+), 62 deletions(-)
+> 
+> -- 
+> 1.8.3.1
+> 
+> --
+> Linux-audit mailing list
+> Linux-audit@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-audit
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
