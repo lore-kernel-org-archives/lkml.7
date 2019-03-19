@@ -2,173 +2,99 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE656C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A575C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B708720850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D712084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b8L9zdz2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgUJvZ/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfCSCyj (ORCPT
+        id S1727474AbfCSC6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:54:39 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37820 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfCSCyj (ORCPT
+        Mon, 18 Mar 2019 22:58:01 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45372 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfCSC6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:54:39 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u2so13163664lfd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:54:37 -0700 (PDT)
+        Mon, 18 Mar 2019 22:58:01 -0400
+Received: by mail-yw1-f68.google.com with SMTP id j128so7821029ywg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qsDPjNkxr6Ikn1pcISydoKNul4OSctffc0IO0+a3pEE=;
-        b=b8L9zdz2YM1pTRR7oMVSP7v4olYcNEliFcvQs1ifA+wyocFUUefLeD5DCLjgnykiFr
-         Jfi9lPr4EyIb2F5X72TYS8gfc71Z9LjjOxcZZLAqKY5gmXxxZXSjfCap4Yv7Oz1u2M+Z
-         goLiCghbjwi9BUAFbtWHRP3YwFoMbmZP6qHb3/18y2r55Icq3kR2coKFoaCaQPbeedu1
-         cK6guT+sgY9y4yQiCtxKQvxtJxv13RzFQrlRuM0od0KNx0LMpsaSYOx2R0qlgpXPW/JI
-         f3XlU+JVr0C0zgAgJdJCkfJdrv444emb2T1sNXIW2G8h9V9o8PWv+XmrlStpV8i+iDWj
-         izew==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+Yckzi4lGrOXCq0n296dhz5of4prQGgh+StK2FP8Zk8=;
+        b=vgUJvZ/8JBFlj/MV6Xc5IPMUPfWRzXrzYvZCk2VsAazzB1H4fbOe5wZCBInTwWXcXO
+         56MlJ3CLb2AfT2lmxE8j1O8+yG+/vzquInWvK/ltqyYigcuK2EEbhTPAHBCglicMv2U4
+         mvThy4mm0dl2e+dc1nSvmhWc/x6ZAIVuinVP2y9uA1NW9S02dBDMw8LpB//j9CHPzelo
+         HgzhmoQ4NYWeC381OKP2nhYnJTOMadE8sWQ8qLI2p6FPzPFPcO9eyrbz7M15r6I19Y4D
+         9tE9KnikLWI4cZqQgnBdJVX6jaf/ynWCDVwUTh7gExDfvky8/WeQuYnxwebX/PD7DVAO
+         e8wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qsDPjNkxr6Ikn1pcISydoKNul4OSctffc0IO0+a3pEE=;
-        b=UwIZZYe2eIt01Kq178O79FZh8S6lMeFO0eEVodvK7zBDl6KX0rOvGmtPS/v+UeXVud
-         kCK3WGDA3kcC2UKivxlaI+1vy91qg7Du3L85BVIEjG87uKU41kPnwvhScfqOOUzvZT0w
-         tdB7uzzQMIKDA43tMR2Ce14T+QFMLtbTK5YyG2TyQSeZpAuVV2SgYsTnfqyaHZsBnumr
-         l3gCPs5sLAYPuIy+SGQxSDfdNGEJZpBZgR4N92mEM77Yguc63T5L6UoKkQnSaQU/uRuw
-         cmiDDiDWOQ4jmxmNzuCVT5gaKLch3zUjyugwU5pAcQCaXV1rFSV8DJM0D0I0GVcC9fXV
-         3zsw==
-X-Gm-Message-State: APjAAAU+CiIo7Y8yVVN8GEhiRr+rUI6YG04K2R048iq7xeWVhbIMrC1B
-        ukb8oAQEMDS2Mwewyuq1eOJ5JNG8PFAz4NHTUWB8Fr8ytDk=
-X-Google-Smtp-Source: APXvYqzDGooeRacfMqYN4K/3IkEuR7PmECLvQrxbpEzo7ewak3LrV48tdaqzjmhz/uoMSTkd9wAEyapib06wa7MXV+4=
-X-Received: by 2002:a19:740e:: with SMTP id v14mr11408994lfe.94.1552964077198;
- Mon, 18 Mar 2019 19:54:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190318083715.877441740@linuxfoundation.org>
-In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 19 Mar 2019 08:24:25 +0530
-Message-ID: <CA+G9fYtHRmRKYdNXWQNsjzmTf4_G1BMmTyXbGiJ0B70twBWKsg@mail.gmail.com>
-Subject: Re: [PATCH 5.0 00/43] 5.0.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+Yckzi4lGrOXCq0n296dhz5of4prQGgh+StK2FP8Zk8=;
+        b=fb/wuiSMiY2RdDfj22rWc5aYMeyaekdgBiaUNtxE46hxXy8YUL/M7YlDm6BjSohb8M
+         iGQkcPx+mW8nj32Xqp59SjHc96chquKMJvCJwiX/OHmo9Uug/a/6582IQLTHwcvIv63N
+         rDTvk9tktBKjX9CoFogRzyfJodlR7W2VgNSwEcgzWxaaz7HVn+HBgOTBCgT9RBsEZ42g
+         R1BT8jgDf4JHyRXjYtFVpPYosLFQ4qrTQVcvKMz4lX6/VpilL4pv6xQJbCTY2/RbzaT6
+         HbYEZPY4gsI9Zy+jFt5btpUirh3d36CiqNjacwQErH/NHQs2GXY+NS0Qnj93B8o5hwTG
+         WADA==
+X-Gm-Message-State: APjAAAXUV51j2FkvD9QUcrMPqLfIiia5z8WpqbatBxsQXEP2opoJRnts
+        Beo5tFQ1I0jWAccsoqHPpWqg2Uftlp9O0A==
+X-Google-Smtp-Source: APXvYqzTqM4OFCdZqKqhcRItmI4Vwfg8heq4xFIpYi1klLMvItrMGfIw7l8rvw54ziQZ259A4NSTfg==
+X-Received: by 2002:a81:a350:: with SMTP id a77mr127940ywh.66.1552964280145;
+        Mon, 18 Mar 2019 19:58:00 -0700 (PDT)
+Received: from localhost.localdomain ([191.101.9.198])
+        by smtp.gmail.com with ESMTPSA id 67sm633042ywb.108.2019.03.18.19.57.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 19:57:59 -0700 (PDT)
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
+        christian.gmeiner@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        etnaviv@lists.freedesktop.org
+Cc:     Bo YU <tsu.yubo@gmail.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, yuzibode@126.com
+Subject: [PATCH] drm: etnaviv: fix strncpy sizeof argument
+Date:   Mon, 18 Mar 2019 22:57:55 -0400
+Message-Id: <20190319025755.15394-1-tsu.yubo@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 at 14:59, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.0.3 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Mar 20 08:36:53 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.3-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Calling strncpy with a maximum size argument of 64 bytes on destination
+array "domain->name" of size 64 bytes might leave the destination string
+unterminated.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Detected by CoverityScan, CID# 1443992:  Memory - illegal accesses
+(BUFFER_SIZE_WARNING)
 
-Summary
-------------------------------------------------------------------------
+Fixes: 9e2c2e2730126 (drm/etnaviv: add infrastructure to query perf counter)
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-kernel: 5.0.3-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: ec6582f51005a29ff2e73fbfa43df92f456f54ca
-git describe: v5.0.2-44-gec6582f51005
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.2-44-gec6582f51005
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index 4227a4006c34..08ca3c44be48 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -414,7 +414,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+-	strncpy(domain->name, dom->name, sizeof(domain->name));
++	strncpy(domain->name, dom->name, sizeof(dom->name));
+ 
+ 	domain->iter++;
+ 	if (domain->iter == meta->nr_domains)
+-- 
+2.11.0
 
-
-No regressions (compared to build v5.0.2)
-
-
-No fixes (compared to build v5.0.2)
-
-Ran 23099 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* spectre-meltdown-checker-test
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
