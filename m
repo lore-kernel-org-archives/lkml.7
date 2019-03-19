@@ -2,205 +2,281 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719E2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D60A217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9162146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="oX2nR8K0"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sP3qwQKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfCSVwY (ORCPT
+        id S1727304AbfCSVyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:52:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37781 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfCSVwG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:52:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v14so9521018wmf.2;
-        Tue, 19 Mar 2019 14:52:05 -0700 (PDT)
+        Tue, 19 Mar 2019 17:54:18 -0400
+Received: from mail-eopbgr810058.outbound.protection.outlook.com ([40.107.81.58]:39872
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726686AbfCSVyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:54:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GZojoNzAlcbGl8fHjoNsnhIbGqEAojM71YZRXsvbN/s=;
-        b=oX2nR8K02oy813R++d7xdIIKjkjXX4fX7XwtTSmh6E46KH/NeeTB+d0W5lf8UQIaGt
-         6xPkd9hk9VNbAR7i5AIcps1PyzOWRy5G2wMUELls+KnrRckZVWnXvUG6nF97zWlfD7z3
-         WjU0lkMAsA3ojHVIOAabfZtqbiBlsSUCCvBCCm9kU0MyRB1isuMbvNT1k01gbPadDYRs
-         2hMYCaItzE8F3EGBdBGgVuzhHxumYVrCxFCd76PjLehqNXcveoCvqdvpq1UyqWwoQTUa
-         bbYkgBtCaGTDuOIJZ/5ijO7CJunWcOEfN2n/Wf+t1EueqG100/jom/xVSLqbB2cZpixP
-         O5ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GZojoNzAlcbGl8fHjoNsnhIbGqEAojM71YZRXsvbN/s=;
-        b=OQfjIp2qj84Zi7gbKGslMc5FCAO5C8ZTChcV/de96ST7U/b4ShJ76e3QKsXllkGzz7
-         7NJiSUuAzZJ1RaI1OH45bQxUGTC6BIdFRrrLlyXGTd4QkhT5suN2pqkf2v7L2lc0uKjK
-         4YYyF+w78y6qRetJtcJXYDxo/o6C1BZmZ+2xQapSCrtSPHkIIKaOfEIEXmxsJRZ3mQUX
-         bzIq9/3ifMh81HO8nKMAfaXY6c83saiJUSen5c5vd1KJm9edq8BieEvNAuS8i7/nY3PH
-         0XCY7AQo/xyJiflpgMForh5WIqCzkkFbBg8l2l4WfnX5ghCaFTTQZN0V8APY+jlbQQN6
-         G9vQ==
-X-Gm-Message-State: APjAAAXxXAdvzismxKcl9zsw8cJCstvRqnjQY779U5IItpnyL0Zp4a4q
-        V8h/oT7mrs/idX+o18iML/63emvR
-X-Google-Smtp-Source: APXvYqyJnrozWxcQ4hOs3D+ZQ5sbgpg+Fs5ZxNC63GBqouuwdxKZNOKkKZoFqZkQuuySDEpG0tmjUw==
-X-Received: by 2002:a1c:99d2:: with SMTP id b201mr5285665wme.90.1553032324145;
-        Tue, 19 Mar 2019 14:52:04 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300DCD739990039EE738515149D3E.dip0.t-ipconnect.de. [2003:dc:d739:9900:39ee:7385:1514:9d3e])
-        by smtp.googlemail.com with ESMTPSA id c8sm56050wrx.6.2019.03.19.14.52.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 14:52:03 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/4] clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
-Date:   Tue, 19 Mar 2019 22:51:20 +0100
-Message-Id: <20190319215121.29340-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
-References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EjwFzwEL+jmbEZqiydc/b9TPpZUlPKee5YMichGPS78=;
+ b=sP3qwQKOccykCDnFSGM0dKXJu3btLqCF5FVCy87BpEha3BZku0vhoBAfjLszF//A7cxSnEHM1rDb2xcFoUprty7qW+KLIaddUlQhr7rSPETwv4sOy9Zlz6GYhp1TOkmJBSk5sonr73KdM9DkcYsWLjOv4jrVDSdKSNoETkXFGfI=
+Received: from BN6PR02CA0048.namprd02.prod.outlook.com (2603:10b6:404:5f::34)
+ by MWHPR02MB2208.namprd02.prod.outlook.com (2603:10b6:300:5a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.14; Tue, 19 Mar
+ 2019 21:54:14 +0000
+Received: from BL2NAM02FT021.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::205) by BN6PR02CA0048.outlook.office365.com
+ (2603:10b6:404:5f::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
+ Transport; Tue, 19 Mar 2019 21:54:13 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT021.mail.protection.outlook.com (10.152.77.158) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
+ via Frontend Transport; Tue, 19 Mar 2019 21:54:12 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <sonal.santan@xilinx.com>)
+        id 1h6MgW-0001QZ-BK; Tue, 19 Mar 2019 14:54:12 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <sonal.santan@xilinx.com>)
+        id 1h6MgR-0001Oa-7J; Tue, 19 Mar 2019 14:54:07 -0700
+Received: from [172.19.73.196] (helo=xsjsonals5570.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <sonals@xilinx.com>)
+        id 1h6MgL-0001KF-Ok; Tue, 19 Mar 2019 14:54:01 -0700
+Received: by xsjsonals5570.xilinx.com (Postfix, from userid 1000)
+        id 7A66376001F; Tue, 19 Mar 2019 14:54:01 -0700 (PDT)
+From:   <sonal.santan@xilinx.com>
+To:     <dri-devel@lists.freedesktop.org>
+CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <airlied@redhat.com>, <cyrilc@xilinx.com>, <michals@xilinx.com>,
+        <lizhih@xilinx.com>, <hyunk@xilinx.com>
+Subject: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
+Date:   Tue, 19 Mar 2019 14:53:55 -0700
+Message-ID: <20190319215401.6562-1-sonal.santan@xilinx.com>
+X-Mailer: git-send-email 2.17.0
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(2980300002)(199004)(189003)(50466002)(336012)(6266002)(2616005)(52956003)(426003)(6916009)(1076003)(486006)(36756003)(6306002)(6666004)(86152003)(47776003)(476003)(126002)(48376002)(63266004)(5660300002)(356004)(36386004)(14444005)(316002)(42186006)(51416003)(478600001)(106002)(81156014)(2906002)(966005)(8676002)(4326008)(90966002)(50226002)(106466001)(2351001)(305945005)(8936002)(2876002)(54906003)(26005)(186003)(16586007)(107886003)(103686004)(81166006)(347745004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2208;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3f89a3cb-a6c8-4499-56f6-08d6acb56cad
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:MWHPR02MB2208;
+X-MS-TrafficTypeDiagnostic: MWHPR02MB2208:
+X-MS-Exchange-PUrlCount: 2
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <MWHPR02MB2208ED3D855967BDA65BC1BCBB400@MWHPR02MB2208.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0981815F2F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: oDF9+rmYXzHpYp9dK79Qi9QvdV5HFIgaS1rIuByMvGZz1L1WPaWv1T3JnRFe6BPaKLZ2Q/+TLALbPSLhED/mVhKmlxUuSjfhJ6VOLfeD5mVdvudVlilUYJkz/vQeo5e2jDnF1xXkmgmeH8e6TbuayaAT9+Blsa0Z4AwFzBUbcx2gNw3RPc2qMvk8dd2XL6NwAe2aKGgjuCG/aCFVzr4XKsoQOIX5IGZ6hRwIY/1HOtSdFdEJpCtqfagtWpDLOYc6moh3MEbccDeyptAWzeX+cBKnGi+Q+SCW10OUsxOnbmc2mUSYk4TQANafAgolGUlwvwMlqRv/ntmqtPnSqEid7nfRgnkNDrlmuz0lWTb2FyZGtXQZQkE06TH8uDgSD8g+VpZsemF2dSWVdimxBVm70n3SCgtx76IfMTdpIcoW+D8=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 21:54:12.9048
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f89a3cb-a6c8-4499-56f6-08d6acb56cad
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Meson8m2 has a GP_PLL clock (similar to GP0_PLL on GXBB/GXL/GXM) which
-is used as input for the VPU clocks.
-The only supported frequency (based on Amlogic's vendor kernel sources)
-is 364MHz which is achieved using the following parameters:
-- input: XTAL (24MHz)
-- M = 182
-- N = 3
-- OD = 2 ^ 2
+From: Sonal Santan <sonal.santan@xilinx.com>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/meson8b.c | 62 +++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/meson8b.h |  5 ++-
- 2 files changed, 66 insertions(+), 1 deletion(-)
+Hello,
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index c9e6ec67d649..0d08f1ef7af8 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1703,6 +1703,64 @@ static struct clk_regmap meson8b_mali = {
- 	},
- };
- 
-+static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
-+	PLL_PARAMS(182, 3),
-+	{ /* sentinel */ },
-+};
-+
-+static struct clk_regmap meson8m2_gp_pll_dco = {
-+	.data = &(struct meson_clk_pll_data){
-+		.en = {
-+			.reg_off = HHI_GP_PLL_CNTL,
-+			.shift   = 30,
-+			.width   = 1,
-+		},
-+		.m = {
-+			.reg_off = HHI_GP_PLL_CNTL,
-+			.shift   = 0,
-+			.width   = 9,
-+		},
-+		.n = {
-+			.reg_off = HHI_GP_PLL_CNTL,
-+			.shift   = 9,
-+			.width   = 5,
-+		},
-+		.l = {
-+			.reg_off = HHI_GP_PLL_CNTL,
-+			.shift   = 31,
-+			.width   = 1,
-+		},
-+		.rst = {
-+			.reg_off = HHI_GP_PLL_CNTL,
-+			.shift   = 29,
-+			.width   = 1,
-+		},
-+		.table = meson8m2_gp_pll_params_table,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "gp_pll_dco",
-+		.ops = &meson_clk_pll_ops,
-+		.parent_names = (const char *[]){ "xtal" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap meson8m2_gp_pll = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_GP_PLL_CNTL,
-+		.shift = 16,
-+		.width = 2,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "gp_pll",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_names = (const char *[]){ "gp_pll_dco" },
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
- /* Everything Else (EE) domain gates */
- 
- static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-@@ -2338,6 +2396,8 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
- 		[CLKID_MALI_1_DIV]	    = &meson8b_mali_1_div.hw,
- 		[CLKID_MALI_1]		    = &meson8b_mali_1.hw,
- 		[CLKID_MALI]		    = &meson8b_mali.hw,
-+		[CLKID_GP_PLL_DCO]	    = &meson8m2_gp_pll_dco.hw,
-+		[CLKID_GP_PLL]		    = &meson8m2_gp_pll.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2500,6 +2560,8 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- 	&meson8b_mali_1_div,
- 	&meson8b_mali_1,
- 	&meson8b_mali,
-+	&meson8m2_gp_pll_dco,
-+	&meson8m2_gp_pll,
- };
- 
- static const struct meson8b_clk_reset_line {
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index b8c58faeae52..a45f7102c558 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -19,6 +19,7 @@
-  *
-  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-  */
-+#define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
- #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
- #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
- #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
-@@ -146,8 +147,10 @@
- #define CLKID_MALI_1_SEL	178
- #define CLKID_MALI_1_DIV	179
- #define CLKID_MALI_1		180
-+#define CLKID_GP_PLL_DCO	181
-+#define CLKID_GP_PLL		182
- 
--#define CLK_NR_CLKS		181
-+#define CLK_NR_CLKS		183
- 
- /*
-  * include the CLKID and RESETID that have
--- 
-2.21.0
+This patch series adds drivers for Xilinx Alveo PCIe accelerator cards.
+These drivers are part of Xilinx Runtime (XRT) open source stack and
+have been deployed by leading FaaS vendors and many enterprise customers.
 
+PLATFORM ARCHITECTURE
+
+Alveo PCIe platforms have a static shell and a reconfigurable (dynamic)
+region. The shell is automatically loaded from PROM when host is booted
+and PCIe is enumerated by BIOS. Shell cannot be changed till next cold
+reboot. The shell exposes two physical functions: management physical
+function and user physical function.
+
+Users compile their high level design in C/C++/OpenCL or RTL into FPGA
+image using SDx compiler. The FPGA image packaged as xclbin file can be
+loaded onto reconfigurable region. The image may contain one or more
+compute unit. Users can dynamically swap the full image running on the
+reconfigurable region in order to switch between different workloads.
+
+XRT DRIVERS
+
+XRT Linux kernel driver xmgmt binds to mgmt pf. The driver is modular and
+organized into several platform drivers which primarily handle the
+following functionality:
+1.  ICAP programming (FPGA bitstream download with FPGA Mgr integration)
+2.  Clock scaling
+3.  Loading firmware container also called dsabin (embedded Microblaze
+    firmware for ERT and XMC, optional clearing bitstream)
+4.  In-band sensors: temp, voltage, power, etc.
+5.  AXI Firewall management
+6.  Device reset and rescan
+7.  Hardware mailbox for communication between two physical functions
+
+XRT Linux kernel driver xocl binds to user pf. Like its peer, this driver
+is also modular and organized into several platform drivers which handle
+the following functionality:
+1.  Device memory topology discovery and memory management
+2.  Buffer object abstraction and management for client process
+3.  XDMA MM PCIe DMA engine programming
+4.  Multi-process aware context management
+5.  Compute unit execution management (optionally with help of ERT) for
+    client processes
+6.  Hardware mailbox for communication between two physical functions
+
+The drivers export ioctls and sysfs nodes for various services. xocl
+driver makes heavy use of DRM GEM features for device memory management,
+reference counting, mmap support and export/import. xocl also includes a
+simple scheduler called KDS which schedules compute units and interacts
+with hardware scheduler running ERT firmware. The scheduler understands
+custom opcodes packaged into command objects and provides an asynchronous
+command done notification via POSIX poll.
+
+More details on architecture, software APIs, ioctl definitions, execution
+model, etc. is available as Sphinx documentation--
+
+https://xilinx.github.io/XRT/2018.3/html/index.html
+
+The complete runtime software stack (XRT) which includes out of tree
+kernel drivers, user space libraries, board utilities and firmware for
+the hardware scheduler is open source and available at
+https://github.com/Xilinx/XRT
+
+Thanks,
+-Sonal
+
+Sonal Santan (6):
+  Add skeleton code: ioctl definitions and build hooks
+  Global data structures shared between xocl and xmgmt drivers
+  Add platform drivers for various IPs and frameworks
+  Add core of XDMA driver
+  Add management driver
+  Add user physical function driver
+
+ drivers/gpu/drm/Kconfig                    |    2 +
+ drivers/gpu/drm/Makefile                   |    1 +
+ drivers/gpu/drm/xocl/Kconfig               |   22 +
+ drivers/gpu/drm/xocl/Makefile              |    3 +
+ drivers/gpu/drm/xocl/devices.h             |  954 +++++
+ drivers/gpu/drm/xocl/ert.h                 |  385 ++
+ drivers/gpu/drm/xocl/lib/Makefile.in       |   16 +
+ drivers/gpu/drm/xocl/lib/cdev_sgdma.h      |   63 +
+ drivers/gpu/drm/xocl/lib/libxdma.c         | 4368 ++++++++++++++++++++
+ drivers/gpu/drm/xocl/lib/libxdma.h         |  596 +++
+ drivers/gpu/drm/xocl/lib/libxdma_api.h     |  127 +
+ drivers/gpu/drm/xocl/mgmtpf/Makefile       |   29 +
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-core.c    |  960 +++++
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-core.h    |  147 +
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-cw.c      |   30 +
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-ioctl.c   |  148 +
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-reg.h     |  244 ++
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-sysfs.c   |  318 ++
+ drivers/gpu/drm/xocl/mgmtpf/mgmt-utils.c   |  399 ++
+ drivers/gpu/drm/xocl/subdev/dna.c          |  356 ++
+ drivers/gpu/drm/xocl/subdev/feature_rom.c  |  412 ++
+ drivers/gpu/drm/xocl/subdev/firewall.c     |  389 ++
+ drivers/gpu/drm/xocl/subdev/fmgr.c         |  198 +
+ drivers/gpu/drm/xocl/subdev/icap.c         | 2859 +++++++++++++
+ drivers/gpu/drm/xocl/subdev/mailbox.c      | 1868 +++++++++
+ drivers/gpu/drm/xocl/subdev/mb_scheduler.c | 3059 ++++++++++++++
+ drivers/gpu/drm/xocl/subdev/microblaze.c   |  722 ++++
+ drivers/gpu/drm/xocl/subdev/mig.c          |  256 ++
+ drivers/gpu/drm/xocl/subdev/sysmon.c       |  385 ++
+ drivers/gpu/drm/xocl/subdev/xdma.c         |  510 +++
+ drivers/gpu/drm/xocl/subdev/xmc.c          | 1480 +++++++
+ drivers/gpu/drm/xocl/subdev/xvc.c          |  461 +++
+ drivers/gpu/drm/xocl/userpf/Makefile       |   27 +
+ drivers/gpu/drm/xocl/userpf/common.h       |  157 +
+ drivers/gpu/drm/xocl/userpf/xocl_bo.c      | 1255 ++++++
+ drivers/gpu/drm/xocl/userpf/xocl_bo.h      |  119 +
+ drivers/gpu/drm/xocl/userpf/xocl_drm.c     |  640 +++
+ drivers/gpu/drm/xocl/userpf/xocl_drv.c     |  743 ++++
+ drivers/gpu/drm/xocl/userpf/xocl_ioctl.c   |  396 ++
+ drivers/gpu/drm/xocl/userpf/xocl_sysfs.c   |  344 ++
+ drivers/gpu/drm/xocl/version.h             |   22 +
+ drivers/gpu/drm/xocl/xclbin.h              |  314 ++
+ drivers/gpu/drm/xocl/xclfeatures.h         |  107 +
+ drivers/gpu/drm/xocl/xocl_ctx.c            |  196 +
+ drivers/gpu/drm/xocl/xocl_drm.h            |   91 +
+ drivers/gpu/drm/xocl/xocl_drv.h            |  783 ++++
+ drivers/gpu/drm/xocl/xocl_subdev.c         |  540 +++
+ drivers/gpu/drm/xocl/xocl_thread.c         |   64 +
+ include/uapi/drm/xmgmt_drm.h               |  204 +
+ include/uapi/drm/xocl_drm.h                |  483 +++
+ 50 files changed, 28252 insertions(+)
+ create mode 100644 drivers/gpu/drm/xocl/Kconfig
+ create mode 100644 drivers/gpu/drm/xocl/Makefile
+ create mode 100644 drivers/gpu/drm/xocl/devices.h
+ create mode 100644 drivers/gpu/drm/xocl/ert.h
+ create mode 100644 drivers/gpu/drm/xocl/lib/Makefile.in
+ create mode 100644 drivers/gpu/drm/xocl/lib/cdev_sgdma.h
+ create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.c
+ create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.h
+ create mode 100644 drivers/gpu/drm/xocl/lib/libxdma_api.h
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/Makefile
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-core.c
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-core.h
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-cw.c
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-ioctl.c
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-reg.h
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-sysfs.c
+ create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-utils.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/dna.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/feature_rom.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/firewall.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/fmgr.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/icap.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mailbox.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mb_scheduler.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/microblaze.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/mig.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/sysmon.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xdma.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xmc.c
+ create mode 100644 drivers/gpu/drm/xocl/subdev/xvc.c
+ create mode 100644 drivers/gpu/drm/xocl/userpf/Makefile
+ create mode 100644 drivers/gpu/drm/xocl/userpf/common.h
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_bo.c
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_bo.h
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_drm.c
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_drv.c
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_ioctl.c
+ create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_sysfs.c
+ create mode 100644 drivers/gpu/drm/xocl/version.h
+ create mode 100644 drivers/gpu/drm/xocl/xclbin.h
+ create mode 100644 drivers/gpu/drm/xocl/xclfeatures.h
+ create mode 100644 drivers/gpu/drm/xocl/xocl_ctx.c
+ create mode 100644 drivers/gpu/drm/xocl/xocl_drm.h
+ create mode 100644 drivers/gpu/drm/xocl/xocl_drv.h
+ create mode 100644 drivers/gpu/drm/xocl/xocl_subdev.c
+ create mode 100644 drivers/gpu/drm/xocl/xocl_thread.c
+ create mode 100644 include/uapi/drm/xmgmt_drm.h
+ create mode 100644 include/uapi/drm/xocl_drm.h
+
+--
+2.17.0
