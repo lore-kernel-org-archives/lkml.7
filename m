@@ -2,185 +2,171 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C17BC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179F720835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6C720835
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LiQcC43K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6IpBPpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfCSQzX (ORCPT
+        id S1727959AbfCSQzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:55:23 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34726 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727691AbfCSQzD (ORCPT
+        Tue, 19 Mar 2019 12:55:36 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44577 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfCSQzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:55:03 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2JGklmI028163
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:55:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=YkJK+QDQeU0RAeiicWK1naakK302b4E3rfK83ukBeow=;
- b=LiQcC43KT9gUVkuXkSScuZqOVPXXOFr1VVSslYQPKEIc7HL0+b2wiOxX5d1CGGIx55Gx
- raP97o8h3daZu2F5Wy8m9I/TALWGTXNuC48dHU1Bbz1710eNqEG0T5lMsEfJN2w85H/a
- asqHgUmqu4dCmSOUOirvhStcBSJ5fElGZY0= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by m0001303.ppops.net with ESMTP id 2rb36fragh-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:55:03 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
- mail.thefacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Tue, 19 Mar 2019 09:55:01 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id B669162E1F1B; Tue, 19 Mar 2019 09:54:59 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2 perf,bpf 1/2] perf, bpf: refactor perf_event__synthesize_one_bpf_prog()
-Date:   Tue, 19 Mar 2019 09:54:53 -0700
-Message-ID: <20190319165454.1298742-2-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190319165454.1298742-1-songliubraving@fb.com>
-References: <20190319165454.1298742-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Tue, 19 Mar 2019 12:55:35 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m65so4681002qkl.11;
+        Tue, 19 Mar 2019 09:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cA1+mvWB52bl96k4YlbvPjUbMNYXk69riQWqrx4dZnU=;
+        b=C6IpBPpngpJYJzTHT//SS9iuyJXUbP62PG3xh22kXoxprtry/2etiLncByTR689Ho7
+         aW+7IJSy35P3O6dSuPOPV+R439jin5gG2lbmoPtQZqelbgHvHm99TdHnpblxZDn5GaD/
+         uNx3YB7W9pfUB9dp9oc3MKVOERZezYCqWwz4PmVSoB4RRl+QL6uLzG4qOdeTqHWo7u+2
+         tKKY0LEqUWZfTxjehIQRwTTmeItmfJDgp1xdEp7xajFy9dvcdFaxfYTrah2hNXZgYUpY
+         lYaF/ux5TPEE4V5QEYgOirSozhZ0/9R6yO92bsZYN1BEhLQF8B+9EzDAp1tU4ItN0R/E
+         3fCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cA1+mvWB52bl96k4YlbvPjUbMNYXk69riQWqrx4dZnU=;
+        b=mrZvE8tTfHTQgHf1PvBDZ2UItlJQ+Jwc9dp4gCIJQXeohu46Eu88cXu3LT5KABeU0l
+         qvpdrUZZ0gA2YLEsKGkoYcC9XXkUBxtv8iAoCOYLkj0j87Fp/NlBxSajQ1FdGJ4GB2yg
+         LDrywHe1cjR7RZzhPjfkxtDJhEYT1D32GCUH+SRws7CaK0rN1feSZ7l9ar4K/Uicebhx
+         atH22yDHKxIGy3uEJExfelLVo8ieKW9fo+URDtEA20rAND5/H201L3+2d/5jUgoWc2Z/
+         6mcdl67Bj5aHna8wg8AOP0SlUpyWFPxu0v/Bu1cGHXzq/KxrjllAEg7je/c0CxQbBrN5
+         aDdg==
+X-Gm-Message-State: APjAAAW7wmYeDkQNQAfB2Bht0jZssqOELqtwXaQJMcbaKlhjnSo2euJ0
+        +AQePUbnp31ni20dMv4nZ0I=
+X-Google-Smtp-Source: APXvYqw3zZI59B3rR4QRm6D/56FWO2Anywk2H1s4vneYk4eAJQLr6ELNfAHV2GcBbojeQ/pXUO0kTw==
+X-Received: by 2002:a37:8505:: with SMTP id h5mr2753676qkd.66.1553014534442;
+        Tue, 19 Mar 2019 09:55:34 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id z5sm4880213qke.51.2019.03.19.09.55.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 09:55:33 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 95CEC4039C; Tue, 19 Mar 2019 13:55:31 -0300 (-03)
+Date:   Tue, 19 Mar 2019 13:55:31 -0300
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stanislav Fomichev <sdf@fomichev.me>
+Subject: Re: [WORKS!] Re: [PATCH v9 perf,bpf 12/15] perf, bpf: enable
+ annotation of bpf program
+Message-ID: <20190319165531.GI3029@kernel.org>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+ <20190312053051.2690567-13-songliubraving@fb.com>
+ <20190318163848.GE22548@kernel.org>
+ <9BC22A6D-B0A7-47B6-9526-E32924EF409D@fb.com>
+ <20190319135813.GC3029@kernel.org>
+ <20190319141435.GD3029@kernel.org>
+ <20190319145228.GF3029@kernel.org>
+ <E51C470D-3737-4221-88F9-22C942A51952@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_08:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E51C470D-3737-4221-88F9-22C942A51952@fb.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract logic to create program names to synthesize_bpf_prog_name(), so
-that it can be reused in header.c:print_bpf_prog_info().
+Em Tue, Mar 19, 2019 at 04:51:44PM +0000, Song Liu escreveu:
+> 
+> 
+> > On Mar 19, 2019, at 7:52 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > 
+> > Em Tue, Mar 19, 2019 at 11:14:35AM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> 
+> >> Now the test is really being performed, the test-all.bin feature
+> >> detection fast path is working, proceeding.
+> > 
+> > Now it all works, really nice!
+> > 
+> > I added a 'Committer testing' section with all the steps to test this
+> > and pushed to:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=6530d44e7dc1d41c73fe70b9e6ea1b9cabebb57f
+> 
+> Thanks Arnaldo! This looks great!
+> 
+> I will rebase https://lkml.org/lkml/2019/3/14/681 on top of this branch
+> and resend. 
 
-This commit doesn't change the behavior.
+I just found one new bug, that may appear now since I took a series of
+fixes found by gcc's ASan feature, i.e. on the exit path we're crashing
+on:
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- tools/perf/util/bpf-event.c | 62 +++++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 27 deletions(-)
+[root@quaco ~]# perf top
+perf: Segmentation fault
+-------- backtrace --------
+perf[0x5a785a]
+/lib64/libc.so.6(+0x385bf)[0x7fd68443c5bf]
+perf(rb_first+0x2b)[0x4d6eeb]
+perf(dso__delete+0xb7)[0x4dffb7]
+perf[0x4f9e37]
+perf(perf_session__delete+0x64)[0x504df4]
+perf(cmd_top+0x1957)[0x454467]
+perf[0x4aad18]
+perf(main+0x61c)[0x42ec7c]
+/lib64/libc.so.6(__libc_start_main+0xf2)[0x7fd684428412]
+perf(_start+0x2d)[0x42eead]
+[root@quaco ~]#
+[root@quaco ~]# addr2line -fe ~/bin/perf 0x4dffb7
+dso_cache__free
+/home/acme/git/perf/tools/perf/util/dso.c:713
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 8fadd0471a9a..b615933c6a8c 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -111,6 +111,38 @@ static int perf_env__fetch_btf(struct perf_env *env,
- 	return 0;
- }
- 
-+static int synthesize_bpf_prog_name(char *buf, int size,
-+				    struct bpf_prog_info *info,
-+				    struct btf *btf,
-+				    u32 sub_id)
-+{
-+	u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(uintptr_t)(info->prog_tags);
-+	void *func_infos = (void *)(uintptr_t)(info->func_info);
-+	u32 sub_prog_cnt = info->nr_jited_ksyms;
-+	const struct bpf_func_info *finfo;
-+	const char *short_name = NULL;
-+	const struct btf_type *t;
-+	int name_len;
-+
-+	name_len = snprintf(buf, size, "bpf_prog_");
-+	name_len += snprintf_hex(buf + name_len, size - name_len,
-+				 prog_tags[sub_id], BPF_TAG_SIZE);
-+	if (btf) {
-+		finfo = func_infos + sub_id * info->func_info_rec_size;
-+		t = btf__type_by_id(btf, finfo->type_id);
-+		short_name = btf__name_by_offset(btf, t->name_off);
-+	} else if (sub_id == 0 && sub_prog_cnt == 1) {
-+		/* no subprog */
-+		if (info->name[0])
-+			short_name = info->name;
-+	} else
-+		short_name = "F";
-+	if (short_name)
-+		name_len += snprintf(buf + name_len, size - name_len,
-+				     "_%s", short_name);
-+	return name_len;
-+}
-+
- /*
-  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
-  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-@@ -135,7 +167,6 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	struct bpf_prog_info_node *info_node;
- 	struct bpf_prog_info *info;
- 	struct btf *btf = NULL;
--	bool has_btf = false;
- 	struct perf_env *env;
- 	u32 sub_prog_cnt, i;
- 	int err = 0;
-@@ -189,19 +220,13 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 			btf = NULL;
- 			goto out;
- 		}
--		has_btf = true;
- 		perf_env__fetch_btf(env, info->btf_id, btf);
- 	}
- 
- 	/* Synthesize PERF_RECORD_KSYMBOL */
- 	for (i = 0; i < sub_prog_cnt; i++) {
--		u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(uintptr_t)(info->prog_tags);
--		__u32 *prog_lens  = (__u32 *)(uintptr_t)(info->jited_func_lens);
-+		__u32 *prog_lens = (__u32 *)(uintptr_t)(info->jited_func_lens);
- 		__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
--		void *func_infos  = (void *)(uintptr_t)(info->func_info);
--		const struct bpf_func_info *finfo;
--		const char *short_name = NULL;
--		const struct btf_type *t;
- 		int name_len;
- 
- 		*ksymbol_event = (struct ksymbol_event){
-@@ -214,26 +239,9 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 			.ksym_type = PERF_RECORD_KSYMBOL_TYPE_BPF,
- 			.flags = 0,
- 		};
--		name_len = snprintf(ksymbol_event->name, KSYM_NAME_LEN,
--				    "bpf_prog_");
--		name_len += snprintf_hex(ksymbol_event->name + name_len,
--					 KSYM_NAME_LEN - name_len,
--					 prog_tags[i], BPF_TAG_SIZE);
--		if (has_btf) {
--			finfo = func_infos + i * info->func_info_rec_size;
--			t = btf__type_by_id(btf, finfo->type_id);
--			short_name = btf__name_by_offset(btf, t->name_off);
--		} else if (i == 0 && sub_prog_cnt == 1) {
--			/* no subprog */
--			if (info->name[0])
--				short_name = info->name;
--		} else
--			short_name = "F";
--		if (short_name)
--			name_len += snprintf(ksymbol_event->name + name_len,
--					     KSYM_NAME_LEN - name_len,
--					     "_%s", short_name);
- 
-+		name_len = synthesize_bpf_prog_name(ksymbol_event->name,
-+						    KSYM_NAME_LEN, info, btf, i);
- 		ksymbol_event->header.size += PERF_ALIGN(name_len + 1,
- 							 sizeof(u64));
- 
--- 
-2.17.1
 
+And that is because of that union:
+
++       union {
++               /* dso data file */
++               struct {
++                       struct rb_root   cache;
++                       int              fd;
++                       int              status;
++                       u32              status_seen;
++                       size_t           file_size;
++                       struct list_head open_entry;
++                       u64              debug_frame_offset;
++                       u64              eh_frame_hdr_offset;
++               } data;
++               /* bpf prog information */
++               struct {
++                       u32             id;
++                       u32             sub_id;
++                       struct perf_env *env;
++               } bpf_prog;
++       };
+
+
+On the dso exit path, it is trying to traverse the data.cache rbtree,
+when what is that is that bpf_prog.id, etc, I'll just remove the union
+for now, later we can do the data.cache access or bpf_prog based on some
+other test.
