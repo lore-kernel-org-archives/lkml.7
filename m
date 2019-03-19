@@ -2,144 +2,189 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF50C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E82C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2452175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B2E2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rpYlLNPs"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="M+ReO8ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfCSXHa (ORCPT
+        id S1727210AbfCSXK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:07:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48308 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfCSXH3 (ORCPT
+        Tue, 19 Mar 2019 19:10:29 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39903 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfCSXK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:07:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2JMxDPi099486;
-        Tue, 19 Mar 2019 23:07:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=nPEVnTiWSuhDBoRXO1SdFfzOhmBOtfMl84Dbp8QcfzI=;
- b=rpYlLNPsgjKHbE3ly+NYAh9LwTJ+wLwWzBtRBp5ugQ/hTSDaRb2jpmgh3ttjc8cmR7ID
- 4nOHcBJdK+0mixz1kM36tL10BSGw6ALJg6Z/MDLXXv6BFeeKWQCagWGjL9eYBCzeWkQD
- 6dr5jcCny15BpuPz0fFkXeGJL9LEhmoPsQ12aoTgo7wmcSb7JsMStzSVe4gfMQvQKjZX
- nCSmic6ttYirfmY4OPASBCnMkkRD5EPT0lw1E2aDW88JM7+ap5e9NkwkPh75V2lIZ9C4
- vIL9bDYZOQEslLJT5cdHloxCfYbGyuRmUUyMYn2gYJEw6Z7X2S//33HzZ8SQ88vwf3NB ag== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2r8rjuqp65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 23:07:05 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2JN74N3014403
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 23:07:04 GMT
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2JN73Pb025065;
-        Tue, 19 Mar 2019 23:07:03 GMT
-Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Mar 2019 16:07:03 -0700
-Subject: Re: [PATCH] xen/pv: Add PV specific legacy_pic struct to expose
- legacy IRQs.
-To:     Jennifer Herbert <jennifer.herbert@citrix.com>, x86@kernel.org,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <1553025739-92245-1-git-send-email-jennifer.herbert@citrix.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <2eb1fdec-6cc0-7f62-3d4f-adc5dba9971e@oracle.com>
-Date:   Tue, 19 Mar 2019 19:06:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 19 Mar 2019 19:10:29 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t28so418191qte.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 16:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6FWypQkapP8gnmtBtLQAKuuE6zk0IbVIm8LRbFhdYXc=;
+        b=M+ReO8agDfxcUZE1BC6jIroXPpA/3rFDw7WL2eBF6QPi8+fe4q1yfE3cc0ZNNln0tP
+         3Dutwt74X0Mb9BEPu7GbrMZZWOuKVdH78KU+HAbkslsG02wo4iK6ObbXFZIoJvse5hPt
+         +mNSLNRsZHvFLQ4ytrymOevkVA91aSIXV02lVyagkwxkXhUuYamp7vkRAOrO2Z+riYjx
+         7iDcO0ceMht3+Sfv53hEyNRAiX3hMmxRqjcgVLTi/UdEAQ7Fpt8Na61DjVKqaRKcg0ZT
+         c6uHvd7we28+D1ALMCmPsoULQb1zPqsGc8VZi23DjfCjNIdsYvHONVsI2or/qGNiNMh1
+         BQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6FWypQkapP8gnmtBtLQAKuuE6zk0IbVIm8LRbFhdYXc=;
+        b=Zy+1x0UVxRVWBeA+trapVSD5xkaTLeMJ5AYnl91WPVReOpWA4am2tYFJr9+UUD9yt2
+         Bn+1yT0UgCZ0PXV+MtC/J+btCdb52gMdnxdVPydGW5SzQdyo84uGae/+2Zw1FffReY0P
+         zjWp+qvPf/lzntSrtXU9VW1JiRp10mlRDHNEE/MTJQynAYqX6dWGtE1niK5d4A6OXdrD
+         dpOOjUpH6ZVhVmBsTqLLeP44FmFDCi16JPFBTVtwMvNKNwUMzTgk6EhNb4QlNlv6P2pB
+         KkjoFCMmRlR2T/8IOO1CJ+eyBvXf51dvV6meYCGer3H6lmC7Nz4oGNm5ZxXGVAl7/nO9
+         1tDA==
+X-Gm-Message-State: APjAAAVHy6D37uieRYl9rR6il0NMyeaB+I74o7NLKLMH1f0CvIrE7zcl
+        yJ6Fa/08+ksB+E77B17umEViFQ==
+X-Google-Smtp-Source: APXvYqxwNsa8SsSdl8LqERXal6FHQWmFo7gdTiOZy3amFeU+WySgqgoRQgKFw4lJtMZx/FhDpN1fcQ==
+X-Received: by 2002:ac8:2850:: with SMTP id 16mr4256446qtr.84.1553037028006;
+        Tue, 19 Mar 2019 16:10:28 -0700 (PDT)
+Received: from brauner.io ([38.127.230.10])
+        by smtp.gmail.com with ESMTPSA id j10sm59557qth.14.2019.03.19.16.10.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 16:10:27 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 00:10:23 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190319231020.tdcttojlbmx57gke@brauner.io>
+References: <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
+ <20190316185726.jc53aqq5ph65ojpk@brauner.io>
+ <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
+ <20190317015306.GA167393@google.com>
+ <20190317114238.ab6tvvovpkpozld5@brauner.io>
+ <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
+ <20190318002949.mqknisgt7cmjmt7n@brauner.io>
+ <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1553025739-92245-1-git-send-email-jennifer.herbert@citrix.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=730 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903190159
+Content-Disposition: inline
+In-Reply-To: <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/19 4:02 PM, Jennifer Herbert wrote:
-> The ACPI tables doesn't always contain all IRQs for legacy devices
-> such as RTC.  Since no PIC controller is visible for a PV linux guest,
-> under Xen, legacy_pic currently defaults to the null_legacy_pic - with
-> reports no legacy IRQs.  Since the commit "rtc: cmos: Do not assume
-> irq 8 for rtc when there are no legacy irqs" by Hans de Goede
-> (commit id: a1e23a42f1bdc00e32fc4869caef12e4e6272f26), the rtc now
-> incorrectly decides it has no irq it can use, for some hardware.
->
-> This patch rectifies the problem by providing a xen legacy_pic
-> struct, which is much like the null_legacy_pic except that it
-> reports NR_IRQS_LEGACY irqs.
+On Tue, Mar 19, 2019 at 03:48:32PM -0700, Daniel Colascione wrote:
+> On Tue, Mar 19, 2019 at 3:14 PM Christian Brauner <christian@brauner.io> wrote:
+> > So I dislike the idea of allocating new inodes from the procfs super
+> > block. I would like to avoid pinning the whole pidfd concept exclusively
+> > to proc. The idea is that the pidfd API will be useable through procfs
+> > via open("/proc/<pid>") because that is what users expect and really
+> > wanted to have for a long time. So it makes sense to have this working.
+> > But it should really be useable without it. That's why translate_pid()
+> > and pidfd_clone() are on the table.  What I'm saying is, once the pidfd
+> > api is "complete" you should be able to set CONFIG_PROCFS=N - even
+> > though that's crazy - and still be able to use pidfds. This is also a
+> > point akpm asked about when I did the pidfd_send_signal work.
+> 
+> I agree that you shouldn't need CONFIG_PROCFS=Y to use pidfds. One
+> crazy idea that I was discussing with Joel the other day is to just
+> make CONFIG_PROCFS=Y mandatory and provide a new get_procfs_root()
+> system call that returned, out of thin air and independent of the
+> mount table, a procfs root directory file descriptor for the caller's
+> PID namspace and suitable for use with openat(2).
 
-I assume this is for dom0?
+Even if this works I'm pretty sure that Al and a lot of others will not
+be happy about this. A syscall to get an fd to /proc? That's not going
+to happen and I don't see the need for a separate syscall just for that.
+(I do see the point of making CONFIG_PROCFS=y the default btw.)
 
-Could there be the same problem with PVH dom0? (and if yes then this
-should probably go into arch/x86/xen/enlighten.c).
+Inode allocation from the procfs mount for the file descriptors Joel
+wants is not correct. Their not really procfs file descriptors so this
+is a nack. We can't just hook into proc that way.
 
--boris
+> 
+> C'mon: /proc is used by everyone today and almost every program breaks
+> if it's not around. The string "/proc" is already de facto kernel ABI.
+> Let's just drop the pretense of /proc being optional and bake it into
+> the kernel proper, then give programs a way to get to /proc that isn't
+> tied to any particular mount configuration. This way, we don't need a
+> translate_pid(), since callers can just use procfs to do the same
+> thing. (That is, if I understand correctly what translate_pid does.)
 
+I'm not sure what you think translate_pid() is doing since you're not
+saying what you think it does.
+Examples from the old patchset:
+translate_pid(pid, ns, -1)      - get pid in our pid namespace
+translate_pid(pid, -1, ns)      - get pid in other pid namespace
+translate_pid(1, ns, -1)        - get pid of init task for namespace
+translate_pid(pid, -1, ns) > 0  - is pid is reachable from ns?
+translate_pid(1, ns1, ns2) > 0  - is ns1 inside ns2?
+translate_pid(1, ns1, ns2) == 0 - is ns1 outside ns2?
+translate_pid(1, ns1, ns2) == 1 - is ns1 equal ns2?
+
+Allowing this syscall to yield pidfds as proper regular file fds and
+also taking pidfds as argument is an excellent way to kill a few
+problems at once:
+- cheap pid namespace introspection
+- creates a bridge between the "old" pid-based api and the "new" pidfd api
+- allows us to get proper non-directory file descriptors for any pids we
+  like
+
+The additional advantage is that people are already happy to add this
+syscall so simply extending it and routing it through the pidfd tree or
+Eric's tree is reasonable. (It should probably grow a flag argument. I
+need to start prototyping this.)
+
+> 
+> We still need a pidfd_clone() for atomicity reasons, but that's a
+> separate story. My goal is to be able to write a library that
+
+Yes, on my todo list and I have a ported patch based on prior working
+rotting somehwere on my git server.
+
+> transparently creates and manages a helper child process even in a
+> "hostile" process environment in which some other uncoordinated thread
+> is constantly doing a waitpid(-1) (e.g., the JVM).
+> 
+> > So instead of going throught proc we should probably do what David has
+> > been doing in the mount API and come to rely on anone_inode. So
+> > something like:
+> >
+> > fd = anon_inode_getfd("pidfd", &pidfd_fops, file_priv_data, flags);
+> >
+> > and stash information such as pid namespace etc. in a pidfd struct or
+> > something that we then can stash file->private_data of the new file.
+> > This also lets us avoid all this open coding done here.
+> > Another advantage is that anon_inodes is its own kernel-internal
+> > filesystem.
+> 
+> Sure. That works too.
+
+Great.
