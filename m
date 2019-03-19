@@ -2,109 +2,214 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A59EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD002083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="ZvRJLHJw"
+	by mail.kernel.org (Postfix) with ESMTP id 1A69620850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfCSPpA (ORCPT
+        id S1727805AbfCSPpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:45:00 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45650 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfCSPo7 (ORCPT
+        Tue, 19 Mar 2019 11:45:17 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:34298 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726763AbfCSPpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:44:59 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so4900341pgk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 08:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1Fjw3xHngZfnwF/TJTFhRTSP9ZNBLIfg4L43mfZOTKk=;
-        b=ZvRJLHJw+Z9ORZucbD8+nowi2iYZp/bmH9bOh6JjB5VEvvi+Vy9+lZAL5009kEqDzx
-         xwOEFmKX57Cpufyu0TzP49VdSmoTq+YMEAyr07pXtAiM6lFSFkcR7jPlbO2W0OFQD6vV
-         tXFBg5wbq2FxM13WGpJiYd11e6F2Vsk8jXZ2yR1VqQOJYzvCfrGp3H5EIKEWHX7ZiNZf
-         LZtuHK4SsFOlBhgdRocXyxeUu0qGqI9Ci17sGuI5CzXoXqEaCtmMOwAkwu8o04f3EY7B
-         qdgyfqKjF+Mv/pXPxY63Mg56bMp1V2YtnWEqkVpJJLOpO3u1alUPwmac0DxbFi8fBhkh
-         GG/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1Fjw3xHngZfnwF/TJTFhRTSP9ZNBLIfg4L43mfZOTKk=;
-        b=ImagtCohaB7gvx97EzxobPzuept3pKrvqmZQGjS5K3HjZHofpHT8O1xeAPTo1rOL0y
-         oD0VZ6cbMwkY+bkCtGsj/QKrWX2k/qHMTN2gS8dNJ0nVdE1VFuhNgKoyGqC9KMgxZgIa
-         oOyqBI92sHbb6HjEqnr06fru3HUlsvgTGiUhaLPPUVV+EawHXkf8YHyl5FU9VB/Ro0S3
-         vwToesOrVD6Cj8r7XMG+WCkqFK+h3Jl+9Dzq5EAwAWBoU5ELcir9FDUUcWnRa5sxM7FY
-         S5XiVNiYvuzqx1dNMd0AnSlf2IXiiVxstZ3kgJXF7fQtF4J8DsG16dTVbfPjZkUWmCUD
-         tDNA==
-X-Gm-Message-State: APjAAAU9F/QpVl3gE7RiW9SEmCF4mUfvNwCefg2vdl5NZRjcTUgtrLYt
-        ZsJ+3GXyiudWWhbdzwOVDexO2g==
-X-Google-Smtp-Source: APXvYqwfxeQIPhxiwRWKhQgS3TV/N0MTqG6fUi9PK/5Ax3dibk2BPCcM2LSmY+dHIh7+lCrdoJONPg==
-X-Received: by 2002:a62:d2ca:: with SMTP id c193mr3060661pfg.247.1553010299013;
-        Tue, 19 Mar 2019 08:44:59 -0700 (PDT)
-Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id h3sm14280128pfb.31.2019.03.19.08.44.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 08:44:58 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 08:44:55 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "wanghai (M)" <wanghai26@huawei.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <davem@davemloft.net>, <idosch@mellanox.com>,
-        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
-        <f.fainelli@gmail.com>, <amritha.nambiar@intel.com>,
-        <joe@perches.com>, <dmitry.torokhov@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net-sysfs: Fix memory leak in netdev_register_kobject
-Message-ID: <20190319084455.2d4b6032@shemminger-XPS-13-9360>
-In-Reply-To: <18553079-7bbd-fcfe-ef1c-6717e963e0a5@huawei.com>
-References: <20190319050657.61327-1-wanghai26@huawei.com>
-        <20190318085724.1e0c017b@shemminger-XPS-13-9360>
-        <20190318161949.GX9224@smile.fi.intel.com>
-        <c1c266af-7aaa-00a7-aa7a-e61c65665741@huawei.com>
-        <20190319103037.GD9224@smile.fi.intel.com>
-        <18553079-7bbd-fcfe-ef1c-6717e963e0a5@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Mar 2019 11:45:17 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0935551-0.0986024-0.807842;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.EA6pZCu_1553010300;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.EA6pZCu_1553010300)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Tue, 19 Mar 2019 23:45:05 +0800
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: [PATCH v14 0/4] pstore/block: new support logger for block devices
+Date:   Tue, 19 Mar 2019 23:45:48 +0800
+Message-Id: <1553010352-13040-1-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 20:17:01 +0800
-"wanghai (M)" <wanghai26@huawei.com> wrote:
+Why should we need pstore_block?
+1. Most embedded intelligent equipment have no persistent ram, which
+increases costs. We perfer to cheaper solutions, like block devices.
+In fast, there is already a sample for block device logger in driver
+MTD (drivers/mtd/mtdoops.c).
+2. Do not any equipment have battery, which means that it lost all data
+on general ram if power failure. Pstore has little to do for these
+equipments.
 
-> +out:
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return error;
-> +register_error:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_del(dev);
-> +device_add_error:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put_device(dev);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
+[PATCH v14]
+On patch 1:
+1. flush dirty dmesg zones when write
+On patch 2:
+1. Support dump_oops for blkoops.
+On patch 3:
+1. use new apis to flush dirty zone.
 
-Everything looks fine, but I would redo the last part without
-the last goto out. Using a goto back to single return reduces
-readability.
+[PATCH v13]
+On patch 1:
+1. no need to check zone->buffer in blkz_zone_write() since it never be null
+2. blkz_free_zones should return directly if zones is null
+3. In blkz_init_zones(), it will causes memory leak if
+blkz_init_zone() return failure because it forget to free zone->buffer.
+4. In blkz_zone_write(), we copy new data to ram buffer only when buf and
+wlen are valid.
+On pathc 2:
+1. Fix spelling error on Kconfig
+On patch 3:
+1. In blkz_pstore_erase(), if there are new but dirty data in pmsg
+zone buffer, we should try to flush them to block device.
+2. Fix spelling error on Kconfig
 
-	if (error)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 goto register_error;
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-	pm_runtime_set_memalloc_noio(dev, true);
-	return 0;
+[PATCH v12]
+On patch 4:
+1. Modify the document according to Randy Dunlap's suggestion.
 
-register_error:
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_del(dev);
-device_add_error:
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put_device(dev);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return error;
+[PATCH v11]
+Change patchset label from RFC to PATCH
+
+[PATCH v10]
+Cancel DT support for blkoops temporarily.
+On patch 1:
+1. pstore/blk should unlink PSTORE_BLKDEV when unregister.
+On patch 2:
+1. cancel DT support temporarily. I will submit other patches to support DT
+   when DT maintainers acked.
+2. add spin lock to protect blkz_info when modify panic operations.
+3. change default value of total size on Kconfig from 1024 to 0.
+
+[PATCH v9]
+On patch 1:
+1. rename part_path/part_size, members of blkz_info, to blkdev/total_size
+2. if total_size is zero, get size from @blkdev
+3. support multiple variants for @blkdev, such as partuuid, major with
+   minor, and /dev/xxxx. See details on Documentation.
+4. get size from block device
+5. add depends on CONFIG_BLOCK
+On patch 2:
+1. update document
+On patch 3:
+1. update codes for new blkzone. Blkoops support insmod without total_size.
+   for example: "insmod ./blkoops.ko blkdev=93:6" (major:minor).
+2. use late_initcalls rather than module_init, to avoid block device not
+ready.
+3. support for block driver to add panic apis to blkoops. By this, block
+   driver can do the least work that just provides panic operations.
+On patch 5:
+1. update document
+
+[PATCH v8]
+On patch 2:
+1. move DT to /bindings/pstore
+2. Delete details for kernel.
+
+[PATCH v7]
+On patch 1:
+1. Fix line over 80 characters.
+On patch 2:
+1. Insert a separate patch for DT bindings.
+
+[PATCH v6]
+On patch 1:
+1. Fix according to email from Kees Cook, including spelling mistakes,
+   explicit overflow test, none of the zeroing etc.
+2. Do not recover data but metadata of dmesg when panic.
+3. No need to take recovery when do erase.
+4. Do not use "blkoops" for blkzone any more because "blkoops" is used for
+   other module now. (rename blkbuf to blkoops)
+On patch 2:
+1. Rename blkbuf to blkoops.
+2. Add Kconfig/device tree/module parameters settings for blkoops.
+3. Add document for device tree.
+On patch 3:
+1. Blkoops support pmsg.
+2. Fix description for new version patch.
+On patch 4:
+1. Fix description for new version patch.
+
+[PATCH v5]
+On patch 1:
+1. rename pstore/rom to pstore/blk
+2. Do not allocate any memory in the write path of panic. So, use local
+array instead in function romz_recover_dmesg_meta.
+3. Add C header file "linux/fs.h" to fix implicit declaration of function
+   'filp_open','kernel_read'...
+On patch 3:
+1. If panic, do not recover pmsg but flush if it is dirty.
+2. Fix erase pmsg failed.
+On patch 4:
+1. Create a document for pstore/blk
+
+[PATCH v4]
+On patch 1:
+1. Fix always true condition '(--i >= 0) => (0-u32max >= 0)' in function
+   romz_init_zones by defining variable i to 'int' rahter than
+   'unsigned int'.
+2. To make codes more easily to read, we use macro READ_NEXT_ZONE for
+   return value of romz_dmesg_read if it need to read next zone.
+   Moveover, we assign READ_NEXT_ZONE -1024 rather than 0.
+3. Add 'FLUSH_META' to 'enum romz_flush_mode' and rename 'NOT_FLUSH' to
+   'FLUSH_NONE'
+4. Function romz_zone_write work badly with FLUSH_PART mode as badly
+   address and offset to write.
+On patch 3:
+NEW SUPPORT psmg for pstore_rom.
+
+[PATCH v3]
+On patch 1:
+Fix build as module error for undefined 'vfs_read' and 'vfs_write'
+Both of 'vfs_read' and 'vfs_write' haven't be exproted yet, so we use
+'kernel_read' and 'kernel_write' instead.
+
+[PATCH v2]
+On patch 1:
+Fix build as module error for redefinition of 'romz_unregister' and
+'romz_register'
+
+[PATCH v1]
+On patch 1:
+Core codes of pstore_rom, which works well on allwinner(sunxi) platform.
+On patch 2:
+A sample for pstore_rom, using general ram rather than block device.
+
+liaoweixiong (4):
+  pstore/blk: new support logger for block devices
+  pstore/blk: add blkoops for pstore_blk
+  pstore/blk: support pmsg for pstore block
+  Documentation: pstore/blk: create document for pstore_blk
+
+ Documentation/admin-guide/pstore-block.rst |  233 +++++
+ MAINTAINERS                                |    3 +-
+ fs/pstore/Kconfig                          |  150 ++++
+ fs/pstore/Makefile                         |    5 +
+ fs/pstore/blkoops.c                        |  219 +++++
+ fs/pstore/blkzone.c                        | 1293 ++++++++++++++++++++++++++++
+ include/linux/pstore_blk.h                 |   87 ++
+ 7 files changed, 1989 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/pstore-block.rst
+ create mode 100644 fs/pstore/blkoops.c
+ create mode 100644 fs/pstore/blkzone.c
+ create mode 100644 include/linux/pstore_blk.h
+
+-- 
+1.9.1
+
