@@ -2,110 +2,104 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0560FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75776C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04AD20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3856F20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bV4WjPqs"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BEx861Rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfCSEKo (ORCPT
+        id S1726303AbfCSEYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 00:10:44 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:29879 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfCSEKo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 00:10:44 -0400
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x2J4AJOB030423;
-        Tue, 19 Mar 2019 13:10:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x2J4AJOB030423
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552968620;
-        bh=gNnwu/3W48uO8s1Quq1TU41bjR7ljkGf3JPs+BgQTN0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bV4WjPqskWle9aCbuKA6ZSh2HN6gnpU8bz+5rpiVe79RWJ1c1BPbxLMPyEkrQRqoU
-         qwAGr/hxqVk/pzx6WpCh10ArJHfzJ4nIVjnBaRTA262aJQNtuQx0oVBkD4WMPunzIy
-         3xdQklcbiPboKGeFwFcT4S/JTG2KXeV/PZJwmCn7fNReoc9+1svQ2BbXOKHGwH/AiH
-         dggH4gtkwwxi5wZVQHMzJgLu+AgKoGeq17839svMOg+FCwsLwJVWWElNiAVjV+yE5U
-         FTWgbOp8yMzPIho1fZ6E2I6VznL2KLTyOapcuTrtYb1AQod4EiRJMCkNUUWkEA0RLL
-         1YlA/xjsd9PpQ==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id l17so4323401vke.7;
-        Mon, 18 Mar 2019 21:10:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAWLNfgcoAh6W5aFRXxpZg2xYM9l/cDJB4+QFX3jwfZH0vhI2kYU
-        ENSKgd+hqtn6fyPMFhR57fNeL4gfIJoPNB2+AZo=
-X-Google-Smtp-Source: APXvYqyb1AMEueEtk0/j4E5A9lA2dHVv5+4a3tgSxiVbnVuYe+k1oLbHr7CX/wJ0GMC1WClCMPy4UihDM+SlZ5ppswM=
-X-Received: by 2002:a1f:ae07:: with SMTP id x7mr213404vke.74.1552968619307;
- Mon, 18 Mar 2019 21:10:19 -0700 (PDT)
+        Tue, 19 Mar 2019 00:24:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:45203 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfCSEYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 00:24:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Ng170mDjz9s5c;
+        Tue, 19 Mar 2019 15:24:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1552969451;
+        bh=poF5ciph9KDsJlgevVC2oSFWCGaWo9zj/rBg/KWvbpg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BEx861RbVQ+NEwLMljJrsnaJTi/flhE8Q7eyLOwAOy7OJfVSlqriBBj0WdelFemPt
+         x03PaoT5zHiInzPgD/tdTVmeCouB41pA4sOSLS70Coq0fKM8QrnFdTOLiMoTpZpohZ
+         P7W+uTeB5uIAaY86pb4SW0VDVaemcYe6pvM8ErXhWsbzqQFr25U4CZ+rSEnv4Sz2ww
+         Ve4OZW3Fv4UVPL22iW/y1Pdrg2LuIW/eLJN/gOmhX3q6Ov8IyvdMlRSdWVSeknOey3
+         e5QEG2wmXeLv0YHQdoHjO1o91Op4fEtk0LOJs/74FPR7/d1viOSf8Reu7e16B+UmEV
+         V4I4PZCn0vAkA==
+Date:   Tue, 19 Mar 2019 15:24:03 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>
+Subject: linux-next: manual merge of the akpm-current tree with the amdgpu
+ tree
+Message-ID: <20190319152403.41570130@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1552036419-924-1-git-send-email-yamada.masahiro@socionext.com> <mvm7ecwqz87.fsf@suse.de>
-In-Reply-To: <mvm7ecwqz87.fsf@suse.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 19 Mar 2019 13:09:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARKGYm0fO1BR83RdCWtxNj4dWBAVAw-JHXxCrRON986kw@mail.gmail.com>
-Message-ID: <CAK7LNARKGYm0fO1BR83RdCWtxNj4dWBAVAw-JHXxCrRON986kw@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: add workaround for Debian make-kpkg
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Manoj Srivastava <srivasta@debian.org>,
-        Liz Zhang <lizzha@microsoft.com>,
-        Lili Deng <v-lide@microsoft.com>,
-        Manoj Srivastava <manoj.srivastava.1962@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/j+tJL_kw4Tm17VEcFezTcpn"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+--Sig_/j+tJL_kw4Tm17VEcFezTcpn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2019 at 7:00 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> On M=C3=A4r 08 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrot=
-e:
->
-> > +$(warning Do not include top Makefile of Linux Kernel)
->
-> So how do I add additional targets then?  Currently I create
-> GNUmakefile, include Makefile, then add the targets I need.  It seems
-> this is now broken.
+Hi all,
 
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
----------(GNUmakefile BEGIN)-----------
-your-own-target1:
-        echo hello
+  mm/hmm.c
 
-your-own-target2:
-        echo world
+between commit:
 
-# For the rest, fall back to the kernel Makefile
-%:
-        $(MAKE) -f Makefile $@
----------(GNUmakefile END)-----------
+  e811b0a79998 ("mm/hmm: use reference counting for HMM struct")
 
+from the amdgpu tree and commit:
 
+  e0ed7d6bb0c5 ("mm/hmm: use reference counting for HMM struct")
 
-Having said that, my previous cheesy workaround sucks.
+and following commits from the akpm-current tree.
 
-How about this patch?
-https://patchwork.kernel.org/patch/10858809/
-
-I hope you will be able to wrap the top Makefile again.
-
-
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
 --=20
-Best Regards
-Masahiro Yamada
+Cheers,
+Stephen Rothwell
+
+--Sig_/j+tJL_kw4Tm17VEcFezTcpn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyQbuMACgkQAVBC80lX
+0Gyb7Qf/TQxNnjwXMss+AiF6aYhuzG5NrAZ61t/8/IXFdIFIJGBnhSGBBvc0WlzJ
+KFc4XPYkw5aO/9b0BD1uRmv3dQhm63VZfMzROUmMO13moylM+YqafQXR5u0SOQLT
+74XElhfHBsrsGpv5kkOjF2NuwIChZaijGOUzNQsjmbZ+2ZF+Il4XqEh16pIdGED8
+OzFsDDG8E4owTj8bYn6OQYhtaG6uB3Z4xJ2Bfc/DkZ0wSyBVfLhR1XjsCHNA6mK6
+NecCGHcyBVhjQsEA3lAgagvbqlMRHOP4lVMigGTXIiClvwtglfibc7D3WdG41cAr
+yfYqt4W/Aqyo4TQJPD0VMxrBOXmf9A==
+=Yx/A
+-----END PGP SIGNATURE-----
+
+--Sig_/j+tJL_kw4Tm17VEcFezTcpn--
