@@ -2,68 +2,177 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652AEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D889AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2067720811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cexcw/s1"
+	by mail.kernel.org (Postfix) with ESMTP id 9CAE52184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfCSP3M (ORCPT
+        id S1727800AbfCSP3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:29:12 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42226 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfCSP3L (ORCPT
+        Tue, 19 Mar 2019 11:29:35 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56323 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCSP3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:29:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M3YgC4PQ3oC3wovMHbKlK0mpQFq3laS/+t0XN7D5y+g=; b=Cexcw/s1HW2/nYjJCLRTHRRZw
-        IgPgO0b84ZDEskK7ObbqDYf29BYkHbcpIkn+m0ReMmlG9VpxGvjouKvhHJ2bkpjOHUo7sPRDw4BUu
-        4fA3jYkcqPG9DM2qYjBJmm7fo1BLTDIFSXkUWyx1qBpfkAGYvaRIIhYamoi9ltcr2Jihef/uLbh6n
-        IHLOZDNd+RvITBnR4LzgVr3YBsMSn0sPf6ERfbWTwh7U/8Gwqp2MCKb5Q/OD+hW3sD2+JwgDz7K9M
-        J9d/W0BwGBbxeFoEb0X1AAd8UqpOsxp/xS/EnTKaUcbXGzyebRa8J2sqcX1G06fWH/ldFDZrzzgrA
-        XQVFpW1fg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6Gfp-0001ig-S5; Tue, 19 Mar 2019 15:29:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8A7FE28295A3F; Tue, 19 Mar 2019 16:29:03 +0100 (CET)
-Date:   Tue, 19 Mar 2019 16:29:03 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 11/22] perf/core: Support a REMOVE transaction
-Message-ID: <20190319152903.GJ5996@hirez.programming.kicks-ass.net>
-References: <20190318214144.4639-1-kan.liang@linux.intel.com>
- <20190318214144.4639-12-kan.liang@linux.intel.com>
+        Tue, 19 Mar 2019 11:29:34 -0400
+X-Originating-IP: 90.88.33.153
+Received: from localhost (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0037520007;
+        Tue, 19 Mar 2019 15:29:29 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v6 0/2] media: cedrus: Add H264 decoding support
+Date:   Tue, 19 Mar 2019 16:29:26 +0100
+Message-Id: <cover.3917a1471bfc8cbdfdde8026566b3857caff5762.1553009355.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318214144.4639-12-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 02:41:33PM -0700, kan.liang@linux.intel.com wrote:
-> From: Andi Kleen <ak@linux.intel.com>
-> 
-> For TopDown metrics it is useful to have a remove transaction when
-> the counter is unscheduled, so that the value can be saved correctly.
-> Add a remove transaction to the perf core.
+Hi,
 
-That needs more explaining.
+Here is a new version of the H264 decoding support in the cedrus
+driver.
+
+As you might already know, the cedrus driver relies on the Request
+API, and is a reverse engineered driver for the video decoding engine
+found on the Allwinner SoCs.
+
+This work has been possible thanks to the work done by the people
+behind libvdpau-sunxi found here:
+https://github.com/linux-sunxi/libvdpau-sunxi/
+
+I've tested the various ABI using this gdb script:
+http://code.bulix.org/jl4se4-505620?raw
+
+And this test script:
+http://code.bulix.org/8zle4s-505623?raw
+
+The application compiled is quite trivial:
+http://code.bulix.org/e34zp8-505624?raw
+
+The output is:
+arm:	builds/arm-test-v4l2-h264-structures
+	SHA1: fd15b30328765c2caac877e8ea8452c829b2b1d8
+x86:	builds/x86-test-v4l2-h264-structures
+	SHA1: fd15b30328765c2caac877e8ea8452c829b2b1d8
+x64:	builds/x64-test-v4l2-h264-structures
+	SHA1: fd15b30328765c2caac877e8ea8452c829b2b1d8
+arm64:	builds/arm64-test-v4l2-h264-structures
+	SHA1: fd15b30328765c2caac877e8ea8452c829b2b1d8
+
+Let me know if there's any flaw using that test setup, or if you have
+any comments on the patches.
+
+Maxime
+
+Changes from v5:
+  - Made the references to the H264 spec more explicit
+  - Added a flag for the IDR pic
+  - Fixed typos
+  - Rebased on v5.1-rc1
+
+Changes from v4:
+  - Changed the luma and chroma weight and offset from s8 to s16
+  - Adjusted chroma and luma denominators masks in the driver
+  - Casted the luma and chroma offset to prevent an overflow
+  - ALways write the interrupt status register
+  - Fix a bug in the sram write routine that would write something even if
+    the length was 0
+  - Make the scaling lists mandatory
+  - Made the reference list order explicit in the documentation
+  - Made the fact that the slice structure can be an array
+  - Renamed the slice format to V4L2_PIX_FMT_H264_SLICE_RAW
+  - Rebased on Hans' tag br-v5.1s
+
+Changes from v3:
+  - Reintroduced long term reference flag and documented it
+  - Reintroduced ref_pic_list_p0/b0/b1 and documented it
+  - Documented the DPB flags
+  - Treat the scaling matrix as optional in the driver, as documented
+  - Free the neighbor buffer
+  - Increase the control IDs by a large margin to be safe of collisions
+  - Reorder the fields documentation according to the structure layout
+  - Change the tag documentation by the timestamp
+  - Convert the sram array to size_t
+  - Simplify the buffer retrieval from timestamp
+  - Rebase
+
+Changes from v2:
+  - Simplified _cedrus_write_ref_list as suggested by Jernej
+  - Set whether the frame is used as reference using nal_ref_idc
+  - Respect chroma_format_idc
+  - Fixes for the scaling list and prediction tables
+  - Wrote the documentation for the flags
+  - Added a bunch of defines to the driver bit fields
+  - Reworded the controls and data format descriptions as suggested
+    by Hans
+  - Reworked the controls' structure field size to avoid padding
+  - Removed the long term reference flag
+  - Reintroduced the neighbor info buffer
+  - Removed the ref_pic_list_p0/b0/b1 arrays that are redundant with the
+    one in the DPB
+  - used the timestamps instead of tags
+  - Rebased on 5.0-rc1
+
+Changes from v1:
+  - Rebased on 4.20
+  - Did the documentation for the userspace API
+  - Used the tags instead of buffer IDs
+  - Added a comment to explain why we still needed the swdec trigger
+  - Reworked the MV col buffer in order to have one slot per frame
+  - Removed the unused neighbor info buffer
+  - Made sure to have the same structure offset and alignments across
+    32 bits and 64 bits architecture
+
+Maxime Ripard (1):
+  media: cedrus: Add H264 decoding support
+
+Pawel Osciak (1):
+  media: uapi: Add H264 low-level decoder API compound controls.
+
+ Documentation/media/uapi/v4l/biblio.rst            |   9 +-
+ Documentation/media/uapi/v4l/ext-ctrls-codec.rst   | 569 ++++++++++++++-
+ Documentation/media/uapi/v4l/pixfmt-compressed.rst |  19 +-
+ Documentation/media/uapi/v4l/vidioc-queryctrl.rst  |  30 +-
+ Documentation/media/videodev2.h.rst.exceptions     |   5 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  42 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +-
+ drivers/staging/media/sunxi/cedrus/Makefile        |   3 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c        |  31 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h        |  38 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_dec.c    |  13 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c   | 577 ++++++++++++++-
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c     |   4 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_regs.h   |  91 ++-
+ drivers/staging/media/sunxi/cedrus/cedrus_video.c  |   9 +-
+ include/media/h264-ctrls.h                         | 192 +++++-
+ include/media/v4l2-ctrls.h                         |  13 +-
+ include/uapi/linux/videodev2.h                     |   1 +-
+ 18 files changed, 1644 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+ create mode 100644 include/media/h264-ctrls.h
+
+base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
+-- 
+git-series 0.9.1
