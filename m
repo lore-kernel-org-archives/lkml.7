@@ -2,295 +2,250 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27422C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FB7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EC52133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A58bLwx8"
+	by mail.kernel.org (Postfix) with ESMTP id B2D342133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfCSOVg (ORCPT
+        id S1727270AbfCSOXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:21:36 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39621 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfCSOVf (ORCPT
+        Tue, 19 Mar 2019 10:23:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726661AbfCSOXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:21:35 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t28so22292564qte.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 07:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Gnr9sn2PbmUnDDxyv0YS0Zaj+dimt19m4HxDy9V5ZSw=;
-        b=A58bLwx8HXhP6CLli+cSbfoaBD/E07xnYLzPI88Rq1/vfcRxuoobJNvJVQ903dMhaC
-         31mvAvcSNKA/3Ne35omQebVZhii0DDMt8dX+riHEpWC0rxH9tWrmI8KnE3TKVXW4FbHv
-         UIhYOiA7CHRuUxDDPfauVCXutiqRojGpOyXH8BemAMj7tsWt7OYQV+MUod1+YqtgVLz6
-         94okkvhE5ZmU6x+yFu2WoyQpLPIjXHkQgun9h3IYH4aI5sAJ2GD+KI3YbZzG5rDxtDNb
-         qaeTTLR5S9VICrLPrn5fybqcfW38DIQ18riz63SPw0Z/4E7kNidl/40SuTwzjPHVBmJL
-         f5NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Gnr9sn2PbmUnDDxyv0YS0Zaj+dimt19m4HxDy9V5ZSw=;
-        b=ActM7yyodmOYf6Lp+K6ewEvIfg2yrbNQCkH/d5bSj9HCiLP9FL2gobjRMJCmKKBxko
-         4GLaep3isDGv3l93HwERZGIj6XvTF1YReyT3Ye51oZklDsAEYWk1DZAkRCKm4rkpyyS0
-         geNcbsDJtNcGYjtPeG3WcxHzJySOW7eGMaPsxB/mQ5hAfXVDEYeb4BY3Z/T8n27WFrQ3
-         uhcJ43L2phV6uWOaVHW0zmX4LIZlpa9UPNz/5C02VYhFwo0EhJWxVuYTqit4uqRt2nQQ
-         Px7q3tgffODk5yPHXtUsRibtBzK6SI1wmfSxqXPHDneOxhW+atlpdp+UGJAXV1VU9DUg
-         I2Fw==
-X-Gm-Message-State: APjAAAU1TNZE+/1UjUONnw7TCZKXUR2iaLS8x564j2+OXbWz6YZUKehm
-        ENc+Uy2RmcojmsguiTMkNWmWxJd7
-X-Google-Smtp-Source: APXvYqxKt6yCAixYRuGF+I1HEtlFebwZ1BtYR4lfpCz2yS/k1dCHEMgCoC0CzuDoK5p4M+4QYoyV4g==
-X-Received: by 2002:ac8:3585:: with SMTP id k5mr2182473qtb.55.1553005294155;
-        Tue, 19 Mar 2019 07:21:34 -0700 (PDT)
-Received: from jfdmac.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id 92sm7036854qtc.97.2019.03.19.07.21.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 07:21:33 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 1/2] w1: ds2408: add a missing reset when retrying in
- output_write()
-From:   Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-In-Reply-To: <20190318092737.8170-2-manio@skyboo.net>
-Date:   Tue, 19 Mar 2019 10:21:32 -0400
-Cc:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <greg@kroah.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DF2ABF87-116D-4287-8A18-89C2C59124AF@gmail.com>
-References: <20190318092737.8170-1-manio@skyboo.net>
- <20190318092737.8170-2-manio@skyboo.net>
-To:     Mariusz Bialonczyk <manio@skyboo.net>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Tue, 19 Mar 2019 10:23:24 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JEEqh4093450
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:23:23 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rb0g3df9a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:23:23 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 19 Mar 2019 14:23:18 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 14:23:15 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2JENEEW59048176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 14:23:14 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78C7DAE051;
+        Tue, 19 Mar 2019 14:23:14 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8C37AE04D;
+        Tue, 19 Mar 2019 14:23:13 +0000 (GMT)
+Received: from [9.145.41.62] (unknown [9.145.41.62])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Mar 2019 14:23:13 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 4/7] s390: ap: setup relation betwen KVM and mediated
+ device
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-5-git-send-email-pmorel@linux.ibm.com>
+ <20190315191557.6c8d7668@oc2783563651>
+ <7c199329-0e82-ff61-46b7-78237a0f01ce@linux.ibm.com>
+ <20190319125425.0cf5324e@oc2783563651>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 19 Mar 2019 15:23:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190319125425.0cf5324e@oc2783563651>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031914-0028-0000-0000-00000355E459
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031914-0029-0000-0000-000024148218
+Message-Id: <2c459ebe-2b37-72bc-1ede-b196e54dc78d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19/03/2019 12:54, Halil Pasic wrote:
+> On Tue, 19 Mar 2019 10:38:42 +0100
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> On 15/03/2019 19:15, Halil Pasic wrote:
+>>> On Wed, 13 Mar 2019 17:05:01 +0100
+>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>>
+>>>> When the mediated device is open we setup the relation with KVM unset it
+>>>> when the mediated device is released.
+>>>>
+>>>> We ensure KVM is present on opening of the mediated device.
+>>>>
+>>>> We ensure that KVM survives the mediated device, and establish a direct
+>>>
+>>> survives?
+>>
+>> what alternative do you prefer?
+>>
+> 
+> Increase kvm's refcount to ensure the guest is alive when the
+> ap_matrix_mdev is active. An ap mp_matrix becomes active with
+> a successful open() and ceases to be active with a release().
+
+Right, it is mdev usage not mdev.
+
+> 
+> Your sentence was materially wrong as the mdev is allowed to outlive
+> the KVM. BTW survive tends to have an 'in spite of' note to it, which
+> outlive does not. vfio-ap is, I hope, not a calamity that threatens
+> the life of KVM ;). https://en.oxforddictionaries.com/definition/survive
+
+Thanks, your description is much better.
+
+> 
+>>>
+>>>> link from KVM to the mediated device to simplify the relationship.
+>>>>
+>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>> ---
+>>
+>> ...snip...
+>>
+>>>>    static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>>>    				       unsigned long action, void *data)
+>>>>    {
+>>>> -	int ret;
+>>>>    	struct ap_matrix_mdev *matrix_mdev;
+>>>>    
+>>>>    	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+>>>>    		return NOTIFY_OK;
+>>>>    
+>>>>    	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>>>> -
+>>>> -	if (!data) {
+>>>> -		matrix_mdev->kvm = NULL;
+>>>> -		return NOTIFY_OK;
+>>>> -	}
+>>>> -
+>>>> -	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+>>>> -	if (ret)
+>>>> -		return NOTIFY_DONE;
+>>>> -
+>>>> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+>>>> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+>>>> -		return NOTIFY_DONE;
+>>>> -
+>>>> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+>>>> -				  matrix_mdev->matrix.aqm,
+>>>> -				  matrix_mdev->matrix.adm);
+>>>> +	matrix_mdev->kvm = data;
+>>>>    
+>>>>    	return NOTIFY_OK;
+>>>>    }
+>>>> @@ -888,6 +873,12 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>>>    	if (ret)
+>>>>    		goto err_group;
+>>>>    
+>>>> +	/* We do not support opening the mediated device without KVM */
+>>>> +	if (!matrix_mdev->kvm) {
+>>>> +		ret = -ENODEV;
+>>>> +		goto err_group;
+>>>> +	}
+>>>> +
+>>>>    	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
+>>>>    	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+>>>>    
+>>>> @@ -896,8 +887,15 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>>>    	if (ret)
+>>>>    		goto err_iommu;
+>>>>    
+>>>> +	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
+>>>
+>>> At this point the matrix_mdev->kvm ain't guaranteed to be valid IMHO. Or
+>>> am I wrong? If I'm right kvm_get_kvm(matrix_mdev->kvm) could be too late.
+>>
+>> What about the if (!matrix_mdev->kvm) 10 lines above ?
+>>
+> 
+> That check is not sufficient.
+> 
+> You should do the kvm_get_kvm() in vfio_ap_mdev_group_notifier(). VFIO
+> must ensure that the kvm pointer you get is valid, in a sense that it
+> points to a valid struct kvm and the kvm object is alive, while you are
+> in the callback. But not beyond.
+> 
+> If another thread were to decrement the refcount of the kvm object you
+> would end up with matrix_mdev->kvm pointing to an object that has already
+> died.
+> 
+> Does my analysis make sense to you?
+
+Yes thanks the explication is good, it would have been worth to get it 
+the first time.
+
+> 
+>>>
+>>>> +	if (ret)
+>>>> +		goto err_kvm;
+>>>> +
+>>>>    	return 0;
+>>>>    
+>>>> +err_kvm:
+>>>> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+>>>> +				 &matrix_mdev->iommu_notifier);
+>>>>    err_iommu:
+>>>>    	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+>>>>    				 &matrix_mdev->group_notifier);
+>>>> @@ -906,19 +904,33 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>>>>    	return ret;
+>>>>    }
+>>>>    
+>>>> -static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>>>> +static int vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
+>>>>    {
+>>>> -	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>>> +	struct kvm *kvm = matrix_mdev->kvm;
+>>>>    
+>>>>    	if (matrix_mdev->kvm)
+>>>>    		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+>>>
+>>> This still conditional?
+>>
+>> Yes, nothing to clear if there is no KVM.
+>>
+> 
+> Since we have ensured the open only works if there is a KVM at that
+> point in time, and we have taken a reference to KVM, I would expect
+> KVM can not go away before we give up our reference.
+
+Right.
 
 
-> On Mar 18, 2019, at 05:27, Mariusz Bialonczyk <manio@skyboo.net> =
-wrote:
->=20
-> When we have success in 'Channel Access Write' but reading back the =
-latch
-> state has failed, then the code continues but without doing a proper
-> slave reset. This was leading to protocol errors as the slave treats
-> the next 'Channel Access Write' as the continuation of previous =
-command.
->=20
-> This commit is fixing this, and because we have to reset no matter if
-> the actual write or the readback checking is failing then the =
-resetting
-> is done on the beginning of the loop.
->=20
-> Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-> Cc: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-> ---
-> drivers/w1/slaves/w1_ds2408.c | 13 ++++++++-----
-> 1 file changed, 8 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/w1/slaves/w1_ds2408.c =
-b/drivers/w1/slaves/w1_ds2408.c
-> index b535d5ec35b6..562ee2d861e8 100644
-> --- a/drivers/w1/slaves/w1_ds2408.c
-> +++ b/drivers/w1/slaves/w1_ds2408.c
-> @@ -158,6 +158,13 @@ static ssize_t output_write(struct file *filp, =
-struct kobject *kobj,
-> 		goto error;
->=20
-> 	while (retries--) {
-> +		/* do a reset/resume on every new retry call
-> +		   except the first one */
-> +		if (retries < W1_F29_RETRIES - 1) {
-> +			if (w1_reset_resume_command(sl->master))
-> +				goto error;
-> +		}
-> +
+Thanks,
+Pierre
 
-The case being solved here is strictly restricted to the
-CONFIG_W1_SLAVE_DS2408_READBACK case and should be confined to this =
-macro being
-defined. I think my original code here is to blame. Although I =
-appreciate what
-you are trying to fix and that this does it, I don't really appreciate =
-the
-resulting style as it puts the improbable case of the retry in the =
-forefront of
-the loop using a non-obvious condition.
-
-This adds burden to the reader. Since this is an error handling case, it =
-should
-like like so and be handled lower in the loop. May I suggest a cleaned =
-up
-version my original klunky code with your fix in it (Note: this is =
-untested, it
-compiles on arm64, that's all):
-
- drivers/w1/slaves/w1_ds2408.c | 78 =
-++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/w1/slaves/w1_ds2408.c =
-b/drivers/w1/slaves/w1_ds2408.c
-index b535d5ec35b6..bf308660f6ae 100644
---- a/drivers/w1/slaves/w1_ds2408.c
-+++ b/drivers/w1/slaves/w1_ds2408.c
-@@ -138,6 +138,34 @@ static ssize_t status_control_read(struct file =
-*filp, struct kobject *kobj,
- 		W1_F29_REG_CONTROL_AND_STATUS, buf);
- }
-=20
-+#ifdef CONFIG_W1_SLAVE_DS2408_READBACK
-+static bool optional_read_back_valid(struct w1_slave *sl, u8 expected)
-+{
-+	u8 w1_buf[3];
-+	/* here the master could read another byte which
-+	   would be the PIO reg (the actual pin logic state)
-+	   since in this driver we don't know which pins are
-+	   in and outs, there's no value to read the state and
-+	   compare. with (*buf) so end this command abruptly: */
-+	if (w1_reset_resume_command(sl->master))
-+		return false;
-+	/* go read back the output latches */
-+	/* (the direct effect of the write access) */
-+	w1_buf[0] =3D W1_F29_FUNC_READ_PIO_REGS;
-+	w1_buf[1] =3D W1_F29_REG_OUTPUT_LATCH_STATE;
-+	w1_buf[2] =3D 0;
-+	w1_write_block(sl->master, w1_buf, 3);
-+
-+	/* read the result of the READ_PIO_REGS command */
-+	return w1_read_8(sl->master) =3D=3D expected;
-+}
-+#else
-+static bool optional_read_back_valid(struct w1_slave *sl, u8 expected)
-+{
-+	return true;
-+}
-+#endif
-+
- static ssize_t output_write(struct file *filp, struct kobject *kobj,
- 			    struct bin_attribute *bin_attr, char *buf,
- 			    loff_t off, size_t count)
-@@ -146,6 +174,7 @@ static ssize_t output_write(struct file *filp, =
-struct kobject *kobj,
- 	u8 w1_buf[3];
- 	u8 readBack;
- 	unsigned int retries =3D W1_F29_RETRIES;
-+	ssize_t bytes_written =3D -EIO;
-=20
- 	if (count !=3D 1 || off !=3D 0)
- 		return -EFAULT;
-@@ -155,9 +184,9 @@ static ssize_t output_write(struct file *filp, =
-struct kobject *kobj,
- 	dev_dbg(&sl->dev, "mutex locked");
-=20
- 	if (w1_reset_select_slave(sl))
--		goto error;
-+		goto out;
-=20
--	while (retries--) {
-+	do {
- 		w1_buf[0] =3D W1_F29_FUNC_CHANN_ACCESS_WRITE;
- 		w1_buf[1] =3D *buf;
- 		w1_buf[2] =3D ~(*buf);
-@@ -165,44 +194,23 @@ static ssize_t output_write(struct file *filp, =
-struct kobject *kobj,
-=20
- 		readBack =3D w1_read_8(sl->master);
-=20
--		if (readBack !=3D W1_F29_SUCCESS_CONFIRM_BYTE) {
--			if (w1_reset_resume_command(sl->master))
--				goto error;
--			/* try again, the slave is ready for a command =
-*/
--			continue;
-+		if (readBack =3D=3D W1_F29_SUCCESS_CONFIRM_BYTE &&
-+		    optional_read_back_valid(sl, *buf)) {
-+			bytes_written =3D 1;
-+			goto out;
- 		}
-=20
--#ifdef CONFIG_W1_SLAVE_DS2408_READBACK
--		/* here the master could read another byte which
--		   would be the PIO reg (the actual pin logic state)
--		   since in this driver we don't know which pins are
--		   in and outs, there's no value to read the state and
--		   compare. with (*buf) so end this command abruptly: */
- 		if (w1_reset_resume_command(sl->master))
--			goto error;
--
--		/* go read back the output latches */
--		/* (the direct effect of the write above) */
--		w1_buf[0] =3D W1_F29_FUNC_READ_PIO_REGS;
--		w1_buf[1] =3D W1_F29_REG_OUTPUT_LATCH_STATE;
--		w1_buf[2] =3D 0;
--		w1_write_block(sl->master, w1_buf, 3);
--		/* read the result of the READ_PIO_REGS command */
--		if (w1_read_8(sl->master) =3D=3D *buf)
--#endif
--		{
--			/* success! */
--			mutex_unlock(&sl->master->bus_mutex);
--			dev_dbg(&sl->dev,
--				"mutex unlocked, retries:%d", retries);
--			return 1;
--		}
--	}
--error:
-+			goto out; /* unrecoverable error */
-+		/* try again, the slave is ready for a command */
-+	} while (--retries);
-+out:
- 	mutex_unlock(&sl->master->bus_mutex);
--	dev_dbg(&sl->dev, "mutex unlocked in error, retries:%d", =
-retries);
-=20
--	return -EIO;
-+	dev_dbg(&sl->dev, "%s, mutex unlocked retries:%d\n",
-+		(bytes_written > 0) ? "succeeded" : "error", retries);
-+
-+	return bytes_written;
- }
-=20
-
-I can do a proper patch submission if you guys provide positive response =
-on this
-early RFC. Or better yet, you can take it and own it yourself as your v2
-Mariusz. ;)
-
-
-
-> 		w1_buf[0] =3D W1_F29_FUNC_CHANN_ACCESS_WRITE;
-> 		w1_buf[1] =3D *buf;
-> 		w1_buf[2] =3D ~(*buf);
-> @@ -165,12 +172,8 @@ static ssize_t output_write(struct file *filp, =
-struct kobject *kobj,
->=20
-> 		readBack =3D w1_read_8(sl->master);
->=20
-> -		if (readBack !=3D W1_F29_SUCCESS_CONFIRM_BYTE) {
-> -			if (w1_reset_resume_command(sl->master))
-> -				goto error;
-> -			/* try again, the slave is ready for a command =
-*/
-> +		if (readBack !=3D W1_F29_SUCCESS_CONFIRM_BYTE)
-> 			continue;
-> -		}
->=20
-> #ifdef CONFIG_W1_SLAVE_DS2408_READBACK
-> 		/* here the master could read another byte which
-> --=20
-> 2.19.0.rc1
->=20
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
