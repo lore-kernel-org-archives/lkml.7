@@ -2,183 +2,108 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A94C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC5BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E172075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D06C2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:26:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ROfsAq4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfCSI02 (ORCPT
+        id S1727554AbfCSI0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:26:28 -0400
-Received: from mx.sdf.org ([205.166.94.20]:54601 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfCSI02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:26:28 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2J8MfKN012808
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Tue, 19 Mar 2019 08:22:41 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2J8MfSO021511;
-        Tue, 19 Mar 2019 08:22:41 GMT
-Message-Id: <d10c5d4b393a1847f32f5b26f4bbaa2857140e1e.1552704200.git.lkml@sdf.org>
-In-Reply-To: <cover.1552704200.git.lkml@sdf.org>
-References: <cover.1552704200.git.lkml@sdf.org>
-From:   George Spelvin <lkml@sdf.org>
-Date:   Tue, 19 Mar 2019 08:15:59 +0000
-Subject: [RESEND PATCH v2 3/5] lib/sort: Avoid indirect calls to built-in swap
-To:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     George Spelvin <lkml@sdf.org>, Andrey Abramov <st5pub@yandex.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Don Mullis <don.mullis@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Tue, 19 Mar 2019 04:26:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34003 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCSI0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:26:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so1681117wrq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 01:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CLzEElnP3dxyv8R6IH/C8LDRIdXF93RnCixM1ah2hMo=;
+        b=ROfsAq4EycQSAWNhwT+bJP3yHo6sajvh/DOVf1X6KgoGiI9FciHoxYEc8Df3XiPt8S
+         isAXnU6PNkc8HO1CnCg006HJ5iUkDYpup3J6p/mAUbDjenokGDTiv4VhxEVQAAIebk6Q
+         aE1Fr4xSzuTBWBe795UPFcLrsV/bxyiRI8SwxxwIsJVZR7WLEbKjRlWpwNAnXOrjAb9f
+         6+B3YAOwIAD12R5cg3Y239tijtDUv6iCa24wFPXsXOL/Cb7GDoNLB6QZYOEEyTrrcrpp
+         iQ2MILTCPTjt6pxLId9hVTDaxKKizya9OtgAPFr0qMI0Egw+jwvLaPF/wipx58PnrCp/
+         y3Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CLzEElnP3dxyv8R6IH/C8LDRIdXF93RnCixM1ah2hMo=;
+        b=EfN/LZn2BwtGgJU0pWpDDBWT2GF+ttnfIc8hVdA/y5f4QUFsTI5hzpORtjcpAnNcu/
+         aA9QP5OJz7pd6eFToKQErmSmTkvMuX9rn9xXEg9oKzrvC7S0xWdRpsIw90J/E0vBoj3K
+         49YmQ8Sk4kxreshiYEuEdgzIwfOqopcZ2USIvNV8sUetFxNy7/3eLIuxzR3cTL2AAwSa
+         2SE8TvJDgPRaTZ1OlK/YGqCVla1Fylt8N3FAmAhumEcWFfvceKLSeHgMjEv1ZvFWB6rf
+         H/iHXlV7S7IGmYbhZQ6swiYQNa6DJqcXT9LWXlpt/5hIep+J4ia8GgaBEJ7yOJR7jztr
+         vwCw==
+X-Gm-Message-State: APjAAAXS1kSyqczRR5BFK06ISF0/ZtoNZ9JVhooka3sbAwLKDoxRP7/V
+        6DsEUjicb/UJbvwqeAB5DQE6zg==
+X-Google-Smtp-Source: APXvYqy21IQIltfVclIGabKt/9gSbK6VRtrToMVt+v8yERTtliPMgJyxHa9zJTAcoNBGOm7UuHmRHA==
+X-Received: by 2002:a05:6000:104b:: with SMTP id c11mr16704504wrx.9.1552984003549;
+        Tue, 19 Mar 2019 01:26:43 -0700 (PDT)
+Received: from mjourdan-pc.numericable.fr (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
+        by smtp.gmail.com with ESMTPSA id 12sm3267104wme.25.2019.03.19.01.26.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 01:26:42 -0700 (PDT)
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: meson: g12a: fix VPU clock muxes mask
+Date:   Tue, 19 Mar 2019 09:26:11 +0100
+Message-Id: <20190319082611.6215-1-mjourdan@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to what's being done in the net code, this takes advantage of
-the fact that most invocations use only a few common swap functions, and
-replaces indirect calls to them with (highly predictable) conditional
-branches.  (The downside, of course, is that if you *do* use a custom
-swap function, there are a few extra predicted branches on the code path.)
+There are 8 parents, use 0x7
 
-This actually *shrinks* the x86-64 code, because it inlines the various
-swap functions inside do_swap, eliding function prologues & epilogues.
-
-x86-64 code size 767 -> 703 bytes (-64)
-
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Acked-by: Andrey Abramov <st5pub@yandex.ru>
+Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 ---
- lib/sort.c | 51 ++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 36 insertions(+), 15 deletions(-)
+ drivers/clk/meson/g12a.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/sort.c b/lib/sort.c
-index 0d24d0c5c0fc..50855ea8c262 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -54,10 +54,8 @@ static bool is_aligned(const void *base, size_t size, unsigned char align)
-  * subtract (since the intervening mov instructions don't alter the flags).
-  * Gcc 8.1.0 doesn't have that problem.
-  */
--static void swap_words_32(void *a, void *b, int size)
-+static void swap_words_32(void *a, void *b, size_t n)
- {
--	size_t n = (unsigned int)size;
--
- 	do {
- 		u32 t = *(u32 *)(a + (n -= 4));
- 		*(u32 *)(a + n) = *(u32 *)(b + n);
-@@ -80,10 +78,8 @@ static void swap_words_32(void *a, void *b, int size)
-  * but it's possible to have 64-bit loads without 64-bit pointers (e.g.
-  * x32 ABI).  Are there any cases the kernel needs to worry about?
-  */
--static void swap_words_64(void *a, void *b, int size)
-+static void swap_words_64(void *a, void *b, size_t n)
- {
--	size_t n = (unsigned int)size;
--
- 	do {
- #ifdef CONFIG_64BIT
- 		u64 t = *(u64 *)(a + (n -= 8));
-@@ -109,10 +105,8 @@ static void swap_words_64(void *a, void *b, int size)
-  *
-  * This is the fallback if alignment doesn't allow using larger chunks.
-  */
--static void swap_bytes(void *a, void *b, int size)
-+static void swap_bytes(void *a, void *b, size_t n)
- {
--	size_t n = (unsigned int)size;
--
- 	do {
- 		char t = ((char *)a)[--n];
- 		((char *)a)[n] = ((char *)b)[n];
-@@ -120,6 +114,33 @@ static void swap_bytes(void *a, void *b, int size)
- 	} while (n);
- }
- 
-+typedef void (*swap_func_t)(void *a, void *b, int size);
-+
-+/*
-+ * The values are arbitrary as long as they can't be confused with
-+ * a pointer, but small integers make for the smallest compare
-+ * instructions.
-+ */
-+#define SWAP_WORDS_64 (swap_func_t)0
-+#define SWAP_WORDS_32 (swap_func_t)1
-+#define SWAP_BYTES    (swap_func_t)2
-+
-+/*
-+ * The function pointer is last to make tail calls most efficient if the
-+ * compiler decides not to inline this function.
-+ */
-+static void do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
-+{
-+	if (swap_func == SWAP_WORDS_64)
-+		swap_words_64(a, b, size);
-+	else if (swap_func == SWAP_WORDS_32)
-+		swap_words_32(a, b, size);
-+	else if (swap_func == SWAP_BYTES)
-+		swap_bytes(a, b, size);
-+	else
-+		swap_func(a, b, (int)size);
-+}
-+
- /**
-  * parent - given the offset of the child, find the offset of the parent.
-  * @i: the offset of the heap element whose parent is sought.  Non-zero.
-@@ -157,7 +178,7 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
-  * This function does a heapsort on the given array.  You may provide
-  * a swap_func function if you need to do something more than a memory
-  * copy (e.g. fix up pointers or auxiliary data), but the built-in swap
-- * isn't usually a bottleneck.
-+ * avoids a slow retpoline and so is significantly faster.
-  *
-  * Sorting time is O(n log n) both on average and worst-case. While
-  * quicksort is slightly faster on average, it suffers from exploitable
-@@ -177,11 +198,11 @@ void sort(void *base, size_t num, size_t size,
- 
- 	if (!swap_func) {
- 		if (is_aligned(base, size, 8))
--			swap_func = swap_words_64;
-+			swap_func = SWAP_WORDS_64;
- 		else if (is_aligned(base, size, 4))
--			swap_func = swap_words_32;
-+			swap_func = SWAP_WORDS_32;
- 		else
--			swap_func = swap_bytes;
-+			swap_func = SWAP_BYTES;
- 	}
- 
- 	/*
-@@ -197,7 +218,7 @@ void sort(void *base, size_t num, size_t size,
- 		if (a)			/* Building heap: sift down --a */
- 			a -= size;
- 		else if (n -= size)	/* Sorting: Extract root to --n */
--			swap_func(base, base + n, size);
-+			do_swap(base, base + n, size, swap_func);
- 		else			/* Sort complete */
- 			break;
- 
-@@ -224,7 +245,7 @@ void sort(void *base, size_t num, size_t size,
- 		c = b;			/* Where "a" belongs */
- 		while (b != a) {	/* Shift it into place */
- 			b = parent(b, lsbit, size);
--			swap_func(base + b, base + c, size);
-+			do_swap(base + b, base + c, size, swap_func);
- 		}
- 	}
- }
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index cfb91df884cb..e52b0b53f398 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -1391,7 +1391,7 @@ static const char * const g12a_vpu_parent_names[] = {
+ static struct clk_regmap g12a_vpu_0_sel = {
+ 	.data = &(struct clk_regmap_mux_data){
+ 		.offset = HHI_VPU_CLK_CNTL,
+-		.mask = 0x3,
++		.mask = 0x7,
+ 		.shift = 9,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+@@ -1435,7 +1435,7 @@ static struct clk_regmap g12a_vpu_0 = {
+ static struct clk_regmap g12a_vpu_1_sel = {
+ 	.data = &(struct clk_regmap_mux_data){
+ 		.offset = HHI_VPU_CLK_CNTL,
+-		.mask = 0x3,
++		.mask = 0x7,
+ 		.shift = 25,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
 -- 
-2.20.1
+2.21.0
 
