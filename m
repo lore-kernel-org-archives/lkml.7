@@ -2,112 +2,184 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A513C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD8AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF42146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5570213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FFVs6T5b"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WL2yARxR";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EYzcnpf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfCSUPP (ORCPT
+        id S1727451AbfCSUPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:15:15 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:47496 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfCSUPP (ORCPT
+        Tue, 19 Mar 2019 16:15:16 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:54866 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727017AbfCSUPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 16:15:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 46BEDCF6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:15:13 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 75rl9K5GPBMk for <linux-kernel@vger.kernel.org>;
-        Tue, 19 Mar 2019 15:15:13 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 11339CEF
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:15:13 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id y6so120483itj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=rTgvYOi0NA2nNhyovhJYwbXYNdmBOXtvCDrrXz0EgAo=;
-        b=FFVs6T5bMZZ2OM2W8BfyzO4uV5EUihfA3zC2747chU2l4SPiiaAxOpD5bQmYGPCWhp
-         UnyzcLlReVKZT3aOQuehjhmS02vD7x1lAAiNj7x3ijZPRFJuf8s+h0gxSMQXs6BuCBZ/
-         wkCJPvVOfbQRbZqsusjXAy3O/OJkR6sRibAoEx3+HO6kNfIRzdiguHS4MyOe3W+BeeSa
-         FNPNCfdP4xsEpzcEPByYRwlNN8bNkqcz+jYTv/d6loOW0R+H8iTrhISVcFmoOyYvKhwK
-         x4D7tPMwr0F2G1dsslZuoMlRFaUdhVkAUgCdbm0S6fUA1Eh/CyroDmHPHXrdQwcO/s6u
-         /BLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rTgvYOi0NA2nNhyovhJYwbXYNdmBOXtvCDrrXz0EgAo=;
-        b=Vs8S6o83/cWCG3KS1PDSE1a1yKB/3ugz1+qw/8Dfq93ecL1O4a0aHEs5aYDnArjYeI
-         iy3NZkH06EXYjhvC87vlrYA2R6w4EHHZi2aoWMMM072bHwDLrgSjmk4R2OmL68LwvXn4
-         z5l4ecr5Ks2tdYnyz7CsL3idjqFQ9OzJesl4Ol9DzMFxf8RnIul6jukxzcSczbKrsqRK
-         TqILnJ6dZtxq+ZTP5SnzDYPifhk5hl8RAPpe8E0+y6vD9xV7RqUXgy+XLNqTqoOadNfe
-         Bh01f2OiXV7D9VrSMImflNOP7WI8V86njTa8cyk1zOV/GgZRJan6T8k1KFL0qST6tK9m
-         qwEw==
-X-Gm-Message-State: APjAAAXctRwvygIwgxv/4CGtih/uW9hZ5ConY/yf3Cxj6USMPSyUbnYK
-        FSszB+LIOCRP/tFn3PhGTGWAVJfhFG2HU9MwLkelQAfogShOw3iLRgEnlpN3d7Q7VHbni2CKPAW
-        Ru2uZ792TR1KJzdkh0NLSnKsAbHpf
-X-Received: by 2002:a6b:e202:: with SMTP id z2mr3044872ioc.6.1553026513078;
-        Tue, 19 Mar 2019 13:15:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy3EpHmHmwX26eWudYyEOAP1u7WFvuQytZqq2ujJMo8bFAQotduXp9iHSUnUm79+x8P1tAjUg==
-X-Received: by 2002:a6b:e202:: with SMTP id z2mr3044862ioc.6.1553026512919;
-        Tue, 19 Mar 2019 13:15:12 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id y24sm6205979iol.8.2019.03.19.13.15.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 13:15:12 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: rtlwifi: Fix potential NULL pointer dereference of kzalloc
-Date:   Tue, 19 Mar 2019 15:15:08 -0500
-Message-Id: <20190319201509.16252-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2JKCKcE019571;
+        Tue, 19 Mar 2019 13:15:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
+ date : message-id : content-type : content-id : content-transfer-encoding
+ : mime-version; s=facebook;
+ bh=kxwGvXRq6eMeBaXh9b05WOAD3wrtaMklvgSAuzBR7X0=;
+ b=WL2yARxRAD+vCVHQiQd1M8sU0/LIGbWvLVpSbQWPyZOQO9cu+HuPhf+C20AjEPaRhrPo
+ yxwuxMzJSUfSF0qtS9fyzaKdTeaGdJDTrXjCIkOejZj6eoCf3k4Cb+wNjU+aY0MqeiUl
+ F96pfeplJF8rJ5Ydl0/4q97l7hIbQefKfqw= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0b-00082601.pphosted.com with ESMTP id 2rb0x59mqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 Mar 2019 13:15:11 -0700
+Received: from frc-mbx01.TheFacebook.com (2620:10d:c0a1:f82::25) by
+ frc-hub01.TheFacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 19 Mar 2019 13:15:11 -0700
+Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
+ frc-mbx01.TheFacebook.com (2620:10d:c0a1:f82::25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 19 Mar 2019 13:15:10 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 19 Mar 2019 13:15:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kxwGvXRq6eMeBaXh9b05WOAD3wrtaMklvgSAuzBR7X0=;
+ b=EYzcnpf3mo2iloh+/6a/dw625RJAXJOPdqv4/0+dzeGldWEFARxxgDB7GCBapAJIg84VlvraaPhrFffq0hLAtb9K8VWoIVty3rGtHzSXfQI8jOwl1cG72NUHGNZiPmbejMLaUoQJBXp8Z+Kw38Qawib2r0zikxYvO5/TMlVblbM=
+Received: from MW2PR1501MB1993.namprd15.prod.outlook.com (52.132.149.157) by
+ MW2PR1501MB2185.namprd15.prod.outlook.com (52.132.150.157) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 20:15:07 +0000
+Received: from MW2PR1501MB1993.namprd15.prod.outlook.com
+ ([fe80::25c8:e561:b2ff:4a40]) by MW2PR1501MB1993.namprd15.prod.outlook.com
+ ([fe80::25c8:e561:b2ff:4a40%7]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 20:15:07 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     "dave.rodgman@arm.com" <dave.rodgman@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Kernel LZO compressor
+Thread-Topic: Kernel LZO compressor
+Thread-Index: AQHU3pByWt4yBWNOP0ewGbmZjuuI6A==
+Date:   Tue, 19 Mar 2019 20:15:07 +0000
+Message-ID: <31D143C0-D64F-4905-B25F-5C3630D38913@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:2ee8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5c73ff9b-6aa8-4978-ff83-08d6aca794fc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MW2PR1501MB2185;
+x-ms-traffictypediagnostic: MW2PR1501MB2185:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MW2PR1501MB2185E1D2FCCCD73C561C00C3AB400@MW2PR1501MB2185.namprd15.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(136003)(39860400002)(346002)(366004)(199004)(189003)(966005)(106356001)(3480700005)(46003)(110136005)(33656002)(71200400001)(71190400001)(83716004)(68736007)(476003)(2501003)(82746002)(8936002)(105586002)(6306002)(25786009)(7116003)(5660300002)(97736004)(316002)(256004)(102836004)(6512007)(6506007)(2616005)(81156014)(8676002)(6486002)(86362001)(81166006)(6636002)(53936002)(186003)(6116002)(14454004)(36756003)(2906002)(478600001)(7736002)(305945005)(486006)(6436002)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR1501MB2185;H:MW2PR1501MB1993.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AMhS/Hk5I1LMVC/bAep0lbr7N+axPkdAEG7k7jMdKqDoDMqpoTpF/dlQAAuXVvip9mT8USJ5O0r1CboXGVTCc8y0RJ2tydwJYVrIc3k/vJBcx/r1AnkuVNaNAlpKWmFXg8DSoZzSOjX05AJYdXdpCWlVBNMYLOtexHI48+k1GrgZwZm3haai8uo+CGqnyZbbouMi4No9jK7R+tI8UAcbe2hu6bDMjMxF2nCuvJ/e7wECrdFfbgLjkl5+J5pD/lCmjZKfBqnyC3SymoKHthnMTKGGTgzGlacxncMnQiDRhvzhmUSLUEISCda4BRy6O0H7Ii5s8L8jFH85VI2kUC85Of4ZxU+nW/ZudrcVNfbhPJ7eOGX/y9IroLfi4nqYGvKE3eEYvR8Wee3MVfmXlgW5TsMqFDVpMbXFNXp5TqiYZkU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B76C7350B42D4846A33F964A76905327@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c73ff9b-6aa8-4978-ff83-08d6aca794fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 20:15:07.7137
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR1501MB2185
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-phydm.internal is allocated using kzalloc which is used multiple
-times without a check for NULL pointer. This patch avoids such a
-scenario.
+Hi Dave,
 
---
-v1: Patch collision with different things, fix as per Greg
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/staging/rtlwifi/phydm/rtl_phydm.c | 2 ++
- 1 file changed, 2 insertions(+)
+I just saw you patches adding LZO-RLE, so I decided to fuzz the LZO
+compressor and decompressor. I didn't find any crashes, but I found some ed=
+ge
+cases in the decompressor.
 
-diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-index 9930ed954abb..a7932706f286 100644
---- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-+++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-@@ -180,6 +180,8 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
- 
- 	rtlpriv->phydm.internal =
- 		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
-+	if (!rtlpriv->phydm.internal)
-+		return -ENOMEM;
- 
- 	_rtl_phydm_init_com_info(rtlpriv, ic, params);
- 
--- 
-2.17.1
+After compressing the empty input with lzo1x_1_compress() I get
+[0x11, 0x00, 0x00] which is rejected by lzo1x_decompress_safe() on line 60
+because *ip =3D=3D 17 and in_len < 5 with error LZO_E_INPUT_OVERRUN.
 
+After compressing the input [0x00] with lzorle1x_1_compress() I get
+[0x11, 0x01, 0x00, 0x11, 0x00, 0x00] which is rejected by
+lzo1x_decompress_safe() with error LZO_E_OUTPUT_OVERRUN.
+
+I ported LZO to userspace by copying the headers from the kernel to
+userspace and/or rewriting them. The fuzzers and ported LZO are in
+a GitHub repo so it can be easily reproduced [1]. The compression
+fuzzer is also included inline below.
+
+```
+#undef NDEBUG
+#include <string.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <stdio.h>
+
+#include "lzo.h"
+
+char wrkmem[LZO1X_MEM_COMPRESS];
+
+#define RLE 1
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  size_t outSize =3D lzo1x_worst_compress(size);
+  uint8_t* const out =3D (uint8_t*)malloc(outSize);
+  assert(out);
+#if RLE
+  assert(LZO_E_OK =3D=3D lzorle1x_1_compress(data, size, out, &outSize, wrk=
+mem));
+#else
+  assert(LZO_E_OK =3D=3D lzo1x_1_compress(data, size, out, &outSize, wrkmem=
+));
+#endif
+  uint8_t* const rt =3D (uint8_t*)malloc(size);
+  assert(rt);
+  size_t rtsize =3D size;
+  int const ret =3D lzo1x_decompress_safe(out, outSize, rt, &rtsize);
+  if (ret !=3D LZO_E_OK) {
+    assert(size < 4);
+    fprintf(stderr, "INPUT: ");
+    for (size_t i =3D 0; i < size; ++i)
+      fprintf(stderr, "%u ", (unsigned)data[i]);
+    fprintf(stderr, "\nOUTPUT: ");
+    for (size_t i =3D 0; i < outSize; ++i)
+      fprintf(stderr, "%u ", (unsigned)out[i]);
+    fprintf(stderr, "\nret =3D %d\n", ret);
+  }
+  assert(ret =3D=3D LZO_E_OK);
+  assert(rtsize =3D=3D size);
+  assert(memcmp(data, rt, size) =3D=3D 0);
+  free(out);
+  free(rt);
+  return 0;
+}
+```
+
+[1] https://github.com/terrelln/lzo-userspace-fuzz
+
+Best,
+Nick Terrell
