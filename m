@@ -2,233 +2,211 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00473C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBA5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B476F213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F84F20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIRBhWyy"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="BX3y2Ik9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfCSSzS (ORCPT
+        id S1727167AbfCSS66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:55:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33018 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfCSSzR (ORCPT
+        Tue, 19 Mar 2019 14:58:58 -0400
+Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:26863 "EHLO
+        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfCSS65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:55:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i19so38569pfd.0;
-        Tue, 19 Mar 2019 11:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lznx2R/eIwlncfA/W4pHe2Of44uDkn3YERMXrXpmRDI=;
-        b=cIRBhWyyRuCiVVnpkGkfuJxjXbd2b8fOomR1nC1FTPA3IjYJYDKwhKVzYpgfTgvqcb
-         xRNGh/kEK6jSaxzHReo3g0yOY3g5pgcHkoqr4zhH+yH1YQvSzK5uo+NmptNbykimopZw
-         Xda0UaFo6NrwaYJL82xRZPEscp9BnMONsbqYv1Y1mOkdNyrbXgTXI0uMk+OYvWpt5fX3
-         2y1BYobXRaGEEgb0eqAUgbNDtSHbYkSPMOvqQ5MMZI/jYjZtUcL67eGw4uf1vLZno1sF
-         sDI8U0X0NvOXniJLjdde9n2X0ZjSmIvQqZTC1hIFbhxH8GUME2T5JbZB4uIR4Mv+Bkwa
-         hmjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lznx2R/eIwlncfA/W4pHe2Of44uDkn3YERMXrXpmRDI=;
-        b=m6N5YVKfZy7EoI+yWcz4oU2LPFJIaYf+Ght3bv6FAy7zmMG8aWRTf7FZH1/LhdWzqm
-         NTM43ZAncGmogB1w+zQIA+z7VwDKyVJzYJ/vaXQrCHDT5GIU2IoHT6lIp/W04z43hYHt
-         01tlT2y34fcp/16LSOlEYxgj97VYnNH82ptGaskP0axa3paI4wFUDFp1hU4heai2TgiQ
-         8iOcBAq7tOGPpdh7VnqIxVyrn92ZPteiEy9fXkNx3TsEOdgGnYLV/JegLvQdxyhCvukD
-         DdMj5BwQ2LnkQX8xUAieLqAT5VK6g026272asfrfk/wOyBH6kvlo0nSQ3RsrpWU0JU5+
-         XyMg==
-X-Gm-Message-State: APjAAAVpt4tBoHP//XLCbw3fpIbaYuGh9qh/BJqONuBhZ1t2XkbgfxgF
-        y8jWYyfj9XkHTZKqdKe2eU0PLKII
-X-Google-Smtp-Source: APXvYqwZnNC8x0R7szDcSZ7rDgYjy/tAbm0Xn5m47/f2UTLhUybPLSzxzpFdgcME1oZkLP4KQg8paQ==
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr3589159plk.109.1553021715896;
-        Tue, 19 Mar 2019 11:55:15 -0700 (PDT)
-Received: from [10.67.50.0] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id m10sm3517000pgq.42.2019.03.19.11.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 11:55:14 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: Add DP83825I to the DP83822 driver
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch
-Cc:     hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190319183251.403-1-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
- WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
- pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
- hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
- OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
- Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
- oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
- 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
- BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
- +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
- FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
- 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
- vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
- WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
- HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
- HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
- Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
- kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
- aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
- y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
- X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
- HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
- YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
- PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
- UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
- iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
- WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
- UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
- sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
- KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
- t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
- AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
- RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
- e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
- UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
- 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
- V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
- xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
- dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
- pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
- caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
- 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <7188c3e4-b0fa-8985-59f7-2b736a6d5cc5@gmail.com>
-Date:   Tue, 19 Mar 2019 11:55:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 14:58:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=5762; q=dns/txt; s=iport;
+  t=1553021937; x=1554231537;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=D0ic8t9YQG0FE69Ze9uqsg8+HQwii9+DcwRCgK6ja1s=;
+  b=BX3y2Ik9jSCbjjD4yUIVRfsxrQoUIl2nwqWzSblyW49K34QweTuB1dNY
+   vaPi+bUCqxXo55qRf36Rtmjp/HqhAS3M0U8pAIuBLwpGsaVPpTpeGejpS
+   L0BVHRk79VpfjjDyOcwWSd/aMb+nxldJrPcZEvN7fBUv0iQQFVspjpt95
+   E=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AHAADCO5Fc/4gNJK1jGQEBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQcBAQEBAQGBUwIBAQEBAQsBghBoUDMnl1OCDY4/iXOBewsBASOERAM?=
+ =?us-ascii?q?CAoRrIjYHDQEBAwEBCQEDAm0cDIVLAQUyAUYQCxIGCSUPLQ0OBoM2gXUPrAS?=
+ =?us-ascii?q?KLxQOgQ0BizEXgUA/gRGDEoMeBBiHKAOKHIIahWaSTQmCS4USi0MlDIFwhXK?=
+ =?us-ascii?q?LcIwjhGSNCAIEBgUCFYFNATGBVjMaCBsVO4JsCYINF4hfhV8fAzCNFCqCIwE?=
+ =?us-ascii?q?B?=
+X-IronPort-AV: E=Sophos;i="5.60,245,1549929600"; 
+   d="scan'208";a="537168065"
+Received: from alln-core-3.cisco.com ([173.36.13.136])
+  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 19 Mar 2019 18:58:56 +0000
+Received: from zorba ([10.41.50.85])
+        by alln-core-3.cisco.com (8.15.2/8.15.2) with ESMTPS id x2JIws9T032440
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 19 Mar 2019 18:58:56 GMT
+Date:   Tue, 19 Mar 2019 11:58:56 -0700
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        xe-linux-external@cisco.com, linux-kernel@vger.kernel.org,
+        Maksym Kokhan <maksym.kokhan@globallogic.com>,
+        Daniel Walker <dwalker@fifo99.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/3] powerpc: convert to generic builtin command line
+Message-ID: <20190319185856.zncq3f7naymoeobu@zorba>
+References: <1551469472-53043-3-git-send-email-danielwa@cisco.com>
+ <e6dc6500-0e33-da0c-c975-0d9125e38c0e@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20190319183251.403-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6dc6500-0e33-da0c-c975-0d9125e38c0e@c-s.fr>
+User-Agent: NeoMutt/20170609 (1.8.3)
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.41.50.85, [10.41.50.85]
+X-Outbound-Node: alln-core-3.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/19 11:32 AM, Dan Murphy wrote:
-> Add the DP83825I ethernet PHY to the DP83822 driver.
-> These devices share the same WoL register bits and addresses.
+On Mon, Mar 04, 2019 at 03:26:59PM +0100, Christophe Leroy wrote:
 > 
-> The phy_driver init was made into a macro as there may be future
-> devices appended to this driver that will share the register space.
 > 
-> http://www.ti.com/lit/gpn/dp83825i
+> Le 01/03/2019 à 20:44, Daniel Walker a écrit :
+> > This updates the powerpc code to use the CONFIG_GENERIC_CMDLINE
+> > option.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Please explain more in details how each powerpc option is replaced by one of
+> the generic options.
 
-Looks good, just a few nitpits below:
+CMDLINE is replace by two options to either which allow static options to either
+be appended or prepended to the boot loader arguemnts. If you wanted a lateral
+changes you would only fill in CONFIG_CMDLINE_PREPEND. CONFIG_CMDLINE_OVERRIDE
+does the same as CMDLINE_FORCE, only with the append and prepend arguemnts
+merged without the boot loader arguments.
 
-> ---
->  drivers/net/phy/dp83822.c | 36 ++++++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 14 deletions(-)
+> > --- a/arch/powerpc/kernel/prom.c
+> > +++ b/arch/powerpc/kernel/prom.c
+> > @@ -34,6 +34,7 @@
+> >   #include <linux/of_fdt.h>
+> >   #include <linux/libfdt.h>
+> >   #include <linux/cpu.h>
+> > +#include <linux/cmdline.h>
+> >   #include <asm/prom.h>
+> >   #include <asm/rtas.h>
+> > @@ -716,6 +717,9 @@ void __init early_init_devtree(void *params)
+> >   	 */
+> >   	of_scan_flat_dt(early_init_dt_scan_chosen_ppc, boot_command_line);
+> > +	/* append and prepend any arguments built into the kernel. */
+> > +	cmdline_add_builtin(boot_command_line, NULL, COMMAND_LINE_SIZE);
+> > +
 > 
-> diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-> index bbd8c22067f3..02dc05b86326 100644
-> --- a/drivers/net/phy/dp83822.c
-> +++ b/drivers/net/phy/dp83822.c
-> @@ -15,6 +15,8 @@
->  #include <linux/netdevice.h>
->  
->  #define DP83822_PHY_ID	        0x2000a240
-> +#define DP83825I_PHY_ID		0x2000a150
-> +
->  #define DP83822_DEVADDR		0x1f
->  
->  #define MII_DP83822_PHYSCR	0x11
-> @@ -304,26 +306,32 @@ static int dp83822_resume(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +#define DP83822_PHY_DRIVER(_id, _name)				\
-> +	{							\
-> +		.phy_id		= _id,				\
-
-I would put the _id argument between parenthesis to guarantee evaluation
-order in case you need to do smart things about the ID in the future.
-
-> +		.phy_id_mask	= 0xfffffff0,			\
-
-You can replace those two lines with PHY_ID_MATCH_MODEL()
-
-> +		.name		= _name,			\
-
-Likewise
-
-> +		.features	= PHY_BASIC_FEATURES,		\
-> +								\
-
-Looks like you have an extra newline here.
-
-With that fixed:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> +		.soft_reset	= dp83822_phy_reset,		\
-> +		.config_init	= dp83822_config_init,		\
-> +		.get_wol = dp83822_get_wol,			\
-> +		.set_wol = dp83822_set_wol,			\
-> +		.ack_interrupt = dp83822_ack_interrupt,		\
-> +		.config_intr = dp83822_config_intr,		\
-> +		.suspend = dp83822_suspend,			\
-> +		.resume = dp83822_resume,			\
-> +	}
-> +
->  static struct phy_driver dp83822_driver[] = {
-> -	{
-> -		.phy_id = DP83822_PHY_ID,
-> -		.phy_id_mask = 0xfffffff0,
-> -		.name = "TI DP83822",
-> -		.features = PHY_BASIC_FEATURES,
-> -		.config_init = dp83822_config_init,
-> -		.soft_reset = dp83822_phy_reset,
-> -		.get_wol = dp83822_get_wol,
-> -		.set_wol = dp83822_set_wol,
-> -		.ack_interrupt = dp83822_ack_interrupt,
-> -		.config_intr = dp83822_config_intr,
-> -		.suspend = dp83822_suspend,
-> -		.resume = dp83822_resume,
-> -	 },
-> +	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
-> +	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
->  };
->  module_phy_driver(dp83822_driver);
->  
->  static struct mdio_device_id __maybe_unused dp83822_tbl[] = {
->  	{ DP83822_PHY_ID, 0xfffffff0 },
-> +	{ DP83825I_PHY_ID, 0xfffffff0 },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(mdio, dp83822_tbl);
+> I don't think it is worth an implementation as complex as in the previous
+> patch just for the above line.
+> Could easily define the temporary buffer in this file directely, then just
+> locally do:
 > 
+> strlcpy(temp_buff, CONFIG_CMDLINE_PREPEND, COMMAND_LINE_SIZE);
+> strlcat(temp_buff, boot_command_line, COMMAND_LINE_SIZE);
+> strlcat(temp_buff, CONFIG_CMDLINE_APPEND, COMMAND_LINE_SIZE);
+> strlcpy(boot_command_line, temp_buff, COMMAND_LINE_SIZE);
+ 
+The point of the code is to have an implementation that other architecture can
+use. If we open code it in powerpc we're no better off.
+
+> 
+> 
+> >   	/* Scan memory nodes and rebuild MEMBLOCKs */
+> >   	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+> >   	of_scan_flat_dt(early_init_dt_scan_memory_ppc, NULL);
+> > diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+> > index f33ff4163a51..e8e9fca22470 100644
+> > --- a/arch/powerpc/kernel/prom_init.c
+> > +++ b/arch/powerpc/kernel/prom_init.c
+> > @@ -30,6 +30,7 @@
+> >   #include <linux/delay.h>
+> >   #include <linux/initrd.h>
+> >   #include <linux/bitops.h>
+> > +#include <linux/cmdline.h>
+> >   #include <asm/prom.h>
+> >   #include <asm/rtas.h>
+> >   #include <asm/page.h>
+> > @@ -637,11 +638,10 @@ static void __init early_cmdline_parse(void)
+> >   	p = prom_cmd_line;
+> >   	if ((long)prom.chosen > 0)
+> >   		l = prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
+> > -#ifdef CONFIG_CMDLINE
+> > +
+> >   	if (l <= 0 || p[0] == '\0') /* dbl check */
+> > -		strlcpy(prom_cmd_line,
+> > -			CONFIG_CMDLINE, sizeof(prom_cmd_line));
+> > -#endif /* CONFIG_CMDLINE */
+> > +		cmdline_add_builtin_section(prom_cmd_line, NULL, sizeof(prom_cmd_line), __prombss);
+> > +
+> 
+> You don't need something as complex as what your generic code does for that.
+> It could be done with the following simple line:
+> 
+> strlcpy(prom_cmd_line, CONFIG_CMDLINE_PREPEND " " CONFIG_CMDLINE_APPEND,
+> sizeof(prom_cmd_line));
+> 
+> >   	prom_printf("command line: %s\n", prom_cmd_line);
+> >   #ifdef CONFIG_PPC64
+> > diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
+> > index 667df97d2595..ab2acc8d8b5a 100644
+> > --- a/arch/powerpc/kernel/prom_init_check.sh
+> > +++ b/arch/powerpc/kernel/prom_init_check.sh
+> > @@ -18,7 +18,7 @@
+> >   WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
+> >   _end enter_prom memcpy memset reloc_offset __secondary_hold
+> > -__secondary_hold_acknowledge __secondary_hold_spinloop __start
+> > +__secondary_hold_acknowledge __secondary_hold_spinloop __start strlcat
+> 
+> The above is a big issue. In the scope of KASAN implementation, we are
+> getting rid of generic string functions from prom_init because they are
+> KASAN instrumented and that's far too early for prom_init. See series
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=94949 and
+> especially patch [v9,03/11] powerpc/prom_init: don't use string functions
+> from lib/
+
+You already re-implemented a number of string functions, seem easy enough to add
+another one.
+
+What your doing here is exactly what I'm trying to prevent in my implementation.
+Say there is a small, but horrific defect in one of the string functions. Some
+other architecture fixes it in lib/strings.c , woops , you just missed it and
+now prom_init.c is stuck with it unless powerpc maintainers are watching closely
+to keep up with the fixes to the string functions.
+
+You could move these functions into the include/linux/string.h as static
+inlines, then use them in lib/strings.c and in prom_init.c. Then you have a
+unified implementation. I assume you would regard that as ugly tho.
+
+Something else you would regard as ugly , your not adding an #ifdef on KASAN in
+prom_init.c for the string functions. If you have that then any buggy string
+functions which you may add (or forget to update) would only cause problems
+if you had KASAN enabled. That then isolates any problems you cause to only
+debug kernels with KASAN enabled, instead of unilaterally all platforms which
+use prom_init.c. That would also only increase the size if KASAN is enabled.
+Very desirable, but ugly. I think most of us kernel hackers will take the ugly.
+
+#ifdef CONFIG_KASAN
+...
+#else
+#define prom_strcmp strcmp
+...
+#endif /* !CONFIG_KASAN */ 
+
+(you would have to change arch/powerpc/kernel/prom_init_check.sh , but that
+shouldn't be too hard)
 
 
--- 
-Florian
+Daniel
