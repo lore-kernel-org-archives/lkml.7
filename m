@@ -2,171 +2,117 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7472EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A641C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8D12085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="SlJof+kj"
+	by mail.kernel.org (Postfix) with ESMTP id E4FCE2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 23:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCSXY6 (ORCPT
+        id S1727257AbfCSXZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 19:24:58 -0400
-Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:47085 "EHLO
-        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCSXY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 19:24:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3816; q=dns/txt; s=iport;
-  t=1553037897; x=1554247497;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MTFoVhwIQZNGeytNbraLJ1jAIHQLVwsMfigDEt0MtsE=;
-  b=SlJof+kjiIi3LMN3rHVDTCyhFSoNUF5Bk63xSoHJzbGTYXYMlNLGnOe+
-   XKKMTKQpyX9Tw5heT0Rkm5Yj0pltUmPSMJnR4B9/yzg0ZN15enqq3/kfx
-   PfdEQGiAilv0hCKmU9PwKeOKL4K2cjma6xjyuj79qv5ZFhxiB/0qiFsPA
-   Q=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AEAAC5eZFc/4cNJK1jGgEBAQEBAgE?=
- =?us-ascii?q?BAQEHAgEBAQGBUQUBAQEBCwGCEGiBAyeMJ6VrgXsNH4RNhG0iNAkNAQEDAQE?=
- =?us-ascii?q?JAQMCbSiGAwFGKYEVARKDIgGBdAGsEIo1FIEbAYZphEgXgUA/gRGNdAOKLod?=
- =?us-ascii?q?ukk0JgkuFEotDDBmTXolOgT6TK4FHOIFWMxoIGxWDJwmCDReOPh8zj2sBAQ?=
-X-IronPort-AV: E=Sophos;i="5.60,246,1549929600"; 
-   d="scan'208";a="537260106"
-Received: from alln-core-2.cisco.com ([173.36.13.135])
-  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 19 Mar 2019 23:24:56 +0000
-Received: from sjc-ads-2388.cisco.com (sjc-ads-2388.cisco.com [171.70.63.76])
-        by alln-core-2.cisco.com (8.15.2/8.15.2) with ESMTP id x2JNOrtX019667;
-        Tue, 19 Mar 2019 23:24:56 GMT
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rob Herring <robh+dt@kernel.org>, xe-linux-external@cisco.com,
-        linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     Daniel Walker <dwalker@fifo99.com>,
-        Maksym Kokhan <maksym.kokhan@globallogic.com>,
+        Tue, 19 Mar 2019 19:25:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11579 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbfCSXZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 19:25:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 16:25:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,246,1549958400"; 
+   d="scan'208";a="284114085"
+Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
+  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2019 16:25:33 -0700
+From:   fei.yang@intel.com
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        zhangjerry@google.com, andrzej.p@collabora.com,
+        plr.vincent@gmail.com, fei.yang@intel.com, jingx.shen@intel.com,
+        john.stultz@linaro.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] powerpc: convert to generic builtin command line
-Date:   Tue, 19 Mar 2019 16:24:47 -0700
-Message-Id: <20190319232448.45964-4-danielwa@cisco.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 171.70.63.76, sjc-ads-2388.cisco.com
-X-Outbound-Node: alln-core-2.cisco.com
+Subject: [PATCH] usb: gadget: f_fs: don't free buffer prematurely
+Date:   Tue, 19 Mar 2019 16:25:15 -0700
+Message-Id: <1553037915-85931-1-git-send-email-fei.yang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This updates the powerpc code to use the CONFIG_GENERIC_CMDLINE
-option.
+From: Fei Yang <fei.yang@intel.com>
 
-[maksym.kokhan@globallogic.com: add strlcat to prom_init_check.sh
-whitelist]
-Cc: Daniel Walker <dwalker@fifo99.com>
-Cc: Daniel Walker <danielwa@cisco.com>
-Cc: xe-linux-external@cisco.com
-Signed-off-by: Daniel Walker <danielwa@cisco.com>
-Signed-off-by: Maksym Kokhan <maksym.kokhan@globallogic.com>
+The following kernel panic happens due to the io_data buffer gets deallocated
+before the async io is completed. Add a check for the case where io_data buffer
+should be deallocated by ffs_user_copy_worker.
+
+[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+[   41.672099] #PF error: [normal kernel read fault]
+[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
+[   41.683687] Oops: 0000 [#1] PREEMPT SMP
+[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
+[   41.705309] Workqueue: adb ffs_user_copy_worker
+[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.705331] Call Trace:
+[   41.705338]  vfree+0x50/0xb0
+[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
+[   41.705344]  process_one_work+0x19f/0x3e0
+[   41.705348]  worker_thread+0x3f/0x3b0
+[   41.829766]  kthread+0x12b/0x150
+[   41.833371]  ? process_one_work+0x3e0/0x3e0
+[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
+[   41.843695]  ret_from_fork+0x3a/0x50
+[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
+[   41.876880] CR2: 0000000000000048
+[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
+[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.985930] Kernel panic - not syncing: Fatal exception
+[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[   42.009525] Rebooting in 10 seconds..
+[   52.014376] ACPI MEMORY or I/O RESET_REG.
+
+Signed-off-by: Fei Yang <fei.yang@intel.com>
 ---
- arch/powerpc/Kconfig                   | 23 +----------------------
- arch/powerpc/kernel/prom_init.c        |  8 ++++----
- arch/powerpc/kernel/prom_init_check.sh |  2 +-
- 3 files changed, 6 insertions(+), 27 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index def41a06377b..385120ff0236 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -173,6 +173,7 @@ config PPC
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_TIME_VSYSCALL
-+	select GENERIC_CMDLINE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_KGDB
-@@ -780,28 +781,6 @@ config PPC_DENORMALISATION
- 	  Add support for handling denormalisation of single precision
- 	  values.  Useful for bare metal only.  If unsure say Y here.
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 20413c2..47be961 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ error_mutex:
+ 	mutex_unlock(&epfile->mutex);
+ error:
+-	ffs_free_buffer(io_data);
++	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
++		ffs_free_buffer(io_data);
+ 	return ret;
+ }
  
--config CMDLINE_BOOL
--	bool "Default bootloader kernel arguments"
--
--config CMDLINE
--	string "Initial kernel command string"
--	depends on CMDLINE_BOOL
--	default "console=ttyS0,9600 console=tty0 root=/dev/sda2"
--	help
--	  On some platforms, there is currently no way for the boot loader to
--	  pass arguments to the kernel. For these platforms, you can supply
--	  some command-line options at build time by entering them here.  In
--	  most cases you will need to specify the root device here.
--
--config CMDLINE_FORCE
--	bool "Always use the default kernel command string"
--	depends on CMDLINE_BOOL
--	help
--	  Always use the default kernel command string, even if the boot
--	  loader passes other arguments to the kernel.
--	  This is useful if you cannot or don't want to change the
--	  command-line options your boot loader passes to the kernel.
--
- config EXTRA_TARGETS
- 	string "Additional default image types"
- 	help
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index f33ff4163a51..e8e9fca22470 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -30,6 +30,7 @@
- #include <linux/delay.h>
- #include <linux/initrd.h>
- #include <linux/bitops.h>
-+#include <linux/cmdline.h>
- #include <asm/prom.h>
- #include <asm/rtas.h>
- #include <asm/page.h>
-@@ -637,11 +638,10 @@ static void __init early_cmdline_parse(void)
- 	p = prom_cmd_line;
- 	if ((long)prom.chosen > 0)
- 		l = prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
--#ifdef CONFIG_CMDLINE
-+
- 	if (l <= 0 || p[0] == '\0') /* dbl check */
--		strlcpy(prom_cmd_line,
--			CONFIG_CMDLINE, sizeof(prom_cmd_line));
--#endif /* CONFIG_CMDLINE */
-+		cmdline_add_builtin_section(prom_cmd_line, NULL, sizeof(prom_cmd_line), __prombss);
-+
- 	prom_printf("command line: %s\n", prom_cmd_line);
- 
- #ifdef CONFIG_PPC64
-diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-index 667df97d2595..ab2acc8d8b5a 100644
---- a/arch/powerpc/kernel/prom_init_check.sh
-+++ b/arch/powerpc/kernel/prom_init_check.sh
-@@ -18,7 +18,7 @@
- 
- WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
- _end enter_prom memcpy memset reloc_offset __secondary_hold
--__secondary_hold_acknowledge __secondary_hold_spinloop __start
-+__secondary_hold_acknowledge __secondary_hold_spinloop __start strlcat
- strcmp strcpy strlcpy strlen strncmp strstr kstrtobool logo_linux_clut224
- reloc_got2 kernstart_addr memstart_addr linux_banner _stext
- __prom_init_toc_start __prom_init_toc_end btext_setup_display TOC."
 -- 
-2.19.1
+2.7.4
 
