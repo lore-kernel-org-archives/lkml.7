@@ -2,359 +2,164 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B828EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7550C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718A220854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A509520854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 04:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTvgi+/V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lUtPNKeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfCSEEG (ORCPT
+        id S1727068AbfCSEEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 00:04:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45424 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCSEEG (ORCPT
+        Tue, 19 Mar 2019 00:04:13 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36361 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCSEEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 00:04:06 -0400
-Received: by mail-io1-f68.google.com with SMTP id x9so16446562iog.12;
-        Mon, 18 Mar 2019 21:04:05 -0700 (PDT)
+        Tue, 19 Mar 2019 00:04:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t206so14917354oib.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 21:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=muBSWe3x1lDU5VtJ3m8DQZD4Epd2BJiMfY/RBjW12V0=;
-        b=qTvgi+/V0O6GHGfHq2WujdCoaHlGxBBu8GPPQTs8yrovP0pGAUqk1LS4EKFh9R9vQd
-         UXLdKKfkej5HMptNr8R2rg31E/YPe4G8jaOMasirizyiqCSZulB36a5aTL6eZn+s1ngv
-         /ENMTsmF/27Fkc3VL8It0iHUOflErMSoZrBUyfpENOPZ2vb6clPobYkTvaK2/ly/qc9d
-         seIkJVmvn+LypGLJzXb97KD3qviDOCAwM0YTqni1pz/oZYSm/ULkHzmYgmLBSjiEK0Lz
-         8xcySkPJjegdDAqkJUJ6e6x7ED3hqIvYtzIymIR0U/2WNHC0w1ArPgLE7iAVCVoNddnp
-         FMeQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FxCVDx55J5+kHcmuGv45W+ZaMNUOkLZNHsAkDDnq18Y=;
+        b=lUtPNKeKZSbonGnF8TWMGUP5R50nabnObsEyuWBm2wlpnICkYv1bxByYTQo1ni9g5L
+         uT6pHpO4tfkpwVwJVzo5QW10t5sdhnz2fEPPoVZ47nhCWVgoHjKXiafM6Da/LajgJ6rv
+         szrISKo2UA/FiqxWwFyMsx3vM7LIn+54RYES8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=muBSWe3x1lDU5VtJ3m8DQZD4Epd2BJiMfY/RBjW12V0=;
-        b=BUmFBX7PUI4bQ+0987veyulNu5splHW8GVli4nQpKKcf1sBgeEdBjMYJOr4lkTiUrR
-         djDRN0mcxwskT2VtY54iV0OTmVxy7v2Z7eRNgM3r5imOuzBspcMsWpHdUfTbH8X5qW3V
-         92hfU4nqEJr4ZX7mo5dN67LlQjCZwRwD3/rykcSZAuOhBMle0TEGRLbNNp2AKaesYDfj
-         3bkiWtGZppTIxWlP2C3/jQb1oK73rDd4BmguFiVew0z9MHWKugmidedDDrk7G4aQV+AN
-         VqGrk6WoZAltGQWrPvxYHDJno+WVICj+6VluY2dxVtX8xOh+7xaPJ6eEQxfiEMEqdS7T
-         Go2g==
-X-Gm-Message-State: APjAAAUgpYyEwK3lsePbHIjR5mNFzCKA1E2sjrHU4sRXjgcvcU/agAB6
-        G5BuycTpUl6NeVx3EzY8gwI=
-X-Google-Smtp-Source: APXvYqxLHNO1WJwkMQvG/xw6Tzb5CEzeeRrBjpSJ4aaS8ZX1E/LsNFbb8aBsN+gmTPAP8Vf7p9JlPw==
-X-Received: by 2002:a6b:6201:: with SMTP id f1mr186260iog.47.1552968244971;
-        Mon, 18 Mar 2019 21:04:04 -0700 (PDT)
-Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
-        by smtp.gmail.com with ESMTPSA id e72sm5353034iof.13.2019.03.18.21.04.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 21:04:04 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 00:04:01 -0400
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6] Drivers: hv: vmbus: Expose monitor data only when monitor
- pages are used
-Message-ID: <20190319040401.GA3050@ubu-Virtual-Machine>
-References: <20190308224611.GA3047@ubu-Virtual-Machine>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FxCVDx55J5+kHcmuGv45W+ZaMNUOkLZNHsAkDDnq18Y=;
+        b=jMEGeLtHWuLGlotQbazYnKGQEYpN/1lrX5ItFLgNNaKCCVQSJIPX2P+CVMe/HpY71G
+         zPhaVhYp90ldSp4Xq/pLCgU9EWEvotcCanvJlCfL+Z1d77IHTYpEFdb1Kpa3PVsEwmHB
+         i69vxUhN0efB2VFQfBegf0W64da0XDxMqtODsk6A/rFBU5U4eiqMakuQgWckEtScM7gq
+         UvHaA8JzXb/Ls+lvAi0eVdA2KVT07YWKRTbYgre/6RMJ30tTq2EV1qF4IKlu5YWZzqXI
+         cOt1u4ZLWRDt3SgbyFrpu79i5GonSlaWNvHiz6SB0twrPmSYdz7l6x/uLu4O6ZAsl7lc
+         kWbw==
+X-Gm-Message-State: APjAAAWrHb/DS45J2mVHGOXYAWOK/l+bdaCVcrO+MAZXaN6xB9loh0sm
+        M0TAEcsXO8lZqEtbWo6tuXJz6iuz/kU=
+X-Google-Smtp-Source: APXvYqxR1NoQEYJhaSnuzEWvymWIHltZBq2KnJvY9CFBbjW0LAQ9KC8/d5Vt3+p9trSM5DEk7GH1JQ==
+X-Received: by 2002:aca:45c4:: with SMTP id s187mr185490oia.20.1552968251480;
+        Mon, 18 Mar 2019 21:04:11 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id a4sm4953197otc.21.2019.03.18.21.04.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 21:04:10 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id 103so1120772otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 21:04:10 -0700 (PDT)
+X-Received: by 2002:a05:6830:11c9:: with SMTP id v9mr257310otq.288.1552968250036;
+ Mon, 18 Mar 2019 21:04:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190308224611.GA3047@ubu-Virtual-Machine>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.f011581516bfe7650c9d4c6054bb828e6227e309.1551964740.git-series.maxime.ripard@bootlin.com>
+ <1d374e71ffcc396b71461ea916cac3d957f8d86c.1551964740.git-series.maxime.ripard@bootlin.com>
+ <CAAFQd5AKXz5QmqnSEkChf8DqPkhEuUQg--q9dZKPmB1kBR1hzA@mail.gmail.com>
+ <20190313153130.hnp5eybcgjm34i4n@flea> <CAAFQd5BeiGVvDcZTFVYg_Qbw1NxRcWFybW2FcDGE=ohFWHFbYA@mail.gmail.com>
+ <20190318154700.4qks2qfxown2frgk@flea>
+In-Reply-To: <20190318154700.4qks2qfxown2frgk@flea>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 19 Mar 2019 13:03:58 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5D29vnxoX7Xd890_KYHdptL7NpMbhv1Jmbzibt1T4cx0g@mail.gmail.com>
+Message-ID: <CAAFQd5D29vnxoX7Xd890_KYHdptL7NpMbhv1Jmbzibt1T4cx0g@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] media: uapi: Add H264 low-level decoder API
+ compound controls.
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        jenskuske@gmail.com, Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two methods for signaling the host: the monitor page mechanism
-and hypercalls. The monitor page mechanism is used by performance
-critical channels (storage, networking, etc.) because it provides
-improved throughput. However, latency is increased. Monitor pages are
-allocated to these channels.
+On Tue, Mar 19, 2019 at 12:47 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Mar 14, 2019 at 01:13:33PM +0900, Tomasz Figa wrote:
+> > On Thu, Mar 14, 2019 at 12:31 AM Maxime Ripard
+> > <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > > On Fri, Mar 08, 2019 at 03:12:18PM +0900, Tomasz Figa wrote:
+> > > > > +.. _v4l2-mpeg-h264:
+> > > > > +
+> > > > > +``V4L2_CID_MPEG_VIDEO_H264_SPS (struct)``
+> > > > > +    Specifies the sequence parameter set (as extracted from the
+> > > > > +    bitstream) for the associated H264 slice data. This includes=
+ the
+> > > > > +    necessary parameters for configuring a stateless hardware de=
+coding
+> > > > > +    pipeline for H264.  The bitstream parameters are defined acc=
+ording
+> > > > > +    to :ref:`h264`. Unless there's a specific comment, refer to =
+the
+> > > > > +    specification for the documentation of these fields, section=
+ 7.4.2.1.1
+> > > > > +    "Sequence Parameter Set Data Semantics".
+> > > >
+> > > > I don't see this section being added by this patch. Where does it c=
+ome from?
+> > >
+> > > This is referring to the the H264 spec itself, as I was trying to
+> > > point out with the reference in that paragraph. How would you write
+> > > this down to make it more obvious?
+> > >
+> >
+> > Aha, somehow it didn't come to my mind when reading it. How about
+> > something like below?
+> >
+> > Unless there is a specific comment, refer to the ITU-T Rec. H.264
+> > specification, section "7.4.2.1.1 Sequence parameter set data semantics=
+"
+> > (as of the 04/2017 edition).
+>
+> The :ref:`h264` currently expands to "ITU H.264", which means in the
+> documentation, in the case above, it ends up as
+>
+>  The bitstream parameters are defined according to ITU H.264. Unless
+>  there=E2=80=99s a specific comment, refer to the specification for the
+>  documentation of these fields, section 7.4.2.1.1 =E2=80=9CSequence Param=
+eter
+>  Set Data Semantics=E2=80=9D.
+>
+> I could change the reference to have "ITU-T Rec. H.264 Specification
+> (04/2017 Edition)". Would that work for you?
+>
 
-Monitor pages are not allocated to channels that do not use the monitor
-page mechanism. Therefore, these channels do not have a valid monitor id
-or valid monitor page data. In these cases, some of the "_show"
-functions return incorrect data. They return an invalid monitor id and
-data that is beyond the bounds of the hv_monitor_page array fields.
+Sounds good to me.
 
-The "channel->offermsg.monitor_allocated" value can be used to determine
-whether monitor pages have been allocated to a channel.
+How about tweaking the text a bit too?
 
-Add "is_visible()" callback functions for the device-level and
-channel-level attribute groups. These functions will hide the monitor
-sysfs files when the monitor mechanism is not used.
+The bitstream parameters are defined according to ITU-T Rec. H.264
+Specification (04/2017 Edition), section 7.4.2.1.1 =E2=80=9CSequence Parame=
+ter
+Set Data Semantics=E2=80=9D. For further documentation, refer to the above
+specification, unless there is an explicit comment stating otherwise.
 
-Remove ".default_attributes" from "vmbus_chan_attrs" and create a
-channel-level attribute group. These changes allow the new
-"is_visible()" callback function to be applied to the channel-level
-attributes.
-
-Call "sysfs_create_group()" in "vmbus_add_channel_kobj()" to create the
-channel's sysfs files. Add a new function,
-“vmbus_remove_channel_attr_group()”, and call it in "free_channel()" to
-remove the channel's sysfs files when the channel is closed.
-
-Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
----
-
-Changes in v6:
- - Removed the “sysfs_group_ready” flag proposed in v5. The flag was
-   used to verify that the attribute group was created, which is
-   unnecessary; sysfs_remove_group() can be called even when
-   sysfs_create_group() fails.
- - Replaced pr_err() with dev_err() as suggested by G. Kroah-Hartman.
- - Shortened the error path comment in vmbus_add_channel_kobj().
- - Updated the commit message.
-
-Changes in v5:
- - Added the “bool sysfs_group_ready” field to vmbus_channel.
- - Added the “vmbus_remove_channel_attr_group()” function which calls
-   "sysfs_remove_group()".
- - Added a comment to "vmbus_add_channel_kobj()" to describe how the
-   empty directory is removed if "sysfs_create_group()" returns an
-   error.
- - Updated the commit message.
-
-NOTE: “.default_attrs” must be removed from vmbus_chan_ktype in order to
-use the is_visible() function because "default_attrs" is an array of
-attributes, not an attribute_group.
-
-Changes in v4:
- - Added “is_visible()” callback functions for the device-level and
-   channel-level attribute groups.
- - Removed the separate monitor attribute groups proposed in v3. They’re
-   no longer needed because the “is_visible()” callbacks are used to
-   determine the attribute visibility.
- - Removed "default_attributes" from "vmbus_chan_attrs" and created a
-   channel-level attribute group.
- - Removed the "kobject_put(kobj)" call proposed in v3. The calling
-   functions take care of calling "kobject_put(channel->kobj)" if an
-   error is returned by "vmbus_add_channel_kobj()".
- - Updated the commit message and subject for clarity and to reflect the
-   new changes in v4.
-
-Changes in v3:
- - The monitor "_show" functions no longer return an error when a
-   channel does not use the monitor page mechanism. Instead, the monitor
-   page sysfs files are created only when a channel uses the monitor
-   page mechanism. This change was suggested by G. Kroah-Hartman.
-
-Note: this patch was originally patch 2/2 in a patchset. Patch 1/2 has
-already been added to char-misc-testing, so I'm not resending it.
-
-Changes in v2:
- - Changed the return value for cases where monitor_allocated is not set
-   to "-EINVAL".
- - Updated the commit message to provide more details about the monitor
-   page mechanism.
- - Updated the sysfs documentation to describe the new return value.
-
-
-Documentation/ABI/stable/sysfs-bus-vmbus | 12 +++-
- drivers/hv/channel_mgmt.c                |  1 +
- drivers/hv/hyperv_vmbus.h                |  2 +
- drivers/hv/vmbus_drv.c                   | 77 +++++++++++++++++++++++-
- 4 files changed, 87 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
-index 826689dcc2e6..8e8d167eca31 100644
---- a/Documentation/ABI/stable/sysfs-bus-vmbus
-+++ b/Documentation/ABI/stable/sysfs-bus-vmbus
-@@ -81,7 +81,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/latency
- Date:		September. 2017
- KernelVersion:	4.14
- Contact:	Stephen Hemminger <sthemmin@microsoft.com>
--Description:	Channel signaling latency
-+Description:	Channel signaling latency. This file is available only for
-+		performance critical channels (storage, network, etc.) that use
-+		the monitor page mechanism.
- Users:		Debugging tools
- 
- What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/out_mask
-@@ -95,7 +97,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/pending
- Date:		September. 2017
- KernelVersion:	4.14
- Contact:	Stephen Hemminger <sthemmin@microsoft.com>
--Description:	Channel interrupt pending state
-+Description:	Channel interrupt pending state. This file is available only for
-+		performance critical channels (storage, network, etc.) that use
-+		the monitor page mechanism.
- Users:		Debugging tools
- 
- What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/read_avail
-@@ -137,7 +141,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/monitor_id
- Date:		January. 2018
- KernelVersion:	4.16
- Contact:	Stephen Hemminger <sthemmin@microsoft.com>
--Description:	Monitor bit associated with channel
-+Description:	Monitor bit associated with channel. This file is available only
-+		for performance critical channels (storage, network, etc.) that
-+		use the monitor page mechanism.
- Users:		Debugging tools and userspace drivers
- 
- What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/ring
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index f174b38f390f..3fc0b247a807 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -347,6 +347,7 @@ static struct vmbus_channel *alloc_channel(void)
- static void free_channel(struct vmbus_channel *channel)
- {
- 	tasklet_kill(&channel->callback_event);
-+	vmbus_remove_channel_attr_group(channel);
- 
- 	kobject_put(&channel->kobj);
- }
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 50fabf4dcb75..e5467b821f41 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -322,6 +322,8 @@ void vmbus_device_unregister(struct hv_device *device_obj);
- int vmbus_add_channel_kobj(struct hv_device *device_obj,
- 			   struct vmbus_channel *channel);
- 
-+void vmbus_remove_channel_attr_group(struct vmbus_channel *channel);
-+
- struct vmbus_channel *relid2channel(u32 relid);
- 
- void vmbus_free_channels(void);
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 41f782af73ea..aa25f3bcbdea 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -630,7 +630,36 @@ static struct attribute *vmbus_dev_attrs[] = {
- 	&dev_attr_driver_override.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(vmbus_dev);
-+
-+/*
-+ * Device-level attribute_group callback function. Returns the permission for
-+ * each attribute, and returns 0 if an attribute is not visible.
-+ */
-+static umode_t vmbus_dev_attr_is_visible(struct kobject *kobj,
-+					 struct attribute *attr, int idx)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	const struct hv_device *hv_dev = device_to_hv_device(dev);
-+
-+	/* Hide the monitor attributes if the monitor mechanism is not used. */
-+	if (!hv_dev->channel->offermsg.monitor_allocated &&
-+	    (attr == &dev_attr_monitor_id.attr ||
-+	     attr == &dev_attr_server_monitor_pending.attr ||
-+	     attr == &dev_attr_client_monitor_pending.attr ||
-+	     attr == &dev_attr_server_monitor_latency.attr ||
-+	     attr == &dev_attr_client_monitor_latency.attr ||
-+	     attr == &dev_attr_server_monitor_conn_id.attr ||
-+	     attr == &dev_attr_client_monitor_conn_id.attr))
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group vmbus_dev_group = {
-+	.attrs = vmbus_dev_attrs,
-+	.is_visible = vmbus_dev_attr_is_visible
-+};
-+__ATTRIBUTE_GROUPS(vmbus_dev);
- 
- /*
-  * vmbus_uevent - add uevent for our device
-@@ -1583,10 +1612,34 @@ static struct attribute *vmbus_chan_attrs[] = {
- 	NULL
- };
- 
-+/*
-+ * Channel-level attribute_group callback function. Returns the permission for
-+ * each attribute, and returns 0 if an attribute is not visible.
-+ */
-+static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
-+					  struct attribute *attr, int idx)
-+{
-+	const struct vmbus_channel *channel =
-+		container_of(kobj, struct vmbus_channel, kobj);
-+
-+	/* Hide the monitor attributes if the monitor mechanism is not used. */
-+	if (!channel->offermsg.monitor_allocated &&
-+	    (attr == &chan_attr_pending.attr ||
-+	     attr == &chan_attr_latency.attr ||
-+	     attr == &chan_attr_monitor_id.attr))
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static struct attribute_group vmbus_chan_group = {
-+	.attrs = vmbus_chan_attrs,
-+	.is_visible = vmbus_chan_attr_is_visible
-+};
-+
- static struct kobj_type vmbus_chan_ktype = {
- 	.sysfs_ops = &vmbus_chan_sysfs_ops,
- 	.release = vmbus_chan_release,
--	.default_attrs = vmbus_chan_attrs,
- };
- 
- /*
-@@ -1594,6 +1647,7 @@ static struct kobj_type vmbus_chan_ktype = {
-  */
- int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
- {
-+	const struct device *device = &dev->device;
- 	struct kobject *kobj = &channel->kobj;
- 	u32 relid = channel->offermsg.child_relid;
- 	int ret;
-@@ -1604,11 +1658,30 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
- 	if (ret)
- 		return ret;
- 
-+	ret = sysfs_create_group(kobj, &vmbus_chan_group);
-+
-+	if (ret) {
-+		/*
-+		 * The calling functions' error handling paths will cleanup the
-+		 * empty channel directory.
-+		 */
-+		dev_err(device, "Unable to set up channel sysfs files\n");
-+		return ret;
-+	}
-+
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
- 	return 0;
- }
- 
-+/*
-+ * vmbus_remove_channel_attr_group - remove the channel's attribute group
-+ */
-+void vmbus_remove_channel_attr_group(struct vmbus_channel *channel)
-+{
-+	sysfs_remove_group(&channel->kobj, &vmbus_chan_group);
-+}
-+
- /*
-  * vmbus_device_create - Creates and registers a new child device
-  * on the vmbus.
--- 
-2.17.1
-
+Best regards,
+Tomasz
