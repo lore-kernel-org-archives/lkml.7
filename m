@@ -2,193 +2,361 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474BBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C358AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1522A20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860CC2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 12:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LAVIaGfe"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="uqJznoMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfCSMDH (ORCPT
+        id S1727357AbfCSME0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 08:03:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34834 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfCSMDH (ORCPT
+        Tue, 19 Mar 2019 08:04:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44502 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfCSMEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 08:03:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h39so21734766qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:03:06 -0700 (PDT)
+        Tue, 19 Mar 2019 08:04:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so203082pgj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 05:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZqLVNyhuH+gUXvfssxaTdgTzYRiUdeA2xUAwVxHGvEI=;
-        b=LAVIaGfec8dONJ1VTXxF7gBiLMpqGzXW2dJdolK1EJrYvh8QMQBDdfgEWNnz/keF7/
-         wdkW238FPXfEQwnJNcx6uVQ2llO2Cy23LUSvTueaiyltcg37+VGSjtWkA59/k27q4w8e
-         FNZ9h/a5h3GeJiyT/5VP+QCKScidqResRDOQs=
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Zgr9l9vFtMckpomHDmXxh5bQX/YD3f/Lbmy6cvF9P3E=;
+        b=uqJznoMur6KVtluxllHSTMtLsmbXgtR6F/GqhjSsGj4wXKwnGvKiSKl5zAF/ilK+E2
+         i2k5GmUGBMUTa3I46PDdjHdXrbyi+cgv1AnNt2K3KOoDvQJaHoHZvaJR5pYAR42vlEw7
+         UIWkgdTGvxODpYZKuGhaCe0Yf7/8jG6Hr5tDMv81n027U6eP/SKhuCOwqDc/R9x1nLa+
+         W+Ily/RA6E3P68zWuDGWNXYZDoII51WsATxbuyQ8YbSv/lFRdhaRYnDhdYc/P5cLWxMN
+         Ucmn5CuA50W+hjNK1LW/PV92MDPQfYdzyF9sEQ1AHTmThzu8WwNmjqYyN/I81JgMe2Ae
+         4MSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZqLVNyhuH+gUXvfssxaTdgTzYRiUdeA2xUAwVxHGvEI=;
-        b=sE6i4wibzTEaYgQA8NBeK1uAgd+HHyFEZA7W7s/YyQ8RwNOhfI0Y3+8AdCA+taWtlu
-         JBSOvPNVfwgo+qVQXjCQerkeh3+mn2bvJzITSceMtpcuaAlAP7Q3Ex4FxCzPYOgYz3DL
-         AzRhc1Di0XN5powJbCFnyyWV3U8IPkBkzfeBIAW2fQomhLKpJfKrThmbEfPjWLgzwI1X
-         loRQJhvvM8aDXQOHOa5gZ9wDieBevQPPRj/Qj+6u7NxNqq3J0GUG54zIGAarM/8fWXTC
-         JWeaZoxn+0/0xHdV48bij85JZJjHAU8YUKuvzGwMjgP/ZLhYezf+meTfxlI2NMy2qoxn
-         bsxg==
-X-Gm-Message-State: APjAAAUACJ7wDIxVqD2Eg1cS+DxWJFik7U0vuOD1b0M2wcswqWplq/HN
-        w6nJ431KcxRzTryXyHD0p6mlo3ufPs43TmOygzUbSVBho3B8fA==
-X-Google-Smtp-Source: APXvYqxFEYKEFnolK3fOin61K12SCmnRiEBy9eD/gw8GJcODjbSx5qNxj4Q0z0eyw2hvm3g0HnV5NTbnDZbW3T+dW0A=
-X-Received: by 2002:ac8:1884:: with SMTP id s4mr1616722qtj.339.1552996984945;
- Tue, 19 Mar 2019 05:03:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Zgr9l9vFtMckpomHDmXxh5bQX/YD3f/Lbmy6cvF9P3E=;
+        b=VrfBDk4zOnUMcn12iCcBRzrfZ2evT1m1qVC+7b02vlPNfu+3ZsVn2DobkKfjymsrXG
+         sHzcRJk7tp6PhozDbUsoQ0MdSyxjQ6u5YpUd4bxc5xtF1jGoNSjMvtXAOotU4K+MgcFJ
+         YMG0zRlBESS56Z2mJ//kZqbQAIWrtVWm+rYPJ+c4dcSrska/t5pkmNjWBiPNJttGqS7O
+         VjHqsnZ/BHW+wqrfbdddPTbfgSD6Zb9AqckEwpWjypoD8KGCRBBKZJPfJhwmn/Nm0GXa
+         kDa3QRaIHXOO7uoFmx9Bb0cyagjws09k+gwrnypEGy0rSiYfmlyL1SjDbL+2KHIQAAtk
+         KLCw==
+X-Gm-Message-State: APjAAAU98QiGIwsFCzw/lzQusi5hjYtsz/NHlztfWOc+6P94vnSXjpMY
+        ZgV5AQl5DiTFBWTuyXyPR71EIg==
+X-Google-Smtp-Source: APXvYqxF1h7pQA9SbXH4i0EHQvYqTodac3jez6r/o4a5QGCCaAGXGZyJJ9eLnT8hPP8mCtbSWgy5MQ==
+X-Received: by 2002:a17:902:2963:: with SMTP id g90mr2175435plb.182.1552997062703;
+        Tue, 19 Mar 2019 05:04:22 -0700 (PDT)
+Received: from kshutemo-mobl1.localdomain (fmdmzpr04-ext.fm.intel.com. [192.55.54.39])
+        by smtp.gmail.com with ESMTPSA id o14sm17438540pgn.65.2019.03.19.05.04.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 05:04:21 -0700 (PDT)
+Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
+        id 871C23011DA; Tue, 19 Mar 2019 15:04:17 +0300 (+03)
+Date:   Tue, 19 Mar 2019 15:04:17 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190319080140.24055-1-weiyi.lu@mediatek.com> <20190319080140.24055-7-weiyi.lu@mediatek.com>
-In-Reply-To: <20190319080140.24055-7-weiyi.lu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 19 Mar 2019 20:02:53 +0800
-Message-ID: <CANMq1KCxhnn+fKaxS1RbpYYJ7pcXzD8XkqTBJHiauHbfrYVTGA@mail.gmail.com>
-Subject: Re: [PATCH v5 06/14] soc: mediatek: Refactor clock control
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190308213633.28978-2-jhubbard@nvidia.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 4:02 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
->
-> Put clock enable and disable control in separate function.
->
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> Introduces put_user_page(), which simply calls put_page().
+> This provides a way to update all get_user_pages*() callers,
+> so that they call put_user_page(), instead of put_page().
+> 
+> Also introduces put_user_pages(), and a few dirty/locked variations,
+> as a replacement for release_pages(), and also as a replacement
+> for open-coded loops that release multiple pages.
+> These may be used for subsequent performance improvements,
+> via batching of pages to be released.
+> 
+> This is the first step of fixing a problem (also described in [1] and
+> [2]) with interactions between get_user_pages ("gup") and filesystems.
+> 
+> Problem description: let's start with a bug report. Below, is what happens
+> sometimes, under memory pressure, when a driver pins some pages via gup,
+> and then marks those pages dirty, and releases them. Note that the gup
+> documentation actually recommends that pattern. The problem is that the
+> filesystem may do a writeback while the pages were gup-pinned, and then the
+> filesystem believes that the pages are clean. So, when the driver later
+> marks the pages as dirty, that conflicts with the filesystem's page
+> tracking and results in a BUG(), like this one that I experienced:
+> 
+>     kernel BUG at /build/linux-fQ94TU/linux-4.4.0/fs/ext4/inode.c:1899!
+>     backtrace:
+>         ext4_writepage
+>         __writepage
+>         write_cache_pages
+>         ext4_writepages
+>         do_writepages
+>         __writeback_single_inode
+>         writeback_sb_inodes
+>         __writeback_inodes_wb
+>         wb_writeback
+>         wb_workfn
+>         process_one_work
+>         worker_thread
+>         kthread
+>         ret_from_fork
+> 
+> ...which is due to the file system asserting that there are still buffer
+> heads attached:
+> 
+>         ({                                                      \
+>                 BUG_ON(!PagePrivate(page));                     \
+>                 ((struct buffer_head *)page_private(page));     \
+>         })
+> 
+> Dave Chinner's description of this is very clear:
+> 
+>     "The fundamental issue is that ->page_mkwrite must be called on every
+>     write access to a clean file backed page, not just the first one.
+>     How long the GUP reference lasts is irrelevant, if the page is clean
+>     and you need to dirty it, you must call ->page_mkwrite before it is
+>     marked writeable and dirtied. Every. Time."
+> 
+> This is just one symptom of the larger design problem: real filesystems
+> that actually write to a backing device, do not actually support
+> get_user_pages() being called on their pages, and letting hardware write
+> directly to those pages--even though that pattern has been going on since
+> about 2005 or so.
+> 
+> The steps are to fix it are:
+> 
+> 1) (This patch): provide put_user_page*() routines, intended to be used
+>    for releasing pages that were pinned via get_user_pages*().
+> 
+> 2) Convert all of the call sites for get_user_pages*(), to
+>    invoke put_user_page*(), instead of put_page(). This involves dozens of
+>    call sites, and will take some time.
+> 
+> 3) After (2) is complete, use get_user_pages*() and put_user_page*() to
+>    implement tracking of these pages. This tracking will be separate from
+>    the existing struct page refcounting.
+> 
+> 4) Use the tracking and identification of these pages, to implement
+>    special handling (especially in writeback paths) when the pages are
+>    backed by a filesystem.
+> 
+> [1] https://lwn.net/Articles/774411/ : "DMA and get_user_pages()"
+> [2] https://lwn.net/Articles/753027/ : "The Trouble with get_user_pages()"
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Christopher Lameter <cl@linux.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Jerome Glisse <jglisse@redhat.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>    # docs
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  drivers/soc/mediatek/mtk-scpsys.c | 49 ++++++++++++++++++++-----------
->  1 file changed, 32 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index 765ad4a5e5df..3e9be07a2627 100644
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -208,6 +208,33 @@ static int scpsys_regulator_disable(struct scp_domain *scpd)
->         return regulator_disable(scpd->supply);
+>  include/linux/mm.h | 24 ++++++++++++++
+>  mm/gup.c           | 82 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 106 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 5801ee849f36..353035c8b115 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -993,6 +993,30 @@ static inline void put_page(struct page *page)
+>  		__put_page(page);
 >  }
->
-> +static int scpsys_clk_enable(struct clk *clk[], int max_num)
+>  
+> +/**
+> + * put_user_page() - release a gup-pinned page
+> + * @page:            pointer to page to be released
+> + *
+> + * Pages that were pinned via get_user_pages*() must be released via
+> + * either put_user_page(), or one of the put_user_pages*() routines
+> + * below. This is so that eventually, pages that are pinned via
+> + * get_user_pages*() can be separately tracked and uniquely handled. In
+> + * particular, interactions with RDMA and filesystems need special
+> + * handling.
+> + *
+> + * put_user_page() and put_page() are not interchangeable, despite this early
+> + * implementation that makes them look the same. put_user_page() calls must
+> + * be perfectly matched up with get_user_page() calls.
+> + */
+> +static inline void put_user_page(struct page *page)
 > +{
-> +       int i, ret = 0;
-> +
-> +       for (i = 0; i < max_num && clk[i]; i++) {
-> +               ret = clk_prepare_enable(clk[i]);
-> +               if (ret) {
-> +                       for (--i; i >= 0; i--)
-> +                               clk_disable_unprepare(clk[i]);
-
-Would it be simpler to just call scpsys_clk_disable(clk, i) ?
-
-> +
-> +                       break;
-> +               }
-> +       }
-> +
-> +       return ret;
+> +	put_page(page);
 > +}
-
-Maybe not for this series, but could you use clk_bulk_prepare_enable
-instead? The only issue is that it'd still call clk_prepare_enable on
-NULL clocks, but that does nothing, so it's just a little less
-efficient...
-
 > +
-> +static void scpsys_clk_disable(struct clk *clk[], int max_num)
+> +void put_user_pages_dirty(struct page **pages, unsigned long npages);
+> +void put_user_pages_dirty_lock(struct page **pages, unsigned long npages);
+> +void put_user_pages(struct page **pages, unsigned long npages);
+> +
+>  #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+>  #define SECTION_IN_PAGE_FLAGS
+>  #endif
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f84e22685aaa..37085b8163b1 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -28,6 +28,88 @@ struct follow_page_context {
+>  	unsigned int page_mask;
+>  };
+>  
+> +typedef int (*set_dirty_func_t)(struct page *page);
+> +
+> +static void __put_user_pages_dirty(struct page **pages,
+> +				   unsigned long npages,
+> +				   set_dirty_func_t sdf)
 > +{
-> +       int i;
+> +	unsigned long index;
 > +
-> +       for (i = max_num - 1; i >= 0; i--) {
-> +               if (clk[i])
+> +	for (index = 0; index < npages; index++) {
+> +		struct page *page = compound_head(pages[index]);
+> +
+> +		if (!PageDirty(page))
+> +			sdf(page);
 
-if test not needed, clk_disable_unprepare ignores NULL parameters.
+How is this safe? What prevents the page to be cleared under you?
 
-> +                       clk_disable_unprepare(clk[i]);
-> +       }
+If it's safe to race clear_page_dirty*() it has to be stated explicitly
+with a reason why. It's not very clear to me as it is.
+
+> +
+> +		put_user_page(page);
+> +	}
 > +}
-
-ditto: clk_bulk_disable_unprepare
-
 > +
->  static int scpsys_power_on(struct generic_pm_domain *genpd)
+> +/**
+> + * put_user_pages_dirty() - release and dirty an array of gup-pinned pages
+> + * @pages:  array of pages to be marked dirty and released.
+> + * @npages: number of pages in the @pages array.
+> + *
+> + * "gup-pinned page" refers to a page that has had one of the get_user_pages()
+> + * variants called on that page.
+> + *
+> + * For each page in the @pages array, make that page (or its head page, if a
+> + * compound page) dirty, if it was previously listed as clean. Then, release
+> + * the page using put_user_page().
+> + *
+> + * Please see the put_user_page() documentation for details.
+> + *
+> + * set_page_dirty(), which does not lock the page, is used here.
+> + * Therefore, it is the caller's responsibility to ensure that this is
+> + * safe. If not, then put_user_pages_dirty_lock() should be called instead.
+> + *
+> + */
+> +void put_user_pages_dirty(struct page **pages, unsigned long npages)
+> +{
+> +	__put_user_pages_dirty(pages, npages, set_page_dirty);
+
+Have you checked if compiler is clever enough eliminate indirect function
+call here? Maybe it's better to go with an opencodded approach and get rid
+of callbacks?
+
+
+> +}
+> +EXPORT_SYMBOL(put_user_pages_dirty);
+> +
+> +/**
+> + * put_user_pages_dirty_lock() - release and dirty an array of gup-pinned pages
+> + * @pages:  array of pages to be marked dirty and released.
+> + * @npages: number of pages in the @pages array.
+> + *
+> + * For each page in the @pages array, make that page (or its head page, if a
+> + * compound page) dirty, if it was previously listed as clean. Then, release
+> + * the page using put_user_page().
+> + *
+> + * Please see the put_user_page() documentation for details.
+> + *
+> + * This is just like put_user_pages_dirty(), except that it invokes
+> + * set_page_dirty_lock(), instead of set_page_dirty().
+> + *
+> + */
+> +void put_user_pages_dirty_lock(struct page **pages, unsigned long npages)
+> +{
+> +	__put_user_pages_dirty(pages, npages, set_page_dirty_lock);
+> +}
+> +EXPORT_SYMBOL(put_user_pages_dirty_lock);
+> +
+> +/**
+> + * put_user_pages() - release an array of gup-pinned pages.
+> + * @pages:  array of pages to be marked dirty and released.
+> + * @npages: number of pages in the @pages array.
+> + *
+> + * For each page in the @pages array, release the page using put_user_page().
+> + *
+> + * Please see the put_user_page() documentation for details.
+> + */
+> +void put_user_pages(struct page **pages, unsigned long npages)
+> +{
+> +	unsigned long index;
+> +
+> +	for (index = 0; index < npages; index++)
+> +		put_user_page(pages[index]);
+
+I believe there's an room for improvement for compound pages.
+
+If there's multiple consequential pages in the array that belong to the
+same compound page we can get away with a single atomic operation to
+handle them all.
+
+> +}
+> +EXPORT_SYMBOL(put_user_pages);
+> +
+>  static struct page *no_page_table(struct vm_area_struct *vma,
+>  		unsigned int flags)
 >  {
->         struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
-> @@ -216,21 +243,14 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
->         u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
->         u32 val;
->         int ret, tmp;
-> -       int i;
->
->         ret = scpsys_regulator_enable(scpd);
->         if (ret < 0)
->                 return ret;
->
-> -       for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++) {
-> -               ret = clk_prepare_enable(scpd->clk[i]);
-> -               if (ret) {
-> -                       for (--i; i >= 0; i--)
-> -                               clk_disable_unprepare(scpd->clk[i]);
-> -
-> -                       goto err_clk;
-> -               }
-> -       }
-> +       ret = scpsys_clk_enable(scpd->clk, MAX_CLKS);
-> +       if (ret)
-> +               goto err_clk;
->
->         val = readl(ctl_addr);
->         val |= PWR_ON_BIT;
-> @@ -283,10 +303,7 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
->         return 0;
->
->  err_pwr_ack:
-> -       for (i = MAX_CLKS - 1; i >= 0; i--) {
-> -               if (scpd->clk[i])
-> -                       clk_disable_unprepare(scpd->clk[i]);
-> -       }
-> +       scpsys_clk_disable(scpd->clk, MAX_CLKS);
->  err_clk:
->         scpsys_regulator_disable(scpd);
->
-> @@ -303,7 +320,6 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
->         u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
->         u32 val;
->         int ret, tmp;
-> -       int i;
->
->         if (scpd->data->bus_prot_mask) {
->                 ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-> @@ -344,8 +360,7 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
->         if (ret < 0)
->                 goto out;
->
-> -       for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++)
-> -               clk_disable_unprepare(scpd->clk[i]);
-> +       scpsys_clk_disable(scpd->clk, MAX_CLKS);
->
->         ret = scpsys_regulator_disable(scpd);
->         if (ret < 0)
-> --
-> 2.18.0
->
+> -- 
+> 2.21.0
+> 
+
+-- 
+ Kirill A. Shutemov
