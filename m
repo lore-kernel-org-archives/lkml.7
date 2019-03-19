@@ -2,112 +2,113 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8481EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F277C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5057F213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E391213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6s9im/u"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="DKRv1KED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfCSUUB (ORCPT
+        id S1727418AbfCSUVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:20:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38588 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbfCSUUA (ORCPT
+        Tue, 19 Mar 2019 16:21:32 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:50428 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfCSUVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:20:00 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x13so250878ljj.5;
-        Tue, 19 Mar 2019 13:19:58 -0700 (PDT)
+        Tue, 19 Mar 2019 16:21:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 7C661C51
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:21:30 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id VdJxZZkXeW1z for <linux-kernel@vger.kernel.org>;
+        Tue, 19 Mar 2019 15:21:30 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 4C2EDCE4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:21:30 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id j127so117917itj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QAp0KuCd+VwXHGjzKhbOPSvfhdsI4XdE3B+BZLnU0mk=;
-        b=j6s9im/uW0PjIPrC7LisBb4yt4hAP9QE0ccseZ//LilK2ZfaIxgGcC8Tgobaztjlln
-         Nyi9NePlyThsQ4U3Ie6sjGo0+OklAqXc21M1zUbC10pqUIhlqCA7S07H/qMdD5egUjk0
-         nNN9BzCUvIKsVdPUBn81Bkn69N3nmmlSYUjQjccWbG9Q38tlLjIGdnZZK+bXY1ZPon7I
-         L0wGnqXiPWcMRjFQr9z0NOW7AMQc2/18EQqQBE2k6IlSmkIvmlTiW/i2UZ8Ide6BEX6V
-         T0L/zZAP16pUdtHOjs0zJDd4A/JW+cbdoKn5wueQhFC4AMKznsPxS5yA3HSeCsYzHpyw
-         7ohg==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4XbTTjIpiLnxJcyBxCsfFIXdDM651MBiT2q5Ta5m9mE=;
+        b=DKRv1KEDHavcTtiRlKGtHGXyuC/RXZg7f7UumYSvaL256iDULMKIyHE1jUDuz7gnk1
+         J/LIPAUOWbgb3EBPeXDBf21LvkX2qMt6Bv/cTcga8kaU8Iw31pJrTnfEmU66P17L8ocV
+         +Qapj/+W44jqulus48Iwj1xdtAUqlJnHylnFfYjDQRZwtUqaaSByCZfWVWrJBdD/ED1C
+         cO6EUp7xFIKfdWm5V2NaGIN09BvPG5rJ3ot4pKnufryJVfDdgzxxF9r55XS8SCfhZ4Fo
+         x8cNIqbYvdn95ayG0TYGgHFmdu/SQ1cXidNkm7iTmHnsmM5MKCCDifd5MxKwBqj5YN/0
+         Kd+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QAp0KuCd+VwXHGjzKhbOPSvfhdsI4XdE3B+BZLnU0mk=;
-        b=Nlf79ZwyNn3KpJFpG8MqD5FA1a3up3jDdu9DQgI2Hz4v8FEsRpQYteFv3qVvKLqOlN
-         Qka6XX6D7AAUwzYA4eNoCGTXU22EyUkLTRzdaS6u1J1SPt1d1UQSzebtg0ibJRuaXnEg
-         QcCE84/6RaxRF7NY3q9g3RxkfvWMC8QsIgDjVyHh2Txpr9i9y3XQ9xJpo9HzT839828c
-         d9sGqqzxVgKvB0pXRm731UeRr8iC7mIZeY1fcjZqQn2Gs9EP8Y//s5Di312+jt6cCHId
-         o3yjBMuOJtvcQtE0AqXhL3l/nuF/H+eJiccuTbj7GCAWWhjkZVICVm6tMBE40b1pPSZQ
-         2EJA==
-X-Gm-Message-State: APjAAAV72EM0i/U1TMyClw3NxZm4rG9YoGD4UdBA5LVW4TcE253mo+kS
-        +gUO0iE+0Qxqvhf2a4nqWhI=
-X-Google-Smtp-Source: APXvYqygDDUfXYqH+4ugtLxN68Uudfb9H3IzyKHm/PL3yUCwrxxR86FDcwIcbV7LqN/S4wCBQg8TgA==
-X-Received: by 2002:a2e:899a:: with SMTP id c26mr13444322lji.192.1553026798116;
-        Tue, 19 Mar 2019 13:19:58 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id i24sm2864410lfl.73.2019.03.19.13.19.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4XbTTjIpiLnxJcyBxCsfFIXdDM651MBiT2q5Ta5m9mE=;
+        b=GuoEObwMVG5gCweD114fD6IXIAbd1qa8K/14Sy2MfreZwllKa151lwh2uk5iZ6F+D2
+         9cV3pBKtuhTWgpitaYMwU7dQipTUJQ4NKhMtmwqPeDzkp+Xywj7vlY+oEOcBFIieYXZU
+         nBHINFUnlACwNxgmcRDmoLIuc2kBBHwCQbGC5GPY/fBm8b9rk+bnGx8FohzNYA278I3z
+         9H4TqVRJGADhyAFU9gT6qulIWOiTwMNLe/ahcn9XjI3VSdoPjFqCwvS5X36PCcKfCla0
+         vZxb0UysCVy1xikFzBZqMcMDrc+khEClt025sw010e5h52BlAxaJZEPNUCt+rnLZ84Jk
+         WGUg==
+X-Gm-Message-State: APjAAAX86MrTSQA9wY0chNcCGmfTv1iXBiuCCvIQdNJZkm2c9S7dUD3D
+        yrMvyJUgMSRezU4Y/Q3EOapVFGXvCntHtJNiErNrhpFRcJtpwe3f+AosBH78rMPC1NgiGltt9ir
+        3EnD5OpHgytdZKMry6GUf0Uh8fboH
+X-Received: by 2002:a24:3655:: with SMTP id l82mr2640842itl.107.1553026890258;
+        Tue, 19 Mar 2019 13:21:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqztpNUNli8bozcP0nGtV3GGAwI9u5P7M5k8VVeDQASG3DWDgAqHlt2pH3/Ubk8P9DAqFg6hZw==
+X-Received: by 2002:a24:3655:: with SMTP id l82mr2640831itl.107.1553026890080;
+        Tue, 19 Mar 2019 13:21:30 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id i5sm41441itb.3.2019.03.19.13.21.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 13:19:57 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] ARM: OMAP1: ams-delta: Fix broken GPIO ID allocation
-Date:   Tue, 19 Mar 2019 21:19:52 +0100
-Message-Id: <20190319201952.1309-1-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.19.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 19 Mar 2019 13:21:29 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sabin Mihai Rapan <sabin.rapan@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: rtlwifi: rtl8822b: fix to avoid NULL pointer dereference
+Date:   Tue, 19 Mar 2019 15:21:25 -0500
+Message-Id: <20190319202127.16692-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to request dynamic allocationn of GPIO IDs, a negative number
-should be passed as a base GPIO ID via platform data.  Unfortuntely,
-commit 771e53c4d1a1 ("ARM: OMAP1: ams-delta: Drop board specific global
-GPIO numbers") didn't follow that rule while switching to dynamically
-allocated GPIO IDs for Amstrad Delta latches, making their IDs
-overlapping with those already assigned to OMAP GPIO devices.  Fix it.
+skb allocated via dev_alloc_skb can fail and return a NULL pointer.
+This patch avoids such a scenario and returns, consistent with other
+invocations.
 
-Fixes: 771e53c4d1a1 ("ARM: OMAP1: ams-delta: Drop board specific global GPIO numbers")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc: stable@vger.kernel.org
 ---
- arch/arm/mach-omap1/board-ams-delta.c | 2 ++
+v1: Patch collision with rtl_phydm.c, fix as per Greg
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mach-omap1/board-ams-delta.c b/arch/arm/mach-omap1/board-ams-delta.c
-index be30c3c061b4..1b15d593837e 100644
---- a/arch/arm/mach-omap1/board-ams-delta.c
-+++ b/arch/arm/mach-omap1/board-ams-delta.c
-@@ -182,6 +182,7 @@ static struct resource latch1_resources[] = {
+diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
+index f061dd1382aa..cf6b7a80b753 100644
+--- a/drivers/staging/rtlwifi/rtl8822be/fw.c
++++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
+@@ -743,6 +743,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
+ 		      u1_rsvd_page_loc, 3);
  
- static struct bgpio_pdata latch1_pdata = {
- 	.label	= LATCH1_LABEL,
-+	.base	= -1,
- 	.ngpio	= LATCH1_NGPIO,
- };
- 
-@@ -219,6 +220,7 @@ static struct resource latch2_resources[] = {
- 
- static struct bgpio_pdata latch2_pdata = {
- 	.label	= LATCH2_LABEL,
-+	.base	= -1,
- 	.ngpio	= LATCH2_NGPIO,
- };
+ 	skb = dev_alloc_skb(totalpacketlen);
++	if (!skb)
++		return;
+ 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
+ 	       totalpacketlen);
  
 -- 
-2.19.2
+2.17.1
 
