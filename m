@@ -2,81 +2,121 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B530C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8EFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58032213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6515213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h9lhySCS"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XMD3wPAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfCSVAZ (ORCPT
+        id S1727485AbfCSVB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:00:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50280 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfCSVAZ (ORCPT
+        Tue, 19 Mar 2019 17:01:56 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35766 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfCSVB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:00:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SsHLgtv2tYTObwwyC6qG+Qh49rThPaG6hGq1pZpjEfI=; b=h9lhySCSbvJtjaKQ17GSxzZXh
-        JMbsgqsBoYOOQMnStPqPpuqpDwMpi5y+NBg4Cmg4vlnC5UZpezvbjKNq2VezKXeexQZCMZ5JDwM/u
-        p4P1HWIUSWpWZtzIKHctOR6427ggauv6mOY+z7X0tZTwEI3J6EuX1pn0S/+akCbRlXV3Tvyi2pYNn
-        4XK7g1Vl+aNt2XYX3gQmGDiQhNPC7pbdXbbQtF6KfzDGHmiTY8F8RV6+PLFZYjHo65i8khdtVS77L
-        HR6hhJYKG+w/btEa05YENuxLe5ygX5k3ep/411lANSFwPMuJr0yABVIFBUTQoz7CU4VW5Z65BrtwC
-        3wYV7zN1Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6LqO-0008St-KG; Tue, 19 Mar 2019 21:00:20 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A91CD23CB6531; Tue, 19 Mar 2019 22:00:18 +0100 (CET)
-Date:   Tue, 19 Mar 2019 22:00:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Subject: Re: [RFC][PATCH 4/8] perf/x86: Remove PERF_X86_EVENT_COMMITTED
-Message-ID: <20190319210018.GP5996@hirez.programming.kicks-ass.net>
-References: <20190314130113.919278615@infradead.org>
- <20190314130705.750219024@infradead.org>
- <CABPqkBQr4VbNQG9R9j8Di=6fSziUw1s_QLyE9L7nsMTdWd8GtQ@mail.gmail.com>
+        Tue, 19 Mar 2019 17:01:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id j132so83741oib.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 14:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pio8TBO/QxsrXniSoOcMA/CnPnxy0r3ewdeSRItQSw0=;
+        b=XMD3wPAA6RKkVosjWQwrcVhBSXF4CQRZ8WKqSVJ9/VfCAf3dqaP2ng/aEHufoysWhB
+         YrexdPQzS+tQ3FrO/+rUCd5AZNQDZMAEV9VCpW5RIY7jbMmiRf6wunCroGrodqHcKoLl
+         dZEtk2EtuOMEaazpk7jMIqI9UgbzCpDk41SXpYKx2kvo9R2W7t9TJ98S5lzHdblY3bNK
+         Bx0Yt+LEGL6ANZbbr+/LqdPqFFXSTjcvaWBnq6CH5+w62cW2L94/Qaqhk6WrRGKMLQxN
+         +NDzy6J0jJVqFrWy6rx8GiNCUBZFkt0MucGFSGF3AvCS9NPYSWlUClVIKKU8kQ2DRDsV
+         yKig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pio8TBO/QxsrXniSoOcMA/CnPnxy0r3ewdeSRItQSw0=;
+        b=a0H9YuGnPp25y7a3cI2WM2f91EKpce+vTU1QKxv6paFcGKvLmD3s6J0Qp0maOi7djV
+         ggOfhEYM/Q+SC3VWm4/9AveuEwAiPD9k590XI002uues5WI3Hfmruc7t3fL+m8f2T0kR
+         tJpnF2TBeb8/G2bameHB9Qakvd/rqBWGmVH6V52kWZEyjp0DzyXyrK8RtF3hQlK/kbf+
+         GgKKK0L32tBcJ8NRV0U69uHQxjDkR7FvReMbpgAW/sGABDAZ/Mn4HX/3aFppCt0n/70A
+         MwcngbIypu8q80fZJAH/snBUyl9aKBTj12/BxAqaPFCwDtCzkGG9imGX8RYXEupKpK4O
+         THhQ==
+X-Gm-Message-State: APjAAAV3jCIjHstWlZOmgYosBb9GMuSuK78ktiN/N5+uSkEv5QrIYxyL
+        oKLmsPUwjChhgdaYz9li787bGQvpyDBhtminWMJ32A==
+X-Google-Smtp-Source: APXvYqyHNtGGZSB7SlpOJuqDZtzl6bzk0eKQD3cO5l9cq0xQo47Tfb8PX+RvbbwXDPfbDMpqweT+G/hCWCzFon2Me5E=
+X-Received: by 2002:aca:aa57:: with SMTP id t84mr2883959oie.149.1553029315376;
+ Tue, 19 Mar 2019 14:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABPqkBQr4VbNQG9R9j8Di=6fSziUw1s_QLyE9L7nsMTdWd8GtQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 Mar 2019 14:01:44 -0700
+Message-ID: <CAPcyv4ij2nHD7JumKNcNYB4gAGujWzCPkcpoi=XafmG3EP2b0g@mail.gmail.com>
+Subject: Re: [PATCH 0/6] security/keys/encrypted: Break module dependency chain
+To:     keyrings@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, ecryptfs@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 01:48:18PM -0700, Stephane Eranian wrote:
-> On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > For x86_pmu_commit_txn(), cpuc->n_events is updated, but we can
-> > trivially compute the desired value with cpuc->n_txn -- the number of
-> > events added in this transaction.
-> >
-> I suggest you put this explanation in the code so that it is easier to
-> understand.
+On Mon, Mar 18, 2019 at 11:18 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> With v5.1-rc1 all the nvdimm sub-system regression tests started failing
+> because the libnvdimm module failed to load in the qemu-kvm test
+> environment.  Critically that environment does not have a TPM. Commit
+> 240730437deb "KEYS: trusted: explicitly use tpm_chip structure..."
+> started to require a TPM to be present for the trusted.ko module to load
+> where there was no requirement for that before.
+>
+> Rather than undo the "fail if no hardware" behavior James points out
+> that the module dependencies can be broken by looking up the key-type by
+> name. Remove the dependencies on the "key_type_trusted" and
+> "key_type_encrypted" symbol exports, and clean up other boilerplate that
+> supported those exports in different configurations.
 
-Right, I actually attempted writing that comment a few times but every
-time it became a mess. I'll try again, because you're quite right, this
-is a bit magical.
+Any feedback? Was hoping to get at least patch1 in the queue for
+v5.1-rc2 since this effectively disables the nvdimm driver on typical
+configurations. Jarkko, would you be willing to merge it since the
+regression came through your tree?
 
-> > -               for (i = 0; i < n; i++) {
-> > +               i = cpuc->n_events;
-> > +               if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
-> > +                       i -= cpuc->n_txn;
-> > +
-> > +               for (; i < n; i++) {
+> Dan Williams (6):
+>       security/keys/encrypted: Allow operation without trusted.ko
+>       security/keys/encrypted: Clean up request_trusted_key()
+>       libnvdimm/security: Drop direct dependency on key_type_encrypted
+>       security/keys/ecryptfs: Drop direct dependency on key_type_encrypted
+>       security/integrity/evm: Drop direct dependency on key_type_encrypted
+>       security/keys/encrypted: Drop export of key_type_encrypted
+>
+>
+>  drivers/nvdimm/security.c                        |   11 ++++-
+>  fs/ecryptfs/ecryptfs_kernel.h                    |   22 -----------
+>  fs/ecryptfs/keystore.c                           |   12 ++++++
+>  include/keys/encrypted-type.h                    |    2 -
+>  include/linux/key.h                              |    1
+>  security/integrity/evm/evm_crypto.c              |    9 ++++
+>  security/keys/encrypted-keys/Makefile            |    3 -
+>  security/keys/encrypted-keys/encrypted.c         |   35 ++++++++++++++++-
+>  security/keys/encrypted-keys/encrypted.h         |   12 ------
+>  security/keys/encrypted-keys/masterkey_trusted.c |   46 ----------------------
+>  security/keys/internal.h                         |    2 -
+>  security/keys/key.c                              |    1
+>  12 files changed, 65 insertions(+), 91 deletions(-)
+>  delete mode 100644 security/keys/encrypted-keys/masterkey_trusted.c
