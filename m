@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB416C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6468BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD42A20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3598C20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553001235;
-	bh=UqAfBUpF2bq1iBlyIni7as0FfXLn9T8gqiIlKawU10s=;
+	s=default; t=1553001237;
+	bh=ZsDi3UdOSoac1DyNZ37Pe3ZabqbNL0nd8hMuLHTfzX8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=l639aHxlM1lcHebiV3wZRLFwmCf9dgkaqQ3cUU153r6mLOooPYfKyfLq5WiOAA8hQ
-	 4SHmCNHJXKmkcCPoC/O3zqvfHy8OTQFeudEd6WEU/X9HMkOuivq5BbcbeSSsgC2gr/
-	 Ak3b1/6Xhfe+XI9za3oiiDSnPl6s016pKCEGqpnM=
+	b=1My2Q++OWgXt7dYcAMJIhfCi9a0UC5EEQj7LJfMNlfYwcZUC9c+bwuur2RAUqFeol
+	 sWbH9r0IzyqoM+Z3U3v5rIAog5xdGwBxHqXJ4oNV/l1KcJ5s7cQrz6JgNcB+0c/m5B
+	 PiLluH4pM8JtQnKGN5tOvh2eP0Rtap0S88mWmuO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfCSNNy (ORCPT
+        id S1727495AbfCSNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:13:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49108 "EHLO
+        Tue, 19 Mar 2019 09:13:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49110 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfCSNNx (ORCPT
+        with ESMTP id S1727095AbfCSNNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Mar 2019 09:13:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,25 +34,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=mtayLktrsM4NK6nMsgZa/4xcLvtHLhZIFZQDAzF23A4=; b=YxIzZ95WmGHx
-        qEnlC6sMVwWAMZry8/eqwyNWuNjIXAG3GFtJt20wpJJOF3QQMD9UTCbOJ0CS7Iy+Gj4hwqGOqgTht
-        mG3Zj7puNjeML2JU2Wm/dKpUmCC4e8WUTgCyZDjE7jN/SslKQmSP9inhC58VMwHb/M+j30neUeamI
-        e8+cY=;
+        List-Archive; bh=rbFBmc2+NnDfdMDJjatkH2gVgT9FD6ZHNkJscwF8z0w=; b=kzIBlIEwcVbh
+        5QF2x/anwRgrfKusU704OltIudgG6jSGC9TbS/Cu3saGPCnljIuWrTOXDJZiaLIlknts+qVOQYsvS
+        0ipdt+mW/9yRxjFHAyZEHo4llNiaQkPH76weYwGd5nGtOX/ur/mhlCuS1mZ7yMmNljMU2Pm8YuDnI
+        xjC74=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6EYt-00039j-G4; Tue, 19 Mar 2019 13:13:47 +0000
+        id 1h6EYv-00039m-4P; Tue, 19 Mar 2019 13:13:49 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 100F211288DF; Tue, 19 Mar 2019 13:13:47 +0000 (GMT)
+        id B443611288DF; Tue, 19 Mar 2019 13:13:48 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Applied "regulator: axp20x: Use rdev_get_id at appropriate places" to the regulator tree
+Subject: Applied "regulator: axp20x: Remove unneeded NULL test against rdev" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190319131347.100F211288DF@debutante.sirena.org.uk>
-Date:   Tue, 19 Mar 2019 13:13:47 +0000 (GMT)
+Message-Id: <20190319131348.B443611288DF@debutante.sirena.org.uk>
+Date:   Tue, 19 Mar 2019 13:13:48 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: axp20x: Use rdev_get_id at appropriate places
+   regulator: axp20x: Remove unneeded NULL test against rdev
 
 has been applied to the regulator tree at
 
@@ -85,68 +85,34 @@ to this mail.
 Thanks,
 Mark
 
-From 04d1446bce279ee6e4c39b3bf705bef3abba008e Mon Sep 17 00:00:00 2001
+From 969697de7fa6eee12fbe216f9603708932a78c0d Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 19 Mar 2019 11:36:08 +0800
-Subject: [PATCH] regulator: axp20x: Use rdev_get_id at appropriate places
+Date: Tue, 19 Mar 2019 11:36:07 +0800
+Subject: [PATCH] regulator: axp20x: Remove unneeded NULL test against rdev
 
-Use rdev_get_id() to simplify the code a bit.
+rdev won't be NULL in .enable callback.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/axp20x-regulator.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ drivers/regulator/axp20x-regulator.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 8a366f66208e..07e10c8b0a22 100644
+index fba8f58ab769..8a366f66208e 100644
 --- a/drivers/regulator/axp20x-regulator.c
 +++ b/drivers/regulator/axp20x-regulator.c
-@@ -367,16 +367,14 @@ static const int axp209_dcdc2_ldo3_slew_rates[] = {
- static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
- {
+@@ -437,9 +437,6 @@ static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
  	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
--	const struct regulator_desc *desc;
-+	int id = rdev_get_id(rdev);
- 	u8 reg, mask, enable, cfg = 0xff;
- 	const int *slew_rates;
- 	int rate_count = 0;
+ 	const struct regulator_desc *desc;
  
--	desc = rdev->desc;
+-	if (!rdev)
+-		return -EINVAL;
 -
- 	switch (axp20x->variant) {
- 	case AXP209_ID:
--		if (desc->id == AXP20X_DCDC2) {
-+		if (id == AXP20X_DCDC2) {
- 			slew_rates = axp209_dcdc2_ldo3_slew_rates;
- 			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
- 			reg = AXP20X_DCDC2_LDO3_V_RAMP;
-@@ -388,7 +386,7 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
- 			break;
- 		}
- 
--		if (desc->id == AXP20X_LDO3) {
-+		if (id == AXP20X_LDO3) {
- 			slew_rates = axp209_dcdc2_ldo3_slew_rates;
- 			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
- 			reg = AXP20X_DCDC2_LDO3_V_RAMP;
-@@ -435,13 +433,11 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
- static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
- {
- 	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
--	const struct regulator_desc *desc;
--
--	desc = rdev->desc;
-+	int id = rdev_get_id(rdev);
+ 	desc = rdev->desc;
  
  	switch (axp20x->variant) {
- 	case AXP209_ID:
--		if ((desc->id == AXP20X_LDO3) &&
-+		if ((id == AXP20X_LDO3) &&
- 		    rdev->constraints && rdev->constraints->soft_start) {
- 			int v_out;
- 			int ret;
 -- 
 2.20.1
 
