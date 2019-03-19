@@ -2,213 +2,113 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9062CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8068C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AC420857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="PndsmpbG"
+	by mail.kernel.org (Postfix) with ESMTP id B2F4620857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfCSLpN (ORCPT
+        id S1727505AbfCSLpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:45:13 -0400
-Received: from mail-eopbgr1310071.outbound.protection.outlook.com ([40.107.131.71]:6276
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfCSLpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:45:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJGKjeDfkxq63qK6+Utz9cs+S1CRCPma+t2/scCTmUM=;
- b=PndsmpbGeAJGs2qLGVxDS0BCHh+ll/QDZsOEM6RTPEJoab/5OSQ5Wq9DezzziQO/CpHeFAKp9bax/i4gOesyfzIw4rj32v5czpp0i3Tg0gp8iEXgG7LhHf54tLPsTMB4szpAb5eVVXQoY5g6ZsEidLonwcbNqP92+eR2INj/5Ag=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB2700.apcprd02.prod.outlook.com (20.177.85.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Tue, 19 Mar 2019 11:45:03 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 11:45:03 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
-Thread-Topic: [External] Re: mm/cma.c: High latency for cma allocation
-Thread-Index: AQHU3YpG7XMhet9mv0+1ZFJR3Y1R16YRXCGAgAACGm2AAAebAIAABP0wgAAIBgCAAU6K1oAAEw1b
-Date:   Tue, 19 Mar 2019 11:45:03 +0000
-Message-ID: <SG2PR02MB30981381635A6BC3783D42CDE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
-References: <SG2PR02MB3098E44824F5AA69BC04F935E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318130757.GG8924@dhcp22.suse.cz>
- <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318134242.GI8924@dhcp22.suse.cz>
- <SG2PR02MB30986F43403B92F31499E42AE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190318142916.GK8924@dhcp22.suse.cz>,<SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
-In-Reply-To: <SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f8d42a61-6cb7-449f-521a-08d6ac605393
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2700;
-x-ms-traffictypediagnostic: SG2PR02MB2700:|SG2PR02MB2700:
-x-microsoft-antispam-prvs: <SG2PR02MB2700F4825851954D5F391649E8400@SG2PR02MB2700.apcprd02.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(346002)(39840400004)(376002)(189003)(199004)(229853002)(66066001)(6436002)(9686003)(52536014)(81166006)(81156014)(8936002)(8676002)(68736007)(5024004)(53936002)(55016002)(478600001)(3846002)(14444005)(14454004)(2940100002)(256004)(86362001)(6116002)(6916009)(99286004)(97736004)(106356001)(5660300002)(486006)(11346002)(7696005)(25786009)(105586002)(446003)(476003)(186003)(102836004)(6246003)(76176011)(6506007)(71190400001)(44832011)(53546011)(55236004)(74316002)(93156006)(305945005)(4326008)(316002)(93886005)(54906003)(33656002)(7736002)(2906002)(26005)(78486014)(66574012)(71200400001)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2700;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vTp4PyWNK5Q4wTO/soaConbGoaqij8SazmSblTSnnbfbYJrQ9M/oQBP77JgFkvCse9S1RoXj7ZaCqZSpaUCJYaMcbEHQ+DTZQjhoZxSDMigVv7NGs5EKuXc4VD5yXdTAxml3SvS05OzWuGjt6wSgsbct4ewkIvP2Zh4uKUIwquyPuIYhZ+2tOptY9yYepUSx2WZvzNJC4YctEhSd6pZJBuYEBRe7Tw1507eH++fjoPBne57GS1dGaEEXzqcXIIW+PzHsg4LIZgc/4X/9SHl470Zl5n+DsgjYZ4XLmCDcJ1nI86B8Sn1MLKqDcQqS0gfGIsxF5hgcszXSd+aMc4Xj4xNy8zPDo0bCiYnwnReDdv0U/uDKr+bDIvjAvJr3ywD2KRqTwLj4h0p+BUx5lIiXj1OO4R1qldwnQi5jrz+GUe4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Mar 2019 07:45:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64898 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfCSLpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:45:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 04:45:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
+   d="scan'208";a="156317827"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 19 Mar 2019 04:45:12 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 19 Mar 2019 13:45:11 +0200
+Date:   Tue, 19 Mar 2019 13:45:11 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex initialisation
+Message-ID: <20190319114511.GS7752@kuha.fi.intel.com>
+References: <20190318174906.10429-1-marc.zyngier@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d42a61-6cb7-449f-521a-08d6ac605393
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 11:45:03.6814
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318174906.10429-1-marc.zyngier@arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 18, 2019 at 05:49:06PM +0000, Marc Zyngier wrote:
+> Running a kernel with the fusb302 driver and lockdep enabled
+> leads to an unpleasant warning:
+> 
+> [    4.617477] INFO: trying to register non-static key.
+> [    4.617930] the code is fine but needs lockdep annotation.
+> [    4.618418] turning off the locking correctness validator.
+> [    4.618913] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc1-00007-g3542533f3fc9 #13
+> [    4.619620] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+> [    4.620454] Call trace:
+> [    4.620693]  dump_backtrace+0x0/0x138
+> [    4.621028]  show_stack+0x24/0x30
+> [    4.621336]  dump_stack+0xbc/0x104
+> [    4.621649]  register_lock_class+0x594/0x598
+> [    4.622036]  __lock_acquire+0x80/0x11b8
+> [    4.622384]  lock_acquire+0xdc/0x260
+> [    4.622711]  __mutex_lock+0x90/0x8a0
+> [    4.623037]  mutex_lock_nested+0x3c/0x50
+> [    4.623394]  _fusb302_log+0x88/0x1f0
+> [    4.623721]  fusb302_log+0x7c/0xa0
+> [    4.624033]  tcpm_init+0x5c/0x190
+> [    4.624336]  tcpm_init+0x3c/0x130
+> [    4.624640]  tcpm_register_port+0x574/0x878
+> [    4.625019]  fusb302_probe+0x2c8/0x590
+> 
+> Despite what the message says, the code isn't fine, as it tries to
+> make use of the fusb302_log facility pretty early. This requires the
+> logbuffer_lock mutex to be initialised, but that only happens much
+> later. Boo.
+> 
+> Hoist the fusb302_debugfs_init call before tcpm_register_port so that
+> we can enjoy a working mutex. At Guenter's request, also add teardown
+> of the debugfs facility on the error path.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
-________________________________________
-From: Pankaj Suryawanshi
-Sent: 19 March 2019 15:59
-To: Michal Hocko
-Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org; minchan@kernel.org; K=
-irill Tkhai
-Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
+After applying this there was no more "fusb302" debugfs directory, and
+attempt to unload the fusb302 module dead locked. Also, attempt to
+reboot caused this to happen on my GDPWin board after applying the
+patch:
+
+        BUG: Dentry 0000000012f2a05d{i=149,n=i2c-fusb302}  still in use (1) [unmount of sysfs sysfs]
+        WARNING: CPU: 3 PID: 1639 at fs/dcache.c:1529 umount_check.cold.55+0x2e/0x3a
+        Modules linked in: intel_xhci_usb_role_switch roles pi3usb30532 typec i915 intel_gtt intel_cht_int33fe [last unloaded: tcpm]
+        CPU: 3 PID: 1639 Comm: umount Not tainted 5.1.0-rc1-heikki+ #916
+        Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
+        RIP: 0010:umount_check.cold.55+0x2e/0x3a
+        ...
+
+Note. Your patch has also a conflict with patches from Hans, I
+think with this one: https://patchwork.kernel.org/patch/10847275/
+I can take care of that, but you can also rebase the next version on
+top of my typec-next branch to solve that problem:
+https://github.com/krohei/linux/commits/typec-next
+
+I think I need to add that to the MAINTAINERS file.
 
 
-________________________________________
-From: Michal Hocko <mhocko@kernel.org>
-Sent: 18 March 2019 19:59
-To: Pankaj Suryawanshi
-Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org; minchan@kernel.org; K=
-irill Tkhai
-Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
+thanks,
 
-On Mon 18-03-19 14:02:09, Pankaj Suryawanshi wrote:
->> > I have the system(vanilla kernel) with 2GB of RAM, reserved 1GB for CM=
-A. No swap or zram.
->> > Sorry, I don't have information where the time is spent.
->> > time is calculated in between cma_alloc call.
->> > I have just cma_alloc trace information/function graph.
->
->> Then please collect that data because it is really hard to judge
->> anything from the numbers you have provided.
->
-> Any pointers from which i can get this details ?
-
-I would start by enabling built in tracepoints for the migration or use
-a system wide perf monitoring with call graph data.
-
-Calling Sequence is as below.
-
-cma_alloc() -->
-alloc_contig_range() -->
-start_isolate_page_range() -->
-__alloc_contig_migrate_range() -->
-isolate_migratepages_range() -->
-reclaim_clean_pages_from_list() -->
-shrink_page_list()
-
-There is no built in tracepoints except cma_alloc.
-How to know where it taking time ?
-
-I have tried for latency count for 385MB:
-
-reclaim- reclaim_clean_pages_from_list()
-migrate- migrate_pages()
-migrateranges- isolate_migratepages_range()
-overall - __alloc_contig_migrate_range()
-
-Note: output is in us
-
-[ 1151.420923] LATENCY reclaim=3D 43 migrate=3D128 migrateranges=3D23
-[ 1151.421209] LATENCY reclaim=3D 11 migrate=3D253 migrateranges=3D14
-[ 1151.427856] LATENCY reclaim=3D 45 migrate=3D12 migrateranges=3D12
-[ 1151.434485] LATENCY reclaim=3D 44 migrate=3D33 migrateranges=3D12
-[ 1151.440975] LATENCY reclaim=3D 45 migrate=3D0 migrateranges=3D11
-[ 1151.447513] LATENCY reclaim=3D 39 migrate=3D35 migrateranges=3D11
-[ 1151.453919] LATENCY reclaim=3D 46 migrate=3D0 migrateranges=3D12
-[ 1151.460474] LATENCY reclaim=3D 39 migrate=3D41 migrateranges=3D11
-[ 1151.466947] LATENCY reclaim=3D 54 migrate=3D32 migrateranges=3D17
-[ 1151.473464] LATENCY reclaim=3D 45 migrate=3D21 migrateranges=3D12
-[ 1151.480016] LATENCY reclaim=3D 41 migrate=3D39 migrateranges=3D12
-[ 1151.486551] LATENCY reclaim=3D 41 migrate=3D36 migrateranges=3D12
-[ 1151.493199] LATENCY reclaim=3D 13 migrate=3D188 migrateranges=3D12
-[ 1151.500034] LATENCY reclaim=3D 60 migrate=3D94 migrateranges=3D13
-[ 1151.506686] LATENCY reclaim=3D 78 migrate=3D9 migrateranges=3D12
-[ 1151.513313] LATENCY reclaim=3D 33 migrate=3D147 migrateranges=3D12
-[ 1151.519839] LATENCY reclaim=3D 52 migrate=3D98 migrateranges=3D12
-[ 1151.526556] LATENCY reclaim=3D 46 migrate=3D126 migrateranges=3D12
-[ 1151.533254] LATENCY reclaim=3D 22 migrate=3D230 migrateranges=3D12
-[ 1151.540145] LATENCY reclaim=3D 0 migrate=3D305 migrateranges=3D13
-[ 1151.546997] LATENCY reclaim=3D 1 migrate=3D301 migrateranges=3D13
-[ 1151.553686] LATENCY reclaim=3D 40 migrate=3D201 migrateranges=3D12
-[ 1151.560395] LATENCY reclaim=3D 35 migrate=3D149 migrateranges=3D12
-[ 1151.567076] LATENCY reclaim=3D 77 migrate=3D43 migrateranges=3D16
-[ 1151.573836] LATENCY reclaim=3D 34 migrate=3D190 migrateranges=3D12
-[ 1151.580510] LATENCY reclaim=3D 51 migrate=3D120 migrateranges=3D12
-[ 1151.587240] LATENCY reclaim=3D 33 migrate=3D147 migrateranges=3D13
-[ 1151.594036] LATENCY reclaim=3D 20 migrate=3D241 migrateranges=3D13
-[ 1151.600749] LATENCY reclaim=3D 75 migrate=3D41 migrateranges=3D13
-[ 1151.607402] LATENCY reclaim=3D 77 migrate=3D32 migrateranges=3D12
-[ 1151.613956] LATENCY reclaim=3D 72 migrate=3D35 migrateranges=3D12
-[ 1151.620642] LATENCY reclaim=3D 59 migrate=3D162 migrateranges=3D12
-[ 1151.627181] LATENCY reclaim=3D 76 migrate=3D9 migrateranges=3D11
-[ 1151.633795] LATENCY reclaim=3D 80 migrate=3D0 migrateranges=3D12
-[ 1151.640278] LATENCY reclaim=3D 87 migrate=3D18 migrateranges=3D12
-[ 1151.646758] LATENCY reclaim=3D 82 migrate=3D10 migrateranges=3D11
-[ 1151.653307] LATENCY reclaim=3D 71 migrate=3D31 migrateranges=3D12
-[ 1151.659911] LATENCY reclaim=3D 61 migrate=3D77 migrateranges=3D12
-[ 1151.666514] LATENCY reclaim=3D 94 migrate=3D42 migrateranges=3D15
-[ 1151.673089] LATENCY reclaim=3D 67 migrate=3D59 migrateranges=3D12
-[ 1151.679655] LATENCY reclaim=3D 81 migrate=3D14 migrateranges=3D12
-[ 1151.686253] LATENCY reclaim=3D 49 migrate=3D93 migrateranges=3D12
-[ 1151.692815] LATENCY reclaim=3D 61 migrate=3D54 migrateranges=3D12
-[ 1151.699438] LATENCY reclaim=3D 42 migrate=3D99 migrateranges=3D10
-[ 1151.705881] OVERALL overall=3D285157
-
-cma_alloc latency is =3D 297385 us
-
-Please let me know is there any workaround/solution to reduce large size bu=
-ffer cma_alloc  latency ?
-
---
-Michal Hocko
-SUSE Labs
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
+-- 
+heikki
