@@ -2,113 +2,77 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9232AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCFEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D3120643
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="X2NJiHAk"
+	by mail.kernel.org (Postfix) with ESMTP id 7907620811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfCSRXE (ORCPT
+        id S1727496AbfCSRYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:23:04 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:43560 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfCSRXE (ORCPT
+        Tue, 19 Mar 2019 13:24:02 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:39127 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfCSRYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:23:04 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 58571697
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:23:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IypPD8jMAumi for <linux-kernel@vger.kernel.org>;
-        Tue, 19 Mar 2019 12:23:03 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 23FE6B72
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:23:03 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id 9so18024231ita.8
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=a7XiR+wDXrgognYXwXb8B0nOe7RqZRd0nfnoJsKowhM=;
-        b=X2NJiHAkRAd9VBDr/wcDegqmJ89yx+uNFNPmERFicZ0w+vqEnMUGhCX4DcU+y2l7hg
-         X9jkyV6eD4WHpBp3pl07PUDCGhkGvoFnBWLdderIakolZwmiqcL9Ms++ksFnbRYza+bt
-         Kr3Bx+IF8zBGFrO2yKHQWUbsYxTxyb4IuzAyUjPnQ3uZDl/B48qN8fKuQzArqH60ar2o
-         7tj3KZKFTzyb1p7lDjjVdEpFaQ44v119AuzY7v2jF6yJ2PuUcQ8yStbnBFILihareLda
-         xRCUb/Dm/tsgTGiAxkpkGNwABUnyaSBz1jahgz63L8GFQ6zYwdFGSyWVnDY2iYJJ51A5
-         Y8Rg==
+        Tue, 19 Mar 2019 13:24:02 -0400
+Received: by mail-it1-f198.google.com with SMTP id e124so5481174ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:24:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a7XiR+wDXrgognYXwXb8B0nOe7RqZRd0nfnoJsKowhM=;
-        b=OnxrjvxR3LdzUL6owvpEPD6CrRcshLGuZFVsCcsCGKA+JiwtdK2q7xaaRLmVvdmWAE
-         gjZfFI+vxLWqkb+9VWqFqtEIHJwV6g0JiXv6/8XxBwxFu5YJzRY2jFOrOVN/d3G5U9PT
-         zHaMg+ciaXOezgO8wbuJBNi8PK7rpsI5vgCApwXzPDQc6hXpjVCAtPIpUCAutUetZIY2
-         av/n1bCwzknNhcRQJzWxFRanfnm+zTt9ZUQ4zgoMdLEgLQa3u9OKxbjeZjMcZ3Yg2hnO
-         CNPLim1nCG1RJSr8hfmHst+eakrW98HD9PawvMOb9ZMbCe70Dwd+9rJ62NKR7H+wc6fi
-         /Yvg==
-X-Gm-Message-State: APjAAAULh+CEswVGnc35GvkRp5jVfu7keR4LxNWcU6lVGfXsJ8bSg3D2
-        bYVouAS95TJ74rl6TnNDgTBcUDB2yfLbcVaqznZpWy56v6+KYOehYXU15v3ZfolI7uYUU0lTY8p
-        +3UMAOoAJljjBssGLwM8upaBhSjKe
-X-Received: by 2002:a6b:f419:: with SMTP id i25mr2302392iog.216.1553016182545;
-        Tue, 19 Mar 2019 10:23:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyN2RkgpliXR+2WAICG/ym6JDtbn5ck2t8/j1V1okJIgqaqy6hDGHxiDzB9l6GhPIf8aTICMQ==
-X-Received: by 2002:a6b:f419:: with SMTP id i25mr2302376iog.216.1553016182374;
-        Tue, 19 Mar 2019 10:23:02 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id z63sm1580893itc.39.2019.03.19.10.23.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 10:23:01 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] thunderbolt: Fix to check return value of ida_simple_get
-Date:   Tue, 19 Mar 2019 12:22:59 -0500
-Message-Id: <20190319172259.8874-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=A5/q4swmgLnBGaVhc342tSJYMVLflngDQewiKppz+44=;
+        b=ZPopxt6VcKxO5MhJvh8uPYXOGZXGCrFjEpKhVGDOVR/9V7oUTBOSfR1NsQbCpxMkgP
+         /l84fS4qUiiCgvpZbGsw2vLxLFxKZrL8VlDuZ4gDA/gdtOUvrQNZeX7sqjY4asMNNa1N
+         YKXJ6p0302ah9HJ//fqBLr7ml+l8dfzyUfQQR3Wn2lwkyWHCHKtP54mmKkeifM32k/Pz
+         BYq4d/wx0iRSv3RSk90lgX9X+4Dpzr573MiKVYBTdEKwpBENwjYwqcFhWsErypYLEoYI
+         z+8dCKf0k2obrpRfP7jaLf5jGunipJZ36kQ7bisSmrgAMjoBA5mjoPIG0NTG7LjjJtcj
+         oZGA==
+X-Gm-Message-State: APjAAAVegcYcW22bqZR551C5mHOI9y8t6peWzSn1FICeMlYDYE3FmM5q
+        TyxK7RL519uPMgxoQJR4oOOY7tuv8xqNrRUPf3Rh8oQx7V49
+X-Google-Smtp-Source: APXvYqyPRz8P22dRbTU/+gHqvKGuW+9VzG94ZuWsSXuFooGgqPabQAyRM5McH4f486X+nzSQDMyij2ngjGv/3hS2Zn8ZpxN7bEZw
+MIME-Version: 1.0
+X-Received: by 2002:a24:4d8e:: with SMTP id l136mr2467612itb.5.1553016241037;
+ Tue, 19 Mar 2019 10:24:01 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 10:24:01 -0700
+In-Reply-To: <000000000000352b7e057cc0a13f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000060a659058475c57e@google.com>
+Subject: Re: general protection fault in dst_dev_put (2)
+From:   syzbot <syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dsahern@gmail.com, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ida_simple_get on failure can return an error. The patch ensures that
-the dev_set_name is set on non failure cases.
+syzbot has bisected this bug to:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/thunderbolt/xdomain.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+commit 52dfae5c85a4c1078e9f1d5e8947d4a25f73dd81
+Author: Jon Maloy <jon.maloy@ericsson.com>
+Date:   Thu Mar 22 19:42:52 2018 +0000
 
-diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-index e27dd8beb94b..b1768f595259 100644
---- a/drivers/thunderbolt/xdomain.c
-+++ b/drivers/thunderbolt/xdomain.c
-@@ -772,7 +772,9 @@ static void enumerate_services(struct tb_xdomain *xd)
- 		svc->dev.bus = &tb_bus_type;
- 		svc->dev.type = &tb_service_type;
- 		svc->dev.parent = &xd->dev;
--		dev_set_name(&svc->dev, "%s.%d", dev_name(&xd->dev), svc->id);
-+		if (svc->id >= 0)
-+			dev_set_name(&svc->dev, "%s.%d", dev_name(&xd->dev),
-+					svc->id);
- 
- 		if (device_register(&svc->dev)) {
- 			put_device(&svc->dev);
--- 
-2.17.1
+     tipc: obtain node identity from interface by default
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1631fc2b200000
+start commit:   52dfae5c tipc: obtain node identity from interface by defa..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1531fc2b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1131fc2b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d4c12bfd45a58738d0a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17254878c00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171ca5df400000
+
+Reported-by: syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com
+Fixes: 52dfae5c ("tipc: obtain node identity from interface by default")
