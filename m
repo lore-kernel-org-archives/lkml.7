@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA040C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B31C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FC72075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E40213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xvzY3e07"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E5U4NF0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfCSOFp (ORCPT
+        id S1727468AbfCSOFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:05:45 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56104 "EHLO
+        Tue, 19 Mar 2019 10:05:49 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56128 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfCSOFo (ORCPT
+        with ESMTP id S1726466AbfCSOFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:05:44 -0400
+        Tue, 19 Mar 2019 10:05:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553004342; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1553004343; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=w0S1Z5JBMZBQar4VEA8wxc7irJ+4Myw7wAVQu7j0DDM=;
-        b=xvzY3e07Okt9pdeNT4MYAh5xH8fBopBc7hLEvmL3YVnvP4HwZAf57pCeHCLKz71I4KwPBl
-        fXUKURrdHvdDY4MX9xHaVwGN4tA2zIZ5x/p2d8YuIU4RoFfzCReYPCmf7UkwaO2H/w7iaL
-        7AhLUAMz5nB4xLL2FYqaF78L4SFrQZg=
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=K2DuZSlRgI37YBReVuYGgH+blU/a23MRqR6iMw4YDeY=;
+        b=E5U4NF0ZPZ9X1E5MmxNsfFHlBdK6fVZa2jlYePy5sRMS2JluDNRp3Hx1mddG+ZYNeTEhpv
+        ubhwDyiITNfFOtSlNqDcrMK3DAb1nzteezxBf/qe7GF5UfvPFOZgg/P2I3npIfIL8Ky4pv
+        ZdcTuT13lYb0UY6torbDZMBkOzGK2mg=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -37,32 +37,40 @@ To:     Michael Turquette <mturquette@baylibre.com>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/2] dt-bindings: clock: jz4725b-cgu: Add UDC PHY clock
-Date:   Tue, 19 Mar 2019 15:05:35 +0100
-Message-Id: <20190319140536.27945-1-paul@crapouillou.net>
+Subject: [PATCH 2/2] clk: ingenic: jz4725b: Add UDC PHY clock
+Date:   Tue, 19 Mar 2019 15:05:36 +0100
+Message-Id: <20190319140536.27945-2-paul@crapouillou.net>
+In-Reply-To: <20190319140536.27945-1-paul@crapouillou.net>
+References: <20190319140536.27945-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add macro for the UDC PHY clock of the JZ4725B.
+Add clock for the USB Device Controller PHY.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- include/dt-bindings/clock/jz4725b-cgu.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/ingenic/jz4725b-cgu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/dt-bindings/clock/jz4725b-cgu.h b/include/dt-bindings/clock/jz4725b-cgu.h
-index 460bbeff6ab8..31f1ab0fe42c 100644
---- a/include/dt-bindings/clock/jz4725b-cgu.h
-+++ b/include/dt-bindings/clock/jz4725b-cgu.h
-@@ -31,5 +31,6 @@
- #define JZ4725B_CLK_TCU		22
- #define JZ4725B_CLK_EXT512	23
- #define JZ4725B_CLK_RTC		24
-+#define JZ4725B_CLK_UDC_PHY	25
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 584ff4ff81c7..8901ea0295b7 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -205,6 +205,12 @@ static const struct ingenic_cgu_clk_info jz4725b_cgu_clocks[] = {
+ 		.parents = { JZ4725B_CLK_EXT512, JZ4725B_CLK_OSC32K, -1, -1 },
+ 		.mux = { CGU_REG_OPCR, 2, 1},
+ 	},
++
++	[JZ4725B_CLK_UDC_PHY] = {
++		"udc_phy", CGU_CLK_GATE,
++		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
++		.gate = { CGU_REG_OPCR, 6, true },
++	},
+ };
  
- #endif /* __DT_BINDINGS_CLOCK_JZ4725B_CGU_H__ */
+ static void __init jz4725b_cgu_init(struct device_node *np)
 -- 
 2.11.0
 
