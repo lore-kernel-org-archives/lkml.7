@@ -2,229 +2,160 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F662C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7ABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F0A20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB0E20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:20:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="PkpDTFEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfCSHLU (ORCPT
+        id S1726776AbfCSHUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:11:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55350 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725996AbfCSHLT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:11:19 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J75H55117043
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:11:17 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2raundrg4j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:11:17 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 19 Mar 2019 07:11:10 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Mar 2019 07:11:04 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J7B8gW40435914
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 07:11:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 236B642049;
-        Tue, 19 Mar 2019 07:11:08 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74A6742045;
-        Tue, 19 Mar 2019 07:11:06 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.84])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 19 Mar 2019 07:11:06 +0000 (GMT)
-Date:   Tue, 19 Mar 2019 09:11:04 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add
- vm.unprivileged_userfaultfd
-References: <20190319030722.12441-1-peterx@redhat.com>
- <20190319030722.12441-2-peterx@redhat.com>
+        Tue, 19 Mar 2019 03:20:10 -0400
+Received: from mail-eopbgr730069.outbound.protection.outlook.com ([40.107.73.69]:64198
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfCSHUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 03:20:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BYY8ptyZMv3SGVRX/R7Em9XeqeEHJf/UmvcxY6EVD8w=;
+ b=PkpDTFEVMoqPcXdgnVQ8/q+6im9hkZr3ClzCEgi2Phiig4ZfmB4uI3xyiuYhj6nAiXtnchtUGKdmZQNRIEtb9OzO4eCCB/Q120jDenV/qvanbDeQixHwdA4NAXdAx/Ra9sf7WN6NPBNq8EVkcnNk/ELanOLzsGvYZdfXrkYXku4=
+Received: from SN4PR0201CA0070.namprd02.prod.outlook.com
+ (2603:10b6:803:20::32) by BN7PR02MB4049.namprd02.prod.outlook.com
+ (2603:10b6:406:fe::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.13; Tue, 19 Mar
+ 2019 07:20:06 +0000
+Received: from CY1NAM02FT057.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::206) by SN4PR0201CA0070.outlook.office365.com
+ (2603:10b6:803:20::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
+ Transport; Tue, 19 Mar 2019 07:20:06 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT057.mail.protection.outlook.com (10.152.75.110) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
+ via Frontend Transport; Tue, 19 Mar 2019 07:20:05 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1h692b-0001Bv-5u; Tue, 19 Mar 2019 00:20:05 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1h692W-0007fn-2Y; Tue, 19 Mar 2019 00:20:00 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2J7JswA027664;
+        Tue, 19 Mar 2019 00:19:54 -0700
+Received: from [172.30.17.111]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1h692Q-0007ew-1b; Tue, 19 Mar 2019 00:19:54 -0700
+Subject: Re: [PATCH] drivers: clk: zynqmp: Allow zero divisor value
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        <linux-clk@vger.kernel.org>, <michal.simek@xilinx.com>,
+        <mturquette@baylibre.com>, <sboyd@codeaurora.org>
+CC:     <rajanv@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>
+References: <1551742066-10825-1-git-send-email-jollys@xilinx.com>
+ <15f0f82f-0607-4cf5-f5a5-5edd7c5321bc@xilinx.com>
+ <155293817691.20095.7275560826051843640@swboyd.mtv.corp.google.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <c9f01ef3-a692-6f15-46d8-8ce4226161bf@xilinx.com>
+Date:   Tue, 19 Mar 2019 08:19:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319030722.12441-2-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19031907-0020-0000-0000-000003250493
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031907-0021-0000-0000-000021771BCD
-Message-Id: <20190319071104.GA6392@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903190054
+In-Reply-To: <155293817691.20095.7275560826051843640@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(346002)(376002)(2980300002)(199004)(189003)(2486003)(31686004)(76176011)(23676004)(305945005)(64126003)(44832011)(2201001)(5660300002)(356004)(6666004)(81156014)(81166006)(126002)(486006)(31696002)(446003)(63266004)(2616005)(4326008)(54906003)(336012)(316002)(476003)(8676002)(11346002)(110136005)(58126008)(36386004)(426003)(106466001)(47776003)(65956001)(26005)(230700001)(36756003)(186003)(65806001)(2906002)(50466002)(77096007)(8936002)(229853002)(9786002)(478600001)(65826007)(6246003)(107886003)(106002)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4049;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 38884b13-4b28-47b1-d127-08d6ac3b4fbb
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BN7PR02MB4049;
+X-MS-TrafficTypeDiagnostic: BN7PR02MB4049:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <BN7PR02MB404955DD426BBBA46327B34DC6400@BN7PR02MB4049.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0981815F2F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: WqkT3dXCFgaKAtLdDb7Jj+QykERS4yY+LoPul5PRM2vs1cx4ohfMmF5Ht8pOZCUXG0bEUctN7KsuX+tBjebswT4fwe+JVAcMEKa6Oui1fF/StSjMWWoDxjYkEP0RB4gvDdu9OAzNzyDH9HLQ7SjrkJ9oKNJ+u1pe5B35UiD1pnY5UN48HtOFVJNQRF6kF66eW1MmheRdAoZ8hbHs3iA7IxPSOnYShp5XkWrptly/eE2VyHHOoqZnOQDqaWcAHtl7BdVTMMQxq5qNXYK1Jz2IGlO2uxbNOZ8URRDRkXrpLoatmmgW0rvWLJ7ygI6lzRGp84bgi5pfDqhySYQnViqvevLRG4wA7b7P3Q8dMV+J54Ns3yddxAEu37f0gmHIvOKhqbuMVq/qTWd7iA6Vbz6kpeIPcWaQXgnnAtUHN8kUGVA=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2019 07:20:05.6372
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38884b13-4b28-47b1-d127-08d6ac3b4fbb
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On 18. 03. 19 20:42, Stephen Boyd wrote:
+> Quoting Michal Simek (2019-03-18 05:48:52)
+>> On 05. 03. 19 0:27, Jolly Shah wrote:
+>>> From: Rajan Vaja <rajan.vaja@xilinx.com>
+>>>
+>>> Zero divider is valid and default for some of ZynqMP
+>>> clocks. Allow zero divisor when CLK_DIVIDER_ALLOW_ZERO
+>>> for the clock is set.
+>>>
+>>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+>>> ---
+>>>  drivers/clk/zynqmp/divider.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+>>> index a371c66..e146b6f 100644
+>>> --- a/drivers/clk/zynqmp/divider.c
+>>> +++ b/drivers/clk/zynqmp/divider.c
+>>> @@ -76,6 +76,13 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
+>>>       else
+>>>               value = div >> 16;
+>>>  
+>>> +     if (!value) {
+>>> +             WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
+>>> +                  "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
+>>> +                  clk_name);
+>>> +             return parent_rate;
+>>> +     }
+>>> +
+>>>       return DIV_ROUND_UP_ULL(parent_rate, value);
+>>>  }
+>>>  
+>>>
+>>
+>> Stephen: Do you want to take it via your tree?
+>>
+> 
+> Sure.
 
-On Tue, Mar 19, 2019 at 11:07:22AM +0800, Peter Xu wrote:
-> Add a global sysctl knob "vm.unprivileged_userfaultfd" to control
-> whether userfaultfd is allowed by unprivileged users.  When this is
-> set to zero, only privileged users (root user, or users with the
-> CAP_SYS_PTRACE capability) will be able to use the userfaultfd
-> syscalls.
-> 
-> Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
-> Suggested-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+ok. Then your turn with that two patches when you have time.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Thanks,
+Michal
 
-Just one minor note below
-
-> ---
->  Documentation/sysctl/vm.txt   | 12 ++++++++++++
->  fs/userfaultfd.c              |  5 +++++
->  include/linux/userfaultfd_k.h |  2 ++
->  kernel/sysctl.c               | 12 ++++++++++++
->  4 files changed, 31 insertions(+)
-> 
-> diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.txt
-> index 187ce4f599a2..f146712f67bb 100644
-> --- a/Documentation/sysctl/vm.txt
-> +++ b/Documentation/sysctl/vm.txt
-> @@ -61,6 +61,7 @@ Currently, these files are in /proc/sys/vm:
->  - stat_refresh
->  - numa_stat
->  - swappiness
-> +- unprivileged_userfaultfd
->  - user_reserve_kbytes
->  - vfs_cache_pressure
->  - watermark_boost_factor
-> @@ -818,6 +819,17 @@ The default value is 60.
-> 
->  ==============================================================
-> 
-> +unprivileged_userfaultfd
-> +
-> +This flag controls whether unprivileged users can use the userfaultfd
-> +syscalls.  Set this to 1 to allow unprivileged users to use the
-> +userfaultfd syscalls, or set this to 0 to restrict userfaultfd to only
-> +privileged users (with SYS_CAP_PTRACE capability).
-
-Can you please fully spell "system call"?
-
-> +
-> +The default value is 1.
-> +
-> +==============================================================
-> +
->  - user_reserve_kbytes
-> 
->  When overcommit_memory is set to 2, "never overcommit" mode, reserve
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 89800fc7dc9d..7e856a25cc2f 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -30,6 +30,8 @@
->  #include <linux/security.h>
->  #include <linux/hugetlb.h>
-> 
-> +int sysctl_unprivileged_userfaultfd __read_mostly = 1;
-> +
->  static struct kmem_cache *userfaultfd_ctx_cachep __read_mostly;
-> 
->  enum userfaultfd_state {
-> @@ -1921,6 +1923,9 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
->  	struct userfaultfd_ctx *ctx;
->  	int fd;
-> 
-> +	if (!sysctl_unprivileged_userfaultfd && !capable(CAP_SYS_PTRACE))
-> +		return -EPERM;
-> +
->  	BUG_ON(!current->mm);
-> 
->  	/* Check the UFFD_* constants for consistency.  */
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> index 37c9eba75c98..ac9d71e24b81 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -28,6 +28,8 @@
->  #define UFFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
->  #define UFFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS)
-> 
-> +extern int sysctl_unprivileged_userfaultfd;
-> +
->  extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
-> 
->  extern ssize_t mcopy_atomic(struct mm_struct *dst_mm, unsigned long dst_start,
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 7578e21a711b..9b8ff1881df9 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -66,6 +66,7 @@
->  #include <linux/kexec.h>
->  #include <linux/bpf.h>
->  #include <linux/mount.h>
-> +#include <linux/userfaultfd_k.h>
-> 
->  #include <linux/uaccess.h>
->  #include <asm/processor.h>
-> @@ -1704,6 +1705,17 @@ static struct ctl_table vm_table[] = {
->  		.extra1		= (void *)&mmap_rnd_compat_bits_min,
->  		.extra2		= (void *)&mmap_rnd_compat_bits_max,
->  	},
-> +#endif
-> +#ifdef CONFIG_USERFAULTFD
-> +	{
-> +		.procname	= "unprivileged_userfaultfd",
-> +		.data		= &sysctl_unprivileged_userfaultfd,
-> +		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= &zero,
-> +		.extra2		= &one,
-> +	},
->  #endif
->  	{ }
->  };
-> -- 
-> 2.17.1
-> 
-
--- 
-Sincerely yours,
-Mike.
 
