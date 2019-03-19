@@ -2,162 +2,110 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D062AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20E0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1D3217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6C920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 22:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWpvVzXr"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PnCTSyJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfCSWhx (ORCPT
+        id S1727389AbfCSWh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 18:37:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44517 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfCSWhw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 18:37:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n18so501075ljg.11;
-        Tue, 19 Mar 2019 15:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d2uS3JYGyQ73AUhjSqp6WbiOn0rKDAb2enK7Ui9OG1k=;
-        b=EWpvVzXrXBYLmg4ieBzv3cl784Xf9T968WwgPowvJKcHSmFbwGgIcs6Of9Z4/tz/7s
-         EZeoucooRipWxBcUbTnfXUFLV1+ZrWulSBMXOUEACygIoWjxo3UgbJYkyKYQvWsMGleR
-         QriXZGfH7BvlyVeeAhMg5RVYoJsg+lssZlpsynrchTqGeOoetgP20B/PD0yOWsHY3blE
-         +hS1HiGrTaVyVpWjTndgKqUXm+AB5XlxI457V+dt1y8mbJbOnvWNY2vbc83X/V5h14gK
-         ypUF7jpoGhrBag36xsFshcHgLBMlEaSTF89VAGrTw8A8QAllZ7LdI0YfCVkYIXinxYtb
-         PskA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d2uS3JYGyQ73AUhjSqp6WbiOn0rKDAb2enK7Ui9OG1k=;
-        b=epJ+chQsvO8Zq8jQAxWnowyl0xI48M091vYKjM+Q4eA/im/jtxEO3yElqf1UCFbnSX
-         rmQe/7JLPdrONyFRUUwazlcedCXUye0ZjxBD4wIOGPGJYQEJGLLLddKG0xbce+nhCBly
-         Q8tCpCNMf4NngZiU5Yc0wfWxPctxU6Z3MtsxW7RNyPszhT6vYc8t4wKLouM9R0A5LVvR
-         k67UbDIbCHO68PkX9HHxh+rb2zzMzwC0FL6N+9bgnrum91+CdNk8xUoa5YLLdU4P6jf3
-         MXJ/O5/PTIHRd+tZGm+r4Qi/0z5bCiEDjWuw2re8JWSNtTuu8eI5fWZ7tZrbPZvf20b9
-         7PEw==
-X-Gm-Message-State: APjAAAVD4W81H98Tq+ERUS2vPkY2urDr/QRARy9n+jJIM2d9KyCzqzuU
-        dNvXJeHoxo0uKr0jtfIop4M3TtBU
-X-Google-Smtp-Source: APXvYqxRGGAMBczbx5QCobRazLvMcrQnc58m6gR2XMzSf0XUPwTAHtOEYTkf0qZQql0G5AidHWzl0w==
-X-Received: by 2002:a2e:5b44:: with SMTP id p65mr15344283ljb.182.1553035070683;
-        Tue, 19 Mar 2019 15:37:50 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id t18sm51192ljg.64.2019.03.19.15.37.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 15:37:49 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH] mtd: rawnand: ams-delta: Drop board specific partition info
-Date:   Tue, 19 Mar 2019 23:37:18 +0100
-Message-Id: <20190319223718.26131-1-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 19 Mar 2019 18:37:57 -0400
+Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:15428
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726741AbfCSWhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 18:37:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cnxEItvYFluVPaOcHToSEKKfQqY25SvwZtNbV+qE1uk=;
+ b=PnCTSyJa1K080UhVVvVDQAtNmsLySIaphodLFwVRAYYPD6QCu0qsd1wa4xWKXJ4rDBQKxCCy5NYegY8LiJYNUiVIN1GquyXMyfe+LOvju6AfSw4cd94jSamchvCTc444qUQ8i+L++r9NrRDqhiKXgVAx+Res0L62hCThFSCF9og=
+Received: from DB8PR05MB5898.eurprd05.prod.outlook.com (20.179.9.32) by
+ DB8PR05MB5913.eurprd05.prod.outlook.com (20.179.9.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Tue, 19 Mar 2019 22:37:47 +0000
+Received: from DB8PR05MB5898.eurprd05.prod.outlook.com
+ ([fe80::28ed:92cd:4075:b660]) by DB8PR05MB5898.eurprd05.prod.outlook.com
+ ([fe80::28ed:92cd:4075:b660%2]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 22:37:47 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "pakki001@umn.edu" <pakki001@umn.edu>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ilya Lesokhin <ilyal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [PATCH v4] net: mlx5: Add a missing check on idr_find, free buf
+Thread-Topic: [PATCH v4] net: mlx5: Add a missing check on idr_find, free buf
+Thread-Index: AQHU3py0/Q+8rPAh+0G/hpfTLlAQ7KYTi4SA
+Date:   Tue, 19 Mar 2019 22:37:46 +0000
+Message-ID: <03f5d2ac3d4e312cffcbc7e61cc10815c28dfeb7.camel@mellanox.com>
+References: <20190319214244.20212-1-pakki001@umn.edu>
+In-Reply-To: <20190319214244.20212-1-pakki001@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36f37595-a381-4ff9-6272-08d6acbb82b0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB8PR05MB5913;
+x-ms-traffictypediagnostic: DB8PR05MB5913:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-microsoft-antispam-prvs: <DB8PR05MB5913E97CC12A3946BBF18FD5BE400@DB8PR05MB5913.eurprd05.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(366004)(199004)(189003)(14444005)(446003)(6916009)(11346002)(14454004)(486006)(3846002)(36756003)(2616005)(6116002)(106356001)(478600001)(2906002)(5640700003)(66066001)(6512007)(6486002)(76176011)(229853002)(2501003)(6436002)(102836004)(105586002)(6506007)(316002)(118296001)(99286004)(25786009)(68736007)(8936002)(71190400001)(71200400001)(26005)(256004)(97736004)(305945005)(476003)(53936002)(8676002)(81156014)(81166006)(86362001)(5660300002)(4744005)(2351001)(2171002)(4326008)(7736002)(6246003)(186003)(54906003)(58126008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB5913;H:DB8PR05MB5898.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ua+skLIya5U1HA7DU8is3t0pkAkK0RqV7jEpIZ3Hm4Tr83L7AicLMEDJyO9rDTMxblkgfQ56SpXNoEvLVBFgcs4ATx+JEW0r8zYMLf7Eyoiu6L4eyvpQKRdKeTl7GGE206OWeSaen7X4dDXpyTAgdH5+lHyE4elPlN2NyUk4Sg9koO039cRV7fWaEBKW0l+89lZ1QU6o+HZaSpV/TigojQMVXDkkWlTXa2dIockVoHYhu7tJykLyKUOk2z4eW8pbSR0eH9VRftrzftC5+46GdJG93VuEUQEEhzH3qR91nsgHoi/+1GyX9zCyMY5sJ4/fz/+68sxqIAcq6rgkrFLoajYYXVzb/9hqr8e+tozLnkYoTVKw7ExF3Aq+7z6CceGojAzSjgHZtPoqdjqtzIQtg3GnYSgoY0aPqypuw0ryw00=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6311568127E32E48B038A028A924A08B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36f37595-a381-4ff9-6272-08d6acbb82b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 22:37:46.9232
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB5913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After recent modifications, only a hardcoded partition info makes
-the driver device specific.  Other than that, the driver uses GPIO
-exclusively and can be used on any hardware.
-
-Drop the partition info and use MTD partition parser with default
-list of partition types instead.
-
-Amstrad Delta users should append the followig partition info to their
-kernel command line, possibly by embedding it in CONFIG_CMDLINE:
-mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),\
-256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved).  For their
-convenience, select CONFIG_MTD_CMDLINE_PARTS  symbol from that board
-Kconfig automatically if this NAND driver is also selected.
-
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap1/Kconfig      |  1 +
- drivers/mtd/nand/raw/ams-delta.c | 28 +---------------------------
- 2 files changed, 2 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
-index c4694f26b5c4..62cf20f22828 100644
---- a/arch/arm/mach-omap1/Kconfig
-+++ b/arch/arm/mach-omap1/Kconfig
-@@ -171,6 +171,7 @@ config MACH_AMS_DELTA
- 	select LEDS_GPIO_REGISTER
- 	select REGULATOR
- 	select REGULATOR_FIXED_VOLTAGE
-+	select MTD_CMDLINE_PARTS if MTD_NAND_AMS_DELTA
- 	help
- 	  Support for the Amstrad E3 (codename Delta) videophone. Say Y here
- 	  if you have such a device.
-diff --git a/drivers/mtd/nand/raw/ams-delta.c b/drivers/mtd/nand/raw/ams-delta.c
-index 8312182088c1..2e8e37ea549a 100644
---- a/drivers/mtd/nand/raw/ams-delta.c
-+++ b/drivers/mtd/nand/raw/ams-delta.c
-@@ -41,31 +41,6 @@ struct ams_delta_nand {
- 	bool			data_in;
- };
- 
--/*
-- * Define partitions for flash devices
-- */
--
--static const struct mtd_partition partition_info[] = {
--	{ .name		= "Kernel",
--	  .offset	= 0,
--	  .size		= 3 * SZ_1M + SZ_512K },
--	{ .name		= "u-boot",
--	  .offset	= 3 * SZ_1M + SZ_512K,
--	  .size		= SZ_256K },
--	{ .name		= "u-boot params",
--	  .offset	= 3 * SZ_1M + SZ_512K + SZ_256K,
--	  .size		= SZ_256K },
--	{ .name		= "Amstrad LDR",
--	  .offset	= 4 * SZ_1M,
--	  .size		= SZ_256K },
--	{ .name		= "File system",
--	  .offset	= 4 * SZ_1M + 1 * SZ_256K,
--	  .size		= 27 * SZ_1M },
--	{ .name		= "PBL reserved",
--	  .offset	= 32 * SZ_1M - 3 * SZ_256K,
--	  .size		=  3 * SZ_256K },
--};
--
- static void ams_delta_write_commit(struct ams_delta_nand *priv)
- {
- 	gpiod_set_value(priv->gpiod_nwe, 0);
-@@ -315,8 +290,7 @@ static int ams_delta_init(struct platform_device *pdev)
- 		return err;
- 
- 	/* Register the partitions */
--	err = mtd_device_register(mtd, partition_info,
--				  ARRAY_SIZE(partition_info));
-+	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
- 	if (err)
- 		goto err_nand_cleanup;
- 
--- 
-2.19.2
-
+T24gVHVlLCAyMDE5LTAzLTE5IGF0IDE2OjQyIC0wNTAwLCBBZGl0eWEgUGFra2kgd3JvdGU6DQo+
+IGlkcl9maW5kKCkgY2FuIHJldHVybiBhIE5VTEwgdmFsdWUgdG8gJ2Zsb3cnIHdoaWNoIGlzIHVz
+ZWQgd2l0aG91dCBhDQo+IGNoZWNrLiBUaGUgcGF0Y2ggYWRkcyBhIGNoZWNrIHRvIGF2b2lkIHBv
+dGVudGlhbCBOVUxMIHBvaW50ZXINCj4gZGVyZWZlcmVuY2UuDQo+IA0KPiBJbiBjYXNlIG9mIG1s
+eDVfZnBnYV9zYnVfY29ubl9zZW5kbXNnKCkgZmFpbHVyZSwgZnJlZSBidWYgYWxsb2NhdGVkDQo+
+IHVzaW5nIGt6YWxsb2MuDQo+IA0KPiBGaXhlczogYWI0MTJlMWRkN2RiICgibmV0L21seDU6IEFj
+Y2VsLCBhZGQgVExTIHJ4IG9mZmxvYWQgcm91dGluZXMiKQ0KPiAtLS0NCj4gdjM6IFJlb3JkZXIg
+YnVmIGFsbG9jYXRpb25zIGFuZCBmbG93IGNoZWNrLg0KPiB2MjogZmFpbHVyZSB0byByZXR1cm4g
+aW4gY2FzZSBvZiBmbG93IGZhaWx1cmUuDQo+IHYxOiBGYWlsZWQgdG8gZnJlZSBidWYgaW4gY2Fz
+ZSBvZiBmbG93IGZhaWx1cmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBZGl0eWEgUGFra2kgPHBh
+a2tpMDAxQHVtbi5lZHU+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
+bWx4NS9jb3JlL2ZwZ2EvdGxzLmMgfCAxNCArKysrKysrKysrKy0NCj4gLS0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCg0KQXBwbGllZCB0
+byBuZXQtbWx4NSwgd2lsbCBiZSBzZW50IHVwc3RyZWFtIHNob3J0bHksDQoNCllvdSBtZXNzZWQg
+dXAgdGhlIFNpZ25lZC1vZmYgdGFnLCBpdCBhbHNvIHNob3VsZCBoYXZlIGJlZW4gcGFydCBvZiB0
+aGUNCmNvbW1pdCBtZXNzYWdlLCBidXQgZG9uJ3Qgd29ycnksIGkgZml4ZWQgaXQgdXAgYW5kIGFk
+ZGVkIFl1dmFsJ3MNClJldmlld2VkLWJ5Lg0KDQpUaGFua3MgQWRlaXR5YSBmb3IgaGFuZGxpbmcg
+YWxsIG9mIHRoZSBjb21tZW50cy4NClNhZWVkLg0KDQo=
