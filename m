@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D906AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C1AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3981213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55412133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfCSIC4 (ORCPT
+        id S1727651AbfCSIDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:02:56 -0400
+        Tue, 19 Mar 2019 04:03:02 -0400
 Received: from mailgw02.mediatek.com ([210.61.82.184]:2245 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725862AbfCSICF (ORCPT
+        with ESMTP id S1726020AbfCSICE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:02:05 -0400
-X-UUID: 69f12a1d5c6e4ea69b145907ab0e7550-20190319
-X-UUID: 69f12a1d5c6e4ea69b145907ab0e7550-20190319
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Tue, 19 Mar 2019 04:02:04 -0400
+X-UUID: 500138a827384d43be539cb4131979be-20190319
+X-UUID: 500138a827384d43be539cb4131979be-20190319
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <weiyi.lu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1464174651; Tue, 19 Mar 2019 16:01:58 +0800
+        with ESMTP id 1555657858; Tue, 19 Mar 2019 16:01:58 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 19 Mar 2019 16:01:57 +0800
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 19 Mar 2019 16:01:56 +0800
 Received: from mtkslt210.mediatek.inc (10.21.14.14) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 19 Mar 2019 16:01:57 +0800
+ Transport; Tue, 19 Mar 2019 16:01:56 +0800
 From:   Weiyi Lu <weiyi.lu@mediatek.com>
 To:     Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -42,121 +42,110 @@ CC:     James Liao <jamesjj.liao@mediatek.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v5 06/14] soc: mediatek: Refactor clock control
-Date:   Tue, 19 Mar 2019 16:01:32 +0800
-Message-ID: <20190319080140.24055-7-weiyi.lu@mediatek.com>
+Subject: [PATCH v5 02/14] dt-bindings: soc: Add MT8183 power dt-bindings
+Date:   Tue, 19 Mar 2019 16:01:28 +0800
+Message-ID: <20190319080140.24055-3-weiyi.lu@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190319080140.24055-1-weiyi.lu@mediatek.com>
 References: <20190319080140.24055-1-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: C4BDC881A96B2214192B7C69363E5436C42C8F701167E299705B974385915BF82000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put clock enable and disable control in separate function.
+Add power dt-bindings of MT8183 and introduces "BASIC" and
+"SUBSYS" clock types in binding document.
+The "BASIC" type is compatible to the original power control with
+clock name [a-z]+[0-9]*, e.g. mm, vpu1.
+The "SUBSYS" type is used for bus protection control with clock
+name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
 
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 49 ++++++++++++++++++++-----------
- 1 file changed, 32 insertions(+), 17 deletions(-)
+ .../bindings/soc/mediatek/scpsys.txt          | 14 ++++++++++
+ include/dt-bindings/power/mt8183-power.h      | 26 +++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 include/dt-bindings/power/mt8183-power.h
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 765ad4a5e5df..3e9be07a2627 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -208,6 +208,33 @@ static int scpsys_regulator_disable(struct scp_domain *scpd)
- 	return regulator_disable(scpd->supply);
- }
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index d6fe16f094af..b4728ce81c43 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
+ - include/dt-bindings/power/mt2701-power.h
+ - include/dt-bindings/power/mt2712-power.h
+ - include/dt-bindings/power/mt7622-power.h
++- include/dt-bindings/power/mt8183-power.h
  
-+static int scpsys_clk_enable(struct clk *clk[], int max_num)
-+{
-+	int i, ret = 0;
+ Required properties:
+ - compatible: Should be one of:
+@@ -24,18 +25,31 @@ Required properties:
+ 	- "mediatek,mt7623-scpsys", "mediatek,mt2701-scpsys": For MT7623 SoC
+ 	- "mediatek,mt7623a-scpsys": For MT7623A SoC
+ 	- "mediatek,mt8173-scpsys"
++	- "mediatek,mt8183-scpsys"
+ - #power-domain-cells: Must be 1
+ - reg: Address range of the SCPSYS unit
+ - infracfg: must contain a phandle to the infracfg controller
+ - clock, clock-names: clocks according to the common clock binding.
+                       These are clocks which hardware needs to be
+                       enabled before enabling certain power domains.
++                      The new clock type "BASIC" belongs to the type above.
++                      As to the new clock type "SUBSYS" needs to be
++                      enabled before releasing bus protection.
+ 	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
+ 	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
+ 	Required clocks for MT6797: "mm", "mfg", "vdec"
+ 	Required clocks for MT7622: "hif_sel"
+ 	Required clocks for MT7622A: "ethif"
+ 	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
++	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
++					   "vpu", "vpu1", "vpu2", "vpu3"
++				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
++					    "mm-4", "mm-5", "mm-6", "mm-7",
++					    "mm-8", "mm-9", "isp-0", "isp-1",
++					    "cam-0", "cam-1", "cam-2", "cam-3",
++					    "cam-4", "cam-5", "cam-6", "vpu-0",
++					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
++					    "vpu-5"
+ 
+ Optional properties:
+ - vdec-supply: Power supply for the vdec power domain
+diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
+new file mode 100644
+index 000000000000..5c0c8c7e3cd0
+--- /dev/null
++++ b/include/dt-bindings/power/mt8183-power.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (c) 2018 MediaTek Inc.
++ * Author: Weiyi Lu <weiyi.lu@mediatek.com>
++ */
 +
-+	for (i = 0; i < max_num && clk[i]; i++) {
-+		ret = clk_prepare_enable(clk[i]);
-+		if (ret) {
-+			for (--i; i >= 0; i--)
-+				clk_disable_unprepare(clk[i]);
++#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
++#define _DT_BINDINGS_POWER_MT8183_POWER_H
 +
-+			break;
-+		}
-+	}
++#define MT8183_POWER_DOMAIN_AUDIO	0
++#define MT8183_POWER_DOMAIN_CONN	1
++#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
++#define MT8183_POWER_DOMAIN_MFG		3
++#define MT8183_POWER_DOMAIN_MFG_CORE0	4
++#define MT8183_POWER_DOMAIN_MFG_CORE1	5
++#define MT8183_POWER_DOMAIN_MFG_2D	6
++#define MT8183_POWER_DOMAIN_DISP	7
++#define MT8183_POWER_DOMAIN_CAM		8
++#define MT8183_POWER_DOMAIN_ISP		9
++#define MT8183_POWER_DOMAIN_VDEC	10
++#define MT8183_POWER_DOMAIN_VENC	11
++#define MT8183_POWER_DOMAIN_VPU_TOP	12
++#define MT8183_POWER_DOMAIN_VPU_CORE0	13
++#define MT8183_POWER_DOMAIN_VPU_CORE1	14
 +
-+	return ret;
-+}
-+
-+static void scpsys_clk_disable(struct clk *clk[], int max_num)
-+{
-+	int i;
-+
-+	for (i = max_num - 1; i >= 0; i--) {
-+		if (clk[i])
-+			clk_disable_unprepare(clk[i]);
-+	}
-+}
-+
- static int scpsys_power_on(struct generic_pm_domain *genpd)
- {
- 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
-@@ -216,21 +243,14 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
--	int i;
- 
- 	ret = scpsys_regulator_enable(scpd);
- 	if (ret < 0)
- 		return ret;
- 
--	for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++) {
--		ret = clk_prepare_enable(scpd->clk[i]);
--		if (ret) {
--			for (--i; i >= 0; i--)
--				clk_disable_unprepare(scpd->clk[i]);
--
--			goto err_clk;
--		}
--	}
-+	ret = scpsys_clk_enable(scpd->clk, MAX_CLKS);
-+	if (ret)
-+		goto err_clk;
- 
- 	val = readl(ctl_addr);
- 	val |= PWR_ON_BIT;
-@@ -283,10 +303,7 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	return 0;
- 
- err_pwr_ack:
--	for (i = MAX_CLKS - 1; i >= 0; i--) {
--		if (scpd->clk[i])
--			clk_disable_unprepare(scpd->clk[i]);
--	}
-+	scpsys_clk_disable(scpd->clk, MAX_CLKS);
- err_clk:
- 	scpsys_regulator_disable(scpd);
- 
-@@ -303,7 +320,6 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
--	int i;
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-@@ -344,8 +360,7 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 	if (ret < 0)
- 		goto out;
- 
--	for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++)
--		clk_disable_unprepare(scpd->clk[i]);
-+	scpsys_clk_disable(scpd->clk, MAX_CLKS);
- 
- 	ret = scpsys_regulator_disable(scpd);
- 	if (ret < 0)
++#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
 -- 
 2.18.0
 
