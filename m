@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626A1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F63C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC4920857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63BB2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCSLLl (ORCPT
+        id S1727644AbfCSLMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:11:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46157 "EHLO
+        Tue, 19 Mar 2019 07:12:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47457 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfCSLLl (ORCPT
+        with ESMTP id S1726504AbfCSLMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:11:41 -0400
+        Tue, 19 Mar 2019 07:12:01 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2JBAqpt3395563
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2JBBef63395639
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 19 Mar 2019 04:10:52 -0700
+        Tue, 19 Mar 2019 04:11:40 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2JBAofk3395560;
-        Tue, 19 Mar 2019 04:10:51 -0700
-Date:   Tue, 19 Mar 2019 04:10:51 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2JBBbmH3395636;
+        Tue, 19 Mar 2019 04:11:37 -0700
+Date:   Tue, 19 Mar 2019 04:11:37 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-a23314e9d88d89d49e69db08f60b7caa470f04e1@git.kernel.org>
-Cc:     rafael.j.wysocki@intel.com, riel@surriel.com,
-        dave.hansen@linux.intel.com, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, quentin.perret@arm.com, bp@alien8.de,
-        peterz@infradead.org, hpa@zytor.com, luto@kernel.org,
-        zhang.lyra@gmail.com, mingo@kernel.org, tglx@linutronix.de,
-        torvalds@linux-foundation.org, vincent.wang@unisoc.com
-Reply-To: vincent.wang@unisoc.com, mingo@kernel.org,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          zhang.lyra@gmail.com, luto@kernel.org, bp@alien8.de,
-          peterz@infradead.org, quentin.perret@arm.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-          rafael.j.wysocki@intel.com, dave.hansen@linux.intel.com,
-          riel@surriel.com
-In-Reply-To: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
-References: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
+From:   tip-bot for Konstantin Khlebnikov <tipbot@zytor.com>
+Message-ID: <tip-4c47acd824aaaa8fc6dc519fb4e08d1522105b7a@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, riel@surriel.com,
+        lizefan@huawei.com, hpa@zytor.com, khlebnikov@yandex-team.ru,
+        tj@kernel.org, bp@alien8.de, tglx@linutronix.de,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hannes@cmpxchg.org, dave.hansen@linux.intel.com,
+        luto@kernel.org
+Reply-To: bp@alien8.de, tglx@linutronix.de, peterz@infradead.org,
+          torvalds@linux-foundation.org, lizefan@huawei.com,
+          riel@surriel.com, hpa@zytor.com, khlebnikov@yandex-team.ru,
+          tj@kernel.org, hannes@cmpxchg.org, dave.hansen@linux.intel.com,
+          luto@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <155189230232.2620.13120481613524200065.stgit@buzz>
+References: <155189230232.2620.13120481613524200065.stgit@buzz>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/urgent] sched/cpufreq: Fix 32-bit math overflow
-Git-Commit-ID: a23314e9d88d89d49e69db08f60b7caa470f04e1
+Subject: [tip:sched/urgent] sched/core: Fix buffer overflow in cgroup2
+ property cpu.max
+Git-Commit-ID: 4c47acd824aaaa8fc6dc519fb4e08d1522105b7a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,176 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a23314e9d88d89d49e69db08f60b7caa470f04e1
-Gitweb:     https://git.kernel.org/tip/a23314e9d88d89d49e69db08f60b7caa470f04e1
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Tue, 5 Mar 2019 09:32:02 +0100
+Commit-ID:  4c47acd824aaaa8fc6dc519fb4e08d1522105b7a
+Gitweb:     https://git.kernel.org/tip/4c47acd824aaaa8fc6dc519fb4e08d1522105b7a
+Author:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+AuthorDate: Wed, 6 Mar 2019 20:11:42 +0300
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 19 Mar 2019 12:06:11 +0100
+CommitDate: Tue, 19 Mar 2019 12:06:15 +0100
 
-sched/cpufreq: Fix 32-bit math overflow
+sched/core: Fix buffer overflow in cgroup2 property cpu.max
 
-Vincent Wang reported that get_next_freq() has a mult overflow bug on
-32-bit platforms in the IOWAIT boost case, since in that case {util,max}
-are in freq units instead of capacity units.
+Add limit into sscanf format string for on-stack buffer.
 
-Solve this by moving the IOWAIT boost to capacity units. And since this
-means @max is constant; simplify the code.
-
-Reported-by: Vincent Wang <vincent.wang@unisoc.com>
-Tested-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Tejun Heo <tj@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Chunyan Zhang <zhang.lyra@gmail.com>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Li Zefan <lizefan@huawei.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190305083202.GU32494@hirez.programming.kicks-ass.net
+Fixes: 0d5936344f30 ("sched: Implement interface for cgroup unified hierarchy")
+Link: https://lkml.kernel.org/r/155189230232.2620.13120481613524200065.stgit@buzz
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/cpufreq_schedutil.c | 59 +++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 34 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 033ec7c45f13..1ccf77f6d346 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -48,10 +48,10 @@ struct sugov_cpu {
- 
- 	bool			iowait_boost_pending;
- 	unsigned int		iowait_boost;
--	unsigned int		iowait_boost_max;
- 	u64			last_update;
- 
- 	unsigned long		bw_dl;
-+	unsigned long		min;
- 	unsigned long		max;
- 
- 	/* The field below is for single-CPU policies only: */
-@@ -303,8 +303,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
- 	if (delta_ns <= TICK_NSEC)
- 		return false;
- 
--	sg_cpu->iowait_boost = set_iowait_boost
--		? sg_cpu->sg_policy->policy->min : 0;
-+	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
- 	sg_cpu->iowait_boost_pending = set_iowait_boost;
- 
- 	return true;
-@@ -344,14 +343,13 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
- 
- 	/* Double the boost at each request */
- 	if (sg_cpu->iowait_boost) {
--		sg_cpu->iowait_boost <<= 1;
--		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
--			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
-+		sg_cpu->iowait_boost =
-+			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
- 		return;
- 	}
- 
- 	/* First wakeup after IO: start with minimum boost */
--	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
-+	sg_cpu->iowait_boost = sg_cpu->min;
- }
- 
- /**
-@@ -373,47 +371,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
-  * This mechanism is designed to boost high frequently IO waiting tasks, while
-  * being more conservative on tasks which does sporadic IO operations.
-  */
--static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
--			       unsigned long *util, unsigned long *max)
-+static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
-+					unsigned long util, unsigned long max)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 6b2c055564b5..b7a4afdc33cb 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6943,7 +6943,7 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
  {
--	unsigned int boost_util, boost_max;
-+	unsigned long boost;
+ 	char tok[21];	/* U64_MAX */
  
- 	/* No boost currently required */
- 	if (!sg_cpu->iowait_boost)
--		return;
-+		return util;
+-	if (!sscanf(buf, "%s %llu", tok, periodp))
++	if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
+ 		return -EINVAL;
  
- 	/* Reset boost if the CPU appears to have been idle enough */
- 	if (sugov_iowait_reset(sg_cpu, time, false))
--		return;
-+		return util;
- 
--	/*
--	 * An IO waiting task has just woken up:
--	 * allow to further double the boost value
--	 */
--	if (sg_cpu->iowait_boost_pending) {
--		sg_cpu->iowait_boost_pending = false;
--	} else {
-+	if (!sg_cpu->iowait_boost_pending) {
- 		/*
--		 * Otherwise: reduce the boost value and disable it when we
--		 * reach the minimum.
-+		 * No boost pending; reduce the boost value.
- 		 */
- 		sg_cpu->iowait_boost >>= 1;
--		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
-+		if (sg_cpu->iowait_boost < sg_cpu->min) {
- 			sg_cpu->iowait_boost = 0;
--			return;
-+			return util;
- 		}
- 	}
- 
-+	sg_cpu->iowait_boost_pending = false;
-+
- 	/*
--	 * Apply the current boost value: a CPU is boosted only if its current
--	 * utilization is smaller then the current IO boost level.
-+	 * @util is already in capacity scale; convert iowait_boost
-+	 * into the same scale so we can compare.
- 	 */
--	boost_util = sg_cpu->iowait_boost;
--	boost_max = sg_cpu->iowait_boost_max;
--	if (*util * boost_max < *max * boost_util) {
--		*util = boost_util;
--		*max = boost_max;
--	}
-+	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
-+	return max(boost, util);
- }
- 
- #ifdef CONFIG_NO_HZ_COMMON
-@@ -460,7 +449,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
- 
- 	util = sugov_get_util(sg_cpu);
- 	max = sg_cpu->max;
--	sugov_iowait_apply(sg_cpu, time, &util, &max);
-+	util = sugov_iowait_apply(sg_cpu, time, util, max);
- 	next_f = get_next_freq(sg_policy, util, max);
- 	/*
- 	 * Do not reduce the frequency if the CPU has not been idle
-@@ -500,7 +489,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
- 
- 		j_util = sugov_get_util(j_sg_cpu);
- 		j_max = j_sg_cpu->max;
--		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
-+		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
- 
- 		if (j_util * max > j_max * util) {
- 			util = j_util;
-@@ -837,7 +826,9 @@ static int sugov_start(struct cpufreq_policy *policy)
- 		memset(sg_cpu, 0, sizeof(*sg_cpu));
- 		sg_cpu->cpu			= cpu;
- 		sg_cpu->sg_policy		= sg_policy;
--		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
-+		sg_cpu->min			=
-+			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-+			policy->cpuinfo.max_freq;
- 	}
- 
- 	for_each_cpu(cpu, policy->cpus) {
+ 	*periodp *= NSEC_PER_USEC;
