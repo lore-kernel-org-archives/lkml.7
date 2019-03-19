@@ -2,80 +2,123 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D62C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596C1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0287A20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2458020872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c7jCwQCL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ugw3hlPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfCSCfd (ORCPT
+        id S1727502AbfCSCjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:35:33 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44395 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbfCSCfc (ORCPT
+        Mon, 18 Mar 2019 22:39:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34750 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfCSCjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:35:32 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m65so3371928qkl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vqXfWNSdabibSi3zXPY15t/6Ee5rIqhW+i5NnYtrDJc=;
-        b=c7jCwQCL89IJXg8jFS2uwu4viDTCxaoBVjOfjlMVxORTCJp5NXpcSAgr6di7vUwPty
-         Fnesa46MxHtEiy7+yjiwBasf30Rn87IpDnWXV82lcaZCcdSo4LjjW4yB36cpV2xbprkt
-         cMvOFwoE5KZl2FOTOs2T4M3aNeEEGpYMKVKf+Pg4u6HF4AdhMkcoxcVI47N2ISZ60NYS
-         4zNnIcfuTeIW+96KXUWRwHmWUeFb6jjynDosp68OIrb0AGdkdGqWzi56nuOFP91Up6DN
-         7Td2pZNDzAB6XWi/6gA6mPrgQ7zsZgA+rUfphYzn7uiomlldXWWSuf87tD6zVCzn001g
-         RAdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vqXfWNSdabibSi3zXPY15t/6Ee5rIqhW+i5NnYtrDJc=;
-        b=p4XZiXDTsWAJ2KSlUAz7S46JnwkNn20VtHytTDDLtjihGqxdv/ey43IeIoWItyEvT4
-         Hgi8mFaCsBLP97rN+mfyl4PcHMrTqgRzNqiwfL5+71EBaLG9TiJMroTQfmwGtDSod8QU
-         +IQoy5wPvs9Q4jgogkIkxqHutaJpbll7dr8unx9X31vc2qz+v/pMu0KMgWsfcS8aJMdo
-         M68WqpJYx8koVc8FXXvYVa+0FUuuMCe40pyFMpovvr1mExaiq6Xq85oB18zVsizu9sYG
-         Szq/DkdQdl2PHkSYSyoKfwQUCtFSL7Ms/QXzHo5xkJMfWij0Raaydz6SH9w2XCTj+bmY
-         nChg==
-X-Gm-Message-State: APjAAAVDxIhh5ThpIi+8dM9UIqsF/S9oHKyNr2khez5tLlHAFArvLiy9
-        3CVIFufzI3vG+IR+cMTEIsxXAd8yQd/5vjKwvExIpg==
-X-Google-Smtp-Source: APXvYqxPSI5atp6OBEqwqup/ODSU0CG9uaN3v3uHzC2uV8RvTZjBx3+tsmk1efrFZsAClsYU9GCrykNTdur84FsOsu8=
-X-Received: by 2002:a05:620a:109b:: with SMTP id g27mr83163qkk.128.1552962931657;
- Mon, 18 Mar 2019 19:35:31 -0700 (PDT)
+        Mon, 18 Mar 2019 22:39:00 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J2XtGG039801;
+        Tue, 19 Mar 2019 02:38:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=SrWCrmloewbKXSPqrcNLcMLvFQIickS8gB6OQnyLIqE=;
+ b=Ugw3hlPwueaNL/T1bU800q/ff+UsRfVTIrCf2CxmJq4G/i0tMEZRQdms3HZvzIB32NEk
+ 51LNBg5YkCemtKXxPft5OLpj6ITT6Z0VRIvJuPWf1zuNbRkIy9rhmm5WnUxyIWRHIdil
+ pSYtEVACapZtG1jfH1wK9fOJ60hFmFEP1MVvzUR6qd+LTlHRMmCEkcXq5l1/cfxp9KpT
+ VnOGcrshsPCsjt0stR2OOxsyRZb5BKkx8wA88Woa6p1yHylq1cJEOtvt1xYpihSI4ESf
+ lNlewIk4LlZcsZTQHL9f1nJpwtYqa40QfHH/04GYGzZL1Ze29iwrkRtL5AnnE6biS2Af nA== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2130.oracle.com with ESMTP id 2r8rjuhyvs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 02:38:55 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2J2cnOu020920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 02:38:50 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2J2cn5X023967;
+        Tue, 19 Mar 2019 02:38:49 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Mar 2019 19:38:49 -0700
+Subject: Re: [BUG] scsi: ses: out of bound accessing in
+ ses_enclosure_data_process
+To:     "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     jejb@linux.ibm.com,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, diego.gonzalez@oracle.com
+References: <78dd3eca-7e8a-72f9-07f9-e2c7cc4569b0@oracle.com>
+ <yq1k1gwkc6x.fsf@oracle.com>
+ <3b2542225e519a8cf8e329745b0ee2e2464787c7.camel@redhat.com>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <92bf2380-626c-d51a-3f8b-de30462d4dd3@oracle.com>
+Date:   Tue, 19 Mar 2019 10:41:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190306162113.8585-1-bgodavar@codeaurora.org>
- <155191158734.20095.15990837191526416248@swboyd.mtv.corp.google.com>
- <a22894cea091ee9945af9c22d6e42051@codeaurora.org> <82fdfbd3dc4dbc1b6258dd470afff589@codeaurora.org>
- <CANMq1KDrGYTrYi1UxyfM2ZMw_GmFpFrrTC6acZkKRHtizAT8OA@mail.gmail.com>
-In-Reply-To: <CANMq1KDrGYTrYi1UxyfM2ZMw_GmFpFrrTC6acZkKRHtizAT8OA@mail.gmail.com>
-From:   Claire Chang <tientzu@google.com>
-Date:   Tue, 19 Mar 2019 10:35:20 +0800
-Message-ID: <CALiNf2_ivxxhox2R6trANOoiH+Xfoi3AGjSRSUWdu5961xKKtw@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Give enough time to ROME
- controller to bootup.
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     rjliao@codeaurora.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, johan.hedberg@gmail.com,
-        marcel@holtmann.org, Matthias Kaehlcke <mka@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, Claire Chang <tientzu@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3b2542225e519a8cf8e329745b0ee2e2464787c7.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > >>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
+
+
+On 3/18/19 11:22 PM, Ewan D. Milne wrote:
+> On Mon, 2019-03-18 at 01:01 -0400, Martin K. Petersen wrote:
+>> Jianchao,
+>>
+>>> When our customer probe the lpfc devices, they encountered odd memory
+>>> corruption issues, and we get 'out of bound' access warning at
+>>> following position after open KASAN
+>>
+>> Please provide the output of:
+>>
+>> # sg_ses -p 1 /dev/sgN
+>> # sg_ses -p 7 /dev/sgN
+>>
+>> for the enclosure device in question.
+>>
+> 
+> The ses driver is allocating kernel buffers based upon the size
+> reported by RECEIVE DIAGNOSTIC commands, and is iterating through
+> them based on sizes in the individual descriptors.  It appears to
+> be vulnerable to incorrect data from the device causing out-of-bounds
+> memory access, because the for() test does not prevent the use of
+> the pointer in subsequent code, e.g.:
+> 
+>         for (i = 0; i < num_enclosures && type_ptr < buf + len; i++) {
+>                 types += type_ptr[2];
+>                 type_ptr += type_ptr[3] + 4;
+>         }
+> 
+>         ses_dev->page1_types = type_ptr;
+>         ses_dev->page1_num_types = types;
+> 
+> Whether or not this is the current problem, it's wrong.
+> 
+
+Yes, I definitely agree with this.
+There should be some change here.
+
+Thanks
+Jianchao
+
