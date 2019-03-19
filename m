@@ -2,108 +2,146 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB15C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A51C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29A42084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="IwLha9oi"
+	by mail.kernel.org (Postfix) with ESMTP id A130E2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfCSC74 (ORCPT
+        id S1727469AbfCSDEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:59:56 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:39972 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfCSC7z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:59:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 8BFD9B4B
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 02:59:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yiSDwP_DZwzm for <linux-kernel@vger.kernel.org>;
-        Mon, 18 Mar 2019 21:59:54 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 5B385B44
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 21:59:54 -0500 (CDT)
-Received: by mail-io1-f70.google.com with SMTP id k24so14969452ioa.18
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0k4elvOvDCPl71m/NEQTaD+jUr1qhfrb5+lcPPA9l/o=;
-        b=IwLha9oi7d+U8A1j4/oqAuuaGNfaHSvp6KezLw46CXQANHEJOnT3Lp6JGVYEuVhksq
-         mtVVB3lK0yAzDWjV7NugHi8JpozwnXc0+CPzj+Al9F1inQaUNorJ6pyvWs7uWsBU27wG
-         boGh0NNbvVbUesf3dvKjNorhecyBOFBuy/Je7Rsxt5unhyYUPVp8d4B8l7tlGWArBan6
-         1eLiWAZHvbOe0HGvmeO0+6d79OsCjm4JhXHFTnTQV3l0E5SWpQVQcLeWhe3Ua8tHQo3n
-         kyKitE49gRr3wDtIcN7d3+RCFBC410VXHd+ZS0ldk7xBo5fPg/Rv1F3nY9hdKPdErLIo
-         i5HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0k4elvOvDCPl71m/NEQTaD+jUr1qhfrb5+lcPPA9l/o=;
-        b=IIZHOuHS2Hh/i3g8YZjXbnIB/KO5m8mhN6gRUBm1hKktbXeczKo6uAFvZ9+rj/yFvC
-         1FWSJPmCJnZl/yrG0MxfE0XzgzFDwNhY0C0P5GR5NrT3v2cLAgXAq2ndIgF78u+Ptk9k
-         IxqbHOHGma2F+1cfLY7238jnYFuWC5fxS+TC7OGLveigaV5mWoKVBS/FiRKNq6pCndHE
-         lm1zb1ldwawNWmeVPBSE0S6rY4K7IQ8NbTnlHSkOP7+3KmfC2gh5L3ExXkBOFtqa5cjp
-         yqfrI66XMXkHPuRHAEX1aKLFv5xl1v3HeVlAe41l9mUuOe3q6FxV7aFoHseFLcu8eG8S
-         NbLw==
-X-Gm-Message-State: APjAAAWzfKRCMGou/tjZTyTlJQu6yOa5sg0OtThb02d0nkucgFyC4RVW
-        kSOlgTDnJTfo62xwcJhPzh2Q4gxYZtWRCOVAD4lNWLDHE5AGID8uK/MiYIyxziUCsKg37UgVVWf
-        hQyJClIQeDvCECgUb9Mhcmh53X3ic
-X-Received: by 2002:a05:6638:1a:: with SMTP id z26mr97566jao.99.1552964394055;
-        Mon, 18 Mar 2019 19:59:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxzmJqgtQCaGefKcVZEKbMAAAraEQp66zKMmFEQB97/XirnUjIcBdX4ju83UwSGGsS2CVD3fg==
-X-Received: by 2002:a05:6638:1a:: with SMTP id z26mr97560jao.99.1552964393893;
-        Mon, 18 Mar 2019 19:59:53 -0700 (PDT)
-Received: from lenovo-1.hsd1.mn.comcast.net (c-73-242-25-233.hsd1.mn.comcast.net. [73.242.25.233])
-        by smtp.googlemail.com with ESMTPSA id o141sm723811ito.14.2019.03.18.19.59.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:59:53 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Jan Kara <jack@suse.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] udf: Fix to check the return value of load_nls
-Date:   Mon, 18 Mar 2019 21:59:49 -0500
-Message-Id: <20190319025950.18311-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 Mar 2019 23:04:36 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4705 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726788AbfCSDEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 23:04:35 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7F23DA162836022F013B;
+        Tue, 19 Mar 2019 11:04:33 +0800 (CST)
+Received: from [127.0.0.1] (10.184.227.228) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 11:04:32 +0800
+Subject: Re: [PATCH] net-sysfs: Fix memory leak in netdev_register_kobject
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     <davem@davemloft.net>, <idosch@mellanox.com>,
+        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
+        <f.fainelli@gmail.com>, <amritha.nambiar@intel.com>,
+        <joe@perches.com>, <dmitry.torokhov@gmail.com>,
+        <andriy.shevchenko@linux.intel.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190319050657.61327-1-wanghai26@huawei.com>
+ <20190318085724.1e0c017b@shemminger-XPS-13-9360>
+From:   "wanghai (M)" <wanghai26@huawei.com>
+Message-ID: <cfc4b528-8bda-6823-cdf8-f4d12eb95c85@huawei.com>
+Date:   Tue, 19 Mar 2019 11:03:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <20190318085724.1e0c017b@shemminger-XPS-13-9360>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.227.228]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-load_nls may fail and return an error message. The patch checks
-for such a scenario and passes the error upstream.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- fs/udf/super.c | 2 ++
- 1 file changed, 2 insertions(+)
+在 2019/3/18 23:57, Stephen Hemminger 写道:
+> On Tue, 19 Mar 2019 01:06:57 -0400
+> Wang Hai <wanghai26@huawei.com> wrote:
+>
+>> When registering struct net_device, it will call
+>> 	register_netdevice ->
+>> 		netdev_register_kobject ->
+>> 			device_add(dev)
+>> 			register_queue_kobjects(ndev)
+>>
+>> If device_add(dev) or register_queue_kobjects(ndev) fails.
+>> Register_netdevice() will return error, causing netdev_freemem(ndev)
+>> to be called to free net_device, however (&ndev->dev)->kobj.name will
+>> not be freed, resulting in a memory leak.
+>>
+>> syzkaller report this:
+>> BUG: memory leak
+>> unreferenced object 0xffff8881f4fad168 (size 8):
+>> comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
+>> hex dump (first 8 bytes):
+>>    77 70 61 6e 30 00 ff ff                          wpan0...
+>> backtrace:
+>>    [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
+>>    [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+>>    [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:281
+>>    [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
+>>    [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/net-sysfs.c:1727
+>>    [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:8711
+>>    [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [ieee802154]
+>>    [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee802154]
+>>    [<00000000e4b3df51>] 0xffffffffc1500e0e
+>>    [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/platform.c:614
+>>    [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
+>>    [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd.c:671
+>>    [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/dd.c:945
+>>    [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:1022
+>>    [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.c:304
+>>    [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:645
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+>> Signed-off-by: Wang Hai <wanghai26@huawei.com>
+>> ---
+>>   net/core/net-sysfs.c | 15 ++++++++++-----
+>>   1 file changed, 10 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+>> index 4ff661f..f0e53dc 100644
+>> --- a/net/core/net-sysfs.c
+>> +++ b/net/core/net-sysfs.c
+>> @@ -1745,17 +1745,22 @@ int netdev_register_kobject(struct net_device *ndev)
+>>   
+>>   	error = device_add(dev);
+>>   	if (error)
+>> -		return error;
+>> +		goto device_add_error;
+>>   
+>>   	error = register_queue_kobjects(ndev);
+>> -	if (error) {
+>> -		device_del(dev);
+>> -		return error;
+>> -	}
+>> +	if (error)
+>> +		goto register_error;
+>>   
+>>   	pm_runtime_set_memalloc_noio(dev, true);
+>>   
+>> +out:
+>>   	return error;
+>> +
+>> +register_error:
+>> +	device_del(dev);
+>> +device_add_error:
+>> +	kfree_const(dev->kobj.name);
+> This looks a bug in device_add() not here.
+> In general, it is better for an api to clean up after itself.
+> Since dev->kobj.name is created in device_add and normally freed
+> in device_del; why is device_add leaving it behind?\
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index ffd8038ff728..1a38271de6d9 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -573,6 +573,8 @@ static int udf_parse_options(char *options, struct udf_options *uopt,
- 				if (uopt->nls_map)
- 					unload_nls(uopt->nls_map);
- 				uopt->nls_map = load_nls(args[0].from);
-+				if (!uopt->nls_map)
-+					return 0;
- 				uopt->flags |= (1 << UDF_FLAG_NLS_MAP);
- 			}
- 			break;
--- 
-2.17.1
+When registering struct net_device, it will call
+register_netdevice ->
+     netdev_register_kobject ->
+         dev_set_name(dev, "%s", ndev->name)
+          device_add(dev)
+          register_queue_kobjects(ndev)
+
+The dev->kobj.name that causes the memory leak is created in 
+dev_set_name(dev, "%s", ndev-> name) in the function 
+netdev_register_kobject(), not in device_add(dev). If device_add(dev) or 
+register_queue_kobjects(ndev) fails, it should release dev-> kobj.name 
+in netdev_register_kobject()
+
 
