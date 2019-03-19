@@ -2,438 +2,154 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A67C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF32C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E073620854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB4B20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nv+/1orn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfCSQXt (ORCPT
+        id S1727871AbfCSQXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:23:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34778 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfCSQXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:23:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A5FB830832CB;
-        Tue, 19 Mar 2019 16:23:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7975A5C1A1;
-        Tue, 19 Mar 2019 16:23:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 3/4] fuse: Convert to mount API
-From:   David Howells <dhowells@redhat.com>
-To:     miklos@szeredi.hu, viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com, anprice@redhat.com
-Date:   Tue, 19 Mar 2019 16:23:45 +0000
-Message-ID: <155301262572.7556.18189698725705132181.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
-References: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 19 Mar 2019 12:23:54 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50206 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbfCSQXv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:23:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z11so9054381wmi.0;
+        Tue, 19 Mar 2019 09:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=fT5IiTrCD2mkBVO4SYwrgK+IBcwUUHJdMAVNHqgXqiA=;
+        b=Nv+/1ornQ92uaVZXSCgLwkVn29SPNjuYlkQE7lFisyac+uKWapyHR25wHjkjd8C1dh
+         I8DcaXN5LjDUuCisuep7YH67CwrsZEqVYSlijJJWVeyBOGG/KXfVL3N/YG1WmkmFxRoR
+         lGUTT06Jp9Z56xGWh1CX8BbPzijvWKrvKEFQyrGE9gf6KXM4Ts14jp0xHm37+R0Jt3YG
+         Mq9rBbwlI3lfieVXdypxQi8p5QQNJNqW6+I/yeW2M4G6dIhe4B1W8ZYTcAdErCBu9tGu
+         IO81LyespkSdKSlDIyRpk2/UbJXr8Q31/ohlcfZk6UEcR+SJvLXMC5MaZlLM0eCncdhO
+         ZgFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fT5IiTrCD2mkBVO4SYwrgK+IBcwUUHJdMAVNHqgXqiA=;
+        b=TwSR4HeSzsAZYO/hi5BaBKoeDsrPoU1hIta4NWY9X6ZA8i8xzI96PEWr4R7/dPweGj
+         7vgzJFJe+ialZNOE+4HbvsCxKFyJ4crTo7OnBSAs5wUg4YltMDAAUJtle1e8F1y9ID7R
+         4X2uY1k9XZPuTj5bKnAJlOO5bWD9tSyqis5cd2VzGPJVHqMmh/UWfvtyIIwcQf/jNLuJ
+         HOmosp70m991Hqc3GbkSrg1+EYq3HLO3F7ZJFuUqJz6Pgrc9DHdEV36lg6VXrcEytNa8
+         1XW1RoT7mQt+v51oiDkXzcWMu0uG+DgE8SjBkhptCySnvl9OXCIlgqHY/9elTCauQihu
+         c58A==
+X-Gm-Message-State: APjAAAVWRy7iA/KJBCdkUeU6TXYvlkzYJsMD0zyptlZ621jSpijMFFo+
+        wBlwmvsqf8L5VZGhZwNyYhVlDWUZ
+X-Google-Smtp-Source: APXvYqw/9SBSQNvAY6ve7IKFyhudKCKJi8jtlMrsA7OXeUwLkJKiV/DMUXXpHzn8TFMlRnDiN5GOiA==
+X-Received: by 2002:a7b:cb1a:: with SMTP id u26mr4601767wmj.46.1553012629985;
+        Tue, 19 Mar 2019 09:23:49 -0700 (PDT)
+Received: from [172.31.96.190] ([195.39.71.253])
+        by smtp.gmail.com with ESMTPSA id c126sm4363728wma.0.2019.03.19.09.23.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 09:23:47 -0700 (PDT)
+Subject: Re: WARNING: suspicious RCU usage in xfrm_alloc_userspi
+To:     syzbot <syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com>,
+        davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com,
+        Su Yanjun <suyj.fnst@cn.fujitsu.com>
+References: <0000000000007783a2058474a0b9@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
+Date:   Tue, 19 Mar 2019 09:23:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 19 Mar 2019 16:23:48 +0000 (UTC)
+In-Reply-To: <0000000000007783a2058474a0b9@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CC Su Yanjun 
 
----
-
- fs/fuse/inode.c |  272 ++++++++++++++++++++++++++++++-------------------------
- 1 file changed, 147 insertions(+), 125 deletions(-)
-
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index ec5d9953dfb6..3aebff5b902a 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -15,7 +15,8 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/parser.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/statfs.h>
- #include <linux/random.h>
- #include <linux/sched.h>
-@@ -59,7 +60,12 @@ MODULE_PARM_DESC(max_user_congthresh,
- /** Congestion starts at 75% of maximum */
- #define FUSE_DEFAULT_CONGESTION_THRESHOLD (FUSE_DEFAULT_MAX_BACKGROUND * 3 / 4)
- 
--struct fuse_mount_data {
-+#ifdef CONFIG_BLOCK
-+static struct file_system_type fuseblk_fs_type;
-+#endif
-+
-+struct fuse_fs_context {
-+	bool		is_bdev;
- 	int fd;
- 	unsigned rootmode;
- 	kuid_t user_id;
-@@ -448,6 +454,7 @@ static int fuse_statfs(struct dentry *dentry, struct kstatfs *buf)
- }
- 
- enum {
-+	OPT_SOURCE,
- 	OPT_FD,
- 	OPT_ROOTMODE,
- 	OPT_USER_ID,
-@@ -459,111 +466,97 @@ enum {
- 	OPT_ERR
- };
- 
--static const match_table_t tokens = {
--	{OPT_FD,			"fd=%u"},
--	{OPT_ROOTMODE,			"rootmode=%o"},
--	{OPT_USER_ID,			"user_id=%u"},
--	{OPT_GROUP_ID,			"group_id=%u"},
--	{OPT_DEFAULT_PERMISSIONS,	"default_permissions"},
--	{OPT_ALLOW_OTHER,		"allow_other"},
--	{OPT_MAX_READ,			"max_read=%u"},
--	{OPT_BLKSIZE,			"blksize=%u"},
--	{OPT_ERR,			NULL}
-+static const struct fs_parameter_spec fuse_param_specs[] = {
-+	fsparam_string	("source",		OPT_SOURCE),
-+	fsparam_fd	("fd",			OPT_FD),
-+	fsparam_u32oct	("rootmode",		OPT_ROOTMODE),
-+	fsparam_u32	("user_id",		OPT_USER_ID),
-+	fsparam_u32	("group_id",		OPT_GROUP_ID),
-+	fsparam_flag	("default_permissions",	OPT_DEFAULT_PERMISSIONS),
-+	fsparam_flag	("allow_other",		OPT_ALLOW_OTHER),
-+	fsparam_u32	("max_read",		OPT_MAX_READ),
-+	fsparam_u32	("blksize",		OPT_BLKSIZE),
-+	{}
- };
- 
--static int fuse_match_uint(substring_t *s, unsigned int *res)
-+static const struct fs_parameter_description fuse_fs_parameters = {
-+	.name		= "fuse",
-+	.specs		= fuse_param_specs,
-+};
-+
-+static int fuse_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
--	int err = -ENOMEM;
--	char *buf = match_strdup(s);
--	if (buf) {
--		err = kstrtouint(buf, 10, res);
--		kfree(buf);
-+	struct fs_parse_result result;
-+	struct fuse_fs_context *ctx = fc->fs_private;
-+	int opt;
-+
-+	opt = fs_parse(fc, &fuse_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case OPT_SOURCE:
-+		kfree(fc->source);
-+		fc->source = param->string;
-+		param->string = NULL;
-+		break;
-+
-+	case OPT_FD:
-+		ctx->fd = result.uint_32;
-+		ctx->fd_present = 1;
-+		break;
-+
-+	case OPT_ROOTMODE:
-+		if (!fuse_valid_type(result.uint_32))
-+			return invalf(fc, "fuse: Invalid rootmode");
-+		ctx->rootmode = result.uint_32;
-+		ctx->rootmode_present = 1;
-+		break;
-+
-+	case OPT_USER_ID:
-+		ctx->user_id = make_kuid(fc->user_ns, result.uint_32);
-+		if (!uid_valid(ctx->user_id))
-+			return invalf(fc, "fuse: Invalid user_id");
-+		ctx->user_id_present = 1;
-+		break;
-+
-+	case OPT_GROUP_ID:
-+		ctx->group_id = make_kgid(fc->user_ns, result.uint_32);
-+		if (!gid_valid(ctx->group_id))
-+			return invalf(fc, "fuse: Invalid group_id");
-+		ctx->group_id_present = 1;
-+		break;
-+
-+	case OPT_DEFAULT_PERMISSIONS:
-+		ctx->default_permissions = 1;
-+		break;
-+
-+	case OPT_ALLOW_OTHER:
-+		ctx->allow_other = 1;
-+		break;
-+
-+	case OPT_MAX_READ:
-+		ctx->max_read = result.uint_32;
-+		break;
-+
-+	case OPT_BLKSIZE:
-+		if (!ctx->is_bdev)
-+			return invalf(fc, "fuse: blksize only supported for fuseblk");
-+		ctx->blksize = result.uint_32;
-+		break;
-+
-+	default:
-+		return -EINVAL;
- 	}
--	return err;
-+
-+	return 0;
- }
- 
--static int parse_fuse_opt(char *opt, struct fuse_mount_data *d, int is_bdev,
--			  struct user_namespace *user_ns)
-+static void fuse_free_fc(struct fs_context *fc)
- {
--	char *p;
--	memset(d, 0, sizeof(struct fuse_mount_data));
--	d->max_read = ~0;
--	d->blksize = FUSE_DEFAULT_BLKSIZE;
--
--	while ((p = strsep(&opt, ",")) != NULL) {
--		int token;
--		int value;
--		unsigned uv;
--		substring_t args[MAX_OPT_ARGS];
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		switch (token) {
--		case OPT_FD:
--			if (match_int(&args[0], &value))
--				return 0;
--			d->fd = value;
--			d->fd_present = 1;
--			break;
--
--		case OPT_ROOTMODE:
--			if (match_octal(&args[0], &value))
--				return 0;
--			if (!fuse_valid_type(value))
--				return 0;
--			d->rootmode = value;
--			d->rootmode_present = 1;
--			break;
--
--		case OPT_USER_ID:
--			if (fuse_match_uint(&args[0], &uv))
--				return 0;
--			d->user_id = make_kuid(user_ns, uv);
--			if (!uid_valid(d->user_id))
--				return 0;
--			d->user_id_present = 1;
--			break;
--
--		case OPT_GROUP_ID:
--			if (fuse_match_uint(&args[0], &uv))
--				return 0;
--			d->group_id = make_kgid(user_ns, uv);
--			if (!gid_valid(d->group_id))
--				return 0;
--			d->group_id_present = 1;
--			break;
--
--		case OPT_DEFAULT_PERMISSIONS:
--			d->default_permissions = 1;
--			break;
--
--		case OPT_ALLOW_OTHER:
--			d->allow_other = 1;
--			break;
--
--		case OPT_MAX_READ:
--			if (match_int(&args[0], &value))
--				return 0;
--			d->max_read = value;
--			break;
--
--		case OPT_BLKSIZE:
--			if (!is_bdev || match_int(&args[0], &value))
--				return 0;
--			d->blksize = value;
--			break;
--
--		default:
--			return 0;
--		}
--	}
--
--	if (!d->fd_present || !d->rootmode_present ||
--	    !d->user_id_present || !d->group_id_present)
--		return 0;
-+	struct fuse_fs_context *ctx = fc->fs_private;
- 
--	return 1;
-+	kfree(ctx);
- }
- 
- static int fuse_show_options(struct seq_file *m, struct dentry *root)
-@@ -1078,12 +1071,12 @@ void fuse_dev_free(struct fuse_dev *fud)
- }
- EXPORT_SYMBOL_GPL(fuse_dev_free);
- 
--static int fuse_fill_super(struct super_block *sb, void *data, int silent)
-+static int fuse_fill_super(struct super_block *sb, struct fs_context *fsc)
- {
-+	struct fuse_fs_context *ctx = fsc->fs_private;
- 	struct fuse_dev *fud;
- 	struct fuse_conn *fc;
- 	struct inode *root;
--	struct fuse_mount_data d;
- 	struct file *file;
- 	struct dentry *root_dentry;
- 	struct fuse_req *init_req;
-@@ -1096,13 +1089,10 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	sb->s_flags &= ~(SB_NOSEC | SB_I_VERSION);
- 
--	if (!parse_fuse_opt(data, &d, is_bdev, sb->s_user_ns))
--		goto err;
--
- 	if (is_bdev) {
- #ifdef CONFIG_BLOCK
- 		err = -EINVAL;
--		if (!sb_set_blocksize(sb, d.blksize))
-+		if (!sb_set_blocksize(sb, ctx->blksize))
- 			goto err;
- #endif
- 	} else {
-@@ -1119,7 +1109,7 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 	if (sb->s_user_ns != &init_user_ns)
- 		sb->s_iflags |= SB_I_UNTRUSTED_MOUNTER;
- 
--	file = fget(d.fd);
-+	file = fget(ctx->fd);
- 	err = -EINVAL;
- 	if (!file)
- 		goto err;
-@@ -1162,17 +1152,17 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 		fc->dont_mask = 1;
- 	sb->s_flags |= SB_POSIXACL;
- 
--	fc->default_permissions = d.default_permissions;
--	fc->allow_other = d.allow_other;
--	fc->user_id = d.user_id;
--	fc->group_id = d.group_id;
--	fc->max_read = max_t(unsigned, 4096, d.max_read);
-+	fc->default_permissions = ctx->default_permissions;
-+	fc->allow_other = ctx->allow_other;
-+	fc->user_id = ctx->user_id;
-+	fc->group_id = ctx->group_id;
-+	fc->max_read = max_t(unsigned, 4096, ctx->max_read);
- 
- 	/* Used by get_root_inode() */
- 	sb->s_fs_info = fc;
- 
- 	err = -ENOMEM;
--	root = fuse_get_root_inode(sb, d.rootmode);
-+	root = fuse_get_root_inode(sb, ctx->rootmode);
- 	sb->s_d_op = &fuse_root_dentry_operations;
- 	root_dentry = d_make_root(root);
- 	if (!root_dentry)
-@@ -1232,11 +1222,48 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 	return err;
- }
- 
--static struct dentry *fuse_mount(struct file_system_type *fs_type,
--		       int flags, const char *dev_name,
--		       void *raw_data)
-+static int fuse_get_tree(struct fs_context *fc)
-+{
-+	struct fuse_fs_context *ctx = fc->fs_private;
-+
-+	if (!ctx->fd_present || !ctx->rootmode_present ||
-+	    !ctx->user_id_present || !ctx->group_id_present)
-+		return invalf(fc, "fuse: Missing mount parameter(s)");
-+
-+	if (ctx->is_bdev)
-+		return vfs_get_block_super(fc, fuse_fill_super);
-+
-+	return vfs_get_super(fc, vfs_get_independent_super, fuse_fill_super);
-+}
-+
-+static const struct fs_context_operations fuse_context_ops = {
-+	.free		= fuse_free_fc,
-+	.parse_param	= fuse_parse_param,
-+	.get_tree	= fuse_get_tree,
-+};
-+
-+/*
-+ * Set up the filesystem mount context.
-+ */
-+static int fuse_init_fs_context(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, raw_data, fuse_fill_super);
-+	struct fuse_fs_context *ctx;
-+
-+	ctx = kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->max_read = ~0;
-+	ctx->blksize = FUSE_DEFAULT_BLKSIZE;
-+
-+#ifdef CONFIG_BLOCK
-+	if (fc->fs_type == &fuseblk_fs_type)
-+		ctx->is_bdev = true;
-+#endif
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &fuse_context_ops;
-+	return 0;
- }
- 
- static void fuse_sb_destroy(struct super_block *sb)
-@@ -1265,19 +1292,13 @@ static struct file_system_type fuse_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "fuse",
- 	.fs_flags	= FS_HAS_SUBTYPE | FS_USERNS_MOUNT,
--	.mount		= fuse_mount,
-+	.init_fs_context = fuse_init_fs_context,
-+	.parameters	= &fuse_fs_parameters,
- 	.kill_sb	= fuse_kill_sb_anon,
- };
- MODULE_ALIAS_FS("fuse");
- 
- #ifdef CONFIG_BLOCK
--static struct dentry *fuse_mount_blk(struct file_system_type *fs_type,
--			   int flags, const char *dev_name,
--			   void *raw_data)
--{
--	return mount_bdev(fs_type, flags, dev_name, raw_data, fuse_fill_super);
--}
--
- static void fuse_kill_sb_blk(struct super_block *sb)
- {
- 	fuse_sb_destroy(sb);
-@@ -1287,7 +1308,8 @@ static void fuse_kill_sb_blk(struct super_block *sb)
- static struct file_system_type fuseblk_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "fuseblk",
--	.mount		= fuse_mount_blk,
-+	.init_fs_context = fuse_init_fs_context,
-+	.parameters	= &fuse_fs_parameters,
- 	.kill_sb	= fuse_kill_sb_blk,
- 	.fs_flags	= FS_REQUIRES_DEV | FS_HAS_SUBTYPE,
- };
-
+On 03/19/2019 09:02 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    b9998194 Add linux-next specific files for 20190318
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17a2e24d200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=59cd5d43b5df6955
+> dashboard link: https://syzkaller.appspot.com/bug?extid=59752237f7ab21c3f3c3
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e70cb3200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17292127200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com
+> 
+> =============================
+> WARNING: suspicious RCU usage
+> 5.1.0-rc1-next-20190318 #5 Not tainted
+> -----------------------------
+> net/xfrm/xfrm_user.c:1080 suspicious rcu_dereference_check() usage!
+> 
+> other info that might help us debug this:
+> 
+> 
+> rcu_scheduler_active = 2, debug_locks = 1
+> 1 lock held by syz-executor085/7946:
+>  #0: 00000000a55031b5 (&net->xfrm.xfrm_cfg_mutex){+.+.}, at: xfrm_netlink_rcv+0x61/0x90 net/xfrm/xfrm_user.c:2691
+> 
+> stack backtrace:
+> CPU: 0 PID: 7946 Comm: syz-executor085 Not tainted 5.1.0-rc1-next-20190318 #5
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
+>  xfrm_nlmsg_unicast net/xfrm/xfrm_user.c:1080 [inline]
+>  xfrm_alloc_userspi+0x7d5/0xa80 net/xfrm/xfrm_user.c:1356
+>  xfrm_user_rcv_msg+0x458/0x770 net/xfrm/xfrm_user.c:2684
+>  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+>  xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2692
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+>  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+>  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+>  sock_sendmsg_nosec net/socket.c:651 [inline]
+>  sock_sendmsg+0xdd/0x130 net/socket.c:661
+>  ___sys_sendmsg+0x806/0x930 net/socket.c:2260
+>  __sys_sendmsg+0x105/0x1d0 net/socket.c:2298
+>  __do_sys_sendmsg net/socket.c:2307 [inline]
+>  __se_sys_sendmsg net/socket.c:2305 [inline]
+>  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2305
+>  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440499
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffcf12caf08 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440499
+> RDX: 0000000000000000 RSI: 00000000200006c0 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000040
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
