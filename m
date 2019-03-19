@@ -2,89 +2,103 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7E7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9495CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD1720830
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:59:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uMKkspNh"
+	by mail.kernel.org (Postfix) with ESMTP id 6CABD2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfCTF7T (ORCPT
+        id S1727116AbfCTGJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:59:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35330 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfCTF7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:59:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y197so663869wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ohtfMEr6LG9wZDTMQQSLeIGpAAUxMDn0ACoAOodG0Ac=;
-        b=uMKkspNhGsp03ZCVBIFQ3+CzA90j9cYgu96q+Prqw2QTkuNEE/JPnMvwWqXT6xR5n8
-         ZICe+v7aNjr2pWfxGFD6IO1nz/hA0uth2cxa3hTq2TmY5YLqvQYwkDk1+VQS3gXmbTBt
-         ZXNRQ41SpTpLSVGrDCL4WcPI3+8hVabaeB9CfRGZBWlrSXD+jd95BkJ6+B5tnfUmWgNH
-         MCCdadppUp/TWVL91FCvmBIl4pSC4D8kmIXGSp+MGyanchMnRwXf0zan850RXFz5/Kon
-         4v35HRE/Uo8pgoesnuEUEgPFUppIy+8kCspx36O+BdrVmkW74wSJacq7N9rTQ+qOU2FY
-         mrUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ohtfMEr6LG9wZDTMQQSLeIGpAAUxMDn0ACoAOodG0Ac=;
-        b=MvqlW05r1ZtCX2bYcx5GZHg4bDBtQAQ/1cYOfHgB1+XYr0Y64M1/6ItwNVWBvaVBEf
-         2IV45EsjUm2ZB7LpI42csPrZ9xVR+mANdMRzTonUjkiTIggBpQ1nZmJF8MhbZul0UeXQ
-         HzXOgRWJgY7ONBYFsjQ34Vtq8aNqqpCHhixCIuP6AP7prpbyomPxiYef6v7us2JwC7or
-         VhvL+3UQvZQjHtHlWf72z/8EiwHkQ4Ssj+WjW/iBPPl9W7SbOkjfC7aou36U+ubGrn3y
-         oYjqVfq8d1fSTLazl9lZYMiUYAyEPk1TdblamblYmB03BnGy8vk3k+mTBoIYLktBzAwY
-         /J6A==
-X-Gm-Message-State: APjAAAW2o5YKtENNs6dlWOkZ8VegorPkQ9/OnIiu+Fqf4qTjF2Y6Kzmy
-        C9XyeySSOpE8Ti6+HhUaTVO79YkoN22AtynturY4hA==
-X-Google-Smtp-Source: APXvYqw//oqwPGuEp5l5VqhAK+D9rXysM+kKYX1zQ6AgroZIXJfNkr9LjMB5S2AYgswYcsLTQC5vDoGJIS7u26jDCEc=
-X-Received: by 2002:a1c:cb82:: with SMTP id b124mr6301317wmg.11.1553061556914;
- Tue, 19 Mar 2019 22:59:16 -0700 (PDT)
+        Wed, 20 Mar 2019 02:09:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:31937 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725300AbfCTGJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 02:09:11 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DB45883F40;
+        Wed, 20 Mar 2019 06:09:09 +0000 (UTC)
+Received: from sky.random (ovpn-120-78.rdu2.redhat.com [10.10.120.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C5652E02F;
+        Wed, 20 Mar 2019 06:09:03 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 14:07:29 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add
+ vm.unprivileged_userfaultfd
+Message-ID: <20190319180729.GA27618@redhat.com>
+References: <20190319030722.12441-1-peterx@redhat.com>
+ <20190319030722.12441-2-peterx@redhat.com>
+ <20190319071104.GA6392@rapoport-lnx>
 MIME-Version: 1.0
-References: <1553059940-127038-1-git-send-email-fei.yang@intel.com> <CAAHfpN_2rUu+kCCgOV+RdqCU5+XRe_c3KkJk6FNv50FG+5_qwg@mail.gmail.com>
-In-Reply-To: <CAAHfpN_2rUu+kCCgOV+RdqCU5+XRe_c3KkJk6FNv50FG+5_qwg@mail.gmail.com>
-From:   Josh Gao <jmgao@google.com>
-Date:   Tue, 19 Mar 2019 22:59:05 -0700
-Message-ID: <CAAHfpN_uVBR5X7e4Bb=OsMVqudB9rVD7rqLhTfix6Pa+-iVwWw@mail.gmail.com>
-Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
-To:     fei.yang@intel.com
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        Jerry Zhang <zhangjerry@google.com>, andrzej.p@collabora.com,
-        plr.vincent@gmail.com, jingx.shen@intel.com,
-        John Stultz <john.stultz@linaro.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319071104.GA6392@rapoport-lnx>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 20 Mar 2019 06:09:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:56 PM Josh Gao <jmgao@google.com> wrote:
->
-> On Tue, Mar 19, 2019 at 10:32 PM <fei.yang@intel.com> wrote:
-> >
-> > From: Fei Yang <fei.yang@intel.com>
-> >
-> > The following kernel panic happens due to the io_data buffer gets deallocated
-> > before the async io is completed. Add a check for the case where io_data buffer
-> > should be deallocated by ffs_user_copy_worker.
->
-> It looks like this happened because data got renamed to io_data, which made the
-> `data = NULL` marked with "Do not kfree the buffer in this function" not do
-> what it was hoping. This should probably either delete the assignment above or
-> fix the assignment to refer to io_data? (EIOCBQUEUED presumably can't come from
-> elsewhere?)
+Hello,
 
-(except ffs_free_buffer doesn't check for null, so probably the former)
+On Tue, Mar 19, 2019 at 09:11:04AM +0200, Mike Rapoport wrote:
+> Hi Peter,
+> 
+> On Tue, Mar 19, 2019 at 11:07:22AM +0800, Peter Xu wrote:
+> > Add a global sysctl knob "vm.unprivileged_userfaultfd" to control
+> > whether userfaultfd is allowed by unprivileged users.  When this is
+> > set to zero, only privileged users (root user, or users with the
+> > CAP_SYS_PTRACE capability) will be able to use the userfaultfd
+> > syscalls.
+> > 
+> > Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
+> > Suggested-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Just one minor note below
+
+This looks fine with me too.
+
+> > +	if (!sysctl_unprivileged_userfaultfd && !capable(CAP_SYS_PTRACE))
+> > +		return -EPERM;
+
+The only difference between the bpf sysctl and the userfaultfd sysctl
+this way is that the bpf sysctl adds the CAP_SYS_ADMIN capability
+requirement, while userfaultfd adds the CAP_SYS_PTRACE requirement,
+because the userfaultfd monitor is more likely to need CAP_SYS_PTRACE
+already if it's doing other kind of tracking on processes runtime, in
+addition of userfaultfd. In other words both syscalls works only for
+root, when the two sysctl are opt-in set to 1.
+
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
