@@ -2,238 +2,107 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EF9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99497C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D236520863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="wcfJm9wr"
+	by mail.kernel.org (Postfix) with ESMTP id 6C82220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553017652;
+	bh=glXpESmb8KvD8pi524J9aPEOAw15KniUMe1SWTzOc08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R+fGK7sQfjab0LLtGNwwTh6oRGWBj1insm/2eEVYmq/3gx2PEBY7F2mPfYRwQRp+z
+	 vfZoJ48JVq94lvAkWWpSZfTOtlDnsUhOybw0VaRY+22VI6SN3uxlLRUDooM7XJZepT
+	 /+YuFxvjBdGSxBdd+0cfehIwXIiyUSi9DXJ/Q3Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfCSRrF (ORCPT
+        id S1727538AbfCSRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:47:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43925 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfCSRrE (ORCPT
+        Tue, 19 Mar 2019 13:47:31 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:46726 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfCSRrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:47:04 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v32so23135463qtc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:47:03 -0700 (PDT)
+        Tue, 19 Mar 2019 13:47:31 -0400
+Received: by mail-yw1-f67.google.com with SMTP id v127so16309711ywe.13;
+        Tue, 19 Mar 2019 10:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=kxyE3mIu+XEHYHbUsnJwC2/Ztt/4Hmrkgoi4jlEiiVs=;
-        b=wcfJm9wr5WYvX7sHAtrZSIF3n0P/XTwLHRyS3aZrp3H/yjbN81u3+nKLY6uIvJ0Bm3
-         aoHrfDe3AllpM4zBTuo6TXkhvJD0vvCezWUZhxUufFFpBPmtrzSpMCA9cLr1SH49Te1K
-         8M7isGiUcp1dXRQ9n23oljlOGhTM+xy6DjKWeM198+E1pITDkCbRrDuRs5uvVzh9pGLq
-         Y/SPXNU6M1fs2bBlolO8qJSNOgEJ9wMhsten72koHScDA3Deq7SH1Ok1jz1Yn/8LFANC
-         pJa/jYlPADruPYVv7hGdYXV5p+EOiqwQdRaaApIZx/Sed86sD4ZOaXI6ArmZrwMEpnBT
-         B8og==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3TV5JSMWzDFmGtM2a9PqyZpbM8Cae0apS79wiWWNBuA=;
+        b=Of9nZV6g8OozSHtv9gaoyJHGTNVH7aXpFqRf7RG2ulzzh7pwgQj53Ja9kX4SRoysBf
+         WTKUwYdhh2cfDrebplPomarUMEhL9wABj/zt2or1kA+U9nPmOmvu8bTqYnxuZcgNZUmU
+         tkP6/jg11wyPjsJxwqSNiWbSz57afpm12rthIEQM5jtGDCutSoQDnwIcSgNiW/mDuErG
+         CublhaTz5si8j5tJnDxiB8H4gboyWwZw9o34/V5gWFi4+u58GPYemOmMoJ9Iekhxniya
+         i5AQNeWP/Whmt+HztHFXJQdO2K12aJk/BkdI/7D0PdklhRP84DYlAqncJICe247p4L5Y
+         yU4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=kxyE3mIu+XEHYHbUsnJwC2/Ztt/4Hmrkgoi4jlEiiVs=;
-        b=Qi0fVfZwg893zaF78hKHLZWsIZCFu6brJXOyroBGaGupD4mhycGljC5/sI2YTx0yZ7
-         ixVH7Czy52J7kbATK/GopvBpB89fhCV+A4Qylcwd/TKRqE2EnkNO7CAm66wW8M4E7HYO
-         Sx7tdVtv46Scjb7GzDPmuqHpjTr2aXZO5YRvuiC/0K3AkPV64Ua1rGIXM6j3pALlt+aM
-         r3KukO21eP7rKsVW5FGVfILVtcQonZYlCSD1873nh/WFrA3kjPL1zs+XIo6dXo4YA4u7
-         KJa2YTZC/09eYDx/2j4Kr9JId/Y+Nxbx2msWObbS8prfQl+INKrJb+xueI2YdV+MukG8
-         xpIg==
-X-Gm-Message-State: APjAAAWquQywR3sbn1HrecoRf4ojIzgspMajdMK+Sk+Bs4uZnkJxM1tl
-        sgwxujlJ0yRha0QL3u+nhalPlQ==
-X-Google-Smtp-Source: APXvYqzBVoCLTy5y8sDlwRR+KqzixXrWEr1pCKahh8mLiK6q7uu5lkPHFmKZntCV76pZaxNU/kaMeQ==
-X-Received: by 2002:a0c:d2d4:: with SMTP id x20mr2950908qvh.227.1553017623464;
-        Tue, 19 Mar 2019 10:47:03 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id l2sm1046205qtc.47.2019.03.19.10.47.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 10:47:03 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 10:46:57 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     pbonzini@redhat.com, ard.biesheuvel@linaro.org, tglx@linutronix.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        oss-drivers@netronome.com
-Subject: Re: [PATCH] locking/static_key: Fix false positive warnings on
- concurrent dec/inc
-Message-ID: <20190319104657.6fa99d82@cakuba.netronome.com>
-In-Reply-To: <20190319121856.GE5996@hirez.programming.kicks-ass.net>
-References: <20190318215814.3724-1-jakub.kicinski@netronome.com>
-        <20190319121856.GE5996@hirez.programming.kicks-ass.net>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3TV5JSMWzDFmGtM2a9PqyZpbM8Cae0apS79wiWWNBuA=;
+        b=LpzB2GYUUg4vvVjEqGZxVxdzny8+ixFOlg0pYC3O5tGlFMC41o+40V0P2MP0l7J9oI
+         eSdNdgMi88W4VpmZCs1jIu4mIMoNQaveKSl+bUJ2efN2koS+hoCXdo/HxH6TQl3Ss5Px
+         hNnYNeiYVnJ7pfe+CW3cXf6s6gxDALKPan7jfAhEOS+VKyimLpDverfBS2zcvpEvA68+
+         o5c6eWWkIjFiWEenLqE7UDWOLH03YDJyUSfSX+TBSBS3p/Hb392Gcewl6wPRLXJFuABA
+         ZbiG+m0sALPRKgt0ydHukBXg4YNJx7FbooJ6thw87nCtWD5fnDYiAYlr6tORUfj2+8tL
+         obvQ==
+X-Gm-Message-State: APjAAAVZ/58O6FftuZHbAwUU06RBGvDLTDhcSPMlOpK1JINGHf8ekaMZ
+        nOVeXwnvr/WwB2mWsZfA46o=
+X-Google-Smtp-Source: APXvYqwHDJ7YG7jNKx+tHayfCaH93EKIvt1NPX/iUHmKCXdnAs6bD1EZDII0MdWTJsBN7A+pOzcaDQ==
+X-Received: by 2002:a25:c9c7:: with SMTP id z190mr2210886ybf.234.1553017649632;
+        Tue, 19 Mar 2019 10:47:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:5a18])
+        by smtp.gmail.com with ESMTPSA id o64sm8805ywb.25.2019.03.19.10.47.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 10:47:28 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 10:47:25 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
+        "Serge E . Hallyn" <serge.hallyn@ubuntu.com>,
+        Michal Hocko <mhocko@suse.cz>, cgroups@vger.kernel.org
+Subject: Re: [PATCH] device_cgroup: fix RCU imbalance in error case
+Message-ID: <20190319174725.GA69236@devbig004.ftw2.facebook.com>
+References: <20190319013659.86199-1-jannh@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319013659.86199-1-jannh@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for looking at the patch!
-
-On Tue, 19 Mar 2019 13:18:56 +0100, Peter Zijlstra wrote:
-> On Mon, Mar 18, 2019 at 02:58:14PM -0700, Jakub Kicinski wrote:
-> > Even though the atomic_dec_and_mutex_lock() in
-> > __static_key_slow_dec_cpuslocked() can never see a negative
-> > value in key->enabled the subsequent sanity check is re-reading
-> > key->enabled, which may have been set to -1 in the meantime by
-> > static_key_slow_inc_cpuslocked().  
+On Tue, Mar 19, 2019 at 02:36:59AM +0100, Jann Horn wrote:
+> When dev_exception_add() returns an error (due to a failed memory
+> allocation), make sure that we move the RCU preemption count back to where
+> it was before we were called. We dropped the RCU read lock inside the loop
+> body, so we can't just "break".
 > 
-> A little extra detail might not hurt, or a diagram or something.
-
-Like this:
-
-                CPU  A                               CPU B
-
- __static_key_slow_dec_cpuslocked():
- static_key_slow_inc_cpuslocked():
-                               # enabled = 1
-        atomic_dec_and_mutex_lock() 
-                               # enabled = 0
-                                              atomic_read() == 0
-                                              atomic_set(-1)
-                               # enabled = -1
-        val = atomic_read() 
-        # Oops - val == -1!
-
-?
-
-The test case is TCP's clean_acked_data_enable() /
-clean_acked_data_disable() as tickled by ktls (net/ktls).
-Which should probably use the delayed version in the first 
-place, hopefully I can get to adding delayed version of 
-static branches and converting at some point..
-
-> > Instead of using -1 as a "enable in progress" constant use
-> > -0xffff, this way we can still treat smaller negative values
-> > as errors.  
+> sparse complains about this, too:
 > 
-> Those offset games always hurt my brain, but see below.
+> $ make -s C=2 security/device_cgroup.o
+> ./include/linux/rcupdate.h:647:9: warning: context imbalance in
+> 'propagate_exception' - unexpected unlock
 > 
-> > Fixes: 4c5ea0a9cd02 ("locking/static_key: Fix concurrent static_key_slow_inc()")
-> > Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > ---
-> >  kernel/jump_label.c | 21 ++++++++++-----------
-> >  1 file changed, 10 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-> > index bad96b476eb6..4a227e70a8f3 100644
-> > --- a/kernel/jump_label.c
-> > +++ b/kernel/jump_label.c
-> > @@ -89,7 +89,7 @@ static void jump_label_update(struct static_key *key);
-> >  int static_key_count(struct static_key *key)
-> >  {
-> >  	/*
-> > -	 * -1 means the first static_key_slow_inc() is in progress.
-> > +	 * -0xffff means the first static_key_slow_inc() is in progress.
-> >  	 *  static_key_enabled() must return true, so return 1 here.
-> >  	 */
-> >  	int n = atomic_read(&key->enabled);
-> > @@ -125,7 +125,10 @@ void static_key_slow_inc_cpuslocked(struct static_key *key)
-> >  
-> >  	jump_label_lock();
-> >  	if (atomic_read(&key->enabled) == 0) {
-> > -		atomic_set(&key->enabled, -1);
-> > +		/* Use a large enough negative number so we can still
-> > +		 * catch underflow bugs in static_key_slow_dec().
-> > +		 */  
-> 
-> Broken comment style.
+> Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Ah, sorry, netdev.
+Applied to cgroup/for-5.1-fixes.
 
-> > +		atomic_set(&key->enabled, -0xffff);
-> >  		jump_label_update(key);
-> >  		/*
-> >  		 * Ensure that if the above cmpxchg loop observes our positive
-> > @@ -158,7 +161,7 @@ void static_key_enable_cpuslocked(struct static_key *key)
-> >  
-> >  	jump_label_lock();
-> >  	if (atomic_read(&key->enabled) == 0) {
-> > -		atomic_set(&key->enabled, -1);
-> > +		atomic_set(&key->enabled, -0xffff);
-> >  		jump_label_update(key);
-> >  		/*
-> >  		 * See static_key_slow_inc().
-> > @@ -208,15 +211,11 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
-> >  {
-> >  	lockdep_assert_cpus_held();
-> >  
-> > -	/*
-> > -	 * The negative count check is valid even when a negative
-> > -	 * key->enabled is in use by static_key_slow_inc(); a
-> > -	 * __static_key_slow_dec() before the first static_key_slow_inc()
-> > -	 * returns is unbalanced, because all other static_key_slow_inc()
-> > -	 * instances block while the update is in progress.
-> > -	 */
-> >  	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
-> > -		WARN(atomic_read(&key->enabled) < 0,
-> > +		int v;
-> > +
-> > +		v = atomic_read(&key->enabled);
-> > +		WARN(v < 0 && v != -0xffff,
-> >  		     "jump label: negative count!\n");
-> >  		return;
-> >  	}  
-> 
-> > Alternatively we could implement atomic_dec_and_mutex_lock_return().  
-> 
-> I think I like that better, something like:
+Thanks.
 
-That indeed looks far cleanest, thanks!
-
-Tested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-
->  kernel/jump_label.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-> index bad96b476eb6..a799b1ac6b2f 100644
-> --- a/kernel/jump_label.c
-> +++ b/kernel/jump_label.c
-> @@ -206,6 +206,8 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
->  					   unsigned long rate_limit,
->  					   struct delayed_work *work)
->  {
-> +	int val;
-> +
->  	lockdep_assert_cpus_held();
->  
->  	/*
-> @@ -215,17 +217,20 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
->  	 * returns is unbalanced, because all other static_key_slow_inc()
->  	 * instances block while the update is in progress.
->  	 */
-> -	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
-> -		WARN(atomic_read(&key->enabled) < 0,
-> -		     "jump label: negative count!\n");
-> +	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-> +	if (val != 1) {
-> +		WARN(val < 0, "jump label: negative count!\n");
->  		return;
->  	}
->  
-> -	if (rate_limit) {
-> -		atomic_inc(&key->enabled);
-> -		schedule_delayed_work(work, rate_limit);
-> -	} else {
-> -		jump_label_update(key);
-> +	jump_label_lock();
-> +	if (atomic_dec_and_test(&key->enabled)) {
-> +		if (rate_limit) {
-> +			atomic_inc(&key->enabled);
-> +			schedule_delayed_work(work, rate_limit);
-> +		} else {
-> +			jump_label_update(key);
-> +		}
->  	}
->  	jump_label_unlock();
->  }
-
+-- 
+tejun
