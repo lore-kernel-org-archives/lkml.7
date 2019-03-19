@@ -2,93 +2,213 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614F9C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B28C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A362075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7667520835
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JqPS57lk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuE54b7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfCSQw4 (ORCPT
+        id S1727508AbfCSQyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:52:56 -0400
-Received: from mout.gmx.net ([212.227.15.18]:33455 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfCSQwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:52:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1553014353;
-        bh=DqiIl/LdOxGWRlLxqdmdgJ/hwY3i58tuTNHAaFlgsVE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=JqPS57lkLHgMXw2JK3iEzipGEtj1WNOiAIPSx+tGHC+1X7vJ2O8bkEuL4VoYoXKHy
-         KahQkfxByVckjYUiBwlcsMSzRgHKZ2IoAdMcrvt8Lc2+asn5ajI9nUIsW1dbV3Y9+H
-         nHtjLfPvKrOcgJ/HdOX5nKIKT2VHY6MsTOyMka0s=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [93.201.42.96] ([93.201.42.96]) by web-mail.gmx.net
- (3c-app-gmx-bs54.server.lan [172.19.170.138]) (via HTTP); Tue, 19 Mar 2019
- 17:52:32 +0100
+        Tue, 19 Mar 2019 12:54:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39055 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCSQyB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:54:01 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t28so22948341qte.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YzAUO7LVnUugKZaOPcx1VJc0nz0jOvjrHkAcAwuRGmA=;
+        b=iuE54b7ZPmA0dTCdFg9XuaI4tfzRB3RNpJ165Fada5NuckwXonTJh3QePk+BHp0LlZ
+         vNdNQbpN1Sz8+tdD95BzCCsC+tzUwpU/awzsmoRxC/LK8VzHngqmU84Oa1HCxwKLBHGl
+         BeEZewD9izD1o8q6STEVvA/RjWHAM3gNGx3a6BJqwFQ3sX8INpzCX4K1d1WvlUyP2Wj5
+         vyvznm4zafK8Zk+nwbIAz3oXMUPbjfColqRvUZU4SHzYochq422wRwXGJ+k7ntLAO7+/
+         kehdWwBUDkk8fRsb0ZIxNvnQ5Up3+XcEaopbBF4R+hL0Viq+cLMRgqjORXvN5tMbfiru
+         grMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YzAUO7LVnUugKZaOPcx1VJc0nz0jOvjrHkAcAwuRGmA=;
+        b=fL3Ehm1h0m/5cNeO4pLrZcRneZbQbIoITQTgWbcUAJmwUM7wBvUYHwdEHrHwHw9LMW
+         eQme9vDbZV0xPBjOMlSdbccVLXo5MrB0Y6SgNNgSR/jrcJjPtArv098pT8PUFPqwfEpl
+         Mp3UNvoM5CHNH8yi1Pm1DgEoxjYKHneGJTGHFt+1JVVdsfpGH62TUM2HlritFZ63w4oV
+         6iet06dg7R88RdVbK2bkbGTO8I6olxkAPeutQyycwzq+TANNxkQmcfnsQnVVmr66hG7G
+         5BaLAur0jNISGD4wCp72/OAHXsWoFtygJlu7p3f+Ih0USrxRCj4LymRSn2XtVPVQUeL2
+         niFg==
+X-Gm-Message-State: APjAAAVtE5ic2GZoiyDOmK2Rqp9e5Td22IlE2JEknCgqjAc/zYXyNxnh
+        im1SP99FLZw8W7cl0BsJs2o=
+X-Google-Smtp-Source: APXvYqzXVwvQy8kQ4ca++NzQeCfqN3BYNnIwnFqmsCyyx8g3bgXysvacDebdmjJO+C4UMFY15B5k2Q==
+X-Received: by 2002:a0c:9319:: with SMTP id d25mr2659181qvd.99.1553014440254;
+        Tue, 19 Mar 2019 09:54:00 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id a20sm3795586qth.88.2019.03.19.09.53.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 09:53:59 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A67CD4039C; Tue, 19 Mar 2019 13:53:56 -0300 (-03)
+Date:   Tue, 19 Mar 2019 13:53:56 -0300
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] perf tools: return errcode in
+ cs_etm__process_auxtrace_info
+Message-ID: <20190319165356.GH3029@kernel.org>
+References: <20190315022649.17848-1-yuehaibing@huawei.com>
+ <20190318171518.GH22548@kernel.org>
+ <CANLsYkzU25wAx0dMQqMVZ2asx+z-taOfffLO7DMd6mkDXc7D9A@mail.gmail.com>
+ <20190319144631.GE3029@kernel.org>
+ <20190319145525.GA7394@xps15>
 MIME-Version: 1.0
-Message-ID: <trinity-2a241119-4398-49c4-bcb6-177d13530d31-1553014352943@3c-app-gmx-bs54>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "CK Hu" <ck.hu@mediatek.com>
-Cc:     "Philipp Zabel" <p.zabel@pengutronix.de>,
-        srv_heupstream@mediatek.com, "David Airlie" <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        =?UTF-8?Q?=22Noralf_Tr=EF=BF=BDnnes=22?= <noralf@tronnes.org>,
-        linux-mediatek@lists.infradead.org,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Aw: Re:  Re:  [PATCH 2/2] drm/mediatek: Add Mediatek framebuffer
- device
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 19 Mar 2019 17:52:32 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <1552965129.7881.5.camel@mtksdaap41>
-References: <20190116013924.11345-1-ck.hu@mediatek.com>
- <20190116013924.11345-2-ck.hu@mediatek.com>
- <trinity-1adab8be-573a-4816-9e9f-feddf07bdcd3-1547734452313@3c-app-gmx-bs28>
- <1547775975.4221.11.camel@mtksdaap41>
- <74eba84d-4686-698a-6100-d72dabd15a21@gmail.com>
- <trinity-1c369adc-b489-43dd-87c9-5b43d49561c5-1547991406711@3c-app-gmx-bs40>
- <1552965129.7881.5.camel@mtksdaap41>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:8XPNGexNPc1QdQhLTIGeEiQce2O1bCcqVPxNcxXagkUvmASK5Oiw6dTFPtfh7QYAu8uAa
- qfsHyqCx4iur/eT09D0hBEZ3Aw7dxafILdrijRWKH9Ui2+dl/lLym76zitAIOGs0vk4SycjPFVN+
- ool1N1yvIXSsAeAu+RzVkONmAAdE8Xx7Odyw1GyWA8h2jfiodoBvNsel/XBZXielriSHUW2pxEfz
- kvnN5A9weufmMoasXxKf6whIZK4BNTNgoxC+n6cm6TNCReOSKEAqZsxVUn2tpNRS691u3sTqtdGQ
- rU=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oskGQDYt2P8=:2SCp/GoCTN4c8kPdji8v6U
- ekSN4kWfPj+hCHSAkgiyESghTg0EHevJC+88wpBqNRC4cSpCos6Mfw4fswnZUJZ/CDSccaXNI
- oAJQ7xLlXLw3/PjVNMb+OankEdzlq86gyQm6jgMhlgEiMi94Wuz7P7Cc/HtvQGTJsLkJvTKc7
- 55W8fC/lYv18XA8v3qKOJDqS9OTNEjoBOuSa91kVhGNNSkP6FQKcuRNVF/6WOq/MV4MNdiS7c
- 0G11nwmQP+NCktVcdkSo+kShCVlreTHLdjm9zHrDQi9nrNzfQePAUvy8zGbt/MTOce1RiqH6z
- Ta3I44plGcusTFiXZd4uNJGN9Ihv51egmkK09ZQnD/A5B7WXe08d8nE76qrcspKTuslsSHTnH
- hAaAn+o2eRb2HuaQAHDiIAu4hmNbK+GyHbgYj0/rASlosIvl0AUTL8oLQ72juB6p8PMVi7rFG
- 2S2XLlZRFETop2PBaJQ3rHI1nvK/qCAOaqVD4uy2s9m9cG5FHoSk68OQFLaJtEVl8W+xNSxO2
- 8GsYf4z/K8uErYHo7O+6TfdqpOYZ4pj34t3ZHIdUJO3G5xuAwPv/pcWPA6oXhlJiyhw1tHBN1
- AKU6tQlDLn3I0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319145525.GA7394@xps15>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Tue, Mar 19, 2019 at 08:55:25AM -0600, Mathieu Poirier escreveu:
+> On Tue, Mar 19, 2019 at 11:46:31AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Mar 19, 2019 at 08:38:32AM -0600, Mathieu Poirier escreveu:
+> > > On Mon, 18 Mar 2019 at 11:15, Arnaldo Carvalho de Melo
+> > > <arnaldo.melo@gmail.com> wrote:
+> > > >
+> > > > Em Fri, Mar 15, 2019 at 10:26:49AM +0800, Yue Haibing escreveu:
+> > > > > From: YueHaibing <yuehaibing@huawei.com>
+> > > > >
+> > > > > 'err' is set in err path, but it's not returned to callers.
+> > > > > Also fix a pass zero to PTR_ERR issue.
+> > > >
+> > > > Next time please submit two patches, one for the PTR_ERR and another for
+> > > > not throwing away the err = -E!INVAL and returning just -EINVAL, I'm
+> > > > doing it this time.
+> > > >
+> > > 
+> > > Please hold off on that - I've asked for other modifications to be
+> > > done on this patch.
+> > 
+> > Do you really think that it is necessary to hold? The fixes are trivial
+> > and I already have them split and applied, see them below, I think
+> > whatever other changes can be done in further patches, no?
+> 
+> Proceeding with the patches below would created two new bugs, hence asking Yue
+> for modifications.
 
-i try to get hdmi running on bananapi-r2 with 5.1 but also without CK Hu's frambuffer-Patch i get no x-server working
+Ok, I'll take your word on it then, dropping the patches.
 
-my codebase: https://github.com/frank-w/BPI-R2-4.14/commits/5.1-hdmi
-reused some Patches working on 5.0 (here X-server is working, but not fbcon)
+- Arnaldo
+ 
+> Mathieu  
+> 
+> > 
+> > - Arnaldo
+> > 
+> > From 6c5c248935a4da12a582b1518a38ec35044833ee Mon Sep 17 00:00:00 2001
+> > From: YueHaibing <yuehaibing@huawei.com>
+> > Date: Fri, 15 Mar 2019 10:26:49 +0800
+> > Subject: [PATCH 24/42] perf cs-etm: return errcode in
+> >  cs_etm__process_auxtrace_info()
+> > 
+> > 'err' is set in err path, but it's not returned to callers. Don't always return
+> > -EINVAL, return err.
+> > 
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> > Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
+> > [ split from a larger patch ]
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/cs-etm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 110804936fc3..2257ac4dbff2 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -2023,5 +2023,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >  err_free_hdr:
+> >  	zfree(&hdr);
+> >  
+> > -	return -EINVAL;
+> > +	return err;
+> >  }
+> > -- 
+> > 2.20.1
+> > 
+> > From 4ab1e71e45a91220bdca7fc3b79c600df81d9234 Mon Sep 17 00:00:00 2001
+> > From: YueHaibing <yuehaibing@huawei.com>
+> > Date: Fri, 15 Mar 2019 10:26:49 +0800
+> > Subject: [PATCH 25/42] perf cs-etm: Remove errnoeous ERR_PTR() usage in in
+> >  cs_etm__process_auxtrace_info
+> > 
+> > intlist__findnew() doesn't uses ERR_PTR() as a return mechanism so its callers
+> > shouldn't try to extract the error using PTR_ERR(ret-from-intlist__findnew()),
+> > make cs_etm__process_auxtrace_info9) return -ENOMEM instead.
+> > 
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> > Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
+> > [ split from a larger patch ]
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/cs-etm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 2257ac4dbff2..111f33cd1204 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -1908,7 +1908,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >  
+> >  		/* Something went wrong, no need to continue */
+> >  		if (!inode) {
+> > -			err = PTR_ERR(inode);
+> > +			err = -ENOMEM;
+> >  			goto err_free_metadata;
+> >  		}
+> >  
+> > -- 
+> > 2.20.1
+> > 
 
-WARNING: CPU: 2 PID: 895 at drivers/gpu/drm/drm_atomic_helper.c:1430 drm_atomic_helper_wait_for_vblanks.part.1+0x2a4/0x2a8
+-- 
 
-any hint how to fix this? if needed i can send full bootlog (with drm.debug=7)
-
-regards Frank
+- Arnaldo
