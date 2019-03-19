@@ -2,87 +2,180 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E0DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69082C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C04A2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD0720850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfCSPK1 (ORCPT
+        id S1727184AbfCSPMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:10:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39802 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSPKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:10:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i17so4142018pfo.6;
-        Tue, 19 Mar 2019 08:10:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qWVbPbIJHWRu+0d/VAgqUPk+oUx6QNArMt1VL+TqPEc=;
-        b=QWczDsYg5YdOTZ7vgl+ku1oNqNPZtnT7+7+xfZryztnx0fJuqiFUqbqYK4pdKv8fFi
-         LGvRf3sx+5mu1TPoYoTC3T7PnbILP1ssW7fJi3I7fOWf6KAY9yjLPiNfYzYO2UP/I8fa
-         NQYDGbu8uYv/PGq42J8dRawyf9/cBkomA6PM4qnAwbL7sleZzd8ak12C7bcx6gOaZRR6
-         7vLS4/aCOnvOUcqFTaQhDYBwXkiYsfRuqpoGEPHYMYnyUVyDBzdqOBwXQpsABYYaj2BI
-         MoYwVPUPS2+Xg6ViJGkV+BtLh4QQ1kcSgOgUOWAln3UAEBK84oxROnblKMD9y/CU+kND
-         38MA==
-X-Gm-Message-State: APjAAAVV5pjFPU3g2rG4/riLvWjPHm30Q1KbuLGz5wpKhY1lgjInOlcw
-        YJriwLlIoKWSMrSh4yV7oLY=
-X-Google-Smtp-Source: APXvYqytU74jOSTCI8MxCdE/xl60VfX4LzCCK8VWZ2KsqANhbFrzY//n7VvW5R9j6rZT54z5azrn7g==
-X-Received: by 2002:aa7:8082:: with SMTP id v2mr2659054pff.164.1553008224410;
-        Tue, 19 Mar 2019 08:10:24 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id h9sm25950092pgk.22.2019.03.19.08.10.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 08:10:23 -0700 (PDT)
-Message-ID: <1553008222.152266.43.camel@acm.org>
-Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     "jianchao.wang" <jianchao.w.wang@oracle.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
-        sagi@grimberg.me, josef@toxicpanda.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com, hare@suse.de, jthumshirn@suse.de, hch@lst.de
-Date:   Tue, 19 Mar 2019 08:10:22 -0700
-In-Reply-To: <3cd58454-eda3-de9a-0eed-b6a7edbce28f@oracle.com>
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
-         <1552930085.152266.36.camel@acm.org>
-         <3cd58454-eda3-de9a-0eed-b6a7edbce28f@oracle.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
+        Tue, 19 Mar 2019 11:12:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43028 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726661AbfCSPMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:12:24 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 00CBACE3CBBB3A038346;
+        Tue, 19 Mar 2019 23:12:19 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 23:12:16 +0800
+Subject: Re: [PATCH] perf tools: return errcode in
+ cs_etm__process_auxtrace_info
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+References: <20190315022649.17848-1-yuehaibing@huawei.com>
+ <20190318171518.GH22548@kernel.org>
+ <CANLsYkzU25wAx0dMQqMVZ2asx+z-taOfffLO7DMd6mkDXc7D9A@mail.gmail.com>
+ <20190319144631.GE3029@kernel.org> <20190319145525.GA7394@xps15>
+CC:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <a006e535-67a3-073b-b556-b6d3a4c31749@huawei.com>
+Date:   Tue, 19 Mar 2019 23:12:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190319145525.GA7394@xps15>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 09:25 +-0800, jianchao.wang wrote:
-+AD4 Do you mean this patch from Jens ?
-+AD4 https://marc.info/?l+AD0-linux-block+ACY-m+AD0-154534605914798+ACY-w+AD0-2
-+AD4 
-+AD4 +-	rcu+AF8-read+AF8-lock()+ADs
-+AD4  	sbitmap+AF8-for+AF8-each+AF8-set(+ACY-bt-+AD4-sb, bt+AF8-iter, +ACY-iter+AF8-data)+ADs
-+AD4 +-	rcu+AF8-read+AF8-unlock()+ADs
-+AD4 
-+AD4 The busy+AF8-iter+AF8-fn could sleep for nvme
-+AD4 blk+AF8-mq+AF8-check+AF8-expired
-+AD4   -+AD4 blk+AF8-mq+AF8-rq+AF8-timed+AF8-out
-+AD4     -+AD4 q-+AD4-mq+AF8-ops-+AD4-timeout
-+AD4        nvme+AF8-timeout
-+AD4          -+AD4 nvme+AF8-dev+AF8-disable
-+AD4             -+AD4 mutex+AF8-lock dev-+AD4-shutdown+AF8-lock
 
-Hi Jianchao,
+On 2019/3/19 22:55, Mathieu Poirier wrote:
+> On Tue, Mar 19, 2019 at 11:46:31AM -0300, Arnaldo Carvalho de Melo wrote:
+>> Em Tue, Mar 19, 2019 at 08:38:32AM -0600, Mathieu Poirier escreveu:
+>>> On Mon, 18 Mar 2019 at 11:15, Arnaldo Carvalho de Melo
+>>> <arnaldo.melo@gmail.com> wrote:
+>>>>
+>>>> Em Fri, Mar 15, 2019 at 10:26:49AM +0800, Yue Haibing escreveu:
+>>>>> From: YueHaibing <yuehaibing@huawei.com>
+>>>>>
+>>>>> 'err' is set in err path, but it's not returned to callers.
+>>>>> Also fix a pass zero to PTR_ERR issue.
+>>>>
+>>>> Next time please submit two patches, one for the PTR_ERR and another for
+>>>> not throwing away the err = -E!INVAL and returning just -EINVAL, I'm
+>>>> doing it this time.
+>>>>
+>>>
+>>> Please hold off on that - I've asked for other modifications to be
+>>> done on this patch.
+>>
+>> Do you really think that it is necessary to hold? The fixes are trivial
+>> and I already have them split and applied, see them below, I think
+>> whatever other changes can be done in further patches, no?
+> 
+> Proceeding with the patches below would created two new bugs, hence asking Yue
+> for modifications.
 
-I think that's an additional reason to rewrite NVMe error handling ...
 
-Best regards,
+Sorry for late, then I can send a new patch to fix the two new bugs.
 
-Bart.
+> 
+> Mathieu  
+> 
+>>
+>> - Arnaldo
+>>
+>> From 6c5c248935a4da12a582b1518a38ec35044833ee Mon Sep 17 00:00:00 2001
+>> From: YueHaibing <yuehaibing@huawei.com>
+>> Date: Fri, 15 Mar 2019 10:26:49 +0800
+>> Subject: [PATCH 24/42] perf cs-etm: return errcode in
+>>  cs_etm__process_auxtrace_info()
+>>
+>> 'err' is set in err path, but it's not returned to callers. Don't always return
+>> -EINVAL, return err.
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+>> Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
+>> [ split from a larger patch ]
+>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>> ---
+>>  tools/perf/util/cs-etm.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>> index 110804936fc3..2257ac4dbff2 100644
+>> --- a/tools/perf/util/cs-etm.c
+>> +++ b/tools/perf/util/cs-etm.c
+>> @@ -2023,5 +2023,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>>  err_free_hdr:
+>>  	zfree(&hdr);
+>>  
+>> -	return -EINVAL;
+>> +	return err;
+>>  }
+>> -- 
+>> 2.20.1
+>>
+>> From 4ab1e71e45a91220bdca7fc3b79c600df81d9234 Mon Sep 17 00:00:00 2001
+>> From: YueHaibing <yuehaibing@huawei.com>
+>> Date: Fri, 15 Mar 2019 10:26:49 +0800
+>> Subject: [PATCH 25/42] perf cs-etm: Remove errnoeous ERR_PTR() usage in in
+>>  cs_etm__process_auxtrace_info
+>>
+>> intlist__findnew() doesn't uses ERR_PTR() as a return mechanism so its callers
+>> shouldn't try to extract the error using PTR_ERR(ret-from-intlist__findnew()),
+>> make cs_etm__process_auxtrace_info9) return -ENOMEM instead.
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+>> Link: http://lkml.kernel.org/r/20190315022649.17848-1-yuehaibing@huawei.com
+>> [ split from a larger patch ]
+>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>> ---
+>>  tools/perf/util/cs-etm.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>> index 2257ac4dbff2..111f33cd1204 100644
+>> --- a/tools/perf/util/cs-etm.c
+>> +++ b/tools/perf/util/cs-etm.c
+>> @@ -1908,7 +1908,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>>  
+>>  		/* Something went wrong, no need to continue */
+>>  		if (!inode) {
+>> -			err = PTR_ERR(inode);
+>> +			err = -ENOMEM;
+>>  			goto err_free_metadata;
+>>  		}
+>>  
+>> -- 
+>> 2.20.1
+>>
+> 
+> .
+> 
+
