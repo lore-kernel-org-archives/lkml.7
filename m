@@ -2,110 +2,91 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A34C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5905DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF612083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FA42075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 19:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CE2GKuJp"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Pzk0QqxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfCSTWf (ORCPT
+        id S1727508AbfCSTWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 15:22:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38019 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfCSTWf (ORCPT
+        Tue, 19 Mar 2019 15:22:46 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43320 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCSTWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 15:22:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v1so9817708pgi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:22:35 -0700 (PDT)
+        Tue, 19 Mar 2019 15:22:46 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 67so16902017oif.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 12:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LsViNz3EuXSVXAyDl+lEov/0/hqmOHSRj7WYM60oPCc=;
-        b=CE2GKuJpTbcy2TUHrTiiun8dDGL1rW45+DZMmrEGD4r6ZJgZlAa36cOuBA2NbzQ9L3
-         S42b64WR+Z5PF5A0L09qsSTSiTJBHaFINH+sFjo1+mcDWMrNdfF1hJIzEwNyxL+QLbJy
-         X5dyz8pIrBH5e72nhnIMr0CJsdm7xf9Qj+XyHH16T2rR3xh0GIkllGo0s8k8zzAk9CmY
-         EszVjc8X2HTXOJhUrWDcn3HjZwX1iDftEqOayG7kXVaeLnTCCZ1y1xtU9uc/XWLp495+
-         Vu+CzxgpKsSmuRdnzra6ClSuVmRW944auQDAEN4p8Com+YxwrwjmZa014ddbKkiQ6ZOR
-         vM7w==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QpOCzTu2ICVtHjUFEypqr/tEcKPKIGlSqe0MmxpE9Yg=;
+        b=Pzk0QqxM5xbc/a8IC7pU41NatT+aPUeUl3rePDdJK+m7UD3/tB8HFkBLxNXfkt3AAN
+         TbnoBuYCiERFJrxLLWciXc88zLXiJnY7yrOgbbx7i9b/dHplqs7Xsz3pS2wlSmyIYpQE
+         zriWAJwh+R25ppQ9fMaMyInoKcBpgWpfIAspaSw3Ty3gWpSiFPi4xVP4+6l91TK95blQ
+         tTw/qFw3BKf30bnhH7EMHQtEd83Kaw3/QZNBZscXR8LJeHlVc8c0dUK6/y4FonxEaj4e
+         EH/Qe/YKs6sCxH+/liVJzSOa+Q04SAizNkfKDkROU28hYcCxlxRkXGlaafGjH4wh/WKS
+         J7vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LsViNz3EuXSVXAyDl+lEov/0/hqmOHSRj7WYM60oPCc=;
-        b=AzC/jfx3yW4yFgZXYpBE6NQlZCAWZ2mb0W43IfwuIRjDqNRuW9bVi6KhPwMZQjRG4h
-         vyUVjpMqfqSnrEONs5thIVKhg0FQBeZxdWsQOrxJLJvNQQ4B/vSCZNmY6dZXakGKBQLn
-         NQufYygTnTEJhGlGOujpLdoAdqhb6YV6PASscunbXCfIIkUJ+3lrGINzbbh2l4SqWqS4
-         SHVMxMkt3z1EIQ39LqiciRjSfElBcsk4SSxMw8/jGsEN3EnRCw4R2c6c17uiY7+ks88i
-         fwX5AhpQyOqbuAe0pQrTftjQOOuxa5kKxFsOW+XaIdc4F8bizKXrUs00dQT9FVlghbmz
-         hfTQ==
-X-Gm-Message-State: APjAAAW2aosB4YUljUP6SX2GbPkiHcVx5bZSBzkDY65mbTNN0fE1kCaP
-        TX9Xk+/Oveb1cOqdO0jLZLvWVQ==
-X-Google-Smtp-Source: APXvYqxgyCmovfKD9DGAqfbwODVoI0aQiskbj5d5lqwiTMoYBhWKpgA8ZFbTlU+vA314q8BQ2Iymyw==
-X-Received: by 2002:a17:902:8b83:: with SMTP id ay3mr3754394plb.1.1553023354294;
-        Tue, 19 Mar 2019 12:22:34 -0700 (PDT)
-Received: from [100.112.89.103] ([104.133.8.103])
-        by smtp.gmail.com with ESMTPSA id m13sm26742042pff.175.2019.03.19.12.22.32
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 19 Mar 2019 12:22:33 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 12:21:51 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Oscar Salvador <osalvador@suse.de>
-cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        anshuman.khandual@arm.com, william.kucharski@oracle.com,
-        hughd@google.com, jack@suse.cz, linux-mm@kvack.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QpOCzTu2ICVtHjUFEypqr/tEcKPKIGlSqe0MmxpE9Yg=;
+        b=Bv1+iehKfkkChrc2Ey1+DNkrCi8kakgHRL39OwM5Zn5RdW05Himd2ZNovj9j/J/adk
+         vu7P9esFmefWo/ePX4HdF2dbOhN2dLH0K0fzW/79rajkfljTTNdrhteHpy4aGf87WsIg
+         kofJPYem5KROcMwIcCxvXkfkjo4on/6CoCeaNS9JuJqLHnWALxU3B7c6YssHjVJiz7UQ
+         To4Ew3hA7mjLIGuMiaqrnvhgkja1IJvDhXPULUDcJd3dWyb2bAz4bOks6osgyyUxpF8b
+         kdsisLiNpgaQiA33GC+NRh5+YiMdRXcF8ED+6jqxLk/ZjO/HxFdZ/IboG9st7niotVuw
+         HTsg==
+X-Gm-Message-State: APjAAAUo708Trl2GMIfUpE0lQQZvyTf/y42nSaazKZ0VIMZ1X/3QksyA
+        xwWRqcpZsHoj/n6iBri4O9U39Q==
+X-Google-Smtp-Source: APXvYqzgbHmdlYs+kBrRHpGuP7/ST9wj2DrM/keeIu/kARVmD3cjJb3V4lbYhSxLlV5BPvvDBpcXRQ==
+X-Received: by 2002:aca:efd4:: with SMTP id n203mr2554789oih.7.1553023364763;
+        Tue, 19 Mar 2019 12:22:44 -0700 (PDT)
+Received: from ziepe.ca (ip-198-214-84-236.utguest.org. [198.214.84.236])
+        by smtp.gmail.com with ESMTPSA id b130sm5678846oif.54.2019.03.19.12.22.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 12:22:43 -0700 (PDT)
+Received: from jgg by LT-JGG-7470.mtl.com with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h6KJv-0000zA-4H; Tue, 19 Mar 2019 16:22:43 -0300
+Date:   Tue, 19 Mar 2019 16:22:43 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jeff Xie <chongguiguzi@gmail.com>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        dledford@redhat.com, nux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: Fix __dump_page when mapping->host is not set
-In-Reply-To: <20190318072931.29094-1-osalvador@suse.de>
-Message-ID: <alpine.LSU.2.11.1903191215190.1113@eggly.anvils>
-References: <20190318072931.29094-1-osalvador@suse.de>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+Subject: Re: [PATCH] infiniband:qplib_fp:move spin_lock_bh to spin_lock in
+ tasklet
+Message-ID: <20190319192242.GA3773@ziepe.ca>
+References: <1553013397-29263-1-git-send-email-chongguiguzi@gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553013397-29263-1-git-send-email-chongguiguzi@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019, Oscar Salvador wrote:
-
-> Swap mapping->host is NULL, so let us protect __dump_page() for such cases.
-
-Thanks :)
-
+On Wed, Mar 20, 2019 at 12:36:37AM +0800, Jeff Xie wrote:
+> It is unnecessary to call spin_lock_bh in a tasklet.
 > 
-> Fixes: 1c6fb1d89e73c ("mm: print more information about mapping in __dump_page")
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: stable@vger.kernel.org
-
+> Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
 > ---
->  mm/debug.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/debug.c b/mm/debug.c
-> index c0b31b6c3877..7759f12a8fbb 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -79,7 +79,7 @@ void __dump_page(struct page *page, const char *reason)
->  		pr_warn("ksm ");
->  	else if (mapping) {
->  		pr_warn("%ps ", mapping->a_ops);
-> -		if (mapping->host->i_dentry.first) {
-> +		if (mapping->host && mapping->host->i_dentry.first) {
->  			struct dentry *dentry;
->  			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
->  			pr_warn("name:\"%pd\" ", dentry);
-> -- 
-> 2.13.7
+>  drivers/infiniband/hw/bnxt_re/qplib_fp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+I'm curious, how did you prove this was always in a tasklet?
+
+Jason
