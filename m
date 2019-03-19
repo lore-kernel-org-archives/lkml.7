@@ -3,139 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B28C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA1C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC43A20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F310720857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 10:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfCSKyD convert rfc822-to-8bit (ORCPT
+        id S1727265AbfCSK4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 06:54:03 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:37116 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfCSKyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 06:54:03 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id E361D14CEB; Tue, 19 Mar 2019 10:54:00 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
-References: <20190226170710.12709-1-mans@mansr.com>
-        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
-        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
-        <20190319102840.GI6124@localhost>
-Date:   Tue, 19 Mar 2019 10:54:00 +0000
-In-Reply-To: <20190319102840.GI6124@localhost> (Johan Hovold's message of
-        "Tue, 19 Mar 2019 11:28:40 +0100")
-Message-ID: <yw1xd0mn16ev.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Tue, 19 Mar 2019 06:56:39 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:39525 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfCSK4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 06:56:39 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2JAuPJR072932;
+        Tue, 19 Mar 2019 19:56:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Tue, 19 Mar 2019 19:56:25 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126065253096.bbtec.net [126.65.253.96])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2JAuIZn072901
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 19 Mar 2019 19:56:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: mount.nfs: Protocol error after upgrade to linux/master
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190315110555.0807d015@cakuba.netronome.com>
+ <20190315120105.5541ad46@cakuba.netronome.com>
+ <20190315165440.53b9db3c@cakuba.netronome.com>
+ <CAGXu5jKHRPuaALQcPXvpDeuVgZR+EeRqo9Qj4j3kYatb3HUSSA@mail.gmail.com>
+ <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
+ <f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp>
+ <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp>
+Date:   Tue, 19 Mar 2019 19:56:15 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johan Hovold <johan@kernel.org> writes:
+Since Kees Cook seems to be busy now, here is my version...
 
-> On Wed, Feb 27, 2019 at 02:32:58PM +0000, Måns Rullgård wrote:
->> Johan Hovold <johan@kernel.org> writes:
->> 
->> > Adding Bjørn.
->> >
->> > On Wed, Feb 27, 2019 at 11:57:16AM +0000, Måns Rullgård wrote:
->> >> Johan Hovold <johan@kernel.org> writes:
->> >> 
->> >> > On Tue, Feb 26, 2019 at 05:07:10PM +0000, Mans Rullgard wrote:
->> >> >> The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
->> >> >> of which are serial ports.  The fifth is a network interface supported
->> >> >> by the qmi-wwan driver.  Furthermore, the serial ports do not support
->> >> >> modem control signals.  Add driver_info flags to reflect this.
->> >> >> 
->> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> >> >> ---
->> >> >>  drivers/usb/serial/option.c | 3 ++-
->> >> >>  1 file changed, 2 insertions(+), 1 deletion(-)
->> >> >> 
->> >> >> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
->> >> >> index fb544340888b..af4cbfecc3ff 100644
->> >> >> --- a/drivers/usb/serial/option.c
->> >> >> +++ b/drivers/usb/serial/option.c
->> >> >> @@ -1066,7 +1066,8 @@ static const struct usb_device_id option_ids[] = {
->> >> >>  	  .driver_info = RSVD(3) },
->> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
->> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
->> >> >> -	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
->> >> >> +	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
->> >> >> +	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
->> >> >>  	/* Quectel products using Qualcomm vendor ID */
->> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
->> >> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
->> >> >
->> >> > Could you please provide the output of usb-devices (or lsusb -v) for
->> >> > this device?
->> >> 
->> >> lsusb -v:
->> >> [...]
->> 
->> > So the patch looks fine to me. The fifth interface is QMI, but hasn't
->> > been available for use until now then, and this seems to have been the
->> > vendors idea from the start:
->> >
->> > 	http://www.microchip.ua/simcom/WCDMA/APPNOTES/SIMCom_3G_Linux_driver_Application%20Note_V1.00.pdf
->> 
->> That document predates the qmi-wwan driver in the kernel.  Note that
->> this driver has an ID table entry for interface 4 of this device.  Right
->> now, whichever driver is probed first claims that interface.  I haven't
->> actually tried using the QMI interface, though.
->
-> I didn't say it was correct, just that the vendor proposed binding to it
-> anyway.
->
->> > And you're seeing errors when opening ports 0-3 due to the DTR calls
->> > which I guess no one noticed or cared about before?
->> 
->> Right, some userspace tools complain about this.
->
-> Hmm. You shouldn't see any errors on open (they're not even logged), but
-> I guess your user space tools complains on receiving -EPROTO instead of
-> -EINVAL when trying to manage these signals directly?
+From 885553e4793d9af2d4e9e99c7d137b0ec7b5f8ad Mon Sep 17 00:00:00 2001
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date: Tue, 19 Mar 2019 19:52:31 +0900
+Subject: [PATCH] LSM: Revive CONFIG_DEFAULT_SECURITY_* for "make oldconfig"
 
-Yes, one specific case is pyserial.  On open, it attempts to set those
-signals and, depending on the error returned, either aborts or marks
-them as unavailable.
+Commit 70b62c25665f636c ("LoadPin: Initialize as ordered LSM") removed
+CONFIG_DEFAULT_SECURITY_{SELINUX,SMACK,TOMOYO,APPARMOR,DAC} from
+security/Kconfig and changed CONFIG_LSM to provide a fixed ordering as a
+default value. That commit expected that existing users (upgrading from
+Linux 5.0 and earlier) will edit CONFIG_LSM value in accordance with
+their CONFIG_DEFAULT_SECURITY_* choice in their old kernel configs. But
+since users might forget to edit CONFIG_LSM value, this patch revives
+the choice (only for providing the default value for CONFIG_LSM) in order
+to make sure that CONFIG_LSM reflects CONFIG_DEFAULT_SECURITY_* from their
+old kernel configs.
 
->> > Before you sent me the lsusb I searched for it and came across the below
->> > thread where Bjørn's having a go at SIMCom. In it there's output from a
->> > second device using the same id but with entirely different descriptors.
->> >
->> > 	https://forum.openwrt.org/t/lte-wireless-module-support-by-openwrt-led-on-tplink/13586?page=3
->> >
->> > If this is a common theme with this vendor we may need to be extra
->> > careful when making changes.
->> 
->> Isn't this a common theme with most USB vendors, especially wireless things?
->> 
->> Regardless, setting the NCTRL flag should be harmless.
->
-> Well, there are devices that depend on getting these requests, at least
-> for the QMI interface. But we can always revert if anyone complains.
+Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ security/Kconfig | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-The QMI interface doesn't even pretend to be a uart.  The other ones do,
-but there isn't actually any real uart behind them.  For instance, it
-doesn't matter what baud rate one sets.
-
-> Now applied, thanks.
-
-Thanks.
-
+diff --git a/security/Kconfig b/security/Kconfig
+index 1d6463f..743e594 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -239,9 +239,43 @@ source "security/safesetid/Kconfig"
+ 
+ source "security/integrity/Kconfig"
+ 
++choice
++	prompt "Default security module [superseded by 'Ordered list of enabled LSMs' below]"
++	default DEFAULT_SECURITY_SELINUX if SECURITY_SELINUX
++	default DEFAULT_SECURITY_SMACK if SECURITY_SMACK
++	default DEFAULT_SECURITY_TOMOYO if SECURITY_TOMOYO
++	default DEFAULT_SECURITY_APPARMOR if SECURITY_APPARMOR
++	default DEFAULT_SECURITY_DAC
++
++	help
++	  This choice is there only for converting CONFIG_DEFAULT_SECURITY in old
++	  kernel config to CONFIG_LSM in new kernel config. Don't change this choice
++	  unless you are creating a fresh kernel config, for this choice will be
++	  ignored after CONFIG_LSM is once defined.
++
++	config DEFAULT_SECURITY_SELINUX
++		bool "SELinux" if SECURITY_SELINUX=y
++
++	config DEFAULT_SECURITY_SMACK
++		bool "Simplified Mandatory Access Control" if SECURITY_SMACK=y
++
++	config DEFAULT_SECURITY_TOMOYO
++		bool "TOMOYO" if SECURITY_TOMOYO=y
++
++	config DEFAULT_SECURITY_APPARMOR
++		bool "AppArmor" if SECURITY_APPARMOR=y
++	config DEFAULT_SECURITY_DAC
++		bool "Unix Discretionary Access Controls"
++
++endchoice
++
+ config LSM
+ 	string "Ordered list of enabled LSMs"
+-	default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
++	default "yama,loadpin,safesetid,integrity,selinux" if DEFAULT_SECURITY_SELINUX
++	default "yama,loadpin,safesetid,integrity,smack" if DEFAULT_SECURITY_SMACK
++	default "yama,loadpin,safesetid,integrity,tomoyo" if DEFAULT_SECURITY_TOMOYO
++	default "yama,loadpin,safesetid,integrity,apparmor" if DEFAULT_SECURITY_APPARMOR
++	default "yama,loadpin,safesetid,integrity"
+ 	help
+ 	  A comma-separated list of LSMs, in initialization order.
+ 	  Any LSMs left off this list will be ignored. This can be
 -- 
-Måns Rullgård
+1.8.3.1
+
+
