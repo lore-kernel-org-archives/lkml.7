@@ -2,472 +2,213 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD7C10F0D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9062CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E654213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AC420857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="PndsmpbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfCSLoZ convert rfc822-to-8bit (ORCPT
+        id S1727400AbfCSLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:44:25 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60808 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfCSLoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:44:25 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1h6DAJ-00022d-Ap; Tue, 19 Mar 2019 12:44:19 +0100
-Date:   Tue, 19 Mar 2019 12:44:19 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: [PATCH v2] rcu: Allow to eliminate softirq processing from rcutree
-Message-ID: <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
-References: <20190315111130.4902-1-bigeasy@linutronix.de>
- <20190318022434.GE4102@linux.ibm.com>
+        Tue, 19 Mar 2019 07:45:13 -0400
+Received: from mail-eopbgr1310071.outbound.protection.outlook.com ([40.107.131.71]:6276
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726002AbfCSLpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aJGKjeDfkxq63qK6+Utz9cs+S1CRCPma+t2/scCTmUM=;
+ b=PndsmpbGeAJGs2qLGVxDS0BCHh+ll/QDZsOEM6RTPEJoab/5OSQ5Wq9DezzziQO/CpHeFAKp9bax/i4gOesyfzIw4rj32v5czpp0i3Tg0gp8iEXgG7LhHf54tLPsTMB4szpAb5eVVXQoY5g6ZsEidLonwcbNqP92+eR2INj/5Ag=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB2700.apcprd02.prod.outlook.com (20.177.85.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Tue, 19 Mar 2019 11:45:03 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
+ 11:45:03 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
+Thread-Topic: [External] Re: mm/cma.c: High latency for cma allocation
+Thread-Index: AQHU3YpG7XMhet9mv0+1ZFJR3Y1R16YRXCGAgAACGm2AAAebAIAABP0wgAAIBgCAAU6K1oAAEw1b
+Date:   Tue, 19 Mar 2019 11:45:03 +0000
+Message-ID: <SG2PR02MB30981381635A6BC3783D42CDE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098E44824F5AA69BC04F935E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190318130757.GG8924@dhcp22.suse.cz>
+ <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190318134242.GI8924@dhcp22.suse.cz>
+ <SG2PR02MB30986F43403B92F31499E42AE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190318142916.GK8924@dhcp22.suse.cz>,<SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
+In-Reply-To: <SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f8d42a61-6cb7-449f-521a-08d6ac605393
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2700;
+x-ms-traffictypediagnostic: SG2PR02MB2700:|SG2PR02MB2700:
+x-microsoft-antispam-prvs: <SG2PR02MB2700F4825851954D5F391649E8400@SG2PR02MB2700.apcprd02.prod.outlook.com>
+x-forefront-prvs: 0981815F2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(346002)(39840400004)(376002)(189003)(199004)(229853002)(66066001)(6436002)(9686003)(52536014)(81166006)(81156014)(8936002)(8676002)(68736007)(5024004)(53936002)(55016002)(478600001)(3846002)(14444005)(14454004)(2940100002)(256004)(86362001)(6116002)(6916009)(99286004)(97736004)(106356001)(5660300002)(486006)(11346002)(7696005)(25786009)(105586002)(446003)(476003)(186003)(102836004)(6246003)(76176011)(6506007)(71190400001)(44832011)(53546011)(55236004)(74316002)(93156006)(305945005)(4326008)(316002)(93886005)(54906003)(33656002)(7736002)(2906002)(26005)(78486014)(66574012)(71200400001)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2700;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vTp4PyWNK5Q4wTO/soaConbGoaqij8SazmSblTSnnbfbYJrQ9M/oQBP77JgFkvCse9S1RoXj7ZaCqZSpaUCJYaMcbEHQ+DTZQjhoZxSDMigVv7NGs5EKuXc4VD5yXdTAxml3SvS05OzWuGjt6wSgsbct4ewkIvP2Zh4uKUIwquyPuIYhZ+2tOptY9yYepUSx2WZvzNJC4YctEhSd6pZJBuYEBRe7Tw1507eH++fjoPBne57GS1dGaEEXzqcXIIW+PzHsg4LIZgc/4X/9SHl470Zl5n+DsgjYZ4XLmCDcJ1nI86B8Sn1MLKqDcQqS0gfGIsxF5hgcszXSd+aMc4Xj4xNy8zPDo0bCiYnwnReDdv0U/uDKr+bDIvjAvJr3ywD2KRqTwLj4h0p+BUx5lIiXj1OO4R1qldwnQi5jrz+GUe4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190318022434.GE4102@linux.ibm.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8d42a61-6cb7-449f-521a-08d6ac605393
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 11:45:03.6814
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 
-Running RCU out of softirq is a problem for some workloads that would
-like to manage RCU core processing independently of other softirq work,
-for example, setting kthread priority.
-This commit therefore introduces the `rcunosoftirq' option which moves
-the RCU core work from softirq to a per-CPU/per-flavor SCHED_OTHER
-kthread named rcuc.
-The SCHED_OTHER approach avoids the scalability problems that appeared
-with the earlier attempt to move RCU core processing to from softirq to
-kthreads.
-That said, kernels built with RCU_BOOST=y will run the rcuc kthreads at
-the RCU-boosting priority.
+________________________________________
+From: Pankaj Suryawanshi
+Sent: 19 March 2019 15:59
+To: Michal Hocko
+Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org; minchan@kernel.org; K=
+irill Tkhai
+Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
 
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mike Galbraith <efault@gmx.de>
-Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-[bigeasy: add rcunosoftirq option]
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-v1…v2:
-       - rebased to Paul's rcu/dev tree/branch
-       - Replaced Mike's email with @gmx.de since the @online.de does
-	 not work anymore.
 
- kernel/rcu/tree.c        | 129 +++++++++++++++++++++++++++++++++---
- kernel/rcu/tree.h        |   2 +-
- kernel/rcu/tree_plugin.h | 137 +++++----------------------------------
- 3 files changed, 138 insertions(+), 130 deletions(-)
+________________________________________
+From: Michal Hocko <mhocko@kernel.org>
+Sent: 18 March 2019 19:59
+To: Pankaj Suryawanshi
+Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org; minchan@kernel.org; K=
+irill Tkhai
+Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 0f31b79eb6761..0a719f726e149 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -51,6 +51,12 @@
- #include <linux/tick.h>
- #include <linux/sysrq.h>
- #include <linux/kprobes.h>
-+#include <linux/gfp.h>
-+#include <linux/oom.h>
-+#include <linux/smpboot.h>
-+#include <linux/jiffies.h>
-+#include <linux/sched/isolation.h>
-+#include "../time/tick-internal.h"
- 
- #include "tree.h"
- #include "rcu.h"
-@@ -2253,7 +2259,7 @@ void rcu_force_quiescent_state(void)
- EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
- 
- /* Perform RCU core processing work for the current CPU.  */
--static __latent_entropy void rcu_core(struct softirq_action *unused)
-+static __latent_entropy void rcu_core(void)
- {
- 	unsigned long flags;
- 	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-@@ -2295,6 +2301,11 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
- 	trace_rcu_utilization(TPS("End RCU core"));
- }
- 
-+static void rcu_core_si(struct softirq_action *h)
-+{
-+	rcu_core();
-+}
-+
- /*
-  * Schedule RCU callback invocation.  If the running implementation of RCU
-  * does not support RCU priority boosting, just do a direct call, otherwise
-@@ -2306,19 +2317,120 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
- {
- 	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
- 		return;
--	if (likely(!rcu_state.boost)) {
--		rcu_do_batch(rdp);
--		return;
--	}
--	invoke_rcu_callbacks_kthread();
-+	rcu_do_batch(rdp);
- }
- 
-+static void rcu_wake_cond(struct task_struct *t, int status)
-+{
-+	/*
-+	 * If the thread is yielding, only wake it when this
-+	 * is invoked from idle
-+	 */
-+	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
-+		wake_up_process(t);
-+}
-+
-+static bool rcu_softirq_enabled = true;
-+
-+static int __init rcunosoftirq_setup(char *str)
-+{
-+	rcu_softirq_enabled = false;
-+	return 0;
-+}
-+__setup("rcunosoftirq", rcunosoftirq_setup);
-+
-+/*
-+ * Wake up this CPU's rcuc kthread to do RCU core processing.
-+ */
- static void invoke_rcu_core(void)
- {
--	if (cpu_online(smp_processor_id()))
-+	unsigned long flags;
-+	struct task_struct *t;
-+
-+	if (!cpu_online(smp_processor_id()))
-+		return;
-+	if (rcu_softirq_enabled) {
- 		raise_softirq(RCU_SOFTIRQ);
-+	} else {
-+		local_irq_save(flags);
-+		__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
-+		t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
-+		if (t != NULL && t != current)
-+			rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
-+		local_irq_restore(flags);
-+	}
- }
- 
-+static void rcu_cpu_kthread_park(unsigned int cpu)
-+{
-+	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
-+}
-+
-+static int rcu_cpu_kthread_should_run(unsigned int cpu)
-+{
-+	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
-+}
-+
-+/*
-+ * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
-+ * the RCU softirq used in configurations of RCU that do not support RCU
-+ * priority boosting.
-+ */
-+static void rcu_cpu_kthread(unsigned int cpu)
-+{
-+	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
-+	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
-+	int spincnt;
-+
-+	for (spincnt = 0; spincnt < 10; spincnt++) {
-+		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
-+		local_bh_disable();
-+		*statusp = RCU_KTHREAD_RUNNING;
-+		local_irq_disable();
-+		work = *workp;
-+		*workp = 0;
-+		local_irq_enable();
-+		if (work)
-+			rcu_core();
-+		local_bh_enable();
-+		if (*workp == 0) {
-+			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
-+			*statusp = RCU_KTHREAD_WAITING;
-+			return;
-+		}
-+	}
-+	*statusp = RCU_KTHREAD_YIELDING;
-+	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
-+	schedule_timeout_interruptible(2);
-+	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
-+	*statusp = RCU_KTHREAD_WAITING;
-+}
-+
-+static struct smp_hotplug_thread rcu_cpu_thread_spec = {
-+	.store			= &rcu_data.rcu_cpu_kthread_task,
-+	.thread_should_run	= rcu_cpu_kthread_should_run,
-+	.thread_fn		= rcu_cpu_kthread,
-+	.thread_comm		= "rcuc/%u",
-+	.setup			= rcu_cpu_kthread_setup,
-+	.park			= rcu_cpu_kthread_park,
-+};
-+
-+/*
-+ * Spawn per-CPU RCU core processing kthreads.
-+ */
-+static int __init rcu_spawn_core_kthreads(void)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
-+	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
-+		return 0;
-+	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
-+	return 0;
-+}
-+early_initcall(rcu_spawn_core_kthreads);
-+
- /*
-  * Handle any core-RCU processing required by a call_rcu() invocation.
-  */
-@@ -3355,7 +3467,8 @@ void __init rcu_init(void)
- 	rcu_init_one();
- 	if (dump_tree)
- 		rcu_dump_rcu_node_tree();
--	open_softirq(RCU_SOFTIRQ, rcu_core);
-+	if (rcu_softirq_enabled)
-+		open_softirq(RCU_SOFTIRQ, rcu_core_si);
- 
- 	/*
- 	 * We don't need protection against CPU-hotplug here because
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index e253d11af3c49..a1a72a1ecb026 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -407,8 +407,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
- static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
- static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
- static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
--static void invoke_rcu_callbacks_kthread(void);
- static bool rcu_is_callbacks_kthread(void);
-+static void rcu_cpu_kthread_setup(unsigned int cpu);
- static void __init rcu_spawn_boost_kthreads(void);
- static void rcu_prepare_kthreads(int cpu);
- static void rcu_cleanup_after_idle(void);
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index f46b4af96ab95..eb99e750a9306 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -11,29 +11,7 @@
-  *	   Paul E. McKenney <paulmck@linux.ibm.com>
-  */
- 
--#include <linux/delay.h>
--#include <linux/gfp.h>
--#include <linux/oom.h>
--#include <linux/sched/debug.h>
--#include <linux/smpboot.h>
--#include <linux/sched/isolation.h>
--#include <uapi/linux/sched/types.h>
--#include "../time/tick-internal.h"
--
--#ifdef CONFIG_RCU_BOOST
- #include "../locking/rtmutex_common.h"
--#else /* #ifdef CONFIG_RCU_BOOST */
--
--/*
-- * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
-- * all uses are in dead code.  Provide a definition to keep the compiler
-- * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
-- * This probably needs to be excluded from -rt builds.
-- */
--#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
--#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
--
--#endif /* #else #ifdef CONFIG_RCU_BOOST */
- 
- #ifdef CONFIG_RCU_NOCB_CPU
- static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
-@@ -629,7 +607,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 		/* Need to defer quiescent state until everything is enabled. */
- 		if (irqs_were_disabled) {
- 			/* Enabling irqs does not reschedule, so... */
--			raise_softirq_irqoff(RCU_SOFTIRQ);
-+			if (rcu_softirq_enabled)
-+				raise_softirq_irqoff(RCU_SOFTIRQ);
-+			else
-+				invoke_rcu_core();
- 		} else {
- 			/* Enabling BH or preempt does reschedule, so... */
- 			set_tsk_need_resched(current);
-@@ -944,18 +925,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
- 
- #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
- 
--#ifdef CONFIG_RCU_BOOST
--
--static void rcu_wake_cond(struct task_struct *t, int status)
-+/*
-+ * If boosting, set rcuc kthreads to realtime priority.
-+ */
-+static void rcu_cpu_kthread_setup(unsigned int cpu)
- {
--	/*
--	 * If the thread is yielding, only wake it when this
--	 * is invoked from idle
--	 */
--	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
--		wake_up_process(t);
-+#ifdef CONFIG_RCU_BOOST
-+	struct sched_param sp;
-+
-+	sp.sched_priority = kthread_prio;
-+	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
-+#endif /* #ifdef CONFIG_RCU_BOOST */
- }
- 
-+#ifdef CONFIG_RCU_BOOST
-+
- /*
-  * Carry out RCU priority boosting on the task indicated by ->exp_tasks
-  * or ->boost_tasks, advancing the pointer to the next task in the
-@@ -1093,23 +1077,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
- 	}
- }
- 
--/*
-- * Wake up the per-CPU kthread to invoke RCU callbacks.
-- */
--static void invoke_rcu_callbacks_kthread(void)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
--	if (__this_cpu_read(rcu_data.rcu_cpu_kthread_task) != NULL &&
--	    current != __this_cpu_read(rcu_data.rcu_cpu_kthread_task)) {
--		rcu_wake_cond(__this_cpu_read(rcu_data.rcu_cpu_kthread_task),
--			      __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
--	}
--	local_irq_restore(flags);
--}
--
- /*
-  * Is the current CPU running the RCU-callbacks kthread?
-  * Caller must have preemption disabled.
-@@ -1163,59 +1130,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
- 	return 0;
- }
- 
--static void rcu_cpu_kthread_setup(unsigned int cpu)
--{
--	struct sched_param sp;
--
--	sp.sched_priority = kthread_prio;
--	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
--}
--
--static void rcu_cpu_kthread_park(unsigned int cpu)
--{
--	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
--}
--
--static int rcu_cpu_kthread_should_run(unsigned int cpu)
--{
--	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
--}
--
--/*
-- * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
-- * the RCU softirq used in configurations of RCU that do not support RCU
-- * priority boosting.
-- */
--static void rcu_cpu_kthread(unsigned int cpu)
--{
--	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
--	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
--	int spincnt;
--
--	for (spincnt = 0; spincnt < 10; spincnt++) {
--		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
--		local_bh_disable();
--		*statusp = RCU_KTHREAD_RUNNING;
--		local_irq_disable();
--		work = *workp;
--		*workp = 0;
--		local_irq_enable();
--		if (work)
--			rcu_do_batch(this_cpu_ptr(&rcu_data));
--		local_bh_enable();
--		if (*workp == 0) {
--			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
--			*statusp = RCU_KTHREAD_WAITING;
--			return;
--		}
--	}
--	*statusp = RCU_KTHREAD_YIELDING;
--	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
--	schedule_timeout_interruptible(2);
--	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
--	*statusp = RCU_KTHREAD_WAITING;
--}
--
- /*
-  * Set the per-rcu_node kthread's affinity to cover all CPUs that are
-  * served by the rcu_node in question.  The CPU hotplug lock is still
-@@ -1246,27 +1160,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
- 	free_cpumask_var(cm);
- }
- 
--static struct smp_hotplug_thread rcu_cpu_thread_spec = {
--	.store			= &rcu_data.rcu_cpu_kthread_task,
--	.thread_should_run	= rcu_cpu_kthread_should_run,
--	.thread_fn		= rcu_cpu_kthread,
--	.thread_comm		= "rcuc/%u",
--	.setup			= rcu_cpu_kthread_setup,
--	.park			= rcu_cpu_kthread_park,
--};
--
- /*
-  * Spawn boost kthreads -- called as soon as the scheduler is running.
-  */
- static void __init rcu_spawn_boost_kthreads(void)
- {
- 	struct rcu_node *rnp;
--	int cpu;
- 
--	for_each_possible_cpu(cpu)
--		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
--	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
--		return;
- 	rcu_for_each_leaf_node(rnp)
- 		(void)rcu_spawn_one_boost_kthread(rnp);
- }
-@@ -1289,11 +1189,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- }
- 
--static void invoke_rcu_callbacks_kthread(void)
--{
--	WARN_ON_ONCE(1);
--}
--
- static bool rcu_is_callbacks_kthread(void)
- {
- 	return false;
--- 
-2.20.1
+On Mon 18-03-19 14:02:09, Pankaj Suryawanshi wrote:
+>> > I have the system(vanilla kernel) with 2GB of RAM, reserved 1GB for CM=
+A. No swap or zram.
+>> > Sorry, I don't have information where the time is spent.
+>> > time is calculated in between cma_alloc call.
+>> > I have just cma_alloc trace information/function graph.
+>
+>> Then please collect that data because it is really hard to judge
+>> anything from the numbers you have provided.
+>
+> Any pointers from which i can get this details ?
 
+I would start by enabling built in tracepoints for the migration or use
+a system wide perf monitoring with call graph data.
+
+Calling Sequence is as below.
+
+cma_alloc() -->
+alloc_contig_range() -->
+start_isolate_page_range() -->
+__alloc_contig_migrate_range() -->
+isolate_migratepages_range() -->
+reclaim_clean_pages_from_list() -->
+shrink_page_list()
+
+There is no built in tracepoints except cma_alloc.
+How to know where it taking time ?
+
+I have tried for latency count for 385MB:
+
+reclaim- reclaim_clean_pages_from_list()
+migrate- migrate_pages()
+migrateranges- isolate_migratepages_range()
+overall - __alloc_contig_migrate_range()
+
+Note: output is in us
+
+[ 1151.420923] LATENCY reclaim=3D 43 migrate=3D128 migrateranges=3D23
+[ 1151.421209] LATENCY reclaim=3D 11 migrate=3D253 migrateranges=3D14
+[ 1151.427856] LATENCY reclaim=3D 45 migrate=3D12 migrateranges=3D12
+[ 1151.434485] LATENCY reclaim=3D 44 migrate=3D33 migrateranges=3D12
+[ 1151.440975] LATENCY reclaim=3D 45 migrate=3D0 migrateranges=3D11
+[ 1151.447513] LATENCY reclaim=3D 39 migrate=3D35 migrateranges=3D11
+[ 1151.453919] LATENCY reclaim=3D 46 migrate=3D0 migrateranges=3D12
+[ 1151.460474] LATENCY reclaim=3D 39 migrate=3D41 migrateranges=3D11
+[ 1151.466947] LATENCY reclaim=3D 54 migrate=3D32 migrateranges=3D17
+[ 1151.473464] LATENCY reclaim=3D 45 migrate=3D21 migrateranges=3D12
+[ 1151.480016] LATENCY reclaim=3D 41 migrate=3D39 migrateranges=3D12
+[ 1151.486551] LATENCY reclaim=3D 41 migrate=3D36 migrateranges=3D12
+[ 1151.493199] LATENCY reclaim=3D 13 migrate=3D188 migrateranges=3D12
+[ 1151.500034] LATENCY reclaim=3D 60 migrate=3D94 migrateranges=3D13
+[ 1151.506686] LATENCY reclaim=3D 78 migrate=3D9 migrateranges=3D12
+[ 1151.513313] LATENCY reclaim=3D 33 migrate=3D147 migrateranges=3D12
+[ 1151.519839] LATENCY reclaim=3D 52 migrate=3D98 migrateranges=3D12
+[ 1151.526556] LATENCY reclaim=3D 46 migrate=3D126 migrateranges=3D12
+[ 1151.533254] LATENCY reclaim=3D 22 migrate=3D230 migrateranges=3D12
+[ 1151.540145] LATENCY reclaim=3D 0 migrate=3D305 migrateranges=3D13
+[ 1151.546997] LATENCY reclaim=3D 1 migrate=3D301 migrateranges=3D13
+[ 1151.553686] LATENCY reclaim=3D 40 migrate=3D201 migrateranges=3D12
+[ 1151.560395] LATENCY reclaim=3D 35 migrate=3D149 migrateranges=3D12
+[ 1151.567076] LATENCY reclaim=3D 77 migrate=3D43 migrateranges=3D16
+[ 1151.573836] LATENCY reclaim=3D 34 migrate=3D190 migrateranges=3D12
+[ 1151.580510] LATENCY reclaim=3D 51 migrate=3D120 migrateranges=3D12
+[ 1151.587240] LATENCY reclaim=3D 33 migrate=3D147 migrateranges=3D13
+[ 1151.594036] LATENCY reclaim=3D 20 migrate=3D241 migrateranges=3D13
+[ 1151.600749] LATENCY reclaim=3D 75 migrate=3D41 migrateranges=3D13
+[ 1151.607402] LATENCY reclaim=3D 77 migrate=3D32 migrateranges=3D12
+[ 1151.613956] LATENCY reclaim=3D 72 migrate=3D35 migrateranges=3D12
+[ 1151.620642] LATENCY reclaim=3D 59 migrate=3D162 migrateranges=3D12
+[ 1151.627181] LATENCY reclaim=3D 76 migrate=3D9 migrateranges=3D11
+[ 1151.633795] LATENCY reclaim=3D 80 migrate=3D0 migrateranges=3D12
+[ 1151.640278] LATENCY reclaim=3D 87 migrate=3D18 migrateranges=3D12
+[ 1151.646758] LATENCY reclaim=3D 82 migrate=3D10 migrateranges=3D11
+[ 1151.653307] LATENCY reclaim=3D 71 migrate=3D31 migrateranges=3D12
+[ 1151.659911] LATENCY reclaim=3D 61 migrate=3D77 migrateranges=3D12
+[ 1151.666514] LATENCY reclaim=3D 94 migrate=3D42 migrateranges=3D15
+[ 1151.673089] LATENCY reclaim=3D 67 migrate=3D59 migrateranges=3D12
+[ 1151.679655] LATENCY reclaim=3D 81 migrate=3D14 migrateranges=3D12
+[ 1151.686253] LATENCY reclaim=3D 49 migrate=3D93 migrateranges=3D12
+[ 1151.692815] LATENCY reclaim=3D 61 migrate=3D54 migrateranges=3D12
+[ 1151.699438] LATENCY reclaim=3D 42 migrate=3D99 migrateranges=3D10
+[ 1151.705881] OVERALL overall=3D285157
+
+cma_alloc latency is =3D 297385 us
+
+Please let me know is there any workaround/solution to reduce large size bu=
+ffer cma_alloc  latency ?
+
+--
+Michal Hocko
+SUSE Labs
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
