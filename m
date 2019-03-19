@@ -2,159 +2,169 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B20C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F05C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C605120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88722064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahEZFth9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Fp/YWQUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfCSQck (ORCPT
+        id S1727795AbfCSQcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:32:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45518 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSQck (ORCPT
+        Tue, 19 Mar 2019 12:32:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55386 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfCSQcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:32:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v21so14056518pfm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:32:39 -0700 (PDT)
+        Tue, 19 Mar 2019 12:32:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so17495715wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 09:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=5i/HHt59oH/roMrJBlZU0BbeOjy0uT6dJM0jK/9SWRQ=;
-        b=ahEZFth98tLqVu7jwRdTuax1PHXLqI4pMwf/+ANiNVFQvT4LnKR5Aqgu17TBHmXLmy
-         UytkgvUrmCSxcw6J+iI6AzcvYpHPm4VjalFGUQD+j3CeI7BlGLB4GpkbcMpTTcWno6sm
-         KdUeIyRPRD1vi4/ghgVi29hhWZ928dcz2DLcNvgHmwvoDMtysPpeQVAPv+jNgBuRNG2+
-         pLVpUqbEW3HKde2hwon1B5dPE37mlXDd+WnFcDl5kUUi8ZW/9l+ZRrc5RuYV3LucYjpu
-         CCIGsBpnc5DllFw67kkIhJOml9kBLeaV+lbHpIRVXW1QBZuK4pehwRCfkXWQySLnqsmU
-         OkNw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LwcgbP/FhQcnTh6imxVlErky6Q46KkyWkYCztYza87M=;
+        b=Fp/YWQUT4PIqnflF6CHYGcYNsbNLvBWaleu9MtSaHZPGBaKDtwJptLRbyZ/KRbLX8m
+         tyc8xnfECgC91Sb3qsZE7xJ/WxyO6jRd5qNgqx4yiFV06qfQUC5+6zfcPA/GbtXwkFXd
+         fQZMDz9dGyYyDwmLkX3K7OwTh3fHpv/Dd8T0nJg1mj090XQrof3+UA0Iud8bbAGOXdJ9
+         0vkK4NoWHCYtsqpTUmFKT6s4K6VqJ6iKjfRNOE2U9C2UHWNOUGKR0LYlZqsXCHLXiPhd
+         vyxnFocsmspAMtUf08byDSlhrgUNUazvHoLWljb76NpBEtWRA/raivCbJvIIAnCHNSW7
+         wFrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=5i/HHt59oH/roMrJBlZU0BbeOjy0uT6dJM0jK/9SWRQ=;
-        b=jNjDOP6IPlsagPKpmrcb6r1Fea68b8OGuP8LIBn91Ff546SdWzBuiNIBkNasTos2kq
-         JI9WIlBpyYteHhCKdCSDT6ttb7amB7XkDMKG1H1RMOIvKAF+N/cP5vmVT/nOlF9rqtxy
-         D8wjwWDNywu/JtbJHVeACug8RBCfAJSs7piIz1/oWKESRt6eMIJMIm29IICbC8xkxcBw
-         QqsIrGtcc4SyFLBao77UspAytevVx+wawNXuJxftM9RqwY4iQG/DqhQvulwTOClZHqtV
-         zSFLhapfmsfGYZrjeUWmTSWz4QOgKa3KQpM2e/nhz/aZjtevDA8ZL8NAqo//zGUecxrt
-         49CA==
-X-Gm-Message-State: APjAAAVkWe5vDLGjMpor+8zjxpOmThhPzX8Ab6q5ItqzxoWh7SdHsXFt
-        yBgmyCTuLjKj3FhBa4p7eqU=
-X-Google-Smtp-Source: APXvYqzRMJ7XzqmgGKTAtLENbYRh4JmXqMC5YQyQe45q3nrzC2jJ4Lhy1KuWWupNg06qKHG6M2acCQ==
-X-Received: by 2002:a17:902:9f83:: with SMTP id g3mr3015258plq.296.1553013159048;
-        Tue, 19 Mar 2019 09:32:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 14sm16533723pfh.177.2019.03.19.09.32.37
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LwcgbP/FhQcnTh6imxVlErky6Q46KkyWkYCztYza87M=;
+        b=Ep3zj8rDlCohKLDgCqP/SE/YwvEPx6OpElZ1iipqzEBxmok2dGkJjtPC4fYb53WJgZ
+         y7g4DlooEBJNRP96N1n8/4N9yIqCXWZxHLfE/oo+CO4AGfAual1LQOs7NG2KovvnQEAg
+         TdKGEPQbeNdLd4WBLlFkq9QyVyAVKiEIqHVUzeChYcShcAX41hQFi7k8YQ1SCBgsrf2g
+         Y1F2gFV4dkhw/XCy4qr51SSz4R9BLzn6JYISefnvvC0P+7HrnZRKBfy/iyMYgUyYL2Rr
+         ENAYuL5eObUAtwtP9vx4GjiPec06yLdSfJIfNgKSbFEcq6MXtgIByfrpWYR/0QJf3DL7
+         SvQg==
+X-Gm-Message-State: APjAAAXBkSx72F3o5aL36d1e1URy3wZsNi/bqTpjgibdjZA2mk2T1APU
+        XpvN6LDeUVRUZFggaRZpLHXGFZzTvVvVFA==
+X-Google-Smtp-Source: APXvYqzVZsWnqQQ754VIydHEBs1DZpKvxnSy+ZM+Of1V906piVviz7pekPfD0KA1s7KeljDirD/q4g==
+X-Received: by 2002:a7b:c382:: with SMTP id s2mr4309463wmj.56.1553013168315;
+        Tue, 19 Mar 2019 09:32:48 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id b9sm5788736wmc.9.2019.03.19.09.32.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 09:32:38 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Benson Leung <bleung@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Urja Rannikko <urjaman@gmail.com>
-Subject: [PATCH] platform/chrome: cros_ec_debugfs: cancel/schedule logging work only if supported
-Date:   Tue, 19 Mar 2019 09:32:36 -0700
-Message-Id: <1553013156-2808-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Mar 2019 09:32:47 -0700 (PDT)
+Subject: Re: [PATCH] clk: meson-gxbb: round the vdec dividers to closest
+To:     Maxime Jourdan <mjourdan@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190319102537.2043-1-mjourdan@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <5738d62f-4076-2b29-2539-f13592dc318b@baylibre.com>
+Date:   Tue, 19 Mar 2019 17:32:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190319102537.2043-1-mjourdan@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following traceback was reported on ASUS C201, which does not support
-console logging.
+On 19/03/2019 11:25, Maxime Jourdan wrote:
+> We want the video decoder clocks to always round to closest. While the
+> muxes are already using CLK_MUX_ROUND_CLOSEST, the corresponding
+> CLK_DIVIDER_ROUND_CLOSEST was forgotten for the dividers.
+> 
+> Fix this by adding the flag to the two vdec dividers.
+> 
+> Fixes: a565242eb9fc ("clk: meson: gxbb: add the video decoder clocks")
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> ---
+>  drivers/clk/meson/gxbb.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+> index 04df2e208ed6..29ffb4fde714 100644
+> --- a/drivers/clk/meson/gxbb.c
+> +++ b/drivers/clk/meson/gxbb.c
+> @@ -2216,6 +2216,7 @@ static struct clk_regmap gxbb_vdec_1_div = {
+>  		.offset = HHI_VDEC_CLK_CNTL,
+>  		.shift = 0,
+>  		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+>  	},
+>  	.hw.init = &(struct clk_init_data){
+>  		.name = "vdec_1_div",
+> @@ -2261,6 +2262,7 @@ static struct clk_regmap gxbb_vdec_hevc_div = {
+>  		.offset = HHI_VDEC2_CLK_CNTL,
+>  		.shift = 16,
+>  		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+>  	},
+>  	.hw.init = &(struct clk_init_data){
+>  		.name = "vdec_hevc_div",
+> 
 
-------------[ cut here ]------------
-WARNING: CPU: 2 PID: 361 at kernel/workqueue.c:3030 __flush_work+0x38/0x154
-Modules linked in: snd_soc_hdmi_codec cros_ec_debugfs cros_ec_sysfs uvcvideo dw_hdmi_cec dw_hdmi_i2s_audio videobuf2_vmalloc cfg80211 gpio_charger rk_crypto rfkill videobuf2_memops videobuf2_v4l2 des_generic videobuf2_common ofpart m25p80 spi_nor tpm_i2c_infineon sbs_battery mtd tpm joydev cros_ec_dev coreboot_table evdev mousedev ip_tables x_tables [last unloaded: brcmutil]
-CPU: 2 PID: 361 Comm: systemd-sleep Not tainted 5.1.0-rc1-1-ARCH+ #1
-Hardware name: Rockchip (Device Tree)
-[<c020e4b0>] (unwind_backtrace) from [<c020ac18>] (show_stack+0x10/0x14)
-[<c020ac18>] (show_stack) from [<c07a3e04>] (dump_stack+0x7c/0x9c)
-[<c07a3e04>] (dump_stack) from [<c0222748>] (__warn+0xd0/0xec)
-[<c0222748>] (__warn) from [<c022279c>] (warn_slowpath_null+0x38/0x44)
-[<c022279c>] (warn_slowpath_null) from [<c02365d0>] (__flush_work+0x38/0x154)
-[<c02365d0>] (__flush_work) from [<c023786c>] (__cancel_work_timer+0x114/0x1a4)
-[<c023786c>] (__cancel_work_timer) from [<bf33233c>] (cros_ec_debugfs_suspend+0x14/0x1c [cros_ec_debugfs])
-[<bf33233c>] (cros_ec_debugfs_suspend [cros_ec_debugfs]) from [<c056a888>] (dpm_run_callback+0x64/0xcc)
-[<c056a888>] (dpm_run_callback) from [<c056ad2c>] (__device_suspend+0x174/0x3a8)
-[<c056ad2c>] (__device_suspend) from [<c056b9e0>] (dpm_suspend+0x174/0x1e0)
-[<c056b9e0>] (dpm_suspend) from [<c026b3e0>] (suspend_devices_and_enter+0x6c/0x50c)
-[<c026b3e0>] (suspend_devices_and_enter) from [<c026ba8c>] (pm_suspend+0x20c/0x274)
-[<c026ba8c>] (pm_suspend) from [<c026a628>] (state_store+0x54/0x88)
-[<c026a628>] (state_store) from [<c03cd2d0>] (kernfs_fop_write+0x114/0x180)
-[<c03cd2d0>] (kernfs_fop_write) from [<c035d48c>] (__vfs_write+0x1c/0x154)
-[<c035d48c>] (__vfs_write) from [<c035f9e8>] (vfs_write+0xb8/0x198)
-[<c035f9e8>] (vfs_write) from [<c035fbc0>] (ksys_write+0x3c/0x74)
-[<c035fbc0>] (ksys_write) from [<c0201000>] (ret_fast_syscall+0x0/0x4c)
-Exception stack(0xe9365fa8 to 0xe9365ff0)
-5fa0: 00000004 beef8b28 00000004 beef8b28 00000004 00000000
-5fc0: 00000004 beef8b28 02319170 00000004 beef8b28 00000004 b6f3d900 beef8b74
-5fe0: 0000006c beef8a98 b6c0adac b6c66534
----[ end trace f4ee5df14e8ea0ec ]---
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-If console logging is not supported, the work structure is never
-initialized, resulting in the traceback. Calling cancel/schedule functions
-conditionally fixes the problem.
-
-While at it, also fix error handling in the probe function.
-
-Reported-by: Urja Rannikko <urjaman@gmail.com>
-Cc: Urja Rannikko <urjaman@gmail.com>
-Fixes: 6fce0a2cf5a05 ("mfd / platform: cros_ec: Move debugfs attributes to its own driver")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/platform/chrome/cros_ec_debugfs.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index 900c7073c46f..71308766e891 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -440,7 +440,7 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 
- 	ret = cros_ec_create_pdinfo(debug_info);
- 	if (ret)
--		goto remove_debugfs;
-+		goto remove_log;
- 
- 	ec->debug_info = debug_info;
- 
-@@ -448,6 +448,8 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 
- 	return 0;
- 
-+remove_log:
-+	cros_ec_cleanup_console_log(debug_info);
- remove_debugfs:
- 	debugfs_remove_recursive(debug_info->dir);
- 	return ret;
-@@ -467,7 +469,8 @@ static int __maybe_unused cros_ec_debugfs_suspend(struct device *dev)
- {
- 	struct cros_ec_dev *ec = dev_get_drvdata(dev);
- 
--	cancel_delayed_work_sync(&ec->debug_info->log_poll_work);
-+	if (ec->debug_info->log_buffer.buf)
-+		cancel_delayed_work_sync(&ec->debug_info->log_poll_work);
- 
- 	return 0;
- }
-@@ -476,7 +479,8 @@ static int __maybe_unused cros_ec_debugfs_resume(struct device *dev)
- {
- 	struct cros_ec_dev *ec = dev_get_drvdata(dev);
- 
--	schedule_delayed_work(&ec->debug_info->log_poll_work, 0);
-+	if (ec->debug_info->log_buffer.buf)
-+		schedule_delayed_work(&ec->debug_info->log_poll_work, 0);
- 
- 	return 0;
- }
--- 
-2.7.4
-
+Will apply to fixes/drivers for 5.1
