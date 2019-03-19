@@ -2,193 +2,100 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7301C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A73213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B508F20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="2MsdGFq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfCSIDI (ORCPT
+        id S1727483AbfCSID6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:03:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:49832 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726776AbfCSICE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:02:04 -0400
-X-UUID: a50aa9ddce514d9498b16165deb701a6-20190319
-X-UUID: a50aa9ddce514d9498b16165deb701a6-20190319
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 582644049; Tue, 19 Mar 2019 16:01:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 19 Mar 2019 16:01:57 +0800
-Received: from mtkslt210.mediatek.inc (10.21.14.14) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 19 Mar 2019 16:01:57 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v5 07/14] soc: mediatek: Refactor sram control
-Date:   Tue, 19 Mar 2019 16:01:33 +0800
-Message-ID: <20190319080140.24055-8-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190319080140.24055-1-weiyi.lu@mediatek.com>
-References: <20190319080140.24055-1-weiyi.lu@mediatek.com>
+        Tue, 19 Mar 2019 04:03:58 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:56640 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfCSID5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:03:57 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 5B8811777;
+        Tue, 19 Mar 2019 09:03:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1552982634; x=1554797035; bh=C0kgbeYzb5O49IVYGePSDb6/Gaxsox0RhH5
+        LjlZcmgE=; b=2MsdGFq9dUE3R/qZT0BPM92s8yyXmic6VBVpTChuHl5V7mW4r5M
+        bSfuJW9lqfc9XyJAFQgjMpWeVRXP9U932Qd4BH+s8LEiGwLTPS6h9jttWTVw05Ic
+        ZuWokcs4WtbhL2q8wkx39uJlRcI+9Q8wJXTZ+xbr6n9vnBj4V+toIXNY1hYaEGV3
+        f9KJZBGLsVv23Bz9x7tip31o12Su8sjfT6Xx3ORk1N8ptFB+98Ya9RmWKNlA/WJe
+        bIwAi6yXMLcvabdIODJlBTqUylOpt2TPXQTyVN0Jpi2RNpNmVIqcJNG1LFERbzqR
+        PIHH7OJpN5oMPVczAV5L28eZr+S3IgqhVvA4brAfM6UxDmp1i6bKjTfu1cUOivgs
+        K22L/BEp93AuV6AvYzCbt1UefjzumzhAqo2MfozW6qkdUIt9uNWdApZTFNX0eRGy
+        lgvUi7HIvz0jgMC8gwdID1S4CDGSBcwmQWcNY7HA2wH2Kp/C9JPTjk5eN45gXxDs
+        sXI1A6dpV8zmgdOcl5RUDe1Ce3aUAUyEvWweZ5aDImBzW1AXl1ShFT/WNukjfbgS
+        6L+RtRRWhcvsaJueqUfIlqIe9pfQUFg8JVOz+4vNcXwUr3nps7SA5rzR7Dyi4XsI
+        sHQ2tzMK9A/XjyeYX9kYwxVpyFk16aZThILe0R5VVvLPm6uIFSQBu3tc=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id pcUpff5qMI8c; Tue, 19 Mar 2019 09:03:54 +0100 (CET)
+Received: from int-mx002.mykolab.com (unknown [10.9.13.2])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id D58261776;
+        Tue, 19 Mar 2019 09:03:54 +0100 (CET)
+Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
+        by int-mx002.mykolab.com (Postfix) with ESMTPS id B39E72757;
+        Tue, 19 Mar 2019 09:03:54 +0100 (CET)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: add translation disclaimer
+Date:   Tue, 19 Mar 2019 09:03:53 +0100
+Message-ID: <14381941.zoZXB8H0OD@pcbe13614>
+In-Reply-To: <20190318113534.43fb94f3@lwn.net>
+References: <20190314204516.10890-1-federico.vaga@vaga.pv.it> <20190318113534.43fb94f3@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put sram enable and disable control in separate functions.
+On Monday, March 18, 2019 6:35:34 PM CET Jonathan Corbet wrote:
+> On Thu, 14 Mar 2019 21:45:16 +0100
+> 
+> Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+> > Add the translation disclaimer in English as reference
+> > for other languages.  Translations must include this disclaimer
+> > in their language so that readers are properly informed.
+> > 
+> > This very same patch updates the Italian translation accordingly.
+> > 
+> > Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+> 
+> Honestly, it all feels a little too legalistic to me; have people been
+> worried about the translations in this regard?
+> 
+> Oh well, I went ahead and applied it.  I do think that it might make sense
+> to move the TOC *above* the disclaimer, though, since that's what readers
+> are really going to be interested in.
 
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
----
- drivers/soc/mediatek/mtk-scpsys.c | 79 ++++++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 28 deletions(-)
+No, problem I can do it and send a new version
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 3e9be07a2627..65b734b40098 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -235,12 +235,55 @@ static void scpsys_clk_disable(struct clk *clk[], int max_num)
- 	}
- }
- 
-+static int scpsys_sram_enable(struct scp_domain *scpd, void __iomem *ctl_addr)
-+{
-+	u32 val;
-+	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
-+	int tmp;
-+
-+	val = readl(ctl_addr) & ~scpd->data->sram_pdn_bits;
-+	writel(val, ctl_addr);
-+
-+	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
-+	if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
-+		/*
-+		 * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
-+		 * MT7622_POWER_DOMAIN_WB and thus just a trivial setup
-+		 * is applied here.
-+		 */
-+		usleep_range(12000, 12100);
-+	} else {
-+		/* Either wait until SRAM_PDN_ACK all 1 or 0 */
-+		int ret = readl_poll_timeout(ctl_addr, tmp,
-+				(tmp & pdn_ack) == 0,
-+				MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int scpsys_sram_disable(struct scp_domain *scpd, void __iomem *ctl_addr)
-+{
-+	u32 val;
-+	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
-+	int tmp;
-+
-+	val = readl(ctl_addr) | scpd->data->sram_pdn_bits;
-+	writel(val, ctl_addr);
-+
-+	/* Either wait until SRAM_PDN_ACK all 1 or 0 */
-+	return readl_poll_timeout(ctl_addr, tmp,
-+			(tmp & pdn_ack) == pdn_ack,
-+			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+}
-+
- static int scpsys_power_on(struct generic_pm_domain *genpd)
- {
- 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
- 	struct scp *scp = scpd->scp;
- 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
--	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
- 
-@@ -252,6 +295,7 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	if (ret)
- 		goto err_clk;
- 
-+	/* subsys power on */
- 	val = readl(ctl_addr);
- 	val |= PWR_ON_BIT;
- 	writel(val, ctl_addr);
-@@ -273,24 +317,9 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	val |= PWR_RST_B_BIT;
- 	writel(val, ctl_addr);
- 
--	val &= ~scpd->data->sram_pdn_bits;
--	writel(val, ctl_addr);
--
--	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
--	if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
--		/*
--		 * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
--		 * MT7622_POWER_DOMAIN_WB and thus just a trivial setup is
--		 * applied here.
--		 */
--		usleep_range(12000, 12100);
--
--	} else {
--		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
--					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
--		if (ret < 0)
--			goto err_pwr_ack;
--	}
-+	ret = scpsys_sram_enable(scpd, ctl_addr);
-+	if (ret < 0)
-+		goto err_pwr_ack;
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-@@ -317,7 +346,6 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
- 	struct scp *scp = scpd->scp;
- 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
--	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
- 
-@@ -329,17 +357,12 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 			goto out;
- 	}
- 
--	val = readl(ctl_addr);
--	val |= scpd->data->sram_pdn_bits;
--	writel(val, ctl_addr);
--
--	/* wait until SRAM_PDN_ACK all 1 */
--	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == pdn_ack,
--				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+	ret = scpsys_sram_disable(scpd, ctl_addr);
- 	if (ret < 0)
- 		goto out;
- 
--	val |= PWR_ISO_BIT;
-+	/* subsys power off */
-+	val = readl(ctl_addr) | PWR_ISO_BIT;
- 	writel(val, ctl_addr);
- 
- 	val &= ~PWR_RST_B_BIT;
+> 
+> Thanks,
+> 
+> jon
+
+
 -- 
-2.18.0
+Federico Vaga
+http://www.federicovaga.it/
+
 
