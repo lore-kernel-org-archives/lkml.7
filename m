@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20EDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22ABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C8520700
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D942147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PK4XnfV7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asxiamFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfCSCVZ (ORCPT
+        id S1727812AbfCSCVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:21:25 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50543 "EHLO
+        Mon, 18 Mar 2019 22:21:24 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36434 "EHLO
         mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfCSCUg (ORCPT
+        with ESMTP id S1727606AbfCSCUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 22:20:36 -0400
-Received: by mail-it1-f196.google.com with SMTP id m137so8135075ita.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:35 -0700 (PDT)
+Received: by mail-it1-f196.google.com with SMTP id h9so2426427itl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e7GvUFWVFREgikvW3Mpnlx9jXsuTxf9sLym6wnUrISE=;
-        b=PK4XnfV7TPR5xj/wcvkBnwuGj9viAsZnTaCnEaIYtVCMofSFk3znttbF7tVthjsdEh
-         1vP9O5PdeZ+c5J6w3eq2hnLONNvgtfH0jr4p7UWesQNna0Fk4PLTARMra3VBFHy+9e2j
-         dzGPHlS6butSlutSUasEK6QthuqqPWFH+MyfuonXWifPKljBOgvyqwMo0VplbcG2BGxw
-         Fim8yL5HHT2xZEP1+LiKP3OfQ80IHaPqXR4ZrbvtLywQrLzge682ec6mKv1g3s3DTONJ
-         VoTbOaI1TRUdImobd2A3UedLe1bMD4bL8zNlT99xHUTH/ng0TsLojpHBX7VvM5dRmIy/
-         t6/g==
+        bh=x6L9u+5sfGiPTE3aM9s6FFeu91hanztAVaLTnZ+ksu4=;
+        b=asxiamFXthx9htnSDZPCK3RT5FImXMg2Xgo+ekQzaB3J+M2PWMLfiSEHJ1S25JSjei
+         X8/Nu6LzxSXikMQWP+74llfuLK3lN8TOFtTb8DJ8G6TDm0+BG8cQewJ7YmpeeiTtJ+8X
+         fl5VhpG6+LYTHTK8YVTCneSQICGSLhPyWmn8FT+87e8zvUVpMLrUgaNSj9YT6F6/r3wK
+         pOg4ibYQgj5K3TDBN0EGuHIehxcthNZF8uE+QDi0qxgHFUYc6s4mAEs2EDWDfXZpEEGh
+         WapN1UWbg/J9rJp2rv9VZXNZZASuLuWaLCs1216k20eulGcfQnwyM6yU3smIebBiZzOp
+         0IYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e7GvUFWVFREgikvW3Mpnlx9jXsuTxf9sLym6wnUrISE=;
-        b=dmmwtNLSfqCggGV4o7A/D7BSWHwpiQKSKHInY9nt63dBsvwbIV3OCMVnPghdlSJ5CB
-         uwszYRNk+vv9HK7XvuzJoAUWYoj1zGFlE3P5a0JdjWKKMAVPbTm/Btq0jpHD95GRZAaM
-         EDdGhH9lVgqx9h+YOHVYRdXBu4bcRvAuJRl2o4nlkR3OO9jroJhZUuKeGwf9QKcOrz4z
-         JbTa/NCL2dBElys+7ys8ckER5DcYj3Mi6G9HnetDIRNTJECNvd7NzAbaMO8seJAyDUTf
-         EHntg1q2FY6c2rdd0B7XKzmR9njP9xKHT7TsDuDXAVHksKLDkIKIe0DrjnUUgq+wtDta
-         rl9A==
-X-Gm-Message-State: APjAAAWNUVBlw7/1X8fDRhulh6bGYWqQHOmLWR/8qpE1qtZuQyJlD7bj
-        kJ9970zqmd3mWiDvJJxzg5w=
-X-Google-Smtp-Source: APXvYqy76DReZqlr4BHnEgoBRSN+K+2Uygpc2Ab/+E2zXSKa6OrFkEjGa6TtIP6f2p2tUNciIFcuFg==
-X-Received: by 2002:a24:3449:: with SMTP id z70mr37832itz.169.1552962035204;
-        Mon, 18 Mar 2019 19:20:35 -0700 (PDT)
+        bh=x6L9u+5sfGiPTE3aM9s6FFeu91hanztAVaLTnZ+ksu4=;
+        b=k6hf469rtYS3PSynLEHGJ2k8TPqS5pEZQNnXuGSG+QAAZ+DWOQIaobFf2D8ljUU6OG
+         TtNpYapsMNvPwBg1Y5iw+2xtrcqg7fkoCnHHGiuuRYJ9FFelhkK7GJPJHRedgzR5L2kA
+         NWG1DJdMwuO8S7TqECv0l+YIPUEVI37Svul81dH7Jyb8jLqQGStf8wz3ptpETvPse611
+         JFktvvrs53X8C98jF2uTZhNk+xwTCkX+DdzGmNrQV/kGbpc5NeYWFU+7anlf+AOVsOAy
+         XF7h6sntOYRM0fjmyc+S6xAnRfO0qEx4aLdogZfM9aC8TpuFZQJGxyv3uIlaDIZcxEUp
+         nEtQ==
+X-Gm-Message-State: APjAAAWHphS+1v2lx8aNx3B59IyYKCGPRn4DOv/ZK6tHLapSfpIjNZK9
+        hwG/bQXXlCNLAwZSRfGYLB4=
+X-Google-Smtp-Source: APXvYqxv/5Vp0rezmupAplX7bTtHUnSni4NhfbzDSQaCslHXCyuNYjPmtXhj9RGwQz2WEkItKKnJ5Q==
+X-Received: by 2002:a24:e00e:: with SMTP id c14mr250737ith.8.1552962036255;
+        Mon, 18 Mar 2019 19:20:36 -0700 (PDT)
 Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.34
+        by smtp.gmail.com with ESMTPSA id l8sm673838itl.26.2019.03.18.19.20.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:20:34 -0700 (PDT)
+        Mon, 18 Mar 2019 19:20:35 -0700 (PDT)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
         George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v2 02/11] staging: mt7621-mmc: Remove obsolete comments and variables
-Date:   Mon, 18 Mar 2019 20:20:03 -0600
-Message-Id: <20190319022012.11051-3-thirtythreeforty@gmail.com>
+Subject: [PATCH v2 03/11] staging: mt7621-mmc: Fix warning when reloading module with debug msgs enabled
+Date:   Mon, 18 Mar 2019 20:20:04 -0600
+Message-Id: <20190319022012.11051-4-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190319022012.11051-1-thirtythreeforty@gmail.com>
 References: <20190319022012.11051-1-thirtythreeforty@gmail.com>
@@ -73,55 +73,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These comments don't contain useful code or alternate implementation
-ideas.  Remove them.
+The kernel complained:
+
+    [  510.277151] WARNING: CPU: 0 PID: 395 at fs/proc/generic.c:360 proc_register+0xf0/0x108
+    [  510.292891] proc_dir_entry '/proc/msdc_debug' already registered
+
+when doing a modprobe/rmmod/modprobe of this module if debug messages
+are compiled in.  Fix this by removing the proc entry when the module is
+unloaded.
 
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- drivers/staging/mt7621-mmc/mt6575_sd.h | 3 ---
- drivers/staging/mt7621-mmc/sd.c        | 2 --
- 2 files changed, 5 deletions(-)
+ drivers/staging/mt7621-mmc/dbg.c | 15 ++++++++++++---
+ drivers/staging/mt7621-mmc/dbg.h |  3 ++-
+ drivers/staging/mt7621-mmc/sd.c  |  4 ++++
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/mt7621-mmc/mt6575_sd.h b/drivers/staging/mt7621-mmc/mt6575_sd.h
-index 038a484a9476..8b6cf17175cd 100644
---- a/drivers/staging/mt7621-mmc/mt6575_sd.h
-+++ b/drivers/staging/mt7621-mmc/mt6575_sd.h
-@@ -39,8 +39,6 @@
- #include <linux/bitops.h>
- #include <linux/mmc/host.h>
- 
--// #include <mach/mt6575_reg_base.h> /* --- by chhung */
--
- /*--------------------------------------------------------------------------*/
- /* Common Definition                                                        */
- /*--------------------------------------------------------------------------*/
-@@ -418,7 +416,6 @@ struct msdc_host {
- 
- 	int                         error;
- 	spinlock_t                  lock;           /* mutex */
--	struct semaphore            sem;
- 
- 	u32                         blksz;          /* host block size */
- 	void __iomem                *base;           /* host base address */
-diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-index 049b312131a9..9074848a8251 100644
---- a/drivers/staging/mt7621-mmc/sd.c
-+++ b/drivers/staging/mt7621-mmc/sd.c
-@@ -100,7 +100,6 @@ static int cd_active_low = 1;
- struct msdc_hw msdc0_hw = {
- 	.clk_src        = 0,
- 	.flags          = MSDC_CD_PIN_EN | MSDC_REMOVABLE,
--//	.flags          = MSDC_WP_PIN_EN | MSDC_CD_PIN_EN | MSDC_REMOVABLE,
+diff --git a/drivers/staging/mt7621-mmc/dbg.c b/drivers/staging/mt7621-mmc/dbg.c
+index fda3ba38ba37..2310f3bcc16e 100644
+--- a/drivers/staging/mt7621-mmc/dbg.c
++++ b/drivers/staging/mt7621-mmc/dbg.c
+@@ -294,9 +294,18 @@ static const struct file_operations msdc_debug_fops = {
+ 	.release	= single_release,
  };
  
- /* end of +++ */
-@@ -1669,7 +1668,6 @@ static int msdc_drv_probe(struct platform_device *pdev)
- 	host->timeout_clks = DEFAULT_DTOC * 65536;
+-void msdc_debug_proc_init(void)
++// Keep ahold of the proc entry we create so it can be freed during
++// module removal
++struct proc_dir_entry *msdc_debug_proc_entry;
++
++void __init msdc_debug_proc_init(void)
+ {
+-	proc_create("msdc_debug", 0660, NULL, &msdc_debug_fops);
++	msdc_debug_proc_entry = proc_create("msdc_debug", 0660,
++					    NULL, &msdc_debug_fops);
++}
++
++void __exit msdc_debug_proc_deinit(void)
++{
++	proc_remove(msdc_debug_proc_entry);
+ }
+-EXPORT_SYMBOL_GPL(msdc_debug_proc_init);
+ #endif
+diff --git a/drivers/staging/mt7621-mmc/dbg.h b/drivers/staging/mt7621-mmc/dbg.h
+index 2d447b2d92ae..d100324aa3fe 100644
+--- a/drivers/staging/mt7621-mmc/dbg.h
++++ b/drivers/staging/mt7621-mmc/dbg.h
+@@ -93,7 +93,8 @@ enum msdc_dbg {
  
- 	host->mrq = NULL;
--	//init_MUTEX(&host->sem); /* we don't need to support multiple threads access */
+ extern unsigned int sd_debug_zone[4];
+ #define TAG "msdc"
+-void msdc_debug_proc_init(void);
++void __init msdc_debug_proc_init(void);
++void __exit msdc_debug_proc_deinit(void);
  
- 	dma_coerce_mask_and_coherent(mmc_dev(mmc), DMA_BIT_MASK(32));
+ u32 msdc_time_calc(u32 old_L32, u32 old_H32, u32 new_L32, u32 new_H32);
+ void msdc_performance(u32 opcode, u32 sizes, u32 bRx, u32 ticks);
+diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
+index 9074848a8251..306b3b46f7c9 100644
+--- a/drivers/staging/mt7621-mmc/sd.c
++++ b/drivers/staging/mt7621-mmc/sd.c
+@@ -1841,6 +1841,10 @@ static int __init mt_msdc_init(void)
+ 
+ static void __exit mt_msdc_exit(void)
+ {
++#if defined(MT6575_SD_DEBUG)
++	msdc_debug_proc_deinit();
++#endif
++
+ 	platform_driver_unregister(&mt_msdc_driver);
+ }
  
 -- 
 2.21.0
