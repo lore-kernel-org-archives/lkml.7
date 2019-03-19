@@ -2,67 +2,89 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B17CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E3AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35C520850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7670D2083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:06:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jDFT+ZeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfCSPF5 (ORCPT
+        id S1727817AbfCSPGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:05:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4710 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726703AbfCSPF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:05:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B1CC061FCEF8F46444D1;
-        Tue, 19 Mar 2019 23:05:52 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 19 Mar 2019 23:05:47 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <viro@zeniv.linux.org.uk>
-Subject: [PATCH] fs: namespace: Make to_mnt_ns() static
-Date:   Tue, 19 Mar 2019 23:17:56 +0800
-Message-ID: <20190319151756.96768-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 19 Mar 2019 11:06:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43405 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfCSPGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:06:04 -0400
+Received: by mail-io1-f66.google.com with SMTP id x3so6322383iol.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 08:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q5xowtc7ZnZnKjlRO7p8KAAicrTh4qNFot0Ilpis0OU=;
+        b=jDFT+ZeF3vvyPX0uqV3LGHQbIK0Lii+gI3tcqxb5rPdHlpvwfuVj5PR6QfygtzXnjQ
+         mUaz4HUvxeARuIcz1whhiKXMBQyd5pk6bQ9/TE8p3YCDOAv5r6AbDT+dXZZgaLCNYK8J
+         n3zQyK+59KUJB1GcsHfUFtn42CNPs75O7ln2LWsCiB9dZS/AHNmYYvcLEwsuXZJJ/OVM
+         rTyEiUha5L2sVql/enTsdx2/N5a9BzpVaWJ56X93k1Q0iZjnesTGRgq5FhwWzOYodjnq
+         jlDqLK+8yCz1noDzu+7zUCmrRkJpTf4tB+h6Bkw4uzgBXErJPzg8sJ3Y1gFVkWA3hm5z
+         mP7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q5xowtc7ZnZnKjlRO7p8KAAicrTh4qNFot0Ilpis0OU=;
+        b=E49kmSOkb/YYEa8FvMGqJZy4IFOdB43UrHQ6EzEzYVzdIkbFHLgwzhZPhbeXYggOKQ
+         EtLYShid0JvKCLroVTsrPb+089YxCj+eARAHNSrhfQOdCXXjNuYsa7XG/FW0/i71wmKC
+         vXAalo2kj7/lHMAUhhRTD5M29hUE738mbHPRfpfAlhuGSr2RwRlJC3AdvaI/VccZNP8+
+         25n1unHF2IsscmL2Xix0SsMonz5uEIlWmpSQgza92eHwe7hgJS69neYaPwXUUKQ78dSs
+         qn9haLKIUuDBjRFSjeAbi4YPR5oFkW7S8/kaIL5co+qnJUokUtZkah4UqFmZKX25Rr9G
+         H4lg==
+X-Gm-Message-State: APjAAAWzDvVYl3G2YuhGzFxxhTCNrjnjut1M9X6Ta5/bQTMKh5slLMQj
+        RmyVUTgYOLbt3dXn5fypCOlMlg==
+X-Google-Smtp-Source: APXvYqyrgbZfWt6TCVUBUKNOXCf4JZzt7P0S/Zoyq/f0xCYWBtgbotb8EOBXzwSHjSvtu5zrrVhpfg==
+X-Received: by 2002:a5d:8712:: with SMTP id u18mr1881942iom.36.1553007963959;
+        Tue, 19 Mar 2019 08:06:03 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id 136sm1566522itu.35.2019.03.19.08.06.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 08:06:02 -0700 (PDT)
+Subject: Re: [PATCH 1/1] blk-mq: remove unused 'nr_expired' from blk_mq_hw_ctx
+To:     Dongli Zhang <dongli.zhang@oracle.com>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, keith.busch@intel.com
+References: <1553007918-5026-1-git-send-email-dongli.zhang@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <385c2413-e2b5-9e72-ac81-aec44de9ea63@kernel.dk>
+Date:   Tue, 19 Mar 2019 09:06:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1553007918-5026-1-git-send-email-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
-fs/namespace.c:1735:22: warning: symbol 'to_mnt_ns' was not declared. Should it be static?
+On 3/19/19 9:05 AM, Dongli Zhang wrote:
+> There is no usage of 'nr_expired'.
+> 
+> The 'nr_expired' was introduced by commit 1d9bd5161ba3 ("blk-mq: replace
+> timeout synchronization with a RCU and generation based scheme"). Its usage
+> was removed since commit 12f5b9314545 ("blk-mq: Remove generation
+> seqeunce").
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- fs/namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index c9cab30..b39a3ec 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1732,7 +1732,7 @@ static bool is_mnt_ns_file(struct dentry *dentry)
- 	       dentry->d_fsdata == &mntns_operations;
- }
- 
--struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
-+static struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
- {
- 	return container_of(ns, struct mnt_namespace, ns);
- }
 -- 
-2.7.4
+Jens Axboe
 
