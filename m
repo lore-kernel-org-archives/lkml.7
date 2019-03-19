@@ -2,115 +2,73 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CF4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B770AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ED6217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XesYp4Qb"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDFB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 14:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfCSOzl (ORCPT
+        id S1727661AbfCSO5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 10:55:41 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60292 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfCSOyM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 10:54:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553007250; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=EvMUEFvyr6uMRXQK4J+V5V34mXPVO04v9dujPtJ2GSU=;
-        b=XesYp4Qb7s230LvePVLWHd9s04jpwTqcMxQODwA4hJ9j57YzahtUa+1fKoklhKuNbEVrHk
-        xAjOYvn+lhACfZ1AYA9nxydPUj1CdIiLOkFSz1vzSECzdOfu4bNhXsfE7MURKsMJRMgJ3i
-        11jof6d5UTkdopo+K3nKAdDyFPoqXsA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 02/13] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC' in documentation
-Date:   Tue, 19 Mar 2019 15:53:52 +0100
-Message-Id: <20190319145403.31627-3-paul@crapouillou.net>
-In-Reply-To: <20190319145403.31627-1-paul@crapouillou.net>
-References: <20190319145403.31627-1-paul@crapouillou.net>
+        Tue, 19 Mar 2019 10:57:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59044 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726831AbfCSO5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 10:57:41 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2B60BA554E5A5D22DE23;
+        Tue, 19 Mar 2019 22:57:36 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 22:57:27 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <jeffrey.t.kirsher@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <intel-wired-lan@lists.osuosl.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] igc: Make igc_write_rss_indir_tbl static
+Date:   Tue, 19 Mar 2019 22:55:07 +0800
+Message-ID: <20190319145507.22388-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes more
-sense to use the more generic ECC term.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fix sparse warning:
+
+drivers/net/ethernet/intel/igc/igc_ethtool.c:646:6:
+ warning: symbol 'igc_write_rss_indir_tbl' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ drivers/net/ethernet/intel/igc/igc_ethtool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Notes:
-    v3: New patch
-    
-    v4: No change
-    
-    v5: No change
-    
-    v6: No change
-
- .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-index a5b940f18bf6..5a45cc54f46d 100644
---- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -1,4 +1,4 @@
--* Ingenic JZ4780 NAND/BCH
-+* Ingenic JZ4780 NAND/ECC
+diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
+index eff37a6..5442394 100644
+--- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
++++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
+@@ -643,7 +643,7 @@ static int igc_set_coalesce(struct net_device *netdev,
+ 	return 0;
+ }
  
- This file documents the device tree bindings for NAND flash devices on the
- JZ4780. NAND devices are connected to the NEMC controller (described in
-@@ -14,10 +14,10 @@ Required NAND controller device properties:
-   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
- 
- Optional NAND controller device properties:
--- ingenic,bch-controller: To make use of the hardware BCH controller, this
--  property must contain a phandle for the BCH controller node. The required
-+- ingenic,bch-controller: To make use of the hardware ECC controller, this
-+  property must contain a phandle for the ECC controller node. The required
-   properties for this node are described below. If this is not specified,
--  software BCH will be used instead.
-+  software ECC will be used instead.
- 
- Optional children nodes:
- - Individual NAND chips are children of the NAND controller node.
-@@ -70,17 +70,17 @@ nemc: nemc@13410000 {
- 	};
- };
- 
--The BCH controller is a separate SoC component used for error correction on
-+The ECC controller is a separate SoC component used for error correction on
- NAND devices. The following is a description of the device properties for a
--BCH controller.
-+ECC controller.
- 
--Required BCH properties:
-+Required ECC properties:
- - compatible: Should be one of:
-   * ingenic,jz4740-ecc
-   * ingenic,jz4725b-bch
-   * ingenic,jz4780-bch
--- reg: Should specify the BCH controller registers location and length.
--- clocks: Clock for the BCH controller.
-+- reg: Should specify the ECC controller registers location and length.
-+- clocks: Clock for the ECC controller.
- 
- Example:
- 
+-void igc_write_rss_indir_tbl(struct igc_adapter *adapter)
++static void igc_write_rss_indir_tbl(struct igc_adapter *adapter)
+ {
+ 	struct igc_hw *hw = &adapter->hw;
+ 	u32 reg = IGC_RETA(0);
 -- 
-2.11.0
+2.7.4
+
 
