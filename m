@@ -2,126 +2,222 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ADFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD31C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F682082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0934520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mETSIgJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfCSLVj (ORCPT
+        id S1727217AbfCSLZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:21:39 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49768 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbfCSLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:21:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA02B174E;
-        Tue, 19 Mar 2019 04:21:38 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 056D83F614;
-        Tue, 19 Mar 2019 04:21:36 -0700 (PDT)
-Subject: Re: [PATCH v1 4/9] iommu/vt-d: Add bounce buffer API for domain
- map/unmap
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     kevin.tian@intel.com, mika.westerberg@linux.intel.com,
-        ashok.raj@intel.com, alan.cox@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        pengfei.xu@intel.com, jacob.jun.pan@intel.com,
-        David Woodhouse <dwmw2@infradead.org>
-References: <20190312060005.12189-1-baolu.lu@linux.intel.com>
- <20190312060005.12189-5-baolu.lu@linux.intel.com>
- <20190312163845.GA13141@infradead.org>
- <e653341d-e001-7262-740b-2262842be06d@linux.intel.com>
- <c9fe7879-569e-b4f4-d6ec-47ab7e6fd443@linux.intel.com>
- <20190313161029.GA23513@infradead.org>
- <c1ffee0a-24d2-df53-0689-23b0d8ef065d@linux.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <04703ea4-58e5-f833-5b39-1b68df2839ca@arm.com>
-Date:   Tue, 19 Mar 2019 11:21:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 07:25:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42728 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSLZm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:25:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n9so16512152wrr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 04:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A3JgLHFiJiDKRWwNVpEhyRSFZhkZ10MYX6wZTJJU16w=;
+        b=mETSIgJ1/NOhnEXBqXdeYCCF+zbNRGDUPzqsxFIG96ZmiCk62vHDjfWnQnykRc7KFy
+         gWhQ11a/AMFBCO4Lbdl0hHwk3J9eaMX6U9u+T7+eKspENgYUVlPm7fXG9tuwuwP8qESp
+         VXK2JU1S9+dfeUYQgfqXFaDMJvNnI2bJPreXJ0yjkoWYwHJlv4Jt/uB6NFtEblBv6fVj
+         ZJeRhzHwgeC/k2bCI37aruuoCc/fMvr+nG3KZ6Rv8wLzBLWLAMdi9opSITfTaX0XiaId
+         uSE753n1uwfdgOgLfAF/lJd39DXf8BWiFYJQ3a9duiXgJaGJ1QIpj5420uPNNo5fv6Za
+         uk8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A3JgLHFiJiDKRWwNVpEhyRSFZhkZ10MYX6wZTJJU16w=;
+        b=lQTOiMpFlKmno2zgVa14CIdQia+akVL4mUjNJ3GXtpBxVdnOTRq3yDdewgL9BArhA/
+         c0v5M55lIKYD4waC3aTdsUWbjwfr37eJZO9n5D2uVbh0s2P6MIhHt5pezb9A0YlS4f/U
+         mFgke1RYOyarGO/NWHfpqBV503tCUkvRF2O1vsXvtoC+ZeMtPiMGDmjdXsICK8ut6TCS
+         ARXS3346s8mjH/ZS5KIK86B83LHpW6gXpsMNj9GN8hnfFughcGO9lFopQFNRi2hs4nrS
+         xQi0IDwxyEa2xtcl39t+TT11KVTd5hlImxPHkZetx1fWmKOoGCjfO5Kidel8nwxCX+Bt
+         8qDQ==
+X-Gm-Message-State: APjAAAVzhEcV4mOMkZq+yQm45BahPcdHnZe8WcwHtBPPbUCUVtljfCRT
+        cXFXFSA8ItPT1CbjGyJPntAxcA==
+X-Google-Smtp-Source: APXvYqyN+8Vho7yqLyT5s6MylHvBjMRkheqU82nnoC3EiyMtryfS76vLTfm0kruGHoNTW4yIX3Kisw==
+X-Received: by 2002:a5d:464e:: with SMTP id j14mr17467772wrs.109.1552994739515;
+        Tue, 19 Mar 2019 04:25:39 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id o8sm2610073wma.1.2019.03.19.04.25.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 04:25:38 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 11:25:37 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] tracing: Add trace_total_entries() /
+ trace_total_entries_cpu()
+Message-ID: <20190319112537.5yi7gelkk4ixswmu@holly.lan>
+References: <20190318204741.116550-1-dianders@chromium.org>
+ <20190318204741.116550-2-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <c1ffee0a-24d2-df53-0689-23b0d8ef065d@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318204741.116550-2-dianders@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019 07:59, Lu Baolu wrote:
-> Hi Christoph,
+On Mon, Mar 18, 2019 at 01:47:40PM -0700, Douglas Anderson wrote:
+> These two new exported functions will be used in a future patch by
+> kdb_ftdump() to quickly skip all but the last few trace entries.
 > 
-> On 3/14/19 12:10 AM, Christoph Hellwig wrote:
->> On Wed, Mar 13, 2019 at 10:31:52AM +0800, Lu Baolu wrote:
->>> Hi again,
->>>
->>> On 3/13/19 10:04 AM, Lu Baolu wrote:
->>>> Hi,
->>>>
->>>> On 3/13/19 12:38 AM, Christoph Hellwig wrote:
->>>>> On Tue, Mar 12, 2019 at 02:00:00PM +0800, Lu Baolu wrote:
->>>>>> This adds the APIs for bounce buffer specified domain
->>>>>> map() and unmap(). The start and end partial pages will
->>>>>> be mapped with bounce buffered pages instead. This will
->>>>>> enhance the security of DMA buffer by isolating the DMA
->>>>>> attacks from malicious devices.
->>>>>
->>>>> Please reuse the swiotlb code instead of reinventing it.
->>>>>
->>>
->>> Just looked into the code again. At least we could reuse below
->>> functions:
->>>
->>> swiotlb_tbl_map_single()
->>> swiotlb_tbl_unmap_single()
->>> swiotlb_tbl_sync_single()
->>>
->>> Anything else?
->>
->> Yes, that is probably about the level you want to reuse, given that the
->> next higher layer already has hooks into the direct mapping code.
->>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> I am trying to change my code to reuse swiotlb. But I found that swiotlb
-> might not be suitable for my case.
+> Changes in v5: None
+> Changes in v4:
+> - trace_total_entries() / trace_total_entries_cpu() new for v4
 > 
-> Below is what I got with swiotlb_map():
+> Changes in v3: None
 > 
-> phy_addr        size    tlb_addr
-> --------------------------------
-> 0x167eec330     0x8     0x85dc6000
-> 0x167eef5c0     0x40    0x85dc6800
-> 0x167eec330     0x8     0x85dc7000
-> 0x167eef5c0     0x40    0x85dc7800
+>  kernel/trace/trace.c | 65 ++++++++++++++++++++++++++++++++++----------
+>  kernel/trace/trace.h |  3 ++
+>  2 files changed, 53 insertions(+), 15 deletions(-)
 > 
-> But what I expected to get is:
-> 
-> phy_addr        size    tlb_addr
-> --------------------------------
-> 0x167eec330     0x8     0xAAAAA330
-> 0x167eef5c0     0x40    0xBBBBB5c0
-> 0x167eec330     0x8     0xCCCCC330
-> 0x167eef5c0     0x40    0xDDDDD5c0
-> 
-> , where 0xXXXXXX000 is the physical address of a bounced page.
-> 
-> Basically, I want a bounce page to replace a leaf page in the vt-d page
-> table, which maps a buffer with size less than a PAGE_SIZE.
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index ccd759eaad79..7afc90f82e53 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3490,34 +3490,69 @@ static void s_stop(struct seq_file *m, void *p)
+>  	trace_event_read_unlock();
+>  }
+>  
+> +static void
+> +get_total_entries_cpu(struct trace_buffer *buf, unsigned long *total,
+> +		      unsigned long *entries, int cpu)
+> +{
+> +	unsigned long count;
+> +
+> +	count = ring_buffer_entries_cpu(buf->buffer, cpu);
+> +	/*
+> +	 * If this buffer has skipped entries, then we hold all
+> +	 * entries for the trace and we need to ignore the
+> +	 * ones before the time stamp.
+> +	 */
+> +	if (per_cpu_ptr(buf->data, cpu)->skipped_entries) {
+> +		count -= per_cpu_ptr(buf->data, cpu)->skipped_entries;
+> +		/* total is the same as the entries */
+> +		*total = count;
+> +	} else
+> +		*total = count +
+> +			ring_buffer_overrun_cpu(buf->buffer, cpu);
+> +	*entries = count;
+> +}
+> +
+>  static void
+>  get_total_entries(struct trace_buffer *buf,
+>  		  unsigned long *total, unsigned long *entries)
+>  {
+> -	unsigned long count;
+> +	unsigned long t, e;
+>  	int cpu;
+>  
+>  	*total = 0;
+>  	*entries = 0;
+>  
+>  	for_each_tracing_cpu(cpu) {
+> -		count = ring_buffer_entries_cpu(buf->buffer, cpu);
+> -		/*
+> -		 * If this buffer has skipped entries, then we hold all
+> -		 * entries for the trace and we need to ignore the
+> -		 * ones before the time stamp.
+> -		 */
+> -		if (per_cpu_ptr(buf->data, cpu)->skipped_entries) {
+> -			count -= per_cpu_ptr(buf->data, cpu)->skipped_entries;
+> -			/* total is the same as the entries */
+> -			*total += count;
+> -		} else
+> -			*total += count +
+> -				ring_buffer_overrun_cpu(buf->buffer, cpu);
+> -		*entries += count;
+> +		get_total_entries_cpu(buf, &t, &e, cpu);
+> +		*total += t;
+> +		*entries += e;
+>  	}
+>  }
+>  
+> +unsigned long trace_total_entries_cpu(struct trace_array *tr, int cpu)
+> +{
+> +	unsigned long total, entries;
+> +
+> +	if (!tr)
+> +		tr = &global_trace;
 
-I'd imagine the thing to do would be to factor out the slot allocation 
-in swiotlb_tbl_map_single() so that an IOMMU page pool/allocator can be 
-hooked in as an alternative.
+This function is only ever called with tr set to NULL which means tr is
+an argument looking for a user.
 
-However we implement it, though, this should absolutely be a common 
-IOMMU thing that all relevant DMA backends can opt into, and not 
-specific to VT-d. I mean, it's already more or less the same concept as 
-the PowerPC secure VM thing.
+I wouldn't mind except if this was following copying prior art to keep
+the API feel the same but I can't find any other trace function where
+the trace_array can be substituted for NULL. AFAICT all the existing
+sites where global_trace is used will use it unconditionally.
 
-Robin.
+
+> +
+> +	get_total_entries_cpu(&tr->trace_buffer, &total, &entries, cpu);
+> +
+> +	return entries;
+> +}
+> +
+> +unsigned long trace_total_entries(struct trace_array *tr)
+> +{
+> +	unsigned long total, entries;
+> +
+> +	if (!tr)
+> +		tr = &global_trace;
+
+Ditto.
+
+
+Daniel.
+
+
+> +
+> +	get_total_entries(&tr->trace_buffer, &total, &entries);
+> +
+> +	return entries;
+> +}
+> +
+>  static void print_lat_help_header(struct seq_file *m)
+>  {
+>  	seq_puts(m, "#                  _------=> CPU#            \n"
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index d80cee49e0eb..4562b30eda9d 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -719,6 +719,9 @@ void trace_init_global_iter(struct trace_iterator *iter);
+>  
+>  void tracing_iter_reset(struct trace_iterator *iter, int cpu);
+>  
+> +unsigned long trace_total_entries_cpu(struct trace_array *tr, int cpu);
+> +unsigned long trace_total_entries(struct trace_array *tr);
+> +
+>  void trace_function(struct trace_array *tr,
+>  		    unsigned long ip,
+>  		    unsigned long parent_ip,
+> -- 
+> 2.21.0.225.g810b269d1ac-goog
+> 
