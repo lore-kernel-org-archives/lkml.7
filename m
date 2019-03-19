@@ -6,33 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC484C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFD820850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14548205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 15:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfCSPTo (ORCPT
+        id S1727700AbfCSPU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 11:19:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5271 "EHLO huawei.com"
+        Tue, 19 Mar 2019 11:20:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5706 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726612AbfCSPTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 11:19:44 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CFF72F1832997C0B44B5;
-        Tue, 19 Mar 2019 23:19:40 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
- 23:19:30 +0800
+        id S1726794AbfCSPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 11:20:58 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 31B86817246F9BB49716;
+        Tue, 19 Mar 2019 23:20:56 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Tue, 19 Mar 2019
+ 23:20:46 +0800
 From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <pkshih@realtek.com>, <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] rtl8723ae: Make rtl8723e_dm_refresh_rate_adaptive_mask static
-Date:   Tue, 19 Mar 2019 23:19:27 +0800
-Message-ID: <20190319151927.19392-1-yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drivers: base: swnode: Make two functions static
+Date:   Tue, 19 Mar 2019 23:20:42 +0800
+Message-ID: <20190319152042.9780-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -47,27 +45,36 @@ From: YueHaibing <yuehaibing@huawei.com>
 
 Fix sparse warning:
 
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:666:6:
- warning: symbol 'rtl8723e_dm_refresh_rate_adaptive_mask' was not declared. Should it be static?
+drivers/base/swnode.c:475:22: warning: symbol 'software_node_get_parent' was not declared. Should it be static?
+drivers/base/swnode.c:484:22: warning: symbol 'software_node_get_next_child' was not declared. Should it be static?
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/swnode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-index 514891e..d8260c7 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-@@ -663,7 +663,7 @@ void rtl8723e_dm_init_rate_adaptive_mask(struct ieee80211_hw *hw)
- 
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 1fad929..7fc5a18 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -472,7 +472,7 @@ static int software_node_read_string_array(const struct fwnode_handle *fwnode,
+ 						val, nval);
  }
  
--void rtl8723e_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
-+static void rtl8723e_dm_refresh_rate_adaptive_mask(struct ieee80211_hw *hw)
+-struct fwnode_handle *
++static struct fwnode_handle *
+ software_node_get_parent(const struct fwnode_handle *fwnode)
  {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_hal *rtlhal = rtl_hal(rtl_priv(hw));
+ 	struct software_node *swnode = to_software_node(fwnode);
+@@ -481,7 +481,7 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
+ 			NULL;
+ }
+ 
+-struct fwnode_handle *
++static struct fwnode_handle *
+ software_node_get_next_child(const struct fwnode_handle *fwnode,
+ 			     struct fwnode_handle *child)
+ {
 -- 
 2.7.4
 
