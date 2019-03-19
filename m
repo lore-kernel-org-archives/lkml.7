@@ -2,470 +2,472 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90519C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD7C10F0D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559D520857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E654213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 11:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfCSLoS convert rfc822-to-8bit (ORCPT
+        id S1727111AbfCSLoZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 07:44:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58294 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfCSLoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 07:44:17 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h6DA4-0006B0-Ec; Tue, 19 Mar 2019 12:44:04 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] drm: rockchip: introduce rk3066 hdmi
-Date:   Tue, 19 Mar 2019 12:44:03 +0100
-Message-ID: <4125149.ebfS1HlHkS@diego>
-In-Reply-To: <20190306224113.24853-2-jbx6244@gmail.com>
-References: <20190306224113.24853-1-jbx6244@gmail.com> <20190306224113.24853-2-jbx6244@gmail.com>
+        Tue, 19 Mar 2019 07:44:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:60808 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfCSLoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 07:44:25 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h6DAJ-00022d-Ap; Tue, 19 Mar 2019 12:44:19 +0100
+Date:   Tue, 19 Mar 2019 12:44:19 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
+        Mike Galbraith <efault@gmx.de>
+Subject: [PATCH v2] rcu: Allow to eliminate softirq processing from rcutree
+Message-ID: <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
+References: <20190315111130.4902-1-bigeasy@linutronix.de>
+ <20190318022434.GE4102@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190318022434.GE4102@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 
-Am Mittwoch, 6. März 2019, 23:41:10 CET schrieb Johan Jonker:
-> From: Zheng Yang <zhengyang@rock-chips.com>
-> 
-> The RK3066 HDMI TX serves as interface between a LCD Controller and
-> a HDMI bus. A HDMI TX consists of one HDMI transmitter controller and
-> one HDMI transmitter PHY. The interface has three (3) 8-bit data channels
-> which can be configured for a number of bus widths (8/10/12/16/20/24-bit)
-> and different video formats (RGB, YCbCr).
-> 
-> Features:
-> HDMI version 1.4a, HDCP revision 1.4 and
-> DVI version 1.0 compliant transmitter.
-> Supports DTV resolutions from 480i to 1080i/p HD.
-> Master I2C interface for a DDC connection.
-> HDMI TX supports multiple power save modes.
-> The HDMI TX input can switch between LCDC0 and LCDC1.
-> (Sound support is not included in this patch)
-> 
-> Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Running RCU out of softirq is a problem for some workloads that would
+like to manage RCU core processing independently of other softirq work,
+for example, setting kthread priority.
+This commit therefore introduces the `rcunosoftirq' option which moves
+the RCU core work from softirq to a per-CPU/per-flavor SCHED_OTHER
+kthread named rcuc.
+The SCHED_OTHER approach avoids the scalability problems that appeared
+with the earlier attempt to move RCU core processing to from softirq to
+kthreads.
+That said, kernels built with RCU_BOOST=y will run the rcuc kthreads at
+the RCU-boosting priority.
 
-Looks good in general, but there are some minor things to improve yet,
-please see below for specifics.
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Mike Galbraith <efault@gmx.de>
+Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+[bigeasy: add rcunosoftirq option]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v1â€¦v2:
+       - rebased to Paul's rcu/dev tree/branch
+       - Replaced Mike's email with @gmx.de since the @online.de does
+	 not work anymore.
 
-[...]
+ kernel/rcu/tree.c        | 129 +++++++++++++++++++++++++++++++++---
+ kernel/rcu/tree.h        |   2 +-
+ kernel/rcu/tree_plugin.h | 137 +++++----------------------------------
+ 3 files changed, 138 insertions(+), 130 deletions(-)
 
-> +static void rk3066_hdmi_config_phy(struct rk3066_hdmi *hdmi)
-> +{
-> +	/* TMDS uses the same frequency as dclk. */
-> +	hdmi_writeb(hdmi, HDMI_DEEP_COLOR_MODE, 0x22);
-
-These magic values below are no fault of yours, but in any case this
-could use a comment that the semi-public documentation does not
-describe hdmi-registers at all, so we're stuck with these magic-values
-for now.
-
-> +	if (hdmi->tmdsclk > 100000000) {
-> +		rk3066_hdmi_phy_write(hdmi, 0x158, 0x0E);
-> +		rk3066_hdmi_phy_write(hdmi, 0x15c, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x160, 0x60);
-> +		rk3066_hdmi_phy_write(hdmi, 0x164, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x168, 0xDA);
-> +		rk3066_hdmi_phy_write(hdmi, 0x16c, 0xA1);
-> +		rk3066_hdmi_phy_write(hdmi, 0x170, 0x0e);
-> +		rk3066_hdmi_phy_write(hdmi, 0x174, 0x22);
-> +		rk3066_hdmi_phy_write(hdmi, 0x178, 0x00);
-> +	} else if (hdmi->tmdsclk > 50000000) {
-> +		rk3066_hdmi_phy_write(hdmi, 0x158, 0x06);
-> +		rk3066_hdmi_phy_write(hdmi, 0x15c, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x160, 0x60);
-> +		rk3066_hdmi_phy_write(hdmi, 0x164, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x168, 0xCA);
-> +		rk3066_hdmi_phy_write(hdmi, 0x16c, 0xA3);
-> +		rk3066_hdmi_phy_write(hdmi, 0x170, 0x0e);
-> +		rk3066_hdmi_phy_write(hdmi, 0x174, 0x20);
-> +		rk3066_hdmi_phy_write(hdmi, 0x178, 0x00);
-> +	} else {
-> +		rk3066_hdmi_phy_write(hdmi, 0x158, 0x02);
-> +		rk3066_hdmi_phy_write(hdmi, 0x15c, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x160, 0x60);
-> +		rk3066_hdmi_phy_write(hdmi, 0x164, 0x00);
-> +		rk3066_hdmi_phy_write(hdmi, 0x168, 0xC2);
-> +		rk3066_hdmi_phy_write(hdmi, 0x16c, 0xA2);
-> +		rk3066_hdmi_phy_write(hdmi, 0x170, 0x0e);
-> +		rk3066_hdmi_phy_write(hdmi, 0x174, 0x20);
-> +		rk3066_hdmi_phy_write(hdmi, 0x178, 0x00);
-> +	}
-> +}
-
-> +static void rk3066_hdmi_encoder_enable(struct drm_encoder *encoder)
-> +{
-> +	struct rk3066_hdmi *hdmi = to_rk3066_hdmi(encoder);
-> +	int mux, val;
-> +
-> +	mux = drm_of_encoder_active_endpoint_id(hdmi->dev->of_node, encoder);
-> +	if (mux)
-> +		val = BIT(30) | BIT(14);
-> +	else
-> +		val = BIT(30);
-> +
-> +	regmap_write(hdmi->grf, 0x150, val);
-
-
-Please define constants for both BIT(14) and the 0x150 GRF register,
-which is GRF_SOC_CON0, so in the header
-
-#define GRF_SOC_CON0	0x150
-#define HDMI_VIDEO_SEL	BIT(14)
-
-and then do
-	if (mux)
-		val = (HDMI_VIDEO_SEL << 16) | HDMI_VIDEO_SEL;
-	else
-		val = HDMI_VIDEO_SEL << 16;
-
-	regmap_write(hdmi->grf, GRF_SOC_CON0, val);
-
-> +
-> +	dev_dbg(hdmi->dev, "hdmi encoder enable select: vop%s\n",
-> +		(mux) ? "1" : "0");
-> +
-> +	rk3066_hdmi_setup(hdmi, &hdmi->previous_mode);
-> +}
-> +
-
-
-> +static const struct drm_display_mode edid_cea_modes[] = {
-> +	/* 4 - 1280x720@60Hz 16:9 */
-> +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 74250, 1280, 1390,
-> +		   1430, 1650, 0, 720, 725, 730, 750, 0,
-> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> +};
-
-please drop that, see below
-
-> +static int rk3066_hdmi_connector_get_modes(struct drm_connector *connector)
-> +{
-> +	struct rk3066_hdmi *hdmi = to_rk3066_hdmi(connector);
-> +	struct drm_display_mode *mode = NULL;
-> +	struct edid *edid;
-> +	int ret = 0;
-> +
-> +	if (!hdmi->ddc)
-> +		return 0;
-> +
-> +	hdmi->hdmi_data.sink_is_hdmi = false;
-> +
-> +	edid = drm_get_edid(connector, hdmi->ddc);
-> +	if (edid) {
-> +		hdmi->hdmi_data.sink_is_hdmi = drm_detect_hdmi_monitor(edid);
-> +
-> +		dev_info(hdmi->dev, "monitor type : %s : %dx%d cm\n",
-> +			(hdmi->hdmi_data.sink_is_hdmi ? "HDMI" : "DVI"),
-> +			edid->width_cm, edid->height_cm);
-> +
-> +		drm_connector_update_edid_property(connector, edid);
-> +		ret = drm_add_edid_modes(connector, edid);
-> +		kfree(edid);
-> +	}
-> +
-> +	if ((ret == 0) || (hdmi->hdmi_data.sink_is_hdmi == false)) {
-> +		hdmi->hdmi_data.sink_is_hdmi = false;
-> +
-> +		mode = drm_mode_duplicate(hdmi->drm_dev, &edid_cea_modes[0]);
-> +		if (!mode)
-> +			return ret;
-> +		mode->type |= DRM_MODE_TYPE_PREFERRED;
-> +		drm_mode_probed_add(connector, mode);
-> +		ret++;
-> +
-> +		dev_info(hdmi->dev, "no CEA mode found, use default\n");
-
-This is a hack from the vendor-kernel.
-
-If EDID reading fails, it is some sort of issue with the driver, so we
-shouldn't assume any specific mode at all. See the somewhat similar
-inno_hdmi driver for comparison.
-
-
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-
-
-
-> +static int
-> +rk3066_hdmi_register(struct drm_device *drm, struct rk3066_hdmi *hdmi)
-> +{
-> +	struct drm_encoder *encoder = &hdmi->encoder;
-> +	struct device *dev = hdmi->dev;
-> +
-> +	encoder->possible_crtcs =
-> +		drm_of_find_possible_crtcs(drm, dev->of_node);
-> +
-> +	/*
-> +	 * If we failed to find the VOP(s) which this encoder is
-> +	 * supposed to be connected to, it's because the VOP has
-> +	 * not been registered yet.  Defer probing, and hope that
-> +	 * the required VOP is added later.
-> +	 */
-> +	if (encoder->possible_crtcs == 0)
-> +		return -EPROBE_DEFER;
-> +
-> +	dev_info(hdmi->dev, "VOP found\n");
-
-unnecessary output which will clutter up the kernel log, please drop.
-
-> +
-> +	drm_encoder_helper_add(encoder, &rk3066_hdmi_encoder_helper_funcs);
-> +	drm_encoder_init(drm, encoder, &rk3066_hdmi_encoder_funcs,
-> +			 DRM_MODE_ENCODER_TMDS, NULL);
-> +
-> +	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> +
-> +	drm_connector_helper_add(&hdmi->connector,
-> +				 &rk3066_hdmi_connector_helper_funcs);
-> +	drm_connector_init(drm, &hdmi->connector,
-> +			   &rk3066_hdmi_connector_funcs,
-> +			   DRM_MODE_CONNECTOR_HDMIA);
-> +
-> +	drm_connector_attach_encoder(&hdmi->connector, encoder);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t rk3066_hdmi_i2c_irq(struct rk3066_hdmi *hdmi, u8 stat)
-> +{
-> +	struct rk3066_hdmi_i2c *i2c = hdmi->i2c;
-> +
-> +	if (!(stat & HDMI_INTR_EDID_MASK))
-> +		return IRQ_NONE;
-> +
-> +	i2c->stat = stat;
-> +
-> +	complete(&i2c->compl);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t rk3066_hdmi_hardirq(int irq, void *dev_id)
-> +{
-> +	struct rk3066_hdmi *hdmi = dev_id;
-> +	irqreturn_t ret = IRQ_NONE;
-> +	u8 interrupt;
-> +
-> +	if (rk3066_hdmi_get_power_mode(hdmi) == HDMI_SYS_POWER_MODE_A)
-> +		hdmi_writeb(hdmi, HDMI_SYS_CTRL, HDMI_SYS_POWER_MODE_B);
-> +
-> +	interrupt = hdmi_readb(hdmi, HDMI_INTR_STATUS1);
-> +	if (interrupt)
-> +		hdmi_writeb(hdmi, HDMI_INTR_STATUS1, interrupt);
-> +
-> +	if (hdmi->i2c)
-> +		ret = rk3066_hdmi_i2c_irq(hdmi, interrupt);
-
-I think you don't really need that rk3066_hdmi_i2c_irq function above,
-this can just become
-
-	if (interrupt & HDMI_INTR_EDID_MASK) {
-		hdmi->i2c->stat = stat;
-		complete(&hdmi->i2c->compl);
-	}
-
-hdmi->i2c is set through rk3066_hdmi_i2c_adapter() which is always called
-and needs to be sucessful before registering the interrupt, so there is
-no need to check for hdmi->i2c here at all.
-
-
-> +
-> +	if (interrupt & (HDMI_INTR_HOTPLUG | HDMI_INTR_MSENS))
-> +		ret = IRQ_WAKE_THREAD;
-> +
-> +	return ret;
-> +}
-> +
-
-
-
-
-
-> +static struct i2c_adapter *rk3066_hdmi_i2c_adapter(struct rk3066_hdmi *hdmi)
-> +{
-> +	struct i2c_adapter *adap;
-> +	struct rk3066_hdmi_i2c *i2c;
-> +	int ret;
-> +
-> +	i2c = devm_kzalloc(hdmi->dev, sizeof(*i2c), GFP_KERNEL);
-> +	if (!i2c)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	mutex_init(&i2c->i2c_lock);
-> +	init_completion(&i2c->compl);
-> +
-> +	adap = &i2c->adap;
-> +	adap->class = I2C_CLASS_DDC;
-> +	adap->owner = THIS_MODULE;
-> +	adap->dev.parent = hdmi->dev;
-> +	adap->dev.of_node = hdmi->dev->of_node;
-> +	adap->algo = &rk3066_hdmi_algorithm;
-> +	strlcpy(adap->name, "RK3066 HDMI", sizeof(adap->name));
-> +	i2c_set_adapdata(adap, hdmi);
-> +
-> +	ret = i2c_add_adapter(adap);
-> +	if (ret) {
-> +		dev_warn(hdmi->dev, "cannot add %s I2C adapter\n", adap->name);
-> +		devm_kfree(hdmi->dev, i2c);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	hdmi->i2c = i2c;
-> +
-> +	dev_info(hdmi->dev, "registered %s I2C bus driver\n", adap->name);
-
-Please drop or make it a DRM_DEV_DEBUG. Also, please convert all the
-general dev_foobar calls to their DRM_* equivalents, so
-dev_warn becomes DRM_DEV_ERROR, dev_info DRM_DEV_INFO and so on.
-
-
-> +	return adap;
-> +}
-> +
-> +static int rk3066_hdmi_bind(struct device *dev, struct device *master,
-> +			    void *data)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct drm_device *drm = data;
-> +	struct rk3066_hdmi *hdmi;
-> +	struct resource *iores;
-> +	int irq;
-> +	int ret;
-> +
-> +	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
-> +	if (!hdmi)
-> +		return -ENOMEM;
-> +
-> +	hdmi->dev = dev;
-> +	hdmi->drm_dev = drm;
-> +
-> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!iores)
-> +		return -ENXIO;
-> +
-> +	hdmi->regs = devm_ioremap_resource(dev, iores);
-> +	if (IS_ERR(hdmi->regs))
-> +		return PTR_ERR(hdmi->regs);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	hdmi->hclk = devm_clk_get(dev, "hclk");
-> +	if (IS_ERR(hdmi->hclk)) {
-> +		dev_err(dev, "unable to get HDMI hclk clock\n");
-> +		return PTR_ERR(hdmi->hclk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(hdmi->hclk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot enable HDMI hclk clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +						    "rockchip,grf");
-> +	if (IS_ERR(hdmi->grf)) {
-> +		dev_err(dev, "unable to get rockchip,grf\n");
-> +		ret = PTR_ERR(hdmi->grf);
-> +		goto err_disable_hclk;
-> +	}
-> +
-> +	/* internal hclk = hdmi_hclk / 25 */
-> +	hdmi_writeb(hdmi, HDMI_INTERNAL_CLK_DIVIDER, 25);
-> +
-> +	hdmi->ddc = rk3066_hdmi_i2c_adapter(hdmi);
-> +	if (IS_ERR(hdmi->ddc)) {
-> +		ret = PTR_ERR(hdmi->ddc);
-> +		hdmi->ddc = NULL;
-> +		goto err_disable_hclk;
-> +	}
-> +
-> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_B);
-> +	usleep_range(999, 1000);
-> +	hdmi_writeb(hdmi, HDMI_INTR_MASK1, HDMI_INTR_HOTPLUG);
-> +	hdmi_writeb(hdmi, HDMI_INTR_MASK2, 0);
-> +	hdmi_writeb(hdmi, HDMI_INTR_MASK3, 0);
-> +	hdmi_writeb(hdmi, HDMI_INTR_MASK4, 0);
-> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_A);
-> +
-> +	ret = rk3066_hdmi_register(drm, hdmi);
-> +	if (ret)
-> +		goto err_disable_hclk;
-
-goto err_disable_i2c;
-
-So that the i2c-adapter also gets disabled on error.
-
-> +	dev_set_drvdata(dev, hdmi);
-> +
-> +	ret = devm_request_threaded_irq(dev, irq, rk3066_hdmi_hardirq,
-> +					rk3066_hdmi_irq, IRQF_SHARED,
-> +					dev_name(dev), hdmi);
-> +	if (ret) {
-> +		dev_err(dev, "failed to request hdmi irq: %d\n", ret);
-> +		goto err_disable_hclk;
-
-goto err_disable_i2c;
-
-> +	}
-> +
-> +	return 0;
-> +
-
-err_disable_i2c:
-	i2c_put_adapter(hdmi->ddc);
-
-> +err_disable_hclk:
-> +	clk_disable_unprepare(hdmi->hclk);
-> +
-> +	return ret;
-> +}
-> +
-> +static void rk3066_hdmi_unbind(struct device *dev, struct device *master,
-> +			       void *data)
-> +{
-> +	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	hdmi->connector.funcs->destroy(&hdmi->connector);
-> +	hdmi->encoder.funcs->destroy(&hdmi->encoder);
-> +
-> +	clk_disable_unprepare(hdmi->hclk);
-> +	i2c_put_adapter(hdmi->ddc);
-
-you should probably invert the calling order here, first remove the
-i2c adapter and only then disable the clock.
-
-
-Thanks
-Heiko
-
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 0f31b79eb6761..0a719f726e149 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -51,6 +51,12 @@
+ #include <linux/tick.h>
+ #include <linux/sysrq.h>
+ #include <linux/kprobes.h>
++#include <linux/gfp.h>
++#include <linux/oom.h>
++#include <linux/smpboot.h>
++#include <linux/jiffies.h>
++#include <linux/sched/isolation.h>
++#include "../time/tick-internal.h"
+ 
+ #include "tree.h"
+ #include "rcu.h"
+@@ -2253,7 +2259,7 @@ void rcu_force_quiescent_state(void)
+ EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
+ 
+ /* Perform RCU core processing work for the current CPU.  */
+-static __latent_entropy void rcu_core(struct softirq_action *unused)
++static __latent_entropy void rcu_core(void)
+ {
+ 	unsigned long flags;
+ 	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+@@ -2295,6 +2301,11 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
+ 	trace_rcu_utilization(TPS("End RCU core"));
+ }
+ 
++static void rcu_core_si(struct softirq_action *h)
++{
++	rcu_core();
++}
++
+ /*
+  * Schedule RCU callback invocation.  If the running implementation of RCU
+  * does not support RCU priority boosting, just do a direct call, otherwise
+@@ -2306,19 +2317,120 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
+ {
+ 	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
+ 		return;
+-	if (likely(!rcu_state.boost)) {
+-		rcu_do_batch(rdp);
+-		return;
+-	}
+-	invoke_rcu_callbacks_kthread();
++	rcu_do_batch(rdp);
+ }
+ 
++static void rcu_wake_cond(struct task_struct *t, int status)
++{
++	/*
++	 * If the thread is yielding, only wake it when this
++	 * is invoked from idle
++	 */
++	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
++		wake_up_process(t);
++}
++
++static bool rcu_softirq_enabled = true;
++
++static int __init rcunosoftirq_setup(char *str)
++{
++	rcu_softirq_enabled = false;
++	return 0;
++}
++__setup("rcunosoftirq", rcunosoftirq_setup);
++
++/*
++ * Wake up this CPU's rcuc kthread to do RCU core processing.
++ */
+ static void invoke_rcu_core(void)
+ {
+-	if (cpu_online(smp_processor_id()))
++	unsigned long flags;
++	struct task_struct *t;
++
++	if (!cpu_online(smp_processor_id()))
++		return;
++	if (rcu_softirq_enabled) {
+ 		raise_softirq(RCU_SOFTIRQ);
++	} else {
++		local_irq_save(flags);
++		__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
++		t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
++		if (t != NULL && t != current)
++			rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
++		local_irq_restore(flags);
++	}
+ }
+ 
++static void rcu_cpu_kthread_park(unsigned int cpu)
++{
++	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
++}
++
++static int rcu_cpu_kthread_should_run(unsigned int cpu)
++{
++	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
++}
++
++/*
++ * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
++ * the RCU softirq used in configurations of RCU that do not support RCU
++ * priority boosting.
++ */
++static void rcu_cpu_kthread(unsigned int cpu)
++{
++	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
++	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
++	int spincnt;
++
++	for (spincnt = 0; spincnt < 10; spincnt++) {
++		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
++		local_bh_disable();
++		*statusp = RCU_KTHREAD_RUNNING;
++		local_irq_disable();
++		work = *workp;
++		*workp = 0;
++		local_irq_enable();
++		if (work)
++			rcu_core();
++		local_bh_enable();
++		if (*workp == 0) {
++			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
++			*statusp = RCU_KTHREAD_WAITING;
++			return;
++		}
++	}
++	*statusp = RCU_KTHREAD_YIELDING;
++	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
++	schedule_timeout_interruptible(2);
++	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
++	*statusp = RCU_KTHREAD_WAITING;
++}
++
++static struct smp_hotplug_thread rcu_cpu_thread_spec = {
++	.store			= &rcu_data.rcu_cpu_kthread_task,
++	.thread_should_run	= rcu_cpu_kthread_should_run,
++	.thread_fn		= rcu_cpu_kthread,
++	.thread_comm		= "rcuc/%u",
++	.setup			= rcu_cpu_kthread_setup,
++	.park			= rcu_cpu_kthread_park,
++};
++
++/*
++ * Spawn per-CPU RCU core processing kthreads.
++ */
++static int __init rcu_spawn_core_kthreads(void)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu)
++		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
++	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
++		return 0;
++	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
++	return 0;
++}
++early_initcall(rcu_spawn_core_kthreads);
++
+ /*
+  * Handle any core-RCU processing required by a call_rcu() invocation.
+  */
+@@ -3355,7 +3467,8 @@ void __init rcu_init(void)
+ 	rcu_init_one();
+ 	if (dump_tree)
+ 		rcu_dump_rcu_node_tree();
+-	open_softirq(RCU_SOFTIRQ, rcu_core);
++	if (rcu_softirq_enabled)
++		open_softirq(RCU_SOFTIRQ, rcu_core_si);
+ 
+ 	/*
+ 	 * We don't need protection against CPU-hotplug here because
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index e253d11af3c49..a1a72a1ecb026 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -407,8 +407,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
+ static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
+ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
+ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
+-static void invoke_rcu_callbacks_kthread(void);
+ static bool rcu_is_callbacks_kthread(void);
++static void rcu_cpu_kthread_setup(unsigned int cpu);
+ static void __init rcu_spawn_boost_kthreads(void);
+ static void rcu_prepare_kthreads(int cpu);
+ static void rcu_cleanup_after_idle(void);
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index f46b4af96ab95..eb99e750a9306 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -11,29 +11,7 @@
+  *	   Paul E. McKenney <paulmck@linux.ibm.com>
+  */
+ 
+-#include <linux/delay.h>
+-#include <linux/gfp.h>
+-#include <linux/oom.h>
+-#include <linux/sched/debug.h>
+-#include <linux/smpboot.h>
+-#include <linux/sched/isolation.h>
+-#include <uapi/linux/sched/types.h>
+-#include "../time/tick-internal.h"
+-
+-#ifdef CONFIG_RCU_BOOST
+ #include "../locking/rtmutex_common.h"
+-#else /* #ifdef CONFIG_RCU_BOOST */
+-
+-/*
+- * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
+- * all uses are in dead code.  Provide a definition to keep the compiler
+- * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
+- * This probably needs to be excluded from -rt builds.
+- */
+-#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
+-#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
+-
+-#endif /* #else #ifdef CONFIG_RCU_BOOST */
+ 
+ #ifdef CONFIG_RCU_NOCB_CPU
+ static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
+@@ -629,7 +607,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		/* Need to defer quiescent state until everything is enabled. */
+ 		if (irqs_were_disabled) {
+ 			/* Enabling irqs does not reschedule, so... */
+-			raise_softirq_irqoff(RCU_SOFTIRQ);
++			if (rcu_softirq_enabled)
++				raise_softirq_irqoff(RCU_SOFTIRQ);
++			else
++				invoke_rcu_core();
+ 		} else {
+ 			/* Enabling BH or preempt does reschedule, so... */
+ 			set_tsk_need_resched(current);
+@@ -944,18 +925,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+ 
+ #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
+ 
+-#ifdef CONFIG_RCU_BOOST
+-
+-static void rcu_wake_cond(struct task_struct *t, int status)
++/*
++ * If boosting, set rcuc kthreads to realtime priority.
++ */
++static void rcu_cpu_kthread_setup(unsigned int cpu)
+ {
+-	/*
+-	 * If the thread is yielding, only wake it when this
+-	 * is invoked from idle
+-	 */
+-	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
+-		wake_up_process(t);
++#ifdef CONFIG_RCU_BOOST
++	struct sched_param sp;
++
++	sp.sched_priority = kthread_prio;
++	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
++#endif /* #ifdef CONFIG_RCU_BOOST */
+ }
+ 
++#ifdef CONFIG_RCU_BOOST
++
+ /*
+  * Carry out RCU priority boosting on the task indicated by ->exp_tasks
+  * or ->boost_tasks, advancing the pointer to the next task in the
+@@ -1093,23 +1077,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 	}
+ }
+ 
+-/*
+- * Wake up the per-CPU kthread to invoke RCU callbacks.
+- */
+-static void invoke_rcu_callbacks_kthread(void)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
+-	if (__this_cpu_read(rcu_data.rcu_cpu_kthread_task) != NULL &&
+-	    current != __this_cpu_read(rcu_data.rcu_cpu_kthread_task)) {
+-		rcu_wake_cond(__this_cpu_read(rcu_data.rcu_cpu_kthread_task),
+-			      __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
+-	}
+-	local_irq_restore(flags);
+-}
+-
+ /*
+  * Is the current CPU running the RCU-callbacks kthread?
+  * Caller must have preemption disabled.
+@@ -1163,59 +1130,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+ 	return 0;
+ }
+ 
+-static void rcu_cpu_kthread_setup(unsigned int cpu)
+-{
+-	struct sched_param sp;
+-
+-	sp.sched_priority = kthread_prio;
+-	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+-}
+-
+-static void rcu_cpu_kthread_park(unsigned int cpu)
+-{
+-	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+-}
+-
+-static int rcu_cpu_kthread_should_run(unsigned int cpu)
+-{
+-	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
+-}
+-
+-/*
+- * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+- * the RCU softirq used in configurations of RCU that do not support RCU
+- * priority boosting.
+- */
+-static void rcu_cpu_kthread(unsigned int cpu)
+-{
+-	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
+-	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
+-	int spincnt;
+-
+-	for (spincnt = 0; spincnt < 10; spincnt++) {
+-		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+-		local_bh_disable();
+-		*statusp = RCU_KTHREAD_RUNNING;
+-		local_irq_disable();
+-		work = *workp;
+-		*workp = 0;
+-		local_irq_enable();
+-		if (work)
+-			rcu_do_batch(this_cpu_ptr(&rcu_data));
+-		local_bh_enable();
+-		if (*workp == 0) {
+-			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+-			*statusp = RCU_KTHREAD_WAITING;
+-			return;
+-		}
+-	}
+-	*statusp = RCU_KTHREAD_YIELDING;
+-	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+-	schedule_timeout_interruptible(2);
+-	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+-	*statusp = RCU_KTHREAD_WAITING;
+-}
+-
+ /*
+  * Set the per-rcu_node kthread's affinity to cover all CPUs that are
+  * served by the rcu_node in question.  The CPU hotplug lock is still
+@@ -1246,27 +1160,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
+ 	free_cpumask_var(cm);
+ }
+ 
+-static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+-	.store			= &rcu_data.rcu_cpu_kthread_task,
+-	.thread_should_run	= rcu_cpu_kthread_should_run,
+-	.thread_fn		= rcu_cpu_kthread,
+-	.thread_comm		= "rcuc/%u",
+-	.setup			= rcu_cpu_kthread_setup,
+-	.park			= rcu_cpu_kthread_park,
+-};
+-
+ /*
+  * Spawn boost kthreads -- called as soon as the scheduler is running.
+  */
+ static void __init rcu_spawn_boost_kthreads(void)
+ {
+ 	struct rcu_node *rnp;
+-	int cpu;
+ 
+-	for_each_possible_cpu(cpu)
+-		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
+-	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+-		return;
+ 	rcu_for_each_leaf_node(rnp)
+ 		(void)rcu_spawn_one_boost_kthread(rnp);
+ }
+@@ -1289,11 +1189,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ }
+ 
+-static void invoke_rcu_callbacks_kthread(void)
+-{
+-	WARN_ON_ONCE(1);
+-}
+-
+ static bool rcu_is_callbacks_kthread(void)
+ {
+ 	return false;
+-- 
+2.20.1
 
