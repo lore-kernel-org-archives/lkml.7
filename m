@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654A4C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D2DC10F03
 	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B36A2146E
+	by mail.kernel.org (Postfix) with ESMTP id 630BC2147C
 	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 06:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="v9NBPp9+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="xcQkAvPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfCSGuk (ORCPT
+        id S1727399AbfCSGup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 02:50:40 -0400
+        Tue, 19 Mar 2019 02:50:45 -0400
 Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:21732
         "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726457AbfCSGuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 02:50:40 -0400
+        id S1725934AbfCSGun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 02:50:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QYrfdCybAFnNgD9DH8DV4chU4OPX+5rBcPx14fH7wTk=;
- b=v9NBPp9+cwYWlS7PZOAidV2mQ3FikDuCtOwGAoVKz+OXM1obTfWG8tUG0MweYs8qHXJxxHUXI9ZkjRiEnR8A0YYP6NJMw7WG+9a9ZUKgH01jfthGx2nfRB0vrAgaokdhzH43LxUhzmy6fGPyynBD8vqrtqjyce2M1243nFxxrCk=
+ bh=u0LDb8kDY8pVRSkkkFYTYGKwpeSaVIgCUyANvxL3Els=;
+ b=xcQkAvPFSsKdEocFU1Cu0hvFEPzcOv+uCy9bOwxpdaSdyyysGNB8IR/nh50zj3vqsdv74aurbJYFIZo82sLrca7GlaxTsihYmkSlNyzVNARn9DUPV9XkZoVMMUKEzFRExX8j4P1umtrVttrBo+SOuD7kKs758pprQSqZiWbY/u4=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
  DB3PR0402MB3788.eurprd04.prod.outlook.com (52.134.72.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -57,11 +57,11 @@ To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
 CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V6 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Topic: [PATCH V6 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Index: AQHU3h/8vPmt411kB02aOAUpMTuiLA==
-Date:   Tue, 19 Mar 2019 06:50:06 +0000
-Message-ID: <1552977898-5590-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V6 2/5] pwm: Add i.MX TPM PWM driver support
+Thread-Topic: [PATCH V6 2/5] pwm: Add i.MX TPM PWM driver support
+Thread-Index: AQHU3iAAbXQsZVPnD0StwW4JRo2kLQ==
+Date:   Tue, 19 Mar 2019 06:50:12 +0000
+Message-ID: <1552977898-5590-3-git-send-email-Anson.Huang@nxp.com>
 References: <1552977898-5590-1-git-send-email-Anson.Huang@nxp.com>
 In-Reply-To: <1552977898-5590-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
@@ -77,23 +77,23 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4420ee99-016c-4615-fdf5-08d6ac371eec
+x-ms-office365-filtering-correlation-id: 5933b225-f55d-4cc9-e972-08d6ac3722b4
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3788;
 x-ms-traffictypediagnostic: DB3PR0402MB3788:
-x-microsoft-antispam-prvs: <DB3PR0402MB3788D24803CB59940B1712BBF5400@DB3PR0402MB3788.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB3PR0402MB378838211D76122FF579DC0DF5400@DB3PR0402MB3788.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(346002)(396003)(136003)(199004)(189003)(6506007)(50226002)(25786009)(8936002)(14454004)(26005)(76176011)(256004)(386003)(4326008)(99286004)(110136005)(305945005)(8676002)(81166006)(68736007)(102836004)(446003)(81156014)(316002)(7416002)(7736002)(186003)(2501003)(105586002)(106356001)(6486002)(11346002)(97736004)(6436002)(2616005)(3846002)(486006)(2906002)(476003)(71200400001)(66066001)(52116002)(478600001)(5660300002)(6666004)(71190400001)(6116002)(2201001)(86362001)(36756003)(53936002)(6512007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3788;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(346002)(396003)(136003)(199004)(189003)(6506007)(50226002)(25786009)(8936002)(14454004)(26005)(76176011)(256004)(30864003)(14444005)(386003)(4326008)(99286004)(110136005)(305945005)(8676002)(81166006)(68736007)(102836004)(446003)(81156014)(316002)(7416002)(7736002)(186003)(2501003)(105586002)(106356001)(6486002)(11346002)(97736004)(6436002)(2616005)(3846002)(486006)(2906002)(53946003)(476003)(71200400001)(66066001)(52116002)(478600001)(5660300002)(6666004)(71190400001)(6116002)(2201001)(86362001)(36756003)(53936002)(6512007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3788;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iKxdZYqKCNAtkeAwEX9i8Hzo9bi4T8jBNGWkHg4xtUuOETzBMREYlsha7V5fEH9k3BtglspmXiSzRSXxa8oxOD94oBdtOOTIGGoukc6YxgEzQNO5qfNoO/2pmIzVJa7CZwQA8l75vHMCip8RyKRs+dN6q3PHoMPoRo5aXtD6OIdsW4SvRFgFdyzBv4w3K0n3m3HoTg3R72hEP6Qjbl4MIdmHwVQdqoVmExZCsk1EIXci6ZCQ4Z3mdlndVA8bcR7ZeXMuhaOfuIYGebq/lrSPUxxB5XrM6MxHzDI9Rij28M5eU//csRTC4WUENirqlLxSy/tIQ4HnJ/dSaWxzst0IBU+YrosSoSvlKaDuTK2qaocjPRNv1p+Z/q9Pc0/nEI9Dc48CCO8kvCxUdgUaVeZsWvQJMNilDTSBq9nRNBCOixc=
+x-microsoft-antispam-message-info: cObJtyM7vhCtwFIyNUDHbDk3sY0Or3cvF07in//NZNVzodsKXbufN1V2Bi0MXQUQs5XYIkirJtl8n53KP1ROjXvCwRh9fO/8vf5CLVvfv6Us72NOPZODk0nHtz5n+n604u878xl/JLcemmtY3AaCkJvjz+hNCEGJrcFhwI8lacpDhErAoJKC151Kn1a2VWsaK9zrYaEQnSs6+OrBioxVGHe1VQii3IOW83SMAmx7Y4wqk69aKzcE+RAdXDB+4yeiypb3g4Q9veNLhmPLNujR4oj9pLgcPrLI7yHdevOOPJKAaszqzZHSWWreIq6Z7+srg/JYBspTC98HlX5G+Z+/YqUb76VsHAdg5tt2qtcn7ePMCEtjU02NBiKtynNwJ28FbdQeiFgONtG4LXhfVm/AtORSwa7oxr+bmQHMnrBV+eo=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4420ee99-016c-4615-fdf5-08d6ac371eec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 06:50:06.4692
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5933b225-f55d-4cc9-e972-08d6ac3722b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 06:50:12.9016
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -104,51 +104,540 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
+inside, it can support multiple PWM channels, all the channels
+share same counter and period setting, but each channel can
+configure its duty and polarity independently.
+
+There are several TPM modules in i.MX7ULP, the number of channels
+in TPM modules are different, it can be read from each TPM module's
+PARAM register.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 Changes since V5:
-	- improve compatible string;
-	- change #pwm-cells to 3;
-	- "pwm" -> "PWM";
+	- improve commit message body;
+	- add period round function;
+	- use per channel data for saving channel's private data;
+	- improve error message output during probe;
+	- improve different period settings by different channels' handling;
+	- support #pwm-cells 3 cases.
 ---
- .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ++++++++++++++++++=
+ drivers/pwm/Kconfig       |  11 ++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-imx-tpm.c | 463 ++++++++++++++++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ 3 files changed, 475 insertions(+)
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt b/Docume=
-ntation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 54f8238..3ea0391 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -210,6 +210,17 @@ config PWM_IMX27
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-imx27.
+=20
++config PWM_IMX_TPM
++	tristate "i.MX TPM PWM support"
++	depends on ARCH_MXC || COMPILE_TEST
++	depends on HAVE_CLK && HAS_IOMEM
++	help
++	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
++	  name is Low Power Timer/Pulse Width Modulation Module.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-imx-tpm.
++
+ config PWM_JZ4740
+ 	tristate "Ingenic JZ47xx PWM support"
+ 	depends on MACH_INGENIC
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 448825e..c368599 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_PWM_HIBVT)		+=3D pwm-hibvt.o
+ obj-$(CONFIG_PWM_IMG)		+=3D pwm-img.o
+ obj-$(CONFIG_PWM_IMX1)		+=3D pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+=3D pwm-imx27.o
++obj-$(CONFIG_PWM_IMX_TPM)	+=3D pwm-imx-tpm.o
+ obj-$(CONFIG_PWM_JZ4740)	+=3D pwm-jz4740.o
+ obj-$(CONFIG_PWM_LP3943)	+=3D pwm-lp3943.o
+ obj-$(CONFIG_PWM_LPC18XX_SCT)	+=3D pwm-lpc18xx-sct.o
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
 new file mode 100644
-index 0000000..94f1ad5
+index 0000000..bb6b27e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-@@ -0,0 +1,22 @@
-+Freescale i.MX TPM PWM controller
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -0,0 +1,463 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2018-2019 NXP.
++ *
++ * Limitations:
++ * - The TPM counter and period counter are shared between
++ *   multiple channels, so all channels should use same period
++ *   settings.
++ */
 +
-+Required properties:
-+- compatible : Should be "fsl,imx-tpm".
-+- reg: Physical base address and length of the controller's registers.
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description=
- of the cells format.
-+- clocks : The clock provided by the SoC to drive the PWM.
-+- interrupts: The interrupt for the PWM controller.
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/log2.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
 +
-+Note: The TPM counter and period counter are shared between multiple chann=
-els, so all channels
-+should use same period setting.
++#define PWM_IMX_TPM_PARAM	0x4
++#define PWM_IMX_TPM_GLOBAL	0x8
++#define PWM_IMX_TPM_SC		0x10
++#define PWM_IMX_TPM_CNT		0x14
++#define PWM_IMX_TPM_MOD		0x18
++#define PWM_IMX_TPM_CnSC(n)	(0x20 + (n) * 0x8)
++#define PWM_IMX_TPM_CnV(n)	(0x24 + (n) * 0x8)
 +
-+Example:
++#define PWM_IMX_TPM_PARAM_CHAN			GENMASK(7, 0)
 +
-+pwm0: tpm@40250000 {
-+	compatible =3D "fsl,imx-tpm";
-+	reg =3D <0x40250000 0x1000>;
-+	assigned-clocks =3D <&clks IMX7ULP_CLK_LPTPM4>;
-+	assigned-clock-parents =3D <&clks IMX7ULP_CLK_SOSC_BUS_CLK>;
-+	clocks =3D <&clks IMX7ULP_CLK_LPTPM4>;
-+	#pwm-cells =3D <3>;
++#define PWM_IMX_TPM_SC_PS			GENMASK(2, 0)
++#define PWM_IMX_TPM_SC_CMOD			GENMASK(4, 3)
++#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	BIT(3)
++#define PWM_IMX_TPM_SC_CPWMS			BIT(5)
++
++#define PWM_IMX_TPM_CnSC_CHF	BIT(7)
++#define PWM_IMX_TPM_CnSC_MSB	BIT(5)
++#define PWM_IMX_TPM_CnSC_MSA	BIT(4)
++#define PWM_IMX_TPM_CnSC_ELS	GENMASK(3, 2) /* combine ELSA and ELSB as a f=
+ield */
++
++#define PWM_IMX_TPM_MOD_MOD	GENMASK(15, 0)
++
++#define PWM_IMX_TPM_MAX_COUNT		0xffff
++
++struct imx_tpm_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	void __iomem *base;
++	struct mutex lock;
++	u32 user_count;
++	u32 enable_count;
++	u32 real_period;
 +};
++
++struct imx_tpm_pwm_channel {
++	u32 config;
++	bool status;
++};
++
++static inline struct imx_tpm_pwm_chip *to_imx_tpm_pwm_chip(struct pwm_chip=
+ *chip)
++{
++	return container_of(chip, struct imx_tpm_pwm_chip, chip);
++}
++
++static unsigned int pwm_imx_tpm_round_period(struct pwm_chip *chip,
++					     u32 period)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	u32 rate, real_period, prescale, period_count;
++	u64 tmp;
++
++	rate =3D clk_get_rate(tpm->clk);
++	tmp =3D period;
++	tmp *=3D rate;
++	tmp =3D DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
++	if (tmp <=3D PWM_IMX_TPM_MAX_COUNT) {
++		prescale =3D 0;
++	} else {
++		prescale =3D roundup_pow_of_two(tmp /
++					      (PWM_IMX_TPM_MAX_COUNT + 1));
++		prescale =3D ilog2(prescale);
++	}
++
++	/* if no valid prescale found, use MAX instead */
++	if ((!FIELD_FIT(PWM_IMX_TPM_SC_PS, prescale)))
++		prescale =3D PWM_IMX_TPM_SC_PS >> __bf_shf(PWM_IMX_TPM_SC_PS);
++
++	/* if no valid period count found, use MAX instead */
++	period_count =3D (tmp + ((1 << prescale) >> 1)) >> prescale;
++	if (period_count > PWM_IMX_TPM_MOD_MOD)
++		period_count =3D PWM_IMX_TPM_MOD_MOD;
++
++	/* calculate real period HW can support */
++	tmp =3D period_count;
++	tmp *=3D (1 << prescale) * NSEC_PER_SEC;
++	real_period =3D DIV_ROUND_CLOSEST_ULL(tmp, rate);
++
++	return real_period;
++}
++
++static void pwm_imx_tpm_config_counter(struct pwm_chip *chip, u32 period)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	u32 val, rate, prescale, saved_cmod;
++	u64 tmp;
++
++	rate =3D clk_get_rate(tpm->clk);
++	tmp =3D period;
++	tmp *=3D rate;
++	tmp =3D DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
++	if (tmp <=3D PWM_IMX_TPM_MAX_COUNT) {
++		prescale =3D 0;
++	} else {
++		prescale =3D roundup_pow_of_two(tmp /
++					      (PWM_IMX_TPM_MAX_COUNT + 1));
++		prescale =3D ilog2(prescale);
++	}
++
++	/* make sure counter is disabled for programming prescale */
++	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
++	saved_cmod =3D FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
++	if (saved_cmod) {
++		val &=3D ~PWM_IMX_TPM_SC_CMOD;
++		writel(val, tpm->base + PWM_IMX_TPM_SC);
++	}
++
++	/* set TPM counter prescale */
++	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
++	val &=3D ~PWM_IMX_TPM_SC_PS;
++	val |=3D FIELD_PREP(PWM_IMX_TPM_SC_PS, prescale);
++	writel(val, tpm->base + PWM_IMX_TPM_SC);
++
++	/*
++	 * set period count: according to RM, the MOD register is
++	 * updated immediately after CMOD[1:0] =3D 2b'00 above
++	 */
++	val =3D (tmp + ((1 << prescale) >> 1)) >> prescale;
++	writel(val, tpm->base + PWM_IMX_TPM_MOD);
++
++	/* restore the clock mode if necessary */
++	if (saved_cmod) {
++		val =3D readl(tpm->base + PWM_IMX_TPM_SC);
++		val |=3D FIELD_PREP(PWM_IMX_TPM_SC_CMOD, saved_cmod);
++		writel(val, tpm->base + PWM_IMX_TPM_SC);
++	}
++
++	tpm->real_period =3D period;
++}
++
++static void pwm_imx_tpm_config(struct pwm_chip *chip,
++			       struct pwm_device *pwm,
++			       u32 period,
++			       u32 duty_cycle,
++			       enum pwm_polarity polarity)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	struct imx_tpm_pwm_channel *chan =3D pwm_get_chip_data(pwm);
++	u32 val;
++	u64 tmp;
++
++	/* set duty counter */
++	tmp =3D readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
++	tmp *=3D duty_cycle;
++	val =3D DIV_ROUND_CLOSEST_ULL(tmp, period);
++	writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
++
++	/*
++	 * set polarity (for edge-aligned PWM modes)
++	 *
++	 * ELS[1:0] =3D 2b10 yields normal polarity behaviour,
++	 * ELS[1:0] =3D 2b01 yields inversed polarity.
++	 * The other values are reserved.
++	 */
++	val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
++	val &=3D ~(PWM_IMX_TPM_CnSC_ELS | PWM_IMX_TPM_CnSC_MSA);
++	val |=3D PWM_IMX_TPM_CnSC_MSB;
++	val |=3D (polarity =3D=3D PWM_POLARITY_NORMAL) ?
++		FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
++		FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
++	/*
++	 * polarity settings will enabled/disable output status
++	 * immediately, so here ONLY save the config and write
++	 * it into register when channel is enabled/disabled.
++	 */
++	chan->config =3D val;
++}
++
++/*
++ * When a channel's polarity is configured, the polarity settings
++ * will be saved and ONLY write into the register when the channel
++ * is enabled.
++ *
++ * When a channel is disabled, its polarity settings will be saved
++ * and its output will be disabled by clearing polarity settings.
++ *
++ * When a channel is enabled, its polarity settings will be restored
++ * and output will be enabled again.
++ */
++static void pwm_imx_tpm_enable(struct pwm_chip *chip,
++			       struct pwm_device *pwm,
++			       bool enable)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	struct imx_tpm_pwm_channel *chan =3D pwm_get_chip_data(pwm);
++	u32 val;
++
++	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
++	if (enable) {
++		/* restore channel config */
++		writel(chan->config,
++		       tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
++
++		if (++tpm->enable_count =3D=3D 1) {
++			/* start TPM counter */
++			val |=3D PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
++			writel(val, tpm->base + PWM_IMX_TPM_SC);
++		}
++	} else {
++		/* disable channel */
++		val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
++		val &=3D ~(PWM_IMX_TPM_CnSC_MSA | PWM_IMX_TPM_CnSC_MSB |
++			 PWM_IMX_TPM_CnSC_ELS);
++		writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
++
++		if (--tpm->enable_count =3D=3D 0) {
++			/* stop TPM counter since all channels are disabled */
++			val &=3D ~PWM_IMX_TPM_SC_CMOD;
++			writel(val, tpm->base + PWM_IMX_TPM_SC);
++		}
++	}
++
++	/* update channel status */
++	chan->status =3D enable;
++}
++
++static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	u32 rate, val;
++	u64 tmp;
++
++	/* get period */
++	state->period =3D tpm->real_period;
++
++	/* get duty cycle */
++	rate =3D clk_get_rate(tpm->clk);
++	val =3D readl(tpm->base + PWM_IMX_TPM_SC);
++	val =3D FIELD_GET(PWM_IMX_TPM_SC_PS, val);
++	tmp =3D readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
++	tmp *=3D (1 << val) * NSEC_PER_SEC;
++	state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, rate);
++
++	/* get polarity */
++	val =3D readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
++	if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) =3D=3D 0x1)
++		state->polarity =3D PWM_POLARITY_INVERSED;
++	else if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) =3D=3D 0x2)
++		state->polarity =3D PWM_POLARITY_NORMAL;
++
++	/* get channel status */
++	state->enabled =3D FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
++}
++
++static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device *pwm=
+,
++			     struct pwm_state *state)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	struct imx_tpm_pwm_channel *chan =3D pwm_get_chip_data(pwm);
++	u32 p;
++
++	mutex_lock(&tpm->lock);
++
++	if (state->period !=3D tpm->real_period) {
++		/*
++		 * TPM counter is shared by multiple channels, so
++		 * prescale and period can NOT be modified when
++		 * there are multiple channels in use with different
++		 * period settings.
++		 */
++		p =3D pwm_imx_tpm_round_period(chip, state->period);
++		if (p !=3D tpm->real_period && tpm->user_count !=3D 1)
++			return -EBUSY;
++		else if (p !=3D tpm->real_period)
++			pwm_imx_tpm_config_counter(chip, p);
++	}
++
++	if (state->enabled =3D=3D false) {
++		/*
++		 * if eventually the PWM output is LOW, either
++		 * duty cycle is 0 or status is disabled, need
++		 * to make sure the output pin is LOW.
++		 */
++		pwm_imx_tpm_config(chip, pwm, state->period,
++				   0, state->polarity);
++		if (chan->status =3D=3D true)
++			pwm_imx_tpm_enable(chip, pwm, false);
++	} else {
++		pwm_imx_tpm_config(chip, pwm, state->period,
++				   state->duty_cycle, state->polarity);
++		if (chan->status =3D=3D false)
++			pwm_imx_tpm_enable(chip, pwm, true);
++	}
++
++	mutex_unlock(&tpm->lock);
++
++	return 0;
++}
++
++static int pwm_imx_tpm_request(struct pwm_chip *chip, struct pwm_device *p=
+wm)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++	struct imx_tpm_pwm_channel *chan;
++
++	chan =3D devm_kzalloc(chip->dev, sizeof(*chan), GFP_KERNEL);
++	if (!chan)
++		return -ENOMEM;
++
++	pwm_set_chip_data(pwm, chan);
++
++	mutex_lock(&tpm->lock);
++	tpm->user_count++;
++	mutex_unlock(&tpm->lock);
++
++	return 0;
++}
++
++static void pwm_imx_tpm_free(struct pwm_chip *chip, struct pwm_device *pwm=
+)
++{
++	struct imx_tpm_pwm_chip *tpm =3D to_imx_tpm_pwm_chip(chip);
++
++	mutex_lock(&tpm->lock);
++	tpm->user_count--;
++	mutex_unlock(&tpm->lock);
++
++	devm_kfree(chip->dev, pwm_get_chip_data(pwm));
++	pwm_set_chip_data(pwm, NULL);
++}
++
++static const struct pwm_ops imx_tpm_pwm_ops =3D {
++	.request =3D pwm_imx_tpm_request,
++	.free =3D pwm_imx_tpm_free,
++	.get_state =3D pwm_imx_tpm_get_state,
++	.apply =3D pwm_imx_tpm_apply,
++	.owner =3D THIS_MODULE,
++};
++
++static int pwm_imx_tpm_probe(struct platform_device *pdev)
++{
++	struct imx_tpm_pwm_chip *tpm;
++	int ret;
++	u32 val;
++
++	tpm =3D devm_kzalloc(&pdev->dev, sizeof(*tpm), GFP_KERNEL);
++	if (!tpm)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, tpm);
++
++	tpm->base =3D devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(tpm->base))
++		return PTR_ERR(tpm->base);
++
++	tpm->clk =3D devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(tpm->clk)) {
++		ret =3D PTR_ERR(tpm->clk);
++		if (ret !=3D -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"failed to get PWM clock: %d\n", ret);
++		return ret;
++	}
++
++	ret =3D clk_prepare_enable(tpm->clk);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to prepare or enable clock: %d\n", ret);
++		return ret;
++	}
++
++	tpm->chip.dev =3D &pdev->dev;
++	tpm->chip.ops =3D &imx_tpm_pwm_ops;
++	tpm->chip.base =3D -1;
++	tpm->chip.of_xlate =3D of_pwm_xlate_with_flags;
++	tpm->chip.of_pwm_n_cells =3D 3;
++
++	/* get number of channels */
++	val =3D readl(tpm->base + PWM_IMX_TPM_PARAM);
++	tpm->chip.npwm =3D FIELD_GET(PWM_IMX_TPM_PARAM_CHAN, val);
++
++	mutex_init(&tpm->lock);
++
++	ret =3D pwmchip_add(&tpm->chip);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
++		clk_disable_unprepare(tpm->clk);
++	}
++
++	return ret;
++}
++
++static int pwm_imx_tpm_remove(struct platform_device *pdev)
++{
++	struct imx_tpm_pwm_chip *tpm =3D platform_get_drvdata(pdev);
++	int ret =3D pwmchip_remove(&tpm->chip);
++
++	clk_disable_unprepare(tpm->clk);
++
++	return ret;
++}
++
++static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
++{
++	struct imx_tpm_pwm_chip *tpm =3D dev_get_drvdata(dev);
++
++	if (tpm->enable_count =3D=3D 0)
++		clk_disable_unprepare(tpm->clk);
++
++	return 0;
++}
++
++static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
++{
++	struct imx_tpm_pwm_chip *tpm =3D dev_get_drvdata(dev);
++	int ret =3D 0;
++
++	if (tpm->enable_count =3D=3D 0) {
++		ret =3D clk_prepare_enable(tpm->clk);
++		if (ret)
++			dev_err(dev,
++				"failed to prepare or enable clock: %d\n",
++				ret);
++	}
++
++	return ret;
++}
++
++static SIMPLE_DEV_PM_OPS(imx_tpm_pwm_pm,
++			 pwm_imx_tpm_suspend, pwm_imx_tpm_resume);
++
++static const struct of_device_id imx_tpm_pwm_dt_ids[] =3D {
++	{ .compatible =3D "fsl,imx-tpm", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx_tpm_pwm_dt_ids);
++
++static struct platform_driver imx_tpm_pwm_driver =3D {
++	.driver =3D {
++		.name =3D "imx-tpm-pwm",
++		.of_match_table =3D imx_tpm_pwm_dt_ids,
++		.pm =3D &imx_tpm_pwm_pm,
++	},
++	.probe	=3D pwm_imx_tpm_probe,
++	.remove =3D pwm_imx_tpm_remove,
++};
++module_platform_driver(imx_tpm_pwm_driver);
++
++MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
++MODULE_DESCRIPTION("i.MX TPM PWM Driver");
++MODULE_LICENSE("GPL v2");
 --=20
 2.7.4
 
