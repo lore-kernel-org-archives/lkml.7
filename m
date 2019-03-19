@@ -2,195 +2,231 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E004C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88E0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147972075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bu0tP29A"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB18205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfCSI3H (ORCPT
+        id S1727330AbfCSIbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:29:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35529 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSI3H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:29:07 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f8so806751wmh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 01:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ctJZHSds0hf4vzWO8bdqiZY60BC3vzw8UB+A+5HMctw=;
-        b=bu0tP29AS/2YT1h8+qCXzsmm0O9gio1tAJPzgFsZst3ebeckplW2KLTrNsV0bBebB0
-         m/UPCDB1Q0ZpXNpKoDrYGHs+FpWk3CY2PN+8OFGKNB6wFezNDIoQdIfacKfkJxGwWZnh
-         ydyR7z7HUvDVVRlyJQ9tQEohLMlPPjZAz9gcM9z+VzfbNvCyvMU86hCWAnKc+z2b9LHu
-         0YGXzYst/xye5DgJ+pWUffb05/ExPXykmyiIn6Bl75TiaGc89zqzftsglKWycopuvu9g
-         6Y5t8FjLSIHRWK0C9PIu0XKSC8XGzdR1XAwjyx2tThI+FNYytO7NoY+9KgYMxxdZJvuZ
-         YiMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ctJZHSds0hf4vzWO8bdqiZY60BC3vzw8UB+A+5HMctw=;
-        b=oKv+bZ32PiQnM8Cw+6iWHL2hk+2ADr1OpYH7ZO4o9+m6W6+aq51EGS6cpfSLWoFr5Q
-         3Ka1P7XFJp4TZxluMKKUea4O6ytV3ASqj+Zofk/1Mqs0cDCtMdrhlQcU6ryygbUpF0c8
-         jsk05LRA9UptPY/cNj5gUopPAEmVBqExS9kkdN4GzOEsEP/VYoj1nfV4N6NUu5T/alGe
-         8yL6XKeT1y8UU5axaYMvmFiHUQ1fhWa4ADPf6px+anEpkzaX47FGhmp40zrfFMX3MeJC
-         Ore0lRW9oqGaxb0yo8OEoW44VK3Uo0MLouNerw/+EbUxNW+nNraSiur2ImbiMSqvhssu
-         v1ZQ==
-X-Gm-Message-State: APjAAAX+GVXV+uA/CEIbvuUxcmN4sUG+Zf9VFL0Ve7Ij9sgESyAkCNJ1
-        8szzz19bjU8bU8Tds2kVECqM6Q==
-X-Google-Smtp-Source: APXvYqxEnweyymg82jk1eHa+OC+OD8j+/BNpUmOYH6SFr8CKLp1PmqywCvgKfC4Qg3cMBQGzHIE+KQ==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr2364498wmc.63.1552984144606;
-        Tue, 19 Mar 2019 01:29:04 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id b134sm3865654wmd.26.2019.03.19.01.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 01:29:04 -0700 (PDT)
-Subject: Re: [PATCH v2 06/11] arm64: dts: meson-g12a-x96-max: add regulators
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190318100458.5619-1-narmstrong@baylibre.com>
- <20190318100458.5619-7-narmstrong@baylibre.com>
- <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <c13bc57b-82ea-8f48-75a7-417941b08a11@baylibre.com>
-Date:   Tue, 19 Mar 2019 09:29:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Mar 2019 04:31:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46928 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfCSIbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:31:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8651596;
+        Tue, 19 Mar 2019 01:31:06 -0700 (PDT)
+Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C7EED3F59C;
+        Tue, 19 Mar 2019 01:31:01 -0700 (PDT)
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+Subject: [PATCH v7 0/10] Add ARMv8.3 pointer authentication for kvm guest
+Date:   Tue, 19 Mar 2019 14:00:33 +0530
+Message-Id: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2019 21:13, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> From: Guillaume La Roque <glaroque@baylibre.com>
->>
->> Add system regulators for the X96 Max Set-Top-Box.
->>
->> Still missing
->> * VDD_EE (0.8V - PWM controlled)
->> * VDD_CPU (PWM controlled)
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
->>  1 file changed, 67 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->> index 0edbd00b358f..5c37930b09e2 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> [...]
->> +       vcc_5v: regulator-vcc_5v {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "VCC_5V";
->> +               regulator-min-microvolt = <5000000>;
->> +               regulator-max-microvolt = <5000000>;
->> +               vin-supply = <&dc_in>;
->> +
->> +               gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
->> +               enable-active-high;
-> is there any way to test whether this GPIO is the right one?
-> I couldn't find a reference to a GPIOH_8 regulator in
-> buildroot_openlinux_kernel_4.9_fbdev_20180706
+Hi,
 
-The x96 is based on the U212 reference design, and the GPIOH_8 controls the 5V_EN signal,
-but you are right, it's the wrong polarity here, it should be enable-active-low instead.
-(FYI The SEI510 does not use this at all, 5V is always enabled)
+This patch series adds pointer authentication support for KVM guest and
+is based on top of Linux 5.1-rc1. The basic patches in this series was
+originally posted by Mark Rutland earlier[1,2] and contains some history
+of this work.
 
-The schematics describes :
-VCC5V_EN (GPIOH_8-Hiz OD): 5V_EN
-L: Enable
-Hiz: Disable
+Extension Overview:
+=============================================
 
-FYI, the GPIOH_8 is Open-Drain only, this means this pin cannot pull to TTL 1, only to TTL 0
-or set as input. We need to add a way to describe this in the pinctrl driver somehow....
+The ARMv8.3 pointer authentication extension adds functionality to detect
+modification of pointer values, mitigating certain classes of attack such as
+stack smashing, and making return oriented programming attacks harder.
 
-I will send a fix on v3
+The extension introduces the concept of a pointer authentication code (PAC),
+which is stored in some upper bits of pointers. Each PAC is derived from the
+original pointer, another 64-bit value (e.g. the stack pointer), and a secret
+128-bit key.
 
-I didn't notice because I power the board using a Type-A to Type-A connector,
-and the 5V from the USB port bypasses this regulator...
+New instructions are added which can be used to:
 
-Neil
+* Insert a PAC into a pointer
+* Strip a PAC from a pointer
+* Authenticate and strip a PAC from a pointer
 
-> 
-> 
-> Regards
-> Martin
-> 
+The detailed description of ARMv8.3 pointer authentication support in
+userspace/kernel and can be found in Kristina's generic pointer authentication
+patch series[3].
+
+KVM guest work:
+==============================================
+
+If pointer authentication is enabled for KVM guests then the new PAC instructions
+will not trap to EL2. If not then they may be ignored if in HINT region or trapped
+in EL2 as illegal instruction. Since KVM guest vcpu runs as a thread so they have
+a key initialized which will be used by PAC. When world switch happens between
+host and guest then this key is exchanged.
+
+The current v7 patch series contains review comments and suggestions by James
+Morse, Mark Rutland and Dave Martin.
+
+The first two patch is cherry picked from Dave Martin [9] v5 series which adds
+SVE support for KVM guest. 
+
+Changes since v6 [8]: Major changes are listed below.
+
+* Pointer authentication key switch entirely in assembly now.
+* isb instruction added after Key switched to host.
+* Use __hyp_this_cpu_ptr for both VHE and nVHE mode.
+* 2 separate flags for address and generic authentication.
+* kvm_arm_vcpu_ptrauth_allowed renamed to has_vcpu_ptrauth.
+* kvm_arm_vcpu_ptrauth_reset renamed to kvm_arm_vcpu_ptrauth_setup_lazy.
+* Save of host Key registers now done in ptrauth instruction trap.
+* A fix to add kern_hyp_va to get correct host_ctxt pointer in nVHE mode.
+* Patches re-structured to better reflect ABI change.
+
+Changes since v5 [7]: Major changes are listed below.
+
+* Split hcr_el2 and mdcr_el2 save/restore in two patches.
+* Reverted back save/restore of sys-reg keys as done in V4 [5]. There was
+  suggestion by James Morse to use ptrauth utilities in a single place
+  in arm core and use them from kvm. However this change deviates from the
+  existing sys-reg implementations and is not scalable.
+* Invoked the key switch C functions from __guest_enter/__guest_exit assembly.
+* Host key save is now done inside vcpu_load.
+* Reverted back masking of cpufeature ID registers for ptrauth when disabled
+  from userpace.
+* Reset of ptrauth key registers not done conditionally.
+* Code and Documentation cleanup.
+
+Changes since v4 [6]: Several suggestions from James Morse
+* Move host registers to be saved/restored inside struct kvm_cpu_context.
+* Similar to hcr_el2, save/restore mdcr_el2 register also.
+* Added save routines for ptrauth keys in generic arm core and
+  use them during KVM context switch.
+* Defined a GCC attribute __no_ptrauth which discards generating
+  ptrauth instructions in a function. This is taken from Kristina's
+  earlier kernel pointer authentication support patches [4].
+* Dropped a patch to mask cpufeature when not enabled from userspace and
+  now only key registers are masked from register list.
+
+Changes since v3 [5]:
+* Use pointer authentication only when VHE is present as ARM8.3 implies ARM8.1
+  features to be present.
+* Added lazy context handling of ptrauth instructions from V2 version again. 
+* Added more details in Documentation.
+
+Changes since v2 [1,2]:
+* Allow host and guest to have different HCR_EL2 settings and not just constant
+  value HCR_HOST_VHE_FLAGS or HCR_HOST_NVHE_FLAGS.
+* Optimise the reading of HCR_EL2 in host/guest switch by fetching it once
+  during KVM initialisation state and using it later.
+* Context switch pointer authentication keys when switching between guest
+  and host. Pointer authentication was enabled in a lazy context earlier[2] and
+  is removed now to make it simple. However it can be revisited later if there
+  is significant performance issue.
+* Added a userspace option to choose pointer authentication.
+* Based on the userspace option, ptrauth cpufeature will be visible.
+* Based on the userspace option, ptrauth key registers will be accessible.
+* A small document is added on how to enable pointer authentication from
+  userspace KVM API.
+
+Looking for feedback and comments.
+
+Thanks,
+Amit
+
+[1]: https://lore.kernel.org/lkml/20171127163806.31435-11-mark.rutland@arm.com/
+[2]: https://lore.kernel.org/lkml/20171127163806.31435-10-mark.rutland@arm.com/
+[3]: https://lkml.org/lkml/2018/12/7/666
+[4]: https://lore.kernel.org/lkml/20181005084754.20950-1-kristina.martsenko@arm.com/
+[5]: https://lkml.org/lkml/2018/10/17/594
+[6]: https://lkml.org/lkml/2018/12/18/80
+[7]: https://lkml.org/lkml/2019/1/28/49
+[8]: https://lkml.org/lkml/2019/2/19/190 
+[9]: https://patchwork.kernel.org/cover/10818797/
+
+Linux (5.1-rc1 based):
+
+Amit Daniel Kachhap (5):
+  KVM: arm64: Move hyp_symbol_addr to fix dependency
+  KVM: arm/arm64: preserve host MDCR_EL2 value
+  KVM: arm64: Add vcpu feature flags to control ptrauth accessibility
+  KVM: arm64: Add capability to advertise pointer authentication for
+    guest
+  KVM: arm64: docs: document KVM support of pointer authentication
+
+Dave Martin (2):
+  KVM: arm64: Propagate vcpu into read_id_reg()
+  KVM: arm64: Support runtime sysreg visibility filtering
+
+Mark Rutland (2):
+  KVM: arm/arm64: preserve host HCR_EL2 value
+  KVM: arm/arm64: context-switch ptrauth registers
+
+ Documentation/arm64/pointer-authentication.txt |  15 +++-
+ Documentation/virtual/kvm/api.txt              |   6 ++
+ arch/arm/include/asm/kvm_host.h                |   3 +-
+ arch/arm64/include/asm/kvm_asm.h               |  22 ++++++
+ arch/arm64/include/asm/kvm_emulate.h           |  24 +++---
+ arch/arm64/include/asm/kvm_host.h              |  46 ++++++++++--
+ arch/arm64/include/asm/kvm_hyp.h               |   2 +-
+ arch/arm64/include/asm/kvm_mmu.h               |  20 -----
+ arch/arm64/include/asm/kvm_ptrauth_asm.h       | 100 +++++++++++++++++++++++++
+ arch/arm64/include/uapi/asm/kvm.h              |   2 +
+ arch/arm64/kernel/asm-offsets.c                |   6 ++
+ arch/arm64/kvm/debug.c                         |  28 ++-----
+ arch/arm64/kvm/guest.c                         |  16 +++-
+ arch/arm64/kvm/handle_exit.c                   |  24 ++++--
+ arch/arm64/kvm/hyp/entry.S                     |   7 ++
+ arch/arm64/kvm/hyp/switch.c                    |  40 +++++-----
+ arch/arm64/kvm/hyp/sysreg-sr.c                 |  22 +++++-
+ arch/arm64/kvm/hyp/tlb.c                       |   6 +-
+ arch/arm64/kvm/reset.c                         |  11 +++
+ arch/arm64/kvm/sys_regs.c                      |  93 +++++++++++++++++++----
+ arch/arm64/kvm/sys_regs.h                      |  13 ++++
+ include/uapi/linux/kvm.h                       |   1 +
+ virt/kvm/arm/arm.c                             |   4 +-
+ 23 files changed, 395 insertions(+), 116 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_ptrauth_asm.h
+
+kvmtool:
+
+Repo: git.kernel.org/pub/scm/linux/kernel/git/will/kvmtool.git
+
+Amit Daniel Kachhap (1):
+  KVM: arm/arm64: Add a vcpu feature for pointer authentication
+
+ arm/aarch32/include/kvm/kvm-cpu-arch.h    | 1 +
+ arm/aarch64/include/asm/kvm.h             | 2 ++
+ arm/aarch64/include/kvm/kvm-config-arch.h | 4 +++-
+ arm/aarch64/include/kvm/kvm-cpu-arch.h    | 2 ++
+ arm/include/arm-common/kvm-config-arch.h  | 1 +
+ arm/kvm-cpu.c                             | 6 ++++++
+ include/linux/kvm.h                       | 1 +
+ 7 files changed, 16 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
 
