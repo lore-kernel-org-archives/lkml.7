@@ -2,155 +2,259 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AB0C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8571BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9AA920700
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A62E2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xU5toR2l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jm1r7D/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfCSCSi (ORCPT
+        id S1727555AbfCSCTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:18:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57636 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfCSCSh (ORCPT
+        Mon, 18 Mar 2019 22:19:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38058 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfCSCTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:18:37 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J2FIvG034487;
-        Tue, 19 Mar 2019 02:18:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=8WOjIZ8HA0PmsIsu84PFWpwUD/WhnweLtaNZQdrhu2w=;
- b=xU5toR2ln97pPrhT5DPhATOICwbv9havXoGA7cg/P2rjjeEaVp+Ji+AHyopxYu5iDArs
- Ske3JzYLVKG7+aujcUqW4SvCwMAv6OdS+lYyN0bktSNyLincA6wjaO6zGGKcdERflWrO
- mcO7KV4DiLvqyFP5YK1XKHqNk4SBUVLE8od8rwzge7CbVfBl5iU3n8yNZE29maKbnXYy
- 6c3c/5aJVg8K/7oQo6rhzFUwKcBNIBhygZcdnpaE+CZCJnfk0enD/7hZnKhR8yhfA+UY
- H1krMMmEfpK/3mYxoFyMLETbU8YKg2Ez5fgusC759jDbuaEw6k1KZNRCivby9mzCIJpH KA== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2r8ssr9sqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 02:18:31 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2J2IPQh003715
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Mar 2019 02:18:25 GMT
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2J2IOjM016507;
-        Tue, 19 Mar 2019 02:18:24 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Mar 2019 19:18:24 -0700
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-To:     Jason Wang <jasowang@redhat.com>, Cornelia Huck <cohuck@redhat.com>
-Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
- <20190312183351.74764f4f.cohuck@redhat.com>
- <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
- <20190313103900.1ea7f996.cohuck@redhat.com>
- <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
- <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
- <20190315134112.7d63348c.cohuck@redhat.com>
- <1df52766-88fb-6b23-d160-b891c3017133@redhat.com>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <0fbdcfa6-cbd7-4f09-93b1-40898d5f77d1@oracle.com>
-Date:   Tue, 19 Mar 2019 10:22:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 18 Mar 2019 22:19:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v1so8026216pgi.5;
+        Mon, 18 Mar 2019 19:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QS3mWzK39q3lW8WqJHFL6wuRYacMcGaOmOmP8soCdrs=;
+        b=jm1r7D/rts2BI9YcnuOGIHlHQpyxSGz4aZOvJE/yi+Xo4uNlBnfqja0VcY+FpX9fSD
+         28+KDFT/SwkBAZZ1o4TLSIUGewjtegnrMoy3LszzvJ2CwtfqOtcuC7wJMFFFvVyHlntf
+         uVBrnde4SmEejwST8D2NZ4eGXPi4DunUxkLIHtZ751AARCv/ODl5lir046VNuABgvsGw
+         ZJyDyGnygvc719vLtey2Vx/RTxTJZUmAHCZjnD1cfEDxhYMw8LC/WDb1WQdzBkzOb/W1
+         DSw3Z0nbuStKECnh1LO8ozlsCAfA6F5QmcQvncr/iEYxCA4scPRMbXzNynH1JZmbcdsw
+         XsMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QS3mWzK39q3lW8WqJHFL6wuRYacMcGaOmOmP8soCdrs=;
+        b=H9KMYd2wM2iVe7DFzDWsrZ2UKj2zb7T35qjkQcsAQN9sCdGvapLlwMwmVuhVACgX7O
+         jXg+UVP8iw0DhEpBUe7jCnLNZwKNYlAJxplQa5ni4sUCMZc+JMEOkrd7c+Y+cSRRDPpl
+         fpeohYFbEtlc2uXvC/nIR0A5NsitXyPhqOS5WDtNjHogBN6aPnw+2hDLO5YWRISeAVqe
+         ST0YgQN8H/JuMW00cd3sZ22FvWwUddi+3r+fQVGKn5XN3jMEBd7WtTljnGQH25DqL4q1
+         jwnAkcTcsC796tfkOB+Yp7IXOomxUzMDsyrvwGJuv+SJmtvnQ8iMJOxrhyq2o7Lyc7em
+         ggBQ==
+X-Gm-Message-State: APjAAAVsJ8DPrl54K3r0zoJm/ViAPP/0cTw9h16bCLoTLmlycHh3k69w
+        uh4u3wy6pY+F3QnfQU5s3O+RRpDp
+X-Google-Smtp-Source: APXvYqz9KjQMMuck4sjrn6Sq3LDJfmEoJ+bGuZkApQa2UhKviptEqmVda9dABsOdlmGAuvojp7es6Q==
+X-Received: by 2002:a17:902:20e8:: with SMTP id v37mr2843228plg.168.1552961960808;
+        Mon, 18 Mar 2019 19:19:20 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC ([106.51.22.39])
+        by smtp.gmail.com with ESMTPSA id q18sm14908138pgv.9.2019.03.18.19.19.19
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 18 Mar 2019 19:19:20 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 07:53:54 +0530
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
+        kirill.shutemov@linux.intel.com, vbabka@suse.cz, riel@surriel.com,
+        sfr@canb.auug.org.au, rppt@linux.vnet.ibm.com,
+        peterz@infradead.org, linux@armlinux.org.uk, robin.murphy@arm.com,
+        iamjoonsoo.kim@lge.com, treding@nvidia.com, keescook@chromium.org,
+        m.szyprowski@samsung.com, stefanr@s5r6.in-berlin.de,
+        hjc@rock-chips.com, heiko@sntech.de, airlied@linux.ie,
+        oleksandr_andrushchenko@epam.com, joro@8bytes.org,
+        pawel@osciak.com, kyungmin.park@samsung.com, mchehab@kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, xen-devel@lists.xen.org,
+        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org
+Subject: [RESEND PATCH v4 1/9] mm: Introduce new vm_map_pages() and
+ vm_map_pages_zero() API
+Message-ID: <751cb8a0f4c3e67e95c58a3b072937617f338eea.1552921225.git.jrdr.linux@gmail.com>
+References: <cover.1552921225.git.jrdr.linux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1df52766-88fb-6b23-d160-b891c3017133@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903190015
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+Previouly drivers have their own way of mapping range of
+kernel pages/memory into user vma and this was done by
+invoking vm_insert_page() within a loop.
 
-On 3/18/19 3:47 PM, Jason Wang wrote:
-> 
-> On 2019/3/15 下午8:41, Cornelia Huck wrote:
->> On Fri, 15 Mar 2019 12:50:11 +0800
->> Jason Wang <jasowang@redhat.com> wrote:
->>
->>> Or something like I proposed several years ago?
->>> https://do-db2.lkml.org/lkml/2014/12/25/169
->>>
->>> Btw, for virtio-net, I think we actually want to go for having a maximum
->>> number of supported queues like what hardware did. This would be useful
->>> for e.g cpu hotplug or XDP (requires per cpu TX queue). But the current
->>> vector allocation doesn't support this which will results all virtqueues
->>> to share a single vector. We may indeed need more flexible policy here.
->> I think it should be possible for the driver to give the transport
->> hints how to set up their queues/interrupt structures. (The driver
->> probably knows best about its requirements.) Perhaps whether a queue is
->> high or low frequency, or whether it should be low latency, or even
->> whether two queues could share a notification mechanism without
->> drawbacks. It's up to the transport to make use of that information, if
->> possible.
-> 
-> 
-> Exactly and it was what the above series tried to do by providing hints of e.g
-> which queues want to share a notification.
-> 
+As this pattern is common across different drivers, it can
+be generalized by creating new functions and use it across
+the drivers.
 
-I read about your patch set on providing more flexibility of queue-to-vector
-mapping.
+vm_map_pages() is the API which could be used to mapped
+kernel memory/pages in drivers which has considered vm_pgoff
 
-One use case of the patch set is we would be able to enable more queues when
-there is limited number of vectors.
+vm_map_pages_zero() is the API which could be used to map
+range of kernel memory/pages in drivers which has not considered
+vm_pgoff. vm_pgoff is passed default as 0 for those drivers.
 
-Another use case we may classify queues as hight priority or low priority as
-mentioned by Cornelia.
+We _could_ then at a later "fix" these drivers which are using
+vm_map_pages_zero() to behave according to the normal vm_pgoff
+offsetting simply by removing the _zero suffix on the function
+name and if that causes regressions, it gives us an easy way to revert.
 
-For virtio-blk, we may extend virtio-blk based on this patch set to enable
-something similar to write_queues/poll_queues in nvme, when (set->nr_maps != 1).
+Tested on Rockchip hardware and display is working, including talking
+to Lima via prime.
 
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Suggested-by: Russell King <linux@armlinux.org.uk>
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+---
+ include/linux/mm.h |  4 +++
+ mm/memory.c        | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/nommu.c         | 14 ++++++++++
+ 3 files changed, 99 insertions(+)
 
-Yet, the question I am asking in this email thread is for a difference scenario.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 80bb640..e0aaa73 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2565,6 +2565,10 @@ unsigned long change_prot_numa(struct vm_area_struct *vma,
+ int remap_pfn_range(struct vm_area_struct *, unsigned long addr,
+ 			unsigned long pfn, unsigned long size, pgprot_t);
+ int vm_insert_page(struct vm_area_struct *, unsigned long addr, struct page *);
++int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num);
++int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num);
+ vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+ 			unsigned long pfn);
+ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+diff --git a/mm/memory.c b/mm/memory.c
+index e11ca9d..cad3e27 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1520,6 +1520,87 @@ int vm_insert_page(struct vm_area_struct *vma, unsigned long addr,
+ }
+ EXPORT_SYMBOL(vm_insert_page);
+ 
++/*
++ * __vm_map_pages - maps range of kernel pages into user vma
++ * @vma: user vma to map to
++ * @pages: pointer to array of source kernel pages
++ * @num: number of pages in page array
++ * @offset: user's requested vm_pgoff
++ *
++ * This allows drivers to map range of kernel pages into a user vma.
++ *
++ * Return: 0 on success and error code otherwise.
++ */
++static int __vm_map_pages(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num, unsigned long offset)
++{
++	unsigned long count = vma_pages(vma);
++	unsigned long uaddr = vma->vm_start;
++	int ret, i;
++
++	/* Fail if the user requested offset is beyond the end of the object */
++	if (offset > num)
++		return -ENXIO;
++
++	/* Fail if the user requested size exceeds available object size */
++	if (count > num - offset)
++		return -ENXIO;
++
++	for (i = 0; i < count; i++) {
++		ret = vm_insert_page(vma, uaddr, pages[offset + i]);
++		if (ret < 0)
++			return ret;
++		uaddr += PAGE_SIZE;
++	}
++
++	return 0;
++}
++
++/**
++ * vm_map_pages - maps range of kernel pages starts with non zero offset
++ * @vma: user vma to map to
++ * @pages: pointer to array of source kernel pages
++ * @num: number of pages in page array
++ *
++ * Maps an object consisting of @num pages, catering for the user's
++ * requested vm_pgoff
++ *
++ * If we fail to insert any page into the vma, the function will return
++ * immediately leaving any previously inserted pages present.  Callers
++ * from the mmap handler may immediately return the error as their caller
++ * will destroy the vma, removing any successfully inserted pages. Other
++ * callers should make their own arrangements for calling unmap_region().
++ *
++ * Context: Process context. Called by mmap handlers.
++ * Return: 0 on success and error code otherwise.
++ */
++int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num)
++{
++	return __vm_map_pages(vma, pages, num, vma->vm_pgoff);
++}
++EXPORT_SYMBOL(vm_map_pages);
++
++/**
++ * vm_map_pages_zero - map range of kernel pages starts with zero offset
++ * @vma: user vma to map to
++ * @pages: pointer to array of source kernel pages
++ * @num: number of pages in page array
++ *
++ * Similar to vm_map_pages(), except that it explicitly sets the offset
++ * to 0. This function is intended for the drivers that did not consider
++ * vm_pgoff.
++ *
++ * Context: Process context. Called by mmap handlers.
++ * Return: 0 on success and error code otherwise.
++ */
++int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num)
++{
++	return __vm_map_pages(vma, pages, num, 0);
++}
++EXPORT_SYMBOL(vm_map_pages_zero);
++
+ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+ 			pfn_t pfn, pgprot_t prot, bool mkwrite)
+ {
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 749276b..b492fd1 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -473,6 +473,20 @@ int vm_insert_page(struct vm_area_struct *vma, unsigned long addr,
+ }
+ EXPORT_SYMBOL(vm_insert_page);
+ 
++int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
++			unsigned long num)
++{
++	return -EINVAL;
++}
++EXPORT_SYMBOL(vm_map_pages);
++
++int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
++				unsigned long num)
++{
++	return -EINVAL;
++}
++EXPORT_SYMBOL(vm_map_pages_zero);
++
+ /*
+  *  sys_brk() for the most part doesn't need the global kernel
+  *  lock, except when an application is doing something nasty
+-- 
+1.9.1
 
-The issue is not we are not having enough vectors (although this is why only 1
-vector is allocated for all virtio-blk queues). As so far virtio-blk has
-(set->nr_maps == 1), block layer would limit the number of hw queues by
-nr_cpu_ids, we indeed do not need more than nr_cpu_ids hw queues in virtio-blk.
-
-That's why I ask why not change the flow as below options when the number of
-supported hw queues is more than nr_cpu_ids (and set->nr_maps == 1. virtio-blk
-does not set nr_maps and block layer would set it to 1 when the driver does not
-specify with a value):
-
-option 1:
-As what nvme and xen-netfront do, limit the hw queue number by nr_cpu_ids.
-
-option 2:
-If the vectors is not enough, use the max number vector (indeed nr_cpu_ids) as
-number of hw queues.
-
-option 3:
-We should allow more vectors even the block layer would support at most
-nr_cpu_ids queues.
-
-
-I understand a new policy for queue-vector mapping is very helpful. I am just
-asking the question from block layer's point of view.
-
-Thank you very much!
-
-Dongli Zhang
