@@ -2,94 +2,112 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08F7C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A6E20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27BF20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NQ26o3jo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xJJ0zNmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfCSBP4 (ORCPT
+        id S1727062AbfCSBWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 21:15:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:36327 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbfCSBPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 21:15:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44NZqr6njkz9s71;
-        Tue, 19 Mar 2019 12:15:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1552958153;
-        bh=0PRGN0yENS398sV2O1LXUiB7eHinZ7TJ6yO6KqhZ+qQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NQ26o3jop3LHzrjFgI8sF7KoHdhpPLZt0J2nNduxsdGiKZG/Sz2Y7YDXIYM+ajVUK
-         EjejN6ZG0QaZ20ibsDpAqkI2oS6m4rt5z3334yGQ4TWNYOP8y8xtCWDyZ01Yz4/BJh
-         zy2NP4FFymdJpwAxNlIXMytMGB/Hlrt0OtrUackGVMauRwRlfRJEYDYaFQUcbaFOOI
-         zRqTPQBcWNncwijksfZaovcdbFReHdNf186/os8wfW6YFcqU+vDTeSo0kXVXcKOUHb
-         jUC0gNcKjCsE7GqcbEbfGzMc/8SkNri74fkEa9W6431CBasgdLhotma7hU3TiOS/Hh
-         WH3nVplaGicWQ==
-Date:   Tue, 19 Mar 2019 12:15:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: linux-next: build warning after merge of the mmc tree
-Message-ID: <20190319121551.14cbea26@canb.auug.org.au>
+        Mon, 18 Mar 2019 21:22:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38030 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfCSBWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 21:22:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J1J4Ea192372;
+        Tue, 19 Mar 2019 01:21:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=vu5KNKQNVWCeTbLREMTDuW5pfSLe3uuLgNbKbCc9gBs=;
+ b=xJJ0zNmQ0y1KUGxtwRVPHxth6g4ldJsXP/F+gq9fJV4PeGrQfXyAAwBEV4XZ5WJCY/m/
+ 3wN28ZKpH07ao6bdywBeEwHGiFE+gc3EhBiXy0J5bwATK/p1cc6WNRj9J0/+aJSVuGhv
+ i0ZcWP6N5gcXf91PlHhQiND7611mjhOUljhHb+De8t5AZjs1qQBbMx9rIUnE+vkG+9lt
+ /SO9bzaSqmkX5li0P/J/uFFSx+ShkXsc/qKVGqQggxJKZ26KHAYYkySfvcAomL/eVhp5
+ Z/j8SltVEFViOPi6Ey7+wR5SWlAp+pMbbvnnXviTDXtsmmv8iyn3Vun8DYPOSf44Uldy XA== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2r8ssr9nj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 01:21:59 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2J1LwjL017977
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 01:21:58 GMT
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2J1Lu8s022738;
+        Tue, 19 Mar 2019 01:21:56 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Mar 2019 18:21:56 -0700
+Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
+To:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
+        sagi@grimberg.me, josef@toxicpanda.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, hare@suse.de, jthumshirn@suse.de, hch@lst.de
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552930085.152266.36.camel@acm.org>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <3cd58454-eda3-de9a-0eed-b6a7edbce28f@oracle.com>
+Date:   Tue, 19 Mar 2019 09:25:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/RmII10Z40D161utywWTc15="; protocol="application/pgp-signature"
+In-Reply-To: <1552930085.152266.36.camel@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/RmII10Z40D161utywWTc15=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Bart
 
-Hi all,
+Thanks for your kindly and detailed comment on this.
 
-After merging the mmc tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+On 3/19/19 1:28 AM, Bart Van Assche wrote:
+> On Fri, 2019-03-15 at 16:57 +0800, Jianchao Wang wrote:
+>> [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dblock-26m-3D154526189023236-26w-3D2&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=7WdAxUBeiTUTCy8v-7zXyr4qk7sx26ATvfo6QSTvZyQ&m=_8Zz6iRpso8g7WlZ-WB50qqNkI2X2GRfySSBWyFKuI4&s=ZVNqSClQ_47hVGJpSrF5rbTh3X32cAlY-GFF2BPkGx0&e=
+> 
+> Hi Jianchao,
+> 
+> That is a reference to the "BUG: KASAN: use-after-free in bt_iter" issue.
+> I think that issue can be fixed in another way than modifying all code that
+> iterates over tags, namely by adding an rcu_read_lock() / rcu_read_unlock()
+> pair in bt_for_each() and bt_tags_for_each() and by changing the calls in
+> blk_mq_free_rqs() and blk_free_flush_queue() that free the data structures
+> used by the tag iteration functions into kfree_rcu() or call_rcu() calls.
 
-drivers/mmc/host/dw_mmc.c: In function 'dw_mci_wait_hw_unbusy':
-drivers/mmc/host/dw_mmc.c:239:16: warning: unused variable 'irqflags' [-Wun=
-used-variable]
-  unsigned long irqflags;
-                ^~~~~~~~
+Do you mean this patch from Jens ?
+https://marc.info/?l=linux-block&m=154534605914798&w=2
 
-Introduced by commit
++	rcu_read_lock();
+ 	sbitmap_for_each_set(&bt->sb, bt_iter, &iter_data);
++	rcu_read_unlock();
 
-  705a0f288113 ("mmc: dw_mmc: Add hardware unbusy interrupt support")
+The busy_iter_fn could sleep for nvme
+blk_mq_check_expired
+  -> blk_mq_rq_timed_out
+    -> q->mq_ops->timeout
+       nvme_timeout
+         -> nvme_dev_disable
+            -> mutex_lock dev->shutdown_lock
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/RmII10Z40D161utywWTc15=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyQQscACgkQAVBC80lX
-0GzqDwf/T9CQ7of/d/SVo8uI5ZyIY0C1wvKQpXSVq0dPX9zFDdNX2WEfLlKMME0p
-DBfihbPlBCXMumrlaEAVcYU2cDQwVqzrcJaydXWfk8F4G8foP1Jl31Ocau4TIsnz
-wWP7nje6CI/u94lpCQ0nL7sbITj+DFD9SAwoyXPe5/T3RgrrbOhHE8bJZICbA5KV
-zcGaAW0EmQq/FDoNTgkfDP9ceVX6MSsDyZuc//3QwthEBislgwjnlN6az6LYTrH1
-5uyT9Mapn9fFkIYiyylqBU/cNcBg1adwMKm16+C0WOeDknyG90a3fZ1crpZUmffm
-KgGn80+tVC/3D05dIkzymwYh+7sIuQ==
-=wbSG
------END PGP SIGNATURE-----
-
---Sig_/RmII10Z40D161utywWTc15=--
+Thanks
+Jianchao
