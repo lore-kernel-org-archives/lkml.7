@@ -2,120 +2,387 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30D1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B798AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881572133D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vgxCeCEb"
+	by mail.kernel.org (Postfix) with ESMTP id 866FC2133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 13:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfCSNhk (ORCPT
+        id S1727718AbfCSNiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 09:37:40 -0400
-Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:3201
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727567AbfCSNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 09:37:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rQVhGWwQVSVIftKZVGzil12bT/7i66y7prDxroFYEV8=;
- b=vgxCeCEb90tYsEQegzAa6qi0XleAj8aiIFnxMhg1CYgo8WVmPaYbHsYITktgKzi7CzKlku+XVp0/BerjeaTJZsFGlFka9a6TzBnlsK2XDVBRjYtR6GDqoblpizh15D6ENiSMMZ7dVOHAwUQEGrHu4WFCXQa8xRDp5jlYWkpyGqc=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6162.eurprd04.prod.outlook.com (20.179.36.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Tue, 19 Mar 2019 13:37:35 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 13:37:35 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "nicolas.pitre@linaro.org" <nicolas.pitre@linaro.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH] arm: use memblocks_present
-Thread-Topic: [PATCH] arm: use memblocks_present
-Thread-Index: AQHUwgpk6mha5pabokK36jjcALV7pqXcbD0AgDamY4CAABSdgIAABjWQ
-Date:   Tue, 19 Mar 2019 13:37:35 +0000
-Message-ID: <AM0PR04MB44818056316525D4E66EC17988400@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190211131602.3294-1-peng.fan@nxp.com>
- <20190212172700.xwtomhb3qahyxugx@shell.armlinux.org.uk>
- <AM0PR04MB4481452226EC21AA7B90735288400@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAOMZO5BNZaQu8xXvVuxdFbCKPFypajq7qimf6Mk-KAYx-EHcHA@mail.gmail.com>
-In-Reply-To: <CAOMZO5BNZaQu8xXvVuxdFbCKPFypajq7qimf6Mk-KAYx-EHcHA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.69]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 229575b2-fbb9-49a8-6f5e-08d6ac700be5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB6162;
-x-ms-traffictypediagnostic: AM0PR04MB6162:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <AM0PR04MB6162C19DDE5AE9F9D9542A4888400@AM0PR04MB6162.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(396003)(136003)(13464003)(189003)(199004)(26005)(6306002)(71190400001)(478600001)(4326008)(55016002)(105586002)(9686003)(25786009)(186003)(66066001)(966005)(106356001)(86362001)(256004)(71200400001)(2906002)(74316002)(45080400002)(14454004)(305945005)(316002)(6436002)(5660300002)(53936002)(229853002)(33656002)(52536014)(44832011)(486006)(6506007)(81156014)(7736002)(8676002)(6246003)(68736007)(81166006)(11346002)(476003)(93886005)(102836004)(7696005)(53546011)(16799955002)(3846002)(97736004)(6116002)(7416002)(54906003)(446003)(99286004)(76176011)(8936002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6162;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wGIyk1a+z1mBk4otIoJABfPa0Qto5dRBj+4tXy5Vg3IOcldKLze9zOCQD6ac7tLCsfC3uCB/LV7Kug9wHSDvfXD1recDKo3I4+pZ2JThBafDSZTs+ZQq4My7p8i+93SZxc1bukOFmskB79SW0fmrDgCDYEJkp6W5VTaAifGkvXwIf0KVQF+czuoxeNAX8RLH6OdYfmM4I7FdC3CmDJFSxIC1fWOnlq+/JtFyiaQ6AxyEphqaewF52Q7VkuXyLndKbU3ZusIaRL+iHhshwTXygKK9i4GGWMX4ZxnrL+c4QFPEtu8vAqYyNLHnC7R5cgQFR/YhqiTcvucHu6DrejmLlnMBgy1gBZ3i4gRdS8vWJt7Lzm0QW1+ljladnvsi4DXpQPDbU8sOhoR7iD9MHhLdEah0ZxOOIx1SHqAmbS9848Y=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 19 Mar 2019 09:38:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36718 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727371AbfCSNiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 09:38:01 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E7EC3082E68;
+        Tue, 19 Mar 2019 13:38:00 +0000 (UTC)
+Received: from krava (unknown [10.43.17.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D36B15EDE1;
+        Tue, 19 Mar 2019 13:37:58 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 14:37:58 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Prateek Sood <prsood@codeaurora.org>
+Cc:     rostedt@goodmis.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, sramana@codeaurora.org,
+        fweisbec@gmail.com
+Subject: Re: [PATCH] perf: fix use after free of perf_trace_buf
+Message-ID: <20190319133758.GB20602@krava>
+References: <20190318151529.GT6058@hirez.programming.kicks-ass.net>
+ <1552998060-5735-1-git-send-email-prsood@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 229575b2-fbb9-49a8-6f5e-08d6ac700be5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 13:37:35.4693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6162
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552998060-5735-1-git-send-email-prsood@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 19 Mar 2019 13:38:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBb
-bWFpbHRvOmZlc3RldmFtQGdtYWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDPmnIgxOeaXpSAyMTox
-NA0KPiBUbzogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+IENjOiBSdXNzZWxsIEtpbmcg
-LSBBUk0gTGludXggYWRtaW4gPGxpbnV4QGFybWxpbnV4Lm9yZy51az47DQo+IG5pY29sYXMucGl0
-cmVAbGluYXJvLm9yZzsgcm9iaEBrZXJuZWwub3JnOyBtaG9ja29Ac3VzZS5jb207DQo+IGFybmRA
-YXJuZGIuZGU7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJvc3RlZHRAZ29vZG1pcy5v
-cmc7DQo+IHJwcHRAbGludXgudm5ldC5pYm0uY29tOyB2YW4uZnJlZW5peEBnbWFpbC5jb207IGYu
-ZmFpbmVsbGlAZ21haWwuY29tOw0KPiBha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJt
-OiB1c2UgbWVtYmxvY2tzX3ByZXNlbnQNCj4gDQo+IEhpIFBlbmcsDQo+IA0KPiBPbiBUdWUsIE1h
-ciAxOSwgMjAxOSBhdCA5OjMxIEFNIFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPiB3cm90ZToN
-Cj4gDQo+ID4gPiBMb29rcyBnb29kLCBwbGVhc2UgcHV0IGl0IGluIHRoZSBwYXRjaCBzeXN0ZW0s
-IHRoYW5rcy4gIERldGFpbHMgaW4NCj4gPiA+IG15IHNpZ25hdHVyZS4NCj4gPg0KPiA+IFdvdWxk
-IHlvdSBhcHBseSB0aGlzIHBhdGNoPyBJIGRvIG5vdCBmaW5kIHRoaXMgcGF0Y2ggaW4geW91ciB0
-cmVlLg0KPiANCj4gSGF2ZSB5b3UgcHV0IGl0IGluIFJ1c3NlbGwncyBwYXRjaCBzeXN0ZW0NCg0K
-VGhhbmtzIGZvciByZW1pbmRpbmcgbWUsIGp1c3QgYWRkZWQNCmh0dHBzOi8vd3d3LmFybWxpbnV4
-Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy92aWV3cGF0Y2gucGhwP2lkPTg4NTAvMQ0KDQpUaGFu
-a3MsDQpQZW5nLg0KDQo+IChodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
-b2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZ3d3cuDQo+IGFybWxpbnV4Lm9yZy51ayUyRmRldmVs
-b3BlciUyRnBhdGNoZXMlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3BlbmcuDQo+IGZhbiU0MG54cC5j
-b20lN0M0NDkxNTg1ZGQ4ZjQ0MmFlMGY4NTA4ZDZhYzZjZDMxMyU3QzY4NmVhMWQzYmMyDQo+IGI0
-YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODg1OTgwNzI5OTIwNjU3JmFtcDtzZGF0
-YT0NCj4gU0glMkZDS2JxN3N3V1V5bjJEeGh4a1g1aHBGJTJGWVNEOE5mQzljNmJjJTJGTTZYTSUz
-RCZhbXA7cg0KPiBlc2VydmVkPTApID8NCg==
+On Tue, Mar 19, 2019 at 05:51:00PM +0530, Prateek Sood wrote:
+> SyS_perf_event_open()
+>   free_event()
+>     _free_event()
+>       tp_perf_event_destroy()
+>         perf_trace_destroy()
+>           perf_trace_event_unreg() //free perf_trace_buf
+> 
+> trace_cpu_frequency()
+>   perf_trace_cpu()
+>     perf_trace_buf_alloc() //access perf_trace_buf
+> 
+> 	CPU0					CPU1
+> perf_trace_event_unreg()                perf_trace_cpu()
+> 					head = (event_call->perf_events)
+> 
+> free_percpu(tp_event->perf_events)
+> tp_event->perf_events = NULL
+> --total_ref_count
+> free_percpu(perf_trace_buf[i])
+> perf_trace_buf[i] = NULL
+> 
+> 					raw_data = perf_trace_buf[rctx]
+> 					memset(raw_data)
+> 
+> A potential race exists between access of perf_trace_buf from
+
+so there's no actual backtrace of the crash, right?
+
+jirka
+
+> perf_trace_buf_alloc() and perf_trace_event_unreg(). This can
+> result in perf_trace_buf[rctx] being NULL during access from memset()
+> in perf_trace_buf_alloc().
+> 
+> Change-Id: I95ae774b9fcc653aa808f2d9f3e4359b3605e909
+> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+> ---
+>  include/linux/trace_events.h    |  2 ++
+>  include/trace/perf.h            |  5 +++-
+>  kernel/trace/trace_event_perf.c | 63 ++++++++++++++++++++++++++++++++++-------
+>  kernel/trace/trace_kprobe.c     | 10 +++++--
+>  kernel/trace/trace_syscalls.c   | 14 ++++++---
+>  kernel/trace/trace_uprobe.c     |  2 ++
+>  6 files changed, 79 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 8a62731..dbdad19 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -591,6 +591,8 @@ extern int  ftrace_profile_set_filter(struct perf_event *event, int event_id,
+>  extern void ftrace_profile_free_filter(struct perf_event *event);
+>  void perf_trace_buf_update(void *record, u16 type);
+>  void *perf_trace_buf_alloc(int size, struct pt_regs **regs, int *rctxp);
+> +void get_perf_trace_buf(void);
+> +void put_perf_trace_buf(void);
+>  
+>  void bpf_trace_run1(struct bpf_prog *prog, u64 arg1);
+>  void bpf_trace_run2(struct bpf_prog *prog, u64 arg1, u64 arg2);
+> diff --git a/include/trace/perf.h b/include/trace/perf.h
+> index dbc6c74..f808c33 100644
+> --- a/include/trace/perf.h
+> +++ b/include/trace/perf.h
+> @@ -55,9 +55,10 @@
+>  			     sizeof(u64));				\
+>  	__entry_size -= sizeof(u32);					\
+>  									\
+> +	get_perf_trace_buf();						\
+>  	entry = perf_trace_buf_alloc(__entry_size, &__regs, &rctx);	\
+>  	if (!entry)							\
+> -		return;							\
+> +		goto out;						\
+>  									\
+>  	perf_fetch_caller_regs(__regs);					\
+>  									\
+> @@ -68,6 +69,8 @@
+>  	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
+>  				  event_call, __count, __regs,		\
+>  				  head, __task);			\
+> +out:									\
+> +	put_perf_trace_buf();						\
+>  }
+>  
+>  /*
+> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> index 4629a61..6caca88 100644
+> --- a/kernel/trace/trace_event_perf.c
+> +++ b/kernel/trace/trace_event_perf.c
+> @@ -21,7 +21,8 @@ typedef typeof(unsigned long [PERF_MAX_TRACE_SIZE / sizeof(unsigned long)])
+>  	perf_trace_t;
+>  
+>  /* Count the events in use (per event id, not per instance) */
+> -static int	total_ref_count;
+> +static int alloc_ref_count;
+> +static atomic_t access_ref_count[PERF_NR_CONTEXTS];
+>  
+>  static int perf_trace_event_perm(struct trace_event_call *tp_event,
+>  				 struct perf_event *p_event)
+> @@ -88,6 +89,34 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+>  	return 0;
+>  }
+>  
+> +void get_perf_trace_buf(void)
+> +{
+> +	int rctx;
+> +
+> +	rctx = perf_swevent_get_recursion_context();
+> +	if (rctx < 0)
+> +		return;
+> +
+> +	atomic_inc(&access_ref_count[rctx]);
+> +	perf_swevent_put_recursion_context(rctx);
+> +}
+> +EXPORT_SYMBOL_GPL(get_perf_trace_buf);
+> +NOKPROBE_SYMBOL(get_perf_trace_buf);
+> +
+> +void put_perf_trace_buf(void)
+> +{
+> +	int rctx;
+> +
+> +	rctx = perf_swevent_get_recursion_context();
+> +	if (rctx < 0)
+> +		return;
+> +
+> +	atomic_dec(&access_ref_count[rctx]);
+> +	perf_swevent_put_recursion_context(rctx);
+> +}
+> +EXPORT_SYMBOL_GPL(put_perf_trace_buf);
+> +NOKPROBE_SYMBOL(put_perf_trace_buf);
+> +
+>  static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  				struct perf_event *p_event)
+>  {
+> @@ -108,7 +137,7 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  
+>  	tp_event->perf_events = list;
+>  
+> -	if (!total_ref_count) {
+> +	if (!alloc_ref_count) {
+>  		char __percpu *buf;
+>  		int i;
+>  
+> @@ -125,11 +154,11 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  	if (ret)
+>  		goto fail;
+>  
+> -	total_ref_count++;
+> +	alloc_ref_count++;
+>  	return 0;
+>  
+>  fail:
+> -	if (!total_ref_count) {
+> +	if (!alloc_ref_count) {
+>  		int i;
+>  
+>  		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
+> @@ -150,6 +179,7 @@ static void perf_trace_event_unreg(struct perf_event *p_event)
+>  {
+>  	struct trace_event_call *tp_event = p_event->tp_event;
+>  	int i;
+> +	bool retry;
+>  
+>  	if (--tp_event->perf_refcount > 0)
+>  		goto out;
+> @@ -165,10 +195,21 @@ static void perf_trace_event_unreg(struct perf_event *p_event)
+>  	free_percpu(tp_event->perf_events);
+>  	tp_event->perf_events = NULL;
+>  
+> -	if (!--total_ref_count) {
+> -		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
+> -			free_percpu(perf_trace_buf[i]);
+> -			perf_trace_buf[i] = NULL;
+> +	if (!--alloc_ref_count) {
+> +again:
+> +		retry = false;
+> +		for (i = 0; (i < PERF_NR_CONTEXTS) && perf_trace_buf[i]; i++) {
+> +			if (!atomic_read(&access_ref_count[i])) {
+> +				free_percpu(perf_trace_buf[i]);
+> +				perf_trace_buf[i] = NULL;
+> +			} else
+> +				retry = true;
+> +		}
+> +
+> +		if (retry) {
+> +			set_current_state(TASK_INTERRUPTIBLE);
+> +			schedule_timeout(msecs_to_jiffies(1));
+> +			goto again;
+>  		}
+>  	}
+>  out:
+> @@ -453,15 +494,17 @@ void perf_trace_buf_update(void *record, u16 type)
+>  	memset(&regs, 0, sizeof(regs));
+>  	perf_fetch_caller_regs(&regs);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(ENTRY_SIZE, NULL, &rctx);
+>  	if (!entry)
+> -		return;
+> +		goto out;
+>  
+>  	entry->ip = ip;
+>  	entry->parent_ip = parent_ip;
+>  	perf_trace_buf_submit(entry, ENTRY_SIZE, rctx, TRACE_FN,
+>  			      1, &regs, &head, NULL);
+> -
+> +out:
+> +	put_perf_trace_buf();
+>  #undef ENTRY_SIZE
+>  }
+>  
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 5d5129b..7830190 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1166,15 +1166,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
+>  	size = ALIGN(__size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+> -		return 0;
+> +		goto out;
+>  
+>  	entry->ip = (unsigned long)tk->rp.kp.addr;
+>  	memset(&entry[1], 0, dsize);
+>  	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  	return 0;
+>  }
+>  NOKPROBE_SYMBOL(kprobe_perf_func);
+> @@ -1202,15 +1205,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
+>  	size = ALIGN(__size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+> -		return;
+> +		goto out;
+>  
+>  	entry->func = (unsigned long)tk->rp.kp.addr;
+>  	entry->ret_ip = (unsigned long)ri->ret_addr;
+>  	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_perf_func);
+>  
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> index f93a56d..a08110f 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -608,9 +608,10 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
+>  	size = ALIGN(size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	rec = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!rec)
+> -		return;
+> +		goto out;
+>  
+>  	rec->nr = syscall_nr;
+>  	syscall_get_arguments(current, regs, 0, sys_data->nb_args,
+> @@ -620,12 +621,14 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
+>  	     !perf_call_bpf_enter(sys_data->enter_event, regs, sys_data, rec)) ||
+>  	    hlist_empty(head)) {
+>  		perf_swevent_put_recursion_context(rctx);
+> -		return;
+> +		goto out;
+>  	}
+>  
+>  	perf_trace_buf_submit(rec, size, rctx,
+>  			      sys_data->enter_event->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  
+>  static int perf_sysenter_enable(struct trace_event_call *call)
+> @@ -706,9 +709,10 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
+>  	size = ALIGN(sizeof(*rec) + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	rec = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!rec)
+> -		return;
+> +		goto out;
+>  
+>  	rec->nr = syscall_nr;
+>  	rec->ret = syscall_get_return_value(current, regs);
+> @@ -717,11 +721,13 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
+>  	     !perf_call_bpf_exit(sys_data->exit_event, regs, rec)) ||
+>  	    hlist_empty(head)) {
+>  		perf_swevent_put_recursion_context(rctx);
+> -		return;
+> +		goto out;
+>  	}
+>  
+>  	perf_trace_buf_submit(rec, size, rctx, sys_data->exit_event->event.type,
+>  			      1, regs, head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  
+>  static int perf_sysexit_enable(struct trace_event_call *call)
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index be78d99..c931b22 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1116,6 +1116,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+>  	if (hlist_empty(head))
+>  		goto out;
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+>  		goto out;
+> @@ -1140,6 +1141,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+>   out:
+> +	put_perf_trace_buf();
+>  	preempt_enable();
+>  }
+>  
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
