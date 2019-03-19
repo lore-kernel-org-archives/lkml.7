@@ -2,72 +2,154 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80890C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FACC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597AC2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E8B2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 01:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vCEdljOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfCSBqm (ORCPT
+        id S1727373AbfCSBva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 21:46:42 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58937 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfCSBqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 21:46:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 18:46:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,496,1544515200"; 
-   d="scan'208";a="126568935"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 18 Mar 2019 18:46:40 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1h63pv-00048F-So; Tue, 19 Mar 2019 09:46:39 +0800
-Date:   Tue, 19 Mar 2019 09:46:33 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Han Xu <han.xu@nxp.com>
-Cc:     kbuild-all@01.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Clark Wang <xiaoning.wang@nxp.com>,
-        Frank Li <frank.li@nxp.com>, linux-kernel@vger.kernel.org
-Subject: [spi:for-5.2 11/19] drivers/spi/spi-fsl-lpspi.c:483:5: sparse:
- symbol 'fsl_lpspi_runtime_resume' was not declared. Should it be static?
-Message-ID: <201903190907.mIc3klXH%lkp@intel.com>
+        Mon, 18 Mar 2019 21:51:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50446 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfCSBv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 21:51:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2J1n5Jk010020;
+        Tue, 19 Mar 2019 01:51:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=jlCQNGVRFwgCBY4CJA2mPoW0A+Yv5I/mTd6xygvrpwA=;
+ b=vCEdljOAEQ8WRFdZNqjCQIqx17dIsSaWZYvGJagJ1p+XjGGFE/4o2CK4TmuEZwiPWh48
+ XcIF0BWi1zIonO29JDln8Q3yrurlENufjy4tWDIQQMif2bPoSOq/K2cQCGeozLw+Yo1c
+ QJmVnHJuanpGgu0HekqgJ+yGQZOND6q11Z62F3+s+24nN6JOeUGiRhZDr2YhPetGnqsA
+ QIo4+L9s7DJl66vVmHIzoe89Zi+VAyURZJvQN+Kjkb3EqzARrR/cUNlPJZC4pefFruiW
+ IgH/uWXvK0UTM0No3MN87cAzuewbm5KHDhn4C2oLpYPs5lkgZu278mQ8EBn4MmFZOEPV sQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2130.oracle.com with ESMTP id 2r8rjuhvja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 01:51:08 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2J1p6fw015014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 01:51:07 GMT
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2J1p4N6003733;
+        Tue, 19 Mar 2019 01:51:04 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Mar 2019 18:51:04 -0700
+Subject: Re: [PATCH 6/8] skd: use blk_mq_queue_tag_busy_iter
+To:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
+        sagi@grimberg.me, josef@toxicpanda.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, hare@suse.de, jthumshirn@suse.de, hch@lst.de
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552640264-26101-7-git-send-email-jianchao.w.wang@oracle.com>
+ <1552929635.152266.30.camel@acm.org>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <d21aa530-7466-a21b-69f5-cfc8750c6e1a@oracle.com>
+Date:   Tue, 19 Mar 2019 09:54:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1552929635.152266.30.camel@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9199 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
-head:   69b921acae8a5b7feef03921d9b42c3634f3b9d1
-commit: 944c01a889d97dc08e1b71f4ed868f4023fd6034 [11/19] spi: lpspi: enable runtime pm for lpspi
-reproduce:
-        # apt-get install sparse
-        git checkout 944c01a889d97dc08e1b71f4ed868f4023fd6034
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Hi Bart
+
+Thanks so much for you comment for this.
+
+After make blk_mq_queue_tag_busy_iter safer in patch 2, the patches that
+replace blk_mq_tagset_busy_iter with blk_mq_queue_tag_busy_iter in drivers
+are efforts to unify the tag iterate interface and finally we could remove
+the blk_mq_tagset_busy_iter which is not safe.
+
+The blk_mq_queue_tag_busy_iter will try to get a non-zero q_usage_counter
+of a request_queue before it try to access the tags, so it could avoid the
+race with the procedures that need to freeze and drain the queue, such as
+update nr_hw_queues, switch io scheduler and even queue clean up. And also
+it iterate the static_rqs and needn't to worry about the stale requests issue.
+So it is a safer interface. Although for shared tagset case, the driver
+need to loop every request_queue itself with blk_mq_queue_tag_busy_iter,
+but all of the work is in error handler path, so it should not be a big deal.
 
 
-sparse warnings: (new ones prefixed by >>)
+Thanks
+Jianchao
 
->> drivers/spi/spi-fsl-lpspi.c:483:5: sparse: symbol 'fsl_lpspi_runtime_resume' was not declared. Should it be static?
->> drivers/spi/spi-fsl-lpspi.c:501:5: sparse: symbol 'fsl_lpspi_runtime_suspend' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+On 3/19/19 1:20 AM, Bart Van Assche wrote:
+> On Fri, 2019-03-15 at 16:57 +0800, Jianchao Wang wrote:
+>> blk_mq_tagset_busy_iter is not safe that it could get stale request
+>> in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here.
+>>
+>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+>> ---
+>>  drivers/block/skd_main.c | 4 ﭗ橸ṷ梧뇪觬(), 2 deletions(-)
+>>
+>> diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+>> index ab893a7..60c34ff 100644
+>> --- a/drivers/block/skd_main.c
+>> diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+>> index ab893a7..60c34ff 100644
+>> --- a/drivers/block/skd_main.c
+>> +++ b/drivers/block/skd_main.c
+>> @@ -395,7 +395,7 @@ static int skd_in_flight(struct skd_device *skdev)
+>>  {
+>>         int count = 0;
+>>  
+>> -       blk_mq_tagset_busy_iter(&skdev->tag_set, skd_inc_in_flight, &count);
+>> +       blk_mq_queue_tag_busy_iter(skdev->queue, skd_inc_in_flight, &count, true);
+>>  
+>>         return count;
+>>  }
+> 
+> Hi Jianchao,
+> 
+> If you have a look at the skd_in_flight() callers you will see that the above
+> change is not necessary.
+> 
+>> @@ -1916,7 +1916,7 @@ static bool skd_recover_request(struct request *req, void *data, bool reserved)
+>>  
+>>  static void skd_recover_requests(struct skd_device *skdev)
+>>  {
+>> -	blk_mq_tagset_busy_iter(&skdev->tag_set, skd_recover_request, skdev);
+>> +	blk_mq_queue_tag_busy_iter(skdev->queue, skd_recover_request, skdev, true);
+>>  }
+> 
+> Same comment here. If you have a look at the callers of this function you will
+> see that this change is not necessary.
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
+> _______________________________________________
+> Linux-nvme mailing list
+> Linux-nvme@lists.infradead.org
+> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_linux-2Dnvme&d=DwIGgQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=7WdAxUBeiTUTCy8v-7zXyr4qk7sx26ATvfo6QSTvZyQ&m=sLURgJ0-Ppht_QzBm__dp4MAaPyGCYjTWVYVglTtnoQ&s=fmR2wU9GQUr-0yrG88JCs1afrjYTd9or1wPKyDKgemg&e=
+> 
