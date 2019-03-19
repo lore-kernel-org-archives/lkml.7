@@ -2,192 +2,194 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F2DC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D77AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB11C20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE4E20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 03:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1buR+fh"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="yU4ztIrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfCSDNt (ORCPT
+        id S1727577AbfCSDPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 23:13:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36673 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfCSDNs (ORCPT
+        Mon, 18 Mar 2019 23:15:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35790 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfCSDPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 23:13:48 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y36so10769793qtb.3;
-        Mon, 18 Mar 2019 20:13:47 -0700 (PDT)
+        Mon, 18 Mar 2019 23:15:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so2172798pgf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 20:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGGSnafaNBpdSiNLLCqzapKuD/ZrthMIzJSfiQIdF54=;
-        b=G1buR+fh/psy/75kjeCHD+SHsR7M0Pr0aXbMeko6MfLOZNmUQCzPkkj3QCJ7UM4Bwt
-         EmvnH3CUwl+zzk/u2cz0i384UTd7sDQTphPs0s1cr+rUGbGO4C4daiTRHjQQe7cuJlFm
-         dPFi6NkD4PW5qEbTmwNo/zyGLPd8jz2RgJztukXHlzhFAa06qlb7di7xUqErcGx19BDL
-         STKnMmIVof7SLcRPGbPCIfRW94iN7Lgw3I1sbFryoERiGUARVSaCpUawvswUsiWfyxPX
-         IqWT48guKvRX9TrYfcPYUCfk7yX/II72/KSQ6u84nCSOoYrVJiO9l+CWxMsmnRrx6ugw
-         BlqQ==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=o/g5shMExclC44bZgU+m0b5jjVwdDBAIFLmLk4oMubY=;
+        b=yU4ztIrn0lEmaGjeISXIczB0Cf++niCPbf4ErCUQz65oU4oDnEscCMlQd3EEJvGEIC
+         OTGXSwvFUl+iqkgfJGUdFMlkhtnBJ6PboTl+8nQfAXX6/3HJMhTrqghJzPUfRaIbtmHI
+         FP2w5r1PtJ/xlphp4mokg+tgROFnwamNlnUtNSN/ZWP3ylQXMutdTbGP1e+Hcdg5+/eE
+         qUgh4qsSlV8bOhiVYgqTp0soYcNXM2N0x4ViARk+qiygm5s/6CwqQlkm94NO3z6QCq7x
+         LYlLJ0sSTzM1dLEMExhMirJBWoFXF625JcTyKPImGSOBirN29t6SkOgHfN1RBdmYAqU2
+         uiVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGGSnafaNBpdSiNLLCqzapKuD/ZrthMIzJSfiQIdF54=;
-        b=DOtNWKQNS8NR9cZrFm9xmQ+jMmHv8jEyri2f3wYs51mhf9zoYzdNRVY6j2mg+7QGtD
-         U8N3t0bE4CrIvlC5JHkoHY5/Uehj/NA/OCaoax2FKUwHTYqYjs/UCUpV9Qvj4eol5Nlh
-         AFiONB7AqTAnieZEpxsDvMYvQQPd0hauA1NLnS8rdFRHis2r9oUvgMnZPQAjx2dsVrbL
-         0Ui53ywIAhW1ClhYqFTxGH8E0uVrpW0M3Q0EmdUknG9xHJdJaxRQCFSLmBu+wLZoJBZN
-         a9ddP03pBAp74PooMEFppfEmMFzhugbUdB1w8L1xT1ewZUgBoA2wOV9rPS3GUcRWsbdD
-         7NfQ==
-X-Gm-Message-State: APjAAAWyGT9ZffaJ2lA+DcjDfugH+KgUSc0h/hcA2qcAq+TGKMERY/rb
-        y34VcK0+AMMKwiKlsiGIQC7z5HDHacFVBkemWwI=
-X-Google-Smtp-Source: APXvYqyi3t6qiVw7/fYbTl+IV+H/saALA8CJxWvXV0yFRATfB7Sd2aJHY3/ZP4XJQR9FVMg9SVVWca3HQ5f7CUF6xho=
-X-Received: by 2002:a0c:c785:: with SMTP id k5mr469951qvj.0.1552965227021;
- Mon, 18 Mar 2019 20:13:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=o/g5shMExclC44bZgU+m0b5jjVwdDBAIFLmLk4oMubY=;
+        b=k6GjEJLQEiuIEDPUvd5UOypmpa15hpe36SuEvEXpXdjEtVMyhJVMjAS1+C+/JnO5UM
+         S2Si0ED0P97O0PchKhW/WumBGHgcGrsIPADwsqn71UxJ5bxKBn/bPQaL8S2AqOcW9XvY
+         c7xY6dzL2Mm2fyq2GvAMFJK2PbA7+BN5+gAj6YS7gLDQAG5TuaLTgiyHvpdCoYjPWg5u
+         bun7PPvd/W2j3c9NIYpCmkkAfVYj2igDn0ud0dpV3P5GCvgZK5BsG4OiZlxGXlEPAMbc
+         ojgE49m2sbbqxFUnOP9narBVfazYWwcEELzWcojmg0gXKBpjTldqwHiTh4AEIsxuVXjx
+         Absg==
+X-Gm-Message-State: APjAAAWraBMr0EJ4dG/Qk98b55knIfjK4bezLYsceujiTgW1QwfSQVYj
+        WVy1jh9KN4Cw+3Y+EqQzwGoPRg==
+X-Google-Smtp-Source: APXvYqy9YrKsrBfNsETLGOiVWf7HssI2Y/q34jMa/TjN82uaRWuxpMdV3GVxRV+BXn9gytUPL/5ENA==
+X-Received: by 2002:a17:902:bccb:: with SMTP id o11mr5929901pls.23.1552965350433;
+        Mon, 18 Mar 2019 20:15:50 -0700 (PDT)
+Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id v9sm19105491pfg.130.2019.03.18.20.15.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 20:15:50 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 20:15:46 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     "wanghai (M)" <wanghai26@huawei.com>
+Cc:     <davem@davemloft.net>, <idosch@mellanox.com>,
+        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
+        <f.fainelli@gmail.com>, <amritha.nambiar@intel.com>,
+        <joe@perches.com>, <dmitry.torokhov@gmail.com>,
+        <andriy.shevchenko@linux.intel.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net-sysfs: Fix memory leak in netdev_register_kobject
+Message-ID: <20190318201546.7675e5ec@shemminger-XPS-13-9360>
+In-Reply-To: <cfc4b528-8bda-6823-cdf8-f4d12eb95c85@huawei.com>
+References: <20190319050657.61327-1-wanghai26@huawei.com>
+        <20190318085724.1e0c017b@shemminger-XPS-13-9360>
+        <cfc4b528-8bda-6823-cdf8-f4d12eb95c85@huawei.com>
 MIME-Version: 1.0
-References: <20190315111107.15154-1-lhenriques@suse.com> <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
- <87r2b4zd2q.fsf@suse.com> <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
- <87lg1c17b2.fsf@suse.com>
-In-Reply-To: <87lg1c17b2.fsf@suse.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Tue, 19 Mar 2019 11:13:35 +0800
-Message-ID: <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
->
-> "Yan, Zheng" <ukernel@gmail.com> writes:
->
-> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>
-> >> "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>
-> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >> >>
-> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
-> >> >>
-> >> >> unreferenced object 0xffff8881fccca940 (size 32):
-> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
-> >> >>   hex dump (first 32 bytes):
-> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >> >>   backtrace:
-> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
-> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
-> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
-> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
-> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
-> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
-> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
-> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
-> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
-> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
-> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
-> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
-> >> >>
-> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
-> >> >> for example, umounting the filesystem.  In that case, we can simply drop
-> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
-> >> >>
-> >> >> Link: https://tracker.ceph.com/issues/38224
-> >> >> Cc: stable@vger.kernel.org
-> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> >> >> ---
-> >> >>  fs/ceph/caps.c | 7 +++++++
-> >> >>  1 file changed, 7 insertions(+)
-> >> >>
-> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> >> >> index 36a8dc699448..208f4dc6f574 100644
-> >> >> --- a/fs/ceph/caps.c
-> >> >> +++ b/fs/ceph/caps.c
-> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
-> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >> >>  {
-> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
-> >> >> +
-> >> >>         spin_lock(&realm->inodes_with_caps_lock);
-> >> >>         list_del_init(&ci->i_snap_realm_item);
-> >> >>         ci->i_snap_realm_counter++;
-> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
-> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
-> >> >>                             realm);
-> >> >> +       /*
-> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
-> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
-> >> >> +        * ceph_snap_context and we need to drop it.
-> >> >> +        */
-> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
-> >> >>  }
-> >> >>
-> >> >>  /*
-> >> >
-> >> > This does not seem right.  i_head_snapc is cleared when
-> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
-> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
-> >> > Did you see 'reconnect denied' during the test? If you did, the fix
-> >> > should be in iterate_session_caps()
-> >> >
-> >>
-> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
-> >> seems to execute fine, except from the memory leak.
-> >>
-> >> It's very difficult to reproduce this issue, but last time I managed to
-> >> get this memory leak to trigger I actually had some debugging code in
-> >> drop_inode_snap_realm, something like:
-> >>
-> >>   if (ci->i_head_snapc)
-> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
-> >
-> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
-> > i_flushing_caps. and try reproducing it again.
-> >
->
-> Ok, it took me a few hours, but I managed to reproduce the bug, with
-> those extra printks.  All those values are set to 0 when the bug
-> triggers (and i_head_snapc != NULL).
->
+On Tue, 19 Mar 2019 11:03:54 +0800
+"wanghai (M)" <wanghai26@huawei.com> wrote:
 
-Thanks, which test triggers this bug?
+> =E5=9C=A8 2019/3/18 23:57, Stephen Hemminger =E5=86=99=E9=81=93:
+> > On Tue, 19 Mar 2019 01:06:57 -0400
+> > Wang Hai <wanghai26@huawei.com> wrote:
+> > =20
+> >> When registering struct net_device, it will call
+> >> 	register_netdevice ->
+> >> 		netdev_register_kobject ->
+> >> 			device_add(dev)
+> >> 			register_queue_kobjects(ndev)
+> >>
+> >> If device_add(dev) or register_queue_kobjects(ndev) fails.
+> >> Register_netdevice() will return error, causing netdev_freemem(ndev)
+> >> to be called to free net_device, however (&ndev->dev)->kobj.name will
+> >> not be freed, resulting in a memory leak.
+> >>
+> >> syzkaller report this:
+> >> BUG: memory leak
+> >> unreferenced object 0xffff8881f4fad168 (size 8):
+> >> comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
+> >> hex dump (first 8 bytes):
+> >>    77 70 61 6e 30 00 ff ff                          wpan0...
+> >> backtrace:
+> >>    [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
+> >>    [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+> >>    [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.=
+c:281
+> >>    [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
+> >>    [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/ne=
+t-sysfs.c:1727
+> >>    [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:=
+8711
+> >>    [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [i=
+eee802154]
+> >>    [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee=
+802154]
+> >>    [<00000000e4b3df51>] 0xffffffffc1500e0e
+> >>    [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/pla=
+tform.c:614
+> >>    [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
+> >>    [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd=
+.c:671
+> >>    [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/d=
+d.c:945
+> >>    [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:=
+1022
+> >>    [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.=
+c:304
+> >>    [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:=
+645
+> >>
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+> >> Signed-off-by: Wang Hai <wanghai26@huawei.com>
+> >> ---
+> >>   net/core/net-sysfs.c | 15 ++++++++++-----
+> >>   1 file changed, 10 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> >> index 4ff661f..f0e53dc 100644
+> >> --- a/net/core/net-sysfs.c
+> >> +++ b/net/core/net-sysfs.c
+> >> @@ -1745,17 +1745,22 @@ int netdev_register_kobject(struct net_device =
+*ndev)
+> >>  =20
+> >>   	error =3D device_add(dev);
+> >>   	if (error)
+> >> -		return error;
+> >> +		goto device_add_error;
+> >>  =20
+> >>   	error =3D register_queue_kobjects(ndev);
+> >> -	if (error) {
+> >> -		device_del(dev);
+> >> -		return error;
+> >> -	}
+> >> +	if (error)
+> >> +		goto register_error;
+> >>  =20
+> >>   	pm_runtime_set_memalloc_noio(dev, true);
+> >>  =20
+> >> +out:
+> >>   	return error;
+> >> +
+> >> +register_error:
+> >> +	device_del(dev);
+> >> +device_add_error:
+> >> +	kfree_const(dev->kobj.name); =20
+> > This looks a bug in device_add() not here.
+> > In general, it is better for an api to clean up after itself.
+> > Since dev->kobj.name is created in device_add and normally freed
+> > in device_del; why is device_add leaving it behind?\ =20
+>=20
+> When registering struct net_device, it will call
+> register_netdevice ->
+>  =C2=A0=C2=A0=C2=A0 netdev_register_kobject ->
+>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 dev_set_name(dev, "%s", ndev->name)
+>  =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 device_add(dev)
+>  =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 register_queue_kobjects(ndev)
+>=20
+> The dev->kobj.name that causes the memory leak is created in=20
+> dev_set_name(dev, "%s", ndev-> name) in the function=20
+> netdev_register_kobject(), not in device_add(dev). If device_add(dev) or=
+=20
+> register_queue_kobjects(ndev) fails, it should release dev-> kobj.name=20
+> in netdev_register_kobject()
 
-I searched that code, found we may fail to cleanup i_head_snap in two
-places. One is in ceph_queue_cap_snap, Another is in
-remove_session_caps_cb().
+Good catch, dev_set_name is using asprintf to allocate new memory
+for the name. The problem with your patch is that device_del()
+already cleans up the device (including name). The device object
+should really not be touched after device_del.
 
-> Cheers,
-> --
-> Luis
->
->
-> >
-> >>
-> >> This printk was only executed when the bug triggered (during a
-> >> filesystem umount) and the address shown was the same as in the kmemleak
-> >> warning.
-> >>
-> >> After spending some time looking, I assumed this to be a missing call to
-> >> handle_cap_flush_ack, which would do the i_head_snapc cleanup.
-> >>
-> >> Cheers,
-> >> --
-> >> Luis
-> >
+Where is the name freed in the normal case?
+
