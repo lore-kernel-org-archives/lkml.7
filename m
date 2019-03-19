@@ -2,163 +2,151 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A66C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7130EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33272082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3974E2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 18:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gZD75jZX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wAnNAB0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfCSSUs (ORCPT
+        id S1727113AbfCSS0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 14:20:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48696 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfCSSUr (ORCPT
+        Tue, 19 Mar 2019 14:26:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43796 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfCSS0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 14:20:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=juRymJ+iEoeCdxC0HbfdiOGoZJfUK9Hyu6zHygcR+y4=; b=gZD75jZXzhc47l6ILkv0/Jzor
-        jBPM1b/a/uHfUUqq9tMgltTHwFwJw6j3+Mbb5iDviHXStKgNvvTEQa4chAmV4Qh7W+9ftft6xDqD5
-        6rBv9lOLkuCy62AFx3MZ1Vhm/t5G3zgC68sAQy91ah1sCzKlI88xITbSF+WUMVbSnszKZBdP6INaU
-        VG1+zSsjORoiEYyMJBcskO4SWTkD5KRDryQZ0dFKZyCSe1UaV+zF/bdYe5DMGL17+d7bpgAemDm45
-        NFCxtL1h0KcyekteavL963tD3ogGqT4mAp3T1nXlE/a55vXvPHBm9fznD834mnBi0/Y9R4YxfmbyC
-        z80G1GowQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6JLv-0002Ot-1J; Tue, 19 Mar 2019 18:20:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 60955284934F3; Tue, 19 Mar 2019 19:20:41 +0100 (CET)
-Date:   Tue, 19 Mar 2019 19:20:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-Message-ID: <20190319182041.GO5996@hirez.programming.kicks-ass.net>
-References: <20190314130113.919278615@infradead.org>
- <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net>
- <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
+        Tue, 19 Mar 2019 14:26:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l11so14404544pgq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 11:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+pv7N5dZB8BBHmN6DIo8H2HB8nh1hDFmwGzl8xyZh88=;
+        b=wAnNAB0jxvCWLMuPL6T+7mtoUraQaRTNFkSQlDfOUJ2P5wCilh1wB/YZ2quuqjzBYV
+         QIKmTgwxkuCGRWK3mmdMY1nowNAteCaW2nX/oBizJUQf6toU5MxmuTrexSoEzyLSwusV
+         mfejIW/vmDPcPj86YyLdZOnWEjhzyYX/chL5y7Lg3FR7fZgY81os2siIjnw7OeLKT49Q
+         O8xHgVT9vcKx7FGRzJ+H7miJTexUgEgwF7Bx3dFiIsM3u9dd4bxJZM3gk2bC0ARME2OD
+         UCsytMJzV1z2IxBM0ZLbUD3nteulberR7awbuzl44tBF1HTH+484YPMGMatq1S3wUfYa
+         C+qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+pv7N5dZB8BBHmN6DIo8H2HB8nh1hDFmwGzl8xyZh88=;
+        b=IBmQ+Yr13X9ITKkOkeXg1aQE3bJKIcBBLJBK1ncguUHRJT9d1izFK4ozJso1zxraK/
+         Y0qZC4AZIjhpLcitXJgJ+uChWw34VrFUTRcOPdtcIiNpKnrw+xolSTMpNVX9OJEX+3m4
+         J1qlyqBu1aCQAcnmXIPY66asCd5wcMECe0kCWk12U0PbsFsdPNui+OE/6ZZZt/dcUK6y
+         ttHeXW5ptSijx+nIcP5T19ku4mb/cY02q4tRW+t0uOkk5e3P3b9aqiqWaIP0/U3iSIJJ
+         5MWritqixOO209eZsC2TugUxF9P6RwrPLqISk6ShmYfq9u9fVDTm+yfKoyk1e8Y7m1rU
+         qLOA==
+X-Gm-Message-State: APjAAAVIysyxCJyGO5D4cVtlSySV2VzQ8Cd4dmePjyasXcTmLDgmMU6Y
+        ovcRLFVxBjb+JxMRCUCZ7Fzbog==
+X-Google-Smtp-Source: APXvYqzhN3XbPCUq5saV3Nx3OzeJ6RM7MUdn5/K8Wv+EwncUOB8dsbswjJiotbQiEu7XgVadCsQKog==
+X-Received: by 2002:a17:902:b707:: with SMTP id d7mr3439630pls.91.1553019962712;
+        Tue, 19 Mar 2019 11:26:02 -0700 (PDT)
+Received: from google.com ([2620:15c:202:1:c562:226a:6d78:2ae4])
+        by smtp.gmail.com with ESMTPSA id z14sm6371164pgi.11.2019.03.19.11.26.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 11:26:01 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 11:25:55 -0700
+From:   Benson Leung <bleung@google.com>
+To:     torvalds@linux-foundation.org
+Cc:     bleung@chromium.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com, bleung@google.com,
+        linux@roeck-us.net, ncrews@chromium.org
+Subject: [GIT PULL] chrome platform fixes for v5.1-rc2
+Message-ID: <20190319182555.GA197525@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Content-Disposition: inline
-In-Reply-To: <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:52:01AM -0700, Stephane Eranian wrote:
-> > Not quite; the control on its own doesn't directly write the MSR. And
-> > even when the work-around is allowed, we'll not set the MSR unless there
-> > is also demand for PMC3.
-> >
-> Trying to understand this better here. When the workaround is enabled
-> (tfa=0), you lose PMC3 and transactions operate normally.
 
-> When it is disabled (tfa=1), transactions are all aborted and PMC3 is
-> available.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, but we don't expose tfa.
+Hi Linus,
 
-> If you are saying that when there is a PMU event requesting PMC3, then
-> you need PMC3 avail, so you set the MSR so that tfa=1 forcing all
-> transactions to abort.
+The following changes since commit 2794449576a6024e203eca5cc2c1a3ae33102b8e:
 
-Right, so when allow_tfa=1 (default), we only set tfa=1 when PMC3 is
-requested.
+  platform/chrome: fix wilco-ec dependencies (2019-03-05 11:35:46 +0100)
 
-This has the advantage that,
+are available in the Git repository at:
 
-  TSX only workload -> works
-  perf 4 counteres -> works
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
+ags/tag-chrome-platform-fixes-for-v5.1-rc2
 
-Only when you need both of them, do you get 'trouble'.
+for you to fetch changes up to 57aeef7f7a6848024b92c32bf23e8c85a8ac896d:
 
-> But in that case, you are modifying the execution of the workload when
-> you are monitoring it, assuming it uses TSX.
+  platform/chrome: cros_ec_debugfs: cancel/schedule logging work only if su=
+pported (2019-03-19 11:00:30 -0700)
 
-We assume you are not in fact using TSX, not a lot of code does. If you
-do use TSX a lot, and you don't want to interfere, you have to set
-allow_tfa=0 and live with one counter less.
+----------------------------------------------------------------
+Chrome Platform fixes for v5.1-rc2
 
-Any which way around you turn this stone, it sucks.
+Two fixes:
+1. platform/chrome: Fix locking pattern in wilco_ec_mailbox()
+	- Closes a potential race condition in the new wilco_ec driver.
+2. platform/chrome: cros_ec_debugfs: cancel/schedule logging work only if s=
+upported
+	- Fixes a warning in cros_ec_debugfs on systems that do not support
+	  console logging, such as the Asus C201.
 
-> You want lowest overhead and no modifications to how the workload
-> operates, otherwise how representative is the data you are collecting?
+----------------------------------------------------------------
+Guenter Roeck (1):
+      platform/chrome: cros_ec_debugfs: cancel/schedule logging work only i=
+f supported
 
-Sure; but there are no good choices here. This 'fix' will break
-something. We figured TSX+4-counter-perf was the least common scenario.
+Nick Crews (1):
+      platform/chrome: Fix locking pattern in wilco_ec_mailbox()
 
-We konw of people that rely on 4 counter being present; you want to
-explain to them how when doing an update their program suddently doesn't
-work anymore?
+ drivers/platform/chrome/cros_ec_debugfs.c  | 10 +++++++---
+ drivers/platform/chrome/wilco_ec/mailbox.c |  2 +-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-Or you want to default to tfa=1; but then you have to explain to those
-people relying on TSX why their workload stopped working.
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
 
-> I understand that there is no impact on apps not using TSX, well,
-> except on context switch where you have to toggle that MSR.
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-There is no additional code in the context switch; only the perf event
-scheduling code prods at the MSR.
+-----BEGIN PGP SIGNATURE-----
 
-> But for workloads using TSX, there is potentially an impact.
+iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlyRNDMACgkQHwn1ewov
+5lht1BAAqIxuYABqK7gv3lBFRjd98PRDSefn5mdHPqNeW7YRMw2N/wp93j8X4VPY
+uHmw9qw4kduIhnKeSCrzHAops1zlYnMXXlI29jB1s5IYI5xjswVsv9XbDJlkCPzp
+TfCAnPo+AVE+YuyUngnrjy2J87Q1TbX3z/fcS+7ka49ncSzVq/SJEwPCISZLgbCT
+5i+yXzDKzC0bHbj/4MfS3e9+WGbXQNrqYmMffiX62XHC46eH4dFyFmp5x4nKJ6OR
+RK6E8HQf6fWyZuJ/DN8ER0qSLzdVTcQo2LEVs2z1VgdLLuFLlH6wEk7NGA4eXHUE
+Cbr8bi/R+D6E4M8EW+V5nc2zUJJoX3TcktDQJ8zWeD/Ptu1D28ifz1oKWRWIMsnq
+yInyCSTKwcM+N8QLIYt8FZfmN05qH8PZwzr5mhmwmmNhG0kc4GcjI+x199XsbHUI
+eUqLHYrZMDj5zLKVcUmI/SXAgP5KfdUriCcAcMRXX+EreSdld8tyXq0P9W12a9/y
+ghlZso7wWrZekRmBedd8Yfo/A9ub6cWi+zs7/xKAtJCY81gPhLUP61X3Cuz3YrkO
+JoXiUrGsz16xPKgeOYfy+a+rY5EJJlVvSsPU/PSN1ZLm4rFXzw2O8M6KlmbgQ8Jp
+ElFKkQsHnaRmixjnw8mbtfY5UVNwaIVkiNq2d4mRl/at88c2cEc=
+=XkEf
+-----END PGP SIGNATURE-----
 
-Yes, well, if you're a TSX _and_ perf user, you now have an extra knob
-to play with; that's not something I can do anything about. We're forced
-to make a choice here.
-
-> > Yeah, meh. You're admin, you can 'fix' it. In practise I don't expect
-> > most people to care about the knob, and the few people that do, should
-> > be able to make it work.
-> 
-> I don't understand how this can work reliably.
-
-> You have a knob to toggle that MSR.
-
-No, we don't have this knob.
-
-> Then, you have another one inside perf_events
-
-Only this knob exists allow_tfa.
-
-> and then the sysadmin has to make sure nobody (incl. NMI watchdog) is
-> using the PMU when this all happens.
-
-You're very unlucky if the watchdog runs on PMC3, normally it runs on
-Fixed1 or something. Esp early after boot. (Remember, we schedule fixed
-counters first, and then general purpose counters, with a preference for
-lower counters).
-
-Anyway, you can trivially switch it off if you want.
-
-> How can this be a practical solution? Am I missing something here?
-
-It works just fine; it is unfortunate that we have this interaction but
-that's not something we can do anything about. We're forced to deal with
-this.
-
-But if you're a TSX+perf user, have your boot scripts do:
-
-  echo 0 > /sys/bus/event_source/devices/cpu/allow_tsx_force_abort
-
-and you'll not use PMC3 and TSX will be 'awesome'. If you don't give a
-crap about TSX (most people), just boot and be happy.
-
-If you do care about TSX+perf and want to dynamically toggle for some
-reason, you just have to be a little careful.
+--G4iJoqBmSsgzjUCe--
