@@ -2,173 +2,229 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAD5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F662C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93D72146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="l9REVXuF"
+	by mail.kernel.org (Postfix) with ESMTP id E1F0A20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 07:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfCSHKd (ORCPT
+        id S1727528AbfCSHLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 03:10:33 -0400
-Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:20494
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726916AbfCSHKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 03:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=85UJNkI0srIsPvpHuYy+G2/GniSv2IreaufG2DlR5DU=;
- b=l9REVXuFrhxcMb3nDhxLFbODRn5I1aZv8ab0TwYsnbFO61sZ/2zBkkF0F9Y86N/mdyQpKuypdQ1I1S4fg2zSJZVz+47hG9hxa0873JQwXYeugARwr+gFacfPKoTBoXyuHaPLwYU4xX1VZxr1PZegj2kbo4O62IS07gxFLeCMgTA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3884.eurprd04.prod.outlook.com (52.134.71.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 19 Mar 2019 07:10:27 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Tue, 19 Mar 2019
- 07:10:27 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH RESEND V6 5/5] ARM: dts: imx7ulp-evk: Add backlight support
-Thread-Topic: [PATCH RESEND V6 5/5] ARM: dts: imx7ulp-evk: Add backlight
- support
-Thread-Index: AQHU3iLURlIAwfZNNUC6bd0m0GRtsg==
-Date:   Tue, 19 Mar 2019 07:10:27 +0000
-Message-ID: <1552979097-5814-6-git-send-email-Anson.Huang@nxp.com>
-References: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1552979097-5814-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR01CA0013.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::25) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3cb3dba8-fb61-4a03-1143-08d6ac39f6bf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3884;
-x-ms-traffictypediagnostic: DB3PR0402MB3884:
-x-microsoft-antispam-prvs: <DB3PR0402MB3884A182CC35388536AAA6DFF5400@DB3PR0402MB3884.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0981815F2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(86362001)(25786009)(7736002)(305945005)(7416002)(4326008)(50226002)(256004)(14454004)(102836004)(110136005)(2201001)(8936002)(316002)(11346002)(476003)(2616005)(2501003)(446003)(99286004)(478600001)(97736004)(81156014)(81166006)(6512007)(53936002)(186003)(8676002)(2906002)(68736007)(71190400001)(71200400001)(6116002)(3846002)(66066001)(76176011)(52116002)(36756003)(6506007)(386003)(6436002)(26005)(106356001)(5660300002)(105586002)(486006)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3884;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Vuaz/F0r7Kh4QUrJUKPZzaHdVpkWjC9c98F7qb7RjtoTeOCqgj0fGRx8Z5Cqm/7GSI10rYilSgTRhUQ+OjChDjQldYWsDQFjWFBa3Vi3/wjhjcErRPLZ9fFqgeBzr2PMZXpMhFb6UQx1HDhUG6A0CZ77+fsI0UfarK+XTRujbN5gf6xJx+PCLOylLOsSV4d2FJA5xpWjrAC/jmEqfR2Dfrq3zL27Ehjdkd9Aa4MZcMW8i1rYdqB8YmXnl/2R0h2dl/mZATMTOs6qPft3JvY/crvTwSmI0NWDsgZfaDrfrf+dMXnzalV3yIThG22K7hrPmQwEPToDgyRC0k/S2/mstyD/X/FbSlROqYw9J4OtZdBnufBaF9ooONqmZbFKWpG9N8tsxn5dVTpPPDqxgMWb97mW3aWwbhWUJ01uBh/iI3w=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Mar 2019 03:11:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55350 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725996AbfCSHLT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 03:11:19 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2J75H55117043
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:11:17 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2raundrg4j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 03:11:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 19 Mar 2019 07:11:10 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Mar 2019 07:11:04 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2J7B8gW40435914
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Mar 2019 07:11:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 236B642049;
+        Tue, 19 Mar 2019 07:11:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74A6742045;
+        Tue, 19 Mar 2019 07:11:06 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.84])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 19 Mar 2019 07:11:06 +0000 (GMT)
+Date:   Tue, 19 Mar 2019 09:11:04 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add
+ vm.unprivileged_userfaultfd
+References: <20190319030722.12441-1-peterx@redhat.com>
+ <20190319030722.12441-2-peterx@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cb3dba8-fb61-4a03-1143-08d6ac39f6bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2019 07:10:27.4755
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3884
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319030722.12441-2-peterx@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19031907-0020-0000-0000-000003250493
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031907-0021-0000-0000-000021771BCD
+Message-Id: <20190319071104.GA6392@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903190054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds i.MX7ULP EVK board MIPI-DSI backlight support.
+Hi Peter,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V5:
-	- change #pwm-cells to 3, add polarity settings.
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+On Tue, Mar 19, 2019 at 11:07:22AM +0800, Peter Xu wrote:
+> Add a global sysctl knob "vm.unprivileged_userfaultfd" to control
+> whether userfaultfd is allowed by unprivileged users.  When this is
+> set to zero, only privileged users (root user, or users with the
+> CAP_SYS_PTRACE capability) will be able to use the userfaultfd
+> syscalls.
+> 
+> Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
+> Suggested-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
-evk.dts
-index a09026a..7c44ffa 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
-=20
- #include "imx7ulp.dtsi"
-+#include <dt-bindings/pwm/pwm.h>
-=20
- / {
- 	model =3D "NXP i.MX7ULP EVK";
-@@ -22,6 +23,14 @@
- 		reg =3D <0x60000000 0x40000000>;
- 	};
-=20
-+	backlight {
-+		compatible =3D "pwm-backlight";
-+		pwms =3D <&pwm0 1 50000 0>;
-+		brightness-levels =3D <0 20 25 30 35 40 100>;
-+		default-brightness-level =3D <6>;
-+		status =3D "okay";
-+	};
-+
- 	reg_vsd_3v3: regulator-vsd-3v3 {
- 		compatible =3D "regulator-fixed";
- 		regulator-name =3D "VSD_3V3";
-@@ -40,6 +49,12 @@
- 	status =3D "okay";
- };
-=20
-+&pwm0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_pwm0>;
-+	status =3D "okay";
-+};
-+
- &usdhc0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_usdhc0>;
-@@ -57,6 +72,12 @@
- 		bias-pull-up;
- 	};
-=20
-+	pinctrl_pwm0: pwm0grp {
-+		fsl,pins =3D <
-+			IMX7ULP_PAD_PTF2__TPM4_CH1	0x2
-+		>;
-+	};
-+
- 	pinctrl_usdhc0: usdhc0grp {
- 		fsl,pins =3D <
- 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
---=20
-2.7.4
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+Just one minor note below
+
+> ---
+>  Documentation/sysctl/vm.txt   | 12 ++++++++++++
+>  fs/userfaultfd.c              |  5 +++++
+>  include/linux/userfaultfd_k.h |  2 ++
+>  kernel/sysctl.c               | 12 ++++++++++++
+>  4 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.txt
+> index 187ce4f599a2..f146712f67bb 100644
+> --- a/Documentation/sysctl/vm.txt
+> +++ b/Documentation/sysctl/vm.txt
+> @@ -61,6 +61,7 @@ Currently, these files are in /proc/sys/vm:
+>  - stat_refresh
+>  - numa_stat
+>  - swappiness
+> +- unprivileged_userfaultfd
+>  - user_reserve_kbytes
+>  - vfs_cache_pressure
+>  - watermark_boost_factor
+> @@ -818,6 +819,17 @@ The default value is 60.
+> 
+>  ==============================================================
+> 
+> +unprivileged_userfaultfd
+> +
+> +This flag controls whether unprivileged users can use the userfaultfd
+> +syscalls.  Set this to 1 to allow unprivileged users to use the
+> +userfaultfd syscalls, or set this to 0 to restrict userfaultfd to only
+> +privileged users (with SYS_CAP_PTRACE capability).
+
+Can you please fully spell "system call"?
+
+> +
+> +The default value is 1.
+> +
+> +==============================================================
+> +
+>  - user_reserve_kbytes
+> 
+>  When overcommit_memory is set to 2, "never overcommit" mode, reserve
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 89800fc7dc9d..7e856a25cc2f 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -30,6 +30,8 @@
+>  #include <linux/security.h>
+>  #include <linux/hugetlb.h>
+> 
+> +int sysctl_unprivileged_userfaultfd __read_mostly = 1;
+> +
+>  static struct kmem_cache *userfaultfd_ctx_cachep __read_mostly;
+> 
+>  enum userfaultfd_state {
+> @@ -1921,6 +1923,9 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>  	struct userfaultfd_ctx *ctx;
+>  	int fd;
+> 
+> +	if (!sysctl_unprivileged_userfaultfd && !capable(CAP_SYS_PTRACE))
+> +		return -EPERM;
+> +
+>  	BUG_ON(!current->mm);
+> 
+>  	/* Check the UFFD_* constants for consistency.  */
+> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> index 37c9eba75c98..ac9d71e24b81 100644
+> --- a/include/linux/userfaultfd_k.h
+> +++ b/include/linux/userfaultfd_k.h
+> @@ -28,6 +28,8 @@
+>  #define UFFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+>  #define UFFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS)
+> 
+> +extern int sysctl_unprivileged_userfaultfd;
+> +
+>  extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+> 
+>  extern ssize_t mcopy_atomic(struct mm_struct *dst_mm, unsigned long dst_start,
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 7578e21a711b..9b8ff1881df9 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -66,6 +66,7 @@
+>  #include <linux/kexec.h>
+>  #include <linux/bpf.h>
+>  #include <linux/mount.h>
+> +#include <linux/userfaultfd_k.h>
+> 
+>  #include <linux/uaccess.h>
+>  #include <asm/processor.h>
+> @@ -1704,6 +1705,17 @@ static struct ctl_table vm_table[] = {
+>  		.extra1		= (void *)&mmap_rnd_compat_bits_min,
+>  		.extra2		= (void *)&mmap_rnd_compat_bits_max,
+>  	},
+> +#endif
+> +#ifdef CONFIG_USERFAULTFD
+> +	{
+> +		.procname	= "unprivileged_userfaultfd",
+> +		.data		= &sysctl_unprivileged_userfaultfd,
+> +		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &zero,
+> +		.extra2		= &one,
+> +	},
+>  #endif
+>  	{ }
+>  };
+> -- 
+> 2.17.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
 
