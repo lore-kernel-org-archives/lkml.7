@@ -2,127 +2,122 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E552BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E268C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB13E2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070152146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQopIIl/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZzVpye8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfCSVuf (ORCPT
+        id S1727210AbfCSVvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:50:35 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37189 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfCSVue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:50:34 -0400
-Received: by mail-vs1-f65.google.com with SMTP id w13so247134vsc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 14:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3sx61kJLbntnOqF9bCfkbVbyId2Nm32y0C4Si3xxSKM=;
-        b=QQopIIl/qvrsO12gXsZj9K33bVboR+U/AppaAP4QzKnQHUHsx64ePy0Sfmy9e7F8Jn
-         1r6KAuoeNCaLS+M/uA6Yro7Yv/w8vX3n8snhT06gGTd7jxVPWeu4k8QzKgPK2O4jwjyI
-         A/0CKVZabZhVpRvOI6yUwFCnPy8ZYZpldxOdVjnxcohtYNszqkv8CFIR6Xb5QVqDLFEo
-         LGFPgFrWM77/RC8KMdrzKvPnaliii2y8A5KK8nQRcqRQH29j8ejO1TcR4PW+obMX/Z/s
-         Sx0MRJZwYvUTj0j1vWmen+Enz72Eq8ozgl1eRyHB1+tLlBjtzyLM+ocLTikQb/+fiaGr
-         XxDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3sx61kJLbntnOqF9bCfkbVbyId2Nm32y0C4Si3xxSKM=;
-        b=d8yxUVvJ1v91SNlfmrMGAmQudwURVsUkTNoDRGH5Oo+9pxsSfewJYKVBjlEkaXcAIn
-         t/mEyisAJLckph4nxnMWtokcNLPkV/9yz6IS67V3YaeQg6AHEo3wPWGlmQmBgN2QB/by
-         SzXUKlDtyG6u8lLnyxcL5nG64QKi+or/ENOUfI9A78K4nrinnnfU+NfGa1A/GGo6sB49
-         eTIm0zyKPwy/lrJB1DcchtpfjCJe51STfSDpe783+10wv0RRSQG+4FKsAdvG4wQcaxvy
-         P2uCdZuVeQB6+O47oUg6YyI64h5uqYxqKOQUWnxzgTVZ46KGUXNS93pxUUtJ0w4U3Hp+
-         ma7Q==
-X-Gm-Message-State: APjAAAUSW21w3yDwTqczq/dJOEIAoMxxcYJMtpjZIlGlHN1TJFOo40B4
-        TtCAwtMnAQP8NcwCPF9J7O2eD8y4h1Q0gpbmsIMFWg==
-X-Google-Smtp-Source: APXvYqzSWRJOTURbF7eui/7MX9Bbf2qwA02XNHX7VbUnYSECKLfoHQNYL9R1TVX5Yf9Dy1vGt/0WC/D4weKL7Aq0UiY=
-X-Received: by 2002:a67:e9cc:: with SMTP id q12mr1098400vso.208.1553032233572;
- Tue, 19 Mar 2019 14:50:33 -0700 (PDT)
+        Tue, 19 Mar 2019 17:51:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:54943 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfCSVvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:51:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44P6FJ5cLPz9sBp;
+        Wed, 20 Mar 2019 08:51:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553032278;
+        bh=xFWnKOibxlW+QQixST4hmzvrqFXNoeUMXKcr4lOOcVM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZzVpye8lF1x9wP6p0afCXWiwXfUalNydgLA/SR2STICVbq63MbNL9xjmROE7NuJ63
+         nO4vDRH2p5CeuZ631eKDq4/z8stz66JZ4EAl091WDhErkrLAQX8MV5SfuGOQTBnIXz
+         L7rTUH+BL2KVMgqtfUWrkwpkFqIhkBrW1CKtvc/LwNM8R75/l8sqviQitIEW856fHw
+         Fp+ZhseTyvOCnzw4cCkZfpz/HUN9DPf/X4SiV3oBXGk0r3K5L5lAps5ZglaSyxWj/h
+         cWlkd5laaQF0v8+tm4+RrFZEee0niw4I9PV6i05rbuyICvPHGaXbX+bHeuRsCTlfCq
+         qGoipDgBw3GMQ==
+Date:   Wed, 20 Mar 2019 08:51:14 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+Message-ID: <20190320085114.3c60ccce@canb.auug.org.au>
+In-Reply-To: <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
+References: <20190129165428.3931-1-jglisse@redhat.com>
+        <20190313012706.GB3402@redhat.com>
+        <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+        <20190318170404.GA6786@redhat.com>
+        <20190319094007.a47ce9222b5faacec3e96da4@linux-foundation.org>
+        <20190319165802.GA3656@redhat.com>
+        <20190319101249.d2076f4bacbef948055ae758@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190314130113.919278615@infradead.org> <20190314130705.956098225@infradead.org>
-In-Reply-To: <20190314130705.956098225@infradead.org>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 19 Mar 2019 14:50:21 -0700
-Message-ID: <CABPqkBReEzMKUDJVAUArwbzxtL5KTNRot2coW4MUOvy0qzgC-w@mail.gmail.com>
-Subject: Re: [RFC][PATCH 6/8] perf/x86: Clear ->event_constraint[] on put
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/rZ_YS7Q3KOb_0EEI.p64CGi"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> The current code unconditionally clears cpuc->event_constraint[i]
-> before calling get_event_constraints(.idx=i). The only site that cares
-> is intel_get_event_constraints() where the c1 load will always be
-> NULL.
->
-> However, always calling get_event_constraints() on all events is
-> wastefull, most times it will return the exact same result. Therefore
-> retain the logic in intel_get_event_constraints() and change the
-> generic code to only clear the constraint on put.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+--Sig_/rZ_YS7Q3KOb_0EEI.p64CGi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I thought there was caching of the constraint in case it was static
-(or unconstrained)
-to avoid walking the constraint table each time between invocations
-on the same group_sched_in() call. But the way the c1 vs. c2 logic
-is written I don't see it. In which case, this could be another opportunity.
+Hi Andrew,
 
-Looks good to me.
+On Tue, 19 Mar 2019 10:12:49 -0700 Andrew Morton <akpm@linux-foundation.org=
+> wrote:
+>
+> Yes, a resend against mainline with those various updates will be
+> helpful.  Please go through the various fixes which we had as well:
+>=20
+> mm-hmm-use-reference-counting-for-hmm-struct.patch
+> mm-hmm-do-not-erase-snapshot-when-a-range-is-invalidated.patch
+> mm-hmm-improve-and-rename-hmm_vma_get_pfns-to-hmm_range_snapshot.patch
+> mm-hmm-improve-and-rename-hmm_vma_fault-to-hmm_range_fault.patch
+> mm-hmm-improve-driver-api-to-work-and-wait-over-a-range.patch
+> mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix.patch
+> mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-fix-fix.patch
+> mm-hmm-add-default-fault-flags-to-avoid-the-need-to-pre-fill-pfns-arrays.=
+patch
+> mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device.p=
+atch
+> mm-hmm-support-hugetlbfs-snap-shoting-faulting-and-dma-mapping.patch
+> mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem.patch
+> mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix.patch
+> mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-fix-2.pat=
+ch
+> mm-hmm-add-helpers-for-driver-to-safely-take-the-mmap_sem.patch
 
-Reviewed-by: Stephane Eranian <eranian@google.com>
+I have dropped all those from linux-next today (along with
+mm-hmm-fix-unused-variable-warnings.patch).
 
-> ---
->  arch/x86/events/core.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -858,7 +858,6 @@ int x86_schedule_events(struct cpu_hw_ev
->                 x86_pmu.start_scheduling(cpuc);
->
->         for (i = 0, wmin = X86_PMC_IDX_MAX, wmax = 0; i < n; i++) {
-> -               cpuc->event_constraint[i] = NULL;
->                 c = x86_pmu.get_event_constraints(cpuc, i, cpuc->event_list[i]);
->                 cpuc->event_constraint[i] = c;
->
-> @@ -941,6 +940,8 @@ int x86_schedule_events(struct cpu_hw_ev
->                          */
->                         if (x86_pmu.put_event_constraints)
->                                 x86_pmu.put_event_constraints(cpuc, e);
-> +
-> +                       cpuc->event_constraint[i] = NULL;
->                 }
->         }
->
-> @@ -1404,6 +1405,7 @@ static void x86_pmu_del(struct perf_even
->                 cpuc->event_list[i-1] = cpuc->event_list[i];
->                 cpuc->event_constraint[i-1] = cpuc->event_constraint[i];
->         }
-> +       cpuc->event_constraint[i-1] = NULL;
->         --cpuc->n_events;
->
->         perf_event_update_userpage(event);
->
->
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rZ_YS7Q3KOb_0EEI.p64CGi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyRZFIACgkQAVBC80lX
+0Gw81AgAnXTKZqmeBZ4XjAsL8P7H6EEBR0UIaAyWsozfkZPGrrTgSMamze/8WwWu
+JaraU0UrKqcUviCT1rKDjxiNThMMbiWqdR6q4GlndWsBUjWTp9Kdis1qBzKG84pb
+j0p+0oPChjQTUkDnJ+sDu4kNzKzsI/dnELnv0eD7CBD6/7fMs0cZqPcIWOx8gU6C
+ZjFRZ3rL1x62j+XQV6Soi75OUmmK3B09pcGSoveJcnczUYbWObuabzxhwIss0+Hs
+uAAVyn8QqeCewozDT1RM8zJMgCsfoxVgUjjeG2OdHGH+812z2yOVXHH5FS68RqWW
+rLwHse5BU5x5GObt1LUXGHPMDksB5w==
+=Kvth
+-----END PGP SIGNATURE-----
+
+--Sig_/rZ_YS7Q3KOb_0EEI.p64CGi--
