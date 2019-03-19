@@ -2,96 +2,122 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4735C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0594C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9603B20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3F520700
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 02:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOrryWLS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiBtkKML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfCSCZK (ORCPT
+        id S1727634AbfCSCZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 22:25:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43250 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfCSCZK (ORCPT
+        Mon, 18 Mar 2019 22:25:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46680 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfCSCZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 22:25:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l11so12727527pgq.10;
-        Mon, 18 Mar 2019 19:25:09 -0700 (PDT)
+        Mon, 18 Mar 2019 22:25:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s23so12582870pfe.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 19:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cj0BROTwWYZVVRLJZ/ByPyaQwjge1zj8VJ28ghnqvAA=;
-        b=EOrryWLS/wv00Gsub5ttHJjzuLzBnaVV6Kf4/OTLgmDFpwKUR6m7sMvTJvxabd9gxL
-         QMNp+GQb9twNRQexbnZghCoQ2IPawp0WhDPqeTws/syMGa8P/JPV+z5Vox2nu78inCLG
-         6TZIZyNX3UsOhkdrdm5sx06aKDZW7OOOeEl56rD0pcjwBMJ3LaGK19mp3+aZzqgvKpZ6
-         uRA7pphMt0BUP/uXyKs/Pl8NssQpcya4NnNSgGmaH7w0dV8cSRZ+Gb2wdDI1dxBq1Ycv
-         OYA3KXdg6fkbl2weNLYX+x7JT7UNs5eb1fCHoOxzrgdlk2r1Cgy2hvJ2iqZV5CxPtlkH
-         c2NA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n/NDS47nz9uuNytg4LeJJ+li959uQqsTwzm1mhrxiWA=;
+        b=jiBtkKMLnhknyJBqO0pykSJ1rbddZqUTZxiCQSo/SQdWsCg6rLr0Cy1/XcNb01JLUe
+         arpg6kvnCyN5mQVoBrYIXH3jjsPbg038amLqb/8cOmOdXYXMUoJGico4viaD0NRc4vzS
+         tqNZi/bzEiId0TsLouzvEpgHrIloi0yxX3b5HKTc68Ot8AOc22832Bwi6kZpXbWljicc
+         Z6NmfIIGCh7KJixA06QsQBncUA/fr0iFgC3sIQ2960zrQ/E63Zzk79r1DAeIZ/RVs56o
+         Z92k7Ksf6tDBHwMo12HW/o2rx8yQUNX35Sfm4tjZIIcRXJ2dzt3xtZBPd9C4QamrFLr+
+         ZhPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cj0BROTwWYZVVRLJZ/ByPyaQwjge1zj8VJ28ghnqvAA=;
-        b=VxxU3KER34qDok1zt6M4yq1po7omg8UfY73ZDnYmhLiK3x327G/3xd6TKDoBpxGJEY
-         OBZ9AE4UaHT9KOZ4KmR4Y4hsC5T2xjoDv1KDrut8W47XbLZ8npgxuzAC4uZMv4FSApNs
-         wt5rVrqx2qCTjsgAresz9T1CoJ8no4x1aeIhuK0w2xG7uSogwPiGPBMqtnrz/ENDBarF
-         EAQuaSi0qB2iMt5TCGnjoZFsPaa2AVrFy8C5GFiIKrepLOjwmnZC2JXer0MQW1L3+8iz
-         F20IE6rSh1zdFKiKhG/9msMph1+wKy6kngvf9KdaZcbmtEkqCVel8sUoFMfi3POQw/bJ
-         maQg==
-X-Gm-Message-State: APjAAAVTVqiHlbMqCpWrM+vjHTEzRLTAx233A2EKHata4UjmLSLdHf/U
-        qDLAqwo0guD2yC42pyYia2CL+jrw
-X-Google-Smtp-Source: APXvYqyiENVLeUCQ2BvE4RylRaidXdwNNVCto+Sdshhx4xpHTBeO5lvb5Pgg3ggsw3zmPXm2A1J7ew==
-X-Received: by 2002:a17:902:2aa6:: with SMTP id j35mr22101213plb.56.1552962309370;
-        Mon, 18 Mar 2019 19:25:09 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v18sm14418101pfm.165.2019.03.18.19.25.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 19:25:08 -0700 (PDT)
-Subject: Re: [PATCH 4.14 00/34] 4.14.107-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190318084144.657740413@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <09b796e0-0162-4e5f-5d63-e5e8fef07292@roeck-us.net>
-Date:   Mon, 18 Mar 2019 19:25:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n/NDS47nz9uuNytg4LeJJ+li959uQqsTwzm1mhrxiWA=;
+        b=UlTDhVEMuOX8O/Qb5u2+/61ItnumDTQBLIkWxcGNzgQ95RBLuNO3QVs6O/PAhLGknr
+         QXlUHZkeutdtDa0byuJ3uzkjgJ6d9Zkw0EUXyybmYVp++7vFO59ALkC9TuLZwAHnaanm
+         +4WiZnKjgCA6VV5f6CYHAAL2Yls1Wz1N9FlmT3SQXcbM49zOoTzTxCIKL3Y5k/1SaeYa
+         ofF2amWisLxOIWmx6SmyvtC0QPLvwGI99x42bSQH2IJXm1SORRPwR0CmDGDCNAnL/6qp
+         ErP2drPB8wVCYFXPeilFrINVXpdQhOCJZFZP98MglYpN6HNSiTfqgyYBTdkW+wTC0mYU
+         qmsg==
+X-Gm-Message-State: APjAAAXmhEnA96tfxMh33t601aRsQq2yfDI1zRWLC3L+UIhzS7+UiiRG
+        zt0feq6fg86ycpxcblRZzp0=
+X-Google-Smtp-Source: APXvYqw25r5MaAPOEBNu+onH2jr/m6hG8lprEL1PtpTxaPWtjQk1ZzP3VFv20URyYkFjUUqJo+9YQg==
+X-Received: by 2002:a63:ff0f:: with SMTP id k15mr7714pgi.301.1552962332881;
+        Mon, 18 Mar 2019 19:25:32 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC ([106.51.22.39])
+        by smtp.gmail.com with ESMTPSA id b17sm3327180pgj.79.2019.03.18.19.25.31
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 18 Mar 2019 19:25:32 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 08:00:07 +0530
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
+        boris.ostrovsky@oracle.com, jgross@suse.com, linux@armlinux.org.uk,
+        robin.murphy@arm.com
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [RESEND PATCH v4 8/9] xen/gntdev.c: Convert to use vm_map_pages()
+Message-ID: <88e56e82d2db98705c2d842e9c9806c00b366d67.1552921225.git.jrdr.linux@gmail.com>
+References: <cover.1552921225.git.jrdr.linux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 2:25 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.107 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Mar 20 08:41:26 UTC 2019.
-> Anything received after that time might be too late.
-> 
+Convert to use vm_map_pages() to map range of kernel
+memory to user vma.
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 329 pass: 329 fail: 0
+map->count is passed to vm_map_pages() and internal API
+verify map->count against count ( count = vma_pages(vma))
+for page array boundary overrun condition.
 
-Guenter
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ drivers/xen/gntdev.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+index 5efc5ee..5d64262 100644
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -1084,7 +1084,7 @@ static int gntdev_mmap(struct file *flip, struct vm_area_struct *vma)
+ 	int index = vma->vm_pgoff;
+ 	int count = vma_pages(vma);
+ 	struct gntdev_grant_map *map;
+-	int i, err = -EINVAL;
++	int err = -EINVAL;
+ 
+ 	if ((vma->vm_flags & VM_WRITE) && !(vma->vm_flags & VM_SHARED))
+ 		return -EINVAL;
+@@ -1145,12 +1145,9 @@ static int gntdev_mmap(struct file *flip, struct vm_area_struct *vma)
+ 		goto out_put_map;
+ 
+ 	if (!use_ptemod) {
+-		for (i = 0; i < count; i++) {
+-			err = vm_insert_page(vma, vma->vm_start + i*PAGE_SIZE,
+-				map->pages[i]);
+-			if (err)
+-				goto out_put_map;
+-		}
++		err = vm_map_pages(vma, map->pages, map->count);
++		if (err)
++			goto out_put_map;
+ 	} else {
+ #ifdef CONFIG_X86
+ 		/*
+-- 
+1.9.1
+
