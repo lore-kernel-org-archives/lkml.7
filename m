@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2350C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E702146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAAF2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Nm92Gdpm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YeSyNfwE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EjiDe/IT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T7uP6b42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfCTJuK (ORCPT
+        id S1727841AbfCTJuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:50:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51064 "EHLO
+        Wed, 20 Mar 2019 05:50:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51186 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727694AbfCTJuI (ORCPT
+        with ESMTP id S1727799AbfCTJuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:50:08 -0400
+        Wed, 20 Mar 2019 05:50:11 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 526B4613A3; Wed, 20 Mar 2019 09:50:05 +0000 (UTC)
+        id ADA35614B6; Wed, 20 Mar 2019 09:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553075406;
-        bh=MJQt3iSoG7Hb5v8EXTLAvfULjqQjr1k8J9tx/gTgULw=;
+        s=default; t=1553075410;
+        bh=7aydc5AQ+/xKBttzzkD8dHxaZRt09wA65scQVcjJiQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nm92Gdpm1fHv5U/7r6mKwW8HQ8Xqm2TBGh+EJ6bbk+hze9YafBoPCIUNkYLsSXGDY
-         kNU2Sn4NuvHQ+9aZwdoawHyKvie4OqoNRuG8QENYcDAAuuteD7XkQOHLrM3gowEVYd
-         6EXAEgd2lKmvdVOo4kkk7TexypYFxDZznnXUWxL8=
+        b=EjiDe/ITzg9QMhB6oAEtDSpT54Lu41BcXa4l3v58CXDSFVAPWg2trok11ix/p8ugL
+         8iGp58DPFdPsfgz0raLnoF0Onhbbo0VykZMGND5YSDZb9NvDXSi+2+/q8XTI6bhTw9
+         vOxZWpo+M/va4DNLy71GSY247er5mahp3P6N7w/k=
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F8CA61340;
-        Wed, 20 Mar 2019 09:50:00 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D3D3960F3E;
+        Wed, 20 Mar 2019 09:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553075404;
-        bh=MJQt3iSoG7Hb5v8EXTLAvfULjqQjr1k8J9tx/gTgULw=;
+        s=default; t=1553075408;
+        bh=7aydc5AQ+/xKBttzzkD8dHxaZRt09wA65scQVcjJiQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YeSyNfwEUlfv7n6eWpm60/VqPdycTGpUtAcitQX+BOnl3+mI8NXU3b4iekkn5q7HQ
-         t0Nm2IqT0SAMPv6Iaz/TU4DLK3wTXNz+wNOl0Ta0F/bNhA8UsjmfgW3vzL/C6cZuja
-         miH1EAx8MHkcdr1kv5PEwL84/ZB6BBYRUXo2nzrE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F8CA61340
+        b=T7uP6b425b7x+UFr96hEXxfUbJryY+3nlGdqfKci2zT4kiT8dgZ56vk2N3hsZPSIB
+         IAMIMsdgVJDZrBWDURpOZb7za6XIEWl3e0KchtlmObcS7auPE2mxFrKv0h1otO2fSf
+         uh0wD094d+KqihKc60dJnio8SMgsljY/4ocDa4VA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D3D3960F3E
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -57,9 +57,9 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         swboyd@chromium.org, ulf.hansson@linaro.org,
         viresh.kumar@linaro.org, dianders@chromium.org, rafael@kernel.org,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [RFC v2 07/11] scsi: ufs: Add support for specifying OPP tables in DT
-Date:   Wed, 20 Mar 2019 15:19:14 +0530
-Message-Id: <20190320094918.20234-8-rnayak@codeaurora.org>
+Subject: [RFC v2 08/11] arm64: dts: sdm845: Add ufs opps and power-domains
+Date:   Wed, 20 Mar 2019 15:19:15 +0530
+Message-Id: <20190320094918.20234-9-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190320094918.20234-1-rnayak@codeaurora.org>
 References: <20190320094918.20234-1-rnayak@codeaurora.org>
@@ -70,63 +70,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms like qualcomms sdm845 SoC have a need to set
-a performance state of a power domain for UFS along with
-setting the clock rate. Add support for passing this freq/perf state
-tuple from DT as an OPP table. Modify the driver to read the OPP
-table and register with OPP layer.
+Add the additional power domain and the OPP table for ufs on sdm845
+so the driver can set the appropriate performance state of the
+power domain while setting the clock rate.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ffa9e58680b4..2b260e83874a 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -913,6 +913,16 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 	if (ret)
- 		return ret;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 027ffe6e93e8..a3af4a1757b4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1140,6 +1140,21 @@
+ 			};
+ 		};
  
-+	if (hba->virt_devs) {
-+		struct dev_pm_opp *opp;
-+		unsigned long freq = scale_up ? INT_MAX: 0;
-+		if (scale_up)
-+			opp = dev_pm_opp_find_freq_floor(hba->dev, &freq);
-+		else
-+			opp = dev_pm_opp_find_freq_ceil(hba->dev, &freq);
-+		dev_pm_opp_set_rate(hba->dev, dev_pm_opp_get_freq(opp));
-+	}
++		ufs_opp_table: ufs-opp-table {
++			compatible = "operating-points-v2";
 +
- 	list_for_each_entry(clki, head, list) {
- 		if (!IS_ERR_OR_NULL(clki->clk)) {
- 			if (scale_up && clki->max_freq) {
-@@ -1318,6 +1328,7 @@ static int ufshcd_devfreq_init(struct ufs_hba *hba)
- 	struct list_head *clk_list = &hba->clk_list_head;
- 	struct ufs_clk_info *clki;
- 	struct devfreq *devfreq;
-+	struct device *virt_dev;
- 	int ret;
- 
- 	/* Skip devfreq if we don't have any clocks in the list */
-@@ -1325,8 +1336,14 @@ static int ufshcd_devfreq_init(struct ufs_hba *hba)
- 		return 0;
- 
- 	clki = list_first_entry(clk_list, struct ufs_clk_info, list);
--	dev_pm_opp_add(hba->dev, clki->min_freq, 0);
--	dev_pm_opp_add(hba->dev, clki->max_freq, 0);
++			opp-50000000 {
++				opp-hz = /bits/ 64 <50000000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
 +
-+	if (dev_pm_opp_of_add_table(hba->dev)) {
-+		dev_pm_opp_add(hba->dev, clki->min_freq, 0);
-+		dev_pm_opp_add(hba->dev, clki->max_freq, 0);
-+	} else {
-+		virt_dev = hba->virt_devs[hba->num_virt_devs -1];
-+		dev_pm_opp_set_genpd_virt_dev(hba->dev, virt_dev, 0);
-+	}
++			opp-200000000 {
++				opp-hz = /bits/ 64 <200000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++
++			};
++		};
++
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+@@ -1148,7 +1163,7 @@
+ 			phys = <&ufs_mem_phy_lanes>;
+ 			phy-names = "ufsphy";
+ 			lanes-per-direction = <2>;
+-			power-domains = <&gcc UFS_PHY_GDSC>;
++			power-domains = <&gcc UFS_PHY_GDSC>, <&rpmhpd SDM845_CX>;
  
- 	devfreq = devfreq_add_device(hba->dev,
- 			&ufs_devfreq_profile,
+ 			iommus = <&apps_smmu 0x100 0xf>;
+ 
+@@ -1170,6 +1185,9 @@
+ 				<&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
+ 				<&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
+ 				<&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
++
++			operating-points-v2 = <&ufs_opp_table>;
++
+ 			freq-table-hz =
+ 				<50000000 200000000>,
+ 				<0 0>,
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
