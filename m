@@ -2,30 +2,30 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71389C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE2C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6C92184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082E4218A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfCTPXn (ORCPT
+        id S1727572AbfCTPXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:23:43 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:48923 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726982AbfCTPXm (ORCPT
+        Wed, 20 Mar 2019 11:23:47 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:12321 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726595AbfCTPXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:23:42 -0400
+        Wed, 20 Mar 2019 11:23:46 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 20 Mar 2019 08:23:37 -0700
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 20 Mar 2019 08:23:40 -0700
 Received: from fedoratest.localdomain (unknown [10.30.24.114])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 1115B4199D;
-        Wed, 20 Mar 2019 08:23:37 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D58B94199D;
+        Wed, 20 Mar 2019 08:23:41 -0700 (PDT)
 From:   Thomas Hellstrom <thellstrom@vmware.com>
 To:     <dri-devel@lists.freedesktop.org>
 CC:     <linux-graphics-maintainer@vmware.com>,
@@ -41,19 +41,29 @@ CC:     <linux-graphics-maintainer@vmware.com>,
         Souptick Joarder <jrdr.linux@gmail.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 0/3] mm modifications / helpers for emulated GPU coherent memory
-Date:   Wed, 20 Mar 2019 16:23:12 +0100
-Message-ID: <20190320152315.82758-1-thellstrom@vmware.com>
+Subject: [RFC PATCH 1/3] mm: Allow the [page|pfn]_mkwrite callbacks to drop the mmap_sem
+Date:   Wed, 20 Mar 2019 16:23:13 +0100
+Message-ID: <20190320152315.82758-2-thellstrom@vmware.com>
 X-Mailer: git-send-email 2.19.0.rc1
+In-Reply-To: <20190320152315.82758-1-thellstrom@vmware.com>
+References: <20190320152315.82758-1-thellstrom@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: thellstrom@vmware.com does not
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: thellstrom@vmware.com does not
  designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+Driver fault callbacks are allowed to drop the mmap_sem when expecting
+long hardware waits to avoid blocking other mm users. Allow the mkwrite
+callbacks to do the same by returning early on VM_FAULT_RETRY.
+
+In particular we want to be able to drop the mmap_sem when waiting for
+a reservation object lock on a GPU buffer object. These locks may be
+held while waiting for the GPU.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
@@ -68,48 +78,53 @@ Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 
-Hi,
-This is an early RFC to make sure I don't go too far in the wrong direction.
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+---
+ mm/memory.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Non-coherent GPUs that can't directly see contents in CPU-visible memory,
-like VMWare's SVGA device, run into trouble when trying to implement
-coherent memory requirements of modern graphics APIs. Examples are
-Vulkan and OpenGL 4.4's ARB_buffer_storage.
-
-To remedy, we need to emulate coherent memory. Typically when it's detected
-that a buffer object is about to be accessed by the GPU, we need to
-gather the ranges that have been dirtied by the CPU since the last operation,
-apply an operation to make the content visible to the GPU and clear the
-the dirty tracking.
-
-Depending on the size of the buffer object and the access pattern there are
-two major possibilities:
-
-1) Use page_mkwrite() and pfn_mkwrite(). (GPU buffer objects are backed
-either by PCI device memory or by driver-alloced pages).
-The dirty-tracking needs to be reset by write-protecting the affected ptes
-and flush tlb. This has a complexity of O(num_dirty_pages), but the
-write page-fault is of course costly.
-
-2) Use hardware dirty-flags in the ptes. The dirty-tracking needs to be reset
-by clearing the dirty bits and flush tlb. This has a complexity of
-O(num_buffer_object_pages) and dirty bits need to be scanned in full before
-each gpu-access.
-
-So in practice the two methods need to be interleaved for best performance.
-
-So to facilitate this, I propose two new helpers, apply_as_wrprotect() and
-apply_as_clean() ("as" stands for address-space) both inspired by
-unmap_mapping_range(). Users of these helpers are in the making, but needs
-some cleaning-up.
-
-There's also a change to x_mkwrite() to allow dropping the mmap_sem while
-waiting.
-
-Any comments or suggestions appreciated.
-
-Thanks,
-Thomas
-
-
+diff --git a/mm/memory.c b/mm/memory.c
+index a52663c0612d..dcd80313cf10 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2144,7 +2144,7 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
+ 	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
+ 	/* Restore original flags so that caller is not surprised */
+ 	vmf->flags = old_flags;
+-	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))
++	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_RETRY | VM_FAULT_NOPAGE)))
+ 		return ret;
+ 	if (unlikely(!(ret & VM_FAULT_LOCKED))) {
+ 		lock_page(page);
+@@ -2419,7 +2419,7 @@ static vm_fault_t wp_pfn_shared(struct vm_fault *vmf)
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		vmf->flags |= FAULT_FLAG_MKWRITE;
+ 		ret = vma->vm_ops->pfn_mkwrite(vmf);
+-		if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE))
++		if (ret & (VM_FAULT_ERROR | VM_FAULT_RETRY | VM_FAULT_NOPAGE))
+ 			return ret;
+ 		return finish_mkwrite_fault(vmf);
+ 	}
+@@ -2440,7 +2440,8 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		tmp = do_page_mkwrite(vmf);
+ 		if (unlikely(!tmp || (tmp &
+-				      (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
++				      (VM_FAULT_ERROR | VM_FAULT_RETRY |
++				       VM_FAULT_NOPAGE)))) {
+ 			put_page(vmf->page);
+ 			return tmp;
+ 		}
+@@ -3472,7 +3473,8 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
+ 		unlock_page(vmf->page);
+ 		tmp = do_page_mkwrite(vmf);
+ 		if (unlikely(!tmp ||
+-				(tmp & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
++				(tmp & (VM_FAULT_ERROR | VM_FAULT_RETRY |
++					VM_FAULT_NOPAGE)))) {
+ 			put_page(vmf->page);
+ 			return tmp;
+ 		}
+-- 
+2.19.0.rc1
 
