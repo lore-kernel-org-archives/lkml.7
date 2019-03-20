@@ -6,110 +6,198 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FACC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E404C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB292186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5970821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfCTOiN convert rfc822-to-8bit (ORCPT
+        id S1728077AbfCTOiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:38:13 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:40712 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbfCTOiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:38:12 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:49792 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbfCTOiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 10:38:07 -0400
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 12A3767A6F5;
-        Wed, 20 Mar 2019 15:38:05 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 20 Mar
- 2019 15:38:04 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 20 Mar 2019 15:38:04 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
-CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI nodes
-Thread-Topic: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI
- nodes
-Thread-Index: AQHU3yqGaKiIE1t8FEeKn41tGZQNsg==
-Date:   Wed, 20 Mar 2019 14:38:04 +0000
-Message-ID: <20190320143800.3555-2-frieder.schrempf@kontron.de>
-References: <20190320143800.3555-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20190320143800.3555-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.42]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        by mx2.mailbox.org (Postfix) with ESMTPS id 9A24FA33CB;
+        Wed, 20 Mar 2019 15:38:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id hrjGHx_vFkXE; Wed, 20 Mar 2019 15:38:00 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH RESEND v5 1/5] namei: split out nd->dfd handling to dirfd_path_init
+Date:   Thu, 21 Mar 2019 01:37:13 +1100
+Message-Id: <20190320143717.2523-2-cyphar@cyphar.com>
+In-Reply-To: <20190320143717.2523-1-cyphar@cyphar.com>
+References: <20190320143717.2523-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 12A3767A6F5.A1A4C
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, shawnguo@kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Previously, path_init's handling of *at(dfd, ...) was only done once,
+but with O_BENEATH (and O_THISROOT) we have to parse the initial
+nd->path at different times (before or after absolute path handling)
+depending on whether we have been asked to scope resolution within a
+root.
 
-After switching to the new FSL QSPI driver the properties
-'fsl,qspi-has-second-chip' and 'big-endian' are not used anymore.
-
-The driver now uses the 'reg' property to determine the bus and
-the chipselect. The endianness is selected by the driver depending
-on which SoC is used.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 -
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 --
- 2 files changed, 3 deletions(-)
+ fs/namei.c | 103 ++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 59 insertions(+), 44 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 6fd6116509cc..2fb8138c6bb0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -296,7 +296,6 @@
- 			interrupts = <0 99 0x4>;
- 			clock-names = "qspi_en", "qspi";
- 			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
--			big-endian;
- 			status = "disabled";
- 		};
+diff --git a/fs/namei.c b/fs/namei.c
+index a85deb55d0c9..4fdcb36f7c01 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2168,9 +2168,59 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 	}
+ }
  
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index cb7185014d3a..b0ef08b090dd 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -215,8 +215,6 @@
- 			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "qspi_en", "qspi";
- 			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
--			big-endian;
--			fsl,qspi-has-second-chip;
- 			status = "disabled";
- 		};
++/*
++ * Configure nd->path based on the nd->dfd. This is only used as part of
++ * path_init().
++ */
++static inline int dirfd_path_init(struct nameidata *nd)
++{
++	if (nd->dfd == AT_FDCWD) {
++		if (nd->flags & LOOKUP_RCU) {
++			struct fs_struct *fs = current->fs;
++			unsigned seq;
++
++			do {
++				seq = read_seqcount_begin(&fs->seq);
++				nd->path = fs->pwd;
++				nd->inode = nd->path.dentry->d_inode;
++				nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
++			} while (read_seqcount_retry(&fs->seq, seq));
++		} else {
++			get_fs_pwd(current->fs, &nd->path);
++			nd->inode = nd->path.dentry->d_inode;
++		}
++	} else {
++		/* Caller must check execute permissions on the starting path component */
++		struct fd f = fdget_raw(nd->dfd);
++		struct dentry *dentry;
++
++		if (!f.file)
++			return -EBADF;
++
++		dentry = f.file->f_path.dentry;
++
++		if (*nd->name->name && unlikely(!d_can_lookup(dentry))) {
++			fdput(f);
++			return -ENOTDIR;
++		}
++
++		nd->path = f.file->f_path;
++		if (nd->flags & LOOKUP_RCU) {
++			nd->inode = nd->path.dentry->d_inode;
++			nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
++		} else {
++			path_get(&nd->path);
++			nd->inode = nd->path.dentry->d_inode;
++		}
++		fdput(f);
++	}
++	return 0;
++}
++
+ /* must be paired with terminate_walk() */
+ static const char *path_init(struct nameidata *nd, unsigned flags)
+ {
++	int error;
+ 	const char *s = nd->name->name;
  
+ 	if (!*s)
+@@ -2204,52 +2254,17 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 
+ 	nd->m_seq = read_seqbegin(&mount_lock);
+ 	if (*s == '/') {
+-		set_root(nd);
+-		if (likely(!nd_jump_root(nd)))
+-			return s;
+-		return ERR_PTR(-ECHILD);
+-	} else if (nd->dfd == AT_FDCWD) {
+-		if (flags & LOOKUP_RCU) {
+-			struct fs_struct *fs = current->fs;
+-			unsigned seq;
+-
+-			do {
+-				seq = read_seqcount_begin(&fs->seq);
+-				nd->path = fs->pwd;
+-				nd->inode = nd->path.dentry->d_inode;
+-				nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
+-			} while (read_seqcount_retry(&fs->seq, seq));
+-		} else {
+-			get_fs_pwd(current->fs, &nd->path);
+-			nd->inode = nd->path.dentry->d_inode;
+-		}
+-		return s;
+-	} else {
+-		/* Caller must check execute permissions on the starting path component */
+-		struct fd f = fdget_raw(nd->dfd);
+-		struct dentry *dentry;
+-
+-		if (!f.file)
+-			return ERR_PTR(-EBADF);
+-
+-		dentry = f.file->f_path.dentry;
+-
+-		if (*s && unlikely(!d_can_lookup(dentry))) {
+-			fdput(f);
+-			return ERR_PTR(-ENOTDIR);
+-		}
+-
+-		nd->path = f.file->f_path;
+-		if (flags & LOOKUP_RCU) {
+-			nd->inode = nd->path.dentry->d_inode;
+-			nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
+-		} else {
+-			path_get(&nd->path);
+-			nd->inode = nd->path.dentry->d_inode;
+-		}
+-		fdput(f);
++		if (likely(!nd->root.mnt))
++			set_root(nd);
++		error = nd_jump_root(nd);
++		if (unlikely(error))
++			s = ERR_PTR(error);
+ 		return s;
+ 	}
++	error = dirfd_path_init(nd);
++	if (unlikely(error))
++		return ERR_PTR(error);
++	return s;
+ }
+ 
+ static const char *trailing_symlink(struct nameidata *nd)
 -- 
-2.17.1
+2.21.0
+
