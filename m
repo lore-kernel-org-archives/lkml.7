@@ -2,84 +2,364 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2530C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87409C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B14D20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D782175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HXuNvrsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfCTSie (ORCPT
+        id S1727451AbfCTSit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:38:34 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43817 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfCTSie (ORCPT
+        Wed, 20 Mar 2019 14:38:49 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45819 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfCTSit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:38:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l11so2401809pgq.10;
-        Wed, 20 Mar 2019 11:38:33 -0700 (PDT)
+        Wed, 20 Mar 2019 14:38:49 -0400
+Received: by mail-vs1-f65.google.com with SMTP id n14so2115965vsp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rvbOUyKpmu+AiCtzN1R5Y5Bbn8gMm0EmsqyJr92bPm4=;
+        b=HXuNvrsqacrSDP3shXNeKed1aW8sI1oNdnWi/Ek4O3lPUj4Bac+T6pazfBUT6B6lXr
+         JTjKTfXg7BnTs1s2FmOT72s2mU6aXquGWUAEvBtyM5ST75wtxtClKSRZ5BdaPdKhNKW7
+         YfN/Qs/hEGDZaSvQ7c8/LXzA7BWLjY8BUSaekxQEiT3gNUZ+gDe1c1ZSfgu4Arz8q4cb
+         ZrjeztsSRu8XXQLnu/4ID2UIdDfpNmXoK2eDs68n9sDncFaK+FFiXiUw76787mAbeHcw
+         +dYAvUih0tMxqYjg2e4ZQ5+0aEWiypbmowCaPshVW38OJqfnf/67eMxchYXY3brzxwUh
+         BnrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qTsbPLLgt3/ihQ/bqjstgfgG4v0W4yVW3lAcoVi1qmw=;
-        b=N4QLekSFdErtji+pB+Z7v54gV7jTDgxnMDaoSFjT3o+S4sY4bowM/qmiSFXuz693Dq
-         N/6yeZA6RojsTQ5FXM1kVDaDwUMYB5Xsf7mHVoU7xXNCx2NaubZ8RMrxekiAZVyvv6tk
-         dt9hSG2B8G5sUxwSX//i3iFVF0u2JoTZ//kRMnr2WB9p2sC3P6QfOuCJBLnDDfq77Bkg
-         HHdtkidBR6cykC0QTlxRSaKlnHtLBY4zIuZ3GKoLJzwQeCP6Qp2PawcjeuoUStygW9TR
-         o2E9gaoB3wKPfRzcxDsSCLiqLCywG+6fI+ut6wVaULElxSEZHvrxWIdXVb4ZBoNgvTfd
-         bYKQ==
-X-Gm-Message-State: APjAAAXGwzPJQNjLWY8G01HDV4bTJO4a0XudT0A6Pr9f7KfK3/hib8aW
-        D9mRarelb1OfqUH6diKgbag=
-X-Google-Smtp-Source: APXvYqxjipooht+viFnMDIXb/Kke+WegR9mhUqgDUSG3bYauUxvb7PrnBsMiZkohg4fCKENkKG61Zw==
-X-Received: by 2002:a65:6383:: with SMTP id h3mr8727105pgv.11.1553107113094;
-        Wed, 20 Mar 2019 11:38:33 -0700 (PDT)
-Received: from [172.20.40.56] (50-207-206-41-static.hfc.comcastbusiness.net. [50.207.206.41])
-        by smtp.gmail.com with ESMTPSA id l5sm4532445pfi.97.2019.03.20.11.38.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 11:38:32 -0700 (PDT)
-Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
-To:     Keith Busch <kbusch@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, keith.busch@intel.com, jsmart2021@gmail.com,
-        josef@toxicpanda.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        hare@suse.de, "jianchao.wang" <jianchao.w.wang@oracle.com>,
-        jthumshirn@suse.de, hch@lst.de
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <1552930085.152266.36.camel@acm.org>
- <3cd58454-eda3-de9a-0eed-b6a7edbce28f@oracle.com>
- <1553008222.152266.43.camel@acm.org>
- <20190319152533.GD24176@localhost.localdomain>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <5879cad9-9d47-4690-0f85-00835346029b@grimberg.me>
-Date:   Wed, 20 Mar 2019 11:38:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rvbOUyKpmu+AiCtzN1R5Y5Bbn8gMm0EmsqyJr92bPm4=;
+        b=XIm+3+6+bVP1YEt8hP7rDxORp/ehQ5Uxp8aBKM2CZmHvGFCNGZoAjutgev6txBvT7x
+         bdSxnLYhOvew66FEhIp2N59znIAZCzAm/CXF5zfxONZYlMn/9/aI0KDnIs+oiVwUMoQ1
+         LZ2LbtckGQi8MUhSlPVfJ2rr991nZ2jBmLbW1PB75CBnzdIJjrJc3DLf6LDq0Oqde/+7
+         TA30HfA3kdmc3EVWxiWwL+4xbsiPhCZkFCyHyN9DKfbWXq3ieUFyrpQxFCgyRofmOZW7
+         V189Lh1ygJXrJViBJoJwViPulMujl/aZQXND0gMdha7H8utmL3JkasnvJVjYUPiQbKZf
+         jUWw==
+X-Gm-Message-State: APjAAAV024JPLKNJSAZwK1oPJb8uuUhOscycSMHyl2mGpzDpR+UQhp/K
+        O/ZtrvrjerovPRHiak4Sj5itEum6lSJfn33uTTqA4A==
+X-Google-Smtp-Source: APXvYqyXejMHsJCD2Zzd0/nTA6NPYk7zKE3kI510Bxr22HtPshdIeXj5A8f8ZUUrkEMPRoVqDMc013+tm4FKQkZUyMM=
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr6069870vsn.149.1553107126804;
+ Wed, 20 Mar 2019 11:38:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190319152533.GD24176@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190318002949.mqknisgt7cmjmt7n@brauner.io> <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io> <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io> <20190320015249.GC129907@google.com>
+ <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com>
+ <20190320035953.mnhax3vd47ya4zzm@brauner.io> <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
+ <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org> <20190320182649.spryp5uaeiaxijum@brauner.io>
+In-Reply-To: <20190320182649.spryp5uaeiaxijum@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 20 Mar 2019 11:38:35 -0700
+Message-ID: <CAKOZuevHbQtrq+Nb-jw1L7O72BmAzcXmbUnfnseeXZjX4PE4tg@mail.gmail.com>
+Subject: Re: pidfd design
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 20, 2019 at 11:26 AM Christian Brauner <christian@brauner.io> w=
+rote:
+> On Wed, Mar 20, 2019 at 07:33:51AM -0400, Joel Fernandes wrote:
+> >
+> >
+> > On March 20, 2019 3:02:32 AM EDT, Daniel Colascione <dancol@google.com>=
+ wrote:
+> > >On Tue, Mar 19, 2019 at 8:59 PM Christian Brauner
+> > ><christian@brauner.io> wrote:
+> > >>
+> > >> On Tue, Mar 19, 2019 at 07:42:52PM -0700, Daniel Colascione wrote:
+> > >> > On Tue, Mar 19, 2019 at 6:52 PM Joel Fernandes
+> > ><joel@joelfernandes.org> wrote:
+> > >> > >
+> > >> > > On Wed, Mar 20, 2019 at 12:10:23AM +0100, Christian Brauner
+> > >wrote:
+> > >> > > > On Tue, Mar 19, 2019 at 03:48:32PM -0700, Daniel Colascione
+> > >wrote:
+> > >> > > > > On Tue, Mar 19, 2019 at 3:14 PM Christian Brauner
+> > ><christian@brauner.io> wrote:
+> > >> > > > > > So I dislike the idea of allocating new inodes from the
+> > >procfs super
+> > >> > > > > > block. I would like to avoid pinning the whole pidfd
+> > >concept exclusively
+> > >> > > > > > to proc. The idea is that the pidfd API will be useable
+> > >through procfs
+> > >> > > > > > via open("/proc/<pid>") because that is what users expect
+> > >and really
+> > >> > > > > > wanted to have for a long time. So it makes sense to have
+> > >this working.
+> > >> > > > > > But it should really be useable without it. That's why
+> > >translate_pid()
+> > >> > > > > > and pidfd_clone() are on the table.  What I'm saying is,
+> > >once the pidfd
+> > >> > > > > > api is "complete" you should be able to set CONFIG_PROCFS=
+=3DN
+> > >- even
+> > >> > > > > > though that's crazy - and still be able to use pidfds. Thi=
+s
+> > >is also a
+> > >> > > > > > point akpm asked about when I did the pidfd_send_signal
+> > >work.
+> > >> > > > >
+> > >> > > > > I agree that you shouldn't need CONFIG_PROCFS=3DY to use
+> > >pidfds. One
+> > >> > > > > crazy idea that I was discussing with Joel the other day is
+> > >to just
+> > >> > > > > make CONFIG_PROCFS=3DY mandatory and provide a new
+> > >get_procfs_root()
+> > >> > > > > system call that returned, out of thin air and independent o=
+f
+> > >the
+> > >> > > > > mount table, a procfs root directory file descriptor for the
+> > >caller's
+> > >> > > > > PID namspace and suitable for use with openat(2).
+> > >> > > >
+> > >> > > > Even if this works I'm pretty sure that Al and a lot of others
+> > >will not
+> > >> > > > be happy about this. A syscall to get an fd to /proc?
+> > >> >
+> > >> > Why not? procfs provides access to a lot of core kernel
+> > >functionality.
+> > >> > Why should you need a mountpoint to get to it?
+> > >> >
+> > >> > > That's not going
+> > >> > > > to happen and I don't see the need for a separate syscall just
+> > >for that.
+> > >> >
+> > >> > We need a system call for the same reason we need a getrandom(2):
+> > >you
+> > >> > have to bootstrap somehow when you're in a minimal environment.
+> > >> >
+> > >> > > > (I do see the point of making CONFIG_PROCFS=3Dy the default bt=
+w.)
+> > >> >
+> > >> > I'm not proposing that we make CONFIG_PROCFS=3Dy the default. I'm
+> > >> > proposing that we *hardwire* it as the default and just declare
+> > >that
+> > >> > it's not possible to build a Linux kernel that doesn't include
+> > >procfs.
+> > >> > Why do we even have that button?
+> > >> >
+> > >> > > I think his point here was that he wanted a handle to procfs no
+> > >matter where
+> > >> > > it was mounted and then can later use openat on that. Agreed tha=
+t
+> > >it may be
+> > >> > > unnecessary unless there is a usecase for it, and especially if
+> > >the /proc
+> > >> > > directory being the defacto mountpoint for procfs is a universal
+> > >convention.
+> > >> >
+> > >> > If it's a universal convention and, in practice, everyone needs
+> > >proc
+> > >> > mounted anyway, so what's the harm in hardwiring CONFIG_PROCFS=3Dy=
+?
+> > >If
+> > >> > we advertise /proc as not merely some kind of optional debug
+> > >interface
+> > >> > but *the* way certain kernel features are exposed --- and there's
+> > >> > nothing wrong with that --- then we should give programs access to
+> > >> > these core kernel features in a way that doesn't depend on
+> > >userspace
+> > >> > kernel configuration, and you do that by either providing a
+> > >> > procfs-root-getting system call or just hardwiring the "/proc/"
+> > >prefix
+> > >> > into VFS.
+> > >> >
+> > >> > > > Inode allocation from the procfs mount for the file descriptor=
+s
+> > >Joel
+> > >> > > > wants is not correct. Their not really procfs file descriptors
+> > >so this
+> > >> > > > is a nack. We can't just hook into proc that way.
+> > >> > >
+> > >> > > I was not particular about using procfs mount for the FDs but
+> > >that's the only
+> > >> > > way I knew how to do it until you pointed out anon_inode (my gre=
+p
+> > >skills
+> > >> > > missed that), so thank you!
+> > >> > >
+> > >> > > > > C'mon: /proc is used by everyone today and almost every
+> > >program breaks
+> > >> > > > > if it's not around. The string "/proc" is already de facto
+> > >kernel ABI.
+> > >> > > > > Let's just drop the pretense of /proc being optional and bak=
+e
+> > >it into
+> > >> > > > > the kernel proper, then give programs a way to get to /proc
+> > >that isn't
+> > >> > > > > tied to any particular mount configuration. This way, we
+> > >don't need a
+> > >> > > > > translate_pid(), since callers can just use procfs to do the
+> > >same
+> > >> > > > > thing. (That is, if I understand correctly what translate_pi=
+d
+> > >does.)
+> > >> > > >
+> > >> > > > I'm not sure what you think translate_pid() is doing since
+> > >you're not
+> > >> > > > saying what you think it does.
+> > >> > > > Examples from the old patchset:
+> > >> > > > translate_pid(pid, ns, -1)      - get pid in our pid namespace
+> > >> >
+> > >> > Ah, it's a bit different from what I had in mind. It's fair to wan=
+t
+> > >to
+> > >> > translate PIDs between namespaces, but the only way to make the
+> > >> > translate_pid under discussion robust is to have it accept and
+> > >produce
+> > >> > pidfds. (At that point, you might as well call it translate_pidfd.=
+)
+> > >We
+> > >> > should not be adding new APIs to the kernel that accept numeric
+> > >PIDs:
+> > >>
+> > >> The traditional pid-based api is not going away. There are users tha=
+t
+> > >> have the requirement to translate pids between namespaces and also
+> > >doing
+> > >> introspection on these namespaces independent of pidfds. We will not
+> > >> restrict the usefulness of this syscall by making it only work with
+> > >> pidfds.
+> > >>
+> > >> > it's not possible to use these APIs correctly except under very
+> > >> > limited circumstances --- mostly, talking about init or a parent
+> > >>
+> > >> The pid-based api is one of the most widely used apis of the kernel
+> > >and
+> > >> people have been using it quite successfully for a long time. Yes,
+> > >it's
+> > >> rac, but it's here to stay.
+> > >>
+> > >> > talking about its child.
+> > >> >
+> > >> > Really, we need a few related operations, and we shouldn't
+> > >necessarily
+> > >> > mingle them.
+> > >>
+> > >> Yes, we've established that previously.
+> > >>
+> > >> >
+> > >> > 1) Given a numeric PID, give me a pidfd: that works today: you jus=
+t
+> > >> > open /proc/<pid>
+> > >>
+> > >> Agreed.
+> > >>
+> > >> >
+> > >> > 2) Given a pidfd, give me a numeric PID: that works today: you jus=
+t
+> > >> > openat(pidfd, "stat", O_RDONLY) and read the first token (which is
+> > >> > always the numeric PID).
+> > >>
+> > >> Agreed.
+> > >>
+> > >> >
+> > >> > 3) Given a pidfd, send a signal: that's what pidfd_send_signal
+> > >does,
+> > >> > and it's a good start on the rest of these operations.
+> > >>
+> > >> Agreed.
+> > >>
+> > >> > 5) Given a pidfd in NS1, get a pidfd in NS2. That's what
+> > >translate_pid
+> > >> > is for. My preferred signature for this routine is
+> > >translate_pid(int
+> > >> > pidfd, int nsfd) -> pidfd. We don't need two namespace arguments.
+> > >Why
+> > >> > not? Because the pidfd *already* names a single process, uniquely!
+> > >>
+> > >> Given that people are interested in pids we can't just always return
+> > >a
+> > >> pidfd. That would mean a user would need to do get the pidfd read
+> > >from
+> > >> <pidfd>/stat and then close the pidfd. If you do that for a 100 pids
+> > >or
+> > >> more you end up allocating and closing file descriptors constantly
+> > >for
+> > >> no reason. We can't just debate pids away. So it will also need to b=
+e
+> > >> able to yield pids e.g. through a flag argument.
+> > >
+> > >Sure, but that's still not a reason that we should care about pidfds
+> > >working separately from procfs..
+>
+> That's unrelated to the point made in the above paragraph.
+> Please note, I said that the pidfd api should work when proc is not
+> available not that they can't be dirfds.
 
->> Hi Jianchao,
->>
->> I think that's an additional reason to rewrite NVMe error handling ...
-> 
-> Nonesense. Block timeout handling runs in a work queue precicesly so
-> handlers can actually do useful work in line with the notification.
+What do you mean by "not available"? CONFIG_PROCFS=3Dn? If pidfds
+supposed to work when proc is unavailable yet also be directory FDs,
+to what directory should the FD refer? As I mentioned in my previous
+message, trying to make pidfd work without CONFIG_PROCFS is a very bad
+idea.
 
-I have to agree with Keith on this one, there is absolutely no reason to
-force this constraint on the error handler. If we want to teardown stuff
-to guarantee that we can free the request safely we may very well need
-to block on queue flushing.
+>
+> >
+> > Agreed. I can't imagine pidfd being anything but a proc pid directory h=
+andle. So I am confused what Christian meant. Pidfd *is* a procfs directory=
+ fid  always. That's what I gathered from his pidfd_send_signal patch but l=
+et me know if I'm way off in the woods.
+>
+> (K9 Mail still hasn't learned to wrap lines at 80 it seems. :))
+>
+> Again, I never said that pidfds should be a directory handle.
+> (Though I would like to point out that one of the original ideas I
+> discussed at LPC was to have something like this to get regular file
+> descriptors instead of dirfds:
+> https://gist.github.com/brauner/59eec91550c5624c9999eaebd95a70df)
+
+As I mentioned in my original email on this thread, if you have
+regular file descriptors instead of directory FDs, you have to use
+some special new API instead of openat to get metadata about a
+process. That's pointless duplication of functionality considering
+that a directory FD gives you that information automatically.
+
+> > For my next revision, I am thinking of adding the flag argument Christi=
+an mentioned to make translate_pid return an anon_inode FD which can be use=
+d for death status, given a <pid>. Since it is thought that translate_pid c=
+an be made to return a pid FD, I think it is ok to have it return a pid sta=
+tus FD for the purposes of the death status as well.
+
+> translate_pid() should just return you a pidfd. Having it return a pidfd
+> and a status fd feels like stuffing too much functionality in there. If
+> you're fine with it I'll finish prototyping what I had in mind. As I
+> said in previous mails I'm already working on this.
+
+translate_pid also needs to *accept* pidfds, at least optionally.
+Unless you have a function from pidfd to pidfd, you race.
