@@ -2,127 +2,218 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE06C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E323721841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC5A21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfCTSMK (ORCPT
+        id S1727379AbfCTSM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:12:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32888 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726438AbfCTSMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:12:10 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KIC1Re019655
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:12:09 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbqhej4e1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:12:05 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 20 Mar 2019 18:11:23 -0000
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 18:11:19 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KIBKWf22347814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 18:11:20 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 188FEB205F;
-        Wed, 20 Mar 2019 18:11:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED1A9B2067;
-        Wed, 20 Mar 2019 18:11:19 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 18:11:19 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7D6A416C2A3C; Wed, 20 Mar 2019 11:12:10 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 11:12:10 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v2] rcu: Allow to eliminate softirq processing from
- rcutree
-Reply-To: paulmck@linux.ibm.com
-References: <20190318022434.GE4102@linux.ibm.com>
- <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
- <20190320113219.d6c3gouqbnsnl5nj@linutronix.de>
- <20190320152146.GH4102@linux.ibm.com>
- <20190320154440.GA16332@linux.ibm.com>
- <20190320160547.s5lbeahr2y4jlzwt@linutronix.de>
- <20190320161500.GK4102@linux.ibm.com>
- <20190320163532.mr32oi53iaueuizw@linutronix.de>
- <20190320173001.GM4102@linux.ibm.com>
- <20190320175952.yh6yfy64vaiurszw@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190320175952.yh6yfy64vaiurszw@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032018-0068-0000-0000-000003A8A138
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01177176; UDB=6.00615785; IPR=6.00957872;
- MB=3.00026076; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 18:11:21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032018-0069-0000-0000-000047E1F443
-Message-Id: <20190320181210.GO4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=936 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200133
+        Wed, 20 Mar 2019 14:12:28 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60847 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727062AbfCTSM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:12:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 11:12:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="154153134"
+Received: from mirmoha-mobl.amr.corp.intel.com ([10.252.205.74])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2019 11:12:26 -0700
+Message-ID: <1deffec420f6a16d11dd8647318d34a66d1989a9.camel@linux.intel.com>
+Subject: Re: [PATCH] tracing: Move destroy_actions() before
+ destroy_hist_fields()
+From:   Tom Zanussi <tom.zanussi@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 20 Mar 2019 13:12:26 -0500
+In-Reply-To: <20190320125359.78dfdb15@gandalf.local.home>
+References: <20190320125359.78dfdb15@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 06:59:52PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2019-03-20 10:30:01 [-0700], Paul E. McKenney wrote:
-> > On Wed, Mar 20, 2019 at 05:35:32PM +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2019-03-20 09:15:00 [-0700], Paul E. McKenney wrote:
-> > > > I am considering making it a module_param() to avoid namespace pollution,
-> > > > as it would become something like rcutree.nosoftirq.
-> > > > 
-> > > > Thoughts?
-> > > 
-> > > nope, perfect.
-> > 
-> > Please see below for an untested patch.  Thoughts?
-> 
-> > -	if (rcu_softirq_enabled) {
-> > +	if (!nosoftirq) {
-> >  		raise_softirq(RCU_SOFTIRQ);
-> >  	} else {
-> 
-> This double negation looks weird. Can we flip the logic somehow?
-> /me testing if it works…
+Hi Steve,
 
-We could name it something like "use_softirq" and initialize it to true.
-I am OK either way.
+On Wed, 2019-03-20 at 12:53 -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> The destroy_actions() function will call track_data_destroy() which
+> calls
+> destroy_hist_field() on the data->track_data.var_ref. This checks the
+> hist_field flags for HIST_FIELD_FL_VAR_REF, and if it is set it will
+> not
+> free the variable as it will be freed later.
+> 
+> destroy_hist_fields() frees the hist_fields that are marked with
+> HIST_FIELD_VAR_REF.
+> 
+> The issue is that destroy_hist_fields() is called before
+> destroy_actions()
+> and frees the data->track_data.var_ref before destroy_actions() is
+> called.
+> When the destroy_hist_field() checks the hist_field's flag for
+> HIST_FIELD_FL_VAR_REF, the hist_field has already been freed, and
+> KASAN
+> reports a "used after free" warning:
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in destroy_hist_field+0x30/0x70
+> Read of size 8 at addr ffff888086df2210 by task bash/1694
+> 
+> CPU: 6 PID: 1694 Comm: bash Not tainted 5.1.0-rc1-test+ #15
+> Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01
+> v03.03
+> 07/14/2016
+> Call Trace:
+>  dump_stack+0x71/0xa0
+>  ? destroy_hist_field+0x30/0x70
+>  print_address_description.cold.3+0x9/0x1fb
+>  ? destroy_hist_field+0x30/0x70
+>  ? destroy_hist_field+0x30/0x70
+>  kasan_report.cold.4+0x1a/0x33
+>  ? __kasan_slab_free+0x100/0x150
+>  ? destroy_hist_field+0x30/0x70
+>  destroy_hist_field+0x30/0x70
+>  track_data_destroy+0x55/0xe0
+>  destroy_hist_data+0x1f0/0x350
+>  hist_unreg_all+0x203/0x220
+>  event_trigger_open+0xbb/0x130
+>  do_dentry_open+0x296/0x700
+>  ? stacktrace_count_trigger+0x30/0x30
+>  ? generic_permission+0x56/0x200
+>  ? __x64_sys_fchdir+0xd0/0xd0
+>  ? inode_permission+0x55/0x200
+>  ? security_inode_permission+0x18/0x60
+>  path_openat+0x633/0x22b0
+>  ? path_lookupat.isra.50+0x420/0x420
+>  ? __kasan_kmalloc.constprop.12+0xc1/0xd0
+>  ? kmem_cache_alloc+0xe5/0x260
+>  ? getname_flags+0x6c/0x2a0
+>  ? do_sys_open+0x149/0x2b0
+>  ? do_syscall_64+0x73/0x1b0
+>  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>  ? _raw_write_lock_bh+0xe0/0xe0
+>  ? __kernel_text_address+0xe/0x30
+>  ? unwind_get_return_address+0x2f/0x50
+>  ? __list_add_valid+0x2d/0x70
+>  ? deactivate_slab.isra.62+0x1f4/0x5a0
+>  ? getname_flags+0x6c/0x2a0
+>  ? set_track+0x76/0x120
+>  do_filp_open+0x11a/0x1a0
+>  ? may_open_dev+0x50/0x50
+>  ? _raw_spin_lock+0x7a/0xd0
+>  ? _raw_write_lock_bh+0xe0/0xe0
+>  ? __alloc_fd+0x10f/0x200
+>  do_sys_open+0x1db/0x2b0
+>  ? filp_open+0x50/0x50
+>  do_syscall_64+0x73/0x1b0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7fa7b24a4ca2
+> Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 85 7a 0d 00 8b 00
+> 85 c0
+> 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00
+> f0 ff ff
+> 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+> RSP: 002b:00007fffbafb3af0 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000101
+> RAX: ffffffffffffffda RBX: 000055d3648ade30 RCX: 00007fa7b24a4ca2
+> RDX: 0000000000000241 RSI: 000055d364a55240 RDI: 00000000ffffff9c
+> RBP: 00007fffbafb3bf0 R08: 0000000000000020 R09: 0000000000000002
+> R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000003 R14: 0000000000000001 R15: 000055d364a55240
+> 
+> By calling destroy_actions() before destroy_hist_fields() will move
+> the
+> check before the free.
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events_hist.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c
+> b/kernel/trace/trace_events_hist.c
+> index ca46339f3009..c510a0e89623 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -4992,10 +4992,10 @@ static void destroy_hist_data(struct
+> hist_trigger_data *hist_data)
+>  		return;
+>  
+>  	destroy_hist_trigger_attrs(hist_data->attrs);
+> +	destroy_actions(hist_data);
+>  	destroy_hist_fields(hist_data);
+>  	tracing_map_destroy(hist_data->map);
+>  
+> -	destroy_actions(hist_data);
+>  	destroy_field_vars(hist_data);
+>  	destroy_field_var_hists(hist_data);
+>  
 
-							Thanx, Paul
+I initially couldn't reproduce this, but then realized it was because I
+had hit another KASAN bug on bootup, unrelated to tracing (will post
+that splat shortly), and that turns off further warnings, so I couldn't
+see the var ref warning until I realized that...
+
+Anyway, your patch will work, and I even tested it to verify that, but
+I think the patch below more directly fixes the problem.
+
+
+From 6a23d0c525c2ce360e08630c90f0e83e13891dc5 Mon Sep 17 00:00:00 2001
+Message-Id: <
+6a23d0c525c2ce360e08630c90f0e83e13891dc5.1553104842.git.tom.zanussi@linux.intel.com
+>
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
+Date: Wed, 20 Mar 2019 12:53:33 -0500
+Subject: [PATCH] tracing: Remove unnecessary var_ref destroy in
+ track_data_destroy()
+
+Commit 656fe2ba85e8 (tracing: Use hist trigger's var_ref array to
+destroy var_refs) centralized the destruction of all the var_refs
+in one place so that other code didn't have to do it.
+
+The track_data_destroy() added later ignored that and also destroyed
+the track_data var_ref, causing a double-free error flagged by KASAN.
+
+So remove the track_data_destroy() destroy_hist_field() call for that
+var_ref.
+
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+---
+ kernel/trace/trace_events_hist.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ca46339..795aa20 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -3713,7 +3713,6 @@ static void track_data_destroy(struct hist_trigger_data *hist_data,
+ 	struct trace_event_file *file = hist_data->event_file;
+ 
+ 	destroy_hist_field(data->track_data.track_var, 0);
+-	destroy_hist_field(data->track_data.var_ref, 0);
+ 
+ 	if (data->action == ACTION_SNAPSHOT) {
+ 		struct track_data *track_data;
+-- 
+2.7.4
+
+
+
 
