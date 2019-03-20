@@ -2,217 +2,101 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EF7C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E2CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E4020850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C923320850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErFhOQzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfCTRKU (ORCPT
+        id S1727358AbfCTRLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:10:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56799 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfCTRKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:10:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 10:10:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
-   d="scan'208";a="330381110"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Mar 2019 10:10:15 -0700
-Date:   Wed, 20 Mar 2019 02:08:57 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190320090857.GB13193@iweiny-DESK2.sc.intel.com>
-References: <20190308213633.28978-2-jhubbard@nvidia.com>
- <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
- <20190319134724.GB3437@redhat.com>
- <20190319141416.GA3879@redhat.com>
- <20190319212346.GA26298@dastard>
- <20190319220654.GC3096@redhat.com>
- <20190319235752.GB26298@dastard>
- <20190320000838.GA6364@redhat.com>
- <c854b2d6-5ec1-a8b5-e366-fbefdd9fdd10@nvidia.com>
- <20190320043319.GA7431@redhat.com>
+        Wed, 20 Mar 2019 13:11:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33723 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfCTRLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 13:11:21 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b12so2281368pgk.0;
+        Wed, 20 Mar 2019 10:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6fxjmu2Aqm6K9TbLvpxrkqitzFTWvG/GeUBHTQd5nuA=;
+        b=ErFhOQzTyUejwwhXHe2WX2Jif+UUq+ywaHtCcpypF5R0/ghx7s69YiJS9Lc61wIoLg
+         VOg5BeF67b8LvyCziiL/rtM9M+Lv8vyLK0IFjz+f6Ppfupg94GYW12JYRjC+vAc9J1VR
+         j4+Dx/yxowaIthI2y0w+VNRhyWV7D0yKn1EqFZ/QRQm6acBoCGfE6My/5UZJ4AjcoCRM
+         43ceqSrf5+4FD8qinM0GUBdZMgI+Z61KNO1cLdtJaxeSyblQc+1nJ0oQyOmT44c5Pzc3
+         6S3k5KuFge+bD7BsKjUgEOJ8CBWCn6UshFiUNtPzs9DpHbFd9PnYadZvEDe95Vi6rkbS
+         agrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6fxjmu2Aqm6K9TbLvpxrkqitzFTWvG/GeUBHTQd5nuA=;
+        b=bhV2fGp+8UM4vkzkuuVbdQQY5A1/oEhwZKLrEMDei2rXHscKnEgNgX2NtG6ovy1ZUr
+         c+5DEdUfYLIIZzSuCY7R68CYoinTrZ6G9haRp50M0W5CjHuOn1ZxoDCI3+IChEpIhLy2
+         1WdHBGnkU1yz8hLSH7eaTa82ECC8vWyAlZPkiVrKp8FxcB224b5AY6tWgf85dLpH/4Q2
+         095qvSEegqQLXVIVoyaXljdItDIT6ypXD1MCyUVXTqFGR4vZRnOS1jHv4Gf3B5yA5f+/
+         7iB1aEj9lRKdE7MLw6TNcDJnsWD2qdevnQb6qiCjvVx5vw+E4m4tQdrLUa4HdMQhH+d+
+         L5Rg==
+X-Gm-Message-State: APjAAAWfr7Je5TEGvBmEa+4CJD6WUQXU9TFLvth2YdWn50QNphDCNJEQ
+        nPINvHrmdFVQgXGt5Uu5YCKjHAW8VH989AzWFI4=
+X-Google-Smtp-Source: APXvYqxxY+XANZTUXi4XvTPndnW/dT4s36satB+ak1wjWqGWy/6R9t0CsVTpJ7yNdjx5zAV9nNVD+4Jee0dCm374YLE=
+X-Received: by 2002:aa7:8c97:: with SMTP id p23mr8875312pfd.229.1553101880224;
+ Wed, 20 Mar 2019 10:11:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190320043319.GA7431@redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <LaQHUFs--3-1@tutanota.com> <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+In-Reply-To: <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 20 Mar 2019 19:11:09 +0200
+Message-ID: <CAHp75VeR2ojtEB1gGE6hPiv9gWfLPyop1rsok1NSV57jrVU9zg@mail.gmail.com>
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     hotwater438@tutanota.com, Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 12:33:20AM -0400, Jerome Glisse wrote:
-> On Tue, Mar 19, 2019 at 06:43:45PM -0700, John Hubbard wrote:
-> > On 3/19/19 5:08 PM, Jerome Glisse wrote:
-> > > On Wed, Mar 20, 2019 at 10:57:52AM +1100, Dave Chinner wrote:
-> > >> On Tue, Mar 19, 2019 at 06:06:55PM -0400, Jerome Glisse wrote:
-> > >>> On Wed, Mar 20, 2019 at 08:23:46AM +1100, Dave Chinner wrote:
-> > >>>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
-> > >>>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
-> > >>>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
-> > >>>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
-> > >>>>>>>> From: John Hubbard <jhubbard@nvidia.com>
-> > >>>>>> [...]
-> > >>>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
-> > >>>>> about set_page_dirty() and Andrea had the good idea of maybe doing
-> > >>>>> the set_page_dirty() at GUP time (when GUP with write) not when the
-> > >>>>> GUP user calls put_page(). We can do that by setting the dirty bit
-> > >>>>> in the pte for instance. They are few bonus of doing things that way:
-> > >>>>>     - amortize the cost of calling set_page_dirty() (ie one call for
-> > >>>>>       GUP and page_mkclean()
-> > >>>>>     - it is always safe to do so at GUP time (ie the pte has write
-> > >>>>>       permission and thus the page is in correct state)
-> > >>>>>     - safe from truncate race
-> > >>>>>     - no need to ever lock the page
-> > >>>>
-> > >>>> I seem to have missed this conversation, so please excuse me for
-> > >>>
-> > >>> The set_page_dirty() at GUP was in a private discussion (it started
-> > >>> on another topic and drifted away to set_page_dirty()).
-> > >>>
-> > >>>> asking a stupid question: if it's a file backed page, what prevents
-> > >>>> background writeback from cleaning the dirty page ~30s into a long
-> > >>>> term pin? i.e. I don't see anything in this proposal that prevents
-> > >>>> the page from being cleaned by writeback and putting us straight
-> > >>>> back into the situation where a long term RDMA is writing to a clean
-> > >>>> page....
-> > >>>
-> > >>> So this patchset does not solve this issue.
-> > >>
-> > >> OK, so it just kicks the can further down the road.
-> > >>
-> > >>>     [3..N] decide what to do for GUPed page, so far the plans seems
-> > >>>          to be to keep the page always dirty and never allow page
-> > >>>          write back to restore the page in a clean state. This does
-> > >>>          disable thing like COW and other fs feature but at least
-> > >>>          it seems to be the best thing we can do.
-> > >>
-> > >> So the plan for GUP vs writeback so far is "break fsync()"? :)
-> > >>
-> > >> We might need to work on that a bit more...
-> > > 
-> > > Sorry forgot to say that we still do write back using a bounce page
-> > > so that at least we write something to disk that is just a snapshot
-> > > of the GUPed page everytime writeback kicks in (so either through
-> > > radix tree dirty page write back or fsync or any other sync events).
-> > > So many little details that i forgot the big chunk :)
-> > > 
-> > > Cheers,
-> > > Jérôme
-> > > 
-> > 
-> > Dave, Jan, Jerome,
-> > 
-> > Bounce pages for periodic data integrity still seem viable. But for the
-> > question of things like fsync or truncate, I think we were zeroing in
-> > on file leases as a nice building block.
-> > 
-> > Can we revive the file lease discussion? By going all the way out to user
-> > space and requiring file leases to be coordinated at a high level in the
-> > software call chain, it seems like we could routinely avoid some of the
-> > worst conflicts that the kernel code has to resolve.
-> > 
-> > For example:
-> > 
-> > Process A
-> > =========
-> >     gets a lease on file_a that allows gup 
-> >         usage on a range within file_a
-> > 
-> >     sets up writable DMA:
-> >         get_user_pages() on the file_a range
-> >         start DMA (independent hardware ops)
-> >             hw is reading and writing to range
-> > 
-> >                                                     Process B
-> >                                                     =========
-> >                                                     truncate(file_a)
-> >                                                        ...
-> >                                                        __break_lease()
-> >     
-> >     handle SIGIO from __break_lease
-> >          if unhandled, process gets killed
-> >          and put_user_pages should get called
-> >          at some point here
-> > 
-> > ...and so this way, user space gets to decide the proper behavior,
-> > instead of leaving the kernel in the dark with an impossible decision
-> > (kill process A? Block process B? User space knows the preference,
-> > per app, but kernel does not.)
-> 
-> There is no need to kill anything here ... if truncate happens then
-> the GUP user is just GUPing page that do not correspond to anything
-> anymore. This is the current behavior and it is what GUP always has
-> been. By the time you get the page from GUP there is no garantee that
-> they correspond to anything.
-> 
-> If a device really want to mirror process address faithfully then the
-> hardware need to make little effort either have something like ATS/
-> PASID or be able to abide mmu notifier.
-> 
-> If we start blocking existing syscall just because someone is doing a
-> GUP we are opening a pandora box. It is not just truncate, it is a
-> whole range of syscall that deals with either file or virtual address.
-> 
-> The semantic of GUP is really the semantic of direct I/O and the
-> virtual address you are direct I/O-ing to/from and the rule there is:
-> do not do anything stupid to those virtual addresses while you are
-> doing direct I/O with them (no munmap, mremap, madvise, truncate, ...).
-> 
-> 
-> Same logic apply to file, when two process do thing to same file there
-> the kernel never get in the way of one process doing something the
-> other process did not expect. For instance one process mmaping the file
-> the other process truncating the file, if the first process try to access
-> the file through the mmap after the truncation it will get a sigbus.
-> 
-> So i believe best we could do is send a SIGBUS to the process that has
-> GUPed a range of a file that is being truncated this would match what
-> we do for CPU acces. There is no reason access through GUP should be
-> handled any differently.
+On Wed, Mar 20, 2019 at 4:38 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+> On Wed, Mar 20, 2019 at 2:28 PM <hotwater438@tutanota.com> wrote:
 
-I agree in sending SIGBUS but the fact is most "Process A"'s will not be
-handling SIGBUS and will then result in that process dying.
-
-Ira
-
+> > Patch is created by help of ELANTECH and RedHat guys (Hans De Goede <hdegoede@redhat.com>, Benjamin Tissoires <btissoir@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>) and me (Vladislav Dalechyn <hotwater438@tutanota.com>.
 >
-> Cheers,
-> Jérôme
-> 
+> Don't take it wrong, but that's not how we give credit in a patch.
+> In your case, if you do not have any Elantech engineer who agreed to
+> sign off the patch, you can definitively mention them this way.
+> But the other guys (Hans, Andy and myself) are well known kernel
+> developers in the input and HID subsystems, so we usually take the
+> fame by adding our Reviewed-by or Signed-off-by tag at the end of the
+> commit message. (Also note that Andy is working for Intel ;-P )
+>
+> If you feel that these persons have an equal participation in the
+> creation of the patch, you should ask for their Signed-off-by in the
+> patch. My gut feelings tell me they would gladly give a Reviewed-by
+> because they helped you on the patch, but they are not the "author",
+> so the Signed-off-by should be you only.
+
+Just in case, we have Co-developed-by: tag and for my opinion Hans'
+name should go under this category.
+
+-- 
+With Best Regards,
+Andy Shevchenko
