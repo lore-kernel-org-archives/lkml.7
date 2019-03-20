@@ -2,80 +2,154 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175E3C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95972C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D497921841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553068883;
-	bh=DezKVxJ9k/B+t90tpPzteaUHsjXY4XQe8hChfflEkVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xItcwMOBoDLdnh06dI+5bN3tuI0DlA6Ie9vhS3IWXmZ/TwBt5eVttsgLhk5gkEu/D
-	 /ep0fsn7pkWio56OI+OupZeTmBl+dTZ7qPH51RnCZOXYMyNk543C397wjaX0jMu6hh
-	 6cF6c2kqfR2i6CK5DMkRVW7Aa730DTW2+ryLAXwU=
+	by mail.kernel.org (Postfix) with ESMTP id 6B2CD2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfCTIBX (ORCPT
+        id S1727648AbfCTICi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47872 "EHLO mail.kernel.org"
+        Wed, 20 Mar 2019 04:02:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46140 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfCTIBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:01:22 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725942AbfCTICh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 04:02:37 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A254B2146E;
-        Wed, 20 Mar 2019 08:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553068882;
-        bh=DezKVxJ9k/B+t90tpPzteaUHsjXY4XQe8hChfflEkVk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GOzeWIwRv0QprvxyqSmBJ1xVSTOqdgINTjKt5B0RDNReHwkmYh+188iBQbHqMwz/V
-         g2wK1/SfDA/xRLADYH9nu4+HuezV8bQ2RKtpwj4LTXF/MVnUj1HV2Cr7bk6a3Wv5aH
-         VBn7pKHbc9F6UqIndZ75Sil+O/PUzNxsPkmpWF7U=
-Date:   Wed, 20 Mar 2019 16:00:57 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/2] clk: imx7ulp: remove snvs clock
-Message-ID: <20190320080056.GC4980@dragon>
-References: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F7E081F31;
+        Wed, 20 Mar 2019 08:02:37 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CBEC17DF3;
+        Wed, 20 Mar 2019 08:02:36 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 16:02:30 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        osalvador@suse.de, mhocko@suse.com, rppt@linux.vnet.ibm.com,
+        richard.weiyang@gmail.com, linux-mm@kvack.org
+Subject: Re: [PATCH] mm/sparse: Rename function related to section memmap
+ allocation/free
+Message-ID: <20190320080230.GL18740@MiWiFi-R3L-srv>
+References: <20190320075301.13994-1-bhe@redhat.com>
+ <20190320075908.GD13626@rapoport-lnx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190320075908.GD13626@rapoport-lnx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 20 Mar 2019 08:02:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 08:56:00AM +0000, Anson Huang wrote:
-> Since i.MX7ULP B0 chip, the SNVS module is moved into M4
-> domain and its clock is also moved into PCC0 which is
-> contorlled by M4, Linux kernel should NOT add it into
-> clock tree.
+On 03/20/19 at 09:59am, Mike Rapoport wrote:
+> On Wed, Mar 20, 2019 at 03:53:01PM +0800, Baoquan He wrote:
+> > These functions are used allocate/free section memmap, have nothing
+> > to do with kmalloc/free during the handling. Rename them to remove
+> > the confusion.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Applied both, thanks.
+Thanks for reviewing, Mike. I makde mistake to send this one twice.
+You can see it has been added into the patchset. Anyway, I will add your
+'Acked-by' when repost to address those issues you pointed out.
+
+Thanks
+Baoquan
+
+> 
+> > ---
+> >  mm/sparse.c | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index 054b99f74181..374206212d01 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -579,13 +579,13 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+> >  #endif
+> > 
+> >  #ifdef CONFIG_SPARSEMEM_VMEMMAP
+> > -static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
+> > +static inline struct page *alloc_section_memmap(unsigned long pnum, int nid,
+> >  		struct vmem_altmap *altmap)
+> >  {
+> >  	/* This will make the necessary allocations eventually. */
+> >  	return sparse_mem_map_populate(pnum, nid, altmap);
+> >  }
+> > -static void __kfree_section_memmap(struct page *memmap,
+> > +static void __free_section_memmap(struct page *memmap,
+> >  		struct vmem_altmap *altmap)
+> >  {
+> >  	unsigned long start = (unsigned long)memmap;
+> > @@ -603,7 +603,7 @@ static void free_map_bootmem(struct page *memmap)
+> >  }
+> >  #endif /* CONFIG_MEMORY_HOTREMOVE */
+> >  #else
+> > -static struct page *__kmalloc_section_memmap(void)
+> > +static struct page *__alloc_section_memmap(void)
+> >  {
+> >  	struct page *page, *ret;
+> >  	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
+> > @@ -624,13 +624,13 @@ static struct page *__kmalloc_section_memmap(void)
+> >  	return ret;
+> >  }
+> > 
+> > -static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
+> > +static inline struct page *alloc_section_memmap(unsigned long pnum, int nid,
+> >  		struct vmem_altmap *altmap)
+> >  {
+> > -	return __kmalloc_section_memmap();
+> > +	return __alloc_section_memmap();
+> >  }
+> > 
+> > -static void __kfree_section_memmap(struct page *memmap,
+> > +static void __free_section_memmap(struct page *memmap,
+> >  		struct vmem_altmap *altmap)
+> >  {
+> >  	if (is_vmalloc_addr(memmap))
+> > @@ -701,7 +701,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+> >  	usemap = __kmalloc_section_usemap();
+> >  	if (!usemap)
+> >  		return -ENOMEM;
+> > -	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+> > +	memmap = alloc_section_memmap(section_nr, nid, altmap);
+> >  	if (!memmap) {
+> >  		kfree(usemap);
+> >  		return -ENOMEM;
+> > @@ -726,7 +726,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+> >  out:
+> >  	if (ret < 0) {
+> >  		kfree(usemap);
+> > -		__kfree_section_memmap(memmap, altmap);
+> > +		__free_section_memmap(memmap, altmap);
+> >  	}
+> >  	return ret;
+> >  }
+> > @@ -777,7 +777,7 @@ static void free_section_usemap(struct page *memmap, unsigned long *usemap,
+> >  	if (PageSlab(usemap_page) || PageCompound(usemap_page)) {
+> >  		kfree(usemap);
+> >  		if (memmap)
+> > -			__kfree_section_memmap(memmap, altmap);
+> > +			__free_section_memmap(memmap, altmap);
+> >  		return;
+> >  	}
+> > 
+> > -- 
+> > 2.17.2
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+> 
