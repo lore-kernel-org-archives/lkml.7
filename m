@@ -2,78 +2,115 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD88C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA4EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D8D218A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553101351;
-	bh=7G48HZIX95PNFoIqOqiO7qLUtbaJCPXyyEJCx2MPR+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nkMYvfaEY1/dMHoWfnLcvwkx7lmu51tZfh58J3eXEfIvwctj7Z+4H2XIxmG+7D7rw
-	 IE3RgdZGhtvYOK6YL5zFtEApWGm+zZcUSm4PI1B3qH+9TN8mHGyT6hZ+oOHa1OvWoC
-	 lr4IX4/0ITCGnVha7ML/7fY5T7/ZEIuf1Wf5hjtE=
+	by mail.kernel.org (Postfix) with ESMTP id 0B2742184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="C9Fx4+03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfCTRC3 (ORCPT
+        id S1727244AbfCTRCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:02:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34755 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbfCTRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:02:26 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 10:02:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
-   d="scan'208";a="135726514"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga003.jf.intel.com with ESMTP; 20 Mar 2019 10:02:24 -0700
-Date:   Wed, 20 Mar 2019 11:03:22 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        John Ferlan <jferlan@redhat.com>
-Subject: Re: your mail
-Message-ID: <20190320170321.GA27462@localhost.localdomain>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
- <20190319152212.GC24176@localhost.localdomain>
- <5a56e110b062de9d448c51cf0774c5e614133873.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a56e110b062de9d448c51cf0774c5e614133873.camel@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+        Wed, 20 Mar 2019 13:02:55 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:41964 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfCTRCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 13:02:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id DEF7DB40
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 17:02:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dK6YBLQCeFtx for <linux-kernel@vger.kernel.org>;
+        Wed, 20 Mar 2019 12:02:53 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id B5337BE
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:02:53 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id z6so2610231ioh.16
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/5fgvFNuiwFQaXpG8wTqV/SjFj07kFd/Tf8QJk9MXPg=;
+        b=C9Fx4+03vXwwL4X8VdqknAqQKoOD4aUjJgZto9K17FQJfmcav0LLCMrM6hOfULllwk
+         mnOmEdsrQV9ReObNVVmgu3QtqNiCmhk/Z8Lox/RB5mrPaYBwEeCBR6FzndLXiykCCB4k
+         s0bin/mzPDYW0i8SnYFX1OWgE/ZpPBpSeQPImB7irpV38k+7jpXViGho/nj0Buuha4bh
+         P+xq+YZqDS+V1qSeBUyWL1cyE9yklELko0+FJWUlJx+RGzk792wbAY7funtjrNtJCR0W
+         fb4cApKF0CR63SBmYvxK/bhoiyHIm7ms5bYjbckE34rPAWauolCWvhCxAjgVHlkgj7Vm
+         8DQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/5fgvFNuiwFQaXpG8wTqV/SjFj07kFd/Tf8QJk9MXPg=;
+        b=IIJr91m9Gr5MG7YHKi3oxo8x8o+Mw+IqhUMWxUVVsQ7B2sXIr/VIDdhOWR9wC3aTXn
+         pjRgIA51q6B3yN3C1QQ+hzG5iSQ+OU8hrjwf3fCxcI/n74ZRltQDpj5XUkZ3h+UwW4zq
+         xo4TPyRCRxTJuNvqhSyL0SdaXeEm/kOnl3AGe+roTKrrZuSqBHbR2SZv99UVkCWrNbgZ
+         Xip9NN+hDsLwi9BD8UqJD53ZEk2b5jOtCMdgkc8eO7Pbz/nblSnTPpfRi1rkYxI/XTXM
+         AW3dV2EAZo7cIy2iPKlQffkV1+rvV9bo5IvuVgGpyMN8QZk5NKD4801oCHNx3Q3e6qwh
+         8wDA==
+X-Gm-Message-State: APjAAAVEdySXjRXMYqT3J2Spl4dsR7J3UNeLL3P+D8SStKOeskI+dFHe
+        6Jt8ygV/hujz1Gz00zD7PQHcYTVKmHDFtzDm90LLCaaru16SX3QoMRB1w+cQZd4al7j2D4rOGc0
+        PaGcjrZe0NlOqnbvCIqFasDMFJWF0
+X-Received: by 2002:a24:e86:: with SMTP id 128mr5689080ite.113.1553101373417;
+        Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqylLeN83pRYTpgJgTFGxIlhJkex28Wg/dBzS9D3APzJoZMymyxGtbN3vkDRP6pUKpWPDVI1fQ==
+X-Received: by 2002:a24:e86:: with SMTP id 128mr5689061ite.113.1553101373193;
+        Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id m79sm1308564itm.25.2019.03.20.10.02.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 10:02:52 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sabin Mihai Rapan <sabin.rapan@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: rtlwifi: rtl8822b: fix to avoid NULL pointer dereference
+Date:   Wed, 20 Mar 2019 12:02:49 -0500
+Message-Id: <20190320170251.31838-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 06:30:29PM +0200, Maxim Levitsky wrote:
-> Or instead I can use the block backend, 
-> (but note that currently the block back-end doesn't support polling which is
-> critical for the performance).
+skb allocated via dev_alloc_skb can fail and return a NULL pointer.
+This patch avoids such a scenario and returns, consistent with other
+invocations.
 
-Oh, I think you can do polling through there. For reference, fs/io_uring.c
-has a pretty good implementation that aligns with how you could use it.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
+---
+v2: Move signed off above the version change log
+v1: Patch collision with rtl_phydm.c, fix as per Greg
+---
+ drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
+index f061dd1382aa..cf6b7a80b753 100644
+--- a/drivers/staging/rtlwifi/rtl8822be/fw.c
++++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
+@@ -743,6 +743,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
+ 		      u1_rsvd_page_loc, 3);
+ 
+ 	skb = dev_alloc_skb(totalpacketlen);
++	if (!skb)
++		return;
+ 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
+ 	       totalpacketlen);
+ 
+-- 
+2.17.1
+
