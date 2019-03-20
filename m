@@ -2,105 +2,95 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF86C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88EEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB8321873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FE0218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jgf6sgY5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uRlEoDHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfCTUiq (ORCPT
+        id S1727421AbfCTUjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:38:46 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44420 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfCTUip (ORCPT
+        Wed, 20 Mar 2019 16:39:16 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:51340 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCTUjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:38:45 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so3416359otl.11;
-        Wed, 20 Mar 2019 13:38:44 -0700 (PDT)
+        Wed, 20 Mar 2019 16:39:15 -0400
+Received: by mail-wm1-f45.google.com with SMTP id 4so85756wmf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lS28IOdb+N4OpJMYZwvSYBGAUmBgN2n51QXH6hhVFhw=;
-        b=jgf6sgY5sBRNZVxPBkWf1m/XKBgEaqmQ48DjGNpRGX+vdmFXwJBj9akSYV+EplRRxe
-         ysPz1XDDmPxcoN9CAcXJeRkbx1Q0Mwmh+Lkajs6TU1Qdd6aLQ9Dyz4QSh+SWgc36n+VV
-         h/gQdgL1JNEW36icXHx/EdCTfxdJDajq9Ar/TfcTvfvrGrzRyOZAmxxU7CBROlvO3JoW
-         HgZonX0ipUfG+mWtZuR7YVQtaSSs5bBs5BC1TUZfVOMKoURrL1iY6X8Qaf1FEEZXugm6
-         1baueBQppbmVdPxWosUm41g1mq/m1Q9r9hpBtkfogGK70zAiIsWkaWm++yo4jKNUtpSq
-         V9Kg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QtXCkD1EGRDrRYjOnCfs08SvF8/UAvCiKGLbAEX6Tyk=;
+        b=uRlEoDHMUNPxQ0L/OeP4I2isOxExoQJM3UPDqJcINRU99uIicizH06iF9ngtPo7F6O
+         kbPjJmebnnpBWMxQVa0tMsWCM0pjkLknc4zXuw2CBVG61oUnXygAMsgUdIHvEbXzXtnv
+         YhPxhtThpLMBtp8c8ncIUY8d5WBtiSqjQpG47/0+PSARLHrFLjZQzhHWi2lUccAU7sqd
+         kPcKG60+StMq6ukb8gXa7dF4IEpWjVUb+K7g6A06kAWbe4DB1j7S3nK4Saom4I+n/1jz
+         XKffmoDfmehsFIYSVWCl9FKL8iyJffPULFDLq32xl7GU5d9mtp1ENoiT6PzNrrUxL3iV
+         jo4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lS28IOdb+N4OpJMYZwvSYBGAUmBgN2n51QXH6hhVFhw=;
-        b=UgitLO8eE1HDO+rDyRlHdceae8Nz1QyFP1VOif1/LPPGcUwYufvMFdRIzpALN6Pirj
-         zqG7CYBoNxgiJLMlEaOQ+hghlwdTMFxSRVPHMtce41R0TJxXWu50FeUheNvQDnBK5Mxe
-         7zqTIpzO64fgar+kMfQD5/H3W86fGhnjDOh/3Q4EYesa40B76TjuaJMphzvc79gKd5cp
-         EoEmi6vZoK9Cc9KjMVkk3mT9E51G1d2i3uBtx8T6W6mZsoe0L411vXgtjSf641x6h2m4
-         SvA1Vxdy3dl5NdwQDRg5J1ZhQEhE4/mwknB1kaXIRUFRD26D1mnkLwJaNx14VjG/F/Md
-         hQ4A==
-X-Gm-Message-State: APjAAAVGIm5wCUKIvV9BQyC1UblMdhRHLSekgBAdxC0KH8XqkwqTvtTr
-        CHZnQkHcc6uUgwZhkY4HtZ6FxrZ3sfdkRQaYmtw=
-X-Google-Smtp-Source: APXvYqwFxNQQS7bEDrTe9ECfwBUC0mZ+RR/Anzw/RLbwocF5qZ/7UmpTy8kZB+aaUb8YldwOu1GPgoMAnhbMr3JoOjM=
-X-Received: by 2002:a9d:6306:: with SMTP id q6mr17150otk.86.1553114324569;
- Wed, 20 Mar 2019 13:38:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QtXCkD1EGRDrRYjOnCfs08SvF8/UAvCiKGLbAEX6Tyk=;
+        b=f1rphB9Ldh4OHXYeXxSYEe8It4uUpq8vLek1AVczHCwmBzGukMNhJm4bLhhJCDeHQh
+         ScMaLBBRnYEpj0MJM6eSUbLV9d1Fgd/DDiV8bIIXDtp0Gtd7QUlAaVcSQgAaoR/e+/At
+         aibdoml24GqCFt3hGl6VEAZ+Jq1idZOse4at9bgWmf5IGJPUP6SPBiL8uHTswfTlMptU
+         4uCNLo0VEpYUQqgwKJBwNHQSijpzrL0qa+kA1BzgAaBad3cLrlRpW+d5jfHhBY90Uzbh
+         Xgaeju9KMUXv9Xh5c2q5HFtRO/83WRv1kuTo7+eMdandJjyph281tUCsKNWPJQgn5y65
+         JVQA==
+X-Gm-Message-State: APjAAAUNLDiNALDjBPFYN2lr/6j3IITUhJx2ycrDu9vpJsshDoLqd7lt
+        FkW6YOxVX+cCbvoeW4OCfw==
+X-Google-Smtp-Source: APXvYqyLZG0NeSJaJl4C/7zwXmib9hqHLLMdsxUEiWjvOtWFPHxWdUQgfj25MrxbN3MVtE8TZqbm9g==
+X-Received: by 2002:a7b:c301:: with SMTP id k1mr146626wmj.117.1553114353760;
+        Wed, 20 Mar 2019 13:39:13 -0700 (PDT)
+Received: from avx2 ([46.53.240.229])
+        by smtp.gmail.com with ESMTPSA id e16sm6404190wrs.0.2019.03.20.13.39.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 13:39:12 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 23:39:10 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: pidfd design
+Message-ID: <20190320203910.GA2842@avx2>
+References: <20190320200702.GA27111@avx2>
+ <CAKOZuespjOTbaTDbgQLo=7PXTE-nYCLy7k=s+RJh_GpZ_5gwgg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
- <20190319215121.29340-3-martin.blumenstingl@googlemail.com> <1d52f584-1a5d-8b0d-ecd0-8c041f2b9c18@baylibre.com>
-In-Reply-To: <1d52f584-1a5d-8b0d-ecd0-8c041f2b9c18@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 20 Mar 2019 21:38:33 +0100
-Message-ID: <CAFBinCC61EgCS2djT2NZdYnGsHM1VS3_zOzaxSDyHGdguLCFyg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] clk: meson: meson8b: use a sparate clock table for Meson8m2
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, linux-amlogic@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKOZuespjOTbaTDbgQLo=7PXTE-nYCLy7k=s+RJh_GpZ_5gwgg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
-
-On Wed, Mar 20, 2019 at 9:15 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi,
->
-> There is a typo in the subject "s/sparate/separate/" !
-good catch - I'll wait until the weekend and send a fixed version then!
-
-> On 19/03/2019 22:51, Martin Blumenstingl wrote:
-> > Meson8, Meson8b and Meson8m2 implement a similar clock controller.
-> > However, there are a few differences between the three actual IP blocks.
+On Wed, Mar 20, 2019 at 01:14:01PM -0700, Daniel Colascione wrote:
+> On Wed, Mar 20, 2019 at 1:07 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> > > What would be your opinion to having a
+> > > /proc/<pid>/handle
+> > > file instead of having a dirfd.
 > >
-> > One example where Meson8m2 differs from Meson8b is the VPU clock setup:
-> > - the VPU input mux can choose between "fclk_div4", "fclk_div3",
-> >   "fclk_div5" and "fclk_div7" on Meson8b
-> > - however, on Meson8m2 it can choose between "fclk_div4", "fclk_div3",
-> >   "fclk_div5" and "gp_pll" (GP_PLL only exists on Meson8m2, it's the
-> >   predecessor of the GP0_PLL clock on GXBB/GXL/GXM))
->
-> By curiosity, what is the default (maximum) setup ? On GX & G12A, fclk_div3 is the default/max setup.
-u-boot on my Meson8m2 board uses GP_PLL as input (364MHz)
-u-boot on my Meson8b (Odroid-C1) uses fclk_div7 as input (approx. 364MHz)
-if you want I can look up the divider (I don't remember it from the
-top of my head)
+> > This is even worse than depending on PROC_FS. Just for the dependency
+> > pidfd code should be backed out immediately. Forget about /proc.
+> 
+> We already have pidfds, and we've had them since /proc was added ages
+> ago.
 
-[...]
-> Apart the typo in the subject,
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-thank you!
-
-
-Regards
-Martin
+New pidfd code (or whatever the name) should NOT depend on /proc and
+should not interact with VFS at all at any point (other than probably
+being a descriptor on a fake filesystem). The reason is that /proc is
+full of crap and you don't want to spill that into new and hopefully
+properly designed part of new code.
