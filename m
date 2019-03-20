@@ -2,176 +2,108 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA72C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C7FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF76521841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B34A21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HiUqBcYT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YJuQKBUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfCTTVM (ORCPT
+        id S1726465AbfCTTVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:21:12 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:48837 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726681AbfCTTVL (ORCPT
+        Wed, 20 Mar 2019 15:21:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34996 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfCTTVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:21:11 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 58DD828A23
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:21:10 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6glyhg65Z2PzO6glyh0giO; Wed, 20 Mar 2019 14:21:10 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=59214 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6glx-003I6U-V3; Wed, 20 Mar 2019 14:21:10 -0500
-Subject: Re: [PATCH] NFC: pn533: mark expected switch fall-throughs
-To:     Samuel Ortiz <sameo@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190213185741.GA5047@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <4c9a29a0-18e5-f7e2-1f60-8a87f4625d63@embeddedor.com>
-Date:   Wed, 20 Mar 2019 14:21:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 15:21:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B904B60E73; Wed, 20 Mar 2019 19:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553109691;
+        bh=+2l973189PQlhjIYHo1woP/hpgZQIV4Yuzpxe3Y4NH0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HiUqBcYTGo9W55aTFe8J26iNibj/8FGu9hmB2yUqzGXGbMxC/I1u1C1qvA15SrCzW
+         E6UO5C7gGm/sXxEIm6D0tr6RDu7o3nl5pwKo0MW+UMR/MnA6BCbPJ3ymzOd6OAcDZs
+         6E208OwqBkAARhNfwA3Eat0bsFNP8/vXAljQvTro=
+Received: from [10.79.162.149] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F30560240;
+        Wed, 20 Mar 2019 19:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553109690;
+        bh=+2l973189PQlhjIYHo1woP/hpgZQIV4Yuzpxe3Y4NH0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YJuQKBUcO08Dw1TRzND4Z8M+aFERUbtMAETneuxb2b+Z2jE0iiVw26o4KLOXZudGl
+         ky02Lye+JMCPlBxprY7JZvgzWEI3Hf3ava4n7y0XfUTMRqHsaJ4QsmUI+qsvZTc0nO
+         O5YHIX64PHfLAAaTTJPPf3+Bj/aMSVx6VlPRz238=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F30560240
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v3] staging: rtlwifi: Fix potential NULL pointer
+ dereference of kzalloc
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20190320154234.29242-1-pakki001@umn.edu>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <b21893ef-6326-fef0-9e3f-60627d58b12d@codeaurora.org>
+Date:   Thu, 21 Mar 2019 00:51:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190213185741.GA5047@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190320154234.29242-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6glx-003I6U-V3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:59214
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-If no one cares, I'll add this to my tree for 5.2
-
-Thanks
---
-Gustavo
-
-On 2/13/19 12:57 PM, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/nfc/pn533/pn533.c: In function ‘pn533_transceive’:
-> drivers/nfc/pn533/pn533.c:2142:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (dev->tgt_active_prot == NFC_PROTO_FELICA) {
->       ^
-> drivers/nfc/pn533/pn533.c:2150:2: note: here
->   default:
->   ^~~~~~~
-> drivers/nfc/pn533/pn533.c: In function ‘pn533_wq_mi_recv’:
-> drivers/nfc/pn533/pn533.c:2267:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (dev->tgt_active_prot == NFC_PROTO_FELICA) {
->       ^
-> drivers/nfc/pn533/pn533.c:2276:2: note: here
->   default:
->   ^~~~~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Addresses-Coverity-ID: 1230487 ("Missing break in switch")
-> Addresses-Coverity-ID: 1230488 ("Missing break in switch")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On 3/20/2019 9:12 PM, Aditya Pakki wrote:
+> phydm.internal is allocated using kzalloc which is used multiple
+> times without a check for NULL pointer. This patch avoids such a
+> scenario by returning 0, consistent with the failure case.
+>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+>
 > ---
->  drivers/nfc/pn533/pn533.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
-> index a0cc1cc45292..5961f14259e5 100644
-> --- a/drivers/nfc/pn533/pn533.c
-> +++ b/drivers/nfc/pn533/pn533.c
-> @@ -2147,6 +2147,7 @@ static int pn533_transceive(struct nfc_dev *nfc_dev,
->  
->  			break;
->  		}
-> +		/* fall through */
->  	default:
->  		/* jumbo frame ? */
->  		if (skb->len > PN533_CMD_DATAEXCH_DATA_MAXLEN) {
-> @@ -2273,6 +2274,7 @@ static void pn533_wq_mi_recv(struct work_struct *work)
->  
->  			break;
->  		}
-> +		/* fall through */
->  	default:
->  		skb_put_u8(skb, 1); /*TG*/
->  
-> 
+> v2: Move the signed off line above
+> v1: Patch collision with different things, fix as per Greg
+> ---
+>   drivers/staging/rtlwifi/phydm/rtl_phydm.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
+> index 9930ed954abb..4cc77b2016e1 100644
+> --- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
+> +++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
+> @@ -180,6 +180,8 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
+>   
+>   	rtlpriv->phydm.internal =
+>   		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
+> +	if (!rtlpriv->phydm.internal)
+> +		return 0;
+>   
+>   	_rtl_phydm_init_com_info(rtlpriv, ic, params);
+>   
+
+
+
+Reviewed-by:  Mukesh Ojha <mojha@codeaurora.org>
+
+Thanks,
+Mukesh
+
+
