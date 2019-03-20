@@ -3,47 +3,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBF9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA77CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA53218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83115218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfCTVWH (ORCPT
+        id S1727687AbfCTVWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:22:07 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:50916 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfCTVWG (ORCPT
+        Wed, 20 Mar 2019 17:22:15 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:52651 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbfCTVWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:22:06 -0400
-Received: by mail-it1-f200.google.com with SMTP id i63so659209itb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:22:05 -0700 (PDT)
+        Wed, 20 Mar 2019 17:22:07 -0400
+Received: by mail-it1-f197.google.com with SMTP id z131so648462itb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:22:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sOdPf80vOSMkUMWceEuQ0LAPOFOLqVpNp3d6ZZTmzbE=;
-        b=ErTSjPU3RhNoW/TAoQkHgaqTI1+UIhIornS+7f3m7tX+P3iQhwAeXrrOq3lGXUURuk
-         I6UofCWASkZtU1z4DEjs7CNhi8hfkGeB0AzzS/fx1jzLajfRaXDtcl5hL9uibLdhFs77
-         5e5qRMpOTmVgXYwoUojBnmXk86+YQmR9BjoBeVI8gSd42ZqYIXZ8hwkVzBQ0hrpkHWii
-         zKyFkaUeI5ld+ezG1E1j72fDZj7mC7WkPcauqY7MwJ03ReU67xLpl8qxdw/fr13fX+g6
-         WNPNxkf6DslTEj/N1aeJgTdNZE2ZxkT7i3KOGR2fwa7OxB2fK4XtAG8yfxKIN478BG7s
-         AG1Q==
-X-Gm-Message-State: APjAAAXmojkCdOQBiyS1K6NkbBhcJhhAO4X+WcpM4ZSLf1Tw9Zw9Sgi+
-        604+JGgqdZpSoGqP+CsNsbctXfnLI3cCKkPuj4rDpXng0zBu
-X-Google-Smtp-Source: APXvYqwWH/jt+nNbiZ367OPAs/CMyBJ5J4qW51bx+wjLAP++8zfe01JDVmco2X+2Q6kI1+toD1KALWDsQ1foTyqHgtKxARBfN6tN
+        bh=Efy7e3i5bPtxOHLTbjdGrad9yd7UmVsp2KLVm2vdE34=;
+        b=c6ktRtga4eNd6cpUKYz0v8g28d51otTbR6P/QHcdX138h+d7zk9PLWL9KtJtpuzbWB
+         IxHwyihB5rUu6XLXbu1Vy10s6sQGsrty6FTF9xaPutM4FsaQXeo45fQ6LWgrdU7MImCW
+         AiqYBr1WCX6Xl8g3xd7wdlwJqptSfR08PqdIDvLwI3OwmpNxsH8PHoOYe35XwrMYIoLs
+         eS0HewbQB4xrIJt2ngL1Hi+a2uVZEOWaQrk2K2tQ9leGGmpRjm8oGY/RmiWVhafJTGo3
+         iSgguOknx5Sse9rX1Vio14MNUCkS57BlnfGwUlfFqLxd3pUSZaAR/7Xj+jqHI6FnFWNW
+         AZig==
+X-Gm-Message-State: APjAAAX5MdBn/812C0lS9LqlgLUM7TJR/rP8gjurehUCCv7byQ8Hy5Ti
+        jwM99Jhf3ShBzBbcdAomV77wyQcg8iLtf/4XeW/Wcc8VfBaf
+X-Google-Smtp-Source: APXvYqxwkXzfDJ4xzcRn7QGgl7L45dvKSbWVs+3dtRC2t6HlzyFZ4p8dhoMFtEY7ub7q7SodovHxloeWbwDTftYPcmz1j0fE7GBK
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8a07:: with SMTP id d7mr54861iok.7.1553116925624; Wed,
- 20 Mar 2019 14:22:05 -0700 (PDT)
+X-Received: by 2002:a24:3a4a:: with SMTP id m71mr5965334itm.12.1553116925881;
+ Wed, 20 Mar 2019 14:22:05 -0700 (PDT)
 Date:   Wed, 20 Mar 2019 14:22:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a58e5905848d362d@google.com>
-Subject: KASAN: use-after-free Read in tipc_sk_filter_rcv
-From:   syzbot <syzbot+e863893591cc7a622e40@syzkaller.appspotmail.com>
+Message-ID: <000000000000a9993005848d36e2@google.com>
+Subject: general protection fault in tipc_mcast_filter_msg
+From:   syzbot <syzbot+be4bdf2cc3e85e952c50@syzkaller.appspotmail.com>
 To:     davem@davemloft.net, hoang.h.le@dektech.com.au,
         jon.maloy@ericsson.com, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
@@ -60,12 +60,12 @@ syzbot found the following crash on:
 
 HEAD commit:    a0cfa79f ibmveth: Make array ibmveth_stats static
 git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=154bec17200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ec3ea3200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
-dashboard link: https://syzkaller.appspot.com/bug?extid=e863893591cc7a622e40
+dashboard link: https://syzkaller.appspot.com/bug?extid=be4bdf2cc3e85e952c50
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160f4c17200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c2ea6d200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146929f7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c05c6d200000
 
 The bug was bisected to:
 
@@ -75,106 +75,80 @@ Date:   Tue Mar 19 11:49:50 2019 +0000
 
      tipc: smooth change between replicast and broadcast
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=128c2007200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=118c2007200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=168c2007200000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=173929f7200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b929f7200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b929f7200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e863893591cc7a622e40@syzkaller.appspotmail.com
+Reported-by: syzbot+be4bdf2cc3e85e952c50@syzkaller.appspotmail.com
 Fixes: c55c8eda ("tipc: smooth change between replicast and broadcast")
 
-==================================================================
-BUG: KASAN: use-after-free in tipc_sk_filter_rcv+0x2166/0x34f0  
-net/tipc/socket.c:2167
-Read of size 4 at addr ffff88808ea58534 by task kworker/u4:0/7
-
-CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.0.0+ #61
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7820 Comm: syz-executor418 Not tainted 5.0.0+ #61
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: tipc_send tipc_conn_send_work
+RIP: 0010:tipc_mcast_filter_msg+0x21b/0x13d0 net/tipc/bcast.c:782
+Code: 45 c0 0f 84 39 06 00 00 48 89 5d 98 e8 ce ab a5 fa 49 8d bc 24 c8 00  
+00 00 48 b9 00 00 00 00 00 fc ff df 48 89 f8 48 c1 e8 03 <80> 3c 08 00 0f  
+85 9a 0e 00 00 49 8b 9c 24 c8 00 00 00 48 be 00 00
+RSP: 0018:ffff8880959defc8 EFLAGS: 00010202
+RAX: 0000000000000019 RBX: ffff888081258a48 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: ffffffff86cab862 RDI: 00000000000000c8
+RBP: ffff8880959df030 R08: ffff8880813d0200 R09: ffffed1015d05bc8
+R10: ffffed1015d05bc7 R11: ffff8880ae82de3b R12: 0000000000000000
+R13: 000000000000002c R14: 0000000000000000 R15: ffff888081258a48
+FS:  000000000106a880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020001cc0 CR3: 0000000094a20000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
-  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  tipc_sk_filter_rcv+0x2166/0x34f0 net/tipc/socket.c:2167
+  tipc_sk_filter_rcv+0x182d/0x34f0 net/tipc/socket.c:2168
   tipc_sk_enqueue net/tipc/socket.c:2254 [inline]
   tipc_sk_rcv+0xc45/0x25a0 net/tipc/socket.c:2305
-  tipc_topsrv_kern_evt+0x3b7/0x580 net/tipc/topsrv.c:610
-  tipc_conn_send_to_sock+0x43e/0x5f0 net/tipc/topsrv.c:283
-  tipc_conn_send_work+0x65/0x80 net/tipc/topsrv.c:303
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Allocated by task 7:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
-  __do_kmalloc_node mm/slab.c:3686 [inline]
-  __kmalloc_node_track_caller+0x4e/0x70 mm/slab.c:3700
-  __kmalloc_reserve.isra.0+0x40/0xf0 net/core/skbuff.c:140
-  __alloc_skb+0x10b/0x5e0 net/core/skbuff.c:208
-  alloc_skb_fclone include/linux/skbuff.h:1107 [inline]
-  tipc_buf_acquire+0x2f/0x100 net/tipc/msg.c:66
-  tipc_msg_create+0x38/0x270 net/tipc/msg.c:98
-  tipc_topsrv_kern_evt+0x2a7/0x580 net/tipc/topsrv.c:602
-  tipc_conn_send_to_sock+0x43e/0x5f0 net/tipc/topsrv.c:283
-  tipc_conn_send_work+0x65/0x80 net/tipc/topsrv.c:303
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Freed by task 7:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3821
-  skb_free_head+0x93/0xb0 net/core/skbuff.c:557
-  skb_release_data+0x576/0x7a0 net/core/skbuff.c:577
-  skb_release_all+0x4d/0x60 net/core/skbuff.c:631
-  __kfree_skb net/core/skbuff.c:645 [inline]
-  kfree_skb net/core/skbuff.c:663 [inline]
-  kfree_skb+0xe8/0x390 net/core/skbuff.c:657
-  tipc_sk_proto_rcv net/tipc/socket.c:2009 [inline]
-  tipc_sk_filter_rcv+0x1e6a/0x34f0 net/tipc/socket.c:2162
-  tipc_sk_enqueue net/tipc/socket.c:2254 [inline]
-  tipc_sk_rcv+0xc45/0x25a0 net/tipc/socket.c:2305
-  tipc_topsrv_kern_evt+0x3b7/0x580 net/tipc/topsrv.c:610
-  tipc_conn_send_to_sock+0x43e/0x5f0 net/tipc/topsrv.c:283
-  tipc_conn_send_work+0x65/0x80 net/tipc/topsrv.c:303
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff88808ea58480
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 180 bytes inside of
-  1024-byte region [ffff88808ea58480, ffff88808ea58880)
-The buggy address belongs to the page:
-page:ffffea00023a9600 count:1 mapcount:0 mapping:ffff88812c3f0ac0 index:0x0  
-compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea00021bbd88 ffffea00023db488 ffff88812c3f0ac0
-raw: 0000000000000000 ffff88808ea58000 0000000100000007 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808ea58400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88808ea58480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808ea58500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                      ^
-  ffff88808ea58580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808ea58600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+  tipc_sk_mcast_rcv+0x724/0x1020 net/tipc/socket.c:1209
+  tipc_mcast_xmit+0x7fe/0x1200 net/tipc/bcast.c:410
+  tipc_sendmcast+0xb36/0xfc0 net/tipc/socket.c:820
+  __tipc_sendmsg+0x10df/0x18d0 net/tipc/socket.c:1358
+  tipc_sendmsg+0x53/0x80 net/tipc/socket.c:1291
+  sock_sendmsg_nosec net/socket.c:651 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:661
+  ___sys_sendmsg+0x806/0x930 net/socket.c:2260
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2298
+  __do_sys_sendmsg net/socket.c:2307 [inline]
+  __se_sys_sendmsg net/socket.c:2305 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2305
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401c9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd887fa9d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401c9
+RDX: 0000000000000000 RSI: 0000000020002140 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a50
+R13: 0000000000401ae0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace ba79875754e1708f ]---
+RIP: 0010:tipc_mcast_filter_msg+0x21b/0x13d0 net/tipc/bcast.c:782
+Code: 45 c0 0f 84 39 06 00 00 48 89 5d 98 e8 ce ab a5 fa 49 8d bc 24 c8 00  
+00 00 48 b9 00 00 00 00 00 fc ff df 48 89 f8 48 c1 e8 03 <80> 3c 08 00 0f  
+85 9a 0e 00 00 49 8b 9c 24 c8 00 00 00 48 be 00 00
+RSP: 0018:ffff8880959defc8 EFLAGS: 00010202
+RAX: 0000000000000019 RBX: ffff888081258a48 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: ffffffff86cab862 RDI: 00000000000000c8
+RBP: ffff8880959df030 R08: ffff8880813d0200 R09: ffffed1015d05bc8
+R10: ffffed1015d05bc7 R11: ffff8880ae82de3b R12: 0000000000000000
+R13: 000000000000002c R14: 0000000000000000 R15: ffff888081258a48
+FS:  000000000106a880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020001cc0 CR3: 0000000094a20000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
