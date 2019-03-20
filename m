@@ -2,115 +2,119 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CD5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCB2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C64221841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:50:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyF4LwKf"
+	by mail.kernel.org (Postfix) with ESMTP id E47552175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfCTIus (ORCPT
+        id S1727134AbfCTIvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:50:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53026 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfCTIus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:50:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a184so5623963wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gJjh0jo2CwGPWxpOafRxA0GoUtLGduiD1ELGGDvBdCU=;
-        b=lyF4LwKfYzTSzv2AnpXchalsr1mvQSJlzZ+I14UrarvyxjD8K7D7plRlWtKiU7dknH
-         QhBotS5W6KH2/jmOEOwF3zzWFioDFS7L+FusUFaJd92Nho0dRH0eyC2cQyyJ9lJSkrgl
-         6afaNrU5lD56kgXNE0O0fYEUay0VuqMYEdtaMRPCwBgf9VSvViVBjkGjHJpAbtbxo8AK
-         ggVA6EsKEPiTu6Emh5UbAvl9OmUbQ15y3I/HUxS/4OhImEjkWmQ6l4YYTiZn+PA5va2Z
-         0WEEgROrm9SVKv6bCfNr6hfTZozHlXS2MWs4qrdm6UBzie9G9KUWfV+8nUENrQeWHq87
-         SLfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gJjh0jo2CwGPWxpOafRxA0GoUtLGduiD1ELGGDvBdCU=;
-        b=kp0oYXzixRhaE665eYTfnR/BPJ5RnuUUK7Mw4duu0YFm0328rlTxXwE1Q79djcOFSU
-         LVRTR/a6EH3nJ9BCsrJZiWxxvWZZ9qvjJWO0v68ymSRksiW1563OYKDNBwXXDkbUG3C+
-         hPhLVJBudJ4P0gAgm/xZVml8yhLcfzKsCx/weBbujwuFQEiljWA2VU/8LoxOEygBveAs
-         FX1n2niI5Oyx9aaaWj1vRdBJVhvmxgJ4wt7jvPUeLUsyNapSz+mpN8hE0QvJNrZAffRx
-         rsBLABxejyLHP1jIC0WY54OenUPhr0a7v+uv406pX+/ax9Tk+clXTOwV1lmwcxE0aR9/
-         wSLA==
-X-Gm-Message-State: APjAAAVGFlIFYJ11WFcmd+jEBpIdbxRVxOcyxrZQ7HQUiGcQjY5lffdY
-        NvruqVDBQ+GNbsHCk8yvzG0=
-X-Google-Smtp-Source: APXvYqzaw0LE09pEVC2cqzCgVNtgl37Nh47rsUcJml6fcmfSzQvXY0qSNp8JDGj5/o/BEDzNG5Fqbw==
-X-Received: by 2002:a7b:c5cf:: with SMTP id n15mr7227181wmk.106.1553071846742;
-        Wed, 20 Mar 2019 01:50:46 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5abb85.dynamic.kabel-deutschland.de. [95.90.187.133])
-        by smtp.gmail.com with ESMTPSA id g10sm1224907wrq.61.2019.03.20.01.50.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 01:50:46 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: remove unused WFD defines
-Date:   Wed, 20 Mar 2019 09:50:29 +0100
-Message-Id: <20190320085029.21025-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Mar 2019 04:51:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32858 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbfCTIvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 04:51:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E82F281104;
+        Wed, 20 Mar 2019 08:51:38 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-62.ams2.redhat.com [10.36.116.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C95635D9C4;
+        Wed, 20 Mar 2019 08:51:35 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id E182C1750C; Wed, 20 Mar 2019 09:51:33 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: make resource id workaround runtime switchable.
+Date:   Wed, 20 Mar 2019 09:51:33 +0100
+Message-Id: <20190320085133.26632-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 20 Mar 2019 08:51:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All defined WFD* in wifi.h are unused in the driver code,
-so remove them.
+Also update the comment with a reference to the virglrenderer fix.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/staging/rtl8188eu/include/wifi.h | 20 --------------------
- 1 file changed, 20 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_object.c | 44 ++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
-index 5f6b04b5016c..d059240b836f 100644
---- a/drivers/staging/rtl8188eu/include/wifi.h
-+++ b/drivers/staging/rtl8188eu/include/wifi.h
-@@ -681,26 +681,6 @@ enum ht_cap_ampdu_factor {
- #define	WPS_CM_SW_DISPLAY_P		0x2008
- #define	WPS_CM_LCD_DISPLAY_P		0x4008
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index e7e946035027..a73dae4e5029 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -25,34 +25,38 @@
  
--/*	=====================WFD Section===================== */
--/*	For Wi-Fi Display */
--#define	WFD_ATTR_DEVICE_INFO		0x00
--#define	WFD_ATTR_ASSOC_BSSID		0x01
--#define	WFD_ATTR_COUPLED_SINK_INFO	0x06
--#define	WFD_ATTR_LOCAL_IP_ADDR		0x08
--#define	WFD_ATTR_SESSION_INFO		0x09
--#define	WFD_ATTR_ALTER_MAC		0x0a
+ #include "virtgpu_drv.h"
+ 
++static int virtio_gpu_virglrenderer_workaround = 1;
++module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
++
+ static int virtio_gpu_resource_id_get(struct virtio_gpu_device *vgdev,
+ 				       uint32_t *resid)
+ {
+-#if 0
+-	int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
 -
--/*	For WFD Device Information Attribute */
--#define	WFD_DEVINFO_SOURCE			0x0000
--#define	WFD_DEVINFO_PSINK			0x0001
--#define	WFD_DEVINFO_SSINK			0x0002
--#define	WFD_DEVINFO_DUAL			0x0003
+-	if (handle < 0)
+-		return handle;
+-#else
+-	static int handle;
 -
--#define	WFD_DEVINFO_SESSION_AVAIL		0x0010
--#define	WFD_DEVINFO_WSD				0x0040
--#define	WFD_DEVINFO_PC_TDLS			0x0080
--#define	WFD_DEVINFO_HDCP_SUPPORT		0x0100
+-	/*
+-	 * FIXME: dirty hack to avoid re-using IDs, virglrenderer
+-	 * can't deal with that.  Needs fixing in virglrenderer, also
+-	 * should figure a better way to handle that in the guest.
+-	 */
+-	handle++;
+-#endif
 -
- #define IP_MCAST_MAC(mac)				\
- 	((mac[0] == 0x01) && (mac[1] == 0x00) && (mac[2] == 0x5e))
- #define ICMPV6_MCAST_MAC(mac)				\
+-	*resid = handle + 1;
++	if (virtio_gpu_virglrenderer_workaround) {
++		/*
++		 * Hack to avoid re-using resource IDs.
++		 *
++		 * virglrenderer versions up to (and including) 0.7.0
++		 * can't deal with that.  virglrenderer commit
++		 * "f91a9dd35715 Fix unlinking resources from hash
++		 * table." (Feb 2019) fixes the bug.
++		 */
++		static int handle;
++		handle++;
++		*resid = handle + 1;
++	} else {
++		int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
++		if (handle < 0)
++			return handle;
++		*resid = handle + 1;
++	}
+ 	return 0;
+ }
+ 
+ static void virtio_gpu_resource_id_put(struct virtio_gpu_device *vgdev, uint32_t id)
+ {
+-#if 0
+-	ida_free(&vgdev->resource_ida, id - 1);
+-#endif
++	if (!virtio_gpu_virglrenderer_workaround) {
++		ida_free(&vgdev->resource_ida, id - 1);
++	}
+ }
+ 
+ static void virtio_gpu_ttm_bo_destroy(struct ttm_buffer_object *tbo)
 -- 
-2.21.0
+2.18.1
 
