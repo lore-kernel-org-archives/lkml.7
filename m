@@ -2,137 +2,104 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89024C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AB12184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03ADD2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P40GTrIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfCTFx1 (ORCPT
+        id S1726891AbfCTF4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:53:27 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:24848 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725900AbfCTFx0 (ORCPT
+        Wed, 20 Mar 2019 01:56:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42839 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbfCTF4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:53:26 -0400
-X-IronPort-AV: E=Sophos;i="5.60,247,1549909800"; 
-   d="scan'208";a="454358"
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Mar 2019 11:23:23 +0530
-X-IronPort-AV: E=McAfee;i="5900,7806,9200"; a="7284346"
-Received: from gkohli-linux.qualcomm.com ([10.204.78.26])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Mar 2019 11:23:23 +0530
-Received: by gkohli-linux.qualcomm.com (Postfix, from userid 427023)
-        id 933EB3B35; Wed, 20 Mar 2019 11:23:22 +0530 (IST)
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-To:     srinivas.kandagatla@linaro.org, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org,
-        Shiraz Hashim <shashim@codeaurora.org>,
-        Gaurav Kohli <gkohli@codeaurora.org>
-Subject: [PATCH v0] nvmem: core: Export nvmem cell info to userspace
-Date:   Wed, 20 Mar 2019 11:23:21 +0530
-Message-Id: <1553061201-28894-1-git-send-email-gkohli@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 20 Mar 2019 01:56:55 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p1so906428lfk.9;
+        Tue, 19 Mar 2019 22:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+4xd4ZKNDB3m0ieARPPIoFc39hu3cN9+Na0ezOy9OHY=;
+        b=P40GTrIYiz5RxE0hvQ472heAfnepSBXMm0HrpbsLpEeR722EaogNXkSKiHmE4v8VXp
+         crq619mjOb6gPBg3u8O9bc6kl6XhkjEKW1Yg59s7rQZrcoLuOEmt+VtJXb1VHnbv7pOh
+         0hh2vDfN8svrpcKwVusfKbvTazdhw/p6OGDqeUB+mipC9zTg3fof87K+mhqaRTuaKeZm
+         ablKEs1zHHcHp6PwYHe1FGhBCRR5X8PXmQ1cWzJc80U6QIJXdKmDR6+7gpUNtrgpmHCz
+         J/0fJOiIdp90qm2PoncN+KPDQmiw4D+jL4th4BLUSipVVVG+5t11T3qrs7WHlEbBSWQA
+         lAgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+4xd4ZKNDB3m0ieARPPIoFc39hu3cN9+Na0ezOy9OHY=;
+        b=T4yo23HkKnjlcZxTp42eZGLVOMHbh04Hs6e93XzV9QsCmZgWpS2DaNP7jQKnua7oXw
+         5ultcynybtnI+ADXvrQcZcsGtujn4EdGkWICY13thY2L6rjgwRTljbYEftLS9TtWc/Ws
+         LOFMB892y5fUiLfd2A/fD/Z12U61LKEIamWf077ofZQ/FPpIciIco8q75xOcitKJzP7y
+         xH2PNeqBtiPVuUjmlQ/E8b7DUlxjGAbdIj+kSP+f+bmu1rSKyk/m8MqPHJx2NZAF3IxT
+         p1fXpcyjCb2bORzekDGoOUvYj0WPrs67AsVr2n+VNo/HxnX7kV7GLoPSuHF1w/u87XQT
+         /HDA==
+X-Gm-Message-State: APjAAAXxTrGiXoRjGqp/sU7EMDWqb8xFfqZpWFQOy3GdTJDDVx9H6twF
+        alU6+jG88pw0UUgxPkY2RSKOyhy8KTP+7lWAoRg=
+X-Google-Smtp-Source: APXvYqzfYIqtgAvCKm9bQHmfqLOcVvxaix7CsuhuC+RyWYn3LUjXV3T9LUg9fLTyNpSeGIHB3q0oaT9gy86lcOs6suE=
+X-Received: by 2002:ac2:44a6:: with SMTP id c6mr9743994lfm.31.1553061413168;
+ Tue, 19 Mar 2019 22:56:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190306162252.GA3221@jordon-HP-15-Notebook-PC>
+In-Reply-To: <20190306162252.GA3221@jordon-HP-15-Notebook-PC>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Wed, 20 Mar 2019 11:26:41 +0530
+Message-ID: <CAFqt6zbqc6PX8QFXz1yFq5yEV7S-+8kafEppkLMDHaH8frBaXQ@mail.gmail.com>
+Subject: Re: [PATCH v2] selftest/timers: Remove duplicate header
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>, sboyd@kernel.org,
+        shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shiraz Hashim <shashim@codeaurora.org>
+On Wed, Mar 6, 2019 at 9:48 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> From: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+>
+> Remove duplicate header which is included twice.
+>
+> Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> ---
+> v2: Corrected format.
 
-Existing nvmem framework export full register space
-as nvmem binary, but not exporting child node of nvmem
-which is nvmem cell. Kernel can read the specific cell
-by using nvmem_cell_read but userspace don't have such
-provision.
+Any comment on this patch ?
 
-Add framework to export nvmem cell as well, So
-userspace can use it directly.
-
-Signed-off-by: Shiraz Hashim <shashim@codeaurora.org>
-Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
-Co-developed-by: Gaurav Kohli <gkohli@codeaurora.org>
-
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index f24008b..e4b6160 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -47,6 +47,7 @@ struct nvmem_cell {
- 	int			nbits;
- 	struct device_node	*np;
- 	struct nvmem_device	*nvmem;
-+	struct bin_attribute	attr;
- 	struct list_head	node;
- };
- 
-@@ -99,6 +100,27 @@ static ssize_t type_show(struct device *dev,
- 	return sprintf(buf, "%s\n", nvmem_type_str[nvmem->type]);
- }
- 
-+static ssize_t bin_attr_nvmem_cell_read(struct file *filp, struct kobject *kobj,
-+				    struct bin_attribute *attr,
-+				    char *buf, loff_t pos, size_t count)
-+{
-+	struct nvmem_cell *cell;
-+	size_t len;
-+	u8 *data;
-+
-+	if (attr->private)
-+		cell = attr->private;
-+	else
-+		return -EINVAL;
-+
-+	data = nvmem_cell_read(cell, &len);
-+
-+	len = (len > count) ? count : len;
-+	memcpy(buf, data, len);
-+
-+	return len;
-+}
-+
- static DEVICE_ATTR_RO(type);
- 
- static struct attribute *nvmem_attrs[] = {
-@@ -324,6 +346,7 @@ static void nvmem_cell_drop(struct nvmem_cell *cell)
- {
- 	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_CELL_REMOVE, cell);
- 	mutex_lock(&nvmem_mutex);
-+	device_remove_bin_file(&cell->nvmem->dev, &cell->attr);
- 	list_del(&cell->node);
- 	mutex_unlock(&nvmem_mutex);
- 	of_node_put(cell->np);
-@@ -341,8 +364,24 @@ static void nvmem_device_remove_all_cells(const struct nvmem_device *nvmem)
- 
- static void nvmem_cell_add(struct nvmem_cell *cell)
- {
-+	int rval;
-+	struct bin_attribute *nvmem_cell_attr = &cell->attr;
-+
- 	mutex_lock(&nvmem_mutex);
- 	list_add_tail(&cell->node, &cell->nvmem->cells);
-+
-+	/* add attr for this cell */
-+	nvmem_cell_attr->attr.name = cell->name;
-+	nvmem_cell_attr->attr.mode = 0400;
-+	nvmem_cell_attr->private = cell;
-+	nvmem_cell_attr->size = cell->bytes;
-+	nvmem_cell_attr->read = bin_attr_nvmem_cell_read;
-+	rval = device_create_bin_file(&cell->nvmem->dev, nvmem_cell_attr);
-+	if (rval) {
-+		dev_err(&cell->nvmem->dev,
-+			"Failed to create cell binary file %d\n", rval);
-+	}
-+
- 	mutex_unlock(&nvmem_mutex);
- 	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_CELL_ADD, cell);
- }
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
-a Linux Foundation Collaborative Project.
-
+>
+>  tools/testing/selftests/timers/skew_consistency.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/timers/skew_consistency.c b/tools/testing/selftests/timers/skew_consistency.c
+> index 022b711..8066be9 100644
+> --- a/tools/testing/selftests/timers/skew_consistency.c
+> +++ b/tools/testing/selftests/timers/skew_consistency.c
+> @@ -32,7 +32,6 @@
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <fcntl.h>
+> -#include <stdlib.h>
+>  #include <string.h>
+>  #include <sys/wait.h>
+>  #include "../kselftest.h"
+> --
+> 1.9.1
+>
