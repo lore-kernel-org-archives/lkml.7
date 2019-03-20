@@ -2,87 +2,94 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE13C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27955C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975F72183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pl5M/KSg"
+	by mail.kernel.org (Postfix) with ESMTP id EF42E20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfCTBPT (ORCPT
+        id S1727434AbfCTBQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:15:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45557 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfCTBPS (ORCPT
+        Tue, 19 Mar 2019 21:16:20 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:33198 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726891AbfCTBQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:15:18 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y3so437625pgk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 18:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ECbyCNrL6POmMsnKOC7bnI3ZWNUdHYm5lLii4apClDQ=;
-        b=Pl5M/KSgSIiqLFbRFRJNsQDB9iKle66fx9LX4ByieGMWC8SQBtyP2qVxGhltYS52eu
-         Cu4JrGQBrPZ21Ba3a0BCPjvBHeuk8s0ihIkCsOiR1vweZEtF8v0RcJ3OGwZOuqCvdkfc
-         8aUUsqwVl+eFU87Yt2inqjPTSGmqQv8Bvx6yFstigacWwF/9OzXquTDbu1KqUt7XTW1U
-         +eUa/VfxDch+o44zrnfnoOPOJObGYm0s/0ZoAIboXUW84pMFAAeFOJAPXMoxqxf5+fWZ
-         TfpLFNCnlqjCpiuxwrB+X0Y3mv6zHqa1bocwXzC2seg7CacojwvvykGFT7Z6oJkXzOgu
-         xwjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ECbyCNrL6POmMsnKOC7bnI3ZWNUdHYm5lLii4apClDQ=;
-        b=s55AS8P+Ctjo1lAcJl/JdU56vV3CX/UUB2Mc5iNHlN4Tt/wHkkMhL+rafPsc2JWuop
-         b4eiJ+Jxpbo7sQgd4z031qdnYdLYcg8QHSH5pQM6xEEKpImYjYPNrRFnDNBCLYFCXs4X
-         PqikjeNhTXh3FTtCMRBP//K1tT4fLKDE17f6HblkeqviwEDEV1azlKAGiEKW2lsHTBLt
-         +UMV9+07TucT51OGELdnBiWA0jfKIS1UNxfJgbYBYSRRfK8LG59d12q4dVxCfxMYjLaV
-         Zs+8QriU4z7qVe2mK698rFPqjQqjWg7lLMecwfmwHG1u409eg1MgVXG/G6B9D0TGa6zK
-         EjrQ==
-X-Gm-Message-State: APjAAAWDtEQAI/mWOWX5kmOqZwQxGhSu0fHnY214qFAAaRgvXRkFebco
-        bl6Lslk4ilAj/PYOkZyzFOVLiw==
-X-Google-Smtp-Source: APXvYqzOiMaKl/du02ONuqlh09I6urwHFacOMjJ61ZMMBO06AiW9KIOBH0tP8AoBI73o/uTgZ0wGqg==
-X-Received: by 2002:a17:902:127:: with SMTP id 36mr5139769plb.268.1553044517257;
-        Tue, 19 Mar 2019 18:15:17 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id h65sm253003pgc.93.2019.03.19.18.15.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 18:15:16 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 18:15:16 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Liu Xiang <liu.xiang6@zte.com.cn>
-cc:     cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, liuxiang_1999@126.com
-Subject: Re: [PATCH] slub: remove useless kmem_cache_debug() before
- remove_full()
-In-Reply-To: <1552577313-2830-1-git-send-email-liu.xiang6@zte.com.cn>
-Message-ID: <alpine.DEB.2.21.1903191812360.18028@chino.kir.corp.google.com>
-References: <1552577313-2830-1-git-send-email-liu.xiang6@zte.com.cn>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 19 Mar 2019 21:16:19 -0400
+X-UUID: 5acaf3f785da4174941343a1fe718fbd-20190320
+X-UUID: 5acaf3f785da4174941343a1fe718fbd-20190320
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2014060886; Wed, 20 Mar 2019 09:16:12 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
+ (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 20 Mar
+ 2019 09:16:10 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 20 Mar 2019 09:16:07 +0800
+Message-ID: <1553044567.10179.148.camel@mhfsdcap03>
+Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "Dmitry Torokhov" <dtor@chromium.org>,
+        Johan Hovold <johan@kernel.org>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 20 Mar 2019 09:16:07 +0800
+In-Reply-To: <20190319092331.GA21652@kroah.com>
+References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
+         <1552982059.10179.143.camel@mhfsdcap03> <20190319092331.GA21652@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 955F538629033F00B19B2CD9B759EA3C2EB99E35E36DC06FDE4EDCE978D524C62000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019, Liu Xiang wrote:
+Hi Greg,
 
-> When CONFIG_SLUB_DEBUG is not enabled, remove_full() is empty.
-> While CONFIG_SLUB_DEBUG is enabled, remove_full() can check
-> s->flags by itself. So kmem_cache_debug() is useless and
-> can be removed.
+On Tue, 2019-03-19 at 10:23 +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 19, 2019 at 03:54:19PM +0800, Chunfeng Yun wrote:
+> > 
+> > Hi Felipe & Mathias,
+> > 
+> > Could you please comment this patch, if there is some-effect on dwc3 and
+> > xhci, I'll remove its change.
+typo: some-effect/side-effect
 > 
-> Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+> To be specific, you are changing the string values for things that might
+> care about it and are seen by userspace.
+> 
+> Please be explicit about this, as it could cause problems.
+Thank you for making it more clearer
 
-Acked-by: David Rientjes <rientjes@google.com>
+> 
+> greg k-h
+
+
