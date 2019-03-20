@@ -2,123 +2,127 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71499C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301CDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF062184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09402184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zAQFlvTY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARoHYitU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfCTLo6 (ORCPT
+        id S1728014AbfCTLq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 07:44:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40567 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfCTLo5 (ORCPT
+        Wed, 20 Mar 2019 07:46:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34957 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727419AbfCTLq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 07:44:57 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 3so866556oir.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:44:57 -0700 (PDT)
+        Wed, 20 Mar 2019 07:46:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y197so1701258wmd.0;
+        Wed, 20 Mar 2019 04:46:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Pb9BBWRMDf0NMbm5WI5qoWMAvnwsvdVTg76HNYPXrdE=;
-        b=zAQFlvTYOBHLpoCFXuN78FGCf2O/JqnuWJS6zP/rwWDolySAwreRWu6MhuCKZqo2gN
-         a5eQWd42hyW1hCn1SEYG1FyJKvTKyIEGleRIWNSGFaFJfdXafI4RU3bqKsh5kIUHPGnW
-         IhobsAfnCiPkwpJwZQk3+QyNXbX1OKPKW9YWiTZ9LCQZiWug1vBZN2reIZS/I0deZmUk
-         JjzKGoQwJofSD8OAvOrHeQ3Q9Y657QqOBa66Zkru9rArlPZYCVGmX4ZJdFA+UNUkE+K+
-         pbqiy/IsOJdQb+HnfB/Iu1GuAGanGaLVE043OZEMccDQRxqPZYVFi4M9tle4MnI18RCE
-         JStg==
+        bh=lEqmdZNDzTWB2b9dWzz92G+TNWKuJGorh2fWb/d6sas=;
+        b=ARoHYitUjoTP/9euhu5jgSqQb6V312wZJQ1kTtTt6o1wqx1srTAOc2KtmyXJgRF+Jp
+         cr4eA3WPnikJ9Df0rmXhUcbCt0uQBHYAUao1q1TDikFpCgCAzIQIo5mc796iqT/le3BK
+         8cE/6BCSC3cDbKD5VssH1XGcs8YLLMpFD4Lzu66b0p95xgo5t7Q7T/RMimDXD+KA7e4I
+         HW/nhEVLxYud/eB5seor4c10tSesELbqBTfAhmiwEX4AiOIIaKvt7K1sMop/Zgp+dPmz
+         FdoTYvN2M76LAOTM9ete4TNVKWeToIBeQRndLBxKAXto4GHKTylqHEb38S6Dj5SZRURK
+         dAcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pb9BBWRMDf0NMbm5WI5qoWMAvnwsvdVTg76HNYPXrdE=;
-        b=gXPpO99W22p42REoE9MvKpuO9LJGvd6uQDKfDtsHqWP1u/gSj0CrGG4U463D9ee4WW
-         RUclU/1Xk3A47twf44Qw9vA6EFF5CEtDNQty0w1LpF2dXWl1FdgtCrNc++bSV/4MlMIU
-         22QstOp9AE2AJOv0RdQFXyxOPd15zgV1bTKmIHeHuHQerPVhNBqFZVME5mcBkWA/mKRy
-         k3E0rbBVGrqxCmWdp6HUaOCudeN3ah6X0MLFtheG180EIjd+a/DtimHN2OleU1nnKpuU
-         UZKEeqAAVRHwm+Z9+rJSuMXiarW48NFBHaXVMqgOApJCgVJZHP02rWIDdiU/ZC2Oe2SQ
-         sBLw==
-X-Gm-Message-State: APjAAAWa3Maq4xwT6+9Qyp3ZZT38HSq+cA5cg94VVANtPRWwUKgXBNTZ
-        X9q+bEnpaKBleZfZKjBz0zRfPA==
-X-Google-Smtp-Source: APXvYqya7ruXXcic+5hzX3x7o1Ii1ZMZYPzwT/krtYdKjqHT1eQQ/rUj7AKfRDe7wbeIoI9M4ensIw==
-X-Received: by 2002:aca:e84c:: with SMTP id f73mr4980047oih.163.1553082296914;
-        Wed, 20 Mar 2019 04:44:56 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id a14sm706759otl.46.2019.03.20.04.44.53
+        bh=lEqmdZNDzTWB2b9dWzz92G+TNWKuJGorh2fWb/d6sas=;
+        b=DGZnLQ/nt7uL48rjaKiRh9sYlt+aer9sgVw66/Yjrs/ZiyCOgs8oqTyWC+hmzH23iH
+         O0x1yV9Gf0ZNS8fXUT21dvTtO7lasILGLoDpBp4M/8mT0Gv5Ks2RiJ9/arF6vdRF+Ras
+         DCRvjxcWnioVkkqOCjvoWzBy/xz2kMW4Bn5mos30JwTD5eO2PhAsB9lrNvpNOFriKkbq
+         kn6lNcVt+6n6pwHMYciEkezM/UAPMPrKpNduxbcF8kHv/LQ6ozvta2jjwGQsCeyv9E4C
+         7Ow36o7w21WlAeTq8flR3Aj5/5cRIq9GFifLqfWR+4CYUDfjlOKkvVwUuxF5TjuiaKta
+         cIUg==
+X-Gm-Message-State: APjAAAVBcr0/Hhbo6h9erB13tAISPqHe0c8WmXuvTI79NbxC4RWOBYFa
+        ToemQg9p77wc2cgs8RzG58M=
+X-Google-Smtp-Source: APXvYqz0+ZO72NCMiDuH6wAPneojSXcvKW2aB3ANf2WTkRNUK+2trWAwO7+NCZ2BWRKcj4i/p+Y4aQ==
+X-Received: by 2002:a1c:f70f:: with SMTP id v15mr7769924wmh.86.1553082384127;
+        Wed, 20 Mar 2019 04:46:24 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id b134sm4790939wmd.26.2019.03.20.04.46.22
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 04:44:55 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 19:44:50 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: juno: Enable smmu_pcie for Juno r1/r2
-Message-ID: <20190320114450.GB17539@leoy-ThinkPad-X240s>
-References: <20190320083105.8954-1-leo.yan@linaro.org>
- <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
+        Wed, 20 Mar 2019 04:46:22 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 11:46:21 +0000
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney " <paulmck@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Fam Zheng <fam@euphon.net>, Amnon Ilan <ailan@redhat.com>,
+        John Ferlan <jferlan@redhat.com>
+Subject: Re: [PATCH 7/9] nvme/core: add mdev interfaces
+Message-ID: <20190320114621.GC5542@stefanha-x1.localdomain>
+References: <20190319144116.400-1-mlevitsk@redhat.com>
+ <20190319144116.400-8-mlevitsk@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
 Content-Disposition: inline
-In-Reply-To: <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190319144116.400-8-mlevitsk@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
 
-On Wed, Mar 20, 2019 at 11:24:18AM +0000, Robin Murphy wrote:
-> Hi Leo,
-> 
-> On 20/03/2019 08:31, Leo Yan wrote:
-> > Though PCIe controller has been enabled on Juno r1/r2, but it misses to
-> > enable its connected SMMU.  From the testing, even without set this SMMU
-> > status property to 'okay', the PCIe NIC device still works well.  Since
-> > the SMMU is not enabled in DT binding and its iommu_groups is not
-> > created properly, finally this prevents to enable vfio-pci for NIC
-> > device with KVM.
-> 
-> FWIW, whilst it might appear to be fine, there are still potential issues
-> once the DMA API sees this SMMU and starts using it, which is why this
-> particular change remains as one of my oldest local hacks that I've never
-> yet considered upstreamable.
-> 
-> The IOMMU DMA ops happen to work for light usage now as a side-effect of
-> 122fac030e912 combined with the current top-down allocation behaviour, but
-> as soon as IOVA usage/fragmentation leads to 32-bit DMA addresses below
-> 0x8000000, or full 40-bit addresses, being allocated then data loss and
-> other problems will happen (for the reasons explained on the other thread).
-> Similarly, it's also going to be fragile to any internal changes in the IOVA
-> allocator.
->
-> Until we have a decent solution for handling such 'windowed' DMA
-> restrictions (there do exist other systems with similar behaviour) I'd be
-> very wary of enabling the PCIe SMMU for all users who may not be aware of
-> the caveats. Given that the lack of stream IDs and SR-IOV support prevents
-> Juno from being a realistic virtualisation platform anyway, I'm not
-> convinced there's enough benefit to justify the risk.
+--H8ygTp4AXg6deix2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ah, I didn't connect the 'windowde' DMA restriction with the IOMMU
-property setting in dt, which actually is deliberate.
+On Tue, Mar 19, 2019 at 04:41:14PM +0200, Maxim Levitsky wrote:
+> +int nvme_core_register_mdev_driver(struct nvme_mdev_driver *driver_ops)
+> +{
+> +	struct nvme_ctrl *ctrl;
+> +
+> +	if (mdev_driver_interface)
+> +		return -EEXIST;
+> +
+> +	mdev_driver_interface = driver_ops;
 
-Please drop this patch and will leave it to you.  Thanks a lot for
-related info.
+Can mdev_driver_interface be accessed from two CPUs at the same time?
+mdev_driver_interface isn't protected by the mutex.  The state_changed
+functions below also don't protect mdev_driver_interface.
 
-[...]
+--H8ygTp4AXg6deix2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Leo Yan
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBAgAGBQJckigNAAoJEJykq7OBq3PIZMoH/1lNrGQjkRw1moJsaMe55jSu
+lRTyTaLwuUru6Mg5TxduJLa3rUhqkboCKYw5j+ehvi8Hm4xc5l4YjvuvQK7SiT8G
+eU+owbZyzGaROuJBpzSv4Zwi2UI86MycQAUqLNrgH+xX9gZSymBk6xeMqpZvcPIx
+TQjI/MiXdGAGXtuzH3Al57N4PponUyQEH79+X13mCsRibbFdqHzSYM99cu2iELhw
+KHW8MMc8GaG8uqtUp3gEIGFe/Mjy0OomHg7Y8vLSG42cbkCJXTtCLp4/RVz1R+Cr
+C1/2gQzDs/I3YIB4db30orExFKDmOuVlLSQhqKp3hQltZNJbk8CyF5QFuJGxfME=
+=tFeG
+-----END PGP SIGNATURE-----
+
+--H8ygTp4AXg6deix2--
