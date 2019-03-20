@@ -2,381 +2,149 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64E7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB087C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9688A20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706BC2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uOuNHEhC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6pwB6+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfCTEwl (ORCPT
+        id S1726907AbfCTEyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 00:52:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34701 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfCTEwk (ORCPT
+        Wed, 20 Mar 2019 00:54:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43363 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfCTEyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 00:52:40 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v64so1008866pfb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 21:52:40 -0700 (PDT)
+        Wed, 20 Mar 2019 00:54:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so1159561wre.10;
+        Tue, 19 Mar 2019 21:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rLbMvVYD9xo2PePz/vY4EcBjG9UXoqRREwseQKk9Xbk=;
-        b=uOuNHEhCO6727iMMQlA5YbP7AfYNkROruI6tnTrn5wBEvnQ6it3BYIBS5XkV/9TaYA
-         hkCmH9J9cSg3gaduutp1NKwmUgttpujp99egQaQrBvpC1zMm1Ze5ahHg5Zhnbtbl6q1M
-         ohwbglCuGJFe+76YvUqvw6w4/EfsJGzJjP0YdO5RRX7EEuStoI7fr1bRs4kH4DrhZFCz
-         0jiZ8hyyXbj+jIGsYpq7SEjqp3tiEAu8fprgpBiFupZW8ltPpZDy1zSDD3HmZ3HwmCw1
-         i01wRpF3h5YtIitnIpQSM2SVM/z5lkhBt2dKil5PptG/qvKo8AZngrsPK/L4d6QQ5sxJ
-         vLTA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WwuaKTPR4oq7iRRr0EQJf+bfmHKLxcy5jJviiAT5pi8=;
+        b=a6pwB6+jGhCKRLaD4k64O0C4iHdmuywggoL1N0WDobSspQ6m2xyJFgdvzc5WCktPF4
+         0irp+XgIOis/JrcsVg2QealOkivUOnXRXw1UFrb7vmUpkekSIesKeRnKY0H8hNYwlPgG
+         atf35kAhFNdms4kvaDBuJEuDhmZJWUBECniVxXVLPE9xZQOjlkfS4wlZ7ULRd9SqjB5k
+         EBzmJSXmUYziBrS+Y/KK4G3PRYcay9uTDZj3iXGWwqKceD1yjm2Ir/TXP4bKlij7FgHc
+         tsdv50brkjmpK6D597fFm+RAryeIKA0n79y5xRqaQRp6gHKqtVQyWxjpQVte1VTFETby
+         TaWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rLbMvVYD9xo2PePz/vY4EcBjG9UXoqRREwseQKk9Xbk=;
-        b=lszDRWVokc0Ogdofkg3qg4lGd5LCOlnS7TTGUn61gyB/Cho9DoomO2Z3/HEvMfN7jc
-         ef/QdS3j9Fz/SDx9tMqe6M+QuBIJDAEyO/Nddm4+M3Xf4Trnm8nA90QlmRxkgOc42NTD
-         gzRqpry6DpE6dYecCNaPhwt1tMnbgwjvn+A14xrETqdzL0sMotROqpbx/1BMSHiz+Mlw
-         ljTdFeBe8Ys/1pGa3tv8+m2dP+Z42piJjEuXpdJAQsQS8tlUs6+DKHIWrrGP/hLprZXZ
-         RJk+ZQoOqezH6aioI1ja3D6OuHWGtl8Q4gxqmS/8d4fOXymNwSk94ZdhtCCnqjBOjb1a
-         95lQ==
-X-Gm-Message-State: APjAAAW3Bvfkx65y55HquozZdPMnUuSMCClH+OHshqo14PqEEJPYpvxE
-        tTRs2PsxjEeq+XaBwQ/vt73qNQ==
-X-Google-Smtp-Source: APXvYqxVBK1iLqVcQvIYEqfXjWknN0sfvoXFQs3/nsH6aseniB1meO+6FpbG5MswoF4TlIbHSjxaOA==
-X-Received: by 2002:a65:6299:: with SMTP id f25mr5457014pgv.376.1553057559839;
-        Tue, 19 Mar 2019 21:52:39 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id k17sm836763pfk.166.2019.03.19.21.52.37
+        bh=WwuaKTPR4oq7iRRr0EQJf+bfmHKLxcy5jJviiAT5pi8=;
+        b=eYAZ/8uFyZfQP7bUxff+7e6zRLEGrZVzlI29hNqpJzVGJiDW5CEZZtnc5xgQkx2L4R
+         UzKu3eMlDLIjLFgd5gfSYsW2UaEWlp6+xgFQAUM2oQsdwVneXf51S0aD6U6rmvJ3pXSi
+         p7AJ7ed1EtOlkwF10UUIjdRGpN3WOthWncHJIuFqEGeVBnPt6RRSO7wxX8vLz2+hVYpF
+         /iFzq2DYGluk0Oyl+XXkfEW5ktieIuKcPacUzNZuKwtCLa39DMk6zr1mfszjuJ+7ruSV
+         8NoacDulCGfWCcN1ZTYbuoPm1k6/7egxRpXkAzaE/fIMsP3lMVl7/TShKPoX3madHwKB
+         DGbA==
+X-Gm-Message-State: APjAAAVRwdxiVnGwJ4jllG9q0i3n76a777lJIF9mML7YpZWVBDRixvv5
+        t/jpv7NZtMsYa6TKUoHD2z1jA946
+X-Google-Smtp-Source: APXvYqzWPEDsAkRi8IE3S76/Oxf7Nxv0BZf14MoGYTIC+lgdZ6nO2zrg3qSZzbVCpuey2NcNNnp4cg==
+X-Received: by 2002:adf:dd4a:: with SMTP id u10mr8602421wrm.322.1553057651452;
+        Tue, 19 Mar 2019 21:54:11 -0700 (PDT)
+Received: from [172.31.96.190] ([195.39.71.253])
+        by smtp.gmail.com with ESMTPSA id j64sm952443wmb.36.2019.03.19.21.54.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 21:52:38 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
+        Tue, 19 Mar 2019 21:54:10 -0700 (PDT)
+Subject: Re: [PATCH v4] net: mlx5: Add a missing check on idr_find, free buf
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sparclinux@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH V3] cpufreq: Call transition notifier only once for each policy
-Date:   Wed, 20 Mar 2019 10:22:23 +0530
-Message-Id: <1eb27e3bbcbb2c67e6eadc0893c9b41e5d76894b.1553057341.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+        Ilya Lesokhin <ilyal@mellanox.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190319214244.20212-1-pakki001@umn.edu>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <d65ddd7e-6553-00a4-c261-bd88b7476626@gmail.com>
+Date:   Tue, 19 Mar 2019 21:54:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319214244.20212-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we call these notifiers once for each CPU of the policy->cpus
-cpumask. It would be more optimal if the notifier can be called only
-once and all the relevant information be provided to it. Out of the 23
-drivers that register for the transition notifiers today, only 4 of them
-do per-cpu updates and the callback for the rest can be called only once
-for the policy without any impact.
 
-This would also avoid multiple function calls to the notifier callbacks
-and reduce multiple iterations of notifier core's code (which does
-locking as well).
 
-This patch adds pointer to the cpufreq policy to the struct
-cpufreq_freqs, so the notifier callback has all the information
-available to it with a single call. The five drivers which perform
-per-cpu updates are updated to use the cpufreq policy. The freqs->cpu
-field is redundant now and is removed.
+On 03/19/2019 02:42 PM, Aditya Pakki wrote:
+> idr_find() can return a NULL value to 'flow' which is used without a
+> check. The patch adds a check to avoid potential NULL pointer dereference.
+> 
+> In case of mlx5_fpga_sbu_conn_sendmsg() failure, free buf allocated
+> using kzalloc.
+> 
+> Fixes: ab412e1dd7db ("net/mlx5: Accel, add TLS rx offload routines")
+> ---
+> v3: Reorder buf allocations and flow check.
+> v2: failure to return in case of flow failure.
+> v1: Failed to free buf in case of flow failure.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+> index 5cf5f2a9d51f..8de64e88c670 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+> @@ -217,15 +217,21 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_core_dev *mdev, u32 handle, u32 seq,
+>  	void *cmd;
+>  	int ret;
+>  
+> +	rcu_read_lock();
+> +	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
+> +	rcu_read_unlock();
 
-Acked-by: David S. Miller <davem@davemloft.net> (sparc)
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
+This looks suspect (even before your patch)
 
-V2->V3:
+What prevents flow from disappearing after this rcu_read_lock() ?
 
-- Drop changes for arch/arm/kernel/smp_twd.c as the notifier is removed
-  in 5.1-rc1.
-- Changed implementation in tsc.c as suggested by Rafael and Peterz. We
-  now WARN if more than one CPU is present in the policy.
-- Rebased over 5.1-rc1.
+IMO your patch might prevent a NULL deref, but not use-after-free.
 
- arch/arm/kernel/smp.c       | 24 +++++++++++++++---------
- arch/sparc/kernel/time_64.c | 28 ++++++++++++++++------------
- arch/x86/kernel/tsc.c       |  9 +++++++--
- arch/x86/kvm/x86.c          | 31 ++++++++++++++++++++-----------
- drivers/cpufreq/cpufreq.c   | 19 ++++++++++---------
- include/linux/cpufreq.h     | 14 +++++++-------
- 6 files changed, 75 insertions(+), 50 deletions(-)
-
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index facd4240ca02..c6d37563610a 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -754,15 +754,20 @@ static int cpufreq_callback(struct notifier_block *nb,
- 					unsigned long val, void *data)
- {
- 	struct cpufreq_freqs *freq = data;
--	int cpu = freq->cpu;
-+	struct cpumask *cpus = freq->policy->cpus;
-+	int cpu, first = cpumask_first(cpus);
-+	unsigned int lpj;
- 
- 	if (freq->flags & CPUFREQ_CONST_LOOPS)
- 		return NOTIFY_OK;
- 
--	if (!per_cpu(l_p_j_ref, cpu)) {
--		per_cpu(l_p_j_ref, cpu) =
--			per_cpu(cpu_data, cpu).loops_per_jiffy;
--		per_cpu(l_p_j_ref_freq, cpu) = freq->old;
-+	if (!per_cpu(l_p_j_ref, first)) {
-+		for_each_cpu(cpu, cpus) {
-+			per_cpu(l_p_j_ref, cpu) =
-+				per_cpu(cpu_data, cpu).loops_per_jiffy;
-+			per_cpu(l_p_j_ref_freq, cpu) = freq->old;
-+		}
-+
- 		if (!global_l_p_j_ref) {
- 			global_l_p_j_ref = loops_per_jiffy;
- 			global_l_p_j_ref_freq = freq->old;
-@@ -774,10 +779,11 @@ static int cpufreq_callback(struct notifier_block *nb,
- 		loops_per_jiffy = cpufreq_scale(global_l_p_j_ref,
- 						global_l_p_j_ref_freq,
- 						freq->new);
--		per_cpu(cpu_data, cpu).loops_per_jiffy =
--			cpufreq_scale(per_cpu(l_p_j_ref, cpu),
--					per_cpu(l_p_j_ref_freq, cpu),
--					freq->new);
-+
-+		lpj = cpufreq_scale(per_cpu(l_p_j_ref, first),
-+				    per_cpu(l_p_j_ref_freq, first), freq->new);
-+		for_each_cpu(cpu, cpus)
-+			per_cpu(cpu_data, cpu).loops_per_jiffy = lpj;
- 	}
- 	return NOTIFY_OK;
- }
-diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
-index 3eb77943ce12..89fb05f90609 100644
---- a/arch/sparc/kernel/time_64.c
-+++ b/arch/sparc/kernel/time_64.c
-@@ -653,19 +653,23 @@ static int sparc64_cpufreq_notifier(struct notifier_block *nb, unsigned long val
- 				    void *data)
- {
- 	struct cpufreq_freqs *freq = data;
--	unsigned int cpu = freq->cpu;
--	struct freq_table *ft = &per_cpu(sparc64_freq_table, cpu);
-+	unsigned int cpu;
-+	struct freq_table *ft;
- 
--	if (!ft->ref_freq) {
--		ft->ref_freq = freq->old;
--		ft->clock_tick_ref = cpu_data(cpu).clock_tick;
--	}
--	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
--	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
--		cpu_data(cpu).clock_tick =
--			cpufreq_scale(ft->clock_tick_ref,
--				      ft->ref_freq,
--				      freq->new);
-+	for_each_cpu(cpu, freq->policy->cpus) {
-+		ft = &per_cpu(sparc64_freq_table, cpu);
-+
-+		if (!ft->ref_freq) {
-+			ft->ref_freq = freq->old;
-+			ft->clock_tick_ref = cpu_data(cpu).clock_tick;
-+		}
-+
-+		if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
-+		    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
-+			cpu_data(cpu).clock_tick =
-+				cpufreq_scale(ft->clock_tick_ref, ft->ref_freq,
-+					      freq->new);
-+		}
- 	}
- 
- 	return 0;
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 3fae23834069..b2fe665878f7 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -958,10 +958,15 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
- 	struct cpufreq_freqs *freq = data;
- 	unsigned long *lpj;
- 
-+	if (WARN_ON_ONCE(cpumask_weight(freq->policy->related_cpus) != 1)) {
-+		mark_tsc_unstable("cpufreq changes: related CPUs affected");
-+		return 0;
-+	}
-+
- 	lpj = &boot_cpu_data.loops_per_jiffy;
- #ifdef CONFIG_SMP
- 	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
--		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
-+		lpj = &cpu_data(freq->policy->cpu).loops_per_jiffy;
- #endif
- 
- 	if (!ref_freq) {
-@@ -977,7 +982,7 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
- 		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
- 			mark_tsc_unstable("cpufreq changes");
- 
--		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
-+		set_cyc2ns_scale(tsc_khz, freq->policy->cpu, rdtsc());
- 	}
- 
- 	return 0;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 65e4559eef2f..1ac8c710cccc 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6649,10 +6649,8 @@ static void kvm_hyperv_tsc_notifier(void)
- }
- #endif
- 
--static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
--				     void *data)
-+static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
- {
--	struct cpufreq_freqs *freq = data;
- 	struct kvm *kvm;
- 	struct kvm_vcpu *vcpu;
- 	int i, send_ipi = 0;
-@@ -6696,17 +6694,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
- 	 *
- 	 */
- 
--	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
--		return 0;
--	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
--		return 0;
--
--	smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-+	smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
- 
- 	spin_lock(&kvm_lock);
- 	list_for_each_entry(kvm, &vm_list, vm_list) {
- 		kvm_for_each_vcpu(i, vcpu, kvm) {
--			if (vcpu->cpu != freq->cpu)
-+			if (vcpu->cpu != cpu)
- 				continue;
- 			kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
- 			if (vcpu->cpu != smp_processor_id())
-@@ -6728,8 +6721,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
- 		 * guest context is entered kvmclock will be updated,
- 		 * so the guest will not see stale values.
- 		 */
--		smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-+		smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
- 	}
-+}
-+
-+static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-+				     void *data)
-+{
-+	struct cpufreq_freqs *freq = data;
-+	int cpu;
-+
-+	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
-+		return 0;
-+	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
-+		return 0;
-+
-+	for_each_cpu(cpu, freq->policy->cpus)
-+		__kvmclock_cpufreq_notifier(freq, cpu);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index e10922709d13..fba38bf27d26 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -300,11 +300,14 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 				      struct cpufreq_freqs *freqs,
- 				      unsigned int state)
- {
-+	int cpu;
-+
- 	BUG_ON(irqs_disabled());
- 
- 	if (cpufreq_disabled())
- 		return;
- 
-+	freqs->policy = policy;
- 	freqs->flags = cpufreq_driver->flags;
- 	pr_debug("notification %u of frequency transition to %u kHz\n",
- 		 state, freqs->new);
-@@ -324,10 +327,8 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 			}
- 		}
- 
--		for_each_cpu(freqs->cpu, policy->cpus) {
--			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
--						 CPUFREQ_PRECHANGE, freqs);
--		}
-+		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
-+					 CPUFREQ_PRECHANGE, freqs);
- 
- 		adjust_jiffies(CPUFREQ_PRECHANGE, freqs);
- 		break;
-@@ -337,11 +338,11 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
- 			 cpumask_pr_args(policy->cpus));
- 
--		for_each_cpu(freqs->cpu, policy->cpus) {
--			trace_cpu_frequency(freqs->new, freqs->cpu);
--			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
--						 CPUFREQ_POSTCHANGE, freqs);
--		}
-+		for_each_cpu(cpu, policy->cpus)
-+			trace_cpu_frequency(freqs->new, cpu);
-+
-+		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
-+					 CPUFREQ_POSTCHANGE, freqs);
- 
- 		cpufreq_stats_record_transition(policy, freqs->new);
- 		policy->cur = freqs->new;
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index b160e98076e3..e327523ddff2 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -42,13 +42,6 @@ enum cpufreq_table_sorting {
- 	CPUFREQ_TABLE_SORTED_DESCENDING
- };
- 
--struct cpufreq_freqs {
--	unsigned int cpu;	/* cpu nr */
--	unsigned int old;
--	unsigned int new;
--	u8 flags;		/* flags of cpufreq_driver, see below. */
--};
--
- struct cpufreq_cpuinfo {
- 	unsigned int		max_freq;
- 	unsigned int		min_freq;
-@@ -156,6 +149,13 @@ struct cpufreq_policy {
- 	struct thermal_cooling_device *cdev;
- };
- 
-+struct cpufreq_freqs {
-+	struct cpufreq_policy *policy;
-+	unsigned int old;
-+	unsigned int new;
-+	u8 flags;		/* flags of cpufreq_driver, see below. */
-+};
-+
- /* Only for ACPI */
- #define CPUFREQ_SHARED_TYPE_NONE (0) /* None */
- #define CPUFREQ_SHARED_TYPE_HW	 (1) /* HW does needed coordination */
--- 
-2.21.0.rc0.269.g1a574e7a288b
-
+> +
+> +	if (!flow) {
+> +		WARN_ONCE(1, "Received NULL pointer for handle\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	buf = kzalloc(size, GFP_ATOMIC);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+>  	cmd = (buf + 1);
+>  
+> -	rcu_read_lock();
+> -	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
+> -	rcu_read_unlock();
+>  	mlx5_fpga_tls_flow_to_cmd(flow, cmd);
+>  
+>  	MLX5_SET(tls_cmd, cmd, swid, ntohl(handle));
+> @@ -238,6 +244,8 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_core_dev *mdev, u32 handle, u32 seq,
+>  	buf->complete = mlx_tls_kfree_complete;
+>  
+>  	ret = mlx5_fpga_sbu_conn_sendmsg(mdev->fpga->tls->conn, buf);
+> +	if (ret < 0)
+> +		kfree(buf);
+>  
+>  	return ret;
+>  }
+> 
