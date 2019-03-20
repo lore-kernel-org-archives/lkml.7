@@ -2,93 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB570C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A132C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C292186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47692075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfCTMuT (ORCPT
+        id S1727430AbfCTMwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:50:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53414 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfCTMuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:50:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3364F308792D;
-        Wed, 20 Mar 2019 12:50:18 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 61E855D788;
-        Wed, 20 Mar 2019 12:50:04 +0000 (UTC)
-Message-ID: <f55b768e86e77fd9dc36aa7e2602c4f1fd7cd3b1.camel@redhat.com>
-Subject: Re: [PATCH 7/9] nvme/core: add mdev interfaces
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        Fam Zheng <fam@euphon.net>, Amnon Ilan <ailan@redhat.com>,
-        John Ferlan <jferlan@redhat.com>
-Date:   Wed, 20 Mar 2019 14:50:04 +0200
-In-Reply-To: <20190320114621.GC5542@stefanha-x1.localdomain>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
-         <20190319144116.400-8-mlevitsk@redhat.com>
-         <20190320114621.GC5542@stefanha-x1.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 20 Mar 2019 12:50:18 +0000 (UTC)
+        Wed, 20 Mar 2019 08:52:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37304 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbfCTMwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 08:52:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3714C3AE664F8A08E120;
+        Wed, 20 Mar 2019 20:52:31 +0800 (CST)
+Received: from SHA1000170415.huawei.com (100.106.92.139) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 20 Mar 2019 20:52:22 +0800
+From:   Wanglai Shi <shiwanglai@hisilicon.com>
+To:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <xuwei5@hisilicon.com>, <alexander.shishkin@linux.intel.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <leo.yan@linaro.org>, <suzhuangluan@hisilicon.com>
+Subject: [PATCH v2 0/3] Support static funnel and CoreSight DT on Hikey960
+Date:   Wed, 20 Mar 2019 20:38:07 +0800
+Message-ID: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [100.106.92.139]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-20 at 11:46 +0000, Stefan Hajnoczi wrote:
-> On Tue, Mar 19, 2019 at 04:41:14PM +0200, Maxim Levitsky wrote:
-> > +int nvme_core_register_mdev_driver(struct nvme_mdev_driver *driver_ops)
-> > +{
-> > +	struct nvme_ctrl *ctrl;
-> > +
-> > +	if (mdev_driver_interface)
-> > +		return -EEXIST;
-> > +
-> > +	mdev_driver_interface = driver_ops;
-> 
-> Can mdev_driver_interface be accessed from two CPUs at the same time?
-> mdev_driver_interface isn't protected by the mutex.  The state_changed
-> functions below also don't protect mdev_driver_interface.
+From: Leo Yan <leo.yan@linaro.org>
 
-It can be for sure.
-However the only time it is updated is when the mdev core module load/unload
-routines.
+Since before there have no platforms use static funnel in mainline
+kernel (though maybe some in-house SoC has used it but didn't upstream
+for mainline kernel yet so we don't be aware for it), when enable
+CoreSight DT binding for hikey960, we found the SoC uses the static
+funnel in the link path and but it's not supported in CoreSight funnel
+driver.
 
-On module load the interface flips from NULL to a pointer to inside of the
-module, so this should be safe, and when mdev module unloads, its reference
-counter is 0, and all the callers first try to increase it and fail, they don't
-call using this interface.
+So patches 0001/0002 are two patches to support static funnel, this
+first patch is to update DT documentation to support static funnel (we
+call it as non-configurable funnel in documentation); the second patch
+is to support the static funnel in the CoreSight funnel driver.
 
-I might still be wrong with this reasoning though.
+Credits to Suzuki shared code for CoreSight replicator refactoring,
+patches 0001/0002 heavily follows up the same fashion in Suzuki's shared
+code.
 
-Best regards,
-	Maxim Levitsky
+Patch 0003 is the DT binding for CoreSight enabling on Hikey960, and
+it's the first consumer for use static funnel binding.
+
+This patch set has been tested on Hikey960 with perf command for trace
+data recording and decoding with below commands:
+
+  # perf record -e cs_etm/@20010000.etf/ --per-thread ./main
+  # perf report --tui
+
+
+Leo Yan (2):
+  dt-bindings: arm: coresight: Support non-configurable funnel
+  coresight: funnel: Support static funnel
+
+Wanglai Shi (1):
+  arm64: dts: hi3660: Add CoreSight support
+
+ .../devicetree/bindings/arm/coresight.txt     |  45 +-
+ .../boot/dts/hisilicon/hi3660-coresight.dtsi  | 456 ++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |   2 +
+ .../hwtracing/coresight/coresight-funnel.c    | 112 +++--
+ 4 files changed, 585 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+
+-- 
+2.17.1
 
