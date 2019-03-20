@@ -2,202 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBD0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D961DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EC82146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACC62184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVAeOn5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfCTO5e (ORCPT
+        id S1728336AbfCTO5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:57:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:41468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfCTO5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:57:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34EAD1650;
-        Wed, 20 Mar 2019 07:57:33 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 882833F614;
-        Wed, 20 Mar 2019 07:57:30 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, will.deacon@arm.com,
-        catalin.marinas@arm.com, james.morse@arm.com,
-        julien.thierry@arm.com, wanghaibin.wang@huawei.com,
-        lious.lilei@hisilicon.com, lishuo1@hisilicon.com,
-        zhengxiang9@huawei.com, yuzenghui@huawei.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v2] kvm: arm: Fix handling of stage2 huge mappings
-Date:   Wed, 20 Mar 2019 14:57:19 +0000
-Message-Id: <1553093839-29317-1-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 Mar 2019 10:57:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33466 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfCTO5s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:57:48 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b12so2016029pgk.0;
+        Wed, 20 Mar 2019 07:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xW98coCfzYxTBvXFzTO2cKOFYscWujwDg237aas+aNE=;
+        b=oVAeOn5mXDT7xWp8Nazq1oY7g4GLdWMQgWcxEklEMDeEKx92a/FfEq+O2nVrLyPQ8f
+         JXFo72LP20RrTkcrTxbnu6ggfFyMnCGpC9x3hKI3aTfkySif5v/80zj6ISD98uTqIGYt
+         Kff3wFQ/Fo80jUc9CZYkQHFJ1CCKedvH+54v6jp8HGVFlq927+Vz4XburpzCBdYIJ9YO
+         +aMMLv+YotkJANkEFO9Y4nrUWt9T9oLiYMyE59/Hq9+0Hg9Pt2mMszDYI/gewLv4/cPQ
+         uqADzBMVT0wqpqpg8nnVGiHdEV5I1eRE5zF9zsXut/4+G9AYj8Te+UFaWeDRAGu7qD02
+         EhUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xW98coCfzYxTBvXFzTO2cKOFYscWujwDg237aas+aNE=;
+        b=awoD7Cl32p3cXdUc6h0a2/5iFeQ6+xiPBCPfIx8+x2dLmRC1A1qgBhEirgbAnKAlL0
+         b0y1KsdggKDKgKy6PDy9G6tRfcH+9Hn/0kx9pRgw9gbVqjp2MKF8YZhwCkB+rkVZC+L1
+         2bpuQTd12hjo2igE4R8kptd5yKCp3ZpjvazrgPuuRdNaQhJkbCMoTc3/AVYlnmKRNOXT
+         jA0ZKEeuV1zhLyeRTxfyk3XywuBI6pYBOfT3XBURfxwb4Emry9xtMoQnEjF3FLv+t0k5
+         s7GXntaD2sIZnnR2GNXoSvIotVTyrixdrnfl3Pv15YcQN/NzmLoevlZ/HYuNFrpBPq/2
+         u93g==
+X-Gm-Message-State: APjAAAW72Hr9sQNRiPr71PMwSGudRtebluN8kF3RuKohvhFMdiXnmAZJ
+        m+lmGYeELEXfXUz6vBG899q8NCXx
+X-Google-Smtp-Source: APXvYqz4/qp6HNKn/+WSiUfyZYP5VWN/9NDoOvTkpOckeLNLIbQmM3NZMVNFvuenESsakOQp2KZhzw==
+X-Received: by 2002:a62:e411:: with SMTP id r17mr20298816pfh.127.1553093868289;
+        Wed, 20 Mar 2019 07:57:48 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k27sm3309432pgb.70.2019.03.20.07.57.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 07:57:47 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 07:57:46 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH -next] watchdog: sb_wdog: Make sbwdog_set and sbwdog_pet
+ static
+Message-ID: <20190320145746.GA10980@roeck-us.net>
+References: <20190320134250.13348-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320134250.13348-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We rely on the mmu_notifier call backs to handle the split/merge
-of huge pages and thus we are guaranteed that, while creating a
-block mapping, either the entire block is unmapped at stage2 or it
-is missing permission.
+On Wed, Mar 20, 2019 at 09:42:50PM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fix sparse warning:
+> 
+> drivers/watchdog/sb_wdog.c:70:6: warning: symbol 'sbwdog_set' was not declared. Should it be static?
+> drivers/watchdog/sb_wdog.c:84:6: warning: symbol 'sbwdog_pet' was not declared. Should it be static?
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-However, we miss a case where the block mapping is split for dirty
-logging case and then could later be made block mapping, if we cancel the
-dirty logging. This not only creates inconsistent TLB entries for
-the pages in the the block, but also leakes the table pages for
-PMD level.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Handle this corner case for the huge mappings at stage2 by
-unmapping the non-huge mapping for the block. This could potentially
-release the upper level table. So we need to restart the table walk
-once we unmap the range.
-
-Fixes : ad361f093c1e31d ("KVM: ARM: Support hugetlbfs backed huge pages")
-Reported-by: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zhenghui Yu <yuzenghui@huawei.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-
-Changes since v1:
- - Fix build break on arm32
-   - Add missing definitions for S2_PUD_*
-   - Use kvm_pud_pfn() instead of pud_pfn()
- - Make PUD handling similar to PMD, by dropping the else case
-
- arch/arm/include/asm/stage2_pgtable.h |  2 ++
- virt/kvm/arm/mmu.c                    | 59 +++++++++++++++++++++++++----------
- 2 files changed, 45 insertions(+), 16 deletions(-)
-
-
-diff --git a/arch/arm/include/asm/stage2_pgtable.h b/arch/arm/include/asm/stage2_pgtable.h
-index de20895..9e11dce 100644
---- a/arch/arm/include/asm/stage2_pgtable.h
-+++ b/arch/arm/include/asm/stage2_pgtable.h
-@@ -75,6 +75,8 @@ static inline bool kvm_stage2_has_pud(struct kvm *kvm)
- 
- #define S2_PMD_MASK				PMD_MASK
- #define S2_PMD_SIZE				PMD_SIZE
-+#define S2_PUD_MASK				PUD_MASK
-+#define S2_PUD_SIZE				PUD_SIZE
- 
- static inline bool kvm_stage2_has_pmd(struct kvm *kvm)
- {
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index fce0983..97b5417 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1060,25 +1060,43 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- {
- 	pmd_t *pmd, old_pmd;
- 
-+retry:
- 	pmd = stage2_get_pmd(kvm, cache, addr);
- 	VM_BUG_ON(!pmd);
- 
- 	old_pmd = *pmd;
-+	/*
-+	 * Multiple vcpus faulting on the same PMD entry, can
-+	 * lead to them sequentially updating the PMD with the
-+	 * same value. Following the break-before-make
-+	 * (pmd_clear() followed by tlb_flush()) process can
-+	 * hinder forward progress due to refaults generated
-+	 * on missing translations.
-+	 *
-+	 * Skip updating the page table if the entry is
-+	 * unchanged.
-+	 */
-+	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-+		return 0;
-+
- 	if (pmd_present(old_pmd)) {
- 		/*
--		 * Multiple vcpus faulting on the same PMD entry, can
--		 * lead to them sequentially updating the PMD with the
--		 * same value. Following the break-before-make
--		 * (pmd_clear() followed by tlb_flush()) process can
--		 * hinder forward progress due to refaults generated
--		 * on missing translations.
-+		 * If we already have PTE level mapping for this block,
-+		 * we must unmap it to avoid inconsistent TLB state and
-+		 * leaking the table page. We could end up in this situation
-+		 * if the memory slot was marked for dirty logging and was
-+		 * reverted, leaving PTE level mappings for the pages accessed
-+		 * during the period. So, unmap the PTE level mapping for this
-+		 * block and retry, as we could have released the upper level
-+		 * table in the process.
- 		 *
--		 * Skip updating the page table if the entry is
--		 * unchanged.
-+		 * Normal THP split/merge follows mmu_notifier callbacks and do
-+		 * get handled accordingly.
- 		 */
--		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
--			return 0;
--
-+		if (!pmd_thp_or_huge(old_pmd)) {
-+			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
-+			goto retry;
-+		}
- 		/*
- 		 * Mapping in huge pages should only happen through a
- 		 * fault.  If a page is merged into a transparent huge
-@@ -1090,8 +1108,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- 		 * should become splitting first, unmapped, merged,
- 		 * and mapped back in on-demand.
- 		 */
--		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
--
-+		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
- 		pmd_clear(pmd);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
-@@ -1107,6 +1124,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- {
- 	pud_t *pudp, old_pud;
- 
-+retry:
- 	pudp = stage2_get_pud(kvm, cache, addr);
- 	VM_BUG_ON(!pudp);
- 
-@@ -1114,14 +1132,23 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- 
- 	/*
- 	 * A large number of vcpus faulting on the same stage 2 entry,
--	 * can lead to a refault due to the
--	 * stage2_pud_clear()/tlb_flush(). Skip updating the page
--	 * tables if there is no change.
-+	 * can lead to a refault due to the stage2_pud_clear()/tlb_flush().
-+	 * Skip updating the page tables if there is no change.
- 	 */
- 	if (pud_val(old_pud) == pud_val(*new_pudp))
- 		return 0;
- 
- 	if (stage2_pud_present(kvm, old_pud)) {
-+		/*
-+		 * If we already have table level mapping for this block, unmap
-+		 * the range for this block and retry.
-+		 */
-+		if (!stage2_pud_huge(kvm, old_pud)) {
-+			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
-+			goto retry;
-+		}
-+
-+		WARN_ON_ONCE(kvm_pud_pfn(old_pud) != kvm_pud_pfn(*new_pudp));
- 		stage2_pud_clear(kvm, pudp);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
--- 
-2.7.4
-
+> ---
+>  drivers/watchdog/sb_wdog.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
+> index 3abae50..8264fced 100644
+> --- a/drivers/watchdog/sb_wdog.c
+> +++ b/drivers/watchdog/sb_wdog.c
+> @@ -67,7 +67,7 @@ static DEFINE_SPINLOCK(sbwd_lock);
+>   *
+>   * wdog is the iomem address of the cfg register
+>   */
+> -void sbwdog_set(char __iomem *wdog, unsigned long t)
+> +static void sbwdog_set(char __iomem *wdog, unsigned long t)
+>  {
+>  	spin_lock(&sbwd_lock);
+>  	__raw_writeb(0, wdog);
+> @@ -81,7 +81,7 @@ void sbwdog_set(char __iomem *wdog, unsigned long t)
+>   *
+>   * wdog is the iomem address of the cfg register
+>   */
+> -void sbwdog_pet(char __iomem *wdog)
+> +static void sbwdog_pet(char __iomem *wdog)
+>  {
+>  	spin_lock(&sbwd_lock);
+>  	__raw_writeb(__raw_readb(wdog) | 1, wdog);
+> -- 
+> 2.7.0
+> 
+> 
