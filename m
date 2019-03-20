@@ -2,119 +2,176 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E577C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79069C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E6021850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553064924;
-	bh=yVXscwuRDKrELvxDrOSnld8kZH5IC4c9kxf9tEXRpw4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ik7elfiy/CuPoa8OWgDgbf7mXFZg96abmyRKiuOg7lvmopBXTS0cLoNwjFr4M1WLX
-	 pLlgdMfa+4dqyCi81vGDQTSEB7MXrGP3YY4G+zG2mpyRAsTV3L0oYDq0sc6MIN+meF
-	 wPKpKT47xwQ7e8tE1O8gXX8G1hSZ9esmve9ZFqm8=
+	by mail.kernel.org (Postfix) with ESMTP id 391672184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qbcMNwbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfCTGzX (ORCPT
+        id S1727210AbfCTG5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 02:55:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4493 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfCTGzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 02:55:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 23:55:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,248,1549958400"; 
-   d="asc'?scan'208";a="124167130"
-Received: from pipin.fi.intel.com (HELO localhost) ([10.237.72.175])
-  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2019 23:55:15 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Johan Hovold <johan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Matteo Croce <mcroce@redhat.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
-In-Reply-To: <1553044567.10179.148.camel@mhfsdcap03>
-References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com> <1552982059.10179.143.camel@mhfsdcap03> <20190319092331.GA21652@kroah.com> <1553044567.10179.148.camel@mhfsdcap03>
-Date:   Wed, 20 Mar 2019 08:55:11 +0200
-Message-ID: <87r2b2ujao.fsf@linux.intel.com>
+        Wed, 20 Mar 2019 02:57:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33018 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfCTG5H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 02:57:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b12so1091186pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 23:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yVNCJ1oojDym+rOOCLnijlSHrKrc/EZsBAi349G+qrU=;
+        b=qbcMNwbg1hBWZYz2UN//8KxicSOwLTBuNqXMQJXaXkGsqgNgMZr8dAnVbriGkZs/Pe
+         qTTn7ePYLwEVnsLyeZ9RJO2I9GUK/xjC+VZUyfqLh4UwYsLOEyJvXNHx5jaHTxmzT1tm
+         CiTzVoD+FYFXwMpgzH36RRN2oK1xjFSyk6JYT+kLAx+Y5OrhMCsVIvZAsmkg9Cw+4EwS
+         Cxj8mhOFPLqicrWdNp+IzIC8yXiO3wUuoL9o1VTh3FqJyqrVQktO+q9e+KZ/o5tMmYhJ
+         uBPk9D8ycq2kVEuWc9Evs/nLLDWX7a78IykapMzO6mOWYsevhuBmj8iZNKDgZwC5G3Lb
+         Il0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yVNCJ1oojDym+rOOCLnijlSHrKrc/EZsBAi349G+qrU=;
+        b=l4IoobgVhkKv1trA02PisRoq7OUDm+KVbEBXva2lPZnJKjjFBEv6Wa/XW6aVlbP6Ux
+         tONHDQKobkIyNH3u9lG6CgyrBnaHi60Pf7QDKPuGYIn+d3dpajf+cRkKpDrWPfBmAz9W
+         hhlsY19p4QzlfWgNLUODaAxkkKbpsIe7Wo3DBMVq550oZ6ZA9lg/QrNsf1x2zd/XxgBV
+         mIsObsTKhYi5pNyFYSjxywjXscdILqJ2eufnfu2btDaShNRSaPJPXj8mU8hlX9sI2QYV
+         pHY0ZhsJcWtXJS1YO3Oz/BBCZSTDaHbKZ/MA1qxYw9YquKCGociCqVWZb9MkvTxlcGme
+         Kkmg==
+X-Gm-Message-State: APjAAAXEC0ZzcJ9YBB5zlqOuJuy6Ib/JozI6Qq9Tttfb++Ort4Gzq79g
+        4StbyqN60wC7u7g0foL+kScG
+X-Google-Smtp-Source: APXvYqy5CjUzB98H1MM/K2zkWRZNxyp8QfBaFDJkEYZR+S/Orf6/ZT4MSBjBkFESlzzo+4o89NAApw==
+X-Received: by 2002:a17:902:ba98:: with SMTP id k24mr21559221pls.185.1553065026477;
+        Tue, 19 Mar 2019 23:57:06 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:608d:553:e11a:9b5b:79f9:9f93])
+        by smtp.gmail.com with ESMTPSA id f2sm3068118pgn.43.2019.03.19.23.57.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 23:57:05 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 12:26:58 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     linux@armlinux.org.uk, xuwei5@hisilicon.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, peter.griffin@linaro.org,
+        guodong.xu@linaro.org, haojian.zhuang@linaro.org,
+        rmk+kernel@armlinux.org.uk
+Subject: Re: [PATCH 1/2] amba: Take device out of reset before reading pid
+ and cid values
+Message-ID: <20190320065658.GA22381@Mani-XPS-13-9360>
+References: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org>
+ <20190309015635.5401-2-manivannan.sadhasivam@linaro.org>
+ <20190312122711.b2ibipico2dgavl7@holly.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312122711.b2ibipico2dgavl7@holly.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Daniel,
 
-Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+On Tue, Mar 12, 2019 at 12:27:11PM +0000, Daniel Thompson wrote:
+> On Sat, Mar 09, 2019 at 07:26:34AM +0530, Manivannan Sadhasivam wrote:
+> > For the AMBA Primecell devices having the reset lines wired, it is
+> > necessary to take them out of reset before reading the pid and cid values.
+> > Earlier we were dependent on the bootloader to do this but a more cleaner
+> > approach would be to do it in the kernel itself. Hence, this commit
+> > deasserts the reset line just before reading the pid and cid values.
+> > 
+> > Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/amba/bus.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> > index 41b706403ef7..da8f1aac5315 100644
+> > --- a/drivers/amba/bus.c
+> > +++ b/drivers/amba/bus.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/limits.h>
+> >  #include <linux/clk/clk-conf.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/reset.h>
+> >  
+> >  #include <asm/irq.h>
+> >  
+> > @@ -352,6 +353,7 @@ static void amba_device_release(struct device *dev)
+> >  
+> >  static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+> >  {
+> > +	struct reset_control *rst;
+> >  	u32 size;
+> >  	void __iomem *tmp;
+> >  	int i, ret;
+> > @@ -388,6 +390,13 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+> >  	if (ret == 0) {
+> >  		u32 pid, cid;
+> >  
+> > +		/* De-assert the reset line to take the device out of reset */
+> > +		rst = reset_control_get_optional_exclusive(&dev->dev, NULL);
+> > +		if (IS_ERR(rst))
+> > +			return PTR_ERR(rst);
+> 
+> It is really correct to propagate an error if we cannot get exclusive
+> ownership of the reset line.
+> 
+> With drivers for vendor specific cells it is ok to "just know" that the
+> reset line is never shared but we cannot know this for generic cells and
+> we certainly can't know this for the bus.
+> 
+> I think it *might* be OK to propagate an error if you used
+> reset_control_get_optional_shared() instead because if that reports an
+> error than arguably we have either a mistake in the DT or a bug in the
+> driver we are sharing a reset with.
+> 
 
-> Hi Greg,
->
-> On Tue, 2019-03-19 at 10:23 +0100, Greg Kroah-Hartman wrote:
->> On Tue, Mar 19, 2019 at 03:54:19PM +0800, Chunfeng Yun wrote:
->> >=20
->> > Hi Felipe & Mathias,
->> >=20
->> > Could you please comment this patch, if there is some-effect on dwc3 a=
-nd
->> > xhci, I'll remove its change.
-> typo: some-effect/side-effect
+Hmm. I'm not sure whether we can assume shared reset lines here or not! Maybe
+Russell can share his opinion here.
 
-well, we don't really know if there are tools parsing the output. The
-side-effect _does_ exist (i.e. you change the string :-), what we don't
-know is if this will cause problems to possibly existing tools.
+> 
+> > +
+> > +		reset_control_deassert(rst);
+> 
+> Perhaps we might also need to explain why we can ignore -ENOTSUPP
+> here. Perhaps something like the following based on the comment
+> found in in reset_control_deassert():
+> 
+> 		/*
+> 		 * -ENOTSUPP means occurs when the reset controller
+> 		 * does not implement .deassert(), in which case the
+> 		 * the reset lines should be self-deasserting (and
+> 		 * deasserted by default).
+> 		 */
+> 		WARN_ON(deassert did not return 0 or -ENOTSUPP);
 
-Personally, I don't mind the patch, but if it breaks existing parsers,
-that would be a little annoying.
+Ack.
 
-=2D-=20
-balbi
+> > +
+> >  		/*
+> >  		 * Read pid and cid based on size of resource
+> >  		 * they are located at end of region
+> 
+> This looks like it will leak the control reference... shouldn't there
+> be a put after you have read the pid/cid?
+> 
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes, but it can come before this as well. Right after deassert.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Mani
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlyR488ACgkQzL64meEa
-mQaAWg//S95naaisDElfGnzXqBw3k2BoHlVBjEBB8ZxEjMzsKRAeg6D+9cUcnr/X
-He/uixVvKfFAnAUVpOFe6gCJi+djcJ+XiPWkPerR0Rrpe2/jk2UN1czQgtf1HRR2
-K4hyy9wny3xoKguLXs8qTCqBW6WnKRhrrfP0XR5X8xN8Nz9bFcqdvN0rj9TAguoO
-LROa4F8afo1M5ImdXA0wnjQkFqVUZNP9/feXlTPjXDWVBK5AdwRFf+ErUXJCofJ+
-YEF05yfB+rnrr4ttlZ6MMWJQ+2CmqxQ0xk0w4aqubhWwbrw6f1LJDNj3j+9cA4mS
-G7H+ZHBBfpa+93X1iyDPkBv0pE+Ztx6s4UkN3B/YbM6IUwYoID14sBKjcmwzpeYS
-0aUc1Fi/91qsj747UyMWwhZFlLhFyycl8oajr+YIz0oWYZBO5S5W4RQ+txOO0YJZ
-3dPE/boIblZaY9GqmLQDtEHHpw7jeynu6+JJWpY6dowiHvLjSGAnbnZisHgdOtxy
-crm+gcocmt5Czl0FVBeuSDQdv5cMfrGIB4bTUa8uuS72WkNVIownQzG4VUl1LH8J
-rudrRmca2jZiq3iP8EXsukiITglgde5hTrN6p8ONK9ZTT8b7DV4OC8osGkOIZ+Eq
-Slx/MHsARCrK+J6h5BzBPom+Wl0rUusvIanvS5zPhqEJ5qRkPPE=
-=A4FC
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> Daniel.
