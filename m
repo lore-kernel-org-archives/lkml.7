@@ -6,109 +6,93 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089C9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F0CC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C082146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11C72146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="URzV/Rxa"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZpUU6kNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfCTIGj (ORCPT
+        id S1727734AbfCTIGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:06:39 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52672 "EHLO pegase1.c-s.fr"
+        Wed, 20 Mar 2019 04:06:40 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:25205 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfCTIGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:06:39 -0400
+        id S1727438AbfCTIGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 04:06:40 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44PMvK3hZcz9v0sG;
-        Wed, 20 Mar 2019 09:06:37 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44PMvL16Slz9v0sH;
+        Wed, 20 Mar 2019 09:06:38 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=URzV/Rxa; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=ZpUU6kNE; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7osTP4gvoruF; Wed, 20 Mar 2019 09:06:37 +0100 (CET)
+        with ESMTP id KlrkXiYREPx0; Wed, 20 Mar 2019 09:06:38 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44PMvK2YBzz9v0sF;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44PMvK75DBz9v0sF;
         Wed, 20 Mar 2019 09:06:37 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553069197; bh=qnnGg1Y54Lzp4P9+gj+fIZn03za/PcqnmOetVqUvDB8=;
-        h=From:Subject:To:Cc:Date:From;
-        b=URzV/RxaGrGa+SAz96KVBFxP17rBs3T+7mJOTDq9deLR/mEN4PqKGiP2cGF8uYXuf
-         68b33Ae7DAJggT5Kl/YuZtSL34UfqSuhdHBygF4lhzoc6KxwM4oIWspvIzyaDXmR0C
-         buZnWmem/Fb24b+3tXq7x+LFEIil/xJ8/r5bCMQQ=
+        t=1553069198; bh=ojpYivvnzd/xdpAwdvwKku22o+9yC4Pjbi1/EclCr8U=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=ZpUU6kNEhxF+MHjv4DGccRhPqTByXAcdFfRkVY4WTtSNyf8GW1O60A4z7f4jTx3H6
+         JAfffYCBhQYirDzVGNyj1b+UizgvlKKvJm+iQs8/8FbTEit/o7hee21GtjMv/tZdnN
+         WSdkz1YIZoZU+JqDhsGe7mLvkj23SdoHXXe+/bYk=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4FD248B8FD;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E66A08B8FE;
         Wed, 20 Mar 2019 09:06:38 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xDmkBSPnEuHo; Wed, 20 Mar 2019 09:06:38 +0100 (CET)
+        with ESMTP id uVY4vAfYH4uB; Wed, 20 Mar 2019 09:06:38 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 16AA48B8F8;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA6928B8F8;
         Wed, 20 Mar 2019 09:06:38 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id ACB7863AF9; Wed, 20 Mar 2019 08:06:37 +0000 (UTC)
-Message-Id: <67ed3a31a16b9ece870ec55139e83c86d4d9ce60.1553069097.git.christophe.leroy@c-s.fr>
+        id B73EE63AF9; Wed, 20 Mar 2019 08:06:38 +0000 (UTC)
+Message-Id: <d781ed8028f6c4284bd81bd292bb9c5b67bd22ac.1553069097.git.christophe.leroy@c-s.fr>
+In-Reply-To: <67ed3a31a16b9ece870ec55139e83c86d4d9ce60.1553069097.git.christophe.leroy@c-s.fr>
+References: <67ed3a31a16b9ece870ec55139e83c86d4d9ce60.1553069097.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 1/3] powerpc/32s: drop Hash_end
+Subject: [PATCH 2/3] powerpc/32s: don't try to print hash table address.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 08:06:37 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 08:06:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hash_end has never been used, drop it.
+Due to %p, (ptrval) is printed in lieu of the hash table address.
+
+showing the hash table address isn't an operationnal need so just
+don't print it.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/mmu_decl.h   | 2 +-
- arch/powerpc/mm/ppc_mmu_32.c | 4 +---
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 74ff61dabcb1..f7f1374ba3ee 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -104,7 +104,7 @@ extern int __map_without_bats;
- extern unsigned int rtas_data, rtas_size;
- 
- struct hash_pte;
--extern struct hash_pte *Hash, *Hash_end;
-+extern struct hash_pte *Hash;
- extern unsigned long Hash_size, Hash_mask;
- 
- #endif /* CONFIG_PPC32 */
 diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index f29d2f118b44..302409fcfbc7 100644
+index 302409fcfbc7..088f14d57cce 100644
 --- a/arch/powerpc/mm/ppc_mmu_32.c
 +++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -36,7 +36,7 @@
- 
- #include "mmu_decl.h"
- 
--struct hash_pte *Hash, *Hash_end;
-+struct hash_pte *Hash;
- unsigned long Hash_size, Hash_mask;
- unsigned long _SDR1;
- 
-@@ -345,8 +345,6 @@ void __init MMU_init_hw(void)
+@@ -345,8 +345,8 @@ void __init MMU_init_hw(void)
  		      __func__, Hash_size, Hash_size);
  	_SDR1 = __pa(Hash) | SDR1_LOW_BITS;
  
--	Hash_end = (struct hash_pte *) ((unsigned long)Hash + Hash_size);
--
- 	printk("Total memory = %lldMB; using %ldkB for hash table (at %p)\n",
- 	       (unsigned long long)(total_memory >> 20), Hash_size >> 10, Hash);
+-	printk("Total memory = %lldMB; using %ldkB for hash table (at %p)\n",
+-	       (unsigned long long)(total_memory >> 20), Hash_size >> 10, Hash);
++	pr_info("Total memory = %lldMB; using %ldkB for hash table\n",
++		(unsigned long long)(total_memory >> 20), Hash_size >> 10);
  
+ 
+ 	/*
 -- 
 2.13.3
 
