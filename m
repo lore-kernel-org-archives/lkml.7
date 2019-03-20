@@ -2,98 +2,209 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65149C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B9C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B543213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:18:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PzUxnAzh"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5002175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfCTES3 (ORCPT
+        id S1726417AbfCTEd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 00:18:29 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19849 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfCTES2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 00:18:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c91bf160000>; Tue, 19 Mar 2019 21:18:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 Mar 2019 21:18:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 Mar 2019 21:18:27 -0700
-Received: from [10.25.74.141] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Mar
- 2019 04:18:24 +0000
-Subject: Re: [PATCH v3] ARM: tegra: enforce PM requirement
-To:     Dmitry Osipenko <digetx@gmail.com>, <linux@armlinux.org.uk>,
-        <jhogan@kernel.org>, <jonathanh@nvidia.com>, <treding@nvidia.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1551255628-4794-1-git-send-email-spujar@nvidia.com>
- <6e5bf310-12b5-26a3-f466-95cc56c6932a@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <226b42a9-766f-2124-6af9-891694ad1195@nvidia.com>
-Date:   Wed, 20 Mar 2019 09:48:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 20 Mar 2019 00:33:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47700 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbfCTEd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 00:33:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B620F81E09;
+        Wed, 20 Mar 2019 04:33:26 +0000 (UTC)
+Received: from redhat.com (ovpn-120-246.rdu2.redhat.com [10.10.120.246])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E74018EC9;
+        Wed, 20 Mar 2019 04:33:22 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 00:33:20 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190320043319.GA7431@redhat.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com>
+ <20190319141416.GA3879@redhat.com>
+ <20190319212346.GA26298@dastard>
+ <20190319220654.GC3096@redhat.com>
+ <20190319235752.GB26298@dastard>
+ <20190320000838.GA6364@redhat.com>
+ <c854b2d6-5ec1-a8b5-e366-fbefdd9fdd10@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <6e5bf310-12b5-26a3-f466-95cc56c6932a@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553055510; bh=J31mxn0xE6EJ1K4K+0budBSjg7LEa82DFKPhOdancq0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=PzUxnAzhi2Fdz/2Kfc7Cj4SU3ca1SiCBANc+btNXgB5viRLS8cOI5pjwlfBRWJefT
-         mNe6Aoc4EXLIx4fSnkQmIs7ZCf1B+3URDKaomRjMcEX3mAN0VPQ3kSm/zNPwIGb+VC
-         H/zfVlQumRbg9F2nMmpm3UBULpGVfCM9pXlvD3ir/yZNLamA0FJ/mbM8oeXxxZkJlu
-         LrPFSGnP98hsuUgnUL493088zK+9XcxmLfXsYxXkDnGuwF+bSGT2349p9g8UHfvDNT
-         Quirhh+ByvWBtIsS3JnBl+bqeyTCqyfzLg8n3avKNXWbPirVnc1unPIts+JYXNhM7q
-         ZTEeQDZTUQ1iw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c854b2d6-5ec1-a8b5-e366-fbefdd9fdd10@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 20 Mar 2019 04:33:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 06:43:45PM -0700, John Hubbard wrote:
+> On 3/19/19 5:08 PM, Jerome Glisse wrote:
+> > On Wed, Mar 20, 2019 at 10:57:52AM +1100, Dave Chinner wrote:
+> >> On Tue, Mar 19, 2019 at 06:06:55PM -0400, Jerome Glisse wrote:
+> >>> On Wed, Mar 20, 2019 at 08:23:46AM +1100, Dave Chinner wrote:
+> >>>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
+> >>>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
+> >>>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
+> >>>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+> >>>>>>>> From: John Hubbard <jhubbard@nvidia.com>
+> >>>>>> [...]
+> >>>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
+> >>>>> about set_page_dirty() and Andrea had the good idea of maybe doing
+> >>>>> the set_page_dirty() at GUP time (when GUP with write) not when the
+> >>>>> GUP user calls put_page(). We can do that by setting the dirty bit
+> >>>>> in the pte for instance. They are few bonus of doing things that way:
+> >>>>>     - amortize the cost of calling set_page_dirty() (ie one call for
+> >>>>>       GUP and page_mkclean()
+> >>>>>     - it is always safe to do so at GUP time (ie the pte has write
+> >>>>>       permission and thus the page is in correct state)
+> >>>>>     - safe from truncate race
+> >>>>>     - no need to ever lock the page
+> >>>>
+> >>>> I seem to have missed this conversation, so please excuse me for
+> >>>
+> >>> The set_page_dirty() at GUP was in a private discussion (it started
+> >>> on another topic and drifted away to set_page_dirty()).
+> >>>
+> >>>> asking a stupid question: if it's a file backed page, what prevents
+> >>>> background writeback from cleaning the dirty page ~30s into a long
+> >>>> term pin? i.e. I don't see anything in this proposal that prevents
+> >>>> the page from being cleaned by writeback and putting us straight
+> >>>> back into the situation where a long term RDMA is writing to a clean
+> >>>> page....
+> >>>
+> >>> So this patchset does not solve this issue.
+> >>
+> >> OK, so it just kicks the can further down the road.
+> >>
+> >>>     [3..N] decide what to do for GUPed page, so far the plans seems
+> >>>          to be to keep the page always dirty and never allow page
+> >>>          write back to restore the page in a clean state. This does
+> >>>          disable thing like COW and other fs feature but at least
+> >>>          it seems to be the best thing we can do.
+> >>
+> >> So the plan for GUP vs writeback so far is "break fsync()"? :)
+> >>
+> >> We might need to work on that a bit more...
+> > 
+> > Sorry forgot to say that we still do write back using a bounce page
+> > so that at least we write something to disk that is just a snapshot
+> > of the GUPed page everytime writeback kicks in (so either through
+> > radix tree dirty page write back or fsync or any other sync events).
+> > So many little details that i forgot the big chunk :)
+> > 
+> > Cheers,
+> > Jérôme
+> > 
+> 
+> Dave, Jan, Jerome,
+> 
+> Bounce pages for periodic data integrity still seem viable. But for the
+> question of things like fsync or truncate, I think we were zeroing in
+> on file leases as a nice building block.
+> 
+> Can we revive the file lease discussion? By going all the way out to user
+> space and requiring file leases to be coordinated at a high level in the
+> software call chain, it seems like we could routinely avoid some of the
+> worst conflicts that the kernel code has to resolve.
+> 
+> For example:
+> 
+> Process A
+> =========
+>     gets a lease on file_a that allows gup 
+>         usage on a range within file_a
+> 
+>     sets up writable DMA:
+>         get_user_pages() on the file_a range
+>         start DMA (independent hardware ops)
+>             hw is reading and writing to range
+> 
+>                                                     Process B
+>                                                     =========
+>                                                     truncate(file_a)
+>                                                        ...
+>                                                        __break_lease()
+>     
+>     handle SIGIO from __break_lease
+>          if unhandled, process gets killed
+>          and put_user_pages should get called
+>          at some point here
+> 
+> ...and so this way, user space gets to decide the proper behavior,
+> instead of leaving the kernel in the dark with an impossible decision
+> (kill process A? Block process B? User space knows the preference,
+> per app, but kernel does not.)
 
-On 2/27/2019 7:01 PM, Dmitry Osipenko wrote:
-> 27.02.2019 11:20, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Currently runtime PM is enabled for Tegra HDA driver. One of the concern
->> raised was about handling !PM case in HDA driver. In this case, there is
->> a need to manage clocks and power explicitly in the driver and reviewers
->> were not really convinced about this. The consensus at the end was to
->> enforce PM requirement to keep things simple, rather driver mentioning a
->> dependency on PM. This is how it is done for ARM 64-bit Tegra platforms
->> and the same can be done for 32-bit Tegra platforms too.
->>
->> Finally the objective is to remove dependency on PM availability for all
->> Tegra drivers. The detailed discussion can be found in following patch,
->> https://patchwork.ozlabs.org/patch/1031007/
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
->> ---
-> The commit message is okay to me this time, thanks! I'm still not super-h=
-appy to lose the !PM option because of its value in regards to the PM debug=
-ging, but again we can just do something better in that regards later on if=
- will be really needed.
->
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Do we have any further concerns over the patch? Request maintainers for=20
-merge otherwise.
+There is no need to kill anything here ... if truncate happens then
+the GUP user is just GUPing page that do not correspond to anything
+anymore. This is the current behavior and it is what GUP always has
+been. By the time you get the page from GUP there is no garantee that
+they correspond to anything.
+
+If a device really want to mirror process address faithfully then the
+hardware need to make little effort either have something like ATS/
+PASID or be able to abide mmu notifier.
+
+If we start blocking existing syscall just because someone is doing a
+GUP we are opening a pandora box. It is not just truncate, it is a
+whole range of syscall that deals with either file or virtual address.
+
+The semantic of GUP is really the semantic of direct I/O and the
+virtual address you are direct I/O-ing to/from and the rule there is:
+do not do anything stupid to those virtual addresses while you are
+doing direct I/O with them (no munmap, mremap, madvise, truncate, ...).
+
+
+Same logic apply to file, when two process do thing to same file there
+the kernel never get in the way of one process doing something the
+other process did not expect. For instance one process mmaping the file
+the other process truncating the file, if the first process try to access
+the file through the mmap after the truncation it will get a sigbus.
+
+So i believe best we could do is send a SIGBUS to the process that has
+GUPed a range of a file that is being truncated this would match what
+we do for CPU acces. There is no reason access through GUP should be
+handled any differently.
+
+Cheers,
+Jérôme
