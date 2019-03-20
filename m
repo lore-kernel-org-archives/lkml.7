@@ -3,64 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CD6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B1CC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC122146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287E221850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfCTHm2 (ORCPT
+        id S1727509AbfCTHuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:42:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59700 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfCTHm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:42:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43EF988ABD;
-        Wed, 20 Mar 2019 07:42:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB625D788;
-        Wed, 20 Mar 2019 07:42:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <87o966uj6z.fsf@linux.intel.com>
-References: <87o966uj6z.fsf@linux.intel.com> <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk> <155257998686.13720.8551460564620091523.stgit@warthog.procyon.org.uk>
+        Wed, 20 Mar 2019 03:50:02 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:34568 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726802AbfCTHuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 03:50:02 -0400
+X-UUID: 2e6fc7c51e58446989dccb26774ac9f5-20190320
+X-UUID: 2e6fc7c51e58446989dccb26774ac9f5-20190320
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 29587343; Wed, 20 Mar 2019 15:49:45 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 20 Mar
+ 2019 15:49:43 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 20 Mar 2019 15:49:42 +0800
+Message-ID: <1553068182.10179.166.camel@mhfsdcap03>
+Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Felipe Balbi <balbi@kernel.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-usb@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 31/38] vfs: Convert gadgetfs to fs_context
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "Dmitry Torokhov" <dtor@chromium.org>,
+        Johan Hovold <johan@kernel.org>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 20 Mar 2019 15:49:42 +0800
+In-Reply-To: <87r2b2ujao.fsf@linux.intel.com>
+References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
+         <1552982059.10179.143.camel@mhfsdcap03> <20190319092331.GA21652@kroah.com>
+         <1553044567.10179.148.camel@mhfsdcap03> <87r2b2ujao.fsf@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27310.1553067744.1@warthog.procyon.org.uk>
-Date:   Wed, 20 Mar 2019 07:42:24 +0000
-Message-ID: <27311.1553067744@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 20 Mar 2019 07:42:27 +0000 (UTC)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Felipe Balbi <balbi@kernel.org> wrote:
+Hi Felipe,
 
-> looks like a mostly mechanical change. Do you want this to go through
-> the USB tree or FS tree?
+On Wed, 2019-03-20 at 08:55 +0200, Felipe Balbi wrote:
+> Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+> 
+> > Hi Greg,
+> >
+> > On Tue, 2019-03-19 at 10:23 +0100, Greg Kroah-Hartman wrote:
+> >> On Tue, Mar 19, 2019 at 03:54:19PM +0800, Chunfeng Yun wrote:
+> >> > 
+> >> > Hi Felipe & Mathias,
+> >> > 
+> >> > Could you please comment this patch, if there is some-effect on dwc3 and
+> >> > xhci, I'll remove its change.
+> > typo: some-effect/side-effect
+> 
+> well, we don't really know if there are tools parsing the output. The
+> side-effect _does_ exist (i.e. you change the string :-), what we don't
+> know is if this will cause problems to possibly existing tools.
+> 
+> Personally, I don't mind the patch, but if it breaks existing parsers,
+> that would be a little annoying.
+Thank you for the feedback.
 
-I'm going to try and get all of these to go through the Al's vfs tree since
-there are dependent cleanup patches that remove code that's then obsolete.
+I'll abandon the changes about dwc3 & xhci
+> 
 
-> Also, do you mind doing the same for drivers/usb/gadget/function/f_fs.c?
 
-Sure.  The reason I hadn't already done it is that it doesn't look entirely
-trivial.
-
-David
