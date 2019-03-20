@@ -2,87 +2,136 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EFEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA50C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15F8218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UlM3Ag0s"
+	by mail.kernel.org (Postfix) with ESMTP id 20B03218CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfCTUzU (ORCPT
+        id S1727510AbfCTU4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:55:20 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:45516 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCTUzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:55:20 -0400
-Received: by mail-yw1-f65.google.com with SMTP id j128so3125955ywg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QQYLVXkrs82mdvyVr+o8qJgCSfJ2t/bxI7yFaYhe2ug=;
-        b=UlM3Ag0sHjKm6b60Xzruo36+UDlJMrcULXCsz153tfTpIzb5RNHWobPLHgqI/mhWmy
-         nAzG2b60WzKXMmT44qvypKs/MRK3dAvTvsH7FaGR2TvLZdw4/xJW8HsjT5RsKvT2l114
-         IxT/BWtMIDwxGR3Rmfw37IsijmQCBbzByTYNMnfL5Pqrmqbt0ycHo6hbZZnw/ciMk73x
-         cPcXJLfScHgpDqcmjbfZuTV1rp0MyTLNKhI28W8pS3bGyOp6RhItnuEcuUJOy2Kdykwv
-         PxWIWOxISeF3vhf5selrKImaCqn1ve35lBZip8IjabpLC+gzrspIs30WY8hjdR6M7M8X
-         2FsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QQYLVXkrs82mdvyVr+o8qJgCSfJ2t/bxI7yFaYhe2ug=;
-        b=VdAYV2DYjuic3J9pBFCpLfQGY3BWXWDjkD5ZpIDWs3d6Q53+9b5DETAAx1oPWWmFel
-         2rYAQVnUiBG2jJhO3bwP84BgkJNJU1Fr/+bFZRydtfo0q0aCz3kbmHySvvC0e97oVPc4
-         tDBLydE7CP37ORkvIgvnNUBLTLnbYUfQbk03YxxlPfZxPXO1WwioAaNJZkAgTGXGC4om
-         mtJte5rb7uPp0AuavZX+uXv9lSzpkCHojx3yyx2TFvr5+LLudm1Au4lqiENs1YVLuvyc
-         RJzjKA6iWt+5M17dnaibOOJ7vKfGCVaQiNIR3j0/XeZ9zdpeM0My2a/6/fh/ukNG260+
-         OwMQ==
-X-Gm-Message-State: APjAAAVneSpRNSJhVStqVR+oYvoZtHmwZuEO5/shvYPhbQ2dxeCEIrda
-        4KJL7yfVFqaPsGwn/yshiPlO6Q==
-X-Google-Smtp-Source: APXvYqyIbRSYuOZ+T6cPUs3nMP69qxZ/A1CkgW2QQVmoCqQ+qIU4OgICrzlh/aj/ZsVwMkaKM+QPbw==
-X-Received: by 2002:a81:2c85:: with SMTP id s127mr107964yws.255.1553115319248;
-        Wed, 20 Mar 2019 13:55:19 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::2:b52c])
-        by smtp.gmail.com with ESMTPSA id j15sm1001794ywa.7.2019.03.20.13.55.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 13:55:18 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 16:55:17 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     gregkh@linuxfoundation.org, tj@kernel.org, lizefan@huawei.com,
-        axboe@kernel.dk, dennis@kernel.org, dennisszhou@gmail.com,
-        mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
-        corbet@lwn.net, cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v6 2/7] psi: make psi_enable static
-Message-ID: <20190320205517.GA19382@cmpxchg.org>
-References: <20190319235619.260832-1-surenb@google.com>
- <20190319235619.260832-3-surenb@google.com>
+        Wed, 20 Mar 2019 16:56:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46866 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfCTU4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:56:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 912B61650;
+        Wed, 20 Mar 2019 13:56:39 -0700 (PDT)
+Received: from [10.1.197.21] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 585273F59C;
+        Wed, 20 Mar 2019 13:56:37 -0700 (PDT)
+Subject: Re: [PATCH v7 9/10] KVM: arm64: docs: document KVM support of pointer
+ authentication
+To:     Julien Thierry <julien.thierry@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>
+References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
+ <1552984243-7689-10-git-send-email-amit.kachhap@arm.com>
+ <7bf19035-02ba-ae47-b08c-7d7622a45dbf@arm.com>
+ <648d66dd-519c-7567-a3e1-c23208f68cf2@arm.com>
+ <52d3f9c8-fc27-bf3d-f8f3-1b3921508a8c@arm.com>
+From:   Kristina Martsenko <kristina.martsenko@arm.com>
+Message-ID: <6d84723d-e00e-e89f-4c42-d48d0eb03443@arm.com>
+Date:   Wed, 20 Mar 2019 20:56:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319235619.260832-3-surenb@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <52d3f9c8-fc27-bf3d-f8f3-1b3921508a8c@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 04:56:14PM -0700, Suren Baghdasaryan wrote:
-> psi_enable is not used outside of psi.c, make it static.
+On 20/03/2019 18:06, Julien Thierry wrote:
 > 
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> 
+> On 20/03/2019 15:04, Kristina Martsenko wrote:
+>> On 20/03/2019 13:37, Julien Thierry wrote:
+>>> Hi Amit,
+>>>
+>>> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
+>>>> This adds sections for KVM API extension for pointer authentication.
+>>>> A brief description about usage of pointer authentication for KVM guests
+>>>> is added in the arm64 documentations.
+>>
+>> [...]
+>>
+>>>> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+>>>> index 7de9eee..b5c66bc 100644
+>>>> --- a/Documentation/virtual/kvm/api.txt
+>>>> +++ b/Documentation/virtual/kvm/api.txt
+>>>> @@ -2659,6 +2659,12 @@ Possible features:
+>>>>  	  Depends on KVM_CAP_ARM_PSCI_0_2.
+>>>>  	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
+>>>>  	  Depends on KVM_CAP_ARM_PMU_V3.
+>>>> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS:
+>>>> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC:
+>>>> +	  Enables Pointer authentication for the CPU.
+>>>> +	  Depends on KVM_CAP_ARM_PTRAUTH and only on arm64 architecture. If
+>>>> +	  set, then the KVM guest allows the execution of pointer authentication
+>>>> +	  instructions. Otherwise, KVM treats these instructions as undefined.
+>>>>  
+>>>
+>>> Overall I feel one could easily get confused to whether
+>>> PTRAUTH_ADDRESS/GENERIC are two individual features, whether one is a
+>>> superset of the other, if the names are just an alias of one another, etc...
+>>>
+>>> I think the doc should at least stress out that *both* flags are
+>>> required to enable ptrauth in a guest. However it raises the question,
+>>> if we don't plan to support the features individually (because we
+>>> can't), should we really expose two feature flags? I seems odd to
+>>> introduce two flags that only do something if used together...
+>>
+>> Why can't we support the features individually? For example, if we ever
+>> get a system where all CPUs support address authentication and none of
+>> them support generic authentication, then we could still support address
+>> authentication in the guest.
+>>
+>>
+> 
+> That's a good point, I didn't think of that.
+> 
+> Although, currently we don't have a way to detect that we are in such a
+> configuration. So as is, both flags are required to enable either
+> feature, and I feel the documentation should be clear on that aspect.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+For now we only support enabling both features together, so both flags
+need to be set. I agree that the documentation should be made clear on this.
+
+In the future, if we need to, we can add "negative" cpucaps to detect
+that a feature is absent on all CPUs.
+
+> 
+> Another option would be to introduce a flag that enables both for now,
+> and if one day we decide to support the configuration you mentioned we
+> could add "more modular" flags that allow you to control those features
+> individually. While a bit cumbersome, I would find that less awkward
+> than having two flags that only do something if both are present.
+
+That would work too.
+
+I find it more logical to have two flags since there are two features
+(two ID register fields), and KVM enables two features for the guest.
+The fact that KVM does not currently support enabling them separately is
+a KVM implementation choice, and could change in the future.
+
+Thanks,
+Kristina
