@@ -2,142 +2,115 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F012AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C79C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C352146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56132146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A+JYGhZ3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FE175wIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfCTOzD (ORCPT
+        id S1728651AbfCTOzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:55:03 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:45805 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbfCTOwD (ORCPT
+        Wed, 20 Mar 2019 10:55:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53846 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728382AbfCTOzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:52:03 -0400
-Received: by mail-ua1-f74.google.com with SMTP id c26so214628uar.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=o/tjHBN+YdVOHlZBhUHSY9iDnhLS0V50uWJeHP43be4=;
-        b=A+JYGhZ3fQkhscb6lUBmQ1muz6oemHopDmPki/B278rzjZ0dk/UjohSsOxEu8keiCi
-         W5/VXLZ67gUh0RZN3rq5skpPYsUC7oWDq+tl+3khHwdNxCrmhkhxq7w99dcsLgc3Elx7
-         dmeBy427vSPfFNaJS7DfUhAb/Fwd/EACn2TYRVMksoGnObzxZTWUPnBuSuAiS/JRvPZA
-         f0EsOCj85jPSuENzq/Bg7zakYTOA4bo6fX1BKjPllZeRcF3GtXBJjjiVIF4U6HkOW9id
-         X49/giQrlJvYsmuoQtVxMGCVLZT2pR3apmEVULZaKks3LsI2Ip7Pr6oRl+H4swKOnmZR
-         D5tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=o/tjHBN+YdVOHlZBhUHSY9iDnhLS0V50uWJeHP43be4=;
-        b=fmCbJVnEp/GEQb7AkHCwHk5Malz+s8iYhK5CV2YaiVuk3JN6vrBZIHdD3zWAVpvj2k
-         TK7cCvUhr9Np8mkL3TA/p6y8tAxgQlkGWq0+ZNwZf/TcKZ4tP/GCU98wTRT/bB2kQZ4f
-         deltEwPYIQFZNi9NQfM/O4MYu9Z8g1b8bUhU69UakvzMbdnOcefxxy+V0Xi8fBSxNo1p
-         sVjHO4gPPcUHXn0V34o88DqWIA6WpF2wJUgjT/tO9QMQ8WvUT4IXbpNZIw1VJAE2b6LW
-         ++03xEqXr1okPqgm622Te6d4fdDMYQSsY+kznQat36DROV4qVgF2LH0VNJUkE5d8dSSE
-         WSZg==
-X-Gm-Message-State: APjAAAXN1AH+QiNMCxS3e00PtIiNI8AJoQSkHxAAwasuWkuGBwFA35ol
-        JZcjbNwHvtzejTRd6LlewdpyTYmFZS5eU+uG
-X-Google-Smtp-Source: APXvYqyHOngs34In5uhQcXPzOfQqpf0ARHPrNyLHXpzz5ogONfScZvSMOj1YE9ihREsOQQ2kQeo8TqNX7xzilecW
-X-Received: by 2002:a67:7651:: with SMTP id r78mr6363022vsc.39.1553093522664;
- Wed, 20 Mar 2019 07:52:02 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 15:51:20 +0100
-In-Reply-To: <cover.1553093420.git.andreyknvl@google.com>
-Message-Id: <e1430838d7393896ade87ffbcf109c7127881137.1553093421.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1553093420.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v13 06/20] mm, arm64: untag user pointers in get_vaddr_frames
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 Mar 2019 10:55:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2KEhaFt051492;
+        Wed, 20 Mar 2019 14:55:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=vyTalyJPAp/99xZSU46vuHhBhzH/5qMxRbhLufZJza8=;
+ b=FE175wIndmjYqE9O1h9gs5/x/125rxIpTQyFuF9GQH3a6Qt22P3l4AlfYcZkplEIkwNy
+ gL7VbxXqStMmQzDd7xdU1b0A57BVB8eoyezOVk6OCl1t5a1UMdVoKFq4Vw0/CxJ6C1ni
+ hmF07JbaCWoErWy1V+EBBGOgYuvfftQ/Hclxb2Zh2YcX3qht8+vjjFLgvQpBSmpNyZeV
+ FgHRKu1XeXc2w2qeNDJlMGA6OfsAYO+/xVIdbTPWmIgQ6xIjue2c/pJSTFqvDG7ArIP8
+ poCyhKg1J2b1Do1V6MWmoC7XL59Xaz+0GVdd/oY+2XtrqWGOcat534VBi/iLvPAvW5y6 dQ== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2r8rjuubhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 14:55:24 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2KEtMju002103
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 14:55:23 GMT
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2KEtKfb010967;
+        Wed, 20 Mar 2019 14:55:20 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 Mar 2019 07:55:20 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190320043319.GA7431@redhat.com>
+Date:   Wed, 20 Mar 2019 08:55:17 -0600
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <BFC3CDEE-4349-44C1-BE11-7C168BC578E1@oracle.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com> <20190319141416.GA3879@redhat.com>
+ <20190319212346.GA26298@dastard> <20190319220654.GC3096@redhat.com>
+ <20190319235752.GB26298@dastard> <20190320000838.GA6364@redhat.com>
+ <c854b2d6-5ec1-a8b5-e366-fbefdd9fdd10@nvidia.com>
+ <20190320043319.GA7431@redhat.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.8)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=913 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903200113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
 
-get_vaddr_frames uses provided user pointers for vma lookups, which can
-only by done with untagged pointers. Instead of locating and changing
-all callers of this function, perform untagging in it.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- mm/frame_vector.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Mar 19, 2019, at 10:33 PM, Jerome Glisse <jglisse@redhat.com> wrote:
+> 
+> So i believe best we could do is send a SIGBUS to the process that has
+> GUPed a range of a file that is being truncated this would match what
+> we do for CPU acces. There is no reason access through GUP should be
+> handled any differently.
 
-diff --git a/mm/frame_vector.c b/mm/frame_vector.c
-index c64dca6e27c2..c431ca81dad5 100644
---- a/mm/frame_vector.c
-+++ b/mm/frame_vector.c
-@@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
- 	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
- 		nr_frames = vec->nr_allocated;
- 
-+	start = untagged_addr(start);
-+
- 	down_read(&mm->mmap_sem);
- 	locked = 1;
- 	vma = find_vma_intersection(mm, start, start + 1);
--- 
-2.21.0.225.g810b269d1ac-goog
+This should be done lazily, as there's no need to send the SIGBUS unless
+the GUPed page is actually accessed post-truncate.
 
