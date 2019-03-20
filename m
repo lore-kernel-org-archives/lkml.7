@@ -2,433 +2,170 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BE0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113B9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3C12184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:48:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="lIXiSAAc"
+	by mail.kernel.org (Postfix) with ESMTP id BD80721850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553064703;
+	bh=pEP+uwho+aStzHT22KI3MKPcLtQjhkJKc67s0wJtjS4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=e7viIiZ16ZVJN33bbiKXCK1aiuubW1/GAAKagXQoLCevw5b/qTO40tPJK1SXbzgVt
+	 eeoJSl9uCGYVUyGaPfSbxaY0tfEYaVK9D06e9sLUuL2/IKp+ZcbJdR67BFNe5Yw05x
+	 HObJZqt8JWfpb943V1RFtrvmimQE34jshg1H8rGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfCTGsm (ORCPT
+        id S1727184AbfCTGvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 02:48:42 -0400
-Received: from mail-eopbgr1310054.outbound.protection.outlook.com ([40.107.131.54]:36539
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726123AbfCTGsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 02:48:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pVJTyAUdYpW1rV9Zr3u1YGhOj2yB6ZXF0806FKC8c8E=;
- b=lIXiSAAc/ZNRJcphW/W3cgL/1awBNa5DJ3EHviWWpXCATr01A/mY7+IfEaUb19QFy8FIwwPXrrLcnnO8BVBo+pOjwJLznMNAZsOMVgNRopugNyN2bjjj+p+twidTMAKwUKkqDia6aIxxf1fTJNxAstIxhMYN3o/0rFY9R1DGP44=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB2812.apcprd02.prod.outlook.com (20.177.86.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Wed, 20 Mar 2019 06:48:28 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1709.015; Wed, 20 Mar 2019
- 06:48:28 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>
-Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
-Thread-Topic: [External] Re: vmscan: Reclaim unevictable pages
-Thread-Index: AQHU3WaYCAMWaFadm0e/0+hd2XPYGaYRGYZ/gAAG5oCAAAD82oAAAx4AgAABDq2AAAzwgIAC47DN
-Date:   Wed, 20 Mar 2019 06:48:27 +0000
-Message-ID: <SG2PR02MB309864258DBE630AD3AD2E10E8410@SG2PR02MB3098.apcprd02.prod.outlook.com>
-References: <SG2PR02MB3098A05E09B0D3F3CB1C3B9BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190314084120.GF7473@dhcp22.suse.cz>
- <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <226a92b9-94c5-b859-c54b-3aacad3089cc@virtuozzo.com>
- <SG2PR02MB3098299456FB6AE2FD822C4CE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB30988333AD658F8124070ABEE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB3098AB587F4BFCD6B9D042FDE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB3098E6F2C4BAEB56AE071EDCE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <0b86dbca-cbc9-3b43-e3b9-8876bcc24f22@suse.cz>
- <SG2PR02MB309841EA4764E675D4649139E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <56862fc0-3e4b-8d1e-ae15-0df32bf5e4c0@virtuozzo.com>
- <SG2PR02MB3098EEAF291BFD72F4163936E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <4c05dda3-9fdf-e357-75ed-6ee3f25c9e52@virtuozzo.com>
- <SG2PR02MB309869FC3A436C71B50FA57BE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>,<09b6ee71-0007-7f1d-ac80-7e05421e4ec6@virtuozzo.com>
-In-Reply-To: <09b6ee71-0007-7f1d-ac80-7e05421e4ec6@virtuozzo.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a56f1753-4002-4087-33db-08d6ad000ee8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2812;
-x-ms-traffictypediagnostic: SG2PR02MB2812:|SG2PR02MB2812:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <SG2PR02MB28123E5AA8AE1525A7A75F7EE8410@SG2PR02MB2812.apcprd02.prod.outlook.com>
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(366004)(376002)(346002)(136003)(54534003)(189003)(199004)(76176011)(11346002)(2501003)(86362001)(110136005)(93886005)(446003)(81156014)(486006)(6246003)(99286004)(7696005)(53546011)(476003)(54906003)(44832011)(8936002)(6506007)(53936002)(8676002)(74316002)(7736002)(68736007)(478600001)(26005)(2906002)(186003)(102836004)(55236004)(305945005)(6306002)(9686003)(6436002)(81166006)(55016002)(966005)(14454004)(316002)(256004)(105586002)(4326008)(5024004)(97736004)(14444005)(66574012)(5660300002)(52536014)(30864003)(25786009)(33656002)(71200400001)(71190400001)(78486014)(6116002)(66066001)(106356001)(3846002)(229853002)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2812;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /cEmGy6OmJUgXcQSWyDX3UUmb93rK2JR/w91DiiK1EysBR90Eti9b8LHb38RDRSpwXcSN4onXQemMi58I+pGfjGW0ZIhaZXorFWng5b8bZ6lcF2eLYamuGtYcflMrZIl2NL04acxVqv31tk2wtAx7ux3U0iBv+IzlqQfluFHTkyoq0u/8/IgVJ48euYGwnG0BrNqUSRwAM0wWoiMgoW4xubwKUyDROd9RWVYAdHrndnz1GVpSLbLbjyHYSjq0gBAQw5Kb682fmiOaoQTJHvi2KxlOREfKYaCVeV202Q5k8+xRG2HoNhx0znpjQytuj0pyE1WT/XbEloCHKY5hL0aVsgx46RlKPa2Fn9Te9ptk5GYBsBJrW+FerFDyOJNp8JPet++dJltm20+3r2+x4DkXYjdnAInU5lLaurXDY0ChOM=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Mar 2019 02:51:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28767 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbfCTGvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 02:51:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 23:51:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,248,1549958400"; 
+   d="asc'?scan'208";a="124166464"
+Received: from pipin.fi.intel.com (HELO localhost) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2019 23:51:39 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 2/5] reset: Add acquired flag to of_reset_control_array_get()
+In-Reply-To: <1553013476.6482.6.camel@pengutronix.de>
+References: <20190221152557.8534-1-thierry.reding@gmail.com> <20190221152557.8534-2-thierry.reding@gmail.com> <1553013476.6482.6.camel@pengutronix.de>
+Date:   Wed, 20 Mar 2019 08:51:34 +0200
+Message-ID: <87tvfyujgp.fsf@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a56f1753-4002-4087-33db-08d6ad000ee8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 06:48:27.8966
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2812
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-________________________________________
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
-Sent: 18 March 2019 16:08
-To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linux.i=
-bm.com
-Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org; k=
-handual@linux.vnet.ibm.com
-Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+Philipp Zabel <p.zabel@pengutronix.de> writes:
 
-On 18.03.2019 12:59, Pankaj Suryawanshi wrote:
+> On Thu, 2019-02-21 at 16:25 +0100, Thierry Reding wrote:
+>> From: Thierry Reding <treding@nvidia.com>
+>>=20
+>> In order to be able to request an array of reset controls in acquired or
+>> released mode, add the acquired flag to of_reset_control_array_get() and
+>> pass the flag to subsequent calls of __of_reset_control_get().
+>>=20
+>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>>  drivers/reset/core.c              |  9 ++++++---
+>>  drivers/usb/dwc3/dwc3-of-simple.c |  3 ++-
+>>  include/linux/reset.h             | 14 ++++++++------
+>>  3 files changed, 16 insertions(+), 10 deletions(-)
+>>=20
+>> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+>> index 1e8a42b16f23..f94da91c22af 100644
+>> --- a/drivers/reset/core.c
+>> +++ b/drivers/reset/core.c
+>> @@ -830,12 +830,15 @@ static int of_reset_control_get_count(struct devic=
+e_node *node)
+>>   * @np: device node for the device that requests the reset controls arr=
+ay
+>>   * @shared: whether reset controls are shared or not
+>>   * @optional: whether it is optional to get the reset controls
+>> + * @acquired: only one reset control may be acquired for a given contro=
+ller
+>> + *            and ID
+>>   *
+>>   * Returns pointer to allocated reset_control_array on success or
+>>   * error on failure
+>>   */
+>>  struct reset_control *
+>> -of_reset_control_array_get(struct device_node *np, bool shared, bool op=
+tional)
+>> +of_reset_control_array_get(struct device_node *np, bool shared, bool op=
+tional,
+>> +			   bool acquired)
+>>  {
+>>  	struct reset_control_array *resets;
+>>  	struct reset_control *rstc;
+>> @@ -851,7 +854,7 @@ of_reset_control_array_get(struct device_node *np, b=
+ool shared, bool optional)
+>>=20=20
+>>  	for (i =3D 0; i < num; i++) {
+>>  		rstc =3D __of_reset_control_get(np, NULL, i, shared, optional,
+>> -					      true);
+>> +					      acquired);
+>>  		if (IS_ERR(rstc))
+>>  			goto err_rst;
+>>  		resets->rstc[i] =3D rstc;
+>> @@ -898,7 +901,7 @@ devm_reset_control_array_get(struct device *dev, boo=
+l shared, bool optional)
+>>  	if (!devres)
+>>  		return ERR_PTR(-ENOMEM);
+>>=20=20
+>> -	rstc =3D of_reset_control_array_get(dev->of_node, shared, optional);
+>> +	rstc =3D of_reset_control_array_get(dev->of_node, shared, optional, tr=
+ue);
+>>  	if (IS_ERR(rstc)) {
+>>  		devres_free(devres);
+>>  		return rstc;
+>> diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-o=
+f-simple.c
+>> index 4c2771c5e727..67ce2037472d 100644
+>> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+>> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+>> @@ -107,7 +107,8 @@ static int dwc3_of_simple_probe(struct platform_devi=
+ce *pdev)
+>>  		simple->pulse_resets =3D true;
+>>  	}
+>>=20=20
+>> -	simple->resets =3D of_reset_control_array_get(np, shared_resets, true);
+>> +	simple->resets =3D of_reset_control_array_get(np, shared_resets, true,
+>> +						    true);
 >
-> From: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Sent: 18 March 2019 15:17:56
-> To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linux=
-.ibm.com
-> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org;=
- khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
-> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+> Felipe, could I get your acked-by to merge this through the reset tree?
+>
+> dwc3-of-simple is a bit of a special case because it calls
+> of_reset_control_array_get directly instead of through the
+> of_reset_control_array_get_shared/exclusive wrappers.
 
-Also, please, avoid irritating quoting like below ^^^. They just distract a=
-ttention.
+Sure thing:
 
-> On 18.03.2019 12:43, Pankaj Suryawanshi wrote:
->> Hi Kirill Tkhai,
->>
->
-> Please, do not top posting:  https://kernelnewbies.org/mailinglistguideli=
-nes
->
-> Okay.
->
-> mailinglistguidelines - Linux Kernel Newbies
-> kernelnewbies.org
-> Set of FAQs for kernelnewbies mailing list. If you are new to this list p=
-lease read this page before you go on your quest for squeezing all the know=
-ledge from fellow members.
+Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-And this spew ^^^.
+=2D-=20
+balbi
 
->> Please see mm/vmscan.c in which it first added to list and than throw th=
-e error :
->> ------------------------------------------------------------------------=
---------------------------
->> keep:
->>                  list_add(&page->lru, &ret_pages);
->>                  VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), =
-page);
->> ------------------------------------------------------------------------=
----------------------------
->>
->> Before throwing error, pages are added to list, this is under iteration =
-of shrink_page_list().
->
-> I say about about the list, which is passed to shrink_page_list() as firs=
-t argument.
-> Did you mean candidate list which is passed to shrink_page_list().
->
-> shrink_inactive_list()
-> {
->         isolate_lru_pages(&page_list); // <-- you can't obtain unevictabl=
-e pages here.
->         shrink_page_list(&page_list);
-> }
->
-> below is the overview of flow of calls for your information.
->
-> cma_alloc() ->
-> alloc_contig_range() ->
-> start_isolate_page_range() ->
-> __alloc_contig_migrate_range() ->
-> isolate_migratepages_range() ->
-> reclaim_clean_pages_from_list() ->
-> shrink_page_list()
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hm, isolate_migratepages_range() can take unevictable pages,
-but then with your patch we just skip them in shrink_page_list().
-Without your patch we bump into bug on.
+-----BEGIN PGP SIGNATURE-----
 
-I don't see any other issue/effect if i apply this patch.
-
-These both look incorrect for me. Let's wait someone who familiar
-with this logic.
-
->> From: Kirill Tkhai <ktkhai@virtuozzo.com>
->> Sent: 18 March 2019 15:03:15
->> To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linu=
-x.ibm.com
->> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org=
-; khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
->> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
->>
->>
->> Hi, Pankaj,
->>
->> On 18.03.2019 12:09, Pankaj Suryawanshi wrote:
->>>
->>> Hello
->>>
->>> shrink_page_list() returns , number of pages reclaimed, when pages is u=
-nevictable it returns VM_BUG_ON_PAGE(PageLRU(page) || PageUnevicatble(page)=
-,page);
->>
->> the general idea is shrink_page_list() can't iterate PageUnevictable() p=
-ages.
->> PageUnevictable() pages are never being added to lists, which shrink_pag=
-e_list()
->> uses for iteration. Also, a page can't be marked as PageUnevictable(), w=
-hen
->> it's attached to a shrinkable list.
->>
->> So, the problem should be somewhere outside shrink_page_list().
->>
->> I won't suggest you something about CMA, since I haven't dived in that c=
-ode.
->>
->>> We can add the unevictable pages in reclaim list in shrink_page_list(),=
- return total number of reclaim pages including unevictable pages, let the =
-caller handle unevictable pages.
->>>
->>> I think the problem is shrink_page_list is awkard. If page is unevictab=
-le it goto activate_locked->keep_locked->keep lables, keep lable list_add t=
-he unevictable pages and throw the VM_BUG instead of passing it to caller w=
-hile it relies on caller for non-reclaimed-non-unevictable    page's putbac=
-k.
->>> I think we can make it consistent so that shrink_page_list could return=
- non-reclaimed pages via page_list and caller can handle it. As an advance,=
- it could try to migrate mlocked pages without retrial.
->>>
->>>
->>> Below is the issue of CMA_ALLOC of large size buffer : (Kernel version =
-- 4.14.65 (On Android pie [ARM])).
->>>
->>> [=A0=A0 24.718792] page dumped because: VM_BUG_ON_PAGE(PageLRU(page) ||=
- PageUnevictable(page))
->>> [=A0=A0 24.726949] page->mem_cgroup:bd008c00
->>> [=A0=A0 24.730693] ------------[ cut here ]------------
->>> [=A0=A0 24.735304] kernel BUG at mm/vmscan.c:1350!
->>> [=A0=A0 24.739478] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
->>>
->>>
->>> Below is the patch which solved this issue :
->>>
->>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>> index be56e2e..12ac353 100644
->>> --- a/mm/vmscan.c
->>> +++ b/mm/vmscan.c
->>> @@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_h=
-ead *page_list,
->>>                 sc->nr_scanned++;
->>>
->>>                 if (unlikely(!page_evictable(page)))
->>> -                       goto activate_locked;
->>> +                      goto cull_mlocked;
->>>
->>>                 if (!sc->may_unmap && page_mapped(page))
->>>                         goto keep_locked;
->>> @@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct lis=
-t_head *page_list,
->>>                 } else
->>>                         list_add(&page->lru, &free_pages);
->>>                 continue;
->>> -
->>> +cull_mlocked:
->>> +                if (PageSwapCache(page))
->>> +                        try_to_free_swap(page);
->>> +                unlock_page(page);
->>> +                list_add(&page->lru, &ret_pages);
->>> +                continue;
->>>  activate_locked:
->>>                 /* Not a candidate for swapping, so reclaim swap space.=
- */
->>>                 if (PageSwapCache(page) && (mem_cgroup_swap_full(page) =
-||
->>>
->>>
->>>
->>>
->>> It fixes the below issue.
->>>
->>> 1. Large size buffer allocation using cma_alloc successful with unevict=
-able pages.
->>>
->>> cma_alloc of current kernel will fail due to unevictable page
->>>
->>> Please let me know if anything i am missing.
->>>
->>> Regards,
->>> Pankaj
->>>
->>> From: Vlastimil Babka <vbabka@suse.cz>
->>> Sent: 18 March 2019 14:12:50
->>> To: Pankaj Suryawanshi; Kirill Tkhai; Michal Hocko; aneesh.kumar@linux.=
-ibm.com
->>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.or=
-g; khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
->>> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
->>>
->>>
->>> On 3/15/19 11:11 AM, Pankaj Suryawanshi wrote:
->>>>
->>>> [ cc Aneesh kumar, Anshuman, Hillf, Vlastimil]
->>>
->>> Can you send a proper patch with changelog explaining the change? I
->>> don't know the context of this thread.
->>>
->>>> From: Pankaj Suryawanshi
->>>> Sent: 15 March 2019 11:35:05
->>>> To: Kirill Tkhai; Michal Hocko
->>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.o=
-rg
->>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
->>>>
->>>>
->>>>
->>>> [ cc linux-mm ]
->>>>
->>>>
->>>> From: Pankaj Suryawanshi
->>>> Sent: 14 March 2019 19:14:40
->>>> To: Kirill Tkhai; Michal Hocko
->>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
->>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
->>>>
->>>>
->>>>
->>>> Hello ,
->>>>
->>>> Please ignore the curly braces, they are just for debugging.
->>>>
->>>> Below is the updated patch.
->>>>
->>>>
->>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>>> index be56e2e..12ac353 100644
->>>> --- a/mm/vmscan.c
->>>> +++ b/mm/vmscan.c
->>>> @@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_=
-head *page_list,
->>>>                  sc->nr_scanned++;
->>>>
->>>>                  if (unlikely(!page_evictable(page)))
->>>> -                       goto activate_locked;
->>>> +                      goto cull_mlocked;
->>>>
->>>>                  if (!sc->may_unmap && page_mapped(page))
->>>>                          goto keep_locked;
->>>> @@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct li=
-st_head *page_list,
->>>>                  } else
->>>>                          list_add(&page->lru, &free_pages);
->>>>                  continue;
->>>> -
->>>> +cull_mlocked:
->>>> +                if (PageSwapCache(page))
->>>> +                        try_to_free_swap(page);
->>>> +                unlock_page(page);
->>>> +                list_add(&page->lru, &ret_pages);
->>>> +                continue;
->>>>   activate_locked:
->>>>                  /* Not a candidate for swapping, so reclaim swap spac=
-e. */
->>>>                  if (PageSwapCache(page) && (mem_cgroup_swap_full(page=
-) ||
->>>>
->>>>
->>>>
->>>> Regards,
->>>> Pankaj
->>>>
->>>>
->>>> From: Kirill Tkhai <ktkhai@virtuozzo.com>
->>>> Sent: 14 March 2019 14:55:34
->>>> To: Pankaj Suryawanshi; Michal Hocko
->>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
->>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
->>>>
->>>>
->>>> On 14.03.2019 11:52, Pankaj Suryawanshi wrote:
->>>>>
->>>>> I am using kernel version 4.14.65 (on Android pie [ARM]).
->>>>>
->>>>> No additional patches applied on top of vanilla.(Core MM).
->>>>>
->>>>> If  I change in the vmscan.c as below patch, it will work.
->>>>
->>>> Sorry, but 4.14.65 does not have braces around trylock_page(),
->>>> like in your patch below.
->>>>
->>>> See        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
-x.git/tree/mm/vmscan.c?h=3Dv4.14.65
->>>>
->>>> [...]
->>>>
->>>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>>>>> index be56e2e..2e51edc 100644
->>>>>> --- a/mm/vmscan.c
->>>>>> +++ b/mm/vmscan.c
->>>>>> @@ -990,15 +990,17 @@ static unsigned long shrink_page_list(struct l=
-ist_head *page_list,
->>>>>>                   page =3D lru_to_page(page_list);
->>>>>>                   list_del(&page->lru);
->>>>>>
->>>>>>                  if (!trylock_page(page)) {
->>>>>>                           goto keep;
->>>>>>                  }
->>>>
->>>> **********************************************************************=
-***************************************************************************=
-************ eInfochips Business Disclaimer: This e-mail message and all at=
-tachments transmitted with it are   intended  solely for the use of the add=
-ressee and may contain legally privileged and confidential information. If =
-the reader of this message is not the intended recipient, or an employee or=
- agent responsible for delivering this message to the intended recipient,  =
- you  are hereby notified that any dissemination, distribution, copying, or=
- other use of this message or its attachments is strictly prohibited. If yo=
-u have received this message in error, please notify the sender immediately=
- by replying to this message and   please  delete it from your computer. An=
-y views expressed in this message are those of the individual sender unless=
- otherwise stated. Company has taken enough precautions to prevent the spre=
-ad of viruses. However the company accepts no liability for any damage   ca=
-used  by any virus transmitted by this email. *****************************=
-***************************************************************************=
-*****************************************************
->>>>
->>>
->>>
->>>
->>
->>
->
->
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlyR4vYACgkQzL64meEa
+mQZ9Kw/+I1IrdMF3FmYc9NjB4bNdvHKB258C5wIFM4ypdDdQCA0KO07hw0qnJlwM
+tVZ+n6fWSkH1bjRFULVFmejpflOWav8PirMepFIt5Arn0CJSSOwW7NLyfjy/fFT9
+sZy1vlDPnim/EbVCVhc5VJiHNeofs8o1EXAmxJAPAot2PEBbsbcfIDfdMXxMgskm
+9To/jMd1OW5p+EugOicpIPz3lzZdPHu9MzmVXc294oS7/To2xO/kCnvDckfG7sk/
+oyylqx79LolmI4f4j0XkX2Poz7NTXYjbM88qpoDWX1phntVd6WGi4Sjhe2Vgu7e9
+6oabn/3Ws/+lWZM38hloiWxowS2o0ZwxLnGL7R22HUlmlatahz5lOUrNqLvFDvTI
+Du0B4obhZTfkG9AS5sq/hFIGiIqyFCs1D4OBnBuooF/tf73K48p1Mv1YryPIRIfu
+5vZCNNEyMB2iRIOfSow5etSPZgijEXH50AgQZg3aDViLBZQDKqWFFYjc0RioxaC1
+lzAK7QmlIMdlrsP3fl65jj/WPrg6el1/3oM4lyThDVOr3Tdllk3nUiyTRPwew87d
+zdZPgQKXV93xvJ3SbwXJ78wQI3ZwrsXxaxbijI/g3BDbd25ivWTRffx7dYet3LoK
+qVo5EsdILA5nntmGqfNM6umJwqB4kLyIA31p5bYtI+fDXomDDCA=
+=gvkl
+-----END PGP SIGNATURE-----
+--=-=-=--
