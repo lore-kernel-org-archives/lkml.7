@@ -2,57 +2,57 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C176C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4C4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B932175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5824C2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfCTFNT (ORCPT
+        id S1727168AbfCTFNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:13:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725986AbfCTFNS (ORCPT
+        Wed, 20 Mar 2019 01:13:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726823AbfCTFNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:13:18 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K53aaS118347
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:17 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbem8hedd-1
+        Wed, 20 Mar 2019 01:13:21 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K53bHS020288
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:20 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rbbvn02jr-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:17 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:19 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 20 Mar 2019 05:13:09 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 20 Mar 2019 05:13:13 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 05:13:06 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5DBRj40370268
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Mar 2019 05:13:11 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43D70AE05D;
-        Wed, 20 Mar 2019 05:13:11 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6787AE04D;
-        Wed, 20 Mar 2019 05:13:10 +0000 (GMT)
+        Wed, 20 Mar 2019 05:13:10 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5DFrX60096620
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 05:13:15 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 129EBA405F;
+        Wed, 20 Mar 2019 05:13:15 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72969A4054;
+        Wed, 20 Mar 2019 05:13:14 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 05:13:10 +0000 (GMT)
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 05:13:14 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A9BB4A0129;
-        Wed, 20 Mar 2019 16:13:09 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5E332A0129;
+        Wed, 20 Mar 2019 16:13:13 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
 Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
@@ -60,24 +60,25 @@ Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 0/7] Refactor OCXL driver to allow external drivers to use it
-Date:   Wed, 20 Mar 2019 16:08:52 +1100
+Subject: [PATCH v2 2/7] ocxl: Don't pass pci_dev around
+Date:   Wed, 20 Mar 2019 16:08:54 +1100
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190313041524.14644-1-alastair@au1.ibm.com>
+In-Reply-To: <20190320050901.310-1-alastair@au1.ibm.com>
 References: <20190313041524.14644-1-alastair@au1.ibm.com>
+ <20190320050901.310-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19032005-0020-0000-0000-000003256780
+x-cbid: 19032005-4275-0000-0000-0000031D1658
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032005-0021-0000-0000-00002177842D
-Message-Id: <20190320050901.310-1-alastair@au1.ibm.com>
+x-cbparentid: 19032005-4276-0000-0000-0000382B98D1
+Message-Id: <20190320050901.310-3-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=905 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1903200044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,46 +87,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-This series reworks the OpenCAPI driver to split frontend
-(driver interactions) from backend (hardware interactions).
+This data is already available in a struct
 
-This allows external drivers to utilise the core of the
-generic OpenCAPI driver to communicate with specific
-OpenCAPI hardware.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-Changelog:
-V2:
-  - Reorder patches as some required structs that were only available later
-  - Add dev.release implementation for ocxl_file_info to address warning on
-    driver unload (ocxl: Create a clear delineation...)
-  - Set output var irq_id in ocxl_afu_irq_alloc (ocxl: afu_irq only deals...)
-  - Bump copyright year (ocxl: Provide global MMIO accessors...,
-	ocxl: Split pci.c)
-
-Alastair D'Silva (7):
-  ocxl: Split pci.c
-  ocxl: Don't pass pci_dev around
-  ocxl: Create a clear delineation between ocxl backend & frontend
-  ocxl: Allow external drivers to use OpenCAPI contexts
-  ocxl: afu_irq only deals with IRQ IDs, not offsets
-  ocxl: move event_fd handling to frontend
-  ocxl: Provide global MMIO accessors for external drivers
-
- drivers/misc/ocxl/Makefile        |   3 +-
- drivers/misc/ocxl/afu_irq.c       |  97 ++---
- drivers/misc/ocxl/context.c       |  18 +-
- drivers/misc/ocxl/core.c          | 578 ++++++++++++++++++++++++++++++
- drivers/misc/ocxl/file.c          | 160 ++++++---
- drivers/misc/ocxl/mmio.c          | 234 ++++++++++++
- drivers/misc/ocxl/ocxl_internal.h |  49 +--
- drivers/misc/ocxl/pci.c           | 562 ++---------------------------
- drivers/misc/ocxl/sysfs.c         |  58 +--
- drivers/misc/ocxl/trace.h         |  12 +-
- include/misc/ocxl.h               | 322 ++++++++++++++++-
- 11 files changed, 1390 insertions(+), 703 deletions(-)
- create mode 100644 drivers/misc/ocxl/core.c
- create mode 100644 drivers/misc/ocxl/mmio.c
-
+diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+index b47cfda83e46..2fd0c700e8a0 100644
+--- a/drivers/misc/ocxl/core.c
++++ b/drivers/misc/ocxl/core.c
+@@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
+ 	return rc;
+ }
+ 
+-static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_actag(struct ocxl_afu *afu)
+ {
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int actag_count, actag_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+ 
+ 	/*
+ 	 * if there were not enough actags for the function, each afu
+@@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+ 		fn->actag_enabled / fn->actag_supported;
+ 	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+ 	if (actag_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+ 			actag_count, actag_offset);
+ 		return actag_offset;
+ 	}
+ 	afu->actag_base = fn->actag_base + actag_offset;
+ 	afu->actag_enabled = actag_count;
+ 
+-	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->actag_base, afu->actag_enabled);
+-	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+ 		afu->actag_base, afu->actag_enabled);
+ 	return 0;
+ }
+@@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+ 	ocxl_actag_afu_free(afu->fn, start_offset, size);
+ }
+ 
+-static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_pasid(struct ocxl_afu *afu)
+ {
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int pasid_count, pasid_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+ 
+ 	/*
+ 	 * We only support the case where the function configuration
+@@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	pasid_count = 1 << afu->config.pasid_supported_log;
+ 	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+ 	if (pasid_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+ 			pasid_count, pasid_offset);
+ 		return pasid_offset;
+ 	}
+@@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	afu->pasid_count = 0;
+ 	afu->pasid_max = pasid_count;
+ 
+-	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->pasid_base,
+ 				afu->config.pasid_supported_log);
+-	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+ 		afu->pasid_base, pasid_count);
+ 	return 0;
+ }
+@@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+ 	WARN_ON(fn->bar_used[idx] < 0);
+ }
+ 
+-static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
++static int map_mmio_areas(struct ocxl_afu *afu)
+ {
+ 	int rc;
++	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
+ 
+ 	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+ 	if (rc)
+@@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	}
+ 
+ 	afu->global_mmio_start =
+-		pci_resource_start(dev, afu->config.global_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+ 		afu->config.global_mmio_offset;
+ 	afu->pp_mmio_start =
+-		pci_resource_start(dev, afu->config.pp_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+ 		afu->config.pp_mmio_offset;
+ 
+ 	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+@@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	if (!afu->global_mmio_ptr) {
+ 		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+ 		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+-		dev_err(&dev->dev, "Error mapping global mmio area\n");
++		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = assign_afu_actag(afu, dev);
++	rc = assign_afu_actag(afu);
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = assign_afu_pasid(afu, dev);
++	rc = assign_afu_pasid(afu);
+ 	if (rc) {
+ 		reclaim_afu_actag(afu);
+ 		return rc;
+ 	}
+ 
+-	rc = map_mmio_areas(afu, dev);
++	rc = map_mmio_areas(afu);
+ 	if (rc) {
+ 		reclaim_afu_pasid(afu);
+ 		reclaim_afu_actag(afu);
+@@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+ 	device_unregister(&afu->dev);
+ }
+ 
+-static struct ocxl_fn *alloc_function(struct pci_dev *dev)
++static struct ocxl_fn *alloc_function(void)
+ {
+ 	struct ocxl_fn *fn;
+ 
+@@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+ 	INIT_LIST_HEAD(&fn->afu_list);
+ 	INIT_LIST_HEAD(&fn->pasid_list);
+ 	INIT_LIST_HEAD(&fn->actag_list);
++
+ 	return fn;
+ }
+ 
+@@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+ 	struct ocxl_fn *fn;
+ 	int rc;
+ 
+-	fn = alloc_function(dev);
++	fn = alloc_function();
+ 	if (!fn)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
 2.20.1
 
