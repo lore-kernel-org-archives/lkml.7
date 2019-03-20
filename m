@@ -2,110 +2,86 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6EEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63755C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5D2218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279012175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553119982;
-	bh=G+jCJeiztv5MQ05x6fsnzWCVxnBmXCrPv6xFGNTK3QU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C8xjZMbjFg3tD3H3xsdObxELb5FJGkC+pVqVSfXBI/ITpZHF7Ou2AeqFfE5Kv0pPq
-	 lmolJLjxA5M5eu0zPaX35+FXFFl+befTvvmOEqg8iRKpTWKbyvSw9tPk/fB7sDQoXt
-	 8snqyUjRlGYLmMo7QuSSq3FhKEm8npWgv8ovkmCc=
+	s=default; t=1553120194;
+	bh=/KXinx4yh7ZqVYs57TWXRP9i6yk4EcRk8/BYfC8kIvs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gces81KvxZ8HB/RzlkVJoZnHmUjq1OKFJbcwNUqvdTLS5ezttgZbIbzL7l2tiAjeZ
+	 8EsFQNkGX5Y2SKUhrEMw6sDafPKFRB7J2sg9Oq9P779RnNWA0KKwWR1FZdjgiXqOtN
+	 9ZHlrF0HpVxkD2KGV7X5vukYp/d52AgdCMY3HEA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfCTWNA (ORCPT
+        id S1727551AbfCTWQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfCTWNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 18:13:00 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FD822175B;
-        Wed, 20 Mar 2019 22:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553119979;
-        bh=G+jCJeiztv5MQ05x6fsnzWCVxnBmXCrPv6xFGNTK3QU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uJoHSa2v+N2C+2ffE2ZjtdtUHENfqpuZEzkEH/u8U5gq13+AC2fUtHbl70bdiGcTZ
-         V6HxB2gV0HLADokaX8AnnvcQWK26UF8/1a9gF9A79LPmG/IIrgqjiRmrToRiYXzs5I
-         8yTwiLNrTvvmLECwwdNzUgRwWrlI21XD8SBWiuz0=
-Date:   Wed, 20 Mar 2019 17:12:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>
-Subject: Re: [PATCH] hotplug/drc-info: ininitialize fndit to zero
-Message-ID: <20190320221257.GI251185@google.com>
-References: <20190316214016.6612-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316214016.6612-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 20 Mar 2019 18:16:33 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:40196 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfCTWQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 18:16:32 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 90ADA7056;
+        Wed, 20 Mar 2019 22:16:31 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 15:16:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, chrubis@suse.cz,
+        Vlastimil Babka <vbabka@suse.cz>, kirill@shutemov.name,
+        osalvador@suse.de, stable@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: mempolicy: make mbind() return -EIO when
+ MPOL_MF_STRICT is specified
+Message-Id: <20190320151630.9c7c604a96f0a892c29befdc@linux-foundation.org>
+In-Reply-To: <CAFqt6zbqYyzVB3HbYXv19jo8=3hGC=XZAkwvE8PCVdLOKTeG1g@mail.gmail.com>
+References: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
+        <CAFqt6zbqYyzVB3HbYXv19jo8=3hGC=XZAkwvE8PCVdLOKTeG1g@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Michael B (original author)]
+On Wed, 20 Mar 2019 11:23:03 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
 
-On Sat, Mar 16, 2019 at 09:40:16PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -447,6 +447,13 @@ static inline bool queue_pages_required(struct page *page,
+> >         return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
+> >  }
+> >
+> > +/*
+> > + * The queue_pages_pmd() may have three kind of return value.
+> > + * 1 - pages are placed on he right node or queued successfully.
 > 
-> Currently variable fndit is not initialized and contains a
-> garbage value, later it is set to 1 if a drc entry is found.
-> Ensure fndit is not containing garbage by initializing it to
-> zero. Also remove an extraneous space at the end of an
-> sprintf call.
-> 
-> Detected by static analysis with cppcheck.
-> 
-> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Minor typo -> s/he/the ?
 
-Michael E, I assume you'll take this since you took the original?
-Let me know if you want me to.
+Yes, that comment needs some help.  This?
 
-> ---
->  drivers/pci/hotplug/rpaphp_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..28213f44f64a 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
->  	struct of_drc_info drc;
->  	const __be32 *value;
->  	char cell_drc_name[MAX_DRC_NAME_LEN];
-> -	int j, fndit;
-> +	int j, fndit = 0;
->  
->  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
->  	if (info == NULL)
-> @@ -254,7 +254,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
->  	/* Found it */
->  
->  	if (fndit)
-> -		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
-> +		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
->  			my_index);
->  
->  	if (((drc_name == NULL) ||
-> -- 
-> 2.20.1
-> 
+--- a/mm/mempolicy.c~mm-mempolicy-make-mbind-return-eio-when-mpol_mf_strict-is-specified-fix
++++ a/mm/mempolicy.c
+@@ -429,9 +429,9 @@ static inline bool queue_pages_required(
+ }
+ 
+ /*
+- * The queue_pages_pmd() may have three kind of return value.
+- * 1 - pages are placed on he right node or queued successfully.
+- * 0 - THP get split.
++ * queue_pages_pmd() has three possible return values:
++ * 1 - pages are placed on the right node or queued successfully.
++ * 0 - THP was split.
+  * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
+  *        page was already on a node that does not follow the policy.
+  */
+_
+
