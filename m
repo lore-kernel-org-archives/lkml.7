@@ -2,125 +2,184 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0838DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C78C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24F82175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300FD2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fhmK4rN4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXNPB7zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfCTNzv (ORCPT
+        id S1728060AbfCTN5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:55:51 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:50353 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfCTNzv (ORCPT
+        Wed, 20 Mar 2019 09:57:17 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51957 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfCTN5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:55:51 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x2KDtgAS020630
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 22:55:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2KDtgAS020630
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553090143;
-        bh=hiiGyh7YSFui/vJJXdCRF4SiqT/SlOJQDxwe8vaqJyE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fhmK4rN4zlHQmTZERE7VFrmW+dQfjiCgVCjGfPPTBtmyceN7deqR0YEuQQ04iexcS
-         rXUhCUla45YYE2Y8i1PRtzk3MP0bL1tXamBWji6hyoH2JO2IpD39Wr/bKzA/tvNZiE
-         DjUWuE8IQBrT7jDKapX0aHaAe8W6/0kDZfJGc41prqchL1eeUVlrdX8CKNtGI/l0d4
-         /MiMughaMmm3V/2l+pSgWzr0SR2eh1hb+E2ltLaO47X5s+tUF+2jiW0xxyYJ8v7ucu
-         51qqAsoHC2mixGk2P/EoPJGtKNL+cJ3re+oWRqZpfCv5EnQeMBTJX+DqXAjI6J+to2
-         0LVX1vVo1E9PQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id w13so1526185vsc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:55:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAXceKdAl011NoN81mgK0QkZcTLIoksFq89yJjgAF9Bpby3k3Mxa
-        80Ld37bhwSlC6z15zw28/STFZGnu5meIx+ax1xc=
-X-Google-Smtp-Source: APXvYqzCph8ErPSuaG/0pGj1kaBQrITvbuYIbvaFsjbDFfZ15oWd4Hgf3K/zLOGQwVDabnyD45jDUa0kEMpAy//NiHM=
-X-Received: by 2002:a67:ea05:: with SMTP id g5mr4891528vso.179.1553090142407;
- Wed, 20 Mar 2019 06:55:42 -0700 (PDT)
+        Wed, 20 Mar 2019 09:57:14 -0400
+Received: by mail-it1-f195.google.com with SMTP id e24so31592119itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CvlQrhVNZGltu5KQzuGmLoTLALk87KzB9BrSGatvLTs=;
+        b=bXNPB7zvPkRgcOAPSdlMSVdFMXKiD4p7E6PFK0UazdmwlGIGsVM969QA2CwMUo9N/n
+         obbqOhB4/UpqWlegShtLyImJKsquRqfqgO39N7IbLXzxPbDy8K2PHAEsF0DUssKOXnBv
+         sIxvubYhUf3W0NnOugvcVe0dFeNe1YUUwBj9/Yk8QATccjDtqjdO7mswCld32ebhE9Qp
+         jjUFJ9PKczP385NR7ngZkXQ8DDGhEY5BMwvCP1GiWitdUjoOsduwk70+ykWyV2D5RmjK
+         46vSp82W0e+1OlkPxUcisjVLwQd47j0ICHede79NSGhjSLBJoDTCC8SEqY0VVOqMJYGm
+         29Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CvlQrhVNZGltu5KQzuGmLoTLALk87KzB9BrSGatvLTs=;
+        b=djyEgw7g9P5evT5JlQiOmNuhPo3G77zHLQHc5BGDSIsKgYI0Ze0BFVqLVMycmEDVvm
+         Ytx4x1JiEDF5nfu4Mi0iNIUxqTL8QoyOpOcCr2HXGgGhQ0z32yAruDI6nkDGAku9pHqa
+         fKoEOSytrAIkclM8hK8QMlGKy/A4bfnoWkDi+kMff38f0Jf5OnvFXudpj2MKamm05gSq
+         EINJdLyhU4j37cRcqRzIqSo+C558CZm77B2k4Rqw47AVBR94PYgNDTIU0Z91tRt8Zmya
+         vOgktdNjhoXPhlmQaxrZCY+fwHzYpR0LyCoE0lq7VrNVC5lBMZj5fqwQfkn8wLJ350IS
+         uCXw==
+X-Gm-Message-State: APjAAAWjSzSxC9nPk7a6b60zoUcu9I9ov9/XVG0A27u0huOEjbJ79Q9R
+        lIeLWo8AdTgu+mH1nZJbYugQIjY2uqFiXaAy60v5bg==
+X-Google-Smtp-Source: APXvYqxdt1A/jMZrV2buAz0e10n701wfuyKaiMQX4b+XZS0YUErmcrU9kOjXrZFjlWOddN3qBDNvx1aBg+c6+Gk2/38=
+X-Received: by 2002:a24:3b01:: with SMTP id c1mr4319010ita.144.1553090233000;
+ Wed, 20 Mar 2019 06:57:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
-In-Reply-To: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 20 Mar 2019 22:55:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASv1BybFUDZ0KippC216i4k51iX42DL-HCHHxZWM2oz+A@mail.gmail.com>
-Message-ID: <CAK7LNASv1BybFUDZ0KippC216i4k51iX42DL-HCHHxZWM2oz+A@mail.gmail.com>
-Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com
+References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+ <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+ <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+ <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com> <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com>
+In-Reply-To: <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 Mar 2019 14:57:01 +0100
+Message-ID: <CACT4Y+axojyHxk5K34YuLUyj+NJ05+FC3n8ozseHC91B1qn5ZQ@mail.gmail.com>
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 4:55 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Wed, Mar 20, 2019 at 2:33 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
 >
-> Building the 32-bit vDSO with a recent clang version fails due
-> to undefined symbols:
 >
-> arch/x86/entry/vdso/vdso32.so.dbg: undefined symbols found
 >
-> The undefined symbol in this case is __lshrdi3, which is part of
-> the compiler runtime library, however the vDSO isn't linked against
-> this library.
+> On 3/20/19 1:38 PM, Dmitry Vyukov wrote:
+> > On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
+> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> >>
+> >> On 2019/03/20 18:59, Dmitry Vyukov wrote:
+> >>>> From bisection log:
+> >>>>
+> >>>>         testing release v4.17
+> >>>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+> >>>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
+> >>>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+> >>>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
+> >>>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>>>         testing release v4.16
+> >>>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+> >>>>         run #0: OK
+> >>>>         run #1: OK
+> >>>>         run #2: OK
+> >>>>         run #3: OK
+> >>>>         run #4: OK
+> >>>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
+> >>>>         run #6: OK
+> >>>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
+> >>>>         run #8: OK
+> >>>>         run #9: OK
+> >>>>         testing release v4.15
+> >>>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+> >>>>         all runs: OK
+> >>>>         # git bisect start v4.16 v4.15
+> >>>>
+> >>>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
+> >>>
+> >>> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
+> >>> looks like the right range, no?
+> >>
+> >> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
+> >> "Stack corruption" can't manifest as "Out of memory and no killable processes".
+> >>
+> >> "kernel panic: Out of memory and no killable processes..." is completely
+> >> unrelated to "kernel panic: corrupted stack end in wb_workfn".
+> >
+> >
+> > Do you think this predicate is possible to code?
 >
-> Include the kernel version of __lshrdi3 in the 32-bit vDSO build.
+> Something like bellow probably would work better than current behavior.
 >
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> diff --git a/lib/lshrdi3.c b/lib/lshrdi3.c
-> index 99cfa5721f2d..8a4fc6bcf3a4 100644
-> --- a/lib/lshrdi3.c
-> +++ b/lib/lshrdi3.c
-> @@ -16,7 +16,7 @@
->   * to the Free Software Foundation, Inc.
->   */
+> For starters, is_duplicates() might just compare 'crash' title with 'target_crash' title and its duplicates titles.
+
+Lots of bugs (half?) manifest differently. On top of this, titles
+change as we go back in history. On top of this, if we see a different
+bug, it does not mean that the original bug is also not there.
+This will sure solve some subset of cases better then the current
+logic. But I feel that that subset is smaller then what the current
+logic solves.
+
+> syzbot has some knowledge about duplicates with different crash titles when people use "syz dup" command.
+
+This is very limited set of info. And in the end I think we've seen
+all bug types being duped on all other bugs types pair-wise, and at
+the same time we've seen all bug types being not dups to all other bug
+types. So I don't see where this gets us.
+And again as we go back in history all these titles change.
+
+> Also it might be worth to experiment with using neural networks to identify duplicates.
 >
-> -#include <linux/module.h>
-> +#include <linux/export.h>
->  #include <linux/libgcc.h>
 >
->  long long notrace __lshrdi3(long long u, word_type b)
-> @@ -42,4 +42,6 @@ long long notrace __lshrdi3(long long u, word_type b)
+> target_crash = 'kernel panic: corrupted stack end in wb_workfn'
+> test commit:
+>         bad = false;
+>         skip = true;
+>         foreach run:
+>                 run_started, crashed, crash := run_repro();
 >
->         return w.ll;
->  }
-> +#ifndef BUILD_VDSO
->  EXPORT_SYMBOL(__lshrdi3);
-> +#endif
-
-
-I picked up
-https://patchwork.kernel.org/patch/10858565/
-
-
-
-I do not know if this patch is still needed.
-
-FYI, just a tip to turn EXPORT_SYMBOL into no-op cleanly.
-
-You can use __DISABLE_EXPORTS
-as drivers/firmware/efi/libstub/Makefile does.
-
-See commit f922c4abdf76.
-
-
--- 
-Best Regards
-Masahiro Yamada
+>                 //kernel built, booted, reproducer launched successfully
+>                 if (run_started)
+>                         skip = false;
+>                 if (crashed && is_duplicates(crash, target_crash))
+>                         bad = true;
+>
+>         if (skip)
+>                 git bisect skip;
+>         else if (bad)
+>                 git bisect bad;
+>         else
+>                 git bisect good;
