@@ -2,190 +2,122 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB1C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2952DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CB521850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C892184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U92vhStm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfCTNJM (ORCPT
+        id S1727587AbfCTNLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:09:12 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46845 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726644AbfCTNJJ (ORCPT
+        Wed, 20 Mar 2019 09:11:19 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:47077 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727172AbfCTNLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:09:09 -0400
-Received: from heimdall.vpn.pengutronix.de ([2001:67c:670:205:1d::14] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1h6axv-0007OK-2r; Wed, 20 Mar 2019 14:09:07 +0100
-Subject: Re: [PATCH 0/6] net: can: xilinx_can: Bug fixes and Enhancements
-To:     Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        wg@grandegger.com, davem@davemloft.net, michal.simek@xilinx.com
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d1cd73cc-e200-7c06-dd6e-3c5e2e35709c@pengutronix.de>
-Date:   Wed, 20 Mar 2019 14:08:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 09:11:19 -0400
+Received: by mail-wr1-f44.google.com with SMTP id o1so2667895wrs.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6tf1wTzSIXlJeGRVIG2wXoLRG/xIF0PpDlp69YcY3EU=;
+        b=U92vhStmXMxiBxLkRoGENdsJLTvY4kbtg2GYeDFaJpQt4Mm/BS3BskVlJ052c1axab
+         80kv71slsOpI7ERzsWqhmtkMmfEGRJlDT8PTgrTPw1nwa6YSPYZYclE4Um7MmCwFp3ea
+         BUK65avspKYuMgoPoDRdhxRIUAVJtxELc/27YFPsxYxy0U0thV6BhdhEQgyIOtIDB5tY
+         HCqE6xI6xY1hg1tOd/QaO5qoN1WmYLpXq7a4YImaqvdOUo7Ot9wbm6tDnzz4mYOjnae0
+         TmPLrXHSRZrjpBJqoA/zG56mdAVSFqw/pVhdaucVZZVPtuNs1IYnC7g3wpDzngETy30Y
+         U0xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6tf1wTzSIXlJeGRVIG2wXoLRG/xIF0PpDlp69YcY3EU=;
+        b=hARwJEiT9ShRKNSLDKSmtkwSwFjmmkCUeTz0iEm0C2/yDbNKb7F9BIzQhhUH/G701p
+         0YzuDnbg3XN0pKNNyokzOqori/ztCThm582aUnWuZWcub0Jy7k2wDlMDJUA2MQsX9YHo
+         7e87wqOzl1un2FCd7LP2yWmC15JLMn6DEGmxjaSN9vwGw9sg59UotBlsa51NQBCkT7gA
+         XlJHrPY1UN/XjesiBj8VMckmIGKwr2eTKBPBAVOPyvCIc0YNNj6xHaT2Jd/Xw2fH8bgL
+         nSbwrafhmSbRvOVlOg3utpc6PEUrfo+QuDeQewxPp6dk57B3xLEbEaC44gMhH1Bhik+p
+         kdLQ==
+X-Gm-Message-State: APjAAAXRjjJZvRoP/lPIJZ8epJMaA06X/gyyyQkmNIfMrZUB/nTga1aA
+        Yfo5TQ8tE2ubSDmQAKmKgkgIeg==
+X-Google-Smtp-Source: APXvYqzzzK8ROP8dawupPjgqRQHLBtVR/Ev29X6SBjWqbBCmtldnBBbef6yfkVHwN46DUnY2v56AFw==
+X-Received: by 2002:adf:eac9:: with SMTP id o9mr10598101wrn.85.1553087476973;
+        Wed, 20 Mar 2019 06:11:16 -0700 (PDT)
+Received: from dell ([2.31.167.140])
+        by smtp.gmail.com with ESMTPSA id r63sm3011859wmr.32.2019.03.20.06.11.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 06:11:16 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 13:11:14 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Florian Vaussard <florian.vaussard@epfl.ch>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv2] mfd: twl6040: Fix device init errors for ACCCTL
+ register
+Message-ID: <20190320131114.GQ4731@dell>
+References: <20190214160345.353-1-tony@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="AtCO4ESIZlZit0M7VDN0gsU3QqTrfNlYZ"
-X-SA-Exim-Connect-IP: 2001:67c:670:205:1d::14
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190214160345.353-1-tony@atomide.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---AtCO4ESIZlZit0M7VDN0gsU3QqTrfNlYZ
-Content-Type: multipart/mixed; boundary="uAr2Tcv5uPxh5vG5HR99EbCyN4MgocTEB";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
- wg@grandegger.com, davem@davemloft.net, michal.simek@xilinx.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-ID: <d1cd73cc-e200-7c06-dd6e-3c5e2e35709c@pengutronix.de>
-Subject: Re: [PATCH 0/6] net: can: xilinx_can: Bug fixes and Enhancements
-References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
-In-Reply-To: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
+On Thu, 14 Feb 2019, Tony Lindgren wrote:
 
---uAr2Tcv5uPxh5vG5HR99EbCyN4MgocTEB
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+> I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+> 
+> twl6040 0-004b: Failed to write 2d = 19: -121
+> 
+> And then any following register access will produce errors.
+> 
+> There 2d offset above is register ACCCTL that gets written on twl6040
+> powerup. With error checking added to the related regcache_sync() call,
+> the -EREMOTEIO error is reproducable on twl6040 powerup at least
+> duovero.
+> 
+> To fix the error, we need to wait until twl6040 is accessible after the
+> powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+> powerup before register write will complete without failures. Let's also
+> make sure we warn about possible errors too.
+> 
+> Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+> configuration and regcache_sync() will write the new value to ACCCTL.
+> 
+> Cc: Florian Vaussard <florian.vaussard@epfl.ch>
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+> 
+> Changes since v1:
+> 
+> - Cosmetic change to improve error message as suggested by Lee
+> 
+> ---
+>  drivers/mfd/twl6040.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 
-On 3/18/19 12:32 PM, Appana Durga Kedareswara rao wrote:
-> This patch series does the below
-> --> Added support for CANFD FD frames
-> --> Fix Checkpatch reported warnings and checks
->=20
-> Appana Durga Kedareswara rao (6):
->   net: can: xilinx_can: Fix style issues
->   net: can: xilinx_can: Fix flags field initialization for axi can and
->     canps
->   net: can: xilinx_can: Add cantype parameter in xcan_devtype_data
->     struct
->   net: can: xilinx_can: Add support for CANFD FD frames
->   net: can: xilinx_can: Add SPDX license
->   net: can: xilinx_can: Fix kernel doc warnings
->=20
->  drivers/net/can/xilinx_can.c | 303 +++++++++++++++++++++++++++++++++++=
-+-------
->  1 file changed, 257 insertions(+), 46 deletions(-)
+Applied, thanks.
 
-Applied to linux-can-next/testing, but in order. First fixes than
-enhancements:
-
-> 241826302854 net: can: xilinx_can: Fix style issues
-> 70fb26fadc27 net: can: xilinx_can: Fix kernel doc warnings
-> 7beb64351ff1 net: can: xilinx_can: Add SPDX license
-> dd94910bceae net: can: xilinx_can: Fix flags field initialization for a=
-xi can and canps
-> 6bd05cece567 net: can: xilinx_can: Add cantype parameter in xcan_devtyp=
-e_data struct
-> 34e280170736 net: can: xilinx_can: Add support for CANFD FD frames
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---uAr2Tcv5uPxh5vG5HR99EbCyN4MgocTEB--
-
---AtCO4ESIZlZit0M7VDN0gsU3QqTrfNlYZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAlySO2sACgkQWsYho5Hk
-nSAO5wf/TRVP/ca1hbKAMEXeNGULYHXPsAylwWq8dvb/PG9OVMK6WdC60jCkbax2
-lRRsxy1gXSjCtV3CGCQAKKDiZSLr5INsAVieVUn07WlNdaBugILb7gD31vK+ql5w
-foHe6Tez+njY5BwbMShk0br4k4U23ja9gc/OIONT/3H9OATI/IGP0UTTIzXRlk0U
-VZD7Ifv1TGsRcbyTfiX8WpU5iEUUqsMrxfTzSIop6rhpZ0Snfbw678dWYx5+5sgy
-telZEt+6WwVYMG980hZVFGPx1uo+YeXS7MirQ0a4ElkonvQTVtmZcCkjs3BNdnlc
-V7gTUhZeKQMHVqFwyc6Dm4sg4JT3fg==
-=bBPD
------END PGP SIGNATURE-----
-
---AtCO4ESIZlZit0M7VDN0gsU3QqTrfNlYZ--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
