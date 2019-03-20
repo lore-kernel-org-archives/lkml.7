@@ -2,69 +2,108 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA3AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5D4C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117F92183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807AE2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mcd+2gKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfCTBzD (ORCPT
+        id S1727584AbfCTBzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:55:03 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726801AbfCTBzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:55:03 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4629E82398EEED7160C6;
-        Wed, 20 Mar 2019 09:55:01 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 20 Mar 2019 09:54:55 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>, <bridge@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <nikolay@cumulusnetworks.com>,
-        <roopa@cumulusnetworks.com>
-Subject: [PATCH net-next] net: bridge: use eth_broadcast_addr() to assign broadcast address
-Date:   Wed, 20 Mar 2019 10:06:57 +0800
-Message-ID: <20190320020657.31423-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 19 Mar 2019 21:55:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34071 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfCTBzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 21:55:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v12so544963pgq.1;
+        Tue, 19 Mar 2019 18:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zLJ/uMiEq5YTdUXdWO6+7y4TcthwbeG5CkDwN5k6eA8=;
+        b=Mcd+2gKgAoag8w1L8q95XO+lkKmE3n4EP3GgIST4+zLLQTFAS7OVqLMHuKp6whJBWT
+         N2JsMLsYPAsTc7jA/dkulXLaxj0DwPruEuNB695fNWfpNivCrsnHbKOoVrYTooVbauld
+         eDNKOSQ+holpQ102g7ryKs/hZdQOYjP8l18Ticy+hT9rshyXPGQFDb40Rqp8lWLJlXPu
+         FQRrq4xv3LJErslZ2p6SGA74vFQEi89Nc2kLZDslUQoapkhYLXAmuajKxTBDw4UL6aU6
+         TIfWTtGsUQxpbajswPkZ+RB1sf+s6PwUOERSWjCee6tqIQ3Ak1g5NzRnXRR9ZKfU5GeL
+         qyEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zLJ/uMiEq5YTdUXdWO6+7y4TcthwbeG5CkDwN5k6eA8=;
+        b=JCzPF/mw3atfYxjfgpHOv68WetZdvb+7GIkpqYr8Q8rMlVQoKC5TokKa0eyRLVBJ9g
+         Ksu+zoMaUwJa46Bs4Hg0S6LXUcxrptXCnbH9TkUx5qARP8I32CE1LFbDcKI3YqQRJD/A
+         ztahXfKniWGzag0M6SIz+fUjzAJ5mre7oc7hy+XwhTHU1Mtzfz56hy3yJTv2f1ZiFpYF
+         8o88++mGO9MbAzak8gMikbcSNwvUw4O4z4X/o3Hiw4tH0ALqR8kQP5m7+7ZeMG6chd4q
+         sKyYCQqsZWDtCqhihrDzhElH84l5ApikSHm56jBBI05QUaoweJB5Ylo8KZ1IMR9eOD5d
+         48IQ==
+X-Gm-Message-State: APjAAAVtGVSlqSr1BpOfqjIUnxSElM7gAVu/OlnT4jFWxlGBvFu4uca3
+        EkdMaDsV1wvb8U0/o7KH764=
+X-Google-Smtp-Source: APXvYqwjK0dFYmBGz6AM0ZjUMxaflutOf94W8pvLO7xsqJglphsBUiEGOEDJx/K4PZgatiUoX5u/Gw==
+X-Received: by 2002:a17:902:9683:: with SMTP id n3mr5287773plp.333.1553046911459;
+        Tue, 19 Mar 2019 18:55:11 -0700 (PDT)
+Received: from localhost ([211.246.69.17])
+        by smtp.gmail.com with ESMTPSA id b138sm436261pfb.48.2019.03.19.18.55.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 18:55:10 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 10:55:07 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Makoto Wu <makotowu@google.com>
+Subject: Re: [PATCH] zram: fix idle/writeback string compare
+Message-ID: <20190320015507.GC4718@jagdpanzerIV>
+References: <20190319231911.145968-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319231911.145968-1-minchan@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to use eth_broadcast_addr() to assign broadcast address
-insetad of memset().
+On (03/20/19 08:19), Minchan Kim wrote:
+> Cc: <stable@vger.kernel.org>	[5.0]
+> Reported-by: Makoto Wu <makotowu@google.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- net/bridge/br_multicast.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
-index a0e369179f6d..b257342c0860 100644
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -517,7 +517,7 @@ struct net_bridge_port_group *br_multicast_new_port_group(
- 	if (src)
- 		memcpy(p->eth_addr, src, ETH_ALEN);
- 	else
--		memset(p->eth_addr, 0xff, ETH_ALEN);
-+		eth_broadcast_addr(p->eth_addr);
- 
- 	return p;
- }
--- 
-2.20.1
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -290,18 +290,8 @@ static ssize_t idle_store(struct device *dev,
+>  	struct zram *zram = dev_to_zram(dev);
+>  	unsigned long nr_pages = zram->disksize >> PAGE_SHIFT;
+>  	int index;
+> -	char mode_buf[8];
+> -	ssize_t sz;
+>  
+> -	sz = strscpy(mode_buf, buf, sizeof(mode_buf));
+> -	if (sz <= 0)
+> -		return -EINVAL;
+> -
+> -	/* ignore trailing new line */
+> -	if (mode_buf[sz - 1] == '\n')
+> -		mode_buf[sz - 1] = 0x00;
+> -
+> -	if (strcmp(mode_buf, "all"))
+> +	if (!sysfs_streq(buf, "all"))
+>  		return -EINVAL;
+[..]
 
+That's a good improvement of the code.
+
+	-ss
