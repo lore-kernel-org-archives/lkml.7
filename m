@@ -2,129 +2,77 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E319DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1555C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B441E218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FM/iqSzl"
+	by mail.kernel.org (Postfix) with ESMTP id 8FF67218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfCTUyS (ORCPT
+        id S1727598AbfCTUzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:54:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33256 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfCTUyP (ORCPT
+        Wed, 20 Mar 2019 16:55:01 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:50777 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTUzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:54:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z6so667143wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/gjxewSVR3uzSO/xeF56lvReGGPDJMv2NWUY31AtQBs=;
-        b=FM/iqSzlqdQVFzO8wnOI/srKD8Yy7qdo7Jf+JMqZo7HEmyXBQFZfL/iLYiecvQdi9b
-         f5lVmjhNgoYBD11b3ZU2eTBtIBG4Xfz/puMgZdCKsFMjgKfB4lXLt7A08h+rOtEzneJw
-         gck6XwktdIsgIQvnEnoxZfCMTweSJGe7R5RCXtN3kIM1KWv5xKwe+Fi2mWvtGZPyRchD
-         hYAmb7QG22WG5YJh6p5qUnBCGhlBc7l7q0H+uDEKq4CamBkyzmK8VJN5/0Hl0yKh8Jzg
-         6m6U1jqNzO1rmTwpy1URB7fk7RTjMHBkX850wO2PEw2bevbXNWvZpC897qN3DJHBLHPd
-         txFg==
+        Wed, 20 Mar 2019 16:55:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id i63so590977itb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:55:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/gjxewSVR3uzSO/xeF56lvReGGPDJMv2NWUY31AtQBs=;
-        b=Rgj6yg6FpLQUdPxaUN2jnylaSt0uII9nXYW7V87CmNhtbLxN1nrDicsj4HcIOkzQ8K
-         +NqGMg8yNIDiae7gLoKP87II8W9jvZgDXHoyAWki/XEBB9lACM1Gzsz3WJaUa8k/M9Xb
-         nexzxSDHME4NYrRCvo7KLxaiKIv0qfwCwflVEYuisF42zy6CZOi602U0zYGp0xPCagGP
-         W1L9qG+gycrx4gbAnx5Ll1UQvq0SncbixcUO/pah+2dIGh7ybdyuN82wyMqodERAo16b
-         FRiv10f7m4najtuqpDC49Unv1Eby7JvKihoGatdZAAVyG+vCyrtq6oYS+0hVRoPmGGW8
-         1ZwQ==
-X-Gm-Message-State: APjAAAU3Xd863E2wPGpRMI+es5sGdAZy5rNGYwU4JZ4tdqrbC2lWGWBr
-        Drjq6pwdOyaY9MaTD14/+/4=
-X-Google-Smtp-Source: APXvYqzptZ0XtBnwh8c9aXr5D4q1+EeCuiC/WgRd1/KW0qU8sCzALEuco/FQonaKs6XMuB+C6wfBmQ==
-X-Received: by 2002:a1c:1a53:: with SMTP id a80mr188081wma.15.1553115253157;
-        Wed, 20 Mar 2019 13:54:13 -0700 (PDT)
-Received: from narunkot ([94.11.212.65])
-        by smtp.gmail.com with ESMTPSA id r12sm5353108wrr.71.2019.03.20.13.54.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 13:54:12 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 20:54:02 +0000
-From:   Okash Khawaja <okash.khawaja@gmail.com>
-To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Chris Brannon <chris@the-brannons.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Kirk Reiser <kirk@reisers.ca>, linux-kernel@vger.kernel.org
-Subject: Re: Staging status of speakup
-Message-ID: <20190320205402.394e3b6a@narunkot>
-In-Reply-To: <20190319163121.5e7ab8c7@alans-desktop>
-References: <20190315130035.6a8f16e9@narunkot>
-        <87ef77obtg.fsf@cmbmachine.messageid.invalid>
-        <20190316093543.w4i6djt5uuqtx5xr@function>
-        <20190319163121.5e7ab8c7@alans-desktop>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ATMdaYfMrEzLAK/3qVE6JRfPa140C73ivhkxaf+hG2g=;
+        b=r960IvT03qtUooHy+a+6lXCr6BJwvT80FBQhY6nxiOj/lDlcVuepvNrcKzgsErIgcD
+         jBpZrMo8/+WRHDAjgsnxS3g/BxsZoaHP4s3NRYTU8rQ2oAZhjVt/MAJwSZHcDVB1QEKe
+         i/+31A5mKEssfZI9j7noVeUUBOAzGX+Lmv7IscmI1rFJqTm4ZGQVVd2GKLrkvfet7M5z
+         ZlKCrkVdeq84ozPlHElSB/ipBW992flG04Hc6zxH01fuRu1UBJpZHfQ5SHK0XR5qozbM
+         JbFVHNVcoDN14Sc986BR5Imh7wTmLiym3GBCF9jFAgoL/Ja/EG3LCQxXIIngEzgApQLf
+         +p2A==
+X-Gm-Message-State: APjAAAUbxHjk7KCKswIDQyk2Hvn+D51Zuv874G4NC5SP6qfDq+tYW4Hi
+        mn7peFPFwSEPjLX+TbIsE5vV03FuayjTJ2YsSZwGlNmZ5FpT
+X-Google-Smtp-Source: APXvYqwKWmO54DQg68LMcZG0mYLaGtrq1IyFFVS31blZL0BGi+p6SIX8ng6BT6POF8LV5tRBsdsrdl/RPJeOjZV3hvpuM7aEMCJ7
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:a904:: with SMTP id c4mr6838iod.19.1553115300405; Wed,
+ 20 Mar 2019 13:55:00 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 13:55:00 -0700
+In-Reply-To: <0000000000005b7456057a9abc57@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c6a7d005848cd56d@google.com>
+Subject: Re: kernel BUG at mm/slab.c:LINE! (3)
+From:   syzbot <syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        sbrivio@redhat.com, sd@queasysnail.net,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 16:31:21 +0000
-Alan Cox <gnomes@lxorguk.ukuu.org.uk> wrote:
+syzbot has bisected this bug to:
 
-> On Sat, 16 Mar 2019 10:35:43 +0100
-> Samuel Thibault <samuel.thibault@ens-lyon.org> wrote:
-> 
-> > Chris Brannon, le ven. 15 mars 2019 18:19:39 -0700, a ecrit:  
-> > > Okash Khawaja <okash.khawaja@gmail.com> writes:    
-> > > > Finally there is an issue where text in output buffer sometimes
-> > > > gets garbled on SMP systems, but we can continue working on it
-> > > > after the driver is moved out of staging, if that's okay.
-> > > > Basically we need a reproducer of this issue.    
-> > > 
-> > > What kind of reproducer do you need here?  It's straightforward to
-> > > reproduce in casual use, at least with a software synthesizer.    
-> > 
-> > The problem is that neither Okash nor I are even casual users of
-> > speakup, so we need a walk-through of the kind of operation that
-> > produces the issue. It does not have to be reproducible each time
-> > it is done. Perhaps (I really don't know what that bug is about
-> > actually) it is a matter of putting text in the selection buffer,
-> > and try to paste it 100 times, and once every 10 times it will be
-> > garbled, for instance.  
-> 
-> paste_selection still says
-> 
-> /* Insert the contents of the selection buffer into the
->  * queue of the tty associated with the current console.
->  * Invoked by ioctl().
->  *
->  * Locking: called without locks. Calls the ldisc wrongly with
->  * unsafe methods,
->  */
-> 
-> from which I deduce that with everyone using X nobody ever bothered to
-> fix it. So before you look too hard at the speakup code you might
-> want to review the interaction with selection.c too.
+commit b8a51b38e4d4dec3e379d52c0fe1a66827f7cf1e
+Author: Stefano Brivio <sbrivio@redhat.com>
+Date:   Thu Nov 8 11:19:23 2018 +0000
 
-Hi,
+     fou, fou6: ICMP error handlers for FoU and GUE
 
-This is a good point. At the moment speakup uses its own set of
-selection and paste functions but I am in process of changing speakup
-to use these functions from drivers/tty/vt/selection.c instead. This
-lack of locking will be worth watching out for.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161b63cf200000
+start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=151b63cf200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=111b63cf200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4a0a89f12ca9b0f5
+dashboard link: https://syzkaller.appspot.com/bug?extid=2182db487a523d86bf34
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148d46d5400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c6a225400000
 
-Thanks!
-Okash
+Reported-by: syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com
+Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
