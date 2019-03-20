@@ -2,104 +2,123 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EEF2190C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KGZy8MFa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="im6uCycF"
+	by mail.kernel.org (Postfix) with ESMTP id 1BCAA21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfCTU3D (ORCPT
+        id S1726907AbfCTUbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:29:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42966 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfCTU3C (ORCPT
+        Wed, 20 Mar 2019 16:31:44 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.31]:29446 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbfCTUbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:29:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3DFF960907; Wed, 20 Mar 2019 20:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553113741;
-        bh=HSAsGMK4zIf5wsNnIfiL39gqU97qYyfNfw2h3KZVNO4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KGZy8MFaDI1KTLbyy9LBS+mgt5JT4joA3jz5fe0VBe9iWaX0t35bFUPmdaSebly2O
-         VazKjnm2fXptdVYV4wQ6Bg1Je/41sgxs8b8m+i7VCC5Fuu9OSRvIJfKWyZGjk3NzhV
-         i3BI2LYwfTKqcfZyGWO/WzXchGresteQSAQjsT9E=
-Received: from [10.79.162.149] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E05596053D;
-        Wed, 20 Mar 2019 20:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553113740;
-        bh=HSAsGMK4zIf5wsNnIfiL39gqU97qYyfNfw2h3KZVNO4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=im6uCycF8lIchyayrYttDxxsxWfVQ5jrq4yOGOG3yVzmLKhwWqSOEKWf/+yZX7wSS
-         aJWwG0LpiIg+Mowkb0xCLPtd3POBj7VAkvwAyiRA3lVBioinFzT6YtJgKoNCaLMjfd
-         sl/dSdREl5ZyhXbeOz19C69p5/s2ngu6hiUR5R0g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E05596053D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v3] staging: rtlwifi: rtl8822b: fix to avoid NULL pointer
- dereference
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sabin Mihai Rapan <sabin.rapan@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20190320170251.31838-1-pakki001@umn.edu>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <1d27e981-1407-3498-03a5-926abec634f3@codeaurora.org>
-Date:   Thu, 21 Mar 2019 01:58:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 16:31:44 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 10C5911D5E3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:31:44 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6hsGhhhrd2PzO6hsGh2HNh; Wed, 20 Mar 2019 15:31:44 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=37774 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6hsC-003xLg-BB; Wed, 20 Mar 2019 15:31:42 -0500
+Date:   Wed, 20 Mar 2019 15:31:39 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] scsi: mptscsih: Mark expected switch fall-throughs
+Message-ID: <20190320203139.GA18369@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190320170251.31838-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6hsC-003xLg-BB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.39]:37774
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 66
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-On 3/20/2019 10:32 PM, Aditya Pakki wrote:
-> skb allocated via dev_alloc_skb can fail and return a NULL pointer.
-> This patch avoids such a scenario and returns, consistent with other
-> invocations.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
->
-> ---
-> v2: Move signed off above the version change log
-> v1: Patch collision with rtl_phydm.c, fix as per Greg
-> ---
->   drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
-> index f061dd1382aa..cf6b7a80b753 100644
-> --- a/drivers/staging/rtlwifi/rtl8822be/fw.c
-> +++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
-> @@ -743,6 +743,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
->   		      u1_rsvd_page_loc, 3);
->   
->   	skb = dev_alloc_skb(totalpacketlen);
-> +	if (!skb)
-> +		return;
->   	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
->   	       totalpacketlen);
->   
+This patch fixes the following warnings:
 
+drivers/message/fusion/mptscsih.c: In function ‘mptscsih_io_done’:
+drivers/message/fusion/mptscsih.c:741:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if ( ioc->bus_type == SAS ) {
+       ^
+drivers/message/fusion/mptscsih.c:790:3: note: here
+   case MPI_IOCSTATUS_SCSI_TASK_TERMINATED: /* 0x0048 */
+   ^~~~
+drivers/message/fusion/mptscsih.c:884:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    scsi_set_resid(sc, 0);
+    ^~~~~~~~~~~~~~~~~~~~~
+drivers/message/fusion/mptscsih.c:885:3: note: here
+   case MPI_IOCSTATUS_SCSI_RECOVERED_ERROR: /* 0x0040 */
+   ^~~~
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/message/fusion/mptscsih.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/message/fusion/mptscsih.c b/drivers/message/fusion/mptscsih.c
+index 587b5daf74b4..f0737c57ed5f 100644
+--- a/drivers/message/fusion/mptscsih.c
++++ b/drivers/message/fusion/mptscsih.c
+@@ -786,6 +786,7 @@ mptscsih_io_done(MPT_ADAPTER *ioc, MPT_FRAME_HDR *mf, MPT_FRAME_HDR *mr)
+ 			/*
+ 			 * Allow non-SAS & non-NEXUS_LOSS to drop into below code
+ 			 */
++			/* Fall through */
+ 
+ 		case MPI_IOCSTATUS_SCSI_TASK_TERMINATED:	/* 0x0048 */
+ 			/* Linux handles an unsolicited DID_RESET better
+@@ -882,6 +883,7 @@ mptscsih_io_done(MPT_ADAPTER *ioc, MPT_FRAME_HDR *mf, MPT_FRAME_HDR *mr)
+ 
+ 		case MPI_IOCSTATUS_SCSI_DATA_OVERRUN:		/* 0x0044 */
+ 			scsi_set_resid(sc, 0);
++			/* Fall through */
+ 		case MPI_IOCSTATUS_SCSI_RECOVERED_ERROR:	/* 0x0040 */
+ 		case MPI_IOCSTATUS_SUCCESS:			/* 0x0000 */
+ 			sc->result = (DID_OK << 16) | scsi_status;
+-- 
+2.21.0
 
