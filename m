@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EEDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C950EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D7F2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1CB2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBRIEAm7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JN7peWS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfCTOw1 (ORCPT
+        id S1728611AbfCTOw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:52:27 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:46125 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbfCTOwY (ORCPT
+        Wed, 20 Mar 2019 10:52:29 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:39545 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbfCTOw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:52:24 -0400
-Received: by mail-pf1-f201.google.com with SMTP id j10so2745679pfn.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:52:24 -0700 (PDT)
+        Wed, 20 Mar 2019 10:52:27 -0400
+Received: by mail-qt1-f202.google.com with SMTP id n13so2659309qtn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TypqXDoyNXONz2oDo7T8C+4NlePqKxo9jFd/dN9OnUY=;
-        b=VBRIEAm79eYl13DjJG/iyvfKJYZY4JaqF0G4F5Q9Tdc02tcv3SWnQ7Xrt3SjBFfGvg
-         PcwgciJDQT6onqfPRyqhMrslyXsxz10zdr5FgA2LGaoQc9yos1AyT8UyusDzxef8QaZN
-         z/f2pc6v7A54U9tLiW8lNWS179RcuvzfHFAZzepf2J72aR6ktogxURSeTjnVYurpdTa1
-         B6f7t3ef6UHMUiBVLuaDIwpdpl0FL6sYq3LH523DSKALKUVOqO0tPAJ4+aeT4zaZmhz+
-         IrRrf0UOiKCQsyUUh28eTbRMIsy4aBjzHA3qkBs+V7Ol2Fi+w51237VJCFLw3aI3tuE3
-         QzOw==
+        bh=BhVJ8uqyuZN/RhYo8e4D2Wo6j82d4Ue7nF7755mNwHM=;
+        b=JN7peWS7Nez+2uGYBenvD1URtgpAIqAee70ib/k/sIrShjHTRTOTS60cMewca4/dl+
+         dG9NPJL3RBHz+jByCPy9VsQpiotQxDiag9Y5aB1mow2uCgebTPUHJtgOnmaSI9Vr/YIx
+         hQI/v/gR0GvyO5deZUXNGQI2iRQRxhpRf4qspE3jPUxJjXOAuD/wl6/iqPcyOgYmtLKK
+         MWpwP9BARDOkmKwS67XX82wJzNDDELNK9gdSeTBhBvMrWdTjib0F+nJEJKUwKFoB/pDB
+         SXeryLoUidHqjz93zv8BQ7DsI9WVz5TfwJy9iV6N2sA8iMykCz2Q8F38PNgxFh8B+8WB
+         8apg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TypqXDoyNXONz2oDo7T8C+4NlePqKxo9jFd/dN9OnUY=;
-        b=eOm0uVff7+n1IeimQGiFQP+rK81I7swQCPzbAovjkWENfhHbkIpTuXPn6l3o9R0gXX
-         LjujrX5wARxX+SNG9fSt2wPylozguprdDPFHJ/WdTof63/rAoi/xQMpUNMmsERkfFZQ8
-         v5SlY/0/jJ2r+qZMpVFXQoETwIp2+QN6eClahTd0hOuvXxiV5u57q6BlZPOu9vj9RO/J
-         fBFHfiEhzlbBDj8Df5HzE8LM/06eaeRMA+/uU+7zCTm7h5FNQnayQ4hrohmFEoE/IagE
-         mJvw+cCMhirS1WETPAym/wiB7mVJY45PJR6slm1pYZLIDVyLa8RrOJDAgBYHX2Z9jeQh
-         xf6w==
-X-Gm-Message-State: APjAAAWWBBmb1MfC4O/ghkCKfrsmq3qb9Gno3l9dqN/guUjUlg4B0x2y
-        bZxmh+YZeVAHq0GGPIwqcHFWGNiM+VkI3H2F
-X-Google-Smtp-Source: APXvYqzAZyZyGva2EuPoJScM6UyEVyBDQ8rao6oUZ0kApC3+FesuzwO5WKxPmyM+dQi9tBAx2Re+64THdUBgYOfQ
-X-Received: by 2002:a17:902:8a98:: with SMTP id p24mr7507223plo.18.1553093543416;
- Wed, 20 Mar 2019 07:52:23 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 15:51:26 +0100
+        bh=BhVJ8uqyuZN/RhYo8e4D2Wo6j82d4Ue7nF7755mNwHM=;
+        b=qLWJBWoipjmJnvAgbZEKPcw4xMJcNJf0Unk6wItXZ5ftZ2gr2q5oFLZzUs3s1DN2KZ
+         YeGi1fjGTGTysSBDFWz2p/rq0gZbVPAefGOEZCBxNVycoDotASOMHROmkkqMmzqOxYri
+         GkZhURSfKyB/7/Mtbi6cq3mzrHJeRL32TlyzcqAD4E/cW/QxT5PaRBcQHPcHSsWe7zBc
+         rzCVjLg6xoVM81mVIvvj15PCoQEus4RX9Gmcz4YO7t07LS65eXsX9S6l5TQYHI5YMMWu
+         Pzfbkp5iwal2SPWtFOzc/Yrsk9VM9ZfIpFfMtXQ5xWaT+V/xKuBcOATo1TAttos2fDdy
+         e3Fg==
+X-Gm-Message-State: APjAAAURHp1AgOTezPU05EoSSFsEUHEEJnN5UqLv5v+d56OlxpYOGb4l
+        cSvFxuecPg55IdpOQPemno+ca4FvB+hbnoRF
+X-Google-Smtp-Source: APXvYqwzO9qScb+3DLKygLOG3z91c2IWDiaev09n3TsGmqkOq4NcQ5CsSt3t0f+AffnIIDyplmnedU704klPsHau
+X-Received: by 2002:a05:620a:15fa:: with SMTP id p26mr919440qkm.51.1553093546857;
+ Wed, 20 Mar 2019 07:52:26 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:51:27 +0100
 In-Reply-To: <cover.1553093420.git.andreyknvl@google.com>
-Message-Id: <88d5255400fc6536d6a6895dd2a3aef0f0ecc899.1553093421.git.andreyknvl@google.com>
+Message-Id: <09d6b8e5c8275de85c7aba716578fbcb3cbce924.1553093421.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1553093420.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v13 12/20] uprobes, arm64: untag user pointers in find_active_uprobe
+Subject: [PATCH v13 13/20] bpf, arm64: untag user pointers in stack_map_get_build_id_offset
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -116,30 +116,42 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-find_active_uprobe() uses user pointers (obtained via
-instruction_pointer(regs)) for vma lookups, which can only by done with
-untagged pointers.
+stack_map_get_build_id_offset() uses provided user pointers for vma
+lookups, which can only by done with untagged pointers.
 
-Untag user pointers in this function.
+Untag user pointers in this function for doing the lookup and
+calculating the offset, but save as is in the bpf_stack_build_id
+struct.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- kernel/events/uprobes.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/bpf/stackmap.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index c5cde87329c7..d3a2716a813a 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1992,6 +1992,8 @@ static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp)
- 	struct uprobe *uprobe = NULL;
- 	struct vm_area_struct *vma;
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 950ab2f28922..bb89341d3faf 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -320,7 +320,9 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+ 	}
  
-+	bp_vaddr = untagged_addr(bp_vaddr);
+ 	for (i = 0; i < trace_nr; i++) {
+-		vma = find_vma(current->mm, ips[i]);
++		u64 untagged_ip = untagged_addr(ips[i]);
 +
- 	down_read(&mm->mmap_sem);
- 	vma = find_vma(mm, bp_vaddr);
- 	if (vma && vma->vm_start <= bp_vaddr) {
++		vma = find_vma(current->mm, untagged_ip);
+ 		if (!vma || stack_map_get_build_id(vma, id_offs[i].build_id)) {
+ 			/* per entry fall back to ips */
+ 			id_offs[i].status = BPF_STACK_BUILD_ID_IP;
+@@ -328,7 +330,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+ 			memset(id_offs[i].build_id, 0, BPF_BUILD_ID_SIZE);
+ 			continue;
+ 		}
+-		id_offs[i].offset = (vma->vm_pgoff << PAGE_SHIFT) + ips[i]
++		id_offs[i].offset = (vma->vm_pgoff << PAGE_SHIFT) + untagged_ip
+ 			- vma->vm_start;
+ 		id_offs[i].status = BPF_STACK_BUILD_ID_VALID;
+ 	}
 -- 
 2.21.0.225.g810b269d1ac-goog
 
