@@ -4,61 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47025C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78114C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9E9218A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E30021841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553103067;
-	bh=liQIPmUoSUd9NnlZV4ogSFNT1lfpHSkmPPzGmyIpeO8=;
+	s=default; t=1553103070;
+	bh=5WguqMAp62uLdo+NLmrnGQLH9zm7u825E/0upOCP6eg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=iUL2mAKekm9cm2SvCEOXkjyCscsKvjKrtBQNtOa8pnm5KcVZuLxfKv71JpxupMVoT
-	 PWQTWl7Utf6Q3JbhW49lsG9iXhI+wUqpYtTAy/6Zb5+aJP8nGSbEdKoAZkd4c1osSf
-	 ZGfRREyruPFicEwtMsoB9D+ADlUqKRtokzsGAiOg=
+	b=1kKVhB5XGaO4/BbIqXczxtLznW/EjmGbNQlPxGF2Dz3o6jdEMk+xl2YEz52B7r2aH
+	 lDi7+8LLDHbYJ60TLwOAJW36YY3Yx3rCdUBBrXcey4+IBa4WGoDLJGFmrm0GRfs/wm
+	 B2Su5Fwcy7aD2xFadL3V6E8J2EThBBFwJKccYQlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfCTR3o (ORCPT
+        id S1727369AbfCTRbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:29:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43716 "EHLO
+        Wed, 20 Mar 2019 13:31:09 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43866 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfCTR3j (ORCPT
+        with ESMTP id S1726644AbfCTR3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:29:39 -0400
+        Wed, 20 Mar 2019 13:29:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=dlxxOt4pex3YgMLqU3bM7fwl3sUMUTWs+eC3ff6/+H8=; b=aiBhRWZtrLYm
-        kRUzCbRASjFtJb6RgMMj35/tP7/2Mwr6oBBVmvzpf+SwWGGpjwioCT1KSMs0W1QmV6+4KlIFtp+cN
-        6tklgzd6g+0bRfJEC3I1fkhCp1Il8uHQ+1vLJheFWI99pHBVzk5mzyGfW0ng+rRoGCkAy4Jn5C1+9
-        a6cfE=;
+        List-Archive; bh=SS8mIqEjR+8P1BvjrL8jO+DbHCwa1wbrhDQ+q53ja1w=; b=jEiKhiVzwd65
+        dMbbyYKja9Hw7q++nh4853ykZMMq6v8zx3ru3AW03yaQafeWduw7mjieQclSm1IiBLAoogidDe8kw
+        pEBCzsWfiJ87EW3YgCEp5wzpJ55nHnCxxSDYW01b+TBYaYUSj6m9O9OlQi2uykpbayjyBz9cVOQMe
+        hVWmQ=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6f1m-000182-7d; Wed, 20 Mar 2019 17:29:22 +0000
+        id 1h6f23-00018y-PR; Wed, 20 Mar 2019 17:29:39 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 6C3991126E4C; Wed, 20 Mar 2019 17:29:21 +0000 (GMT)
+        id 134B51126E4C; Wed, 20 Mar 2019 17:29:39 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: stm32: dfsdm: fix debugfs warnings on entry creation" to the asoc tree
-In-Reply-To:  <1551711165-28684-3-git-send-email-olivier.moysan@st.com>
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regmap: debugfs: Jump to the next readable register" to the regmap tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190320172921.6C3991126E4C@debutante.sirena.org.uk>
-Date:   Wed, 20 Mar 2019 17:29:21 +0000 (GMT)
+Message-Id: <20190320172939.134B51126E4C@debutante.sirena.org.uk>
+Date:   Wed, 20 Mar 2019 17:29:39 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+   regmap: debugfs: Jump to the next readable register
 
-has been applied to the asoc tree at
+has been applied to the regmap tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,73 +85,67 @@ to this mail.
 Thanks,
 Mark
 
-From c47255b61129857b74b0d86eaf59335348be05e0 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 4 Mar 2019 15:52:44 +0100
-Subject: [PATCH] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+From cc6a8d69ba624f0ad7a09ed095b7bd4b86476489 Mon Sep 17 00:00:00 2001
+From: Lucas Tanure <tanureal@opensource.cirrus.com>
+Date: Tue, 19 Mar 2019 09:41:33 +0000
+Subject: [PATCH] regmap: debugfs: Jump to the next readable register
 
-Register platform component with a prefix, to avoid warnings
-on debugfs entries creation, due to component name
-redundancy.
+Improve the speed of the loop jumping to the next
+available register
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Tested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/base/regmap/regmap-debugfs.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
-index d77f0421e4f0..78bed9734713 100644
---- a/sound/soc/stm/stm32_adfsdm.c
-+++ b/sound/soc/stm/stm32_adfsdm.c
-@@ -305,6 +305,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
- static int stm32_adfsdm_probe(struct platform_device *pdev)
- {
- 	struct stm32_adfsdm_priv *priv;
-+	struct snd_soc_component *component;
- 	int ret;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -332,9 +333,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->iio_cb))
- 		return PTR_ERR(priv->iio_cb);
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &stm32_adfsdm_soc_platform,
--					      NULL, 0);
-+	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
-+	if (!component)
-+		return -ENOMEM;
-+#ifdef CONFIG_DEBUG_FS
-+	component->debugfs_prefix = "pcm";
-+#endif
-+
-+	ret = snd_soc_add_component(&pdev->dev, component,
-+				    &stm32_adfsdm_soc_platform, NULL, 0);
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
- 			__func__);
-@@ -342,12 +349,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
- 	return ret;
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 648779e6df88..fc45c2bb961a 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -195,6 +195,28 @@ static inline void regmap_calc_tot_len(struct regmap *map,
+ 	}
  }
  
-+static int stm32_adfsdm_remove(struct platform_device *pdev)
++static int regmap_next_readable_reg(struct regmap *map, int reg)
 +{
-+	snd_soc_unregister_component(&pdev->dev);
++	struct regmap_debugfs_off_cache *c;
++	int ret = -EINVAL;
 +
-+	return 0;
++	if (regmap_printable(map, reg + map->reg_stride)) {
++		ret = reg + map->reg_stride;
++	} else {
++		mutex_lock(&map->cache_lock);
++		list_for_each_entry(c, &map->debugfs_off_cache, list) {
++			if (reg > c->max_reg)
++				continue;
++			if (reg < c->base_reg) {
++				ret = c->base_reg;
++				break;
++			}
++		}
++		mutex_unlock(&map->cache_lock);
++	}
++	return ret;
 +}
 +
- static struct platform_driver stm32_adfsdm_driver = {
- 	.driver = {
- 		   .name = STM32_ADFSDM_DRV_NAME,
- 		   .of_match_table = stm32_adfsdm_of_match,
- 		   },
- 	.probe = stm32_adfsdm_probe,
-+	.remove = stm32_adfsdm_remove,
- };
+ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 				   unsigned int to, char __user *user_buf,
+ 				   size_t count, loff_t *ppos)
+@@ -218,9 +240,8 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 	/* Work out which register we're starting at */
+ 	start_reg = regmap_debugfs_get_dump_start(map, from, *ppos, &p);
  
- module_platform_driver(stm32_adfsdm_driver);
+-	for (i = start_reg; i <= to; i += map->reg_stride) {
+-		if (!regmap_printable(map, i))
+-			continue;
++	for (i = start_reg; i >= 0 && i <= to;
++	     i = regmap_next_readable_reg(map, i)) {
+ 
+ 		/* If we're in the region the user is trying to read */
+ 		if (p >= *ppos) {
 -- 
 2.20.1
 
