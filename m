@@ -3,104 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C317DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6871AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9940E20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D012184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfCTJwJ (ORCPT
+        id S1727380AbfCTJ4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:52:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37493 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTJwI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:52:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so506889wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:52:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iZRyTYuUQUUo3qbf5oF6NaALqEbZIa8lBEhAHa+zZ64=;
-        b=iLaVT8AGUHImuTlv8gj3T6p4HmOI0yX62niIqpftp4MY64SFX0UfHdWQfAO6CeFuOR
-         GuefBAHibEO34xTXhyob17NU0puTP6p/UrW4rCOqVcDmG1SDbXwzA8iM+4nlsVNOa+34
-         Ydo3I1ixKTXBN4dvwhx/PlO6hPB3Wo53NzZecyyLdMln5SpnL9DhhltlGwxnQmGQghvB
-         JgO/qdPrELxMZu/E0N1lW3VXNpXMpM5ZR+3KpvMHI07KY4CsenDQAQbmTVXUkjM7J9q7
-         VHqqJ5kYLFFqAYeZI6OybE1Xx94WTAnNwkLlgMwHz+dTEwn+TNjrugo0JcKLJg8QjwwE
-         O3Ew==
-X-Gm-Message-State: APjAAAVsWJx/H2i1DhduMqRyzYPm2SR/zb+t+wyw8NGPDpWLA9pYLDj7
-        VAbElcD5ylCTPsanYAnkDYfoAQ==
-X-Google-Smtp-Source: APXvYqwKAVUToUxzYOvdfVmOs4OeGrRx1HyjNLA2Pxp3YQo3VzltHohgGrvfjPbNDj7MnRSmzgeMdQ==
-X-Received: by 2002:adf:efca:: with SMTP id i10mr9375207wrp.265.1553075527145;
-        Wed, 20 Mar 2019 02:52:07 -0700 (PDT)
-Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id q63sm1578016wma.21.2019.03.20.02.52.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 02:52:06 -0700 (PDT)
-Subject: Re: [PATCH] virt: vbox: Implement passing requestor info to the host
- for VirtualBox 6.0.x
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Thayer <michael.thayer@oracle.com>,
-        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190320093519.26029-1-hdegoede@redhat.com>
- <20190320094601.GA30735@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <29c6e212-6233-364f-5a90-564f91bca989@redhat.com>
-Date:   Wed, 20 Mar 2019 10:52:05 +0100
+        Wed, 20 Mar 2019 05:56:44 -0400
+Received: from relay.sw.ru ([185.231.240.75]:52770 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfCTJ4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 05:56:43 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1h6XxM-0007BT-M9; Wed, 20 Mar 2019 12:56:20 +0300
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, cai@lca.pw, davem@davemloft.net,
+        dvyukov@google.com, guro@fb.com, hannes@cmpxchg.org, jbacik@fb.com,
+        ktkhai@virtuozzo.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-sctp@vger.kernel.org,
+        mgorman@techsingularity.net, mhocko@suse.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        vyasevich@gmail.com, willy@infradead.org
+References: <000000000000db3d130584506672@google.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Xin Long <lucien.xin@gmail.com>
+Message-ID: <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+Date:   Wed, 20 Mar 2019 12:56:50 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190320094601.GA30735@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <000000000000db3d130584506672@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 20-03-19 10:46, Greg Kroah-Hartman wrote:
-> On Wed, Mar 20, 2019 at 10:35:19AM +0100, Hans de Goede wrote:
->> VirtualBox 6.0.x has a new feature where the guest kernel driver passes
->> info about the origin of the request (e.g. userspace or kernelspace) to
->> the hypervisor.
->>
->> If we do not pass this information then when running the 6.0.x userspace
->> guest-additions tools on a 6.0.x host, some requests will get denied
->> with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
->> the mounting of shared folders marked to be auto-mounted.
->>
->> This commit implements passing the requestor info to the host, fixing this.
->>
->> Cc: stable@vger.kernel.org
+
+On 3/17/19 11:49 PM, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> This feels like support for a "new feature", so why would this need to
-> go to older kernels?
+> commit c981f254cc82f50f8cb864ce6432097b23195b9c
+> Author: Al Viro <viro@zeniv.linux.org.uk>
+> Date:   Sun Jan 7 18:19:09 2018 +0000
 > 
-> It's not our fault that vb implemented a non-backwards-compatible change
-> for their new release, right?  So why should we be forced to add new
-> features to stable kernels?
+>     sctp: use vmemdup_user() rather than badly open-coding memdup_user()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137bcecf200000
+> start commit:   c981f254 sctp: use vmemdup_user() rather than badly open-c..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10fbcecf200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=177bcecf200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ec1b7575afef85a0e5ca
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a9a84b400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17199bb3400000
+> 
+> Reported-by: syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com
+> Fixes: c981f254 ("sctp: use vmemdup_user() rather than badly open-coding memdup_user()")
 
- From a technical point of view I completely agree with you and I'm unhappy
-with this breakage after vb agreed with me to keep ABI compatibility so
-that we could add a version of the vboxguest driver to the mainline kernel.
+From bisection log:
 
-OTOH this is going to bite users out there, which is why I added the Cc:
-stable. But this is entirely your call.
+	testing release v4.17
+	testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+	run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #1: crashed: kernel panic: corrupted stack end in worker_thread
+	run #2: crashed: kernel panic: Out of memory and no killable processes...
+	run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+	run #8: crashed: kernel panic: Out of memory and no killable processes...
+	run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+	testing release v4.16
+	testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+	run #0: OK
+	run #1: OK
+	run #2: OK
+	run #3: OK
+	run #4: OK
+	run #5: crashed: kernel panic: Out of memory and no killable processes...
+	run #6: OK
+	run #7: crashed: kernel panic: Out of memory and no killable processes...
+	run #8: OK
+	run #9: OK
+	testing release v4.15
+	testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+	all runs: OK
+	# git bisect start v4.16 v4.15
 
-> I have no problem to add this for 5.2, but not for older stuff.
+Why bisect started between 4.16 4.15 instead of 4.17 4.16?
 
-Can we at least at it as a fix to 5.1 ? It is not very adventurous.
 
-Regards,
+	testing commit c14376de3a1befa70d9811ca2872d47367b48767 with gcc (GCC) 8.1.0
+	run #0: crashed: kernel panic: Out of memory and no killable processes...
+	run #1: crashed: kernel panic: Out of memory and no killable processes...
+	run #2: crashed: kernel panic: Out of memory and no killable processes...
+	run #3: crashed: kernel panic: Out of memory and no killable processes...
+	run #4: OK
+	run #5: OK
+	run #6: crashed: WARNING: ODEBUG bug in netdev_freemem
+	run #7: crashed: no output from test machine
+	run #8: OK
+	run #9: OK
+	# git bisect bad c14376de3a1befa70d9811ca2872d47367b48767
 
-Hans
+Why c14376de3a1befa70d9811ca2872d47367b48767 is bad? There was no stack corruption.
+It looks like the syzbot were bisecting a different bug - "kernel panic: Out of memory and no killable processes..."
+And bisection for that bug seems to be correct. kvmalloc() in vmemdup_user() may eat up all memory unlike kmalloc which is limited by KMALLOC_MAX_SIZE (4MB usually).
