@@ -2,79 +2,114 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5504C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD4EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D09F20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3787E21874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:18:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qH0tHNVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfCTRQa (ORCPT
+        id S1726824AbfCTRSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:16:30 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:33898 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfCTRQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:16:29 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 41F2A20184;
-        Wed, 20 Mar 2019 18:16:27 +0100 (CET)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id I9kNGSrCEPPJ; Wed, 20 Mar 2019 18:16:23 +0100 (CET)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id B86D6200A7;
-        Wed, 20 Mar 2019 18:16:23 +0100 (CET)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Mar 2019
- 18:16:22 +0100
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 03272318050E;
- Wed, 20 Mar 2019 18:16:23 +0100 (CET)
-Date:   Wed, 20 Mar 2019 18:16:22 +0100
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     "Su Yanjun <suyj.fnst@cn.fujitsu.com>" <suyj.fnst@cn.fujitsu.com>
-CC:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
-        <fw@strlen.de>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] net: xfrm: Add '_rcu' tag for rcu protected pointer
- in netns_xfrm
-Message-ID: <20190320171622.GA6035@gauss3.secunet.de>
-References: <1551923648-17656-1-git-send-email-suyj.fnst@cn.fujitsu.com>
- <20190311101006.GK3758@gauss3.secunet.de>
- <b2beff03-f789-5c8b-bd69-57ece92372f8@gmail.com>
- <20190319151503.GW6035@gauss3.secunet.de>
- <91cf303a-7d44-2c15-8b7a-8b2eb797a234@cn.fujitsu.com>
+        Wed, 20 Mar 2019 13:18:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43090 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfCTRSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 13:18:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so2382506pfd.10;
+        Wed, 20 Mar 2019 10:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tKlHVjRxjKuI1Z9G/6jARFHoWpyJM+7v4o3aLDnjNNI=;
+        b=qH0tHNVkGWlbjSxDOS5cRFAlad1fAJcuVVB2LIIXLPGxLEfIjgzPA4GJxU/+ZKwL8B
+         SbHavcgamEx/IheNfj1yxudySRcRY40kToJVGhThX2Z5u6UiJKCue9uQehiM2WSYnV9r
+         hTP4qiGVZrxOKJEtv520oZ0sxWWqZ56eJkFwwzod/Ri0VArEtjYPTadf/pFl3WoQciU/
+         sxJ0apcDLxIOyGIwCkvJL6Dwq4mOJLNENGhbNyoL9iPXllsMj9Ml0OyZjTWE+AGqUwq6
+         SJpre9kXp7A3Zxr4gn73vtVAG0JtIcUAe8RePytdGAbPGsTOji6bWZO1PC9ERsl4BAlh
+         A26g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tKlHVjRxjKuI1Z9G/6jARFHoWpyJM+7v4o3aLDnjNNI=;
+        b=sBSeW8wk8S569c7zIaf3Jvlim0yG/8vGs9WHTcykXQB8kk9w/Nq00ZUTn3lRAyBSJo
+         BG1ducaMjd709Gzhsm+KS+TjKwldBiApH7638w3cXibgdSj6/0apRqvk2UyOMFUkPpV0
+         BaRUnGMrsYXrXUkkh81mb3Dz4jXa/SrezXvkz6hQYhW9LKpTShGMV/C8F7/wq1cZplOK
+         SA4BzntnRxqiuwmtj1B5d7Yh+cQfyaL4WJGxc+T3cbHjB02IYxAfr4wDS4dbBzLkYX9K
+         ScTmfk4ZM+kIE2hwE+OfLG0isfoYUfKLxX+WoMrauZRhZH5h6Mxzj6+rppmwKgchNw8G
+         ARVQ==
+X-Gm-Message-State: APjAAAW7lcHVy7e7iRuIMEVlWCP5R2HLcSfuCgcKsbrJ8kc1zF3XRa2+
+        a2tr3YTvQGoYPg4wjDioCmK2NPLmuLGbZkFlk7s=
+X-Google-Smtp-Source: APXvYqwL4jS7Y1gocqs7MV9Zdsnw0opceASViNFlqbrzJMlNgCYgXt31CeDlwdlQRMO2oY6G1TgYeDxRQUmU8+8vwMk=
+X-Received: by 2002:a63:e845:: with SMTP id a5mr7612181pgk.246.1553102318914;
+ Wed, 20 Mar 2019 10:18:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <91cf303a-7d44-2c15-8b7a-8b2eb797a234@cn.fujitsu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-G-Data-MailSecurity-for-Exchange-State: 0
-X-G-Data-MailSecurity-for-Exchange-Error: 0
-X-G-Data-MailSecurity-for-Exchange-Sender: 23
-X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-X-G-Data-MailSecurity-for-Exchange-Guid: 181D3464-E827-464D-B547-5AEC87B90C9B
-X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
+References: <LaQHUFs--3-1@tutanota.com> <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+ <9151d116-958c-9298-9427-fe803a163e9f@redhat.com> <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
+In-Reply-To: <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 20 Mar 2019 19:18:27 +0200
+Message-ID: <CAHp75VcOG9H8u+tZyNN682r7+jsRZi8VoPPZ2uJPch1gNyFgmQ@mail.gmail.com>
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        hotwater438@tutanota.com, Jiri Kosina <jikos@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 08:53:54AM +0800, Su Yanjun <suyj.fnst@cn.fujitsu.com> wrote:
-> 
-> Firs of all, I didn't produce it on my test machine.
+On Wed, Mar 20, 2019 at 6:55 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> at 23:39, Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 3/20/19 3:37 PM, Benjamin Tissoires wrote:
 
-First of all, you should provide better quality patches.
+> > Benjamin, what I find interesting here is that the BOGUS_IRQ quirk
+> > is also used on Elan devices, I suspect that these Elan devices
+> > likely also need the I2C_HID_QUIRK_FORCE_TRIGGER_FALLING quirk
+> > and then they probably will no longer need the bogus IRQ flag,
+> > if you know about bugreports with an acpidump for any of the devices
+> > needing the bogus IRQ quirk, then I (or you) can check how the IRQ is
+> > declared there, I suspect it will be declared as level-low, just like
+> > with the laptop this patch was written for. And it probably need to
+> > be edge-falling instead of level-low just like this case.
+>
+> First, I=E2=80=99ve already tried using IRQF_TRIGGER_FALLING, unfortunate=
+ly it
+> doesn=E2=80=99t solve the issue for me.
+>
+> I talked to Elan once, and they confirm the correct IRQ trigger is level
+> low. So forcing falling trigger may break other platforms.
 
-All of your recent patches had issues, some were sorted 
-out before applying other not. Bugs happen, but it is
-not acceptable that all your patches are buggy.
+As far as I understood Vladislav the quirk he got from Elan as well.
 
-I've reverted this patch like Eric suggested.
+> Recently we found that Elan touchpad doesn=E2=80=99t like GpioInt() from =
+its _CRS.
+> Once the Interrupt() is used instead, the issue goes away.
+
+IIRC i2c core tries to get interrupt from Interrupt() resource and
+then falls back to GpioInt().
+See i2c_acpi_get_info() and i2c_device_probe().
+
+> But I am not sure how to patch its DSDT/SSDT in i2c-hid.
+
+--=20
+With Best Regards,
+Andy Shevchenko
