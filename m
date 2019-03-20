@@ -2,96 +2,86 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F48C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19923C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8925F2083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HB7P4zOe"
+	by mail.kernel.org (Postfix) with ESMTP id D70122083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553111609;
+	bh=4Jgy3ijQmOE+WDX+l3HCoLNIUje0+pxoHh8fgZgF+Go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WGN6MbqizxM1k0Ru5OXEc9epmIVHPZ0QQCQ8/6aeb4Tx32AjOGkpSEuUq/OHhsqiT
+	 JWMLp0EmvTcoS8220AVeBHoJf/M8+9PiO9rF0cIMcqmOcBPCpn+dh0/8hCOeoHWLNi
+	 +BpLla3nPyrZbl5yPhc69jxn9Hwbj9jsue6WFQ/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfCTTxW (ORCPT
+        id S1727458AbfCTTx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:53:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34305 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfCTTxV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:53:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v64so2691351pfb.1;
-        Wed, 20 Mar 2019 12:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UoFfgHfSWzPt3xT3667SWw0cZSd2ZgW4vdHLz8aEP/c=;
-        b=HB7P4zOepspAY/gcj8X/kaOc4wMKQZbXPl/ZFppy3PId/E1cVFzOj8LcRLTWLjgzzM
-         8SJx26xY047j1GgiXmRscZUqHPq+7Df8dD/5JEQJy95DE2345Q4YKUqpEWvLBC1toC8X
-         0t6x11omhyrwB+V8LZVQcV4TGIsY9uREZz38b8Q3J2Fg5j7XwmtLM4/r5ukfU05E6oeq
-         FO1cB8JPCPnrgoJnG+UdKUTfAFhjmDRDOLy2vNus0vP+oYl0YSfxhYR0XQU8+H9djZF4
-         yVzxfbO/f9x8shA6ANJIlm3cVJOBBJCCXVH2/hkz0FTVJqTMorgW0ocl4KKhuXOQrnbQ
-         HunA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UoFfgHfSWzPt3xT3667SWw0cZSd2ZgW4vdHLz8aEP/c=;
-        b=g4SPWsIUKgZ/7r1Ax+qatuwLHgBL3lrtFbIlRAnY0DjL+rkzP/lsBCzw2w+eMxwrEh
-         rJitgF+dW9UT0FxQKBJEmcxrQ8vXnDaW4bkJAUpbT2pi4/E18aF0SWEyopoHpZHjSuqN
-         Xj6MdvSv9Dxk59qUdtg/KSSCwqHNxw5II1MWL6I/DWQxy3h+0R6mTgiRLHNLyJ7CAOrp
-         iJ749Sa7K7V+LZ9EFzW39a9pJBJ844PLjBvr+jUpq4fsw9DTuOb6e++e/4m3GldNKd4n
-         iX2q5nVRvBCU1fflg/n9KFO0K9g+GYythqJ0d+HDQKypiWKxlxBSYAw9LTcgDZe3BLF8
-         Zp5Q==
-X-Gm-Message-State: APjAAAVugdHOiWU7/0WvWdQ5Ogz3R5FsPnA/A5GjupYj3DRPhSn8AP7u
-        7mOjlDFUywQd8fM5PIoWpD90E6jQ
-X-Google-Smtp-Source: APXvYqxAHQP5alxmQiAAdbO0PkrCj5W8rtFRA2xZFHbcY+n/87+mzxJK61FG/US0pM5Fu2rQav9rQQ==
-X-Received: by 2002:a65:6149:: with SMTP id o9mr9038067pgv.315.1553111599849;
-        Wed, 20 Mar 2019 12:53:19 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id y37sm3805933pgk.78.2019.03.20.12.53.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 12:53:19 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list), hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        murali.policharla@broadcom.com, arun.parameswaran@broadcom.com
-Subject: [PATCH net-next 0/2] net: phy: Move Omega PHY entry to Cygnus PHY driver
-Date:   Wed, 20 Mar 2019 12:53:11 -0700
-Message-Id: <20190320195313.15658-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 Mar 2019 15:53:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58230 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbfCTTxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:53:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2C219AEF5;
+        Wed, 20 Mar 2019 19:53:23 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 20:53:21 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        osalvador@suse.de, david@redhat.com, richard.weiyang@gmail.com,
+        rppt@linux.ibm.com, linux-mm@kvack.org
+Subject: Re: [PATCH] mm, memory_hotplug: Fix the wrong usage of N_HIGH_MEMORY
+Message-ID: <20190320195321.GE8696@dhcp22.suse.cz>
+References: <20190320080732.14933-1-bhe@redhat.com>
+ <20190320121209.5cd30d7b15f299df7d97d51e@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320121209.5cd30d7b15f299df7d97d51e@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed 20-03-19 12:12:09, Andrew Morton wrote:
+> On Wed, 20 Mar 2019 16:07:32 +0800 Baoquan He <bhe@redhat.com> wrote:
+> 
+> > In function node_states_check_changes_online(), N_HIGH_MEMORY is used
+> > to substitute ZONE_HIGHMEM directly. This is not right. N_HIGH_MEMORY
+> > always has value '3' if CONFIG_HIGHMEM=y, while ZONE_HIGHMEM's value
+> > is not. It depends on whether CONFIG_ZONE_DMA/CONFIG_ZONE_DMA32 are
+> > enabled. Obviously it's not true for CONFIG_ZONE_DMA32 on 32bit system,
+> > and CONFIG_ZONE_DMA is also optional.
+> > 
+> > Replace it with ZONE_HIGHMEM.
+> > 
+> > Fixes: 8efe33f40f3e ("mm/memory_hotplug.c: simplify node_states_check_changes_online")
+> 
+> What are the runtime effects of this change?
 
-In order to pave the way for adding some specific Omega PHY features
-that may not be desirable on other products covered by the bcm7xxx PHY
-driver, split the Omega PHY entry into the Cygnus PHY driver such that
-the PHY drivers are reflective of product lines/business units
-maintaining them within Broadcom.
+There shouldn't be none. The code is just messy. The newer changelog
+should make it more clear I believe.
 
-No functional changes intended.
-
-Florian Fainelli (2):
-  net: phy: Prepare for moving Omega out of bcm7xxx
-  net: phy: Move Omega PHY entry to Cygnus PHY driver
-
- drivers/net/phy/Kconfig       |   5 +-
- drivers/net/phy/bcm-cygnus.c  | 147 +++++++++++++++++++++++++++++++++-
- drivers/net/phy/bcm-phy-lib.c |  52 ++++++++++++
- drivers/net/phy/bcm-phy-lib.h |  20 +++++
- drivers/net/phy/bcm7xxx.c     |  76 +-----------------
- 5 files changed, 225 insertions(+), 75 deletions(-)
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -712,7 +712,7 @@ static void node_states_check_changes_online(unsigned long nr_pages,
+> >  	if (zone_idx(zone) <= ZONE_NORMAL && !node_state(nid, N_NORMAL_MEMORY))
+> >  		arg->status_change_nid_normal = nid;
+> >  #ifdef CONFIG_HIGHMEM
+> > -	if (zone_idx(zone) <= N_HIGH_MEMORY && !node_state(nid, N_HIGH_MEMORY))
+> > +	if (zone_idx(zone) <= ZONE_HIGHMEM && !node_state(nid, N_HIGH_MEMORY))
+> >  		arg->status_change_nid_high = nid;
+> >  #endif
+> >  }
+> 
 
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
