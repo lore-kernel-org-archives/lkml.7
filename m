@@ -2,146 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5551BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0AEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248DA20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130D20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvwfvKFi"
+	dkim=pass (1024-bit key) header.d=euphon.net header.i=fam@euphon.net header.b="AQFMbMTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfCTDKb (ORCPT
+        id S1727542AbfCTDMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 23:10:31 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:40214 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfCTDKb (ORCPT
+        Tue, 19 Mar 2019 23:12:03 -0400
+Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17814 "EHLO
+        sender1.zoho.com.cn" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726749AbfCTDMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 23:10:31 -0400
-Received: by mail-pf1-f201.google.com with SMTP id z26so1099362pfa.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=p42pV0SCrq58ooliIiJHPKGHiJvIyZQn0fiaDDXUeDE=;
-        b=hvwfvKFiq7tn+8Ltbdy+fVGOHDYnnPfy7yNy0xgeotI2i1SLPTj+1dBLvbZ3ic/HfE
-         mBcd4/7UeoP7r/TMGQjf35jLfP8054qA8IhG5dTR58ohXro2lhiS9/OJ0rRZGuW4YHsk
-         1raqE9piWwsMJdnTBRNUGshgbWvmqvAYN7igu80kXRlAl8y6hTLxegsGq7sSjgA1vOPN
-         dwpGXjG+e7vFhWPHH1x6KbGBsxZqT+dTzMmUQTvvi1cTT5hb2r4FaZy5LeNT83S1cP0+
-         xufxkZ6/pJsTDFPxQ+UHzyK1YyPe/fEF0Bla+H6E2D8OYPqG6TtRzh59nlcaVPWfFg87
-         SRnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=p42pV0SCrq58ooliIiJHPKGHiJvIyZQn0fiaDDXUeDE=;
-        b=lUSdrTDzVs2pRiwz/lrB3SXJU860AdrmjUrD9V6pXsCCtqnmNv5VKCj1VWPn1u2y7g
-         IVXVSMs1X9T59+Mygde3BKbF9LcPKOftwx6uN8oCZY0a1La6p785ah+Qx2ERb3COgNEJ
-         LPG0aIWkwuHJ7tOaqjFnhNDdBcsgRj7UM4lNotB9L7zeENQ9sQgjQHntYNgkOQ4WcXOo
-         rFPCiPY14oUU7lsVqutey/89KDY7puIHvnB1DUUNsXGPZj19xDzXDM//e6D7LBgqsVZK
-         FPPam4ZZUhDnFZ9v37gcinNjEdOBhNa2nSchrzRpMq524l9w3orMvdywKXvZ6JrS9y8o
-         dAlg==
-X-Gm-Message-State: APjAAAXdOvyHfo3fzMgsn43ylZSxj2Iys9LTAg3YE0Peow9cHP9SnIbw
-        dhwOoa2o42A/I7o0WocIn+xIPl4DYvir
-X-Google-Smtp-Source: APXvYqzP9hlTwEAopdX8JP9UvODwCwuyPJeDSPx005WHLDV8mbMDPu/mCqDp8lSBihYtJNHP85VfMIJNk+Uo
-X-Received: by 2002:a62:ee01:: with SMTP id e1mr8346820pfi.58.1553051430426;
- Tue, 19 Mar 2019 20:10:30 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 11:10:22 +0800
-Message-Id: <20190320031022.174052-1-linfish@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH] media: v4l-ctrl: add control for variable frame rate
-From:   Fish Lin <linfish@google.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Smitha T Murthy <smitha.t@samsung.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fish Lin <linfish@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 Mar 2019 23:12:02 -0400
+X-Greylist: delayed 909 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Mar 2019 23:12:00 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1553050460; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=iN8zMl/E4OxZmWGYhO/XZfgFwvz8qcsT1z77kx8Kpf+gpb1oJYOQ52QfucyqFuoIDFDh3+/iyF6w3Iwd7e9kOO0+FYCbJem7/HA6QhH1lp4uFuSbzSH4gd3HscDCDaL9pwFqBWleIKwS5cW/E8pRRocIrhXCehNtRn5O9qPOsxM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1553050460; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=Bkj9qVX6lovTRA5/LtbQdN5ooBi9eafvXSUBaTln7uc=; 
+        b=XDY4EjJ42svw//SeWqLV2B2PFWr7GV4P9untTTfhyJubV14WgE/RCS/km1eb/noF1hilaH34Ehrg4VFlx5raZI4J+TmORWbXYVzzYBzKUSyEtawWQKtFnciywJOZ4YpEQBrFgHupdRppBugYs3kyngVso0C0RkHsAOxbq3sqVlE=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=euphon.net;
+        spf=pass  smtp.mailfrom=fam@euphon.net;
+        dmarc=pass header.from=<fam@euphon.net> header.from=<fam@euphon.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1553050460;
+        s=zoho; d=euphon.net; i=fam@euphon.net;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=257; bh=Bkj9qVX6lovTRA5/LtbQdN5ooBi9eafvXSUBaTln7uc=;
+        b=AQFMbMTtf13LBYBio72MV7DB9IE6bZZdVnylol+9pxlKhwAN66GrJbxN7LSQugrf
+        cdbiL4a9Jte5cLnh2ebgxkooe/rt/dNyLKScaNhy5oefdqvz1AbC4l7rcwS2aKxwW2S
+        mavGvO9ubFa07wyT9fRCWmBjsX4kIoCIziAh/zn4=
+Received: from localhost (120.52.147.47 [120.52.147.47]) by mx.zoho.com.cn
+        with SMTPS id 1553050457751417.14378170390694; Wed, 20 Mar 2019 10:54:17 +0800 (CST)
+Date:   Wed, 20 Mar 2019 10:54:15 +0800
+From:   Fam Zheng <fam@euphon.net>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney " <paulmck@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
+Subject: Re: [PATCH 4/9] nvme/pci: use the NVME_CTRL_SUSPENDED state
+Message-ID: <20190320025415.bli42qmifuu5gxdm@deb>
+References: <20190319144116.400-1-mlevitsk@redhat.com>
+ <20190319144116.400-5-mlevitsk@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319144116.400-5-mlevitsk@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These flag are added
-* V4L2_CID_MPEG_VIDEO_VFR_ENABLE
-* V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE
-One is to set variable frame rate enable or not, another is to control
-minimal frame rate that video encoder should keep per second.
+On Tue, 03/19 16:41, Maxim Levitsky wrote:
+> When enteriing low power state, the nvme
 
-Signed-off-by: Fish Lin <linfish@google.com>
----
- Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 9 +++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c             | 3 +++
- include/uapi/linux/v4l2-controls.h               | 3 +++
- 3 files changed, 15 insertions(+)
+Typo: "entering".
 
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-index c97fb7923be5..4bc013d71b67 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-@@ -620,7 +620,16 @@ enum v4l2_mpeg_video_bitrate_mode -
-     * - Bit 24:31
-       - Must be zero.
- 
-+.. _v4l2-mpeg-video-variable-framerate:
- 
-+``V4L2_CID_MPEG_VIDEO_VFR_ENABLE (boolean)``
-+    Set variable framerate enable or not. When enabled, video encoder is able
-+    to drop frames based on some mechanism, like frame similarity or bitrate
-+    control (default disable).
-+
-+``V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE (integer)``
-+    Minimal kept frame per second when variable framerate is enabled (default
-+    is input framerate).
- 
- .. _v4l2-mpeg-video-dec-pts:
- 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b79d3bbd8350..566c6552c9a0 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -786,6 +786,8 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264 MB Level Rate Control";
- 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return "Sequence Header Mode";
- 	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max Number of Reference Pics";
-+	case V4L2_CID_MPEG_VIDEO_VFR_ENABLE:			return "Variable Frame Rate Enable";
-+	case V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE:		return "VFR Minimal Frame Rate";
- 	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame QP Value";
-@@ -1108,6 +1110,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
- 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
- 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
-+	case V4L2_CID_MPEG_VIDEO_VFR_ENABLE:
- 	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
- 	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 06479f2fb3ae..f1bf52eb0152 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -404,6 +404,9 @@ enum v4l2_mpeg_video_multi_slice_mode {
- #define V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE		(V4L2_CID_MPEG_BASE+228)
- #define V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME		(V4L2_CID_MPEG_BASE+229)
- 
-+#define V4L2_CID_MPEG_VIDEO_VFR_ENABLE (V4L2_CID_MPEG_BASE + 250)
-+#define V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE (V4L2_CID_MPEG_BASE + 251)
-+
- #define V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP		(V4L2_CID_MPEG_BASE+300)
- #define V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP		(V4L2_CID_MPEG_BASE+301)
- #define V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP		(V4L2_CID_MPEG_BASE+302)
--- 
-2.21.0.225.g810b269d1ac-goog
+> driver will now inform the core with the NVME_CTRL_SUSPENDED state
+> which will allow mdev driver to act on this information
+
+[snip]
+
+Fam
 
