@@ -2,151 +2,98 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9207DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD2DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1402184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="LNYZPgXM"
+	by mail.kernel.org (Postfix) with ESMTP id 5A97821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553103879;
+	bh=pWBZMiDJ4MfbJ8pnd+IJ2rbVZAb1N+eaq/Nw+CLDzNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O8mzBd08IHAAZuCy+paTtQ22NEAAkhdchEbXKrpdZd2KPjKu6bCzI6FWrp/JyNRl8
+	 5+Tosbkfgr0PhqdBSPKbYkHs8Tb7XRiLkqe2WJ43930+nFF8EKlszWHGrhXhLSSGWg
+	 2+P3dMUvdzY/6sEV7l5/TGyvhvBtf2zjFdfr1KoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfCTRoe (ORCPT
+        id S1727371AbfCTRoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:44:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45645 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfCTRod (ORCPT
+        Wed, 20 Mar 2019 13:44:38 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54683 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbfCTRoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:44:33 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s15so3734921wra.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:44:32 -0700 (PDT)
+        Wed, 20 Mar 2019 13:44:37 -0400
+Received: by mail-it1-f196.google.com with SMTP id w18so131213itj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:44:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arrikto-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DjLlnVJlihTC9Ib0FLMZvDbZ9ZyWjgzRsseOQK8Fk08=;
-        b=LNYZPgXMx2z2HFHZQF1FQ1rNiv+6X9cZAji3KfWaui1xo3xBQQXGrwgSLp4Y4IjJku
-         JM8tYAApw8gffTCN+wvTfvCW/uhs46ykHnhtv1qt2IRfA+5RCucIDemGWURqBVvu3Rez
-         OqQb6wusNxkfi8dXzZIlKL+WWH3DKTaovUK6RECnEptsD+HAK3OQu/memmx2uBO94QqJ
-         dDTu01fqJouDWv0HqBFC+Q4qv6kr72A79AxkfiWOzoR/Gj8z9w54l3Vsee9wEOOQzObP
-         JnUnb++rHpmp7MuYuuwK9Jpth8L+rBSjLaUiwCS5LShLY1QwKIz5um0bGtRHsW1WF+yX
-         Pyqg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XJWBhpRbEsqIJ/DPGDyokhV3NlZo8RjYnfZk7wmzygQ=;
+        b=XjPpCD+ZJTMYSk/BqhuSEWRGlQaW/hyey9PaU3FV5gAeNwYyxO4i7aKuB5YbiCbZAt
+         hr/e/rN2zuXCyeU7jZSmgzLrhktYCTGIqP21ysoYS4nnJOyKaxvWSjnfNmLqRu/wPpJX
+         9F7CSp4UdH4UlhCsCtrdKWgaRnIAztFvwZgVo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DjLlnVJlihTC9Ib0FLMZvDbZ9ZyWjgzRsseOQK8Fk08=;
-        b=YHT7MppxQgDnrJ6m4xgfvywvLmV7Km8NwfWFd9nc2Q+6nHLyhskdG2QGxpb+5Q79Jq
-         doS1TB/ddr4NPASV4z1lthfwvYeUe2fTs8wm7HJducdFU43gJyRcVwNCwu2iwT29YCRt
-         koeJZtjNmq0c2hWHBey/Ud8JVrkT6tBG/brmhaDcRzDwe8uxlsoexQod10+73ptZdJgo
-         7N96hcWzJyZTZeoDRQeNuBROs537qDnTUX0uvDJvi2ulYGn8D3Ttm3ofj0TINGPWfGhN
-         9tHpdJ25jJcFbpfldF4iwZwYJSGSIzi5Gg0z48yQelOrdNZ17lVBpjpwbbK+oRAM81EY
-         SacQ==
-X-Gm-Message-State: APjAAAWlNFSgGLNuAgPk+XEunX0Z6YOpSiQNUCA5IaOeGY5x8a/AsfUg
-        1vKrVTbPi4rudm/TV2fe2QimXQ7MQcI=
-X-Google-Smtp-Source: APXvYqx86bUurON9o1nGZ12kWQlXsQF6LexUTKyGJrj/kFGY3tIKVp/cA35SGtB2SB2RenUOiswybg==
-X-Received: by 2002:a5d:5703:: with SMTP id a3mr16483260wrv.175.1553103871466;
-        Wed, 20 Mar 2019 10:44:31 -0700 (PDT)
-Received: from [10.94.250.119] ([31.177.62.212])
-        by smtp.gmail.com with ESMTPSA id e16sm5350536wrs.0.2019.03.20.10.44.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 10:44:30 -0700 (PDT)
-Subject: Re: [PATCH v3 2/6] list_bl: Add hlist_bl_add_before/behind helpers
-To:     paulmck@linux.ibm.com
-Cc:     snitzer@redhat.com, agk@redhat.com, dm-devel@redhat.com,
-        mpatocka@redhat.com, hch@infradead.org, iliastsi@arrikto.com,
-        linux-kernel@vger.kernel.org
-References: <20190317122258.21760-1-ntsironis@arrikto.com>
- <20190317122258.21760-3-ntsironis@arrikto.com>
- <20190318154138.GI4102@linux.ibm.com>
-From:   Nikos Tsironis <ntsironis@arrikto.com>
-Message-ID: <b34c05b0-11a6-19a4-f6e0-bb0ea2666eb5@arrikto.com>
-Date:   Wed, 20 Mar 2019 19:44:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XJWBhpRbEsqIJ/DPGDyokhV3NlZo8RjYnfZk7wmzygQ=;
+        b=Ev/LjiY1Ecdk6womTf/BEg9XE4VlgNboiT1ud0zgTs9hUJv0+a6Aw/8D5sk1OPC7Nn
+         AcnB1hGKReUKf2bOpH4iuaNO880cCmypU+PEuCd5lkhjacEFITLDtJTWbvPBESKCrLVs
+         GWXzoOADm2WeqZAbf6aZlZ36YBhuJOzp/FgcPh0KBtqg12e3EpgperWBCOVoR8cBCVy4
+         OEAMnIHj+tETVi7Gw1MDc6/0plSgND1DZLiQ4zAlHL2f9W6r5l3xbTvguabyg68Mlmxk
+         1AoAqJR95KrCSCAFP3baOhaHg29YDiKSGBZb0F/bEL1BAMnRBsyzCanCYLDbfnddk8Ex
+         ojNA==
+X-Gm-Message-State: APjAAAVuF9e2OPf+GMgnCgT9bFbfvdVn/lVzgUOxcRCwgwwDH8yVC1Rr
+        InovJCVtkXbvKd1gJNMwA3WTzzteFDSiqAAXwjGyOQ==
+X-Google-Smtp-Source: APXvYqxfZ6ixIH0xqyyWhq2SKkFOcfrQCZEajo6cJAAjo4EckoJs3VPKsrPtHoDwKk0p7K/roLqpIt5pOLfXha6zckw=
+X-Received: by 2002:a05:660c:11cb:: with SMTP id p11mr4418477itm.105.1553103876286;
+ Wed, 20 Mar 2019 10:44:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190318154138.GI4102@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190320152315.82758-1-thellstrom@vmware.com> <20190320152315.82758-2-thellstrom@vmware.com>
+In-Reply-To: <20190320152315.82758-2-thellstrom@vmware.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 20 Mar 2019 10:44:25 -0700
+Message-ID: <CAADWXX9N+mCN5Vg1eVz9k-UFMQPzc5QXUm6fieBf0oEnC1-=OA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] mm: Allow the [page|pfn]_mkwrite callbacks to
+ drop the mmap_sem
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-graphics-maintainer@vmware.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 5:41 PM, Paul E. McKenney wrote:
-> On Sun, Mar 17, 2019 at 02:22:54PM +0200, Nikos Tsironis wrote:
->> Add hlist_bl_add_before/behind helpers to add an element before/after an
->> existing element in a bl_list.
->>
->> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
->> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
-> 
-> On both this and the previous patch, the double signed-off-by lines
-> are a bit strange.  You might be wanting Co-developed-by, but please
-> see Documentation/process/submitting-patches.rst.
+On Wed, Mar 20, 2019 at 8:23 AM Thomas Hellstrom <thellstrom@vmware.com> wrote:
+>
+> Driver fault callbacks are allowed to drop the mmap_sem when expecting
+> long hardware waits [...]
 
-Hi Paul,
+No comment on the patch itself, but please fix your email setup.
 
-Thanks for your suggestion. I will make sure to reread the Documentation
-regarding patch submission.
+All the patches were marked as spam, because you sent them from your
+vmware.com address, but without going through the proper vmware smtp
+gateway.
 
-Thanks,
-Nikos
+So they lack the proper vmware DKIM hashes and proper mail handling
+should (and does) consider them spam.
 
-> 
-> Other than that:
-> 
-> Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> 
->> ---
->>  include/linux/list_bl.h | 26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
->> index 3fc2cc57ba1b..ae1b541446c9 100644
->> --- a/include/linux/list_bl.h
->> +++ b/include/linux/list_bl.h
->> @@ -86,6 +86,32 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
->>  	hlist_bl_set_first(h, n);
->>  }
->>  
->> +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
->> +				       struct hlist_bl_node *next)
->> +{
->> +	struct hlist_bl_node **pprev = next->pprev;
->> +
->> +	n->pprev = pprev;
->> +	n->next = next;
->> +	next->pprev = &n->next;
->> +
->> +	/* pprev may be `first`, so be careful not to lose the lock bit */
->> +	WRITE_ONCE(*pprev,
->> +		   (struct hlist_bl_node *)
->> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
->> +}
->> +
->> +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
->> +				       struct hlist_bl_node *prev)
->> +{
->> +	n->next = prev->next;
->> +	n->pprev = &prev->next;
->> +	prev->next = n;
->> +
->> +	if (n->next)
->> +		n->next->pprev = &n->next;
->> +}
->> +
->>  static inline void __hlist_bl_del(struct hlist_bl_node *n)
->>  {
->>  	struct hlist_bl_node *next = n->next;
->> -- 
->> 2.11.0
->>
-> 
+               Linus
