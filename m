@@ -2,77 +2,122 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2338C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A74C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C8521871
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3C72064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfCTFVC (ORCPT
+        id S1726802AbfCTFck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:21:02 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:56852 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbfCTFVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:21:01 -0400
-Received: by mail-it1-f198.google.com with SMTP id f5so449875ita.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=9geYZ/ETSCiLBquOlYHg+QWiNjA7HTFC/bOSloCl7YY=;
-        b=YctHIs6bxPqeyMBFhIQmUaI+q80eNAWBD76VPnsifnP9CtiZci09iO5kdgorG3ufMp
-         f73aEY/Z1REVqJdlndTkbPSNRwT6167vIqfWiiwFZVqAgeegzgbx1VQo2cbQrpTuUP7a
-         mf3xwj6deQvjOVWm5HHlcPZhEcETgHMclQHA4bizgBgVO0cnwAMsFpNPpEC1XIinz1Et
-         e7E7RcdHp030186cipchIkCa24SIAbSa5EuQVWcM+9CLXBCDxi4woBdgtKR86LyvfY+7
-         2gWiNr/SJeUgob33dsAm/UCUlQQtfnPgioG0ZTG/6387eKgpT02YGOWn7PXtlp80Qpq/
-         GVqw==
-X-Gm-Message-State: APjAAAU0Zogem86bnHTi+lS+CDUhQur5v2iv+9hW0fhXeHlqL9OuP6Jp
-        ue7/EM5Cw36EAUCtXT3+aZSw1bsmGeNdVswDdaoC6k0vV8M1
-X-Google-Smtp-Source: APXvYqzxyB/tyIlqMmbyrMnzb0EyYchghWE2XE+xX5mm26gb1hvIro80qUEQtvO3owxQq9R9omDB0/u1uiynD0Smo6oDpLHycJZJ
-MIME-Version: 1.0
-X-Received: by 2002:a24:ee41:: with SMTP id b62mr1604320iti.11.1553059260850;
- Tue, 19 Mar 2019 22:21:00 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 22:21:00 -0700
-In-Reply-To: <0000000000004f8499057be95e1d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ee87005847fc985@google.com>
-Subject: Re: INFO: task hung in vhost_net_stop_vq
-From:   syzbot <syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com>
-To:     jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org, weiyj.lk@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 20 Mar 2019 01:32:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:58052 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfCTFck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 01:32:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 22:32:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,247,1549958400"; 
+   d="scan'208";a="308697115"
+Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 22:32:38 -0700
+From:   fei.yang@intel.com
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        zhangjerry@google.com, andrzej.p@collabora.com,
+        plr.vincent@gmail.com, fei.yang@intel.com, jingx.shen@intel.com,
+        john.stultz@linaro.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
+Date:   Tue, 19 Mar 2019 22:32:20 -0700
+Message-Id: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+From: Fei Yang <fei.yang@intel.com>
 
-commit 6b1e6cc7855b09a0a9bfa1d9f30172ba366f161c
-Author: Jason Wang <jasowang@redhat.com>
-Date:   Thu Jun 23 06:04:32 2016 +0000
+The following kernel panic happens due to the io_data buffer gets deallocated
+before the async io is completed. Add a check for the case where io_data buffer
+should be deallocated by ffs_user_copy_worker.
 
-     vhost: new device IOTLB API
+[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+[   41.672099] #PF error: [normal kernel read fault]
+[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
+[   41.683687] Oops: 0000 [#1] PREEMPT SMP
+[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
+[   41.705309] Workqueue: adb ffs_user_copy_worker
+[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.705331] Call Trace:
+[   41.705338]  vfree+0x50/0xb0
+[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
+[   41.705344]  process_one_work+0x19f/0x3e0
+[   41.705348]  worker_thread+0x3f/0x3b0
+[   41.829766]  kthread+0x12b/0x150
+[   41.833371]  ? process_one_work+0x3e0/0x3e0
+[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
+[   41.843695]  ret_from_fork+0x3a/0x50
+[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
+[   41.876880] CR2: 0000000000000048
+[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
+[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.985930] Kernel panic - not syncing: Fatal exception
+[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[   42.009525] Rebooting in 10 seconds..
+[   52.014376] ACPI MEMORY or I/O RESET_REG.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1486ad27200000
-start commit:   6b1e6cc7 vhost: new device IOTLB API
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1686ad27200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1286ad27200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c94f9f0c0363db4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=d21e6e297322a900c128
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141db34d400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=108ef293400000
+Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+Signed-off-by: Fei Yang <fei.yang@intel.com>
+Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+---
+V2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
 
-Reported-by: syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com
-Fixes: 6b1e6cc7 ("vhost: new device IOTLB API")
+ drivers/usb/gadget/function/f_fs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 20413c2..47be961 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ error_mutex:
+ 	mutex_unlock(&epfile->mutex);
+ error:
+-	ffs_free_buffer(io_data);
++	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
++		ffs_free_buffer(io_data);
+ 	return ret;
+ }
+ 
+-- 
+2.7.4
+
