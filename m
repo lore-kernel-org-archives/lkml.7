@@ -2,112 +2,138 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D31C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E97C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9599F2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FA42175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfCTMGP (ORCPT
+        id S1727365AbfCTMGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:06:15 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:6829 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfCTMGO (ORCPT
+        Wed, 20 Mar 2019 08:06:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726417AbfCTMGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:06:14 -0400
-Received: from [46.226.52.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id 86/B9-11025-EAC229C5; Wed, 20 Mar 2019 12:06:06 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRWlGSWpSXmKPExsVy8IPnUd21OpN
-  iDH4dMLSYf+Qcq8XDq/4Wq6buZLHY9Pgaq0XXr5XMFpd3zWGzWHr9IpNF694j7BZ/t29isXix
-  RdyBy2PNvDWMHjtn3WX32LSqk81j85J6j43vdjB59P818Pi8SS6APYo1My8pvyKBNaN97kuWg
-  gecFU823mdpYNzD0cXIxSEksJ5R4tbmayxdjBxAToXE7B9JXYycHGwChhLz3rxnBLFZBFQlrq
-  xYwwZiCwt4S3zcvAHMFhHoZZJY8LUcZA6zwHFGib2Lr7CAJHgFHCR2d5xkhLAFJU7OfAIWZxa
-  QkDj44gUzxC4tieXHIkHCEgL2EtPfXwULSwjoSzQei4UIG0p8n/WNBcI2lzjUf5ZpAiP/LCRD
-  ZyEZuoCRaRWjRVJRZnpGSW5iZo6uoYGBrqGhka6hpaWukZGFXmKVbpJeaqlueWpxia6hXmJ5s
-  V5xZW5yTopeXmrJJkZgXKQUHH+yg/F/V/ohRkkOJiVR3ka1STFCfEn5KZUZicUZ8UWlOanFhx
-  hlODiUJHj3agPlBItS01Mr0jJzgBEKk5bg4FES4X2lBZTmLS5IzC3OTIdInWLU5XjY+nkusxB
-  LXn5eqpQ47w2QIgGQoozSPLgRsGRxiVFWSpiXkYGBQYinILUoN7MEVf4VozgHo5IwLw8w9Qjx
-  ZOaVwG16BXQEE9AR6+b1gxxRkoiQkmpg1DTMc8pZ7/n6baSYkJRZe9wGmYw+Uws7mZ6eqd2BR
-  VvSBLs1Jta9fXqQ+Wctj9vfStF/kdJq677JnFu+TvTh5G0eG+VblKyCb/a5/fFYxyOWduB1Qf
-  wKni/Jd5vcGNfWb700161Ph+WXTHzQvwc1752lmL+WHo/es7Y/tOkmx9M1YRlTLW8psRRnJBp
-  qMRcVJwIAtPrUrREDAAA=
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-15.tower-282.messagelabs.com!1553083565!3936329!1
-X-Originating-IP: [193.240.73.197]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 5737 invoked from network); 20 Mar 2019 12:06:05 -0000
-Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-15.tower-282.messagelabs.com with AES128-SHA256 encrypted SMTP; 20 Mar 2019 12:06:05 -0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 20 Mar 2019 12:06:04 +0000
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22547)      id
- 7D99B3FBE9; Wed, 20 Mar 2019 12:06:04 +0000 (GMT)
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-Date:   Wed, 20 Mar 2019 11:03:50 +0000
-Subject: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-CC:     DEVICETREE <devicetree@vger.kernel.org>,
-        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dialog Opensource Support <support.opensource@diasemi.com>
-Message-ID: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 20/03/2019 09:36:00
+        Wed, 20 Mar 2019 08:06:39 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KBxnIM022674
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:06:38 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbkrsn7t4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:06:37 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 20 Mar 2019 12:06:34 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 12:06:31 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KC6UQf33619984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 12:06:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8E96AE055;
+        Wed, 20 Mar 2019 12:06:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED020AE04D;
+        Wed, 20 Mar 2019 12:06:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.93.235])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 12:06:29 +0000 (GMT)
+Subject: Re: [PATCH 2/6] security/keys/encrypted: Clean up
+ request_trusted_key()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     keyrings@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 20 Mar 2019 08:06:19 -0400
+In-Reply-To: <CAPcyv4gySHayfwtp1PgxEoM-T_s_1A4RTcnXefx5iRLn9g=D5w@mail.gmail.com>
+References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <155297558570.2276575.11731393787282486177.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <1553040398.4899.149.camel@linux.ibm.com>
+         <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
+         <1553049331.4899.177.camel@linux.ibm.com>
+         <CAPcyv4gySHayfwtp1PgxEoM-T_s_1A4RTcnXefx5iRLn9g=D5w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032012-0028-0000-0000-000003564121
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032012-0029-0000-0000-00002414E274
+Message-Id: <1553083579.4899.239.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
-'rgmii' instead of 'rgmii-id'. Meaning the RX and TX delays that were
-previously added by the MAC when required, but are now provided
-internally by the PHY (and the MAC should no longer add the RX or TX
-delays in this case).
+On Tue, 2019-03-19 at 22:48 -0700, Dan Williams wrote:
+> On Tue, Mar 19, 2019 at 7:36 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >
+> > On Tue, 2019-03-19 at 17:20 -0700, Dan Williams wrote:
+> > > On Tue, Mar 19, 2019 at 5:07 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > > >
+> > > > On Mon, 2019-03-18 at 23:06 -0700, Dan Williams wrote:
+> > > >
+> > > > < snip >
+> > > >
+> > > > > +/*
+> > > > > + * request_trusted_key - request the trusted key
+> > > > > + *
+> > > > > + * Trusted keys are sealed to PCRs and other metadata. Although userspace
+> > > > > + * manages both trusted/encrypted key-types, like the encrypted key type
+> > > > > + * data, trusted key type data is not visible decrypted from userspace.
+> > > > > + */
+> > > > > +static struct key *request_trusted_key(const char *trusted_desc,
+> > > > > +                             const u8 **master_key, size_t *master_keylen)
+> > > > > +{
+> > > > > +     struct trusted_key_payload *tpayload;
+> > > > > +     struct key_type *type;
+> > > > > +     struct key *tkey;
+> > > > > +
+> > > > > +     type = key_type_lookup("trusted");
+> > > >
+> > > > The associated key_type_put() will need to be called.
+> > >
+> > > Yes.
+> >
+> > I don't know if defining a key_type_lookup() wrapper, perhaps named
+> > is_key_type_available(), would help.  Both key_type_lookup() and
+> > key_type_put() would be called.  The existing code could then remain
+> > the same.
+> >
+> 
+> Maybe, but something still needs to pin the hosting module. I think
+> this means that the first call to key_type->instantiate() pins the
+> hosting module, and the ->destroy() of the last key for the key_type
+> unpins the module. It does mean that the ->destroy() method is no
+> longer optional.
 
-This patch fixes the network problems seen on the Freescale i.MX6Q/DL
-SABRE boards and makes a difference when correctly loading the NFS
-rootfs on startup.
+This sounds like it isn't a new problem.  Both issues need to be
+addressed, but I think we should differentiate between them and
+address them separately.
 
-Link: https://lkml.kernel.org/r/1397569821-5530-4-git-send-email-thomas.petazzoni@free-electrons.com
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Tested-by: Adam Thomson <Adam.Thomson@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In terms of the original nvdimm encrypted/trusted key problem, the
+above suggestion requires the least amount of change.  For v5.2, I
+would replace it with the full updated patch set.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index a070506..185fb17 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -202,7 +202,7 @@
- &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
--- 
-1.9.3
+Mimi
 
