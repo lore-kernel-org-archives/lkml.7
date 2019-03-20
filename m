@@ -2,116 +2,76 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE2BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E3CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DC12184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2872184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M4EM0xwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfCTPET (ORCPT
+        id S1727189AbfCTPFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:04:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39720 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727382AbfCTPET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:04:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3295DAD07;
-        Wed, 20 Mar 2019 15:04:18 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 16:04:16 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
-Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
-Message-ID: <20190320150416.4otf2343wmjfbw2c@pathway.suse.cz>
-References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
- <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
- <201903050123.x251N312025685@www262.sakura.ne.jp>
- <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
- <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
+        Wed, 20 Mar 2019 11:05:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35630 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfCTPFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:05:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NU7OCzToea/W2OFZrf3xnbBldScyyakPBNoWNNyNxOY=; b=M4EM0xwe47i6TAXPlgJFnm3cf
+        E6tQp1y4sb4Kep0rqkxAAlpd7WqsD/BFKJU6OCKbeFU0zBQ8WFEqR7q/GKkMOrxVjmHA8CDyPLXgE
+        YzXsfGYkRLMEpLbIcEFhbzb5Mjo0y9qtpHCiRxx9QGx33w/r+6CnK/CRP0nP69ivP5DSCbZPEPUzb
+        CEf8yLMMORUGFtwGktRbBw5J5Zjw93bLw5sBmo8ccrnojzww1xDOdERSQbiR30TRH8abmw6FNLGin
+        wgkydOKKMFwVQNln0373W/J5ykaaGSFgXweMBHiPo4MQTkm1UkwZ8tb/J+VVFBVPlIIlU/WQ+lwlq
+        O5j4N/EtQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6cmv-0006Ik-07; Wed, 20 Mar 2019 15:05:53 +0000
+Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8742b0a2-de4e-9865-cb3e-dfda0dec6a0a@infradead.org>
+Date:   Wed, 20 Mar 2019 08:05:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-03-07 03:24:25, Tetsuo Handa wrote:
-> On 2019/03/06 19:04, Petr Mladek wrote:
-> >> I'm suggesting to use a non-async printk() for $trailer_text_line line. I think
-> >> that changing all printk() called from out_of_memory() to async is doable, if
-> >> the caller of out_of_memory() wakes up a dedicated kthread described below.
-> > 
-> > This is error prone. The trailing printk is not guaranteed:
-> > 
-> >     + It might get lost by code refactoring.
+On 3/19/19 11:43 AM, Andy Shevchenko wrote:
+> If by BIOS or by other means the serial port is configured
+> user might want to skip reconfiguration in the boot code.
 > 
-> Caller uses this async printk() with their own risk. This concern is same with
-> "buffering into on-stack 'char buf[80]' using snprintf() and forgetting to flush
-> it using printk()".
-
-AFAIK, all pr_cont() users are self-contained. Most of them print all
-pieces in the same function. Some of them print the part of the lines
-using some helper scripts but these are defined in the same source
-file, usually right above the caller.
-
-> > 
-> >     + People would miss that it is needed when async printk is used
-> >       in a shared function, e.g. dump_stack().
+> Add support of 'nocfg' parameter to earlyprintk.
 > 
-> I'm planning to allow async printk() for shared functions like dump_stack()
-> because there will be some $trailer_text_line line after such shared functions.
-> (By the way, for that reason, I expect that we won't do a tree-wide KERN_DEFAULT
-> removal so that callers can pass KERN_DEFAULT_ASYNC as an function argument to
-> such shared functions.)
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-Now, you are going to spread related lines all over the kernel sources.
+Hi Andy,
+Please add "nocfg" to Documentation/admin-guide/kernel-parameters.txt.
 
 
-> > But I would really like to avoid even more printk variants.
-> > They have many problems:
-> > 
-> >     + Only a handful of people would know how to use them right.
-> 
-> The caller of async printk() knows when/how to use async printk().
-> 
-> > 
-> >     + They are hard to maintain. Any incompatible printk() in the call
-> >       chain might break the intention.
-> 
-> There is no incompatible printk(). Only when to wake up a thread which
-> writes to consoles differs.
-
-By incompatible I mean the following:
-
-   + Adding any synchronous printk() into a chain of async printk's
-     will break the chain. I mean that the consoles will get handled
-     by the new normal printk() before the original author wanted.
-
-   + Also the wanted normal printk() might get removed from some
-     reason (by mistake). Then all the previous async lines will
-     not get reliably flushed.
-
-Both situations are bugs that might get fixed. But the API
-is just too error prone from my POV.
-
-We are repeating the same arguments by different words all over
-again. I explained why the API is not acceptable for me and
-suggested other approaches. This is my last mail about the API.
-
-Best Regards,
-Petr
+-- 
+~Randy
