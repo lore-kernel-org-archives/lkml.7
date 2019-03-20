@@ -2,123 +2,515 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527B2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9666AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BE52186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="LlyhXyvL"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA1C2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfCTMLK (ORCPT
+        id S1727328AbfCTMNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:11:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45392 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfCTMLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:11:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v21so1780811pfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 05:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=JO0hRtirnbvAuYdx+9sUZT6fK1EoSxICeBDSVE6GYxM=;
-        b=LlyhXyvLeRTjzqFsZBwwgqDH0XWjjULMpMGaX1Upp2NtS5m0nksY9ojY9B7XYgjgVq
-         Loy72R9AasKPC7RnqkQoJGj1nhvwJijwXBRx7wu/UaIU0SCnQZ/2qNezxLpSxI/I29If
-         aqqDvaotELYZO06NB6kekIlT9X7RPaOdqHbGWydnZOJDM0WjN7SUGKvDbvfNheq4dxto
-         ZJp8ijLL3hD2e0HaUAOvqcO4o5nqtUruGqsaOvDxCtDNhAUg6FRcoyJ9SFQkqqOPYkVJ
-         Uxh9dTcGY2FSkgQA8TiLNEaMM1TvE7nfPHVSobVhMknm6K3rcK3dzfWYKeYqUJZh+rPm
-         kaYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JO0hRtirnbvAuYdx+9sUZT6fK1EoSxICeBDSVE6GYxM=;
-        b=Vutbz8o8THYJFWnP+I4tQYWid0rajdINP3B4j8pEr0jblpkM+LBCcmdYDnMHU7D6HV
-         rEJ1A+Wlj4nAoO2hvQRDTdE6C2BVO2g2EKJbmG5U+GHrkLbeq05H5Hzgh2FYzO5LlJSx
-         STmtL6x+AVNoizdudDihzZKmBGw+Xpu/YA6TEJeLGh7AfxR4ORRzMDdT++1Kx0OrUcMA
-         t/ZoAghSuM/Ye7P4pa2rLl6LYVGfHTA3kKQKMbQerqOjD/TJIYR7oJFG0J9WkRuQeN9h
-         hibXz7ON18MBA3j6XkkLJBd2bNTk8WZSEqIdXsVZkG/H0l66CBJ4Rrq14/n3dH5ugo9g
-         krEQ==
-X-Gm-Message-State: APjAAAV61MsBpV3NDAXtKeadD8fXoZdfRXjSEJndoQdd4CqhJdm9jGAt
-        e7ZmaTrmCY7jGzIGlSrf5ibf3Q==
-X-Google-Smtp-Source: APXvYqyL/5BnbR7nIishvW7WPyZqAn8U0OUae4m6BaJBwmYaDhVQO6utmldOTRLWxLJKPePax34eQw==
-X-Received: by 2002:a17:902:1101:: with SMTP id d1mr7396376pla.19.1553083868536;
-        Wed, 20 Mar 2019 05:11:08 -0700 (PDT)
-Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
-        by smtp.gmail.com with ESMTPSA id 184sm2729937pff.149.2019.03.20.05.11.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 05:11:07 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Pierre-Hugues Husson <phh@phh.me>,
-        Stefan Agner <stefan@agner.ch>,
-        Beniamino Galvani <b.galvani@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: rn5t618: Constify regulator_desc
-Date:   Wed, 20 Mar 2019 20:10:57 +0800
-Message-Id: <20190320121057.31167-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 Mar 2019 08:13:15 -0400
+Received: from foss.arm.com ([217.140.101.70]:39036 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfCTMNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 08:13:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44910A78;
+        Wed, 20 Mar 2019 05:13:14 -0700 (PDT)
+Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5039F3F575;
+        Wed, 20 Mar 2019 05:13:07 -0700 (PDT)
+Subject: Re: [PATCH v7 7/10] KVM: arm/arm64: context-switch ptrauth registers
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>
+References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
+ <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
+From:   Julien Thierry <julien.thierry@arm.com>
+Message-ID: <a3252299-b1ac-3d39-31a4-ca653daa815f@arm.com>
+Date:   Wed, 20 Mar 2019 12:13:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regulator_desc never need to be modified, so define them as const as a
-hint to the compiler that they can go into .rodata.
+Hi Amit,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/rn5t618-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
+> 
+> When pointer authentication is supported, a guest may wish to use it.
+> This patch adds the necessary KVM infrastructure for this to work, with
+> a semi-lazy context switch of the pointer auth state.
+> 
+> Pointer authentication feature is only enabled when VHE is built
+> in the kernel and present in the CPU implementation so only VHE code
+> paths are modified.
+> 
+> When we schedule a vcpu, we disable guest usage of pointer
+> authentication instructions and accesses to the keys. While these are
+> disabled, we avoid context-switching the keys. When we trap the guest
+> trying to use pointer authentication functionality, we change to eagerly
+> context-switching the keys, and enable the feature. The next time the
+> vcpu is scheduled out/in, we start again. However the host key save is
+> optimized and implemented inside ptrauth instruction/register access
+> trap.
+> 
+> Pointer authentication consists of address authentication and generic
+> authentication, and CPUs in a system might have varied support for
+> either. Where support for either feature is not uniform, it is hidden
+> from guests via ID register emulation, as a result of the cpufeature
+> framework in the host.
+> 
+> Unfortunately, address authentication and generic authentication cannot
+> be trapped separately, as the architecture provides a single EL2 trap
+> covering both. If we wish to expose one without the other, we cannot
+> prevent a (badly-written) guest from intermittently using a feature
+> which is not uniformly supported (when scheduled on a physical CPU which
+> supports the relevant feature). Hence, this patch expects both type of
+> authentication to be present in a cpu.
+> 
+> This switch of key is done from guest enter/exit assembly as preperation
+> for the upcoming in-kernel pointer authentication support. Hence, these
+> key switching routines are not implemented in C code as they may cause
+> pointer authentication key signing error in some situations.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
+> , save host key in ptrauth exception trap]
+> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Cc: kvmarm@lists.cs.columbia.edu
+> ---
+>  arch/arm64/include/asm/kvm_host.h        |  17 ++++++
+>  arch/arm64/include/asm/kvm_ptrauth_asm.h | 100 +++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/asm-offsets.c          |   6 ++
+>  arch/arm64/kvm/guest.c                   |  14 +++++
+>  arch/arm64/kvm/handle_exit.c             |  24 +++++---
+>  arch/arm64/kvm/hyp/entry.S               |   7 +++
+>  arch/arm64/kvm/reset.c                   |   7 +++
+>  arch/arm64/kvm/sys_regs.c                |  46 +++++++++++++-
+>  virt/kvm/arm/arm.c                       |   2 +
+>  9 files changed, 212 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/kvm_ptrauth_asm.h
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 9dd2918..61239a6 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -152,6 +152,18 @@ enum vcpu_sysreg {
+>  	PMSWINC_EL0,	/* Software Increment Register */
+>  	PMUSERENR_EL0,	/* User Enable Register */
+>  
+> +	/* Pointer Authentication Registers */
+> +	APIAKEYLO_EL1,
+> +	APIAKEYHI_EL1,
+> +	APIBKEYLO_EL1,
+> +	APIBKEYHI_EL1,
+> +	APDAKEYLO_EL1,
+> +	APDAKEYHI_EL1,
+> +	APDBKEYLO_EL1,
+> +	APDBKEYHI_EL1,
+> +	APGAKEYLO_EL1,
+> +	APGAKEYHI_EL1,
+> +
+>  	/* 32bit specific registers. Keep them at the end of the range */
+>  	DACR32_EL2,	/* Domain Access Control Register */
+>  	IFSR32_EL2,	/* Instruction Fault Status Register */
+> @@ -497,6 +509,11 @@ static inline bool kvm_arch_requires_vhe(void)
+>  		test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) && \
+>  		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features))
+>  
+> +void kvm_arm_vcpu_ptrauth_enable(struct kvm_vcpu *vcpu);
+> +void kvm_arm_vcpu_ptrauth_disable(struct kvm_vcpu *vcpu);
+> +void kvm_arm_vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu);
+> +void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu);
+> +
+>  static inline void kvm_arch_hardware_unsetup(void) {}
+>  static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>  static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+> diff --git a/arch/arm64/include/asm/kvm_ptrauth_asm.h b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+> new file mode 100644
+> index 0000000..97bb040
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+> @@ -0,0 +1,100 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + * arch/arm64/include/asm/kvm_ptrauth_asm.h: Guest/host ptrauth save/restore
+> + * Copyright 2019 Arm Limited
+> + * Author: Mark Rutland <mark.rutland@arm.com>
+> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
+> + */
+> +
+> +#ifndef __ASM_KVM_ASM_PTRAUTH_H
+> +#define __ASM_KVM_ASM_PTRAUTH_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#define __ptrauth_save_key(regs, key)						\
+> +({										\
+> +	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
+> +	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
+> +})
+> +
+> +#define __ptrauth_save_state(ctxt)						\
+> +({										\
+> +	__ptrauth_save_key(ctxt->sys_regs, APIA);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APIB);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APDA);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APDB);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APGA);				\
+> +})
+> +
+> +#else /* __ASSEMBLY__ */
+> +
+> +#include <asm/sysreg.h>
+> +
+> +#ifdef	CONFIG_ARM64_PTR_AUTH
+> +
+> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index 790a4a73ea2c..a79c0c43b9f8 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -46,7 +46,7 @@ static const struct regulator_ops rn5t618_reg_ops = {
- 		.vsel_mask	= (vmask),				\
- 	}
- 
--static struct regulator_desc rn5t567_regulators[] = {
-+static const struct regulator_desc rn5t567_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -63,7 +63,7 @@ static struct regulator_desc rn5t567_regulators[] = {
- 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
- };
- 
--static struct regulator_desc rn5t618_regulators[] = {
-+static const struct regulator_desc rn5t618_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -79,7 +79,7 @@ static struct regulator_desc rn5t618_regulators[] = {
- 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
- };
- 
--static struct regulator_desc rc5t619_regulators[] = {
-+static const struct regulator_desc rc5t619_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -107,7 +107,7 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
- 	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
--	struct regulator_desc *regulators;
-+	const struct regulator_desc *regulators;
- 	int i;
- 	int num_regulators = 0;
- 
+I don't really see the point of this macro. You move the pointers of
+kvm_cpu_contexts to point to where the ptr auth registers are (which is
+in the middle of an array) by adding the offset of APIAKEYLO and then we
+have to recompute all offsets with this macro.
+
+Why not just pass the kvm_cpu_context pointers to
+ptrauth_save/restore_state and use the already defined offsets
+(CPU_AP*_EL1) directly?
+
+I think this would also allow to use one less register for the
+ptrauth_switch_to_* macros.
+
+> +
+> +.macro	ptrauth_save_state base, reg1, reg2
+> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+> +.endm
+> +
+> +.macro	ptrauth_restore_state base, reg1, reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
+> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
+> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
+> +	.endm
+
+Nit: Bad indentation.
+
+> +
+> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+> +	cbz	\reg1, skip_switch_to_guest
+> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+
+As mentioned we probably can get rid of one temporary register and
+directly pass g_ctxt here.
+
+> +skip_switch_to_guest:
+
+I believe you should use numbered labels for assembly macros, otherwise
+multiple references to that macros will lead to symbol redefinitions.
+
+> +.endm
+> +
+> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+> +	cbz	\reg1, skip_switch_to_host
+> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_save_state	\reg1, \reg2, \reg3
+> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+> +	isb
+> +skip_switch_to_host:
+
+Same.
+
+Cheers,
+
+Julien
+
+> +.endm
+> +
+> +#else /* !CONFIG_ARM64_PTR_AUTH */
+> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+> +.endm
+> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+> +.endm
+> +#endif /* CONFIG_ARM64_PTR_AUTH */
+> +#endif /* __ASSEMBLY__ */
+> +#endif /* __ASM_KVM_ASM_PTRAUTH_H */
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index 7f40dcb..12ca916 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -126,6 +126,12 @@ int main(void)
+>    DEFINE(VCPU_FAULT_DISR,	offsetof(struct kvm_vcpu, arch.fault.disr_el1));
+>    DEFINE(VCPU_WORKAROUND_FLAGS,	offsetof(struct kvm_vcpu, arch.workaround_flags));
+>    DEFINE(CPU_GP_REGS,		offsetof(struct kvm_cpu_context, gp_regs));
+> +  DEFINE(CPU_APIAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APIAKEYLO_EL1]));
+> +  DEFINE(CPU_APIBKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APIBKEYLO_EL1]));
+> +  DEFINE(CPU_APDAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APDAKEYLO_EL1]));
+> +  DEFINE(CPU_APDBKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APDBKEYLO_EL1]));
+> +  DEFINE(CPU_APGAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APGAKEYLO_EL1]));
+> +  DEFINE(CPU_HCR_EL2,		offsetof(struct kvm_cpu_context, hcr_el2));
+>    DEFINE(CPU_USER_PT_REGS,	offsetof(struct kvm_regs, regs));
+>    DEFINE(HOST_CONTEXT_VCPU,	offsetof(struct kvm_cpu_context, __hyp_running_vcpu));
+>  #endif
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index e2f0268..9f591ad 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -544,3 +544,17 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
+>  
+>  	return ret;
+>  }
+> +
+> +/**
+> + * kvm_arm_vcpu_ptrauth_setup_lazy - setup lazy ptrauth for vcpu schedule
+> + *
+> + * @vcpu: The VCPU pointer
+> + *
+> + * This function may be used to disable ptrauth and use it in a lazy context
+> + * via traps.
+> + */
+> +void kvm_arm_vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
+> +{
+> +	if (vcpu_has_ptrauth(vcpu))
+> +		kvm_arm_vcpu_ptrauth_disable(vcpu);
+> +}
+> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
+> index 0b79834..5838ff9 100644
+> --- a/arch/arm64/kvm/handle_exit.c
+> +++ b/arch/arm64/kvm/handle_exit.c
+> @@ -30,6 +30,7 @@
+>  #include <asm/kvm_coproc.h>
+>  #include <asm/kvm_emulate.h>
+>  #include <asm/kvm_mmu.h>
+> +#include <asm/kvm_ptrauth_asm.h>
+>  #include <asm/debug-monitors.h>
+>  #include <asm/traps.h>
+>  
+> @@ -174,19 +175,26 @@ static int handle_sve(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  }
+>  
+>  /*
+> + * Handle the guest trying to use a ptrauth instruction, or trying to access a
+> + * ptrauth register.
+> + */
+> +void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
+> +{
+> +	if (vcpu_has_ptrauth(vcpu)) {
+> +		kvm_arm_vcpu_ptrauth_enable(vcpu);
+> +		__ptrauth_save_state(vcpu->arch.host_cpu_context);
+> +	} else {
+> +		kvm_inject_undefined(vcpu);
+> +	}
+> +}
+> +
+> +/*
+>   * Guest usage of a ptrauth instruction (which the guest EL1 did not turn into
+>   * a NOP).
+>   */
+>  static int kvm_handle_ptrauth(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  {
+> -	/*
+> -	 * We don't currently support ptrauth in a guest, and we mask the ID
+> -	 * registers to prevent well-behaved guests from trying to make use of
+> -	 * it.
+> -	 *
+> -	 * Inject an UNDEF, as if the feature really isn't present.
+> -	 */
+> -	kvm_inject_undefined(vcpu);
+> +	kvm_arm_vcpu_ptrauth_trap(vcpu);
+>  	return 1;
+>  }
+>  
+> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+> index 675fdc1..3a70213 100644
+> --- a/arch/arm64/kvm/hyp/entry.S
+> +++ b/arch/arm64/kvm/hyp/entry.S
+> @@ -24,6 +24,7 @@
+>  #include <asm/kvm_arm.h>
+>  #include <asm/kvm_asm.h>
+>  #include <asm/kvm_mmu.h>
+> +#include <asm/kvm_ptrauth_asm.h>
+>  
+>  #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
+>  #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
+> @@ -64,6 +65,9 @@ ENTRY(__guest_enter)
+>  
+>  	add	x18, x0, #VCPU_CONTEXT
+>  
+> +	// Macro ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3).
+> +	ptrauth_switch_to_guest x18, x0, x1, x2
+> +
+>  	// Restore guest regs x0-x17
+>  	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
+>  	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
+> @@ -118,6 +122,9 @@ ENTRY(__guest_exit)
+>  
+>  	get_host_ctxt	x2, x3
+>  
+> +	// Macro ptrauth_switch_to_host(guest cxt, host cxt, tmp1, tmp2, tmp3).
+> +	ptrauth_switch_to_host x1, x2, x3, x4, x5
+> +
+>  	// Now restore the host regs
+>  	restore_callee_saved_regs x2
+>  
+> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> index f16a5f8..00f0639 100644
+> --- a/arch/arm64/kvm/reset.c
+> +++ b/arch/arm64/kvm/reset.c
+> @@ -128,6 +128,13 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>  	if (loaded)
+>  		kvm_arch_vcpu_put(vcpu);
+>  
+> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
+> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
+> +		/* Verify that KVM startup matches the conditions for ptrauth */
+> +		if (WARN_ON(!vcpu_has_ptrauth(vcpu)))
+> +			return -EINVAL;
+> +	}
+> +
+>  	switch (vcpu->arch.target) {
+>  	default:
+>  		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 75942f6..ed6613e 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1007,6 +1007,38 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+>  	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
+>  	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
+>  
+> +void kvm_arm_vcpu_ptrauth_enable(struct kvm_vcpu *vcpu)
+> +{
+> +	vcpu->arch.ctxt.hcr_el2 |= (HCR_API | HCR_APK);
+> +}
+> +
+> +void kvm_arm_vcpu_ptrauth_disable(struct kvm_vcpu *vcpu)
+> +{
+> +	vcpu->arch.ctxt.hcr_el2 &= ~(HCR_API | HCR_APK);
+> +}
+> +
+> +static bool trap_ptrauth(struct kvm_vcpu *vcpu,
+> +			 struct sys_reg_params *p,
+> +			 const struct sys_reg_desc *rd)
+> +{
+> +	kvm_arm_vcpu_ptrauth_trap(vcpu);
+> +	return false;
+> +}
+> +
+> +static unsigned int ptrauth_restrictions(const struct kvm_vcpu *vcpu,
+> +			const struct sys_reg_desc *rd)
+> +{
+> +	return vcpu_has_ptrauth(vcpu) ? 0 : REG_NO_USER | REG_NO_GUEST;
+> +}
+> +
+> +#define __PTRAUTH_KEY(k)						\
+> +	{ SYS_DESC(SYS_## k), trap_ptrauth, reset_unknown, k,		\
+> +	.restrictions = ptrauth_restrictions}
+> +
+> +#define PTRAUTH_KEY(k)							\
+> +	__PTRAUTH_KEY(k ## KEYLO_EL1),					\
+> +	__PTRAUTH_KEY(k ## KEYHI_EL1)
+> +
+>  static bool access_arch_timer(struct kvm_vcpu *vcpu,
+>  			      struct sys_reg_params *p,
+>  			      const struct sys_reg_desc *r)
+> @@ -1061,9 +1093,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
+>  					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+>  					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
+>  					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
+> -		if (val & ptrauth_mask)
+> -			kvm_debug("ptrauth unsupported for guests, suppressing\n");
+> -		val &= ~ptrauth_mask;
+> +		if (!vcpu_has_ptrauth(vcpu)) {
+> +			if (val & ptrauth_mask)
+> +				kvm_debug("ptrauth unsupported for guests, suppressing\n");
+> +			val &= ~ptrauth_mask;
+> +		}
+>  	}
+>  
+>  	return val;
+> @@ -1387,6 +1421,12 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  	{ SYS_DESC(SYS_TTBR1_EL1), access_vm_reg, reset_unknown, TTBR1_EL1 },
+>  	{ SYS_DESC(SYS_TCR_EL1), access_vm_reg, reset_val, TCR_EL1, 0 },
+>  
+> +	PTRAUTH_KEY(APIA),
+> +	PTRAUTH_KEY(APIB),
+> +	PTRAUTH_KEY(APDA),
+> +	PTRAUTH_KEY(APDB),
+> +	PTRAUTH_KEY(APGA),
+> +
+>  	{ SYS_DESC(SYS_AFSR0_EL1), access_vm_reg, reset_unknown, AFSR0_EL1 },
+>  	{ SYS_DESC(SYS_AFSR1_EL1), access_vm_reg, reset_unknown, AFSR1_EL1 },
+>  	{ SYS_DESC(SYS_ESR_EL1), access_vm_reg, reset_unknown, ESR_EL1 },
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 58de0ca..50ae066 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -385,6 +385,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>  		vcpu_clear_wfe_traps(vcpu);
+>  	else
+>  		vcpu_set_wfe_traps(vcpu);
+> +
+> +	kvm_arm_vcpu_ptrauth_setup_lazy(vcpu);
+>  }
+>  
+>  void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+> 
+
 -- 
-2.17.1
-
+Julien Thierry
