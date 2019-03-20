@@ -2,102 +2,116 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C710C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE2BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404AC2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DC12184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbfCTPEU (ORCPT
+        id S1728329AbfCTPET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:04:20 -0400
-Received: from foss.arm.com ([217.140.101.70]:41634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfCTPET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 11:04:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D425174E;
-        Wed, 20 Mar 2019 08:04:19 -0700 (PDT)
-Received: from [10.1.197.21] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9F223F740;
-        Wed, 20 Mar 2019 08:04:16 -0700 (PDT)
-Subject: Re: [PATCH v7 9/10] KVM: arm64: docs: document KVM support of pointer
- authentication
-To:     Julien Thierry <julien.thierry@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-10-git-send-email-amit.kachhap@arm.com>
- <7bf19035-02ba-ae47-b08c-7d7622a45dbf@arm.com>
-From:   Kristina Martsenko <kristina.martsenko@arm.com>
-Message-ID: <648d66dd-519c-7567-a3e1-c23208f68cf2@arm.com>
-Date:   Wed, 20 Mar 2019 15:04:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: from mx2.suse.de ([195.135.220.15]:39720 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727382AbfCTPET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:04:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3295DAD07;
+        Wed, 20 Mar 2019 15:04:18 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 16:04:16 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
+Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
+Message-ID: <20190320150416.4otf2343wmjfbw2c@pathway.suse.cz>
+References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+ <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
+ <201903050123.x251N312025685@www262.sakura.ne.jp>
+ <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
+ <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <7bf19035-02ba-ae47-b08c-7d7622a45dbf@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/03/2019 13:37, Julien Thierry wrote:
-> Hi Amit,
+On Thu 2019-03-07 03:24:25, Tetsuo Handa wrote:
+> On 2019/03/06 19:04, Petr Mladek wrote:
+> >> I'm suggesting to use a non-async printk() for $trailer_text_line line. I think
+> >> that changing all printk() called from out_of_memory() to async is doable, if
+> >> the caller of out_of_memory() wakes up a dedicated kthread described below.
+> > 
+> > This is error prone. The trailing printk is not guaranteed:
+> > 
+> >     + It might get lost by code refactoring.
 > 
-> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
->> This adds sections for KVM API extension for pointer authentication.
->> A brief description about usage of pointer authentication for KVM guests
->> is added in the arm64 documentations.
+> Caller uses this async printk() with their own risk. This concern is same with
+> "buffering into on-stack 'char buf[80]' using snprintf() and forgetting to flush
+> it using printk()".
 
-[...]
+AFAIK, all pr_cont() users are self-contained. Most of them print all
+pieces in the same function. Some of them print the part of the lines
+using some helper scripts but these are defined in the same source
+file, usually right above the caller.
 
->> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
->> index 7de9eee..b5c66bc 100644
->> --- a/Documentation/virtual/kvm/api.txt
->> +++ b/Documentation/virtual/kvm/api.txt
->> @@ -2659,6 +2659,12 @@ Possible features:
->>  	  Depends on KVM_CAP_ARM_PSCI_0_2.
->>  	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
->>  	  Depends on KVM_CAP_ARM_PMU_V3.
->> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS:
->> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC:
->> +	  Enables Pointer authentication for the CPU.
->> +	  Depends on KVM_CAP_ARM_PTRAUTH and only on arm64 architecture. If
->> +	  set, then the KVM guest allows the execution of pointer authentication
->> +	  instructions. Otherwise, KVM treats these instructions as undefined.
->>  
+> > 
+> >     + People would miss that it is needed when async printk is used
+> >       in a shared function, e.g. dump_stack().
 > 
-> Overall I feel one could easily get confused to whether
-> PTRAUTH_ADDRESS/GENERIC are two individual features, whether one is a
-> superset of the other, if the names are just an alias of one another, etc...
+> I'm planning to allow async printk() for shared functions like dump_stack()
+> because there will be some $trailer_text_line line after such shared functions.
+> (By the way, for that reason, I expect that we won't do a tree-wide KERN_DEFAULT
+> removal so that callers can pass KERN_DEFAULT_ASYNC as an function argument to
+> such shared functions.)
+
+Now, you are going to spread related lines all over the kernel sources.
+
+
+> > But I would really like to avoid even more printk variants.
+> > They have many problems:
+> > 
+> >     + Only a handful of people would know how to use them right.
 > 
-> I think the doc should at least stress out that *both* flags are
-> required to enable ptrauth in a guest. However it raises the question,
-> if we don't plan to support the features individually (because we
-> can't), should we really expose two feature flags? I seems odd to
-> introduce two flags that only do something if used together...
+> The caller of async printk() knows when/how to use async printk().
+> 
+> > 
+> >     + They are hard to maintain. Any incompatible printk() in the call
+> >       chain might break the intention.
+> 
+> There is no incompatible printk(). Only when to wake up a thread which
+> writes to consoles differs.
 
-Why can't we support the features individually? For example, if we ever
-get a system where all CPUs support address authentication and none of
-them support generic authentication, then we could still support address
-authentication in the guest.
+By incompatible I mean the following:
 
-Thanks,
-Kristina
+   + Adding any synchronous printk() into a chain of async printk's
+     will break the chain. I mean that the consoles will get handled
+     by the new normal printk() before the original author wanted.
+
+   + Also the wanted normal printk() might get removed from some
+     reason (by mistake). Then all the previous async lines will
+     not get reliably flushed.
+
+Both situations are bugs that might get fixed. But the API
+is just too error prone from my POV.
+
+We are repeating the same arguments by different words all over
+again. I explained why the API is not acceptable for me and
+suggested other approaches. This is my last mail about the API.
+
+Best Regards,
+Petr
