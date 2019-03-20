@@ -2,141 +2,101 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7DBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F931C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60162218CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A798218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hQHtw54b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tkiMUKi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfCTU5g (ORCPT
+        id S1727612AbfCTU6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:57:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42955 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfCTU5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:57:36 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 103so3485289otd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ij6DJHAqfryzjiSG/jxMhd1XKTG9GJ9L0fy61wU1Z5Q=;
-        b=hQHtw54bMsNq0UWUzqZi4Xepmmij8Jy+KDZGJeywwLNrPiqUxNyKDH9xKURLPj0fcE
-         kgWIoCRrhrHXSjdOwmwJflndw0Hkzfn+dxWAhGaTjcdCUmKbGDvtLdps5Q5aNmZbyXWA
-         3qpCDijWEutH+VhB1H3M03XG0EqvBDiHqQf8KpW7PktJ/3m/DRFeEcos1F+gSTr3sIrB
-         Ad673In69dbKt/dX6+IzUFlmsJQdelglLg+znKplUjCEwy5y+QlPtMSJmrjZ01yzykjv
-         KzrcWmFeOoSmQMh+oZa/9G1ooH7YeUyBLCBcskKekprWtQU1d7nwTXUeH25dBf7R+wDa
-         oxlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ij6DJHAqfryzjiSG/jxMhd1XKTG9GJ9L0fy61wU1Z5Q=;
-        b=FjRaFzEqBWRlxIhjji4dxiDcpK/2cF/0TL3II/dwsTn3C2gmpzmO/gARrwhjw/LOxn
-         WrimpRJKU1dyTvRyMz4CiZ3w99V22OEAQZCbgFNQpTbiGCe+fjB3kRNmVgS7eYRTbLZj
-         5ioS18s11duuHyNCIGnUebcQKNv1mZYxgqCf/25gka2qx7UiY1ruZQ+N3wPR336Z/7ix
-         kFvfS7dwkET1AKisgZT9dnj0ANHeNnmbtJogsl+WmEq8N5XhyhJEzTCuJTIB4XEFH71h
-         mMfespHTE0QDDR+LZK1fAXkgPoSrL2z8/k8vk32sx9hNiQvFhFOi9IkCFQ8Zu0NRxX9Z
-         9E7g==
-X-Gm-Message-State: APjAAAU74P6qiQlBxo4IC4OasHlMaXzstNCiniHjV79PYmpBWh0mury4
-        3o0zPmN1HTxGVvbPiTRi4XRlqjQw0soIFAQ8IEBxxDrj
-X-Google-Smtp-Source: APXvYqxcZXKMA+p2n96n1FFTaOSelIGH59iBkrJ6znV79aqILXhBWYIui9s4FGcIsTHT0hrIr2022s1bnFyAt264+ko=
-X-Received: by 2002:a9d:4d0b:: with SMTP id n11mr63266otf.98.1553115455713;
- Wed, 20 Mar 2019 13:57:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
- <20190228083522.8189-2-aneesh.kumar@linux.ibm.com> <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
- <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
- <87k1hc8iqa.fsf@linux.ibm.com> <CAPcyv4ir4irASBQrZD_a6kMkEUt=XPUCuKajF75O7wDCgeG=7Q@mail.gmail.com>
- <871s3aqfup.fsf@linux.ibm.com> <CAPcyv4i0SahDP=_ZQV3RG_b5pMkjn-9Cjy7OpY2sm1PxLdO8jA@mail.gmail.com>
- <87bm267ywc.fsf@linux.ibm.com> <878sxa7ys5.fsf@linux.ibm.com> <CAPcyv4iuAPg3HWh5e8-Ud3oCrvp5AoFmjOzf4bbA+VLgR7NLFg@mail.gmail.com>
-In-Reply-To: <CAPcyv4iuAPg3HWh5e8-Ud3oCrvp5AoFmjOzf4bbA+VLgR7NLFg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Mar 2019 13:57:25 -0700
-Message-ID: <CAPcyv4hMzVuOYzy2tTq-my8Z1y+X6Ug-fyObpKTxVU44p5rBZw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Wed, 20 Mar 2019 16:58:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:35495 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbfCTU6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:58:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Pj1n1JgLz9s3q;
+        Thu, 21 Mar 2019 07:58:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553115501;
+        bh=SX0CVgKXSxgaII5kPcChVBCgfsYOOcVj2P9e+jwEB4E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tkiMUKi8i+u8v+Iu5c/LKKFFbBct6ZUPragVx9J3Rt4/eIgq2+l36/sewvT4CFJFD
+         MxkPY3Po3KPrqCj7L1LMrKEqrXRskwDZZSqnuImR6dYrhJIOToj02njKLpWKahf8em
+         nrQ2QFuGQZXoVmR2L+t/VR13YxnvFgoqmJ0+liNGRPEYOeXJL7Zuuie1u5c0RRnTqH
+         vzhkQlIDdS/MleJCO2Ied3Kx/Cpr/hiCITCNVDJnVavD5/e+7A5CuFW0Ky0ghZBIDd
+         RU3j+J32qunSJvwrLlFBBJ4LaMdTNRxkQzPg8JXY6xqLUkChvTjHFvJZSCrm3pNxyK
+         D0XYshl/ogJiA==
+Date:   Thu, 21 Mar 2019 07:58:18 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jon Mason <jdmason@kudzu.us>,
+        NTB Mailing List <linux-ntb@googlegroups.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: linux-next: Fixes tag needs some work in the ntb tree
+Message-ID: <20190321075818.24f9703a@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/wfWlJaTnCrn0=Kn4xr_QCJT"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 8:34 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Wed, Mar 20, 2019 at 1:09 AM Aneesh Kumar K.V
-> <aneesh.kumar@linux.ibm.com> wrote:
-> >
-> > Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com> writes:
-> >
-> > > Dan Williams <dan.j.williams@intel.com> writes:
-> > >
-> > >>
-> > >>> Now what will be page size used for mapping vmemmap?
-> > >>
-> > >> That's up to the architecture's vmemmap_populate() implementation.
-> > >>
-> > >>> Architectures
-> > >>> possibly will use PMD_SIZE mapping if supported for vmemmap. Now a
-> > >>> device-dax with struct page in the device will have pfn reserve area aligned
-> > >>> to PAGE_SIZE with the above example? We can't map that using
-> > >>> PMD_SIZE page size?
-> > >>
-> > >> IIUC, that's a different alignment. Currently that's handled by
-> > >> padding the reservation area up to a section (128MB on x86) boundary,
-> > >> but I'm working on patches to allow sub-section sized ranges to be
-> > >> mapped.
-> > >
-> > > I am missing something w.r.t code. The below code align that using nd_pfn->align
-> > >
-> > >       if (nd_pfn->mode == PFN_MODE_PMEM) {
-> > >               unsigned long memmap_size;
-> > >
-> > >               /*
-> > >                * vmemmap_populate_hugepages() allocates the memmap array in
-> > >                * HPAGE_SIZE chunks.
-> > >                */
-> > >               memmap_size = ALIGN(64 * npfns, HPAGE_SIZE);
-> > >               offset = ALIGN(start + SZ_8K + memmap_size + dax_label_reserve,
-> > >                               nd_pfn->align) - start;
-> > >       }
-> > >
-> > > IIUC that is finding the offset where to put vmemmap start. And that has
-> > > to be aligned to the page size with which we may end up mapping vmemmap
-> > > area right?
->
-> Right, that's the physical offset of where the vmemmap ends, and the
-> memory to be mapped begins.
->
-> > > Yes we find the npfns by aligning up using PAGES_PER_SECTION. But that
-> > > is to compute howmany pfns we should map for this pfn dev right?
-> > >
-> >
-> > Also i guess those 4K assumptions there is wrong?
->
-> Yes, I think to support non-4K-PAGE_SIZE systems the 'pfn' metadata
-> needs to be revved and the PAGE_SIZE needs to be recorded in the
-> info-block.
+--Sig_/wfWlJaTnCrn0=Kn4xr_QCJT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-How often does a system change page-size. Is it fixed or do
-environment change it from one boot to the next? I'm thinking through
-the behavior of what do when the recorded PAGE_SIZE in the info-block
-does not match the current system page size. The simplest option is to
-just fail the device and require it to be reconfigured. Is that
-acceptable?
+Hi all,
+
+In commit
+
+  f4d0dd1064b8 ("NTB: ntb_transport: Ensure qp->tx_mw_dma_addr is initaliaz=
+ed")
+
+Fixes tag
+
+  Fixes: c27ccb899219 ("NTB: ntb_transport: Ensure the destination buffer i=
+s mapped for TX DMA")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean:
+
+  c59666bb32b9 ("NTB: ntb_transport: Ensure the destination buffer is mappe=
+d for TX DMA")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wfWlJaTnCrn0=Kn4xr_QCJT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlySqWoACgkQAVBC80lX
+0Gx1tAf/QOrwg468avcjYsUY2uzPNwTYuM1iGFnq15ztb04t10OLvcTKOIizdD+j
+Vtn6b9ZxkVoQUOER96omj01F4ZHbWntGOx1xKmsGg97+XJg9O0nb3bGqJo3RLnlJ
+uNYE6jLi+veZEILiEJ7MYqWw11EM/blYVp0YUg8/rrA/jsPkNL7xLutce4IPMepZ
+PZPRaskEbxTPWqkmU+bEyuSCyBGZSq4B7GxHRCbdaEAGMPEejcIkBwrWr4y6ddHM
+UwjHkoyQzkF1ceGiTMqBQPmVimBKsLUX2pkQCZ8Vh02oF7LpC9Mm+2d546ufj06I
+SFlqceiMAykAzB3rGP5k4/OaZQh2XA==
+=0+8A
+-----END PGP SIGNATURE-----
+
+--Sig_/wfWlJaTnCrn0=Kn4xr_QCJT--
