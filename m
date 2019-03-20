@@ -2,125 +2,113 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6871AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94952C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D012184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FAF2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a52kVBz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfCTJ4o (ORCPT
+        id S1727504AbfCTJ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:56:44 -0400
-Received: from relay.sw.ru ([185.231.240.75]:52770 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfCTJ4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:56:43 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1h6XxM-0007BT-M9; Wed, 20 Mar 2019 12:56:20 +0300
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, cai@lca.pw, davem@davemloft.net,
-        dvyukov@google.com, guro@fb.com, hannes@cmpxchg.org, jbacik@fb.com,
-        ktkhai@virtuozzo.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-sctp@vger.kernel.org,
-        mgorman@techsingularity.net, mhocko@suse.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com, shakeelb@google.com,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        vyasevich@gmail.com, willy@infradead.org
-References: <000000000000db3d130584506672@google.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Xin Long <lucien.xin@gmail.com>
-Message-ID: <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
-Date:   Wed, 20 Mar 2019 12:56:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 20 Mar 2019 05:56:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40311 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCTJ4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 05:56:52 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u10so16977550wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=RyQRDbneuUcopel4ePcYPEKczczt6Epk4IFH7CruhCI=;
+        b=a52kVBz44/1n1fevwoAiewr+VHf4iJ5zMja8q3Oq2GiKtEhMk4T6TkcjhUJtBOXEqC
+         aeBvrxsId1uDPNpYSFWE9r4EATFGQmWe56Jago7faHRuK3xbud/ZkxRt9fy+SqLOiNjA
+         ziXEwYSLyavbW4f+Ynwwcf+8PFFy9F7mgC1MuElBHBdG7D0ukvp4gi932wlMX0kaG97K
+         AcId181wDIWHTRSwyqhQCdgWA3AUVjtSIyPgMUXEFv0F6GzLfn4yB9lAg9CGauMIsvFd
+         eZBVDhJ1xvfHC+vV4J5Q89+lB2I+a8GeYjj+tmvQP5qaK3cWip/BCGCAZmVk0ZPz/UCS
+         TRZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=RyQRDbneuUcopel4ePcYPEKczczt6Epk4IFH7CruhCI=;
+        b=oafmL+leK0x+JEF4waiQOz3DIve6K7uZSJnEh2CroGOWmF6bBZum9RAweA2M7Huor1
+         JIKY8nWbkh4DnYBMtbPBEgq3FsU+My7TM85KJ/GNK/2NyK6E7sgs/ZJUrHOmBVAdPY68
+         G6kwundxDUNJu7/UTJja06bKI35L8NktLJaSlEUs0epA5DiMcYgI3p+bH6MoYGNEhoMK
+         v5xcdEjad533fU1skjzNb/gSLH7ikPj6i7da9UI2YtzTM3ebhwHfaCD9BxjmWTzFeDUw
+         DoX31jzw76ZtrEpzVxCAmwvK/zMVrYvKeRRM42hdkm8yLUCtCOPbnAdp+NNmpm6WxMK/
+         JZVg==
+X-Gm-Message-State: APjAAAWHXW9Yr6Y7CfDmiapO/de/QfP3cdEmrtn3nlXrWK02clFhtsk0
+        UnehSvq0f6YOBdMOXb1HlzsWRA==
+X-Google-Smtp-Source: APXvYqzQ9z1fTJZ2cdLVzpKWUsNhEI15sAGZD7JPUjENIUnOiiOZOnFLqZGX8Wzn2u8yTVYZAzSzdQ==
+X-Received: by 2002:a1c:1dc3:: with SMTP id d186mr6950713wmd.64.1553075810401;
+        Wed, 20 Mar 2019 02:56:50 -0700 (PDT)
+Received: from dell ([2.31.167.140])
+        by smtp.gmail.com with ESMTPSA id n189sm2284796wmb.28.2019.03.20.02.56.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 02:56:49 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 09:56:48 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Yauhen Kharuzhy <jekhor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 2/2] mfd: Add leds MFD cell for intel_soc_pmic_chtwc
+Message-ID: <20190320095648.GI4731@dell>
+References: <20190212205901.13037-1-jekhor@gmail.com>
+ <20190212205901.13037-3-jekhor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000db3d130584506672@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190212205901.13037-3-jekhor@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 Feb 2019, Yauhen Kharuzhy wrote:
 
-
-On 3/17/19 11:49 PM, syzbot wrote:
-> syzbot has bisected this bug to:
+> Add MFD cell for LEDs driver to the Intel Cherry Trail Whiskey Cove PMIC
+> mfd device driver.
 > 
-> commit c981f254cc82f50f8cb864ce6432097b23195b9c
-> Author: Al Viro <viro@zeniv.linux.org.uk>
-> Date:   Sun Jan 7 18:19:09 2018 +0000
-> 
->     sctp: use vmemdup_user() rather than badly open-coding memdup_user()
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137bcecf200000
-> start commit:   c981f254 sctp: use vmemdup_user() rather than badly open-c..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10fbcecf200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=177bcecf200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ec1b7575afef85a0e5ca
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a9a84b400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17199bb3400000
-> 
-> Reported-by: syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com
-> Fixes: c981f254 ("sctp: use vmemdup_user() rather than badly open-coding memdup_user()")
+> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> ---
+>  drivers/mfd/intel_soc_pmic_chtwc.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-From bisection log:
+I'll fix up the subject line for you.
 
-	testing release v4.17
-	testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-	run #0: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #1: crashed: kernel panic: corrupted stack end in worker_thread
-	run #2: crashed: kernel panic: Out of memory and no killable processes...
-	run #3: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #4: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #5: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #6: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #7: crashed: kernel panic: corrupted stack end in wb_workfn
-	run #8: crashed: kernel panic: Out of memory and no killable processes...
-	run #9: crashed: kernel panic: corrupted stack end in wb_workfn
-	testing release v4.16
-	testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
-	run #0: OK
-	run #1: OK
-	run #2: OK
-	run #3: OK
-	run #4: OK
-	run #5: crashed: kernel panic: Out of memory and no killable processes...
-	run #6: OK
-	run #7: crashed: kernel panic: Out of memory and no killable processes...
-	run #8: OK
-	run #9: OK
-	testing release v4.15
-	testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
-	all runs: OK
-	# git bisect start v4.16 v4.15
+In future, please do the following to see what is expected:
 
-Why bisect started between 4.16 4.15 instead of 4.17 4.16?
+  git log --oneline -- <subsystem>
 
+> diff --git a/drivers/mfd/intel_soc_pmic_chtwc.c b/drivers/mfd/intel_soc_pmic_chtwc.c
+> index 64a3aece9c5e..be84bb2aa837 100644
+> --- a/drivers/mfd/intel_soc_pmic_chtwc.c
+> +++ b/drivers/mfd/intel_soc_pmic_chtwc.c
+> @@ -60,6 +60,7 @@ static struct mfd_cell cht_wc_dev[] = {
+>  		.resources = cht_wc_ext_charger_resources,
+>  	},
+>  	{	.name = "cht_wcove_region", },
+> +	{	.name = "cht_wcove_leds", },
+>  };
+>  
+>  /*
 
-	testing commit c14376de3a1befa70d9811ca2872d47367b48767 with gcc (GCC) 8.1.0
-	run #0: crashed: kernel panic: Out of memory and no killable processes...
-	run #1: crashed: kernel panic: Out of memory and no killable processes...
-	run #2: crashed: kernel panic: Out of memory and no killable processes...
-	run #3: crashed: kernel panic: Out of memory and no killable processes...
-	run #4: OK
-	run #5: OK
-	run #6: crashed: WARNING: ODEBUG bug in netdev_freemem
-	run #7: crashed: no output from test machine
-	run #8: OK
-	run #9: OK
-	# git bisect bad c14376de3a1befa70d9811ca2872d47367b48767
-
-Why c14376de3a1befa70d9811ca2872d47367b48767 is bad? There was no stack corruption.
-It looks like the syzbot were bisecting a different bug - "kernel panic: Out of memory and no killable processes..."
-And bisection for that bug seems to be correct. kvmalloc() in vmemdup_user() may eat up all memory unlike kmalloc which is limited by KMALLOC_MAX_SIZE (4MB usually).
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
