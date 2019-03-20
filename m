@@ -2,81 +2,117 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516EFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38717C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D7C2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FB02184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDd2dfHB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mmmgr5nz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfCTNkG (ORCPT
+        id S1728130AbfCTNkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:40:06 -0400
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:44398 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfCTNkG (ORCPT
+        Wed, 20 Mar 2019 09:40:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46882 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfCTNkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:40:06 -0400
-Received: by mail-pf1-f169.google.com with SMTP id a3so1939279pff.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:40:05 -0700 (PDT)
+        Wed, 20 Mar 2019 09:40:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so1714048pfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=10bfi8c9aasvRCzXb6fZaP3wXcQwybcEs2fMQNWvwkY=;
-        b=pDd2dfHBnJqg5Smba+IKApiNySdvZa9EtoVYUdWF4pXD0EESHUDX8DRdrCP1ei+08d
-         JqfAQrGiGrH47uWS2QrGSX+RHuCm6AyE0Xze4DXnGcFroCOTbgDTK0YGj9F6uPZrvm0+
-         WR1+Bf5cYYtZSKX11bKLzJmiudElO3VYRRJjTshXSgt59Ls/0nMDEpWJH2KMEu09CU5a
-         ekHTWj/m+BkHlOY4ltXRxq/ZeaO3La7mkRy6lJIzk5qeDMyGxu20rw66cdIHKx8d5IiN
-         MTIKhG+6zIPxhnFtsM0TB8p39vJ0rCGI50yulpFLmiLEVfu5KrKBBst78VyO0enOksAC
-         6W8Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=rvHnmZw/liQW94gjtXrCFd/1cgko4DZ3dzHWakfqGUM=;
+        b=Mmmgr5nzfWZXkqiKLKcW8/xIzhnin/O9stc4o0X0c4pxDVgSWz/+JUNeKCHQ+btE0z
+         R5/Eum8O/BMMCupBpzyHSPzgrZ6JBumnkFeOKId48En9fLIAKYdkvtUJIlOLkKHB/bZV
+         280tgvyeDYQia4MM9bmZuh+RpO7wLelW4/dgS9aSNPbgZVvKZ2bNlm/JkRFbQfGgYA1n
+         z7ndOqmmHLSXiVAx83UiHP7BILcfzcSnhmbFeYt9xJXyEPpAHHojgtLI4Bqx1+m1CcqR
+         IyV8hiRMHmqO5rlduqbSO0xN8CEe7M+b2SiQ/rO9D25lMELMBufiZUykaPgGLErT68Vv
+         VZEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=10bfi8c9aasvRCzXb6fZaP3wXcQwybcEs2fMQNWvwkY=;
-        b=hK7KrNjRvxDZ0B8zsBE0rvKpmZ3T7fO3W44uj8bB7LQaVaegKKJfDHNNg8ipnhnJH8
-         mLHfB1qpR6sYnQhk9TKrStfh2rTFYR7rZ9q4LULHm/I3HWX9eeij9y+htdxNcbFa3ZFD
-         ag5v0j/Gs2zK99LulV5jXlHAMhTdL6o56wj5xMXD3VXjV7Q3lC8Os8rAfNYGwRMz25cj
-         8xJoy+sCSvqnXkSZ+ctrj8ElJar/FYf6OJI/KOSKEBhbq6nopKs9pSJnuCzShyJWKQyy
-         G5AwOnjfJRAgjlTPgnMn08gBz74CXazXbcatLZ8YiDbEtnuPUqUGDfGAB/g2+zwuo5O4
-         sY5g==
-X-Gm-Message-State: APjAAAVPO+39IcvJmX7kQ8qKKtueP6mMeStXF1G//mEaxOBwPHIYwUvQ
-        Yiq4Bk9MSdtOc98a8zXTDlo8eKS5dPA=
-X-Google-Smtp-Source: APXvYqx8bfS6DvNDYRqicnNzErTC24QJb6A9EwJkDKnEEKEB8WOU9Wp4yRe8TQo7T8NDBIxG3qyfZg==
-X-Received: by 2002:a65:448b:: with SMTP id l11mr7851720pgq.450.1553089205068;
-        Wed, 20 Mar 2019 06:40:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=rvHnmZw/liQW94gjtXrCFd/1cgko4DZ3dzHWakfqGUM=;
+        b=NtBGST8z3fExO4WSHWax6lSpYRh/JlHcRb4mtv0Y/4uGKSgBlL8QKkR3J3FN3cYeYl
+         NpaLuy9rZhoJ1W0nK9fTbyi36cwBATeojo1WpF7hy9C9AvRbU42BILjxaXcqZRYSjFrB
+         bZ4hmWWwwcyutCoFvioMDH90BZO7rN/Tce8GClOmNB2AJlPc4dHCruB9UX/qwOUjBMxM
+         TEM2uDM0C7JpncHWTg6miCgEwK/RrNj749IS8HUDxeqMjIZUswGDRGfc6rbKKa8HSxb1
+         6GcMp6HRuVzZkuZJG/ng4XTxwQEtpSEJf0n4NjDhxkapshBGptmNxOHZ4s3gg28JQtiB
+         a4hg==
+X-Gm-Message-State: APjAAAXOdDXmmpN+gMN8uFtdXwncCuf2IcX7GOKv6ZtWkNAAmsLFBIXF
+        VKn2mn9MfoHyLPS+blrMgMmRt4KTIwY=
+X-Google-Smtp-Source: APXvYqycICWNdPqht5aQPZXIKHsNttq38KZmXYoR2e0MAEITbI292UrQFZnhrfWsJ6TO7I7BZA3/EQ==
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr7973368pll.29.1553089209309;
+        Wed, 20 Mar 2019 06:40:09 -0700 (PDT)
 Received: from localhost ([114.143.122.221])
-        by smtp.gmail.com with ESMTPSA id x62sm3681224pfx.117.2019.03.20.06.40.03
+        by smtp.gmail.com with ESMTPSA id s6sm3579698pfe.37.2019.03.20.06.40.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 06:40:04 -0700 (PDT)
+        Wed, 20 Mar 2019 06:40:08 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, andy.gross@linaro.org,
         David Brown <david.brown@linaro.org>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCHv1 0/2] qcom: pms405: adc fixes
-Date:   Wed, 20 Mar 2019 19:09:56 +0530
-Message-Id: <cover.1553088982.git.amit.kucheria@linaro.org>
+Subject: [PATCHv1 1/2] arm64: dts: qcom: pms405: calibrate the VADC correctly
+Date:   Wed, 20 Mar 2019 19:09:57 +0530
+Message-Id: <08751dd65ad76558724ce4d495b2a85d7ea27ca5.1553088982.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
+References: <cover.1553088982.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
+References: <cover.1553088982.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A couple of fixes to the adc node in PMS405 to get thermistors to work
-correctly.
+Set the qcom,ratiometric property to make the VADC use the VDD reference
+(1.875V) and GND for channel calibration of the temperature channels
+instead of 1.25V. Allow a 200us delay between the AMUX configuration and
+ADC starting conversion using qcom,hw-settle-time as described in
+documentation.
 
-Amit Kucheria (2):
-  arm64: dts: qcom: pms405: calibrate the VADC correctly
-  arm64: dts: qcom: pms405: Rename adc outputs as per schematics
+Fixes: 041b9a7b9fdb ("arm64: dts: pms405: Export PMIC temperature to thermal framework")
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/pms405.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- arch/arm64/boot/dts/qcom/pms405.dtsi | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+index 1bb836d1e8aa..8b6aa2334f56 100644
+--- a/arch/arm64/boot/dts/qcom/pms405.dtsi
++++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+@@ -110,16 +110,22 @@
+ 
+ 			xo_therm_100k_pu {
+ 				reg = <ADC5_XO_THERM_100K_PU>;
++				qcom,ratiometric;
++				qcom,hw-settle-time = <200>;
+ 				qcom,pre-scaling = <1 1>;
+ 			};
+ 
+ 			amux_thm1_100k_pu {
+ 				reg = <ADC5_AMUX_THM1_100K_PU>;
++				qcom,ratiometric;
++				qcom,hw-settle-time = <200>;
+ 				qcom,pre-scaling = <1 1>;
+ 			};
+ 
+ 			amux_thm3_100k_pu {
+ 				reg = <ADC5_AMUX_THM3_100K_PU>;
++				qcom,ratiometric;
++				qcom,hw-settle-time = <200>;
+ 				qcom,pre-scaling = <1 1>;
+ 			};
+ 		};
 -- 
 2.17.1
 
