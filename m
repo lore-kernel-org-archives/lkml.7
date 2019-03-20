@@ -2,88 +2,139 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BA8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88C8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D5121841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553111945;
-	bh=gp5n0il2dP3M7PXopfzX/0v2fTUPNCVmnzViLurpi2k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n2ow/ywZy0iEFyz6a9RJKZf3mrse0ON1Dti9sLx/WU8x+Y6HC6FSO6mW1JZ3/BuTz
-	 WrM3Y06HS4MEveKIYO9t6AJFHT9R3P0He5ydw7XNGsIz/SQ8J8a5ZPPH2MByOgq4hd
-	 xprAfZVM/e0m9AKK1Os9SZPEhQLmJvee4N9rLpfg=
+	by mail.kernel.org (Postfix) with ESMTP id 9AABF21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfCTT7E (ORCPT
+        id S1726538AbfCTUCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:59:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46646 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfCTT7D (ORCPT
+        Wed, 20 Mar 2019 16:02:40 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.250]:41109 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbfCTUCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:59:03 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o1so4140890wrs.13;
-        Wed, 20 Mar 2019 12:59:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Set6nLx7VA7za62jApDxAnNgGkHuhZYBfmaEV0aRmkM=;
-        b=GdL/8oAE/I3x4rhT3XYRWeTznJggSd4B3uPHikrfqpHd4QL+aSUWNTrK4Cnv0822G0
-         qkg3+9NtKFm3WPJBB8wUMaUOSrSc1sxltPjwEu7d8UY8TR+aeHWb709vnlUBEodq3NpH
-         iUvgGlzKRlFs5otn4ik2eszWB1XgYjw9Lyv7uDCYtjKpkMB/jUfS57hOQWeOg0QQs/Ps
-         sizoDdMnSXZqb30wWJBKuOC9DgCfB/UK4aMghWfTaZ3n8dVPOZcEEhajTMajrKMp+lqS
-         kmIKv83f2wrofNY4ixywHUUFwojtAGIoOdvG5lRnetSLswQOv7wejiyEseJ4jlEdNxNl
-         VWXA==
-X-Gm-Message-State: APjAAAWlJTSjmMUAgcj4h2U3BmbduL3/H7n9AfdTPDUp4zKx6WlRDMOO
-        YRCOjcgDh3KGudfOu8oHgqM=
-X-Google-Smtp-Source: APXvYqxScdNZ9esBRpbCleJvja+bsu4THzGjS7Ri4GCl0bM0mHtB8jpo0pqOB+jhjzDwW2KrWvRYJQ==
-X-Received: by 2002:a5d:43c9:: with SMTP id v9mr4561108wrr.269.1553111941786;
-        Wed, 20 Mar 2019 12:59:01 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.153])
-        by smtp.googlemail.com with ESMTPSA id n13sm4414450wrw.67.2019.03.20.12.59.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 12:59:00 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 20:58:58 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 1/3] arm64: dts: exynos: add SlimSSS for Exynos5433
-Message-ID: <20190320195858.GB9956@kozik-lap>
-References: <20190222122144.19024-1-k.konieczny@partner.samsung.com>
- <CGME20190222122203eucas1p19a77c1cb72526ce36e99542926fd5a17@eucas1p1.samsung.com>
- <20190222122144.19024-2-k.konieczny@partner.samsung.com>
+        Wed, 20 Mar 2019 16:02:40 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 1BD1C26759
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:02:39 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6hQ7hRhsmYTGM6hQ7heNMQ; Wed, 20 Mar 2019 15:02:39 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=36344 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6hNj-003efl-Pz; Wed, 20 Mar 2019 15:02:37 -0500
+Date:   Wed, 20 Mar 2019 15:00:10 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] mmc: usdhi6rol0: mark expected switch fall-throughs
+Message-ID: <20190320200010.GA14527@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190222122144.19024-2-k.konieczny@partner.samsung.com>
+Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6hNj-003efl-Pz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.39]:36344
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 01:21:42PM +0100, Kamil Konieczny wrote:
-> Add DT node for SlimSSS (aka Slim SecuritySubSystem) in Exynos5433 SoC.
-> The users can use compatibility "samsung,exynos5433-slim-sss".
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 9 +++++++++
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Thanks, applied.
+This patch fixes the following warnings:
 
-Best regards,
-Krzysztof
+In file included from drivers/mmc/host/usdhi6rol0.c:9:
+drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_timeout_work’:
+./include/linux/device.h:1483:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1689:3: note: in expansion of macro ‘dev_err’
+   dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
+   ^~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1691:2: note: here
+  case USDHI6_WAIT_FOR_CMD:
+  ^~~~
+drivers/mmc/host/usdhi6rol0.c:1711:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   usdhi6_sg_unmap(host, true);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/usdhi6rol0.c:1716:2: note: here
+  case USDHI6_WAIT_FOR_DATA_END:
+  ^~~~
+drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_stop_cmd’:
+drivers/mmc/host/usdhi6rol0.c:1338:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (mrq->stop->opcode == MMC_STOP_TRANSMISSION) {
+      ^
+drivers/mmc/host/usdhi6rol0.c:1343:2: note: here
+  default:
+  ^~~~~~~
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/mmc/host/usdhi6rol0.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+index cd8b1b9d4d8a..b9712ac96be5 100644
+--- a/drivers/mmc/host/usdhi6rol0.c
++++ b/drivers/mmc/host/usdhi6rol0.c
+@@ -1339,7 +1339,7 @@ static int usdhi6_stop_cmd(struct usdhi6_host *host)
+ 			host->wait = USDHI6_WAIT_FOR_STOP;
+ 			return 0;
+ 		}
+-		/* Unsupported STOP command */
++		/* fall through - Unsupported STOP command */
+ 	default:
+ 		dev_err(mmc_dev(host->mmc),
+ 			"unsupported stop CMD%d for CMD%d\n",
+@@ -1688,6 +1688,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
+ 	default:
+ 		dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
+ 		/* mrq can be NULL in this actually impossible case */
++		/* fall through */
+ 	case USDHI6_WAIT_FOR_CMD:
+ 		usdhi6_error_code(host);
+ 		if (mrq)
+@@ -1713,6 +1714,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
+ 		 * If USDHI6_WAIT_FOR_DATA_END times out, we have already unmapped
+ 		 * the page
+ 		 */
++		/* fall through */
+ 	case USDHI6_WAIT_FOR_DATA_END:
+ 		usdhi6_error_code(host);
+ 		data->error = -ETIMEDOUT;
+-- 
+2.21.0
 
