@@ -2,152 +2,282 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DABC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C50C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3D82183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5562146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfCTQfH (ORCPT
+        id S1727654AbfCTQfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 Mar 2019 12:35:10 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42334 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727566AbfCTQfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 12:35:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726817AbfCTQfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:35:06 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KGT85W012947
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:35:05 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rbqxcmt17-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:35:04 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 20 Mar 2019 16:35:03 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 16:35:00 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KGZ0nK18612422
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 16:35:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65FD6B206A;
-        Wed, 20 Mar 2019 16:35:00 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48BE2B2065;
-        Wed, 20 Mar 2019 16:35:00 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 16:35:00 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id AFBBC16C30D6; Wed, 20 Mar 2019 09:35:50 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 09:35:50 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Zhouyi Zhou <zhouzhouyi@gmail.com>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RCU: Adjust comments for force_qs_rnp
-Reply-To: paulmck@linux.ibm.com
-References: <1553052780-3789-1-git-send-email-zhouzhouyi@gmail.com>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 09:35:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="128649870"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2019 09:35:03 -0700
+Date:   Wed, 20 Mar 2019 09:37:27 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 05/22] iommu: Introduce cache_invalidate API
+Message-ID: <20190320093727.45a86866@jacob-builder>
+In-Reply-To: <20190317172232.1068-6-eric.auger@redhat.com>
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+        <20190317172232.1068-6-eric.auger@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553052780-3789-1-git-send-email-zhouzhouyi@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032016-0072-0000-0000-0000040DF0AC
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01177144; UDB=6.00615766; IPR=6.00957839;
- MB=3.00026075; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 16:35:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032016-0073-0000-0000-00004B8D0D81
-Message-Id: <20190320163550.GL4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200124
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 03:33:00AM +0000, Zhouyi Zhou wrote:
-> Previously, threads blocked on offlining CPUS are migrated to root
-> rcu_node, so there is a need to initiate RCU priority boosting on root
-> rcu_node,
+On Sun, 17 Mar 2019 18:22:15 +0100
+Eric Auger <eric.auger@redhat.com> wrote:
+
+> From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
 > 
-> Current RCU does not migrate blocked tasks even if all corresponding CPUs
-> offline. 
-> commit d19fb8d1f3f6 ("rcu: Don't migrate blocked tasks even if all corresponding CPUs offline")'
+> In any virtualization use case, when the first translation stage
+> is "owned" by the guest OS, the host IOMMU driver has no knowledge
+> of caching structure updates unless the guest invalidation activities
+> are trapped by the virtualizer and passed down to the host.
 > 
-> Consequently, rcu does not initiate RCU priority boosting on root rcu_node.
-> commit 1be0085b515e ("rcu: Don't initiate RCU priority boosting on root rcu_node")'
+> Since the invalidation data are obtained from user space and will be
+> written into physical IOMMU, we must allow security check at various
+> layers. Therefore, generic invalidation data format are proposed here,
+> model specific IOMMU drivers need to convert them into their own
+> format.
 > 
-> So I think the comments for force_qs_rnp should be adjusted.
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 > 
-> Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+> ---
+> v5 -> v6:
+> - fix merge issue
+> 
+> v3 -> v4:
+> - full reshape of the API following Alex' comments
+> 
+> v1 -> v2:
+> - add arch_id field
+> - renamed tlb_invalidate into cache_invalidate as this API allows
+>   to invalidate context caches on top of IOTLBs
+> 
+> v1:
+> renamed sva_invalidate into tlb_invalidate and add iommu_ prefix in
+> header. Commit message reworded.
+> ---
+>  drivers/iommu/iommu.c      | 14 ++++++++
+>  include/linux/iommu.h      | 15 ++++++++
+>  include/uapi/linux/iommu.h | 71
+> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 100
+> insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 7d9285cea100..b72e326ddd41 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1544,6 +1544,20 @@ void iommu_detach_pasid_table(struct
+> iommu_domain *domain) }
+>  EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
+>  
+> +int iommu_cache_invalidate(struct iommu_domain *domain, struct
+> device *dev,
+> +			   struct iommu_cache_invalidate_info
+> *inv_info) +{
+> +	int ret = 0;
+> +
+> +	if (unlikely(!domain->ops->cache_invalidate))
+> +		return -ENODEV;
+> +
+> +	ret = domain->ops->cache_invalidate(domain, dev, inv_info);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
+> +
+>  static void __iommu_detach_device(struct iommu_domain *domain,
+>  				  struct device *dev)
+>  {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index fb9b7a8de25f..7c7c6bad1420 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -191,6 +191,7 @@ struct iommu_resv_region {
+>   *                      driver init to device driver init (default
+> no)
+>   * @attach_pasid_table: attach a pasid table
+>   * @detach_pasid_table: detach the pasid table
+> + * @cache_invalidate: invalidate translation caches
+>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>   */
+>  struct iommu_ops {
+> @@ -239,6 +240,9 @@ struct iommu_ops {
+>  				  struct iommu_pasid_table_config
+> *cfg); void (*detach_pasid_table)(struct iommu_domain *domain);
+>  
+> +	int (*cache_invalidate)(struct iommu_domain *domain, struct
+> device *dev,
+> +				struct iommu_cache_invalidate_info
+> *inv_info); +
+>  	unsigned long pgsize_bitmap;
+>  };
+>  
+> @@ -349,6 +353,9 @@ extern void iommu_detach_device(struct
+> iommu_domain *domain, extern int iommu_attach_pasid_table(struct
+> iommu_domain *domain, struct iommu_pasid_table_config *cfg);
+>  extern void iommu_detach_pasid_table(struct iommu_domain *domain);
+> +extern int iommu_cache_invalidate(struct iommu_domain *domain,
+> +				  struct device *dev,
+> +				  struct iommu_cache_invalidate_info
+> *inv_info); extern struct iommu_domain
+> *iommu_get_domain_for_dev(struct device *dev); extern struct
+> iommu_domain *iommu_get_dma_domain(struct device *dev); extern int
+> iommu_map(struct iommu_domain *domain, unsigned long iova, @@ -797,6
+> +804,14 @@ int iommu_attach_pasid_table(struct iommu_domain *domain,
+> static inline void iommu_detach_pasid_table(struct iommu_domain
+> *domain) {} 
+> +static inline int
+> +iommu_cache_invalidate(struct iommu_domain *domain,
+> +		       struct device *dev,
+> +		       struct iommu_cache_invalidate_info *inv_info)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>  #endif /* CONFIG_IOMMU_API */
+>  
+>  #ifdef CONFIG_IOMMU_DEBUGFS
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index 532a64075f23..e4c6a447e85a 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -159,4 +159,75 @@ struct iommu_pasid_table_config {
+>  	};
+>  };
+>  
+> +/* defines the granularity of the invalidation */
+> +enum iommu_inv_granularity {
+> +	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective
+> invalidation */
+> +	IOMMU_INV_GRANU_PASID,	/* pasid-selective
+> invalidation */
+> +	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation
+> */ +};
+> +
+> +/**
+> + * Address Selective Invalidation Structure
+> + *
+> + * @flags indicates the granularity of the address-selective
+> invalidation
+> + * - if PASID bit is set, @pasid field is populated and the
+> invalidation
+> + *   relates to cache entries tagged with this PASID and matching the
+> + *   address range.
+> + * - if ARCHID bit is set, @archid is populated and the invalidation
+> relates
+> + *   to cache entries tagged with this architecture specific id and
+> matching
+> + *   the address range.
+> + * - Both PASID and ARCHID can be set as they may tag different
+> caches.
+> + * - if neither PASID or ARCHID is set, global addr invalidation
+> applies
+> + * - LEAF flag indicates whether only the leaf PTE caching needs to
+> be
+> + *   invalidated and other paging structure caches can be preserved.
+> + * @pasid: process address space id
+> + * @archid: architecture-specific id
+> + * @addr: first stage/level input address
+> + * @granule_size: page/block size of the mapping in bytes
+> + * @nb_granules: number of contiguous granules to be invalidated
+> + */
+> +struct iommu_inv_addr_info {
+> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+> +	__u32	flags;
+> +	__u32	archid;
+> +	__u64	pasid;
+> +	__u64	addr;
+> +	__u64	granule_size;
+> +	__u64	nb_granules;
+> +};
+> +
+> +/**
+> + * First level/stage invalidation information
+> + * @cache: bitfield that allows to select which caches to invalidate
+> + * @granularity: defines the lowest granularity used for the
+> invalidation:
+> + *     domain > pasid > addr
+> + *
+> + * Not all the combinations of cache/granularity make sense:
+> + *
+> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+> + * granularity	|		|		|
+> cache	|
+> + * -------------+---------------+---------------+---------------+
+> + * DOMAIN	|	N/A	|       Y	|
+> Y	|
+> + * PASID	|	Y	|       Y	|
+> Y	|
+> + * ADDR		|       Y	|       Y	|
+> N/A	|
+> + */
+> +struct iommu_cache_invalidate_info {
+> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> +	__u32	version;
+> +/* IOMMU paging structure cache */
+> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+> cache */
+Just a clarification, this used to be an enum. You do intend to issue a
+single invalidation request on multiple cache types? Perhaps for
+virtio-IOMMU? I only see a single cache type in your patch #14. For VT-d
+we plan to issue one cache type at a time for now. So this format works
+for us.
+However, if multiple cache types are issued in a single invalidation.
+They must share a single granularity, not all combinations are valid.
+e.g. dev IOTLB does not support domain granularity. Just a reminder,
+not an issue. Driver could filter out invalid combinations.
 
-Great catch, thank you!  I have queued it with wordsmithing as shown
-below.  Please let me know if I messed anything up.
+> +	__u8	cache;
+> +	__u8	granularity;
+> +	__u8	padding[2];
+> +	union {
+> +		__u64	pasid;
+> +		struct iommu_inv_addr_info addr_info;
+> +	};
+> +};
+> +
+> +
+>  #endif /* _UAPI_IOMMU_H */
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 24bbb0754fdfabe3976c42e82620d1d1a86da9d6
-Author: Zhouyi Zhou <zhouzhouyi@gmail.com>
-Date:   Wed Mar 20 03:33:00 2019 +0000
-
-    rcu: Fix force_qs_rnp() header comment
-    
-    Previously, threads blocked on offlining CPUS were migrated to the
-    root rcu_node structure, thus requiring RCU priority boosting on this
-    structure.  However, since commit d19fb8d1f3f6 ("rcu: Don't migrate
-    blocked tasks even if all corresponding CPUs offline"), RCU does not
-    migrate blocked tasks.  Consequently, RCU no longer does RCU priority
-    boosting on the root rcu_node structure as of commit 1be0085b515e ("rcu:
-    Don't initiate RCU priority boosting on root rcu_node").
-    
-    This commit therefore brings comments for the force_qs_rnp() function's
-    header comment in line with this new no-root-boosting reality.
-    
-    Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
-    [ paulmck: Also remove obsolete comment on suppressing new grace periods. ]
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index c719929c9316..961dbc7b8949 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2171,11 +2171,11 @@ void rcu_sched_clock_irq(int user)
- }
- 
- /*
-- * Scan the leaf rcu_node structures, processing dyntick state for any that
-- * have not yet encountered a quiescent state, using the function specified.
-- * Also initiate boosting for any threads blocked on the root rcu_node.
-- *
-- * The caller must have suppressed start of new grace periods.
-+ * Scan the leaf rcu_node structures.  For each structure on which all
-+ * CPUs have reported a quiescent state and on which there are tasks
-+ * blocking the current grace period, initiate RCU priority boosting.
-+ * Otherwise, invoke the specified function to check dyntick state for
-+ * each CPU that has not yet reported a quiescent state.
-  */
- static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- {
-
+[Jacob Pan]
