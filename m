@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708AFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E00217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B18C217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfCTCKY (ORCPT
+        id S1727936AbfCTCKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 22:10:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52130 "EHLO mx1.redhat.com"
+        Tue, 19 Mar 2019 22:10:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59780 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfCTCKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 22:10:23 -0400
+        id S1727358AbfCTCKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 22:10:32 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 95594307D874;
-        Wed, 20 Mar 2019 02:10:23 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C0138C049E20;
+        Wed, 20 Mar 2019 02:10:31 +0000 (UTC)
 Received: from xz-x1.nay.redhat.com (dhcp-14-116.nay.redhat.com [10.66.14.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E522A605CA;
-        Wed, 20 Mar 2019 02:10:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E4735B0BE;
+        Wed, 20 Mar 2019 02:10:23 +0000 (UTC)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -44,85 +44,61 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v3 25/28] userfaultfd: wp: fixup swap entries in change_pte_range
-Date:   Wed, 20 Mar 2019 10:06:39 +0800
-Message-Id: <20190320020642.4000-26-peterx@redhat.com>
+Subject: [PATCH v3 26/28] userfaultfd: wp: declare _UFFDIO_WRITEPROTECT conditionally
+Date:   Wed, 20 Mar 2019 10:06:40 +0800
+Message-Id: <20190320020642.4000-27-peterx@redhat.com>
 In-Reply-To: <20190320020642.4000-1-peterx@redhat.com>
 References: <20190320020642.4000-1-peterx@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 20 Mar 2019 02:10:23 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 20 Mar 2019 02:10:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In change_pte_range() we do nothing for uffd if the PTE is a swap
-entry.  That can lead to data mismatch if the page that we are going
-to write protect is swapped out when sending the UFFDIO_WRITEPROTECT.
-This patch applies/removes the uffd-wp bit even for the swap entries.
+Only declare _UFFDIO_WRITEPROTECT if the user specified
+UFFDIO_REGISTER_MODE_WP and if all the checks passed.  Then when the
+user registers regions with shmem/hugetlbfs we won't expose the new
+ioctl to them.  Even with complete anonymous memory range, we'll only
+expose the new WP ioctl bit if the register mode has MODE_WP.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
+ fs/userfaultfd.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-I kept this patch a standalone one majorly to make review easier.  The
-patch can be considered as standalone or to squash into the patch
-"userfaultfd: wp: support swap and page migration".
----
- mm/mprotect.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
-
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 96c0f521099d..a23e03053787 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -183,11 +183,11 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 			}
- 			ptep_modify_prot_commit(mm, addr, pte, ptent);
- 			pages++;
--		} else if (IS_ENABLED(CONFIG_MIGRATION)) {
-+		} else if (is_swap_pte(oldpte)) {
- 			swp_entry_t entry = pte_to_swp_entry(oldpte);
-+			pte_t newpte;
- 
- 			if (is_write_migration_entry(entry)) {
--				pte_t newpte;
- 				/*
- 				 * A protection check is difficult so
- 				 * just be safe and disable write
-@@ -198,22 +198,24 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 					newpte = pte_swp_mksoft_dirty(newpte);
- 				if (pte_swp_uffd_wp(oldpte))
- 					newpte = pte_swp_mkuffd_wp(newpte);
--				set_pte_at(mm, addr, pte, newpte);
--
--				pages++;
--			}
--
--			if (is_write_device_private_entry(entry)) {
--				pte_t newpte;
--
-+			} else if (is_write_device_private_entry(entry)) {
- 				/*
- 				 * We do not preserve soft-dirtiness. See
- 				 * copy_one_pte() for explanation.
- 				 */
- 				make_device_private_entry_read(&entry);
- 				newpte = swp_entry_to_pte(entry);
--				set_pte_at(mm, addr, pte, newpte);
-+			} else {
-+				newpte = oldpte;
-+			}
- 
-+			if (uffd_wp)
-+				newpte = pte_swp_mkuffd_wp(newpte);
-+			else if (uffd_wp_resolve)
-+				newpte = pte_swp_clear_uffd_wp(newpte);
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index f1f61a0278c2..7f87e9e4fb9b 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1456,14 +1456,24 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ 	if (!ret) {
++		__u64 ioctls_out;
 +
-+			if (!pte_same(oldpte, newpte)) {
-+				set_pte_at(mm, addr, pte, newpte);
- 				pages++;
- 			}
- 		}
++		ioctls_out = basic_ioctls ? UFFD_API_RANGE_IOCTLS_BASIC :
++		    UFFD_API_RANGE_IOCTLS;
++
++		/*
++		 * Declare the WP ioctl only if the WP mode is
++		 * specified and all checks passed with the range
++		 */
++		if (!(uffdio_register.mode & UFFDIO_REGISTER_MODE_WP))
++			ioctls_out &= ~((__u64)1 << _UFFDIO_WRITEPROTECT);
++
+ 		/*
+ 		 * Now that we scanned all vmas we can already tell
+ 		 * userland which ioctls methods are guaranteed to
+ 		 * succeed on this range.
+ 		 */
+-		if (put_user(basic_ioctls ? UFFD_API_RANGE_IOCTLS_BASIC :
+-			     UFFD_API_RANGE_IOCTLS,
+-			     &user_uffdio_register->ioctls))
++		if (put_user(ioctls_out, &user_uffdio_register->ioctls))
+ 			ret = -EFAULT;
+ 	}
+ out:
 -- 
 2.17.1
 
