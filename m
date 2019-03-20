@@ -2,164 +2,561 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2F0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5D3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1F820828
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFF1217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nyU3o3kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfCTAZf (ORCPT
+        id S1727270AbfCTA0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:25:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57618 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfCTAZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:25:35 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9598281106;
-        Wed, 20 Mar 2019 00:25:34 +0000 (UTC)
-Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E2314669EC;
-        Wed, 20 Mar 2019 00:25:32 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 08:25:24 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190320002524.GD18740@MiWiFi-R3L-srv>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+        Tue, 19 Mar 2019 20:26:17 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44667 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfCTA0Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 20:26:16 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w5so549601qtb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MlI6kS6RccsIQruFS80wgP4+vBxbgVJ9TyOkVKODzv4=;
+        b=nyU3o3kSjh+BzLKFjWU08c/bw1UsZ78LJAgULj3UTkZSMRD0iWK7VIVA5remjT0sKG
+         4eRjyN8Mla4TShpPTGiSEswg2REFDccWvyhZtK7YjR+1UT/YIm7/TZbfj7yhLNx+xwD9
+         u9wZTiuCDu43L8QBKHJP9KOOEt1ynJ2cF72oE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MlI6kS6RccsIQruFS80wgP4+vBxbgVJ9TyOkVKODzv4=;
+        b=fHaTjvDnrdrgDuWGhAeUDv8vu7fsroj3aQI7k3P+7lW/P3TmzVWxts0NfPiepx6XQ7
+         +ftgY0NfupTrGBDcGMyou68srGDe/edVm4dTeBj9ot6IsWvuERuGSZwz3+8Sq0XKYMMT
+         tKNQ+rlxwJVaqm7DkBimD+J6RKAnGSSyVJApA+Z154/v68U0aQ58V3O11PTMyf9tP9lp
+         rzq9sYeOpluCJADWoeRvO/sRsWXq5rd/7WQdZ/txOGoet6fAxe0u0b0puqHIvDoGDPNh
+         dm9HAY7rOj3tLN0ly++i1KmMfV2zYXYCZ0FgnYNDw7Weheq3M5DQ3jbYIbFIussmLqvl
+         izrQ==
+X-Gm-Message-State: APjAAAVAQaR44tRKZD+qba60R3gN4LLhMp+0AAxx7jmWVtV0GWpaFHlr
+        RKTMt6ta5AN6NyJTqctCF/UqPQ==
+X-Google-Smtp-Source: APXvYqzoYP2aHwG4HbFNi/eGKyXvQHmtqL+9x6zU44jCxuVPeNfSDp0eszi+sd7Ip0DLynDLiWMjUQ==
+X-Received: by 2002:aed:3988:: with SMTP id m8mr4587971qte.177.1553041575440;
+        Tue, 19 Mar 2019 17:26:15 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id v63sm382662qkv.45.2019.03.19.17.26.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 17:26:14 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 20:26:13 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Mike Galbraith <bitbucket@online.de>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Allow to eliminate softirq processing from rcutree
+Message-ID: <20190320002613.GA129907@google.com>
+References: <20190315111130.4902-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+In-Reply-To: <20190315111130.4902-1-bigeasy@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 20 Mar 2019 00:25:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please change subject as:
+Adding the rcu@vger.kernel.org list as well, more comment below:
 
-"x86/boot/KASLR: skip the specified crashkernel region"
-
-Don't see why reserved is needed here.
-
-On 03/13/19 at 12:19pm, Pingfan Liu wrote:
-> crashkernel=x@y option may fail to reserve the required memory region if
-> KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
-> skip the required region.
+On Fri, Mar 15, 2019 at 12:11:30PM +0100, Sebastian Andrzej Siewior wrote:
+> From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 > 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Nicolas Pitre <nico@linaro.org>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
+> Running RCU out of softirq is a problem for some workloads that would
+> like to manage RCU core processing independently of other softirq work,
+> for example, setting kthread priority.
+> This commit therefore introduces the `rcunosoftirq' option which moves
+> the RCU core work from softirq to a per-CPU/per-flavor SCHED_OTHER
+> kthread named rcuc.
+> The SCHED_OTHER approach avoids the scalability problems that appeared
+> with the earlier attempt to move RCU core processing to from softirq to
+> kthreads.
+> That said, kernels built with RCU_BOOST=y will run the rcuc kthreads at
+> the RCU-boosting priority.
+> 
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Tested-by: Mike Galbraith <bitbucket@online.de>
+> Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> [bigeasy: add rcunosoftirq option]
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
-> v1 -> v2: fix some trival format
+>  kernel/rcu/tree.c        | 132 ++++++++++++++++++++++++++++++++---
+>  kernel/rcu/tree.h        |   4 +-
+>  kernel/rcu/tree_plugin.h | 145 +++++----------------------------------
+>  3 files changed, 141 insertions(+), 140 deletions(-)
 > 
->  arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> index 9ed9709..e185318 100644
-> --- a/arch/x86/boot/compressed/kaslr.c
-> +++ b/arch/x86/boot/compressed/kaslr.c
-> @@ -109,6 +109,7 @@ enum mem_avoid_index {
->  	MEM_AVOID_BOOTPARAMS,
->  	MEM_AVOID_MEMMAP_BEGIN,
->  	MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
-> +	MEM_AVOID_CRASHKERNEL,
->  	MEM_AVOID_MAX,
->  };
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 9180158756d2c..498dc5e9287d0 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -62,6 +62,12 @@
+>  #include <linux/suspend.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/tick.h>
+> +#include <linux/gfp.h>
+> +#include <linux/oom.h>
+> +#include <linux/smpboot.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/sched/isolation.h>
+> +#include "../time/tick-internal.h"
 >  
-> @@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
+>  #include "tree.h"
+>  #include "rcu.h"
+> @@ -2716,7 +2722,7 @@ EXPORT_SYMBOL_GPL(rcu_fwd_progress_check);
+>   * structures.  This may be called only from the CPU to whom the rdp
+>   * belongs.
+>   */
+> -static __latent_entropy void rcu_process_callbacks(struct softirq_action *unused)
+> +static __latent_entropy void rcu_process_callbacks(void)
+>  {
+>  	unsigned long flags;
+>  	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+> @@ -2758,6 +2764,13 @@ static __latent_entropy void rcu_process_callbacks(struct softirq_action *unused
+>  	trace_rcu_utilization(TPS("End RCU core"));
+>  }
+>  
+> +static void rcu_process_callbacks_si(struct softirq_action *h)
+> +{
+> +	rcu_process_callbacks();
+> +}
+> +
+> +static DEFINE_PER_CPU(struct task_struct *, rcu_cpu_kthread_task);
+> +
+>  /*
+>   * Schedule RCU callback invocation.  If the running implementation of RCU
+>   * does not support RCU priority boosting, just do a direct call, otherwise
+> @@ -2769,19 +2782,121 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
+>  {
+>  	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
+>  		return;
+> -	if (likely(!rcu_state.boost)) {
+> -		rcu_do_batch(rdp);
+> -		return;
+> -	}
+> -	invoke_rcu_callbacks_kthread();
+> +	rcu_do_batch(rdp);
+
+Looks like a nice change, but one question...
+
+Consider the case where rcunosoftirq boot option is not passed.
+
+Before, if RCU_BOOST=y, then callbacks would be invoked in rcuc threads if
+possible, by those threads being woken up from within the softirq context
+(in invoke_rcu_callbacks).
+
+Now, if RCU_BOOST=y, then callbacks would only be invoked in softirq context
+and not in the threads at all. Because rcu_softirq_enabled = false, so the
+path executes:
+  rcu_read_unlock_special() ->
+        raise_softirq_irqsoff() ->
+                rcu_process_callbacks_si() ->
+                        rcu_process_callbacks() ->
+                                invoke_rcu_callbacks() ->
+                                        rcu_do_batch()
+
+This seems like a behavioral change to me. This makes the callbacks always
+execute from the softirq context and not the threads when boosting is
+configured. IMO in the very least, such behavioral change should be
+documented in the change.
+
+One way to fix this I think could be, if boosting is enabled, then set
+rcu_softirq_enabled to false by default so the callbacks are still executed
+in the rcuc threads.
+
+Did I miss something? Sorry if I did, thanks!
+
+ - Joel
+
+
+>  }
+>  
+> +static void rcu_wake_cond(struct task_struct *t, int status)
+> +{
+> +	/*
+> +	 * If the thread is yielding, only wake it when this
+> +	 * is invoked from idle
+> +	 */
+> +	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
+> +		wake_up_process(t);
+> +}
+> +
+> +static bool rcu_softirq_enabled = true;
+> +
+> +static int __init rcunosoftirq_setup(char *str)
+> +{
+> +	rcu_softirq_enabled = false;
+> +	return 0;
+> +}
+> +__setup("rcunosoftirq", rcunosoftirq_setup);
+> +
+> +/*
+> + * Wake up this CPU's rcuc kthread to do RCU core processing.
+> + */
+>  static void invoke_rcu_core(void)
+>  {
+> -	if (cpu_online(smp_processor_id()))
+> +	unsigned long flags;
+> +	struct task_struct *t;
+> +
+> +	if (!cpu_online(smp_processor_id()))
+> +		return;
+> +	if (rcu_softirq_enabled) {
+>  		raise_softirq(RCU_SOFTIRQ);
+> +	} else {
+> +		local_irq_save(flags);
+> +		__this_cpu_write(rcu_cpu_has_work, 1);
+> +		t = __this_cpu_read(rcu_cpu_kthread_task);
+> +		if (t != NULL && current != t)
+> +			rcu_wake_cond(t, __this_cpu_read(rcu_cpu_kthread_status));
+> +		local_irq_restore(flags);
+> +	}
+>  }
+>  
+> +static void rcu_cpu_kthread_park(unsigned int cpu)
+> +{
+> +	per_cpu(rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+> +}
+> +
+> +static int rcu_cpu_kthread_should_run(unsigned int cpu)
+> +{
+> +	return __this_cpu_read(rcu_cpu_has_work);
+> +}
+> +
+> +/*
+> + * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+> + * the RCU softirq used in configurations of RCU that do not support RCU
+> + * priority boosting.
+> + */
+> +static void rcu_cpu_kthread(unsigned int cpu)
+> +{
+> +	unsigned int *statusp = this_cpu_ptr(&rcu_cpu_kthread_status);
+> +	char work, *workp = this_cpu_ptr(&rcu_cpu_has_work);
+> +	int spincnt;
+> +
+> +	for (spincnt = 0; spincnt < 10; spincnt++) {
+> +		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+> +		local_bh_disable();
+> +		*statusp = RCU_KTHREAD_RUNNING;
+> +		this_cpu_inc(rcu_cpu_kthread_loops);
+> +		local_irq_disable();
+> +		work = *workp;
+> +		*workp = 0;
+> +		local_irq_enable();
+> +		if (work)
+> +			rcu_process_callbacks();
+> +		local_bh_enable();
+> +		if (*workp == 0) {
+> +			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+> +			*statusp = RCU_KTHREAD_WAITING;
+> +			return;
+> +		}
+> +	}
+> +	*statusp = RCU_KTHREAD_YIELDING;
+> +	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+> +	schedule_timeout_interruptible(2);
+> +	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+> +	*statusp = RCU_KTHREAD_WAITING;
+> +}
+> +
+> +static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+> +	.store			= &rcu_cpu_kthread_task,
+> +	.thread_should_run	= rcu_cpu_kthread_should_run,
+> +	.thread_fn		= rcu_cpu_kthread,
+> +	.thread_comm		= "rcuc/%u",
+> +	.setup			= rcu_cpu_kthread_setup,
+> +	.park			= rcu_cpu_kthread_park,
+> +};
+> +
+> +/*
+> + * Spawn per-CPU RCU core processing kthreads.
+> + */
+> +static int __init rcu_spawn_core_kthreads(void)
+> +{
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu)
+> +		per_cpu(rcu_cpu_has_work, cpu) = 0;
+> +	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
+> +		return 0;
+> +	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
+> +	return 0;
+> +}
+> +early_initcall(rcu_spawn_core_kthreads);
+> +
+>  /*
+>   * Handle any core-RCU processing required by a call_rcu() invocation.
+>   */
+> @@ -3777,7 +3892,8 @@ void __init rcu_init(void)
+>  	rcu_init_one();
+>  	if (dump_tree)
+>  		rcu_dump_rcu_node_tree();
+> -	open_softirq(RCU_SOFTIRQ, rcu_process_callbacks);
+> +	if (rcu_softirq_enabled)
+> +		open_softirq(RCU_SOFTIRQ, rcu_process_callbacks_si);
+>  
+>  	/*
+>  	 * We don't need protection against CPU-hotplug here because
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index d90b02b53c0ec..fb8fc6ecc391b 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -402,12 +402,10 @@ static const char *tp_rcu_varname __used __tracepoint_string = rcu_name;
+>  
+>  int rcu_dynticks_snap(struct rcu_data *rdp);
+>  
+> -#ifdef CONFIG_RCU_BOOST
+>  DECLARE_PER_CPU(unsigned int, rcu_cpu_kthread_status);
+>  DECLARE_PER_CPU(int, rcu_cpu_kthread_cpu);
+>  DECLARE_PER_CPU(unsigned int, rcu_cpu_kthread_loops);
+>  DECLARE_PER_CPU(char, rcu_cpu_has_work);
+> -#endif /* #ifdef CONFIG_RCU_BOOST */
+>  
+>  /* Forward declarations for rcutree_plugin.h */
+>  static void rcu_bootup_announce(void);
+> @@ -425,8 +423,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
+>  static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
+>  static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
+>  static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
+> -static void invoke_rcu_callbacks_kthread(void);
+>  static bool rcu_is_callbacks_kthread(void);
+> +static void rcu_cpu_kthread_setup(unsigned int cpu);
+>  static void __init rcu_spawn_boost_kthreads(void);
+>  static void rcu_prepare_kthreads(int cpu);
+>  static void rcu_cleanup_after_idle(void);
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 1b3dd2fc0cd64..b440d6ef45d16 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -24,17 +24,6 @@
+>   *	   Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+>   */
+>  
+> -#include <linux/delay.h>
+> -#include <linux/gfp.h>
+> -#include <linux/oom.h>
+> -#include <linux/sched/debug.h>
+> -#include <linux/smpboot.h>
+> -#include <linux/sched/isolation.h>
+> -#include <uapi/linux/sched/types.h>
+> -#include "../time/tick-internal.h"
+> -
+> -#ifdef CONFIG_RCU_BOOST
+> -
+>  #include "../locking/rtmutex_common.h"
+>  
+>  /*
+> @@ -45,19 +34,6 @@ DEFINE_PER_CPU(unsigned int, rcu_cpu_kthread_status);
+>  DEFINE_PER_CPU(unsigned int, rcu_cpu_kthread_loops);
+>  DEFINE_PER_CPU(char, rcu_cpu_has_work);
+>  
+> -#else /* #ifdef CONFIG_RCU_BOOST */
+> -
+> -/*
+> - * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
+> - * all uses are in dead code.  Provide a definition to keep the compiler
+> - * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
+> - * This probably needs to be excluded from -rt builds.
+> - */
+> -#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
+> -#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
+> -
+> -#endif /* #else #ifdef CONFIG_RCU_BOOST */
+> -
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
+>  static bool __read_mostly rcu_nocb_poll;    /* Offload kthread are to poll. */
+> @@ -652,7 +628,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  		/* Need to defer quiescent state until everything is enabled. */
+>  		if (irqs_were_disabled) {
+>  			/* Enabling irqs does not reschedule, so... */
+> -			raise_softirq_irqoff(RCU_SOFTIRQ);
+> +			if (rcu_softirq_enabled)
+> +				raise_softirq_irqoff(RCU_SOFTIRQ);
+> +			else
+> +				invoke_rcu_core();
+>  		} else {
+>  			/* Enabling BH or preempt does reschedule, so... */
+>  			set_tsk_need_resched(current);
+> @@ -1150,18 +1129,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+>  
+>  #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
+>  
+> -#ifdef CONFIG_RCU_BOOST
+> -
+> -static void rcu_wake_cond(struct task_struct *t, int status)
+> +/*
+> + * If boosting, set rcuc kthreads to realtime priority.
+> + */
+> +static void rcu_cpu_kthread_setup(unsigned int cpu)
+>  {
+> -	/*
+> -	 * If the thread is yielding, only wake it when this
+> -	 * is invoked from idle
+> -	 */
+> -	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
+> -		wake_up_process(t);
+> +#ifdef CONFIG_RCU_BOOST
+> +	struct sched_param sp;
+> +
+> +	sp.sched_priority = kthread_prio;
+> +	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+> +#endif /* #ifdef CONFIG_RCU_BOOST */
+>  }
+>  
+> +#ifdef CONFIG_RCU_BOOST
+> +
+>  /*
+>   * Carry out RCU priority boosting on the task indicated by ->exp_tasks
+>   * or ->boost_tasks, advancing the pointer to the next task in the
+> @@ -1299,23 +1281,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
 >  	}
 >  }
 >  
-> +/* parse crashkernel=x@y option */
-> +static void mem_avoid_crashkernel_simple(char *option)
-
-Chao ever mentioned this, I want to ask again, why does it has to be
-xxx_simple()?
-
-Except of these, patch looks good to me. It's a nice catch, and only
-need a simple fix based on the current code.
-
-Thanks
-Baoquan
-
-> +{
-> +	unsigned long long crash_size, crash_base;
-> +	char *cur = option;
-> +
-> +	crash_size = memparse(option, &cur);
-> +	if (option == cur)
-> +		return;
-> +
-> +	if (*cur == '@') {
-> +		option = cur + 1;
-> +		crash_base = memparse(option, &cur);
-> +		if (option == cur)
-> +			return;
-> +		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-> +		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-> +	}
-> +}
+> -/*
+> - * Wake up the per-CPU kthread to invoke RCU callbacks.
+> - */
+> -static void invoke_rcu_callbacks_kthread(void)
+> -{
+> -	unsigned long flags;
+> -
+> -	local_irq_save(flags);
+> -	__this_cpu_write(rcu_cpu_has_work, 1);
+> -	if (__this_cpu_read(rcu_cpu_kthread_task) != NULL &&
+> -	    current != __this_cpu_read(rcu_cpu_kthread_task)) {
+> -		rcu_wake_cond(__this_cpu_read(rcu_cpu_kthread_task),
+> -			      __this_cpu_read(rcu_cpu_kthread_status));
+> -	}
+> -	local_irq_restore(flags);
+> -}
+> -
+>  /*
+>   * Is the current CPU running the RCU-callbacks kthread?
+>   * Caller must have preemption disabled.
+> @@ -1369,65 +1334,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+>  	return 0;
+>  }
 >  
->  static void handle_mem_options(void)
+> -static void rcu_kthread_do_work(void)
+> -{
+> -	rcu_do_batch(this_cpu_ptr(&rcu_data));
+> -}
+> -
+> -static void rcu_cpu_kthread_setup(unsigned int cpu)
+> -{
+> -	struct sched_param sp;
+> -
+> -	sp.sched_priority = kthread_prio;
+> -	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+> -}
+> -
+> -static void rcu_cpu_kthread_park(unsigned int cpu)
+> -{
+> -	per_cpu(rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+> -}
+> -
+> -static int rcu_cpu_kthread_should_run(unsigned int cpu)
+> -{
+> -	return __this_cpu_read(rcu_cpu_has_work);
+> -}
+> -
+> -/*
+> - * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+> - * the RCU softirq used in configurations of RCU that do not support RCU
+> - * priority boosting.
+> - */
+> -static void rcu_cpu_kthread(unsigned int cpu)
+> -{
+> -	unsigned int *statusp = this_cpu_ptr(&rcu_cpu_kthread_status);
+> -	char work, *workp = this_cpu_ptr(&rcu_cpu_has_work);
+> -	int spincnt;
+> -
+> -	for (spincnt = 0; spincnt < 10; spincnt++) {
+> -		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+> -		local_bh_disable();
+> -		*statusp = RCU_KTHREAD_RUNNING;
+> -		this_cpu_inc(rcu_cpu_kthread_loops);
+> -		local_irq_disable();
+> -		work = *workp;
+> -		*workp = 0;
+> -		local_irq_enable();
+> -		if (work)
+> -			rcu_kthread_do_work();
+> -		local_bh_enable();
+> -		if (*workp == 0) {
+> -			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+> -			*statusp = RCU_KTHREAD_WAITING;
+> -			return;
+> -		}
+> -	}
+> -	*statusp = RCU_KTHREAD_YIELDING;
+> -	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+> -	schedule_timeout_interruptible(2);
+> -	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+> -	*statusp = RCU_KTHREAD_WAITING;
+> -}
+> -
+>  /*
+>   * Set the per-rcu_node kthread's affinity to cover all CPUs that are
+>   * served by the rcu_node in question.  The CPU hotplug lock is still
+> @@ -1458,27 +1364,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
+>  	free_cpumask_var(cm);
+>  }
+>  
+> -static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+> -	.store			= &rcu_cpu_kthread_task,
+> -	.thread_should_run	= rcu_cpu_kthread_should_run,
+> -	.thread_fn		= rcu_cpu_kthread,
+> -	.thread_comm		= "rcuc/%u",
+> -	.setup			= rcu_cpu_kthread_setup,
+> -	.park			= rcu_cpu_kthread_park,
+> -};
+> -
+>  /*
+>   * Spawn boost kthreads -- called as soon as the scheduler is running.
+>   */
+>  static void __init rcu_spawn_boost_kthreads(void)
 >  {
-> @@ -250,7 +270,7 @@ static void handle_mem_options(void)
->  	u64 mem_size;
+>  	struct rcu_node *rnp;
+> -	int cpu;
 >  
->  	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
-> -		!strstr(args, "hugepages"))
-> +		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
->  		return;
+> -	for_each_possible_cpu(cpu)
+> -		per_cpu(rcu_cpu_has_work, cpu) = 0;
+> -	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> -		return;
+>  	rcu_for_each_leaf_node(rnp)
+>  		(void)rcu_spawn_one_boost_kthread(rnp);
+>  }
+> @@ -1501,11 +1393,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+>  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  }
 >  
->  	tmp_cmdline = malloc(len + 1);
-> @@ -286,6 +306,8 @@ static void handle_mem_options(void)
->  				goto out;
->  
->  			mem_limit = mem_size;
-> +		} else if (strstr(param, "crashkernel")) {
-> +			mem_avoid_crashkernel_simple(val);
->  		}
->  	}
->  
-> @@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
->  
->  	/* We don't need to set a mapping for setup_data. */
->  
-> -	/* Mark the memmap regions we need to avoid */
-> +	/* Mark the regions we need to avoid */
->  	handle_mem_options();
->  
->  #ifdef CONFIG_X86_VERBOSE_BOOTUP
+> -static void invoke_rcu_callbacks_kthread(void)
+> -{
+> -	WARN_ON_ONCE(1);
+> -}
+> -
+>  static bool rcu_is_callbacks_kthread(void)
+>  {
+>  	return false;
 > -- 
-> 2.7.4
+> 2.20.1
 > 
