@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54D7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157DCC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7400A21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDA7218A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553102999;
-	bh=DctZP3eiEeBhywZCzbXr3Non8a+EIttpMxAXP1W6NWM=;
+	s=default; t=1553103002;
+	bh=f0OYkMKaH/beRppJ2OTFANbQskNXXJqk2ZhBixDyRUI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hOFOzV9CbbQT3qjEAGJR4ruhykWJ07ZMn7yJzPK4cMITd7pTDavPEe1vMdxBbR17k
-	 9qOg/oFibK3Aps7ZrevhJ1i9Jl47kxmLIczI0XKkcWzXPcUtGJHnnygbZ38hXj9/0z
-	 w+elu+CfjsKUY7MNmRKL7WfrKT+9jMA4i68IFYpc=
+	b=qiEUgNF2vJF3QWCa8qli4ev/othWhR7321RULNFb2j8WmSaFhZGr5IZu3wIHO99DB
+	 qLAsSJJ6FKg3HFf1L2QM6zIgYZRnWZ+1byhAtYtXdip9EuzqJvrJWgLjxM5iaIQqX4
+	 M0Nrlp92byOLV0jJm5/rugPwqjyvvPMTIORFoMhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfCTR36 (ORCPT
+        id S1727487AbfCTRaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:29:58 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44108 "EHLO
+        Wed, 20 Mar 2019 13:30:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44300 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfCTR3w (ORCPT
+        with ESMTP id S1727437AbfCTR37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:29:52 -0400
+        Wed, 20 Mar 2019 13:29:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=yhbpyTWJ2NNjelWcU/HUG1rS5pWRRczRoGi4fPOJ8Hw=; b=A1SQE7rTcAV+
-        uIgBGy3VgaTylpBxMlOoYsthnmKPpbRrMPFbDC8oR0VGrAimhkE1fdJAT2eSfZRRdU4oJ4BzIfre+
-        bHXekAlCOvLluCxlOvFg/qcACyBkNTmEPPjGQEudwuLqn4VsfxntcdSVWZXQBNpv9XS3Mi/ZJDoHN
-        HNuf8=;
+        List-Archive; bh=XtyXEiiV7HtUwRyDVlL7/GxpPLGCd++wTmtcOX0310Y=; b=HI++VmBubKre
+        kwXKlD2WpRWSzjsxGEkyv0C+K/CfC4cjQQahrULqt0GI1XDGP3U9mFhQZwTGga6HW9dyTHJrzksF3
+        TJxfWzoHZqtrTf6XGlPzmBQXXqbn/jrZGmYy1oQpslTSvj8BQKbOph3nkK7VUfLaHDVyAPshD/6Av
+        EcdJM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6f2E-00019H-9p; Wed, 20 Mar 2019 17:29:50 +0000
+        id 1h6f2H-00019Y-Bl; Wed, 20 Mar 2019 17:29:53 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 7C7411126E4C; Wed, 20 Mar 2019 17:29:49 +0000 (GMT)
+        id DAA9F1126E4C; Wed, 20 Mar 2019 17:29:52 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
+To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: rn5t618: Constify regulator_desc" to the regulator tree
+Subject: Applied "regulator: of: Make regulator_of_get_init_node static" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190320172949.7C7411126E4C@debutante.sirena.org.uk>
-Date:   Wed, 20 Mar 2019 17:29:49 +0000 (GMT)
+Message-Id: <20190320172952.DAA9F1126E4C@debutante.sirena.org.uk>
+Date:   Wed, 20 Mar 2019 17:29:52 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: rn5t618: Constify regulator_desc
+   regulator: of: Make regulator_of_get_init_node static
 
 has been applied to the regulator tree at
 
@@ -84,60 +84,38 @@ to this mail.
 Thanks,
 Mark
 
-From c22938562fd891cf1fa95690a6eb6cc9d9a1fbbd Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 20 Mar 2019 20:10:57 +0800
-Subject: [PATCH] regulator: rn5t618: Constify regulator_desc
+From 7a67eb1d3abefe16b491b0e9801f98a98f15a3bf Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 19 Mar 2019 23:23:19 +0800
+Subject: [PATCH] regulator: of: Make regulator_of_get_init_node static
 
-The regulator_desc never need to be modified, so define them as const as a
-hint to the compiler that they can go into .rodata.
+Fix sparse warning:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+drivers/regulator/of_regulator.c:374:20:
+ warning: symbol 'regulator_of_get_init_node' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/rn5t618-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/regulator/of_regulator.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index 790a4a73ea2c..a79c0c43b9f8 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -46,7 +46,7 @@ static const struct regulator_ops rn5t618_reg_ops = {
- 		.vsel_mask	= (vmask),				\
- 	}
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 7b6bf3536271..6dca0ba044d8 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -371,8 +371,9 @@ int of_regulator_match(struct device *dev, struct device_node *node,
+ }
+ EXPORT_SYMBOL_GPL(of_regulator_match);
  
--static struct regulator_desc rn5t567_regulators[] = {
-+static const struct regulator_desc rn5t567_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -63,7 +63,7 @@ static struct regulator_desc rn5t567_regulators[] = {
- 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
- };
- 
--static struct regulator_desc rn5t618_regulators[] = {
-+static const struct regulator_desc rn5t618_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -79,7 +79,7 @@ static struct regulator_desc rn5t618_regulators[] = {
- 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
- };
- 
--static struct regulator_desc rc5t619_regulators[] = {
-+static const struct regulator_desc rc5t619_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
- 	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-@@ -107,7 +107,7 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
- 	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
--	struct regulator_desc *regulators;
-+	const struct regulator_desc *regulators;
- 	int i;
- 	int num_regulators = 0;
- 
+-struct device_node *regulator_of_get_init_node(struct device *dev,
+-					       const struct regulator_desc *desc)
++static struct
++device_node *regulator_of_get_init_node(struct device *dev,
++					const struct regulator_desc *desc)
+ {
+ 	struct device_node *search, *child;
+ 	const char *name;
 -- 
 2.20.1
 
