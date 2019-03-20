@@ -2,106 +2,126 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB09C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B15FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F67F218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B17A21908
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lEIw2rGQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vKcu6SnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfCTSVP (ORCPT
+        id S1727503AbfCTSVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:21:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41118 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfCTSVP (ORCPT
+        Wed, 20 Mar 2019 14:21:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39234 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfCTSVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:21:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2KIIbK7053772;
-        Wed, 20 Mar 2019 18:20:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : cc : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=44zS0rN0lFkOKd6owGCH9o48+inXYzKGH8Y3xOZr3d0=;
- b=lEIw2rGQOqbZoDy1Fx1cztis0YIYy+h23nBD3fz5f7s1GOVC/pwi41ONdn5wK+UzZQF/
- lPak5ajMWP26oCtjOoGwxLT2qVLJO/0MHPX5SY+TeWO7Z4hqmi5u42Z4Zb4FgPB7RpGv
- Bt7fVSX+oAHhzaOsXA9juLVBXBtbdbI/rfqG3sQsZJp3iSOnvoHr+KOo8dZ5KYv7+Bba
- PDSr/j9FcRfU7UKAV3D8qTubT/4fwwvChTQi9T4HnloI5QexUlhMTxVlLmFaCr7SS+i5
- Th6tSJYIvi+JrHT/QSuJEJbisAav/FnYNUeOiL7BEvkYlEVT+9PetrrjoP1WxZwsAR+d Gw== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2130.oracle.com with ESMTP id 2r8rjuvj0y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 18:20:47 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2KIKlvG029360
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 18:20:47 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2KIKlxQ001966;
-        Wed, 20 Mar 2019 18:20:47 GMT
-Received: from [10.132.106.120] (/10.132.106.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 Mar 2019 11:20:46 -0700
-Subject: Re: [PATCH] tracing: Kernel access to ftrace instances
-To:     Steven Rostedt <rostedt@goodmis.org>
-References: <1552692925-17240-1-git-send-email-divya.indi@oracle.com>
- <1552692925-17240-2-git-send-email-divya.indi@oracle.com>
- <20190319161655.2824746c@gandalf.local.home>
-Cc:     linux-kernel@vger.kernel.org
-From:   divya.indi@oracle.com
-Organization: Oracle Corporation
-Message-ID: <8cb583dd-1712-f4c3-fa6f-191fa042137f@oracle.com>
-Date:   Wed, 20 Mar 2019 11:20:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 20 Mar 2019 14:21:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t124so181542wma.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DGLPWVpQQtSUqa/GWW3qJMtD3dwVhKh0WuDOsD0UIE8=;
+        b=vKcu6SnUYVK/M0lMFBxnsaqfA7KOrr9R5AP/f9O6N/SpGT9k8X8iFWCwwexdJgwrSQ
+         WLfZ2bKfvaEbkUzFN0emgHzcc7SadsRS5mrdNcofPngotCHCU8BYMjBiESFd3++WXH6c
+         gvR3aceLQauDlKQHHbb18snSmYGVUTDEwhgTYHU9ZKnrt/5Eu1pvM0a93MAFO+CrxWsf
+         fAWmDeYPVFh3l/qVhze2KS5JBneb00qVzMYm10dAKbINfnlQJ0dyQ2a4LJ8ZSeMMIDAR
+         52zWEfa6BfMvcbLaynvYygWRvkN0Uv0q4hpKzBZNRE+dXzOKEG24snXAb8v9LsmadJEl
+         6EhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DGLPWVpQQtSUqa/GWW3qJMtD3dwVhKh0WuDOsD0UIE8=;
+        b=ea1LO/pseLrAdRmQlIesrN4EG/Uw0pMvRb/Epl9RqUYw01bpqkZ/SsYfgM/tB3wWh5
+         kNcMeeC/npOfBG+GLvRh2Q3B31sRYEIHh9zJhdaUAk36RVNEZ34U861guvMiaRvVA9eV
+         XnFN61JM1iCs/dG0kWZ8CPHP9kltBe1O3pYAG5xQycKWM/6gHLT0ZYxoh785bosmkLhn
+         KOJRBOl/QPl6B9xmJgACNvi3WTvronpT89haZXT1TXtbc/qW24+1VqHpdNtQgFgHnmlB
+         0W18uzfF3C5P3PebiHBfnghPlN0cqSHhTT1HIhZuowFOUmcfGz9OhdKkGH/98O8jxxDb
+         QdOw==
+X-Gm-Message-State: APjAAAW7cvWAndHVjK/Ve1DMQCem/BJst2D528lDRbZIIhbW2VLqAjiV
+        V0THExx6yXnbFZ9qF75ZgPm3x3BybgP20jPn4JvNxA==
+X-Google-Smtp-Source: APXvYqxv/ApvJdMCl/33oCyNLtfJzfBOPVm1kol3UcgAlWRGLfBkJsLtinfW3ZFMJRBTqdAGVqVMlNMmilKXvmR5R3A=
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr9730573wmh.9.1553106074824;
+ Wed, 20 Mar 2019 11:21:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190319161655.2824746c@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903200134
+References: <1553059940-127038-1-git-send-email-fei.yang@intel.com> <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com>
+In-Reply-To: <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 20 Mar 2019 11:21:02 -0700
+Message-ID: <CALAqxLUwB4vYiCM1Yi2CizMu-FvEoBB-eNqwaTFi2b=gnvCCZQ@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
+To:     fei.yang@intel.com
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, andrzej.p@collabora.com,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sure, thanks for taking the time to review.
-
-There are a few issues with the patch styling and some minor modifications. I will shortly send the v2 for the same.
-
-
-Regards,
-Divya
-
-
-On 03/19/2019 01:16 PM, Steven Rostedt wrote:
-> On Fri, 15 Mar 2019 16:35:25 -0700
-> Divya Indi <divya.indi@oracle.com> wrote:
+On Wed, Mar 20, 2019 at 9:40 AM John Stultz <john.stultz@linaro.org> wrote:
 >
->> Ftrace provides the feature “instances” that provides the capability to
->> create multiple Ftrace ring buffers. However, currently these buffers
->> are created/accessed via userspace only. The kernel APIs providing these
->> features are not exported, hence cannot be used by other kernel
->> components.
->>
->> This patch aims to extend this infrastructure to provide the
->> flexibility to create/log/remove/ enable-disable existing trace events
->> to these buffers from within the kernel.
->>
->>
-> Thanks for sending this. I'm currently working on some other changes,
-> but will look in this when I'm finished with the other work. Should be
-> within this week.
+> On Tue, Mar 19, 2019 at 10:32 PM <fei.yang@intel.com> wrote:
+>   So while this patch does resolve the issues I was seeing with
+> mainline kernels and recent changes to adbd, Josh pointed out that it
+> wouldn't resolve the issues I was seeing with older kernels which is
+> slightly different (but still related to aio usage).
 >
-> -- Steve
+> On the older kernels I'm hitting scheduling while atomic on reboot,
+> which seems to be due to ffs_aio_cancel() taking a spinlock then
+> calling usb_ep_dequeue() which might sleep.
+>
+> It seems a fix for this was tried earlier with d52e4d0c0c428 ("usb:
+> gadget: ffs: Fix BUG when userland exits with submitted AIO
+> transfers") which was then reverted by a9c859033f6e.
+>
+> Elsewhere it seems the ffs driver takes effort to drop any locks
+> before calling usb_ep_dequeue(), so this seems like that should be
+> addressed, but it also seems like recent change to the dwc3 driver has
+> been made to avoid sleeping in that path (see fec9095bdef4 ("usb:
+> dwc3: gadget: remove wait_end_transfer")), which may be why I'm not
+> seeing the problem with mainline (and your patch here, of coarse).
+> But that also doesn't clarify if its still a potential issue w/
+> non-dwc3 platforms.
 
+Felipe: Given Alan's point, does it make sense to mark the commits
+that remove the possible sleep from wait_event_lock_irq() in
+dwc3_gadget_ep_dequeue()  for -stable?
+
+Against 4.19.30, the following set manages to cherry-pick cleanly:
+git cherry-pick 1a22ec643580626f439c8583edafdcc73798f2fb
+git cherry-pick 09fe1f8d7e2f461275b1cdd832f2cfa5e9be346d
+git cherry-pick c3acd59014148470dc58519870fbc779785b4bf7
+git cherry-pick 7746a8dfb3f9c91b3a0b63a1d5c2664410e6498d
+git cherry-pick d5443bbf5fc8f8389cce146b1fc2987cdd229d12
+git cherry-pick d4f1afe5e896c18ae01099a85dab5e1a198bd2a8
+git cherry-pick fec9095bdef4e7c988adb603d0d4f92ee735d4a1
+# To get things building, revert modified -stable fix
+git revert 25ad17d
+#pick actual upstream fix replacing the previous
+git cherry-pick bd6742249b9ca918565e4e3abaa06665e587f4b5
+
+(Though I'm always a bit hesitant with -stable backports on subsystems
+I don't know well. So I'm not sure if this set is fully correct.)
+
+This set seems to avoid the crash on reboot I was seeing.
+
+And of course, I'm sure getting that set backported to 4.14 and 4.9
+(and maybe even 4.4, I need to check) will be less clean.
+
+thanks
+-john
