@@ -2,117 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D68BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532CE21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022EF21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCTRYZ (ORCPT
+        id S1727122AbfCTRYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:24:25 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43364 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbfCTRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:24:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E055A78;
-        Wed, 20 Mar 2019 10:24:24 -0700 (PDT)
-Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90ABB3F614;
-        Wed, 20 Mar 2019 10:24:21 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 17:24:17 +0000
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>, <will.deacon@arm.com>,
-        <catalin.marinas@arm.com>, <james.morse@arm.com>,
-        <julien.thierry@arm.com>, <wanghaibin.wang@huawei.com>,
-        <lious.lilei@hisilicon.com>, <lishuo1@hisilicon.com>,
-        <zhengxiang9@huawei.com>, <yuzenghui@huawei.com>,
-        <christoffer.dall@arm.com>
-Subject: Re: [PATCH] kvm: arm: Fix handling of stage2 huge mappings
-Message-ID: <20190320172417.6e769373@why.wild-wind.fr.eu.org>
-In-Reply-To: <c27d5828-3924-e209-82b6-c9168007867b@arm.com>
-References: <25971fd5-3774-3389-a82a-04707480c1e0@huawei.com>
-        <1553004668-23296-1-git-send-email-suzuki.poulose@arm.com>
-        <86d0mmynaz.wl-marc.zyngier@arm.com>
-        <5e7e40b4-7983-4440-179a-6f107cee5994@arm.com>
-        <20190320101126.11ff63af@why.wild-wind.fr.eu.org>
-        <4daf0783-fc50-3346-0732-1e3f53c8ccbc@arm.com>
-        <20190320103511.11d777b9@why.wild-wind.fr.eu.org>
-        <c27d5828-3924-e209-82b6-c9168007867b@arm.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 20 Mar 2019 13:24:46 -0400
+Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:59595 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726830AbfCTRYp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 13:24:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 4A80D181D3419;
+        Wed, 20 Mar 2019 17:24:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tooth04_63629714ab316
+X-Filterd-Recvd-Size: 2271
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 20 Mar 2019 17:24:42 +0000 (UTC)
+Message-ID: <3e62601417f959c60d7f0c0311afb1d8484a0d1c.camel@perches.com>
+Subject: Re: [PATCH v3 2/5] ocxl: Clean up printf formats
+From:   Joe Perches <joe@perches.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 20 Mar 2019 10:24:41 -0700
+In-Reply-To: <20190320053448.2098-3-alastair@au1.ibm.com>
+References: <20190313040702.14276-1-alastair@au1.ibm.com>
+         <20190320053448.2098-1-alastair@au1.ibm.com>
+         <20190320053448.2098-3-alastair@au1.ibm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 11:12:47 +0000
-Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-
-> Marc,
+On Wed, 2019-03-20 at 16:34 +1100, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> On 20/03/2019 10:35, Marc Zyngier wrote:
-> > On Wed, 20 Mar 2019 10:23:39 +0000
-> > Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> > 
-> > Hi Suzuki,
-> >   
-> >> Marc,
-> >>
-> >> On 20/03/2019 10:11, Marc Zyngier wrote:  
-> >>> On Wed, 20 Mar 2019 09:44:38 +0000
-> >>> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:  
-> >>>    >>>> Hi Marc,  
-> >>>>
-> >>>> On 20/03/2019 08:15, Marc Zyngier wrote:  
-> >>>>> Hi Suzuki,
-> >>>>>
-> >>>>> On Tue, 19 Mar 2019 14:11:08 +0000,
-> >>>>> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:  
-> 
-> ...
-> 
-> >>>>>> +		if (!pmd_thp_or_huge(old_pmd)) {
-> >>>>>> +			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
-> >>>>>> +			goto retry;  
-> >>>>>   >>  
-> >>>>>> +		if (!stage2_pud_huge(kvm, old_pud)) {
-> >>>>>> +			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);  
-> >>>>>   >>  
-> >>>> We should really get rid of the S2_P{U/M}D_* definitions, as they are
-> >>>> always the same as the host. The only thing that changes is the PGD size
-> >>>> which varies according to the IPA and the concatenation.  
-> >>>>   >>  
-> >> Also what do you think about using  P{M,U}D_* instead of S2_P{M,U}D_*
-> >> above ? I could make that change with the respin.  
-> > 
-> > Given that this is a fix, I'd like it to be as small as obvious as
-> > possible, making it easier to backport.
-> > 
-> > I'm happy to take another patch for 5.2 that will drop the whole S2_P*
-> > if we still think that this should be the case (though what I'd really
-> > like is to have architectural levels instead of these arbitrary
-> > definitions).  
-> 
-> I only meant the two new instances added above in the patch. Of course, I
-> could send something to fix the existing ones.
+> Use %# instead of using a literal '0x'
 
-I'd rather be consistent, and use the same names all over the code.
-Once we decide to change, we do it all in one go.
+I do not suggest this as reasonable.
 
-Thanks,
+There are 10's of thousands of uses of 0x%x in the kernel
+and converting them to save a byte seems unnecessary.
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+$ git grep -P '0x%[\*\d\.]*[xX]' | wc -l
+26120
+
+And the %#x style is by far the lesser used form
+
+$ git grep -P '%#[\*\d\.]*[xX]' | wc -l
+2726
+
+Also, the sized form of %#[size]x is frequently misused
+where the size does not account for the initial 0x output.
+
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+[]
+> @@ -178,9 +178,9 @@ static int read_dvsec_vendor(struct pci_dev *dev)
+>  	pci_read_config_dword(dev, pos + OCXL_DVSEC_VENDOR_DLX_VERS, &dlx);
+>  
+>  	dev_dbg(&dev->dev, "Vendor specific DVSEC:\n");
+> -	dev_dbg(&dev->dev, "  CFG version = 0x%x\n", cfg);
+> -	dev_dbg(&dev->dev, "  TLX version = 0x%x\n", tlx);
+> -	dev_dbg(&dev->dev, "  DLX version = 0x%x\n", dlx);
+> +	dev_dbg(&dev->dev, "  CFG version = %#x\n", cfg);
+> +	dev_dbg(&dev->dev, "  TLX version = %#x\n", tlx);
+> +	dev_dbg(&dev->dev, "  DLX version = %#x\n", dlx);
+
+etc...
+
+
