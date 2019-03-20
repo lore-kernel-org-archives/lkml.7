@@ -2,109 +2,82 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A36DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1680C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF642146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xd7qynPF";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UuwugYyK"
+	by mail.kernel.org (Postfix) with ESMTP id C886B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfCTMyP (ORCPT
+        id S1728092AbfCTMzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:54:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49082 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbfCTMyO (ORCPT
+        Wed, 20 Mar 2019 08:55:01 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:34902 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfCTMzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:54:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B0F09617AA; Wed, 20 Mar 2019 12:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553086453;
-        bh=S+//d+8XRGfDWTwGoXAsPfcR4sX01lQTYFWyJMr879o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Xd7qynPFxcJhn9KbvabWEVeLyYbl3slK5n4m4P7Upl2KgJVZXXvIclx4Zwg/08kId
-         VPM6eMEtrgeWxpsdhvWQVj7ACDx5+y/dd8VTPGkNk3gxZx7nomHWY4QS58qlT+8rrD
-         kYazLI+rr/PMitQoC3FtDC50aT91I7NPSEXiu+rU=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EB7E615BE;
-        Wed, 20 Mar 2019 12:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553086448;
-        bh=S+//d+8XRGfDWTwGoXAsPfcR4sX01lQTYFWyJMr879o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UuwugYyKgv3HMOENBe4MwyhNGgVnlyHAPqaOtUbgiDd/gZa7HupzynhfiLRT8mbwl
-         iSIDld5ldyPNzWT/tJ3GyngD0WhHe2Ck/6dbkTqrUjTkwgWT81hreZryGEaDQUKvDE
-         c0R7bknjh7f/3eC1rUZUXuoSg+iTE2btkpH9XDHg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6EB7E615BE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] thunderbolt: Fix to check return value of ida_simple_get
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20190319172259.8874-1-pakki001@umn.edu>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <6e3d1501-be71-ac95-2f47-ab928b3bc026@codeaurora.org>
-Date:   Wed, 20 Mar 2019 18:24:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 08:55:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id k2so1955757ioj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 05:55:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=smvzSB3T+mnGKo+uKlNF4p2seEbKwW6qQs9JTl0ogoM=;
+        b=A5ugdrOYW+oRNSLWAc0rqoGLw6AIsBgpIpJTd/nRYIOO1K9fNG9WwKIOv+JIgQECnA
+         DNVMi3kVuIHFk1HKU2Bir+RVGmbHjqzHx0fFX6mO7OeS06rgiB2AI+/nDijauTvvXDGe
+         Iq7r2dWELnqRqbOILYR4jJJw+hzQGM9KNPqZ5iHXaMHqJHRH8cGDqPUwY4s8wX+SsB2c
+         f2VC7SRyj/AecNhaop9X8ykm2GPhiFT+xBKqTznSko80+YkW3uEbJ4ph85AQcSZBlXzd
+         5xXRn/uEDEkgEc3pwcDHDF6M5hFHK8Y0kXB6HUaHeuUeCMC6D5F96/yGTAtrk62wG8WG
+         XLeg==
+X-Gm-Message-State: APjAAAUmB+yCQWfm97HPUdtmCV0TBVkT1712S2XbP4VNGsUugim4Zhit
+        eWl7b8xGCOWkg5uvjN7rKJ6nT10DmVf5iCl/dxyVUzAdA9ug
+X-Google-Smtp-Source: APXvYqz27NpEzXwpWTZ9z6cmTUr5f2p2P6Yxv5IHTHyuEY3waZm3h+6TSsTRXXi8OSTIWSmTUmO5gZn0owurRIJS5Q9jak2l8Daf
 MIME-Version: 1.0
-In-Reply-To: <20190319172259.8874-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a24:5c5:: with SMTP id 188mr4806509itl.3.1553086500812;
+ Wed, 20 Mar 2019 05:55:00 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 05:55:00 -0700
+In-Reply-To: <0000000000009ce9ee057b0be7f8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002fbe8d0584862154@google.com>
+Subject: Re: WARNING in update_load_avg
+From:   syzbot <syzbot+20fddccabc274e99398e@syzkaller.appspotmail.com>
+To:     andy.shevchenko@gmail.com, bp@alien8.de, davem@davemloft.net,
+        douly.fnst@cn.fujitsu.com, hpa@zytor.com, konrad.wilk@oracle.com,
+        kuznet@ms2.inr.ac.ru, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        netdev@vger.kernel.org, puwen@hygon.cn, rppt@linux.vnet.ibm.com,
+        sbrivio@redhat.com, sd@queasysnail.net,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        ville.syrjala@linux.intel.com, x86@kernel.org,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
-On 3/19/2019 10:52 PM, Aditya Pakki wrote:
-> ida_simple_get on failure can return an error. The patch ensures that
-> the dev_set_name is set on non failure cases.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
+commit b8a51b38e4d4dec3e379d52c0fe1a66827f7cf1e
+Author: Stefano Brivio <sbrivio@redhat.com>
+Date:   Thu Nov 8 11:19:23 2018 +0000
 
+     fou, fou6: ICMP error handlers for FoU and GUE
 
-We should add check against `ida_simple_get` instead of svc->id >= 0 and 
-clean up  svc.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a48993200000
+start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16a48993200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a48993200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d86f24333880b605
+dashboard link: https://syzkaller.appspot.com/bug?extid=20fddccabc274e99398e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10272c5d400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157bd093400000
 
-Also, It seems clean up is missing when device_register fails and it is 
-leaking svc.
-
-Cheers,
-Mukesh
-
-
->   drivers/thunderbolt/xdomain.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-> index e27dd8beb94b..b1768f595259 100644
-> --- a/drivers/thunderbolt/xdomain.c
-> +++ b/drivers/thunderbolt/xdomain.c
-> @@ -772,7 +772,9 @@ static void enumerate_services(struct tb_xdomain *xd)
->   		svc->dev.bus = &tb_bus_type;
->   		svc->dev.type = &tb_service_type;
->   		svc->dev.parent = &xd->dev;
-> -		dev_set_name(&svc->dev, "%s.%d", dev_name(&xd->dev), svc->id);
-> +		if (svc->id >= 0)
-> +			dev_set_name(&svc->dev, "%s.%d", dev_name(&xd->dev),
-> +					svc->id);
->   
->   		if (device_register(&svc->dev)) {
->   			put_device(&svc->dev);
+Reported-by: syzbot+20fddccabc274e99398e@syzkaller.appspotmail.com
+Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
