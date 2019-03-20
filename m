@@ -2,123 +2,86 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A496C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA5CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E7A2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AD621850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553075166;
+	bh=JZBy2iw9o99cjWnxJcjag01IU+ALDYqZ/OQbaelwo+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=POnF3ZRwaOYl/BgK58fhyMi6PZAfnzo1QKzy46DmPf3hs2GlGdGU9XvG83eDxtEro
+	 n3YyvQB5jWa/1ZabVwxJjjq0urwflgINXV45UPZrf1LHenA49tlj+cVV6b1uiYHyp7
+	 39r2j7WgHIvEVczmyDa55+1Lk5ImDdcy1M/VVTBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfCTJpL (ORCPT
+        id S1727526AbfCTJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:45:11 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40467 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfCTJpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:45:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t5so1939316wri.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/5Jq/1A4wnNU45uP0a2SlC5SWn4VZjmGVVWgkyU8b6Q=;
-        b=QvTYKidPjVdc/Z+pFwJkND2xKX/ZScvIwgjDt0DNwExWePLStnCo/rPBLR5WN1JpdL
-         fakLHcaihvNUZRXFyZQ0tyTmxOArIPXIaFMRocTuhfaTMLnNvCNnK4ZV77JegcwNIQKB
-         zg3EZct0BGaOV3zcyGVS0WqtjP2ayCyuNZgQ9FXR6XNEPrPzaJHP/bL/ayMJCXf6ai4a
-         1IpqQW3B7Rjb/7ZR7oB94Sh2DrfQc6KmfYLUoftBllSuc0RbtpaHGXVOlv5nw0v2jTHT
-         8tUeGGAAnr1ZRb7biAtAJpTib4/FBRIzRUcTB4BB9ytxCKC6O3Kr4aH0h8e6rIWIE2gw
-         s0Qw==
-X-Gm-Message-State: APjAAAV3CebMvjxT+HS1hl0I9C4xKizndiOFjlNgGx24zb/JP67qlZOs
-        NKq1X6C0nWeP+prubIglRlvykgkIFEU=
-X-Google-Smtp-Source: APXvYqzII/fmq2lFyYDmCPW3x4gl3JslO9q1l87eIxW6hq+HHlFlkhJTlM2Tth2VSEq8y9DUCy8RPg==
-X-Received: by 2002:adf:90af:: with SMTP id i44mr20781788wri.222.1553075108830;
-        Wed, 20 Mar 2019 02:45:08 -0700 (PDT)
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id o10sm1234925wrx.82.2019.03.20.02.45.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 02:45:08 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 10:45:05 +0100
-From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20190320094504.GA16193@localhost.localdomain>
-References: <20190320081549.7112c33c@canb.auug.org.au>
+        Wed, 20 Mar 2019 05:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727257AbfCTJqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 05:46:04 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86E92175B;
+        Wed, 20 Mar 2019 09:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553075164;
+        bh=JZBy2iw9o99cjWnxJcjag01IU+ALDYqZ/OQbaelwo+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fiUgbpd6ACxLPoNX8u0bD/o0YIJqeyit2SvNXHpSXeQCAloFh7nsMchntqikuxtha
+         vXXsdGzvpm9VZx/lSAwDRBhTYPUb77PQyOELrVK8j5HvpqecIWKOs3fEXCOfWuj8wB
+         sQpbjocznO5o31YNeelohow4watGFA4WFXFJg6GI=
+Date:   Wed, 20 Mar 2019 10:46:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] virt: vbox: Implement passing requestor info to the host
+ for VirtualBox 6.0.x
+Message-ID: <20190320094601.GA30735@kroah.com>
+References: <20190320093519.26029-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190320081549.7112c33c@canb.auug.org.au>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190320093519.26029-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 20, 2019 at 10:35:19AM +0100, Hans de Goede wrote:
+> VirtualBox 6.0.x has a new feature where the guest kernel driver passes
+> info about the origin of the request (e.g. userspace or kernelspace) to
+> the hypervisor.
+> 
+> If we do not pass this information then when running the 6.0.x userspace
+> guest-additions tools on a 6.0.x host, some requests will get denied
+> with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
+> the mounting of shared folders marked to be auto-mounted.
+> 
+> This commit implements passing the requestor info to the host, fixing this.
+> 
+> Cc: stable@vger.kernel.org
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This feels like support for a "new feature", so why would this need to
+go to older kernels?
 
-> Hi all,
->=20
-> In commit
->=20
->   13f61dfc5235 ("mt76: fix schedule while atomic in mt76x02_reset_state")
->=20
-> Fixes tag
->=20
->   Fixes: e4ebb8b403d1 ("mt76: mt76x2: implement full device restart on wa=
-tchdog reset")
->=20
-> has these problem(s):
->=20
->   - Target SHA1 does not exist
->=20
-> Did you mean:
->=20
->   004960423fe1 ("mt76: mt76x2: implement full device restart on watchdog =
-reset")
+It's not our fault that vb implemented a non-backwards-compatible change
+for their new release, right?  So why should we be forced to add new
+features to stable kernels?
 
-Hi Stephen,
+I have no problem to add this for 5.2, but not for older stuff.
 
-yes, the right Fixes tag is:
-004960423fe1 ("mt76: mt76x2: implement full device restart on watchdog rese=
-t")
+thanks,
 
-Sorry for the mistake.
-
-Regards,
-Lorenzo
-
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
-
-
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXJILnAAKCRA6cBh0uS2t
-rLs1APsHBqDbJ8Dnrh33NzyBoydGceQK5C9X0KLG7NNv2zDm+AEA2CUnUhrv+gGQ
-4h9qAzCppfRa+tbcAkyvr+pprstOPwE=
-=0ehf
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+greg k-h
