@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F34C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A800BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795022146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A712146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="moiJhGTb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CCmkoVuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfCTNF1 (ORCPT
+        id S1727918AbfCTNFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:05:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39069 "EHLO
+        Wed, 20 Mar 2019 09:05:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55863 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfCTNF0 (ORCPT
+        with ESMTP id S1727713AbfCTNFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:05:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t124so19999003wma.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:05:25 -0700 (PDT)
+        Wed, 20 Mar 2019 09:05:38 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 4so20422124wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=/7aZ2qEgUMS4VwIoiwp9ThhiabkO+yBZ85+zXiYDfoE=;
-        b=moiJhGTbMn6iphRnXEa8YwF3RcwYDewv+vemObV2SSx/Wpgf9ZAA+9xrDqtm/tNY45
-         A05aDJyU0LngNAUuIqPwqk4jKftOXi7m7+E4Xbrpi2Ty73oix8sr0RG0rRZ2n/YqAzUW
-         7RzzXeJCfVGMtql6K6nXjiSSQ35iGJJiiNIAKVRyK6V40ked0JWsWm5O+aHXr/yAD4rx
-         7pb8hXjI2wyHY0ZDR5XciKUSxWt/jmDV8d16hr/4gE0I120tGpEqZvQ/stqlFJGlc0K3
-         +PT4NoAe5cBOCAIy3wYFcOVY0hcPA8GQKggLJuHOgSuq/FflFyZL2VBHo7xo75np3HSg
-         upuw==
+        bh=pcAe7xKXSA+JqdtmP9jJoY+vIqRWtxM3ko7Hz0Mu9XM=;
+        b=CCmkoVujw80180LAp2VjhdD6MYlzX3KrXHBgwNSIJxTh0F/jcpj6UcpTTuyp9z5yIf
+         qr50lpPN6lpDWTfXADhRHsZmEbFjGcAIcbWVk/AFi2kcGi8aTP9MXioupSLPjh10TEdb
+         KO8j6OmSqVhLOhUpuqtA85p3PORv7bSAybvfc61SnMGzs/VHTKtSbazJqqnu2vsWVTcX
+         Kgx/8CagVY6UHpVib6uF8PqhA5sbRzePveYy27wgDAKb3h0BTXniqA4+oNc++xY3O7S8
+         s6kk8eYiCuUowy73E7WOWHBHtvAvxFWeLpcjlSUarTLdmkdjJaphu7ONO430bREIzFd/
+         38jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=/7aZ2qEgUMS4VwIoiwp9ThhiabkO+yBZ85+zXiYDfoE=;
-        b=BRQwGDn7+mNO1Nc4ku2o7qL72az8PcYGDDz0FnhV065qcNP03Oi+5l4znSIV0GP2iG
-         1sruNt1+W4y4bgs4ufxLVP4USGytsT8XqxishLCWsJNoYaoE2Xj6TbsN/wRRGaUxjRai
-         FMCl02oBVG0ATwgTiBauAndjTfJ5yroYpnjupp4S4NO6UhSxVqbwKwZL50yowpc1FvZR
-         D2355J0mEazSvjPvJh98zW17V0Bk3KIB8jIBqxHnfLUdb4Ka7kUEYK6ILF+GIw7xOZ8b
-         hbY1CQKNb+JYGFcMlc4nhTZHvWdGGoiDubhB6LknpwR9tnhPHFLr7R/ry+n9r9w1XFwc
-         jz0w==
-X-Gm-Message-State: APjAAAV2x1v6lMwi6cNk13QteYC+XopPHCViHOIjPfG60PMZSPjz8JaN
-        F0txtaUp7L6Dh+2FPNeUsFGRog==
-X-Google-Smtp-Source: APXvYqyYkijsXl6jDZ6l/pka/VdJ/jXuHhXMhrM3IoMtdmr7/0Pu3WGbigqKPUH2r/dCKuN5ZEKVRw==
-X-Received: by 2002:a1c:6587:: with SMTP id z129mr1431470wmb.84.1553087124938;
-        Wed, 20 Mar 2019 06:05:24 -0700 (PDT)
+        bh=pcAe7xKXSA+JqdtmP9jJoY+vIqRWtxM3ko7Hz0Mu9XM=;
+        b=qzHbSMCmj3Axrov02TkHG1V3VAbpHjCMtZTd36JeEMOdbpRUivjhU7YFliYFGO2xCg
+         KrkHrQea+WG5ZVlk59d/kFjMgTAXScVRQPNtHa+oJGVCBk44QXMTdiO9xNHJILQrUZDc
+         x0Pdj2AsCbvZoeR9LCcNLv3B2kqRdV+DragCeSZnL8bZ9nXuvmIUemzl2Q4TExYysN6M
+         a5OrS+O/fi6ZInTBT7J6CFN4KycKurYpuaCMsDWJdglnYV21SCDkdnCGRrhYgOf1Uh9r
+         v9GkIKnqPwSUV9uxe/Ymw/BqiKYoUjrD7StR1IssuOrAEZKIlmCyfMWyErjvQqlizt75
+         cheQ==
+X-Gm-Message-State: APjAAAUn0Gznrk4S1dOMHGd6FnZovy/Dqt3irYp++6Pr2BZ2g7x6aw2C
+        aE9JSHBW0z11uCZG8jyIIjSzhA==
+X-Google-Smtp-Source: APXvYqz8mfe/6jxjJCwNqRWPRNhurjfeIqqq8Yrt6IxDdoOAtXo4tvUaa4T3bSXZSwxfUPfBBw9T9w==
+X-Received: by 2002:a05:600c:2159:: with SMTP id v25mr7857218wml.17.1553087136963;
+        Wed, 20 Mar 2019 06:05:36 -0700 (PDT)
 Received: from dell ([2.31.167.140])
-        by smtp.gmail.com with ESMTPSA id l8sm1989105wrv.45.2019.03.20.06.05.23
+        by smtp.gmail.com with ESMTPSA id y63sm2300306wmb.31.2019.03.20.06.05.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 06:05:24 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 13:05:22 +0000
+        Wed, 20 Mar 2019 06:05:36 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 13:05:34 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Fabrice Gasnier <fabrice.gasnier@st.com>
 Cc:     robh+dt@kernel.org, alexandre.torgue@st.com,
@@ -67,15 +67,15 @@ Cc:     robh+dt@kernel.org, alexandre.torgue@st.com,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: stm32: syscon: add clock support
-Message-ID: <20190320130522.GO4731@dell>
+Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
+Message-ID: <20190320130534.GP4731@dell>
 References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
- <1544604495-4082-2-git-send-email-fabrice.gasnier@st.com>
+ <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1544604495-4082-2-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -84,16 +84,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 12 Dec 2018, Fabrice Gasnier wrote:
 
-> STM32 system configuration controller registers needs to be clocked.
-> Document clock support on stm32-syscon.
+> Some system control registers need to be clocked, so the registers can
+> be accessed. Add an optional clock and attach it to regmap.
 > 
 > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
-> Changes in v2:
-> - move clocks to specific bindings using syscon as per Rob's comment
-> ---
->  Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mfd/syscon.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
 Applied, thanks.
 
