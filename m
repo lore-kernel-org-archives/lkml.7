@@ -2,161 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6B0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9EBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E97218D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553120948;
-	bh=oRaK19O3D9ZrwFghZnb18XXfv9+3H162NAdYdMdF4ks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obUobNUMJeHWnChIUy9PVks1poefVwt02RsDd2a5ksnnhgyV+647NJcrI3fucc3w1
-	 98V4dWqhmJCL0399n6FQwTqkuuMJKwvQ2fFoXiCCI1VX10WRzvLTbQwPGUVssHziT0
-	 JHbJ39HvlsnytvENWeTid8qrm3YOc67Wkd7JIRag=
+	by mail.kernel.org (Postfix) with ESMTP id 172C120643
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:34:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WIUI0I3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfCTW3H (ORCPT
+        id S1727612AbfCTWeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:29:07 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:41487 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfCTW3F (ORCPT
+        Wed, 20 Mar 2019 18:34:07 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:50536 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbfCTWeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 18:29:05 -0400
-Received: by mail-yw1-f67.google.com with SMTP id q128so3330609ywg.8;
-        Wed, 20 Mar 2019 15:29:04 -0700 (PDT)
+        Wed, 20 Mar 2019 18:34:07 -0400
+Received: by mail-qk1-f202.google.com with SMTP id d8so22272249qkk.17
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fwvS1CCeK/9mxSvkHjON/M6m7Jcgc0dvN8k4BI8hC0s=;
+        b=WIUI0I3Oba+9hV5dGc2k6eBV6T/Zq/Bu1J0cYkyXUMDETJZcYihFO3+V9kOD5L49SV
+         UE75YWqQmNnTXyGPjaDfFsJWtrYyIu2clVtfm5KR4/dUpCEwb6+gGJ1WKJFppk9htYYW
+         PqcNvdzwOv9SNzW3s9Eu2q3yyGsZFtWEeU2/YhLRqzCZlLk46W2Bhc1Opindf4Yui1Vi
+         BkObjVJUnL25X486Qk6UhZGN65FRzeOMt0pp6PPXEQFAu8HKAFzOTA8PeWyTiKkk7KxM
+         I84EYmYLyswLTghPe5ri5DsljyX0ANDb68SFXonSgiT22LrJ/HNvW4VUpLNer6LdMoUz
+         wT+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DYaa3sSap9EzNyPtF8ZXKlbzOxq4cInzBuykp6Ou0k8=;
-        b=D3cUyCL5f3Uq6Pwh6F8E7U4Y+laz4LNCpxp4+99ssEfXQITBwb1pFomrd1XEMlEyy4
-         eidjmU31Ses8TOzr40HRTfBLKp9Ozf2uAXoiOF/ZZa6k/j4HgahqF66J9QtQLxSQBX/E
-         6IguPBSvxmZyTIqrC1C/SREpHhsInaRzu7shmK8JUq21w+1LDZaNNYG0acsiDnMJ/DnE
-         qMv/SHyWqWq/2z3of0Wbnqlkd4CDUccMxaoQwi7iw6OLfsNAPEACuwBZxg7GvWlTMJtF
-         2chj1Sx8M820E/3dbYGcJ8PvpK9T3tx4Onup20B/HVqPM3pcM2az2nZIndMVK3EQCwdJ
-         tCbA==
-X-Gm-Message-State: APjAAAXyh4AxnmmLWOIWk+qKZ8tkUpIrYWTN4c3rxQy31Qm7bVIVnqYu
-        7hNmezsJf65SL2XW4ZRs6AA=
-X-Google-Smtp-Source: APXvYqxfpambTscKeen7xjavbFX57ULo+udBKXVmK3Us74m4heYIPhQWwo6aDaGNPVr52HGayqMZGQ==
-X-Received: by 2002:a5b:51:: with SMTP id e17mr386715ybp.64.1553120943931;
-        Wed, 20 Mar 2019 15:29:03 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id g1sm1052184ywf.0.2019.03.20.15.29.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 15:29:02 -0700 (PDT)
-Received: by 42.do-not-panic.com (sSMTP sendmail emulation); Wed, 20 Mar 2019 22:29:00 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     akpm@linux-foundation.org, keescook@chromium.org
-Cc:     sandeen@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 6/6] sysctl: Fix proc_do_large_bitmap for large input buffers
-Date:   Wed, 20 Mar 2019 22:28:31 +0000
-Message-Id: <20190320222831.8243-7-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190320222831.8243-1-mcgrof@kernel.org>
-References: <20190320222831.8243-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fwvS1CCeK/9mxSvkHjON/M6m7Jcgc0dvN8k4BI8hC0s=;
+        b=oi2KjuTNHfjTwPBZc5G57aDEqPfhvNlnDFoCoIbu/R3gI+Rzz7rNvJsmnks7IPeASy
+         OpjQAEGzmuZ8evYSIG46XgmTF5TwEVI38O/Tdk952bjc4rbZugiZFfxz4U91pGzzkf04
+         nkerBvPlhceBVXzAv+p4BvMStk8kI0LUkoRBQhi5f0yG8dCO4dgU9rp95wdCMv8Ucebo
+         h0bEXo8qwDG/Ub7Rs4ge/fs6pXsj41fgrELaH7DEVqVmsEbTfBPyoTAby+9dmdyb6hGS
+         YGgZx1QVW9Rt+6dxZgwuZ3dUCJjYYbK59nOyPUjlGqJQ1iuKK4ZGTYLLdAs1TJc/xWLk
+         kHvQ==
+X-Gm-Message-State: APjAAAVLcGsibtkeeG5ibtgV5gg3RatR8QUnYDPIJA0cqb4O6s9Ye+E+
+        ckPMFZjOUw46Mx3TTDT6V1MNi2jUmwlm
+X-Google-Smtp-Source: APXvYqw9SkimWRID5FQXcj1l45ZV6jcaTiJPKFiWkGZ749B8KdpSNU0Ah5D32BeFFUpZuynM9OB9OISSi8Tw
+X-Received: by 2002:a0c:ea90:: with SMTP id d16mr120555qvp.27.1553121246494;
+ Wed, 20 Mar 2019 15:34:06 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:28:44 -0700
+Message-Id: <20190320222844.134765-1-furquan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
+Subject: [PATCH] drivers/acpi: Clear status of an event before enabling it
+From:   Furquan Shaikh <furquan@google.com>
+To:     robert.moore@intel.com, erik.schmauss@intel.com,
+        rafael.j.wysocki@intel.com, lenb@kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org
+Cc:     rajatja@google.com, evgreen@google.com, dlaurie@google.com,
+        furquan@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
+clearing ACPI IRQs during suspend/resume") was added to stop clearing
+of event status bits unconditionally on suspend and resume paths. This
+was done because of an issue
+reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
+lid status stays closed even on resume (which happens because event
+status bits are cleared unconditionally on resume). Though this change
+fixed the issue on suspend path, it introduced regressions on several
+resume paths.
 
-Today, proc_do_large_bitmap() truncates a large write input buffer
-to PAGE_SIZE - 1, which may result in misparsed numbers at the
-(truncated) end of the buffer.  Further, it fails to notify the caller
-that the buffer was truncated, so it doesn't get called iteratively
-to finish the entire input buffer.
+First regression was reported and fixed on S5 path by the following
+change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
+entering S5"). Next regression was reported and fixed on all legacy
+sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
+events when entering sleep states"). However, regression still exists
+on S0ix sleep path since it does not follow the legacy sleep path.
 
-Tell the caller if there's more work to do by adding the skipped
-amount back to left/*lenp before returning.
+In case of S0ix, events are enabled as part of device suspend path. If
+status bits for the events are set when they are enabled, it could
+result in premature wake from S0ix. This change ensures that status is
+cleared for any event that is being enabled so that any stale events
+are cleared out.
 
-To fix the misparsing, reset the position if we have completely
-consumed a truncated buffer (or if just one char is left, which
-may be a "-" in a range), and ask the caller to come back for
-more.
-
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Furquan Shaikh <furquan@google.com>
 ---
- kernel/sysctl.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ drivers/acpi/acpica/evgpe.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index e1a8d785b839..ddc6c717355d 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -3159,9 +3159,13 @@ int proc_do_large_bitmap(struct ctl_table *table, int write,
+diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+index 62d3aa74277b4..61455ab42fc87 100644
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct acpi_gpe_event_info *gpe_event_info)
  
- 	if (write) {
- 		char *kbuf, *p;
-+		size_t skipped = 0;
+ 	ACPI_FUNCTION_TRACE(ev_enable_gpe);
  
--		if (left > PAGE_SIZE - 1)
-+		if (left > PAGE_SIZE - 1) {
- 			left = PAGE_SIZE - 1;
-+			/* How much of the buffer we'll skip this pass */
-+			skipped = *lenp - left;
-+		}
+-	/* Enable the requested GPE */
++	/* Clear the GPE (of stale events) */
++	status = acpi_hw_clear_gpe(gpe_event_info);
++	if (ACPI_FAILURE(status))
++		return_ACPI_STATUS(status);
  
- 		p = kbuf = memdup_user_nul(buffer, left);
- 		if (IS_ERR(kbuf))
-@@ -3178,9 +3182,22 @@ int proc_do_large_bitmap(struct ctl_table *table, int write,
- 		while (!err && left) {
- 			unsigned long val_a, val_b;
- 			bool neg;
-+			size_t saved_left;
- 
-+			/* In case we stop parsing mid-number, we can reset */
-+			saved_left = left;
- 			err = proc_get_long(&p, &left, &val_a, &neg, tr_a,
- 					     sizeof(tr_a), &c);
-+			/*
-+			 * If we consumed the entirety of a truncated buffer or
-+			 * only one char is left (may be a "-"), then stop here,
-+			 * reset, & come back for more.
-+			 */
-+			if ((left <= 1) && skipped) {
-+				left = saved_left;
-+				break;
-+			}
-+
- 			if (err)
- 				break;
- 			if (val_a >= bitmap_len || neg) {
-@@ -3198,6 +3215,15 @@ int proc_do_large_bitmap(struct ctl_table *table, int write,
- 				err = proc_get_long(&p, &left, &val_b,
- 						     &neg, tr_b, sizeof(tr_b),
- 						     &c);
-+				/*
-+				 * If we consumed all of a truncated buffer or
-+				 * then stop here, reset, & come back for more.
-+				 */
-+				if (!left && skipped) {
-+					left = saved_left;
-+					break;
-+				}
-+
- 				if (err)
- 					break;
- 				if (val_b >= bitmap_len || neg ||
-@@ -3216,6 +3242,7 @@ int proc_do_large_bitmap(struct ctl_table *table, int write,
- 			proc_skip_char(&p, &left, '\n');
- 		}
- 		kfree(kbuf);
-+		left += skipped;
- 	} else {
- 		unsigned long bit_a, bit_b = 0;
- 
++	/* Enable the requested GPE */
+ 	status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+ 	return_ACPI_STATUS(status);
+ }
 -- 
-2.18.0
+2.21.0.225.g810b269d1ac-goog
 
