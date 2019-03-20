@@ -3,109 +3,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFD3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E227C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3F12184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFA52184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfCTO1y (ORCPT
+        id S1727586AbfCTO2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:27:54 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41139 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfCTO1w (ORCPT
+        Wed, 20 Mar 2019 10:28:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33082 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726782AbfCTO2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:27:52 -0400
-X-Originating-IP: 90.88.33.153
-Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 835162000C;
-        Wed, 20 Mar 2019 14:27:49 +0000 (UTC)
-Message-ID: <ba12d2480e357a37e6110c3ce907c4beea48cc35.camel@bootlin.com>
-Subject: Re: [RFC PATCH 05/20] drm: Replace instances of drm_format_info by
- drm_get_format_info
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Date:   Wed, 20 Mar 2019 15:27:49 +0100
-In-Reply-To: <2c4461e827cf9a64326962094f7420bfafc5e13b.1553032382.git-series.maxime.ripard@bootlin.com>
-References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
-         <2c4461e827cf9a64326962094f7420bfafc5e13b.1553032382.git-series.maxime.ripard@bootlin.com>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Wed, 20 Mar 2019 10:28:38 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k14so2754062qtb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:28:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=smCGIeI6unDecV1aEBVbWWQkZNXXruDfYTpgXklMZKc=;
+        b=rNacqltbMGgWdJk3L7yVm7cj6oExDOCGLV2XJNfXihjSa+QPgZHO6min6eJRXjI9Xb
+         6Y/Yd+RGAyu21OfGd3CTpmHtS1jVDPJTlfX0YrtkI6PHtJImvKh2DBEFQzbZeR6ezysN
+         sgp3HdgpjdIVaFpn9+Gzpz+qmKramnQGU3gubhYOvCeOwfBOwHSzSfetHKxUusoZld4t
+         R1buenliF+K1P73ekyw2qIo5tgN/ZVkYKgi0BoPZzFH5jerhMiZbqvdhmngA6//cC/1v
+         sw7H/eNR0+1AN1CHE/8Ml5EJgTyY5siIMA5+jnjTVXyLtjcuQ4JKYsJECrDwdBo66KKl
+         l96g==
+X-Gm-Message-State: APjAAAUH4X2CMhAS8wcwsWsD7Z+rA5dbavmc3qEH5hRzi92mvRWXBq7i
+        2Z7PYCGfnF5zN5G2Yff27PaoXQ==
+X-Google-Smtp-Source: APXvYqw8nqgdlvVmWGpdsXaRt8lJKqqLwoeke1NlThzqJJzb2ijpW0P2BGlHJcE72TgE2lldw3Lvow==
+X-Received: by 2002:ac8:1637:: with SMTP id p52mr1634425qtj.212.1553092117360;
+        Wed, 20 Mar 2019 07:28:37 -0700 (PDT)
+Received: from ?IPv6:2601:602:9800:dae6::c6a6? ([2601:602:9800:dae6::c6a6])
+        by smtp.gmail.com with ESMTPSA id q75sm1200600qke.17.2019.03.20.07.28.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 07:28:36 -0700 (PDT)
+Subject: Re: [PATCH] driver : staging : ion: optimization for decreasing
+ memory fragmentaion
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Zhaoyang Huang <huangzhaoyang@gmail.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        David Rientjes <rientjes@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        devel@driverdev.osuosl.org,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <1552561599-23662-1-git-send-email-huangzhaoyang@gmail.com>
+ <ca8bb8d0-3252-f9a7-3bf7-98d5a97e40cf@suse.cz>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <73eb235f-9515-916e-ff20-0491fe2e107e@redhat.com>
+Date:   Wed, 20 Mar 2019 07:28:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca8bb8d0-3252-f9a7-3bf7-98d5a97e40cf@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
-> drm_get_format_info directly calls into drm_format_info, but takes directly
-> a struct drm_mode_fb_cmd2 pointer, instead of the fourcc directly. It's
-> shorter to not dereference it, and we can customise the behaviour at the
-> driver level if we want to, so let's switch to it where it makes sense.
+On 3/20/19 7:23 AM, Vlastimil Babka wrote:
+> You should have CC'd the ION maintainers/lists per
+> ./scripts/get_maintainer.pl - CCing now.
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Makes good sense to me!
-
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> ---
->  drivers/gpu/drm/gma500/framebuffer.c | 2 +-
->  drivers/gpu/drm/omapdrm/omap_fb.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> On 3/14/19 12:06 PM, Zhaoyang Huang wrote:
+>> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+>>
+>> Two action for this patch:
+>> 1. set a batch size for system heap's shrinker, which can have it buffer
+>> reasonable page blocks in pool for future allocation.
+>> 2. reverse the order sequence when free page blocks, the purpose is also
+>> to have system heap keep as more big blocks as it can.
+>>
+>> By testing on an android system with 2G RAM, the changes with setting
+>> batch = 48MB can help reduce the fragmentation obviously and improve
+>> big block allocation speed for 15%.
+>>
+>> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+>> ---
+>>   drivers/staging/android/ion/ion_heap.c        | 12 +++++++++++-
+>>   drivers/staging/android/ion/ion_system_heap.c |  2 +-
+>>   2 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+>> index 31db510..9e9caf2 100644
+>> --- a/drivers/staging/android/ion/ion_heap.c
+>> +++ b/drivers/staging/android/ion/ion_heap.c
+>> @@ -16,6 +16,8 @@
+>>   #include <linux/vmalloc.h>
+>>   #include "ion.h"
+>>   
+>> +unsigned long ion_heap_batch = 0;
+>> +
+>>   void *ion_heap_map_kernel(struct ion_heap *heap,
+>>   			  struct ion_buffer *buffer)
+>>   {
+>> @@ -303,7 +305,15 @@ int ion_heap_init_shrinker(struct ion_heap *heap)
+>>   	heap->shrinker.count_objects = ion_heap_shrink_count;
+>>   	heap->shrinker.scan_objects = ion_heap_shrink_scan;
+>>   	heap->shrinker.seeks = DEFAULT_SEEKS;
+>> -	heap->shrinker.batch = 0;
+>> +	heap->shrinker.batch = ion_heap_batch;
+>>   
+>>   	return register_shrinker(&heap->shrinker);
+>>   }
+>> +
+>> +static int __init ion_system_heap_batch_init(char *arg)
+>> +{
+>> +	 ion_heap_batch = memparse(arg, NULL);
+>> +
+>> +	return 0;
+>> +}
+>> +early_param("ion_batch", ion_system_heap_batch_init);
+>> diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+>> index 701eb9f..d249f8d 100644
+>> --- a/drivers/staging/android/ion/ion_system_heap.c
+>> +++ b/drivers/staging/android/ion/ion_system_heap.c
+>> @@ -182,7 +182,7 @@ static int ion_system_heap_shrink(struct ion_heap *heap, gfp_t gfp_mask,
+>>   	if (!nr_to_scan)
+>>   		only_scan = 1;
+>>   
+>> -	for (i = 0; i < NUM_ORDERS; i++) {
+>> +	for (i = NUM_ORDERS - 1; i >= 0; i--) {
+>>   		pool = sys_heap->pools[i];
+>>   
+>>   		if (only_scan) {
+>>
 > 
-> diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-> index c934b3df1f81..46f0078f7a91 100644
-> --- a/drivers/gpu/drm/gma500/framebuffer.c
-> +++ b/drivers/gpu/drm/gma500/framebuffer.c
-> @@ -232,7 +232,7 @@ static int psb_framebuffer_init(struct drm_device *dev,
->  	 * Reject unknown formats, YUV formats, and formats with more than
->  	 * 4 bytes per pixel.
->  	 */
-> -	info = drm_format_info(mode_cmd->pixel_format);
-> +	info = drm_get_format_info(dev, mode_cmd);
->  	if (!info || !info->depth || info->cpp[0] > 4)
->  		return -EINVAL;
->  
-> diff --git a/drivers/gpu/drm/omapdrm/omap_fb.c b/drivers/gpu/drm/omapdrm/omap_fb.c
-> index cfb641363a32..6557b2d6e16e 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_fb.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_fb.c
-> @@ -339,7 +339,7 @@ struct drm_framebuffer *omap_framebuffer_init(struct drm_device *dev,
->  			dev, mode_cmd, mode_cmd->width, mode_cmd->height,
->  			(char *)&mode_cmd->pixel_format);
->  
-> -	format = drm_format_info(mode_cmd->pixel_format);
-> +	format = drm_get_format_info(dev, mode_cmd);
->  
->  	for (i = 0; i < ARRAY_SIZE(formats); i++) {
->  		if (formats[i] == mode_cmd->pixel_format)
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+
+We're in the process of significantly reworking Ion so I
+don't think it makes sense to take these as we work to
+get things out of staging. You can resubmit this later,
+but when you do please split this into two separate
+patches since it's actually two independent changes.
+
+Thanks,
+Laura
 
