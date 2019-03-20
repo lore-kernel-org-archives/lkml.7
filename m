@@ -2,274 +2,148 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E9EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C988FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F21821873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCD32186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dkX+tfoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfCTFfb (ORCPT
+        id S1727705AbfCTFgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:35:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725300AbfCTFfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:35:30 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K5YmWM096123
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:35:29 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbbvnrfg3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:35:29 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 20 Mar 2019 05:35:22 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 05:35:19 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5ZM7r45613304
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 05:35:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4AE9A4054;
-        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40041A4064;
-        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2AB8CA024A;
-        Wed, 20 Mar 2019 16:35:21 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Greg Kurz <groug@kaod.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/5] ocxl: Rename struct link to ocxl_link
-Date:   Wed, 20 Mar 2019 16:34:44 +1100
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190320053448.2098-1-alastair@au1.ibm.com>
-References: <20190313040702.14276-1-alastair@au1.ibm.com>
- <20190320053448.2098-1-alastair@au1.ibm.com>
+        Wed, 20 Mar 2019 01:36:16 -0400
+Received: from mout.gmx.net ([212.227.17.22]:49721 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfCTFgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 01:36:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1553060162;
+        bh=kWBahTr4EBmI1Q7hvCWRCwSa+fuLA6gThCEi1Fh98QE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=dkX+tfoaZrUfdVymlzBqAf1kh73oxrtpFE/lUwfDGYv7By/fC8OQAkWpr37XKUP0R
+         XmEj0r6G2AwoEGL9QCtNURJvnt6voNJvCvjxjMcKu7AfQAPb1G0LaeQRSfGNN5kK22
+         CMhqK735WEKEjVL9yXJPL+PDSEZDMtXgTw8+fj1E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.202] ([217.250.36.4]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MUHbK-1hXOgC229y-00Qx5M; Wed, 20
+ Mar 2019 06:36:02 +0100
+Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
+To:     Tom Psyborg <pozega.tomislav@gmail.com>
+Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190318190557.21599-1-timschumi@gmx.de>
+ <CAKR_QV+wjuOZVfv9awX5bRLYC8xkoAy0h22LSPvL0DX6yg4-yw@mail.gmail.com>
+ <57195909-b18b-8490-e1b8-043ff9727e5a@gmx.de>
+ <CAKR_QVKWbrx2EmcaCBhyuaYRd+T3pFW0i2jVcDZG6=wee=DaMA@mail.gmail.com>
+From:   Tim Schumacher <timschumi@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=timschumi@gmx.de; keydata=
+ mQINBFcuQFEBEADFdq6ifgHlI42LHxPoK3pxL85GeV6TEww5LMnXVMvmi22Q+olTrnqETIvH
+ LYYqIAj5YPpCs9S9ROFi7YqgCneqnyABx7r3MAjfM9Pnvb7LzIZIlAhDcZ799HSJgRmnEoaF
+ 8og/QJmVKnEvSep+gLk97/DPxj/E1KFWgxysTRfuhyivf/ZFl6/oEnyVfZMY5IEx5bNN60tr
+ uA6fjbXitqM1GRep1jG17Q6YrtADuu/DIawjMujqnIYwlZRsyEfvP1ezJCxSYZpm6ox+mEwx
+ wrUPyhs76LyEoiLXCAJko57mBB/OvqCMNuVy8BVPB3UDOI9TiUAkzWUiqayPRrM9khGXQtYn
+ 8gOz3Y4GiBI94iHD/EweSF34Uttm3ELl1cxJtfWTCxjn7shN/xdCJCMWdbHzpjZ7O4wFacs7
+ 1dvb5n0dnIdWCIQGneT8Rfq4tF7wbkHKM26TwijMiRFoxXv+ud4oM7qecsfZfwy4+DAsVghV
+ Sy6jCIkduBPyP2DoNhiT9ZeavLYjdAIaxewqjGhKi8N7Uvd8xMxJeVkkgZQqA3/Aewm52j1n
+ pFiStR3C6394iumBBykc5BH5akcYkA90BjXP7IaRvfrG92abty2zJPQ6LF01/oxbBggMjd/f
+ 9oVhC4eAMoTdIjPQkIj6Elvn9l4fRcVk4Y3KQcgjMVY1lAjZkQARAQABtCFUaW0gU2NodW1h
+ Y2hlciA8dGltc2NodW1pQGdteC5kZT6JAlcEEwEKAEECGwMFCwkIBwMFFQoJCAsFFgIDAQAC
+ HgECF4AFCQcHnSwWIQTMtsAhgfa2/uTeYPwmIHQiLhnCvQUCXFSuzgIZAQAKCRAmIHQiLhnC
+ vbnCD/94ae11DAfgfOpKXfqkAU1mr+/J01773tcX0D1y7VjZ8Y26OJoixndLvU2hSMmAx3lA
+ lmmt+3XR2g1zNiqk7jxEoLqJ79Jt87CxnvVUbZy+fzyq+C+bodAoeFEr3sv4xdabcHR+finr
+ aZLfLFpC7eDrYCQvER18IiD/uUeO9zIX/Ff1wfUfCRHhmmN8+Qmt4CjPSfJoCsZb1Kch6Khr
+ 8zPEbrHxxE6qwRtDDevyz3Y9f+kREHr914hnXyRrwekCc7ckFmYGfDT29rjqVsgx4k19cagA
+ epxqEUONI3s6bIRhhzLXwCAB4Y6G6HNFoK3hBgna3OhIZvoiuUJ5SlWrtyJXb2BPsXcjUHO2
+ NEaaV/iySqx1B6/FKiX8/zJMZmf4doip6abLbTQKLiEwAoAy3Z0gduWO5J6rtjoy42RgsPXv
+ j/cLsrHivOaqZiTVlxE5aeoHdnzQlw/wN979MXEglo9OE0d9LQ2hHFiL5jmZoF1Ahnats9RE
+ CR+XHG4DKrOUI3zvs8a6lwOWAL9kgflPnGx6nMrEp82qIJhkagEaPCyreE32JiD0oz2UyOhU
+ ATvZiwVQ2jBytvOgA6qMqWGdsNQ0O57U7UJJbETJmu5u3McXxunc0IB1tjm7QMdm/lhbYjyi
+ b66OPCuzb/Fp22cMPK+ObDblNk6UpE4aqkKRNGv/rbkCDQRXLkBRARAAoFqgxu6yPL2rp3qo
+ BquCvvkACYD5GZDkAXng2ghhSFgifsmEbSo0UXrxP2FkCP0S9jZ+C4X1j6FYEa1iGeH8TFc5
+ M3o7jsvrUhKcsoF6CzjAQ3KCqD6u0wN+pCmOfQdJEZmuYTwvZPe952mHJzJJ8BSsT26WDY04
+ MOF5jbC5Naao8tO+PUCSZ+djoU+rGfKecH/8ua/rcv6LGcc/1k5R9umBmNmy1pJCcDrGZzg5
+ AXi92Zu4mFGv0XkaReGze6zfxwmSi79j52xcTIi5lV7SVJDkFFWCMqUR6rUFPLZc3YFTUDa+
+ cBNalT90rwqYlq50BFFkGE4Vw34/WyYGcWn7iSy+CFNB0wvQGMclVJSXtPzpv7BzHAK6qnOa
+ 74pkr5QpYXNEgojHjBGGACp/3Tf0c5f4FptbWzzQOCqAV1+XdnfUV3BeGIYfYy+xX0MQQMm6
+ d9nRtvPfO3oOfgts1+H6hGAavw92m84hTdlpZOWaXm+7322ULI5tR4kcov6sMJ4lp6+ZzKId
+ PmdvyBBkLjG6C1TxUjkc3FR4QkVkrDMzNp+GlYFW0LCshF1zuc6cquTOM395oXDtzxM5FQji
+ EAXV1WOlqDYJ+fUkGTHfIkXKuex9zgtB3aqg2kxmlyBoEWOq+5Wo8ltW0xMXbkAT9Env6Xjt
+ qG7Ks8/AwczayJ+aitkAEQEAAYkCPAQYAQoAJgIbDBYhBMy2wCGB9rb+5N5g/CYgdCIuGcK9
+ BQJcVKouBQkHB51dAAoJECYgdCIuGcK9vtkP/2kD6crT3YBVifbbEaOSYDU3UjBsJTHPpIIB
+ gRrffhav/g1CIfqwHM2zertIFPSjFEbg4br3aGKUwM7mUsuzKgj2xrixrkrALOUXbjSTr07o
+ XAgliLLzXL/PHCWfFv53GZPptBblVtGxrd76DX9KeEZYk9fdy6+DHLufsB59h7dnaOswv9Un
+ faMrCd8jhTIfhWXocJCe8a2epZz82cFlx1rd38pkBs2/DDNpGNBeD4qcYZVMhbzpBPDT8RhZ
+ YiTi4Ge485am8r8sNk93M3ewsVfHIA6P3ChQIDJsuEgjiE4jjzJskcjnU/m5qIYy/m5eeJ9P
+ zLHiQaBZIHcZrqSBhEUR7n9QSJJ0oERoZOYfBmCTYtbnGOHHyrhy/STBs/RhUOLBHEXzahSq
+ hSq96S3lliFUgq0D5ADMVbNd5h/WHur//8y4n04aO8CpXgUeE/OJ/0ShS4OzltSRpJrtTXdk
+ iJGcvmZ2wplkVM25rT0i88hU58R4SqXEDGxOB92gH5dr5FMWBXvKzXtksX+x5ktlShdFye2X
+ Z+NRWzsKyM0lEu7YUiWIHn4oidqn43FTrc9I4EqUw5EtDr9aeEmgNYFxGCQUg9yL85uykgZo
+ yZgTz2jxUNaSz0i7LOeOc6G8JMM7GtChNxrDGxvvvOEBXBQZ0WIjPfC4ngYAl3bUV5B/eL1X
+Message-ID: <db5b0b39-525b-3e79-1461-e8d42bfff419@gmx.de>
+Date:   Wed, 20 Mar 2019 06:35:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032005-0008-0000-0000-000002CF644F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032005-0009-0000-0000-0000223B79E2
-Message-Id: <20190320053448.2098-2-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=956 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200048
+In-Reply-To: <CAKR_QVKWbrx2EmcaCBhyuaYRd+T3pFW0i2jVcDZG6=wee=DaMA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:eX3EcL2RmHJoacRInx+KQ/0yYVmJh7ghpRQjx9wvZ6Y+OyrNgGc
+ MK0o4P6ztujRRDgWrQNgZyr5n15XkY0iP1SWEOa2jLukmyWD3Zw3ysX6hhPEyiq5fCZmok1
+ Xjsgf58TknU15+XpI30EkGcKpfszYdyXIklvp8k1rz//DnvX+ATapLLcs7t1749lcedaLQ/
+ 3gUPPB2VzVDIIMgJRwNhQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Tj1UonexgbE=:gPuAA1LEfEfgNkeEJnhf0R
+ LrPN4+zsEIbLu9neZfPfmgqEJLKNeyFO3t/gTBDq4ba+R2Fx8TMB3k8G4ZwKkbjq3C7JT9Uju
+ W6kwsethXPXHFIFfigpXTlvruFyTHgq1Ord1pAngZ6M2paAbAbp0jRc1tdwhDKyq/nuFzqoTp
+ lMf+bS+uLsXVt3z/bT0AKvWbgRwvMYaaJtcIfD7f7O/HVHoGvbWIh8XtIMfQfhJjz2pILGsci
+ jzIhUsFn3TAfVomUB3xlWHfHlkskUoiRS302Q+qt8CCRdJpP0mnfoxdURYUxSFLTx8CFT49kS
+ jhJHfqOCsYMBmlZ/f/1thiz8SMz+yI3x2/pOtZp622kBz8aOKruuiU7Rp8A90zIwY9ghVlZyN
+ dyYzixc930LQvci4OxgiClD/t30Hxjlt+KDb1GJuzoyx6/u27dt+wo9daC3/2pwFJyQWzjuMt
+ zZ0Ku98MAkQ92mMsxoDLI5U6CP8IUGE9sLT2u2Ppd+kN5lNRNG/34SUDR/l+djZIq/VQ//MQU
+ DpiD3gL5bs75uZrdBlb9CrFQmmvzMwpPg2k4CuoNlv9cI5LoS2nHsf7+di+DrKlV+S4HEKh98
+ ljDBpqlKpUE80G63fadhnvxwsZYl/TECO5DGlf3RHakMVLdwgXod+RU3H0bS+l6oBcI/oCqRS
+ jDXbAHgqNbKyHUzUZ08+UpY3NpgT6oj1cPAitduw4P2CKiXc6BlP1maVpmTgiy53U6bo31v7q
+ 3IkJC7f4btbQHnlfTB+ND+bf9erykLw0jTbTjQvJZbah7HkITOe48RtwhP1v0EfXiw2HgnEJ3
+ L0DDutz0VKJ1n4h2WoYCW2KVQZSWE6iMFTvLFhko+xXlj+XYwq/Gtms7eWwqPEPdyKykF5AeV
+ pZOxcIUOasBsyJdnyMV2f0hyijeHs6Hvnfy2YajRdAggLUpnreS5nae19NWQ0d08WK5fya8Fd
+ WBsF+PGbGbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On 20.03.19 00:38, Tom Psyborg wrote:
+> On 19/03/2019, Tim Schumacher <timschumi@gmx.de> wrote:
+>>
+>> The case in where the revision succeeded to read, but it simply
+>> isn't supported by the driver, is untouched and it still prints
+>> the original message.
+>>
+>
+> In that case this change is fine.
+>
+>> I don't know why it fails to read the SREV register in my specific
+>> case (I tracked it down to a WMI command timeout, which seems to
+>> only happen on a Raspberry Pi 3), but having the SREV error message
+>> (which points to the actual issue) instead of the false-positive
+>> "Rev not supported" message would have saved me quite some time that
+>> I spent with debugging the issue, searching for the source of the
+>> wrong value.
+>>
+>
+> Did you try some other device than RPI3 ? I've noticed that on router
+> and laptop while doing some htc fw builds.
+>
 
-The term 'link' is ambiguous (especially when the struct is used for a
-list), so rename it for clarity.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Reviewed-by: Greg Kurz <groug@kaod.org>
----
- drivers/misc/ocxl/file.c |  5 ++---
- drivers/misc/ocxl/link.c | 36 ++++++++++++++++++------------------
- 2 files changed, 20 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-index e6a607488f8a..009e09b7ded5 100644
---- a/drivers/misc/ocxl/file.c
-+++ b/drivers/misc/ocxl/file.c
-@@ -151,10 +151,9 @@ static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
- 		mutex_unlock(&ctx->status_mutex);
- 
- 		if (status == ATTACHED) {
--			int rc;
--			struct link *link = ctx->afu->fn->link;
-+			int rc = ocxl_link_update_pe(ctx->afu->fn->link,
-+				ctx->pasid, ctx->tidr);
- 
--			rc = ocxl_link_update_pe(link, ctx->pasid, ctx->tidr);
- 			if (rc)
- 				return rc;
- 		}
-diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-index d50b861d7e57..8d2690a1a9de 100644
---- a/drivers/misc/ocxl/link.c
-+++ b/drivers/misc/ocxl/link.c
-@@ -76,7 +76,7 @@ struct spa {
-  * limited number of opencapi slots on a system and lookup is only
-  * done when the device is probed
-  */
--struct link {
-+struct ocxl_link {
- 	struct list_head list;
- 	struct kref ref;
- 	int domain;
-@@ -179,7 +179,7 @@ static void xsl_fault_handler_bh(struct work_struct *fault_work)
- 
- static irqreturn_t xsl_fault_handler(int irq, void *data)
- {
--	struct link *link = (struct link *) data;
-+	struct ocxl_link *link = (struct ocxl_link *) data;
- 	struct spa *spa = link->spa;
- 	u64 dsisr, dar, pe_handle;
- 	struct pe_data *pe_data;
-@@ -256,7 +256,7 @@ static int map_irq_registers(struct pci_dev *dev, struct spa *spa)
- 				&spa->reg_tfc, &spa->reg_pe_handle);
- }
- 
--static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
-+static int setup_xsl_irq(struct pci_dev *dev, struct ocxl_link *link)
- {
- 	struct spa *spa = link->spa;
- 	int rc;
-@@ -311,7 +311,7 @@ static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
- 	return rc;
- }
- 
--static void release_xsl_irq(struct link *link)
-+static void release_xsl_irq(struct ocxl_link *link)
- {
- 	struct spa *spa = link->spa;
- 
-@@ -323,7 +323,7 @@ static void release_xsl_irq(struct link *link)
- 	unmap_irq_registers(spa);
- }
- 
--static int alloc_spa(struct pci_dev *dev, struct link *link)
-+static int alloc_spa(struct pci_dev *dev, struct ocxl_link *link)
- {
- 	struct spa *spa;
- 
-@@ -350,7 +350,7 @@ static int alloc_spa(struct pci_dev *dev, struct link *link)
- 	return 0;
- }
- 
--static void free_spa(struct link *link)
-+static void free_spa(struct ocxl_link *link)
- {
- 	struct spa *spa = link->spa;
- 
-@@ -364,12 +364,12 @@ static void free_spa(struct link *link)
- 	}
- }
- 
--static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
-+static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_link)
- {
--	struct link *link;
-+	struct ocxl_link *link;
- 	int rc;
- 
--	link = kzalloc(sizeof(struct link), GFP_KERNEL);
-+	link = kzalloc(sizeof(struct ocxl_link), GFP_KERNEL);
- 	if (!link)
- 		return -ENOMEM;
- 
-@@ -405,7 +405,7 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
- 	return rc;
- }
- 
--static void free_link(struct link *link)
-+static void free_link(struct ocxl_link *link)
- {
- 	release_xsl_irq(link);
- 	free_spa(link);
-@@ -415,7 +415,7 @@ static void free_link(struct link *link)
- int ocxl_link_setup(struct pci_dev *dev, int PE_mask, void **link_handle)
- {
- 	int rc = 0;
--	struct link *link;
-+	struct ocxl_link *link;
- 
- 	mutex_lock(&links_list_lock);
- 	list_for_each_entry(link, &links_list, list) {
-@@ -442,7 +442,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_setup);
- 
- static void release_xsl(struct kref *ref)
- {
--	struct link *link = container_of(ref, struct link, ref);
-+	struct ocxl_link *link = container_of(ref, struct ocxl_link, ref);
- 
- 	list_del(&link->list);
- 	/* call platform code before releasing data */
-@@ -452,7 +452,7 @@ static void release_xsl(struct kref *ref)
- 
- void ocxl_link_release(struct pci_dev *dev, void *link_handle)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 
- 	mutex_lock(&links_list_lock);
- 	kref_put(&link->ref, release_xsl);
-@@ -488,7 +488,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
- 		void *xsl_err_data)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 	struct spa *spa = link->spa;
- 	struct ocxl_process_element *pe;
- 	int pe_handle, rc = 0;
-@@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
- 
- int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 	struct spa *spa = link->spa;
- 	struct ocxl_process_element *pe;
- 	int pe_handle, rc;
-@@ -594,7 +594,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
- 
- int ocxl_link_remove_pe(void *link_handle, int pasid)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 	struct spa *spa = link->spa;
- 	struct ocxl_process_element *pe;
- 	struct pe_data *pe_data;
-@@ -666,7 +666,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_remove_pe);
- 
- int ocxl_link_irq_alloc(void *link_handle, int *hw_irq, u64 *trigger_addr)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 	int rc, irq;
- 	u64 addr;
- 
-@@ -687,7 +687,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_irq_alloc);
- 
- void ocxl_link_free_irq(void *link_handle, int hw_irq)
- {
--	struct link *link = (struct link *) link_handle;
-+	struct ocxl_link *link = (struct ocxl_link *) link_handle;
- 
- 	pnv_ocxl_free_xive_irq(hw_irq);
- 	atomic_inc(&link->irq_available);
--- 
-2.20.1
-
+I don't have that many other devices to test, but everything worked
+fine on both of my PCs and it was fine on the RPi3 that was running
+a raspbian-based kernel instead of mainline.
