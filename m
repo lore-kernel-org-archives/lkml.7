@@ -2,152 +2,99 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70003C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5495C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4962184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553107963;
-	bh=HUxD4zz8Zf+WY2iSBbRgjfg2I0iw9IDkAFSzHi5UwbM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qNF44G2J96sJK+pLXgZsnqKTThwjQ21h5NLg46b45GGmj/ig7hNzvLdtzHx8P2JPF
-	 Bf0BWgr714SY6WAME4h+7bme3Sjq4xLI7neH0SQLq6/IBoQedR7nevyv+8rJZU9NjH
-	 VrB7eGVxzSBAgcz6voevbrNII72hCI2gEFJKS+pA=
+	by mail.kernel.org (Postfix) with ESMTP id A3EBC2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfCTSwl (ORCPT
+        id S1727705AbfCTSw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfCTSwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:52:39 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CAF62146E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553107958;
-        bh=HUxD4zz8Zf+WY2iSBbRgjfg2I0iw9IDkAFSzHi5UwbM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0coyyM/RhxAfI7QyrQoNtZcSaFX+1PKfm8ZtUTnCUTbpoeWM+5zvMmhsCx1J5+TCC
-         lFqIVy++YNJNaUWAJCaS2JDQqHvDnnyqfAtkCXmBUh4b86ovIQFdKV0hHo2YN0xG9J
-         PClAxccVOq0TdIE13GtfH7QhDQG59xdr4qx+3gdM=
-Received: by mail-wr1-f44.google.com with SMTP id g12so3986162wrm.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:52:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAV4tLqh3dyGt/EHsrdRla/gtTJsB2HcUqpW71QHIV9plJB2ri3p
-        Tu8Aq/Tq5HYwJQ3Vw8qO273G1++yg+0T+7tMKkQ53A==
-X-Google-Smtp-Source: APXvYqz+3EH7OAApLS1c3Ky5zJprm9XIhGC4yft3gC9LcO7BNV9y3r8KWkfsUvGPzeeN1MoMmQNqJWkPB9IfWDq2mhc=
-X-Received: by 2002:adf:e743:: with SMTP id c3mr9313755wrn.330.1553107956638;
- Wed, 20 Mar 2019 11:52:36 -0700 (PDT)
+        Wed, 20 Mar 2019 14:52:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40914 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfCTSw4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:52:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u9so2438352pgo.7;
+        Wed, 20 Mar 2019 11:52:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o3gjSzDbZy8TGgUbY1hplnA38xjEf5kt0+ATtlYXGkQ=;
+        b=IVPkHH2O5SLRqjCt08twRjGdoOmB0CKBBv2/bAxwgEAOi+AN6xtdH9RcJ9JAtVN2It
+         zpOqsZYsDpco1w8oPnAA6XQHponiG0lIjJ5vHf7hm5B4wubC/QaMnbtGVh2Twcoj0Aei
+         Kg+DdN5CbZ+bE1+eXeK/ZdLVLV0qL5FvShoC3NqUr2VNaXXdKWKhru2uHG1VJ53OFsED
+         5tOj6a2P24TQo1pOTKYZnK61LTI0/20KFu/wU25O2Sun1LSsNEdiIBSAtSOHjrP1mku0
+         lRSAONB+sX0sbbu8+ELZWH1Su1p6dqF0UknPFXnTYDsJjLIxiuNxyj1wwmCfckPF0AIH
+         G5gg==
+X-Gm-Message-State: APjAAAW/LLJyQO9JUocr2Ae34tNGVZIEvDWN7KCgtrJDQYWpRutRrcuA
+        9KgoACvSgNu5U4KReifLkaNoso9Y
+X-Google-Smtp-Source: APXvYqyVtY1KfZxna9aMM3PcNny3diMbUjPRe/DzZiuefUN3g735V+/p8Q3PgJlkLlRnPcvnAm+1lg==
+X-Received: by 2002:a63:c242:: with SMTP id l2mr8839587pgg.138.1553107975560;
+        Wed, 20 Mar 2019 11:52:55 -0700 (PDT)
+Received: from [172.20.40.56] (50-207-206-41-static.hfc.comcastbusiness.net. [50.207.206.41])
+        by smtp.gmail.com with ESMTPSA id v2sm4258202pfg.118.2019.03.20.11.52.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 11:52:54 -0700 (PDT)
+Subject: Re: [PATCH 2/8] blk-mq: change the method of iterating busy tags of a
+ request_queue
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
+Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
+        bvanassche@acm.org, keith.busch@intel.com, jsmart2021@gmail.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <bf563d09-c243-5bf5-ab3e-0fa2bd583edd@grimberg.me>
+Date:   Wed, 20 Mar 2019 11:52:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 20 Mar 2019 11:52:25 -0700
-X-Gmail-Original-Message-ID: <CALCETrVKAUK-jZ7Knp7RetTL055p3iK1D8Wyr6=hPq5HkePkFg@mail.gmail.com>
-Message-ID: <CALCETrVKAUK-jZ7Knp7RetTL055p3iK1D8Wyr6=hPq5HkePkFg@mail.gmail.com>
-Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave()
- to wrap SGX enclave transitions
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 11:30 AM Xing, Cedric <cedric.xing@intel.com> wrote=
-:
->
-> > +/**
-> > + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-> > + *
-> > + * %eax:        ENCLU leaf, must be EENTER or ERESUME
-> > + * %rbx:        TCS, must be non-NULL
-> > + * %rcx:        Optional pointer to 'struct sgx_enclave_exception'
-> > + *
-> > + * Return:
-> > + *  0 on a clean entry/exit to/from the enclave
-> > + *  -EINVAL if ENCLU leaf is not allowed or if TCS is NULL
-> > + *  -EFAULT if ENCLU or the enclave faults
-> > + *
-> > + * Note that __vdso_sgx_enter_enclave() is not compliant with the x86-
-> > 64 ABI.
-> > + * All registers except RSP must be treated as volatile from the
-> > +caller's
-> > + * perspective, including but not limited to GPRs, EFLAGS.DF, MXCSR,
-> > FCW, etc...
-> > + * Conversely, the enclave being run must preserve the untrusted RSP
-> > and stack.
->
-> By requiring preservation of RSP at both AEX and EEXIT, this precludes th=
-e possibility of using the untrusted stack as temporary storage by enclaves=
-. While that looks reasonable at first glance, I'm afraid it isn't the case=
- in reality. The untrusted stack is inarguably the most convenient way for =
-data exchange between an enclave and its enclosing process, and is in fact =
-being used for that purpose by almost all existing enclaves to date. Given =
-the expectation that this API will be used by all future SGX application, i=
-t looks unwise to ban the most convenient and commonly used approach for da=
-ta exchange.
 
-I'm going to go out on a limb and say that this is a good thing.
 
-Using the untrusted stack as a way to exchange data is very
-convenient, but that doesn't mean it's a good idea.  Here are some
-problems it causes:
+On 3/15/19 1:57 AM, Jianchao Wang wrote:
+> tags->rqs[] will not been cleaned when free driver tag and there
+> is a window between get driver tag and write tags->rqs[], so we
+> may see stale rq in tags->rqs[] which may have been freed, as
+> following case,
+> blk_mq_get_request         blk_mq_queue_tag_busy_iter
+>    -> blk_mq_get_tag
+>                               -> bt_for_each
+>                                 -> bt_iter
+>                                   -> rq = taags->rqs[]
+>                                   -> rq->q
+>    -> blk_mq_rq_ctx_init
+>      -> data->hctx->tags->rqs[rq->tag] = rq;
+> 
+> To fix this, the blk_mq_queue_tag_busy_iter is changed in this
+> patch to use tags->static_rqs[] instead of tags->rqs[]. We have
+> to identify whether there is a io scheduler attached to decide
+> to use hctx->tags or hctx->sched_tags. And we will try to get a
+> non-zero q_usage_counter before that, so it is safe to access
+> them. Add 'inflight' parameter to determine to iterate in-flight
+> requests or just busy tags. A correction here is that
+> part_in_flight should count the busy tags instead of rqs that
+> have got driver tags.
 
- - It prevents using a normal function to wrap enclave entry (as we're
-seeing with this patch set).
+IMO, instead of this parameter, add a wrapper like
+blk_mq_queue_tag_inflight_iter() or keep the parameter out until
+we actually have a user that calls it for busy and not inflight.
 
- - It makes quite a few unfortunate assumptions about the layout of
-the untrusted stack.  It assumes that the untrusted stack is
-arbitrarily expandable, which is entirely untrue in languages like Go.
-It assumes that the untrusted stack isn't further constrained by
-various CFI mechanisms (e.g. CET), and, as of last time I checked, the
-interaction between CET and SGX was still not specified.  It also
-assumes that the untrusted stack doesn't have ABI-imposed layout
-restrictions related to unwinding, and, as far as I know, this means
-that current enclaves with current enclave runtimes can interact quite
-poorly with debuggers, exception handling, and various crash dumping
-technologies.
-
- - It will make it quite unpleasant to call into an enclave in a
-coroutine depending on how the host untrusted runtime implements
-coroutines.
-
-So I think it's a *good* thing if the effect is to make enclave SDKs
-change their memory management so that untrusted buffers are
-explicitly supplied by the host runtime.  Honestly, I would have much
-preferred if the architecture did not give the enclave access to RSP
-and RBP at all.  (And, for that matter, RIP.)
+Other than that, I think that iterating over static_rqs is a good
+solution to the problem described.
