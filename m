@@ -2,396 +2,650 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2D8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9F7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3C2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LUTjayQS"
+	by mail.kernel.org (Postfix) with ESMTP id 253C72184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfCTISd (ORCPT
+        id S1727814AbfCTITO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:18:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43511 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfCTISc (ORCPT
+        Wed, 20 Mar 2019 04:19:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51191 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfCTITO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:18:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d17so1621682wre.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zNSEjT5R1wgFC31DWWn380G0jbuTgx5ZPt4C6o89+Po=;
-        b=LUTjayQSyQFaw+u03MiWndNtuCiDM3+S1tWRq8Logugkywc31EVAkpVb2j5sCAq4i1
-         e8JVVw4h7cadDdAidI9/MIDYj6GX0io7Ztsroknvi3B9OM3IRXJScirkrKBPsPFXby2Y
-         mfB3gzpnax80ObEwCFsKC7J2DX3F9L7uzdAVMUZwR6ReLfEWuU1Js7A+oBEoedMZFMWi
-         BI9duAXWSdbJZi8Wli43n2a+7siMBsD1JlypzGpoh0OK/gCx71XxNFdPA7jokPGUZ3uE
-         HMGsYxWF7PJiuB87TX5JFJsG6trwonyvF53P7lApnn8FTqzxX30Vl2NdlPk/d7NoJ51n
-         Oohw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zNSEjT5R1wgFC31DWWn380G0jbuTgx5ZPt4C6o89+Po=;
-        b=PfymV3NtiNkxVFIW1kNRv5cBy4B6qGPgPigz2hlsTK5o14HFYmHULpyR1A6ADa1XgT
-         zNVogXKyVD/FAry9wQmnK7MZao3XvULXUM9ucEckEu0b1n8Utt/d5g/s74cWW+jPm7rN
-         JoUwXsIg/YHzU0ab7m+spHm8u/+rY/ffmcddPCYaAQ2Jt3p0bdvub8bg3n5tBjLds8wc
-         f58jUr6bSYvWJcLpZcMwtuxUPCDqaQ79FGTz5ZWLpzMqRFH7QWnOSHnthb7QPyakQidG
-         Yry4UWRgZdS6FZkSE0j5+K7NPtOYzivPZKK+KsUz4xUTQ8PAVJw95nVsaZBwBfdf05qR
-         3dKw==
-X-Gm-Message-State: APjAAAWpASBje346VDR0MG0FHtkS5pNVAsOnkOzhaihoi9HL3mOQk8JG
-        d5Vq/XZpIqmxIlSt3uWsoRAbhRWiO1IfJVl6
-X-Google-Smtp-Source: APXvYqyiUIai+eALfU7Xl435xIlJQAoCA41cJbKYw0JkZq0D4sW/LUnQox+kKZ7DvgVjb/2mqissYw==
-X-Received: by 2002:a5d:54c4:: with SMTP id x4mr7853794wrv.296.1553069909445;
-        Wed, 20 Mar 2019 01:18:29 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id u7sm1201862wrn.44.2019.03.20.01.18.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 01:18:28 -0700 (PDT)
-Subject: Re: [PATCH 4/4] clk: meson: meson8b: add the VPU clock trees
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
- <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <0439a93e-8338-efca-9a7d-8285710400fb@baylibre.com>
-Date:   Wed, 20 Mar 2019 09:18:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 04:19:14 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h6WR8-0001N6-F3; Wed, 20 Mar 2019 09:18:58 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h6WR6-0003NO-4n; Wed, 20 Mar 2019 09:18:56 +0100
+Date:   Wed, 20 Mar 2019 09:18:56 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
+Message-ID: <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
+References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
+ <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2019 22:51, Martin Blumenstingl wrote:
-> The VPU clock tree is slightly different on all three supported SoCs:
-> 
-> Meson8 only has an input mux (which chooses between "fclk_div4",
-> "fclk_div3", "fclk_div5" and "fclk_div7"), a divider and a gate.
-> 
-> Meson8b has two VPU clock trees, each with an input mux (using the same
-> parents as the input mux on Meson8), divider and a gates. The final VPU
-> clock is a glitch-free mux which chooses between VPU_1 and VPU_2.
-> 
-> Meson8m2 uses a similar clock tree as Meson8b but the last input clock
-> is different: instead of using "fclk_div7" as input Meson8m2 uses
-> "gp_pll". This was probably done in hardware to improve the accuracy of
-> the clock because fclk_div7 gives us 2550MHz / 7 = 364.286MHz while
-> GP_PLL can achieve 364.0MHz.
+Hello,
 
-This could be a reason, but they only implement frequency scaling for the VPU
-in the recent 4.9 kernel releases... but we should also implement it upstream
-once we solve how to switch these dual clocks in a clean fashion.
-
+On Wed, Mar 20, 2019 at 05:06:21AM +0000, Anson Huang wrote:
+> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
+> inside, it can support multiple PWM channels, all the channels
+> share same counter and period setting, but each channel can
+> configure its duty and polarity independently.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> There are several TPM modules in i.MX7ULP, the number of channels
+> in TPM modules are different, it can be read from each TPM module's
+> PARAM register.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/clk/meson/meson8b.c | 167 ++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/meson8b.h |   9 +-
->  2 files changed, 175 insertions(+), 1 deletion(-)
+> Changes since V6:
+> 	- merge "config" and "enable" functions into ONE function pwm_imx_tpm_apply_hw;
+> 	- save computation for confiuring counter, the "round_state" function will return
+> 	  the registers value directly;
+> 	- improve the logic in .apply;
+> 	- return error when there is still PWM active during suspend callback.
+> ---
+>  drivers/pwm/Kconfig       |  11 ++
+>  drivers/pwm/Makefile      |   1 +
+>  drivers/pwm/pwm-imx-tpm.c | 428 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 440 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-imx-tpm.c
 > 
-> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-> index 0d08f1ef7af8..8e091c2d10e6 100644
-> --- a/drivers/clk/meson/meson8b.c
-> +++ b/drivers/clk/meson/meson8b.c
-> @@ -1761,6 +1761,147 @@ static struct clk_regmap meson8m2_gp_pll = {
->  	},
->  };
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 54f8238..3ea0391 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -210,6 +210,17 @@ config PWM_IMX27
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-imx27.
 >  
-> +static const char * const mmeson8b_vpu_0_1_parent_names[] = {
-> +	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7"
-> +};
+> +config PWM_IMX_TPM
+> +	tristate "i.MX TPM PWM support"
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	depends on HAVE_CLK && HAS_IOMEM
+> +	help
+> +	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
+> +	  name is Low Power Timer/Pulse Width Modulation Module.
 > +
-> +static const char * const mmeson8m2_vpu_0_1_parent_names[] = {
-> +	"fclk_div4", "fclk_div3", "fclk_div5", "gp_pll"
-> +};
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-imx-tpm.
 > +
-> +static struct clk_regmap meson8b_vpu_0_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 9,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+>  	depends on MACH_INGENIC
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 448825e..c368599 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
+>  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+>  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+>  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+> +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+>  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+>  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+>  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> new file mode 100644
+> index 0000000..02403d0
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-imx-tpm.c
+> @@ -0,0 +1,428 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2018-2019 NXP.
+> + *
+> + * Limitations:
+> + * - The TPM counter and period counter are shared between
+> + *   multiple channels, so all channels should use same period
+> + *   settings.
+> + */
 > +
-> +static struct clk_regmap meson8m2_vpu_0_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 9,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/log2.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
 > +
-> +static struct clk_regmap meson8b_vpu_0_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.shift = 0,
-> +		.width = 7,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_0_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vpu_0_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
+> +#define PWM_IMX_TPM_PARAM	0x4
+> +#define PWM_IMX_TPM_GLOBAL	0x8
+> +#define PWM_IMX_TPM_SC		0x10
+> +#define PWM_IMX_TPM_CNT		0x14
+> +#define PWM_IMX_TPM_MOD		0x18
+> +#define PWM_IMX_TPM_CnSC(n)	(0x20 + (n) * 0x8)
+> +#define PWM_IMX_TPM_CnV(n)	(0x24 + (n) * 0x8)
 > +
-> +static struct clk_regmap meson8b_vpu_0 = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.bit_idx = 8,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vpu_0",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vpu_0_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
+> +#define PWM_IMX_TPM_PARAM_CHAN			GENMASK(7, 0)
 > +
-> +static struct clk_regmap meson8b_vpu_1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 25,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8m2_vpu_1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 0x3,
-> +		.shift = 25,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
-> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_1_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.shift = 16,
-> +		.width = 7,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu_1_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vpu_1_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu_1 = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.bit_idx = 24,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vpu_1",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vpu_1_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap meson8b_vpu = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VPU_CLK_CNTL,
-> +		.mask = 1,
-> +		.shift = 31,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vpu",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = (const char *[]){ "vpu_0", "vpu_1" },
-> +		.num_parents = 2,
-> +		.flags = CLK_SET_RATE_NO_REPARENT,
-> +	},
-> +};
-> +
->  /* Everything Else (EE) domain gates */
->  
->  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-> @@ -2024,6 +2165,9 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
->  		[CLKID_MALI_0_SEL]	    = &meson8b_mali_0_sel.hw,
->  		[CLKID_MALI_0_DIV]	    = &meson8b_mali_0_div.hw,
->  		[CLKID_MALI]		    = &meson8b_mali_0.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2210,6 +2354,13 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
->  		[CLKID_MALI_1_DIV]	    = &meson8b_mali_1_div.hw,
->  		[CLKID_MALI_1]		    = &meson8b_mali_1.hw,
->  		[CLKID_MALI]		    = &meson8b_mali.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
-> +		[CLKID_VPU_1_SEL]	    = &meson8b_vpu_1_sel.hw,
-> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
-> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2398,6 +2549,13 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
->  		[CLKID_MALI]		    = &meson8b_mali.hw,
->  		[CLKID_GP_PLL_DCO]	    = &meson8m2_gp_pll_dco.hw,
->  		[CLKID_GP_PLL]		    = &meson8m2_gp_pll.hw,
-> +		[CLKID_VPU_0_SEL]	    = &meson8m2_vpu_0_sel.hw,
-> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
-> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
-> +		[CLKID_VPU_1_SEL]	    = &meson8m2_vpu_1_sel.hw,
-> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
-> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
-> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
->  		[CLK_NR_CLKS]		    = NULL,
->  	},
->  	.num = CLK_NR_CLKS,
-> @@ -2562,6 +2720,15 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
->  	&meson8b_mali,
->  	&meson8m2_gp_pll_dco,
->  	&meson8m2_gp_pll,
-> +	&meson8b_vpu_0_sel,
-> +	&meson8m2_vpu_0_sel,
-> +	&meson8b_vpu_0_div,
-> +	&meson8b_vpu_0,
-> +	&meson8b_vpu_1_sel,
-> +	&meson8m2_vpu_1_sel,
-> +	&meson8b_vpu_1_div,
-> +	&meson8b_vpu_1,
-> +	&meson8b_vpu,
->  };
->  
->  static const struct meson8b_clk_reset_line {
-> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-> index a45f7102c558..e775f91ccce9 100644
-> --- a/drivers/clk/meson/meson8b.h
-> +++ b/drivers/clk/meson/meson8b.h
-> @@ -35,6 +35,7 @@
->  #define HHI_VID_DIVIDER_CNTL		0x198 /* 0x66 offset in data sheet */
->  #define HHI_SYS_CPU_CLK_CNTL0		0x19c /* 0x67 offset in data sheet */
->  #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
-> +#define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
->  #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
->  #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
->  #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
-> @@ -149,8 +150,14 @@
->  #define CLKID_MALI_1		180
->  #define CLKID_GP_PLL_DCO	181
->  #define CLKID_GP_PLL		182
-> +#define CLKID_VPU_0_SEL		183
-> +#define CLKID_VPU_0_DIV		184
-> +#define CLKID_VPU_0		185
-> +#define CLKID_VPU_1_SEL		186
-> +#define CLKID_VPU_1_DIV		187
-> +#define CLKID_VPU_1		189
->  
-> -#define CLK_NR_CLKS		183
-> +#define CLK_NR_CLKS		191
->  
->  /*
->   * include the CLKID and RESETID that have
-> 
+> +#define PWM_IMX_TPM_SC_PS			GENMASK(2, 0)
+> +#define PWM_IMX_TPM_SC_CMOD			GENMASK(4, 3)
+> +#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	BIT(3)
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	FIELD_PREP(PWM_IMX_TPM_SC_CMOD, 1)
+
+?
+
+> +#define PWM_IMX_TPM_SC_CPWMS			BIT(5)
+> +
+> +#define PWM_IMX_TPM_CnSC_CHF	BIT(7)
+> +#define PWM_IMX_TPM_CnSC_MSB	BIT(5)
+> +#define PWM_IMX_TPM_CnSC_MSA	BIT(4)
+> +
+> +/*
+> + * The reference manual describes this field as two separate bits. The
+> + * samantic of the two bits isn't orthogonal though, so they are treated
+> + * together as a 2-bit field here.
+> + */
+> +#define PWM_IMX_TPM_CnSC_ELS	GENMASK(3, 2)
+> +#define PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED	0x1
+> +
+> +#define PWM_IMX_TPM_MOD_MOD	GENMASK(15, 0)
+> +
+> +struct imx_tpm_pwm_chip {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	struct mutex lock;
+> +	u32 user_count;
+> +	u32 enable_count;
+> +	u32 real_period;
+> +};
+> +
+> +struct imx_tpm_pwm_param {
+> +	u8 prescale;
+> +	u32 mod;
+> +};
+> +
+> +static inline struct imx_tpm_pwm_chip *to_imx_tpm_pwm_chip(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct imx_tpm_pwm_chip, chip);
+> +}
+> +
+> +static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
+> +				   struct imx_tpm_pwm_param *p,
+> +				   struct pwm_state *state,
+> +				   struct pwm_state *real_state)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +	u32 rate, prescale, period_count, clock_unit;
+> +	u64 tmp;
+> +
+> +	rate = clk_get_rate(tpm->clk);
+> +	tmp = (u64)state->period * rate;
+> +	clock_unit = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
+> +	if (clock_unit <= PWM_IMX_TPM_MOD_MOD) {
+> +		prescale = 0;
+> +	} else {
+> +		prescale = roundup_pow_of_two(clock_unit);
+> +		prescale = ilog2(prescale) - 16;
+
+This 16 should be a define to make it obvious where it comes from.
+
+Maybe use:
+
+	#define PWM_IMX_TPM_MOD_WIDTH	16
+	#define PWM_IMX_TPM_MOD_MOD	GENMASK(PWM_IMX_TPM_MOD_WIDTH - 1, 0)
+
+?
+
+If clock_unit happens to be 0x10000, we end up with prescale = 0 which
+is wrong. I think we need:
+
+	} else {
+		prescale = ilog2(clock_unit) + 1 - PWM_IMX_TPM_MOD_WIDTH;
+
+without the roundup.
+
+> +	}
+> +
+> +	if ((!FIELD_FIT(PWM_IMX_TPM_SC_PS, prescale)))
+> +		return -ERANGE;
+> +	p->prescale = prescale;
+> +
+> +	period_count = (clock_unit + ((1 << prescale) >> 1)) >> prescale;
+> +	if (period_count > PWM_IMX_TPM_MOD_MOD)
+> +		return -ERANGE;
+
+This check (together with the right way to calculate prescale) is
+theoretically superflous. period_count cannot be bigger than
+PWM_IMX_TPM_MOD_MOD. I'd either drop that check or add a scary warning
+to make people hitting this report the respective parameters.
+
+> +	p->mod = period_count;
+> +
+> +	/* calculate real period HW can support */
+> +	tmp = (u64)period_count << prescale;
+> +	tmp *= NSEC_PER_SEC;
+> +	real_state->period = DIV_ROUND_CLOSEST_ULL(tmp, rate);
+> +
+> +	/*
+> +	 * if eventually the PWM output is LOW, either
+> +	 * duty cycle is 0 or status is disabled, need
+> +	 * to make sure the output pin is LOW.
+
+s/LOW/inactive/, then it's also true for inversed polarity.
+
+> +	 */
+> +	if (!state->enabled)
+> +		real_state->duty_cycle = 0;
+> +	else
+> +		real_state->duty_cycle = state->duty_cycle;
+> +
+> +	real_state->polarity = state->polarity;
+> +	real_state->enabled = state->enabled;
+> +
+> +	return 0;
+> +}
+> +
+> +static void pwm_imx_tpm_config_counter(struct pwm_chip *chip,
+> +				       struct imx_tpm_pwm_param p)
+
+Please pass p as a pointer. I think pwm_imx_tpm_setup_period is a better
+name here.
+
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +	u32 val, saved_cmod;
+> +
+> +	/* make sure counter is disabled for programming prescale */
+> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
+> +	saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
+> +	if (saved_cmod) {
+> +		val &= ~PWM_IMX_TPM_SC_CMOD;
+> +		writel(val, tpm->base + PWM_IMX_TPM_SC);
+
+I thought we agreed on not stopping the counter if the PS field isn't
+changed?
+
+> +	}
+> +
+> +	/* set TPM counter prescale */
+> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
+
+val already holds this register value, no need to reread.
+
+> +	val &= ~PWM_IMX_TPM_SC_PS;
+> +	val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p.prescale);
+> +	writel(val, tpm->base + PWM_IMX_TPM_SC);
+> +
+> +	/*
+> +	 * set period count: according to RM, the MOD register is
+> +	 * updated immediately after CMOD[1:0] = 2b'00 above
+> +	 */
+
+So the current period isn't completed? That's wrong.
+
+> +	writel(p.mod, tpm->base + PWM_IMX_TPM_MOD);
+> +
+> +	/* restore the clock mode if necessary */
+> +	if (saved_cmod) {
+> +		val = readl(tpm->base + PWM_IMX_TPM_SC);
+> +		val |= FIELD_PREP(PWM_IMX_TPM_SC_CMOD, saved_cmod);
+> +		writel(val, tpm->base + PWM_IMX_TPM_SC);
+> +	}
+> +}
+> +
+> +static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+> +				  struct pwm_device *pwm,
+> +				  struct pwm_state *state)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +	u32 rate, val;
+> +	u64 tmp;
+> +
+> +	/* get period */
+> +	state->period = tpm->real_period;
+> +
+> +	/* get duty cycle */
+> +	rate = clk_get_rate(tpm->clk);
+> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
+> +	val = FIELD_GET(PWM_IMX_TPM_SC_PS, val);
+> +	tmp = readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> +	tmp *= (1 << val) * NSEC_PER_SEC;
+
+"prescale" would be a better name here than "val". As in the previous
+review round: Don't multiply by (1 << something).
+
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
+> +
+> +	/* get polarity */
+> +	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> +	if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ==
+> +	    PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED)
+> +		state->polarity = PWM_POLARITY_INVERSED;
+> +	else
+> +		/*
+> +		 * Assume reserved values (2b00 and 2b11) to yield
+> +		 * normal polarity.
+> +		 */
+> +		state->polarity = PWM_POLARITY_NORMAL;
+> +
+> +	/* get channel status */
+> +	state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
+> +}
+> +
+> +static void pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
+> +				 struct pwm_device *pwm,
+> +				 struct pwm_state state)
+
+Please pass a the struct pwm_state as a pointer, not as a value.
+
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +	struct pwm_state c;
+> +	u32 val, sc_val;
+> +	u64 tmp;
+> +
+> +	pwm_imx_tpm_get_state(chip, pwm, &c);
+> +
+> +	if (state.duty_cycle != c.duty_cycle) {
+> +		/* set duty counter */
+> +		tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
+> +		tmp *= state.duty_cycle;
+> +		val = DIV_ROUND_CLOSEST_ULL(tmp, state.period);
+> +		writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
+> +	}
+> +
+> +	if (state.enabled != c.enabled) {
+
+This is wrong. If the PWM was running (c.enabled == true) and you are
+supposed to disable (state.enabled == false) you enable the hardware
+once more.
+
+> +		/*
+> +		 * set polarity (for edge-aligned PWM modes)
+> +		 *
+> +		 * ELS[1:0] = 2b10 yields normal polarity behaviour,
+> +		 * ELS[1:0] = 2b01 yields inversed polarity.
+> +		 * The other values are reserved.
+> +		 *
+> +		 * polarity settings will enabled/disable output status
+> +		 * immediately, so if the channel is disabled, need to
+> +		 * make sure MSA/MSB/ELS are set to 0 which means channel
+> +		 * disabled.
+> +		 */
+> +		val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> +		val &= ~(PWM_IMX_TPM_CnSC_ELS | PWM_IMX_TPM_CnSC_MSA |
+> +			 PWM_IMX_TPM_CnSC_MSB);
+> +		sc_val = readl(tpm->base + PWM_IMX_TPM_SC);
+> +		if (state.enabled) {
+> +			val |= PWM_IMX_TPM_CnSC_MSB;
+> +			val |= (state.polarity == PWM_POLARITY_NORMAL) ?
+> +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
+> +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
+
+Introduce PWM_IMX_TPM_CnSC_ELS_POLARITY_NORMAL and use it together with
+PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED here. If you put the FIELD_PREP
+into the definition the line doesn't get excessively long.
+
+Maybe also add
+
+	#define PWM_IMX_TPM_CnSC_ELS_INACTIVE FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0)
+
+?
+
+> +			if (++tpm->enable_count == 1) {
+> +				/* start TPM counter */
+> +				sc_val |= PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
+> +				writel(sc_val, tpm->base + PWM_IMX_TPM_SC);
+> +			}
+> +		} else {
+> +			if (--tpm->enable_count == 0) {
+> +				/* stop TPM counter */
+> +				sc_val &= ~PWM_IMX_TPM_SC_CMOD;
+> +				writel(sc_val, tpm->base + PWM_IMX_TPM_SC);
+> +			}
+> +		}
+> +		writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> +	}
+> +}
+> +
+> +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
+> +			      struct pwm_device *pwm,
+> +			     struct pwm_state *state)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +	struct imx_tpm_pwm_param param;
+> +	struct pwm_state real_state;
+> +	int ret;
+> +
+> +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&tpm->lock);
+> +
+> +	/*
+> +	 * TPM counter is shared by multiple channels, so
+> +	 * prescale and period can NOT be modified when
+> +	 * there are multiple channels in use with different
+> +	 * period settings.
+> +	 */
+> +	if (real_state.period != tpm->real_period) {
+> +		if (tpm->user_count > 1) {
+> +			ret = -EBUSY;
+> +			goto exit;
+> +		}
+> +
+> +		pwm_imx_tpm_config_counter(chip, param);
+> +		tpm->real_period = real_state.period;
+> +	}
+
+Maybe add a comment that this could still be optimized. For example if
+pwm_imx_tpm_round_state returned prescale = 5 but prescale is currently
+6, you might still be able to configure
+
+> +
+> +	pwm_imx_tpm_apply_hw(chip, pwm, real_state);
+> +
+> +exit:
+> +	mutex_unlock(&tpm->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int pwm_imx_tpm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +
+> +	mutex_lock(&tpm->lock);
+> +	tpm->user_count++;
+> +	mutex_unlock(&tpm->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static void pwm_imx_tpm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> +
+> +	mutex_lock(&tpm->lock);
+> +	tpm->user_count--;
+> +	mutex_unlock(&tpm->lock);
+> +}
+> +
+> +static const struct pwm_ops imx_tpm_pwm_ops = {
+> +	.request = pwm_imx_tpm_request,
+> +	.free = pwm_imx_tpm_free,
+> +	.get_state = pwm_imx_tpm_get_state,
+> +	.apply = pwm_imx_tpm_apply,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int pwm_imx_tpm_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm;
+> +	int ret;
+> +	u32 val;
+> +
+> +	tpm = devm_kzalloc(&pdev->dev, sizeof(*tpm), GFP_KERNEL);
+> +	if (!tpm)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, tpm);
+> +
+> +	tpm->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(tpm->base))
+> +		return PTR_ERR(tpm->base);
+> +
+> +	tpm->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(tpm->clk)) {
+> +		ret = PTR_ERR(tpm->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev,
+> +				"failed to get PWM clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(tpm->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"failed to prepare or enable clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	tpm->chip.dev = &pdev->dev;
+> +	tpm->chip.ops = &imx_tpm_pwm_ops;
+> +	tpm->chip.base = -1;
+> +	tpm->chip.of_xlate = of_pwm_xlate_with_flags;
+> +	tpm->chip.of_pwm_n_cells = 3;
+> +
+> +	/* get number of channels */
+> +	val = readl(tpm->base + PWM_IMX_TPM_PARAM);
+> +	tpm->chip.npwm = FIELD_GET(PWM_IMX_TPM_PARAM_CHAN, val);
+> +
+> +	mutex_init(&tpm->lock);
+> +
+> +	ret = pwmchip_add(&tpm->chip);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+> +		clk_disable_unprepare(tpm->clk);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int pwm_imx_tpm_remove(struct platform_device *pdev)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
+> +	int ret = pwmchip_remove(&tpm->chip);
+> +
+> +	clk_disable_unprepare(tpm->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
+> +
+> +	if (tpm->enable_count > 0)
+> +		return -EBUSY;
+> +
+> +	clk_disable_unprepare(tpm->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
+> +{
+> +	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
+> +	int ret = 0;
+> +
+> +	if (tpm->enable_count == 0) {
+
+tpm->enable_count cannot be different from 0 here.
+
+> +		ret = clk_prepare_enable(tpm->clk);
+> +		if (ret)
+> +			dev_err(dev,
+> +				"failed to prepare or enable clock: %d\n",
+> +				ret);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(imx_tpm_pwm_pm,
+> +			 pwm_imx_tpm_suspend, pwm_imx_tpm_resume);
+> +
+> +static const struct of_device_id imx_tpm_pwm_dt_ids[] = {
+> +	{ .compatible = "fsl,imx-tpm", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_tpm_pwm_dt_ids);
+> +
+> +static struct platform_driver imx_tpm_pwm_driver = {
+> +	.driver = {
+> +		.name = "imx-tpm-pwm",
+> +		.of_match_table = imx_tpm_pwm_dt_ids,
+> +		.pm = &imx_tpm_pwm_pm,
+> +	},
+> +	.probe	= pwm_imx_tpm_probe,
+> +	.remove = pwm_imx_tpm_remove,
+> +};
+> +module_platform_driver(imx_tpm_pwm_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("i.MX TPM PWM Driver");
+> +MODULE_LICENSE("GPL v2");
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
