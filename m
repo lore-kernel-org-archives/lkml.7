@@ -2,91 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC27C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6D8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2DA21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F1A21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HPpQBz/C"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JplPzbTJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KHgXKJzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfCTUEf (ORCPT
+        id S1726907AbfCTUFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:04:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33366 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfCTUEf (ORCPT
+        Wed, 20 Mar 2019 16:05:47 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43264 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfCTUFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:04:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k189so9699185qkc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Vo6r5RiuoHQQbBcC9iguZtdqZ6ajLyJa96gCdeOiWbE=;
-        b=HPpQBz/CvqsFaa0YHkIdIWC9iwfw02s4wfgNx/cLGOHj1a5FGWAnDDpEotjpjx0NSL
-         F0gyFf/ieAD253cjGeiAI+MkOvyvKxGe61VtSSWQyyRJBaP7ihSFnE/JoVW2e+vyFmJ/
-         oOS7inR6aNpv0mA8RAyeReJDsdd38nUMURgiM9zWeRT4BPqOg5Djdld7zvw2Y8Eov+n7
-         /YZmRaOdN3FdNQJFu/QU8RFIhdswP6VC6E+Es8DpHWFEFDgpkO5rN/P+p1FBRmPnU30m
-         WYfL0DDwwyVAavff0M6gTimy98fqUaF3Rinq/8q+m+aNdLDaewlmpV8kawsjV23Vwx7s
-         G2Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Vo6r5RiuoHQQbBcC9iguZtdqZ6ajLyJa96gCdeOiWbE=;
-        b=mAL2sDOzox3titmeQ2JQrrkf5WWPj6Ad79j00U8mhp3D1rx+sgGOjPQUJLI/uum1d3
-         plS5zTN1NWzrW1GOFWNXeFQiOajh1Np6VDhRWTbZghNVpoynBQsFmt7VVC99lUVasF6y
-         Nh/LFSaZ+mlUmGYnPgFzeK1LfworjqYXwSetYgPy9IRPMYVGAqwmdSE2bW3Nl85mB110
-         Lbht8AIbAY/ZI+ODuaUHlOlbsixC/PfvpWu+YpOC/GvM7s4lCNtQMObQnBIFU9k4NpN3
-         s4JjgoHZdOD2uQ6suOgOIPNYbaxShrP8cRqh2NIqvJ9m1WF8jTgT6crK0t6Uw6x6/jXc
-         UX5w==
-X-Gm-Message-State: APjAAAWTj7zp+iwPwlKbg9skZpI9FdVi5qx5ia1NC/AFh8ye4143qnO7
-        5UOvmN8vio5JWm/GcAI0Gwrf3w==
-X-Google-Smtp-Source: APXvYqyNcoCpTrG/QlxBIiS3xOXvYOWD0i6x08P3+8eR8pgFrkDCEqYQr79GX02pD2JjjO+rwwfWzA==
-X-Received: by 2002:a37:4d52:: with SMTP id a79mr8186639qkb.75.1553112274192;
-        Wed, 20 Mar 2019 13:04:34 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h24sm2225964qte.50.2019.03.20.13.04.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 13:04:33 -0700 (PDT)
-Message-ID: <1553112272.26196.9.camel@lca.pw>
-Subject: Re: [PATCH v2] kmemleak: skip scanning holes in the .bss section
-From:   Qian Cai <cai@lca.pw>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     akpm@linux-foundation.org, paulus@ozlabs.org,
-        benh@kernel.crashing.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 16:04:32 -0400
-In-Reply-To: <20190320181656.GB38229@arrakis.emea.arm.com>
-References: <20190313145717.46369-1-cai@lca.pw>
-         <20190319115747.GB59586@arrakis.emea.arm.com>
-         <87lg19y9dp.fsf@concordia.ellerman.id.au>
-         <20190320181656.GB38229@arrakis.emea.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Wed, 20 Mar 2019 16:05:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 88E8760FE9; Wed, 20 Mar 2019 20:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553112346;
+        bh=J4dZuMKJKUnbEpzsHHPpkPO3B4l+kubBHyMn5liynsc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JplPzbTJWcwMnJUUwVU5dEM3d7u6ddwfQDbDRp+mALsnVjfuuM5eDVzt/m8/jbeCf
+         tuwBIYptUo4N8AmscAJQrEaG7JWJCXRx4FRrlgVFzIrj85zg/tkU2oKiJUASoXuI2A
+         nv0ie8K3Fb3vMXCBZiTp9VwwPA9Mibqy+WPSQCuw=
+Received: from [10.79.162.149] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E654C60F3C;
+        Wed, 20 Mar 2019 20:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553112345;
+        bh=J4dZuMKJKUnbEpzsHHPpkPO3B4l+kubBHyMn5liynsc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KHgXKJzRF1got7rWIme0ritJPvmxHydiuRxPsvZaUcs2NlLvYJdETIPUestjYpNwz
+         2NN74J2U9bnNJAa3yexXZvqHY4NuG1BQvyAx+6dSYAuVh7aDtOFdAwyAa2Qk8Mgohh
+         fD1r60aVJWnDTd/L+PhrQ/fKMDeg2Wa63Yz2whns=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E654C60F3C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH -next] ubifs: remove unused function __ubifs_shash_final
+To:     Yue Haibing <yuehaibing@huawei.com>, richard@nod.at,
+        dedekind1@gmail.com, adrian.hunter@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+References: <20190320140955.11576-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <97289b81-ed73-002a-504d-2e82fad153e7@codeaurora.org>
+Date:   Thu, 21 Mar 2019 01:35:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190320140955.11576-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-20 at 18:16 +0000, Catalin Marinas wrote:
-> I think I have a simpler idea. Kmemleak allows punching holes in
-> allocated objects, so just turn the data/bss sections into dedicated
-> kmemleak objects. This happens when kmemleak is initialised, before the
-> initcalls are invoked. The kvm_free_tmp() would just free the
-> corresponding part of the bss.
-> 
-> Patch below, only tested briefly on arm64. Qian, could you give it a try
-> on powerpc? Thanks.
 
-It works great so far!
+On 3/20/2019 7:39 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> There is no callers in tree, and can be removed.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   fs/ubifs/auth.c | 18 ------------------
+>   1 file changed, 18 deletions(-)
+>
+> diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
+> index 5bf5fd0..2a40ccce 100644
+> --- a/fs/ubifs/auth.c
+> +++ b/fs/ubifs/auth.c
+> @@ -147,24 +147,6 @@ struct shash_desc *__ubifs_hash_get_desc(const struct ubifs_info *c)
+>   }
+>   
+>   /**
+> - * __ubifs_shash_final - finalize shash
+> - * @c: UBIFS file-system description object
+> - * @desc: the descriptor
+> - * @out: the output hash
+> - *
+> - * Simple wrapper around crypto_shash_final(), safe to be called with
+> - * disabled authentication.
+> - */
+> -int __ubifs_shash_final(const struct ubifs_info *c, struct shash_desc *desc,
+> -			u8 *out)
+> -{
+> -	if (ubifs_authenticated(c))
+> -		return crypto_shash_final(desc, out);
+> -
+> -	return 0;
+> -}
+> -
+> -/**
+>    * ubifs_bad_hash - Report hash mismatches
+>    * @c: UBIFS file-system description object
+>    * @node: the node
+
+
+
+Looks fine to be removed.
+
+Acked-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
