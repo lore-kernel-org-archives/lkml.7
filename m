@@ -3,546 +3,177 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94E2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8433DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBD621871
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF6A206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfCTOTM (ORCPT
+        id S1727141AbfCTOVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:19:12 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48489 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbfCTOTL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:19:11 -0400
-X-Originating-IP: 90.88.33.153
-Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1615560014;
-        Wed, 20 Mar 2019 14:19:06 +0000 (UTC)
-Message-ID: <1f7df78264eb964ae941f572b7affde34bfc3538.camel@bootlin.com>
-Subject: Re: [RFC PATCH 02/20] drm: Remove users of
- drm_format_(horz|vert)_chroma_subsampling
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Date:   Wed, 20 Mar 2019 15:19:06 +0100
-In-Reply-To: <df29f4927fae6733994bed0a16ca2177a532d996.1553032382.git-series.maxime.ripard@bootlin.com>
-References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
-         <df29f4927fae6733994bed0a16ca2177a532d996.1553032382.git-series.maxime.ripard@bootlin.com>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Wed, 20 Mar 2019 10:21:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29772 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfCTOVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:21:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 07:20:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="153452168"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2019 07:20:59 -0700
+Received: from [10.254.87.179] (kliang2-mobl1.ccr.corp.intel.com [10.254.87.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 845FA5804B6;
+        Wed, 20 Mar 2019 07:20:58 -0700 (PDT)
+Subject: Re: [PATCH 06/22] perf/x86/intel: Add Icelake support
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20190318214144.4639-1-kan.liang@linux.intel.com>
+ <20190318214144.4639-7-kan.liang@linux.intel.com>
+ <CABPqkBR-2e47Anf2RhMcmFmACpvxPTgNLGGPQU2VXdbES=EkaA@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <8e935e1d-dbbe-6e02-bda0-8b217bdbb5b8@linux.intel.com>
+Date:   Wed, 20 Mar 2019 10:20:57 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABPqkBR-2e47Anf2RhMcmFmACpvxPTgNLGGPQU2VXdbES=EkaA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
-> drm_format_horz_chroma_subsampling and drm_format_vert_chroma_subsampling
-> are basically a lookup in the drm_format_info table plus an access to the
-> hsub and vsub fields of the appropriate entry.
+
+On 3/19/2019 8:08 PM, Stephane Eranian wrote:
+> On Mon, Mar 18, 2019 at 2:44 PM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Add Icelake core PMU perf code, including constraint tables and the main
+>> enable code.
+>>
+>> Icelake expanded the generic counters to always 8 even with HT on, but a
+>> range of events cannot be scheduled on the extra 4 counters.
+>> Add new constraint ranges to describe this to the scheduler.
+>> The number of constraints that need to be checked is larger now than
+>> with earlier CPUs.
+>> At some point we may need a new data structure to look them up more
+>> efficiently than with linear search. So far it still seems to be
+>> acceptable however.
+>>
+>> Icelake added a new fixed counter SLOTS. Full support for it is added
+>> later in the patch series.
+>>
+>> The cache events table is identical to Skylake.
+>>
+>> Compare to PEBS instruction event on generic counter, fixed counter 0
+>> has less skid. Force instruction:ppp always in fixed counter 0.
+>>
+>> Originally-by: Andi Kleen <ak@linux.intel.com>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   arch/x86/events/intel/core.c      | 111 ++++++++++++++++++++++++++++++
+>>   arch/x86/events/intel/ds.c        |  26 ++++++-
+>>   arch/x86/events/perf_event.h      |   2 +
+>>   arch/x86/include/asm/intel_ds.h   |   2 +-
+>>   arch/x86/include/asm/perf_event.h |   2 +-
+>>   5 files changed, 139 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 8486ab87f8f8..87dafac87520 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -239,6 +239,35 @@ static struct extra_reg intel_skl_extra_regs[] __read_mostly = {
+>>          EVENT_EXTRA_END
+>>   };
+>>
+>> +static struct event_constraint intel_icl_event_constraints[] = {
+>> +       FIXED_EVENT_CONSTRAINT(0x00c0, 0),      /* INST_RETIRED.ANY */
+>> +       INTEL_UEVENT_CONSTRAINT(0x1c0, 0),      /* INST_RETIRED.PREC_DIST */
+>> +       FIXED_EVENT_CONSTRAINT(0x003c, 1),      /* CPU_CLK_UNHALTED.CORE */
+>> +       FIXED_EVENT_CONSTRAINT(0x0300, 2),      /* CPU_CLK_UNHALTED.REF */
+>> +       FIXED_EVENT_CONSTRAINT(0x0400, 3),      /* SLOTS */
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0x03, 0x0a, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0x1f, 0x28, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT(0x32, 0xf),      /* SW_PREFETCH_ACCESS.* */
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0x48, 0x54, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0x60, 0x8b, 0xf),
+>> +       INTEL_UEVENT_CONSTRAINT(0x04a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_TOTAL */
+>> +       INTEL_UEVENT_CONSTRAINT(0x10a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_MEM_ANY */
+>> +       INTEL_EVENT_CONSTRAINT(0xa3, 0xf),      /* CYCLE_ACTIVITY.* */
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0xa8, 0xb0, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0xb7, 0xbd, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xe6, 0xf),
+>> +       INTEL_EVENT_CONSTRAINT_RANGE(0xf0, 0xf4, 0xf),
+>> +       EVENT_CONSTRAINT_END
+>> +};
+>> +
+>> +static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
+>> +       INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
+>> +       INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
+>> +       INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
+>> +       INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
+>> +       EVENT_EXTRA_END
+>> +};
+>> +
+>>   EVENT_ATTR_STR(mem-loads,      mem_ld_nhm,     "event=0x0b,umask=0x10,ldlat=3");
+>>   EVENT_ATTR_STR(mem-loads,      mem_ld_snb,     "event=0xcd,umask=0x1,ldlat=3");
+>>   EVENT_ATTR_STR(mem-stores,     mem_st_snb,     "event=0xcd,umask=0x2");
+>> @@ -3324,6 +3353,9 @@ static struct event_constraint counter0_constraint =
+>>   static struct event_constraint counter2_constraint =
+>>                          EVENT_CONSTRAINT(0, 0x4, 0);
+>>
+>> +static struct event_constraint fixed_counter0_constraint =
+>> +                       FIXED_EVENT_CONSTRAINT(0x00c0, 0);
+>> +
+>>   static struct event_constraint *
+>>   hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>>                            struct perf_event *event)
+>> @@ -3342,6 +3374,21 @@ hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>>          return c;
+>>   }
+>>
+>> +static struct event_constraint *
+>> +icl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>> +                         struct perf_event *event)
+>> +{
+>> +       /*
+>> +        * Fixed counter 0 has less skid.
+>> +        * Force instruction:ppp in Fixed counter 0
+>> +        */
+>> +       if ((event->attr.precise_ip == 3) &&
+>> +           ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
+>> +               return &fixed_counter0_constraint;
+>> +
+> Not clear to me why you need to treat this one separately from the
+> PEBS constraints, if you check that you have
+> :ppp (precise_ip > 0)?
 > 
-> Most drivers are using this function while having access to the entry
-> already, which means that we will perform an unnecessary lookup. Removing
-> the call to these functions is therefore more efficient.
 > 
-> Some drivers will not have access to that entry in the function, but in
-> this case the overhead is minimal (we just have to call drm_format_info()
-> to perform the lookup) and we can even avoid multiple, inefficient lookups
-> in some places that need multiple fields from the drm_format_info
-> structure.
-> 
-> This is amplified by the fact that most of the time the callers will have
-> to retrieve both the vsub and hsub fields, meaning that they would perform
-> twice the lookup.
 
-Cheers for nuking these two as well!
+There is no model specific get_pebs_constrains, so I have to put the 
+checking here for Icelake.
+We only want to force the :ppp case in fixed counter 0, which has less 
+skid.
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |  9 +----
->  drivers/gpu/drm/drm_fourcc.c                    | 34 +------------------
->  drivers/gpu/drm/imx/ipuv3-plane.c               | 15 +++-----
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c       |  9 +----
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c      | 24 +++++--------
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c        |  2 +-
->  drivers/gpu/drm/msm/msm_fb.c                    |  8 +---
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c      |  9 +----
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c     | 13 ++-----
->  drivers/gpu/drm/tegra/fb.c                      |  9 +----
->  drivers/gpu/drm/vc4/vc4_plane.c                 | 13 ++-----
->  include/drm/drm_fourcc.h                        |  2 +-
->  12 files changed, 37 insertions(+), 110 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> index e836e2de35ce..fdd607ad27fe 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> @@ -603,8 +603,6 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
->  	const struct drm_display_mode *mode;
->  	struct drm_crtc_state *crtc_state;
->  	unsigned int tmp;
-> -	int hsub = 1;
-> -	int vsub = 1;
->  	int ret;
->  	int i;
->  
-> @@ -642,13 +640,10 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
->  	if (state->nplanes > ATMEL_HLCDC_LAYER_MAX_PLANES)
->  		return -EINVAL;
->  
-> -	hsub = drm_format_horz_chroma_subsampling(fb->format->format);
-> -	vsub = drm_format_vert_chroma_subsampling(fb->format->format);
-> -
->  	for (i = 0; i < state->nplanes; i++) {
->  		unsigned int offset = 0;
-> -		int xdiv = i ? hsub : 1;
-> -		int ydiv = i ? vsub : 1;
-> +		int xdiv = i ? fb->format->hsub : 1;
-> +		int ydiv = i ? fb->format->vsub : 1;
->  
->  		state->bpp[i] = fb->format->cpp[i];
->  		if (!state->bpp[i])
-> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-> index 22c7fa459f65..04be330b7cae 100644
-> --- a/drivers/gpu/drm/drm_fourcc.c
-> +++ b/drivers/gpu/drm/drm_fourcc.c
-> @@ -326,40 +326,6 @@ int drm_format_plane_cpp(uint32_t format, int plane)
->  EXPORT_SYMBOL(drm_format_plane_cpp);
->  
->  /**
-> - * drm_format_horz_chroma_subsampling - get the horizontal chroma subsampling factor
-> - * @format: pixel format (DRM_FORMAT_*)
-> - *
-> - * Returns:
-> - * The horizontal chroma subsampling factor for the
-> - * specified pixel format.
-> - */
-> -int drm_format_horz_chroma_subsampling(uint32_t format)
-> -{
-> -	const struct drm_format_info *info;
-> -
-> -	info = drm_format_info(format);
-> -	return info ? info->hsub : 1;
-> -}
-> -EXPORT_SYMBOL(drm_format_horz_chroma_subsampling);
-> -
-> -/**
-> - * drm_format_vert_chroma_subsampling - get the vertical chroma subsampling factor
-> - * @format: pixel format (DRM_FORMAT_*)
-> - *
-> - * Returns:
-> - * The vertical chroma subsampling factor for the
-> - * specified pixel format.
-> - */
-> -int drm_format_vert_chroma_subsampling(uint32_t format)
-> -{
-> -	const struct drm_format_info *info;
-> -
-> -	info = drm_format_info(format);
-> -	return info ? info->vsub : 1;
-> -}
-> -EXPORT_SYMBOL(drm_format_vert_chroma_subsampling);
-> -
-> -/**
->   * drm_format_plane_width - width of the plane given the first plane
->   * @width: width of the first plane
->   * @format: pixel format
-> diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
-> index 21e964f6ab5c..2530143281b2 100644
-> --- a/drivers/gpu/drm/imx/ipuv3-plane.c
-> +++ b/drivers/gpu/drm/imx/ipuv3-plane.c
-> @@ -115,8 +115,8 @@ drm_plane_state_to_ubo(struct drm_plane_state *state)
->  	cma_obj = drm_fb_cma_get_gem_obj(fb, 1);
->  	BUG_ON(!cma_obj);
->  
-> -	x /= drm_format_horz_chroma_subsampling(fb->format->format);
-> -	y /= drm_format_vert_chroma_subsampling(fb->format->format);
-> +	x /= fb->format->hsub;
-> +	y /= fb->format->vsub;
->  
->  	return cma_obj->paddr + fb->offsets[1] + fb->pitches[1] * y +
->  	       fb->format->cpp[1] * x - eba;
-> @@ -134,8 +134,8 @@ drm_plane_state_to_vbo(struct drm_plane_state *state)
->  	cma_obj = drm_fb_cma_get_gem_obj(fb, 2);
->  	BUG_ON(!cma_obj);
->  
-> -	x /= drm_format_horz_chroma_subsampling(fb->format->format);
-> -	y /= drm_format_vert_chroma_subsampling(fb->format->format);
-> +	x /= fb->format->hsub;
-> +	y /= fb->format->vsub;
->  
->  	return cma_obj->paddr + fb->offsets[2] + fb->pitches[2] * y +
->  	       fb->format->cpp[2] * x - eba;
-> @@ -348,7 +348,6 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
->  	struct drm_framebuffer *old_fb = old_state->fb;
->  	unsigned long eba, ubo, vbo, old_ubo, old_vbo, alpha_eba;
->  	bool can_position = (plane->type == DRM_PLANE_TYPE_OVERLAY);
-> -	int hsub, vsub;
->  	int ret;
->  
->  	/* Ok to disable */
-> @@ -467,10 +466,8 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
->  		 * The x/y offsets must be even in case of horizontal/vertical
->  		 * chroma subsampling.
->  		 */
-> -		hsub = drm_format_horz_chroma_subsampling(fb->format->format);
-> -		vsub = drm_format_vert_chroma_subsampling(fb->format->format);
-> -		if (((state->src.x1 >> 16) & (hsub - 1)) ||
-> -		    ((state->src.y1 >> 16) & (vsub - 1)))
-> +		if (((state->src.x1 >> 16) & (fb->format->hsub - 1)) ||
-> +		    ((state->src.y1 >> 16) & (fb->format->vsub - 1)))
->  			return -EINVAL;
->  		break;
->  	case DRM_FORMAT_RGB565_A8:
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> index 6aefcd6db46b..a9492c488441 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -553,14 +553,9 @@ static void _dpu_plane_setup_scaler(struct dpu_plane *pdpu,
->  		struct dpu_plane_state *pstate,
->  		const struct dpu_format *fmt, bool color_fill)
->  {
-> -	uint32_t chroma_subsmpl_h, chroma_subsmpl_v;
-> +	const struct drm_format_info *info = drm_format_info(fmt->base.pixel_format);
->  
->  	/* don't chroma subsample if decimating */
-> -	chroma_subsmpl_h =
-> -		drm_format_horz_chroma_subsampling(fmt->base.pixel_format);
-> -	chroma_subsmpl_v =
-> -		drm_format_vert_chroma_subsampling(fmt->base.pixel_format);
-> -
->  	/* update scaler. calculate default config for QSEED3 */
->  	_dpu_plane_setup_scaler3(pdpu, pstate,
->  			drm_rect_width(&pdpu->pipe_cfg.src_rect),
-> @@ -568,7 +563,7 @@ static void _dpu_plane_setup_scaler(struct dpu_plane *pdpu,
->  			drm_rect_width(&pdpu->pipe_cfg.dst_rect),
->  			drm_rect_height(&pdpu->pipe_cfg.dst_rect),
->  			&pstate->scaler3_cfg, fmt,
-> -			chroma_subsmpl_h, chroma_subsmpl_v);
-> +			info->hsub, info->vsub);
->  }
->  
->  /**
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> index be13140967b4..9d9fb6c5fd68 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-> @@ -650,10 +650,10 @@ static int calc_scalex_steps(struct drm_plane *plane,
->  		uint32_t pixel_format, uint32_t src, uint32_t dest,
->  		uint32_t phasex_steps[COMP_MAX])
->  {
-> +	const struct drm_format_info *info = drm_format_info(pixel_format);
->  	struct mdp5_kms *mdp5_kms = get_kms(plane);
->  	struct device *dev = mdp5_kms->dev->dev;
->  	uint32_t phasex_step;
-> -	unsigned int hsub;
->  	int ret;
->  
->  	ret = calc_phase_step(src, dest, &phasex_step);
-> @@ -662,11 +662,9 @@ static int calc_scalex_steps(struct drm_plane *plane,
->  		return ret;
->  	}
->  
-> -	hsub = drm_format_horz_chroma_subsampling(pixel_format);
-> -
->  	phasex_steps[COMP_0]   = phasex_step;
->  	phasex_steps[COMP_3]   = phasex_step;
-> -	phasex_steps[COMP_1_2] = phasex_step / hsub;
-> +	phasex_steps[COMP_1_2] = phasex_step / info->hsub;
->  
->  	return 0;
->  }
-> @@ -675,10 +673,10 @@ static int calc_scaley_steps(struct drm_plane *plane,
->  		uint32_t pixel_format, uint32_t src, uint32_t dest,
->  		uint32_t phasey_steps[COMP_MAX])
->  {
-> +	const struct drm_format_info *info = drm_format_info(pixel_format);
->  	struct mdp5_kms *mdp5_kms = get_kms(plane);
->  	struct device *dev = mdp5_kms->dev->dev;
->  	uint32_t phasey_step;
-> -	unsigned int vsub;
->  	int ret;
->  
->  	ret = calc_phase_step(src, dest, &phasey_step);
-> @@ -687,11 +685,9 @@ static int calc_scaley_steps(struct drm_plane *plane,
->  		return ret;
->  	}
->  
-> -	vsub = drm_format_vert_chroma_subsampling(pixel_format);
-> -
->  	phasey_steps[COMP_0]   = phasey_step;
->  	phasey_steps[COMP_3]   = phasey_step;
-> -	phasey_steps[COMP_1_2] = phasey_step / vsub;
-> +	phasey_steps[COMP_1_2] = phasey_step / info->vsub;
->  
->  	return 0;
->  }
-> @@ -699,8 +695,9 @@ static int calc_scaley_steps(struct drm_plane *plane,
->  static uint32_t get_scale_config(const struct mdp_format *format,
->  		uint32_t src, uint32_t dst, bool horz)
->  {
-> +	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
->  	bool scaling = format->is_yuv ? true : (src != dst);
-> -	uint32_t sub, pix_fmt = format->base.pixel_format;
-> +	uint32_t sub;
->  	uint32_t ya_filter, uv_filter;
->  	bool yuv = format->is_yuv;
->  
-> @@ -708,8 +705,7 @@ static uint32_t get_scale_config(const struct mdp_format *format,
->  		return 0;
->  
->  	if (yuv) {
-> -		sub = horz ? drm_format_horz_chroma_subsampling(pix_fmt) :
-> -			     drm_format_vert_chroma_subsampling(pix_fmt);
-> +		sub = horz ? info->hsub : info->vsub;
->  		uv_filter = ((src / sub) <= dst) ?
->  				   SCALE_FILTER_BIL : SCALE_FILTER_PCMN;
->  	}
-> @@ -754,7 +750,7 @@ static void mdp5_write_pixel_ext(struct mdp5_kms *mdp5_kms, enum mdp5_pipe pipe,
->  	uint32_t src_w, int pe_left[COMP_MAX], int pe_right[COMP_MAX],
->  	uint32_t src_h, int pe_top[COMP_MAX], int pe_bottom[COMP_MAX])
->  {
-> -	uint32_t pix_fmt = format->base.pixel_format;
-> +	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
->  	uint32_t lr, tb, req;
->  	int i;
->  
-> @@ -763,8 +759,8 @@ static void mdp5_write_pixel_ext(struct mdp5_kms *mdp5_kms, enum mdp5_pipe pipe,
->  		uint32_t roi_h = src_h;
->  
->  		if (format->is_yuv && i == COMP_1_2) {
-> -			roi_w /= drm_format_horz_chroma_subsampling(pix_fmt);
-> -			roi_h /= drm_format_vert_chroma_subsampling(pix_fmt);
-> +			roi_w /= info->hsub;
-> +			roi_h /= info->vsub;
->  		}
->  
->  		lr  = (pe_left[i] >= 0) ?
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> index 72ab8d89efa4..b30b2f4efc60 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> @@ -135,7 +135,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
->  	uint32_t blkcfg = 0;
->  
->  	nplanes = info->num_planes;
-> -	hsub = drm_format_horz_chroma_subsampling(fmt);
-> +	hsub = info->hsub;
->  
->  	/* different if BWC (compressed framebuffer?) enabled: */
->  	nlines = 2;
-> diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
-> index 432beddafb9e..f69c0afd6ec6 100644
-> --- a/drivers/gpu/drm/msm/msm_fb.c
-> +++ b/drivers/gpu/drm/msm/msm_fb.c
-> @@ -145,16 +145,12 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
->  	struct drm_framebuffer *fb;
->  	const struct msm_format *format;
->  	int ret, i, n;
-> -	unsigned int hsub, vsub;
->  
->  	DBG("create framebuffer: dev=%p, mode_cmd=%p (%dx%d@%4.4s)",
->  			dev, mode_cmd, mode_cmd->width, mode_cmd->height,
->  			(char *)&mode_cmd->pixel_format);
->  
->  	n = info->num_planes;
-> -	hsub = drm_format_horz_chroma_subsampling(mode_cmd->pixel_format);
-> -	vsub = drm_format_vert_chroma_subsampling(mode_cmd->pixel_format);
-> -
->  	format = kms->funcs->get_format(kms, mode_cmd->pixel_format,
->  			mode_cmd->modifier[0]);
->  	if (!format) {
-> @@ -180,8 +176,8 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
->  	}
->  
->  	for (i = 0; i < n; i++) {
-> -		unsigned int width = mode_cmd->width / (i ? hsub : 1);
-> -		unsigned int height = mode_cmd->height / (i ? vsub : 1);
-> +		unsigned int width = mode_cmd->width / (i ? info->hsub : 1);
-> +		unsigned int height = mode_cmd->height / (i ? info->vsub : 1);
->  		unsigned int min_size;
->  
->  		min_size = (height - 1) * mode_cmd->pitches[i]
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> index 606d176d5d96..c318fae28581 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> @@ -79,18 +79,13 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
->  	struct drm_framebuffer *fb;
->  	struct drm_gem_object *objs[ROCKCHIP_MAX_FB_BUFFER];
->  	struct drm_gem_object *obj;
-> -	unsigned int hsub;
-> -	unsigned int vsub;
->  	int num_planes = min_t(int, info->num_planes, ROCKCHIP_MAX_FB_BUFFER);
->  	int ret;
->  	int i;
->  
-> -	hsub = drm_format_horz_chroma_subsampling(mode_cmd->pixel_format);
-> -	vsub = drm_format_vert_chroma_subsampling(mode_cmd->pixel_format);
-> -
->  	for (i = 0; i < num_planes; i++) {
-> -		unsigned int width = mode_cmd->width / (i ? hsub : 1);
-> -		unsigned int height = mode_cmd->height / (i ? vsub : 1);
-> +		unsigned int width = mode_cmd->width / (i ? info->hsub : 1);
-> +		unsigned int height = mode_cmd->height / (i ? info->vsub : 1);
->  		unsigned int min_size;
->  
->  		obj = drm_gem_object_lookup(file_priv, mode_cmd->handles[i]);
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index c7d4c6073ea5..88c3902057f3 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -317,21 +317,18 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
->  			     uint32_t src_w, uint32_t src_h, uint32_t dst_w,
->  			     uint32_t dst_h, uint32_t pixel_format)
->  {
-> +	const struct drm_format_info *info = drm_format_info(pixel_format);
->  	uint16_t yrgb_hor_scl_mode, yrgb_ver_scl_mode;
->  	uint16_t cbcr_hor_scl_mode = SCALE_NONE;
->  	uint16_t cbcr_ver_scl_mode = SCALE_NONE;
-> -	int hsub = drm_format_horz_chroma_subsampling(pixel_format);
-> -	int vsub = drm_format_vert_chroma_subsampling(pixel_format);
-> -	const struct drm_format_info *info;
->  	bool is_yuv = false;
-> -	uint16_t cbcr_src_w = src_w / hsub;
-> -	uint16_t cbcr_src_h = src_h / vsub;
-> +	uint16_t cbcr_src_w = src_w / info->hsub;
-> +	uint16_t cbcr_src_h = src_h / info->vsub;
->  	uint16_t vsu_mode;
->  	uint16_t lb_mode;
->  	uint32_t val;
->  	int vskiplines;
->  
-> -	info = drm_format_info(pixel_format);
->  
->  	if (info->is_yuv)
->  		is_yuv = true;
-> @@ -819,8 +816,8 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
->  		    (state->rotation & DRM_MODE_REFLECT_X) ? 1 : 0);
->  
->  	if (is_yuv) {
-> -		int hsub = drm_format_horz_chroma_subsampling(fb->format->format);
-> -		int vsub = drm_format_vert_chroma_subsampling(fb->format->format);
-> +		int hsub = fb->format->hsub;
-> +		int vsub = fb->format->vsub;
->  		int bpp = fb->format->cpp[1];
->  
->  		uv_obj = fb->obj[1];
-> diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-> index bc8f9afd1b5f..ddf2c764f24c 100644
-> --- a/drivers/gpu/drm/tegra/fb.c
-> +++ b/drivers/gpu/drm/tegra/fb.c
-> @@ -132,18 +132,15 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
->  					const struct drm_mode_fb_cmd2 *cmd)
->  {
->  	const struct drm_format_info *info = drm_get_format_info(dev, cmd);
-> -	unsigned int hsub, vsub, i;
->  	struct tegra_bo *planes[4];
->  	struct drm_gem_object *gem;
->  	struct drm_framebuffer *fb;
-> +	unsigned int i;
->  	int err;
->  
-> -	hsub = drm_format_horz_chroma_subsampling(cmd->pixel_format);
-> -	vsub = drm_format_vert_chroma_subsampling(cmd->pixel_format);
-> -
->  	for (i = 0; i < info->num_planes; i++) {
-> -		unsigned int width = cmd->width / (i ? hsub : 1);
-> -		unsigned int height = cmd->height / (i ? vsub : 1);
-> +		unsigned int width = cmd->width / (i ? info->hsub : 1);
-> +		unsigned int height = cmd->height / (i ? info->vsub : 1);
->  		unsigned int size, bpp;
->  
->  		gem = drm_gem_object_lookup(file, cmd->handles[i]);
-> diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-> index 138a9ff23b70..6605c1b7370d 100644
-> --- a/drivers/gpu/drm/vc4/vc4_plane.c
-> +++ b/drivers/gpu/drm/vc4/vc4_plane.c
-> @@ -310,10 +310,10 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
->  	struct drm_framebuffer *fb = state->fb;
->  	struct drm_gem_cma_object *bo = drm_fb_cma_get_gem_obj(fb, 0);
->  	u32 subpixel_src_mask = (1 << 16) - 1;
-> -	u32 format = fb->format->format;
->  	int num_planes = fb->format->num_planes;
->  	struct drm_crtc_state *crtc_state;
-> -	u32 h_subsample, v_subsample;
-> +	u32 h_subsample = fb->format->hsub;
-> +	u32 v_subsample = fb->format->vsub;
->  	int i, ret;
->  
->  	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
-> @@ -328,9 +328,6 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
->  	if (ret)
->  		return ret;
->  
-> -	h_subsample = drm_format_horz_chroma_subsampling(format);
-> -	v_subsample = drm_format_vert_chroma_subsampling(format);
-> -
->  	for (i = 0; i < num_planes; i++)
->  		vc4_state->offsets[i] = bo->paddr + fb->offsets[i];
->  
-> @@ -538,7 +535,8 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
->  	const struct hvs_format *format = vc4_get_hvs_format(fb->format->format);
->  	u64 base_format_mod = fourcc_mod_broadcom_mod(fb->modifier);
->  	int num_planes = fb->format->num_planes;
-> -	u32 h_subsample, v_subsample;
-> +	u32 h_subsample = fb->format->hsub;
-> +	u32 v_subsample = fb->format->vsub;
->  	bool mix_plane_alpha;
->  	bool covers_screen;
->  	u32 scl0, scl1, pitch0;
-> @@ -568,9 +566,6 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
->  		scl1 = vc4_get_scl_field(state, 0);
->  	}
->  
-> -	h_subsample = drm_format_horz_chroma_subsampling(format->drm);
-> -	v_subsample = drm_format_vert_chroma_subsampling(format->drm);
-> -
->  	rotation = drm_rotation_simplify(state->rotation,
->  					 DRM_MODE_ROTATE_0 |
->  					 DRM_MODE_REFLECT_X |
-> diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-> index 41779b327d91..eeec449d6c6a 100644
-> --- a/include/drm/drm_fourcc.h
-> +++ b/include/drm/drm_fourcc.h
-> @@ -269,8 +269,6 @@ uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
->  uint32_t drm_driver_legacy_fb_format(struct drm_device *dev,
->  				     uint32_t bpp, uint32_t depth);
->  int drm_format_plane_cpp(uint32_t format, int plane);
-> -int drm_format_horz_chroma_subsampling(uint32_t format);
-> -int drm_format_vert_chroma_subsampling(uint32_t format);
->  int drm_format_plane_width(int width, uint32_t format, int plane);
->  int drm_format_plane_height(int height, uint32_t format, int plane);
->  unsigned int drm_format_info_block_width(const struct drm_format_info *info,
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+Thanks,
+Kan
