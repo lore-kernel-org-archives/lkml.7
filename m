@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F6FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3569C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A74F2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789AE218A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfCTSuz (ORCPT
+        id S1727755AbfCTSvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:50:55 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45054 "EHLO
+        Wed, 20 Mar 2019 14:51:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45084 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbfCTSuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:50:52 -0400
+        id S1727726AbfCTSuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:50:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 833391AC1;
-        Wed, 20 Mar 2019 11:50:51 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06E29A78;
+        Wed, 20 Mar 2019 11:50:55 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D9E933F59C;
-        Wed, 20 Mar 2019 11:50:49 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A55173F59C;
+        Wed, 20 Mar 2019 11:50:53 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         coresight@lists.linaro.org, mike.leach@linaro.org,
-        robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 24/25] coresight: Support for ACPI bindings
-Date:   Wed, 20 Mar 2019 18:49:41 +0000
-Message-Id: <1553107783-3340-25-git-send-email-suzuki.poulose@arm.com>
+        robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [TEST PATCH 26/25] edk2-platform: juno: Update ACPI CoreSight Bindings
+Date:   Wed, 20 Mar 2019 18:49:43 +0000
+Message-Id: <1553107783-3340-27-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
 References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,451 +41,322 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for parsing the ACPI platform description
-for CoreSight. The connections are encoded in a DSD graph
-property with CoreSight specific variation of the property.
+ACPI bindings for CoreSight components on the Juno-r0 board.
+Please note that the bindings apply only for the juno-r0.
+The layout on r1 and r2 are slightly different and will need
+dynamic ACPI table support to be able to use a single UEFI
+image.
 
-The ETMs are listed as the children device of the respective
-CPU.
-
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-platform.c | 402 +++++++++++++++++++++++
- 1 file changed, 402 insertions(+)
+ Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl | 241 +++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 5eee987..06b1188 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2012, The Linux Foundation. All rights reserved.
-  */
+diff --git a/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl b/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
+index 702b057..c70e8ac 100644
+--- a/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
++++ b/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
+@@ -14,6 +14,51 @@
  
-+#include <linux/acpi.h>
- #include <linux/types.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-@@ -289,10 +290,409 @@ of_get_coresight_platform_data(struct device *dev,
- }
- #endif
+ #include "ArmPlatform.h"
  
-+#ifdef CONFIG_ACPI
++#define ACPI_GRAPH_REV		0
++#define ACPI_GRAPH_UUID		"ab02a46b-74c7-45a2-bd68-f7d344ef2153"
 +
-+#include <acpi/actypes.h>
-+#include <acpi/processor.h>
++#define CORESIGHT_GRAPH_UUID	"3ecbc8b6-1d0e-4fb3-8107-e627f805c6cd"
 +
-+/* ACPI Graph _DSD UUID : "ab02a46b-74c7-45a2-bd68-f7d344ef2153" */
-+static const guid_t acpi_graph_uuid = GUID_INIT(0xab02a46b, 0x74c7, 0x45a2,
-+						0xbd, 0x68, 0xf7, 0xd3,
-+						0x44, 0xef, 0x21, 0x53);
-+/* Coresight ACPI Graph UUID : "3ecbc8b6-1d0e-4fb3-8107-e627f805c6cd" */
-+static const guid_t coresight_graph_uuid = GUID_INIT(0x3ecbc8b6, 0x1d0e, 0x4fb3,
-+						     0x81, 0x07, 0xe6, 0x27,
-+						     0xf8, 0x05, 0xc6, 0xcd);
-+#define ACPI_CORESIGHT_LINK_SLAVE	0
-+#define ACPI_CORESIGHT_LINK_MASTER	1
++#define CS_LINK_MASTER		1
++#define CS_LINK_SLAVE		0
 +
-+static inline bool is_acpi_guid(const union acpi_object *obj)
-+{
-+	return (obj->type == ACPI_TYPE_BUFFER) && (obj->buffer.length == 16);
-+}
 +
-+/*
-+ * acpi_guid_matches	- Checks if the given object is a GUID object and
-+ * that it matches the supplied the GUID.
-+ */
-+static inline bool acpi_guid_matches(const union acpi_object *obj,
-+				   const guid_t *guid)
-+{
-+	return is_acpi_guid(obj) &&
-+	       guid_equal((guid_t *)obj->buffer.pointer, guid);
-+}
++#define DSD_CS_GRAPH_BEGIN(_nports)			\
++        Package () {					\
++          1,		// GraphID			\
++          ToUUID(CORESIGHT_GRAPH_UUID),			\
++          _nports,
 +
-+static inline bool is_acpi_dsd_graph_guid(const union acpi_object *obj)
-+{
-+	return acpi_guid_matches(obj, &acpi_graph_uuid);
-+}
-+
-+static inline bool is_acpi_coresight_graph_guid(const union acpi_object *obj)
-+{
-+	return acpi_guid_matches(obj, &coresight_graph_uuid);
-+}
-+
-+static inline bool is_acpi_coresight_graph(const union acpi_object *obj)
-+{
-+	const union acpi_object *graphid, *guid, *links;
-+
-+	if (obj->type != ACPI_TYPE_PACKAGE ||
-+	    obj->package.count < 3)
-+		return false;
-+
-+	graphid = &obj->package.elements[0];
-+	guid = &obj->package.elements[1];
-+	links = &obj->package.elements[2];
-+
-+	if (graphid->type != ACPI_TYPE_INTEGER ||
-+	    links->type != ACPI_TYPE_INTEGER)
-+		return false;
-+
-+	return is_acpi_coresight_graph_guid(guid);
-+}
-+
-+/*
-+ * acpi_validate_dsd_graph	- Make sure the given _DSD graph conforms
-+ * to the ACPI _DSD Graph specification.
-+ *
-+ * ACPI Devices Graph property has the following format:
-+ *	Revision	- Integer, must be 0
-+ *	NumberOfGraphs	- Integer, N indicating the following list.
-+ *	Graph[1],
-+ *	 ...
-+ *	Graph[N]
-+ *
-+ * And each Graph entry has the following format:
-+ *	GraphID		- Integer, identifying a graph the device belongs to.
-+ *	UUID		- UUID identifying the specification that governs
-+ *			  this graph. (e.g, see is_acpi_coresight_graph())
-+ *	NumberOfLinks	- Number "N" of connections on this node of the graph.
-+ *	Links[1]
-+ *	...
-+ *	Links[N]
-+ */
-+static inline bool acpi_validate_dsd_graph(const union acpi_object *graph)
-+{
-+	int i, n;
-+	const union acpi_object *rev, *nr_graphs;
-+
-+	/* The graph must contain at least the Revision and Number of Graphs */
-+	if (graph->package.count < 2)
-+		return false;
-+
-+	rev = &graph->package.elements[0];
-+	nr_graphs = &graph->package.elements[1];
-+
-+	if (rev->type != ACPI_TYPE_INTEGER ||
-+	    nr_graphs->type != ACPI_TYPE_INTEGER)
-+		return false;
-+
-+	/* We only support revision 0 */
-+	if (rev->integer.value != 0)
-+		return false;
-+
-+	n = nr_graphs->integer.value;
-+	/* Make sure the package has right number of elements */
-+	if (graph->package.count != (n + 2))
-+		return false;
-+
-+	/* Each entry must be a graph package with at least 3 members */
-+	for (i = 2; i < n + 2; i++) {
-+		const union acpi_object *obj = &graph->package.elements[i];
-+
-+		if (obj->type != ACPI_TYPE_PACKAGE ||
-+		    obj->package.count < 3)
-+			return false;
++#define DSD_CS_GRAPH_END				\
 +	}
 +
-+	return true;
-+}
++#define DSD_GRAPH_BEGIN(_nports)			\
++     ToUUID(ACPI_GRAPH_UUID),				\
++     Package() {					\
++       ACPI_GRAPH_REV,					\
++       1,						\
++       DSD_CS_GRAPH_BEGIN(_nports)
 +
-+/* acpi_get_dsd_graph	- Find the _DSD Graph property for the given device. */
-+const union acpi_object *
-+acpi_get_dsd_graph(struct acpi_device *adev)
-+{
-+	int i;
-+	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
-+	acpi_status status;
-+	const union acpi_object *dsd;
++#define DSD_GRAPH_END					\
++       DSD_CS_GRAPH_END					\
++     }
 +
-+	status = acpi_evaluate_object_typed(adev->handle, "_DSD", NULL,
-+					    &buf, ACPI_TYPE_PACKAGE);
-+	if (ACPI_FAILURE(status))
-+		return NULL;
++#define DSD_PORTS_BEGIN(_nports)			\
++   Name (_DSD,  Package () {				\
++     DSD_GRAPH_BEGIN(_nports)
 +
-+	dsd = buf.pointer;
-+	for (i = 0; i + 1 < dsd->package.count; i += 2) {
-+		const union acpi_object *guid, *package;
++#define DSD_PORTS_END					\
++   DSD_GRAPH_END					\
++  })
 +
-+		guid = &dsd->package.elements[i];
-+		package = &dsd->package.elements[i + 1];
++#define CS_PORT(_port, _rport, _rphandle, _dir)		\
++    Package () { _port, _rport, _rphandle, _dir}
 +
-+		/* All _DSD elements must have a UUID and a Package */
-+		if (!is_acpi_guid(guid) || package->type != ACPI_TYPE_PACKAGE)
-+			break;
-+		/* Skip the non-Graph _DSD packages */
-+		if (!is_acpi_dsd_graph_guid(guid))
-+			continue;
-+		if (acpi_validate_dsd_graph(package))
-+			return package;
-+		/* Invalid graph format, continue */
-+		dev_warn(&adev->dev, "Invalid Graph _DSD property\n");
-+	}
++#define CS_INPUT_PORT(_port, _rport, _rphandle)		\
++    CS_PORT(_port, _rport, _rphandle, CS_LINK_SLAVE)
++#define CS_OUTPUT_PORT(_port, _rport, _rphandle)		\
++    CS_PORT(_port, _rport, _rphandle, CS_LINK_MASTER)
 +
-+	return NULL;
-+}
+ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_OEM_REVISION) {
+   Scope(_SB) {
+     //
+@@ -122,15 +167,56 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
 +
-+static inline bool
-+acpi_validate_coresight_graph(const union acpi_object *cs_graph)
-+{
-+	int nlinks;
++        Device(ETM0) { // ETM on Cluster0 CPU0
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x22040000, 0x1000)
++          })
 +
-+	nlinks = cs_graph->package.elements[2].integer.value;
-+	if (cs_graph->package.count != (nlinks + 3))
-+		return false;
-+	/* The links are validated in acpi_coresight_parse_link() */
-+	return true;
-+}
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 0, \_SB_.CLU0.FUN0)
++          DSD_PORTS_END
 +
-+/*
-+ * acpi_get_coresight_graph	- Parse the device _DSD tables and find
-+ * the Graph property matching the CoreSight Graphs.
-+ *
-+ * Returns the pointer to the CoreSight Graph Package when found. Otherwise
-+ * returns NULL.
-+ */
-+const union acpi_object *
-+acpi_get_coresight_graph(struct acpi_device *adev)
-+{
-+	const union acpi_object *graph_list, *graph;
-+	int i, nr_graphs;
++        } // ETM0
+       }
 +
-+	graph_list = acpi_get_dsd_graph(adev);
-+	if (!graph_list)
-+		return graph_list;
+       Device(CPU1) { // A57-1: Cluster 0, Cpu 1
+         Name(_HID, "ACPI0007")
+         Name(_UID, 5)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM1) { // ETM on Cluster0 CPU1
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x22140000, 0x1000)
++          })
 +
-+	nr_graphs = graph_list->package.elements[1].integer.value;
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 1, \_SB_.CLU0.FUN0)
++          DSD_PORTS_END
 +
-+	for (i = 2; i < nr_graphs + 2; i++) {
-+		graph = &graph_list->package.elements[i];
-+		if (!is_acpi_coresight_graph(graph))
-+			continue;
-+		if (acpi_validate_coresight_graph(graph))
-+			return graph;
-+		/* Invalid graph format */
-+		break;
-+	}
++        } // ETM1
+       }
 +
-+	return NULL;
-+}
++      Device(FUN0) {
++        Name(_HID, "ARMHC9FF")
++        Name(_CID, "ARMHC9FF")
++        Name(_CRS, ResourceTemplate() {
++          Memory32Fixed(ReadWrite, 0x220c0000, 0x1000)
++        })
 +
-+/*
-+ * acpi_coresight_parse_link	- Parse the given Graph connection
-+ * of the device and populate the coresight_connection for an output
-+ * connection.
-+ *
-+ * CoreSight Graph specification mandates that the direction of the data
-+ * flow must be specified in the link. i.e,
-+ *
-+ *	SourcePortAddress,	// Integer
-+ *	DestinationPortAddress,	// Integer
-+ *	DestinationDeviceName,	// Reference to another device
-+ *	DirectionOfFlow,	// 1 for output(master), 0 for input(slave)
-+ *
-+ * Returns the direction of the data flow [ Input(slave) or Output(master) ]
-+ * upon success.
-+ * Returns an negative error number otherwise.
-+ */
-+static int acpi_coresight_parse_link(struct acpi_device *adev,
-+				     const union acpi_object *link,
-+				     struct coresight_connection *conn)
-+{
-+	int rc, dir;
-+	const union acpi_object *fields;
-+	struct acpi_device *r_adev;
-+	struct device *rdev;
++        DSD_PORTS_BEGIN(3)
++        CS_OUTPUT_PORT(0, 0, \_SB_.MFUN),
++        CS_INPUT_PORT(0, 0, \_SB_.CLU0.CPU0.ETM0),
++        CS_INPUT_PORT(1, 0, \_SB_.CLU0.CPU1.ETM1)
++        DSD_PORTS_END
++      } // CL0.FUN0
+     }
 +
-+	if (link->type != ACPI_TYPE_PACKAGE ||
-+	    link->package.count != 4)
-+		return -EINVAL;
+     Device (CLU1) { // Cluster1 state
+       Name(_HID, "ACPI0010")
+       Name(_UID, 2)
+@@ -208,19 +294,45 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+           "CorePwrDn"
+         },
+       })
 +
-+	fields = link->package.elements;
+       Device(CPU2) { // A53-0: Cluster 1, Cpu 0
+         Name(_HID, "ACPI0007")
+         Name(_UID, 0)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM2) { // ETM on Cluster1, CPU0
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23040000, 0x1000)
++          })
 +
-+	if (fields[0].type != ACPI_TYPE_INTEGER ||
-+	    fields[1].type != ACPI_TYPE_INTEGER ||
-+	    fields[2].type != ACPI_TYPE_LOCAL_REFERENCE ||
-+	    fields[3].type != ACPI_TYPE_INTEGER)
-+		return -EINVAL;
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 0, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
 +
-+	rc = acpi_bus_get_device(fields[2].reference.handle, &r_adev);
-+	if (rc)
-+		return rc;
++        } // ETM2
+       }
 +
-+	dir = fields[3].integer.value;
-+	if (dir == ACPI_CORESIGHT_LINK_MASTER) {
-+		conn->outport = fields[0].integer.value;
-+		conn->child_port = fields[1].integer.value;
-+		rdev = coresight_find_device_by_fwnode(&r_adev->fwnode);
-+		if (!rdev)
-+			return -EPROBE_DEFER;
-+		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
-+	}
+       Device(CPU3) { // A53-1: Cluster 1, Cpu 1
+         Name(_HID, "ACPI0007")
+         Name(_UID, 1)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM3) { // ETM on Cluster1, CPU1
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23140000, 0x1000)
++          })
 +
-+	return dir;
-+}
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 1, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
 +
-+/*
-+ * acpi_coresight_parse_graph	- Parse the _DSD CoreSight graph
-+ * connection information and populate the supplied coresight_platform_data
-+ * instance.
-+ */
-+static int acpi_coresight_parse_graph(struct acpi_device *adev,
-+				      struct coresight_platform_data *pdata)
-+{
-+	int rc, i, nlinks;
-+	const union acpi_object *graph;
-+	struct coresight_connection *conns, *ptr;
++        } // ETM3
+       }
+       Device(CPU4) { // A53-2: Cluster 1, Cpu 2
+         Name(_HID, "ACPI0007")
+@@ -228,6 +340,18 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM4) { // ETM on Cluster1, CPU2
++          Name (_HID, "ARMHC500")	// ETM
++          Name (_CID, "ARMHC500")	// ETM
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23240000, 0x1000)
++          })
 +
-+	pdata->nr_inport = pdata->nr_outport = 0;
-+	graph = acpi_get_coresight_graph(adev);
-+	if (!graph)
-+		return -ENOENT;
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 2, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
 +
-+	nlinks = graph->package.elements[2].integer.value;
-+	if (!nlinks)
-+		return 0;
++        } // ETM4
+       }
+       Device(CPU5) { // A53-3: Cluster 1, Cpu 3
+         Name(_HID, "ACPI0007")
+@@ -235,9 +359,126 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM5) { // ETM on Cluster1, CPU3
++          Name (_HID, "ARMHC500")	// ETM
++          Name (_CID, "ARMHC500")	// ETM
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23340000, 0x1000)
++          })
 +
-+	/*
-+	 * To avoid scanning the table twice (once for finding the number of
-+	 * output links and then later for parsing the output links),
-+	 * cache the links information in one go and then later copy
-+	 * it to the pdata.
-+	 */
-+	conns = devm_kcalloc(&adev->dev, nlinks, sizeof(*conns), GFP_KERNEL);
-+	if (!conns)
-+		return -ENOMEM;
-+	ptr = conns;
-+	for (i = 0; i < nlinks; i++) {
-+		const union acpi_object *link = &graph->package.elements[3 + i];
-+		int dir;
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 3, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
++        } // ETM5
+       }
++      Device(FUN1) {
++        Name(_HID, "ARMHC9FF")
++        Name(_CID, "ARMHC9FF")
++        Name(_CRS, ResourceTemplate() {
++          Memory32Fixed(ReadWrite, 0x230c0000, 0x1000)
++        })
 +
-+		dir = acpi_coresight_parse_link(adev, link, ptr);
-+		if (dir < 0)
-+			return dir;
-+
-+		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
-+			pdata->nr_outport++;
-+			ptr++;
-+		} else {
-+			pdata->nr_inport++;
-+		}
-+	}
-+
-+	rc = coresight_alloc_conns(&adev->dev, pdata);
-+	if (rc)
-+		return rc;
-+
-+	/* Copy the connection information to the final location */
-+	for (i = 0; i < pdata->nr_outport; i++)
-+		pdata->conns[i] = conns[i];
-+
-+	devm_kfree(&adev->dev, conns);
-+	return 0;
-+}
-+
-+/*
-+ * acpi_handle_to_logical_cpuid	- Map a given acpi_handle to the
-+ * logical CPU id of the corresponding CPU device.
-+ *
-+ * Returns the logical CPU id when found. Otherwise returns >= nr_cpus_id.
-+ */
-+static int
-+acpi_handle_to_logical_cpuid(acpi_handle handle)
-+{
-+	int i;
-+	struct acpi_processor *pr;
-+
-+	for_each_possible_cpu(i) {
-+		pr = per_cpu(processors, i);
-+		if (pr && pr->handle == handle)
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+/*
-+ * acpi_coresigh_get_cpu - Find the logical CPU id of the CPU associated
-+ * with this coresight device. With ACPI bindings, the CoreSight components
-+ * are listed as child device of the associated CPU.
-+ *
-+ * Returns the logical CPU id when found. Otherwise returns < 0.
-+ */
-+static int acpi_coresight_get_cpu(struct device *dev)
-+{
-+	int cpu;
-+	acpi_handle cpu_handle;
-+	acpi_status status;
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+
-+	if (!adev)
-+		return 0;
-+	status = acpi_get_parent(adev->handle, &cpu_handle);
-+	if (ACPI_FAILURE(status))
-+		return 0;
-+
-+	cpu = acpi_handle_to_logical_cpuid(cpu_handle);
-+	if (cpu >= nr_cpu_ids)
-+		return 0;
-+	return cpu;
-+}
-+
-+static struct coresight_platform_data *
-+acpi_get_coresight_platform_data(struct device *dev,
-+				 struct coresight_platform_data *pdata)
-+{
-+	int rc = -EINVAL;
-+	struct acpi_device *adev;
-+
-+	if (!dev)
-+		goto out;
-+
-+	adev = ACPI_COMPANION(dev);
-+	if (!adev)
-+		goto out;
-+
-+	rc = acpi_coresight_parse_graph(adev, pdata);
-+	if (rc)
-+		goto out;
-+out:
-+	if (rc)
-+		return ERR_PTR(rc);
-+	return pdata;
-+}
-+
-+#else
-+
-+static inline struct coresight_platform_data *
-+acpi_get_coresight_platform_data(struct device *dev,
-+				 struct coresight_platform_data *pdata)
-+{
-+	return NULL;
-+}
-+
-+static inline int acpi_coresight_get_cpu(struct device *dev)
-+{
-+	return 0;
-+}
-+#endif
-+
- int coresight_get_cpu(struct device *dev)
- {
- 	if (is_of_node(dev->fwnode))
- 		return of_coresight_get_cpu(dev);
-+	else if (is_acpi_device_node(dev->fwnode))
-+		return acpi_coresight_get_cpu(dev);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(coresight_get_cpu);
-@@ -315,6 +715,8 @@ coresight_get_platform_data(struct device *dev)
++        DSD_PORTS_BEGIN(5)
++        CS_OUTPUT_PORT(0, 1, \_SB_.MFUN),
++        CS_INPUT_PORT(0, 0, \_SB_.CLU1.CPU2.ETM2),
++        CS_INPUT_PORT(1, 0, \_SB_.CLU1.CPU3.ETM3),
++        CS_INPUT_PORT(2, 0, \_SB_.CLU1.CPU4.ETM4),
++        CS_INPUT_PORT(3, 0, \_SB_.CLU1.CPU5.ETM5)
++        DSD_PORTS_END
++      } // CL1.FUN1
+     }
  
- 	if (is_of_node(dev->fwnode))
- 		return of_get_coresight_platform_data(dev, pdata);
-+	else if (is_acpi_device_node(dev->fwnode))
-+		return acpi_get_coresight_platform_data(dev, pdata);
- 
- 	return ERR_PTR(-ENOENT);
- }
++    Device(STM0) {
++      Name(_HID, "ARMHC502")	// STM
++      Name(_CID, "ARMHC502")
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20100000, 0x1000)
++        Memory32Fixed(ReadWrite, 0x28000000, 0x1000000)
++      })
++      DSD_PORTS_BEGIN(1)
++      CS_OUTPUT_PORT(0, 2, \_SB_.MFUN)
++      DSD_PORTS_END
++    }
++
++    Device(MFUN) {
++      Name(_HID, "ARMHC9FF")	// Funnel
++      Name(_CID, "ARMHC9FF")	// Funnel
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20040000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(4)
++      CS_OUTPUT_PORT(0, 0, \_SB_.ETF0),
++      CS_INPUT_PORT(0, 0, \_SB_.CLU0.FUN0),
++      CS_INPUT_PORT(1, 0, \_SB_.CLU1.FUN1),
++      CS_INPUT_PORT(2, 0, \_SB_.STM0)
++      DSD_PORTS_END
++
++    } // MFUN-nel
++
++    Device(ETF0) {
++      Name(_HID, "ARMHC97C")	// TMC
++      Name(_CID, "ARMHC97C")	// TMC
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20010000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(2)
++      CS_OUTPUT_PORT(0, 1, \_SB_.RPL),
++      CS_INPUT_PORT(0, 0, \_SB_.MFUN)
++      DSD_PORTS_END
++
++    } // ETF0
++
++    Device(RPL) {
++      Name(_HID, "ARMHC98D")	// Replicator
++      Name(_CID, "ARMHC98D")	// Replicator
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20120000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(3)
++      CS_OUTPUT_PORT(0, 0, \_SB_.TPIU),
++      CS_OUTPUT_PORT(1, 0, \_SB_.ETR),
++      CS_INPUT_PORT(0, 0, \_SB_.ETF0)
++      DSD_PORTS_END
++
++    } // RPL
++
++    Device(ETR) {
++      Name(_HID, "ARMHC97C")	// TMC
++      Name(_CID, "ARMHC97C")	// TMC
++      Name(_CCA, 0) // The ETR on this platform is not coherent
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20070000, 0x1000)
++      })
++
++      Name(_DSD, Package() {
++         DSD_GRAPH_BEGIN(1)
++         CS_INPUT_PORT(0, 1, \_SB_.RPL)
++         DSD_GRAPH_END,
++
++         ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++         Package() {
++            Package(2) {"arm,scatter-gather", 1}
++         }
++      })
++
++    } // ETR
++
++    Device(TPIU) {
++      Name(_HID, "ARMHC979")	// TPIU
++      Name(_CID, "ARMHC979")	// TPIU
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20030000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(1)
++      CS_INPUT_PORT(0, 0, \_SB_.RPL)
++      DSD_PORTS_END
++
++    } // TPIU
++
+     //
+     // Keyboard and Mouse
+     //
 -- 
 2.7.4
 
