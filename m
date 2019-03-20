@@ -2,74 +2,116 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E75C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D8DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC23321850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29E2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfCTK0J (ORCPT
+        id S1727726AbfCTK0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:26:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18912 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbfCTK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:26:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 03:26:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,248,1549958400"; 
-   d="scan'208";a="154023085"
-Received: from tfkristx-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.254.211])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2019 03:26:05 -0700
-Date:   Wed, 20 Mar 2019 12:26:07 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sudeep Dutt <sudeep.dutt@intel.com>
-Cc:     ashutosh.dixit@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: scif_insert_vma()
-Message-ID: <20190320102607.GA9457@linux.intel.com>
-References: <20190311064514.GA10833@linux.intel.com>
- <1552888060.22480.197.camel@intel.com>
+        Wed, 20 Mar 2019 06:26:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:36058 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfCTK0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:26:39 -0400
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2KAO3Sr008946;
+        Wed, 20 Mar 2019 19:24:03 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
+ Wed, 20 Mar 2019 19:24:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126094122116.bbtec.net [126.94.122.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2KANxPp008907
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 20 Mar 2019 19:24:03 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
+References: <000000000000db3d130584506672@google.com>
+ <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+ <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+Date:   Wed, 20 Mar 2019 19:23:58 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552888060.22480.197.camel@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 10:47:40PM -0700, Sudeep Dutt wrote:
-> On Mon, 2019-03-11 at 08:45 +0200, Jarkko Sakkinen wrote:
-> > Hi
-> > 
-> > Just wondering what will happen if kzalloc() fails in scif_mmap.c. How
-> > it is recovered? I don't see anything in the VMA callbacks taking care
-> > of this.
+On 2019/03/20 18:59, Dmitry Vyukov wrote:
+>> From bisection log:
+>>
+>>         testing release v4.17
+>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
+>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
+>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+>>         testing release v4.16
+>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+>>         run #0: OK
+>>         run #1: OK
+>>         run #2: OK
+>>         run #3: OK
+>>         run #4: OK
+>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
+>>         run #6: OK
+>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
+>>         run #8: OK
+>>         run #9: OK
+>>         testing release v4.15
+>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+>>         all runs: OK
+>>         # git bisect start v4.16 v4.15
+>>
+>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
 > 
-> Hi Jarkko,
-> 
-> scif_insert_vma(..) is called from scif_mmap(..) and scif_vma_open(..).
-> scif_mmap(..) checks for allocation failures but scif_vma_open(..) does
-> not on purpose.
-> 
-> The vm_operations_struct open(..)/close(..) callbacks do not allow
-> returning errors. The driver will take a reference to the VMA private
-> data structure irrespective of whether the allocation during the
-> open(..) callback succeeds or fails. The close(..) callback cleans up
-> the data structures from the mmap(..) or open(..) callbacks if any.
+> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
+> looks like the right range, no?
 
-I'm doing allocations also in SGX vma_open callback and was grepping
-through kernel tree for how allocations were handled.  Thanks for
-clarifying this. In SGX's case I ended up with allowing to fail in
-vma open and doing SIGBUS in the #PF handler if so...
+No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
+"Stack corruption" can't manifest as "Out of memory and no killable processes".
 
-/Jarkko
+"kernel panic: Out of memory and no killable processes..." is completely
+unrelated to "kernel panic: corrupted stack end in wb_workfn".
