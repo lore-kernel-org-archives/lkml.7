@@ -2,75 +2,137 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E0DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E21DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDF6213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29888213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfCTQuE (ORCPT
+        id S1727137AbfCTQu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:50:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50155 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfCTQuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:50:04 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h6ePg-00035m-GR; Wed, 20 Mar 2019 16:50:00 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: mpt3sas: fix indentation issue
-Date:   Wed, 20 Mar 2019 16:50:00 +0000
-Message-Id: <20190320165000.29340-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 20 Mar 2019 12:50:28 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42882 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfCTQu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 12:50:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97C45A78;
+        Wed, 20 Mar 2019 09:50:27 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E60C53F614;
+        Wed, 20 Mar 2019 09:50:24 -0700 (PDT)
+Subject: Re: [PATCH v6 05/22] iommu: Introduce cache_invalidate API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Cc:     yi.l.liu@linux.intel.com, kevin.tian@intel.com,
+        vincent.stehle@arm.com, alex.williamson@redhat.com,
+        ashok.raj@intel.com, kvm@vger.kernel.org, peter.maydell@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, marc.zyngier@arm.com,
+        iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger.pro@gmail.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-6-eric.auger@redhat.com>
+ <20190320093727.45a86866@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <7ae1df77-18d0-0993-8dab-6af3a4474b42@arm.com>
+Date:   Wed, 20 Mar 2019 16:50:07 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320093727.45a86866@jacob-builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 20/03/2019 16:37, Jacob Pan wrote:
+[...]
+>> +struct iommu_inv_addr_info {
+>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>> +	__u32	flags;
+>> +	__u32	archid;
+>> +	__u64	pasid;
+>> +	__u64	addr;
+>> +	__u64	granule_size;
+>> +	__u64	nb_granules;
+>> +};
+>> +
+>> +/**
+>> + * First level/stage invalidation information
+>> + * @cache: bitfield that allows to select which caches to invalidate
+>> + * @granularity: defines the lowest granularity used for the
+>> invalidation:
+>> + *     domain > pasid > addr
+>> + *
+>> + * Not all the combinations of cache/granularity make sense:
+>> + *
+>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>> + * granularity	|		|		|
+>> cache	|
+>> + * -------------+---------------+---------------+---------------+
+>> + * DOMAIN	|	N/A	|       Y	|
+>> Y	|
+>> + * PASID	|	Y	|       Y	|
+>> Y	|
+>> + * ADDR		|       Y	|       Y	|
+>> N/A	|
+>> + */
+>> +struct iommu_cache_invalidate_info {
+>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>> +	__u32	version;
+>> +/* IOMMU paging structure cache */
+>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>> cache */
+> Just a clarification, this used to be an enum. You do intend to issue a
+> single invalidation request on multiple cache types? Perhaps for
+> virtio-IOMMU? I only see a single cache type in your patch #14. For VT-d
+> we plan to issue one cache type at a time for now. So this format works
+> for us.
 
-There are a couple of statements that are incorrectly indented, fix
-these.
+Yes for virtio-iommu I'd like as little overhead as possible, which
+means a single invalidation message to hit both IOTLB and ATC at once,
+and the ability to specify multiple pages with @nb_granules.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/mpt3sas/mpt3sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> However, if multiple cache types are issued in a single invalidation.
+> They must share a single granularity, not all combinations are valid.
+> e.g. dev IOTLB does not support domain granularity. Just a reminder,
+> not an issue. Driver could filter out invalid combinations.
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 0aca627e21e8..9c7012f4c412 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -1523,8 +1523,8 @@ _base_process_reply_queue(struct adapter_reply_queue *reply_q)
- 				reply_q->irq_poll_scheduled = true;
- 				irq_poll_sched(&reply_q->irqpoll);
- 			}
--				atomic_dec(&reply_q->busy);
--				return completed_cmds;
-+			atomic_dec(&reply_q->busy);
-+			return completed_cmds;
- 		}
- 		if (request_descript_type == MPI2_RPY_DESCRIPT_FLAGS_UNUSED)
- 			goto out;
--- 
-2.20.1
+Agreed. Even the core could filter out invalid combinations based on the
+table above: IOTLB and domain granularity are N/A.
+
+Thanks,
+Jean
+
+> 
+>> +	__u8	cache;
+>> +	__u8	granularity;
+>> +	__u8	padding[2];
+>> +	union {
+>> +		__u64	pasid;
+>> +		struct iommu_inv_addr_info addr_info;
+>> +	};
+>> +};
+>> +
+>> +
+>>  #endif /* _UAPI_IOMMU_H */
+> 
+> [Jacob Pan]
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> 
 
