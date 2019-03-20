@@ -2,112 +2,75 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EA1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397B0213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mFtDMmFO"
+	by mail.kernel.org (Postfix) with ESMTP id C55FE213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553088581;
+	bh=r5CcAPwZR0UU8uWco8mxXvnypDrWuxeTVLrwSeqAlR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mJkG2r4SQ660tPX8bShXP5s+UM/eZn7LGdQhwGD8bNcsQGGhSizOFsGgEubgKCAWB
+	 6dD1nZixPAuGGxOLiOtvex5m0lZujRku/WqlDh+/pcEnxknclqFwFOdEXcX9BRBYP8
+	 ysxxVKHjGI+Ircjp4ZtZFAL1BkVaOdo5IMKowH/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfCTN3h (ORCPT
+        id S1727936AbfCTN3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:29:37 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:42104 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTN3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:29:34 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x2KDTJHu029375;
-        Wed, 20 Mar 2019 22:29:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2KDTJHu029375
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553088560;
-        bh=J3I0WRysBKxZTanhBUXEyZbaQHMnn1tkHS81meSjYfA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mFtDMmFOERz3kLq4QsYxXpOJiDrEatzJOu4Y8j6VaI9UKsteLMDGmwy5RvZZfXzPv
-         fDNnCfkvDschdeWpGO6OikoJWTvEIRo+GPi9EnJZvOx+TUg2cQCcEths7AO8xwqCpB
-         Q5fWGsi4x0d+s7ZIdFAElyXVv0dpDOnvEH3nYiQcN1dVlv8p5foRi4G4HTH/25MhQ4
-         XzAWxndV1MzXoUqAwoeTUr5LTvhuU/L/RYNvZFjCrLn5PlvPE/0SRRh5iknbVLfeqY
-         3nh9QFloW8lo6M8pX8/2qR3Gtw4wrzz3Fe3lyN2tqluHRzhgrzWa6UZO4+zXMVobdE
-         lwRmDFF/3Rn5g==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id w13so1467500vsc.4;
-        Wed, 20 Mar 2019 06:29:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmp1uStq5/dvfCRMtdRNwqE1GZ/7IkHkF4AIPclbEgWKB8IGCF
-        UJmJIHkLvqY7kZhsfh3UTz5TLvyVLS/RipTMzdg=
-X-Google-Smtp-Source: APXvYqzynuO5wFvKvdc2hDj2kkxFFLy89AfeVQybGkVKM48ZI5ErdqKZ2eMRkl9o5z/VEFP4Xd9NtyRei0KPIWGfrR0=
-X-Received: by 2002:a67:f105:: with SMTP id n5mr4963786vsk.181.1553088559207;
- Wed, 20 Mar 2019 06:29:19 -0700 (PDT)
+        Wed, 20 Mar 2019 09:29:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52056 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726644AbfCTN3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 09:29:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 75CD9AF1F;
+        Wed, 20 Mar 2019 13:29:37 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 14:29:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     syzbot <syzbot+b70f2aabc707c69c9239@syzkaller.appspotmail.com>,
+        chanho.min@lge.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz,
+        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: WARNING: syz-executor still has locks held!
+Message-ID: <20190320132936.GB8696@dhcp22.suse.cz>
+References: <0000000000000e4a41057b6c9792@google.com>
+ <0000000000004cdec6058485b2ce@google.com>
+ <20190320131655.GA8696@dhcp22.suse.cz>
+ <20190320132410.GB21673@redhat.com>
 MIME-Version: 1.0
-References: <CAG5bF+RvumzKK0E-GAT223jnBvkRe1RN_0J9cGpfPOqCBvfWyw@mail.gmail.com>
-In-Reply-To: <CAG5bF+RvumzKK0E-GAT223jnBvkRe1RN_0J9cGpfPOqCBvfWyw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 20 Mar 2019 22:28:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3_YA4+cdcJGzgpZ_QcL-LxfFNOpuL7tibGvuLo4CHfA@mail.gmail.com>
-Message-ID: <CAK7LNAT3_YA4+cdcJGzgpZ_QcL-LxfFNOpuL7tibGvuLo4CHfA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "kbuild: use -Oz instead of -Os when using clang"
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Behan Webster <behanw@converseincode.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320132410.GB21673@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 6:10 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The clang option -Oz enables *aggressive* optimization for size,
-> which doesn't necessarily result in smaller images, but can have
-> negative impact on performance. Switch back to the less aggressive
-> -Os.
->
-> This reverts commit 6748cb3c299de1ffbe56733647b01dbcc398c419.
->
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Wed 20-03-19 14:24:11, Oleg Nesterov wrote:
+> On 03/20, Michal Hocko wrote:
+> >
+> > Yes we do hold the cgred mutex while calling freezable_schedule but why
+> > are we getting a warning is not really clear to me. The task should be
+> > hidden from the freezer so why do we warn at all?
+> 
+> try_to_freeze() calls debug_check_no_locks_held() and this makes sense.
 
+Yes it does. But it already ignores PF_NOFREEZE tasks and I fail to see
+why is PF_FREEZER_SKIP any different. Yes we know we are holding the
+lock and we have discussed that left and right before the patch was
+merged but it seems that skipping the task was the only viable option
+to fix suspend issues as removing the cgred is way way too complicated.
 
-Applied to linux-kbuild/fixes.  Thanks.
-
-
-> ---
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 9ef547fc7ffe..191f3ce3cb5e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -667,7 +667,7 @@ KBUILD_CFLAGS       += $(call cc-disable-warning, format-overflow)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, int-in-bool-context)
->
->  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-> -KBUILD_CFLAGS  += $(call cc-option,-Oz,-Os)
-> +KBUILD_CFLAGS  += -Os
->  else
->  KBUILD_CFLAGS   += -O2
->  endif
-> --
-> 2.21.0.225.g810b269d1ac-goog
-
-
-
+That being said, I was arguing against the patch initially because it
+was a hack but sometimes that is the only way viable path short term.
 -- 
-Best Regards
-Masahiro Yamada
+Michal Hocko
+SUSE Labs
