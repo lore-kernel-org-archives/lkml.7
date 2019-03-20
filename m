@@ -2,139 +2,112 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC7FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265F8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB61218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EAD218A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfCTSRC (ORCPT
+        id S1727429AbfCTSRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:17:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44388 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfCTSRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:17:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE9A8A78;
-        Wed, 20 Mar 2019 11:17:01 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1F723F59C;
-        Wed, 20 Mar 2019 11:16:59 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 18:16:57 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
-        paulus@ozlabs.org, benh@kernel.crashing.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] kmemleak: skip scanning holes in the .bss section
-Message-ID: <20190320181656.GB38229@arrakis.emea.arm.com>
-References: <20190313145717.46369-1-cai@lca.pw>
- <20190319115747.GB59586@arrakis.emea.arm.com>
- <87lg19y9dp.fsf@concordia.ellerman.id.au>
+        Wed, 20 Mar 2019 14:17:09 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.119]:34013 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727122AbfCTSRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:17:09 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 474CD1586AA
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:17:08 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6fm0hAtnW2qH76fm0hbwUa; Wed, 20 Mar 2019 13:17:08 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=57748 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6flr-002fa8-Tg; Wed, 20 Mar 2019 13:17:07 -0500
+Date:   Wed, 20 Mar 2019 13:16:58 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] watchdog: alim7101: Mark expected switch fall-through
+Message-ID: <20190320181658.GA6749@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87lg19y9dp.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6flr-002fa8-Tg
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.39]:57748
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 12:15:46AM +1100, Michael Ellerman wrote:
-> Catalin Marinas <catalin.marinas@arm.com> writes:
-> > On Wed, Mar 13, 2019 at 10:57:17AM -0400, Qian Cai wrote:
-> >> @@ -1531,7 +1547,14 @@ static void kmemleak_scan(void)
-> >>  
-> >>  	/* data/bss scanning */
-> >>  	scan_large_block(_sdata, _edata);
-> >> -	scan_large_block(__bss_start, __bss_stop);
-> >> +
-> >> +	if (bss_hole_start) {
-> >> +		scan_large_block(__bss_start, bss_hole_start);
-> >> +		scan_large_block(bss_hole_stop, __bss_stop);
-> >> +	} else {
-> >> +		scan_large_block(__bss_start, __bss_stop);
-> >> +	}
-> >> +
-> >>  	scan_large_block(__start_ro_after_init, __end_ro_after_init);
-> >
-> > I'm not a fan of this approach but I couldn't come up with anything
-> > better. I was hoping we could check for PageReserved() in scan_block()
-> > but on arm64 it ends up not scanning the .bss at all.
-> >
-> > Until another user appears, I'm ok with this patch.
-> >
-> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> I actually would like to rework this kvm_tmp thing to not be in bss at
-> all. It's a bit of a hack and is incompatible with strict RWX.
-> 
-> If we size it a bit more conservatively we can hopefully just reserve
-> some space in the text section for it.
-> 
-> I'm not going to have time to work on that immediately though, so if
-> people want this fixed now then this patch could go in as a temporary
-> solution.
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-I think I have a simpler idea. Kmemleak allows punching holes in
-allocated objects, so just turn the data/bss sections into dedicated
-kmemleak objects. This happens when kmemleak is initialised, before the
-initcalls are invoked. The kvm_free_tmp() would just free the
-corresponding part of the bss.
+This patch fixes the following warning:
 
-Patch below, only tested briefly on arm64. Qian, could you give it a try
-on powerpc? Thanks.
+drivers/watchdog/alim7101_wdt.c: In function ‘fop_ioctl’:
+drivers/watchdog/alim7101_wdt.c:279:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   wdt_keepalive();
+   ^~~~~~~~~~~~~~~
+drivers/watchdog/alim7101_wdt.c:282:2: note: here
+  case WDIOC_GETTIMEOUT:
+  ^~~~
 
---------8<------------------------------
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index 683b5b3805bd..c4b8cb3c298d 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -712,6 +712,8 @@ static void kvm_use_magic_page(void)
- 
- static __init void kvm_free_tmp(void)
- {
-+	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
-+			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
- }
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 707fa5579f66..0f6adcbfc2c7 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1529,11 +1529,6 @@ static void kmemleak_scan(void)
+Notice that, in this particular case, the /* Fall through */
+comment is placed at the very bottom of the case statement,
+which is what GCC is expecting to find.
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enabling
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/watchdog/alim7101_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
+index 12f7ea62dddd..f5ada07e9202 100644
+--- a/drivers/watchdog/alim7101_wdt.c
++++ b/drivers/watchdog/alim7101_wdt.c
+@@ -277,8 +277,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 			return -EINVAL;
+ 		timeout = new_timeout;
+ 		wdt_keepalive();
+-		/* Fall through */
  	}
- 	rcu_read_unlock();
- 
--	/* data/bss scanning */
--	scan_large_block(_sdata, _edata);
--	scan_large_block(__bss_start, __bss_stop);
--	scan_large_block(__start_ro_after_init, __end_ro_after_init);
--
- #ifdef CONFIG_SMP
- 	/* per-cpu sections scanning */
- 	for_each_possible_cpu(i)
-@@ -2071,6 +2066,15 @@ void __init kmemleak_init(void)
- 	}
- 	local_irq_restore(flags);
- 
-+	/* register the data/bss sections */
-+	create_object((unsigned long)_sdata, _edata - _sdata,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__start_ro_after_init,
-+		      __end_ro_after_init - __start_ro_after_init,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+
- 	/*
- 	 * This is the point where tracking allocations is safe. Automatic
- 	 * scanning is started during the late initcall. Add the early logged
++		/* Fall through */
+ 	case WDIOC_GETTIMEOUT:
+ 		return put_user(timeout, p);
+ 	default:
+-- 
+2.21.0
+
