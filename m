@@ -2,77 +2,86 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740A8C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6E4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F032184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD422184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:25:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dfru4UH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfCTMYC (ORCPT
+        id S1727616AbfCTMZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:24:02 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:44129 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727637AbfCTMYB (ORCPT
+        Wed, 20 Mar 2019 08:25:30 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50206 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfCTMZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:24:01 -0400
-Received: by mail-it1-f197.google.com with SMTP id z190so1972919itc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 05:24:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=yzZsyOBPk2mVki6aWk8bYi3PxGLUTmWInMgQm4PaJig=;
-        b=mN2zkBWuIT92x6RjID/0gvPLyIpAXxye0K2lq0Js3nRqLiqnxCNFC1WZg9Uy0nXv+f
-         /tXxEEA12BZ/AQqFbVbZ44BnvXaIooOI1IhJ3dAAbiciJWz/dI8P5fTNVzt/LBLeoLYK
-         dxTIcnAvo/bvNe/+l+N1a7vcTz+Tqvy387OQyz3qF1TkL/iRapF4IoSV3FT7O4dOlEfa
-         PQn4oC3EhyCj67KDyWid4ayM5a/zFGEIfJ3DR3hO4oD20mgyUnAV/76Mvy5jh870uDVI
-         yoVH11TcOSEQ77/AyLV2wI5njzdxNeO7s0KBV9387ZE5hszR6rIhMwHH1dRwoB/g95KW
-         dafg==
-X-Gm-Message-State: APjAAAUTc1AVvTLYTMPEg1q8xR2PZfAQENIUa/xj5rbmYzsBcmE8UfLe
-        0/BNRLOLWd3C6m03ER2WERxJKh61UXnHPHZAO+dbBYI3PWQe
-X-Google-Smtp-Source: APXvYqwikRuQ9Jtv7r9PrhNSda7enOr/a+TY2zZd5yzbHmDETTLymI6IU+FWdoKzpan+XUgDrtKG2g6w9k417LXGJHev01ZLV5eu
+        Wed, 20 Mar 2019 08:25:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=smgpF9UKcmBfA9N5X/DOY2q9U2CSoD48XaQLEORD2dI=; b=Dfru4UH0ntTrplb6Ke5efLEJE
+        rkznrgnYBSKt6cUgqtBbkSVef9olE7JcagcMs64PgwoMsT95Sq2cdBE/axhYpDQiEYbPKGeCuFNmY
+        NXZwcLn1vLAzKhx3jV0vghnWzuK0JjsVWuHMiGAXxZiIKh06a9BjatNep27D8fjIWKXmlTv/9L/ny
+        HYUJ4DrWW55x4O4A6Z40e0hOSDkUpPDpkIPAFAorWgRQJ+KH+fQQlBkwJXqaJ9NPabukcFeSs4M58
+        sCvSOT7kXAYLXQV89FKckicNVUg7xpI8m/TyLUYa/DN9ip2G5R2BkNxCe+ssHPcYecBYlyxDd0zFk
+        Igw9mSZBA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6aHU-0002cC-GI; Wed, 20 Mar 2019 12:25:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F3C5923EA30BA; Wed, 20 Mar 2019 13:25:14 +0100 (CET)
+Date:   Wed, 20 Mar 2019 13:25:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Subject: Re: [RFC][PATCH 6/8] perf/x86: Clear ->event_constraint[] on put
+Message-ID: <20190320122514.GF6058@hirez.programming.kicks-ass.net>
+References: <20190314130113.919278615@infradead.org>
+ <20190314130705.956098225@infradead.org>
+ <CABPqkBReEzMKUDJVAUArwbzxtL5KTNRot2coW4MUOvy0qzgC-w@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:7d8a:: with SMTP id b132mr4397836itc.20.1553084640449;
- Wed, 20 Mar 2019 05:24:00 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 05:24:00 -0700
-In-Reply-To: <0000000000000e4a41057b6c9792@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004cdec6058485b2ce@google.com>
-Subject: Re: WARNING: syz-executor still has locks held!
-From:   syzbot <syzbot+b70f2aabc707c69c9239@syzkaller.appspotmail.com>
-To:     chanho.min@lge.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, oleg@redhat.com,
-        pavel@ucw.cz, rafael.j.wysocki@intel.com,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBReEzMKUDJVAUArwbzxtL5KTNRot2coW4MUOvy0qzgC-w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Mar 19, 2019 at 02:50:21PM -0700, Stephane Eranian wrote:
+> On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > The current code unconditionally clears cpuc->event_constraint[i]
+> > before calling get_event_constraints(.idx=i). The only site that cares
+> > is intel_get_event_constraints() where the c1 load will always be
+> > NULL.
+> >
+> > However, always calling get_event_constraints() on all events is
+> > wastefull, most times it will return the exact same result. Therefore
+> > retain the logic in intel_get_event_constraints() and change the
+> > generic code to only clear the constraint on put.
+> >
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> I thought there was caching of the constraint in case it was static
+> (or unconstrained)
 
-commit c22397888f1eed98cd59f0a88f2a5f6925f80e15
-Author: Chanho Min <chanho.min@lge.com>
-Date:   Mon Nov 12 03:54:45 2018 +0000
+Yeah, I was under the same impression :-/
 
-     exec: make de_thread() freezable
+> to avoid walking the constraint table each time between invocations
+> on the same group_sched_in() call. But the way the c1 vs. c2 logic
+> is written I don't see it. In which case, this could be another opportunity.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ee6217200000
-start commit:   c2239788 exec: make de_thread() freezable
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16ee6217200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ee6217200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=73e2bc0cb6463446
-dashboard link: https://syzkaller.appspot.com/bug?extid=b70f2aabc707c69c9239
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c9e26d400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e1234d400000
-
-Reported-by: syzbot+b70f2aabc707c69c9239@syzkaller.appspotmail.com
-Fixes: c2239788 ("exec: make de_thread() freezable")
+Right, the next patch attempts this.
