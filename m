@@ -2,108 +2,144 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE01C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23834C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D787218CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S1O9kHKD"
+	by mail.kernel.org (Postfix) with ESMTP id E70C8218CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553115159;
+	bh=KhM59fq0xMcxfrPWegt3eJ/Pj0d60Y1W4KnA/CcsvYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uaGZ1d6Gp18VQdu4ZcqzLxTKFOqWptpOMpJM538VCGxehMbWxdInuMkge5cMRmtPm
+	 GiU2PBDcgoPRrRg0dRF/Y74hRBjJdmV9077zHyOU7YTOJSw+0fXkTEUiKwUqwXaSPf
+	 GUDGe959afG0VLzeebE+iiwF5VhlZERvQM9MCPSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfCTUvo (ORCPT
+        id S1727539AbfCTUwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:51:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42652 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726644AbfCTUvn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:51:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p6so2640747pgh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g+r58zUzKkd46kafe10Zzb0WJpKDqL0ZbHfu9A1I5ZY=;
-        b=S1O9kHKDYCN8MuWYYqnMF2Gyx2u8YJdgu1KvTS6/h6lW9URvU9/naiUw1uY5dNTgyq
-         uwSMu3+huDMeITkU/wwPJfHV37EYgiH+1mR5v72LeVAo8iz0bfz/5XY6kpW+5HZWKWB1
-         sxE6PjV9WsaObdluAUF7AmD6hkqkgQYIp4t1U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g+r58zUzKkd46kafe10Zzb0WJpKDqL0ZbHfu9A1I5ZY=;
-        b=GqbrJiOv8xk+cGZ6+zfOAw81ECpGQE3HUxC2j5CDfm677N+1rfYb4hmHedwN+5ZI2l
-         tq0Ia9la8yj+hsRxw5/jdXX6gB4Cl1u4zxOeX9TZwTpKgZ8rrFdywQNhLbpF0/P22+/+
-         5eItKhpXjGwBgq+mzM40uQVP9PFnws6zk1V2lck7LsVcEIwXBxDfbdrmqXfdTwOT/SGV
-         Hw1R1UhhiVsC1wOwii979G93dKQBzefQMVcRoosQiH8rhx8SDaNyjSi6+b0ncfHL/sbi
-         Ts0QtvZcxIiUtWzRzKhwcCGyKJIEPuKdLjUeHumft66Pg4sHI7H5r9gyjhpujlIc0vbX
-         /hiw==
-X-Gm-Message-State: APjAAAVD/tRwjwjF1p98b5/GJ/8a5KpqW+ifDgb57jN36wbTtypmKjT7
-        llqd5BvK8OgHR9q/d0ubNpoDPg==
-X-Google-Smtp-Source: APXvYqyXFt21Z0luGHpGxXvyHZqtzLqvwvN2RbqQuE7jMoudhSy9+GNB9w2/OxluMWf7A7zsf6fLFQ==
-X-Received: by 2002:a17:902:7b93:: with SMTP id w19mr9940719pll.141.1553115103140;
-        Wed, 20 Mar 2019 13:51:43 -0700 (PDT)
-Received: from [10.136.4.147] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id o76sm9372018pfa.156.2019.03.20.13.51.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 13:51:42 -0700 (PDT)
-Subject: Re: [PATCH net-next 0/2] net: phy: Move Omega PHY entry to Cygnus PHY
- driver
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        murali.policharla@broadcom.com
-References: <20190320195313.15658-1-f.fainelli@gmail.com>
-From:   Arun Parameswaran <arun.parameswaran@broadcom.com>
-Message-ID: <b4882cd3-c6c7-6af8-2204-6627434b03cf@broadcom.com>
-Date:   Wed, 20 Mar 2019 13:51:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 20 Mar 2019 16:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfCTUwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:52:37 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D69218C3;
+        Wed, 20 Mar 2019 20:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553115155;
+        bh=KhM59fq0xMcxfrPWegt3eJ/Pj0d60Y1W4KnA/CcsvYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lyDrQ2lfJ8reyDeVFxG2UYbgulcfBgBQjpYvufZ2RV6cy+pjwJbUMsFoNTdVjApwN
+         jDY9JaM8KVc79RTb5fJL8rQzvLsszooOxN0bvFh1eOrevnb3ePnut9xH7zaBmP/Y0G
+         3fhjWZwYWmNEQFSpCIKQYz1zDaPa8Ncz0j6sPHVE=
+Date:   Wed, 20 Mar 2019 15:52:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH v3] PCI/MSI: Don't touch MSI bits when the PCI device is
+ disconnected
+Message-ID: <20190320205233.GE251185@google.com>
+References: <20190222194808.15962-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190320195313.15658-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190222194808.15962-1-mr.nuke.me@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Florian.
+[+cc Jon, Jens, Christoph, Sagi, Linus, linux-nvme from related discussion]
+[+cc Greg, Oliver, who responded to v2 of this patch]
 
-
-For the patch series,
-
-Acked-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-
-
-On 2019-03-20 12:53 p.m., Florian Fainelli wrote:
-> Hi,
+On Fri, Feb 22, 2019 at 01:48:06PM -0600, Alexandru Gagniuc wrote:
+> A SURPRISE removal of a hotplug PCIe device, caused by a Link Down
+> event will execute an orderly removal of the driver, which normally
+> includes releasing the IRQs with pci_free_irq(_vectors):
 > 
-> In order to pave the way for adding some specific Omega PHY features
-> that may not be desirable on other products covered by the bcm7xxx PHY
-> driver, split the Omega PHY entry into the Cygnus PHY driver such that
-> the PHY drivers are reflective of product lines/business units
-> maintaining them within Broadcom.
+>  * SURPRISE removal event causes Link Down
+>  * pciehp_disable_slot()
+>  * pci_device_remove()
+>  * driver->remove()
+>  * pci_free_irq(_vectors)()
+>  * irq_chip->irq_mask()
+>  * pci_msi_mask_irq()
 > 
-> No functional changes intended.
+> Eventually, msi_set_mask_bit() will attempt to do MMIO over the dead
+> link, usually resulting in an Unsupported Request error. This can
+> confuse the firmware on FFS machines, and lead to a system crash.
 > 
-> Florian Fainelli (2):
->   net: phy: Prepare for moving Omega out of bcm7xxx
->   net: phy: Move Omega PHY entry to Cygnus PHY driver
+> Since the channel will have been marked "pci_channel_io_perm_failure"
+> by the hotplug thread, we know we should avoid sending blind IO to a
+> dead link.
+> When the device is disconnected, bail out of MSI teardown.
 > 
->  drivers/net/phy/Kconfig       |   5 +-
->  drivers/net/phy/bcm-cygnus.c  | 147 +++++++++++++++++++++++++++++++++-
->  drivers/net/phy/bcm-phy-lib.c |  52 ++++++++++++
->  drivers/net/phy/bcm-phy-lib.h |  20 +++++
->  drivers/net/phy/bcm7xxx.c     |  76 +-----------------
->  5 files changed, 225 insertions(+), 75 deletions(-)
+> If device removal and Link Down are independent events, there exists a
+> race condition when the Link Down event occurs right after the
+> pci_dev_is_disconnected() check. This is outside the scope of this patch.
+> 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+
+I had actually applied this to pci/msi with the intent of merging it
+for v5.1, but by coincidence I noticed [1], where Jon was basically
+solving another piece of the same problem, this time in nvme-pci.
+
+AFAICT, the consensus there was that it would be better to find some
+sort of platform solution instead of dealing with it in individual
+drivers.  The PCI core isn't really a driver, but I think the same
+argument applies to it: if we had a better way to recover from readl()
+errors, that way would work equally well in nvme-pci and the PCI core.
+
+It sounds like the problem has two parts: the PCI core part and the
+individual driver part.  Solving only the first (eg, with this patch)
+isn't enough by itself, and solving the second via some platform
+solution would also solve the first.  If that's the case, I don't
+think it's worth applying this one, but please correct me if I'm
+wrong.
+
+Bjorn
+
+[1] https://lore.kernel.org/lkml/20190222010502.2434-1-jonathan.derrick@intel.com/T/#u
+
+> ---
+> Changes since v2:
+>  * Updated commit message
+> 
+>  drivers/pci/msi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 4c0b47867258..6b6541ab264f 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -227,6 +227,9 @@ static void msi_set_mask_bit(struct irq_data *data, u32 flag)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+> +	if (pci_dev_is_disconnected(msi_desc_to_pci_dev(desc)))
+> +		return;
+> +
+>  	if (desc->msi_attrib.is_msix) {
+>  		msix_mask_irq(desc, flag);
+>  		readl(desc->mask_base);		/* Flush write to device */
+> -- 
+> 2.19.2
 > 
