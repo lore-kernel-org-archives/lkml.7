@@ -2,79 +2,149 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA35C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00633C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F4621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVKbo80S"
+	by mail.kernel.org (Postfix) with ESMTP id CCA4D21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfCTUHH (ORCPT
+        id S1726767AbfCTUJU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:07:07 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:38757 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfCTUHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:07:07 -0400
-Received: by mail-wm1-f51.google.com with SMTP id a188so477257wmf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:07:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=i2CZ2h17IUTfC8WxVSpqJhUQ56dM9AQtPWmIlXcrDl0=;
-        b=FVKbo80SI+42LmCHZJvOHvWzk7+b+wBTJiKEPa48rO5HujMlpo8/QojQ9YJP+FxMI3
-         B+pstJUepqfPEIF1YmgWFtMh+Zpumje1ueefKQcVSoZyETP2Un19mhENRFGcHpFQz9AN
-         vwbJIc34yf9eIYdFWHN4A+9IPuEQAyH37Lz5+PkeibNaAW1FpVxCSxtCyaTjlKjHOkZP
-         3ODi9QP6wlC5m+dDpSNnBd7z1hPXL5maAayR7pq9fkvr1m3wqOkJnC1+V4SCjP5dhNCm
-         LARIurLqd0rhV2Wfmb/I7Sw6Tu6m83NBQdAaL2iXqKXQBuX63Cl49/X9aMwq68QTJtAy
-         cJ+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=i2CZ2h17IUTfC8WxVSpqJhUQ56dM9AQtPWmIlXcrDl0=;
-        b=BAHaayWDkW3MCgDFwx4EqCKO6nzv1Nd3KdjWixyHlne8UkB3L57HTZwjHpWDemvxDv
-         8llY7tKbO+SSJmTwiSovQcNvYcv6jhXBnKSUc7Uxyr+APuBoBQZjf1Or4X2RC1VM0zsF
-         Ar+1qlPaolB5z4mnuB0YiWcMijS72GNBPQ1Af6o/nT0j5wr5VbIl0v/zKkPTZKY0pFYt
-         E2oLcAd+smlSu55SXB8wZyaz2cDsffofvwYu46ikeYyLD6WOYsguaTOigyNWpyzisF/r
-         bJ9mqZpLSKocoztasyQJxZyotL0Mnl2IYJu/K+EYefIbw6jTJPrQHvtkI1iKmSzBM8SN
-         hGHQ==
-X-Gm-Message-State: APjAAAXc7HSpjmSkBeATTz+0dYfxeY1PGYtftu7UOCjSBmlACXuTX/UU
-        l0NpL2G6qXXRrcBk0cfDZw==
-X-Google-Smtp-Source: APXvYqzTXph3URt/BZzlcgWs8a2s/GSn/LjXj6+fgVo/FylUSSi2NBrXK8ee2H8Q7du6WthYmKtdlg==
-X-Received: by 2002:a1c:66c2:: with SMTP id a185mr64553wmc.139.1553112425351;
-        Wed, 20 Mar 2019 13:07:05 -0700 (PDT)
-Received: from avx2 ([46.53.240.229])
-        by smtp.gmail.com with ESMTPSA id f20sm6715964wrg.91.2019.03.20.13.07.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 13:07:04 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 23:07:02 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     christian@brauner.io
-Cc:     linux-kernel@vger.kernel.org, dancol@google.com,
-        joel@joelfernandes.org, luto@kernel.org
-Subject: Re: pidfd design
-Message-ID: <20190320200702.GA27111@avx2>
+        Wed, 20 Mar 2019 16:09:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4077 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfCTUJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:09:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 13:09:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="329094718"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2019 13:09:18 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 20 Mar 2019 13:09:18 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.155]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.86]) with mapi id 14.03.0415.000;
+ Wed, 20 Mar 2019 13:09:18 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "apw@canonical.com" <apw@canonical.com>,
+        Joe Perches <golf@perches.com>
+CC:     Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH] checkpatch: fix camel case seeding when run with --root
+Thread-Topic: [PATCH] checkpatch: fix camel case seeding when run with --root
+Thread-Index: AQHU2ss2CnInC/0Woki3g/1NaWN2raYU+4eA
+Date:   Wed, 20 Mar 2019 20:09:17 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB589232E64D@ORSMSX121.amr.corp.intel.com>
+References: <20190315010334.5707-1-jacob.e.keller@intel.com>
+In-Reply-To: <20190315010334.5707-1-jacob.e.keller@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTNmZjE0ZDgtYTBjNy00NTQ2LTg4MTgtYWU4NjFlMWE0MDhkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMUduUlVNS0tmME1YYldjWHpKcW91cG5LWFNjUDJpWWV6ODBkc3F6RzlcLzl4TnZuUmMrbk9KTmtHazBrcXpmNXUifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> What would be your opinion to having a
-> /proc/<pid>/handle
-> file instead of having a dirfd.
+> -----Original Message-----
+> From: Keller, Jacob E
+> Sent: Thursday, March 14, 2019 6:04 PM
+> To: linux-kernel@vger.kernel.org
+> Cc: Intel Wired LAN <intel-wired-lan@lists.osuosl.org>; netdev@vger.kernel.org;
+> Keller, Jacob E <jacob.e.keller@intel.com>; joe@perches.com
+> Subject: [PATCH] checkpatch: fix camel case seeding when run with --root
+> 
+> checkpatch.pl avoids warning about camel case of some definitions by
+> seeding a file that tracks all of the currently committed camel case
+> definitions.
+> 
+> To build this seed file, checkpatch.pl decides between using git or the
+> --root parameter.
+> 
+> This works as long as you don't run checkpatch.pl from within
+> a different git tree that is not the Linux kernel.
+> 
+> In this case, the check for ".git" will return true, and checkpatch will
+> attempt to seed a camel case file using the current directory. This
+> works fine if --root is not provided, but can result in an incorrect
+> camel case seed file resulting in false positive warnings.
+> 
+> Fix this by checking for $root/.git instead, so that we use the --root
+> parameter properly when seeding the camel case list.
+> 
+> Additionally, when generating the list of files to be checked, prefix
+> the $root path so that the correct file will be found.
+> 
+> These changes allow checkpatch.pl to honor the --root parameter even if
+> being run from within another git repository.
+> 
+> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> ---
+> (Resending with a not-invalid address for the netdev mailing list...)
+> 
 
-This is even worse than depending on PROC_FS. Just for the dependency
-pidfd code should be backed out immediately. Forget about /proc.
+Ping? Andy? Joe?
+
+This is a re-write of a rather old (couple of years old...) fix that I've been meaning to get around to submitting.
+
+I'd like to have this picked up since it resolves issues with using --root while inside another git tree.
+
+Thanks,
+Jake
+
+>  scripts/checkpatch.pl | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index d0001fd1112d..358add495e18 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -903,8 +903,8 @@ sub seed_camelcase_includes {
+> 
+>  	$camelcase_seeded = 1;
+> 
+> -	if (-e ".git") {
+> -		my $git_last_include_commit = `git log --no-merges --
+> pretty=format:"%h%n" -1 -- include`;
+> +	if (-e "$root/.git") {
+> +		my $git_last_include_commit = `cd $root && git log --no-merges --
+> pretty=format:"%h%n" -1 -- include`;
+>  		chomp $git_last_include_commit;
+>  		$camelcase_cache = ".checkpatch-
+> camelcase.git.$git_last_include_commit";
+>  	} else {
+> @@ -931,9 +931,10 @@ sub seed_camelcase_includes {
+>  		return;
+>  	}
+> 
+> -	if (-e ".git") {
+> -		$files = `git ls-files "include/*.h"`;
+> +	if (-e "$root/.git") {
+> +		$files = `cd $root && git ls-files "include/*.h"`;
+>  		@include_files = split('\n', $files);
+> +		@include_files = map("$root/$_", @include_files);
+>  	}
+> 
+>  	foreach my $file (@include_files) {
+> --
+> 2.18.0.219.gaf81d287a9da
+
