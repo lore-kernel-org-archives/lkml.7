@@ -2,116 +2,111 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D37EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4217C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5B0213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553085767;
-	bh=Mb8MDZe/dnoG/NeNKp2b9QF5AQ3pzP/m9Q2AQopQThc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=taHRk6LmYnMUJ6YDrtDnyVPi9Dtw0vGA/5pXDs4coOdbiEKPz5ZudCEIx9Or4L0hm
-	 KWXG+Z2xmsT5J9Y5ZQX0/Oq7tPVcWh0YBXLIt/v2l1Shn0YvEX5+DL0TFUOMln0B04
-	 GT8B5LPM9UUZTcIBrSSIF5fWpImRf9Rfg31EbLNs=
+	by mail.kernel.org (Postfix) with ESMTP id 7EAB82184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSfanRc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfCTMmq (ORCPT
+        id S1727843AbfCTMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfCTMmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:42:45 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80856213F2;
-        Wed, 20 Mar 2019 12:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553085764;
-        bh=Mb8MDZe/dnoG/NeNKp2b9QF5AQ3pzP/m9Q2AQopQThc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0nSEC2/dK6Oo3uBAmv9YuuRV2vvTrRSgAXQqTRYSEOsOhfAy5gB/spxhiD28GBtYg
-         6pGaSnbgDhnqr+mlb48SU7bRQ+AhgpRCIxDM9c4L9YbZPuIby7oupkHayGCcnbO5xJ
-         eMaUjY9KvAzdiONinQ3qObVJUfB9MIFhzD0dQeOQ=
-Date:   Wed, 20 Mar 2019 20:42:22 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: dts: imx6q-logicpd: Shutdown LCD regulator
- during suspend
-Message-ID: <20190320124221.GN4980@dragon>
-References: <20190306140402.17122-1-aford173@gmail.com>
+        Wed, 20 Mar 2019 08:42:51 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44471 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfCTMmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 08:42:50 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u9so1737746lfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 05:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=04XwcsfTZ1R0QsHYMFDJsfOYyv8/svDLPPFH2qpFOh0=;
+        b=YSfanRc2TSVyk5C12aZBx6feqH4EonczhprKzog/b3Fs/K9wlv0KzGxES2Hd2H3Svv
+         by5Cn/EQ7MaKq6BlyTlqiMnUTAIbQI+/mHNlBfgZSyX9JgtKwHsyq9/i1wW65GotkR8C
+         Mo2BL77rZDXkxyHwhlZ7rmpykF3w/qOkN0s0RSV8WBVCKHrNO81pRADCVKut+8Ogytqv
+         Ri8Ftq7zjSWOrZGBrWA+QvPH+HgR2jIqRHSyc2ar/dJOYAsLJMZUsS0cr0HhLq62oXbR
+         pCnZlLlxCd2ImPREh1MrfvIMLYXiNorzPzZPoARqBKwP5RnzAIrYXp6Nt5+SULPS3Mug
+         ms4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=04XwcsfTZ1R0QsHYMFDJsfOYyv8/svDLPPFH2qpFOh0=;
+        b=hjPDothoKqlGkImldCxO6mWpFVmm9hziyg32WaI8oMsoBafiwo2eH8TM3ugbD5HMbl
+         KcrhaZuLAJOgpLwSciN87P48saEWpdfw7WObqcB9vpvIiuYNM7BSmSr/0QKqUFzEZ2kT
+         lpq3oI8+njv0+yxaPKGaRdg6qVjLpfJUXvKewV/kzT+dHpVtRhlvHmfDZC6nLtUURJfL
+         tYxfGVeJ85324t2OWSNci4pDgJ8JigPVGIwh1KqWrLLkXyvutxHk8bjuyU5uw469qVzm
+         JIk+3cnTyPyq+lPv7yPYHP0MGoI810LlDtcewZH1QyI/7qx8vTKwGU1Nv0Jcu0lHtpGC
+         gZNQ==
+X-Gm-Message-State: APjAAAUI9QoFKYalVTkxAX3UaNtF0zyCyEB6wmRSGCiPNJ6FIX0ol7eh
+        AjAlMxoS+XJVbCH1K/qkwPo=
+X-Google-Smtp-Source: APXvYqzjL5KexikbhU1D+bElXWp0TtkKZiOpjTV7cqo1Y0BTzVqhc72EPxNYWg1SbNBvMzu76YNAXQ==
+X-Received: by 2002:a19:a40b:: with SMTP id q11mr16159371lfc.33.1553085768910;
+        Wed, 20 Mar 2019 05:42:48 -0700 (PDT)
+Received: from alpha ([178.71.210.108])
+        by smtp.gmail.com with ESMTPSA id q22sm322746ljc.59.2019.03.20.05.42.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 05:42:48 -0700 (PDT)
+Received: (nullmailer pid 15795 invoked by uid 1000);
+        Wed, 20 Mar 2019 12:45:23 -0000
+From:   Ivan Safonov <insafonov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bhagyashri Dighole <digholebhagyashri@gmail.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wentao Cai <etsai042@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Ivan Safonov <insafonov@gmail.com>
+Subject: [PATCH] staging: netlogic: replace skb_put/pull pair with skb_reserve
+Date:   Wed, 20 Mar 2019 15:45:19 +0300
+Message-Id: <20190320124519.15751-1-insafonov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306140402.17122-1-aford173@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 08:03:59AM -0600, Adam Ford wrote:
-> The LCD power sequencer is very finicky.  The backlight cannot
-> be driven until after the sequencer is done.  Until now, the
-> regulators were marked with 'regulator-always-on' to make sure
-> it came up before the backlight.  This patch allows the LCD
-> regulators to power down and prevent the backlight from being
-> used again until the sequencer is ready.  This reduces
-> standby power consumption by ~100mW.
-> 
-> Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic
-> PD i.MX6QD EVM")
+The sequence
 
-Fixes tag is more for regressions or serious bugs.  It looks the patch
-is more like an improvement though.
+    skb_put(skb);
+    skb_pull(skb);
 
-Shawn
+leads to the same result as
 
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
-> index 45eb0b7f75f8..d96ae54be338 100644
-> --- a/arch/arm/boot/dts/imx6q-logicpd.dts
-> +++ b/arch/arm/boot/dts/imx6q-logicpd.dts
-> @@ -21,6 +21,8 @@
->  
->  	panel-lvds0 {
->  		compatible = "okaya,rs800480t-7x0gp";
-> +		power-supply = <&reg_lcd_reset>;
-> +		backlight = <&backlight>;
->  
->  		port {
->  			panel_in_lvds0: endpoint {
-> @@ -38,7 +40,6 @@
->  		regulator-max-microvolt = <3300000>;
->  		gpio = <&gpio4 17 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
-> -		regulator-always-on;
->  		vin-supply = <&reg_3v3>;
->  		startup-delay-us = <500000>;
->  	};
-> @@ -52,7 +53,6 @@
->  		regulator-max-microvolt = <3300000>;
->  		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
-> -		regulator-always-on;
->  		vin-supply = <&reg_lcd>;
->  	};
->  };
-> -- 
-> 2.17.1
-> 
+    skb_reserve(skb);
+
+but second is a little shorter and clearer.
+
+Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+---
+ drivers/staging/netlogic/xlr_net.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/staging/netlogic/xlr_net.c b/drivers/staging/netlogic/xlr_net.c
+index 10f14a5cf490..1897b711d66d 100644
+--- a/drivers/staging/netlogic/xlr_net.c
++++ b/drivers/staging/netlogic/xlr_net.c
+@@ -87,8 +87,7 @@ static inline unsigned char *xlr_alloc_skb(void)
+ 	if (!skb)
+ 		return NULL;
+ 	skb_data = skb->data;
+-	skb_put(skb, MAC_SKB_BACK_PTR_SIZE);
+-	skb_pull(skb, MAC_SKB_BACK_PTR_SIZE);
++	skb_reserve(skb, MAC_SKB_BACK_PTR_SIZE);
+ 	memcpy(skb_data, &skb, buf_len);
+ 
+ 	return skb->data;
+-- 
+2.19.2
+
