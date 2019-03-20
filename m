@@ -2,114 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD4EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB705C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3787E21874
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948D820850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qH0tHNVk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aF0DxHHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfCTRSk (ORCPT
+        id S1726935AbfCTRTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:18:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43090 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfCTRSk (ORCPT
+        Wed, 20 Mar 2019 13:19:30 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38329 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfCTRTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:18:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c8so2382506pfd.10;
-        Wed, 20 Mar 2019 10:18:39 -0700 (PDT)
+        Wed, 20 Mar 2019 13:19:30 -0400
+Received: by mail-it1-f196.google.com with SMTP id m18so6155ita.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tKlHVjRxjKuI1Z9G/6jARFHoWpyJM+7v4o3aLDnjNNI=;
-        b=qH0tHNVkGWlbjSxDOS5cRFAlad1fAJcuVVB2LIIXLPGxLEfIjgzPA4GJxU/+ZKwL8B
-         SbHavcgamEx/IheNfj1yxudySRcRY40kToJVGhThX2Z5u6UiJKCue9uQehiM2WSYnV9r
-         hTP4qiGVZrxOKJEtv520oZ0sxWWqZ56eJkFwwzod/Ri0VArEtjYPTadf/pFl3WoQciU/
-         sxJ0apcDLxIOyGIwCkvJL6Dwq4mOJLNENGhbNyoL9iPXllsMj9Ml0OyZjTWE+AGqUwq6
-         SJpre9kXp7A3Zxr4gn73vtVAG0JtIcUAe8RePytdGAbPGsTOji6bWZO1PC9ERsl4BAlh
-         A26g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lBzzUkM+kI5tIaUeBRyufftLhAJwCdFsTBc3qT1AV/w=;
+        b=aF0DxHHdlxvp/4AvGdWIHM9odA/a67EamU1O3P0v8BO+Z0oCePxlslbvPQqNrOKCVn
+         B1NzrByxKD0OxPRLBxEFPmknW8D9yJgB2H5D0tSQWVrGCG4OogUnfetBhBoOtR70ZvCs
+         bPoAAd0D/c63mYANsP0uOI+frpmB/vAncMIaL9mv6nU5L6ddlLJobFqn0rsYd/mpQ9Pb
+         +Etdvk4Ksg0Fsx6Dvib1+rLWUMLzkvQhht4pYY6r/cncYx/uCcbYF/xT1A8mkt7aqpoO
+         8Hp4BGLnkkJkTKxAskROcbUNR+3QKHywVHgOv7Hg4WReURs5cJ+GqNmarTteHnYajz9H
+         8kgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tKlHVjRxjKuI1Z9G/6jARFHoWpyJM+7v4o3aLDnjNNI=;
-        b=sBSeW8wk8S569c7zIaf3Jvlim0yG/8vGs9WHTcykXQB8kk9w/Nq00ZUTn3lRAyBSJo
-         BG1ducaMjd709Gzhsm+KS+TjKwldBiApH7638w3cXibgdSj6/0apRqvk2UyOMFUkPpV0
-         BaRUnGMrsYXrXUkkh81mb3Dz4jXa/SrezXvkz6hQYhW9LKpTShGMV/C8F7/wq1cZplOK
-         SA4BzntnRxqiuwmtj1B5d7Yh+cQfyaL4WJGxc+T3cbHjB02IYxAfr4wDS4dbBzLkYX9K
-         ScTmfk4ZM+kIE2hwE+OfLG0isfoYUfKLxX+WoMrauZRhZH5h6Mxzj6+rppmwKgchNw8G
-         ARVQ==
-X-Gm-Message-State: APjAAAW7lcHVy7e7iRuIMEVlWCP5R2HLcSfuCgcKsbrJ8kc1zF3XRa2+
-        a2tr3YTvQGoYPg4wjDioCmK2NPLmuLGbZkFlk7s=
-X-Google-Smtp-Source: APXvYqwL4jS7Y1gocqs7MV9Zdsnw0opceASViNFlqbrzJMlNgCYgXt31CeDlwdlQRMO2oY6G1TgYeDxRQUmU8+8vwMk=
-X-Received: by 2002:a63:e845:: with SMTP id a5mr7612181pgk.246.1553102318914;
- Wed, 20 Mar 2019 10:18:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lBzzUkM+kI5tIaUeBRyufftLhAJwCdFsTBc3qT1AV/w=;
+        b=P8zUmDldvyegDHETch11aMuC9jJbWYrh+lUYzvMfxW6r8opadicaEPDpEmNrqAyCV3
+         lbU8n6YBiosNIh/0WcIhLl47+10bPnyPc7CzGS7OvelElPusLe7yqNIK9X9sk5BrEo6p
+         wPeNG6fYO8u2YPhToEXZh72eFh61qlhFCx85fer000v0xEwn1E9CXHu+1uF+EdUaURSj
+         m1gNyHXX/KmGXGssY0ef/+0Kia/BiOii/gUFGK0PadRZ1B09eYHrHejiq0PUSUkN7jM/
+         C7P48DQ3G0eQDBKvBoSu8J0T5xB12chnbgUIpx6adiDzqXNGlySJNwnFyMTSFQ9Pv5Mo
+         z9IA==
+X-Gm-Message-State: APjAAAUW0XaZOWP88DZwb+X8fQu3xx9DV73rmQJCtD9VpjLna87Be4Gi
+        DxWwzuNFglI4CI/qORndpJw=
+X-Google-Smtp-Source: APXvYqysOkffaODF2bnPiNm3m/xonGeQ0CbqA5wKyvP9MwyeNTbyUEgB81CugT03ZCsHOzgQSzLaAw==
+X-Received: by 2002:a02:241d:: with SMTP id f29mr5643131jaa.30.1553102369434;
+        Wed, 20 Mar 2019 10:19:29 -0700 (PDT)
+Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
+        by smtp.gmail.com with ESMTPSA id z13sm1048015ioj.21.2019.03.20.10.19.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 10:19:28 -0700 (PDT)
+From:   George Hilliard <thirtythreeforty@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
+        George Hilliard <thirtythreeforty@gmail.com>
+Subject: [PATCH] staging: mt7621-spi: Remove references to nonexistent mt7621_spi_ops
+Date:   Wed, 20 Mar 2019 11:19:15 -0600
+Message-Id: <20190320171915.14178-1-thirtythreeforty@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <LaQHUFs--3-1@tutanota.com> <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
- <9151d116-958c-9298-9427-fe803a163e9f@redhat.com> <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
-In-Reply-To: <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 20 Mar 2019 19:18:27 +0200
-Message-ID: <CAHp75VcOG9H8u+tZyNN682r7+jsRZi8VoPPZ2uJPch1gNyFgmQ@mail.gmail.com>
-Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        hotwater438@tutanota.com, Jiri Kosina <jikos@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 6:55 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
-> at 23:39, Hans de Goede <hdegoede@redhat.com> wrote:
-> > On 3/20/19 3:37 PM, Benjamin Tissoires wrote:
+This struct does not exist, and when it is looked up in the
+compatibility tree, it returns null.  Remove these nonfunctional lines.
 
-> > Benjamin, what I find interesting here is that the BOGUS_IRQ quirk
-> > is also used on Elan devices, I suspect that these Elan devices
-> > likely also need the I2C_HID_QUIRK_FORCE_TRIGGER_FALLING quirk
-> > and then they probably will no longer need the bogus IRQ flag,
-> > if you know about bugreports with an acpidump for any of the devices
-> > needing the bogus IRQ quirk, then I (or you) can check how the IRQ is
-> > declared there, I suspect it will be declared as level-low, just like
-> > with the laptop this patch was written for. And it probably need to
-> > be edge-falling instead of level-low just like this case.
->
-> First, I=E2=80=99ve already tried using IRQF_TRIGGER_FALLING, unfortunate=
-ly it
-> doesn=E2=80=99t solve the issue for me.
->
-> I talked to Elan once, and they confirm the correct IRQ trigger is level
-> low. So forcing falling trigger may break other platforms.
+Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
+---
+ drivers/staging/mt7621-spi/spi-mt7621.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-As far as I understood Vladislav the quirk he got from Elan as well.
+diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
+index b509f9fe3346..d260b42ff328 100644
+--- a/drivers/staging/mt7621-spi/spi-mt7621.c
++++ b/drivers/staging/mt7621-spi/spi-mt7621.c
+@@ -58,8 +58,6 @@ struct mt7621_spi {
+ 	unsigned int		speed;
+ 	struct clk		*clk;
+ 	int			pending_write;
+-
+-	struct mt7621_spi_ops	*ops;
+ };
+ 
+ static inline struct mt7621_spi *spidev_to_mt7621_spi(struct spi_device *spi)
+@@ -330,13 +328,11 @@ static int mt7621_spi_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int status = 0;
+ 	struct clk *clk;
+-	struct mt7621_spi_ops *ops;
+ 	int ret;
+ 
+ 	match = of_match_device(mt7621_spi_match, &pdev->dev);
+ 	if (!match)
+ 		return -EINVAL;
+-	ops = (struct mt7621_spi_ops *)match->data;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(&pdev->dev, r);
+@@ -375,7 +371,6 @@ static int mt7621_spi_probe(struct platform_device *pdev)
+ 	rs->clk = clk;
+ 	rs->master = master;
+ 	rs->sys_freq = clk_get_rate(rs->clk);
+-	rs->ops = ops;
+ 	rs->pending_write = 0;
+ 	dev_info(&pdev->dev, "sys_freq: %u\n", rs->sys_freq);
+ 
+-- 
+2.21.0
 
-> Recently we found that Elan touchpad doesn=E2=80=99t like GpioInt() from =
-its _CRS.
-> Once the Interrupt() is used instead, the issue goes away.
-
-IIRC i2c core tries to get interrupt from Interrupt() resource and
-then falls back to GpioInt().
-See i2c_acpi_get_info() and i2c_device_probe().
-
-> But I am not sure how to patch its DSDT/SSDT in i2c-hid.
-
---=20
-With Best Regards,
-Andy Shevchenko
