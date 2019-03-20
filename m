@@ -2,122 +2,122 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD90C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D14C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C072B2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCD+PBTj"
+	by mail.kernel.org (Postfix) with ESMTP id A2BA62146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfCTSvp (ORCPT
+        id S1727805AbfCTSvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:51:45 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41344 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbfCTSvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:51:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id t7so3117108otk.8;
-        Wed, 20 Mar 2019 11:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XNMPwWvFba4JuAksv3Ts/sq+FdMZEQ3WIMOUGxHjzJI=;
-        b=CCD+PBTjFlkwB+0/IrPzvlBko46ds79+Muf1cZOJ92mMMOdNVO5zplGlQ5x6GHYRel
-         788HN8hAgErRWvGSy+efoxQ/+TgXpWsf/wCdE625zEVbBB8/4bHYanoTZoTeYocJluxD
-         b1Foprou+5lt+IffB4ehTpnactRE4Vx1ZufX2Zykjk24ObmL9VWukIu6G2h9IRSACb9N
-         oA3/B/xPDnWwARgdQpD5MYmzoS4eS36k9C8Kelwfkq06Kp2W99qvJet+ArBanpCUTvno
-         tVagB+0KsSBzNAS3wHS8usq0VOWUiOwHlcm2Qcd2fDgX3eIl+p6JAqaSFwwfZefMZIKH
-         JQSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XNMPwWvFba4JuAksv3Ts/sq+FdMZEQ3WIMOUGxHjzJI=;
-        b=bwjtqDXm1ePXOun5ypQ+/dgdt+8eh3lRpsU1ekpj13CSOVwfFj/ywUcOQQImdi0xzY
-         1KJtbzSUltIQXuIn5qsLCcfAKsu+HXCAjAu1bTtRhPP0jBosF5xw+oW4/gKUMBSCDHZ/
-         jH9/Kcg2PU0oWeQKf5L7+D9Yf8Gqes+INmC/3aqlQQ2j5WEMi9IluOlBksCvyPEjks0b
-         fghjm/PuVggJvUL+nttxVXyfgMvAW8rvtFO/7aEmaY09hiAp7DeEp6rlsB2Ckg4/f9SI
-         FjfuFkNWFijbSgENzmW1g3oSWY+YEBc/XGdfVcUoLvDd5Pz5at/NL9FQfcbefpiUvx9f
-         FSyw==
-X-Gm-Message-State: APjAAAXWDpYPj47vFYLwHF9ntIWmTeZ5pU6AWdHJ8ngg644ilAPRbzss
-        id+M+Tc3T+QFZ6DDAATuI+J+obsjQguKR60tuf8=
-X-Google-Smtp-Source: APXvYqx4bdeP/n6pHORM8a+LXrO9DEvxXSmxNZJAC1yVVxzeAuIC05KqKfczN+sSEx57Pg31TnlDlWizYSFOXDvrfyM=
-X-Received: by 2002:a05:6830:2118:: with SMTP id i24mr7147820otc.224.1553107902852;
- Wed, 20 Mar 2019 11:51:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
-In-Reply-To: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
-From:   =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Date:   Wed, 20 Mar 2019 20:51:30 +0200
-Message-ID: <CAPWNY8UmDAKeF+SNMKDxki=-=s+UPx9WXQvSoFqWmUCsNvv=1g@mail.gmail.com>
-Subject: Re: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
-To:     Tadeusz Struk <tadeusz.struk@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James.Bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Mar 2019 14:51:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:44920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727577AbfCTSua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:50:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3956A1AC1;
+        Wed, 20 Mar 2019 11:50:30 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B3CFF3F59C;
+        Wed, 20 Mar 2019 11:50:28 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        coresight@lists.linaro.org, mike.leach@linaro.org,
+        robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 12/25] coresight: etm: Clean up device specific data
+Date:   Wed, 20 Mar 2019 18:49:29 +0000
+Message-Id: <1553107783-3340-13-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:31 PM Tadeusz Struk <tadeusz.struk@intel.com> wr=
-ote:
->
-> The poll condition should only check response_length,
-> because reads should only be issued if there is data to read.
-> The response_read flag only prevents double writes.
-> The problem was that the write set the response_read to false,
-> enqued a tpm job, and returned. Then application called poll
-> which checked the response_read flag and returned EPOLLIN.
-> Then the application called read, but got nothing.
-> After all that the async_work kicked in.
-> Added also mutex_lock around the poll check to prevent
-> other possible race conditions.
->
-> Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
-> Reported-by: Mantas Mikul=C4=97nas <grawity@gmail.com>
-> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-> ---
->  drivers/char/tpm/tpm-dev-common.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev=
--common.c
-> index 5eecad233ea1..7312d3214381 100644
-> --- a/drivers/char/tpm/tpm-dev-common.c
-> +++ b/drivers/char/tpm/tpm-dev-common.c
-> @@ -203,12 +203,14 @@ __poll_t tpm_common_poll(struct file *file, poll_ta=
-ble *wait)
->         __poll_t mask =3D 0;
->
->         poll_wait(file, &priv->async_wait, wait);
-> +       mutex_lock(&priv->buffer_mutex);
->
-> -       if (!priv->response_read || priv->response_length)
-> +       if (priv->response_length)
->                 mask =3D EPOLLIN | EPOLLRDNORM;
->         else
->                 mask =3D EPOLLOUT | EPOLLWRNORM;
->
-> +       mutex_unlock(&priv->buffer_mutex);
->         return mask;
->  }
+Track the coresight device instead of the real device.
 
-Thanks, this patch seems to work, and I apologize for not responding
-to test the patches earlier.
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-etm3x.c | 6 +++---
+ drivers/hwtracing/coresight/coresight-etm4x.c | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Any chance it'll be submitted for stable 5.0.x as well?
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
+index be302ec..1b9ae3a 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x.c
+@@ -462,7 +462,7 @@ int etm_get_trace_id(struct etm_drvdata *drvdata)
+ 	if (!local_read(&drvdata->mode))
+ 		return drvdata->traceid;
+ 
+-	pm_runtime_get_sync(drvdata->dev);
++	pm_runtime_get_sync(drvdata->dev->parent);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+ 
+@@ -471,7 +471,7 @@ int etm_get_trace_id(struct etm_drvdata *drvdata)
+ 	CS_LOCK(drvdata->base);
+ 
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-	pm_runtime_put(drvdata->dev);
++	pm_runtime_put(drvdata->dev->parent);
+ 
+ out:
+ 	return trace_id;
+@@ -803,7 +803,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+ 		drvdata->use_cp14 = of_property_read_bool(np, "arm,cp14");
+ 	}
+ 
+-	drvdata->dev = &adev->dev;
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	/* Validity for the resource is already checked by the AMBA core */
+@@ -864,6 +863,7 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto err_arch_supported;
+ 	}
+ 
++	drvdata->dev = &drvdata->csdev->dev;
+ 	ret = etm_perf_symlink(drvdata->csdev, true);
+ 	if (ret) {
+ 		coresight_unregister(drvdata->csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 08ce37c..8d5ee3b 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -987,7 +987,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 		adev->dev.platform_data = pdata;
+ 	}
+ 
+-	drvdata->dev = &adev->dev;
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	/* Validity for the resource is already checked by the AMBA core */
+@@ -1042,6 +1041,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto err_arch_supported;
+ 	}
+ 
++	drvdata->dev = &drvdata->csdev->dev;
+ 	ret = etm_perf_symlink(drvdata->csdev, true);
+ 	if (ret) {
+ 		coresight_unregister(drvdata->csdev);
+@@ -1049,7 +1049,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 	}
+ 
+ 	pm_runtime_put(&adev->dev);
+-	dev_info(dev, "CPU%d: ETM v%d.%d initialized\n",
++	dev_info(drvdata->dev, "CPU%d: ETM v%d.%d initialized\n",
+ 		 drvdata->cpu, drvdata->arch >> 4, drvdata->arch & 0xf);
+ 
+ 	if (boot_enable) {
+-- 
+2.7.4
 
---=20
-Mantas Mikul=C4=97nas
