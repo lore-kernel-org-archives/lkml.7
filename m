@@ -2,107 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3A3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462A82184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C152184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Yt+UUNDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfCTH2D (ORCPT
+        id S1727243AbfCTHfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:28:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32872 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726123AbfCTH2C (ORCPT
+        Wed, 20 Mar 2019 03:35:38 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:51326 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfCTHfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:28:02 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K7PfIn058474
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:28:01 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rbh48r33y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:28:01 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 20 Mar 2019 07:27:54 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 07:27:51 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K7Rted38666352
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 07:27:55 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4AD6152051;
-        Wed, 20 Mar 2019 07:27:55 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 07EF15204F;
-        Wed, 20 Mar 2019 07:27:55 +0000 (GMT)
-Date:   Wed, 20 Mar 2019 08:27:48 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Jeff Xie <chongguiguzi@gmail.com>
-Cc:     schwidefsky@de.ibm.com, rppt@linux.vnet.ibm.com,
-        akpm@linux-foundation.org, mhocko@suse.com, keescook@chromium.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390:tty3270:move spin_lock_bh to spin_lock in tasklet
-References: <1553011956-28747-1-git-send-email-chongguiguzi@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553011956-28747-1-git-send-email-chongguiguzi@gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032007-0016-0000-0000-00000265030E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032007-0017-0000-0000-000032C01B0E
-Message-Id: <20190320072748.GA3625@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=918 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200063
+        Wed, 20 Mar 2019 03:35:37 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 08784CE2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:35:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eypDx70Q4w2t for <linux-kernel@vger.kernel.org>;
+        Wed, 20 Mar 2019 02:35:35 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id C6F9BCE1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:35:35 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id q184so1397351itd.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 00:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zfONtXWLTlknVBIhoCgVa9EP7g4rpRB2fEu/ggG/yeQ=;
+        b=Yt+UUNDWNN0N+O2OZXWcRoIRe7qCCsgxUW82ZoNapUOWSFiUj2DMfNUVq4es1N7QQv
+         QSqTUuQ9tFxHx9zHJypSKixfozZQ7n2wB/WZgS8vS9xP9zEvBy9Th7jVjktp6SN+WvG5
+         DoLsOXUDsA/Jtaz9hYdiyTR/kk5v0WBxesNXi5JvPXF/f2noK3SWcxPbYQe+/hIAd9AU
+         jFMJnlxV+tvpIyJKDZEBLOaLH16iCcyx1NKihdFrWYM2p1cRvdMsopOzdvHm32SFRKpa
+         OTqDCvD3SdPoqZ2CcpZemZmb4NRRJnDvPRuIl4z5asyF8cAFHt+pIu4Z7UjTRLnT71xh
+         logA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zfONtXWLTlknVBIhoCgVa9EP7g4rpRB2fEu/ggG/yeQ=;
+        b=T4tKBjX1xn69IxFGFmh72w2FiVqbbxHkhF7yDbbR6B8jygHsDgrLdt16WV5lKUNKR+
+         XOws3MuJ+KXbOOmhXVbT3VcmjGkYh49z7ljj92BVSOLg7TFMVdyR6re42dJWb/oxLIWj
+         AgMql1UtKgg5SD1MkcGIQRxxw8p73uudaNUZh3DikaJF+Ov2qIeluWgDE//rf0Z+Cefp
+         EY6hyU54LWc/aXqn25fcvHmHDBuwejm6TlZeY7H90mj4bPW0p3x7X/cJD3k5T2Iq4Qbn
+         FvE5aC26SNWvNkA1iOcls6VqH4jDntDK10dUGymqF5NGsNTaspTSBXmR/mvi1DHOUjXq
+         4WdQ==
+X-Gm-Message-State: APjAAAVzNgB6sBQ3QjnXOeH1TYautpVZUlr40J6xAODjn5Ayytal1ucS
+        M21vI94YOIYOLBOPcaQC29+HmzFXeAJBH5bTifDjGTz3+J3pL5jG6abJiI/es71vqcRNPN2khiR
+        9jZZCBgA9MayS6LWWQVoqAOXmnOKm
+X-Received: by 2002:a6b:640f:: with SMTP id t15mr4548986iog.32.1553067335423;
+        Wed, 20 Mar 2019 00:35:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw9GB4JQ8k6yDfTpfoDhp++/yXTXFmeNYPQwlYeWzQgdhNaqp4Ws1NqB4N7zVaA9Zcz/xHwSg==
+X-Received: by 2002:a6b:640f:: with SMTP id t15mr4548973iog.32.1553067335181;
+        Wed, 20 Mar 2019 00:35:35 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id l8sm762541itl.26.2019.03.20.00.35.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 00:35:34 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] extcon: fix a missing check of regmap_read
+Date:   Wed, 20 Mar 2019 02:35:22 -0500
+Message-Id: <20190320073522.26143-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <b902ff68-3054-80c3-f5c3-658fd0a1920e@samsung.com>
+References: <b902ff68-3054-80c3-f5c3-658fd0a1920e@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 12:12:36AM +0800, Jeff Xie wrote:
-> It is unnecessary to call spin_lock_bh in a tasklet.
-> 
-> Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
-> ---
->  drivers/s390/char/tty3270.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-> index 2b0c36c2..2963396 100644
-> --- a/drivers/s390/char/tty3270.c
-> +++ b/drivers/s390/char/tty3270.c
-> @@ -563,7 +563,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
->  	char *input;
->  	int len;
-> 
-> -	spin_lock_bh(&tp->view.lock);
-> +	spin_lock(&tp->view.lock);
->  	/*
->  	 * Two AID keys are special: For 0x7d (enter) the input line
->  	 * has to be emitted to the tty and for 0x6d the screen
-> @@ -590,7 +590,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
->  		tp->update_flags = TTY_UPDATE_ALL;
->  		tty3270_set_timer(tp, 1);
->  	}
-> -	spin_unlock_bh(&tp->view.lock);
-> +	spin_unlock(&tp->view.lock);
+When regmap_read fails, it doesn't make sense to use the read
+value "val" because it can be uninitialized.
 
-I'm not going to take this. There is close to zero benefit, but rather
-high cost to review this - just because the function is named *tasklet
-doesn't mean it is only called in tasklet / softirq context.
+The fix returns if regmap_read fails.
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/extcon/extcon-axp288.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
+index a983708b77a6..b2ba5f073aa7 100644
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -143,6 +143,10 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+ 	int ret;
+ 
+ 	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
++	if (ret) {
++		dev_err(info->dev, "failed to read BOOT_REASON_REG: %d\n", ret);
++		return;
++	}
+ 	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
+ 		if (val & BIT(i)) {
+ 			dev_dbg(info->dev, "%s\n", *rsi);
+-- 
+2.17.1
 
