@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D27AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAFAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E6B21908
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE952184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cS/GWV3n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sefw+LBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfCTOxv (ORCPT
+        id S1728607AbfCTOyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:53:51 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:37103 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728616AbfCTOwb (ORCPT
+        Wed, 20 Mar 2019 10:54:22 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:33941 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbfCTOwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:52:31 -0400
-Received: by mail-vs1-f73.google.com with SMTP id t20so871242vsq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:52:30 -0700 (PDT)
+        Wed, 20 Mar 2019 10:52:21 -0400
+Received: by mail-qt1-f202.google.com with SMTP id x58so2696904qtc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=m8A/eWnO1t/szRUY+Sf0prGvVhEq1OhdUwg16kciR9Y=;
-        b=cS/GWV3n1i5lKwRxDER3D1j30wbKLrIjlKCprX6vTMe8cTVCKT78AfLte355OG84/3
-         9+SHdUMKMpHe6+iOH3VzHT8pjZaRW6z5pqFcAKCDTvZf0KT3SG8dydvzjoFsqtcRHpO+
-         s7SFViAVxLm68wpAwuS47+5QK7VNwFMa5b5lxPhRs6N/VfdBIHBgFKkHSvd9I7PtKYIh
-         RebKnvIoWsQx14IlpHTag2G1jk9EWaN7+3KeAj9wdOKQHYUJVkQSYeiCwVLs53b9gTS2
-         jR0wtaevF8SL4RJoxbCrc5cwPvE9OCqov4p9AQcvaLAPdf8xImWPv+ch+hRrKoxeSje1
-         7BOw==
+        bh=K4asd4oI0/VXu7bks/7ZozR0oEqYxUgnLBJb7yiErTQ=;
+        b=Sefw+LBQD0bYtQOF7Z3/FF5rWl5fnzlahJItvb5ZICgi8f6u4tK/9F6nfzFXPich3o
+         EcUn7JVF7lEJYJneqAC0m7D0m73A5VmH620Qfp8NMW21rRutLGEd2Gtg1ILCNwDmdZNZ
+         FjIyPxXe0aqGhTuqozDv4invVSFneb5ZIlySFOfmNfdoGDZG5iv4aiillZPkIZFAoy/1
+         Op94lqwLg26NfLmDs8/kDtPAlvGhye76V+rDgwQLh/XO9bfB2FGQp9lBXpf3J2QGTDlH
+         XxqI4JERIWdF2z3HZogNyJS65SJ4WuJX9kuolmSrlZO9gRMOVvxcsIln5olphRwer6Xd
+         nAYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=m8A/eWnO1t/szRUY+Sf0prGvVhEq1OhdUwg16kciR9Y=;
-        b=QH1zJgCAKUZeg1jyr8N+/Jv/2NJHS/sIsOjQCEDASBvTjnHJcQ56i3W75SP2lrejsF
-         eooHfZyK3lBrpxqSPauv6Bn1Hjg+enVz4C0UOHGHglWrDhqCkOY0OpVxfL1+f5eZ2t7J
-         UQ0W+ncsQYPtXOUoCJ0YeojoXjKpjahw2sdC1p74GVna4ZWPUNTQXfdpni3/krpg9WUI
-         TAUXGPSyv2srkVYUETP6Fqo1XVCfmjv9yYqondgvgvAlJtwrUVf3bgWR/bi5xSgvqebj
-         kKY1MZnZNvfhxn28qYzZgfjVatzId9Slv7iymkir2WeqoTuCkrzmM1E+uXnrT39nIRov
-         hluw==
-X-Gm-Message-State: APjAAAWOgQPIqLyfSE3qUAvW27o0p6AZTAZhfqrHWfpE7gY0vmavLCLN
-        WwSr2UrjetPCRV8O+C3mHpU8ChHcsr0myY7w
-X-Google-Smtp-Source: APXvYqw58aZo87dG3fwjMiai1M3z5FY5q/6ly8PoJSCWFGZ15x+DIhLzfcwRQ16QrQdSY5QNXUz25VoApSfh8lGu
-X-Received: by 2002:a1f:c507:: with SMTP id v7mr16491398vkf.18.1553093549995;
- Wed, 20 Mar 2019 07:52:29 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 15:51:28 +0100
+        bh=K4asd4oI0/VXu7bks/7ZozR0oEqYxUgnLBJb7yiErTQ=;
+        b=MSzzr3OVnRZg5gqL2c4TZIXpS2rOJsBY2iOoXxu8tYEWEOZDTfUNaFhmnmReeAjWMj
+         KhjmRlFeQjSDIDfZk/LyvBrFkCFIFd2Z3MNMANbxlgcIDR7ljujXwWhYRo79uQ2UGmWN
+         GUrbUnoQKtL3zev4lcVxMiEP9Gwe4bEDVRqi153zHAVkEQNaZdxp1yPijFAFSpjp0aS2
+         4zPpNWyMq0MydarzP+CzUV+YsvvENlrke77dO4QFEFs+w0az4l+pUnmSbHDse23484+t
+         Q66B+mIJCtpYjuRBuWd9Lj6QuhDU2J62PjybtbozlrYtsJubf4nYmIOUs2iR4zncHcno
+         8x7A==
+X-Gm-Message-State: APjAAAWZ00usBJZbfw1C7JaFfBVI4lPoG4b0KwGGg36Ns0cWKGP3yRJG
+        /XBeq1vZbZifgeiAPUdu6JOolAKT3jBaYApS
+X-Google-Smtp-Source: APXvYqyQ4NMWwmcD+QNQXwycznUSrQ4ccjdMHmvJTyO2jY+wRoLxkzWub5WBnbxSwYjZ06st+3eMc86w9nXfL0n7
+X-Received: by 2002:aed:3b09:: with SMTP id p9mr8634647qte.55.1553093540002;
+ Wed, 20 Mar 2019 07:52:20 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:51:25 +0100
 In-Reply-To: <cover.1553093420.git.andreyknvl@google.com>
-Message-Id: <017804b2198a906463d634f84777b6087c9b4a40.1553093421.git.andreyknvl@google.com>
+Message-Id: <c9553c3a4850d43c8af0c00e97850d70428b7de7.1553093421.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1553093420.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v13 14/20] drm/amdgpu, arm64: untag user pointers in amdgpu_ttm_tt_get_user_pages
+Subject: [PATCH v13 11/20] tracing, arm64: untag user pointers in seq_print_user_ip
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -116,34 +116,46 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-amdgpu_ttm_tt_get_user_pages() uses provided user pointers for vma
-lookups, which can only by done with untagged pointers.
+seq_print_user_ip() uses provided user pointers for vma lookups, which
+can only by done with untagged pointers.
 
 Untag user pointers in this function.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 5 +++--
+ kernel/trace/trace_output.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index 73e71e61dc99..891b027fa33b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -751,10 +751,11 @@ int amdgpu_ttm_tt_get_user_pages(struct ttm_tt *ttm, struct page **pages)
- 		 * check that we only use anonymous memory to prevent problems
- 		 * with writeback
- 		 */
--		unsigned long end = gtt->userptr + ttm->num_pages * PAGE_SIZE;
-+		unsigned long userptr = untagged_addr(gtt->userptr);
-+		unsigned long end = userptr + ttm->num_pages * PAGE_SIZE;
- 		struct vm_area_struct *vma;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 54373d93e251..6376bee93c84 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -370,6 +370,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ {
+ 	struct file *file = NULL;
+ 	unsigned long vmstart = 0;
++	unsigned long untagged_ip = untagged_addr(ip);
+ 	int ret = 1;
  
--		vma = find_vma(mm, gtt->userptr);
-+		vma = find_vma(mm, userptr);
- 		if (!vma || vma->vm_file || vma->vm_end < end) {
- 			up_read(&mm->mmap_sem);
- 			return -EPERM;
+ 	if (s->full)
+@@ -379,7 +380,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ 		const struct vm_area_struct *vma;
+ 
+ 		down_read(&mm->mmap_sem);
+-		vma = find_vma(mm, ip);
++		vma = find_vma(mm, untagged_ip);
+ 		if (vma) {
+ 			file = vma->vm_file;
+ 			vmstart = vma->vm_start;
+@@ -388,7 +389,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ 			ret = trace_seq_path(s, &file->f_path);
+ 			if (ret)
+ 				trace_seq_printf(s, "[+0x%lx]",
+-						 ip - vmstart);
++						 untagged_ip - vmstart);
+ 		}
+ 		up_read(&mm->mmap_sem);
+ 	}
 -- 
 2.21.0.225.g810b269d1ac-goog
 
