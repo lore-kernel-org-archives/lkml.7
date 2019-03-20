@@ -2,105 +2,156 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2864C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC05C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F642183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="gcLpwLnw"
+	by mail.kernel.org (Postfix) with ESMTP id 2BCB8218A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfCTXXb (ORCPT
+        id S1727691AbfCTXXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 19:23:31 -0400
-Received: from rcdn-iport-1.cisco.com ([173.37.86.72]:27991 "EHLO
-        rcdn-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfCTXXb (ORCPT
+        Wed, 20 Mar 2019 19:23:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:22239 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726115AbfCTXXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 19:23:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1174; q=dns/txt; s=iport;
-  t=1553124210; x=1554333810;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R+DVdRepSu84yfowrZ6ypAs5+WZg8d0uiCTV7N33jOI=;
-  b=gcLpwLnwL8oK6W3uyQDGERr7rwHRYaZ6p+c1bTt642oVyVP1OggiT96x
-   sB7I2mZOXe/n4Ez44SukC3J4CWlTtejYWqV9wByv/w3bYdJmgXh5uWE3Y
-   ROty3q/EM834OIDGXF9NuNZ0YZ2GkYs1yr6uqGPCnykMTXSxmWilNxEej
-   g=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AQAACbypJc/4oNJK1kGQEBAQEBAQE?=
- =?us-ascii?q?BAQEBAQcBAQEBAQGBVAEBAQEBAQsBghCBODMnl0eCDYkzhQwRiXmBZwsBARi?=
- =?us-ascii?q?EVAKEZyI3Bg0BAQMBAQkBAwJtKIVKAQEBAQMBOTQLEAsOBwIBCSUPEgcUEwg?=
- =?us-ascii?q?GE4UAAxWsRYgFDYIfFA6BDQGLMReBQD+EI4JXgXcBEQIBhX8DkiaGGotrGzY?=
- =?us-ascii?q?JgkuMLHqDMyUMk1mSRYtbAgQGBQIVgWIiZXEzGggbFTuCbJBrHwMwjQ0BAQ?=
-X-IronPort-AV: E=Sophos;i="5.60,250,1549929600"; 
-   d="scan'208";a="537691888"
-Received: from alln-core-5.cisco.com ([173.36.13.138])
-  by rcdn-iport-1.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 20 Mar 2019 23:23:30 +0000
-Received: from zorba ([10.154.176.41])
-        by alln-core-5.cisco.com (8.15.2/8.15.2) with ESMTPS id x2KNNSaN001900
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 20 Mar 2019 23:23:29 GMT
-Date:   Wed, 20 Mar 2019 16:23:28 -0700
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rob Herring <robh+dt@kernel.org>, xe-linux-external@cisco.com,
-        linuxppc-dev@lists.ozlabs.org, Daniel Walker <dwalker@fifo99.com>,
-        Maksym Kokhan <maksym.kokhan@globallogic.com>,
-        linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH 1/4] add generic builtin command line
-Message-ID: <20190320232328.3bijcxek2yg43a25@zorba>
-References: <20190319232448.45964-2-danielwa@cisco.com>
- <20190320155319.2cd3c0f73ef3cdefb65d5d1e@linux-foundation.org>
+        Wed, 20 Mar 2019 19:23:43 -0400
+X-UUID: 067764989df2473ab1faef31bd0ac87e-20190321
+X-UUID: 067764989df2473ab1faef31bd0ac87e-20190321
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2000137597; Thu, 21 Mar 2019 07:23:38 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 07:23:36 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 07:23:36 +0800
+Message-ID: <1553124216.30977.80.camel@mtkswgap22>
+Subject: Re: [PATCH] scsi: ufs-mediatek: Avoid using ret uninitialized in
+ ufs_mtk_setup_clocks
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        <linux-scsi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 21 Mar 2019 07:23:36 +0800
+In-Reply-To: <CAKwvOdn0fcGSsX7XQD2v9iV=FMM6z5shqN4=Zjkkyyrd+y8rWw@mail.gmail.com>
+References: <20190320180340.25795-1-natechancellor@gmail.com>
+         <CAKwvOdn0fcGSsX7XQD2v9iV=FMM6z5shqN4=Zjkkyyrd+y8rWw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320155319.2cd3c0f73ef3cdefb65d5d1e@linux-foundation.org>
-User-Agent: NeoMutt/20170609 (1.8.3)
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.154.176.41, [10.154.176.41]
-X-Outbound-Node: alln-core-5.cisco.com
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 03:53:19PM -0700, Andrew Morton wrote:
-> On Tue, 19 Mar 2019 16:24:45 -0700 Daniel Walker <danielwa@cisco.com> wrote:
+Hi,
+
+On Wed, 2019-03-20 at 15:23 -0700, Nick Desaulniers wrote:
+> On Wed, Mar 20, 2019 at 11:06 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > When building with -Wsometimes-uninitialized, Clang warns:
+> >
+> > drivers/scsi/ufs/ufs-mediatek.c:112:7: warning: variable 'ret' is used
+> > uninitialized whenever 'if' condition is false
+> > [-Wsometimes-uninitialized]
+> >                 if (on)
+> >                     ^~
+> > drivers/scsi/ufs/ufs-mediatek.c:120:9: note: uninitialized use occurs
+> > here
+> >         return ret;
+> >                ^~~
+> > drivers/scsi/ufs/ufs-mediatek.c:112:3: note: remove the 'if' if its
+> > condition is always true
+> >                 if (on)
+> >                 ^~~~~~~
+> > drivers/scsi/ufs/ufs-mediatek.c:108:7: warning: variable 'ret' is used
+> > uninitialized whenever 'if' condition is false
+> > [-Wsometimes-uninitialized]
+> >                 if (!on)
+> >                     ^~~
+> > drivers/scsi/ufs/ufs-mediatek.c:120:9: note: uninitialized use occurs
+> > here
+> >         return ret;
+> >                ^~~
+> > drivers/scsi/ufs/ufs-mediatek.c:108:3: note: remove the 'if' if its
+> > condition is always true
+> >                 if (!on)
+> >                 ^~~~~~~~
+> > drivers/scsi/ufs/ufs-mediatek.c:96:9: note: initialize the variable
+> > 'ret' to silence this warning
+> >         int ret;
+> >                ^
+> >                 = 0
+> > 2 warnings generated.
+> >
+> > Remove the default case and initialize ret to -EINVAL to properly fix
+> > this warning.
+> >
+> > Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/426
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/scsi/ufs/ufs-mediatek.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> > index c3b78fc83d3f..34aecad04468 100644
+> > --- a/drivers/scsi/ufs/ufs-mediatek.c
+> > +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> > @@ -93,7 +93,7 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
+> >                                 enum ufs_notify_change_status status)
+> >  {
+> >         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+> > -       int ret;
+> > +       int ret = -EINVAL;
+> >
+> >         /*
+> >          * In case ufs_mtk_init() is not yet done, simply ignore.
+> > @@ -112,9 +112,6 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
+> >                 if (on)
+> >                         ret = phy_power_on(host->mphy);
+> >                 break;
+> > -       default:
+> > -               ret = -EINVAL;
+> > -               break;
+> >         }
+> >
+> >         return ret;
+> > --
+> > 2.21.0
+> >
 > 
-> > This code allows architectures to use a generic builtin command line.
-> 
-> I wasn't cc'ed on [2/4].  No mailing lists were cc'ed on [0/4] but it
-> didn't say anything useful anyway ;)
-> 
-> I'll queue them up for testing and shall await feedback from the
-> powerpc developers.
-> 
+> The enum being switched on (enum ufs_notify_change_status) only has 2
+> values; so the default case is impossible.  A switch is probably
+> overkill, but this change is fine as is.  Thanks for sending it.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-You weren't CC'd , but it was To: you,
+Currently the caller is always using "on" with "POST_CHANGE" and "!on"
+with "PRE_CHANGE", however the warnings shall be fixed. Thanks for
+fixing it.
 
- 35 From: Daniel Walker <danielwa@cisco.com>
- 36 To: Andrew Morton <akpm@linux-foundation.org>,
- 37         Christophe Leroy <christophe.leroy@c-s.fr>,
- 38         Michael Ellerman <mpe@ellerman.id.au>,
- 39         Rob Herring <robh+dt@kernel.org>, xe-linux-external@cisco.com,
- 40         linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>
- 41 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
- 42 Subject: [PATCH 2/4] drivers: of: generic command line support
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
 
-and the first one [0/4] should have went to the linuxppc-dev , and xe-linux-external. Maybe 
-our git-send-email isn't working with our mail servers.
 
-Thanks for picking it up.
 
-Daniel
+
