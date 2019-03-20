@@ -2,112 +2,137 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D006C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2F1C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D63821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FDE21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553109899;
+	bh=J/tyPdWp5ij+HzyxPMKplKC0JtfFbMNLhYxrJRSFnpY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZiBvJGJ9V587C/+EMYCM/7nq5soIAMEIhvjOste0pyRnIM9faAwbv1SqrCfY1g/yD
+	 9XEzYXgTiullOlYu1i0Tdia65kk9tshCcm/UxaC0DHS2QXX8YDSPDRhMMFfJsqunB6
+	 wiqEK+rS+ywISpoK69Vm+q8po8ASn0AY7eeiHP0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfCTTWH (ORCPT
+        id S1726707AbfCTTY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:22:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49134 "EHLO mx1.redhat.com"
+        Wed, 20 Mar 2019 15:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfCTTWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:22:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726023AbfCTTY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:24:57 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75EC8368E6;
-        Wed, 20 Mar 2019 19:22:06 +0000 (UTC)
-Received: from x1.home (ovpn-116-218.phx2.redhat.com [10.3.116.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FB4C60461;
-        Wed, 20 Mar 2019 19:22:03 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 13:22:02 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-Message-ID: <20190320132202.6279a190@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
-References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
-        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
-        <20190319121416.27495651@x1.home>
-        <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id B196D21841;
+        Wed, 20 Mar 2019 19:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553109896;
+        bh=J/tyPdWp5ij+HzyxPMKplKC0JtfFbMNLhYxrJRSFnpY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ogZ3DGvQpv2k6ADYAy3sobBQuPA7xXyxp2IR4AQ3FbPlVlh4EBXkapSsHvDiqd6bd
+         k6Jg6aaGaUAAckERGj/2SovqAsg6TukCEDi07EJEAsOgyZ/U7uUPCGPCQYWcuwbyJ5
+         olZHouW1t93osddh2Qwe2hw/fJyyhsExrfQuyNyg=
+Date:   Wed, 20 Mar 2019 14:24:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: Mark expected switch fall-throughs
+Message-ID: <20190320192454.GB251185@google.com>
+References: <20190320182715.GA9406@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 20 Mar 2019 19:22:06 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320182715.GA9406@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 11:49:37 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+On Wed, Mar 20, 2019 at 01:27:15PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
 
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: Wednesday, March 20, 2019 2:14 AM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-> > 
-> > On Tue, 12 Mar 2019 16:18:22 +0800
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > This patch exports the following symbols from vfio-pci driver
-> > > for vfio-pci alike driver. e.g. vfio-pci-mdev driver
-> > >
-> > > *) vfio_pci_set_vga_decode();
-> > > *) vfio_pci_release();
-> > > *) vfio_pci_open();
-> > > *) vfio_pci_register_dev_region();
-> > > *) vfio_pci_ioctl();
-> > > *) vfio_pci_rw();
-> > > *) vfio_pci_mmap();
-> > > *) vfio_pci_request();
-> > > *) vfio_pci_probe_misc();
-> > > *) vfio_pci_remove_misc();
-> > > *) vfio_err_handlers;
-> > > *) vfio_pci_reflck_attach();
-> > > *) vfio_pci_reflck_put();  
-> > 
-> > Exporting all these symbols scares me a bit.  They're GPL and we don't
-> > guarantee a kernel ABI, but I don't really want to support arbitrary
-> > use cases either.  What if we re-factored the shared bits into a common
-> > file and just linked them together?  Thanks,  
+Does this fix all the remaining cases in drivers/pci?  I'd like to fix
+them all at once.
+
+What's the best way to watch for new warnings being added?  I fiddled
+with "make W=2" etc but it didn't seem useful.  Does the 0-day robot
+warn when -Wimplicit-fallthrough warnings are added?
+
+Bjorn
+
+> This patch fixes the following warnings:
 > 
-> Hi, Alex,
+> drivers/pci/proc.c: In function ‘proc_bus_pci_ioctl’:
+> drivers/pci/proc.c:216:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (arch_can_pci_mmap_wc()) {
+>       ^
+> drivers/pci/proc.c:225:2: note: here
+>   default:
+>   ^~~~~~~
 > 
-> Before refactor the code, I'd like to check with you on the module
-> parameters for the two modules. The existing vfio-pci driver has
-> some module parameters. e.g. ids, nointxmask, disable_idle_d3.
-> For future usage and maintain, I think it is better to let the two
-> drivers have same parameters. However, I'm not 100% on whether
-> we want to allow user load vfio-pci.ko and vfio-pci-mdev.ko with
-> different parameter value? e.g. load vfio-pci.ko with nointxmask=false
-> while load vfio-pci-mdev.ko with nointxmask=true. How about your
-> opinion on it?
-
-Hi Yi,
-
-I agree that it makes sense to retain the module options for the mdev
-wrapped version, but I expect we should also allow dissimilar user
-settings.  If those lived in the common code that gets linked separately
-with each module, that should work fine, I think.  We can worry about
-refactoring for future driver that might not want those options later.
-Thanks,
-
-Alex
+> drivers/pci/xen-pcifront.c: In function ‘pcifront_backend_changed’:
+> drivers/pci/xen-pcifront.c:1105:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (xdev->state == XenbusStateClosed)
+>       ^
+> drivers/pci/xen-pcifront.c:1108:2: note: here
+>   case XenbusStateClosing:
+>   ^~~~
+> 
+> Notice that, in this particular case, the /* fall through */
+> comment is placed at the very bottom of the case statement,
+> which is what GCC is expecting to find.
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/pci/proc.c         | 1 +
+>  drivers/pci/xen-pcifront.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+> index 6fa1627ce08d..445b51db75b0 100644
+> --- a/drivers/pci/proc.c
+> +++ b/drivers/pci/proc.c
+> @@ -222,6 +222,7 @@ static long proc_bus_pci_ioctl(struct file *file, unsigned int cmd,
+>  		}
+>  		/* If arch decided it can't, fall through... */
+>  #endif /* HAVE_PCI_MMAP */
+> +		/* fall through */
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
+> diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+> index eba6e33147a2..14cf0f41ecf0 100644
+> --- a/drivers/pci/xen-pcifront.c
+> +++ b/drivers/pci/xen-pcifront.c
+> @@ -1104,7 +1104,7 @@ static void __ref pcifront_backend_changed(struct xenbus_device *xdev,
+>  	case XenbusStateClosed:
+>  		if (xdev->state == XenbusStateClosed)
+>  			break;
+> -		/* Missed the backend's CLOSING state -- fallthrough */
+> +		/* fall through - Missed the backend's CLOSING state. */
+>  	case XenbusStateClosing:
+>  		dev_warn(&xdev->dev, "backend going away!\n");
+>  		pcifront_try_disconnect(pdev);
+> -- 
+> 2.21.0
+> 
