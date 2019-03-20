@@ -2,198 +2,126 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F9EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF96C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B029C2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BA321850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P38sKNAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfCTL2u (ORCPT
+        id S1727931AbfCTLaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 07:28:50 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35304 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfCTL2t (ORCPT
+        Wed, 20 Mar 2019 07:30:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50179 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTLaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 07:28:49 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1h6ZOd-00028d-Un; Wed, 20 Mar 2019 12:28:36 +0100
-Date:   Wed, 20 Mar 2019 12:28:35 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Mike Galbraith <bitbucket@online.de>, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcu: Allow to eliminate softirq processing from rcutree
-Message-ID: <20190320112835.prq22vsto3ecckff@linutronix.de>
-References: <20190315111130.4902-1-bigeasy@linutronix.de>
- <20190320002613.GA129907@google.com>
+        Wed, 20 Mar 2019 07:30:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z11so11708071wmi.0;
+        Wed, 20 Mar 2019 04:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6cth7Y463YwZNMzZQfogNVGpIY2rvKagq7dq2OfCuEU=;
+        b=P38sKNAANu+uvCM7XitK2f4L4lsW0FtLNOD08bj5d665cZWnyrbF+nMR/lfEHc2pvw
+         ewvVDkgUzju4BYLpdy1LuFvqwRFOFzoJi6thcl2fQ/Fij0xd2/3IwGcu+b/zMBIX8WwL
+         2NjS/KAfnOuQoM1NvVynGdt/dpKIrQxMRtkIJwD0uslF16Q2QVl1SlLUQjG8EgKl06fW
+         lYru7GpKCjVD8HGbEYUVlARxvm4hGZ7mPeDfN303kPrnnhx9bbrod12RO3L9gv5cfXnb
+         +WPGztKgOXBxAg8KGiZd49fP2UqmEuIuuZAzwo3J2mY/azQ22n03IH8zhLn6r8R5sMxl
+         htbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6cth7Y463YwZNMzZQfogNVGpIY2rvKagq7dq2OfCuEU=;
+        b=sKAUGX2Bl7x8Eua2Ijw+3cdadr6JAyl5O5oaMUcEnAf5drV8chjU1drcVgHC+6CBUB
+         mCxdsTiarZji8N0Q/d3+ot0RObnw6h28R08XC6D5O5KRPE2fCxdP570TANLP1TqgJOAu
+         eEHJDSicYniPvIvldYhayO0nDFSlKnVLeqhdiHQ/3Sf/QuVZDqexACNOA5PbUdHjhWhc
+         DPNIzDxjLGX1FDi7yTaqIKJtAnbFZzfxHYw1533uc4iJXk0P5Z5EbnYh5TvFb1Hszr4q
+         OouDPi1wgpkDRn2qWy98wRXL5ff8KdLAuB74DLznc+C/O4CvcVNAu+GyYgY1qfo/3YoK
+         oXIg==
+X-Gm-Message-State: APjAAAVRqgpFO8ohuo3hU6XgN3X0P7c/8t55HjYaoHFK8/nEstvvXtqp
+        I9FG2fLaWFgd0+ieq3crudk=
+X-Google-Smtp-Source: APXvYqw4SI24Ut3PNk+rbZYZVntYfcR0t4fA/mm6oqOCfYXUrDfZqCS9AKLzF3o1aoE3MBPqadTYoQ==
+X-Received: by 2002:a1c:804c:: with SMTP id b73mr7625251wmd.116.1553081407535;
+        Wed, 20 Mar 2019 04:30:07 -0700 (PDT)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id c10sm2757402wrt.65.2019.03.20.04.30.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 04:30:06 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 12:30:05 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] pwm: img: Turn final 'else if' into 'else' in
+ img_pwm_config
+Message-ID: <20190320113005.GB23838@ulmo>
+References: <20190307223628.21270-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
 Content-Disposition: inline
-In-Reply-To: <20190320002613.GA129907@google.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190307223628.21270-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-19 20:26:13 [-0400], Joel Fernandes wrote:
-> > @@ -2769,19 +2782,121 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
-> >  {
-> >  	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
-> >  		return;
-> > -	if (likely(!rcu_state.boost)) {
-> > -		rcu_do_batch(rdp);
-> > -		return;
-> > -	}
-> > -	invoke_rcu_callbacks_kthread();
-> > +	rcu_do_batch(rdp);
-> 
-> Looks like a nice change, but one question...
-> 
-> Consider the case where rcunosoftirq boot option is not passed.
-> 
-> Before, if RCU_BOOST=y, then callbacks would be invoked in rcuc threads if
-> possible, by those threads being woken up from within the softirq context
-> (in invoke_rcu_callbacks).
-> 
-> Now, if RCU_BOOST=y, then callbacks would only be invoked in softirq context
-> and not in the threads at all. Because rcu_softirq_enabled = false, so the
-> path executes:
->   rcu_read_unlock_special() ->
->         raise_softirq_irqsoff() ->
->                 rcu_process_callbacks_si() ->
->                         rcu_process_callbacks() ->
->                                 invoke_rcu_callbacks() ->
->                                         rcu_do_batch()
-> 
-> This seems like a behavioral change to me. This makes the callbacks always
-> execute from the softirq context and not the threads when boosting is
-> configured. IMO in the very least, such behavioral change should be
-> documented in the change.
-> 
-> One way to fix this I think could be, if boosting is enabled, then set
-> rcu_softirq_enabled to false by default so the callbacks are still executed
-> in the rcuc threads.
-> 
-> Did I miss something? Sorry if I did, thanks!
 
-So with all the swaps and reorder we talking about this change:
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 0a719f726e149..82810483bfc6c 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2306,20 +2306,6 @@ static void rcu_core_si(struct softirq_action *h)
- 	rcu_core();
- }
- 
--/*
-- * Schedule RCU callback invocation.  If the running implementation of RCU
-- * does not support RCU priority boosting, just do a direct call, otherwise
-- * wake up the per-CPU kernel kthread.  Note that because we are running
-- * on the current CPU with softirqs disabled, the rcu_cpu_kthread_task
-- * cannot disappear out from under us.
-- */
--static void invoke_rcu_callbacks(struct rcu_data *rdp)
--{
--	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
--		return;
--	rcu_do_batch(rdp);
--}
--
- static void rcu_wake_cond(struct task_struct *t, int status)
- {
- 	/*
-@@ -2330,6 +2316,19 @@ static void rcu_wake_cond(struct task_struct *t, int status)
- 		wake_up_process(t);
- }
- 
-+static void invoke_rcu_core_kthread(void)
-+{
-+	struct task_struct *t;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
-+	t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
-+	if (t != NULL && t != current)
-+		rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
-+	local_irq_restore(flags);
-+}
-+
- static bool rcu_softirq_enabled = true;
- 
- static int __init rcunosoftirq_setup(char *str)
-@@ -2339,26 +2338,33 @@ static int __init rcunosoftirq_setup(char *str)
- }
- __setup("rcunosoftirq", rcunosoftirq_setup);
- 
-+/*
-+ * Schedule RCU callback invocation.  If the running implementation of RCU
-+ * does not support RCU priority boosting, just do a direct call, otherwise
-+ * wake up the per-CPU kernel kthread.  Note that because we are running
-+ * on the current CPU with softirqs disabled, the rcu_cpu_kthread_task
-+ * cannot disappear out from under us.
-+ */
-+static void invoke_rcu_callbacks(struct rcu_data *rdp)
-+{
-+	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
-+		return;
-+	if (rcu_state.boost || rcu_softirq_enabled)
-+		invoke_rcu_core_kthread();
-+	rcu_do_batch(rdp);
-+}
-+
- /*
-  * Wake up this CPU's rcuc kthread to do RCU core processing.
-  */
- static void invoke_rcu_core(void)
- {
--	unsigned long flags;
--	struct task_struct *t;
--
- 	if (!cpu_online(smp_processor_id()))
- 		return;
--	if (rcu_softirq_enabled) {
-+	if (rcu_softirq_enabled)
- 		raise_softirq(RCU_SOFTIRQ);
--	} else {
--		local_irq_save(flags);
--		__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
--		t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
--		if (t != NULL && t != current)
--			rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
--		local_irq_restore(flags);
--	}
-+	else
-+		invoke_rcu_core_kthread();
- }
- 
- static void rcu_cpu_kthread_park(unsigned int cpu)
-@@ -2426,7 +2432,8 @@ static int __init rcu_spawn_core_kthreads(void)
- 		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
- 	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
- 		return 0;
--	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
-+	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec),
-+		  "%s: Could not start rcuc kthread, OOM is now expected behavior\n", __func__);
- 	return 0;
- }
- early_initcall(rcu_spawn_core_kthreads);
--- 
-2.20.1
+On Thu, Mar 07, 2019 at 03:36:28PM -0700, Nathan Chancellor wrote:
+> When building with -Wsometimes-uninitialized, Clang warns:
+>=20
+> drivers/pwm/pwm-img.c:126:13: error: variable 'timebase' is used
+> uninitialized whenever 'if' condition is false
+> [-Werror,-Wsometimes-uninitialized]
+>=20
+> The final else if functions as an else; make that explicit so that Clang
+> understands that timebase cannot be used uninitialized.
+>=20
+> Link: https://github.com/ClangBuiltLinux/linux/issues/400
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/pwm/pwm-img.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
->  - Joel
+Applied, thanks!
 
-Sebastian
+Thierry
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlySJD0ACgkQ3SOs138+
+s6E56A/9F05DPbUM0SbbazEQOwUiPy48Ag9mRyXsXCvhxloijwFNTHSOGJ86C/Hh
+wLpYG5t47dqrnFgb3W07M2BGsEH3FyrfYRLrhYgB5M2/7Dc718TWodZfvt6jthOE
+1sjFKAg1CHTt/bUNPAarq19l5ENKVrwj52auukodIUeRFQjjst4weFQ4NVmJN2rp
+Yh6jHHq9VmGsNUUhw0OiIigXshIg8UQAcINvmzfK5RlAYfbp6/F37/MgBjYluV2u
+C2Fb2d6s1V/5u72CdC0MD0lcbTsVZwBGdgcdPTHgW32IpToI6JkDDiIT8rDHteHE
+ThVTECSLbrLRDyhFS5W2O0eoMejiiYLh01Is7es0cMXzlW9/sxia8pHdtySnD9lN
+5vPT8V47Sfq+v6EvEI5m8i0u4iHdNclB4qe0pMN3pZHH3FsW/VjN4oYt9xkl3Xfm
+7feiX5pI1NaVVwQ89kJaqVt/Cwmcy3HDDCmSXzXgeviDGguqnX+VD7O2iyRwPhvi
+eaf8hgGrRcyM8EFtOBpz+RBeaVGA8mO3eNdzDNYHa76vdUQcoZz5ApfYgjOOgMfT
+qdP864Sdc67xCdKSGxy74WDom3DLZ7OoyIiHJyWz6rbHK49abbCQSH9I7eKYFusl
+zW3GxLvKpVzgkyfM4ZvjtV8Bi1YEMcAFBn4HVnzTghZIHXOxrEw=
+=xI91
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
