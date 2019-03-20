@@ -2,113 +2,130 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C176C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0DD2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B932175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfCTFJ7 (ORCPT
+        id S1727084AbfCTFNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:09:59 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35750 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfCTFJz (ORCPT
+        Wed, 20 Mar 2019 01:13:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725986AbfCTFNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:09:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so877776pgf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:09:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NzF2lox56cCw7G7V/HuQAT3g3XyLKaDXps4ZB1oA+bc=;
-        b=Fk8K7AsU6La5lO3wRAxifDP4cjlbwd7BOOatAPDsU313oOSfSeAuS4LksQOwDPDZqH
-         KfMEdQPlNWCxyQbnXG+rvE3+qdzqa0v7oRzX842Vx7vioXyqKTtfz2KGe9DZLJHy31BF
-         Kqxd+bElNtZF/Fp+mgy0McODs1zG0MVz5gYXzOJpBLGeKI3O/oX0yvQulOmeCaXBluXW
-         AB2zmkbEZq9JN1iHHalJSDqbxH6T0AhSX7co92JlQ+fKr9gGiTZfCv6IKxdU4O8AURe8
-         ufwD7w+XsavkyNESyPdSbVz4W6REqJdA71IVjOQXWsS0LVfv/CsJrS1PK3XNYPxPZV6m
-         fIUQ==
-X-Gm-Message-State: APjAAAXiMJU2b75Y2t3HJwJ3f8b+UfBb1mDdiSni0azTf7YRDU7Qn3Yo
-        OM8bb0IlN3o2xAV99J3RwVQSbJWJuyk=
-X-Google-Smtp-Source: APXvYqz11gH+I/P5+wWWISa5BJ9kL4DjJeRovWcoEtWVrZ9t7h0ul+/Pcy/JsXGCFXwgldP+Gz6FQg==
-X-Received: by 2002:a17:902:7b93:: with SMTP id w19mr5881676pll.141.1553058594147;
-        Tue, 19 Mar 2019 22:09:54 -0700 (PDT)
-Received: from localhost ([122.177.144.121])
-        by smtp.gmail.com with ESMTPSA id t10sm1470971pgo.27.2019.03.19.22.09.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 22:09:53 -0700 (PDT)
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
-        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
-Subject: [PATCH v3 3/3] Documentation/vmcoreinfo: Add documentation for 'MAX_PHYSMEM_BITS'
-Date:   Wed, 20 Mar 2019 10:39:34 +0530
-Message-Id: <1553058574-18606-4-git-send-email-bhsharma@redhat.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+        Wed, 20 Mar 2019 01:13:18 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K53aaS118347
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:17 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbem8hedd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 20 Mar 2019 05:13:09 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 05:13:06 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5DBRj40370268
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 Mar 2019 05:13:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43D70AE05D;
+        Wed, 20 Mar 2019 05:13:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6787AE04D;
+        Wed, 20 Mar 2019 05:13:10 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 05:13:10 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A9BB4A0129;
+        Wed, 20 Mar 2019 16:13:09 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 0/7] Refactor OCXL driver to allow external drivers to use it
+Date:   Wed, 20 Mar 2019 16:08:52 +1100
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190313041524.14644-1-alastair@au1.ibm.com>
+References: <20190313041524.14644-1-alastair@au1.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032005-0020-0000-0000-000003256780
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032005-0021-0000-0000-00002177842D
+Message-Id: <20190320050901.310-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=905 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for 'MAX_PHYSMEM_BITS' variable being added to
-vmcoreinfo.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-'MAX_PHYSMEM_BITS' defines the maximum supported physical address
-space memory.
+This series reworks the OpenCAPI driver to split frontend
+(driver interactions) from backend (hardware interactions).
 
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- Documentation/kdump/vmcoreinfo.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+This allows external drivers to utilise the core of the
+generic OpenCAPI driver to communicate with specific
+OpenCAPI hardware.
 
-diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.txt
-index bb94a4bd597a..f5a11388dc49 100644
---- a/Documentation/kdump/vmcoreinfo.txt
-+++ b/Documentation/kdump/vmcoreinfo.txt
-@@ -95,6 +95,11 @@ It exists in the sparse memory mapping model, and it is also somewhat
- similar to the mem_map variable, both of them are used to translate an
- address.
- 
-+MAX_PHYSMEM_BITS
-+----------------
-+
-+Defines the maximum supported physical address space memory.
-+
- page
- ----
- 
+Changelog:
+V2:
+  - Reorder patches as some required structs that were only available later
+  - Add dev.release implementation for ocxl_file_info to address warning on
+    driver unload (ocxl: Create a clear delineation...)
+  - Set output var irq_id in ocxl_afu_irq_alloc (ocxl: afu_irq only deals...)
+  - Bump copyright year (ocxl: Provide global MMIO accessors...,
+	ocxl: Split pci.c)
+
+Alastair D'Silva (7):
+  ocxl: Split pci.c
+  ocxl: Don't pass pci_dev around
+  ocxl: Create a clear delineation between ocxl backend & frontend
+  ocxl: Allow external drivers to use OpenCAPI contexts
+  ocxl: afu_irq only deals with IRQ IDs, not offsets
+  ocxl: move event_fd handling to frontend
+  ocxl: Provide global MMIO accessors for external drivers
+
+ drivers/misc/ocxl/Makefile        |   3 +-
+ drivers/misc/ocxl/afu_irq.c       |  97 ++---
+ drivers/misc/ocxl/context.c       |  18 +-
+ drivers/misc/ocxl/core.c          | 578 ++++++++++++++++++++++++++++++
+ drivers/misc/ocxl/file.c          | 160 ++++++---
+ drivers/misc/ocxl/mmio.c          | 234 ++++++++++++
+ drivers/misc/ocxl/ocxl_internal.h |  49 +--
+ drivers/misc/ocxl/pci.c           | 562 ++---------------------------
+ drivers/misc/ocxl/sysfs.c         |  58 +--
+ drivers/misc/ocxl/trace.h         |  12 +-
+ include/misc/ocxl.h               | 322 ++++++++++++++++-
+ 11 files changed, 1390 insertions(+), 703 deletions(-)
+ create mode 100644 drivers/misc/ocxl/core.c
+ create mode 100644 drivers/misc/ocxl/mmio.c
+
 -- 
-2.7.4
+2.20.1
 
