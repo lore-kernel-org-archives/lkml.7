@@ -2,161 +2,204 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91246C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF624C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E4C2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F022175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OixlN/PX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfCTA2w (ORCPT
+        id S1727148AbfCTAdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:28:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36974 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726875AbfCTA2w (ORCPT
+        Tue, 19 Mar 2019 20:33:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46004 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfCTAdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:28:52 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K0OFdv018925
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:28:51 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rb75w11ft-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:28:50 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 20 Mar 2019 00:28:42 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 00:28:40 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K0SjQZ58916900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 00:28:45 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 263F04C04A;
-        Wed, 20 Mar 2019 00:28:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9BC34C040;
-        Wed, 20 Mar 2019 00:28:44 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 00:28:44 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3AE79A0129;
-        Wed, 20 Mar 2019 11:28:43 +1100 (AEDT)
-Subject: Re: [PATCH 6/7] ocxl: afu_irq only deals with IRQ IDs, not offsets
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Greg Kurz <groug@kaod.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 11:28:43 +1100
-In-Reply-To: <20190315145639.4ae9e257@bahia.lab.toulouse-stg.fr.ibm.com>
-References: <20190313041524.14644-1-alastair@au1.ibm.com>
-         <20190313041524.14644-7-alastair@au1.ibm.com>
-         <20190315145639.4ae9e257@bahia.lab.toulouse-stg.fr.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 19 Mar 2019 20:33:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id y3so372900pgk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pIAmozdrbTOLwLNGIyetO2St2qeMD1RsIRur82uuJek=;
+        b=OixlN/PXRwQFCJpfng9mAz+ykI8+BrgxciXQKA2qqI40KgUxB1ta/9IYGKVJVgmgVj
+         bRt5LIhFdpdZJsHlRJTNEBBT4zf+7FyYP5kr7bZsuY28b3xh9NDZxw81XTHaTnnG5tlc
+         wpMQwz+nxJdj7dTo+kiMxK/FQaKjOdZmx0R2k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pIAmozdrbTOLwLNGIyetO2St2qeMD1RsIRur82uuJek=;
+        b=MZACr9ek3VJeeFpRyp/sJm22b2L9ycsPzxT63iHoWHG2lHv4qhwI4OIqU9/RwCPOEM
+         TXfzlzqL6XFrCGVXZaBmt/yjqX3NDUmHNyk4M9cGWVYNZX1yIjaQtAsiE5KxJBMAcS6I
+         jW1f0wbhMCtfVwFva1Ucg9aHK577+pXWj/qduKliwNYX3WIRPHgwiFn/palXlRizG/eA
+         2+Qgy4bI6/zxQDnkapXCBtlWOTsz+xLhQmjLcRZLvNTR96bt0q33SSzHovErfD6MCiXJ
+         DuZBMCqAm5x3Enuw6HiuN4yhIPDOQPgRe4yQ0HMrgqv31UL7XXxbVvk6P9EX1GeGTOtH
+         wQGg==
+X-Gm-Message-State: APjAAAUTtrv+WJW5URLHS6TkiD/pGUxpvqJ5ibxDxDFC8AMNCOdsToEM
+        1Np+DosX1SpXvaA5WW/bPY/xPQ==
+X-Google-Smtp-Source: APXvYqzbgiE7aJ+ThgbRlljjuMjnoZuOAv0b7hZqNDkCC+iqTxIpTIQ/lgi4xeLM/4yfWMSOPjH/+A==
+X-Received: by 2002:a17:902:6949:: with SMTP id k9mr4679354plt.275.1553042033947;
+        Tue, 19 Mar 2019 17:33:53 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id p14sm216333pgn.34.2019.03.19.17.33.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Mar 2019 17:33:53 -0700 (PDT)
+Date:   Tue, 19 Mar 2019 17:33:52 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Message-ID: <20190320003352.GN112750@google.com>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032000-0020-0000-0000-000003255778
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032000-0021-0000-0000-00002177734C
-Message-Id: <20fc6ceee1d45e3d4e71e3ac6887ef2860a1c341.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-19_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319181323.22804-4-gael.portay@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-15 at 14:56 +0100, Greg Kurz wrote:
-> On Wed, 13 Mar 2019 15:15:21 +1100
-> "Alastair D'Silva" <alastair@au1.ibm.com> wrote:
-> 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > The use of offsets is required only in the frontend, so alter
-> > the IRQ API to only work with IRQ IDs in the backend.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/misc/ocxl/afu_irq.c       | 31 +++++++++++++------------
-> > ------
-> >  drivers/misc/ocxl/context.c       |  7 +++++--
-> >  drivers/misc/ocxl/file.c          | 13 ++++++++-----
-> >  drivers/misc/ocxl/ocxl_internal.h | 10 ++++++----
-> >  drivers/misc/ocxl/trace.h         | 12 ++++--------
-> >  5 files changed, 36 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/drivers/misc/ocxl/afu_irq.c
-> > b/drivers/misc/ocxl/afu_irq.c
-> > index 11ab996657a2..1885c472df58 100644
-> > --- a/drivers/misc/ocxl/afu_irq.c
-> > +++ b/drivers/misc/ocxl/afu_irq.c
-> > @@ -14,14 +14,14 @@ struct afu_irq {
-> >  	struct eventfd_ctx *ev_ctx;
-> >  };
-> >  
-> > -static int irq_offset_to_id(struct ocxl_context *ctx, u64 offset)
-> > +int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset)
-> >  {
-> >  	return (offset - ctx->afu->irq_base_offset) >> PAGE_SHIFT;
-> >  }
-> >  
-> > -static u64 irq_id_to_offset(struct ocxl_context *ctx, int id)
-> > +u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id)
-> >  {
-> > -	return ctx->afu->irq_base_offset + (id << PAGE_SHIFT);
-> > +	return ctx->afu->irq_base_offset + (irq_id << PAGE_SHIFT);
-> >  }
-> >  
-> >  static irqreturn_t afu_irq_handler(int virq, void *data)
-> > @@ -69,7 +69,7 @@ static void release_afu_irq(struct afu_irq *irq)
-> >  	kfree(irq->name);
-> >  }
-> >  
-> > -int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset)
-> > +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id)
-> >  {
-> >  	struct afu_irq *irq;
-> >  	int rc;
-> > @@ -101,10 +101,7 @@ int ocxl_afu_irq_alloc(struct ocxl_context
-> > *ctx, u64 *irq_offset)
-> >  	if (rc)
-> >  		goto err_alloc;
-> >  
-> > -	*irq_offset = irq_id_to_offset(ctx, irq->id);
-> 
-> This should be replaced by:
-> 
-> 	*irq_id = irq->id;
-> 
+Hi Gaël,
 
-Whoops, good catch, thanks :)
+On Tue, Mar 19, 2019 at 02:13:21PM -0400, Gaël PORTAY wrote:
+> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> 
+> Trusted Firmware-A (TF-A) for rk3399 implements a SiP call to get the
+> on-die termination (ODT) and auto power down parameters from kernel,
+> this patch adds the functionality to do this. Also, if DDR clock
+> frequency is lower than the on-die termination (ODT) disable frequency
+> this driver should disable the DDR ODT.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+> 
+> Changes in v2: None
+> 
+> Changes in v1:
+> - [RFC 3/10] Add an explanation for platform SIP calls.
+> - [RFC 3/10] Change if statement for a switch.
+> - [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
+> 
+>  drivers/devfreq/rk3399_dmc.c        | 74 ++++++++++++++++++++++++++++-
+>  include/soc/rockchip/rockchip_sip.h |  1 +
+>  2 files changed, 74 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+> ...
+>  static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+> @@ -80,6 +86,8 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+>  	struct dev_pm_opp *opp;
+>  	unsigned long old_clk_rate = dmcfreq->rate;
+>  	unsigned long target_volt, target_rate;
+> +	struct arm_smccc_res res;
+> +	bool odt_enable = false;
+>  	int err;
+>  
+>  	opp = devfreq_recommended_opp(dev, freq, flags);
+> @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+>  
+>  	mutex_lock(&dmcfreq->lock);
+>  
+> +	if (target_rate >= dmcfreq->odt_dis_freq)
+> +		odt_enable = true;
+> +
+> +	/*
+> +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+> +	 * timings and to enable or disable the ODT (on-die termination)
+> +	 * resistors.
+> +	 */
+> +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+> +		      dmcfreq->odt_pd_arg1,
+> +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+> +		      odt_enable, 0, 0, 0, &res);
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Is it necessary/desirable to make this call for every frequency
+change? IIUC it should be only needed when odt_enable changes and the
+driver could track the state. If the DDR frequency doesn't change too
+often and the overhead of the call is small it shouldn't be really
+important though.
 
+> @@ -294,11 +315,13 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+>  {
+>  	struct arm_smccc_res res;
+>  	struct device *dev = &pdev->dev;
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.of_node, *node;
+>  	struct rk3399_dmcfreq *data;
+>  	int ret, index, size;
+>  	uint32_t *timing;
+>  	struct dev_pm_opp *opp;
+> +	u32 ddr_type;
+> +	u32 val;
+>  
+>  	data = devm_kzalloc(dev, sizeof(struct rk3399_dmcfreq), GFP_KERNEL);
+>  	if (!data)
+> @@ -334,6 +357,34 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	/* Try to find the optional reference to the pmu syscon */
+> +	node = of_parse_phandle(np, "rockchip,pmu", 0);
+> +	if (node) {
+
+The 'optional' part doesn't seem to be accurate: according to the
+binding (https://lore.kernel.org/patchwork/patch/1052322/) the
+property is required and the code below assumes that data->regmap_pmu
+is set.
+
+> +		data->regmap_pmu = syscon_node_to_regmap(node);
+> +		if (IS_ERR(data->regmap_pmu))
+> +			return PTR_ERR(data->regmap_pmu);
+> +	}
+> +
+> +	/* Get DDR type */
+
+nit: the comment doesn't add much value, thanks to good variable
+naming this is evident from the code.
+
+> +	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
+> +	ddr_type = (val >> RK3399_PMUGRF_DDRTYPE_SHIFT) &
+> +		    RK3399_PMUGRF_DDRTYPE_MASK;
+> +
+> +	/* Get the odt_dis_freq parameter in function of the DDR type */
+
+nit: ditto
+
+(if you prefer to keep these comments I'm not opposed to keeping them,
+but I don't think they are needed)
+
+Cheers
+
+Matthias
