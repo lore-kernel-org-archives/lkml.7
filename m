@@ -2,141 +2,71 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD6FC10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC5AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110502146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5C621841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553069406;
+	bh=YaVRyq5vKrV86ffYinhOJ+OZY793tkKJXOVI2W8GqBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y+pPaZZ24tr07jA7rw5DQzXoUhKRDU9X5IigXWHahd8wvybLsbLikh5Dbe+QmqGrK
+	 QEYOrgHbXM/KfLyqtW6C8Q69Skmeji5PtQlRjgIwUfvatfQIioCPcMpDYOX/LMhEJy
+	 COZAV74PPp2IlUPdhCaKFJWPQ8EDgKCyK/M0OJY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfCTIJ0 (ORCPT
+        id S1727711AbfCTIKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:09:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727304AbfCTIJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:09:25 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K85wq9146482
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:09:24 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbentgkyb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:09:24 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Wed, 20 Mar 2019 08:09:17 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 08:09:14 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K89H8X49676504
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 08:09:17 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F9D14204D;
-        Wed, 20 Mar 2019 08:09:17 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB6D34203F;
-        Wed, 20 Mar 2019 08:09:15 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.124.31.96])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 08:09:15 +0000 (GMT)
-X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-In-Reply-To: <87bm267ywc.fsf@linux.ibm.com>
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com> <20190228083522.8189-2-aneesh.kumar@linux.ibm.com> <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com> <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com> <87k1hc8iqa.fsf@linux.ibm.com> <CAPcyv4ir4irASBQrZD_a6kMkEUt=XPUCuKajF75O7wDCgeG=7Q@mail.gmail.com> <871s3aqfup.fsf@linux.ibm.com> <CAPcyv4i0SahDP=_ZQV3RG_b5pMkjn-9Cjy7OpY2sm1PxLdO8jA@mail.gmail.com> <87bm267ywc.fsf@linux.ibm.com>
-Date:   Wed, 20 Mar 2019 13:39:14 +0530
+        Wed, 20 Mar 2019 04:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727304AbfCTIKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 04:10:04 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24DC92146E;
+        Wed, 20 Mar 2019 08:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553069404;
+        bh=YaVRyq5vKrV86ffYinhOJ+OZY793tkKJXOVI2W8GqBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bKOphAfTSkZoJmiVjX+Wxb8vNFJ3rlBCyUtbMURmvKUwyvlw6Tv5ulUMAkrTnPpjL
+         cJVUSa8RNx9T6bB7jbWczOZE19rWsFd7liLzq+hZkpwIuOITDu0c4LXqu/+MZPNMmc
+         aTzoGJuo2LFs5NFCnfVLPQ6NBdLZ3Xowqpd077kQ=
+Date:   Wed, 20 Mar 2019 16:09:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Pierre-Jean Texier <pjtexier@koncepto.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx7s-warp: PMIC swbst boot-on/always-on
+Message-ID: <20190320080940.GD4980@dragon>
+References: <1551565949-13843-1-git-send-email-pjtexier@koncepto.io>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19032008-0008-0000-0000-000002CF7022
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032008-0009-0000-0000-0000223B8633
-Message-Id: <878sxa7ys5.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551565949-13843-1-git-send-email-pjtexier@koncepto.io>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com> writes:
+On Sat, Mar 02, 2019 at 11:32:29PM +0100, Pierre-Jean Texier wrote:
+> PMIC swbst regulator is used for the MikroBUS socket (pin +5V).
+> 
+> We have to set the regulator to "boot-on" and "always-on"
+> to output a voltage of 5V on this socket.
+> 
+> Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 
-> Dan Williams <dan.j.williams@intel.com> writes:
->
->>
->>> Now what will be page size used for mapping vmemmap?
->>
->> That's up to the architecture's vmemmap_populate() implementation.
->>
->>> Architectures
->>> possibly will use PMD_SIZE mapping if supported for vmemmap. Now a
->>> device-dax with struct page in the device will have pfn reserve area aligned
->>> to PAGE_SIZE with the above example? We can't map that using
->>> PMD_SIZE page size?
->>
->> IIUC, that's a different alignment. Currently that's handled by
->> padding the reservation area up to a section (128MB on x86) boundary,
->> but I'm working on patches to allow sub-section sized ranges to be
->> mapped.
->
-> I am missing something w.r.t code. The below code align that using nd_pfn->align
->
-> 	if (nd_pfn->mode == PFN_MODE_PMEM) {
-> 		unsigned long memmap_size;
->
-> 		/*
-> 		 * vmemmap_populate_hugepages() allocates the memmap array in
-> 		 * HPAGE_SIZE chunks.
-> 		 */
-> 		memmap_size = ALIGN(64 * npfns, HPAGE_SIZE);
-> 		offset = ALIGN(start + SZ_8K + memmap_size + dax_label_reserve,
-> 				nd_pfn->align) - start;
->       }
->
-> IIUC that is finding the offset where to put vmemmap start. And that has
-> to be aligned to the page size with which we may end up mapping vmemmap
-> area right?
->
-> Yes we find the npfns by aligning up using PAGES_PER_SECTION. But that
-> is to compute howmany pfns we should map for this pfn dev right?
-> 	
-
-Also i guess those 4K assumptions there is wrong?
-
-modified   drivers/nvdimm/pfn_devs.c
-@@ -783,7 +783,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 		return -ENXIO;
- 	}
- 
--	npfns = (size - offset - start_pad - end_trunc) / SZ_4K;
-+	npfns = (size - offset - start_pad - end_trunc) / PAGE_SIZE;
- 	pfn_sb->mode = cpu_to_le32(nd_pfn->mode);
- 	pfn_sb->dataoff = cpu_to_le64(offset);
- 	pfn_sb->npfns = cpu_to_le64(npfns);
-
-
--aneesh
-
+Applied, thanks.
