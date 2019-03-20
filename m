@@ -2,124 +2,122 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C31C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E37C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6236E20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50F121841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:19:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QmPJbJMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbfCTTSo (ORCPT
+        id S1726809AbfCTTTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:18:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:9228 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfCTTSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:18:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 12:18:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
-   d="scan'208";a="135761141"
-Received: from tstruk-mobl1.jf.intel.com ([10.7.196.61])
-  by orsmga003.jf.intel.com with ESMTP; 20 Mar 2019 12:18:42 -0700
-Subject: Re: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
-To:     =?UTF-8?Q?Mantas_Mikul=c4=97nas?= <grawity@gmail.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James.Bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
- <CAPWNY8UmDAKeF+SNMKDxki=-=s+UPx9WXQvSoFqWmUCsNvv=1g@mail.gmail.com>
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tadeusz.struk@intel.com; prefer-encrypt=mutual; keydata=
- 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
- FheFfUJaD4iEjuL98uUjS/AI
-Message-ID: <8f90121a-490c-6a44-1765-d232fcc93ce0@intel.com>
-Date:   Wed, 20 Mar 2019 12:18:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 15:19:38 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46998 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfCTTTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:19:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z17so2875887qts.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5mMC0KQfG735C164EcTD+oEbBbnx3mNbSvIp42P1/ag=;
+        b=QmPJbJMB9wKLf1bmnt3tiF7HqCc3zU327h3UXi5c8JGotzjL+VOVDTOEXl3wAoaEIu
+         9lAq+U7AMe3JsNkD/QoqLqLNVTcrH/nV+0YJxKHOpRootWoI8oATCWHjdDIFomwmlko/
+         uW0bKGgZvqQgDsmQl8QAYmYpsrgerWnYApdp8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5mMC0KQfG735C164EcTD+oEbBbnx3mNbSvIp42P1/ag=;
+        b=l1750zSrWsSzM71GwJ8Z9fgcVd6PavMxXt5Io5ZfFctCe9COJlpPawLdlmJN1zjANC
+         tzL2oXfGgrQ8e4/mnO24v45MclZmOmdbOgtAOHPrpBKVSXdWXUS/86ZecReCSafX/5Mj
+         PFtN23OSQGQYHwdfbixSi0aIT0VpeOcyv0zqmBS66zFDDThr54svX0PSQKRD8ufGoA4P
+         8mXtFnCnnJQbIv3diYDrVFAiKKCVE4azVPIl4KjSltZBMubLY/2CycSNUI2Nr+aNwRdm
+         a+0b0Zn8I4i/wyktfqGWys+2ZSLTWibkhA6prlHAVKDIHH/knnM7l6WPHgfnUYoKFFCU
+         O+hQ==
+X-Gm-Message-State: APjAAAWtiZn4lxQolQYKVz/9vhTWYFRpwmQ2PhgX+rHQp6aGGnHF6Q2r
+        wJJD4AHPWPBpSfYDNU+SbaesyA==
+X-Google-Smtp-Source: APXvYqyCvIcP3+DKbe38H1Wq95MgCtycxVep/aavFfInOZgeS5CjRORRXHM97tnnLgFhx5cd9IBy/A==
+X-Received: by 2002:ac8:3a63:: with SMTP id w90mr7586860qte.233.1553109577350;
+        Wed, 20 Mar 2019 12:19:37 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id 33sm1829081qtm.28.2019.03.20.12.19.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 12:19:36 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:19:35 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: pidfd design
+Message-ID: <20190320191935.GB76715@google.com>
+References: <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com>
+ <20190320035953.mnhax3vd47ya4zzm@brauner.io>
+ <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
+ <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org>
+ <20190320182649.spryp5uaeiaxijum@brauner.io>
+ <CAKOZuevHbQtrq+Nb-jw1L7O72BmAzcXmbUnfnseeXZjX4PE4tg@mail.gmail.com>
+ <20190320185156.7bq775vvtsxqlzfn@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <CAPWNY8UmDAKeF+SNMKDxki=-=s+UPx9WXQvSoFqWmUCsNvv=1g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320185156.7bq775vvtsxqlzfn@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/19 11:51 AM, Mantas Mikulėnas wrote:
-> Thanks, this patch seems to work, and I apologize for not responding
-> to test the patches earlier.
-
-Thanks for testing.
-
+On Wed, Mar 20, 2019 at 07:51:57PM +0100, Christian Brauner wrote:
+[snip]
+> > > translate_pid() should just return you a pidfd. Having it return a pidfd
+> > > and a status fd feels like stuffing too much functionality in there. If
+> > > you're fine with it I'll finish prototyping what I had in mind. As I
+> > > said in previous mails I'm already working on this.
+> > 
+> > translate_pid also needs to *accept* pidfds, at least optionally.
+> > Unless you have a function from pidfd to pidfd, you race.
 > 
-> Any chance it'll be submitted for stable 5.0.x as well?
+> You're misunderstanding. Again, I said in my previous mails it should
+> accept pidfds optionally as arguments, yes. But I don't want it to
+> return the status fds that you previously wanted pidfd_wait() to return.
+> I really want to see Joel's pidfd_wait() patchset and have more people
+> review the actual code.
 
-Yes, it's a regression. I included the "Fixes" tag so
-it should be applied to all affected versions.
-In this case it's 5.0 only.
-Thanks,
--- 
-Tadeusz
+No problem, pidfd_wait is also fine with me and we can change it later to
+translate_pid or something else if needed.
+
+Agreed that lets get to some code writing now that (I hope) we are all on the
+same page and discuss on actual code.
+
+ - Joel
+
