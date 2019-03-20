@@ -3,148 +3,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00633C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B52C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA4D21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E333021841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfCTUJU convert rfc822-to-8bit (ORCPT
+        id S1727169AbfCTUJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:09:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4077 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfCTUJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:09:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 13:09:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
-   d="scan'208";a="329094718"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2019 13:09:18 -0700
-Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 20 Mar 2019 13:09:18 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.155]) by
- ORSMSX155.amr.corp.intel.com ([169.254.7.86]) with mapi id 14.03.0415.000;
- Wed, 20 Mar 2019 13:09:18 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "apw@canonical.com" <apw@canonical.com>,
-        Joe Perches <golf@perches.com>
-CC:     Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH] checkpatch: fix camel case seeding when run with --root
-Thread-Topic: [PATCH] checkpatch: fix camel case seeding when run with --root
-Thread-Index: AQHU2ss2CnInC/0Woki3g/1NaWN2raYU+4eA
-Date:   Wed, 20 Mar 2019 20:09:17 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB589232E64D@ORSMSX121.amr.corp.intel.com>
-References: <20190315010334.5707-1-jacob.e.keller@intel.com>
-In-Reply-To: <20190315010334.5707-1-jacob.e.keller@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTNmZjE0ZDgtYTBjNy00NTQ2LTg4MTgtYWU4NjFlMWE0MDhkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMUduUlVNS0tmME1YYldjWHpKcW91cG5LWFNjUDJpWWV6ODBkc3F6RzlcLzl4TnZuUmMrbk9KTmtHazBrcXpmNXUifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 20 Mar 2019 16:09:44 -0400
+Received: from gateway30.websitewelcome.com ([192.185.150.24]:27545 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbfCTUJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:09:44 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 3E71315D5A
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:08:08 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6hVQhRqNeYTGM6hVQheVnP; Wed, 20 Mar 2019 15:08:08 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=33992 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6hVP-003k4o-NQ; Wed, 20 Mar 2019 15:08:07 -0500
+Subject: Re: [PATCH] xen, fbfront: mark expected switch fall-through
+To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        xen-devel <xen-devel@lists.xenproject.org>
+References: <20190227205303.GA1231@embeddedor>
+ <f8ff03de-9d7c-233a-cd86-37269667db0c@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <6675f2ed-6916-2be5-fb60-39c9436f53f7@embeddedor.com>
+Date:   Wed, 20 Mar 2019 15:08:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <f8ff03de-9d7c-233a-cd86-37269667db0c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6hVP-003k4o-NQ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:33992
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Keller, Jacob E
-> Sent: Thursday, March 14, 2019 6:04 PM
-> To: linux-kernel@vger.kernel.org
-> Cc: Intel Wired LAN <intel-wired-lan@lists.osuosl.org>; netdev@vger.kernel.org;
-> Keller, Jacob E <jacob.e.keller@intel.com>; joe@perches.com
-> Subject: [PATCH] checkpatch: fix camel case seeding when run with --root
-> 
-> checkpatch.pl avoids warning about camel case of some definitions by
-> seeding a file that tracks all of the currently committed camel case
-> definitions.
-> 
-> To build this seed file, checkpatch.pl decides between using git or the
-> --root parameter.
-> 
-> This works as long as you don't run checkpatch.pl from within
-> a different git tree that is not the Linux kernel.
-> 
-> In this case, the check for ".git" will return true, and checkpatch will
-> attempt to seed a camel case file using the current directory. This
-> works fine if --root is not provided, but can result in an incorrect
-> camel case seed file resulting in false positive warnings.
-> 
-> Fix this by checking for $root/.git instead, so that we use the --root
-> parameter properly when seeding the camel case list.
-> 
-> Additionally, when generating the list of files to be checked, prefix
-> the $root path so that the correct file will be found.
-> 
-> These changes allow checkpatch.pl to honor the --root parameter even if
-> being run from within another git repository.
-> 
-> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-> ---
-> (Resending with a not-invalid address for the netdev mailing list...)
-> 
+Hi all,
 
-Ping? Andy? Joe?
+Friendly ping:
 
-This is a re-write of a rather old (couple of years old...) fix that I've been meaning to get around to submitting.
+Who can take this?
 
-I'd like to have this picked up since it resolves issues with using --root while inside another git tree.
+Thanks
+--
+Gustavo
 
-Thanks,
-Jake
-
->  scripts/checkpatch.pl | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+On 2/28/19 5:51 AM, Oleksandr Andrushchenko wrote:
+> +Xen-devel list
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index d0001fd1112d..358add495e18 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -903,8 +903,8 @@ sub seed_camelcase_includes {
+> On 2/27/19 10:53 PM, Gustavo A. R. Silva wrote:
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warning:
+>>
+>> drivers/video/fbdev/xen-fbfront.c: In function ‘xenfb_backend_changed’:
+>> drivers/video/fbdev/xen-fbfront.c:678:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>     if (dev->state == XenbusStateClosed)
+>>        ^
+>> drivers/video/fbdev/xen-fbfront.c:681:2: note: here
+>>    case XenbusStateClosing:
+>>    ^~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> Notice that, in this particular case, the code comment is modified
+>> in accordance with what GCC is expecting to find.
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>   drivers/video/fbdev/xen-fbfront.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/xen-fbfront.c b/drivers/video/fbdev/xen-fbfront.c
+>> index 6a4bbc9e1fb0..a3d6b6db221b 100644
+>> --- a/drivers/video/fbdev/xen-fbfront.c
+>> +++ b/drivers/video/fbdev/xen-fbfront.c
+>> @@ -677,7 +677,7 @@ static void xenfb_backend_changed(struct xenbus_device *dev,
+>>       case XenbusStateClosed:
+>>           if (dev->state == XenbusStateClosed)
+>>               break;
+>> -        /* Missed the backend's CLOSING state -- fallthrough */
+>> +        /* fall through - Missed the backend's CLOSING state. */
+>>       case XenbusStateClosing:
+>>           xenbus_frontend_closed(dev);
+>>           break;
 > 
->  	$camelcase_seeded = 1;
-> 
-> -	if (-e ".git") {
-> -		my $git_last_include_commit = `git log --no-merges --
-> pretty=format:"%h%n" -1 -- include`;
-> +	if (-e "$root/.git") {
-> +		my $git_last_include_commit = `cd $root && git log --no-merges --
-> pretty=format:"%h%n" -1 -- include`;
->  		chomp $git_last_include_commit;
->  		$camelcase_cache = ".checkpatch-
-> camelcase.git.$git_last_include_commit";
->  	} else {
-> @@ -931,9 +931,10 @@ sub seed_camelcase_includes {
->  		return;
->  	}
-> 
-> -	if (-e ".git") {
-> -		$files = `git ls-files "include/*.h"`;
-> +	if (-e "$root/.git") {
-> +		$files = `cd $root && git ls-files "include/*.h"`;
->  		@include_files = split('\n', $files);
-> +		@include_files = map("$root/$_", @include_files);
->  	}
-> 
->  	foreach my $file (@include_files) {
-> --
-> 2.18.0.219.gaf81d287a9da
-
