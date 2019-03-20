@@ -2,242 +2,166 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86671C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2B920857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CjWs6wNE"
+	by mail.kernel.org (Postfix) with ESMTP id 8D65221841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfCTDuT (ORCPT
+        id S1727550AbfCTD40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 23:50:19 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:34825 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbfCTDuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 23:50:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1553053816; x=1584589816;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=B7Z9k8q1xGnoUmWrs1oyq1DlUAqkHTxgYEU9CfpPdOQ=;
-  b=CjWs6wNEpvfPCrT9oFyiUH6NBxLyK6J08JJI8mzYUim+5RYPyknsTOWj
-   /USNCPLGvNvKcH+YsjoXvRe/xmEnptUVt0DlUVYnPkLxYNCl4oqOXtSJp
-   8SGfkVlXORidFDI7MGm1WxH6aLrTvO5xunney6YVr0mxGfg09uGB0OZm5
-   8=;
-X-IronPort-AV: E=Sophos;i="5.60,246,1549929600"; 
-   d="scan'208";a="666091845"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 20 Mar 2019 03:50:11 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x2K3o5VS003555
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 20 Mar 2019 03:50:07 GMT
-Received: from EX13D10UWB004.ant.amazon.com (10.43.161.121) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 20 Mar 2019 03:50:07 +0000
-Received: from [10.94.35.169] (10.43.161.197) by EX13D10UWB004.ant.amazon.com
- (10.43.161.121) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 20 Mar
- 2019 03:50:06 +0000
-Subject: Re: [Xen-devel] [PATCH] xen/netfront: Remove unneeded .resume
- callback
-To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        <netdev@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>, <jgross@suse.com>,
-        <sstabellini@kernel.org>, <davem@davemloft.net>
-CC:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        <anchalag@amazon.com>, <eduval@amazon.com>
-References: <20190314131749.25706-1-andr2000@gmail.com>
- <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
- <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
- <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
- <b55d4f90-100c-7a2a-9651-c99c06953465@gmail.com>
- <09afcdca-258f-e5ca-5c31-b7fd079eb213@oracle.com>
- <3e868e7a-4872-e8ab-fd2c-90917ad6d593@arm.com>
- <d709d185-5345-c463-3fd1-e711f954e58a@gmail.com>
-From:   Munehisa Kamata <kamatam@amazon.com>
-Message-ID: <435369ba-ad3b-1d3a-c2f4-babe8bb6189c@amazon.com>
-Date:   Tue, 19 Mar 2019 20:50:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 19 Mar 2019 23:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfCTD4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 23:56:25 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E3820857;
+        Wed, 20 Mar 2019 03:56:24 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 23:56:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: KASAN use after free
+Message-ID: <20190319235622.0e76463e@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <d709d185-5345-c463-3fd1-e711f954e58a@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.161.197]
-X-ClientProxiedBy: EX13D17UWC002.ant.amazon.com (10.43.162.61) To
- EX13D10UWB004.ant.amazon.com (10.43.161.121)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/2019 3:02 AM, Oleksandr Andrushchenko wrote:
-> +Amazon
-> pls see inline
-Hi Oleksandr,
+Hi Tom,
 
-Let me add some comments as the original author of the series.
+I ran the latest kernel (5.1-rc1) with full KASAN enabled, and ran the
+ftrace tests, and hit the following:
 
-> 
-> On 3/14/19 9:00 PM, Julien Grall wrote:
->> Hi,
->>
->> On 3/14/19 3:40 PM, Boris Ostrovsky wrote:
->>> On 3/14/19 11:10 AM, Oleksandr Andrushchenko wrote:
->>>> On 3/14/19 5:02 PM, Boris Ostrovsky wrote:
->>>>> On 3/14/19 10:52 AM, Oleksandr Andrushchenko wrote:
->>>>>> On 3/14/19 4:47 PM, Boris Ostrovsky wrote:
->>>>>>> On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
->>>>>>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->>>>>>>>
->>>>>>>> Currently on driver resume we remove all the network queues and
->>>>>>>> destroy shared Tx/Rx rings leaving the driver in its current state
->>>>>>>> and never signaling the backend of this frontend's state change.
->>>>>>>> This leads to the number of consequences:
->>>>>>>> - when frontend withdraws granted references to the rings etc. it
->>>>>>>> cannot
->>>>>>>>      be cleanly done as the backend still holds those (it was not
->>>>>>>> told to
->>>>>>>>      free the resources)
->>>>>>>> - it is not possible to resume driver operation as all the
->>>>>>>> communication
->>>>>>>>      means with the backned were destroyed by the frontend, thus
->>>>>>>>      making the frontend appear to the guest OS as functional, but
->>>>>>>>      not really.
->>>>>>> What do you mean? Are you saying that after resume you lose
->>>>>>> connectivity?
->>>>>> Exactly, if you take a look at the .resume callback as it is now
->>>>>> what it does it destroys the rings etc. and never notifies the backend
->>>>>> of that, e.g. it stays in, say, connected state with communication
->>>>>> channels destroyed. It never goes into any other Xen bus state, so
->>>>>> there is
->>>>>> no way its state machine can help recovering.
->>>>>
->>>>> My tree is about a month old so perhaps there is some sort of regression
->>>>> but this certainly works for me. After resume netfront gets
->>>>> XenbusStateInitWait from backend which causes xennet_connect().
->>>> Ah, the difference can be of the way we get the guest enter
->>>> the suspend state. I am making my guest to suspend with:
->>>> echo mem > /sys/power/state
->>>> And then I use an interrupt to the guest (this is a test code)
->>>> to wake it up.
->>>> Could you please share your exact use-case when the guest enters suspend
->>>> and what you do to resume it?
->>>
->>>
->>> xl save / xl restore
->>>
->>>> I can see no way backend may want enter XenbusStateInitWait in my
->>>> use-case
->>>> as it simply doesn't know we want him to.
->>>
->>>
->>> Yours looks like ACPI path, I don't know how well it was tested TBH.
->>
->> I remember a series from amazon [1] that plays around suspend and hibernation. The patch [2] leads me to think that guest triggered suspend/resume does not work properly. It looks like the series has never been fully reviewed. Not sure why...
-> Julien, thanks a lot for bringing these patches to our attention which we obviously missed.
->>
->> Anyway, from my understanding this series may solve Oleksandr issue. However, this would only address the common code side. AFAIK Oleksandr is targeting Arm platform. If so, I think this would require more work than this series. Arm code still miss few bits properly suspend/resume arch specific code (see [2]).
->>
->> I have a branch on my git to track the series. However, they never have been resent after Ian Campbell left Citrix. I would be happy to review them if someone wants to pick them up and repost them.
->>
-> First of all, let me make it clear that we are interested in hibernation long term, so it would be
-> desirable to re-use as much work form resume/suspend as we can. But, we see it as a step by
-> step work, e.g. first S2RAM and later on hibernation.
-> Let me clarify the immediate use-case that we have, so it is easier to understand what we want
-> and what we don't at the moment. We are about to continue work started by Mirela/Xilinx on
-> Suspend-to-RAM for ARM [3] and we made number of assumptions:
-> 1. We are talking about *system* suspend, e.g. the goal is to suspend all the components
-> of the system and Xen itself at once. Think about this as fast-boot and/or energy saving
-> feature if you will.
-> 2. With suspend/resume there is no intention to migrate VMs to any other host.
-> 3. Most probably configuration of the back/front won't change between suspend/resume.
-> But long term we are also thinking for supporting suspend/resume in its broader meaning,
-> e.g. what is probably what you mean by suspend/resume.
-AFAIK .suspend and .resume callbacks in frontend drivers are
-specifically for xl save/restore case rather than the normal "system"
-suspend. i.e. The former is Boris' case and something I called "Xen
-suspend" in the patch series, the latter should be your interest and
-called "ACPI path" here, and I referred to as "PM suspend". They are
-very different code paths, see drivers/xen/manage.c for details of
-Xen suspend.
+==================================================================
+BUG: KASAN: use-after-free in destroy_hist_field+0x30/0x70
+Read of size 8 at addr ffff888086df2210 by task bash/1694
 
-> Given that, we think that we don't need Xen support to save grants, page tables and other
-> VM's context on suspend at least at the first stage as we are implementing not a fully
-> blown suspend/resume, but only S2RAM part of it which is much more simpler than a generic
-> suspend implementation. We only need changes to Linux kernel frontend drivers from [1] - the
-> piece that we miss is suspend/resume implementation in the netfront driver. What is more, as
-> we are not changing back/front configuration, we can even live with empty .resume/.suspend
-> frontend's callbacks because event channels, rings etc. are "statically" allocated in our
-> use-case at the first system start (cold boot). And indeed, tests show that waking domains
-> in the right order do allow that.
-> So, frankly, from [3] we are immediately interested in implementing .resume/.suspend, not
-If you just (re)implement .suspend and .resume so without taking care
-of Xen suspend, you can easily break the existing functionality. The
-patch series introduced .freeze and .restore callbacks for both PM
-suspend and hibernation, and kept .suspend (not implemented in most
-frontend though) and .resume with no changes for Xen suspend.
+CPU: 6 PID: 1694 Comm: bash Not tainted 5.1.0-rc1-test+ #15
+Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+Call Trace:
+ dump_stack+0x71/0xa0
+ ? destroy_hist_field+0x30/0x70
+ print_address_description.cold.3+0x9/0x1fb
+ ? destroy_hist_field+0x30/0x70
+ ? destroy_hist_field+0x30/0x70
+ kasan_report.cold.4+0x1a/0x33
+ ? __kasan_slab_free+0x100/0x150
+ ? destroy_hist_field+0x30/0x70
+ destroy_hist_field+0x30/0x70
+ track_data_destroy+0x55/0xe0
+ destroy_hist_data+0x1f0/0x350
+ hist_unreg_all+0x203/0x220
+ event_trigger_open+0xbb/0x130
+ do_dentry_open+0x296/0x700
+ ? stacktrace_count_trigger+0x30/0x30
+ ? generic_permission+0x56/0x200
+ ? __x64_sys_fchdir+0xd0/0xd0
+ ? inode_permission+0x55/0x200
+ ? security_inode_permission+0x18/0x60
+ path_openat+0x633/0x22b0
+ ? path_lookupat.isra.50+0x420/0x420
+ ? __kasan_kmalloc.constprop.12+0xc1/0xd0
+ ? kmem_cache_alloc+0xe5/0x260
+ ? getname_flags+0x6c/0x2a0
+ ? do_sys_open+0x149/0x2b0
+ ? do_syscall_64+0x73/0x1b0
+ ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ ? _raw_write_lock_bh+0xe0/0xe0
+ ? __kernel_text_address+0xe/0x30
+ ? unwind_get_return_address+0x2f/0x50
+ ? __list_add_valid+0x2d/0x70
+ ? deactivate_slab.isra.62+0x1f4/0x5a0
+ ? getname_flags+0x6c/0x2a0
+ ? set_track+0x76/0x120
+ do_filp_open+0x11a/0x1a0
+ ? may_open_dev+0x50/0x50
+ ? _raw_spin_lock+0x7a/0xd0
+ ? _raw_write_lock_bh+0xe0/0xe0
+ ? __alloc_fd+0x10f/0x200
+ do_sys_open+0x1db/0x2b0
+ ? filp_open+0x50/0x50
+ do_syscall_64+0x73/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fa7b24a4ca2
+Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 85 7a 0d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+RSP: 002b:00007fffbafb3af0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 000055d3648ade30 RCX: 00007fa7b24a4ca2
+RDX: 0000000000000241 RSI: 000055d364a55240 RDI: 00000000ffffff9c
+RBP: 00007fffbafb3bf0 R08: 0000000000000020 R09: 0000000000000002
+R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000003 R14: 0000000000000001 R15: 000055d364a55240
 
-Note that xenbus has mapped freeze/thaw/restore events to suspend,
-resume and cancel callbacks to handle "checkpoint" case[4]. This was a
-bit tricky and led me to the design to have the separate set of
-callbacks at each frontend driver level[5]. You might need to consider
-a similar approach even if your immediate interest at the moment is PM
-suspend.
+Allocated by task 1694:
+ __kasan_kmalloc.constprop.12+0xc1/0xd0
+ kmem_cache_alloc_trace+0x11a/0x280
+ create_hist_field+0x54/0x460
+ create_var_ref+0x2f/0xb0
+ event_hist_trigger_func+0x19cb/0x26a0
+ event_trigger_write+0x1a7/0x250
+ vfs_write+0xe1/0x240
+ ksys_write+0xa1/0x130
+ do_syscall_64+0x73/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> even freeze/thaw/restore callbacks: if Amazon has will and capacity to continue working on [3]
-> then once that gets into the upstream it also solves our S2RAM use-case, but if not then we
-> can probably re-work netfront patch and only provide .resume/.suspend callbacks which we need
-> for now (remember our very specific use-case which can survive suspend without callbacks
-> implemented).
-> IMO, patches at [2] seem to be useful while implementing generic suspend/resume and can
-> be postponed for S2RAM.
-> 
-> Julien/Juergen/Boris/Amazon - could you please express your view on the above?
-> Is it acceptable that for now we only take re-worked netfront patch from [3] with full
-> implementation in mind for later (we reuse code for .resume/.suspend)?
-In fact, Anchal has taken over my initial work and she may want to chime
-in here.
+Freed by task 1694:
+ __kasan_slab_free+0x111/0x150
+ kfree+0x8d/0x1c0
+ destroy_hist_data+0x13b/0x350
+ hist_unreg_all+0x203/0x220
+ event_trigger_open+0xbb/0x130
+ do_dentry_open+0x296/0x700
+ path_openat+0x633/0x22b0
+ do_filp_open+0x11a/0x1a0
+ do_sys_open+0x1db/0x2b0
+ do_syscall_64+0x73/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-That said, I'd be very happy to review patches if you come up with your
-own ones, so feel free to add me in that case.
+The buggy address belongs to the object at ffff888086df2208
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 8 bytes inside of
+ 192-byte region [ffff888086df2208, ffff888086df22c8)
+The buggy address belongs to the page:
+page:ffffea00021b7c00 count:1 mapcount:0 mapping:ffff8880d000cc40 index:0x0 compound_mapcount: 0
+flags: 0xffff000010200(slab|head)
+raw: 000ffff000010200 ffffea00021b7708 ffffea000312ee08 ffff8880d000cc40
+raw: 0000000000000000 00000000001e001e 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
->> Cheers,
->>
->> [1] https://lists.xenproject.org/archives/html/xen-devel/2018-06/msg00823.html
->>
->> [2] http://xenbits.xen.org/gitweb/?p=people/julieng/linux-arm.git;a=shortlog;h=refs/heads/xen-migration/v2
->>
-> [3] https://lists.xenproject.org/archives/html/xen-devel/2018-11/msg01093.html
+Memory state around the buggy address:
+ ffff888086df2100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888086df2180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888086df2200: fc fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff888086df2280: fb fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc
+ ffff888086df2300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+Disabling lock debugging due to kernel taint
 
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b3e96c0c756211e805c6941d4a6e5f6e1995cb6b
-[5] https://lists.xenproject.org/archives/html/xen-devel/2018-06/msg00825.html
+I can easily reproduce it with the following commands:
 
->>>
->>>
->>> -boris
->>>
->>> _______________________________________________
->>> Xen-devel mailing list
->>> Xen-devel@lists.xenproject.org
->>> https://lists.xenproject.org/mailman/listinfo/xen-devel
->>>
->>
-> Thank you,
-> Oleksandr
+# cd /sys/kernel/debug/tracing
+# echo 'hist:keys=pid:vals=hitcount:ts0=common_timestamp.usecs:sort=hitcount:size=2048:clock=global if comm=="ping"' > \
+  events/sched/sched_waking/trigger
+# echo 'hist:keys=next_pid:vals=hitcount:wakeup_lat=common_timestamp.usecs-$ts0:sort=hitcount:size=2048:clock=global:onmax($wakeup_lat).save(next_comm,prev_pid,prev_prio,prev_comm) if next_comm=="ping"' > \
+  events/sched/sched_switch/trigger
+# echo '!hist:keys=next_pid:vals=hitcount:wakeup_lat=common_timestamp.usecs-$ts0:sort=hitcount:size=2048:clock=global:onmax($wakeup_lat).save(next_comm,prev_pid,prev_prio,prev_comm) if next_comm=="ping"' > \
+  events/sched/sched_switch/trigger
 
-Thanks,
-Munehisa
+And boom, KASAN complains.
+
+I tried to debug it, but the hist code is rather complex, and I can't
+figure out how the var_refs is associated to the fields. I figured I'd
+pass it off to you.
+
+-- Steve
