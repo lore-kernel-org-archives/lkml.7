@@ -2,104 +2,97 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F90FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F49C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF94213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVkj4XMQ"
+	by mail.kernel.org (Postfix) with ESMTP id E57D821841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfCTQuo (ORCPT
+        id S1727047AbfCTQwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:50:44 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37038 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbfCTQuk (ORCPT
+        Wed, 20 Mar 2019 12:52:47 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:33170 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726123AbfCTQwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:50:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v21so2609708edq.4;
-        Wed, 20 Mar 2019 09:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X6IZ0kdG9aeVwwBEHw4YFMvSu0VQ1Omdeh0RqqU4m+M=;
-        b=iVkj4XMQjA3YdGcG4sLh/P4h2F/vjrWVJBiZGfV4BtaqgFTd+n2oiQsB8tqQk2dKjh
-         XTub/1asRnhyZ9xOJH5Ce8rn6Gy1lWxKbRwWxrPYZ8MWuZim6mo0R8bARUBUXf8W2YSP
-         fibkb+Z1M+YChp+LKczyBYfCtHueeRNjVHIO33nGu0zMgcm9ac3ElrJ324MRsWyRlxi9
-         RNC5YEuog17+otmi51Kyyi6+BsUX++ZuC2m1fg8h498kJC2fm4TMW4b7bjelZMj59SFS
-         0mojySkaEX412KE/GwTEZ22OFF+9VS0lxDEXIqsZT713K54FCEIdJ6KDwDozYCl87Shx
-         UdIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=X6IZ0kdG9aeVwwBEHw4YFMvSu0VQ1Omdeh0RqqU4m+M=;
-        b=efO0et9oulBL24vdfAhpvHRsPCih1AyusQcKXGYY7L6pELNrTuEm62A+B10DxeT1IA
-         4aMziTrtfNQybMAfueZEGVnvrMIKPc7WXsRYt1PtIpwyqCAAYH/Vz43iWhOpHPo/MBmY
-         iQTptsk0FlAa+Z8+DhyLXWw1OOuBsMHQcPImuFBx/KVUqK4C1LZW/XYe0/25d0+GIgQM
-         6/qzvmA7dnkt1ZBKtw8WxvhKJTye6p3M4DH0RiZ0zRKWZeA2k6M57qMxG2tx8APfq/6i
-         PupuHalX2jYo/bPuxlbDMG+2QLNWVhhfQYI3u9ukh68vdnXJ7T8iO7qu37e5sl8ea3j+
-         m0zg==
-X-Gm-Message-State: APjAAAVD0p/COpX8UMBkCEvjSHKTx2LsgTylNsOXqoA9YiyFLWhRvk0Z
-        rfSdrpowHWsSmv4KGQPZod7gPnKz
-X-Google-Smtp-Source: APXvYqxL6SkEBwzv2tvC8ZNITZUPGsxMq+BWJwMyrTmbbymmjJD99AiN4xQ39n6o8c6AwLWJhu5adQ==
-X-Received: by 2002:a17:906:518:: with SMTP id j24mr17503865eja.26.1553100638648;
-        Wed, 20 Mar 2019 09:50:38 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id f5sm808254ede.94.2019.03.20.09.50.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 09:50:38 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
-        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 3/3] net: systemport:  Remove print of base address
-Date:   Wed, 20 Mar 2019 09:45:17 -0700
-Message-Id: <20190320164517.29608-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190320164517.29608-1-f.fainelli@gmail.com>
-References: <20190320164517.29608-1-f.fainelli@gmail.com>
+        Wed, 20 Mar 2019 12:52:47 -0400
+Received: (qmail 4602 invoked by uid 2102); 20 Mar 2019 12:52:46 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 20 Mar 2019 12:52:46 -0400
+Date:   Wed, 20 Mar 2019 12:52:46 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     John Stultz <john.stultz@linaro.org>
+cc:     fei.yang@intel.com, Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Shen Jing <jingx.shen@intel.com>
+Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
+In-Reply-To: <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1903201247570.1538-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-pointers are being hashed when printed. Displaying the virtual memory at
-bootup time is not helpful, especially given we use a dev_info() which
-already displays the platform device's address.
+On Wed, 20 Mar 2019, John Stultz wrote:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/broadcom/bcmsysport.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Hey Fei,
+>   So while this patch does resolve the issues I was seeing with
+> mainline kernels and recent changes to adbd, Josh pointed out that it
+> wouldn't resolve the issues I was seeing with older kernels which is
+> slightly different (but still related to aio usage).
+> 
+> On the older kernels I'm hitting scheduling while atomic on reboot,
+> which seems to be due to ffs_aio_cancel() taking a spinlock then
+> calling usb_ep_dequeue() which might sleep.
+> 
+> It seems a fix for this was tried earlier with d52e4d0c0c428 ("usb:
+> gadget: ffs: Fix BUG when userland exits with submitted AIO
+> transfers") which was then reverted by a9c859033f6e.
+> 
+> Elsewhere it seems the ffs driver takes effort to drop any locks
+> before calling usb_ep_dequeue(), so this seems like that should be
+> addressed, but it also seems like recent change to the dwc3 driver has
+> been made to avoid sleeping in that path (see fec9095bdef4 ("usb:
+> dwc3: gadget: remove wait_end_transfer")), which may be why I'm not
+> seeing the problem with mainline (and your patch here, of coarse).
+> But that also doesn't clarify if its still a potential issue w/
+> non-dwc3 platforms.
+> 
+> So for older kernels, do you have a suggestion of which approach is
+> advised?  Does usb_ep_dequeue need to avoid sleeping or do we need to
+> rework the ffs_aio_cancel logic?
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index bc3ac369cbe3..c86515f7fd2f 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2599,11 +2599,11 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 
- 	priv->rev = topctrl_readl(priv, REV_CNTL) & REV_MASK;
- 	dev_info(&pdev->dev,
--		 "Broadcom SYSTEMPORT%s" REV_FMT
--		 " at 0x%p (irqs: %d, %d, TXQs: %d, RXQs: %d)\n",
-+		 "Broadcom SYSTEMPORT%s " REV_FMT
-+		 " (irqs: %d, %d, TXQs: %d, RXQs: %d)\n",
- 		 priv->is_lite ? " Lite" : "",
- 		 (priv->rev >> 8) & 0xff, priv->rev & 0xff,
--		 priv->base, priv->irq0, priv->irq1, txq, rxq);
-+		 priv->irq0, priv->irq1, txq, rxq);
- 
- 	return 0;
- 
--- 
-2.17.1
+usb_ep_dequeue can be called in interrupt context, meaning it is never
+allowed to sleep.  This is mentioned in the kerneldoc:
+
+/**
+ * usb_ep_dequeue - dequeues (cancels, unlinks) an I/O request from an endpoint
+ * @ep:the endpoint associated with the request
+ * @req:the request being canceled
+ *
+ * If the request is still active on the endpoint, it is dequeued and
+ * eventually its completion routine is called (with status -ECONNRESET);
+ * else a negative error code is returned.  This routine is asynchronous,
+ * that is, it may return before the completion routine runs.
+ *
+ * Note that some hardware can't clear out write fifos (to unlink the request
+ * at the head of the queue) except as part of disconnecting from usb. Such
+ * restrictions prevent drivers from supporting configuration changes,
+ * even to configuration zero (a "chapter 9" requirement).
+ *
+ * This routine may be called in interrupt context.
+ */
+
+Alan Stern
 
