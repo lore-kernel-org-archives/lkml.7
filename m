@@ -2,115 +2,146 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA4EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2742184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE5F2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="C9Fx4+03"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vBR6zerf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfCTRCz (ORCPT
+        id S1727328AbfCTRDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:02:55 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:41964 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfCTRCz (ORCPT
+        Wed, 20 Mar 2019 13:03:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41757 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfCTRDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:02:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id DEF7DB40
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 17:02:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dK6YBLQCeFtx for <linux-kernel@vger.kernel.org>;
-        Wed, 20 Mar 2019 12:02:53 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id B5337BE
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:02:53 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id z6so2610231ioh.16
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
+        Wed, 20 Mar 2019 13:03:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k11so2229497pgb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=/5fgvFNuiwFQaXpG8wTqV/SjFj07kFd/Tf8QJk9MXPg=;
-        b=C9Fx4+03vXwwL4X8VdqknAqQKoOD4aUjJgZto9K17FQJfmcav0LLCMrM6hOfULllwk
-         mnOmEdsrQV9ReObNVVmgu3QtqNiCmhk/Z8Lox/RB5mrPaYBwEeCBR6FzndLXiykCCB4k
-         s0bin/mzPDYW0i8SnYFX1OWgE/ZpPBpSeQPImB7irpV38k+7jpXViGho/nj0Buuha4bh
-         P+xq+YZqDS+V1qSeBUyWL1cyE9yklELko0+FJWUlJx+RGzk792wbAY7funtjrNtJCR0W
-         fb4cApKF0CR63SBmYvxK/bhoiyHIm7ms5bYjbckE34rPAWauolCWvhCxAjgVHlkgj7Vm
-         8DQg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l3vs7YgqR+NCj73AWguWqT/+I9Cf6xgsHrfCXHYtClQ=;
+        b=vBR6zerfi9ayOdShyFb2Esu7bIkR4t5OFTCWdC01n/5vSAPH0BCHB8tMz5noi9EVTS
+         NdWbVFfYDpApleRKqPpE358G9CjMJh846R7yaJVYARyeCDoerwQn9wOJrsZ2LzqN5LzY
+         5wzPRtT+S9RPnS/YTmZB90bcBCDYxU7OnaCkfenwTAqNUYMI2ZQPVR/iWrIRcxotCB56
+         8Jc0vmoFvhdH4zQO/iUCh5/HQb/Cgg7sHgUcb6yeYdK3IsTHT6ksZ556ueUFFQlXkllp
+         NZGbnGfXnI5RsnrHdaNLyqSOqlTDgLVi7GyjXSF2O1ftCsmpRVeMnkr0bJ5QdL5gMP6N
+         p/Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/5fgvFNuiwFQaXpG8wTqV/SjFj07kFd/Tf8QJk9MXPg=;
-        b=IIJr91m9Gr5MG7YHKi3oxo8x8o+Mw+IqhUMWxUVVsQ7B2sXIr/VIDdhOWR9wC3aTXn
-         pjRgIA51q6B3yN3C1QQ+hzG5iSQ+OU8hrjwf3fCxcI/n74ZRltQDpj5XUkZ3h+UwW4zq
-         xo4TPyRCRxTJuNvqhSyL0SdaXeEm/kOnl3AGe+roTKrrZuSqBHbR2SZv99UVkCWrNbgZ
-         Xip9NN+hDsLwi9BD8UqJD53ZEk2b5jOtCMdgkc8eO7Pbz/nblSnTPpfRi1rkYxI/XTXM
-         AW3dV2EAZo7cIy2iPKlQffkV1+rvV9bo5IvuVgGpyMN8QZk5NKD4801oCHNx3Q3e6qwh
-         8wDA==
-X-Gm-Message-State: APjAAAVEdySXjRXMYqT3J2Spl4dsR7J3UNeLL3P+D8SStKOeskI+dFHe
-        6Jt8ygV/hujz1Gz00zD7PQHcYTVKmHDFtzDm90LLCaaru16SX3QoMRB1w+cQZd4al7j2D4rOGc0
-        PaGcjrZe0NlOqnbvCIqFasDMFJWF0
-X-Received: by 2002:a24:e86:: with SMTP id 128mr5689080ite.113.1553101373417;
-        Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqylLeN83pRYTpgJgTFGxIlhJkex28Wg/dBzS9D3APzJoZMymyxGtbN3vkDRP6pUKpWPDVI1fQ==
-X-Received: by 2002:a24:e86:: with SMTP id 128mr5689061ite.113.1553101373193;
-        Wed, 20 Mar 2019 10:02:53 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id m79sm1308564itm.25.2019.03.20.10.02.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 10:02:52 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sabin Mihai Rapan <sabin.rapan@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: rtlwifi: rtl8822b: fix to avoid NULL pointer dereference
-Date:   Wed, 20 Mar 2019 12:02:49 -0500
-Message-Id: <20190320170251.31838-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l3vs7YgqR+NCj73AWguWqT/+I9Cf6xgsHrfCXHYtClQ=;
+        b=K52D5vy35LhcIFLPFk20XpC3Ttr7a6z6cI7a7w0Y2t07yH0VdrVBHh8iUpx+p4sPIx
+         NC3qKbHQs3N+sLiNvCoT2bEL47KAlE3Kf6pDDkuMWlaj8Xs7vQtt4hJzCyVMOoCPQ3ge
+         UBO62rUY8a+Q9F7Lvi11hIh6nWEY6xeuCMpfM+KZEKck0l70oFpFvDl30ixr1C8IwSrm
+         xb1SpHYj5GPpafA5azsCAVN2u9ut4kXvzM0uHr6nDTAevFT1E2gZYULE+3PnJizM+NbQ
+         yYYkMdfkIzJ448AEs4ynt0Jp9US1af2j1tZR6jphfg8NrxIi2QZUjDC2h8Q/xXPgcSIX
+         D9sQ==
+X-Gm-Message-State: APjAAAUVCoAXNxgofTA0TYMEAAuvwGAUCLqNmiSypoboshKz1/rO+vBe
+        E1VP8XshELQbG4AGKj/U/9PXz8SC34DsoSqswuQppQ==
+X-Google-Smtp-Source: APXvYqyJSLHi9kjwirjjHSK/IHzI4DppCY+Pxs+4O3zEo5Lzdj8qqH0vTyKCYax7ZC3eqhFxSHx3Q3OR+umkqJaj81A=
+X-Received: by 2002:a62:7603:: with SMTP id r3mr8672719pfc.32.1553101383143;
+ Wed, 20 Mar 2019 10:03:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190320005842.25383-1-natechancellor@gmail.com>
+In-Reply-To: <20190320005842.25383-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 20 Mar 2019 10:02:51 -0700
+Message-ID: <CAKwvOdmBfCarhfJZLmfALsdhCVDWLdzS3XALXRNLpQCjZE88Mg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/powerplay: Zero initialize num_of_levels in vega20_set_single_dpm_table
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb allocated via dev_alloc_skb can fail and return a NULL pointer.
-This patch avoids such a scenario and returns, consistent with other
-invocations.
+On Tue, Mar 19, 2019 at 6:00 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:456:2: warning:
+> variable 'num_of_levels' is used uninitialized whenever '?:' condition
+> is false [-Wsometimes-uninitialized]
+>         smu_read_smc_arg(smu, &num_of_levels);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:608:3: note:
+> expanded from macro 'smu_read_smc_arg'
+>         ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
+>          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:457:7: note:
+> uninitialized use occurs here
+>         if (!num_of_levels) {
+>              ^~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:456:2: note: remove
+> the '?:' if its condition is always true
+>         smu_read_smc_arg(smu, &num_of_levels);
+>         ^
+> drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:608:3: note:
+> expanded from macro 'smu_read_smc_arg'
+>         ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
+>          ^
+> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:446:27: note:
+> initialize the variable 'num_of_levels' to silence this warning
+>         uint32_t i, num_of_levels, clk;
+>                                  ^
+>                                   = 0
+> 1 warning generated.
+>
+> The if statement it mentions as potentially problematic is currently
+> always true because the read_smc_arg callback is assigned at the
+> bottom of this file but Clang can't tell that. If the callback were
+> ever to disappear, num_of_levels would never be initialized. Just
+> zero initialize it to ensure that the intent behind this code
+> remains the same.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Thanks for the simple fix.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
----
-v2: Move signed off above the version change log
-v1: Patch collision with rtl_phydm.c, fix as per Greg
----
- drivers/staging/rtlwifi/rtl8822be/fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+>
+> Fixes: 870b996f955f ("drm/amd/powerplay: set defalut dpm table for smu")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/425
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+> index 7e9e8ad9a300..41e6f49c9cb6 100644
+> --- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+> +++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+> @@ -443,7 +443,7 @@ vega20_set_single_dpm_table(struct smu_context *smu,
+>                             PPCLK_e clk_id)
+>  {
+>         int ret = 0;
+> -       uint32_t i, num_of_levels, clk;
+> +       uint32_t i, num_of_levels = 0, clk;
+>
+>         ret = smu_send_smc_msg_with_param(smu,
+>                         SMU_MSG_GetDpmFreqByIndex,
+> --
+> 2.21.0
+>
 
-diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
-index f061dd1382aa..cf6b7a80b753 100644
---- a/drivers/staging/rtlwifi/rtl8822be/fw.c
-+++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
-@@ -743,6 +743,8 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
- 		      u1_rsvd_page_loc, 3);
- 
- 	skb = dev_alloc_skb(totalpacketlen);
-+	if (!skb)
-+		return;
- 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
- 	       totalpacketlen);
- 
+
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
