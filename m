@@ -2,206 +2,151 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC872C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73BBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA3A21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F9D218D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfCTKLf (ORCPT
+        id S1727086AbfCTKNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:11:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:37472 "EHLO foss.arm.com"
+        Wed, 20 Mar 2019 06:13:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43038 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbfCTKLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:11:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B31280D;
-        Wed, 20 Mar 2019 03:11:34 -0700 (PDT)
-Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 583673F71A;
-        Wed, 20 Mar 2019 03:11:31 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 10:11:26 +0000
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>, <will.deacon@arm.com>,
-        <catalin.marinas@arm.com>, <james.morse@arm.com>,
-        <julien.thierry@arm.com>, <wanghaibin.wang@huawei.com>,
-        <lious.lilei@hisilicon.com>, <lishuo1@hisilicon.com>,
-        <zhengxiang9@huawei.com>, <yuzenghui@huawei.com>,
-        <christoffer.dall@arm.com>
-Subject: Re: [PATCH] kvm: arm: Fix handling of stage2 huge mappings
-Message-ID: <20190320101126.11ff63af@why.wild-wind.fr.eu.org>
-In-Reply-To: <5e7e40b4-7983-4440-179a-6f107cee5994@arm.com>
-References: <25971fd5-3774-3389-a82a-04707480c1e0@huawei.com>
-        <1553004668-23296-1-git-send-email-suzuki.poulose@arm.com>
-        <86d0mmynaz.wl-marc.zyngier@arm.com>
-        <5e7e40b4-7983-4440-179a-6f107cee5994@arm.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726115AbfCTKNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:13:22 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CDF302D7E0;
+        Wed, 20 Mar 2019 10:13:21 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 243D35D71C;
+        Wed, 20 Mar 2019 10:13:20 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 18:13:18 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        pasha.tatashin@oracle.com, mhocko@suse.com,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] mm/sparse: Optimize sparse_add_one_section()
+Message-ID: <20190320101318.GP18740@MiWiFi-R3L-srv>
+References: <20190320073540.12866-1-bhe@redhat.com>
+ <20190320073540.12866-2-bhe@redhat.com>
+ <20190320075649.GC13626@rapoport-lnx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320075649.GC13626@rapoport-lnx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 20 Mar 2019 10:13:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 09:44:38 +0000
-Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+Hi Mike,
 
-> Hi Marc,
+On 03/20/19 at 09:56am, Mike Rapoport wrote:
+ > @@ -697,16 +697,17 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+> >  	ret = sparse_index_init(section_nr, nid);
+> >  	if (ret < 0 && ret != -EEXIST)
+> >  		return ret;
+> > -	ret = 0;
+> > -	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+> > -	if (!memmap)
+> > -		return -ENOMEM;
+> > +
+> >  	usemap = __kmalloc_section_usemap();
+> > -	if (!usemap) {
+> > -		__kfree_section_memmap(memmap, altmap);
+> > +	if (!usemap)
+> > +		return -ENOMEM;
+> > +	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+> > +	if (!memmap) {
+> > +		kfree(usemap);
 > 
-> On 20/03/2019 08:15, Marc Zyngier wrote:
-> > Hi Suzuki,
-> > 
-> > On Tue, 19 Mar 2019 14:11:08 +0000,
-> > Suzuki K Poulose <suzuki.poulose@arm.com> wrote:  
-> >>
-> >> We rely on the mmu_notifier call backs to handle the split/merge
-> >> of huge pages and thus we are guaranteed that, while creating a
-> >> block mapping, either the entire block is unmapped at stage2 or it
-> >> is missing permission.
-> >>
-> >> However, we miss a case where the block mapping is split for dirty
-> >> logging case and then could later be made block mapping, if we cancel the
-> >> dirty logging. This not only creates inconsistent TLB entries for
-> >> the pages in the the block, but also leakes the table pages for
-> >> PMD level.
-> >>
-> >> Handle this corner case for the huge mappings at stage2 by
-> >> unmapping the non-huge mapping for the block. This could potentially
-> >> release the upper level table. So we need to restart the table walk
-> >> once we unmap the range.
-> >>
-> >> Fixes : ad361f093c1e31d ("KVM: ARM: Support hugetlbfs backed huge pages")
-> >> Reported-by: Zheng Xiang <zhengxiang9@huawei.com>
-> >> Cc: Zheng Xiang <zhengxiang9@huawei.com>
-> >> Cc: Zhengui Yu <yuzenghui@huawei.com>
-> >> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> >> Cc: Christoffer Dall <christoffer.dall@arm.com>
-> >> Signed-off-by: Suzuki K Poulose ...  
-> 
-> >> +retry:
-> >>   	pmd = stage2_get_pmd(kvm, cache, addr);
-> >>   	VM_BUG_ON(!pmd);
-> >>   ...  
-> 
-> >>   	if (pmd_present(old_pmd)) {
-> >>   		/*
-> >> -		 * Multiple vcpus faulting on the same PMD entry, can
-> >> -		 * lead to them sequentially updating the PMD with the
-> >> -		 * same value. Following the break-before-make
-> >> -		 * (pmd_clear() followed by tlb_flush()) process can
-> >> -		 * hinder forward progress due to refaults generated
-> >> -		 * on missing translations.
-> >> +		 * If we already have PTE level mapping for this block,
-> >> +		 * we must unmap it to avoid inconsistent TLB state and
-> >> +		 * leaking the table page. We could end up in this situation
-> >> +		 * if the memory slot was marked for dirty logging and was
-> >> +		 * reverted, leaving PTE level mappings for the pages accessed
-> >> +		 * during the period. So, unmap the PTE level mapping for this
-> >> +		 * block and retry, as we could have released the upper level
-> >> +		 * table in the process.
-> >>   		 *
-> >> -		 * Skip updating the page table if the entry is
-> >> -		 * unchanged.
-> >> +		 * Normal THP split/merge follows mmu_notifier callbacks and do
-> >> +		 * get handled accordingly.
-> >>   		 */
-> >> -		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-> >> -			return 0;
-> >> -
-> >> +		if (!pmd_thp_or_huge(old_pmd)) {
-> >> +			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
-> >> +			goto retry;  
-> > 
-> > This looks slightly dodgy. Doing this retry results in another call to
-> > stage2_get_pmd(), which may or may not result in allocating a PUD. I
-> > think this is safe as if we managed to get here, it means the whole
-> > hierarchy was already present and nothing was allocated in the first
-> > round.
-> > 
-> > Somehow, I would feel more comfortable with just not even trying.
-> > Unmap, don't fix the fault, let the vcpu come again for additional
-> > punishment. But this is probably more invasive, as none of the
-> > stage2_set_p*() return value is ever evaluated. Oh well.
-> >   
-> 
-> Yes. The other option was to unmap_stage2_ptes() and get the page refcount
-> on the new pmd. But that kind of makes it a bit difficult to follow the
-> code.
-> 
-> >>   	if (stage2_pud_present(kvm, old_pud)) {
-> >> -		stage2_pud_clear(kvm, pudp);
-> >> -		kvm_tlb_flush_vmid_ipa(kvm, addr);
-> >> +		/*
-> >> +		 * If we already have table level mapping for this block, unmap
-> >> +		 * the range for this block and retry.
-> >> +		 */
-> >> +		if (!stage2_pud_huge(kvm, old_pud)) {
-> >> +			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);  
-> > 
-> > This broke 32bit. I've added the following hunk to fix it:  
-> 
-> Grrr! Sorry about that.
-> 
-> > 
-> > diff --git a/arch/arm/include/asm/stage2_pgtable.h b/arch/arm/include/asm/stage2_pgtable.h
-> > index de2089501b8b..b8f21088a744 100644
-> > --- a/arch/arm/include/asm/stage2_pgtable.h
-> > +++ b/arch/arm/include/asm/stage2_pgtable.h
-> > @@ -68,6 +68,9 @@ stage2_pmd_addr_end(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
-> >   #define stage2_pmd_table_empty(kvm, pmdp)	kvm_page_empty(pmdp)
-> >   #define stage2_pud_table_empty(kvm, pudp)	false  
-> >   > +#define S2_PUD_MASK				PGDIR_MASK  
-> > +#define S2_PUD_SIZE				PGDIR_SIZE
-> > +  
-> 
-> We should really get rid of the S2_P{U/M}D_* definitions, as they are
-> always the same as the host. The only thing that changes is the PGD size
-> which varies according to the IPA and the concatenation.
-> 
-> >   static inline bool kvm_stage2_has_pud(struct kvm *kvm)
-> >   {
-> >   	return false;
-> >   
-> >> +			goto retry;
-> >> +		} else {
-> >> +			WARN_ON_ONCE(pud_pfn(old_pud) != pud_pfn(*new_pudp));
-> >> +			stage2_pud_clear(kvm, pudp);
-> >> +			kvm_tlb_flush_vmid_ipa(kvm, addr);
-> >> +		}  
-> > 
-> > The 'else' line could go, and would make the code similar to the PMD path.
-> >   
-> 
-> Yep. I think the pud_pfn() may not be defined for some configs, if the hugetlbfs
-> is not selected on arm32. So, we should move them to kvm_pud_pfn() instead.
-> 
-> 
-> >>   	} else {
-> >>   		get_page(virt_to_page(pudp));
-> >>   	}  
-> >> -- >> 2.7.4  
-> >>  
-> > 
-> > If you're OK with the above nits, I'll squash them into the patch.  
-> 
-> With the kvm_pud_pfn() changes, yes. Alternately, I could resend the updated
-> patch, fixing the typo in Zenghui's name. Let me know.
+> If you are anyway changing this why not to switch to goto's for error
+> handling?
 
-Sure, feel free to send a fixed version. I'll drop the currently queued
-patch.
+I update code change as below, could you check if it's OK to you?
 
-Thanks,
+Thanks
+Baoquan
 
-	M.
+From 39b679b6f34f6acbc05351be8569d23bae3c0458 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 15 Mar 2019 16:03:52 +0800
+Subject: [PATCH] mm/sparse: Optimize sparse_add_one_section()
+
+Reorder the allocation of usemap and memmap since usemap allocation
+is much smaller and simpler. Otherwise hard work is done to make
+memmap ready, then have to rollback just because of usemap allocation
+failure.
+
+Meanwhile update the error handler to cover usemap allocation failure
+too.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ mm/sparse.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index a99e0b253927..0e842b924be6 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -699,20 +699,21 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+ 	ret = sparse_index_init(section_nr, nid);
+ 	if (ret < 0 && ret != -EEXIST)
+ 		return ret;
+-	ret = 0;
+-	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+-	if (!memmap)
+-		return -ENOMEM;
++
+ 	usemap = __kmalloc_section_usemap();
+-	if (!usemap) {
+-		__kfree_section_memmap(memmap, altmap);
++	if (!usemap)
+ 		return -ENOMEM;
++	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
++	if (!memmap) {
++		ret = -ENOMEM;
++		goto out2;
+ 	}
+ 
++	ret = 0;
+ 	ms = __pfn_to_section(start_pfn);
+ 	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
+ 		ret = -EEXIST;
+-		goto out;
++		goto out2;
+ 	}
+ 
+ 	/*
+@@ -724,11 +725,11 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+ 	section_mark_present(ms);
+ 	sparse_init_one_section(ms, section_nr, memmap, usemap);
+ 
++	return ret;
+ out:
+-	if (ret < 0) {
+-		kfree(usemap);
+-		__kfree_section_memmap(memmap, altmap);
+-	}
++	__kfree_section_memmap(memmap, altmap);
++out2:
++	kfree(usemap);
+ 	return ret;
+ }
+ 
 -- 
-Without deviation from the norm, progress is not possible.
+2.17.2
+
