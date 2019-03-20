@@ -2,92 +2,111 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7498FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E606C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B1F2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EB92184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553094767;
+	bh=y3d0ZCvnI3wqMUc4Bm8hyrm3yD8RBSNXHXeCIO8D5t0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QSi+cQBiqWSCehSQ2ImDvF1BslHbebT/zr6kPBssqn5Jbe3sPUKIVwpn1Gd9vVDPT
+	 KQjk2Y6kgH2/3MlTA4pIesd7jOUUcnTZ0AxpN60JDJM0m7uTHg8WmU/57rv89QT4b/
+	 exSjVxp3oMs+YNamrDoDQDSrgmW0DViLDJqOMmDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfCTPMF (ORCPT
+        id S1727556AbfCTPMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:12:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59405 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbfCTPME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:12:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 08:12:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
-   d="scan'208";a="154096388"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.181])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2019 08:12:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] docs: Explicitly state ordering requirements for Co-developed-by
-Date:   Wed, 20 Mar 2019 08:11:40 -0700
-Message-Id: <20190320151140.32432-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 20 Mar 2019 11:12:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40922 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726169AbfCTPMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:12:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 42CD8AE07;
+        Wed, 20 Mar 2019 15:12:44 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 16:12:42 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     syzbot <syzbot+b70f2aabc707c69c9239@syzkaller.appspotmail.com>,
+        chanho.min@lge.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz,
+        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, Ingo Molnar <mingo@elte.hu>
+Subject: Re: WARNING: syz-executor still has locks held!
+Message-ID: <20190320151242.GC8696@dhcp22.suse.cz>
+References: <0000000000000e4a41057b6c9792@google.com>
+ <0000000000004cdec6058485b2ce@google.com>
+ <20190320131655.GA8696@dhcp22.suse.cz>
+ <20190320132410.GB21673@redhat.com>
+ <20190320132936.GB8696@dhcp22.suse.cz>
+ <20190320150053.GD21673@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320150053.GD21673@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per Thomas' yet-to-be-merged "tip tree handbook"[1], Co-developed-by and
-Signed-off-by must be paired together, i.e. the co-authors' SOB mustn't
-be scattered willy-nilly, and the author's SOB must be the first SOB
-*after* the last Co-developed-by/Signed-off-by pair.  Provide an example
-to eliminate any ambiguity.
+[Cc Ingo and Chanho Min - the thread starts here
+http://lkml.kernel.org/r/0000000000004cdec6058485b2ce@google.com]
 
-[1] http://lkml.kernel.org/r/20181107171149.165693799@linutronix.de
+On Wed 20-03-19 16:00:54, Oleg Nesterov wrote:
+> On 03/20, Michal Hocko wrote:
+> >
+> > On Wed 20-03-19 14:24:11, Oleg Nesterov wrote:
+> > > On 03/20, Michal Hocko wrote:
+> > > >
+> > > > Yes we do hold the cgred mutex while calling freezable_schedule but why
+> > > > are we getting a warning is not really clear to me. The task should be
+> > > > hidden from the freezer so why do we warn at all?
+> > >
+> > > try_to_freeze() calls debug_check_no_locks_held() and this makes sense.
+> >
+> > Yes it does. But it already ignores PF_NOFREEZE tasks and I fail to see
+> > why is PF_FREEZER_SKIP any different.
+> 
+> But they differ. PF_NOFREEZE is a "sticky" flag for kthreads. Set by default,
+> cleared by set_freezable() if you want a freezable kthread.
+> 
+> PF_FREEZER_SKIP means that a sleeping freezable task will call try_to_freeze()
+> right after schedule() returns, so try_to_freeze_tasks() can safely count it as
+> "already frozen".
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- Documentation/process/submitting-patches.rst | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+But the fundamental semantic is the same right? Both might be sitting on
+locks that might interfere with other tasks and we should be _extra_
+careful when using them. In an ideal world, none of them is really
+needed.
 
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index be7d1829c3af..f4b5c4850601 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -547,8 +547,13 @@ have been included in the discussion.
- 
- A Co-developed-by: states that the patch was also created by another developer
- along with the original author.  This is useful at times when multiple people
--work on a single patch.  Note, this person also needs to have a Signed-off-by:
--line in the patch as well.
-+work on a single patch.  Note, Co-developed-by: must be accompanied by a
-+Signed-off-by: of the co-author(s).  All Co-developed-by:/Signed-off-by: pairs
-+must precede the Signed-off-by: of the original author.
-+
-+	Co-developed-by: Random Co-Author <random@coauthor.example.org>
-+	Signed-off-by: Random Co-Author <random@coauthor.example.org>
-+	Signed-off-by: Original Author <original@author.example.org>
- 
- 
- 13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
+So my question remains. Can we drop the warning for PF_FREEZER_SKIP
+tasks as well?
+
+> > it seems that skipping the task was the only viable option
+> > to fix suspend issues
+> 
+> Yes, de_thread() should use freezable_schedule(), iow I hope we will reconsider
+> this (reverted) patch.
+
+As long as we do not have a better solution for the original problem
+then revert just because of a pointless warning is not really ideal. I
+am wondering why I do not see any of people acking the patch is in CC of
+the revert.
+
+> > as removing the cgred is way way too complicated.
+> 
+> We need to do this anyway, this leads to other more serious problems...
+
+Yes but this is far away and it doesn't really seem like a stable tree
+material either and I am pretty sure that people on older kernels would
+like to not see suspend failures. Those are annoying as hell.
 -- 
-2.21.0
-
+Michal Hocko
+SUSE Labs
