@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE36C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F90FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD199213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF94213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8gaMIEv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVkj4XMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfCTQul (ORCPT
+        id S1727271AbfCTQuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:50:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44573 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbfCTQui (ORCPT
+        Wed, 20 Mar 2019 12:50:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37038 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727210AbfCTQuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:50:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x10so2570511edh.11;
-        Wed, 20 Mar 2019 09:50:37 -0700 (PDT)
+        Wed, 20 Mar 2019 12:50:40 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v21so2609708edq.4;
+        Wed, 20 Mar 2019 09:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EJK4SI3rcQBttHs6/NW8odmC7txCmuUAl2muEupVnNM=;
-        b=j8gaMIEvkaKX2msvQUybgBnEGRLrRfPAnTeJi/5+QQ0vt6vklzNvzZPvNxpBlB3qrn
-         j33LcHyX1ItvCImQRx05bObtca5X6Mc9w9OTNyD8Bw10/MihlmbdHlKT1gXuAiw9yJ/g
-         LeZhUcUriLMbYjCaFkwUTxOj7cDhyom/98ow8Mn+2rSNmDMY70F6zpFpnXB93KR6pkHb
-         tgs9V/J+WtP2ODpmcheW6Dhuem4aH8Ts5nUUv2YHAc1vlB0W5LxPTwVjMif76mfJam3q
-         fDu1ZdlkaA7zft6jlepjTlilHXKmsqWFg/2U+rj5kkZxFrOaReaWT6/Aec9ZlGo8DnVV
-         L0XA==
+        bh=X6IZ0kdG9aeVwwBEHw4YFMvSu0VQ1Omdeh0RqqU4m+M=;
+        b=iVkj4XMQjA3YdGcG4sLh/P4h2F/vjrWVJBiZGfV4BtaqgFTd+n2oiQsB8tqQk2dKjh
+         XTub/1asRnhyZ9xOJH5Ce8rn6Gy1lWxKbRwWxrPYZ8MWuZim6mo0R8bARUBUXf8W2YSP
+         fibkb+Z1M+YChp+LKczyBYfCtHueeRNjVHIO33nGu0zMgcm9ac3ElrJ324MRsWyRlxi9
+         RNC5YEuog17+otmi51Kyyi6+BsUX++ZuC2m1fg8h498kJC2fm4TMW4b7bjelZMj59SFS
+         0mojySkaEX412KE/GwTEZ22OFF+9VS0lxDEXIqsZT713K54FCEIdJ6KDwDozYCl87Shx
+         UdIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EJK4SI3rcQBttHs6/NW8odmC7txCmuUAl2muEupVnNM=;
-        b=kdIfpgxvOVoS1YIq8KqrBlucj2oLJ41hExE5g3OGhfGnk8IhHXz2DJCPM+9q6jmZ+u
-         +FJI/AjXF7QU8oyyKuI6PaEP/dUSQBdl3BlHWLBEnXi+Net9gBFkIa7/ofi9FgvqNjRm
-         I7L53lAoZijboHwBR2TzGyPWCYOXaimJJjbR+d6pZ7jAy5jn73wCbOcOM33zCsIywhrR
-         8f/4PnXm7UWLQQqD+KYQMMndiGJi/4AWrs2pc0+vR7Dc9TOeHhsM1kE4+48qEq2oOZDH
-         Jn4TOsd4dKrPIrV0JSv6/E37ibUZ67ozIk6JmBE3o3RLw/yN7AEfnNk8dsQqFy7Gbfva
-         s9QA==
-X-Gm-Message-State: APjAAAWp6aTbmR3FiDU5I1jT2c81ggXdPv6zzdqZy6EusuWnh+QRvGK4
-        1sIs5bBZuupMwMxZ10yuI/96KAw/
-X-Google-Smtp-Source: APXvYqz6jvKKGJTohwW4VuIrPOpeuprOFrC56jE+CJ68REEOyXeOIDOACj9cvagtNZ++6BbjWhrFTA==
-X-Received: by 2002:a50:baab:: with SMTP id x40mr20301317ede.244.1553100636443;
-        Wed, 20 Mar 2019 09:50:36 -0700 (PDT)
+        bh=X6IZ0kdG9aeVwwBEHw4YFMvSu0VQ1Omdeh0RqqU4m+M=;
+        b=efO0et9oulBL24vdfAhpvHRsPCih1AyusQcKXGYY7L6pELNrTuEm62A+B10DxeT1IA
+         4aMziTrtfNQybMAfueZEGVnvrMIKPc7WXsRYt1PtIpwyqCAAYH/Vz43iWhOpHPo/MBmY
+         iQTptsk0FlAa+Z8+DhyLXWw1OOuBsMHQcPImuFBx/KVUqK4C1LZW/XYe0/25d0+GIgQM
+         6/qzvmA7dnkt1ZBKtw8WxvhKJTye6p3M4DH0RiZ0zRKWZeA2k6M57qMxG2tx8APfq/6i
+         PupuHalX2jYo/bPuxlbDMG+2QLNWVhhfQYI3u9ukh68vdnXJ7T8iO7qu37e5sl8ea3j+
+         m0zg==
+X-Gm-Message-State: APjAAAVD0p/COpX8UMBkCEvjSHKTx2LsgTylNsOXqoA9YiyFLWhRvk0Z
+        rfSdrpowHWsSmv4KGQPZod7gPnKz
+X-Google-Smtp-Source: APXvYqxL6SkEBwzv2tvC8ZNITZUPGsxMq+BWJwMyrTmbbymmjJD99AiN4xQ39n6o8c6AwLWJhu5adQ==
+X-Received: by 2002:a17:906:518:: with SMTP id j24mr17503865eja.26.1553100638648;
+        Wed, 20 Mar 2019 09:50:38 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id f5sm808254ede.94.2019.03.20.09.50.34
+        by smtp.gmail.com with ESMTPSA id f5sm808254ede.94.2019.03.20.09.50.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 09:50:35 -0700 (PDT)
+        Wed, 20 Mar 2019 09:50:38 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/3] net: dsa: bcm_sf2:  Remove print of base address
-Date:   Wed, 20 Mar 2019 09:45:16 -0700
-Message-Id: <20190320164517.29608-3-f.fainelli@gmail.com>
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
+        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 3/3] net: systemport:  Remove print of base address
+Date:   Wed, 20 Mar 2019 09:45:17 -0700
+Message-Id: <20190320164517.29608-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190320164517.29608-1-f.fainelli@gmail.com>
 References: <20190320164517.29608-1-f.fainelli@gmail.com>
@@ -74,31 +73,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
 pointers are being hashed when printed. Displaying the virtual memory at
-bootup time is not helpful, we use a dev_info() print which already
-displays the platform device's address.
+bootup time is not helpful, especially given we use a dev_info() which
+already displays the platform device's address.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/dsa/bcm_sf2.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index c8e3f05e1d72..4ccb3239f5f7 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1188,10 +1188,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_mdio;
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index bc3ac369cbe3..c86515f7fd2f 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2599,11 +2599,11 @@ static int bcm_sysport_probe(struct platform_device *pdev)
  
--	pr_info("Starfighter 2 top: %x.%02x, core: %x.%02x base: 0x%p, IRQs: %d, %d\n",
--		priv->hw_params.top_rev >> 8, priv->hw_params.top_rev & 0xff,
--		priv->hw_params.core_rev >> 8, priv->hw_params.core_rev & 0xff,
--		priv->core, priv->irq0, priv->irq1);
-+	dev_info(&pdev->dev,
-+		 "Starfighter 2 top: %x.%02x, core: %x.%02x, IRQs: %d, %d\n",
-+		 priv->hw_params.top_rev >> 8, priv->hw_params.top_rev & 0xff,
-+		 priv->hw_params.core_rev >> 8, priv->hw_params.core_rev & 0xff,
-+		 priv->irq0, priv->irq1);
+ 	priv->rev = topctrl_readl(priv, REV_CNTL) & REV_MASK;
+ 	dev_info(&pdev->dev,
+-		 "Broadcom SYSTEMPORT%s" REV_FMT
+-		 " at 0x%p (irqs: %d, %d, TXQs: %d, RXQs: %d)\n",
++		 "Broadcom SYSTEMPORT%s " REV_FMT
++		 " (irqs: %d, %d, TXQs: %d, RXQs: %d)\n",
+ 		 priv->is_lite ? " Lite" : "",
+ 		 (priv->rev >> 8) & 0xff, priv->rev & 0xff,
+-		 priv->base, priv->irq0, priv->irq1, txq, rxq);
++		 priv->irq0, priv->irq1, txq, rxq);
  
  	return 0;
  
