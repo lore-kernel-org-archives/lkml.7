@@ -2,379 +2,118 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1895CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590AAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67DD2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1702175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rzUtbsZU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yuy2FPOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfCTIzh (ORCPT
+        id S1726780AbfCTI7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:55:37 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:17529 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTIzh (ORCPT
+        Wed, 20 Mar 2019 04:59:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39508 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCTI7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:55:37 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x2K8tB4F007573;
-        Wed, 20 Mar 2019 17:55:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2K8tB4F007573
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553072113;
-        bh=tn61Hm0v5i2KjymZFAe3rF/kB5GA1lCQspZgfgpOFS4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rzUtbsZU9Zcew2HWTAwYEqKVIAh42uxoZ81T/s+1lJh4rusdWAJOrtZKqG8MIqYHy
-         2UqcexBuZ2Tro/sR6um3TzuyLFBbl3fLFuBFo8xneCh8xRVSQyX/OIW/tn6N2ZvULd
-         4ks9VdfscMRws4wL6rD6YuUHuPCJqQ+qLMbJGSuUQaxRANjk83oZ1EjeGMtvQ0Fxqj
-         dVMATIW/eDywAFnCN4Jpp65Iqr76ODeErrAc5ONQuWsBKLn20ugv9qKXK9FOGVwIwO
-         Kt1o92ySqJL/5iL3Hdk21qEOBhOMETsrLGeM/1bRBOdFLEOiBGoljulxl60i4cp+rA
-         xEQi2PjKmxLpA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id z18so992216vso.7;
-        Wed, 20 Mar 2019 01:55:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqaLiiVkATECPXK5ZjIFQtsguE3FQTjvKZniFSDkmmednT4jbj
-        TMRCGtuoEW74McM2ki6+qSB06ONsxaMu+tyVolA=
-X-Google-Smtp-Source: APXvYqwUeCoxJWRZoKL45Zva3n3fX4+J+S/jxOROALcVX8Xbr87JZJyMdrpnUg1xb1Jjt0jFpG3eARGdCePIULpY0Mc=
-X-Received: by 2002:a67:74cd:: with SMTP id p196mr4062961vsc.215.1553072111392;
- Wed, 20 Mar 2019 01:55:11 -0700 (PDT)
+        Wed, 20 Mar 2019 04:59:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2K8sLHn149988;
+        Wed, 20 Mar 2019 08:59:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Mq3oeKvwEtgfjFSKPpK1HBygoHwQWpAO8dOx1N18U1s=;
+ b=Yuy2FPOtlegvvJIcWXGkEJyBlj8fylOF7oJqPBDI4H+Mchy+YFzYN0CuoAO4P+OWNsSq
+ NIh8NS2570kECwTxWbVZITQ46wIw7fGc+RRXfnw3gE8XGt0X8GPxVq+lhTfmPfkUekpj
+ o9zeShwC21X0DBwSZUNSetKMRaPfoTbUOsykB6FzplKbfJSUHo00z/CiMTBOQVJNrEQ0
+ o3e8c8/thpn8rSqdCsWZJ6dznJjis10/rSCKeCEy15AXIfZnvYGK3Cl4KURqudrMPMk2
+ YRr+i3g8uARvuG6vk6f6ZpMx1pSCoXHf5JyqQYjE5jjjCr9SWdXmbMLwb0VXglqizKft +Q== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2r8ssrhc88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 08:59:03 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2K8x2vH011728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 08:59:02 GMT
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2K8x1n6001887;
+        Wed, 20 Mar 2019 08:59:01 GMT
+Received: from kadam (/10.175.25.169)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 Mar 2019 01:59:01 -0700
+Date:   Wed, 20 Mar 2019 11:58:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: static analysis bug report: staging r8712u memcpy of
+ uninitialized variable
+Message-ID: <20190320085858.GF2202@kadam>
+References: <2b54dc2d-7509-dc76-b730-4c8d66f81226@canonical.com>
 MIME-Version: 1.0
-References: <20190315101013.GN8455@Legion-PC.fortress>
-In-Reply-To: <20190315101013.GN8455@Legion-PC.fortress>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 20 Mar 2019 17:54:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATuuAHav=RJ8oAQNyj1THR1bazWY-+6hOJ6EM+V-WOW5A@mail.gmail.com>
-Message-ID: <CAK7LNATuuAHav=RJ8oAQNyj1THR1bazWY-+6hOJ6EM+V-WOW5A@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
- modules in separate file
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b54dc2d-7509-dc76-b730-4c8d66f81226@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903200074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->
-> Problem:
->
-> When a kernel module is compiled as a separate module, some important
-> information about the kernel module is available via .modinfo section of
-> the module.  In contrast, when the kernel module is compiled into the
-> kernel, that information is not available.
->
-> Information about built-in modules is necessary in the following cases:
->
-> 1. When it is necessary to find out what additional parameters can be
-> passed to the kernel at boot time.
->
-> 2. When you need to know which module names and their aliases are in
-> the kernel. This is very useful for creating an initrd image.
->
-> Proposal:
->
-> The proposed patch does not remove .modinfo section with module
-> information from the vmlinux at the build time and saves it into a
-> separate file after kernel linking. So, the kernel does not increase in
-> size and no additional information remains in it. Information is stored
-> in the same format as in the separate modules (null-terminated string
-> array). Because the .modinfo section is already exported with a separate
-> modules, we are not creating a new API.
->
-> It can be easily read in the userspace:
->
-> $ tr '\0' '\n' < kernel.builtin.modinfo
-> ext4.softdep=pre: crc32c
-> ext4.license=GPL
-> ext4.description=Fourth Extended Filesystem
-> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
-> ext4.alias=fs-ext4
-> ext4.alias=ext3
-> ext4.alias=fs-ext3
-> ext4.alias=ext2
-> ext4.alias=fs-ext2
-> md_mod.alias=block-major-9-*
-> md_mod.alias=md
-> md_mod.description=MD RAID framework
-> md_mod.license=GPL
-> md_mod.parmtype=create_on_open:bool
-> md_mod.parmtype=start_dirty_degraded:int
-> ...
->
-> Co-Developed-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
-> Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> ---
+On Mon, Mar 18, 2019 at 11:20:51AM +0000, Colin Ian King wrote:
+> Hi,
+> 
+> Static analysis with cppcheck found a couple of interesting issues with
+> memcpy'ing of an uninitialized variable. Two occurrences of the same
+> issue are found in drivers/staging/rtl8712/rtl8712_cmd.c in functions
+> read_bbreg_hdl and read_rfreg_hdl.
+> 
+> For example:
+> 
+> static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+> {
+>         u32 val;
+>         void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj
+> *pcmd);
+>         struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
+> 
+>         if (pcmd->rsp && pcmd->rspsz > 0)
+>                 memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+> 
+> 	....
+> 
+> }
+> 
+> I don't understand why the contents of val is being memcpy'd to
+> pcmd->rsp, especially when val is uninitialized and hence contains
+> garbage. Any ideas?
+> 
 
+The concern would be that it's reading a user specified amount of
+stack memory to pcmd->rsp and that sounds like an information leak.
 
-I just started to take a look.
+The pcmd_callback function pointer is always r8712_getbbrfreg_cmdrsp_callback()
+which frees pcmd->parmbuf and pcmd but leaks pcmd->rsp.  I don't see
+a way for anyone to access the ->rsp memory so probably there aren't any
+security implications.
 
-I was able to compile it for x86,
-but got tons of warnings for powerpc.
+Anyway, let me send a patch.
 
-Anyway, you do not need to send v2 soon.
-Please give me some more time for the through review.
+regards,
+dan carpenter
 
-
-
-The following is what I got by
-"make -j8 ARCH=powerpc CROSS_COMPILE=powerpc-linux-  defconfig  all"
-
-
-...
-  CC [M]  drivers/scsi/st.o
-  AR      drivers/scsi/built-in.a
-  AR      drivers/built-in.a
-  GEN     .version
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  CC      init/version.o
-  AR      init/built-in.a
-  LD      vmlinux.o
-  MODPOST vmlinux.o
-powerpc-linux-ld: warning: orphan section `.gnu.hash' from `linker
-stubs' being placed in section `.gnu.hash'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`arch/powerpc/platforms/pseries/pseries_energy.o' being placed in
-section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`arch/powerpc/platforms/pseries/cmm.o' being placed in section
-`.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`arch/powerpc/platforms/pasemi/gpio_mdio.o' being placed in section
-`.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/workqueue.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/printk/printk.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/irq/spurious.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/rcu/update.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/rcu/srcutree.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/rcu/tree.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/module.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`kernel/configs.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/binfmt_script.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/binfmt_elf.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/compat_binfmt_elf.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/mbcache.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs_common/nfsacl.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs_common/grace.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/ext4/super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/ext2/super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/jbd2/journal.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/fat/inode.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/fat/namei_msdos.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/isofs/inode.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/dir.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/inode.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/nfs2super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/nfs3super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nfs/nfs4super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/exportfs/expfs.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/lockd/svc.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nls/nls_base.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nls/nls_cp437.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nls/nls_ascii.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nls/nls_iso8859-1.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/nls/nls_utf8.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/xfs/xfs_super.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/debugfs/inode.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`fs/tracefs/inode.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/api.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/crypto_wq.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/algapi.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/aead.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/blkcipher.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/skcipher.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/ahash.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/shash.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/akcipher.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/kpp.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/acompress.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/scompress.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/algboss.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/testmgr.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/hmac.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/crypto_null.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/sha256_generic.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/aes_generic.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/crc32c_generic.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`crypto/rng.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`block/bsg.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`block/mq-deadline.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`block/kyber-iosched.o' being placed in section `.modinfo'.
-powerpc-linux-ld: warning: orphan section `.modinfo' from
-`lib/btree.o' being placed in section `.modinfo'.
-
-...
-
-
-
-
-
->  Makefile                    |  1 +
->  include/linux/moduleparam.h | 12 +++++-------
->  scripts/link-vmlinux.sh     |  8 ++++++++
->  3 files changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index d5713e7b1e50..971102194c92 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1288,6 +1288,7 @@ _modinst_:
->         fi
->         @cp -f $(objtree)/modules.order $(MODLIB)/
->         @cp -f $(objtree)/modules.builtin $(MODLIB)/
-> +       @cp -f $(objtree)/kernel.builtin.modinfo $(MODLIB)/
->         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
->
->  # This depmod is only for convenience to give the initial
-> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> index ba36506db4fb..5ba250d9172a 100644
-> --- a/include/linux/moduleparam.h
-> +++ b/include/linux/moduleparam.h
-> @@ -10,23 +10,21 @@
->     module name. */
->  #ifdef MODULE
->  #define MODULE_PARAM_PREFIX /* empty */
-> +#define __MODULE_INFO_PREFIX /* empty */
->  #else
->  #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
-> +/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
-> +#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
->  #endif
->
->  /* Chosen so that structs with an unsigned long line up. */
->  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
->
-> -#ifdef MODULE
->  #define __MODULE_INFO(tag, name, info)                                   \
->  static const char __UNIQUE_ID(name)[]                                    \
->    __used __attribute__((section(".modinfo"), unused, aligned(1)))        \
-> -  = __stringify(tag) "=" info
-> -#else  /* !MODULE */
-> -/* This struct is here for syntactic coherency, it is not used */
-> -#define __MODULE_INFO(tag, name, info)                                   \
-> -  struct __UNIQUE_ID(name) {}
-> -#endif
-> +  = __MODULE_INFO_PREFIX __stringify(tag) "=" info
-> +
->  #define __MODULE_PARM_TYPE(name, _type)                                          \
->    __MODULE_INFO(parmtype, name##type, #name ":" _type)
->
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index c8cf45362bd6..399d7e4d11ec 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -258,10 +258,12 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
->
->         # step 1
->         vmlinux_link "" .tmp_vmlinux1
-> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux1
->         kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
->
->         # step 2
->         vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
-> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux2
->         kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
->
->         # step 3
-> @@ -273,6 +275,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
->                 kallsyms_vmlinux=.tmp_vmlinux3
->
->                 vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
-> +               "${OBJCOPY}" -R .modinfo .tmp_vmlinux3
->
->                 kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
->         fi
-> @@ -281,6 +284,11 @@ fi
->  info LD vmlinux
->  vmlinux_link "${kallsymso}" vmlinux
->
-> +info MODINFO kernel.builtin.modinfo
-> +"${OBJCOPY}" -j .modinfo -O binary vmlinux kernel.builtin.modinfo
-> +chmod 444 kernel.builtin.modinfo
-> +"${OBJCOPY}" -R .modinfo vmlinux
-> +
->  if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
->         info SORTEX vmlinux
->         sortextable vmlinux
-> --
-> 2.19.2
->
-
-
--- 
-Best Regards
-Masahiro Yamada
