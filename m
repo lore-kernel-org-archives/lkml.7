@@ -2,148 +2,119 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814ADC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6654C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D824218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:49:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="QcjSz+Lc";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="DxN2j7+a"
+	by mail.kernel.org (Postfix) with ESMTP id 9E50D2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfCTOtD (ORCPT
+        id S1727605AbfCTOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:49:03 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:60780 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726067AbfCTOtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:49:03 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KEfI9K002823;
-        Wed, 20 Mar 2019 07:48:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=1t5/vJWVGDj7VV2LHpgiwYm4EnFNtY7tFccjZgh/34I=;
- b=QcjSz+Lc9Z+X8N7aPxC4qyoXd1V8cXj3dQD49emB0YwzjuNEZSV0J2HXTJwxVkvUgKrK
- L2LBQeEHEvms7SpMR/O5VrOOpdT9x7rNQkPJEqSnGj/1gyZcA5/GPo8AybtukjzB0wg+
- gaSj83xVEO2zfi0bvDHq8V8dI7cfE6ita9BPg09VMUTA0Z4P8z0L7uTX38mZaVcTD1Nd
- gnPGUwWqIBwMbGsW9bFDSrSpbJpd6IjzAC94rwtASqeRUbfa1PHh4FtBko2WAc8Xqfqc
- NO57lS+F9VjosS8FIXn46LiUv5e6Xx2B0Tvnj3qYcxMNxoqhCzH0PHstBYpC2iB9WzX+ iw== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2rbjvm0y2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 20 Mar 2019 07:48:47 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 20 Mar
- 2019 07:48:36 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.52) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 20 Mar 2019 07:48:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1t5/vJWVGDj7VV2LHpgiwYm4EnFNtY7tFccjZgh/34I=;
- b=DxN2j7+aHI0CyoQZvCoDhNyDRfnoGiQkwMFgmrFutP0kP/ZEggHTCOHWqNw+WtGM116d/uli36PbR3De/8Y27WKKbZy1TJ8rjCID1oTlbz8J7jMXHUEI0/7NoE0pVblp3LOuVWhQJt4KVgsYBBxDOtJDvI9JY4Nh5MbrxR90n/8=
-Received: from BL0PR18MB2305.namprd18.prod.outlook.com (52.132.30.25) by
- BL0PR18MB2195.namprd18.prod.outlook.com (52.132.29.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Wed, 20 Mar 2019 14:48:34 +0000
-Received: from BL0PR18MB2305.namprd18.prod.outlook.com
- ([fe80::d42:95e4:7e1c:76b6]) by BL0PR18MB2305.namprd18.prod.outlook.com
- ([fe80::d42:95e4:7e1c:76b6%5]) with mapi id 15.20.1709.015; Wed, 20 Mar 2019
- 14:48:34 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-CC:     Marcin Benka <mbenka@marvell.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH] efi: Unify dmi setup code over architectures arm/arm64,
- io64 and x86
-Thread-Topic: [PATCH] efi: Unify dmi setup code over architectures arm/arm64,
- io64 and x86
-Thread-Index: AQHU3x8X2rcfIh633keoeruImJvrSKYUmbYA
-Date:   Wed, 20 Mar 2019 14:48:34 +0000
-Message-ID: <20190320144828.a7iui7v5cwt45myr@rric.localdomain>
-References: <20190320130502.16667-1-rrichter@marvell.com>
- <20190320131607.vgst3r7ynha55ikw@rric.localdomain>
-In-Reply-To: <20190320131607.vgst3r7ynha55ikw@rric.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0601CA0044.eurprd06.prod.outlook.com
- (2603:10a6:203:68::30) To BL0PR18MB2305.namprd18.prod.outlook.com
- (2603:10b6:207:43::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [77.191.24.140]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: beb5459f-8eb4-4a66-4bde-08d6ad432072
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BL0PR18MB2195;
-x-ms-traffictypediagnostic: BL0PR18MB2195:
-x-microsoft-antispam-prvs: <BL0PR18MB21951F7750D7149F763C12D5D9410@BL0PR18MB2195.namprd18.prod.outlook.com>
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(136003)(396003)(376002)(189003)(199004)(76176011)(14454004)(476003)(99286004)(6506007)(305945005)(7416002)(7736002)(386003)(3846002)(26005)(53546011)(102836004)(6116002)(478600001)(446003)(86362001)(25786009)(52116002)(486006)(186003)(11346002)(4326008)(81156014)(110136005)(97736004)(8676002)(2501003)(81166006)(5660300002)(71190400001)(6436002)(316002)(4744005)(1076003)(105586002)(53936002)(6486002)(68736007)(106356001)(6512007)(229853002)(71200400001)(66066001)(9686003)(54906003)(256004)(6246003)(8936002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR18MB2195;H:BL0PR18MB2305.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hjSqZ+Ei9i6Tl4F3Lf8pAM0HtLzriDruWziROd5OeFyP0IpLAL9QamfCcHvwYPvlsmh7eQdgRAGEtAybrR/i00SwfWEIt7pYRZtjlbYnct+NXf3HoXOZN1flC6tmqFZ/lYzIZwmiKu3KL44ZeroJylm5u3Y+4abxEOtQkfi5hSPcpEoSBMXxC7iia+be9L7IAOYOsmw7pQkECvGdCf653fu1+oxKEhOee4mD9GIGuBv9ZaNOtXPPaUnkJh5A1U9K1Ht1dT8Czp+U3UYP9aHel+gv5rUIoTwjBkzjT8pxy7ixnJPDFguXm50VNXr6X8PDK2JIwxvSq2SaD1HvCCdhT7nY1ZA4u4mD+CZyd39ti7BdfWR4M+oo63ZYxIDaP8lJUShTfQmCuPxVfAP+43eu4Qbp4Fk8KASgAC6l5otZk0g=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <91E9DFF65CD8DA40980FD4A23D35FDB4@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Mar 2019 10:49:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45287 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbfCTOt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:49:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP; 20 Mar 2019 07:49:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="135685466"
+Received: from unknown (HELO tstruk-mobl1.jf.intel.com) ([10.7.196.61])
+  by orsmga003.jf.intel.com with ESMTP; 20 Mar 2019 07:49:28 -0700
+Subject: Re: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        jarkko.sakkinen@linux.intel.com
+Cc:     grawity@gmail.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
+ <1553092243.2835.3.camel@HansenPartnership.com>
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tadeusz.struk@intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ FheFfUJaD4iEjuL98uUjS/AI
+Message-ID: <d707229d-e395-2c31-7bf6-c0ca2a19b625@intel.com>
+Date:   Wed, 20 Mar 2019 07:49:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: beb5459f-8eb4-4a66-4bde-08d6ad432072
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 14:48:34.4733
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2195
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_09:,,
- signatures=0
+In-Reply-To: <1553092243.2835.3.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.03.19 13:16:13, Robert Richter wrote:
+On 3/20/19 7:30 AM, James Bottomley wrote:
+> Just an observation on this: the mutex is now no-longer necessary
+> because a read on a size_t quantity is always atomic.
 
-> diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/ar=
-m-runtime.c
-> index 4a0dfe4ab829..c250b767030e 100644
-> --- a/drivers/firmware/efi/arm-runtime.c
-> +++ b/drivers/firmware/efi/arm-runtime.c
-> @@ -162,14 +162,10 @@ void efi_virtmap_unload(void)
->  static int __init arm_dmi_init(void)
->  {
->  	/*
-> -	 * On arm64/ARM, DMI depends on UEFI, and dmi_scan_machine() needs to
-> +	 * On arm64/ARM, DMI depends on UEFI, and dmi_setup() needs to
->  	 * be called early because dmi_id_init(), which is an arch_initcall
->  	 * itself, depends on dmi_scan_machine() having been called already.
->  	 */
-> -	dmi_scan_machine();
-> -	dmi_memdev_walk();
-> -	if (dmi_available)
-> -		dmi_set_dump_stack_arch_desc();
+True, that's why it wasn't there at the beginning, but
+then things changed and I forgot to add it, so let's
+put it there just in case.
 
-This went wrong in the last stage of a comment rework. A dmi_setup()
-should be here. Will resubmit. Sorry.
-
--Robert
-
->  	return 0;
->  }
+Thanks,
+-- 
+Tadeusz
