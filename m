@@ -2,160 +2,93 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459D3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4418FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C3320857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kNKfEAMv"
+	by mail.kernel.org (Postfix) with ESMTP id 1F54720857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfCTFjh (ORCPT
+        id S1727405AbfCTFkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:39:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35906 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfCTFjh (ORCPT
+        Wed, 20 Mar 2019 01:40:42 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:47144 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfCTFkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:39:37 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y36so1190720qtb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZEjJ6etV+w60g+RQ+q8C242i8vp5K0OvlqD6WlyL/y0=;
-        b=kNKfEAMv8ABrEKO4mNvJhWJHkmy23olQPW1F8poL0wlRQWaDsf9sww1wiu5oRgGWU0
-         B1s6QZ6h8QGtz6w0hHXEqqC0ubPJORsG/H142+spghboBZCs30SuNCg9A0aaEXjhaLma
-         6rBRksa7TRdbkIDujC7P6cbSJdoID9TRjkfpw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZEjJ6etV+w60g+RQ+q8C242i8vp5K0OvlqD6WlyL/y0=;
-        b=bBoHsxKof0AoJJQu62X2hdBfuPYcQ7eLWWbSlmKXW+rPud0Nm0P4BCcTA8IdJ4JIPS
-         uev9JHIuyl0NQhv3TtituhnRJhMnD3N4xPtERu8bWaIDuO7ja87SV+5Z8EbNda2sC08M
-         L7JkCRoyNFbCRBf07oInUp7qW+MI5jGNI+8WK8i2MkWG3BQwAdJ+KzGcey/cgn3xUhVV
-         z9493g7pAZ9mMrKrnIuMCneh7PgCylN6akWeQaDeeImqBwyl/l9W/ftzjoDSuiOLJhUb
-         dzTe2Ws4ijoyPcvKSE8cc6ay4A2K1Ha+ElNRk60mpxIWyH2X9AUeVLZK/QfXqMQwqqvW
-         RC5w==
-X-Gm-Message-State: APjAAAV/gD6YYLHqy6mlCZaNOsVdhnyq5PNs56sWHRUg2+DJC4UjY0zf
-        AeZywR3a5gjxtSn19SDpmMYoutqWyLtTofSfuo3DMA==
-X-Google-Smtp-Source: APXvYqwNF8npuEOANcnBF3zfqs6fvis5pRJkPCwgmJPUFQANG7NjyBGn44+y5S3/SNkPmj/3nbbGGf7KbMvnXyv8zYg=
-X-Received: by 2002:a0c:92e7:: with SMTP id c36mr5139523qvc.80.1553060376269;
- Tue, 19 Mar 2019 22:39:36 -0700 (PDT)
+        Wed, 20 Mar 2019 01:40:42 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h6Txg-00057H-Jv; Wed, 20 Mar 2019 13:40:24 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h6Txd-00078Y-7v; Wed, 20 Mar 2019 13:40:21 +0800
+Date:   Wed, 20 Mar 2019 13:40:21 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Thomas Graf <tgraf@suug.ch>, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] rhashtable: don't hold lock on first table
+ throughout insertion.
+Message-ID: <20190320054021.sjxkye3bi5cvyip2@gondor.apana.org.au>
+References: <155253979234.5022.1840929790507376038.stgit@noble.brown>
+ <155253992829.5022.17977838545670077984.stgit@noble.brown>
+ <20190315054709.mlcctcv3qy57wini@gondor.apana.org.au>
+ <87o96cocs2.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20190318040915.101218-1-hsinyi@chromium.org> <1553051356.20221.23.camel@mtksdaap41>
-In-Reply-To: <1553051356.20221.23.camel@mtksdaap41>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 20 Mar 2019 13:39:25 +0800
-Message-ID: <CAJMQK-gSWiqu-cdBpsz54U_427bB7w3vZ01u6n2L0Ghd9vG6Dw@mail.gmail.com>
-Subject: Re: [PATCH] gpu/drm: mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o96cocs2.fsf@notabene.neil.brown.name>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 11:09 AM CK Hu <ck.hu@mediatek.com> wrote:
+On Fri, Mar 15, 2019 at 05:46:37PM +1100, NeilBrown wrote:
 >
-> Hi, Hsin-yi:
->
-> On Mon, 2019-03-18 at 12:09 +0800, Hsin-Yi Wang wrote:
-> > mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
-> > ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
-> > ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
-> > irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
-> > happens sometimes when turning off the screen.
-> >
-> > In drm_atomic_helper.c#disable_outputs(),
-> > the calling sequence when turning off the screen is:
-> >
-> > 1. mtk_dsi_encoder_disable()
-> >      --> mtk_output_dsi_disable()
-> >        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
-> >          --> mtk_dsi_poweroff();
-> > 2. mtk_drm_crtc_atomic_disable()
-> >      --> drm_crtc_wait_one_vblank();
-> >      ...
-> >        --> mtk_dsi_ddp_stop()
-> >          --> mtk_dsi_poweroff();
-> >
->
-> Thanks for your inference, but I wonder this patch meet all
-> consideration. In MT8173 with a bridge chip, the timing to disable dsi
-> signal output would influence bridge chip output garbage or not. It's
-> better that you could test this on MT8173, or let this patch go for
-> weeks and wait for someone to test. If no one care about MT8173, I could
-> accept this patch.
-We care about MT8173, but it's not easy to test since we have to bring
-the whole kernel to >= 4.19 to be able to test latest dsi driver.
-The patch (0707632b5bac) that added mtk_dsi_stop() was after MT8173
-(on 3.18), for panel without bridge, so I think without mtk_dsi_stop()
-was also working fine for MT8173.
+> From: NeilBrown <neilb@suse.com>
+> Date: Mon, 25 Jun 2018 08:09:19 +1000
+> Subject: [PATCH] rhashtable: don't hold lock on first table throughout
+>  insertion.
+> 
+> rhashtable_try_insert() currently holds a lock on the bucket in
+> the first table, while also locking buckets in subsequent tables.
+> This is unnecessary and looks like a hold-over from some earlier
+> version of the implementation.
+> 
+> As insert and remove always lock a bucket in each table in turn, and
+> as insert only inserts in the final table, there cannot be any races
+> that are not covered by simply locking a bucket in each table in turn.
+> 
+> When an insert call reaches that last table it can be sure that there
+> is no matchinf entry in any other table as it has searched them all, and
+> insertion never happens anywhere but in the last table.  The fact that
+> code tests for the existence of future_tbl while holding a lock on
+> the relevant bucket ensures that two threads inserting the same key
+> will make compatible decisions about which is the "last" table.
+> 
+> This simplifies the code and allows the ->rehash field to be
+> discarded.
+> 
+> We still need a way to ensure that a dead bucket_table is never
+> re-linked by rhashtable_walk_stop().  This can be achieved by calling
+> call_rcu() inside the locked region, and checking with
+> rcu_head_after_call_rcu() in rhashtable_walk_stop() to see if the
+> bucket table is empty and dead.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.com>
+> ---
+>  include/linux/rhashtable.h | 13 ------------
+>  lib/rhashtable.c           | 52 ++++++++++++++--------------------------------
+>  2 files changed, 16 insertions(+), 49 deletions(-)
 
->
-> > Change to make mtk_dsi_stop() called in mtk_dsi_ddp_stop() instead of
-> > mtk_output_dsi_disable().
->
-> mtk_dsi_poweroff() has reference count, why not just move mtk_dsi_stop()
-> into mtk_dsi_poweroff()?
-Yes, we can also call mtk_dsi_stop() in mtk_dsi_poweroff() when
-refcount is 0. I can send v2 if you think this way is better.
-
-Thanks
->
-> Regards,
-> CK
->
-> >
-> > Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > index b00eb2d2e086..cdd9637dd517 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > @@ -696,7 +696,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
-> >               }
-> >       }
-> >
-> > -     mtk_dsi_stop(dsi);
-> >       mtk_dsi_poweroff(dsi);
-> >
-> >       dsi->enabled = false;
-> > @@ -857,6 +856,7 @@ static void mtk_dsi_ddp_stop(struct mtk_ddp_comp *comp)
-> >  {
-> >       struct mtk_dsi *dsi = container_of(comp, struct mtk_dsi, ddp_comp);
-> >
-> > +     mtk_dsi_stop(dsi);
-> >       mtk_dsi_poweroff(dsi);
-> >  }
-> >
-> > @@ -1178,6 +1178,8 @@ static int mtk_dsi_remove(struct platform_device *pdev)
-> >       struct mtk_dsi *dsi = platform_get_drvdata(pdev);
-> >
-> >       mtk_output_dsi_disable(dsi);
-> > +     mtk_dsi_stop(dsi);
-> > +     mtk_dsi_poweroff(dsi);
-> >       component_del(&pdev->dev, &mtk_dsi_component_ops);
-> >
-> >       return 0;
->
->
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
