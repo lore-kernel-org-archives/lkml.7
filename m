@@ -2,103 +2,147 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9ACC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E930C218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBCC2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j5Hjumol"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QJ0Hixfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfCTKi1 (ORCPT
+        id S1727865AbfCTKid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:38:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36720 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfCTKi0 (ORCPT
+        Wed, 20 Mar 2019 06:38:33 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37543 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfCTKic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:38:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2KATIqP031820;
-        Wed, 20 Mar 2019 10:38:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=BOs2ZelRjbsnheU+2tZG6JoDo75VRuJc7Q90B0DHEkc=;
- b=j5Hjumolk7mpI0Til9U2mcI6rNsNpNEIsLl3o3Etm6sAl7vZStx4b/YchFtqFCQJhhUT
- KL37aFT6ob3PtoOpNgQ3tbjR+Qt8Gzn6UgnFsgSb88IytS4dipxqwFBDL3SiufYNUBNf
- nAAybYLc8AVc590tK1uMxssjwN4KVdnB6OVcr9EX8aa6L1cXpE3Lt8lKdNqYtrCo/Jn5
- OhjdyyFFrpJ1LcEf3/LzGTiV4dsLPwmKHHZEeoJE06NfhjNwESdFsWUnTpL/u4Eiw7gd
- mG14sOGJ1kcbUnssg+Hqobacp/ZZ6G/1qgh3zHU6zfvXPG6SRJ+a+IyvBUIAfhLGvlAs rA== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2r8ssrhtkm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 10:38:21 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2KAcGMI006468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 10:38:16 GMT
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2KAcFZ6015246;
-        Wed, 20 Mar 2019 10:38:15 GMT
-Received: from kadam (/10.175.25.169)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 Mar 2019 03:38:14 -0700
-Date:   Wed, 20 Mar 2019 13:38:13 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtlwifi: Fix potential NULL pointer dereference
-Message-ID: <20190320103812.GG2202@kadam>
-References: <20190313161336.20182-1-pakki001@umn.edu>
+        Wed, 20 Mar 2019 06:38:32 -0400
+Received: by mail-it1-f195.google.com with SMTP id z124so31721918itc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jmTWTsjVde8Buo2u+HYWbLOnOnpUNQfeTfb58oufkzI=;
+        b=QJ0Hixfu5hcP+OFD1pi83mFWhFYFQQSuLAY5azSzK1Z0hCoctBQFEUwJ3f+Y/VGYEs
+         3PrcLIjfbZB1UJki9W2oG8Yvj7/3C8jMjCHX8G7+CvIhafbtBJUq/RVj7VtbdIQlLxyv
+         IyabyWBUzqVe8JITAbfCLJ8ln9FqUkgcwKaXhMwHvHpGMR0AUoCE0zClrsX7pJPc2LOP
+         Y7bIuhc4F9jTAxR/SGC2rNDbUNXrPorOtIJoaoQgmOaIs+INa7CDUpL7zCU/HQOuCrmt
+         9UYNEZvjD7PjjoK7qcv0p5ONx5+qNWVQSKus6VlZjbyYmKVSreGt8Gpn5cVtS0uiOJBe
+         sbIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jmTWTsjVde8Buo2u+HYWbLOnOnpUNQfeTfb58oufkzI=;
+        b=oC9349YZXuf1vq1UUEiDwZ89EVcDIqaXnwjCJmdLV4as+NyGnzYE+6iYRSjBjvK6aC
+         jErm0JOxP0dn9mjiS1KpFtOjLkMQPgFa6Fpe/qlbIEDVPLYu6kHMzXjh6obS5UVx4c+P
+         6wfGeCxz2xFboA0xN5yZdvfcYAC0eOu5AKDSsFIaN1XhMNXxK08H9XBUaF/sbesw6Ee3
+         6b08hpOV20s01z7xw8gRlbUym2r/+ZfYhgGqp5Ntbs28FpYoq9A/4WerzN/flHPkS93w
+         sw/yKIbkcRw485Rt78yTyF0xJ6bH6TcYYqoO4nzXHmUSE32lLnzConrqE7GkiAn+hWZ6
+         /u9Q==
+X-Gm-Message-State: APjAAAVtUhevseuZ3UBfPP+d1EjxXSKeZmoBAhIUG+gVV1GbFnaQ1zvW
+        k8+8eDQFgbLQlAorJUSvXvqp9oqgWM+JdmPWyoNglQ==
+X-Google-Smtp-Source: APXvYqy33umIL3MTXjGhjlwdTvUuLGhoU88o0cygKpqVUozi+RPmVzBEzCyLcYDMDt639xeDV//bSwRJbj7diqKadhU=
+X-Received: by 2002:a05:6638:211:: with SMTP id e17mr3466378jaq.35.1553078311470;
+ Wed, 20 Mar 2019 03:38:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313161336.20182-1-pakki001@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903200085
+References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+ <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com> <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+In-Reply-To: <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 Mar 2019 11:38:20 +0100
+Message-ID: <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 11:13:34AM -0500, Aditya Pakki wrote:
-> phydm.internal is allocated using kzalloc which is used multiple
-> times without a check for NULL pointer. This patch avoids such a
-> scenario.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/staging/rtlwifi/phydm/rtl_phydm.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> index 9930ed954abb..37c7fcb72b65 100644
-> --- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> +++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> @@ -181,6 +181,9 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
->  	rtlpriv->phydm.internal =
->  		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
->  
-> +	if (!rtlpriv->phydm.internal)
+On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/03/20 18:59, Dmitry Vyukov wrote:
+> >> From bisection log:
+> >>
+> >>         testing release v4.17
+> >>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+> >>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
+> >>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+> >>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         run #8: crashed: kernel panic: Out of memory and no killable processes...
+> >>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+> >>         testing release v4.16
+> >>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+> >>         run #0: OK
+> >>         run #1: OK
+> >>         run #2: OK
+> >>         run #3: OK
+> >>         run #4: OK
+> >>         run #5: crashed: kernel panic: Out of memory and no killable processes...
+> >>         run #6: OK
+> >>         run #7: crashed: kernel panic: Out of memory and no killable processes...
+> >>         run #8: OK
+> >>         run #9: OK
+> >>         testing release v4.15
+> >>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+> >>         all runs: OK
+> >>         # git bisect start v4.16 v4.15
+> >>
+> >> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
+> >
+> > Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
+> > looks like the right range, no?
+>
+> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
+> "Stack corruption" can't manifest as "Out of memory and no killable processes".
+>
+> "kernel panic: Out of memory and no killable processes..." is completely
+> unrelated to "kernel panic: corrupted stack end in wb_workfn".
 
-Don't put a blank line between the allocation and the check.  They're
 
-part of the same code and it's weird to double space the code.
-
-regards,
-dan carpenter
-
+Do you think this predicate is possible to code? Looking at the
+examples we have, distinguishing different bugs does not look feasible
+to me. If the predicate is not accurate, you just trade one set of
+false positives to another set of false positives and then you at the
+beginning of an infinite slippery slope refining it.
+Also, if we see a different bug (assuming we can distinguish them),
+does it mean that the original bug is not present? Or it's also
+present, but we just hit the other one first? This also does not look
+feasible to answer. And if you give a wrong answer, bisection goes the
+wrong way and we are where we started. Just with more complex code and
+things being even harder to explain to other people.
+I mean, yes, I agree, kernel bug bisection won't be perfect. But do
+you see anything actionable here?
