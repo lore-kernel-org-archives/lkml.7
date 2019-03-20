@@ -2,268 +2,210 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A06C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F83CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB48B213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539F7213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfCTMDk (ORCPT
+        id S1727513AbfCTMEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:03:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56796 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfCTMDj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:03:39 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KC0M8h122661
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:03:38 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbmaaaxrb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:03:38 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 20 Mar 2019 12:03:30 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 12:03:26 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KC3Vlb40960132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 12:03:31 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 272DDA404D;
-        Wed, 20 Mar 2019 12:03:31 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 248ACA405F;
-        Wed, 20 Mar 2019 12:03:30 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.235])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 12:03:30 +0000 (GMT)
-Subject: Re: [PATCH v4 0/8] selftests/kexec: add kexec tests
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Petr Vorel <pvorel@suse.cz>,
-        Matthew Garrett <mjg59@google.com>, Petr Vorel <pvorel@suse.cz>
-Date:   Wed, 20 Mar 2019 08:03:19 -0400
-In-Reply-To: <20190320090401.GA2591@dhcp-128-65.nay.redhat.com>
-References: <1552588876-28481-1-git-send-email-zohar@linux.ibm.com>
-         <20190318140643.GA17706@dhcp-128-65.nay.redhat.com>
-         <1552932562.8658.274.camel@linux.ibm.com>
-         <20190320090401.GA2591@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032012-0016-0000-0000-000002651C97
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032012-0017-0000-0000-000032C0361E
-Message-Id: <1553083399.4899.236.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200095
+        Wed, 20 Mar 2019 08:04:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35629 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfCTMEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 08:04:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 05:04:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,248,1549958400"; 
+   d="scan'208";a="328951522"
+Received: from irsmsx108.ger.corp.intel.com ([163.33.3.3])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2019 05:04:20 -0700
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.146]) by
+ IRSMSX108.ger.corp.intel.com ([169.254.11.7]) with mapi id 14.03.0415.000;
+ Wed, 20 Mar 2019 12:04:19 +0000
+From:   "Reshetova, Elena" <elena.reshetova@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: RE: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Topic: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Index: AQHU3W7K/qF6gc5OOEis06RmzC4AhqYR090AgAKXluA=
+Date:   Wed, 20 Mar 2019 12:04:18 +0000
+Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C0EA74@IRSMSX102.ger.corp.intel.com>
+References: <20190318094128.1488-1-elena.reshetova@intel.com>
+ <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+In-Reply-To: <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzBkMzFjZDMtY2M2Zi00ZDVlLWIxMzItZmNiNDQ2OTgxMzQxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieG9XYmYwVEh3YUVPOTBXTmVkek93dFNHNTAxTEZNbVQwTkIyMm8wNFVqRmg2ZGllK1JZaE4xRW1rWWg5cEtkZyJ9
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-20 at 17:04 +0800, Dave Young wrote:
-> Hi Mimi,
-> 
-> Thank you for help about the pointer about IMA testing.
-> Probably I should cc list as well since we are talking about the patch
-> itself.  For the ima test itself I could still ask for help in a private
-> email thread.
-
-Thank you for bringing the discussion back online!
-
-> 
-> On 03/18/19 at 02:09pm, Mimi Zohar wrote:
-> > On Mon, 2019-03-18 at 22:06 +0800, Dave Young wrote:
-> > > Hi Mimi,
-> > > 
-> > > On 03/14/19 at 02:41pm, Mimi Zohar wrote:
-> > > > The kernel may be configured or an IMA policy specified on the boot
-> > > > command line requiring the kexec kernel image signature to be verified.
-> > > > At runtime a custom IMA policy may be loaded, replacing the policy
-> > > > specified on the boot command line.  In addition, the arch specific
-> > > > policy rules are dynamically defined based on the secure boot mode that
-> > > > may require the kernel image signature to be verified.
-> > > > 
-> > > > The kernel image may have a PE signature, an IMA signature, or both. In
-> > > > addition, there are two kexec syscalls - kexec_load and kexec_file_load
-> > > > - but only the kexec_file_load syscall can verify signatures.
-> > > > 
-> > > > These kexec selftests verify that only properly signed kernel images are
-> > > > loaded as required, based on the kernel config, the secure boot mode,
-> > > > and the IMA runtime policy.
-> > > > 
-> > > > Loading a kernel image or kernel module requires root privileges.  To
-> > > > run just the KEXEC selftests: sudo make TARGETS=kexec kselftest
-> > > > 
-> > > > Changelog v4:
-> > > > - Moved the kexec tests to selftests/kexec, as requested by Dave Young.
-> > > > - Removed the kernel module selftest from this patch set.
-> > > > - Rewritten cover letter, removing reference to kernel modules.
-> > > > 
-> > > > Changelog v3:
-> > > > - Updated tests based on Petr's review, including the defining a common
-> > > >   test to check for root privileges.
-> > > > - Modified config, removing the CONFIG_KEXEC_VERIFY_SIG requirement.
-> > > > - Updated the SPDX license to GPL-2.0 based on Shuah's review.
-> > > > - Updated the secureboot mode test to check the SetupMode as well, based
-> > > >   on David Young's review.
-> > > > 
-> > > > 
-> > > I was trying to review the patches although I'm slow due to something
-> > > else.
-> > > 
-> > > But I still did not setup a IMA testable system, need check your old
-> > > email about how to setup it.
-> > 
-> > (The ima-evm-utils package contains a README with directions.)
-
-Suggesting using the EVM README might not have been the best idea, as
-we're only interested, at the moment, in enabling IMA-appraisal for
-now.
-
-You need to create 2 public keys - a local CA and an IMA key.  The
-local CA public key needs to be loaded onto the builtin trusted keys
-keyring.  There are a number of different methods of doing this.  The
-simplest method, for those building their own kernel, is to add the
-local CA public key to the certs signing_key.x509 (PEM) or to the
-x509_certificate_list (DER).
-
-Create the IMA key and then sign the IMA certificate with the local CA
-key.  After rebooting the kernel with the local CA key loaded onto the
-builtin trusted keyring, you'll be able to import the IMA key onto the
-IMA trusted keyring.
-
-To manually load the IMA key, without relying on dracut/systemd:
-
-# id=`sudo keyctl describe %keyring:.ima | awk -F ':' '{print $1}';`
-# evmctl import examples/x509_ima.der $id
-
-(The evm utils package contains two sample scripts in the examples
-directory to create the local CA and the IMA key.)
-
-> > 
-> > > 
-> > > A quick testing gives me below results
-> > > 
-> > > /* test #1, my default kconfig
-> > > # NO CONFIG_INTEGRITY compiled in
-> > > */
-> > > 
-> > > make[1]: Nothing to be done for 'all'.
-> > > make[1]: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > make[1]: Entering directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > TAP version 13
-> > > selftests: kexec: test_kexec_load.sh
-> > > ========================================
-> > > selftests: kexec: test_kexec_load.sh: Warning: file
-> > > test_kexec_load.sh is not executable, correct this.
-> > > not ok 1..1 selftests: kexec: test_kexec_load.sh [FAIL]
-> > 
-> > That's really weird.  Both before and after applying these patches
-> > test_kexec_load.sh is executable (stable linux-5.0.y).  Could
-> > something else be preventing it from executing?
-> > 
-> > > selftests: kexec: test_kexec_file_load.sh
-> > > ========================================
-> > > [INFO] kexec_file_load is enabled
-> > > [INFO] secure boot mode not enabled
-> > > [INFO] kexec kernel image PE signed
-> > > [INFO] kexec kernel image not IMA signed
-> > > kexec_file_load succeeded (possibly missing IMA sig) [FAIL]
-> > > not ok 1..2 selftests: kexec: test_kexec_file_load.sh [FAIL]
-> > > make[1]: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > make: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests'
-> > 
-> > This message is because neither CONFIG_KEXEC_BZIMAGE_VERIFY_SIG or an
-> > IMA signature is required.  It couldn't read the IMA runtime policy
-> > rules to determine if an IMA signature is required.  So, it's trying
-> > to provide a hint as to what happened.
-> > 
-> > I'll update the test to see if CONFIG_IMA_APPRAISE is enabled, before
-> > emitting this message.
-> > 
-> > > 
-> > > /* test #2, enabled IMA kconfigs, simply test without other ima
-> > > setup eg. use a policy etc. need to follow up some guide to test the
-> > > ima functionality (TODO..)
-> > > */
-> > > 
-> > > 
-> > > [root@dhcp-128-65 linux-x86]# make -C tools/testing/selftests TARGETS=kexec run_tests
-> > > make: Entering directory '/home/dyoung/git/github/linux/tools/testing/selftests'
-> > > make[1]: Entering directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > make[1]: Nothing to be done for 'all'.
-> > > make[1]: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > make[1]: Entering directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > TAP version 13
-> > > selftests: kexec: test_kexec_load.sh
-> > > ========================================
-> > > selftests: kexec: test_kexec_load.sh: Warning: file test_kexec_load.sh is not executable, correct this.
-> > > not ok 1..1 selftests: kexec: test_kexec_load.sh [FAIL]
-> > > selftests: kexec: test_kexec_file_load.sh
-> > > ========================================
-> > > [INFO] kexec_file_load is enabled
-> > > [INFO] reading IMA policy permitted
-> > > [INFO] secure boot mode not enabled
-> > > No signature verification required
-> > > not ok 1..2 selftests: kexec: test_kexec_file_load.sh [SKIP]
-> > > make[1]: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests/kexec'
-> > > make: Leaving directory '/home/dyoung/git/github/linux/tools/testing/selftests'
-> > 
-> > The purpose of these tests was to coordinate kernel image signature
-> > verification.
-> > 
-> > If you require a PE signature, load an IMA policy requiring an IMA
-> > signature, or even enable CONFIG_IMA_ARCH_POLICY, the test would
-> > require some form of signature verification.
-> 
-> Did a test with a embedded ima key in kernel, with secure boot disabled,
-> but with Secure Boot enabled, but failed to sign the kernel with both
-> pesign and evmctl, will continue to see how to work on it and ask in
-> private email if needed :)
-
-"with secure boot disabled, but with Secure Boot enabled" - I'm
-missing the nuance between upper and lower case "secure boot".
-
-> 
-> About the patch itself, as we talked in another email, I would expect it
-> can work with other test cases eg. without IMA/secure boot.  But if that
-> is not easy, maybe you can change the test script filename to something
-> like:  test_kexec_load_sigcheck.sh and test_kexec_file_load_sigcheck.sh 
-> then we can add other non-sigcheck related cases to other test scripts
-> later.  But ideally if we can handle them in current files it would be
-> better.
-
-Ok
-
-> Another issue I noticed is even if boot with ima_appraise=off, kexec
-> load still checking the conditions. Will see if I'm having something
-> wrong in test steps.
-
-Enabling the arch policy disables the "ima_appraise=" boot command
-line option.  You're right, if the arch policy isn't enabled, this
-test needs to detect the "ima_appraise" mode.
-
-Mimi
-
+U210aCBpcyByZWFsbHkgd2VpcmQgd2l0aCBteSBpbnRlbCBtYWlsOiBpdCBvbmx5IG5vdyBkZWxp
+dmVyZWQNCm1lIGFsbCBtZXNzYWdlcyBpbiBvbmUgZ28gYW5kIEkgd2FzIHRoaW5raW5nIHRoYXQg
+SSBkb24ndCBnZXQgYW55IGZlZWRiYWNrLi4uDQoNCj4gPiBJZiBDT05GSUdfUkFORE9NSVpFX0tT
+VEFDS19PRkZTRVQgaXMgc2VsZWN0ZWQsDQo+ID4gdGhlIGtlcm5lbCBzdGFjayBvZmZzZXQgaXMg
+cmFuZG9taXplZCB1cG9uIGVhY2gNCj4gPiBlbnRyeSB0byBhIHN5c3RlbSBjYWxsIGFmdGVyIGZp
+eGVkIGxvY2F0aW9uIG9mIHB0X3JlZ3MNCj4gPiBzdHJ1Y3QuDQo+ID4NCj4gPiBUaGlzIGZlYXR1
+cmUgaXMgYmFzZWQgb24gdGhlIG9yaWdpbmFsIGlkZWEgZnJvbQ0KPiA+IHRoZSBQYVgncyBSQU5E
+S1NUQUNLIGZlYXR1cmU6DQo+ID4gaHR0cHM6Ly9wYXguZ3JzZWN1cml0eS5uZXQvZG9jcy9yYW5k
+a3N0YWNrLnR4dA0KPiA+IEFsbCB0aGUgY3JlZGl0cyBmb3IgdGhlIG9yaWdpbmFsIGlkZWEgZ29l
+cyB0byB0aGUgUGFYIHRlYW0uDQo+ID4gSG93ZXZlciwgdGhlIGRlc2lnbiBhbmQgaW1wbGVtZW50
+YXRpb24gb2YNCj4gPiBSQU5ET01JWkVfS1NUQUNLX09GRlNFVCBkaWZmZXJzIGdyZWF0bHkgZnJv
+bSB0aGUgUkFOREtTVEFDSw0KPiA+IGZlYXR1cmUgKHNlZSBiZWxvdykuDQo+ID4NCj4gPiBSZWFz
+b25pbmcgZm9yIHRoZSBmZWF0dXJlOg0KPiA+DQo+ID4gVGhpcyBmZWF0dXJlIGFpbXMgdG8gbWFr
+ZSBjb25zaWRlcmFibHkgaGFyZGVyIHZhcmlvdXMNCj4gPiBzdGFjay1iYXNlZCBhdHRhY2tzIHRo
+YXQgcmVseSBvbiBkZXRlcm1pbmlzdGljIHN0YWNrDQo+ID4gc3RydWN0dXJlLg0KPiA+IFdlIGhh
+dmUgaGFkIG1hbnkgb2Ygc3VjaCBhdHRhY2tzIGluIHBhc3QgWzFdLFsyXSxbM10NCj4gPiAoanVz
+dCB0byBuYW1lIGZldyksIGFuZCBhcyBMaW51eCBrZXJuZWwgc3RhY2sgcHJvdGVjdGlvbnMNCj4g
+PiBoYXZlIGJlZW4gY29uc3RhbnRseSBpbXByb3ZpbmcgKHZtYXAtYmFzZWQgc3RhY2sNCj4gPiBh
+bGxvY2F0aW9uIHdpdGggZ3VhcmQgcGFnZXMsIHJlbW92YWwgb2YgdGhyZWFkX2luZm8sDQo+ID4g
+U1RBQ0tMRUFLKSwgYXR0YWNrZXJzIGhhdmUgdG8gZmluZCBuZXcgd2F5cyBmb3IgdGhlaXINCj4g
+PiBleHBsb2l0cyB0byB3b3JrLg0KPiA+DQo+ID4gSXQgaXMgaW1wb3J0YW50IHRvIG5vdGUgdGhh
+dCB3ZSBjdXJyZW50bHkgY2Fubm90IHNob3cNCj4gPiBhIGNvbmNyZXRlIGF0dGFjayB0aGF0IHdv
+dWxkIGJlIHN0b3BwZWQgYnkgdGhpcyBuZXcNCj4gPiBmZWF0dXJlIChnaXZlbiB0aGF0IG90aGVy
+IGV4aXN0aW5nIHN0YWNrIHByb3RlY3Rpb25zDQo+ID4gYXJlIGVuYWJsZWQpLCBzbyB0aGlzIGlz
+IGFuIGF0dGVtcHQgdG8gYmUgb24gYSBwcm9hY3RpdmUNCj4gPiBzaWRlIHZzLiBjYXRjaGluZyB1
+cCB3aXRoIGV4aXN0aW5nIHN1Y2Nlc3NmdWwgZXhwbG9pdHMuDQo+ID4NCj4gPiBUaGUgbWFpbiBp
+ZGVhIGlzIHRoYXQgc2luY2UgdGhlIHN0YWNrIG9mZnNldCBpcw0KPiA+IHJhbmRvbWl6ZWQgdXBv
+biBlYWNoIHN5c3RlbSBjYWxsLCBpdCBpcyB2ZXJ5IGhhcmQgZm9yDQo+ID4gYXR0YWNrZXIgdG8g
+cmVsaWFibHkgbGFuZCBpbiBhbnkgcGFydGljdWxhciBwbGFjZSBvbg0KPiA+IHRoZSB0aHJlYWQg
+c3RhY2sgd2hlbiBhdHRhY2sgaXMgcGVyZm9ybWVkLg0KPiA+IEFsc28sIHNpbmNlIHJhbmRvbWl6
+YXRpb24gaXMgcGVyZm9ybWVkICphZnRlciogcHRfcmVncywNCj4gPiB0aGUgcHRyYWNlLWJhc2Vk
+IGFwcHJvYWNoIHRvIGRpc2NvdmVyIHJhbmRvbWl6YXRpb24NCj4gPiBvZmZzZXQgZHVyaW5nIGEg
+bG9uZy1ydW5uaW5nIHN5c2NhbGwgc2hvdWxkIG5vdCBiZQ0KPiA+IHBvc3NpYmxlLg0KPiA+DQo+
+ID4gWzFdIGpvbi5vYmVyaGVpZGUub3JnL2ZpbGVzL2luZmlsdHJhdGUxMi10aGVzdGFja2lzYmFj
+ay5wZGYNCj4gPiBbMl0gam9uLm9iZXJoZWlkZS5vcmcvZmlsZXMvc3RhY2tqYWNraW5nLWluZmls
+dHJhdGUxMS5wZGYNCj4gPiBbM10gZ29vZ2xlcHJvamVjdHplcm8uYmxvZ3Nwb3QuY29tLzIwMTYv
+MDYvZXhwbG9pdGluZy0NCj4gPiByZWN1cnNpb24taW4tbGludXgta2VybmVsXzIwLmh0bWwNCj4g
+Pg0KPiA+IERlc2lnbiBkZXNjcmlwdGlvbjoNCj4gPg0KPiA+IER1cmluZyBtb3N0IG9mIHRoZSBr
+ZXJuZWwncyBleGVjdXRpb24sIGl0IHJ1bnMgb24gdGhlICJ0aHJlYWQNCj4gPiBzdGFjayIsIHdo
+aWNoIGlzIGFsbG9jYXRlZCBhdCBmb3JrLmMvZHVwX3Rhc2tfc3RydWN0KCkgYW5kIHN0b3JlZCBp
+bg0KPiA+IGEgcGVyLXRhc2sgdmFyaWFibGUgKHRzay0+c3RhY2spLiBTaW5jZSBzdGFjayBpcyBn
+cm93aW5nIGRvd253YXJkLA0KPiA+IHRoZSBzdGFjayB0b3AgY2FuIGJlIGFsd2F5cyBjYWxjdWxh
+dGVkIHVzaW5nIHRhc2tfdG9wX29mX3N0YWNrKHRzaykNCj4gPiBmdW5jdGlvbiwgd2hpY2ggZXNz
+ZW50aWFsbHkgcmV0dXJucyBhbiBhZGRyZXNzIG9mIHRzay0+c3RhY2sgKyBzdGFjaw0KPiA+IHNp
+emUuIFdoZW4gVk1BUF9TVEFDSyBpcyBlbmFibGVkLCB0aGUgdGhyZWFkIHN0YWNrIGlzIGFsbG9j
+YXRlZCBmcm9tDQo+ID4gdm1hbGxvYyBzcGFjZS4NCj4gPg0KPiA+IFRocmVhZCBzdGFjayBpcyBw
+cmV0dHkgZGV0ZXJtaW5pc3RpYyBvbiBpdHMgc3RydWN0dXJlIC0gZml4ZWQgaW4gc2l6ZSwNCj4g
+PiBhbmQgdXBvbiBldmVyeSBlbnRyeSBmcm9tIGEgdXNlcnNwYWNlIHRvIGtlcm5lbCBvbiBhDQo+
+ID4gc3lzY2FsbCB0aGUgdGhyZWFkIHN0YWNrIGlzIHN0YXJ0ZWQgdG8gYmUgY29uc3RydWN0ZWQg
+ZnJvbSBhbg0KPiA+IGFkZHJlc3MgZmV0Y2hlZCBmcm9tIGEgcGVyLWNwdSBjcHVfY3VycmVudF90
+b3Bfb2Zfc3RhY2sgdmFyaWFibGUuDQo+ID4gVGhlIGZpcnN0IGVsZW1lbnQgdG8gYmUgcHVzaGVk
+IHRvIHRoZSB0aHJlYWQgc3RhY2sgaXMgdGhlIHB0X3JlZ3Mgc3RydWN0DQo+ID4gdGhhdCBzdG9y
+ZXMgYWxsIHJlcXVpcmVkIENQVSByZWdpc3RlcnMgYW5kIHN5cyBjYWxsIHBhcmFtZXRlcnMuDQo+
+ID4NCj4gPiBUaGUgZ29hbCBvZiBSQU5ET01JWkVfS1NUQUNLX09GRlNFVCBmZWF0dXJlIGlzIHRv
+IGFkZCBhIHJhbmRvbSBvZmZzZXQNCj4gPiBhZnRlciB0aGUgcHRfcmVncyBoYXMgYmVlbiBwdXNo
+ZWQgdG8gdGhlIHN0YWNrIGFuZCB0aGUgcmVzdCBvZiB0aHJlYWQNCj4gPiBzdGFjayAodXNlZCBk
+dXJpbmcgdGhlIHN5c2NhbGwgcHJvY2Vzc2luZykgZXZlcnkgdGltZSBhIHByb2Nlc3MgaXNzdWVz
+DQo+ID4gYSBzeXNjYWxsLiBUaGUgc291cmNlIG9mIHJhbmRvbW5lc3MgY2FuIGJlIHRha2VuIGVp
+dGhlciBmcm9tIHJkdHNjIG9yDQo+ID4gcmRyYW5kIHdpdGggcGVyZm9ybWFuY2UgaW1wbGljYXRp
+b25zIGxpc3RlZCBiZWxvdy4gVGhlIHZhbHVlIG9mIHJhbmRvbQ0KPiA+IG9mZnNldCBpcyBzdG9y
+ZWQgaW4gYSBjYWxsZWUtc2F2ZWQgcmVnaXN0ZXIgKHIxNSBjdXJyZW50bHkpIGFuZCB0aGUNCj4g
+PiBtYXhpbXVtIHNpemUgb2YgcmFuZG9tIG9mZnNldCBpcyBkZWZpbmVkIGJ5IF9fTUFYX1NUQUNL
+X1JBTkRPTV9PRkZTRVQNCj4gPiB2YWx1ZSwgd2hpY2ggY3VycmVudGx5IGVxdWFscyB0byAweEZG
+MC4NCj4gPg0KPiA+IEFzIGEgcmVzdWx0IHRoaXMgcGF0Y2ggaW50cm9kdWNlcyA4IGJpdHMgb2Yg
+cmFuZG9tbmVzcw0KPiA+IChiaXRzIDQgLSAxMSBhcmUgcmFuZG9taXplZCwgYml0cyAwLTMgbXVz
+dCBiZSB6ZXJvIGR1ZSB0byBzdGFjayBhbGlnbm1lbnQpDQo+ID4gYWZ0ZXIgcHRfcmVncyBsb2Nh
+dGlvbiBvbiB0aGUgdGhyZWFkIHN0YWNrLg0KPiA+IFRoZSBhbW91bnQgb2YgcmFuZG9tbmVzcyBj
+YW4gYmUgYWRqdXN0ZWQgYmFzZWQgb24gaG93IG11Y2ggb2YgdGhlDQo+ID4gc3RhY2sgc3BhY2Ug
+d2Ugd2lzaC9jYW4gdHJhZGUgZm9yIHNlY3VyaXR5Lg0KPiANCj4gV2h5IGRvIHlvdSBuZWVkIGZv
+dXIgemVybyBiaXRzIGF0IHRoZSBib3R0b20/ICB4ODZfNjQgTGludXggb25seQ0KPiBtYWludGFp
+bnMgOCBieXRlIHN0YWNrIGFsaWdubWVudC4NCg0KSSBoYXZlIHRvIGNoZWNrIHRoaXM6IGl0IGRp
+ZCBsb29rIHRvIG1lIHRoYXQgdGhpcyBpcyBuZWVkZWQgdG8gYXZvaWQNCmFsaWdubWVudCBpc3N1
+ZXMsIGJ1dCBtYXliZSBpdCBpcyBteSBtaXN0YWtlLiAgDQoNCj4gPg0KPiA+IFRoZSBtYWluIGlz
+c3VlIHdpdGggdGhpcyBhcHByb2FjaCBpcyB0aGF0IGl0IHNsaWdodGx5IGJyZWFrcyB0aGUNCj4g
+PiBwcm9jZXNzaW5nIG9mIGxhc3QgZnJhbWUgaW4gdGhlIHVud2luZGVyLCBzbyBJIGhhdmUgbWFk
+ZSBhIHNpbXBsZQ0KPiA+IGZpeCB0byB0aGUgZnJhbWUgcG9pbnRlciB1bndpbmRlciAoSSBndWVz
+cyBvdGhlcnMgc2hvdWxkIGJlIGZpeGVkDQo+ID4gc2ltaWxhcmx5KSBhbmQgc3RhY2sgZHVtcCBm
+dW5jdGlvbmFsaXR5IHRvICJqdW1wIiBvdmVyIHRoZSByYW5kb20gaG9sZQ0KPiA+IGF0IHRoZSBl
+bmQuIE15IHdheSBvZiBzb2x2aW5nIHRoaXMgaXMgcHJvYmFibHkgZmFyIGZyb20gaWRlYWwsDQo+
+ID4gc28gSSB3b3VsZCByZWFsbHkgYXBwcmVjaWF0ZSBmZWVkYmFjayBvbiBob3cgdG8gaW1wcm92
+ZSBpdC4NCj4gDQo+IFRoYXQncyBwcm9iYWJseSBhIHF1ZXN0aW9uIGZvciBKb3NoIDopDQo+IA0K
+PiBBbm90aGVyIHdheSB0byBkbyB0aGUgZGlydHkgd29yayB3b3VsZCBiZSB0byBkbzoNCj4gDQo+
+ICAgICBjaGFyICpwdHIgPSBhbGxvY2Eob2Zmc2V0KTsNCj4gICAgIGFzbSB2b2xhdGlsZSAoIiIg
+OjogIm0iICgqcHRyKSk7DQo+IA0KPiBpbiBkb19zeXNjYWxsXzY0KCkgYW5kIGFkanVzdCBjb21w
+aWxlciBmbGFncyBhcyBuZWVkZWQgdG8gYXZvaWQgd2FybmluZ3MuICBIbW0uDQoNCkkgd2FzIGhv
+cGluZyB0byBnbyBhd2F5IHdpdGggYXNzZW1ibHktb25seSBhbmQgbWluaW1hbA0KY2hhbmdlcywg
+YnV0IGlmIHRoaXMgYXBwcm9hY2ggc2VlbXMgYmV0dGVyIGZvciB5b3UgYW5kIEpvc2gsDQp0aGVu
+IEkgZ3Vlc3MgSSBjYW4gZG8gaXQgdGhpcyB3YXkuIA0KDQo+IA0KPiA+DQo+ID4gUGVyZm9ybWFu
+Y2U6DQo+ID4NCj4gPiAxKSBsbWJlbmNoOiAuL2xhdF9zeXNjYWxsIC1OIDEwMDAwMDAgbnVsbA0K
+PiA+ICAgICBiYXNlOiAgICAgICAgICAgICAgICAgICAgIFNpbXBsZSBzeXNjYWxsOiAwLjE3NzQg
+bWljcm9zZWNvbmRzDQo+ID4gICAgIHJhbmRvbV9vZmZzZXQgKHJkdHNjKTogICAgIFNpbXBsZSBz
+eXNjYWxsOiAwLjE4MDMgbWljcm9zZWNvbmRzDQo+ID4gICAgIHJhbmRvbV9vZmZzZXQgKHJkcmFu
+ZCk6IFNpbXBsZSBzeXNjYWxsOiAwLjM3MDIgbWljcm9zZWNvbmRzDQo+ID4NCj4gPiAyKSAgQW5k
+eSdzIHRlc3RzLCBtaXNjLXRlc3RzOiAuL3RpbWluZ190ZXN0XzY0IDEwTSBzeXNfZW5vc3lzDQo+
+ID4gICAgIGJhc2U6ICAgICAgICAgICAgICAgICAgICAgMTAwMDAwMDAgbG9vcHMgaW4gMS42MjIy
+NHMgPSAxNjIuMjIgbnNlYyAvIGxvb3ANCj4gPiAgICAgcmFuZG9tX29mZnNldCAocmR0c2MpOiAg
+ICAgMTAwMDAwMDAgbG9vcHMgaW4gMS42NDY2MHMgPSAxNjQuNjYgbnNlYyAvIGxvb3ANCj4gPiAg
+ICAgcmFuZG9tX29mZnNldCAocmRyYW5kKTogMTAwMDAwMDAgbG9vcHMgaW4gMy41MTMxNXMgPSAz
+NTEuMzIgbnNlYyAvIGxvb3ANCj4gPg0KPiANCj4gRWdhZHMhICBSRFRTQyBpcyBuaWNlIGFuZCBm
+YXN0IGJ1dCBwcm9iYWJseSBmYWlybHkgZWFzeSB0byBkZWZlYXQuDQo+IFJEUkFORCBpcyBhd2Z1
+bC4gIEkgaGFkIGhvcGVkIGZvciBiZXR0ZXIuDQoNClllcywgaXQgaXMgdmVyeSB2ZXJ5IHNsb3cs
+IEkgYWN0dWFsbHkgZGlkbid0IGJlbGlldmUgbXkgbWVhc3VyZW1lbnRzDQpmaXJzdCB0aGlua2lu
+ZyB0aGF0IGl0IGNhbm5vdCBiZSBzbyBtdWNoIHNsb3dlciBqdXN0IGJlY2F1c2Ugb2Ygb25lDQpp
+bnN0cnVjdGlvbiBkaWZmZXJlbmNlLCBidXQgaXQgbG9va3MgbGlrZSBpdCBjYW4uLi4NCg0KPiAN
+Cj4gU28gcGVyaGFwcyB3ZSBuZWVkIGEgbGl0dGxlIHBlcmNwdSBidWZmZXIgdGhhdCBjb2xsZWN0
+cyA2NCBiaXRzIG9mDQo+IHJhbmRvbW5lc3MgYXQgYSB0aW1lLCBzaGlmdHMgb3V0IHRoZSBuZWVk
+ZWQgYml0cywgYW5kIHJlZmlsbHMgdGhlDQo+IGJ1ZmZlciB3aGVuIHdlIHJ1biBvdXQuDQoNCkht
+Li4uIFdlIG1pZ2h0IGhhdmUgdG8gcmVmaWxsIHByZXR0eSBvZnRlbiBvbiBhIHN5c2NhbGwtaHVu
+Z3J5IA0Kd29ya2xvYWRzLiBJZiB3ZSBuZWVkIDggYml0cyBmb3IgZWFjaCBzeXMgY2FsbCwgdGhl
+biB3ZSB3aWxsIHJlZmlsbA0KZXZlcnkgOCBzeXNjYWxscywgd2hpY2ggaXMgb2YgY291cnNlIGJl
+dHRlciB0aGFuIGVhY2ggb25lLCBidXQgaXMNCml0IGFuIGFjY2VwdGFibGUgcGVuYWx0eT8gQW5k
+IHRoZW4gdGhlcmUgaXMgYWxzbyBhIHN0b3JhZ2UgaXNzdWUNCm9mIG91ciBvZmZzZXQgYml0cyBh
+cyBLZWVzIG1lbnRpb25lZC4gDQoNCj4gDQo+ID4gIC8qDQo+ID4gICAqIFRoaXMgZG9lcyAnY2Fs
+bCBlbnRlcl9mcm9tX3VzZXJfbW9kZScgdW5sZXNzIHdlIGNhbiBhdm9pZCBpdCBiYXNlZCBvbg0K
+PiA+ICAgKiBrZXJuZWwgY29uZmlnIG9yIHVzaW5nIHRoZSBzdGF0aWMganVtcCBpbmZyYXN0cnVj
+dHVyZS4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZW50cnkvZW50cnlfNjQuUyBiL2FyY2gv
+eDg2L2VudHJ5L2VudHJ5XzY0LlMNCj4gPiBpbmRleCAxZjBlZmRiN2I2MjkuLjA4MTZlYzY4MGMy
+MSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TDQo+ID4gKysrIGIv
+YXJjaC94ODYvZW50cnkvZW50cnlfNjQuUw0KPiA+IEBAIC0xNjcsMTMgKzE2NywxOSBAQCBHTE9C
+QUwoZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKQ0KPiA+DQo+ID4gICAgICAgICBQVVNI
+X0FORF9DTEVBUl9SRUdTIHJheD0kLUVOT1NZUw0KPiA+DQo+ID4gKyAgICAgICBSQU5ET01JWkVf
+S1NUQUNLICAgICAgICAgICAgICAgIC8qIHN0b3JlcyByYW5kb21pemVkIG9mZnNldCBpbiByMTUg
+Ki8NCj4gPiArDQo+ID4gICAgICAgICBUUkFDRV9JUlFTX09GRg0KPiA+DQo+ID4gICAgICAgICAv
+KiBJUlFzIGFyZSBvZmYuICovDQo+ID4gICAgICAgICBtb3ZxICAgICVyYXgsICVyZGkNCj4gPiAg
+ICAgICAgIG1vdnEgICAgJXJzcCwgJXJzaQ0KPiA+ICsgICAgICAgc3ViICAgICAlcjE1LCAlcnNw
+ICAgICAgICAgIC8qIHN1YnN0aXR1dGUgcmFuZG9tIG9mZnNldCBmcm9tIHJzcCAqLw0KPiA+ICAg
+ICAgICAgY2FsbCAgICBkb19zeXNjYWxsXzY0ICAgICAgICAgICAvKiByZXR1cm5zIHdpdGggSVJR
+cyBkaXNhYmxlZCAqLw0KPiA+DQo+ID4gKyAgICAgICAvKiBuZWVkIHRvIHJlc3RvcmUgdGhlIGdh
+cCAqLw0KPiA+ICsgICAgICAgYWRkICAgICAlcjE1LCAlcnNwICAgICAgIC8qIGFkZCByYW5kb20g
+b2Zmc2V0IGJhY2sgdG8gcnNwICovDQo+IA0KPiBPZmYgdGhlIHRvcCBvZiBteSBoZWFkLCB0aGUg
+bmljZXIgd2F5IHRvIGFwcHJvYWNoIHRoaXMgd291bGQgYmUgdG8NCj4gY2hhbmdlIHRoaXMgc3Vj
+aCB0aGF0IG1vdiAlcmJwLCAlcnNwOyBwb3BxICVyYnAgb3Igc29tZXRoaW5nIGxpa2UgdGhhdA0K
+PiB3aWxsIGRvIHRoZSB0cmljay4gIFRoZW4gdGhlIHVud2luZGVyIGNvdWxkIGp1c3Qgc2VlIGl0
+IGFzIGEgcmVndWxhcg0KPiBmcmFtZS4gIE1heWJlIEpvc2ggd2lsbCBoYXZlIGEgYmV0dGVyIGlk
+ZWEuDQoNCkkgdHJpZWQgaXQgd2l0aCByYnAsIGJ1dCBJIGNvdWxkIG5vdCBnZXQgaXQgd29ya2lu
+ZyBhcyB3aXRoIG90aGVyIGNhbGxlZQ0Kc2F2ZWQgcmVnaXN0ZXJzLiBCdXQgc2luY2UgYWxsb2Nh
+IG1ldGhvZCBzZWVtcyB0byBiZSBtb3JlIHByZWZlcmFibGUsIA0KbWF5YmUgaXQgaXMgbm90IHdv
+cnRoIGludmVzdGlnYXRpbmcgdGhpcyBmdXJ0aGVyLiANCg0KQmVzdCBSZWdhcmRzLA0KRWxlbmEu
+DQo=
