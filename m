@@ -2,150 +2,704 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6167C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABBAC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765422184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FudfDBAH"
+	by mail.kernel.org (Postfix) with ESMTP id E47732184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfCTJeg (ORCPT
+        id S1727304AbfCTJfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:34:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33668 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTJef (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:34:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2K9XqbB097653;
-        Wed, 20 Mar 2019 04:33:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553074432;
-        bh=dRu4mEIkh/n5bBWff4XyaPuG/oRp0w42scvWFUpjYg8=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=FudfDBAHIaJta+z1kNcyOlIFFafQZtK8d/R8lMIYvEphaRxd+qWmi6yOE20AbHAVy
-         DGF60ie0QAXdRE9Nn2rDns5/hrrviE3ZR++yvCi7Zd8tV/FbWjm1p4xIBHZyUta2Ka
-         Yu3ZVwO3EGBHOciH/RDuEozlVObuMsCTAbMJhF1o=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2K9Xqjv099370
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Mar 2019 04:33:52 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 20
- Mar 2019 04:33:50 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Wed, 20 Mar 2019 04:33:50 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2K9Xk34014230;
-        Wed, 20 Mar 2019 04:33:47 -0500
-Subject: Re: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-To:     Damian Kos <dkos@cadence.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>, <jbergsagel@ti.com>,
-        <quentin.schulz@bootlin.com>, <piotrs@cadence.com>,
-        <rafalc@cadence.com>
-References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
- <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
-Message-ID: <ce6ed2e6-90d5-fc7a-4d6d-ab27d62c5432@ti.com>
-Date:   Wed, 20 Mar 2019 11:33:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 05:35:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53414 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfCTJfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 05:35:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 71684309264B;
+        Wed, 20 Mar 2019 09:35:22 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-117-218.ams2.redhat.com [10.36.117.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3CE01974C;
+        Wed, 20 Mar 2019 09:35:20 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] virt: vbox: Implement passing requestor info to the host for VirtualBox 6.0.x
+Date:   Wed, 20 Mar 2019 10:35:19 +0100
+Message-Id: <20190320093519.26029-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 20 Mar 2019 09:35:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Damian, ping.
+VirtualBox 6.0.x has a new feature where the guest kernel driver passes
+info about the origin of the request (e.g. userspace or kernelspace) to
+the hypervisor.
 
-On 31/01/2019 14:08, Tomi Valkeinen wrote:
-> Hi,
-> 
-> On 30/01/2019 13:03, Damian Kos wrote:
->> Hello!
->>
->> This is the series of patches that will add support for the Cadence's DPI/DP
->> bridge. Please note that this is a preliminary version of the driver and there
->> will be more patches in the future with updates, fixes and improvements.
->> Please keep that in mind when looking at FIXME/TODO/XXX comments.
->>
->> Initially, MHDP driver was developed as a DRM bridge driver and was planed to
->> be placed in drivers/gpu/drm/bridge/mhdp.c.  However, there was already
->> a driver for Cadence's DP controller developed by RockChip, but that driver
->> uses the different DRM framework and looks like a part of a bigger system.
->> Both controllers (including firmware) are quite different internally
->> (MST/FEC/DSC support, link training done by driver, additional commands, IRQ's
->> etc.) but they have similar register map, except for Framer/Streamer (which is
->> noticeably different), so they appear similar.
->>
->> The following patches contain:
->> - Moving common code to drivers/gpu/drm/bridge/cdns-mhdp-common.* and
->>   modifying it a bit (mostly new prefixes for functions and data types) so it
->>   can be used by two, higher level, drivers.
->> - Modifying existing RockChip's DP driver to use the common code after changes
->>   made to it (use the new cdns_mhdp_device structure and new function names).
->> - Modifying DRM helpers a bit. Some are required for new driver, some are
->>   updates from DP 1.2 to 1.3 or 1.4.
->> - Adding documentation for device tree bindings.
->> - Adding preliminary Cadence DPI/DP bridge driver.
->>
->> Some of the things that will be added later on include (but are not limited
->> to):
->> - DSC support
->> - FEC support
->> - HDCP support
-> 
-> A few random comments/questions after a quick look at the patches.
-> 
-> The names of the source files and the kernel Kconfig are only about
-> "Cadence DP". But the DT bindings is for cdns,mhdp8546, and the
-> resulting module file is mhdp8546.ko. I think more consistency here
-> would be good.
-> 
-> I presume the part number (or family? are there other similar parts with
-> similar part numbers?) is relevant, so it should be in the Kconfig
-> option and help text, and probably in the file names too. The module
-> name should have "cdns" prefix there, similar to the source files and
-> the cdns-dsi.ko.
-> 
-> Or maybe the same driver will handle all Cadence DP parts, in which case
-> generic filenames are fine, but then the resulting kernel module should
-> also be just "cdns-mhdp.ko".
-> 
-> I see some audio functions in the code, but it's not mentioned in the DT
-> bindings. I'm not an audio guy, but the display bridges with audio
-> support I have seen have had DT bindings for the audio source too. Is
-> audio supported in the current driver?
-> 
->  Tomi
-> 
+If we do not pass this information then when running the 6.0.x userspace
+guest-additions tools on a 6.0.x host, some requests will get denied
+with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
+the mounting of shared folders marked to be auto-mounted.
 
+This commit implements passing the requestor info to the host, fixing this.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/virt/vboxguest/vboxguest_core.c    | 106 ++++++++++++++-------
+ drivers/virt/vboxguest/vboxguest_core.h    |  15 +--
+ drivers/virt/vboxguest/vboxguest_linux.c   |  26 ++++-
+ drivers/virt/vboxguest/vboxguest_utils.c   |  32 ++++---
+ drivers/virt/vboxguest/vboxguest_version.h |   9 +-
+ drivers/virt/vboxguest/vmmdev.h            |   8 +-
+ include/linux/vbox_utils.h                 |  12 ++-
+ include/uapi/linux/vbox_vmmdev_types.h     |  31 ++++++
+ 8 files changed, 168 insertions(+), 71 deletions(-)
+
+diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
+index 1475ed5ffcde..2ec5b34ffed7 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -27,6 +27,10 @@
+ 
+ #define GUEST_MAPPINGS_TRIES	5
+ 
++#define VBG_KERNEL_REQUEST \
++	(VMMDEV_REQUESTOR_KERNEL | VMMDEV_REQUESTOR_USR_DRV | \
++	 VMMDEV_REQUESTOR_CON_DONT_KNOW | VMMDEV_REQUESTOR_TRUST_NOT_GIVEN)
++
+ /**
+  * Reserves memory in which the VMM can relocate any guest mappings
+  * that are floating around.
+@@ -48,7 +52,8 @@ static void vbg_guest_mappings_init(struct vbg_dev *gdev)
+ 	int i, rc;
+ 
+ 	/* Query the required space. */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HYPERVISOR_INFO);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HYPERVISOR_INFO,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return;
+ 
+@@ -135,7 +140,8 @@ static void vbg_guest_mappings_exit(struct vbg_dev *gdev)
+ 	 * Tell the host that we're going to free the memory we reserved for
+ 	 * it, the free it up. (Leak the memory if anything goes wrong here.)
+ 	 */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_HYPERVISOR_INFO);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_HYPERVISOR_INFO,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return;
+ 
+@@ -172,8 +178,10 @@ static int vbg_report_guest_info(struct vbg_dev *gdev)
+ 	struct vmmdev_guest_info2 *req2 = NULL;
+ 	int rc, ret = -ENOMEM;
+ 
+-	req1 = vbg_req_alloc(sizeof(*req1), VMMDEVREQ_REPORT_GUEST_INFO);
+-	req2 = vbg_req_alloc(sizeof(*req2), VMMDEVREQ_REPORT_GUEST_INFO2);
++	req1 = vbg_req_alloc(sizeof(*req1), VMMDEVREQ_REPORT_GUEST_INFO,
++			     VBG_KERNEL_REQUEST);
++	req2 = vbg_req_alloc(sizeof(*req2), VMMDEVREQ_REPORT_GUEST_INFO2,
++			     VBG_KERNEL_REQUEST);
+ 	if (!req1 || !req2)
+ 		goto out_free;
+ 
+@@ -187,8 +195,8 @@ static int vbg_report_guest_info(struct vbg_dev *gdev)
+ 	req2->additions_minor = VBG_VERSION_MINOR;
+ 	req2->additions_build = VBG_VERSION_BUILD;
+ 	req2->additions_revision = VBG_SVN_REV;
+-	/* (no features defined yet) */
+-	req2->additions_features = 0;
++	req2->additions_features =
++		VMMDEV_GUEST_INFO2_ADDITIONS_FEATURES_REQUESTOR_INFO;
+ 	strlcpy(req2->name, VBG_VERSION_STRING,
+ 		sizeof(req2->name));
+ 
+@@ -230,7 +238,8 @@ static int vbg_report_driver_status(struct vbg_dev *gdev, bool active)
+ 	struct vmmdev_guest_status *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_REPORT_GUEST_STATUS);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_REPORT_GUEST_STATUS,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -423,7 +432,8 @@ static int vbg_heartbeat_host_config(struct vbg_dev *gdev, bool enabled)
+ 	struct vmmdev_heartbeat *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_HEARTBEAT_CONFIGURE);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_HEARTBEAT_CONFIGURE,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -457,7 +467,8 @@ static int vbg_heartbeat_init(struct vbg_dev *gdev)
+ 
+ 	gdev->guest_heartbeat_req = vbg_req_alloc(
+ 					sizeof(*gdev->guest_heartbeat_req),
+-					VMMDEVREQ_GUEST_HEARTBEAT);
++					VMMDEVREQ_GUEST_HEARTBEAT,
++					VBG_KERNEL_REQUEST);
+ 	if (!gdev->guest_heartbeat_req)
+ 		return -ENOMEM;
+ 
+@@ -528,7 +539,8 @@ static int vbg_reset_host_event_filter(struct vbg_dev *gdev,
+ 	struct vmmdev_mask *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -567,8 +579,14 @@ static int vbg_set_session_event_filter(struct vbg_dev *gdev,
+ 	u32 changed, previous;
+ 	int rc, ret = 0;
+ 
+-	/* Allocate a request buffer before taking the spinlock */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK);
++	/*
++	 * Allocate a request buffer before taking the spinlock, when
++	 * the session is being terminated the requestor is the kernel,
++	 * as we're cleaning up.
++	 */
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK,
++			    session_termination ? VBG_KERNEL_REQUEST :
++						  session->requestor);
+ 	if (!req) {
+ 		if (!session_termination)
+ 			return -ENOMEM;
+@@ -627,7 +645,8 @@ static int vbg_reset_host_capabilities(struct vbg_dev *gdev)
+ 	struct vmmdev_mask *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -662,8 +681,14 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
+ 	u32 changed, previous;
+ 	int rc, ret = 0;
+ 
+-	/* Allocate a request buffer before taking the spinlock */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES);
++	/*
++	 * Allocate a request buffer before taking the spinlock, when
++	 * the session is being terminated the requestor is the kernel,
++	 * as we're cleaning up.
++	 */
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
++			    session_termination ? VBG_KERNEL_REQUEST :
++						  session->requestor);
+ 	if (!req) {
+ 		if (!session_termination)
+ 			return -ENOMEM;
+@@ -722,7 +747,8 @@ static int vbg_query_host_version(struct vbg_dev *gdev)
+ 	struct vmmdev_host_version *req;
+ 	int rc, ret;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HOST_VERSION);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HOST_VERSION,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -783,19 +809,24 @@ int vbg_core_init(struct vbg_dev *gdev, u32 fixed_events)
+ 
+ 	gdev->mem_balloon.get_req =
+ 		vbg_req_alloc(sizeof(*gdev->mem_balloon.get_req),
+-			      VMMDEVREQ_GET_MEMBALLOON_CHANGE_REQ);
++			      VMMDEVREQ_GET_MEMBALLOON_CHANGE_REQ,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->mem_balloon.change_req =
+ 		vbg_req_alloc(sizeof(*gdev->mem_balloon.change_req),
+-			      VMMDEVREQ_CHANGE_MEMBALLOON);
++			      VMMDEVREQ_CHANGE_MEMBALLOON,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->cancel_req =
+ 		vbg_req_alloc(sizeof(*(gdev->cancel_req)),
+-			      VMMDEVREQ_HGCM_CANCEL2);
++			      VMMDEVREQ_HGCM_CANCEL2,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->ack_events_req =
+ 		vbg_req_alloc(sizeof(*gdev->ack_events_req),
+-			      VMMDEVREQ_ACKNOWLEDGE_EVENTS);
++			      VMMDEVREQ_ACKNOWLEDGE_EVENTS,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->mouse_status_req =
+ 		vbg_req_alloc(sizeof(*gdev->mouse_status_req),
+-			      VMMDEVREQ_GET_MOUSE_STATUS);
++			      VMMDEVREQ_GET_MOUSE_STATUS,
++			      VBG_KERNEL_REQUEST);
+ 
+ 	if (!gdev->mem_balloon.get_req || !gdev->mem_balloon.change_req ||
+ 	    !gdev->cancel_req || !gdev->ack_events_req ||
+@@ -892,9 +923,9 @@ void vbg_core_exit(struct vbg_dev *gdev)
+  * vboxguest_linux.c calls this when userspace opens the char-device.
+  * Return: A pointer to the new session or an ERR_PTR on error.
+  * @gdev:		The Guest extension device.
+- * @user:		Set if this is a session for the vboxuser device.
++ * @requestor:		VMMDEV_REQUESTOR_* flags
+  */
+-struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user)
++struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, u32 requestor)
+ {
+ 	struct vbg_session *session;
+ 
+@@ -903,7 +934,7 @@ struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	session->gdev = gdev;
+-	session->user_session = user;
++	session->requestor = requestor;
+ 
+ 	return session;
+ }
+@@ -924,7 +955,9 @@ void vbg_core_close_session(struct vbg_session *session)
+ 		if (!session->hgcm_client_ids[i])
+ 			continue;
+ 
+-		vbg_hgcm_disconnect(gdev, session->hgcm_client_ids[i], &rc);
++		/* requestor is kernel here, as we're cleaning up. */
++		vbg_hgcm_disconnect(gdev, VBG_KERNEL_REQUEST,
++				    session->hgcm_client_ids[i], &rc);
+ 	}
+ 
+ 	kfree(session);
+@@ -1152,7 +1185,8 @@ static int vbg_req_allowed(struct vbg_dev *gdev, struct vbg_session *session,
+ 		return -EPERM;
+ 	}
+ 
+-	if (trusted_apps_only && session->user_session) {
++	if (trusted_apps_only &&
++	    (session->requestor & VMMDEV_REQUESTOR_USER_DEVICE)) {
+ 		vbg_err("Denying userspace vmm call type %#08x through vboxuser device node\n",
+ 			req->request_type);
+ 		return -EPERM;
+@@ -1209,8 +1243,8 @@ static int vbg_ioctl_hgcm_connect(struct vbg_dev *gdev,
+ 	if (i >= ARRAY_SIZE(session->hgcm_client_ids))
+ 		return -EMFILE;
+ 
+-	ret = vbg_hgcm_connect(gdev, &conn->u.in.loc, &client_id,
+-			       &conn->hdr.rc);
++	ret = vbg_hgcm_connect(gdev, session->requestor, &conn->u.in.loc,
++			       &client_id, &conn->hdr.rc);
+ 
+ 	mutex_lock(&gdev->session_mutex);
+ 	if (ret == 0 && conn->hdr.rc >= 0) {
+@@ -1251,7 +1285,8 @@ static int vbg_ioctl_hgcm_disconnect(struct vbg_dev *gdev,
+ 	if (i >= ARRAY_SIZE(session->hgcm_client_ids))
+ 		return -EINVAL;
+ 
+-	ret = vbg_hgcm_disconnect(gdev, client_id, &disconn->hdr.rc);
++	ret = vbg_hgcm_disconnect(gdev, session->requestor, client_id,
++				  &disconn->hdr.rc);
+ 
+ 	mutex_lock(&gdev->session_mutex);
+ 	if (ret == 0 && disconn->hdr.rc >= 0)
+@@ -1313,12 +1348,12 @@ static int vbg_ioctl_hgcm_call(struct vbg_dev *gdev,
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_COMPAT) && f32bit)
+-		ret = vbg_hgcm_call32(gdev, client_id,
++		ret = vbg_hgcm_call32(gdev, session->requestor, client_id,
+ 				      call->function, call->timeout_ms,
+ 				      VBG_IOCTL_HGCM_CALL_PARMS32(call),
+ 				      call->parm_count, &call->hdr.rc);
+ 	else
+-		ret = vbg_hgcm_call(gdev, client_id,
++		ret = vbg_hgcm_call(gdev, session->requestor, client_id,
+ 				    call->function, call->timeout_ms,
+ 				    VBG_IOCTL_HGCM_CALL_PARMS(call),
+ 				    call->parm_count, &call->hdr.rc);
+@@ -1408,6 +1443,7 @@ static int vbg_ioctl_check_balloon(struct vbg_dev *gdev,
+ }
+ 
+ static int vbg_ioctl_write_core_dump(struct vbg_dev *gdev,
++				     struct vbg_session *session,
+ 				     struct vbg_ioctl_write_coredump *dump)
+ {
+ 	struct vmmdev_write_core_dump *req;
+@@ -1415,7 +1451,8 @@ static int vbg_ioctl_write_core_dump(struct vbg_dev *gdev,
+ 	if (vbg_ioctl_chk(&dump->hdr, sizeof(dump->u.in), 0))
+ 		return -EINVAL;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_WRITE_COREDUMP);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_WRITE_COREDUMP,
++			    session->requestor);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -1476,7 +1513,7 @@ int vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data)
+ 	case VBG_IOCTL_CHECK_BALLOON:
+ 		return vbg_ioctl_check_balloon(gdev, data);
+ 	case VBG_IOCTL_WRITE_CORE_DUMP:
+-		return vbg_ioctl_write_core_dump(gdev, data);
++		return vbg_ioctl_write_core_dump(gdev, session, data);
+ 	}
+ 
+ 	/* Variable sized requests. */
+@@ -1508,7 +1545,8 @@ int vbg_core_set_mouse_status(struct vbg_dev *gdev, u32 features)
+ 	struct vmmdev_mouse_status *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_MOUSE_STATUS);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_MOUSE_STATUS,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/virt/vboxguest/vboxguest_core.h b/drivers/virt/vboxguest/vboxguest_core.h
+index 7ad9ec45bfa9..4188c12b839f 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.h
++++ b/drivers/virt/vboxguest/vboxguest_core.h
+@@ -154,15 +154,15 @@ struct vbg_session {
+ 	 * host. Protected by vbg_gdev.session_mutex.
+ 	 */
+ 	u32 guest_caps;
+-	/** Does this session belong to a root process or a user one? */
+-	bool user_session;
++	/** VMMDEV_REQUESTOR_* flags */
++	u32 requestor;
+ 	/** Set on CANCEL_ALL_WAITEVENTS, protected by vbg_devevent_spinlock. */
+ 	bool cancel_waiters;
+ };
+ 
+ int  vbg_core_init(struct vbg_dev *gdev, u32 fixed_events);
+ void vbg_core_exit(struct vbg_dev *gdev);
+-struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user);
++struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, u32 requestor);
+ void vbg_core_close_session(struct vbg_session *session);
+ int  vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data);
+ int  vbg_core_set_mouse_status(struct vbg_dev *gdev, u32 features);
+@@ -172,12 +172,13 @@ irqreturn_t vbg_core_isr(int irq, void *dev_id);
+ void vbg_linux_mouse_event(struct vbg_dev *gdev);
+ 
+ /* Private (non exported) functions form vboxguest_utils.c */
+-void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type);
++void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type,
++		    u32 requestor);
+ void vbg_req_free(void *req, size_t len);
+ int vbg_req_perform(struct vbg_dev *gdev, void *req);
+ int vbg_hgcm_call32(
+-	struct vbg_dev *gdev, u32 client_id, u32 function, u32 timeout_ms,
+-	struct vmmdev_hgcm_function_parameter32 *parm32, u32 parm_count,
+-	int *vbox_status);
++	struct vbg_dev *gdev, u32 requestor, u32 client_id, u32 function,
++	u32 timeout_ms, struct vmmdev_hgcm_function_parameter32 *parm32,
++	u32 parm_count, int *vbox_status);
+ 
+ #endif
+diff --git a/drivers/virt/vboxguest/vboxguest_linux.c b/drivers/virt/vboxguest/vboxguest_linux.c
+index 6e2a9619192d..6e8c0f1c1056 100644
+--- a/drivers/virt/vboxguest/vboxguest_linux.c
++++ b/drivers/virt/vboxguest/vboxguest_linux.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2006-2016 Oracle Corporation
+  */
+ 
++#include <linux/cred.h>
+ #include <linux/input.h>
+ #include <linux/kernel.h>
+ #include <linux/miscdevice.h>
+@@ -28,6 +29,23 @@ static DEFINE_MUTEX(vbg_gdev_mutex);
+ /** Global vbg_gdev pointer used by vbg_get/put_gdev. */
+ static struct vbg_dev *vbg_gdev;
+ 
++static u32 vbg_misc_device_requestor(struct inode *inode)
++{
++	u32 requestor = VMMDEV_REQUESTOR_USERMODE |
++			VMMDEV_REQUESTOR_CON_DONT_KNOW |
++			VMMDEV_REQUESTOR_TRUST_NOT_GIVEN;
++
++	if (from_kuid(current_user_ns(), current->cred->uid) == 0)
++		requestor |= VMMDEV_REQUESTOR_USR_ROOT;
++	else
++		requestor |= VMMDEV_REQUESTOR_USR_USER;
++
++	if (in_egroup_p(inode->i_gid))
++		requestor |= VMMDEV_REQUESTOR_GRP_VBOX;
++
++	return requestor;
++}
++
+ static int vbg_misc_device_open(struct inode *inode, struct file *filp)
+ {
+ 	struct vbg_session *session;
+@@ -36,7 +54,7 @@ static int vbg_misc_device_open(struct inode *inode, struct file *filp)
+ 	/* misc_open sets filp->private_data to our misc device */
+ 	gdev = container_of(filp->private_data, struct vbg_dev, misc_device);
+ 
+-	session = vbg_core_open_session(gdev, false);
++	session = vbg_core_open_session(gdev, vbg_misc_device_requestor(inode));
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
+@@ -53,7 +71,8 @@ static int vbg_misc_device_user_open(struct inode *inode, struct file *filp)
+ 	gdev = container_of(filp->private_data, struct vbg_dev,
+ 			    misc_device_user);
+ 
+-	session = vbg_core_open_session(gdev, false);
++	session = vbg_core_open_session(gdev, vbg_misc_device_requestor(inode) |
++					      VMMDEV_REQUESTOR_USER_DEVICE);
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
+@@ -115,7 +134,8 @@ static long vbg_misc_device_ioctl(struct file *filp, unsigned int req,
+ 			 req == VBG_IOCTL_VMMDEV_REQUEST_BIG;
+ 
+ 	if (is_vmmdev_req)
+-		buf = vbg_req_alloc(size, VBG_IOCTL_HDR_TYPE_DEFAULT);
++		buf = vbg_req_alloc(size, VBG_IOCTL_HDR_TYPE_DEFAULT,
++				    session->requestor);
+ 	else
+ 		buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf)
+diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
+index bf4474214b4d..75fd140b02ff 100644
+--- a/drivers/virt/vboxguest/vboxguest_utils.c
++++ b/drivers/virt/vboxguest/vboxguest_utils.c
+@@ -62,7 +62,8 @@ VBG_LOG(vbg_err, pr_err);
+ VBG_LOG(vbg_debug, pr_debug);
+ #endif
+ 
+-void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type)
++void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type,
++		    u32 requestor)
+ {
+ 	struct vmmdev_request_header *req;
+ 	int order = get_order(PAGE_ALIGN(len));
+@@ -78,7 +79,7 @@ void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type)
+ 	req->request_type = req_type;
+ 	req->rc = VERR_GENERAL_FAILURE;
+ 	req->reserved1 = 0;
+-	req->reserved2 = 0;
++	req->requestor = requestor;
+ 
+ 	return req;
+ }
+@@ -119,7 +120,7 @@ static bool hgcm_req_done(struct vbg_dev *gdev,
+ 	return done;
+ }
+ 
+-int vbg_hgcm_connect(struct vbg_dev *gdev,
++int vbg_hgcm_connect(struct vbg_dev *gdev, u32 requestor,
+ 		     struct vmmdev_hgcm_service_location *loc,
+ 		     u32 *client_id, int *vbox_status)
+ {
+@@ -127,7 +128,7 @@ int vbg_hgcm_connect(struct vbg_dev *gdev,
+ 	int rc;
+ 
+ 	hgcm_connect = vbg_req_alloc(sizeof(*hgcm_connect),
+-				     VMMDEVREQ_HGCM_CONNECT);
++				     VMMDEVREQ_HGCM_CONNECT, requestor);
+ 	if (!hgcm_connect)
+ 		return -ENOMEM;
+ 
+@@ -153,13 +154,15 @@ int vbg_hgcm_connect(struct vbg_dev *gdev,
+ }
+ EXPORT_SYMBOL(vbg_hgcm_connect);
+ 
+-int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 client_id, int *vbox_status)
++int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 requestor,
++			u32 client_id, int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_disconnect *hgcm_disconnect = NULL;
+ 	int rc;
+ 
+ 	hgcm_disconnect = vbg_req_alloc(sizeof(*hgcm_disconnect),
+-					VMMDEVREQ_HGCM_DISCONNECT);
++					VMMDEVREQ_HGCM_DISCONNECT,
++					requestor);
+ 	if (!hgcm_disconnect)
+ 		return -ENOMEM;
+ 
+@@ -593,9 +596,10 @@ static int hgcm_call_copy_back_result(
+ 	return 0;
+ }
+ 
+-int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+-		  u32 timeout_ms, struct vmmdev_hgcm_function_parameter *parms,
+-		  u32 parm_count, int *vbox_status)
++int vbg_hgcm_call(struct vbg_dev *gdev, u32 requestor, u32 client_id,
++		  u32 function, u32 timeout_ms,
++		  struct vmmdev_hgcm_function_parameter *parms, u32 parm_count,
++		  int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_call *call;
+ 	void **bounce_bufs = NULL;
+@@ -615,7 +619,7 @@ int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+ 		goto free_bounce_bufs;
+ 	}
+ 
+-	call = vbg_req_alloc(size, VMMDEVREQ_HGCM_CALL);
++	call = vbg_req_alloc(size, VMMDEVREQ_HGCM_CALL, requestor);
+ 	if (!call) {
+ 		ret = -ENOMEM;
+ 		goto free_bounce_bufs;
+@@ -647,9 +651,9 @@ EXPORT_SYMBOL(vbg_hgcm_call);
+ 
+ #ifdef CONFIG_COMPAT
+ int vbg_hgcm_call32(
+-	struct vbg_dev *gdev, u32 client_id, u32 function, u32 timeout_ms,
+-	struct vmmdev_hgcm_function_parameter32 *parm32, u32 parm_count,
+-	int *vbox_status)
++	struct vbg_dev *gdev, u32 requestor, u32 client_id, u32 function,
++	u32 timeout_ms, struct vmmdev_hgcm_function_parameter32 *parm32,
++	u32 parm_count, int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_function_parameter *parm64 = NULL;
+ 	u32 i, size;
+@@ -689,7 +693,7 @@ int vbg_hgcm_call32(
+ 			goto out_free;
+ 	}
+ 
+-	ret = vbg_hgcm_call(gdev, client_id, function, timeout_ms,
++	ret = vbg_hgcm_call(gdev, requestor, client_id, function, timeout_ms,
+ 			    parm64, parm_count, vbox_status);
+ 	if (ret < 0)
+ 		goto out_free;
+diff --git a/drivers/virt/vboxguest/vboxguest_version.h b/drivers/virt/vboxguest/vboxguest_version.h
+index 77f0c8f8a231..84834dad38d5 100644
+--- a/drivers/virt/vboxguest/vboxguest_version.h
++++ b/drivers/virt/vboxguest/vboxguest_version.h
+@@ -9,11 +9,10 @@
+ #ifndef __VBOX_VERSION_H__
+ #define __VBOX_VERSION_H__
+ 
+-/* Last synced October 4th 2017 */
+-#define VBG_VERSION_MAJOR 5
+-#define VBG_VERSION_MINOR 2
++#define VBG_VERSION_MAJOR 6
++#define VBG_VERSION_MINOR 0
+ #define VBG_VERSION_BUILD 0
+-#define VBG_SVN_REV 68940
+-#define VBG_VERSION_STRING "5.2.0"
++#define VBG_SVN_REV 127566
++#define VBG_VERSION_STRING "6.0.0"
+ 
+ #endif
+diff --git a/drivers/virt/vboxguest/vmmdev.h b/drivers/virt/vboxguest/vmmdev.h
+index 5e2ae978935d..6337b8d75d96 100644
+--- a/drivers/virt/vboxguest/vmmdev.h
++++ b/drivers/virt/vboxguest/vmmdev.h
+@@ -98,8 +98,8 @@ struct vmmdev_request_header {
+ 	s32 rc;
+ 	/** Reserved field no.1. MBZ. */
+ 	u32 reserved1;
+-	/** Reserved field no.2. MBZ. */
+-	u32 reserved2;
++	/** IN: Requestor information (VMMDEV_REQUESTOR_*) */
++	u32 requestor;
+ };
+ VMMDEV_ASSERT_SIZE(vmmdev_request_header, 24);
+ 
+@@ -247,6 +247,8 @@ struct vmmdev_guest_info {
+ };
+ VMMDEV_ASSERT_SIZE(vmmdev_guest_info, 24 + 8);
+ 
++#define VMMDEV_GUEST_INFO2_ADDITIONS_FEATURES_REQUESTOR_INFO	BIT(0)
++
+ /** struct vmmdev_guestinfo2 - Guest information report, version 2. */
+ struct vmmdev_guest_info2 {
+ 	/** Header. */
+@@ -259,7 +261,7 @@ struct vmmdev_guest_info2 {
+ 	u32 additions_build;
+ 	/** SVN revision. */
+ 	u32 additions_revision;
+-	/** Feature mask, currently unused. */
++	/** Feature mask. */
+ 	u32 additions_features;
+ 	/**
+ 	 * The intentional meaning of this field was:
+diff --git a/include/linux/vbox_utils.h b/include/linux/vbox_utils.h
+index a240ed2a0372..ff56c443180c 100644
+--- a/include/linux/vbox_utils.h
++++ b/include/linux/vbox_utils.h
+@@ -24,15 +24,17 @@ __printf(1, 2) void vbg_debug(const char *fmt, ...);
+ #define vbg_debug pr_debug
+ #endif
+ 
+-int vbg_hgcm_connect(struct vbg_dev *gdev,
++int vbg_hgcm_connect(struct vbg_dev *gdev, u32 requestor,
+ 		     struct vmmdev_hgcm_service_location *loc,
+ 		     u32 *client_id, int *vbox_status);
+ 
+-int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 client_id, int *vbox_status);
++int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 requestor,
++			u32 client_id, int *vbox_status);
+ 
+-int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+-		  u32 timeout_ms, struct vmmdev_hgcm_function_parameter *parms,
+-		  u32 parm_count, int *vbox_status);
++int vbg_hgcm_call(struct vbg_dev *gdev, u32 requestor, u32 client_id,
++		  u32 function, u32 timeout_ms,
++		  struct vmmdev_hgcm_function_parameter *parms, u32 parm_count,
++		  int *vbox_status);
+ 
+ /**
+  * Convert a VirtualBox status code to a standard Linux kernel return value.
+diff --git a/include/uapi/linux/vbox_vmmdev_types.h b/include/uapi/linux/vbox_vmmdev_types.h
+index 0e68024f36c7..8c535c2594ad 100644
+--- a/include/uapi/linux/vbox_vmmdev_types.h
++++ b/include/uapi/linux/vbox_vmmdev_types.h
+@@ -102,6 +102,37 @@ enum vmmdev_request_type {
+ #define VMMDEVREQ_HGCM_CALL VMMDEVREQ_HGCM_CALL32
+ #endif
+ 
++/* vmmdev_request_header.requestor defines */
++
++/* Requestor user not given. */
++#define VMMDEV_REQUESTOR_USR_NOT_GIVEN                      0x00000000
++/* The kernel driver (VBoxGuest) is the requestor. */
++#define VMMDEV_REQUESTOR_USR_DRV                            0x00000001
++/* Some other kernel driver is the requestor. */
++#define VMMDEV_REQUESTOR_USR_DRV_OTHER                      0x00000002
++/* The root or a admin user is the requestor. */
++#define VMMDEV_REQUESTOR_USR_ROOT                           0x00000003
++/* Regular joe user is making the request. */
++#define VMMDEV_REQUESTOR_USR_USER                           0x00000006
++/* User classification mask. */
++#define VMMDEV_REQUESTOR_USR_MASK                           0x00000007
++/* Kernel mode request. */
++#define VMMDEV_REQUESTOR_KERNEL                             0x00000000
++/* User mode request. */
++#define VMMDEV_REQUESTOR_USERMODE                           0x00000008
++/* Don't know the physical console association of the requestor. */
++#define VMMDEV_REQUESTOR_CON_DONT_KNOW                      0x00000000
++/* Console classification mask. */
++#define VMMDEV_REQUESTOR_CON_MASK                           0x00000040
++/* Requestor is member of special VirtualBox user group. */
++#define VMMDEV_REQUESTOR_GRP_VBOX                           0x00000080
++/* Requestor trust level: Unspecified */
++#define VMMDEV_REQUESTOR_TRUST_NOT_GIVEN                    0x00000000
++/* Requestor trust level mask */
++#define VMMDEV_REQUESTOR_TRUST_MASK                         0x00007000
++/* Requestor is using the less trusted user device node (/dev/vboxuser) */
++#define VMMDEV_REQUESTOR_USER_DEVICE                        0x00008000
++
+ /** HGCM service location types. */
+ enum vmmdev_hgcm_service_location_type {
+ 	VMMDEV_HGCM_LOC_INVALID    = 0,
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.21.0
+
