@@ -2,77 +2,90 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ADCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B008AC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4106218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F282218D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="JEjXZibp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfCTVAj (ORCPT
+        id S1727651AbfCTVBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:00:39 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:43092 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbfCTVAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:00:39 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h6iKD-0003hg-JT; Wed, 20 Mar 2019 15:00:38 -0600
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jon Mason <jdmason@kudzu.us>,
-        NTB Mailing List <linux-ntb@googlegroups.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190321075818.24f9703a@canb.auug.org.au>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8a8ce003-c151-d04b-3ac9-8823a6c8ff7b@deltatee.com>
-Date:   Wed, 20 Mar 2019 15:00:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 17:01:19 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46172 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727634AbfCTVBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 17:01:18 -0400
+Received: by mail-yw1-f68.google.com with SMTP id v127so3133131ywe.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ac3c8BuwXRGufN3K90gjwkHmlf5WusrlHW6NBm1q4lU=;
+        b=JEjXZibp3H4f5ucHf9/nYNdp/ytl0tGHWy0AKX8AmsOYBRlU8V7e7ASVsOt5LncbG1
+         gCS3JBKOn47BLQ8g8YjIgv5iVaKorzkc91V8QDkcVsYe9/uFey0bvFZJ40zD0zOsl8II
+         nHTxk66AWJwMWj4oEKBm1cbfvp6BYEg7JuMVewxzaYlEdBuWcOECG93P/lHKqFr/4AtI
+         Ay0134rkQc9XtvkOKQ5mUy2sa9+TvRSVaXpfbxTCCpsuq4KZKEtKZF+CElW2vAYDxjNZ
+         iH6/4zmve2aF6+bRlPsYN4X24H06xqEBtv9npU1i8LLPi3xQMpqTA2LPRN+hWfZwilZn
+         FBVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ac3c8BuwXRGufN3K90gjwkHmlf5WusrlHW6NBm1q4lU=;
+        b=li4GABgmUEhzK2jC1uM6X02XHHWbS48ZXCINHuKmXUzkC8kl/P74Ijt7b9YB8tM/Cp
+         s8aLT6CkJy9GRpsDBlvWBtMKzEb44htGegcoY057tmFtI3MZB/UsA/mrgHVVsqkoDYaO
+         1urjd4yb+Fauc9pZRixBnO7fpK/cey8J/UUuXMakUdyrIA3qeIm4PhvvSn3QjryTHj2K
+         PgFjN6UkiAkVsXWMCgEOGTZo/EOlDYc8yJBM0rGwjfI+iLhBVj9ZxrtNSLc7SV6GcFUw
+         fv6jF+kOj7Iwepcb/T4Osihn0W2ROcaCIuZc9srXvE/ajc/Xa7rLMwSsgGZQOfD17RsJ
+         WHiw==
+X-Gm-Message-State: APjAAAWVLKqI0wCTFmWaPDC99+daybSIwIYDRP/nAZOLcpEw/6iL4TKy
+        L1w1eC/BdF/MPBsfLTexptBSTveoToo=
+X-Google-Smtp-Source: APXvYqwtzykOHbzXPKJJWcXH+CWrw+RxKVwf2qkPOM6F/W9FMVFsz+4hKQS1ImujNybU7Y3XRpcA9g==
+X-Received: by 2002:a81:430a:: with SMTP id q10mr156204ywa.508.1553115677811;
+        Wed, 20 Mar 2019 14:01:17 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:b52c])
+        by smtp.gmail.com with ESMTPSA id 207sm1091449yws.38.2019.03.20.14.01.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 14:01:17 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 17:01:15 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     gregkh@linuxfoundation.org, tj@kernel.org, lizefan@huawei.com,
+        axboe@kernel.dk, dennis@kernel.org, dennisszhou@gmail.com,
+        mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
+        corbet@lwn.net, cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v6 5/7] psi: track changed states
+Message-ID: <20190320210115.GD19382@cmpxchg.org>
+References: <20190319235619.260832-1-surenb@google.com>
+ <20190319235619.260832-6-surenb@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190321075818.24f9703a@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, linux-ntb@googlegroups.com, jdmason@kudzu.us, sfr@canb.auug.org.au
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: linux-next: Fixes tag needs some work in the ntb tree
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319235619.260832-6-surenb@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 04:56:17PM -0700, Suren Baghdasaryan wrote:
+> Introduce changed_states parameter into collect_percpu_times to track
+> the states changed since the last update.
+> 
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-On 2019-03-20 2:58 p.m., Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   f4d0dd1064b8 ("NTB: ntb_transport: Ensure qp->tx_mw_dma_addr is initaliazed")
-> 
-> Fixes tag
-> 
->   Fixes: c27ccb899219 ("NTB: ntb_transport: Ensure the destination buffer is mapped for TX DMA")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Did you mean:
-> 
->   c59666bb32b9 ("NTB: ntb_transport: Ensure the destination buffer is mapped for TX DMA")
-
-My fault. I sent the fix patch with the fixes tag before the original
-patch was merged upstream expecting them to be squashed. c59666bb32b9 is
-the correct hash in upstream now.
-
-Logan
-
+This will be needed to detect whether polled states activated in the
+monitor patch.
