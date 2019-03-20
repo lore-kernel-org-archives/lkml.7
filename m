@@ -2,77 +2,87 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1555C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EFEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF67218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15F8218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UlM3Ag0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfCTUzB (ORCPT
+        id S1727558AbfCTUzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:55:01 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:50777 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfCTUzB (ORCPT
+        Wed, 20 Mar 2019 16:55:20 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:45516 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfCTUzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:55:01 -0400
-Received: by mail-it1-f199.google.com with SMTP id i63so590977itb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:55:00 -0700 (PDT)
+        Wed, 20 Mar 2019 16:55:20 -0400
+Received: by mail-yw1-f65.google.com with SMTP id j128so3125955ywg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QQYLVXkrs82mdvyVr+o8qJgCSfJ2t/bxI7yFaYhe2ug=;
+        b=UlM3Ag0sHjKm6b60Xzruo36+UDlJMrcULXCsz153tfTpIzb5RNHWobPLHgqI/mhWmy
+         nAzG2b60WzKXMmT44qvypKs/MRK3dAvTvsH7FaGR2TvLZdw4/xJW8HsjT5RsKvT2l114
+         IxT/BWtMIDwxGR3Rmfw37IsijmQCBbzByTYNMnfL5Pqrmqbt0ycHo6hbZZnw/ciMk73x
+         cPcXJLfScHgpDqcmjbfZuTV1rp0MyTLNKhI28W8pS3bGyOp6RhItnuEcuUJOy2Kdykwv
+         PxWIWOxISeF3vhf5selrKImaCqn1ve35lBZip8IjabpLC+gzrspIs30WY8hjdR6M7M8X
+         2FsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ATMdaYfMrEzLAK/3qVE6JRfPa140C73ivhkxaf+hG2g=;
-        b=r960IvT03qtUooHy+a+6lXCr6BJwvT80FBQhY6nxiOj/lDlcVuepvNrcKzgsErIgcD
-         jBpZrMo8/+WRHDAjgsnxS3g/BxsZoaHP4s3NRYTU8rQ2oAZhjVt/MAJwSZHcDVB1QEKe
-         i/+31A5mKEssfZI9j7noVeUUBOAzGX+Lmv7IscmI1rFJqTm4ZGQVVd2GKLrkvfet7M5z
-         ZlKCrkVdeq84ozPlHElSB/ipBW992flG04Hc6zxH01fuRu1UBJpZHfQ5SHK0XR5qozbM
-         JbFVHNVcoDN14Sc986BR5Imh7wTmLiym3GBCF9jFAgoL/Ja/EG3LCQxXIIngEzgApQLf
-         +p2A==
-X-Gm-Message-State: APjAAAUbxHjk7KCKswIDQyk2Hvn+D51Zuv874G4NC5SP6qfDq+tYW4Hi
-        mn7peFPFwSEPjLX+TbIsE5vV03FuayjTJ2YsSZwGlNmZ5FpT
-X-Google-Smtp-Source: APXvYqwKWmO54DQg68LMcZG0mYLaGtrq1IyFFVS31blZL0BGi+p6SIX8ng6BT6POF8LV5tRBsdsrdl/RPJeOjZV3hvpuM7aEMCJ7
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QQYLVXkrs82mdvyVr+o8qJgCSfJ2t/bxI7yFaYhe2ug=;
+        b=VdAYV2DYjuic3J9pBFCpLfQGY3BWXWDjkD5ZpIDWs3d6Q53+9b5DETAAx1oPWWmFel
+         2rYAQVnUiBG2jJhO3bwP84BgkJNJU1Fr/+bFZRydtfo0q0aCz3kbmHySvvC0e97oVPc4
+         tDBLydE7CP37ORkvIgvnNUBLTLnbYUfQbk03YxxlPfZxPXO1WwioAaNJZkAgTGXGC4om
+         mtJte5rb7uPp0AuavZX+uXv9lSzpkCHojx3yyx2TFvr5+LLudm1Au4lqiENs1YVLuvyc
+         RJzjKA6iWt+5M17dnaibOOJ7vKfGCVaQiNIR3j0/XeZ9zdpeM0My2a/6/fh/ukNG260+
+         OwMQ==
+X-Gm-Message-State: APjAAAVneSpRNSJhVStqVR+oYvoZtHmwZuEO5/shvYPhbQ2dxeCEIrda
+        4KJL7yfVFqaPsGwn/yshiPlO6Q==
+X-Google-Smtp-Source: APXvYqyIbRSYuOZ+T6cPUs3nMP69qxZ/A1CkgW2QQVmoCqQ+qIU4OgICrzlh/aj/ZsVwMkaKM+QPbw==
+X-Received: by 2002:a81:2c85:: with SMTP id s127mr107964yws.255.1553115319248;
+        Wed, 20 Mar 2019 13:55:19 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:b52c])
+        by smtp.gmail.com with ESMTPSA id j15sm1001794ywa.7.2019.03.20.13.55.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 13:55:18 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 16:55:17 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     gregkh@linuxfoundation.org, tj@kernel.org, lizefan@huawei.com,
+        axboe@kernel.dk, dennis@kernel.org, dennisszhou@gmail.com,
+        mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
+        corbet@lwn.net, cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v6 2/7] psi: make psi_enable static
+Message-ID: <20190320205517.GA19382@cmpxchg.org>
+References: <20190319235619.260832-1-surenb@google.com>
+ <20190319235619.260832-3-surenb@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a904:: with SMTP id c4mr6838iod.19.1553115300405; Wed,
- 20 Mar 2019 13:55:00 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 13:55:00 -0700
-In-Reply-To: <0000000000005b7456057a9abc57@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c6a7d005848cd56d@google.com>
-Subject: Re: kernel BUG at mm/slab.c:LINE! (3)
-From:   syzbot <syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        sbrivio@redhat.com, sd@queasysnail.net,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319235619.260832-3-surenb@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Mar 19, 2019 at 04:56:14PM -0700, Suren Baghdasaryan wrote:
+> psi_enable is not used outside of psi.c, make it static.
+> 
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-commit b8a51b38e4d4dec3e379d52c0fe1a66827f7cf1e
-Author: Stefano Brivio <sbrivio@redhat.com>
-Date:   Thu Nov 8 11:19:23 2018 +0000
-
-     fou, fou6: ICMP error handlers for FoU and GUE
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161b63cf200000
-start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=151b63cf200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=111b63cf200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4a0a89f12ca9b0f5
-dashboard link: https://syzkaller.appspot.com/bug?extid=2182db487a523d86bf34
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148d46d5400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c6a225400000
-
-Reported-by: syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com
-Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
