@@ -2,79 +2,162 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9002C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70015C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F1F2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348472184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9g8y7SR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbfCTRIC (ORCPT
+        id S1727189AbfCTRIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:08:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:55309 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbfCTRIB (ORCPT
+        Wed, 20 Mar 2019 13:08:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40230 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbfCTRIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:08:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id l10so2605405iob.22
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:08:01 -0700 (PDT)
+        Wed, 20 Mar 2019 13:08:18 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u9so2242276pgo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=19pjDld7aQJ7Bk6oo+SlKKyQukupfxrzA/nJcvqxtQM=;
+        b=j9g8y7SRted33GJVwiZeCNXqGl7bwGb30QPmrqaHo1uoFHglAMJi04UvV9DL3d+B3J
+         6BfNtTPXcbgiMEpR5u9TxngtfE22rpqzsNPPXYcE+ypmNafxaTw3NX5mlhxzR6yF9j3g
+         B5InCGme9mfXjKtn6szH7TyN2NhNKljx+VkWq2QBZzgcfmmXqU3ZXjJsXHH/OLs6pWoa
+         JtUEXz7vwfdcS4DVkOHTgsqWbt+GkStf4nvjSjsyatLP5nVMXPpOSjkqrQV3BTAPsStL
+         QSHsuTxlfkIWbq1RxE2S+D3R7iImAFDF6u/+adcjyvOcEgk6fSgWcYecq1PlTVb19MBe
+         tB9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=NS1NrcRUcS0tKKGgmb2skJ/xqucXk1o9rgiLaWhKW9w=;
-        b=cy2jU2zIQypgBpthbzy/RrJjV/4LrdcEJaMHVJfP6Yapf2pbMhv2wemGMNk0V3EWQ+
-         /tJODKHBa7jucxfxUnHyBX1nEZRi1px2PenRn0X5tGVLCuN2Kcngr6hAjmmJnBGKHgvB
-         KPPrwCeEzN3qkgR5NNQTN3lb04jwAxqJ3h5eNUPsYvC68Rv7zaJ8Tcxyf/d1XsdadlLy
-         jmd5reaiGAdbAd8p3pao9fXMbSl4M5mVAYe8uvMeKXRjoRHHiGLSyWXtM5btDov/F9kU
-         iz3Jn2gjUfivohnhZN8EFxCTay8XwK2zlohRXPHWs515dwbi/+9EpMw3vUvUpOKRbmyJ
-         DguQ==
-X-Gm-Message-State: APjAAAWQc6+p3oakBQyy7pnbSph/P112nzMH/IEKuty1A3UL6IB2jeGQ
-        bIaRINuemNaWV+DWqHaLpBAxT105TTsurj8tQTTT85R3lcHr
-X-Google-Smtp-Source: APXvYqzaCUN8NCMDuAmWy3CxOottRizhhnZK3g4cK3QEZG+OovIPbAQa5sIQbwHyUxln7uuveFghYeQ1ldwBS5TpJshNRnz9EexJ
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=19pjDld7aQJ7Bk6oo+SlKKyQukupfxrzA/nJcvqxtQM=;
+        b=hvZIV03f01HnQ/a2WwqZBAasIaEUiLGn6hAswjFKsVFfzVW5ZSyONbJ9yyzEyiNPYQ
+         RlHZB4qx8ZwVae3ATtPJgARm6mxdXBF48d+B1SKcrd7HAH0SMe6LWETfoJ3O6AgQllY3
+         N7FR8MoMSw5xtyR6J3XXwomPYhtnoGmU6IvOt92ERfs5/T6LtKms1YrPM644Z7ScDZ4Z
+         XxYEqyRaMg1Pv3nESNHd8B9vxAAQ6VzsIppHfUAiOywFQqA0hrDe/EOjiJQlkx06TNno
+         +RQvkgNCMphGj3cuthNeO+uoI4JlGiTPLWQkdtYBr2dlOS387zoThgicTsIS04e6F2Q9
+         pjuw==
+X-Gm-Message-State: APjAAAXvczs5XTMyiqJab5ybIyPSkpfkdM0FvH7l5pCwzQoiYntuGdAP
+        smB2jgzpLAFMgZw6J0f7YkvvED8cSu9W2hCeAHSWmA==
+X-Google-Smtp-Source: APXvYqwIK1yONspeQIPBMxqqG0nw4FoeuiNb1S4qwfU7+l/BXuALNegkDS28rpoVGju6KMC2FlpcdUDTncn4ziWl18w=
+X-Received: by 2002:a17:902:380c:: with SMTP id l12mr9089722plc.238.1553101697469;
+ Wed, 20 Mar 2019 10:08:17 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8b47:: with SMTP id c7mr17965228iot.21.1553101680918;
- Wed, 20 Mar 2019 10:08:00 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 10:08:00 -0700
-In-Reply-To: <000000000000b5e346057af4da06@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fdcb1d058489a91b@google.com>
-Subject: Re: WARNING in enqueue_task_dl
-From:   syzbot <syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com>
-To:     bp@alien8.de, bristot@redhat.com, dvhart@infradead.org,
-        dvyukov@google.com, hpa@zytor.com, juri.lelli@redhat.com,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        luto@kernel.org, mingo@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190320163315.12740-1-natechancellor@gmail.com>
+In-Reply-To: <20190320163315.12740-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 20 Mar 2019 10:08:06 -0700
+Message-ID: <CAKwvOd=-vD5_Et6i1CcoQEEX7PecOUPctjn3vsi0hHOxUDkYRw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: qla2xxx: Simplify conditional check
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     qla2xxx-upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, Mar 20, 2019 at 9:36 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang generates a warning when it sees a logical not followed by a
+> conditional operator like ==, >, or < because it thinks that the logical
+> not should be applied to the whole statement:
+>
+> drivers/scsi/qla2xxx/qla_nx.c:3702:7: warning: logical not is only
+> applied to the left hand side of this comparison
+> [-Wlogical-not-parentheses]
+>                 if (!qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
+>                     ^
+> drivers/scsi/qla2xxx/qla_nx.c:3702:7: note: add parentheses after the
+> '!' to evaluate the comparison first
+>                 if (!qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
+>                     ^
+>                      (
+> drivers/scsi/qla2xxx/qla_nx.c:3702:7: note: add parentheses around left
+> hand side expression to silence this warning
+>                 if (!qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
+>                     ^
+>                     (
+> 1 warning generated.
+>
+> It assumes the author might have made a mistake in their logic:
+>
+> if (!a == b) -> if (!(a == b))
+>
+> Sometimes that is the case; other times, it's just a super convoluted
+> way of saying 'if (a)' when b = 0:
+>
+> if (!1 == 0) -> if (0 == 0) -> if (true)
+>
+> Alternatively:
+>
+> if (!1 == 0) -> if (!!1) -> if (1)
+>
+> Simplify this comparison so that Clang doesn't complain.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/80
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> This is commit 0bfe7d3cae58 ("scsi: qla2xxx: Simplify conditional check")
+> upstream but commit 3695310e37b4 ("scsi: qla2xxx: Update flash
+> read/write routine") in the 5.2/scsi-queue branch silently reverted it.
+> I don't care if it is squashed or not, I just want the warning to stay
+> fixed.
 
-commit 7c80cfc99b7bfdc92cee26f8008859f326f4a37f
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Sat May 6 14:03:17 2017 +0000
+This is probably a simpler commit message. A "Fixes:" tag is a simple
+enough addition, too.
+Thanks for catching this and resending the fix.
 
-     sched/fair: Clean up calc_cfs_shares()
+>
+> Thanks,
+> Nathan
+>
+>  drivers/scsi/qla2xxx/qla_nx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/qla2xxx/qla_nx.c b/drivers/scsi/qla2xxx/qla_nx.c
+> index de2bc78449e7..121e18b3b9f8 100644
+> --- a/drivers/scsi/qla2xxx/qla_nx.c
+> +++ b/drivers/scsi/qla2xxx/qla_nx.c
+> @@ -3699,8 +3699,8 @@ qla82xx_chip_reset_cleanup(scsi_qla_host_t *vha)
+>                 spin_unlock_irqrestore(&ha->hardware_lock, flags);
+>
+>                 /* Wait for pending cmds (physical and virtual) to complete */
+> -               if (!qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
+> -                   WAIT_HOST) == QLA_SUCCESS) {
+> +               if (qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
+> +                   WAIT_HOST)) {
+>                         ql_dbg(ql_dbg_init, vha, 0x00b3,
+>                             "Done wait for "
+>                             "pending commands.\n");
+> --
+> 2.21.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To post to this group, send email to clang-built-linux@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190320163315.12740-1-natechancellor%40gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=169d614d200000
-start commit:   7c80cfc9 sched/fair: Clean up calc_cfs_shares()
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=159d614d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=119d614d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=76d28549be7c27cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=119ba87189432ead09b4
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10eb7ebf400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14156d77400000
 
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Fixes: 7c80cfc9 ("sched/fair: Clean up calc_cfs_shares()")
+
+-- 
+Thanks,
+~Nick Desaulniers
