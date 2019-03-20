@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C495FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7555BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A019217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40979217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="FNXKglhq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="p/mmDdoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfCTBXQ (ORCPT
+        id S1727532AbfCTBXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:23:16 -0400
+        Tue, 19 Mar 2019 21:23:20 -0400
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:58805 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfCTBXL (ORCPT
+        with ESMTP id S1727362AbfCTBXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:23:11 -0400
+        Tue, 19 Mar 2019 21:23:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1553044990; x=1584580990;
+  t=1553044991; x=1584580991;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=clP6NMFQMwOD3n54p6gFwQhrqNU04Jf2cfalAdxHECo=;
-  b=FNXKglhqgRdNXSexvL3keXxNagprjIk88z0i5QAfUYM26jy3beKR8BC9
-   zaId9n38+h/yLg8mqaUr4DO34386W85fF6792CQiJJhun+pqKlUnQatyh
-   +pA6n8e6UpGPAG1voG1A8MovDjSAa1wRoDC2u/v+OkJ6USV51B0LwkLUG
-   jCwhbIM+5UIW0og62rp1igaEFqCYQNcKkhXvRGn8FKZ/7hAbUysdpG7Cx
-   lNUG/Ts4sKho0fpotS2YNz1ShjRPeEIPdUz6+IuDg63VMKeCe0u38iupU
-   953OLAbXFnSFVe3nk3NxRBI8I2QXwgLmfmzb8BHDpRxraeKV/QrvfwDOP
-   g==;
+  bh=s8sajK0+Y5Qxk3l9f3FRoReqL4ztyr9hMhYSgl8VlYs=;
+  b=p/mmDdojvPDaxAT2GZoO/7X7qcbydkokC3wY4ZQhSjAs62yNY/vgXWzE
+   M7pJvnIArF6GgEXoGm4ogDMl6xJMTid7u4klX2KlIa+EG8S24CDPoouju
+   QVYNxZxd+tEuRqyJAIl+VzjtqyrScg1QtZNCo3BejGoGyw5K/OUFt+L+/
+   UFsFxK7tuDuu+zjwszklvXq/oGWmLrQD4ZkUh+6E8stMxebi0i93NYK96
+   ZAJzjQIkPnGY4IKoJdMr+7F6fAl9Fdstiz3OxZEhR8B1jvLSlWqGj8bMH
+   aOLob8h/gGJk4G/Kvg7FOG4KHIVbk+OkKoQRF4VgGETS92UyCkE95/EXH
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.58,498,1544457600"; 
-   d="scan'208";a="209334031"
+   d="scan'208";a="209334033"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2019 09:22:59 +0800
-IronPort-SDR: JVj/9vlWesC8weJiktfwCdn6/HfKUCC3+7eoFYIAvkut0mn/nj3A4KU9DyuDkRotQFzZD0+j4H
- pWzT4M8LZYJBxAX0YJkPGHTDsK1YtwMrc8v532Kr4AVXmVBAswsvW4DRe6muLl/Rb0gQa7KMG1
- W/R0V4UGbKKruxUT/grmX2y66BzIzLMxTwlF4rKCNHRxiUYNNr49RAocFsTnTy3GcyUioX8QKf
- HfHyOcmTvyHKbRZasc8mFzx5z60cWTiYWiI+01UKLjS1nKqnPJ4c4/NpiaVbdD6/fo+CgMu9oV
- +dEhofYF5SLFuP70R+zIrJqE
+  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2019 09:23:01 +0800
+IronPort-SDR: ZSCjO78nagcTKoKZGF15Ft3F+6Vqpkkh+FMP28J69Ouki3QURLwHm8J4flo6ihGyH98itzmbIp
+ AT466zEOPrT+tI2IF1BFJGT7C+6bWQcNmM7ilXkjSTTWkoNhJ2IA9o3VC1Ug3tWf4OVHeCs1ke
+ qYig5nsvO5Mg3gBZAPCSqRwiE+XvqfW9+OTwSvhUScYPpge9MRqYYBng7r1a2GjPE7Mwm2Gd4O
+ z+EfFhBBbygVuaktNquv/40dsntycpqNVpcJvKr8uFXRcYG7OZn2Z1MdvVHTBdM4/2WsHJGpdO
+ CZs=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 19 Mar 2019 18:02:38 -0700
-IronPort-SDR: Mm5ffHnMXLnxzR1GUSYNkrtLoY2+7RghWhnwm3rbWmIpX08gxIVYkBbEC5fVJZJ9NDkJDK9Xin
- FhOTRoW7BlLxIMunZBjIBu0QNT6ma2EmmYIAWko25FHzceSMVH1ysTi8VHGeFo2mgdzRuljAhH
- dOsnYATokewlBOXrwwg8owTuQL28346eGYMJ+BUgEbg/nTNxtoRwgt7vyulnZowRtjtbpyGTNi
- MvpVbRYG7k13jQD+ietuBwFSjIxgDdPJnghQFwFrRBYaoSfnU+/UN0v72cNq7CPhPB3ppX79iI
- ISc=
+  by uls-op-cesaep02.wdc.com with ESMTP; 19 Mar 2019 18:02:39 -0700
+IronPort-SDR: 7ewcJGwtdw1Bf+9Hx8qbkswK2bQ36UhDlgzsirbxYImQVPyGxNNSJ08RkKvFY5C56vHTnOHLK+
+ 0BFpINbW/yBhvuKyV+dc3ltHSxuu2PupuxExbrh9S1/cfGpJ98NMYQxiJ21g0KPoxZI31SOkun
+ itoqAjWahzU2c5kgbwEy71+MG4c971MaZyTBaESpHrzVp+4tYPNat80yjSmkoVyMGiHKBXjKrq
+ EQexS25nFe0rWbGhOl/pGyWsOpkW+dj2+rarvgGLoa9Ge8ryMlswwOL4x2kT3i7X1qXk5xl+NK
+ iYY=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 19 Mar 2019 18:22:59 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 19 Mar 2019 18:23:00 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -78,9 +77,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will.deacon@arm.com>
-Subject: [RFT/RFC PATCH v2 3/4] arm: Use common cpu_topology
-Date:   Tue, 19 Mar 2019 18:22:50 -0700
-Message-Id: <20190320012251.2728-4-atish.patra@wdc.com>
+Subject: [RFT/RFC PATCH v2 4/4] RISC-V: Parse cpu topology during boot.
+Date:   Tue, 19 Mar 2019 18:22:51 -0700
+Message-Id: <20190320012251.2728-5-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190320012251.2728-1-atish.patra@wdc.com>
 References: <20190320012251.2728-1-atish.patra@wdc.com>
@@ -91,132 +90,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, ARM32 and ARM64 uses different data structures to
-represent their cpu toplogies. Since, we are moving the ARM64
-topology to common code to be used by other architectures, we
-can reuse that for ARM32 as well.
+Currently, there are no topology defined for RISC-V.
+Parse the cpu-map node from device tree and setup the
+cpu topology.
+
+CPU topology after applying the patch.
+$cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+0-3
+$cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+0-3
+$cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
+0
+$cat /sys/devices/system/cpu/cpu3/topology/core_id
+3
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/arm/include/asm/topology.h | 22 +---------------------
- arch/arm/kernel/topology.c      | 10 +++++-----
- include/linux/arch_topology.h   | 10 +++++++++-
- 3 files changed, 15 insertions(+), 27 deletions(-)
+ arch/riscv/Kconfig          | 1 +
+ arch/riscv/kernel/smpboot.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-index 2a786f54..52f99ec8 100644
---- a/arch/arm/include/asm/topology.h
-+++ b/arch/arm/include/asm/topology.h
-@@ -5,26 +5,6 @@
- #ifdef CONFIG_ARM_CPU_TOPOLOGY
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index eb56c82d..ac87a0ec 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -47,6 +47,7 @@ config RISCV
+ 	select PCI_MSI if PCI
+ 	select RISCV_TIMER
+ 	select GENERIC_IRQ_MULTI_HANDLER
++	select GENERIC_ARCH_TOPOLOGY if SMP
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select HAVE_EBPF_JIT if 64BIT
  
- #include <linux/cpumask.h>
--
--struct cputopo_arm {
--	int thread_id;
--	int core_id;
--	int socket_id;
--	cpumask_t thread_sibling;
--	cpumask_t core_sibling;
--};
--
--extern struct cputopo_arm cpu_topology[NR_CPUS];
--
--#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
--#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
--#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
--#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
--
--void init_cpu_topology(void);
--void store_cpu_topology(unsigned int cpuid);
--const struct cpumask *cpu_coregroup_mask(int cpu);
--
- #include <linux/arch_topology.h>
- 
- /* Replace task scheduler's default frequency-invariant accounting */
-@@ -38,7 +18,7 @@ const struct cpumask *cpu_coregroup_mask(int cpu);
- 
- #else
- 
--static inline void init_cpu_topology(void) { }
-+static inline void init_cpu_topology(void) {}
- static inline void store_cpu_topology(unsigned int cpuid) { }
- 
- #endif
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 60e375ce..0ddb24c7 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -180,7 +180,7 @@ static inline void update_cpu_capacity(unsigned int cpuid) {}
-  /*
-  * cpu topology table
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index f41eb193..a8fe590c 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -16,6 +16,7 @@
+  * GNU General Public License for more details.
   */
--struct cputopo_arm cpu_topology[NR_CPUS];
-+struct cpu_topology cpu_topology[NR_CPUS];
- EXPORT_SYMBOL_GPL(cpu_topology);
  
- const struct cpumask *cpu_coregroup_mask(int cpu)
-@@ -197,9 +197,9 @@ const struct cpumask *cpu_corepower_mask(int cpu)
- 	return &cpu_topology[cpu].thread_sibling;
++#include <linux/arch_topology.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -43,6 +44,7 @@ static DECLARE_COMPLETION(cpu_running);
+ 
+ void __init smp_prepare_boot_cpu(void)
+ {
++	init_cpu_topology();
  }
  
--static void update_siblings_masks(unsigned int cpuid)
-+void update_siblings_masks(unsigned int cpuid)
- {
--	struct cputopo_arm *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
-+	struct cpu_topology *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
- 	int cpu;
+ void __init smp_prepare_cpus(unsigned int max_cpus)
+@@ -146,6 +148,7 @@ asmlinkage void __init smp_callin(void)
  
- 	/* update core and thread sibling masks */
-@@ -230,7 +230,7 @@ static void update_siblings_masks(unsigned int cpuid)
-  */
- void store_cpu_topology(unsigned int cpuid)
- {
--	struct cputopo_arm *cpuid_topo = &cpu_topology[cpuid];
-+	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
- 	unsigned int mpidr;
- 
- 	/* If the cpu topology has been already set, just return */
-@@ -302,7 +302,7 @@ void __init init_cpu_topology(void)
- 
- 	/* init core mask and capacity */
- 	for_each_possible_cpu(cpu) {
--		struct cputopo_arm *cpu_topo = &(cpu_topology[cpu]);
-+		struct cpu_topology *cpu_topo = &(cpu_topology[cpu]);
- 
- 		cpu_topo->thread_id = -1;
- 		cpu_topo->core_id =  -1;
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index d4e76e0a..7c850611 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -36,17 +36,25 @@ unsigned long topology_get_freq_scale(int cpu)
- struct cpu_topology {
- 	int thread_id;
- 	int core_id;
-+#ifdef CONFIG_ARM_CPU_TOPOLOGY
-+	int socket_id;
-+#else
- 	int package_id;
- 	int llc_id;
-+	cpumask_t llc_sibling;
-+#endif
- 	cpumask_t thread_sibling;
- 	cpumask_t core_sibling;
--	cpumask_t llc_sibling;
- };
- 
- #ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
- extern struct cpu_topology cpu_topology[NR_CPUS];
- 
-+#ifdef CONFIG_ARM_CPU_TOPOLOGY
-+#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
-+#else
- #define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
-+#endif
- #define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
- #define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
- #define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
+ 	trap_init();
+ 	notify_cpu_starting(smp_processor_id());
++	update_siblings_masks(smp_processor_id());
+ 	set_cpu_online(smp_processor_id(), 1);
+ 	/*
+ 	 * Remote TLB flushes are ignored while the CPU is offline, so emit
 -- 
 2.21.0
 
