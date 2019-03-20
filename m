@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7013AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07B1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536142146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23322146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfCTSuw (ORCPT
+        id S1727742AbfCTSu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:50:52 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45046 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfCTSuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:50:50 -0400
+        Wed, 20 Mar 2019 14:50:56 -0400
+Received: from foss.arm.com ([217.140.101.70]:45066 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727717AbfCTSux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:50:53 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D0161A25;
-        Wed, 20 Mar 2019 11:50:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 689DA1BC0;
+        Wed, 20 Mar 2019 11:50:53 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F41563F59C;
-        Wed, 20 Mar 2019 11:50:47 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BFEFF3F59C;
+        Wed, 20 Mar 2019 11:50:51 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         coresight@lists.linaro.org, mike.leach@linaro.org,
         robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH 23/25] coresight: stm: ACPI support for parsing stimulus base
-Date:   Wed, 20 Mar 2019 18:49:40 +0000
-Message-Id: <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 25/25] coresight: acpi: Support for components
+Date:   Wed, 20 Mar 2019 18:49:42 +0000
+Message-Id: <1553107783-3340-26-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
 References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,82 +43,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The stimulus base for STM device must be listed as the second memory
-resource, followed by the programming base address. Add support for
-parsing the information for ACPI.
+All AMBA devices are handled via ACPI AMBA scan notifier
+infrastructure. The platform devices get the ACPI id
+added to their driver.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-stm.c | 43 +++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/acpi/acpi_amba.c                           | 9 +++++++++
+ drivers/hwtracing/coresight/coresight-replicator.c | 9 ++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-index d94ae22..995443a 100644
---- a/drivers/hwtracing/coresight/coresight-stm.c
-+++ b/drivers/hwtracing/coresight/coresight-stm.c
-@@ -16,6 +16,7 @@
-  * (C) 2015-2016 Chunyan Zhang <zhang.chunyan@linaro.org>
+diff --git a/drivers/acpi/acpi_amba.c b/drivers/acpi/acpi_amba.c
+index 7f77c07..eef5a69 100644
+--- a/drivers/acpi/acpi_amba.c
++++ b/drivers/acpi/acpi_amba.c
+@@ -24,6 +24,15 @@
+ 
+ static const struct acpi_device_id amba_id_list[] = {
+ 	{"ARMH0061", 0}, /* PL061 GPIO Device */
++	{"ARMHC500", 0}, /* ARM CoreSight ETM4x */
++	{"ARMHC501", 0}, /* ARM CoreSight ETR */
++	{"ARMHC502", 0}, /* ARM CoreSight STM */
++	{"ARMHC503", 0}, /* ARM CoreSight Debug */
++	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
++	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
++	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
++	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
++	{"ARMHC9FF", 0}, /* ARM CoreSight Funnel */
+ 	{"", 0},
+ };
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 7b937c0..11b1978 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -5,6 +5,7 @@
+  * Description: CoreSight Replicator driver
   */
- #include <asm/local.h>
+ 
 +#include <linux/acpi.h>
  #include <linux/amba/bus.h>
- #include <linux/bitmap.h>
- #include <linux/clk.h>
-@@ -717,10 +718,52 @@ static inline int of_stm_get_stimulus_area(struct device *dev,
- }
- #endif
+ #include <linux/kernel.h>
+ #include <linux/device.h>
+@@ -288,11 +289,17 @@ static const struct of_device_id static_replicator_match[] = {
+ 	{}
+ };
  
 +#ifdef CONFIG_ACPI
-+static int acpi_stm_get_stimulus_area(struct device *dev, struct resource *res)
-+{
-+	int rc;
-+	bool found_base = false;
-+	struct resource_entry *rent;
-+	LIST_HEAD(res_list);
-+
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+
-+	if (!adev)
-+		return -ENODEV;
-+	rc = acpi_dev_get_resources(adev, &res_list, NULL, NULL);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = -ENOENT;
-+	list_for_each_entry(rent, &res_list, node) {
-+		if (resource_type(rent->res) != IORESOURCE_MEM)
-+			continue;
-+		if (found_base) {
-+			*res = *rent->res;
-+			rc = 0;
-+			break;
-+		}
-+
-+		found_base = true;
-+	}
-+
-+	acpi_dev_free_resource_list(&res_list);
-+	return rc;
-+}
-+#else
-+static inline int acpi_stm_get_stimulus_area(struct device *dev,
-+					     struct resource *res)
-+{
-+	return -ENOENT;
-+}
++static const struct acpi_device_id static_replicator_acpi_ids[] = {
++	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
++};
 +#endif
-+
- static int stm_get_stimulus_area(struct device *dev, struct resource *res)
- {
- 	if (dev->of_node)
- 		return of_stm_get_stimulus_area(dev, res);
-+	else if (is_acpi_node(dev->fwnode))
-+		return acpi_stm_get_stimulus_area(dev, res);
- 	return -ENOENT;
- }
- 
+ static struct platform_driver static_replicator_driver = {
+ 	.probe          = static_replicator_probe,
+ 	.driver         = {
+ 		.name   = "coresight-replicator",
+-		.of_match_table = static_replicator_match,
++		.of_match_table = of_match_ptr(static_replicator_match),
++		.acpi_match_table = ACPI_PTR(static_replicator_acpi_ids),
+ 		.pm	= &replicator_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
 -- 
 2.7.4
 
