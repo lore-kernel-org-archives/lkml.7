@@ -2,115 +2,110 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AE2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF6DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27912146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GMdIfA/L";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hk0/DHHC"
+	by mail.kernel.org (Postfix) with ESMTP id BE1C12146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfCTT1N (ORCPT
+        id S1727193AbfCTT1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:27:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38332 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfCTT1M (ORCPT
+        Wed, 20 Mar 2019 15:27:38 -0400
+Received: from smtp.eu.citrix.com ([185.25.65.24]:49476 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfCTT1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:27:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9E5446119E; Wed, 20 Mar 2019 19:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553110031;
-        bh=KxsE+Vgi098gw7lUagctKNE7jjetmQhiXBz4P4yXpss=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GMdIfA/LX07diV4w/UODDabnaFHSKD2u8i7ea/zVerCCTaVswxWlWl2FnXElIJqO8
-         p+K8DgX6Bj8KcIVvgIYyDWC23W/yqkHxkKOo8ytInAnv3MCPnvY6axoHno1jgniDCk
-         ZoCRzAShlhiqg/cZ6+NmXcecxm/GGCp3Xk9rucbg=
-Received: from [10.79.162.149] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C8E5261112;
-        Wed, 20 Mar 2019 19:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553110030;
-        bh=KxsE+Vgi098gw7lUagctKNE7jjetmQhiXBz4P4yXpss=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hk0/DHHCwnQ32QvkyWXYCzqG3sO1WjTx+Av1hb/jCHSLzaxxL5lxZEC7yHC4N9rMv
-         hXDTjdBNgh1ZhZ/bDt1za18eX+6POGsFeKj5YxxoDgyBice3lPogehhWBc83yyJxGU
-         YY0nEHh6gMGEduLQHci9wLWLMy9S9rLdT5qN+6OU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C8E5261112
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH -next] watchdog: sb_wdog: Make sbwdog_set and sbwdog_pet
- static
-To:     Yue Haibing <yuehaibing@huawei.com>, wim@linux-watchdog.org,
-        linux@roeck-us.net
-Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20190320134250.13348-1-yuehaibing@huawei.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <45a85dca-93e8-80eb-3392-028a3dca4b3d@codeaurora.org>
-Date:   Thu, 21 Mar 2019 00:57:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 15:27:38 -0400
+X-IronPort-AV: E=Sophos;i="5.60,249,1549929600"; 
+   d="scan'208";a="87619252"
+Subject: Re: [Xen-devel] [PATCH] PCI: Mark expected switch fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        <xen-devel@lists.xenproject.org>
+References: <20190320182715.GA9406@embeddedor>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <b67ab7b5-bb75-4443-1cfc-bb905ac09a15@citrix.com>
+Date:   Wed, 20 Mar 2019 19:27:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190320134250.13348-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190320182715.GA9406@embeddedor>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20/03/2019 18:27, Gustavo A. R. Silva wrote:
+> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+> index 6fa1627ce08d..445b51db75b0 100644
+> --- a/drivers/pci/proc.c
+> +++ b/drivers/pci/proc.c
+> @@ -222,6 +222,7 @@ static long proc_bus_pci_ioctl(struct file *file, unsigned int cmd,
+>  		}
+>  		/* If arch decided it can't, fall through... */
+>  #endif /* HAVE_PCI_MMAP */
+> +		/* fall through */
 
-On 3/20/2019 7:12 PM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fix sparse warning:
->
-> drivers/watchdog/sb_wdog.c:70:6: warning: symbol 'sbwdog_set' was not declared. Should it be static?
-> drivers/watchdog/sb_wdog.c:84:6: warning: symbol 'sbwdog_pet' was not declared. Should it be static?
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/watchdog/sb_wdog.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
-> index 3abae50..8264fced 100644
-> --- a/drivers/watchdog/sb_wdog.c
-> +++ b/drivers/watchdog/sb_wdog.c
-> @@ -67,7 +67,7 @@ static DEFINE_SPINLOCK(sbwd_lock);
->    *
->    * wdog is the iomem address of the cfg register
->    */
-> -void sbwdog_set(char __iomem *wdog, unsigned long t)
-> +static void sbwdog_set(char __iomem *wdog, unsigned long t)
->   {
->   	spin_lock(&sbwd_lock);
->   	__raw_writeb(0, wdog);
-> @@ -81,7 +81,7 @@ void sbwdog_set(char __iomem *wdog, unsigned long t)
->    *
->    * wdog is the iomem address of the cfg register
->    */
-> -void sbwdog_pet(char __iomem *wdog)
-> +static void sbwdog_pet(char __iomem *wdog)
->   {
->   	spin_lock(&sbwd_lock);
->   	__raw_writeb(__raw_readb(wdog) | 1, wdog);
+Surely it would be better to transpose the #endif and its previous line,
+than to add a second fallthrough ?
 
-
-Acked-by: Mukesh Ojha <mojha@codeaurora.org>
-
-
-Thanks.
-
-Mukesh
-
+~Andrew
