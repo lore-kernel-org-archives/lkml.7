@@ -2,122 +2,126 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5E9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC60C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89C42077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC692183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:11:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LmuJS4dQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfCTQHP (ORCPT
+        id S1726963AbfCTQLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:07:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:42308 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbfCTQHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:07:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 234651650;
-        Wed, 20 Mar 2019 09:07:14 -0700 (PDT)
-Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C30113F614;
-        Wed, 20 Mar 2019 09:07:12 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 16:07:08 +0000
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex
- initialisation
-Message-ID: <20190320160708.5f31ff10@why.wild-wind.fr.eu.org>
-In-Reply-To: <20190319114511.GS7752@kuha.fi.intel.com>
-References: <20190318174906.10429-1-marc.zyngier@arm.com>
-        <20190319114511.GS7752@kuha.fi.intel.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 20 Mar 2019 12:11:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37568 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfCTQLo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 12:11:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so12236618wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PdN8bZNJMWdZ4Zi7pWsi2wFU/QM5+o2MrnWrqwYPdW4=;
+        b=LmuJS4dQCG9Dt5f6sbosls3tYtFPHtCcWa8S4C7jctPZZYJFT5z6VMC5enCEyD5ap6
+         xsZ7aM39Z4cWXXk94Mm1+FgwC+IxecgE+8AbEmhyxake/iLPvR0qqiZdyk1OOkAxxTxM
+         nc/k+4DRDvsrSgD76P/WrbEE3Q4OLz9FrWT2e7g1cy/gFiazYkMxhJPCC4/BoyTaMN1p
+         mEiBcrUec5i0QY7LESQnW3+iWJhSrTUIXxk09H13c9TMSr/8U3IH6EvQIQWTZ92u0gFD
+         hcKhXlCC9MNXQiUbIhOq1f5vjZg9oaoh4K875NwNNNufrOeXf302Q2e2KXcZW1F4OJce
+         Kxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PdN8bZNJMWdZ4Zi7pWsi2wFU/QM5+o2MrnWrqwYPdW4=;
+        b=AhNR5jtRerEzsPhbu3gh5dIlmbuB95S6JV189Nh5cfCe87/DBbXl2VbYzuRCpAOzk3
+         qV5vvj2bbJbR1w48Ydi6M/uZhlwzQoGxqsOLuO6CGJrZgrY+uEGXrYs1+HODx+/ntbwr
+         Hb01a9sy/93u5wjyGg2T7BLqylUL0J3ej3S6nK/9gxZDvZIO9G6bkxKLHfqS+kTgwH2C
+         lEWBCSxvEe+DsOIFKW3Qz6oXs/Hh5LmS33Yxa/khCH42BYipuzX+PKM9yZbpI+g5P3GX
+         BxbetPgavb0zEVOAqzuBY8H6RuvxGzkz5Pvhu/4g6suXBEBnYaTTk4viwg5F0RDixH5v
+         9Y9w==
+X-Gm-Message-State: APjAAAW+OuWulFfN5fpXHcmPi5fUr6tS5JfM2a+MNRqcuBbEQQxyJBR6
+        xhurklaOPaWMlAwuI9Es/E6VEm2hG0qb0jd5/Beraw==
+X-Google-Smtp-Source: APXvYqxBbNi+dbSbGM+A8sly6AIun8ogCPygRl2G/URsrUtsQ8sKif3ehMrQ7SZmBYAyW7xd8biJLC0K2Hv6efV3GU8=
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr9328232wmh.9.1553098302879;
+ Wed, 20 Mar 2019 09:11:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
+ <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
+ <CA+M3ks7q8QnNirk_WkaE5CmFWkEPn4uu5Hfb2kP+4d5qapHvrA@mail.gmail.com>
+ <c51be371-086a-bd5b-b70a-5579f5b95320@ti.com> <CAF6AEGss21WmpF7sHGTxOEjuadSNpM6M_Z-WweK2W68FEHOFdA@mail.gmail.com>
+ <CALAqxLVbdpj+T4u3jZ_5Uqda5La1Py-ZGpXSep_CCoLzWyap8A@mail.gmail.com> <CA+M3ks61BGPkPjNd01g32LV7YZfDpy8t100KxQhScOFgGO4KjA@mail.gmail.com>
+In-Reply-To: <CA+M3ks61BGPkPjNd01g32LV7YZfDpy8t100KxQhScOFgGO4KjA@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 20 Mar 2019 09:11:31 -0700
+Message-ID: <CALAqxLX-ooNmHBmSr3iRvHhBwP+rinc7WOe0Aw1dKKyKZWE0iw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Rob Clark <robdclark@gmail.com>, "Andrew F. Davis" <afd@ti.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Chenbo Feng <fengc@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Marissa Wall <marissaw@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 13:45:11 +0200
-Heikki Krogerus <heikki.krogerus@linux.intel.com> wrote:
+On Wed, Mar 20, 2019 at 2:16 AM Benjamin Gaignard
+<benjamin.gaignard@linaro.org> wrote:
+> Le mar. 19 mars 2019 =C3=A0 23:36, John Stultz <john.stultz@linaro.org> a=
+ =C3=A9crit :
+> > On Tue, Mar 19, 2019 at 2:58 PM Rob Clark <robdclark@gmail.com> wrote:
+> > > For at least some hw the importing driver needs to configure things
+> > > differently for secure buffers :-/
+> >
+> > Does the import ioctl need/use a flag for that then? Userland already
+> > has to keep meta-data about dmabufs around.
+>
+> To secure a buffer you need to know who is allowed to write/read it and
+> hardware block involved in the dataflow may need to know that the buffer
+> is secure to configure themself.
+> As example for a video decoding you allow hw video decoder to read in
+> a buffer and display to read it. You can also allow cpu to write on the b=
+uffer
+> to add subtitles. For that we need to be able to mmap/kmap the buffer.
+> Using a carveout heap for secure buffer mean that you reserved a large
+> memory region only for this purpose, that isn't possible on embedded devi=
+ce
+> where we are always limited in memory so we use CMA.
+> In the past I have used dmabuf's attach function to know who write into
+> the buffer and then configure who will be able to read it. It was working=
+ well
+> but the issue was how to in generic way this behavior.
 
-Heikki,
+Given the complexity of the configuration needed when allocating the
+buffer, instead of trying to make a generic secure buffer allocator,
+would having per-usege heaps make sense?  It just feels there are so
+many specifics to the secure buffer setup and configuration that maybe
+there can't be a generic configuration interface.  So instead maybe we
+let the heap implementations provide set usage configs?
 
-> On Mon, Mar 18, 2019 at 05:49:06PM +0000, Marc Zyngier wrote:
-> > Running a kernel with the fusb302 driver and lockdep enabled
-> > leads to an unpleasant warning:
-> > 
-> > [    4.617477] INFO: trying to register non-static key.
-> > [    4.617930] the code is fine but needs lockdep annotation.
-> > [    4.618418] turning off the locking correctness validator.
-> > [    4.618913] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc1-00007-g3542533f3fc9 #13
-> > [    4.619620] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
-> > [    4.620454] Call trace:
-> > [    4.620693]  dump_backtrace+0x0/0x138
-> > [    4.621028]  show_stack+0x24/0x30
-> > [    4.621336]  dump_stack+0xbc/0x104
-> > [    4.621649]  register_lock_class+0x594/0x598
-> > [    4.622036]  __lock_acquire+0x80/0x11b8
-> > [    4.622384]  lock_acquire+0xdc/0x260
-> > [    4.622711]  __mutex_lock+0x90/0x8a0
-> > [    4.623037]  mutex_lock_nested+0x3c/0x50
-> > [    4.623394]  _fusb302_log+0x88/0x1f0
-> > [    4.623721]  fusb302_log+0x7c/0xa0
-> > [    4.624033]  tcpm_init+0x5c/0x190
-> > [    4.624336]  tcpm_init+0x3c/0x130
-> > [    4.624640]  tcpm_register_port+0x574/0x878
-> > [    4.625019]  fusb302_probe+0x2c8/0x590
-> > 
-> > Despite what the message says, the code isn't fine, as it tries to
-> > make use of the fusb302_log facility pretty early. This requires the
-> > logbuffer_lock mutex to be initialised, but that only happens much
-> > later. Boo.
-> > 
-> > Hoist the fusb302_debugfs_init call before tcpm_register_port so that
-> > we can enjoy a working mutex. At Guenter's request, also add teardown
-> > of the debugfs facility on the error path.
-> > 
-> > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>  
-> 
-> After applying this there was no more "fusb302" debugfs directory, and
-> attempt to unload the fusb302 module dead locked. Also, attempt to
-> reboot caused this to happen on my GDPWin board after applying the
-> patch:
-> 
->         BUG: Dentry 0000000012f2a05d{i=149,n=i2c-fusb302}  still in use (1) [unmount of sysfs sysfs]
->         WARNING: CPU: 3 PID: 1639 at fs/dcache.c:1529 umount_check.cold.55+0x2e/0x3a
->         Modules linked in: intel_xhci_usb_role_switch roles pi3usb30532 typec i915 intel_gtt intel_cht_int33fe [last unloaded: tcpm]
->         CPU: 3 PID: 1639 Comm: umount Not tainted 5.1.0-rc1-heikki+ #916
->         Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
->         RIP: 0010:umount_check.cold.55+0x2e/0x3a
->         ...
-> 
-> Note. Your patch has also a conflict with patches from Hans, I
-> think with this one: https://patchwork.kernel.org/patch/10847275/
-> I can take care of that, but you can also rebase the next version on
-> top of my typec-next branch to solve that problem:
-> https://github.com/krohei/linux/commits/typec-next
+This doesn't necessarily require that you have separate pools of
+memory (they can share the same backing store), but by having multiple
+per-config heap devices, maybe this could avoid trying to fit all the
+options into one interface?
 
-OK, this is very weird. I can't reproduce any of the issues you're
-reporting:
+On the import side, I'm not sure how much the importing device needs
+to know about the specific rules here (out side of "secure buffer" or
+not), so maybe that's another catch.
 
-- the patch applies cleanly on top of typec-next
-- removing the fusb302 module works
-- I see the debugfs file whenever fsusb302 is inserted
-
-Maybe you were trying this on another branch?
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+thanks
+-john
