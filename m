@@ -2,165 +2,152 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D878C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7F3C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144AE218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4DE21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lcrHgEg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfCTUl2 (ORCPT
+        id S1727361AbfCTUnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:41:28 -0400
-Received: from gateway36.websitewelcome.com ([50.116.125.2]:20875 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbfCTUl2 (ORCPT
+        Wed, 20 Mar 2019 16:43:11 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40253 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfCTUnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:41:28 -0400
-X-Greylist: delayed 1408 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Mar 2019 16:41:27 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 0F889400C991E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:34:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6hexhDrzh2qH76hexhetDm; Wed, 20 Mar 2019 15:17:59 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=34502 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6hew-003pZX-J1; Wed, 20 Mar 2019 15:17:58 -0500
-Subject: Re: [PATCH] mtd: lpddr_cmds: Mark expected switch fall-through
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190208181210.GA8388@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
-Date:   Wed, 20 Mar 2019 15:17:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190208181210.GA8388@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6hew-003pZX-J1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34502
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 30
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 20 Mar 2019 16:43:10 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x12so4233255qts.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2RLae5TxRnlaqkXd+oED+3b1Dwsri72MEioaQj3Oulg=;
+        b=lcrHgEg4Qfep15DQxX+bHhuyKyVVdmSuCCHmm0pqnrjeZt12Hp1KKQToATIau34B5P
+         bCdAVNkHxXCnmo0CWbW+LVRsojBOGZIT4RwH9eskGG1dYel05xR5BJ7TDMb6bKLFqUzB
+         RmeoH7wS9bXaw9c4sZ9wYOxqa4biXgAujOMa5Yjgn+N0yDF9jz20u3VvLtkJDR0d2wqx
+         dlA5kBBZvUlqXW+HHowZEB1sg0ufmIClYpAhfxQh7XUrBW7mNVJpwGWNXs1KpJI49GF0
+         nzB+9ejLNQ5tuYK4SG3l7IZigpQenAh0iHQBZQcqxHSrjlDsigdBdC5Net74aLFHoA1a
+         sixw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2RLae5TxRnlaqkXd+oED+3b1Dwsri72MEioaQj3Oulg=;
+        b=JHKdGCYASxyZZiqVBUWiTazz85aF0CFGra64+TkBd7fUM2P8z2Cz9vyECpqumyrHNT
+         RizIn4F8gDzzeCA5kIciOYZ2nSCd1MGWpdAIoN6cLYypGaw+1HC5py1Eiymzqq90fBxo
+         bjSqNEQMGWaR4YPZA5r04ADUcwti1KeeQy9R4Er+/46j4nXhLCKNTZS9YBjcjN2PtIGi
+         uIxo108UeRmI0UjxQ1kULcpOjxaYg3A7u5FNRIPgNRG6ivZXFRNPbOu7N6a4qWMdJ3VE
+         GNHNBTYQrcImPqgdFv2+H/mvYEFXs7ZI22KRJrZaONTcJqQ8VFzeRxey2gjEdg/NP/+f
+         eCXA==
+X-Gm-Message-State: APjAAAUqEihglJPXAu1uycdf83D7c5t9B6Tqne/UUv7aflq0ehSwHk9/
+        7Qctrbaj1ufmB6tGbzMS3aQ+kA==
+X-Google-Smtp-Source: APXvYqwzCP9jQqLKW0C4jmyp3fUsgGIIOy4gfG1whZqkYd5q01aerQ0qLQhXJnxRnA2EQyz0NZU8DQ==
+X-Received: by 2002:aed:302f:: with SMTP id 44mr8986876qte.178.1553114589845;
+        Wed, 20 Mar 2019 13:43:09 -0700 (PDT)
+Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id o19sm1971787qkl.65.2019.03.20.13.43.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 13:43:09 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, osalvador@suse.de, anshuman.khandual@arm.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, stable@vger.kernel.org
+Subject: [RESEND PATCH] mm/hotplug: fix notification in offline error path
+Date:   Wed, 20 Mar 2019 16:42:55 -0400
+Message-Id: <20190320204255.53571-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+When start_isolate_page_range() returned -EBUSY in __offline_pages(), it
+calls memory_notify(MEM_CANCEL_OFFLINE, &arg) with an uninitialized
+"arg". As the result, it triggers warnings below. Also, it is only
+necessary to notify MEM_CANCEL_OFFLINE after MEM_GOING_OFFLINE.
 
-Friendly ping:
+page:ffffea0001200000 count:1 mapcount:0 mapping:0000000000000000
+index:0x0
+flags: 0x3fffe000001000(reserved)
+raw: 003fffe000001000 ffffea0001200008 ffffea0001200008 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: unmovable page
+WARNING: CPU: 25 PID: 1665 at mm/kasan/common.c:665
+kasan_mem_notifier+0x34/0x23b
+CPU: 25 PID: 1665 Comm: bash Tainted: G        W         5.0.0+ #94
+Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20
+10/25/2017
+RIP: 0010:kasan_mem_notifier+0x34/0x23b
+RSP: 0018:ffff8883ec737890 EFLAGS: 00010206
+RAX: 0000000000000246 RBX: ff10f0f4435f1000 RCX: f887a7a21af88000
+RDX: dffffc0000000000 RSI: 0000000000000020 RDI: ffff8881f221af88
+RBP: ffff8883ec737898 R08: ffff888000000000 R09: ffffffffb0bddcd0
+R10: ffffed103e857088 R11: ffff8881f42b8443 R12: dffffc0000000000
+R13: 00000000fffffff9 R14: dffffc0000000000 R15: 0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560fbd31d730 CR3: 00000004049c6003 CR4: 00000000001606a0
+Call Trace:
+ notifier_call_chain+0xbf/0x130
+ __blocking_notifier_call_chain+0x76/0xc0
+ blocking_notifier_call_chain+0x16/0x20
+ memory_notify+0x1b/0x20
+ __offline_pages+0x3e2/0x1210
+ offline_pages+0x11/0x20
+ memory_block_action+0x144/0x300
+ memory_subsys_offline+0xe5/0x170
+ device_offline+0x13f/0x1e0
+ state_store+0xeb/0x110
+ dev_attr_store+0x3f/0x70
+ sysfs_kf_write+0x104/0x150
+ kernfs_fop_write+0x25c/0x410
+ __vfs_write+0x66/0x120
+ vfs_write+0x15a/0x4f0
+ ksys_write+0xd2/0x1b0
+ __x64_sys_write+0x73/0xb0
+ do_syscall_64+0xeb/0xb78
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f14f75cc3b8
+RSP: 002b:00007ffe84d01d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 00007f14f75cc3b8
+RDX: 0000000000000008 RSI: 0000563f8e433d70 RDI: 0000000000000001
+RBP: 0000563f8e433d70 R08: 000000000000000a R09: 00007ffe84d018f0
+R10: 000000000000000a R11: 0000000000000246 R12: 00007f14f789e780
+R13: 0000000000000008 R14: 00007f14f7899740 R15: 0000000000000008
 
-Who can take this?
+Fixes: 7960509329c2 ("mm, memory_hotplug: print reason for the offlining failure")
+CC: stable@vger.kernel.org # 5.0.x
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/memory_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
---
-Gustavo
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0e0a16021fd5..0082d699be94 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1699,12 +1699,12 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 
+ failed_removal_isolated:
+ 	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
++	memory_notify(MEM_CANCEL_OFFLINE, &arg);
+ failed_removal:
+ 	pr_debug("memory offlining [mem %#010llx-%#010llx] failed due to %s\n",
+ 		 (unsigned long long) start_pfn << PAGE_SHIFT,
+ 		 ((unsigned long long) end_pfn << PAGE_SHIFT) - 1,
+ 		 reason);
+-	memory_notify(MEM_CANCEL_OFFLINE, &arg);
+ 	/* pushback to free area */
+ 	mem_hotplug_done();
+ 	return ret;
+-- 
+2.17.2 (Apple Git-113)
 
-On 2/8/19 12:12 PM, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/mtd/lpddr/lpddr_cmds.c: In function ‘chip_ready’:
-> drivers/mtd/lpddr/lpddr_cmds.c:319:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (mode == FL_READY && chip->oldstate == FL_READY)
->       ^
-> drivers/mtd/lpddr/lpddr_cmds.c:322:2: note: here
->   default:
->   ^~~~~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enabling
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/mtd/lpddr/lpddr_cmds.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmds.c
-> index b13557fe52bd..76a4c73e100e 100644
-> --- a/drivers/mtd/lpddr/lpddr_cmds.c
-> +++ b/drivers/mtd/lpddr/lpddr_cmds.c
-> @@ -318,6 +318,7 @@ static int chip_ready(struct map_info *map, struct flchip *chip, int mode)
->  		/* Only if there's no operation suspended... */
->  		if (mode == FL_READY && chip->oldstate == FL_READY)
->  			return 0;
-> +		/* fall through */
->  
->  	default:
->  sleep:
-> 
