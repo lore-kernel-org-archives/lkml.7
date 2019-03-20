@@ -2,140 +2,139 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0D9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1E3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A496720835
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DDB2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEYYZsCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfCTAzb (ORCPT
+        id S1727432AbfCTBAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:55:31 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:39859 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727062AbfCTAza (ORCPT
+        Tue, 19 Mar 2019 21:00:05 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43817 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbfCTBAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:55:30 -0400
-X-IronPort-AV: E=Sophos;i="5.60,246,1549900800"; 
-   d="scan'208";a="57180461"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 20 Mar 2019 08:55:23 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id 4EA4E4CD447D;
-        Wed, 20 Mar 2019 08:54:55 +0800 (CST)
-Received: from [10.167.226.33] (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 20 Mar 2019 08:55:29 +0800
-Subject: Re: WARNING: suspicious RCU usage in xfrm_alloc_userspi
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com>,
-        <davem@davemloft.net>, <herbert@gondor.apana.org.au>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <steffen.klassert@secunet.com>, <syzkaller-bugs@googlegroups.com>
-References: <0000000000007783a2058474a0b9@google.com>
- <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
-From:   "Su Yanjun <suyj.fnst@cn.fujitsu.com>" <suyj.fnst@cn.fujitsu.com>
-Message-ID: <aab926e8-61a3-2fc8-6f8c-d64db133f167@cn.fujitsu.com>
-Date:   Wed, 20 Mar 2019 08:55:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.3
+        Tue, 19 Mar 2019 21:00:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m35so489638ede.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 18:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pOVvWiIbvkv3BPkmEu5aKRdzm0rTvaqyGu0VcKq2UcI=;
+        b=cEYYZsCyS1qFITS10aeYQGv12nLdcVypBSXszAFRudBZcrngMqMKv88nZjzsRdTopO
+         3kaGYJ5FEZua+pkofNmRA9Fb8hJ0DbU7T5M5626ypc6Np2H+phLAu0JPh24b8CSLOHIl
+         +5JqIL2SqlFEp3PhTiNcKwabQuUc8oYMpe0bfKjH1++6wNyztD7oI5qDo+7BdAhIZ0iN
+         BZ40JQJGho8f9NVLq/KqoQ2UXSUiAkPO1KQwGoSUIzzHdN8spzsKBFtMZ65OrBhgVNGO
+         GihfLC1vWn+e8vNM5KeLsQPLZnjXya5rs2gHf79o66Elny61l4wd+xhDxkEneuhsuDRN
+         er9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pOVvWiIbvkv3BPkmEu5aKRdzm0rTvaqyGu0VcKq2UcI=;
+        b=YSqkbUdm9c/wXbSAypPVgXAwAq+WLqHAjsCtOgy58yp+TBhODtgmcFI0G17Dl0f0zz
+         VipM5VFrBfEizknIhisVT8WAHCmIAQv97gLSiqyUGBPISNpwGgRyay9KLlqJsO5JxuKo
+         3Ri1RHsr4LHwbA0Ylu2718Og22lAYwwjPT/ka+yANR24pE9Et2nf4x5gVLuTAtVj1rmU
+         WyRepKoUj2xCJ7yh84QivrG3SaTC4s9wpn1bmdl1iZsm9+ytxIS36l9jad6F8odZy6xt
+         tOhJapURXAqPvlDFMDqqGK5o2blhRxtvG8D/e7rS0lw2qhLFVTi1cRBY1/Mb1aOo0mKp
+         y+1g==
+X-Gm-Message-State: APjAAAV0Pyx7z5VGONJKZ2MMxJG7LDTzTGYNqmLifWUBAOTjBBXhIN82
+        T4j4l0sVuNT+my9nkzfIGnMEYXR90Gc=
+X-Google-Smtp-Source: APXvYqw+0mNOdD9OpPVjAEqf4P5SvmzDL0Bd5kC8hWfVjlV0PafbkpAPkpVICZ6XFMVW7UdFkIIxww==
+X-Received: by 2002:aa7:d406:: with SMTP id z6mr929570edq.197.1553043602763;
+        Tue, 19 Mar 2019 18:00:02 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id g2sm163296edi.76.2019.03.19.18.00.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 18:00:02 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] drm/amd/powerplay: Zero initialize num_of_levels in vega20_set_single_dpm_table
+Date:   Tue, 19 Mar 2019 17:58:42 -0700
+Message-Id: <20190320005842.25383-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: 4EA4E4CD447D.ABE5C
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When building with -Wsometimes-uninitialized, Clang warns:
 
-On 2019/3/20 0:23, Eric Dumazet wrote:
-> CC Su Yanjun
->
-> On 03/19/2019 09:02 AM, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    b9998194 Add linux-next specific files for 20190318
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=17a2e24d200000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=59cd5d43b5df6955
->> dashboard link: https://syzkaller.appspot.com/bug?extid=59752237f7ab21c3f3c3
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e70cb3200000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17292127200000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com
->>
->> =============================
->> WARNING: suspicious RCU usage
->> 5.1.0-rc1-next-20190318 #5 Not tainted
->> -----------------------------
->> net/xfrm/xfrm_user.c:1080 suspicious rcu_dereference_check() usage!
->>
->> other info that might help us debug this:
->>
->>
->> rcu_scheduler_active = 2, debug_locks = 1
->> 1 lock held by syz-executor085/7946:
->>   #0: 00000000a55031b5 (&net->xfrm.xfrm_cfg_mutex){+.+.}, at: xfrm_netlink_rcv+0x61/0x90 net/xfrm/xfrm_user.c:2691
->>
->> stack backtrace:
->> CPU: 0 PID: 7946 Comm: syz-executor085 Not tainted 5.1.0-rc1-next-20190318 #5
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> Call Trace:
->>   __dump_stack lib/dump_stack.c:77 [inline]
->>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->>   lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
->>   xfrm_nlmsg_unicast net/xfrm/xfrm_user.c:1080 [inline]
->>   xfrm_alloc_userspi+0x7d5/0xa80 net/xfrm/xfrm_user.c:1356
->>   xfrm_user_rcv_msg+0x458/0x770 net/xfrm/xfrm_user.c:2684
->>   netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
->>   xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2692
->>   netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
->>   netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
->>   netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
->>   sock_sendmsg_nosec net/socket.c:651 [inline]
->>   sock_sendmsg+0xdd/0x130 net/socket.c:661
->>   ___sys_sendmsg+0x806/0x930 net/socket.c:2260
->>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2298
->>   __do_sys_sendmsg net/socket.c:2307 [inline]
->>   __se_sys_sendmsg net/socket.c:2305 [inline]
->>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2305
->>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x440499
->> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007ffcf12caf08 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
->> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440499
->> RDX: 0000000000000000 RSI: 00000000200006c0 RDI: 0000000000000003
->> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
->> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000040
->>
->>
->> ---
->> This bug is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this bug report. See:
->> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
->> syzbot can test patches for this bug, for details see:
->> https://goo.gl/tpsmEJ#testing-patches
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:456:2: warning:
+variable 'num_of_levels' is used uninitialized whenever '?:' condition
+is false [-Wsometimes-uninitialized]
+        smu_read_smc_arg(smu, &num_of_levels);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:608:3: note:
+expanded from macro 'smu_read_smc_arg'
+        ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:457:7: note:
+uninitialized use occurs here
+        if (!num_of_levels) {
+             ^~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:456:2: note: remove
+the '?:' if its condition is always true
+        smu_read_smc_arg(smu, &num_of_levels);
+        ^
+drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:608:3: note:
+expanded from macro 'smu_read_smc_arg'
+        ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu), (arg)) : 0)
+         ^
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:446:27: note:
+initialize the variable 'num_of_levels' to silence this warning
+        uint32_t i, num_of_levels, clk;
+                                 ^
+                                  = 0
+1 warning generated.
 
-I  got it.
+The if statement it mentions as potentially problematic is currently
+always true because the read_smc_arg callback is assigned at the
+bottom of this file but Clang can't tell that. If the callback were
+ever to disappear, num_of_levels would never be initialized. Just
+zero initialize it to ensure that the intent behind this code
+remains the same.
 
-Thanks
+Fixes: 870b996f955f ("drm/amd/powerplay: set defalut dpm table for smu")
+Link: https://github.com/ClangBuiltLinux/linux/issues/425
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index 7e9e8ad9a300..41e6f49c9cb6 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -443,7 +443,7 @@ vega20_set_single_dpm_table(struct smu_context *smu,
+ 			    PPCLK_e clk_id)
+ {
+ 	int ret = 0;
+-	uint32_t i, num_of_levels, clk;
++	uint32_t i, num_of_levels = 0, clk;
+ 
+ 	ret = smu_send_smc_msg_with_param(smu,
+ 			SMU_MSG_GetDpmFreqByIndex,
+-- 
+2.21.0
 
