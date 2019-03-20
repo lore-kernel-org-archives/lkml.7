@@ -2,130 +2,248 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7DFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A5DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538FA218A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF4C218A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="GNlxODKY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NNtx2zb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfCTXsZ (ORCPT
+        id S1727701AbfCTXsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 19:48:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33294 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbfCTXsX (ORCPT
+        Wed, 20 Mar 2019 19:48:18 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:11921 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbfCTXsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 19:48:23 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f23so3850063ljc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 16:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UJAjnNyQyoI4jcj7/tfz9qZtFR2QTmyN6OQ6+gk8aHo=;
-        b=GNlxODKY2cXGyDHBJEhylwuxzug2kEMQAVHe9ybfvYikmW4u8u7H0YWR6hjaL8nhM6
-         0QWC+dqjBlwh8WvBs2n8RLbXrazQTIclC/ckW49RJ/QYVszS58s6151LARHFVaN53bRi
-         LQVMi2joNkMRgIs9XGXQ+auxkKVuf0mdnmdN7sECNRgKm/BrIszzV4Qlzs42xhlQbID9
-         1X5aVYh/0S4eOZnj9wwIXpQChYorQeGj0EEcAXyjmbs5aJFCqZJxQTX2WqHKhuvBQ3jN
-         GdafozoBuv/MCXJx0CJzaaYbxVcFNVYVR2VVoA2ysURCJpiicDDlCIcfgtser2cwltFZ
-         SFzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UJAjnNyQyoI4jcj7/tfz9qZtFR2QTmyN6OQ6+gk8aHo=;
-        b=YvhTWH0H1CODzvs5cCM7dZRxHclHDWyXKvhpBpCjw8y+czHYshm6eKkGQfN93STXI7
-         faKVdsryVIXKzB/yEKpDYL5twuvRiVgEvsh7BkRpWLz6uM9DXygrSpmLd6GhLkTvkGYx
-         185PamIHsYC9VzFG7Oy6mbkuYG3D5WVOqiWMfMKP4Rfa+gzjaW1PgbXlhUrxk/IkkFGa
-         pIEzEWxF9zcbg23fB6CO9064jU4SjGWq+h0+JAVpNkNKHyQs7A+N3q3h6Xk0zB+NF213
-         H8zhZgwncCWfp1or3QSb7J1590GiOr3dqbK9X5hGq2sWOHgKBs8FdwMl8KGhzK7wvztV
-         wpmw==
-X-Gm-Message-State: APjAAAUqwtwh8WaahechV5ccEd5BaIy7PM7SrX01GLLu1n/gBvrEVt1A
-        2876Sm/1gemq4A47TnYla9iumchKZitWCG5r89iP
-X-Google-Smtp-Source: APXvYqyTy/0Jx0A5zxhGXII9imQPLaDDUiMBztEy9QyBkli0QjSD2HhZ7X6GxqIdMe4bebjgTMzPGSR+c8tXwI+QEGM=
-X-Received: by 2002:a2e:500d:: with SMTP id e13mr345820ljb.169.1553125700851;
- Wed, 20 Mar 2019 16:48:20 -0700 (PDT)
+        Wed, 20 Mar 2019 19:48:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1553125695; x=1584661695;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8+GS09e2kuxAm41XWJLYt8y5cTm3Ai/BqW043K5L6o4=;
+  b=NNtx2zb2y9sGKLKamKklGu9AuMQxKk1aHQcoehX4jkMUmlBZ2ld56Kr6
+   +N5Bdukf3Zn5sWosocu6aSfgL92pzXz//WvFEBwU02BBDqDcBzRP3vs6w
+   NG+NQPNplcFLn3EPb/Vo6K4htTJz7lUS4nPsBS8aXB5Yxuk31JGc0Vw57
+   Rr3VrtTixrNPjxfO7vK/DLEDXIBUSZzyCwofwOHnyuoV0f5IuWFSk3tJu
+   8POwAdk6FFzGAgdZ49DBIPJO6/x/akuoiSmGUJC0A3XnvDZUQIuNeKPlP
+   n1HrmVG/Vy7QDcsNEIRjRe+DxNqO8KzF2bRVCpJquapY1AEFRDICqCZep
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,250,1549900800"; 
+   d="scan'208";a="103874316"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Mar 2019 07:48:15 +0800
+IronPort-SDR: mxqfAq8Ke2yMkXI5FRXQPXJBIcL0SUIHpB9TfLOEYe8JvOh7ZuL0gLI2XGm4nlF2JOv1Fa2kGh
+ 49FoFhvBpOObNHHfWXKmL9oY5x7Nki9HM3yV+D0eS0I60ZoGEHSztlkl2u1dmcxRB5/oGbMg0b
+ 4fCQz9a8ZE8gaVkjwv7pZ38hDKo8B0fnQ6bf6sqtRs3DUeRB3TzynvAvUUysztxi7z0kQBNo7w
+ FvQsuACdW6eV/a/wp/wKB2MpWRFjQIDpkRWkdCxXXKvI1MmgdyTB80KUtZYpiPvtDDClwa5O8F
+ goK1ovJudsY5p+vdDb9vmrxq
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 20 Mar 2019 16:27:52 -0700
+IronPort-SDR: Lzd9zrpBxuvOxN6UBKKq8X/tVYNVlG7Ll9jP+kayjJZ+zTZmiDXWlHXB7ErYVYouYINWVkqXWn
+ E1ME3G9uZnXmVc+ibzLqXuJye1s8omY9roT4jxZ+VWbm1/TmtWTd5vlnMI3B9bXrSJhpgrNbtS
+ Mf47+JOWvDzu1PRfMLkDf1PuYMv/29duqltRdzxXpH1M4oZ3ioD0Rv5JppuJTzBUuekZ8FvF5C
+ YEUBQ/MgqO8vJsO0M/fp41GlMZXwwTEqQ0fs1tTGx2b1EFU6EqiDyQSCt6tZFkc5j2KbtbPmuG
+ I08=
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Mar 2019 16:48:15 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        devicetree@vger.kernel.org,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [RFT/RFC PATCH v3 2/5] dt-binding: cpu-topology: Move cpu-map to a common binding.
+Date:   Wed, 20 Mar 2019 16:48:03 -0700
+Message-Id: <20190320234806.19748-3-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190320234806.19748-1-atish.patra@wdc.com>
+References: <20190320234806.19748-1-atish.patra@wdc.com>
 MIME-Version: 1.0
-References: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com>
-In-Reply-To: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 20 Mar 2019 19:48:09 -0400
-Message-ID: <CAHC9VhS61LTQMXiALRre+5_+wvwe6Wa9RN-WYNTjvz5LVsA5rw@mail.gmail.com>
-Subject: Re: [PATCH ghak109 V1] audit: link integrity evm_write_xattrs record
- to syscall event
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
-        omosnace@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, zohar@linux.ibm.com,
-        mjg59@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 8:10 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> In commit fa516b66a1bf ("EVM: Allow runtime modification of the set of
-> verified xattrs"), the call to audit_log_start() is missing a context to
-> link it to an audit event. Since this event is in user context, add
-> the process' syscall context to the record.
->
-> In addition, the orphaned keyword "locked" appears in the record.
-> Normalize this by changing it to "xattr=(locked)".
->
-> Please see the github issue
-> https://github.com/linux-audit/audit-kernel/issues/109
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  security/integrity/evm/evm_secfs.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-> index 015aea8fdf1e..4171d174e9da 100644
-> --- a/security/integrity/evm/evm_secfs.c
-> +++ b/security/integrity/evm/evm_secfs.c
-> @@ -192,7 +192,8 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
->         if (count > XATTR_NAME_MAX)
->                 return -E2BIG;
->
-> -       ab = audit_log_start(NULL, GFP_KERNEL, AUDIT_INTEGRITY_EVM_XATTR);
-> +       ab = audit_log_start(audit_context(), GFP_KERNEL,
-> +                            AUDIT_INTEGRITY_EVM_XATTR);
+cpu-map binding can be used to described cpu topology for both
+RISC-V & ARM. It makes more sense to move the binding to document
+to a common place.
 
-This part is fine.
+The relevant discussion can be found here.
+https://lkml.org/lkml/2018/11/6/19
 
->         if (!ab)
->                 return -ENOMEM;
->
-> @@ -222,7 +223,7 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
->                 inode_lock(inode);
->                 err = simple_setattr(evm_xattrs, &newattrs);
->                 inode_unlock(inode);
-> -               audit_log_format(ab, "locked");
-> +               audit_log_format(ab, "xattr=(locked)");
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ .../topology.txt => cpu/cpu-topology.txt}     | 82 +++++++++++++++----
+ 1 file changed, 66 insertions(+), 16 deletions(-)
+ rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
 
-Two things come to mind:
-
-* While we can clearly trust the string above, should we be logging
-the xattr field value as an untrusted string so it is consistent with
-how we record other xattr names?
-* I'm not sure you can ever have parens in a xattr (I would hope not),
-but if we are going to use the xattr field, perhaps we should simply
-stick with the name as provided (".") so we don't ever run afoul of
-xattr names?  I'm curious to hear what the IMA/EVM folks think of
-this.
-
+diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+similarity index 86%
+rename from Documentation/devicetree/bindings/arm/topology.txt
+rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
+index 3b8febb4..069addcc 100644
+--- a/Documentation/devicetree/bindings/arm/topology.txt
++++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+@@ -1,12 +1,12 @@
+ ===========================================
+-ARM topology binding description
++CPU topology binding description
+ ===========================================
+ 
+ ===========================================
+ 1 - Introduction
+ ===========================================
+ 
+-In an ARM system, the hierarchy of CPUs is defined through three entities that
++In a SMP system, the hierarchy of CPUs is defined through three entities that
+ are used to describe the layout of physical CPUs in the system:
+ 
+ - socket
+@@ -14,9 +14,6 @@ are used to describe the layout of physical CPUs in the system:
+ - core
+ - thread
+ 
+-The cpu nodes (bindings defined in [1]) represent the devices that
+-correspond to physical CPUs and are to be mapped to the hierarchy levels.
+-
+ The bottom hierarchy level sits at core or thread level depending on whether
+ symmetric multi-threading (SMT) is supported or not.
+ 
+@@ -25,33 +22,31 @@ threads existing in the system and map to the hierarchy level "thread" above.
+ In systems where SMT is not supported "cpu" nodes represent all cores present
+ in the system and map to the hierarchy level "core" above.
+ 
+-ARM topology bindings allow one to associate cpu nodes with hierarchical groups
++CPU topology bindings allow one to associate cpu nodes with hierarchical groups
+ corresponding to the system hierarchy; syntactically they are defined as device
+ tree nodes.
+ 
+-The remainder of this document provides the topology bindings for ARM, based
+-on the Devicetree Specification, available from:
++Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
++used for any other architecture as well.
+ 
+-https://www.devicetree.org/specifications/
++The cpu nodes, as per bindings defined in [4], represent the devices that
++correspond to physical CPUs and are to be mapped to the hierarchy levels.
+ 
+-If not stated otherwise, whenever a reference to a cpu node phandle is made its
+-value must point to a cpu node compliant with the cpu node bindings as
+-documented in [1].
+ A topology description containing phandles to cpu nodes that are not compliant
+-with bindings standardized in [1] is therefore considered invalid.
++with bindings standardized in [4] is therefore considered invalid.
+ 
+ ===========================================
+ 2 - cpu-map node
+ ===========================================
+ 
+-The ARM CPU topology is defined within the cpu-map node, which is a direct
++The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
+ child of the cpus node and provides a container where the actual topology
+ nodes are listed.
+ 
+ - cpu-map node
+ 
+-	Usage: Optional - On ARM SMP systems provide CPUs topology to the OS.
+-			  ARM uniprocessor systems do not require a topology
++	Usage: Optional - On SMP systems provide CPUs topology to the OS.
++			  Uniprocessor systems do not require a topology
+ 			  description and therefore should not define a
+ 			  cpu-map node.
+ 
+@@ -494,8 +489,63 @@ cpus {
+ 	};
+ };
+ 
++Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
++
++{
++	#address-cells = <2>;
++	#size-cells = <2>;
++	compatible = "sifive,fu540g", "sifive,fu500";
++	model = "sifive,hifive-unleashed-a00";
++
++	...
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU1>;
++				};
++				core1 {
++					cpu = <&CPU2>;
++				};
++				core2 {
++					cpu0 = <&CPU2>;
++				};
++				core3 {
++					cpu0 = <&CPU3>;
++				};
++			};
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x1>;
++		}
++
++		CPU2: cpu@2 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x2>;
++		}
++		CPU3: cpu@3 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x3>;
++		}
++		CPU4: cpu@4 {
++			device_type = "cpu";
++			compatible = "sifive,rocket0", "riscv";
++			reg = <0x4>;
++		}
++	}
++};
+ ===============================================================================
+ [1] ARM Linux kernel documentation
+     Documentation/devicetree/bindings/arm/cpus.yaml
+ [2] Devicetree NUMA binding description
+     Documentation/devicetree/bindings/numa.txt
++[3] RISC-V Linux kernel documentation
++    Documentation/devicetree/bindings/riscv/cpus.txt
++[4] https://www.devicetree.org/specifications/
 -- 
-paul moore
-www.paul-moore.com
+2.21.0
+
