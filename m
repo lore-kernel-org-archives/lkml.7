@@ -2,134 +2,85 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DATE_IN_FUTURE_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8D5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF78E2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF592183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:31:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5dheTyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfCTC2k (ORCPT
+        id S1727220AbfCTCbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 22:28:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58160 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726573AbfCTC2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 22:28:40 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4F637A36BDE19A7B6F17;
-        Wed, 20 Mar 2019 10:28:38 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Wed, 20 Mar 2019
- 10:28:33 +0800
-From:   Wang Hai <wanghai26@huawei.com>
-To:     <davem@davemloft.net>, <idosch@mellanox.com>,
-        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
-        <f.fainelli@gmail.com>
-CC:     <amritha.nambiar@intel.com>, <joe@perches.com>,
-        <dmitry.torokhov@gmail.com>, <andriy.shevchenko@linux.intel.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] net-sysfs: Fix memory leak in netdev_register_kobject
-Date:   Wed, 20 Mar 2019 14:25:05 -0400
-Message-ID: <20190320182505.18642-1-wanghai26@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 Mar 2019 22:31:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37199 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfCTCbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 22:31:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so856755qtn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 19:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z4P9JaRSt8xPt7JdkSd0fTgJ95kf7fCY0+tUGcSiO/E=;
+        b=K5dheTyc62Z6K7G/0k8yU35QfeISyhxCYf+S9G1tdzbExuxFmwgHiv7VW8HItM1ABK
+         ibnGYWu5q1BHdCaUkKXsbADos0YUWACekVb3F4hHUr9dJaLlBeQbhznjcGScWa1yLoUn
+         7uqmR6+qK62U+GcI3NdCN9jjND5lXoe+NNpmas3o8Ehjibr81oV+saD3kRqGCl278ubx
+         0V8nkFaK5XDgfImRgqdPvl3/pPrp2cRtTcXMGLXtn7fDoJLrKuVqDJbl2SzFvsZ1jh4q
+         9WAzvEMidx2TS0dDkUMhu2GEzBERQBw6KKnPO/LeI+Ljh051xDgHfGs3tCTlW62fspsE
+         fhag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4P9JaRSt8xPt7JdkSd0fTgJ95kf7fCY0+tUGcSiO/E=;
+        b=WtYAOa1HdJpUJ/k/17B4CVmurYMk7NZm0NK0AfHSC+gkBDmXAquRlP7aXv5K8fs5U9
+         RrojPmpxncncY77yR1da0himAnEWs+No28xrE/qoglnwGHwBVI25E5JpVLf2uD+ep43b
+         I5pzAM2NBiSsgypCr+0epjyMNnGwzQVco6UgmoGpeqPM23ATUh1tcNGTOwGLmBBRehJS
+         wGy7K6o8ScBcaKrg4eZPAY8egplH1nqay2C/qp93YNP9lYH6B3bW4ocnyZw/rRAeK4D2
+         qsjxzcPohfxyo8av6OmxpqY23dh5IS/0zmaSXj4jHgZZO3CVkyiH82pdJY/L3hP3niHl
+         vqQQ==
+X-Gm-Message-State: APjAAAVILL5wgg6PoJ1l1i8CUlFi9F3/XftvRyrtHdmEl3tq+QWDoKDC
+        qcUiryDEZabgXP7MFsKNp3pYWz+fIJL+JMDxN2o=
+X-Google-Smtp-Source: APXvYqy15oS71M/HOpKpclUTi2gaBJkGclp3ThgWnsi6fjlb8mZ/E/3NsXhf3R9wA2DqTigi7MjPscW0LaKHqKIxIww=
+X-Received: by 2002:a0c:ba9d:: with SMTP id x29mr4467745qvf.112.1553049061443;
+ Tue, 19 Mar 2019 19:31:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+References: <20190318085733.3143-1-duyuyang@gmail.com> <20190318085733.3143-16-duyuyang@gmail.com>
+ <1553014484.65329.10.camel@acm.org>
+In-Reply-To: <1553014484.65329.10.camel@acm.org>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Wed, 20 Mar 2019 10:30:50 +0800
+Message-ID: <CAHttsravNVDC882277Vwqif3oicHUnixj7NuTjNE2AL0V5cpwA@mail.gmail.com>
+Subject: Re: [PATCH v2 15/19] locking/lockdep: Remove __cq_empty()
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org,
+        ming.lei@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When registering struct net_device, it will call
-	register_netdevice ->
-		netdev_register_kobject ->
-			device_initialize(dev);
-			dev_set_name(dev, "%s", ndev->name)
-			device_add(dev)
-			register_queue_kobjects(ndev)
+Thanks for review.
 
-In netdev_register_kobject(), if device_add(dev) or
-register_queue_kobjects(ndev) failed. Register_netdevice()
-will return error, causing netdev_freemem(ndev) to be
-called to free net_device, however put_device(&dev->dev)->..->
-kobject_cleanup() won't be called, resulting in a memory leak.
+On Wed, 20 Mar 2019 at 00:54, Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> This is the most important change in this patch. Using the title "Remove __cq_empty()"
+> for this patch is misleading because the above patch does something else, namely changing
+> the return type of __cq_dequeue() from int into a pointer. Should this patch perhaps be
+> split or should the __cq_empty() removal be left out from this patch?
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffff8881f4fad168 (size 8):
-comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
-hex dump (first 8 bytes):
-  77 70 61 6e 30 00 ff ff                          wpan0...
-backtrace:
-  [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
-  [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
-  [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:281
-  [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
-  [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/net-sysfs.c:1727
-  [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:8711
-  [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [ieee802154]
-  [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee802154]
-  [<00000000e4b3df51>] 0xffffffffc1500e0e
-  [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/platform.c:614
-  [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
-  [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd.c:671
-  [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/dd.c:945
-  [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:1022
-  [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.c:304
-  [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:645
+I actually hesitated whether _cq_full() should be inlined as well.
+Having said that, let me keep both of them and just change the return
+type of __cq_dequeue().
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1fa5ae857bb1 ("driver core: get rid of struct device's bus_id string array")
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
----
-v2 -> v3:
- - Change kfree_const(dev->kobj.name) to put_device(dev), fix the
-   problem of freeing kobj
- - Improve the description of the cause of the bug
-
-v1 -> v2:
- - Fix the commit id of Fixes
- - Improve the description of the cause of the bug, no code changes.
----
- net/core/net-sysfs.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 4ff661f..8e568422 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1745,16 +1745,20 @@ int netdev_register_kobject(struct net_device *ndev)
- 
- 	error = device_add(dev);
- 	if (error)
--		return error;
-+		goto error_put_device;
- 
- 	error = register_queue_kobjects(ndev);
--	if (error) {
--		device_del(dev);
--		return error;
--	}
-+	if (error)
-+		goto error_device_del;
- 
- 	pm_runtime_set_memalloc_noio(dev, true);
- 
-+	return 0;
-+
-+error_device_del:
-+	device_del(dev);
-+error_put_device:
-+	put_device(dev);
- 	return error;
- }
- 
--- 
-1.8.3.1
-
+Thanks,
+Yuyang
