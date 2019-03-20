@@ -2,86 +2,81 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5152184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383552184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HoZkAd9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfCTPRh (ORCPT
+        id S1727102AbfCTPTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:17:37 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55741 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfCTPRg (ORCPT
+        Wed, 20 Mar 2019 11:19:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfCTPTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:17:36 -0400
-X-Originating-IP: 90.88.33.153
-Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 7683D6000B;
-        Wed, 20 Mar 2019 15:17:33 +0000 (UTC)
-Message-ID: <8d6f1e9191638e243616ac7832b1b650a80d85ad.camel@bootlin.com>
-Subject: Re: [PATCH 3/3] drm/vc4: Don't liberate the binner BO at runtime
- suspend
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        Wed, 20 Mar 2019 11:19:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=a8ekTXuzg61G+wyve9vwXgUPZDjFwY9vKbtzAzyeWPI=; b=HoZkAd9tQWp/l5ok1fODPx3PB
+        az8iWBXChMftlzSqUZo9vgcK23Vg3rPoTsKCn/K0NcFVmTeNXQlIMeLVZilyq9OvUMUSmv6vgyF5H
+        UhpPtpvoN3VCXn+/v/ok6AJTAGYwVFLZdNTQAOCYBYt8z5zxE8KOcepfxZh+6ARIFZhdhjF/ED29L
+        Llk3yjG0DaSNPIIgLvHyn2iVGM4XMFYnJM70IYj86H1vUVqfMcnspdC3/4llpOZxA1fAtT9Azp+4/
+        AL9KZDwSarIURJk/S8uYazZ48itn91nNryLFZMC19f9JJZaeGRuyzjmPUgPc6ZpLvlr5SMNUrH5zt
+        3jrosqBng==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6d0N-0000zI-Qk; Wed, 20 Mar 2019 15:19:47 +0000
+Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>
-Date:   Wed, 20 Mar 2019 16:17:32 +0100
-In-Reply-To: <87o96alk7k.fsf@anholt.net>
-References: <20190315162538.4120-1-paul.kocialkowski@bootlin.com>
-         <20190315162538.4120-3-paul.kocialkowski@bootlin.com>
-         <87o96alk7k.fsf@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
+ <8742b0a2-de4e-9865-cb3e-dfda0dec6a0a@infradead.org>
+ <20190320151715.GG9224@smile.fi.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <415863c9-8a06-f392-a558-bce694069d09@infradead.org>
+Date:   Wed, 20 Mar 2019 08:19:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320151715.GG9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le samedi 16 mars 2019 à 11:58 -0700, Eric Anholt a écrit :
-> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+On 3/20/19 8:17 AM, Andy Shevchenko wrote:
+> On Wed, Mar 20, 2019 at 08:05:51AM -0700, Randy Dunlap wrote:
+>> On 3/19/19 11:43 AM, Andy Shevchenko wrote:
+>>> If by BIOS or by other means the serial port is configured
+>>> user might want to skip reconfiguration in the boot code.
+>>>
+>>> Add support of 'nocfg' parameter to earlyprintk.
 > 
-> > The binner BO is a pre-requisite to GPU operations, so we must ensure
-> > that it is always allocated when the GPU is in use.
-> > 
-> > Because the buffer is allocated from the same pool as other GPU buffers,
-> > we might run into a situation where we are out of memory at runtime
-> > resume. This causes the binner BO allocation to fail and results in all
-> > subsequent operations to fail, resulting in a major hang in userspace.
-> > 
-> > Now that we allocate the buffer at firstopen and liberate it at
-> > lastclose, we can just keep it alive during runtime suspend.
+>> Please add "nocfg" to Documentation/admin-guide/kernel-parameters.txt.
 > 
-> I think this needs to be squashed into the previous patch, as otherwise
-> coming from suspended, a firstopen -> resume -> render will leak a copy
-> of the bin BO.
+> I think it's not a time right now to do so. This only does it for boot stage.
+> 
 
-Woops, you're definitely right: vc4_allocate_bin_bo won't check whether
-we already have allocated it or not. I'll send a new version with both
-patches squashed.
+OK.   Is there somewhere else that it could be added to Documentation/[x86/]?
 
-Cheers,
-
-Paul
-
+thanks.
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+~Randy
