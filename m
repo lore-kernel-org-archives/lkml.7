@@ -2,105 +2,147 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0993FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A48C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CD02175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09292175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PvdmPulf"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S1aUtcUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfCTKIt (ORCPT
+        id S1728033AbfCTKIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:08:49 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64298 "EHLO pegase1.c-s.fr"
+        Wed, 20 Mar 2019 06:08:55 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8615 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbfCTKGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:06:40 -0400
+        id S1725906AbfCTKGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:06:38 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44PQYn5FKMz9vC01;
-        Wed, 20 Mar 2019 11:06:37 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44PQYk6v4wz9vByy;
+        Wed, 20 Mar 2019 11:06:34 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=PvdmPulf; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=S1aUtcUr; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5cGSIn7k_SbG; Wed, 20 Mar 2019 11:06:37 +0100 (CET)
+        with ESMTP id MCxzExgMd-u1; Wed, 20 Mar 2019 11:06:34 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYn4578z9vByx;
-        Wed, 20 Mar 2019 11:06:37 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYk5k54z9vByx;
+        Wed, 20 Mar 2019 11:06:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553076397; bh=XMnpdij0lJYntaQnJxTgXX8uHpknTcgE4njbUx620Ec=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=PvdmPulfodAoMdDiTkNtRzcBq9ESvZQ6gx4OJsCeDi4j+xeP0m94uhXO9FtPtFztI
-         ArU8Yo7gt6R3SdmsN0lVhnr9fr0/6KyoOFTzNX1VnPVzQpvmLPxkve9g92eCayvgTr
-         oCgB413oxBr5lNN8XhEicgftRnDasABApQkN/sKE=
+        t=1553076394; bh=TdkFaqEZaF4rEmRCkdUJ4i7IZPhv3teZiDofQzCOris=;
+        h=From:Subject:To:Cc:Date:From;
+        b=S1aUtcUr4Q0o53gWaQbmoATi2pbMjdkdstCgy8We7M0HMue3b83A8sehEJLxmBz0E
+         hL/HmcJb015VZhbksPGK6mZqWHRbnmB83EZQUqHKUedi0LZR6X6rsT6KHTUfVuW4Rc
+         iVRhnUBVXy1XPMETCIdkmizQ2MOluku1gYmqPNds=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A90818B918;
-        Wed, 20 Mar 2019 11:06:38 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D338B8B91A;
+        Wed, 20 Mar 2019 11:06:35 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 87GHPVL2yRWI; Wed, 20 Mar 2019 11:06:38 +0100 (CET)
+        with ESMTP id NG4fGzSDtkKW; Wed, 20 Mar 2019 11:06:35 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E1588B911;
-        Wed, 20 Mar 2019 11:06:38 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A7C558B911;
+        Wed, 20 Mar 2019 11:06:35 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 8231063AEF; Wed, 20 Mar 2019 10:06:38 +0000 (UTC)
-Message-Id: <f67363798e1ffb7603cd6619cb867563e4126d9a.1553076180.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1553076180.git.christophe.leroy@c-s.fr>
-References: <cover.1553076180.git.christophe.leroy@c-s.fr>
+        id 7CC3863AEF; Wed, 20 Mar 2019 10:06:35 +0000 (UTC)
+Message-Id: <cover.1553076180.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 03/27] powerpc/mm: don't BUG() in slice_mask_for_size()
+Subject: [PATCH v1 00/27] Reduce ifdef mess in hugetlbpage.c and slice.c
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 10:06:38 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 10:06:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When no mask is found for the page size, WARN() and return NULL
-instead of BUG()ing.
+The main purpose of this series is to reduce the amount of #ifdefs in
+hugetlbpage.c and slice.c
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/slice.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+At the same time, it does some cleanup by reducing the number of BUG_ON()
+and dropping unused functions.
 
-diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
-index aec91dbcdc0b..011d470ea340 100644
---- a/arch/powerpc/mm/slice.c
-+++ b/arch/powerpc/mm/slice.c
-@@ -165,7 +165,8 @@ static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
- 	if (psize == MMU_PAGE_16G)
- 		return &mm->context.mask_16g;
- #endif
--	BUG();
-+	WARN_ON(true);
-+	return NULL;
- }
- #elif defined(CONFIG_PPC_8xx)
- static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
-@@ -178,7 +179,8 @@ static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
- 	if (psize == MMU_PAGE_8M)
- 		return &mm->context.mask_8m;
- #endif
--	BUG();
-+	WARN_ON(true);
-+	return NULL;
- }
- #else
- #error "Must define the slice masks for page sizes supported by the platform"
+It also removes 64k pages related code in nohash/64 as 64k pages are
+can only by selected on book3s/64
+
+Christophe Leroy (27):
+  powerpc/mm: Don't BUG() in hugepd_page()
+  powerpc/mm: don't BUG in add_huge_page_size()
+  powerpc/mm: don't BUG() in slice_mask_for_size()
+  powerpc/book3e: drop mmu_get_tsize()
+  powerpc/mm: drop slice_set_user_psize()
+  powerpc/64: only book3s/64 supports CONFIG_PPC_64K_PAGES
+  powerpc/book3e: hugetlbpage is only for CONFIG_PPC_FSL_BOOK3E
+  powerpc/mm: move __find_linux_pte() out of hugetlbpage.c
+  powerpc/mm: make hugetlbpage.c depend on CONFIG_HUGETLB_PAGE
+  powerpc/mm: make gup_hugepte() static
+  powerpc/mm: split asm/hugetlb.h into dedicated subarch files
+  powerpc/mm: add a helper to populate hugepd
+  powerpc/mm: define get_slice_psize() all the time
+  powerpc/mm: no slice for nohash/64
+  powerpc/mm: cleanup ifdef mess in add_huge_page_size()
+  powerpc/mm: move hugetlb_disabled into asm/hugetlb.h
+  powerpc/mm: cleanup HPAGE_SHIFT setup
+  powerpc/mm: cleanup remaining ifdef mess in hugetlbpage.c
+  powerpc/mm: drop slice DEBUG
+  powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
+  powerpc/mm: hand a context_t over to slice_mask_for_size() instead of
+    mm_struct
+  powerpc/mm: move slice_mask_for_size() into mmu.h
+  powerpc/mm: remove a couple of #ifdef CONFIG_PPC_64K_PAGES in
+    mm/slice.c
+  powerpc: define subarch SLB_ADDR_LIMIT_DEFAULT
+  powerpc/mm: flatten function __find_linux_pte()
+  powerpc/mm: flatten function __find_linux_pte() step 2
+  powerpc/mm: flatten function __find_linux_pte() step 3
+
+ arch/powerpc/Kconfig                             |   3 +-
+ arch/powerpc/include/asm/book3s/64/hugetlb.h     |  73 +++++++
+ arch/powerpc/include/asm/book3s/64/mmu.h         |  22 +-
+ arch/powerpc/include/asm/book3s/64/slice.h       |   7 +-
+ arch/powerpc/include/asm/hugetlb.h               |  87 +-------
+ arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  45 +++++
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h     |  18 ++
+ arch/powerpc/include/asm/nohash/32/slice.h       |   2 +
+ arch/powerpc/include/asm/nohash/64/pgalloc.h     |   3 -
+ arch/powerpc/include/asm/nohash/64/pgtable.h     |   4 -
+ arch/powerpc/include/asm/nohash/64/slice.h       |  12 --
+ arch/powerpc/include/asm/nohash/hugetlb-book3e.h |  45 +++++
+ arch/powerpc/include/asm/nohash/pte-book3e.h     |   5 -
+ arch/powerpc/include/asm/page.h                  |  12 +-
+ arch/powerpc/include/asm/pgtable-be-types.h      |   7 +-
+ arch/powerpc/include/asm/pgtable-types.h         |   7 +-
+ arch/powerpc/include/asm/pgtable.h               |   3 -
+ arch/powerpc/include/asm/slice.h                 |   8 +-
+ arch/powerpc/include/asm/task_size_64.h          |   2 +-
+ arch/powerpc/kernel/fadump.c                     |   1 +
+ arch/powerpc/kernel/setup-common.c               |   8 +-
+ arch/powerpc/mm/Makefile                         |   4 +-
+ arch/powerpc/mm/hash_utils_64.c                  |   1 +
+ arch/powerpc/mm/hugetlbpage-book3e.c             |  52 ++---
+ arch/powerpc/mm/hugetlbpage-hash64.c             |  16 ++
+ arch/powerpc/mm/hugetlbpage.c                    | 245 ++++-------------------
+ arch/powerpc/mm/pgtable.c                        | 114 +++++++++++
+ arch/powerpc/mm/slice.c                          | 132 ++----------
+ arch/powerpc/mm/tlb_low_64e.S                    |  31 ---
+ arch/powerpc/mm/tlb_nohash.c                     |  13 --
+ arch/powerpc/platforms/Kconfig.cputype           |   4 +
+ 31 files changed, 438 insertions(+), 548 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+ delete mode 100644 arch/powerpc/include/asm/nohash/64/slice.h
+ create mode 100644 arch/powerpc/include/asm/nohash/hugetlb-book3e.h
+
 -- 
 2.13.3
 
