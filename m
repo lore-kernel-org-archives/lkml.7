@@ -2,176 +2,96 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7061DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7165C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE9B2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553120297;
-	bh=kZM2JED21ul2A+ZNE+d9uOulIkH/RnsK04+h0ddyi3w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z8Tn5joaDnJKqDQMmUQuB8Vs96piqMFDXaihw84hmoPZS7mHBZCRZYY8ZR6ouqWKN
-	 vKbQdpc6J0ePBpbOQTUu6Eof8eyfzLW9JwDxVqfyF5eLRjqIFwCPkinpDu/6pYg4EY
-	 pBWeAP8YqDVC7m5vseYoGWwjpQo9pV1ZXELchSDM=
+	by mail.kernel.org (Postfix) with ESMTP id B1EEB2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W8uI6sdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfCTWSP (ORCPT
+        id S1727628AbfCTWWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:18:15 -0400
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:43294 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfCTWSP (ORCPT
+        Wed, 20 Mar 2019 18:22:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56380 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfCTWWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 18:18:15 -0400
-Received: by mail-oi1-f174.google.com with SMTP id 67so3136036oif.10;
-        Wed, 20 Mar 2019 15:18:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vEjcFnZj4SLhGx6f1FBW+wz7ljQx0oSs/w2Wb6sJnPI=;
-        b=mz8kSefCX8reUJW01Jg56obz309/GbBAjJ2IkICK269q3MVicQg+ZZbA/4qHbyDwJk
-         vcItgaDa3ywWhlScnRXUfqBpV43GmxUkeqgCHIvJxFjgqrSbQ6aXBdvsYbgMPymaCbMF
-         vHBYzlzVYQRdU/FpCaUxe7aELkqzTWz8rXimuCR8/M/Eq4K7s8k1yyDniVFYtEHp2Ahg
-         OMsr+mftk2Hhki4Y2swk2Le1YpvyIPAvtpW3EVKMjKEcvN3qda78MhjJ6b5uTeB8y5v1
-         yt38ZyVnApqqwfrP1Y6obXZyJM49PuxvUzlAUULb+w0VmpbwnIPwf97SP1BpYZ/N/s7x
-         65qA==
-X-Gm-Message-State: APjAAAUd/BRT9eeSEuUiQsPj59V9P1Em7kIMrpzvMeeSNFH5aGvz1HOz
-        qYy88BSdP0UPEMPFOEHdKblqiVRBiweFmtJch50=
-X-Google-Smtp-Source: APXvYqyPtwhcnUVdXiS34ZlODxlv4uVdA7liO1vl3PyReP5FU0rfG9Mc6IlxC5ohphN190wdrDgR8FvpaTPUw8ksAa4=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr203636oib.95.1553120294392;
- Wed, 20 Mar 2019 15:18:14 -0700 (PDT)
+        Wed, 20 Mar 2019 18:22:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BYzz+wefXr4lloqI93uXDNGiX+SSPf7icG7IRc4Yt04=; b=W8uI6sdXml3fAevCDrWwImtHG
+        fw27fYYpuql/HGmotiTsTisODfKQkxqg2wPPIx0Mbg6Zh/GLXGNOiGPblPryAXvx5viQ152N2gxKY
+        X3ygJiAZGjzfy3Nz7TIE72mvDVbp1lANpWZYK6fGKPd+XNC4eYgQ0iBsnBg10ox9DGC91PcCHqP1H
+        Gn7MXCZqHCjtp4Z3wFej6xchuOHrN28Gc3kPhfckj0z1wznaxt83uiOYROXL1oSQbDF632woyqzBh
+        BeTLxeR/QW6G68NlFMoKkz3WVYn2yE/6T6lEXbqPEJMyv7am9Avr+qzt4ndMkYRTIHBu9S/0LsA2P
+        BlAVDPP7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6jbK-0002LJ-IW; Wed, 20 Mar 2019 22:22:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 93BA8984EED; Wed, 20 Mar 2019 23:22:20 +0100 (CET)
+Date:   Wed, 20 Mar 2019 23:22:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
+Message-ID: <20190320222220.GA2490@worktop.programming.kicks-ass.net>
+References: <20190314130113.919278615@infradead.org>
+ <20190314130705.441549378@infradead.org>
+ <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
+ <20190319110549.GC5996@hirez.programming.kicks-ass.net>
+ <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
+ <20190319182041.GO5996@hirez.programming.kicks-ass.net>
+ <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <6369897.qxlu8PgE1t@house> <3100343.nkNWlhakcz@house>
- <CAJZ5v0if=ypE-0j6baq4uTkDp5Ew_WO68oqL0dOi+tZhoP-4mQ@mail.gmail.com> <2885751.XIsKOnZRY2@house>
-In-Reply-To: <2885751.XIsKOnZRY2@house>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 Mar 2019 23:18:03 +0100
-Message-ID: <CAJZ5v0h6tx_swhuQhZFsayszqtE2k3rO45VoDcrSieB6Z9NBgg@mail.gmail.com>
-Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by
- default at boot
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Hannes Reinecke <hare@suse.de>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Simon Schricker <sschricker@suse.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Len Brown <len.brown@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 3:17 PM Thomas Renninger <trenn@suse.de> wrote:
->
-> Rafael,
->
-> I top post the general things and answer in only a few sentences embedded in
-> context below:
->
-> I very much honour your work and your neutral opinions and reasoning and
-> I always have.
->
-> This patch is a resend and while I try to come up with alternative hacks,
-> there still is no solution, not even a suggestion.
+On Wed, Mar 20, 2019 at 01:47:28PM -0700, Stephane Eranian wrote:
 
-I have a patch to rework the EPB handling to avoid the offline/online
-and suspend/resume issues which I'm going to post shortly.  It doesn't
-change the current behavior on the first CPU bring-up, however, so
-feel free to adjust it to your needs.
+> Right now, if I do:
+> 
+> echo 0 > /sys/bus/event_source/devices/cpu/allow_tsx_force_abort
+> 
+> Then I don't have the guarantee on when there will be no abort when I
+> return from the echo.  the MSR is accessed only on PMU scheduling. I
+> would expect a sysadmin to want some guarantee if this is to be
+> switched on/off at runtime. If not, then having a boot time option is
+> better in my opinion.
 
-> I sent the patch 3 years ago:
-> https://lkml.org/lkml/2016/2/26/675
-> And I found this when doing performance analysis with Mel (Gorman).
->
-> This time Hannes (Reinicke) stumbled over it, while he was working on
-> performance tests on NVE over fabrics.
->
-> We need this fixed and I am going to repush this into our kernel(s) now.
+Something like cycling the nmi watchdog or:
 
-I'd recommend to wait for a while with that.
+  perf stat -a -e cycles sleep 1
 
-> On Monday, March 18, 2019 11:57:08 PM CET Rafael J. Wysocki wrote:
-> > On Mon, Mar 18, 2019 at 2:22 PM Thomas Renninger <trenn@suse.de> wrote:
-> > > On Monday, March 18, 2019 12:40:46 PM CET Rafael J. Wysocki wrote:
-> > > > On Mon, Mar 18, 2019 at 12:15 PM Thomas Renninger <trenn@suse.de> wrote:
-> > > ...
->
-> ...
->
-> > > > > > It may not match every setup perfectly, but at least it
-> > > > > > is consistent.  Why exactly is it worse than whatever the BIOS has
-> > > > > > set?
-> > > > >
-> > > > > Because there may be BIOS settings for the CPU which justify
-> > > > > initialization
-> > > > > of the Perf BIAS value by BIOS.
-> > > >
-> > > > Well, the EPB is there for users to set it via the OS.  The BIOS
-> > > > setting is not guaranteed to work for all users anyway.
-> > >
-> > > Who says that?
-> >
-> > I do.
->
-> And this is the reason you do not see much patches from myself anymore over
-> the last years.
-> It's certainly not your fault. I had quite some discussions with Len about
-> specification and BIOS breakages.
->
-> Especially in the CPU powersave area, idle states and cpufreq drivers, Intel
-> was doing it differently all time long the last 5 years. Ignoring their own
-> specifications, ignoring possible BIOS settings and changing kernel and
-> userspace interfaces all the time.
+should be enough to force reschedule the events on every CPU.
 
-It looks like you are generally frustrated and hopefully this isn't my fault.
+Again, I'm not adverse to 'fixing' this if it can be done with limited
+LoC. But I don't really see this as critical.
 
-I would like you to be more specific, though.
+> This other bit I noticed is that cpuc->tfa_shadow is used to avoid the
+> wrmsr(), but I don't see the code that makes sure the init value (0)
+> matches the value of the MSR.  Is this MSR guarantee to be zero on
+> reset? 
 
-> And now I have the discussion again...
+That was my understanding.
 
-What discussion?
+> How about on kexec()?
 
-> While it is related to this patch, it gets off topic.
-> I guess there should be a more general thread on lkml:
-> "Do not change APIs every second day"
-> Up to userspace, but also to BIOS.
-
-I have no idea what you mean here, sorry.
-
-> > And then we can get back to the initial setting discussion.
->
-> Let's stick to this topic in this thread.
-> There is no reason to not find a proper fix for this meanwhile.
->
-> Overriding the BIOS setting should IMO only take place:
-> - if lifetime of CPU could be affected as you mentioned. But in this case the
->   affected CPUs should be matched
-> - if we expect that there are BIOSes which "want to set this value to 6,
->   but may have forgotten to do so", as mentioned in the original patch
->   from Len. BIOSes where this is the case should get a quirk to set it to 6.
-
-On all of the laptops in my office where EPB is present the initial
-value of it is 0 and I don't honestly think that this is really
-intentional.  It looks to me like they don't initialize the EPB at
-all, which unfortunately is hard to distinguish from an intentional
-'performance' setting.
-
->
-> Still, ideally the whole overriding and the message should vanish IMO.
-
-We may consider doing that, but let's fix clear bugs first.
-
-> Last time I sent this patch your answer was:
-> "I need to talk to Len about that,"
-> https://lkml.org/lkml/2016/3/4/371
->
-> But as this is x86 kernel core code, I guess this should be discussed and
-> pushed by the general x86 maintainers anyway. Sigh.
+Good point, we might want to fix that.
