@@ -2,133 +2,175 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94366C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCDA21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FYm6Ljdk"
+	by mail.kernel.org (Postfix) with ESMTP id 716852184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfCTUSp (ORCPT
+        id S1727382AbfCTUTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:18:45 -0400
-Received: from mail-eopbgr690101.outbound.protection.outlook.com ([40.107.69.101]:15746
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726006AbfCTUSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:18:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CNzdCBRI9SINYOxsdlHWR5H1QNSsHqLu1BfZAHq59f4=;
- b=FYm6Ljdkj8FxR40sA8JSs0ul0gouyV8jhH7ojkH1/MgQeHmPz7+2ecAIPjnW0HLt1Is9T4X1XUEnaxpDUByWG7tv57PWy397zUPkn9xgWIKp9gjqQxk+5jxCqAH0lrVqJlzlSZq+Ck9WFEKz4/wOVFLs94yYAyvulkFdbTEEMW8=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB1093.namprd21.prod.outlook.com (52.132.130.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.5; Wed, 20 Mar 2019 20:18:41 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::c92a:a5e0:ee92:5f6]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::c92a:a5e0:ee92:5f6%5]) with mapi id 15.20.1730.008; Wed, 20 Mar 2019
- 20:18:41 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kimbrownkd <kimbrownkd@gmail.com>, Long Li <longli@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6] Drivers: hv: vmbus: Expose monitor data only when
- monitor pages are used
-Thread-Topic: [PATCH v6] Drivers: hv: vmbus: Expose monitor data only when
- monitor pages are used
-Thread-Index: AQHU3gjNNES1C2iNXEige4oL1t6+MaYU99WA
-Date:   Wed, 20 Mar 2019 20:18:41 +0000
-Message-ID: <DM5PR2101MB0918806B98B074BCEA1889DED7410@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <20190308224611.GA3047@ubu-Virtual-Machine>
- <20190319040401.GA3050@ubu-Virtual-Machine>
-In-Reply-To: <20190319040401.GA3050@ubu-Virtual-Machine>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-20T20:18:38.7027304Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ff6591b4-d5d6-44a7-b37a-74063e763a43;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bcfb2474-13b9-43d0-6e81-08d6ad713ed1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB1093;
-x-ms-traffictypediagnostic: DM5PR2101MB1093:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR2101MB10930DD59BF24B10765E2588D7410@DM5PR2101MB1093.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(136003)(366004)(39860400002)(189003)(199004)(33656002)(81166006)(76176011)(14454004)(5660300002)(66066001)(14444005)(6506007)(256004)(81156014)(7696005)(99286004)(8936002)(26005)(186003)(2906002)(10290500003)(52536014)(6116002)(6346003)(478600001)(7736002)(102836004)(305945005)(3846002)(68736007)(74316002)(86362001)(6436002)(11346002)(10090500001)(86612001)(4326008)(476003)(486006)(229853002)(53936002)(105586002)(6246003)(316002)(54906003)(55016002)(71200400001)(106356001)(8676002)(25786009)(9686003)(71190400001)(446003)(97736004)(22452003)(8990500004)(1511001)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1093;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: piz7qVrfrCZzrhvEN8K5sJUx96yKCGqOtJVHjWtpQEh09cyegNAmsFlmJ5JV/G2qUuL0blarY4DyxPzUhwJ2hP3c5GwWhBLITaDeFjJTxbkLiLgDbCIpzKd7/lEBSB1cGRbkA14JvaFAqIS4ejsHR3302ANzQWWZmX4guZ6wXjaRPeKWyug+SLhm+06/JFlHL8LkqKK7jaIcy9cqrqFAm5E03EFwDI00NiurQDFbY2/KJVbfx2/ZlcsFHR76xlFoMchSUycywZouYsa28K/q2UJ/f9GZCs53DbHOfTSC4CYVhSftH1+AE7WfYdUOxVnIS3xNCpqlZ+UeFUPchaIH6fkXgsdoeesg5ek2y8B4G61y77tWRX0o/GDam79ieSU6mYdtPVqkgExKKjdBM8+VfYgilvULG01KbpJi+Ftmvsc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 Mar 2019 16:19:17 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.154]:39771 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726403AbfCTUTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:19:16 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 04B8B400CB495
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:19:16 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6hgBhCK6u90on6hgBhSdvm; Wed, 20 Mar 2019 15:19:16 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=34514 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6hgB-003qGw-EJ; Wed, 20 Mar 2019 15:19:15 -0500
+Subject: Re: [PATCH] mtd: phram: Mark expected switch fall-throughs
+To:     Joern Engel <joern@lazybastard.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190208180911.GA32525@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <a5b310a1-d0ba-689b-100a-14a8204761a8@embeddedor.com>
+Date:   Wed, 20 Mar 2019 15:19:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcfb2474-13b9-43d0-6e81-08d6ad713ed1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 20:18:41.4537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1093
+In-Reply-To: <20190208180911.GA32525@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6hgB-003qGw-EJ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34514
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 38
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2ltYmVybHkgQnJvd24gPGtpbWJyb3dua2RAZ21haWwuY29tPiBTZW50OiBNb25kYXks
-IE1hcmNoIDE4LCAyMDE5IDk6MDQgUE0NCj4gDQo+IFRoZXJlIGFyZSB0d28gbWV0aG9kcyBmb3Ig
-c2lnbmFsaW5nIHRoZSBob3N0OiB0aGUgbW9uaXRvciBwYWdlIG1lY2hhbmlzbQ0KPiBhbmQgaHlw
-ZXJjYWxscy4gVGhlIG1vbml0b3IgcGFnZSBtZWNoYW5pc20gaXMgdXNlZCBieSBwZXJmb3JtYW5j
-ZQ0KPiBjcml0aWNhbCBjaGFubmVscyAoc3RvcmFnZSwgbmV0d29ya2luZywgZXRjLikgYmVjYXVz
-ZSBpdCBwcm92aWRlcw0KPiBpbXByb3ZlZCB0aHJvdWdocHV0LiBIb3dldmVyLCBsYXRlbmN5IGlz
-IGluY3JlYXNlZC4gTW9uaXRvciBwYWdlcyBhcmUNCj4gYWxsb2NhdGVkIHRvIHRoZXNlIGNoYW5u
-ZWxzLg0KPiANCj4gTW9uaXRvciBwYWdlcyBhcmUgbm90IGFsbG9jYXRlZCB0byBjaGFubmVscyB0
-aGF0IGRvIG5vdCB1c2UgdGhlIG1vbml0b3INCj4gcGFnZSBtZWNoYW5pc20uIFRoZXJlZm9yZSwg
-dGhlc2UgY2hhbm5lbHMgZG8gbm90IGhhdmUgYSB2YWxpZCBtb25pdG9yIGlkDQo+IG9yIHZhbGlk
-IG1vbml0b3IgcGFnZSBkYXRhLiBJbiB0aGVzZSBjYXNlcywgc29tZSBvZiB0aGUgIl9zaG93Ig0K
-PiBmdW5jdGlvbnMgcmV0dXJuIGluY29ycmVjdCBkYXRhLiBUaGV5IHJldHVybiBhbiBpbnZhbGlk
-IG1vbml0b3IgaWQgYW5kDQo+IGRhdGEgdGhhdCBpcyBiZXlvbmQgdGhlIGJvdW5kcyBvZiB0aGUg
-aHZfbW9uaXRvcl9wYWdlIGFycmF5IGZpZWxkcy4NCj4gDQo+IFRoZSAiY2hhbm5lbC0+b2ZmZXJt
-c2cubW9uaXRvcl9hbGxvY2F0ZWQiIHZhbHVlIGNhbiBiZSB1c2VkIHRvIGRldGVybWluZQ0KPiB3
-aGV0aGVyIG1vbml0b3IgcGFnZXMgaGF2ZSBiZWVuIGFsbG9jYXRlZCB0byBhIGNoYW5uZWwuDQo+
-IA0KPiBBZGQgImlzX3Zpc2libGUoKSIgY2FsbGJhY2sgZnVuY3Rpb25zIGZvciB0aGUgZGV2aWNl
-LWxldmVsIGFuZA0KPiBjaGFubmVsLWxldmVsIGF0dHJpYnV0ZSBncm91cHMuIFRoZXNlIGZ1bmN0
-aW9ucyB3aWxsIGhpZGUgdGhlIG1vbml0b3INCj4gc3lzZnMgZmlsZXMgd2hlbiB0aGUgbW9uaXRv
-ciBtZWNoYW5pc20gaXMgbm90IHVzZWQuDQo+IA0KPiBSZW1vdmUgIi5kZWZhdWx0X2F0dHJpYnV0
-ZXMiIGZyb20gInZtYnVzX2NoYW5fYXR0cnMiIGFuZCBjcmVhdGUgYQ0KPiBjaGFubmVsLWxldmVs
-IGF0dHJpYnV0ZSBncm91cC4gVGhlc2UgY2hhbmdlcyBhbGxvdyB0aGUgbmV3DQo+ICJpc192aXNp
-YmxlKCkiIGNhbGxiYWNrIGZ1bmN0aW9uIHRvIGJlIGFwcGxpZWQgdG8gdGhlIGNoYW5uZWwtbGV2
-ZWwNCj4gYXR0cmlidXRlcy4NCj4gDQo+IENhbGwgInN5c2ZzX2NyZWF0ZV9ncm91cCgpIiBpbiAi
-dm1idXNfYWRkX2NoYW5uZWxfa29iaigpIiB0byBjcmVhdGUgdGhlDQo+IGNoYW5uZWwncyBzeXNm
-cyBmaWxlcy4gQWRkIGEgbmV3IGZ1bmN0aW9uLA0KPiDigJx2bWJ1c19yZW1vdmVfY2hhbm5lbF9h
-dHRyX2dyb3VwKCnigJ0sIGFuZCBjYWxsIGl0IGluICJmcmVlX2NoYW5uZWwoKSIgdG8NCj4gcmVt
-b3ZlIHRoZSBjaGFubmVsJ3Mgc3lzZnMgZmlsZXMgd2hlbiB0aGUgY2hhbm5lbCBpcyBjbG9zZWQu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLaW1iZXJseSBCcm93biA8a2ltYnJvd25rZEBnbWFpbC5j
-b20+DQoNClJldmlld2VkLWJ5OiBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNv
-bT4NCg==
+Hi all,
+
+Friendly ping:
+
+Who can take this?
+
+Thanks
+--
+Gustavo
+
+On 2/8/19 12:09 PM, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/mtd/devices/phram.c: In function ‘parse_num64’:
+> drivers/mtd/devices/phram.c:149:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>      shift += 10;
+>      ~~~~~~^~~~~
+> drivers/mtd/devices/phram.c:150:4: note: here
+>     case 'M':
+>     ^~~~
+> drivers/mtd/devices/phram.c:151:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>      shift += 10;
+>      ~~~~~~^~~~~
+> drivers/mtd/devices/phram.c:152:4: note: here
+>     case 'k':
+>     ^~~~
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enabling
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/mtd/devices/phram.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+> index 9ee04b5f9311..8a8627c30aed 100644
+> --- a/drivers/mtd/devices/phram.c
+> +++ b/drivers/mtd/devices/phram.c
+> @@ -147,8 +147,10 @@ static int parse_num64(uint64_t *num64, char *token)
+>  			switch (token[len - 2]) {
+>  			case 'G':
+>  				shift += 10;
+> +				/* fall through */
+>  			case 'M':
+>  				shift += 10;
+> +				/* fall through */
+>  			case 'k':
+>  				shift += 10;
+>  				token[len - 2] = 0;
+> 
