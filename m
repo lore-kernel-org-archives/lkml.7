@@ -2,315 +2,212 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20920C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BCB2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A542146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mRAEamYd"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="gcf1VQNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfCTLd5 (ORCPT
+        id S1727984AbfCTLkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 07:33:57 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36980 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfCTLd4 (ORCPT
+        Wed, 20 Mar 2019 07:40:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37099 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbfCTLkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 07:33:56 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z16so572843qtn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:33:55 -0700 (PDT)
+        Wed, 20 Mar 2019 07:40:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so1758587pfr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=d4Z5Mqmi4LJpbgIxofUDgn3+z5lt3XVSz/v98zM6dGA=;
-        b=mRAEamYdksjPsuTT3gCoilF0nl1WVeaMZxrp1TGoeVeQ2DV/jRTfE84LyIcdoznqET
-         1JMcsEKSvlvTNUOo4WathfgwTJMeKT2I7E8FU4K5gKtP7VYRExdXFSSyLq4DyQo4J9+0
-         AWCC6EAjjQKAtdovCCY6NFWpZHC98Dq7Nlu3o=
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=RCzSIHq/usPy1SZSQl4aky3KfYzMolvPk3ngnvcAqB0=;
+        b=gcf1VQNmdgpJRQ41liTULY7pjTT02PSquAtMmpT7qdqhzHjGflyPwQJvGbWh28oRC2
+         evQvkj/C9BjxV/XDViNJtRhpbb1U3n2/AR/kDXo1UwOTpY/97LmgjhK0qTUNEzqQcgET
+         QDI5jrdtYPUVA8yoEAuXjgfnR9Vyyn+m1gx+NkTnHbfMzwHQLauJJDs6N0/AYVgmxpnw
+         h2O7KWscOowKN9p8SMdQ34urzUmZZnEKflZqRciRYcVC4Ao38l85oA+dngA4u229RIXX
+         IBHE9RZcTbZYvko51Hzpn+OANJb7iFvs3Kt5uqqgePxBj3T/pnIEQRlP8gyc+FU8iedN
+         hRng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=d4Z5Mqmi4LJpbgIxofUDgn3+z5lt3XVSz/v98zM6dGA=;
-        b=RqcL4s/ENn0FYbUBRDVxIORTOwLHSaexeAeWDYrJnOrCERRruanes/r4TWd2yGmeFE
-         PySHQ6bPMxZ5TJ4KTGc2CpNGtw+uAT+pAohRmu4ghlaoyC/b4mAyhCPEMZvgAs2HcNDC
-         66pVRN67pOugr/RI1VUq6dj39V0PHuC9ORwLqOUWriDwfJUe3Gto2MdOQRMqlEjc7jIg
-         iQLzvo/65nRmwHVDmd/NANh/mNetaj79HnsU/G87s5Jj8/ozG9f1tdQXDpgj/tw9UJRX
-         SBw5UZ8Eiz94xSgCgWHuNn71nhEcBcA9k0MCs3Qak0xt6d9WdcWOZ6uYn+fl2uYAIX8h
-         DWIw==
-X-Gm-Message-State: APjAAAUsT8Wxg7BrIU0s3nZX19dTloOtDZAq3JZMH7KhbB4CWDKrRinT
-        gxfOJPWvhuydqNYAQFx3bxqarw==
-X-Google-Smtp-Source: APXvYqzkMfTtf1uGPNkRoUzX4rFJebsuzIDcrB0bSeB6XFbGSXfe+v9DxOGTZ1whbs3Rlygi+TBr6w==
-X-Received: by 2002:a0c:9e9a:: with SMTP id r26mr6005557qvd.57.1553081635138;
-        Wed, 20 Mar 2019 04:33:55 -0700 (PDT)
-Received: from [192.168.0.109] (c-73-216-90-110.hsd1.va.comcast.net. [73.216.90.110])
-        by smtp.gmail.com with ESMTPSA id 91sm912671qtf.62.2019.03.20.04.33.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RCzSIHq/usPy1SZSQl4aky3KfYzMolvPk3ngnvcAqB0=;
+        b=R9i01Uq6+XItT9gPWu1v6I0KpP41YbcC9F5usl8wjAofC0lH/STEm8uDb/fC1G7bLk
+         0pvkoM8XkjLVPV8hKzQCgEyzx4lGFaVaGCcbbFSFWbNuJrYD3luC2niPQTCitcB+KMd+
+         ZweS+Ynm1BvMO6TxABp6yrK/ccZqZxhhprGlM7USTSMMzI7eJSrw2H49emsA3UabndnM
+         VWR5yFyALCFuVqy1eYVxmxqMCjATLS8oeDJKCNoEadUTDiqgG2I9GRZGucp1vq+QIQl1
+         bDteQxucHAZtqkTB5xQ5g1XLI9tVkeZDsvpVV7ieF31tA6wPr220JVc4yWXA35IAdN5f
+         y54g==
+X-Gm-Message-State: APjAAAVRsR0VbGxUG2hLgl2bp1In2kVs+yTsw0fH/2pNyC/G02wzAXhi
+        0h2OeZn9lkwLL96jyg4+miEBIdfCERA=
+X-Google-Smtp-Source: APXvYqza85BUy6fs9DQa6l9ISK1FvQyHyK3dX850CcjwXj4JGgF5Q8iEu+XY+Y1ewjGasROh+XrGPA==
+X-Received: by 2002:a17:902:2865:: with SMTP id e92mr7611762plb.312.1553082035739;
+        Wed, 20 Mar 2019 04:40:35 -0700 (PDT)
+Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
+        by smtp.gmail.com with ESMTPSA id x5sm2214225pgp.68.2019.03.20.04.40.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 04:33:54 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 07:33:51 -0400
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
-References: <20190317015306.GA167393@google.com> <20190317114238.ab6tvvovpkpozld5@brauner.io> <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com> <20190318002949.mqknisgt7cmjmt7n@brauner.io> <20190318235052.GA65315@google.com> <20190319221415.baov7x6zoz7hvsno@brauner.io> <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com> <20190319231020.tdcttojlbmx57gke@brauner.io> <20190320015249.GC129907@google.com> <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com> <20190320035953.mnhax3vd47ya4zzm@brauner.io> <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: pidfd design
-To:     Daniel Colascione <dancol@google.com>,
-        Christian Brauner <christian@brauner.io>
-CC:     Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?ISO-8859-1?Q?Arve_Hj=F8nnev=E5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Message-ID: <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org>
+        Wed, 20 Mar 2019 04:40:34 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: max8925: Convert to regulator core's simplified DT parsing code
+Date:   Wed, 20 Mar 2019 19:40:23 +0800
+Message-Id: <20190320114023.19801-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use regulator core's simplified DT parsing code to simply the driver
+implementation.
 
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/max8925-regulator.c | 76 ++++-----------------------
+ 1 file changed, 9 insertions(+), 67 deletions(-)
 
-On March 20, 2019 3:02:32 AM EDT, Daniel Colascione <dancol@google=2Ecom> =
-wrote:
->On Tue, Mar 19, 2019 at 8:59 PM Christian Brauner
-><christian@brauner=2Eio> wrote:
->>
->> On Tue, Mar 19, 2019 at 07:42:52PM -0700, Daniel Colascione wrote:
->> > On Tue, Mar 19, 2019 at 6:52 PM Joel Fernandes
-><joel@joelfernandes=2Eorg> wrote:
->> > >
->> > > On Wed, Mar 20, 2019 at 12:10:23AM +0100, Christian Brauner
->wrote:
->> > > > On Tue, Mar 19, 2019 at 03:48:32PM -0700, Daniel Colascione
->wrote:
->> > > > > On Tue, Mar 19, 2019 at 3:14 PM Christian Brauner
-><christian@brauner=2Eio> wrote:
->> > > > > > So I dislike the idea of allocating new inodes from the
->procfs super
->> > > > > > block=2E I would like to avoid pinning the whole pidfd
->concept exclusively
->> > > > > > to proc=2E The idea is that the pidfd API will be useable
->through procfs
->> > > > > > via open("/proc/<pid>") because that is what users expect
->and really
->> > > > > > wanted to have for a long time=2E So it makes sense to have
->this working=2E
->> > > > > > But it should really be useable without it=2E That's why
->translate_pid()
->> > > > > > and pidfd_clone() are on the table=2E  What I'm saying is,
->once the pidfd
->> > > > > > api is "complete" you should be able to set CONFIG_PROCFS=3DN
->- even
->> > > > > > though that's crazy - and still be able to use pidfds=2E This
->is also a
->> > > > > > point akpm asked about when I did the pidfd_send_signal
->work=2E
->> > > > >
->> > > > > I agree that you shouldn't need CONFIG_PROCFS=3DY to use
->pidfds=2E One
->> > > > > crazy idea that I was discussing with Joel the other day is
->to just
->> > > > > make CONFIG_PROCFS=3DY mandatory and provide a new
->get_procfs_root()
->> > > > > system call that returned, out of thin air and independent of
->the
->> > > > > mount table, a procfs root directory file descriptor for the
->caller's
->> > > > > PID namspace and suitable for use with openat(2)=2E
->> > > >
->> > > > Even if this works I'm pretty sure that Al and a lot of others
->will not
->> > > > be happy about this=2E A syscall to get an fd to /proc?
->> >
->> > Why not? procfs provides access to a lot of core kernel
->functionality=2E
->> > Why should you need a mountpoint to get to it?
->> >
->> > > That's not going
->> > > > to happen and I don't see the need for a separate syscall just
->for that=2E
->> >
->> > We need a system call for the same reason we need a getrandom(2):
->you
->> > have to bootstrap somehow when you're in a minimal environment=2E
->> >
->> > > > (I do see the point of making CONFIG_PROCFS=3Dy the default btw=
-=2E)
->> >
->> > I'm not proposing that we make CONFIG_PROCFS=3Dy the default=2E I'm
->> > proposing that we *hardwire* it as the default and just declare
->that
->> > it's not possible to build a Linux kernel that doesn't include
->procfs=2E
->> > Why do we even have that button?
->> >
->> > > I think his point here was that he wanted a handle to procfs no
->matter where
->> > > it was mounted and then can later use openat on that=2E Agreed that
->it may be
->> > > unnecessary unless there is a usecase for it, and especially if
->the /proc
->> > > directory being the defacto mountpoint for procfs is a universal
->convention=2E
->> >
->> > If it's a universal convention and, in practice, everyone needs
->proc
->> > mounted anyway, so what's the harm in hardwiring CONFIG_PROCFS=3Dy?
->If
->> > we advertise /proc as not merely some kind of optional debug
->interface
->> > but *the* way certain kernel features are exposed --- and there's
->> > nothing wrong with that --- then we should give programs access to
->> > these core kernel features in a way that doesn't depend on
->userspace
->> > kernel configuration, and you do that by either providing a
->> > procfs-root-getting system call or just hardwiring the "/proc/"
->prefix
->> > into VFS=2E
->> >
->> > > > Inode allocation from the procfs mount for the file descriptors
->Joel
->> > > > wants is not correct=2E Their not really procfs file descriptors
->so this
->> > > > is a nack=2E We can't just hook into proc that way=2E
->> > >
->> > > I was not particular about using procfs mount for the FDs but
->that's the only
->> > > way I knew how to do it until you pointed out anon_inode (my grep
->skills
->> > > missed that), so thank you!
->> > >
->> > > > > C'mon: /proc is used by everyone today and almost every
->program breaks
->> > > > > if it's not around=2E The string "/proc" is already de facto
->kernel ABI=2E
->> > > > > Let's just drop the pretense of /proc being optional and bake
->it into
->> > > > > the kernel proper, then give programs a way to get to /proc
->that isn't
->> > > > > tied to any particular mount configuration=2E This way, we
->don't need a
->> > > > > translate_pid(), since callers can just use procfs to do the
->same
->> > > > > thing=2E (That is, if I understand correctly what translate_pid
->does=2E)
->> > > >
->> > > > I'm not sure what you think translate_pid() is doing since
->you're not
->> > > > saying what you think it does=2E
->> > > > Examples from the old patchset:
->> > > > translate_pid(pid, ns, -1)      - get pid in our pid namespace
->> >
->> > Ah, it's a bit different from what I had in mind=2E It's fair to want
->to
->> > translate PIDs between namespaces, but the only way to make the
->> > translate_pid under discussion robust is to have it accept and
->produce
->> > pidfds=2E (At that point, you might as well call it translate_pidfd=
-=2E)
->We
->> > should not be adding new APIs to the kernel that accept numeric
->PIDs:
->>
->> The traditional pid-based api is not going away=2E There are users that
->> have the requirement to translate pids between namespaces and also
->doing
->> introspection on these namespaces independent of pidfds=2E We will not
->> restrict the usefulness of this syscall by making it only work with
->> pidfds=2E
->>
->> > it's not possible to use these APIs correctly except under very
->> > limited circumstances --- mostly, talking about init or a parent
->>
->> The pid-based api is one of the most widely used apis of the kernel
->and
->> people have been using it quite successfully for a long time=2E Yes,
->it's
->> rac, but it's here to stay=2E
->>
->> > talking about its child=2E
->> >
->> > Really, we need a few related operations, and we shouldn't
->necessarily
->> > mingle them=2E
->>
->> Yes, we've established that previously=2E
->>
->> >
->> > 1) Given a numeric PID, give me a pidfd: that works today: you just
->> > open /proc/<pid>
->>
->> Agreed=2E
->>
->> >
->> > 2) Given a pidfd, give me a numeric PID: that works today: you just
->> > openat(pidfd, "stat", O_RDONLY) and read the first token (which is
->> > always the numeric PID)=2E
->>
->> Agreed=2E
->>
->> >
->> > 3) Given a pidfd, send a signal: that's what pidfd_send_signal
->does,
->> > and it's a good start on the rest of these operations=2E
->>
->> Agreed=2E
->>
->> > 5) Given a pidfd in NS1, get a pidfd in NS2=2E That's what
->translate_pid
->> > is for=2E My preferred signature for this routine is
->translate_pid(int
->> > pidfd, int nsfd) -> pidfd=2E We don't need two namespace arguments=2E
->Why
->> > not? Because the pidfd *already* names a single process, uniquely!
->>
->> Given that people are interested in pids we can't just always return
->a
->> pidfd=2E That would mean a user would need to do get the pidfd read
->from
->> <pidfd>/stat and then close the pidfd=2E If you do that for a 100 pids
->or
->> more you end up allocating and closing file descriptors constantly
->for
->> no reason=2E We can't just debate pids away=2E So it will also need to =
-be
->> able to yield pids e=2Eg=2E through a flag argument=2E
->
->Sure, but that's still not a reason that we should care about pidfds
->working separately from procfs=2E=2E
+diff --git a/drivers/regulator/max8925-regulator.c b/drivers/regulator/max8925-regulator.c
+index 39b63ddefeb2..aed6727982cd 100644
+--- a/drivers/regulator/max8925-regulator.c
++++ b/drivers/regulator/max8925-regulator.c
+@@ -159,6 +159,8 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
+ {								\
+ 	.desc	= {						\
+ 		.name	= "SDV" #_id,				\
++		.of_match = of_match_ptr("SDV" #_id),		\
++		.regulators_node = of_match_ptr("regulators"),	\
+ 		.ops	= &max8925_regulator_sdv_ops,		\
+ 		.type	= REGULATOR_VOLTAGE,			\
+ 		.id	= MAX8925_ID_SD##_id,			\
+@@ -175,6 +177,8 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
+ {								\
+ 	.desc	= {						\
+ 		.name	= "LDO" #_id,				\
++		.of_match = of_match_ptr("LDO" #_id),		\
++		.regulators_node = of_match_ptr("regulators"),	\
+ 		.ops	= &max8925_regulator_ldo_ops,		\
+ 		.type	= REGULATOR_VOLTAGE,			\
+ 		.id	= MAX8925_ID_LDO##_id,			\
+@@ -187,34 +191,6 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
+ 	.enable_reg	= MAX8925_LDOCTL##_id,			\
+ }
+ 
+-#ifdef CONFIG_OF
+-static struct of_regulator_match max8925_regulator_matches[] = {
+-	{ .name	= "SDV1",},
+-	{ .name = "SDV2",},
+-	{ .name = "SDV3",},
+-	{ .name = "LDO1",},
+-	{ .name = "LDO2",},
+-	{ .name = "LDO3",},
+-	{ .name = "LDO4",},
+-	{ .name = "LDO5",},
+-	{ .name = "LDO6",},
+-	{ .name = "LDO7",},
+-	{ .name = "LDO8",},
+-	{ .name = "LDO9",},
+-	{ .name = "LDO10",},
+-	{ .name = "LDO11",},
+-	{ .name = "LDO12",},
+-	{ .name = "LDO13",},
+-	{ .name = "LDO14",},
+-	{ .name = "LDO15",},
+-	{ .name = "LDO16",},
+-	{ .name = "LDO17",},
+-	{ .name = "LDO18",},
+-	{ .name = "LDO19",},
+-	{ .name = "LDO20",},
+-};
+-#endif
+-
+ static struct max8925_regulator_info max8925_regulator_info[] = {
+ 	MAX8925_SDV(1, 637.5, 1425, 12.5),
+ 	MAX8925_SDV(2,   650, 2225,   25),
+@@ -242,37 +218,6 @@ static struct max8925_regulator_info max8925_regulator_info[] = {
+ 	MAX8925_LDO(20, 750, 3900, 50),
+ };
+ 
+-#ifdef CONFIG_OF
+-static int max8925_regulator_dt_init(struct platform_device *pdev,
+-				    struct regulator_config *config,
+-				    int ridx)
+-{
+-	struct device_node *nproot, *np;
+-	int rcount;
+-
+-	nproot = pdev->dev.parent->of_node;
+-	if (!nproot)
+-		return -ENODEV;
+-	np = of_get_child_by_name(nproot, "regulators");
+-	if (!np) {
+-		dev_err(&pdev->dev, "failed to find regulators node\n");
+-		return -ENODEV;
+-	}
+-
+-	rcount = of_regulator_match(&pdev->dev, np,
+-				&max8925_regulator_matches[ridx], 1);
+-	of_node_put(np);
+-	if (rcount < 0)
+-		return rcount;
+-	config->init_data =	max8925_regulator_matches[ridx].init_data;
+-	config->of_node = max8925_regulator_matches[ridx].of_node;
+-
+-	return 0;
+-}
+-#else
+-#define max8925_regulator_dt_init(x, y, z)	(-1)
+-#endif
+-
+ static int max8925_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
+@@ -281,7 +226,7 @@ static int max8925_regulator_probe(struct platform_device *pdev)
+ 	struct max8925_regulator_info *ri;
+ 	struct resource *res;
+ 	struct regulator_dev *rdev;
+-	int i, regulator_idx;
++	int i;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+ 	if (!res) {
+@@ -290,10 +235,8 @@ static int max8925_regulator_probe(struct platform_device *pdev)
+ 	}
+ 	for (i = 0; i < ARRAY_SIZE(max8925_regulator_info); i++) {
+ 		ri = &max8925_regulator_info[i];
+-		if (ri->vol_reg == res->start) {
+-			regulator_idx = i;
++		if (ri->vol_reg == res->start)
+ 			break;
+-		}
+ 	}
+ 
+ 	if (i == ARRAY_SIZE(max8925_regulator_info)) {
+@@ -303,12 +246,11 @@ static int max8925_regulator_probe(struct platform_device *pdev)
+ 	}
+ 	ri->i2c = chip->i2c;
+ 
+-	config.dev = &pdev->dev;
++	config.dev = chip->dev;
+ 	config.driver_data = ri;
+ 
+-	if (max8925_regulator_dt_init(pdev, &config, regulator_idx))
+-		if (pdata)
+-			config.init_data = pdata;
++	if (pdata)
++		config.init_data = pdata;
+ 
+ 	rdev = devm_regulator_register(&pdev->dev, &ri->desc, &config);
+ 	if (IS_ERR(rdev)) {
+-- 
+2.17.1
 
-Agreed=2E I can't imagine pidfd being anything but a proc pid directory ha=
-ndle=2E So I am confused what Christian meant=2E Pidfd *is* a procfs direct=
-ory fid  always=2E That's what I gathered from his pidfd_send_signal patch =
-but let me know if I'm way off in the woods=2E
-
-For my next revision, I am thinking of adding the flag argument Christian =
-mentioned to make translate_pid return an anon_inode FD which can be used f=
-or death status, given a <pid>=2E Since it is thought that translate_pid ca=
-n be made to return a pid FD, I think it is ok to have it return a pid stat=
-us FD for the purposes of the death status as well=2E
-
-Joel Fernandes, Android kernel team
-Sent from k9-mail on Android
