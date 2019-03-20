@@ -2,117 +2,144 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6146FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D3DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C0E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34668218A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="b14RFkdi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBgfxh9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbfCTOvF (ORCPT
+        id S1728343AbfCTOvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:51:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46145 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfCTOvE (ORCPT
+        Wed, 20 Mar 2019 10:51:49 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:35284 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728315AbfCTOvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:51:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 9so1853636pfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:51:04 -0700 (PDT)
+        Wed, 20 Mar 2019 10:51:47 -0400
+Received: by mail-vk1-f202.google.com with SMTP id z75so1062386vkd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Cux81Nb/mkGVNNBd664Ke7OVASRtYEGVnVz4ins3jKE=;
-        b=b14RFkdiigwlHIF0ccPOgC+3FEXNAdhmPZMIqMc/djtnb4z6S9eYBQBLveAg/6SBiq
-         50AnSpqkCtZNAhMsCSOk7ZckvGparXfTWUQxl2m5JQTNnuOZ/1UlchIsiK7QvlwxazzY
-         N5gNeA3oJcE3aSJhRWNigEH8KWq6ykos+llYrftPae2vDvuhc13qB0eXEm7UBM3J4O+C
-         DH5tx5kSYkIrtbY2iUfqwas4TNdHu7Oj3j5iWuHXWynAkwrHLZalfX1F3rZzfiT3NxVE
-         ycgJANRk3kD2zJTuo7M88q8gywzNMAc27pxIbH1eE5Dl/OKOKELQRq9UQB90wF0XAUXl
-         NAQA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=20ADMBvUHCnrZbwN97RAJ/EQy38heFRI/sJcSeCbm08=;
+        b=fBgfxh9GgamRMHg2ccGZFUoBByz4GOt4sfGHL3tpn3ZQ1767xayTeCcyI3yXs2mSPo
+         9L9Z+nWnCgS1IkEZKl0L10t99Kxoazx3+kM5cwGHIxLejwB/C6WPwJK7TADmWr+R7zyk
+         SVEtWmrnvfwXlM1zlGyhZQZOBAu3t9jHBJl+/8o9qgFuWwu995t1w8VbhpR252WdIqRb
+         sE8Ml1x7tGBmVRlYQ2buPK+l8HSNYgOfT1+UtDa9CPF/KYM3j84TJNM8Ny+6EFQlptxm
+         +USjsypvXQxVHDirJ+TCg6zJChaLRFAlYddXbqGYhP/AQ/lMXeTl1LdpntucdrWI+Hfw
+         RS9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Cux81Nb/mkGVNNBd664Ke7OVASRtYEGVnVz4ins3jKE=;
-        b=mKX/1h7J/AucLECjOHZZoQDWeAI+7VT50Y5bfVi4gP52oqfDP6DSs7lIkhhkb5BDYg
-         ltpFGibgqIDrPGb7Pbd0//DKSykU3FHXTNXHDlpJz9Ad0gKz5G5RO83QthteK3zTV0je
-         +A6FzxVZxqmjg0ea61weT8tmQVzp8EP2gb9bElghHGaJS7o83n/c116whmO7lKUaEtL/
-         gc9RAe690aIwgFD7z+EmnjefFzwFWjXhSgvzAuiQM0B77KCnHe0KFGeEr0OajMwSWOo1
-         4OPCIhDsOoC7K6XkdFEXBkLhET7Vg7HDM6Wokx4mn9V3GSwN48zDXKozglMLEDzQoHg8
-         EvHQ==
-X-Gm-Message-State: APjAAAXEjlAxOfG4yPi3E2gYKpa+z0ftORiJtpq4iyRSrT6M1OfJZFzt
-        rgm6Puh7NGjA0bKVUiordLdYGw==
-X-Google-Smtp-Source: APXvYqyDvqly4ubx2cdqZXAlBXZY7Fe7z0wZvONdbfJHoA+AGuNBQPVGqaUpuYq89ESrv4QCzM/WGA==
-X-Received: by 2002:a63:c149:: with SMTP id p9mr7778882pgi.362.1553093463901;
-        Wed, 20 Mar 2019 07:51:03 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b01f:ea94:84dd:9ed8:80e7:caaa? ([2600:1010:b01f:ea94:84dd:9ed8:80e7:caaa])
-        by smtp.gmail.com with ESMTPSA id g188sm4798970pfc.24.2019.03.20.07.51.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 07:51:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16D57)
-In-Reply-To: <30998bcd55a34ed38b681f9bb3e3fb87@AcuMS.aculab.com>
-Date:   Wed, 20 Mar 2019 07:51:01 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=20ADMBvUHCnrZbwN97RAJ/EQy38heFRI/sJcSeCbm08=;
+        b=FXg76h40rfYOs2nKje3qcG6ICojy5QlRzqaEXJQaNH2P09ovQUdTi6iLOYRvDkrN9L
+         WnSLXAx235KIBjf5SsV+T9mAaFVGLMP1AMkmK5SVwHxZbi+dOelzrceu2m25+UHDlRRe
+         rG98DtFhtcKVodGcnv0heUZPclPxNnwSx99Ttrr29y4mHqqwupl7mqDkmxisaEsIT4CB
+         IKMI9XOtS6woSPBnuaVxM/xdxtC+it2UVZwPT7f0RdCwuFJ+M09XtjvtTCohGQSb9saV
+         /artukSr0yhRA7kfYme6Wt5SZJ8iFCjEfsDgNMiJnTEr+ORYOfZ58vv2E8V4UtRLOqHi
+         jr9g==
+X-Gm-Message-State: APjAAAU4+vZGD3nuhBxRqhWhabP3K/N5G1gOZjRHXZTJzzLKnBCaaSvT
+        1ynbO7pnHHbOOD8TvcwfxhmWTaqMwdl40ru+
+X-Google-Smtp-Source: APXvYqwYZ0q0Kqz4Z5cFxviM/RSvP8v992XNq+tHsBzIasT+5NuCnNNfSRat/OKpd5fkXdzMwZGbNS7t4SMgCBo4
+X-Received: by 2002:a1f:2a48:: with SMTP id q69mr16477241vkq.7.1553093506075;
+ Wed, 20 Mar 2019 07:51:46 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:51:15 +0100
+In-Reply-To: <cover.1553093420.git.andreyknvl@google.com>
+Message-Id: <7747d94301bcb30de0026e9434a1e1879f84aae7.1553093421.git.andreyknvl@google.com>
+Mime-Version: 1.0
+References: <cover.1553093420.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
+Subject: [PATCH v13 01/20] uaccess: add untagged_addr definition for other arches
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <25395187-837A-4689-9387-5ACCE78E4DF3@amacapital.net>
-References: <20190318094128.1488-1-elena.reshetova@intel.com> <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com> <30998bcd55a34ed38b681f9bb3e3fb87@AcuMS.aculab.com>
-To:     David Laight <David.Laight@aculab.com>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To allow arm64 syscalls to accept tagged pointers from userspace, we must
+untag them when they are passed to the kernel. Since untagging is done in
+generic parts of the kernel, the untagged_addr macro needs to be defined
+for all architectures.
 
-> On Mar 20, 2019, at 4:12 AM, David Laight <David.Laight@aculab.com> wrote:=
+Define it as a noop for architectures other than arm64.
 
->=20
-> From: Andy Lutomirski
->> Sent: 18 March 2019 20:16
-> ...
->>> As a result this patch introduces 8 bits of randomness
->>> (bits 4 - 11 are randomized, bits 0-3 must be zero due to stack alignmen=
-t)
->>> after pt_regs location on the thread stack.
->>> The amount of randomness can be adjusted based on how much of the
->>> stack space we wish/can trade for security.
->>=20
->> Why do you need four zero bits at the bottom?  x86_64 Linux only
->> maintains 8 byte stack alignment.
->=20
-> ISTR that the gcc developers arbitrarily changed the alignment
-> a few years ago.
-> If the stack is only 8 byte aligned and you allocate a variable that
-> requires 16 byte alignment you need gcc to generate the extra stack
-> frame to align the stack.
-> I don't remember seeing the relevant gcc options on the linux
-> gcc command lines.
->=20
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ include/linux/mm.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 76769749b5a5..4d674518d392 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -99,6 +99,10 @@ extern int mmap_rnd_compat_bits __read_mostly;
+ #include <asm/pgtable.h>
+ #include <asm/processor.h>
+ 
++#ifndef untagged_addr
++#define untagged_addr(addr) (addr)
++#endif
++
+ #ifndef __pa_symbol
+ #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
+ #endif
+-- 
+2.21.0.225.g810b269d1ac-goog
 
-On older gcc, you *can=E2=80=99t* set the relevant command line options beca=
-use gcc was daft.  So we just crossed out fingers and hope led for the best.=
-  On newer gcc, we set the options.  Fortunately, 32-byte stack variable ali=
-gnment works regardless.
-
-AFAIK x86_64 Linux has never aligned the stack to 16 bytes.=
