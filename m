@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C38C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A265C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4221E218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59161218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VstqouIz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RheJ2U75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfCTWn7 (ORCPT
+        id S1727691AbfCTWoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:43:59 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:52518 "EHLO
+        Wed, 20 Mar 2019 18:44:01 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52166 "EHLO
         mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfCTWn7 (ORCPT
+        with ESMTP id S1727634AbfCTWn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 18:43:59 -0400
-Received: by mail-it1-f194.google.com with SMTP id g17so1535645ita.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:43:58 -0700 (PDT)
+Received: by mail-it1-f194.google.com with SMTP id e24so1547553itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fl/CUxCABAmxe+Llf6wo6ebySjALKSa8m/h8/EOIlp0=;
-        b=VstqouIzpbbIYmb/G3f7svpKqQJURMJ5qMKAxmtRzjNmWUm8vrp3BwqlM0UnE7oQJy
-         4MpMycWJYWGWh+3HHyjZb+KnjCHpCavGxxZnJsbPYql4wNUNHsuu6eYbfS2HQ8xou5Yx
-         616ZQKcEUGATIqvRJr+Ys1kmBNbGEhkdWr2aFwqdpQD/uIHx7AJD7rHPw9OKoJ7ukXga
-         sPUBxGHxgHS4V2vfjx+Mgcwj9Uw9KguBPTQYRcsJ4bwd03CLVJ9J82ckFOZjMkqHgNGB
-         fi4Wcabw47xq7yuuPkPiqWbW9KbqdIrWmq7UZdNboqNaZ3STfRkK3rPZPW5VwdFxdWZl
-         Cj+g==
+        bh=xPh/urz4hZLHR0zNevi1GPYrSYGBm6GIoDjMF3aQxys=;
+        b=RheJ2U75xwvBcWHNZL4cVJOw7ZkSIbK3FBQjYF6Mb2bqvvjIK9cWGV0v+hTjF/fXCz
+         4pHybdWPWUVFI1D4xZ5GXHyE+Vi6AH+nkmnZ+5+eMwj5K/o+gGkMlrR0iCJHmJd5kWzf
+         aRo5JoSyx4oTpB0v5QvaOYsfYsQMCkXRYJdFOur6R0fAn7cJ3Jdp1PIK881C2VFK6EWq
+         N2woc9Fi4lgRmGSV1Ir3abXBqGxGHOK4ul9ePIL7jqGEbPwCLkyUqTN5xt1dPazH7BIB
+         OSH+Zb0HTkU4L4QF5obtejQdhyNdxAE7OcJjSUzCOy1QmoRTMEOta+psRY9eTlkkctro
+         BQjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fl/CUxCABAmxe+Llf6wo6ebySjALKSa8m/h8/EOIlp0=;
-        b=lkGD1FFI4f3wZGss9pWYcaPASPDn5FZgX+BpdHW3XDwAOpuCQRbyjBUsnRhmaKZ/Sk
-         y3jLeobtthDiPudbQEA9v7eEKu6fACBw3Tp+KxJUc1PfPjylwOh+0wsEEkUW2UXvP9i+
-         uaf1Ce7cnca8uLMhgCuc30CCGwYeyvhBuRMiEXOwdWZHrG/rxjBk9swdKzoVQEuXop3H
-         VvoBlSeAOanMMsr+/6TteKzVmt4TbuUjuvenKkSFj7vPeAtIdMaX4ZLqeq9qPtp6huvH
-         cWGaYFv5+10g2oo6kyWh51HvhbUyrGWmFbq844LHft2FLdXWnXDZl6GJvwRCxna5dLsb
-         aDMg==
-X-Gm-Message-State: APjAAAXWQQtOARre969ll5L1xOLHp/b+rMK22pQ1+2/JJD/kgnpKVbhP
-        CzTHavMUlpnxRtboChLmjXA=
-X-Google-Smtp-Source: APXvYqykh7DvXUCYJV1nHh1vZAkAd9H7rKV0D9Fpw0Z6TaMPhIhZycwJhlfGEjpx8kTYNC4hmA75Aw==
-X-Received: by 2002:a24:97d4:: with SMTP id k203mr585920ite.16.1553121837900;
-        Wed, 20 Mar 2019 15:43:57 -0700 (PDT)
+        bh=xPh/urz4hZLHR0zNevi1GPYrSYGBm6GIoDjMF3aQxys=;
+        b=Qwz5tlabNtTBB5OMaKUt1HRZjLBMc1DNfMlZ0kCm4kLaANYkkMLUdqsQwhLWQnewxP
+         1g8OxyUkghqjMkQoAqXbBkIiJl/+Jr5bqixFWrTNqJKsbtgT5gF4lZBaZ1TRwr/9wflp
+         jxb5x97KDCV0JJgbyN9VxoE1uWfhZfGeIIq3dQ4ADczZnSrfebxvAoW91MdlURoWZSSM
+         rpLuJV1MBszJ6OluZG3RpZl4NctMG03hgYzt2Fooi7VxjvM+ODcjfy7swcWR9P620Llz
+         3TcTYKtxPOwhxrxqLwAH0KFQ/wpEkH/9MAu/JNr1CwPjBIMzRi9cftS7H+E9cTZ+uyEx
+         X+Jg==
+X-Gm-Message-State: APjAAAVK9QTlqKn05ifpx7pjIVbJCFX+DhkvXFiledfjzJUYUFwS3MCf
+        z2Kj2AMiGvIlOB4CQumRs3w=
+X-Google-Smtp-Source: APXvYqzPfmBbt6VSnYliO0s9TR2cK+yu7I0DcpB5Ge8r0LeP5uHI68bdeFyVV1JnZYyWr6+DYteSUQ==
+X-Received: by 2002:a02:c007:: with SMTP id y7mr497825jai.1.1553121838810;
+        Wed, 20 Mar 2019 15:43:58 -0700 (PDT)
 Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id 139sm1805554itk.28.2019.03.20.15.43.56
+        by smtp.gmail.com with ESMTPSA id 139sm1805554itk.28.2019.03.20.15.43.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 15:43:57 -0700 (PDT)
+        Wed, 20 Mar 2019 15:43:58 -0700 (PDT)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org,
         George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v3 1/3] staging: mt7621-mmc: Fix warning when reloading module with debug msgs enabled
-Date:   Wed, 20 Mar 2019 16:42:03 -0600
-Message-Id: <20190320224204.10243-2-thirtythreeforty@gmail.com>
+Subject: [PATCH v3 2/3] staging: mt7621-mmc: Initialize completions a single time during probe
+Date:   Wed, 20 Mar 2019 16:42:04 -0600
+Message-Id: <20190320224204.10243-3-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190320224204.10243-1-thirtythreeforty@gmail.com>
 References: <20190320224204.10243-1-thirtythreeforty@gmail.com>
@@ -73,94 +73,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel complained:
+The module was initializing completions whenever it was going to wait on
+them, and not when the completion was allocated.  This is incorrect
+according to the completion docs:
 
-    [  510.277151] WARNING: CPU: 0 PID: 395 at fs/proc/generic.c:360 proc_register+0xf0/0x108
-    [  510.292891] proc_dir_entry '/proc/msdc_debug' already registered
+    Calling init_completion() on the same completion object twice is
+    most likely a bug [...]
 
-when doing a modprobe/rmmod/modprobe of this module if debug messages
-are compiled in.  Fix this by removing the proc entry when the module is
-unloaded.
+Re-initialization is also unnecessary because the module never uses
+complete_all().  Fix this by only ever initializing the completion a
+single time, and log if the completions are not consumed as intended
+(this is not a fatal problem, but should not go unnoticed).
 
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
-v1: Initial attempt
-v2: Rebased from v1
-v3: Use #ifdef in header file, not implementation
+v2: Rebased v1
+v3: Removed BUG_ON() calls, and politely log; this failure won't kill us
 
- drivers/staging/mt7621-mmc/dbg.c | 15 ++++++++++++---
- drivers/staging/mt7621-mmc/dbg.h |  9 +++++++--
- drivers/staging/mt7621-mmc/sd.c  |  5 +++--
- 3 files changed, 22 insertions(+), 7 deletions(-)
+ drivers/staging/mt7621-mmc/sd.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/mt7621-mmc/dbg.c b/drivers/staging/mt7621-mmc/dbg.c
-index fda3ba38ba37..2310f3bcc16e 100644
---- a/drivers/staging/mt7621-mmc/dbg.c
-+++ b/drivers/staging/mt7621-mmc/dbg.c
-@@ -294,9 +294,18 @@ static const struct file_operations msdc_debug_fops = {
- 	.release	= single_release,
- };
- 
--void msdc_debug_proc_init(void)
-+// Keep ahold of the proc entry we create so it can be freed during
-+// module removal
-+struct proc_dir_entry *msdc_debug_proc_entry;
-+
-+void __init msdc_debug_proc_init(void)
- {
--	proc_create("msdc_debug", 0660, NULL, &msdc_debug_fops);
-+	msdc_debug_proc_entry = proc_create("msdc_debug", 0660,
-+					    NULL, &msdc_debug_fops);
-+}
-+
-+void __exit msdc_debug_proc_deinit(void)
-+{
-+	proc_remove(msdc_debug_proc_entry);
- }
--EXPORT_SYMBOL_GPL(msdc_debug_proc_init);
- #endif
-diff --git a/drivers/staging/mt7621-mmc/dbg.h b/drivers/staging/mt7621-mmc/dbg.h
-index 2d447b2d92ae..b6a09876d7ae 100644
---- a/drivers/staging/mt7621-mmc/dbg.h
-+++ b/drivers/staging/mt7621-mmc/dbg.h
-@@ -92,8 +92,13 @@ enum msdc_dbg {
- #define DBG_EVT_MASK        (DBG_EVT_ALL)
- 
- extern unsigned int sd_debug_zone[4];
--#define TAG "msdc"
--void msdc_debug_proc_init(void);
-+#ifdef MT6575_SD_DEBUG
-+void __init msdc_debug_proc_init(void);
-+void __exit msdc_debug_proc_deinit(void);
-+#else
-+static inline void msdc_debug_proc_init(void) {}
-+static inline void msdc_debug_proc_deinit(void) {}
-+#endif
- 
- u32 msdc_time_calc(u32 old_L32, u32 old_H32, u32 new_L32, u32 new_H32);
- void msdc_performance(u32 opcode, u32 sizes, u32 bRx, u32 ticks);
 diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-index 40f23e200c7a..ff01872ab972 100644
+index ff01872ab972..139533606863 100644
 --- a/drivers/staging/mt7621-mmc/sd.c
 +++ b/drivers/staging/mt7621-mmc/sd.c
-@@ -1825,14 +1825,15 @@ static int __init mt_msdc_init(void)
- 		return ret;
+@@ -466,7 +466,10 @@ static unsigned int msdc_command_start(struct msdc_host   *host,
+ 	host->cmd     = cmd;
+ 	host->cmd_rsp = resp;
+ 
+-	init_completion(&host->cmd_done);
++	// The completion should have been consumed by the previous command
++	// response handler, because the mmc requests should be serialized
++	if(completion_done(&host->cmd_done))
++		dev_err(mmc_dev(host->mmc), "previous command was not handled\n");
+ 
+ 	sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 	sdc_send_cmd(rawcmd, cmd->arg);
+@@ -488,7 +491,6 @@ static unsigned int msdc_command_resp(struct msdc_host   *host,
+ 		    MSDC_INT_ACMD19_DONE;
+ 
+ 	BUG_ON(in_interrupt());
+-	//init_completion(&host->cmd_done);
+ 	//sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 
+ 	spin_unlock(&host->lock);
+@@ -672,7 +674,11 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		//msdc_clr_fifo(host);  /* no need */
+ 
+ 		msdc_dma_on();  /* enable DMA mode first!! */
+-		init_completion(&host->xfer_done);
++
++		// The completion should have been consumed by the previous xfer
++		// response handler, because the mmc requests should be serialized
++		if(completion_done(&host->cmd_done))
++			dev_err(mmc_dev(host->mmc), "previous transfer was not handled\n");
+ 
+ 		/* start the command first*/
+ 		if (msdc_command_start(host, cmd, CMD_TIMEOUT) != 0)
+@@ -691,7 +697,6 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		/* for read, the data coming too fast, then CRC error
+ 		 *  start DMA no business with CRC.
+ 		 */
+-		//init_completion(&host->xfer_done);
+ 		msdc_dma_start(host);
+ 
+ 		spin_unlock(&host->lock);
+@@ -1682,6 +1687,8 @@ static int msdc_drv_probe(struct platform_device *pdev)
  	}
+ 	msdc_init_gpd_bd(host, &host->dma);
  
--#if defined(MT6575_SD_DEBUG)
- 	msdc_debug_proc_init();
--#endif
-+
- 	return 0;
- }
- 
- static void __exit mt_msdc_exit(void)
- {
-+	msdc_debug_proc_deinit();
-+
- 	platform_driver_unregister(&mt_msdc_driver);
- }
- 
++	init_completion(&host->cmd_done);
++	init_completion(&host->xfer_done);
+ 	INIT_DELAYED_WORK(&host->card_delaywork, msdc_tasklet_card);
+ 	spin_lock_init(&host->lock);
+ 	msdc_init_hw(host);
 -- 
 2.21.0
 
