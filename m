@@ -2,1082 +2,265 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACB6218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:14:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="psQ2M6an"
+	by mail.kernel.org (Postfix) with ESMTP id B1F17218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553116524;
+	bh=j+E/RkT4UktfqqPBAngWwZyzd794VuSAqlhKXC2IEWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QvyCvqAxri5rMVMI3U6tQkRIFLl4hg4C2LTYcwa9AdfQQI8Zpg4mgEVnTMI/M2JJo
+	 YvyDIT6Cg/OyH9AsZys+lXYUF5yfro9kJcEIlsDYNaUoyWfmUfKuVsbRlcLxRV8dV/
+	 wmkSHP3VfieFkUWhylCrUfCbDi523d/BzRGBt23M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfCTVOT (ORCPT
+        id S1727619AbfCTVPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:14:19 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45667 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfCTVOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:14:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e5so2531822otk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0TXOkikj2NarcdvR1e0JgSWXudruwfNZZo+8h0iCh/8=;
-        b=psQ2M6anBK9RP2Dk+zlvoeyITEURVGUKKIJRI1TJApn6UppGJIJivWWO9n383Ayccz
-         IC5MN55XuHLMYBizXl+jQemNKttnzXs6VpAC00X8yZ0jvQbu/QvE0hBo/tbnrDqAbESa
-         EqQFm99ax+v/UQc0xH9rn2MlJfU557A6Zq8WdFWdWRDKXksvRWj2WLWeXqxKPNC/5E4O
-         YIuaoOdp8h5kd/0l845DylMjx2Fnemd/n0V5yJ2bIhf4KM99WjyDNC7TKbCB6V1IuNHH
-         28Firvqgq4K/Qdp2Wh8xyLucXEh+TpAjYC3o960jvqiBIRQuBuO3qNF36v+rMkmg/yon
-         6KPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0TXOkikj2NarcdvR1e0JgSWXudruwfNZZo+8h0iCh/8=;
-        b=T97faNJLs0VatURTuk+iFx4Z2EkEtzmWm9DC16+MxDhUEFMeEVVNQNALTVoNzl6MUR
-         YqD9S4kX+aVvFoWufuRcHFzp/Q7V6G0NGmSY31vWYCqx2Q0GupXgxNAkaS10Dvq1ULVh
-         zy69T8thyY1KmpaxYFnEYbh5hNbKOEMoVKtsKEch08K4SzdV9Y6KCH1DtyD6IHwZUjgY
-         c6YfLl5we8Yad0b9Lh6CFXZqzFUhwkQHOiX67kivZ5YceOiJmoHrruycDT1HCfmjVrd8
-         CsdzxszNA+OgBp5MhetwOZLt+40dnaf4GkT0SVW4D+y8z2BFSNbVZo4Q4YLgAeqV8P/Q
-         TZsA==
-X-Gm-Message-State: APjAAAXoskRa3a7hg14LafMTpfQjGBsxQcjOv30j5EdQnhf163ROSwv8
-        6N4b1NGw85cvgmySgoyFr/5RAg==
-X-Google-Smtp-Source: APXvYqw5DZVnuc2s35MVTHtpPu93f2ded7vPOCjFhCb/FazvxqcmzstZFgrBjevYney0Zs8ZcvQjkQ==
-X-Received: by 2002:a9d:32e5:: with SMTP id u92mr120561otb.208.1553116457665;
-        Wed, 20 Mar 2019 14:14:17 -0700 (PDT)
-Received: from alago.cortijodelrio.net (CableLink-189-218-30-19.Hosts.InterCable.net. [189.218.30.19])
-        by smtp.googlemail.com with ESMTPSA id 97sm1259601otn.39.2019.03.20.14.14.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 14:14:16 -0700 (PDT)
-From:   =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
-To:     gregkh@linuxfoundation.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Bo Gan <ganb@vmware.com>,
-        "Matt Helsley (VMware)" <matt.helsley@gmail.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4.4.y] perf bench: Copy kernel files needed to build mem{cpy,set} x86_64 benchmarks
-Date:   Wed, 20 Mar 2019 15:13:56 -0600
-Message-Id: <20190320211400.7128-1-daniel.diaz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 Mar 2019 17:15:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727220AbfCTVPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 17:15:22 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E4BA218AE;
+        Wed, 20 Mar 2019 21:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553116520;
+        bh=j+E/RkT4UktfqqPBAngWwZyzd794VuSAqlhKXC2IEWQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C++4YfbK7ptX2duVbZsJuK8wxmYPn5fHlTyYxOLo6HfbxXiJCU/qWHqiNjrTqUYVW
+         78saXUV0WzHvFgGHXHqGXuSOYL0Zvgme+f/r/QXzhgjIkC7EQuBufnQg5U7uzsclsD
+         bAM0k2XzfTXLe3Dwoh+JCuLXrkREDSvTvbVYbpls=
+Date:   Wed, 20 Mar 2019 16:15:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, kurt.schwemmer@microsemi.com,
+        logang@deltatee.com, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: Re: [PATCH v2] drivers: ntb: Kconfig: pedantic cleanups
+Message-ID: <20190320211517.GG251185@google.com>
+References: <1551898265-18909-1-git-send-email-info@metux.net>
+ <1551909774-24030-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551909774-24030-1-git-send-email-info@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+[+cc Jon, Dave, Allen]
 
-commit 7d7d1bf1d1dabe435ef50efb051724b8664749cb upstream.
+On Wed, Mar 06, 2019 at 11:02:54PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Formatting of Kconfig files doesn't look so pretty, so just
+> take damp cloth and clean it up.
 
-We can't access kernel files directly from tools/, so copy the required
-bits, and make sure that we detect when the original files, in the
-kernel, gets modified.
+Oops, I didn't notice that this was a v2.  I first thought this was a
+2/2 patch.  Sorry for the noise.  Most of my comments still apply
+here, I think.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-z7e76274ch5j4nugv048qacb@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
----
- tools/arch/x86/include/asm/cpufeatures.h      | 336 ++++++++++++++++++
- .../arch/x86/include/asm/disabled-features.h  |  65 ++++
- .../arch/x86/include/asm/required-features.h  | 106 ++++++
- tools/arch/x86/lib/memcpy_64.S                | 179 ++++++++++
- tools/arch/x86/lib/memset_64.S                | 138 +++++++
- .../util => }/include/asm/alternative-asm.h   |   4 +-
- tools/perf/MANIFEST                           |   8 +-
- tools/perf/Makefile.perf                      |  15 +
- tools/perf/bench/mem-memcpy-x86-64-asm.S      |   2 +-
- tools/perf/bench/mem-memset-x86-64-asm.S      |   2 +-
- 10 files changed, 849 insertions(+), 6 deletions(-)
- create mode 100644 tools/arch/x86/include/asm/cpufeatures.h
- create mode 100644 tools/arch/x86/include/asm/disabled-features.h
- create mode 100644 tools/arch/x86/include/asm/required-features.h
- create mode 100644 tools/arch/x86/lib/memcpy_64.S
- create mode 100644 tools/arch/x86/lib/memset_64.S
- rename tools/{perf/util => }/include/asm/alternative-asm.h (66%)
-
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-new file mode 100644
-index 000000000000..a5fa3195a230
---- /dev/null
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -0,0 +1,336 @@
-+#ifndef _ASM_X86_CPUFEATURES_H
-+#define _ASM_X86_CPUFEATURES_H
-+
-+#ifndef _ASM_X86_REQUIRED_FEATURES_H
-+#include <asm/required-features.h>
-+#endif
-+
-+#ifndef _ASM_X86_DISABLED_FEATURES_H
-+#include <asm/disabled-features.h>
-+#endif
-+
-+/*
-+ * Defines x86 CPU feature bits
-+ */
-+#define NCAPINTS	19	/* N 32-bit words worth of info */
-+#define NBUGINTS	1	/* N 32-bit bug flags */
-+
-+/*
-+ * Note: If the comment begins with a quoted string, that string is used
-+ * in /proc/cpuinfo instead of the macro name.  If the string is "",
-+ * this feature bit is not displayed in /proc/cpuinfo at all.
-+ */
-+
-+/* Intel-defined CPU features, CPUID level 0x00000001 (edx), word 0 */
-+#define X86_FEATURE_FPU		( 0*32+ 0) /* Onboard FPU */
-+#define X86_FEATURE_VME		( 0*32+ 1) /* Virtual Mode Extensions */
-+#define X86_FEATURE_DE		( 0*32+ 2) /* Debugging Extensions */
-+#define X86_FEATURE_PSE		( 0*32+ 3) /* Page Size Extensions */
-+#define X86_FEATURE_TSC		( 0*32+ 4) /* Time Stamp Counter */
-+#define X86_FEATURE_MSR		( 0*32+ 5) /* Model-Specific Registers */
-+#define X86_FEATURE_PAE		( 0*32+ 6) /* Physical Address Extensions */
-+#define X86_FEATURE_MCE		( 0*32+ 7) /* Machine Check Exception */
-+#define X86_FEATURE_CX8		( 0*32+ 8) /* CMPXCHG8 instruction */
-+#define X86_FEATURE_APIC	( 0*32+ 9) /* Onboard APIC */
-+#define X86_FEATURE_SEP		( 0*32+11) /* SYSENTER/SYSEXIT */
-+#define X86_FEATURE_MTRR	( 0*32+12) /* Memory Type Range Registers */
-+#define X86_FEATURE_PGE		( 0*32+13) /* Page Global Enable */
-+#define X86_FEATURE_MCA		( 0*32+14) /* Machine Check Architecture */
-+#define X86_FEATURE_CMOV	( 0*32+15) /* CMOV instructions */
-+					  /* (plus FCMOVcc, FCOMI with FPU) */
-+#define X86_FEATURE_PAT		( 0*32+16) /* Page Attribute Table */
-+#define X86_FEATURE_PSE36	( 0*32+17) /* 36-bit PSEs */
-+#define X86_FEATURE_PN		( 0*32+18) /* Processor serial number */
-+#define X86_FEATURE_CLFLUSH	( 0*32+19) /* CLFLUSH instruction */
-+#define X86_FEATURE_DS		( 0*32+21) /* "dts" Debug Store */
-+#define X86_FEATURE_ACPI	( 0*32+22) /* ACPI via MSR */
-+#define X86_FEATURE_MMX		( 0*32+23) /* Multimedia Extensions */
-+#define X86_FEATURE_FXSR	( 0*32+24) /* FXSAVE/FXRSTOR, CR4.OSFXSR */
-+#define X86_FEATURE_XMM		( 0*32+25) /* "sse" */
-+#define X86_FEATURE_XMM2	( 0*32+26) /* "sse2" */
-+#define X86_FEATURE_SELFSNOOP	( 0*32+27) /* "ss" CPU self snoop */
-+#define X86_FEATURE_HT		( 0*32+28) /* Hyper-Threading */
-+#define X86_FEATURE_ACC		( 0*32+29) /* "tm" Automatic clock control */
-+#define X86_FEATURE_IA64	( 0*32+30) /* IA-64 processor */
-+#define X86_FEATURE_PBE		( 0*32+31) /* Pending Break Enable */
-+
-+/* AMD-defined CPU features, CPUID level 0x80000001, word 1 */
-+/* Don't duplicate feature flags which are redundant with Intel! */
-+#define X86_FEATURE_SYSCALL	( 1*32+11) /* SYSCALL/SYSRET */
-+#define X86_FEATURE_MP		( 1*32+19) /* MP Capable. */
-+#define X86_FEATURE_NX		( 1*32+20) /* Execute Disable */
-+#define X86_FEATURE_MMXEXT	( 1*32+22) /* AMD MMX extensions */
-+#define X86_FEATURE_FXSR_OPT	( 1*32+25) /* FXSAVE/FXRSTOR optimizations */
-+#define X86_FEATURE_GBPAGES	( 1*32+26) /* "pdpe1gb" GB pages */
-+#define X86_FEATURE_RDTSCP	( 1*32+27) /* RDTSCP */
-+#define X86_FEATURE_LM		( 1*32+29) /* Long Mode (x86-64) */
-+#define X86_FEATURE_3DNOWEXT	( 1*32+30) /* AMD 3DNow! extensions */
-+#define X86_FEATURE_3DNOW	( 1*32+31) /* 3DNow! */
-+
-+/* Transmeta-defined CPU features, CPUID level 0x80860001, word 2 */
-+#define X86_FEATURE_RECOVERY	( 2*32+ 0) /* CPU in recovery mode */
-+#define X86_FEATURE_LONGRUN	( 2*32+ 1) /* Longrun power control */
-+#define X86_FEATURE_LRTI	( 2*32+ 3) /* LongRun table interface */
-+
-+/* Other features, Linux-defined mapping, word 3 */
-+/* This range is used for feature bits which conflict or are synthesized */
-+#define X86_FEATURE_CXMMX	( 3*32+ 0) /* Cyrix MMX extensions */
-+#define X86_FEATURE_K6_MTRR	( 3*32+ 1) /* AMD K6 nonstandard MTRRs */
-+#define X86_FEATURE_CYRIX_ARR	( 3*32+ 2) /* Cyrix ARRs (= MTRRs) */
-+#define X86_FEATURE_CENTAUR_MCR	( 3*32+ 3) /* Centaur MCRs (= MTRRs) */
-+/* cpu types for specific tunings: */
-+#define X86_FEATURE_K8		( 3*32+ 4) /* "" Opteron, Athlon64 */
-+#define X86_FEATURE_K7		( 3*32+ 5) /* "" Athlon */
-+#define X86_FEATURE_P3		( 3*32+ 6) /* "" P3 */
-+#define X86_FEATURE_P4		( 3*32+ 7) /* "" P4 */
-+#define X86_FEATURE_CONSTANT_TSC ( 3*32+ 8) /* TSC ticks at a constant rate */
-+#define X86_FEATURE_UP		( 3*32+ 9) /* smp kernel running on up */
-+/* free, was #define X86_FEATURE_FXSAVE_LEAK ( 3*32+10) * "" FXSAVE leaks FOP/FIP/FOP */
-+#define X86_FEATURE_ARCH_PERFMON ( 3*32+11) /* Intel Architectural PerfMon */
-+#define X86_FEATURE_PEBS	( 3*32+12) /* Precise-Event Based Sampling */
-+#define X86_FEATURE_BTS		( 3*32+13) /* Branch Trace Store */
-+#define X86_FEATURE_SYSCALL32	( 3*32+14) /* "" syscall in ia32 userspace */
-+#define X86_FEATURE_SYSENTER32	( 3*32+15) /* "" sysenter in ia32 userspace */
-+#define X86_FEATURE_REP_GOOD	( 3*32+16) /* rep microcode works well */
-+#define X86_FEATURE_MFENCE_RDTSC ( 3*32+17) /* "" Mfence synchronizes RDTSC */
-+#define X86_FEATURE_LFENCE_RDTSC ( 3*32+18) /* "" Lfence synchronizes RDTSC */
-+/* free, was #define X86_FEATURE_11AP	( 3*32+19) * "" Bad local APIC aka 11AP */
-+#define X86_FEATURE_NOPL	( 3*32+20) /* The NOPL (0F 1F) instructions */
-+#define X86_FEATURE_ALWAYS	( 3*32+21) /* "" Always-present feature */
-+#define X86_FEATURE_XTOPOLOGY	( 3*32+22) /* cpu topology enum extensions */
-+#define X86_FEATURE_TSC_RELIABLE ( 3*32+23) /* TSC is known to be reliable */
-+#define X86_FEATURE_NONSTOP_TSC	( 3*32+24) /* TSC does not stop in C states */
-+/* free, was #define X86_FEATURE_CLFLUSH_MONITOR ( 3*32+25) * "" clflush reqd with monitor */
-+#define X86_FEATURE_EXTD_APICID	( 3*32+26) /* has extended APICID (8 bits) */
-+#define X86_FEATURE_AMD_DCM     ( 3*32+27) /* multi-node processor */
-+#define X86_FEATURE_APERFMPERF	( 3*32+28) /* APERFMPERF */
-+#define X86_FEATURE_NONSTOP_TSC_S3 ( 3*32+30) /* TSC doesn't stop in S3 state */
-+
-+/* Intel-defined CPU features, CPUID level 0x00000001 (ecx), word 4 */
-+#define X86_FEATURE_XMM3	( 4*32+ 0) /* "pni" SSE-3 */
-+#define X86_FEATURE_PCLMULQDQ	( 4*32+ 1) /* PCLMULQDQ instruction */
-+#define X86_FEATURE_DTES64	( 4*32+ 2) /* 64-bit Debug Store */
-+#define X86_FEATURE_MWAIT	( 4*32+ 3) /* "monitor" Monitor/Mwait support */
-+#define X86_FEATURE_DSCPL	( 4*32+ 4) /* "ds_cpl" CPL Qual. Debug Store */
-+#define X86_FEATURE_VMX		( 4*32+ 5) /* Hardware virtualization */
-+#define X86_FEATURE_SMX		( 4*32+ 6) /* Safer mode */
-+#define X86_FEATURE_EST		( 4*32+ 7) /* Enhanced SpeedStep */
-+#define X86_FEATURE_TM2		( 4*32+ 8) /* Thermal Monitor 2 */
-+#define X86_FEATURE_SSSE3	( 4*32+ 9) /* Supplemental SSE-3 */
-+#define X86_FEATURE_CID		( 4*32+10) /* Context ID */
-+#define X86_FEATURE_SDBG	( 4*32+11) /* Silicon Debug */
-+#define X86_FEATURE_FMA		( 4*32+12) /* Fused multiply-add */
-+#define X86_FEATURE_CX16	( 4*32+13) /* CMPXCHG16B */
-+#define X86_FEATURE_XTPR	( 4*32+14) /* Send Task Priority Messages */
-+#define X86_FEATURE_PDCM	( 4*32+15) /* Performance Capabilities */
-+#define X86_FEATURE_PCID	( 4*32+17) /* Process Context Identifiers */
-+#define X86_FEATURE_DCA		( 4*32+18) /* Direct Cache Access */
-+#define X86_FEATURE_XMM4_1	( 4*32+19) /* "sse4_1" SSE-4.1 */
-+#define X86_FEATURE_XMM4_2	( 4*32+20) /* "sse4_2" SSE-4.2 */
-+#define X86_FEATURE_X2APIC	( 4*32+21) /* x2APIC */
-+#define X86_FEATURE_MOVBE	( 4*32+22) /* MOVBE instruction */
-+#define X86_FEATURE_POPCNT      ( 4*32+23) /* POPCNT instruction */
-+#define X86_FEATURE_TSC_DEADLINE_TIMER	( 4*32+24) /* Tsc deadline timer */
-+#define X86_FEATURE_AES		( 4*32+25) /* AES instructions */
-+#define X86_FEATURE_XSAVE	( 4*32+26) /* XSAVE/XRSTOR/XSETBV/XGETBV */
-+#define X86_FEATURE_OSXSAVE	( 4*32+27) /* "" XSAVE enabled in the OS */
-+#define X86_FEATURE_AVX		( 4*32+28) /* Advanced Vector Extensions */
-+#define X86_FEATURE_F16C	( 4*32+29) /* 16-bit fp conversions */
-+#define X86_FEATURE_RDRAND	( 4*32+30) /* The RDRAND instruction */
-+#define X86_FEATURE_HYPERVISOR	( 4*32+31) /* Running on a hypervisor */
-+
-+/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
-+#define X86_FEATURE_XSTORE	( 5*32+ 2) /* "rng" RNG present (xstore) */
-+#define X86_FEATURE_XSTORE_EN	( 5*32+ 3) /* "rng_en" RNG enabled */
-+#define X86_FEATURE_XCRYPT	( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
-+#define X86_FEATURE_XCRYPT_EN	( 5*32+ 7) /* "ace_en" on-CPU crypto enabled */
-+#define X86_FEATURE_ACE2	( 5*32+ 8) /* Advanced Cryptography Engine v2 */
-+#define X86_FEATURE_ACE2_EN	( 5*32+ 9) /* ACE v2 enabled */
-+#define X86_FEATURE_PHE		( 5*32+10) /* PadLock Hash Engine */
-+#define X86_FEATURE_PHE_EN	( 5*32+11) /* PHE enabled */
-+#define X86_FEATURE_PMM		( 5*32+12) /* PadLock Montgomery Multiplier */
-+#define X86_FEATURE_PMM_EN	( 5*32+13) /* PMM enabled */
-+
-+/* More extended AMD flags: CPUID level 0x80000001, ecx, word 6 */
-+#define X86_FEATURE_LAHF_LM	( 6*32+ 0) /* LAHF/SAHF in long mode */
-+#define X86_FEATURE_CMP_LEGACY	( 6*32+ 1) /* If yes HyperThreading not valid */
-+#define X86_FEATURE_SVM		( 6*32+ 2) /* Secure virtual machine */
-+#define X86_FEATURE_EXTAPIC	( 6*32+ 3) /* Extended APIC space */
-+#define X86_FEATURE_CR8_LEGACY	( 6*32+ 4) /* CR8 in 32-bit mode */
-+#define X86_FEATURE_ABM		( 6*32+ 5) /* Advanced bit manipulation */
-+#define X86_FEATURE_SSE4A	( 6*32+ 6) /* SSE-4A */
-+#define X86_FEATURE_MISALIGNSSE ( 6*32+ 7) /* Misaligned SSE mode */
-+#define X86_FEATURE_3DNOWPREFETCH ( 6*32+ 8) /* 3DNow prefetch instructions */
-+#define X86_FEATURE_OSVW	( 6*32+ 9) /* OS Visible Workaround */
-+#define X86_FEATURE_IBS		( 6*32+10) /* Instruction Based Sampling */
-+#define X86_FEATURE_XOP		( 6*32+11) /* extended AVX instructions */
-+#define X86_FEATURE_SKINIT	( 6*32+12) /* SKINIT/STGI instructions */
-+#define X86_FEATURE_WDT		( 6*32+13) /* Watchdog timer */
-+#define X86_FEATURE_LWP		( 6*32+15) /* Light Weight Profiling */
-+#define X86_FEATURE_FMA4	( 6*32+16) /* 4 operands MAC instructions */
-+#define X86_FEATURE_TCE		( 6*32+17) /* translation cache extension */
-+#define X86_FEATURE_NODEID_MSR	( 6*32+19) /* NodeId MSR */
-+#define X86_FEATURE_TBM		( 6*32+21) /* trailing bit manipulations */
-+#define X86_FEATURE_TOPOEXT	( 6*32+22) /* topology extensions CPUID leafs */
-+#define X86_FEATURE_PERFCTR_CORE ( 6*32+23) /* core performance counter extensions */
-+#define X86_FEATURE_PERFCTR_NB  ( 6*32+24) /* NB performance counter extensions */
-+#define X86_FEATURE_BPEXT	(6*32+26) /* data breakpoint extension */
-+#define X86_FEATURE_PERFCTR_L2	( 6*32+28) /* L2 performance counter extensions */
-+#define X86_FEATURE_MWAITX	( 6*32+29) /* MWAIT extension (MONITORX/MWAITX) */
-+
-+/*
-+ * Auxiliary flags: Linux defined - For features scattered in various
-+ * CPUID levels like 0x6, 0xA etc, word 7.
-+ *
-+ * Reuse free bits when adding new feature flags!
-+ */
-+
-+#define X86_FEATURE_CPB		( 7*32+ 2) /* AMD Core Performance Boost */
-+#define X86_FEATURE_EPB		( 7*32+ 3) /* IA32_ENERGY_PERF_BIAS support */
-+#define X86_FEATURE_INVPCID_SINGLE ( 7*32+ 4) /* Effectively INVPCID && CR4.PCIDE=1 */
-+
-+#define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
-+#define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
-+
-+#define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
-+#define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
-+
-+#define X86_FEATURE_INTEL_PT	( 7*32+15) /* Intel Processor Trace */
-+#define X86_FEATURE_RSB_CTXSW	( 7*32+19) /* "" Fill RSB on context switches */
-+
-+#define X86_FEATURE_MSR_SPEC_CTRL ( 7*32+16) /* "" MSR SPEC_CTRL is implemented */
-+#define X86_FEATURE_SSBD	( 7*32+17) /* Speculative Store Bypass Disable */
-+
-+/* Because the ALTERNATIVE scheme is for members of the X86_FEATURE club... */
-+#define X86_FEATURE_KAISER	( 7*32+31) /* CONFIG_PAGE_TABLE_ISOLATION w/o nokaiser */
-+
-+#define X86_FEATURE_USE_IBPB	( 7*32+21) /* "" Indirect Branch Prediction Barrier enabled*/
-+#define X86_FEATURE_USE_IBRS_FW	( 7*32+22) /* "" Use IBRS during runtime firmware calls */
-+#define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE	( 7*32+23) /* "" Disable Speculative Store Bypass. */
-+#define X86_FEATURE_LS_CFG_SSBD	( 7*32+24) /* "" AMD SSBD implementation */
-+
-+#define X86_FEATURE_IBRS	( 7*32+25) /* Indirect Branch Restricted Speculation */
-+#define X86_FEATURE_IBPB	( 7*32+26) /* Indirect Branch Prediction Barrier */
-+#define X86_FEATURE_STIBP	( 7*32+27) /* Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_ZEN		( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
-+#define X86_FEATURE_L1TF_PTEINV	( 7*32+29) /* "" L1TF workaround PTE inversion */
-+
-+/* Virtualization flags: Linux defined, word 8 */
-+#define X86_FEATURE_TPR_SHADOW  ( 8*32+ 0) /* Intel TPR Shadow */
-+#define X86_FEATURE_VNMI        ( 8*32+ 1) /* Intel Virtual NMI */
-+#define X86_FEATURE_FLEXPRIORITY ( 8*32+ 2) /* Intel FlexPriority */
-+#define X86_FEATURE_EPT         ( 8*32+ 3) /* Intel Extended Page Table */
-+#define X86_FEATURE_VPID        ( 8*32+ 4) /* Intel Virtual Processor ID */
-+
-+#define X86_FEATURE_VMMCALL     ( 8*32+15) /* Prefer vmmcall to vmcall */
-+#define X86_FEATURE_XENPV       ( 8*32+16) /* "" Xen paravirtual guest */
-+
-+
-+/* Intel-defined CPU features, CPUID level 0x00000007:0 (ebx), word 9 */
-+#define X86_FEATURE_FSGSBASE	( 9*32+ 0) /* {RD/WR}{FS/GS}BASE instructions*/
-+#define X86_FEATURE_TSC_ADJUST	( 9*32+ 1) /* TSC adjustment MSR 0x3b */
-+#define X86_FEATURE_BMI1	( 9*32+ 3) /* 1st group bit manipulation extensions */
-+#define X86_FEATURE_HLE		( 9*32+ 4) /* Hardware Lock Elision */
-+#define X86_FEATURE_AVX2	( 9*32+ 5) /* AVX2 instructions */
-+#define X86_FEATURE_SMEP	( 9*32+ 7) /* Supervisor Mode Execution Protection */
-+#define X86_FEATURE_BMI2	( 9*32+ 8) /* 2nd group bit manipulation extensions */
-+#define X86_FEATURE_ERMS	( 9*32+ 9) /* Enhanced REP MOVSB/STOSB */
-+#define X86_FEATURE_INVPCID	( 9*32+10) /* Invalidate Processor Context ID */
-+#define X86_FEATURE_RTM		( 9*32+11) /* Restricted Transactional Memory */
-+#define X86_FEATURE_CQM		( 9*32+12) /* Cache QoS Monitoring */
-+#define X86_FEATURE_MPX		( 9*32+14) /* Memory Protection Extension */
-+#define X86_FEATURE_AVX512F	( 9*32+16) /* AVX-512 Foundation */
-+#define X86_FEATURE_RDSEED	( 9*32+18) /* The RDSEED instruction */
-+#define X86_FEATURE_ADX		( 9*32+19) /* The ADCX and ADOX instructions */
-+#define X86_FEATURE_SMAP	( 9*32+20) /* Supervisor Mode Access Prevention */
-+#define X86_FEATURE_PCOMMIT	( 9*32+22) /* PCOMMIT instruction */
-+#define X86_FEATURE_CLFLUSHOPT	( 9*32+23) /* CLFLUSHOPT instruction */
-+#define X86_FEATURE_CLWB	( 9*32+24) /* CLWB instruction */
-+#define X86_FEATURE_AVX512PF	( 9*32+26) /* AVX-512 Prefetch */
-+#define X86_FEATURE_AVX512ER	( 9*32+27) /* AVX-512 Exponential and Reciprocal */
-+#define X86_FEATURE_AVX512CD	( 9*32+28) /* AVX-512 Conflict Detection */
-+#define X86_FEATURE_SHA_NI	( 9*32+29) /* SHA1/SHA256 Instruction Extensions */
-+
-+/* Extended state features, CPUID level 0x0000000d:1 (eax), word 10 */
-+#define X86_FEATURE_XSAVEOPT	(10*32+ 0) /* XSAVEOPT */
-+#define X86_FEATURE_XSAVEC	(10*32+ 1) /* XSAVEC */
-+#define X86_FEATURE_XGETBV1	(10*32+ 2) /* XGETBV with ECX = 1 */
-+#define X86_FEATURE_XSAVES	(10*32+ 3) /* XSAVES/XRSTORS */
-+
-+/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:0 (edx), word 11 */
-+#define X86_FEATURE_CQM_LLC	(11*32+ 1) /* LLC QoS if 1 */
-+
-+/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:1 (edx), word 12 */
-+#define X86_FEATURE_CQM_OCCUP_LLC (12*32+ 0) /* LLC occupancy monitoring if 1 */
-+
-+/* AMD-defined CPU features, CPUID level 0x80000008 (ebx), word 13 */
-+#define X86_FEATURE_CLZERO	(13*32+0) /* CLZERO instruction */
-+#define X86_FEATURE_AMD_IBPB	(13*32+12) /* Indirect Branch Prediction Barrier */
-+#define X86_FEATURE_AMD_IBRS	(13*32+14) /* Indirect Branch Restricted Speculation */
-+#define X86_FEATURE_AMD_STIBP	(13*32+15) /* Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_VIRT_SSBD	(13*32+25) /* Virtualized Speculative Store Bypass Disable */
-+
-+/* Thermal and Power Management Leaf, CPUID level 0x00000006 (eax), word 14 */
-+#define X86_FEATURE_DTHERM	(14*32+ 0) /* Digital Thermal Sensor */
-+#define X86_FEATURE_IDA		(14*32+ 1) /* Intel Dynamic Acceleration */
-+#define X86_FEATURE_ARAT	(14*32+ 2) /* Always Running APIC Timer */
-+#define X86_FEATURE_PLN		(14*32+ 4) /* Intel Power Limit Notification */
-+#define X86_FEATURE_PTS		(14*32+ 6) /* Intel Package Thermal Status */
-+#define X86_FEATURE_HWP		(14*32+ 7) /* Intel Hardware P-states */
-+#define X86_FEATURE_HWP_NOTIFY	(14*32+ 8) /* HWP Notification */
-+#define X86_FEATURE_HWP_ACT_WINDOW (14*32+ 9) /* HWP Activity Window */
-+#define X86_FEATURE_HWP_EPP	(14*32+10) /* HWP Energy Perf. Preference */
-+#define X86_FEATURE_HWP_PKG_REQ (14*32+11) /* HWP Package Level Request */
-+
-+/* AMD SVM Feature Identification, CPUID level 0x8000000a (edx), word 15 */
-+#define X86_FEATURE_NPT		(15*32+ 0) /* Nested Page Table support */
-+#define X86_FEATURE_LBRV	(15*32+ 1) /* LBR Virtualization support */
-+#define X86_FEATURE_SVML	(15*32+ 2) /* "svm_lock" SVM locking MSR */
-+#define X86_FEATURE_NRIPS	(15*32+ 3) /* "nrip_save" SVM next_rip save */
-+#define X86_FEATURE_TSCRATEMSR  (15*32+ 4) /* "tsc_scale" TSC scaling support */
-+#define X86_FEATURE_VMCBCLEAN   (15*32+ 5) /* "vmcb_clean" VMCB clean bits support */
-+#define X86_FEATURE_FLUSHBYASID (15*32+ 6) /* flush-by-ASID support */
-+#define X86_FEATURE_DECODEASSISTS (15*32+ 7) /* Decode Assists support */
-+#define X86_FEATURE_PAUSEFILTER (15*32+10) /* filtered pause intercept */
-+#define X86_FEATURE_PFTHRESHOLD (15*32+12) /* pause filter threshold */
-+
-+/* Intel-defined CPU features, CPUID level 0x00000007:0 (ecx), word 16 */
-+#define X86_FEATURE_PKU		(16*32+ 3) /* Protection Keys for Userspace */
-+#define X86_FEATURE_OSPKE	(16*32+ 4) /* OS Protection Keys Enable */
-+
-+/* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
-+#define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery support */
-+#define X86_FEATURE_SUCCOR	(17*32+1) /* Uncorrectable error containment and recovery */
-+#define X86_FEATURE_SMCA	(17*32+3) /* Scalable MCA */
-+
-+
-+/* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
-+#define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
-+#define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
-+#define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
-+#define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
-+#define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
-+
-+/*
-+ * BUG word(s)
-+ */
-+#define X86_BUG(x)		(NCAPINTS*32 + (x))
-+
-+#define X86_BUG_F00F		X86_BUG(0) /* Intel F00F */
-+#define X86_BUG_FDIV		X86_BUG(1) /* FPU FDIV */
-+#define X86_BUG_COMA		X86_BUG(2) /* Cyrix 6x86 coma */
-+#define X86_BUG_AMD_TLB_MMATCH	X86_BUG(3) /* "tlb_mmatch" AMD Erratum 383 */
-+#define X86_BUG_AMD_APIC_C1E	X86_BUG(4) /* "apic_c1e" AMD Erratum 400 */
-+#define X86_BUG_11AP		X86_BUG(5) /* Bad local APIC aka 11AP */
-+#define X86_BUG_FXSAVE_LEAK	X86_BUG(6) /* FXSAVE leaks FOP/FIP/FOP */
-+#define X86_BUG_CLFLUSH_MONITOR	X86_BUG(7) /* AAI65, CLFLUSH required before MONITOR */
-+#define X86_BUG_SYSRET_SS_ATTRS	X86_BUG(8) /* SYSRET doesn't fix up SS attrs */
-+#define X86_BUG_CPU_MELTDOWN	X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
-+#define X86_BUG_SPECTRE_V1	X86_BUG(15) /* CPU is affected by Spectre variant 1 attack with conditional branches */
-+#define X86_BUG_SPECTRE_V2	X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
-+#define X86_BUG_SPEC_STORE_BYPASS X86_BUG(17) /* CPU is affected by speculative store bypass attack */
-+#define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
-+
-+#endif /* _ASM_X86_CPUFEATURES_H */
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-new file mode 100644
-index 000000000000..1f8cca459c6c
---- /dev/null
-+++ b/tools/arch/x86/include/asm/disabled-features.h
-@@ -0,0 +1,65 @@
-+#ifndef _ASM_X86_DISABLED_FEATURES_H
-+#define _ASM_X86_DISABLED_FEATURES_H
-+
-+/* These features, although they might be available in a CPU
-+ * will not be used because the compile options to support
-+ * them are not present.
-+ *
-+ * This code allows them to be checked and disabled at
-+ * compile time without an explicit #ifdef.  Use
-+ * cpu_feature_enabled().
-+ */
-+
-+#ifdef CONFIG_X86_INTEL_MPX
-+# define DISABLE_MPX	0
-+#else
-+# define DISABLE_MPX	(1<<(X86_FEATURE_MPX & 31))
-+#endif
-+
-+#ifdef CONFIG_X86_64
-+# define DISABLE_VME		(1<<(X86_FEATURE_VME & 31))
-+# define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
-+# define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
-+# define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
-+# define DISABLE_PCID		0
-+#else
-+# define DISABLE_VME		0
-+# define DISABLE_K6_MTRR	0
-+# define DISABLE_CYRIX_ARR	0
-+# define DISABLE_CENTAUR_MCR	0
-+# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
-+#endif /* CONFIG_X86_64 */
-+
-+#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+# define DISABLE_PKU		0
-+# define DISABLE_OSPKE		0
-+#else
-+# define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
-+# define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
-+#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
-+
-+/*
-+ * Make sure to add features to the correct mask
-+ */
-+#define DISABLED_MASK0	(DISABLE_VME)
-+#define DISABLED_MASK1	0
-+#define DISABLED_MASK2	0
-+#define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
-+#define DISABLED_MASK4	(DISABLE_PCID)
-+#define DISABLED_MASK5	0
-+#define DISABLED_MASK6	0
-+#define DISABLED_MASK7	0
-+#define DISABLED_MASK8	0
-+#define DISABLED_MASK9	(DISABLE_MPX)
-+#define DISABLED_MASK10	0
-+#define DISABLED_MASK11	0
-+#define DISABLED_MASK12	0
-+#define DISABLED_MASK13	0
-+#define DISABLED_MASK14	0
-+#define DISABLED_MASK15	0
-+#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE)
-+#define DISABLED_MASK17	0
-+#define DISABLED_MASK18	0
-+#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-+
-+#endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
-new file mode 100644
-index 000000000000..6847d85400a8
---- /dev/null
-+++ b/tools/arch/x86/include/asm/required-features.h
-@@ -0,0 +1,106 @@
-+#ifndef _ASM_X86_REQUIRED_FEATURES_H
-+#define _ASM_X86_REQUIRED_FEATURES_H
-+
-+/* Define minimum CPUID feature set for kernel These bits are checked
-+   really early to actually display a visible error message before the
-+   kernel dies.  Make sure to assign features to the proper mask!
-+
-+   Some requirements that are not in CPUID yet are also in the
-+   CONFIG_X86_MINIMUM_CPU_FAMILY which is checked too.
-+
-+   The real information is in arch/x86/Kconfig.cpu, this just converts
-+   the CONFIGs into a bitmask */
-+
-+#ifndef CONFIG_MATH_EMULATION
-+# define NEED_FPU	(1<<(X86_FEATURE_FPU & 31))
-+#else
-+# define NEED_FPU	0
-+#endif
-+
-+#if defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
-+# define NEED_PAE	(1<<(X86_FEATURE_PAE & 31))
-+#else
-+# define NEED_PAE	0
-+#endif
-+
-+#ifdef CONFIG_X86_CMPXCHG64
-+# define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
-+#else
-+# define NEED_CX8	0
-+#endif
-+
-+#if defined(CONFIG_X86_CMOV) || defined(CONFIG_X86_64)
-+# define NEED_CMOV	(1<<(X86_FEATURE_CMOV & 31))
-+#else
-+# define NEED_CMOV	0
-+#endif
-+
-+#ifdef CONFIG_X86_USE_3DNOW
-+# define NEED_3DNOW	(1<<(X86_FEATURE_3DNOW & 31))
-+#else
-+# define NEED_3DNOW	0
-+#endif
-+
-+#if defined(CONFIG_X86_P6_NOP) || defined(CONFIG_X86_64)
-+# define NEED_NOPL	(1<<(X86_FEATURE_NOPL & 31))
-+#else
-+# define NEED_NOPL	0
-+#endif
-+
-+#ifdef CONFIG_MATOM
-+# define NEED_MOVBE	(1<<(X86_FEATURE_MOVBE & 31))
-+#else
-+# define NEED_MOVBE	0
-+#endif
-+
-+#ifdef CONFIG_X86_64
-+#ifdef CONFIG_PARAVIRT
-+/* Paravirtualized systems may not have PSE or PGE available */
-+#define NEED_PSE	0
-+#define NEED_PGE	0
-+#else
-+#define NEED_PSE	(1<<(X86_FEATURE_PSE) & 31)
-+#define NEED_PGE	(1<<(X86_FEATURE_PGE) & 31)
-+#endif
-+#define NEED_MSR	(1<<(X86_FEATURE_MSR & 31))
-+#define NEED_FXSR	(1<<(X86_FEATURE_FXSR & 31))
-+#define NEED_XMM	(1<<(X86_FEATURE_XMM & 31))
-+#define NEED_XMM2	(1<<(X86_FEATURE_XMM2 & 31))
-+#define NEED_LM		(1<<(X86_FEATURE_LM & 31))
-+#else
-+#define NEED_PSE	0
-+#define NEED_MSR	0
-+#define NEED_PGE	0
-+#define NEED_FXSR	0
-+#define NEED_XMM	0
-+#define NEED_XMM2	0
-+#define NEED_LM		0
-+#endif
-+
-+#define REQUIRED_MASK0	(NEED_FPU|NEED_PSE|NEED_MSR|NEED_PAE|\
-+			 NEED_CX8|NEED_PGE|NEED_FXSR|NEED_CMOV|\
-+			 NEED_XMM|NEED_XMM2)
-+#define SSE_MASK	(NEED_XMM|NEED_XMM2)
-+
-+#define REQUIRED_MASK1	(NEED_LM|NEED_3DNOW)
-+
-+#define REQUIRED_MASK2	0
-+#define REQUIRED_MASK3	(NEED_NOPL)
-+#define REQUIRED_MASK4	(NEED_MOVBE)
-+#define REQUIRED_MASK5	0
-+#define REQUIRED_MASK6	0
-+#define REQUIRED_MASK7	0
-+#define REQUIRED_MASK8	0
-+#define REQUIRED_MASK9	0
-+#define REQUIRED_MASK10	0
-+#define REQUIRED_MASK11	0
-+#define REQUIRED_MASK12	0
-+#define REQUIRED_MASK13	0
-+#define REQUIRED_MASK14	0
-+#define REQUIRED_MASK15	0
-+#define REQUIRED_MASK16	0
-+#define REQUIRED_MASK17	0
-+#define REQUIRED_MASK18	0
-+#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-+
-+#endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/tools/arch/x86/lib/memcpy_64.S b/tools/arch/x86/lib/memcpy_64.S
-new file mode 100644
-index 000000000000..a0de849435ad
---- /dev/null
-+++ b/tools/arch/x86/lib/memcpy_64.S
-@@ -0,0 +1,179 @@
-+/* Copyright 2002 Andi Kleen */
-+
-+#include <linux/linkage.h>
-+#include <asm/cpufeatures.h>
-+#include <asm/alternative-asm.h>
-+
-+/*
-+ * We build a jump to memcpy_orig by default which gets NOPped out on
-+ * the majority of x86 CPUs which set REP_GOOD. In addition, CPUs which
-+ * have the enhanced REP MOVSB/STOSB feature (ERMS), change those NOPs
-+ * to a jmp to memcpy_erms which does the REP; MOVSB mem copy.
-+ */
-+
-+.weak memcpy
-+
-+/*
-+ * memcpy - Copy a memory block.
-+ *
-+ * Input:
-+ *  rdi destination
-+ *  rsi source
-+ *  rdx count
-+ *
-+ * Output:
-+ * rax original destination
-+ */
-+ENTRY(__memcpy)
-+ENTRY(memcpy)
-+	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
-+		      "jmp memcpy_erms", X86_FEATURE_ERMS
-+
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+	shrq $3, %rcx
-+	andl $7, %edx
-+	rep movsq
-+	movl %edx, %ecx
-+	rep movsb
-+	ret
-+ENDPROC(memcpy)
-+ENDPROC(__memcpy)
-+
-+/*
-+ * memcpy_erms() - enhanced fast string memcpy. This is faster and
-+ * simpler than memcpy. Use memcpy_erms when possible.
-+ */
-+ENTRY(memcpy_erms)
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+	rep movsb
-+	ret
-+ENDPROC(memcpy_erms)
-+
-+ENTRY(memcpy_orig)
-+	movq %rdi, %rax
-+
-+	cmpq $0x20, %rdx
-+	jb .Lhandle_tail
-+
-+	/*
-+	 * We check whether memory false dependence could occur,
-+	 * then jump to corresponding copy mode.
-+	 */
-+	cmp  %dil, %sil
-+	jl .Lcopy_backward
-+	subq $0x20, %rdx
-+.Lcopy_forward_loop:
-+	subq $0x20,	%rdx
-+
-+	/*
-+	 * Move in blocks of 4x8 bytes:
-+	 */
-+	movq 0*8(%rsi),	%r8
-+	movq 1*8(%rsi),	%r9
-+	movq 2*8(%rsi),	%r10
-+	movq 3*8(%rsi),	%r11
-+	leaq 4*8(%rsi),	%rsi
-+
-+	movq %r8,	0*8(%rdi)
-+	movq %r9,	1*8(%rdi)
-+	movq %r10,	2*8(%rdi)
-+	movq %r11,	3*8(%rdi)
-+	leaq 4*8(%rdi),	%rdi
-+	jae  .Lcopy_forward_loop
-+	addl $0x20,	%edx
-+	jmp  .Lhandle_tail
-+
-+.Lcopy_backward:
-+	/*
-+	 * Calculate copy position to tail.
-+	 */
-+	addq %rdx,	%rsi
-+	addq %rdx,	%rdi
-+	subq $0x20,	%rdx
-+	/*
-+	 * At most 3 ALU operations in one cycle,
-+	 * so append NOPS in the same 16 bytes trunk.
-+	 */
-+	.p2align 4
-+.Lcopy_backward_loop:
-+	subq $0x20,	%rdx
-+	movq -1*8(%rsi),	%r8
-+	movq -2*8(%rsi),	%r9
-+	movq -3*8(%rsi),	%r10
-+	movq -4*8(%rsi),	%r11
-+	leaq -4*8(%rsi),	%rsi
-+	movq %r8,		-1*8(%rdi)
-+	movq %r9,		-2*8(%rdi)
-+	movq %r10,		-3*8(%rdi)
-+	movq %r11,		-4*8(%rdi)
-+	leaq -4*8(%rdi),	%rdi
-+	jae  .Lcopy_backward_loop
-+
-+	/*
-+	 * Calculate copy position to head.
-+	 */
-+	addl $0x20,	%edx
-+	subq %rdx,	%rsi
-+	subq %rdx,	%rdi
-+.Lhandle_tail:
-+	cmpl $16,	%edx
-+	jb   .Lless_16bytes
-+
-+	/*
-+	 * Move data from 16 bytes to 31 bytes.
-+	 */
-+	movq 0*8(%rsi), %r8
-+	movq 1*8(%rsi),	%r9
-+	movq -2*8(%rsi, %rdx),	%r10
-+	movq -1*8(%rsi, %rdx),	%r11
-+	movq %r8,	0*8(%rdi)
-+	movq %r9,	1*8(%rdi)
-+	movq %r10,	-2*8(%rdi, %rdx)
-+	movq %r11,	-1*8(%rdi, %rdx)
-+	retq
-+	.p2align 4
-+.Lless_16bytes:
-+	cmpl $8,	%edx
-+	jb   .Lless_8bytes
-+	/*
-+	 * Move data from 8 bytes to 15 bytes.
-+	 */
-+	movq 0*8(%rsi),	%r8
-+	movq -1*8(%rsi, %rdx),	%r9
-+	movq %r8,	0*8(%rdi)
-+	movq %r9,	-1*8(%rdi, %rdx)
-+	retq
-+	.p2align 4
-+.Lless_8bytes:
-+	cmpl $4,	%edx
-+	jb   .Lless_3bytes
-+
-+	/*
-+	 * Move data from 4 bytes to 7 bytes.
-+	 */
-+	movl (%rsi), %ecx
-+	movl -4(%rsi, %rdx), %r8d
-+	movl %ecx, (%rdi)
-+	movl %r8d, -4(%rdi, %rdx)
-+	retq
-+	.p2align 4
-+.Lless_3bytes:
-+	subl $1, %edx
-+	jb .Lend
-+	/*
-+	 * Move data from 1 bytes to 3 bytes.
-+	 */
-+	movzbl (%rsi), %ecx
-+	jz .Lstore_1byte
-+	movzbq 1(%rsi), %r8
-+	movzbq (%rsi, %rdx), %r9
-+	movb %r8b, 1(%rdi)
-+	movb %r9b, (%rdi, %rdx)
-+.Lstore_1byte:
-+	movb %cl, (%rdi)
-+
-+.Lend:
-+	retq
-+ENDPROC(memcpy_orig)
-diff --git a/tools/arch/x86/lib/memset_64.S b/tools/arch/x86/lib/memset_64.S
-new file mode 100644
-index 000000000000..c9c81227ea37
---- /dev/null
-+++ b/tools/arch/x86/lib/memset_64.S
-@@ -0,0 +1,138 @@
-+/* Copyright 2002 Andi Kleen, SuSE Labs */
-+
-+#include <linux/linkage.h>
-+#include <asm/cpufeatures.h>
-+#include <asm/alternative-asm.h>
-+
-+.weak memset
-+
-+/*
-+ * ISO C memset - set a memory block to a byte value. This function uses fast
-+ * string to get better performance than the original function. The code is
-+ * simpler and shorter than the orignal function as well.
-+ *
-+ * rdi   destination
-+ * rsi   value (char)
-+ * rdx   count (bytes)
-+ *
-+ * rax   original destination
-+ */
-+ENTRY(memset)
-+ENTRY(__memset)
-+	/*
-+	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
-+	 * to use it when possible. If not available, use fast string instructions.
-+	 *
-+	 * Otherwise, use original memset function.
-+	 */
-+	ALTERNATIVE_2 "jmp memset_orig", "", X86_FEATURE_REP_GOOD, \
-+		      "jmp memset_erms", X86_FEATURE_ERMS
-+
-+	movq %rdi,%r9
-+	movq %rdx,%rcx
-+	andl $7,%edx
-+	shrq $3,%rcx
-+	/* expand byte value  */
-+	movzbl %sil,%esi
-+	movabs $0x0101010101010101,%rax
-+	imulq %rsi,%rax
-+	rep stosq
-+	movl %edx,%ecx
-+	rep stosb
-+	movq %r9,%rax
-+	ret
-+ENDPROC(memset)
-+ENDPROC(__memset)
-+
-+/*
-+ * ISO C memset - set a memory block to a byte value. This function uses
-+ * enhanced rep stosb to override the fast string function.
-+ * The code is simpler and shorter than the fast string function as well.
-+ *
-+ * rdi   destination
-+ * rsi   value (char)
-+ * rdx   count (bytes)
-+ *
-+ * rax   original destination
-+ */
-+ENTRY(memset_erms)
-+	movq %rdi,%r9
-+	movb %sil,%al
-+	movq %rdx,%rcx
-+	rep stosb
-+	movq %r9,%rax
-+	ret
-+ENDPROC(memset_erms)
-+
-+ENTRY(memset_orig)
-+	movq %rdi,%r10
-+
-+	/* expand byte value  */
-+	movzbl %sil,%ecx
-+	movabs $0x0101010101010101,%rax
-+	imulq  %rcx,%rax
-+
-+	/* align dst */
-+	movl  %edi,%r9d
-+	andl  $7,%r9d
-+	jnz  .Lbad_alignment
-+.Lafter_bad_alignment:
-+
-+	movq  %rdx,%rcx
-+	shrq  $6,%rcx
-+	jz	 .Lhandle_tail
-+
-+	.p2align 4
-+.Lloop_64:
-+	decq  %rcx
-+	movq  %rax,(%rdi)
-+	movq  %rax,8(%rdi)
-+	movq  %rax,16(%rdi)
-+	movq  %rax,24(%rdi)
-+	movq  %rax,32(%rdi)
-+	movq  %rax,40(%rdi)
-+	movq  %rax,48(%rdi)
-+	movq  %rax,56(%rdi)
-+	leaq  64(%rdi),%rdi
-+	jnz    .Lloop_64
-+
-+	/* Handle tail in loops. The loops should be faster than hard
-+	   to predict jump tables. */
-+	.p2align 4
-+.Lhandle_tail:
-+	movl	%edx,%ecx
-+	andl    $63&(~7),%ecx
-+	jz 		.Lhandle_7
-+	shrl	$3,%ecx
-+	.p2align 4
-+.Lloop_8:
-+	decl   %ecx
-+	movq  %rax,(%rdi)
-+	leaq  8(%rdi),%rdi
-+	jnz    .Lloop_8
-+
-+.Lhandle_7:
-+	andl	$7,%edx
-+	jz      .Lende
-+	.p2align 4
-+.Lloop_1:
-+	decl    %edx
-+	movb 	%al,(%rdi)
-+	leaq	1(%rdi),%rdi
-+	jnz     .Lloop_1
-+
-+.Lende:
-+	movq	%r10,%rax
-+	ret
-+
-+.Lbad_alignment:
-+	cmpq $7,%rdx
-+	jbe	.Lhandle_7
-+	movq %rax,(%rdi)	/* unaligned store */
-+	movq $8,%r8
-+	subq %r9,%r8
-+	addq %r8,%rdi
-+	subq %r8,%rdx
-+	jmp .Lafter_bad_alignment
-+.Lfinal:
-+ENDPROC(memset_orig)
-diff --git a/tools/perf/util/include/asm/alternative-asm.h b/tools/include/asm/alternative-asm.h
-similarity index 66%
-rename from tools/perf/util/include/asm/alternative-asm.h
-rename to tools/include/asm/alternative-asm.h
-index 3a3a0f16456a..2a4d1bfa2988 100644
---- a/tools/perf/util/include/asm/alternative-asm.h
-+++ b/tools/include/asm/alternative-asm.h
-@@ -1,5 +1,5 @@
--#ifndef _PERF_ASM_ALTERNATIVE_ASM_H
--#define _PERF_ASM_ALTERNATIVE_ASM_H
-+#ifndef _TOOLS_ASM_ALTERNATIVE_ASM_H
-+#define _TOOLS_ASM_ALTERNATIVE_ASM_H
- 
- /* Just disable it so we can build arch/x86/lib/memcpy_64.S for perf bench: */
- 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 39c38cb45b00..358b810057d6 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -11,6 +11,11 @@ tools/arch/sparc/include/asm/barrier_32.h
- tools/arch/sparc/include/asm/barrier_64.h
- tools/arch/tile/include/asm/barrier.h
- tools/arch/x86/include/asm/barrier.h
-+tools/arch/x86/include/asm/cpufeatures.h
-+tools/arch/x86/include/asm/disabled-features.h
-+tools/arch/x86/include/asm/required-features.h
-+tools/arch/x86/lib/memcpy_64.S
-+tools/arch/x86/lib/memset_64.S
- tools/arch/xtensa/include/asm/barrier.h
- tools/scripts
- tools/build
-@@ -25,6 +30,7 @@ tools/lib/rbtree.c
- tools/lib/symbol/kallsyms.c
- tools/lib/symbol/kallsyms.h
- tools/lib/util/find_next_bit.c
-+tools/include/asm/alternative-asm.h
- tools/include/asm/atomic.h
- tools/include/asm/barrier.h
- tools/include/asm/bug.h
-@@ -65,8 +71,6 @@ include/linux/swab.h
- arch/*/include/asm/unistd*.h
- arch/*/include/uapi/asm/unistd*.h
- arch/*/include/uapi/asm/perf_regs.h
--arch/*/lib/memcpy*.S
--arch/*/lib/memset*.S
- include/linux/poison.h
- include/linux/hw_breakpoint.h
- include/uapi/linux/perf_event.h
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index b67e006d56cc..7e0837579f40 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -310,6 +310,21 @@ export srctree OUTPUT RM CC LD AR CFLAGS V BISON FLEX AWK
- include $(srctree)/tools/build/Makefile.include
- 
- $(PERF_IN): prepare FORCE
-+	@(test -f ../../arch/x86/include/asm/disabled-features.h && ( \
-+        (diff -B ../arch/x86/include/asm/disabled-features.h ../../arch/x86/include/asm/disabled-features.h >/dev/null) \
-+        || echo "Warning: tools/arch/x86/include/asm/disabled-features.h differs from kernel" >&2 )) || true
-+	@(test -f ../../arch/x86/include/asm/required-features.h && ( \
-+        (diff -B ../arch/x86/include/asm/required-features.h ../../arch/x86/include/asm/required-features.h >/dev/null) \
-+        || echo "Warning: tools/arch/x86/include/asm/required-features.h differs from kernel" >&2 )) || true
-+	@(test -f ../../arch/x86/include/asm/cpufeatures.h && ( \
-+        (diff -B ../arch/x86/include/asm/cpufeatures.h ../../arch/x86/include/asm/cpufeatures.h >/dev/null) \
-+        || echo "Warning: tools/arch/x86/include/asm/cpufeatures.h differs from kernel" >&2 )) || true
-+	@(test -f ../../arch/x86/lib/memcpy_64.S && ( \
-+        (diff -B ../arch/x86/lib/memcpy_64.S ../../arch/x86/lib/memcpy_64.S >/dev/null) \
-+        || echo "Warning: tools/arch/x86/lib/memcpy_64.S differs from kernel" >&2 )) || true
-+	@(test -f ../../arch/x86/lib/memset_64.S && ( \
-+        (diff -B ../arch/x86/lib/memset_64.S ../../arch/x86/lib/memset_64.S >/dev/null) \
-+        || echo "Warning: tools/arch/x86/lib/memset_64.S differs from kernel" >&2 )) || true
- 	$(Q)$(MAKE) $(build)=perf
- 
- $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
-diff --git a/tools/perf/bench/mem-memcpy-x86-64-asm.S b/tools/perf/bench/mem-memcpy-x86-64-asm.S
-index e4c2c30143b9..9d82c44a6d71 100644
---- a/tools/perf/bench/mem-memcpy-x86-64-asm.S
-+++ b/tools/perf/bench/mem-memcpy-x86-64-asm.S
-@@ -1,7 +1,7 @@
- #define memcpy MEMCPY /* don't hide glibc's memcpy() */
- #define altinstr_replacement text
- #define globl p2align 4; .globl
--#include "../../../arch/x86/lib/memcpy_64.S"
-+#include "../../arch/x86/lib/memcpy_64.S"
- /*
-  * We need to provide note.GNU-stack section, saying that we want
-  * NOT executable stack. Otherwise the final linking will assume that
-diff --git a/tools/perf/bench/mem-memset-x86-64-asm.S b/tools/perf/bench/mem-memset-x86-64-asm.S
-index de278784c866..58407aa24c1b 100644
---- a/tools/perf/bench/mem-memset-x86-64-asm.S
-+++ b/tools/perf/bench/mem-memset-x86-64-asm.S
-@@ -1,7 +1,7 @@
- #define memset MEMSET /* don't hide glibc's memset() */
- #define altinstr_replacement text
- #define globl p2align 4; .globl
--#include "../../../arch/x86/lib/memset_64.S"
-+#include "../../arch/x86/lib/memset_64.S"
- 
- /*
-  * We need to provide note.GNU-stack section, saying that we want
--- 
-2.17.1
-
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/ntb/Kconfig          | 20 ++++++++++----------
+>  drivers/ntb/hw/amd/Kconfig   |  4 ++--
+>  drivers/ntb/hw/idt/Kconfig   | 41 ++++++++++++++++++++---------------------
+>  drivers/ntb/hw/intel/Kconfig |  4 ++--
+>  drivers/ntb/hw/mscc/Kconfig  |  8 ++++----
+>  drivers/ntb/test/Kconfig     | 26 +++++++++++++-------------
+>  6 files changed, 51 insertions(+), 52 deletions(-)
+> 
+> diff --git a/drivers/ntb/Kconfig b/drivers/ntb/Kconfig
+> index 95944e5..5ce3fdd 100644
+> --- a/drivers/ntb/Kconfig
+> +++ b/drivers/ntb/Kconfig
+> @@ -2,13 +2,13 @@ menuconfig NTB
+>  	tristate "Non-Transparent Bridge support"
+>  	depends on PCI
+>  	help
+> -	 The PCI-E Non-transparent bridge hardware is a point-to-point PCI-E bus
+> -	 connecting 2 systems.  When configured, writes to the device's PCI
+> -	 mapped memory will be mirrored to a buffer on the remote system.  The
+> -	 ntb Linux driver uses this point-to-point communication as a method to
+> -	 transfer data from one system to the other.
+> +	  The PCI-E Non-transparent bridge hardware is a point-to-point PCI-E bus
+> +	  connecting 2 systems.  When configured, writes to the device's PCI
+> +	  mapped memory will be mirrored to a buffer on the remote system.  The
+> +	  ntb Linux driver uses this point-to-point communication as a method to
+> +	  transfer data from one system to the other.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+>  
+>  if NTB
+>  
+> @@ -19,10 +19,10 @@ source "drivers/ntb/test/Kconfig"
+>  config NTB_TRANSPORT
+>  	tristate "NTB Transport Client"
+>  	help
+> -	 This is a transport driver that enables connected systems to exchange
+> -	 messages over the ntb hardware.  The transport exposes a queue pair api
+> -	 to client drivers.
+> +	  This is a transport driver that enables connected systems to exchange
+> +	  messages over the ntb hardware.  The transport exposes a queue pair api
+> +	  to client drivers.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+>  
+>  endif # NTB
+> diff --git a/drivers/ntb/hw/amd/Kconfig b/drivers/ntb/hw/amd/Kconfig
+> index cfe903c..9a90f17 100644
+> --- a/drivers/ntb/hw/amd/Kconfig
+> +++ b/drivers/ntb/hw/amd/Kconfig
+> @@ -2,6 +2,6 @@ config NTB_AMD
+>  	tristate "AMD Non-Transparent Bridge support"
+>  	depends on X86_64
+>  	help
+> -	 This driver supports AMD NTB on capable Zeppelin hardware.
+> +	  This driver supports AMD NTB on capable Zeppelin hardware.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+> diff --git a/drivers/ntb/hw/idt/Kconfig b/drivers/ntb/hw/idt/Kconfig
+> index f8948cf..5d106ac 100644
+> --- a/drivers/ntb/hw/idt/Kconfig
+> +++ b/drivers/ntb/hw/idt/Kconfig
+> @@ -3,28 +3,27 @@ config NTB_IDT
+>  	depends on PCI
+>  	select HWMON
+>  	help
+> -	 This driver supports NTB of cappable IDT PCIe-switches.
+> +	  This driver supports NTB of cappable IDT PCIe-switches.
+>  
+> -	 Some of the pre-initializations must be made before IDT PCIe-switch
+> -	 exposes it NT-functions correctly. It should be done by either proper
+> -	 initialisation of EEPROM connected to master smbus of the switch or
+> -	 by BIOS using slave-SMBus interface changing corresponding registers
+> -	 value. Evidently it must be done before PCI bus enumeration is
+> -	 finished in Linux kernel.
+> +	  Some of the pre-initializations must be made before IDT PCIe-switch
+> +	  exposes it NT-functions correctly. It should be done by either proper
+> +	  initialisation of EEPROM connected to master smbus of the switch or
+> +	  by BIOS using slave-SMBus interface changing corresponding registers
+> +	  value. Evidently it must be done before PCI bus enumeration is
+> +	  finished in Linux kernel.
+>  
+> -	 First of all partitions must be activated and properly assigned to all
+> -	 the ports with NT-functions intended to be activated (see SWPARTxCTL
+> -	 and SWPORTxCTL registers). Then all NT-function BARs must be enabled
+> -	 with chosen valid aperture. For memory windows related BARs the
+> -	 aperture settings shall determine the maximum size of memory windows
+> -	 accepted by a BAR. Note that BAR0 must map PCI configuration space
+> -	 registers.
+> +	  First of all partitions must be activated and properly assigned to all
+> +	  the ports with NT-functions intended to be activated (see SWPARTxCTL
+> +	  and SWPORTxCTL registers). Then all NT-function BARs must be enabled
+> +	  with chosen valid aperture. For memory windows related BARs the
+> +	  aperture settings shall determine the maximum size of memory windows
+> +	  accepted by a BAR. Note that BAR0 must map PCI configuration space
+> +	  registers.
+>  
+> -	 It's worth to note, that since a part of this driver relies on the
+> -	 BAR settings of peer NT-functions, the BAR setups can't be done over
+> -	 kernel PCI fixups. That's why the alternative pre-initialization
+> -	 techniques like BIOS using SMBus interface or EEPROM should be
+> -	 utilized.
+> -
+> -	 If unsure, say N.
+> +	  It's worth to note, that since a part of this driver relies on the
+> +	  BAR settings of peer NT-functions, the BAR setups can't be done over
+> +	  kernel PCI fixups. That's why the alternative pre-initialization
+> +	  techniques like BIOS using SMBus interface or EEPROM should be
+> +	  utilized.
+>  
+> +	  If unsure, say N.
+> diff --git a/drivers/ntb/hw/intel/Kconfig b/drivers/ntb/hw/intel/Kconfig
+> index 91f995e..c166d50 100644
+> --- a/drivers/ntb/hw/intel/Kconfig
+> +++ b/drivers/ntb/hw/intel/Kconfig
+> @@ -2,6 +2,6 @@ config NTB_INTEL
+>  	tristate "Intel Non-Transparent Bridge support"
+>  	depends on X86_64
+>  	help
+> -	 This driver supports Intel NTB on capable Xeon and Atom hardware.
+> +	  This driver supports Intel NTB on capable Xeon and Atom hardware.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+> diff --git a/drivers/ntb/hw/mscc/Kconfig b/drivers/ntb/hw/mscc/Kconfig
+> index 013ed67..74ec015 100644
+> --- a/drivers/ntb/hw/mscc/Kconfig
+> +++ b/drivers/ntb/hw/mscc/Kconfig
+> @@ -2,8 +2,8 @@ config NTB_SWITCHTEC
+>  	tristate "MicroSemi Switchtec Non-Transparent Bridge Support"
+>  	select PCI_SW_SWITCHTEC
+>  	help
+> -	 Enables NTB support for Switchtec PCI switches. This also
+> -	 selects the Switchtec management driver as they share the same
+> -	 hardware interface.
+> +	  Enables NTB support for Switchtec PCI switches. This also
+> +	  selects the Switchtec management driver as they share the same
+> +	  hardware interface.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+> diff --git a/drivers/ntb/test/Kconfig b/drivers/ntb/test/Kconfig
+> index a5d0eda..416ab56 100644
+> --- a/drivers/ntb/test/Kconfig
+> +++ b/drivers/ntb/test/Kconfig
+> @@ -1,27 +1,27 @@
+>  config NTB_PINGPONG
+>  	tristate "NTB Ping Pong Test Client"
+>  	help
+> -	 This is a simple ping pong driver that exercises the scratchpads and
+> -	 doorbells of the ntb hardware.  This driver may be used to test that
+> -	 your ntb hardware and drivers are functioning at a basic level.
+> +	  This is a simple ping pong driver that exercises the scratchpads and
+> +	  doorbells of the ntb hardware.  This driver may be used to test that
+> +	  your ntb hardware and drivers are functioning at a basic level.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+>  
+>  config NTB_TOOL
+>  	tristate "NTB Debugging Tool Test Client"
+>  	help
+> -	 This is a simple debugging driver that enables the doorbell and
+> -	 scratchpad registers to be read and written from the debugfs.  This
+> -	 enables more complicated debugging to be scripted from user space.
+> -	 This driver may be used to test that your ntb hardware and drivers are
+> -	 functioning at a basic level.
+> +	  This is a simple debugging driver that enables the doorbell and
+> +	  scratchpad registers to be read and written from the debugfs.  This
+> +	  enables more complicated debugging to be scripted from user space.
+> +	  This driver may be used to test that your ntb hardware and drivers are
+> +	  functioning at a basic level.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+>  
+>  config NTB_PERF
+>  	tristate "NTB RAW Perf Measuring Tool"
+>  	help
+> -	 This is a tool to measure raw NTB performance by transferring data
+> -	 to and from the window without additional software interaction.
+> +	  This is a tool to measure raw NTB performance by transferring data
+> +	  to and from the window without additional software interaction.
+>  
+> -	 If unsure, say N.
+> +	  If unsure, say N.
+> -- 
+> 1.9.1
+> 
