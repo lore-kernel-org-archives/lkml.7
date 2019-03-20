@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FD4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2AFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56032184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7F62184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="APhtF+fQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dukqm7Yy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfCTNSr (ORCPT
+        id S1728181AbfCTNSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:18:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36011 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbfCTNSo (ORCPT
+        Wed, 20 Mar 2019 09:18:51 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36002 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728167AbfCTNSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:18:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p10so1933503pff.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:18:44 -0700 (PDT)
+        Wed, 20 Mar 2019 09:18:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r124so1805706pgr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=081b2WykrwcmfZxREyFy0rYtvIRmQI0giDh8mi53WU0=;
-        b=APhtF+fQy9zajyek1wjxwkdSFjGJHyZgmJYPdiag42a9PW9HqSIWH+HWAYNujKgeUM
-         cHuX+Ufg7sIBA5bZXKSYKAv4TXg0L9xW9s1DGSsJB/13IWxtdBgAOXRFy6E11L83fCb5
-         cH04ZgXjMTxwpM7R/3AkmImHMatVQDCJ6xF+FwIHVH+e1SYZv6jOap5KzpZLuU94r65Y
-         MXACy3Q55Pt9v8OqehXNjFn1C0XfU1upr/3awR7fhu2x934dWqOxi1Fo90/a0ORNGayJ
-         2cmAn3cjIJgLXU7qps010YhSv/kHwukt2fECbHUJOBIfk4RyrzAGTuJqG3zhVFpnkbsU
-         C5WQ==
+        bh=TBXOh+qCZb1AbvhplyZXyYZ1SSUAH9q1meg8o/qp39A=;
+        b=Dukqm7YyVqigrw6lDqctSEhs4I4uOFNaCkyh650aKW4VErIT6IyYo4JdyCOTAZzVqx
+         Begg9lvVg1Qp04MW6PF/khuDMDyIVVn+C1xpRe9yUGH2dccr4FPap0UnHzDVTdtjOjxN
+         RzRSwyDTYkb6wBiqGI+ubu3tWOeu9aSTHHfWwoLU4n6ZXBtMJm0CJtAaJ/O51673lv8S
+         WMk2DYft4uGNl1H1TnWjxKEwATy8RrRfFn7AKYfOpQZopuABM8/tyjep1hZ5gBuz4PqP
+         +Gw7Bl3OdyWOMsGxYQyq1tsdH1Xncp7n9lVeQRn5WnoMjGUqu+6BEEyUfqIokqh1WCc/
+         jX1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=081b2WykrwcmfZxREyFy0rYtvIRmQI0giDh8mi53WU0=;
-        b=kHtzAWiuAT4Kf+E73+x/lH3t7oZvz+5R9+RyBoul4t98ZU/XABgX8EsaTj42P+IjXg
-         uj9HTYj9806oueAiYwt27jpQ7P9YflA3MKnPykJmHzzHcDkxkk2DhfpPXwKYN+WD+SiE
-         +8fT8IYy1eJDwOUHb+tA0pnDxYkn6Opn5zKRaEosOehiRZpsxONEa607ikyvzdxYkVAn
-         4u5Cg0drHoXKsPo2AKilNe6y3yq6I3XJ9Rn0OjzyvyZ8jKoH3vPgOUAyPFNyG9sgPCvi
-         OMEe/h4Dh1QgtrzmRvsf41cPEKnBsILKhY+WJaxAzuzsP2Tdi5GTn21B+2i9AomCC33E
-         /tVQ==
-X-Gm-Message-State: APjAAAV7Etk2DftVd8c/22wy9ex8Hgpw1UAhk+4psoGj9pE1AkjIQttQ
-        /1/dsOUY1l9XScW38E10H/zIQp4h+Io=
-X-Google-Smtp-Source: APXvYqx+qIZRHlxT1gbx5cVq+OErFaoo/HtW5LL3CzXUQcNvPGo2aRrBbjxzuA43EfJsTs2W81WOkQ==
-X-Received: by 2002:a62:ed08:: with SMTP id u8mr7644659pfh.200.1553087923408;
-        Wed, 20 Mar 2019 06:18:43 -0700 (PDT)
+        bh=TBXOh+qCZb1AbvhplyZXyYZ1SSUAH9q1meg8o/qp39A=;
+        b=Y7MqASJa4ZceSGBEtI8R+Vb9lCYvDrB9RlTRn7LZcOyB/sW8CGokwQIHHIC2Sf3ezt
+         JJwRaOFfmfWgFMmz5nXl7ob0w0EjAewSdTJCSc/bT/Sg/FZSHx5jC7B5hplaFNRkGRYU
+         LvO0DoATcbTZWq/fJRoxguSfIf/qQY65aOvUCNutsl71yVaLw7sqXjYSpDx2P630zCcE
+         Zp20jGpjMDqctSLDvj7YkZVRZj5uNMopm4R6bGlJbsRli6E4E6qCuXPfDmcRegOkHEES
+         nffTv6ZpFml4GSj2b8gQBmZlfWMLFRWGdo68+8JBop3r30pT0XhyavclGWPAb/MBqI/l
+         3Qcw==
+X-Gm-Message-State: APjAAAWjezXSjIL71F2/iCWBaoyNECdwRMJCP3J61xVtDN3twD9g65QU
+        2zN0WJDD5/4YAAYoM/f/550Hjk6Zok4=
+X-Google-Smtp-Source: APXvYqy7nez153SYADd3MZBc+TbCbOkMEU3qZ4JJ9PxLVlIEUP8rdhvr96Ztjrg3gW8UXgiI0R1QoQ==
+X-Received: by 2002:a63:4a4d:: with SMTP id j13mr7242489pgl.16.1553087927781;
+        Wed, 20 Mar 2019 06:18:47 -0700 (PDT)
 Received: from localhost ([114.143.122.221])
-        by smtp.gmail.com with ESMTPSA id l84sm6734764pfb.113.2019.03.20.06.18.41
+        by smtp.gmail.com with ESMTPSA id n65sm6654476pfb.160.2019.03.20.06.18.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 06:18:42 -0700 (PDT)
+        Wed, 20 Mar 2019 06:18:46 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         David Brown <david.brown@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCHv3 05/23] drivers: thermal: tsens: Use consistent names for variables
-Date:   Wed, 20 Mar 2019 18:47:45 +0530
-Message-Id: <3b4b55040759d823ae146e938e01be2e3a72257e.1553086065.git.amit.kucheria@linaro.org>
+Subject: [PATCHv3 06/23] drivers: thermal: tsens: Function prototypes should have argument names
+Date:   Wed, 20 Mar 2019 18:47:46 +0530
+Message-Id: <5789c6cda462269f443dfe05a561c098bd81c7ea.1553086065.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1553086065.git.amit.kucheria@linaro.org>
 References: <cover.1553086065.git.amit.kucheria@linaro.org>
@@ -76,37 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tsens_get_temp() uses the name 'data' for the void pointer, use the same
-in tsens_get_trend() for consistency.
+check_patch complains a lot as follows:
 
-Remove a stray space while we're at it.
+WARNING: function definition argument 'struct tsens_priv *' should also have an identifier name
++       int (*init)(struct tsens_priv *);
+
+Fix it.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/qcom/tsens.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/thermal/qcom/tsens.h | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 4582d2b30e94..0b5be08d515f 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -20,13 +20,13 @@ static int tsens_get_temp(void *data, int *temp)
- 	return priv->ops->get_temp(priv, s->id, temp);
- }
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 61ca2905ee7a..4d6a406f8dca 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -47,15 +47,15 @@ struct tsens_sensor {
+  */
+ struct tsens_ops {
+ 	/* mandatory callbacks */
+-	int (*init)(struct tsens_priv *);
+-	int (*calibrate)(struct tsens_priv *);
+-	int (*get_temp)(struct tsens_priv *, int, int *);
++	int (*init)(struct tsens_priv *priv);
++	int (*calibrate)(struct tsens_priv *priv);
++	int (*get_temp)(struct tsens_priv *priv, int i, int *temp);
+ 	/* optional callbacks */
+-	int (*enable)(struct tsens_priv *, int);
+-	void (*disable)(struct tsens_priv *);
+-	int (*suspend)(struct tsens_priv *);
+-	int (*resume)(struct tsens_priv *);
+-	int (*get_trend)(struct tsens_priv *, int, enum thermal_trend *);
++	int (*enable)(struct tsens_priv *priv, int i);
++	void (*disable)(struct tsens_priv *priv);
++	int (*suspend)(struct tsens_priv *priv);
++	int (*resume)(struct tsens_priv *priv);
++	int (*get_trend)(struct tsens_priv *priv, int i, enum thermal_trend *trend);
+ };
  
--static int tsens_get_trend(void *p, int trip, enum thermal_trend *trend)
-+static int tsens_get_trend(void *data, int trip, enum thermal_trend *trend)
- {
--	const struct tsens_sensor *s = p;
-+	const struct tsens_sensor *s = data;
- 	struct tsens_priv *priv = s->priv;
+ enum reg_list {
+@@ -111,10 +111,10 @@ struct tsens_priv {
+ 	struct tsens_sensor		sensor[0];
+ };
  
- 	if (priv->ops->get_trend)
--		return  priv->ops->get_trend(priv, s->id, trend);
-+		return priv->ops->get_trend(priv, s->id, trend);
+-char *qfprom_read(struct device *, const char *);
+-void compute_intercept_slope(struct tsens_priv *, u32 *, u32 *, u32);
+-int init_common(struct tsens_priv *);
+-int get_temp_common(struct tsens_priv *, int, int *);
++char *qfprom_read(struct device *dev, const char *cname);
++void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mode);
++int init_common(struct tsens_priv *priv);
++int get_temp_common(struct tsens_priv *priv, int i, int *temp);
  
- 	return -ENOTSUPP;
- }
+ /* TSENS v1 targets */
+ extern const struct tsens_plat_data data_8916, data_8974, data_8960;
 -- 
 2.17.1
 
