@@ -2,134 +2,142 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918E6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19C9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610602184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDEE2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vzd125ZF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YP8H2/SP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfCTOk3 (ORCPT
+        id S1727423AbfCTOkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:40:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40478 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCTOk2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:40:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u10so17982372wmj.5;
-        Wed, 20 Mar 2019 07:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=63lUCKzou0hKfO0w+V6Cio4BeboSTxW84Eh4nTzwxsM=;
-        b=Vzd125ZFTuWtYphi13aF3UM8xmSExJHfC09VqlBSXM8QEGQGkjj8a/G4u0xUVWxq50
-         KGActoHGWYrUoQpD/4Y6TbIDbZTD/OSlbXa4cifeXn070lCv6Y6avSJeYpuc3yYEkTOH
-         OIyr45wPD/TkW5CTa/cIjmnT2+t7vuupwABMfV1LVN3j9Dfk3CWuHcPaIRh/OaNulhe6
-         1jy6LcJ1R953IFmkyYWSdlsSK3a6TlSfh/v3mFWcnDdRk/wsna1BGs91I7SaZspRHIk1
-         u/ByT3PZteHrWOeJ6/s8IDC725sao0KCFqbYqZWb90RaIgz+CZ6hOAJAPbG0RSKjDjGU
-         pGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=63lUCKzou0hKfO0w+V6Cio4BeboSTxW84Eh4nTzwxsM=;
-        b=NHW6Ir83/IDJVN5UUu6VbTDuyS6T+vvC3dt4TToC3YEF2qZVJlCjEScmrvs89hDP5C
-         DzSldiQNfrcLysj94Sg0Ay43b6zyrtmSPezj/sdoJXQcjzzSrCIaCs+Nb/+zp7AXNUpK
-         aF8qlr3GyTIex9+HsCrWXIHBZPgA0licQa0t5WzMEUzxEjqBJgA3asrANPSP9x3u7NAP
-         7EH/BTLOt5E36d1X4biOlc67EszdGra5uYSW61uaxlPsRHIqbYXPZaUZg7b5BoAaroqo
-         0h2IRFTYrfDw/6YOA6ajVho8Pg58xfjTWwsKtxZNpbkxTbIBgE11C3moanKy9DvIHvBd
-         srfA==
-X-Gm-Message-State: APjAAAVDHkJG/0WOQLY2MEV7z7JSXmXQDLT8PDO/YwXQ1AsGHwYLf2Nm
-        +FTMO9CHwtPFkVY1MYIlcOg=
-X-Google-Smtp-Source: APXvYqy2vehQ4w1sNvQHIK58PnXeQOX8/aXLrDPAzBtZ2No4z0wtJ9+TVE5c0KF86+piralA7Sxtyg==
-X-Received: by 2002:a1c:ed10:: with SMTP id l16mr6511616wmh.118.1553092825868;
-        Wed, 20 Mar 2019 07:40:25 -0700 (PDT)
-Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
-        by smtp.gmail.com with ESMTPSA id c10sm2738646wrr.1.2019.03.20.07.40.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 07:40:25 -0700 (PDT)
-References: <20190319163622.30607-1-wsa+renesas@sang-engineering.com>
-User-agent: mu4e 1.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] staging: media: imx: imx7-mipi-csis: simplify getting .driver_data
-In-reply-to: <20190319163622.30607-1-wsa+renesas@sang-engineering.com>
-Date:   Wed, 20 Mar 2019 14:40:23 +0000
-Message-ID: <m3y359vcbs.fsf@gmail.com>
+        Wed, 20 Mar 2019 10:40:33 -0400
+Received: from mail-eopbgr770098.outbound.protection.outlook.com ([40.107.77.98]:29443
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726067AbfCTOkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:40:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l+nai1KSas3j9kQtUrBcrMVl0Q6GQg1eulqp1WNTZrQ=;
+ b=YP8H2/SP4R7vEoFS4zQCStZycVFOp+5BZdJQKrhOb/YwoxgeiHelXm1LwQBl9I0zmYnTr0KvahaANhlNO03d3kn39ccYi4wVucffdoGSAOBWUm/4KY8nhoQbtZVX6l3ceznkUn8OKT5wKiyWQCXg3wnfFZrEJegqnkwblcBPoac=
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com (10.173.192.19) by
+ CY4PR21MB0134.namprd21.prod.outlook.com (10.173.189.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.7; Wed, 20 Mar 2019 14:40:28 +0000
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::9595:af36:ad4:ab7d]) by CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::9595:af36:ad4:ab7d%9]) with mapi id 15.20.1750.002; Wed, 20 Mar 2019
+ 14:40:28 +0000
+From:   KY Srinivasan <kys@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Kangjie Lu <kjlu@umn.edu>, "pakki001@umn.edu" <pakki001@umn.edu>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] hyperv: a potential NULL pointer dereference
+Thread-Topic: [PATCH] hyperv: a potential NULL pointer dereference
+Thread-Index: AQHU2ilZRp8CWZZ0pke1kYNV+eQu/KYLMX6wgAknVgCAAEhA4A==
+Date:   Wed, 20 Mar 2019 14:40:28 +0000
+Message-ID: <CY4PR21MB077378A6C09FEDE31990D86DA0410@CY4PR21MB0773.namprd21.prod.outlook.com>
+References: <20190314054651.1315-1-kjlu@umn.edu>
+ <CY4PR21MB0773FB535B3F4177CA9662C0A04B0@CY4PR21MB0773.namprd21.prod.outlook.com>
+ <alpine.DEB.2.21.1903201119240.1906@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1903201119240.1906@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2601:600:a280:9:8d7e:908d:9a9b:f0dc]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4086ac7-839b-4fbd-b848-08d6ad41ff44
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0134;
+x-ms-traffictypediagnostic: CY4PR21MB0134:
+x-microsoft-antispam-prvs: <CY4PR21MB0134E5171AC5704526D9034FA0410@CY4PR21MB0134.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-forefront-prvs: 098291215C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(136003)(376002)(39860400002)(199004)(189003)(13464003)(22452003)(446003)(71190400001)(55016002)(86362001)(4326008)(86612001)(71200400001)(25786009)(76176011)(229853002)(99286004)(9686003)(256004)(7416002)(68736007)(10290500003)(6916009)(5660300002)(53936002)(11346002)(7696005)(6246003)(46003)(52536014)(8936002)(6116002)(316002)(476003)(486006)(97736004)(6436002)(7736002)(74316002)(186003)(305945005)(8990500004)(8676002)(33656002)(106356001)(54906003)(81156014)(53546011)(81166006)(2906002)(6506007)(478600001)(105586002)(6346003)(10090500001)(102836004)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0134;H:CY4PR21MB0773.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kys@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Rs/PG8kipgae9d8cIloWQsf7UESpXH31GD7EsIYflY7gxYa6L8NfjXKlip3f8PNitZQBJYV77+qhqSEsJAmJy7+b54o31DTgPaFtkuvKWAeBCcvIef9Xjj7BSJ0vM+gvqaVCyxJlwVTOuVw1UP/l/cIJQKq3syfxmL8dEVFjgbl5MJRSdwj7iB/ea3RLEgz5IKamC3H+GN7hHVvMR3KVERbtTZ1q4ImRrh9IdBmr3aDfObB7h2+PxzOJnwWuwwOzGzqH8LoK5CpYwSHWRlx0kpdluAc6IfYNF3CCKRD3R5Trr7EBPeFPAtyTWV842RM6tsqOYXhCzja5ndaJrHtAz4nppUDDG4g6Vg4GFo2qFz6Ui/OmmXATZJyfHw5Oky/T3E0/a0dCHE2QDm7KyKi5SJv0Gu3UfItBaFsaoMFVMaQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4086ac7-839b-4fbd-b848-08d6ad41ff44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 14:40:28.5365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-Thanks for the patch.
-On Tue 19 Mar 2019 at 16:36, Wolfram Sang wrote:
-> We should get 'driver_data' from 'struct device' directly. Going 
-> via
-> platform_device is an unneeded step back and forth.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
 
----
-Cheers,
-	Rui
 
-> ---
->
-> Build tested only. buildbot is happy.
->
->  drivers/staging/media/imx/imx7-mipi-csis.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c 
-> b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 2ddcc42ab8ff..44569c63e4de 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -1039,8 +1039,7 @@ static int mipi_csis_probe(struct 
-> platform_device *pdev)
->  
->  static int mipi_csis_pm_suspend(struct device *dev, bool 
->  runtime)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
-> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
->  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
->  	int ret = 0;
->  
-> @@ -1064,8 +1063,7 @@ static int mipi_csis_pm_suspend(struct 
-> device *dev, bool runtime)
->  
->  static int mipi_csis_pm_resume(struct device *dev, bool 
->  runtime)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
-> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
->  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
->  	int ret = 0;
+> -----Original Message-----
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Wednesday, March 20, 2019 3:21 AM
+> To: KY Srinivasan <kys@microsoft.com>
+> Cc: Kangjie Lu <kjlu@umn.edu>; pakki001@umn.edu; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Ingo Molnar
+> <mingo@redhat.com>; Borislav Petkov <bp@alien8.de>; H. Peter Anvin
+> <hpa@zytor.com>; x86@kernel.org; linux-hyperv@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: RE: [PATCH] hyperv: a potential NULL pointer dereference
+>=20
+> On Thu, 14 Mar 2019, KY Srinivasan wrote:
+> > > -----Original Message-----
+> > > From: Kangjie Lu <kjlu@umn.edu>
+> > > Sent: Wednesday, March 13, 2019 10:47 PM
+> > > To: kjlu@umn.edu
+> > > Cc: pakki001@umn.edu; KY Srinivasan <kys@microsoft.com>; Haiyang
+> Zhang
+> > > <haiyangz@microsoft.com>; Stephen Hemminger
+> > > <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Thomas
+> > > Gleixner <tglx@linutronix.de>; Ingo Molnar <mingo@redhat.com>;
+> Borislav
+> > > Petkov <bp@alien8.de>; H. Peter Anvin <hpa@zytor.com>;
+> x86@kernel.org;
+> > > linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: [PATCH] hyperv: a potential NULL pointer dereference
+> > >
+> > > In case alloc_page, the fix returns -ENOMEM to avoid the potential
+> > > NULL pointer dereference.
+> > >
+> > Thanks.
+> >
+> > > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+>=20
+> Did you mean: Reviewed-by or Acked-by?
+Sorry, I meant Acked-by.
 
+K. Y
+>=20
+> You cannot sign off on a patch from
+> someone else which you are not picking up and transporting it further.
+>=20
+> Thanks,
+>=20
+> 	tglx
