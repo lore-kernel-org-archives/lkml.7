@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4615C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34137C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3BF2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACCB20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b9S59dYT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+LNmc1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfCTNTD (ORCPT
+        id S1728219AbfCTNTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:19:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37551 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbfCTNTA (ORCPT
+        Wed, 20 Mar 2019 09:19:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32822 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728207AbfCTNTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:19:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 8so1932870pfr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:18:59 -0700 (PDT)
+        Wed, 20 Mar 2019 09:19:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i19so1941749pfd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=s/+Bl7ZGzK0cL5xDzP2iXR4sdWkOPpcYJr4QjVnhB2E=;
-        b=b9S59dYTFY3WccOujlrOlQhCiFsoEOIbyiHxVdBpJxeap37XgzNDGATF3GRbLzzwo9
-         +vDVTBBlbkPwvJjrD3YwLLakl082XP8sfOZ80/DtuO3cHdTZoojom1KHH3+uuXu29BBS
-         2qFE1fsnmgkyaagnGQY9KagPpi5VtIWTQCqlt/E9Y4Uh0XLRFM1Pzr4bmTT8lI3AFH1k
-         HEU9Chjhj53c1eTNnJUaRALmBkVeHjCpWJuKEPWSZ9YxEWiS0xJw9w0MfmWSa1G5QWEa
-         UPFbEeFqq5NWZDGKcZZNCmjnZOIwbZRYHMwyK4Jycs5Yg0TRx0p+OhGjC1juCPhyWYiV
-         DtQw==
+        bh=GQERaam7BX0uQrRP6UmIWBlFpeXRfuuGSf7vQIQdfq0=;
+        b=G+LNmc1O/+x+OXLbSkivaLZrNenPXFPDd/OtLQ+K2oKwvsBzLf568N+sTPBNuS957N
+         tpXxMNYcYLlRo+jqi6yc8q+Mz8VIwKx/cguYexaDqs4hZUfYaMPsRgaXjwpC71stZUI8
+         s6cq+r02Q8tRB/bRS0/avPrtZbjjjJB01FrIQvwhCy/7I6/B8cXSITft8JEROOofPDFY
+         fofgpGDtrP0VM6dYjnfuJzKNoPL2sk0rPhuoxDBgVfdk4NwZDSIIUbh+c7M2z4SunVMO
+         zobAHqniQcmuNKtcpJAFo75TSZpbSILTT1WXbN+OCvMhcZM2Yb46LeFr5ppYldTHyanY
+         HL6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=s/+Bl7ZGzK0cL5xDzP2iXR4sdWkOPpcYJr4QjVnhB2E=;
-        b=rXkK5sBaGhJw5+zzlssHXqL3z5bNkp/BAB3ZPlEdu6INLYpARQpD7iXJM7DMlnfn4V
-         fprJyWLlae5Ba0oT4lxYXNrET6NgiStgWvq8WQAbtT5tgHmWT017UHprLqZ9hJP1eKbY
-         xhBVkEsEms7Zle2SXbZSH5q93WMz9O5qTu9yew5O8ASlJVMSZJm1a9JaCSBEoieOCTuJ
-         f0K2glkVsZSX+AHZCg5BDM1OjLqH49+PCs6VuW84mO2vxrIyZEHDFrgPhbGPIq36WpIR
-         cAotJXC4f7pBOV03sKk87WE7jNpDAK8oLwPwFNFcSWxo+orik9brIRNncXARgGgPzNBY
-         IPPQ==
-X-Gm-Message-State: APjAAAWiy5qN76v81l3kGHSHzgcLt4Cw1tzYI1fVP/VivXofTy7oVfdU
-        CKHsvnoV/6V3+24E3pRPImCrTPj1VPQ=
-X-Google-Smtp-Source: APXvYqyEVb/h/lmL7667GXipAjIJty+zggDQ1gVHiGx/Y5mqTrWLQ33kXpqx9tE7J/ZI5b+tGfbZ1Q==
-X-Received: by 2002:a63:6e02:: with SMTP id j2mr7397195pgc.229.1553087939194;
-        Wed, 20 Mar 2019 06:18:59 -0700 (PDT)
+        bh=GQERaam7BX0uQrRP6UmIWBlFpeXRfuuGSf7vQIQdfq0=;
+        b=JIGoaV75UOeVno9xc3jo16R2h6GLt9BNyavyLA76cDbiqzdpcmOdW1AsP6TdWADgO+
+         CmJMYLbf4dfNFwLFglDkIU28kNOy2Yi/NQBHIqeRWEG/PbaJ1jtCShE9bCAHqmBpownh
+         OPuo1W4kyNgapybj3EgDYDkRXBQA3GJAVyAMVxHZTOzm6bQkQtRKZqHaUZGXU0V/lHLa
+         eTQZRtbwe8LwHyIBLRqTjz2Qjt6kqUp7nHEnAZ5Tc3lMzw4zP46R4MeWyGPbIPTf0AQz
+         Vankv4yqKzBNh4NyGTkMbZe5fSXsSNUjm8RcT9w6/DgMmnvyLyoavjkVpvPSDWAC4Mlf
+         lSXw==
+X-Gm-Message-State: APjAAAVMs3OjySdIrhqdfiOIKaL1Gg4k7/zsRn5tBIckTg7CsvlpEbR7
+        PDHZGrvqoIKib7CSiG+lMPj14cpOdaM=
+X-Google-Smtp-Source: APXvYqxf0fC4jcrJiVI6pUbh7JywrTWZw++edQWrtCVDcB9dIK92aVWWduId8uUdEVQI9NBJEAVvzg==
+X-Received: by 2002:a65:4203:: with SMTP id c3mr7877540pgq.271.1553087943954;
+        Wed, 20 Mar 2019 06:19:03 -0700 (PDT)
 Received: from localhost ([114.143.122.221])
-        by smtp.gmail.com with ESMTPSA id b15sm7370229pfj.167.2019.03.20.06.18.57
+        by smtp.gmail.com with ESMTPSA id i126sm4268413pfc.101.2019.03.20.06.19.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 06:18:58 -0700 (PDT)
+        Wed, 20 Mar 2019 06:19:03 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         David Brown <david.brown@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCHv3 08/23] drivers: thermal: tsens: Rename constants to prepare to merge with tsens-8974
-Date:   Wed, 20 Mar 2019 18:47:48 +0530
-Message-Id: <934cc97c81ebe8e5f19eb99ce5b37debcc15f585.1553086065.git.amit.kucheria@linaro.org>
+Subject: [PATCHv3 09/23] drivers: thermal: tsens: Merge tsens-8974 into tsens-v0_1
+Date:   Wed, 20 Mar 2019 18:47:49 +0530
+Message-Id: <5f8103b0ed28859b23417307ba90bc4c183eeac4.1553086065.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1553086065.git.amit.kucheria@linaro.org>
 References: <cover.1553086065.git.amit.kucheria@linaro.org>
@@ -76,128 +76,539 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some #defines in tsens-v_0_1.c clash with those in tsens-8974.c. Prefix
-them with 8916 to avoid the clash so we can merge the two files.
+8974 and 8916 have the same version of the TSENS IP. Merge the files to
+allow for better code reuse.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/qcom/tsens-v0_1.c | 88 +++++++++++++++----------------
- 1 file changed, 44 insertions(+), 44 deletions(-)
+ drivers/thermal/qcom/Makefile     |   2 +-
+ drivers/thermal/qcom/tsens-8974.c | 236 ------------------------------
+ drivers/thermal/qcom/tsens-v0_1.c | 229 +++++++++++++++++++++++++++++
+ drivers/thermal/qcom/tsens.h      |   8 +-
+ 4 files changed, 236 insertions(+), 239 deletions(-)
+ delete mode 100644 drivers/thermal/qcom/tsens-8974.c
 
+diff --git a/drivers/thermal/qcom/Makefile b/drivers/thermal/qcom/Makefile
+index 1f2fafd43dff..7fa3cadce760 100644
+--- a/drivers/thermal/qcom/Makefile
++++ b/drivers/thermal/qcom/Makefile
+@@ -1,3 +1,3 @@
+ obj-$(CONFIG_QCOM_TSENS)	+= qcom_tsens.o
+-qcom_tsens-y			+= tsens.o tsens-common.o tsens-v0_1.o tsens-8974.o tsens-8960.o tsens-v2.o
++qcom_tsens-y			+= tsens.o tsens-common.o tsens-v0_1.o tsens-8960.o tsens-v2.o
+ obj-$(CONFIG_QCOM_SPMI_TEMP_ALARM)	+= qcom-spmi-temp-alarm.o
+diff --git a/drivers/thermal/qcom/tsens-8974.c b/drivers/thermal/qcom/tsens-8974.c
+deleted file mode 100644
+index 303157fd00be..000000000000
+--- a/drivers/thermal/qcom/tsens-8974.c
++++ /dev/null
+@@ -1,236 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+- */
+-
+-#include <linux/platform_device.h>
+-#include "tsens.h"
+-
+-/* eeprom layout data for 8974 */
+-#define BASE1_MASK		0xff
+-#define S0_P1_MASK		0x3f00
+-#define S1_P1_MASK		0xfc000
+-#define S2_P1_MASK		0x3f00000
+-#define S3_P1_MASK		0xfc000000
+-#define S4_P1_MASK		0x3f
+-#define S5_P1_MASK		0xfc0
+-#define S6_P1_MASK		0x3f000
+-#define S7_P1_MASK		0xfc0000
+-#define S8_P1_MASK		0x3f000000
+-#define S8_P1_MASK_BKP		0x3f
+-#define S9_P1_MASK		0x3f
+-#define S9_P1_MASK_BKP		0xfc0
+-#define S10_P1_MASK		0xfc0
+-#define S10_P1_MASK_BKP		0x3f000
+-#define CAL_SEL_0_1		0xc0000000
+-#define CAL_SEL_2		0x40000000
+-#define CAL_SEL_SHIFT		30
+-#define CAL_SEL_SHIFT_2		28
+-
+-#define S0_P1_SHIFT		8
+-#define S1_P1_SHIFT		14
+-#define S2_P1_SHIFT		20
+-#define S3_P1_SHIFT		26
+-#define S5_P1_SHIFT		6
+-#define S6_P1_SHIFT		12
+-#define S7_P1_SHIFT		18
+-#define S8_P1_SHIFT		24
+-#define S9_P1_BKP_SHIFT		6
+-#define S10_P1_SHIFT		6
+-#define S10_P1_BKP_SHIFT	12
+-
+-#define BASE2_SHIFT		12
+-#define BASE2_BKP_SHIFT		18
+-#define S0_P2_SHIFT		20
+-#define S0_P2_BKP_SHIFT		26
+-#define S1_P2_SHIFT		26
+-#define S2_P2_BKP_SHIFT		6
+-#define S3_P2_SHIFT		6
+-#define S3_P2_BKP_SHIFT		12
+-#define S4_P2_SHIFT		12
+-#define S4_P2_BKP_SHIFT		18
+-#define S5_P2_SHIFT		18
+-#define S5_P2_BKP_SHIFT		24
+-#define S6_P2_SHIFT		24
+-#define S7_P2_BKP_SHIFT		6
+-#define S8_P2_SHIFT		6
+-#define S8_P2_BKP_SHIFT		12
+-#define S9_P2_SHIFT		12
+-#define S9_P2_BKP_SHIFT		18
+-#define S10_P2_SHIFT		18
+-#define S10_P2_BKP_SHIFT	24
+-
+-#define BASE2_MASK		0xff000
+-#define BASE2_BKP_MASK		0xfc0000
+-#define S0_P2_MASK		0x3f00000
+-#define S0_P2_BKP_MASK		0xfc000000
+-#define S1_P2_MASK		0xfc000000
+-#define S1_P2_BKP_MASK		0x3f
+-#define S2_P2_MASK		0x3f
+-#define S2_P2_BKP_MASK		0xfc0
+-#define S3_P2_MASK		0xfc0
+-#define S3_P2_BKP_MASK		0x3f000
+-#define S4_P2_MASK		0x3f000
+-#define S4_P2_BKP_MASK		0xfc0000
+-#define S5_P2_MASK		0xfc0000
+-#define S5_P2_BKP_MASK		0x3f000000
+-#define S6_P2_MASK		0x3f000000
+-#define S6_P2_BKP_MASK		0x3f
+-#define S7_P2_MASK		0x3f
+-#define S7_P2_BKP_MASK		0xfc0
+-#define S8_P2_MASK		0xfc0
+-#define S8_P2_BKP_MASK		0x3f000
+-#define S9_P2_MASK		0x3f000
+-#define S9_P2_BKP_MASK		0xfc0000
+-#define S10_P2_MASK		0xfc0000
+-#define S10_P2_BKP_MASK		0x3f000000
+-
+-#define BKP_SEL			0x3
+-#define BKP_REDUN_SEL		0xe0000000
+-#define BKP_REDUN_SHIFT		29
+-
+-#define BIT_APPEND		0x3
+-
+-static int calibrate_8974(struct tsens_priv *priv)
+-{
+-	int base1 = 0, base2 = 0, i;
+-	u32 p1[11], p2[11];
+-	int mode = 0;
+-	u32 *calib, *bkp;
+-	u32 calib_redun_sel;
+-
+-	calib = (u32 *)qfprom_read(priv->dev, "calib");
+-	if (IS_ERR(calib))
+-		return PTR_ERR(calib);
+-
+-	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
+-	if (IS_ERR(bkp))
+-		return PTR_ERR(bkp);
+-
+-	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
+-	calib_redun_sel >>= BKP_REDUN_SHIFT;
+-
+-	if (calib_redun_sel == BKP_SEL) {
+-		mode = (calib[4] & CAL_SEL_0_1) >> CAL_SEL_SHIFT;
+-		mode |= (calib[5] & CAL_SEL_2) >> CAL_SEL_SHIFT_2;
+-
+-		switch (mode) {
+-		case TWO_PT_CALIB:
+-			base2 = (bkp[2] & BASE2_BKP_MASK) >> BASE2_BKP_SHIFT;
+-			p2[0] = (bkp[2] & S0_P2_BKP_MASK) >> S0_P2_BKP_SHIFT;
+-			p2[1] = (bkp[3] & S1_P2_BKP_MASK);
+-			p2[2] = (bkp[3] & S2_P2_BKP_MASK) >> S2_P2_BKP_SHIFT;
+-			p2[3] = (bkp[3] & S3_P2_BKP_MASK) >> S3_P2_BKP_SHIFT;
+-			p2[4] = (bkp[3] & S4_P2_BKP_MASK) >> S4_P2_BKP_SHIFT;
+-			p2[5] = (calib[4] & S5_P2_BKP_MASK) >> S5_P2_BKP_SHIFT;
+-			p2[6] = (calib[5] & S6_P2_BKP_MASK);
+-			p2[7] = (calib[5] & S7_P2_BKP_MASK) >> S7_P2_BKP_SHIFT;
+-			p2[8] = (calib[5] & S8_P2_BKP_MASK) >> S8_P2_BKP_SHIFT;
+-			p2[9] = (calib[5] & S9_P2_BKP_MASK) >> S9_P2_BKP_SHIFT;
+-			p2[10] = (calib[5] & S10_P2_BKP_MASK) >> S10_P2_BKP_SHIFT;
+-			/* Fall through */
+-		case ONE_PT_CALIB:
+-		case ONE_PT_CALIB2:
+-			base1 = bkp[0] & BASE1_MASK;
+-			p1[0] = (bkp[0] & S0_P1_MASK) >> S0_P1_SHIFT;
+-			p1[1] = (bkp[0] & S1_P1_MASK) >> S1_P1_SHIFT;
+-			p1[2] = (bkp[0] & S2_P1_MASK) >> S2_P1_SHIFT;
+-			p1[3] = (bkp[0] & S3_P1_MASK) >> S3_P1_SHIFT;
+-			p1[4] = (bkp[1] & S4_P1_MASK);
+-			p1[5] = (bkp[1] & S5_P1_MASK) >> S5_P1_SHIFT;
+-			p1[6] = (bkp[1] & S6_P1_MASK) >> S6_P1_SHIFT;
+-			p1[7] = (bkp[1] & S7_P1_MASK) >> S7_P1_SHIFT;
+-			p1[8] = (bkp[2] & S8_P1_MASK_BKP) >> S8_P1_SHIFT;
+-			p1[9] = (bkp[2] & S9_P1_MASK_BKP) >> S9_P1_BKP_SHIFT;
+-			p1[10] = (bkp[2] & S10_P1_MASK_BKP) >> S10_P1_BKP_SHIFT;
+-			break;
+-		}
+-	} else {
+-		mode = (calib[1] & CAL_SEL_0_1) >> CAL_SEL_SHIFT;
+-		mode |= (calib[3] & CAL_SEL_2) >> CAL_SEL_SHIFT_2;
+-
+-		switch (mode) {
+-		case TWO_PT_CALIB:
+-			base2 = (calib[2] & BASE2_MASK) >> BASE2_SHIFT;
+-			p2[0] = (calib[2] & S0_P2_MASK) >> S0_P2_SHIFT;
+-			p2[1] = (calib[2] & S1_P2_MASK) >> S1_P2_SHIFT;
+-			p2[2] = (calib[3] & S2_P2_MASK);
+-			p2[3] = (calib[3] & S3_P2_MASK) >> S3_P2_SHIFT;
+-			p2[4] = (calib[3] & S4_P2_MASK) >> S4_P2_SHIFT;
+-			p2[5] = (calib[3] & S5_P2_MASK) >> S5_P2_SHIFT;
+-			p2[6] = (calib[3] & S6_P2_MASK) >> S6_P2_SHIFT;
+-			p2[7] = (calib[4] & S7_P2_MASK);
+-			p2[8] = (calib[4] & S8_P2_MASK) >> S8_P2_SHIFT;
+-			p2[9] = (calib[4] & S9_P2_MASK) >> S9_P2_SHIFT;
+-			p2[10] = (calib[4] & S10_P2_MASK) >> S10_P2_SHIFT;
+-			/* Fall through */
+-		case ONE_PT_CALIB:
+-		case ONE_PT_CALIB2:
+-			base1 = calib[0] & BASE1_MASK;
+-			p1[0] = (calib[0] & S0_P1_MASK) >> S0_P1_SHIFT;
+-			p1[1] = (calib[0] & S1_P1_MASK) >> S1_P1_SHIFT;
+-			p1[2] = (calib[0] & S2_P1_MASK) >> S2_P1_SHIFT;
+-			p1[3] = (calib[0] & S3_P1_MASK) >> S3_P1_SHIFT;
+-			p1[4] = (calib[1] & S4_P1_MASK);
+-			p1[5] = (calib[1] & S5_P1_MASK) >> S5_P1_SHIFT;
+-			p1[6] = (calib[1] & S6_P1_MASK) >> S6_P1_SHIFT;
+-			p1[7] = (calib[1] & S7_P1_MASK) >> S7_P1_SHIFT;
+-			p1[8] = (calib[1] & S8_P1_MASK) >> S8_P1_SHIFT;
+-			p1[9] = (calib[2] & S9_P1_MASK);
+-			p1[10] = (calib[2] & S10_P1_MASK) >> S10_P1_SHIFT;
+-			break;
+-		}
+-	}
+-
+-	switch (mode) {
+-	case ONE_PT_CALIB:
+-		for (i = 0; i < priv->num_sensors; i++)
+-			p1[i] += (base1 << 2) | BIT_APPEND;
+-		break;
+-	case TWO_PT_CALIB:
+-		for (i = 0; i < priv->num_sensors; i++) {
+-			p2[i] += base2;
+-			p2[i] <<= 2;
+-			p2[i] |= BIT_APPEND;
+-		}
+-		/* Fall through */
+-	case ONE_PT_CALIB2:
+-		for (i = 0; i < priv->num_sensors; i++) {
+-			p1[i] += base1;
+-			p1[i] <<= 2;
+-			p1[i] |= BIT_APPEND;
+-		}
+-		break;
+-	default:
+-		for (i = 0; i < priv->num_sensors; i++)
+-			p2[i] = 780;
+-		p1[0] = 502;
+-		p1[1] = 509;
+-		p1[2] = 503;
+-		p1[3] = 509;
+-		p1[4] = 505;
+-		p1[5] = 509;
+-		p1[6] = 507;
+-		p1[7] = 510;
+-		p1[8] = 508;
+-		p1[9] = 509;
+-		p1[10] = 508;
+-		break;
+-	}
+-
+-	compute_intercept_slope(priv, p1, p2, mode);
+-
+-	return 0;
+-}
+-
+-static const struct tsens_ops ops_8974 = {
+-	.init		= init_common,
+-	.calibrate	= calibrate_8974,
+-	.get_temp	= get_temp_common,
+-};
+-
+-const struct tsens_plat_data data_8974 = {
+-	.num_sensors	= 11,
+-	.ops		= &ops_8974,
+-	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x0 },
+-};
 diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-index d4ad4082c800..30909594b1cf 100644
+index 30909594b1cf..a6e26be1234f 100644
 --- a/drivers/thermal/qcom/tsens-v0_1.c
 +++ b/drivers/thermal/qcom/tsens-v0_1.c
-@@ -7,37 +7,37 @@
- #include "tsens.h"
+@@ -39,6 +39,91 @@
+ #define MSM8916_CAL_SEL_MASK	0xe0000000
+ #define MSM8916_CAL_SEL_SHIFT	29
  
- /* eeprom layout data for 8916 */
--#define BASE0_MASK	0x0000007f
--#define BASE1_MASK	0xfe000000
--#define BASE0_SHIFT	0
--#define BASE1_SHIFT	25
--
--#define S0_P1_MASK	0x00000f80
--#define S1_P1_MASK	0x003e0000
--#define S2_P1_MASK	0xf8000000
--#define S3_P1_MASK	0x000003e0
--#define S4_P1_MASK	0x000f8000
--
--#define S0_P2_MASK	0x0001f000
--#define S1_P2_MASK	0x07c00000
--#define S2_P2_MASK	0x0000001f
--#define S3_P2_MASK	0x00007c00
--#define S4_P2_MASK	0x01f00000
--
--#define S0_P1_SHIFT	7
--#define S1_P1_SHIFT	17
--#define S2_P1_SHIFT	27
--#define S3_P1_SHIFT	5
--#define S4_P1_SHIFT	15
--
--#define S0_P2_SHIFT	12
--#define S1_P2_SHIFT	22
--#define S2_P2_SHIFT	0
--#define S3_P2_SHIFT	10
--#define S4_P2_SHIFT	20
--
--#define CAL_SEL_MASK	0xe0000000
--#define CAL_SEL_SHIFT	29
-+#define MSM8916_BASE0_MASK	0x0000007f
-+#define MSM8916_BASE1_MASK	0xfe000000
-+#define MSM8916_BASE0_SHIFT	0
-+#define MSM8916_BASE1_SHIFT	25
++/* eeprom layout data for 8974 */
++#define BASE1_MASK		0xff
++#define S0_P1_MASK		0x3f00
++#define S1_P1_MASK		0xfc000
++#define S2_P1_MASK		0x3f00000
++#define S3_P1_MASK		0xfc000000
++#define S4_P1_MASK		0x3f
++#define S5_P1_MASK		0xfc0
++#define S6_P1_MASK		0x3f000
++#define S7_P1_MASK		0xfc0000
++#define S8_P1_MASK		0x3f000000
++#define S8_P1_MASK_BKP		0x3f
++#define S9_P1_MASK		0x3f
++#define S9_P1_MASK_BKP		0xfc0
++#define S10_P1_MASK		0xfc0
++#define S10_P1_MASK_BKP		0x3f000
++#define CAL_SEL_0_1		0xc0000000
++#define CAL_SEL_2		0x40000000
++#define CAL_SEL_SHIFT		30
++#define CAL_SEL_SHIFT_2		28
 +
-+#define MSM8916_S0_P1_MASK	0x00000f80
-+#define MSM8916_S1_P1_MASK	0x003e0000
-+#define MSM8916_S2_P1_MASK	0xf8000000
-+#define MSM8916_S3_P1_MASK	0x000003e0
-+#define MSM8916_S4_P1_MASK	0x000f8000
++#define S0_P1_SHIFT		8
++#define S1_P1_SHIFT		14
++#define S2_P1_SHIFT		20
++#define S3_P1_SHIFT		26
++#define S5_P1_SHIFT		6
++#define S6_P1_SHIFT		12
++#define S7_P1_SHIFT		18
++#define S8_P1_SHIFT		24
++#define S9_P1_BKP_SHIFT		6
++#define S10_P1_SHIFT		6
++#define S10_P1_BKP_SHIFT	12
 +
-+#define MSM8916_S0_P2_MASK	0x0001f000
-+#define MSM8916_S1_P2_MASK	0x07c00000
-+#define MSM8916_S2_P2_MASK	0x0000001f
-+#define MSM8916_S3_P2_MASK	0x00007c00
-+#define MSM8916_S4_P2_MASK	0x01f00000
++#define BASE2_SHIFT		12
++#define BASE2_BKP_SHIFT		18
++#define S0_P2_SHIFT		20
++#define S0_P2_BKP_SHIFT		26
++#define S1_P2_SHIFT		26
++#define S2_P2_BKP_SHIFT		6
++#define S3_P2_SHIFT		6
++#define S3_P2_BKP_SHIFT		12
++#define S4_P2_SHIFT		12
++#define S4_P2_BKP_SHIFT		18
++#define S5_P2_SHIFT		18
++#define S5_P2_BKP_SHIFT		24
++#define S6_P2_SHIFT		24
++#define S7_P2_BKP_SHIFT		6
++#define S8_P2_SHIFT		6
++#define S8_P2_BKP_SHIFT		12
++#define S9_P2_SHIFT		12
++#define S9_P2_BKP_SHIFT		18
++#define S10_P2_SHIFT		18
++#define S10_P2_BKP_SHIFT	24
 +
-+#define MSM8916_S0_P1_SHIFT	7
-+#define MSM8916_S1_P1_SHIFT	17
-+#define MSM8916_S2_P1_SHIFT	27
-+#define MSM8916_S3_P1_SHIFT	5
-+#define MSM8916_S4_P1_SHIFT	15
++#define BASE2_MASK		0xff000
++#define BASE2_BKP_MASK		0xfc0000
++#define S0_P2_MASK		0x3f00000
++#define S0_P2_BKP_MASK		0xfc000000
++#define S1_P2_MASK		0xfc000000
++#define S1_P2_BKP_MASK		0x3f
++#define S2_P2_MASK		0x3f
++#define S2_P2_BKP_MASK		0xfc0
++#define S3_P2_MASK		0xfc0
++#define S3_P2_BKP_MASK		0x3f000
++#define S4_P2_MASK		0x3f000
++#define S4_P2_BKP_MASK		0xfc0000
++#define S5_P2_MASK		0xfc0000
++#define S5_P2_BKP_MASK		0x3f000000
++#define S6_P2_MASK		0x3f000000
++#define S6_P2_BKP_MASK		0x3f
++#define S7_P2_MASK		0x3f
++#define S7_P2_BKP_MASK		0xfc0
++#define S8_P2_MASK		0xfc0
++#define S8_P2_BKP_MASK		0x3f000
++#define S9_P2_MASK		0x3f000
++#define S9_P2_BKP_MASK		0xfc0000
++#define S10_P2_MASK		0xfc0000
++#define S10_P2_BKP_MASK		0x3f000000
 +
-+#define MSM8916_S0_P2_SHIFT	12
-+#define MSM8916_S1_P2_SHIFT	22
-+#define MSM8916_S2_P2_SHIFT	0
-+#define MSM8916_S3_P2_SHIFT	10
-+#define MSM8916_S4_P2_SHIFT	20
++#define BKP_SEL			0x3
++#define BKP_REDUN_SEL		0xe0000000
++#define BKP_REDUN_SHIFT		29
 +
-+#define MSM8916_CAL_SEL_MASK	0xe0000000
-+#define MSM8916_CAL_SEL_SHIFT	29
- 
++#define BIT_APPEND		0x3
++
  static int calibrate_8916(struct tsens_priv *priv)
  {
-@@ -54,27 +54,27 @@ static int calibrate_8916(struct tsens_priv *priv)
- 	if (IS_ERR(qfprom_csel))
- 		return PTR_ERR(qfprom_csel);
+ 	int base0 = 0, base1 = 0, i;
+@@ -91,6 +176,138 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 	return 0;
+ }
  
--	mode = (qfprom_csel[0] & CAL_SEL_MASK) >> CAL_SEL_SHIFT;
-+	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
- 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
++static int calibrate_8974(struct tsens_priv *priv)
++{
++	int base1 = 0, base2 = 0, i;
++	u32 p1[11], p2[11];
++	int mode = 0;
++	u32 *calib, *bkp;
++	u32 calib_redun_sel;
++
++	calib = (u32 *)qfprom_read(priv->dev, "calib");
++	if (IS_ERR(calib))
++		return PTR_ERR(calib);
++
++	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
++	if (IS_ERR(bkp))
++		return PTR_ERR(bkp);
++
++	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
++	calib_redun_sel >>= BKP_REDUN_SHIFT;
++
++	if (calib_redun_sel == BKP_SEL) {
++		mode = (calib[4] & CAL_SEL_0_1) >> CAL_SEL_SHIFT;
++		mode |= (calib[5] & CAL_SEL_2) >> CAL_SEL_SHIFT_2;
++
++		switch (mode) {
++		case TWO_PT_CALIB:
++			base2 = (bkp[2] & BASE2_BKP_MASK) >> BASE2_BKP_SHIFT;
++			p2[0] = (bkp[2] & S0_P2_BKP_MASK) >> S0_P2_BKP_SHIFT;
++			p2[1] = (bkp[3] & S1_P2_BKP_MASK);
++			p2[2] = (bkp[3] & S2_P2_BKP_MASK) >> S2_P2_BKP_SHIFT;
++			p2[3] = (bkp[3] & S3_P2_BKP_MASK) >> S3_P2_BKP_SHIFT;
++			p2[4] = (bkp[3] & S4_P2_BKP_MASK) >> S4_P2_BKP_SHIFT;
++			p2[5] = (calib[4] & S5_P2_BKP_MASK) >> S5_P2_BKP_SHIFT;
++			p2[6] = (calib[5] & S6_P2_BKP_MASK);
++			p2[7] = (calib[5] & S7_P2_BKP_MASK) >> S7_P2_BKP_SHIFT;
++			p2[8] = (calib[5] & S8_P2_BKP_MASK) >> S8_P2_BKP_SHIFT;
++			p2[9] = (calib[5] & S9_P2_BKP_MASK) >> S9_P2_BKP_SHIFT;
++			p2[10] = (calib[5] & S10_P2_BKP_MASK) >> S10_P2_BKP_SHIFT;
++			/* Fall through */
++		case ONE_PT_CALIB:
++		case ONE_PT_CALIB2:
++			base1 = bkp[0] & BASE1_MASK;
++			p1[0] = (bkp[0] & S0_P1_MASK) >> S0_P1_SHIFT;
++			p1[1] = (bkp[0] & S1_P1_MASK) >> S1_P1_SHIFT;
++			p1[2] = (bkp[0] & S2_P1_MASK) >> S2_P1_SHIFT;
++			p1[3] = (bkp[0] & S3_P1_MASK) >> S3_P1_SHIFT;
++			p1[4] = (bkp[1] & S4_P1_MASK);
++			p1[5] = (bkp[1] & S5_P1_MASK) >> S5_P1_SHIFT;
++			p1[6] = (bkp[1] & S6_P1_MASK) >> S6_P1_SHIFT;
++			p1[7] = (bkp[1] & S7_P1_MASK) >> S7_P1_SHIFT;
++			p1[8] = (bkp[2] & S8_P1_MASK_BKP) >> S8_P1_SHIFT;
++			p1[9] = (bkp[2] & S9_P1_MASK_BKP) >> S9_P1_BKP_SHIFT;
++			p1[10] = (bkp[2] & S10_P1_MASK_BKP) >> S10_P1_BKP_SHIFT;
++			break;
++		}
++	} else {
++		mode = (calib[1] & CAL_SEL_0_1) >> CAL_SEL_SHIFT;
++		mode |= (calib[3] & CAL_SEL_2) >> CAL_SEL_SHIFT_2;
++
++		switch (mode) {
++		case TWO_PT_CALIB:
++			base2 = (calib[2] & BASE2_MASK) >> BASE2_SHIFT;
++			p2[0] = (calib[2] & S0_P2_MASK) >> S0_P2_SHIFT;
++			p2[1] = (calib[2] & S1_P2_MASK) >> S1_P2_SHIFT;
++			p2[2] = (calib[3] & S2_P2_MASK);
++			p2[3] = (calib[3] & S3_P2_MASK) >> S3_P2_SHIFT;
++			p2[4] = (calib[3] & S4_P2_MASK) >> S4_P2_SHIFT;
++			p2[5] = (calib[3] & S5_P2_MASK) >> S5_P2_SHIFT;
++			p2[6] = (calib[3] & S6_P2_MASK) >> S6_P2_SHIFT;
++			p2[7] = (calib[4] & S7_P2_MASK);
++			p2[8] = (calib[4] & S8_P2_MASK) >> S8_P2_SHIFT;
++			p2[9] = (calib[4] & S9_P2_MASK) >> S9_P2_SHIFT;
++			p2[10] = (calib[4] & S10_P2_MASK) >> S10_P2_SHIFT;
++			/* Fall through */
++		case ONE_PT_CALIB:
++		case ONE_PT_CALIB2:
++			base1 = calib[0] & BASE1_MASK;
++			p1[0] = (calib[0] & S0_P1_MASK) >> S0_P1_SHIFT;
++			p1[1] = (calib[0] & S1_P1_MASK) >> S1_P1_SHIFT;
++			p1[2] = (calib[0] & S2_P1_MASK) >> S2_P1_SHIFT;
++			p1[3] = (calib[0] & S3_P1_MASK) >> S3_P1_SHIFT;
++			p1[4] = (calib[1] & S4_P1_MASK);
++			p1[5] = (calib[1] & S5_P1_MASK) >> S5_P1_SHIFT;
++			p1[6] = (calib[1] & S6_P1_MASK) >> S6_P1_SHIFT;
++			p1[7] = (calib[1] & S7_P1_MASK) >> S7_P1_SHIFT;
++			p1[8] = (calib[1] & S8_P1_MASK) >> S8_P1_SHIFT;
++			p1[9] = (calib[2] & S9_P1_MASK);
++			p1[10] = (calib[2] & S10_P1_MASK) >> S10_P1_SHIFT;
++			break;
++		}
++	}
++
++	switch (mode) {
++	case ONE_PT_CALIB:
++		for (i = 0; i < priv->num_sensors; i++)
++			p1[i] += (base1 << 2) | BIT_APPEND;
++		break;
++	case TWO_PT_CALIB:
++		for (i = 0; i < priv->num_sensors; i++) {
++			p2[i] += base2;
++			p2[i] <<= 2;
++			p2[i] |= BIT_APPEND;
++		}
++		/* Fall through */
++	case ONE_PT_CALIB2:
++		for (i = 0; i < priv->num_sensors; i++) {
++			p1[i] += base1;
++			p1[i] <<= 2;
++			p1[i] |= BIT_APPEND;
++		}
++		break;
++	default:
++		for (i = 0; i < priv->num_sensors; i++)
++			p2[i] = 780;
++		p1[0] = 502;
++		p1[1] = 509;
++		p1[2] = 503;
++		p1[3] = 509;
++		p1[4] = 505;
++		p1[5] = 509;
++		p1[6] = 507;
++		p1[7] = 510;
++		p1[8] = 508;
++		p1[9] = 509;
++		p1[10] = 508;
++		break;
++	}
++
++	compute_intercept_slope(priv, p1, p2, mode);
++
++	return 0;
++}
++
+ static const struct tsens_ops ops_8916 = {
+ 	.init		= init_common,
+ 	.calibrate	= calibrate_8916,
+@@ -103,3 +320,15 @@ const struct tsens_plat_data data_8916 = {
+ 	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x0 },
+ 	.hw_ids		= (unsigned int []){0, 1, 2, 4, 5 },
+ };
++
++static const struct tsens_ops ops_8974 = {
++	.init		= init_common,
++	.calibrate	= calibrate_8974,
++	.get_temp	= get_temp_common,
++};
++
++const struct tsens_plat_data data_8974 = {
++	.num_sensors	= 11,
++	.ops		= &ops_8974,
++	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x0 },
++};
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 4d6a406f8dca..27b8f74829d9 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -116,8 +116,12 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mo
+ int init_common(struct tsens_priv *priv);
+ int get_temp_common(struct tsens_priv *priv, int i, int *temp);
  
- 	switch (mode) {
- 	case TWO_PT_CALIB:
--		base1 = (qfprom_cdata[1] & BASE1_MASK) >> BASE1_SHIFT;
--		p2[0] = (qfprom_cdata[0] & S0_P2_MASK) >> S0_P2_SHIFT;
--		p2[1] = (qfprom_cdata[0] & S1_P2_MASK) >> S1_P2_SHIFT;
--		p2[2] = (qfprom_cdata[1] & S2_P2_MASK) >> S2_P2_SHIFT;
--		p2[3] = (qfprom_cdata[1] & S3_P2_MASK) >> S3_P2_SHIFT;
--		p2[4] = (qfprom_cdata[1] & S4_P2_MASK) >> S4_P2_SHIFT;
-+		base1 = (qfprom_cdata[1] & MSM8916_BASE1_MASK) >> MSM8916_BASE1_SHIFT;
-+		p2[0] = (qfprom_cdata[0] & MSM8916_S0_P2_MASK) >> MSM8916_S0_P2_SHIFT;
-+		p2[1] = (qfprom_cdata[0] & MSM8916_S1_P2_MASK) >> MSM8916_S1_P2_SHIFT;
-+		p2[2] = (qfprom_cdata[1] & MSM8916_S2_P2_MASK) >> MSM8916_S2_P2_SHIFT;
-+		p2[3] = (qfprom_cdata[1] & MSM8916_S3_P2_MASK) >> MSM8916_S3_P2_SHIFT;
-+		p2[4] = (qfprom_cdata[1] & MSM8916_S4_P2_MASK) >> MSM8916_S4_P2_SHIFT;
- 		for (i = 0; i < priv->num_sensors; i++)
- 			p2[i] = ((base1 + p2[i]) << 3);
- 		/* Fall through */
- 	case ONE_PT_CALIB2:
--		base0 = (qfprom_cdata[0] & BASE0_MASK);
--		p1[0] = (qfprom_cdata[0] & S0_P1_MASK) >> S0_P1_SHIFT;
--		p1[1] = (qfprom_cdata[0] & S1_P1_MASK) >> S1_P1_SHIFT;
--		p1[2] = (qfprom_cdata[0] & S2_P1_MASK) >> S2_P1_SHIFT;
--		p1[3] = (qfprom_cdata[1] & S3_P1_MASK) >> S3_P1_SHIFT;
--		p1[4] = (qfprom_cdata[1] & S4_P1_MASK) >> S4_P1_SHIFT;
-+		base0 = (qfprom_cdata[0] & MSM8916_BASE0_MASK);
-+		p1[0] = (qfprom_cdata[0] & MSM8916_S0_P1_MASK) >> MSM8916_S0_P1_SHIFT;
-+		p1[1] = (qfprom_cdata[0] & MSM8916_S1_P1_MASK) >> MSM8916_S1_P1_SHIFT;
-+		p1[2] = (qfprom_cdata[0] & MSM8916_S2_P1_MASK) >> MSM8916_S2_P1_SHIFT;
-+		p1[3] = (qfprom_cdata[1] & MSM8916_S3_P1_MASK) >> MSM8916_S3_P1_SHIFT;
-+		p1[4] = (qfprom_cdata[1] & MSM8916_S4_P1_MASK) >> MSM8916_S4_P1_SHIFT;
- 		for (i = 0; i < priv->num_sensors; i++)
- 			p1[i] = (((base0) + p1[i]) << 3);
- 		break;
+-/* TSENS v1 targets */
+-extern const struct tsens_plat_data data_8916, data_8974, data_8960;
++/* TSENS target */
++extern const struct tsens_plat_data data_8960;
++
++/* TSENS v0.1 targets */
++extern const struct tsens_plat_data data_8916, data_8974;
++
+ /* TSENS v2 targets */
+ extern const struct tsens_plat_data data_8996, data_tsens_v2;
+ 
 -- 
 2.17.1
 
