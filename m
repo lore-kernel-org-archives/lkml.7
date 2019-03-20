@@ -2,93 +2,107 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3A3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7D22186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KiZ/7Spk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KiZ/7Spk"
+	by mail.kernel.org (Postfix) with ESMTP id 462A82184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfCTH0c (ORCPT
+        id S1727452AbfCTH2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:26:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59874 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfCTH03 (ORCPT
+        Wed, 20 Mar 2019 03:28:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32872 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726123AbfCTH2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:26:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 910FA60850; Wed, 20 Mar 2019 07:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553066788;
-        bh=BlbMmcSUQ+1gbzVIOZJC1WZ0TVsvZmReGeTN/mVM94g=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=KiZ/7Spk892XsX3lYn+gCBCGF/pkQawHPY9huVYIPKQKSWhrIbNTUcJLEyVj91gb1
-         zzsvGJ9630EhLvLK4ieoxiBCStdfcY++DHaTWqgR1n9rX/K0ImIMrrf2OQh9rTHRp1
-         IcAOV87yFGsA9W6IHul8oBj3dxpMWBbxtWwHtsKM=
-Received: from x230.qca.qualcomm.com (unknown [195.39.71.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5B1B60850;
-        Wed, 20 Mar 2019 07:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553066788;
-        bh=BlbMmcSUQ+1gbzVIOZJC1WZ0TVsvZmReGeTN/mVM94g=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=KiZ/7Spk892XsX3lYn+gCBCGF/pkQawHPY9huVYIPKQKSWhrIbNTUcJLEyVj91gb1
-         zzsvGJ9630EhLvLK4ieoxiBCStdfcY++DHaTWqgR1n9rX/K0ImIMrrf2OQh9rTHRp1
-         IcAOV87yFGsA9W6IHul8oBj3dxpMWBbxtWwHtsKM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5B1B60850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the net tree
-References: <20190320081549.7112c33c@canb.auug.org.au>
-Date:   Wed, 20 Mar 2019 09:26:23 +0200
-In-Reply-To: <20190320081549.7112c33c@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 20 Mar 2019 08:15:49 +1100")
-Message-ID: <87ftrit3a8.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 20 Mar 2019 03:28:02 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K7PfIn058474
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:28:01 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rbh48r33y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:28:01 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 20 Mar 2019 07:27:54 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 07:27:51 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K7Rted38666352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 07:27:55 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AD6152051;
+        Wed, 20 Mar 2019 07:27:55 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 07EF15204F;
+        Wed, 20 Mar 2019 07:27:55 +0000 (GMT)
+Date:   Wed, 20 Mar 2019 08:27:48 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Jeff Xie <chongguiguzi@gmail.com>
+Cc:     schwidefsky@de.ibm.com, rppt@linux.vnet.ibm.com,
+        akpm@linux-foundation.org, mhocko@suse.com, keescook@chromium.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390:tty3270:move spin_lock_bh to spin_lock in tasklet
+References: <1553011956-28747-1-git-send-email-chongguiguzi@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553011956-28747-1-git-send-email-chongguiguzi@gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19032007-0016-0000-0000-00000265030E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032007-0017-0000-0000-000032C01B0E
+Message-Id: <20190320072748.GA3625@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=918 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On Wed, Mar 20, 2019 at 12:12:36AM +0800, Jeff Xie wrote:
+> It is unnecessary to call spin_lock_bh in a tasklet.
+> 
+> Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
+> ---
+>  drivers/s390/char/tty3270.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+> index 2b0c36c2..2963396 100644
+> --- a/drivers/s390/char/tty3270.c
+> +++ b/drivers/s390/char/tty3270.c
+> @@ -563,7 +563,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
+>  	char *input;
+>  	int len;
+> 
+> -	spin_lock_bh(&tp->view.lock);
+> +	spin_lock(&tp->view.lock);
+>  	/*
+>  	 * Two AID keys are special: For 0x7d (enter) the input line
+>  	 * has to be emitted to the tty and for 0x6d the screen
+> @@ -590,7 +590,7 @@ tty3270_read_tasklet(struct raw3270_request *rrq)
+>  		tp->update_flags = TTY_UPDATE_ALL;
+>  		tty3270_set_timer(tp, 1);
+>  	}
+> -	spin_unlock_bh(&tp->view.lock);
+> +	spin_unlock(&tp->view.lock);
 
-> In commit
->
->   13f61dfc5235 ("mt76: fix schedule while atomic in mt76x02_reset_state")
->
-> Fixes tag
->
->   Fixes: e4ebb8b403d1 ("mt76: mt76x2: implement full device restart on watchdog reset")
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
-> Did you mean:
->
->   004960423fe1 ("mt76: mt76x2: implement full device restart on watchdog reset")
+I'm not going to take this. There is close to zero benefit, but rather
+high cost to review this - just because the function is named *tasklet
+doesn't mean it is only called in tasklet / softirq context.
 
-Sorry, I missed this but too late to fix now.
-
--- 
-Kalle Valo
