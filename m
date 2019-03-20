@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D14C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31219C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BA62146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116A42175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfCTSvy (ORCPT
+        id S1727811AbfCTSwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:51:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:44920 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfCTSua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:50:30 -0400
+        Wed, 20 Mar 2019 14:52:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44896 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727567AbfCTSu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:50:27 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3956A1AC1;
-        Wed, 20 Mar 2019 11:50:30 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B42FB168F;
+        Wed, 20 Mar 2019 11:50:26 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B3CFF3F59C;
-        Wed, 20 Mar 2019 11:50:28 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3A3933F59C;
+        Wed, 20 Mar 2019 11:50:25 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         coresight@lists.linaro.org, mike.leach@linaro.org,
         robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 12/25] coresight: etm: Clean up device specific data
-Date:   Wed, 20 Mar 2019 18:49:29 +0000
-Message-Id: <1553107783-3340-13-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 10/25] coresight: tpiu: Clean up device specific data
+Date:   Wed, 20 Mar 2019 18:49:27 +0000
+Message-Id: <1553107783-3340-11-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
 References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,82 +42,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Track the coresight device instead of the real device.
+Switch to using the coresight device instead of the parent
+amba device.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm3x.c | 6 +++---
- drivers/hwtracing/coresight/coresight-etm4x.c | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/hwtracing/coresight/coresight-tpiu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index be302ec..1b9ae3a 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -462,7 +462,7 @@ int etm_get_trace_id(struct etm_drvdata *drvdata)
- 	if (!local_read(&drvdata->mode))
- 		return drvdata->traceid;
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index b2f72a1..9763721 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -48,15 +48,13 @@
  
--	pm_runtime_get_sync(drvdata->dev);
-+	pm_runtime_get_sync(drvdata->dev->parent);
+ /**
+  * @base:	memory mapped base address for this component.
+- * @dev:	the device entity associated to this component.
++ * @dev:	the coresight device entity associated to this component.
+  * @atclk:	optional clock for the core parts of the TPIU.
+- * @csdev:	component vitals needed by the framework.
+  */
+ struct tpiu_drvdata {
+ 	void __iomem		*base;
+ 	struct device		*dev;
+ 	struct clk		*atclk;
+-	struct coresight_device	*csdev;
+ };
  
- 	spin_lock_irqsave(&drvdata->spinlock, flags);
+ static void tpiu_enable_hw(struct tpiu_drvdata *drvdata)
+@@ -121,6 +119,7 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	struct tpiu_drvdata *drvdata;
+ 	struct resource *res = &adev->res;
+ 	struct coresight_desc desc = { 0 };
++	struct coresight_device *csdev;
+ 	struct device_node *np = adev->dev.of_node;
  
-@@ -471,7 +471,7 @@ int etm_get_trace_id(struct etm_drvdata *drvdata)
- 	CS_LOCK(drvdata->base);
- 
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
--	pm_runtime_put(drvdata->dev);
-+	pm_runtime_put(drvdata->dev->parent);
- 
- out:
- 	return trace_id;
-@@ -803,7 +803,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 		drvdata->use_cp14 = of_property_read_bool(np, "arm,cp14");
- 	}
- 
--	drvdata->dev = &adev->dev;
- 	dev_set_drvdata(dev, drvdata);
- 
- 	/* Validity for the resource is already checked by the AMBA core */
-@@ -864,6 +863,7 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_arch_supported;
- 	}
- 
-+	drvdata->dev = &drvdata->csdev->dev;
- 	ret = etm_perf_symlink(drvdata->csdev, true);
- 	if (ret) {
- 		coresight_unregister(drvdata->csdev);
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 08ce37c..8d5ee3b 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -987,7 +987,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 		adev->dev.platform_data = pdata;
- 	}
+ 	if (np) {
+@@ -134,7 +133,6 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	if (!drvdata)
+ 		return -ENOMEM;
  
 -	drvdata->dev = &adev->dev;
- 	dev_set_drvdata(dev, drvdata);
+ 	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
+@@ -160,9 +158,11 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.ops = &tpiu_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
+-	drvdata->csdev = coresight_register(&desc);
++	csdev = coresight_register(&desc);
++	if (!IS_ERR(csdev))
++		drvdata->dev = &csdev->dev;
  
- 	/* Validity for the resource is already checked by the AMBA core */
-@@ -1042,6 +1041,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_arch_supported;
- 	}
+-	return PTR_ERR_OR_ZERO(drvdata->csdev);
++	return PTR_ERR_OR_ZERO(csdev);
+ }
  
-+	drvdata->dev = &drvdata->csdev->dev;
- 	ret = etm_perf_symlink(drvdata->csdev, true);
- 	if (ret) {
- 		coresight_unregister(drvdata->csdev);
-@@ -1049,7 +1049,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	pm_runtime_put(&adev->dev);
--	dev_info(dev, "CPU%d: ETM v%d.%d initialized\n",
-+	dev_info(drvdata->dev, "CPU%d: ETM v%d.%d initialized\n",
- 		 drvdata->cpu, drvdata->arch >> 4, drvdata->arch & 0xf);
- 
- 	if (boot_enable) {
+ #ifdef CONFIG_PM
 -- 
 2.7.4
 
