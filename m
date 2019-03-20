@@ -3,74 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6022BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AF3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F83A2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40212184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z5/Izu+M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GWtkLkMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfCTOZc (ORCPT
+        id S1727645AbfCTOZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:25:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46252 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfCTOZc (ORCPT
+        Wed, 20 Mar 2019 10:25:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43918 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfCTOZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:25:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o1so2968818wrs.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:25:31 -0700 (PDT)
+        Wed, 20 Mar 2019 10:25:40 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d17so2975816wre.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vJZ+YrJB76v44y8pGCHMamF0l+A/H+lquNh9MfjhJmk=;
-        b=Z5/Izu+MEjPqdKibEmIgMEO5aKk4qwQibtu6fq7Izbx+h2rlCDs/OJc7BjL80DE1EK
-         9d9FhmrzW1AKjhDPZ986wmzzhYsCUMh8Ur5wH4cBCkw6f+0JB/mgDeNTI9/EdTjb8pZG
-         j/F1hXlkLWgKmPiomELnq9T29yAnAOJzaQb9Z9g81zH8EQoz0C0XZ6/y/JdPvLbIBz3w
-         kzSnsuG/74kOFABdeYMw7qQQU+QIWu8TiXYLrV1OOoZikepsZT+ak59noVjqQ0Er2O5c
-         K2oiqSZ1VJlLe4Aa91xFAwefnNfK/f/RHCorQZZ9Nil/WdtHOy9JmTe5QCB4O8jXd+Jk
-         MJpA==
+        bh=zhB+LeFVS6OFyErgJNo3tOKrMggpNFpe2MsHnlwSdoc=;
+        b=GWtkLkMWuzbZyx7qkGuvjmvhnO2mFey3KQu0tw7hSNUr5avZXIrfzKKNGVqsZkhxsK
+         +JQFdVsjKw6bsjh2T7DlDn1ed7msi4HqiHFVdb2V3bIncbdhYIIRQJv3B01UZiQJnd4D
+         A7qC7XvxxBMbn+qOFviFOkVj9aXYXTV5bRGE6lI61OijVOQqwmmibC5VyHXCRGj2FLEg
+         Az/0edLTmoDEKrPkRK1cI5s5ieatxdUC+onrjLAt/lFQtvtfBF5DKdrEK9mgZqf+bDqc
+         9MM95hxEeNE2fJU0FblSJu/E/IRWNqXFaUxWFEf4Z1xcQiuiQA3hTM/6D/YvChhAeivQ
+         mkCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vJZ+YrJB76v44y8pGCHMamF0l+A/H+lquNh9MfjhJmk=;
-        b=nid3pfewiOXjm+k9gm3CsZK09thZiXsjAVCN58hXP6DkHutUijrRpXAE5sytESpIZt
-         uKh2+9jFYjO1aWwY4AmOcOpp7rx1kHmKTQQ4y6yeJ+yk2Bh3f3RmBf4JWArAiFchEuGT
-         V+nGk8rqzXhcmEKbI813wbe5LcLSgdCM7vHEaQSIO4Yn/UgqlYaPQuiA1ZF67Bx+31Ox
-         DUteLZ8T8iyQesM9IdNT1mXr7GsZIzp4Pl8dE6cnKe2vwM7P56gW3Ce3lVKDWbYDB99k
-         MgQnIClyudUySf30SgHmm4kGB0qAB8hlSjh5ESVyIf4yL1XYpsMevDzdoGyYjbPI7z2R
-         TiBw==
-X-Gm-Message-State: APjAAAXiVjaHR5gWqSbgIwOzWFs9Bqbk/qBUK8AFPcyIM9npXnEna6ER
-        S1d3Hgt7Wmswl8+H51NTQkpkOPqVLMk=
-X-Google-Smtp-Source: APXvYqyBz7l2YuBTrWgUA4H5vNoE41PXmzAwx8+1oy1xPE+tUq/p0piGGFsswSPtUJnp2/CmEKP5+w==
-X-Received: by 2002:a5d:4081:: with SMTP id o1mr16638861wrp.241.1553091930211;
-        Wed, 20 Mar 2019 07:25:30 -0700 (PDT)
+        bh=zhB+LeFVS6OFyErgJNo3tOKrMggpNFpe2MsHnlwSdoc=;
+        b=faEaflHVKntCvsXmUsvFbclUULOrcmsOHcmc2pgclb7UOIcqG79ajQydpiSiFjg5EN
+         LyibHCLa5RZ/LcbatuCZxld4y9js7PFL6dR4f1c4BufmrjhzV1IC6RzgaLY0/RSF9tMZ
+         ILJUqlWDsbzRVQ/X9rkdFuw5NKVrJDa4gbPR2DBRdKv2wdWudNAY7qRtRhgTbX7uYMCO
+         WI0T/IJnfsUoYXSMiS6UiLHehbghEQ7xKVbn/UbnT4ZQxIUNgLUR87PjA9mtuiukPanj
+         gY/k3JirieCN+ZWdWwWq22KjrDCUPjXtR/EOnITjPDXm3GPO5sD7VLZxDsgbcRvWGfhi
+         vG/Q==
+X-Gm-Message-State: APjAAAVtkF08zdQLSFeNQPzOJhXJCPy6ksdwut4/tdv+I3aFqZfA8ocQ
+        kKn7AmJuh6mXtUanM71WvhOGzkssDTw=
+X-Google-Smtp-Source: APXvYqy97hHbUmezKnrVjDvyeTgzMEv5T5YP9IFOx7VmHF/9vMkePzRUYLH/rbnon7DyJ83vFB6qbw==
+X-Received: by 2002:adf:e889:: with SMTP id d9mr9095138wrm.162.1553091938812;
+        Wed, 20 Mar 2019 07:25:38 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id z14sm2950585wrv.78.2019.03.20.07.25.29
+        by smtp.googlemail.com with ESMTPSA id v20sm7710526wmj.2.2019.03.20.07.25.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 07:25:29 -0700 (PDT)
-Subject: Re: [PATCH v2 0/6] Add nvmem support on STM32
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org,
-        alexandre.torgue@st.com
-Cc:     mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        lionel.debieve@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+        Wed, 20 Mar 2019 07:25:38 -0700 (PDT)
+Subject: Re: [PATCH 0/6] nvmem: sunxi_sid: native format and A83T/H5 support
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190318073354.12151-1-wens@kernel.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <06ec547f-8c7c-0326-200f-22fcdca42b72@linaro.org>
-Date:   Wed, 20 Mar 2019 14:25:28 +0000
+Message-ID: <437873bb-26c5-a451-0a4e-5d846b05244a@linaro.org>
+Date:   Wed, 20 Mar 2019 14:25:37 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20190318073354.12151-1-wens@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,26 +80,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 28/02/2019 10:19, Fabrice Gasnier wrote:
-> Non volatile memory area is available on STM32. It contains various
-> factory programmed information such as unique device ID, analog calibration...
-> This patchset adds:
-> - NVMEM support to access stm32 data cells
-> - helper to read 16 bits cells.
+On 18/03/2019 07:33, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> ---
-> Changes in v2:
-> - update "st,stm32f4-otp" compatible as discussed with Rob
-> - add stm32f429 dts
-> - add core helper to read 16 bits cells
+> Hi everyone,
 > 
-> Fabrice Gasnier (6):
->    dt-bindings: nvmem: Add STM32 factory-programmed romem
->    nvmem: Add driver for STM32 factory-programmed read only mem
->    nvmem: stm32: add support for STM32MP15 BSEC to control OTP data
->    nvmem: core: add nvmem_cell_read_u16
-
-Applied all the nvmem patches except DTS patches to nvmem next
+> This series converts the sunxi_sid driver to read out data in native
+> endianness for all Allwinner SoCs. It was already the case for the H3,
+> which used a different read-out method. The endianness for this hardware
+> was found to be either native or little endian [1], based on the data
+> layout for the thermal sensor calibration data stored within. Some SoCs
+> have either 1 or 3 sensors, and calibration data for each sensor is 2
+> bytes wide, with data for 2 sensors packed into 1 word.
+> 
+> The first three patches do some clean-up and improvements of the code
+> overall. The fourth patch converts the driver to reading out data in
+> native endianness. The fifth adds support for the A83T and H5. These
+> two were already listed in the device tree bindings. The last patch
+> adds a device node for it on H3 and H5.
+> 
+> Please have a look.
+> 
+> Regards
+> ChenYu
+> 
+> [1] https://lkml.org/lkml/2019/2/18/134
+> 
+> Chen-Yu Tsai (6):
+>    nvmem: sunxi_sid: Read out SID for randomness without looping
+>    nvmem: sunxi_sid: Optimize register read-out method
+>    nvmem: sunxi_sid: Dynamically allocate nvmem_config structure
+>    nvmem: sunxi_sid: Read out data in native format
+>    nvmem: sunxi_sid: Support SID on A83T and H5
+>    ARM: dts: sunxi: h3/h5: Add device node for SID
+> 
+Applied all the nvmem patches except DTS patch to nvmem next
 
 Thanks,
 srini
