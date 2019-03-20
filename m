@@ -2,122 +2,113 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E2FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40791C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3CB62184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5C72175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AFdABBqR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UgXys/Yk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfCTJFL (ORCPT
+        id S1726998AbfCTJFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:05:11 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40080 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfCTJFK (ORCPT
+        Wed, 20 Mar 2019 05:05:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43502 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfCTJFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 05:05:10 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2K94vYI013686;
-        Wed, 20 Mar 2019 04:04:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553072697;
-        bh=shW+6H/NgxAuCRg88FkfQrh0o12N9Q7cgurPj2bR63g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AFdABBqRSQFzUDfFbrVRyo1hobFVOWtut+SeiungJRb9A18xEs5pMC/9nXRI+bTTa
-         /EAHjQVSrZpmT0zr/fwp6G6Y3BBaOojUqLjHkoUmQzHMa1mmZqvViISyn7VZgvR4iD
-         4j0vys/zSFyU2btaVTdaLsOa2FdbTqIFpq4RwB68=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2K94v5A061094
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Mar 2019 04:04:57 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 20
- Mar 2019 04:04:57 -0500
-Received: from dlep32.itg.ti.com (157.170.170.100) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Wed, 20 Mar 2019 04:04:57 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2K94pqd013387;
-        Wed, 20 Mar 2019 04:04:53 -0500
-Subject: Re: [PATCH 2/2] pwm: Kconfig: Enable ehrpwm driver to be compiled for
- ARCH_K3
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20190312091629.31701-1-vigneshr@ti.com>
- <20190312091629.31701-3-vigneshr@ti.com>
- <20190312093012.g4rnis37nltzbygz@pengutronix.de>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <a998ec1e-d734-b350-8b3f-99a5bb52b62a@ti.com>
-Date:   Wed, 20 Mar 2019 14:35:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: by mail-wr1-f66.google.com with SMTP id d17so1779570wre.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RQzgXpUy5ei3usYQ6WK/1U/tk6t8iy2sCzuXJ+U0vig=;
+        b=UgXys/YktUaqh5iKlbOWxTmWg3gyfw+YYhCKEKYy8Ffc4Q3bT/vcAxcVmC/a8ChehE
+         0DQpMrUjPnycI4dDMPctNdv/vMTumv/scmA8HR/k9E5g0SrOaYccZkPZWIDmjkyDJ2gV
+         vgqkzvq081KY1dW3t966Qiicbk0SvGg16P+HN7ErdzxNP5ge33FJ7JGmcGZ8pTK79KQt
+         Vjwo5adG0kfHRxOVOKZC84eJZepjlOXBnE2y35XXb+INM8hvKwJExy8vN86nc4SSaNLu
+         LJT0wpo/FybSKPymcVUtQ+wqNm4+CzpAk5PmQGfYUpQrGlbeAEIC8D/QVlXhDB9lLRy8
+         FDGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RQzgXpUy5ei3usYQ6WK/1U/tk6t8iy2sCzuXJ+U0vig=;
+        b=A2zkVdH6oZ2dKYnOxum10c2ZI9Bf3P99Qu8Y78wRUH1GKg3ysueVWv1JkdO5rrgnmT
+         bjzNn2SSXCkP/DFW6BaWVgTPinBEoFSlaEMWVhF3zvTP4ZC69cCbW+EGCAssNyhL6lur
+         EfNkusW5g0a8rN3p2V03MghI1c+wv9U1DRaAmGfo94bY0aaM3/j7EJ1Gv1YTf+67Y5uo
+         f9FfPScF4ztRm66bBsA1LKG2ZW6OJekPJ4JUJBtFNtVY/DtvkJ+h0iHO23W/MuUTZqBr
+         3+eRLbsxVg8a0lTiOwsTpNG8pKh13hXPLlWlPHvDP2P7kYbM0cbr23MBZ2IlTlQPjQnb
+         tsYQ==
+X-Gm-Message-State: APjAAAVcQPLzcLBM8dds1jy322OVsmqpY0w6USvg+N/WnCKrwC3eJhS2
+        aQtG0SmhuhXPBm2WOIthl6ROHIyborVA5NGJdNFktw==
+X-Google-Smtp-Source: APXvYqzMkhGCQbYgprw3asmwlfB8aGzhKo6avgH+uXYdPwKKW+WTPm8sLLWF85att2OXv9+4n0TSeN6hJ+LrJZ1+0og=
+X-Received: by 2002:a5d:6202:: with SMTP id y2mr20199699wru.29.1553072708376;
+ Wed, 20 Mar 2019 02:05:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190312093012.g4rnis37nltzbygz@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190320081110.1718-1-narmstrong@baylibre.com>
+In-Reply-To: <20190320081110.1718-1-narmstrong@baylibre.com>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Wed, 20 Mar 2019 10:04:57 +0100
+Message-ID: <CAMO6naz5bqq7_S_y4yFR-ALinB3ApoE3z3m_fymP2RbaqRotAQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/meson: fix TMDS clock filtering for DMT monitors
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Neil,
+On Wed, Mar 20, 2019 at 9:11 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> DMT monitors does not necessarely report a maximum TMDS clock
+> in a VSDB EDID extension.
+>
+> In this case, all modes are wrongly rejected, including
+> the DRM fallback EDID.
+>
+> This patch only rejects modes whith clock > max_tmds_clock if
+> the max_tmds_clock is specified. This will only reject
+> 4:2:0 HDMI2.0 modes, who reports a clock > max_tmds_clock.
+>
+> Reported-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Fixes: d7d8fb7046b6 ("drm/meson: add HDMI div40 TMDS mode")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/meson/meson_dw_hdmi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> index e28814f4ea6c..563953ec6ad0 100644
+> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> @@ -569,7 +569,8 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+>         DRM_DEBUG_DRIVER("Modeline " DRM_MODE_FMT "\n", DRM_MODE_ARG(mode));
+>
+>         /* If sink max TMDS clock, we reject the mode */
+> -       if (mode->clock > connector->display_info.max_tmds_clock)
+> +       if (connector->display_info.max_tmds_clock &&
+> +           mode->clock > connector->display_info.max_tmds_clock)
+>                 return MODE_BAD;
+>
+>         /* Check against non-VIC supported modes */
+> --
+> 2.21.0
+>
 
-On 12/03/19 3:00 PM, Uwe Kleine-König wrote:
-> On Tue, Mar 12, 2019 at 02:46:29PM +0530, Vignesh Raghavendra wrote:
->> K3 devices have the same EHRPWM IP as OMAP SoCs. Enable driver to be built
->> for K3 devices. Also, drop reference to AM33xx in help text, as IP is
->> found on multiple TI SoCs.
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  drivers/pwm/Kconfig | 5 ++---
->>  1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index 54f8238aac0d..c054bd1dba36 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -467,10 +467,9 @@ config  PWM_TIECAP
->>  
->>  config  PWM_TIEHRPWM
->>  	tristate "EHRPWM PWM support"
->> -	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX
->> +	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
->>  	help
->> -	  PWM driver support for the EHRPWM controller found on AM33XX
->> -	  TI SOC
->> +	  PWM driver support for the EHRPWM controller found on TI SOCs
-> 
-> It would be great to be able to compile this driver with COMPILE_TEST.
-> From a quick look the following would be appropriate:
-> 
-> 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
-> 	depends on HAVE_CLK && HAS_IOMEM
->  
+Thanks, this patch restores HDMI output with my old 1080p TV which
+does not specify a max tmds clock in its EDID. (all modes were
+considered BAD before).
 
-Thanks for the suggestion! I will send a separate patch on top of this
-series to enable COMPILE TEST for this driver and other TI PWM drivers.
-
-> Best regards
-> Uwe
-> 
-
--- 
-Regards
-Vignesh
+Tested-by: Maxime Jourdan <mjourdan@baylibre.com>
+Reviewed-by: Maxime Jourdan <mjourdan@baylibre.com>
