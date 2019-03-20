@@ -7,392 +7,314 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1384FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B60C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ED42175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2C42175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bMYy4zYE"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mV9NsOJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfCTKGs (ORCPT
+        id S1728022AbfCTKIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:06:48 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8626 "EHLO pegase1.c-s.fr"
+        Wed, 20 Mar 2019 06:08:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37117 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfCTKGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:06:44 -0400
+        id S1726692AbfCTKGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:06:46 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44PQYs1d9Zz9vC05;
-        Wed, 20 Mar 2019 11:06:41 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44PQYv21ppz9vC07;
+        Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=bMYy4zYE; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=mV9NsOJB; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id xcPG2EcTJ-lW; Wed, 20 Mar 2019 11:06:41 +0100 (CET)
+        with ESMTP id O3jlt3R78t9O; Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYr6cXRz9vByx;
-        Wed, 20 Mar 2019 11:06:40 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYv0rRyz9vByx;
+        Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553076400; bh=TvQo0+ngyYXygiogOtin9lG0beg9YDU3n1pdFDHySO4=;
+        t=1553076403; bh=X0LiwJM7sZFl1rz1tQ3IaI3Bh0G0lBzR81laNMZXDmk=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=bMYy4zYEZ3P75277dPGFTP07+9lxziJLSJ+tGWcNbnsbL/hKSheSo28875t98tluc
-         OKIvDsJDc/vBDQXsWtbMVIQghXX6xuWfE0SV4fotXCTZ1gywNx4BWiIEBMZ6oZAMtC
-         QA3ECEVCRBAEitQbMcEfv1AEjkHqdfwN+mnukl4k=
+        b=mV9NsOJBvvW5hELMn2j+dW7JCT0YIFt6YIQW86VKnkDtFqpdizyUcLn28fjKuPyLb
+         n1mKSIXO6AMqslixlGodBTwcPVuD4CL9qYsKSPOKXkKoWFvu++03OHavpac0yhgxGC
+         50w5U01aNhjZAo4O2TdfUteFsV4L5f+8clmRkiLY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E94898B919;
-        Wed, 20 Mar 2019 11:06:41 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B7348B918;
+        Wed, 20 Mar 2019 11:06:44 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Jz4cs-aioIC5; Wed, 20 Mar 2019 11:06:41 +0100 (CET)
+        with ESMTP id BBYHdAGOnXFo; Wed, 20 Mar 2019 11:06:44 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BC3298B911;
-        Wed, 20 Mar 2019 11:06:41 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0DD078B911;
+        Wed, 20 Mar 2019 11:06:44 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id AAA0A63AEF; Wed, 20 Mar 2019 10:06:41 +0000 (UTC)
-Message-Id: <fafa51595f5d91c7af534b4e242eb314891d43d4.1553076180.git.christophe.leroy@c-s.fr>
+        id ED2D463AEF; Wed, 20 Mar 2019 10:06:43 +0000 (UTC)
+Message-Id: <c2ba1b09b69f4f8d5b57e88d84cf40203a3b8c43.1553076180.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1553076180.git.christophe.leroy@c-s.fr>
 References: <cover.1553076180.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 06/27] powerpc/64: only book3s/64 supports
- CONFIG_PPC_64K_PAGES
+Subject: [PATCH v1 08/27] powerpc/mm: move __find_linux_pte() out of
+ hugetlbpage.c
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 10:06:41 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 10:06:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_PPC_64K_PAGES cannot be selected by nohash/64
+__find_linux_pte() is the only function in hugetlbpage.c
+which is compiled in regardless on CONFIG_HUGETLBPAGE
+
+This patch moves it in pgtable.c.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/Kconfig                         |  1 -
- arch/powerpc/include/asm/nohash/64/pgalloc.h |  3 ---
- arch/powerpc/include/asm/nohash/64/pgtable.h |  4 ----
- arch/powerpc/include/asm/nohash/64/slice.h   |  4 ----
- arch/powerpc/include/asm/nohash/pte-book3e.h |  5 -----
- arch/powerpc/include/asm/pgtable-be-types.h  |  7 ++-----
- arch/powerpc/include/asm/pgtable-types.h     |  7 ++-----
- arch/powerpc/include/asm/task_size_64.h      |  2 +-
- arch/powerpc/mm/tlb_low_64e.S                | 31 ----------------------------
- arch/powerpc/mm/tlb_nohash.c                 | 13 ------------
- 10 files changed, 5 insertions(+), 72 deletions(-)
+ arch/powerpc/mm/hugetlbpage.c | 103 -----------------------------------------
+ arch/powerpc/mm/pgtable.c     | 104 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+), 103 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2d0be82c3061..5d8e692d6470 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -375,7 +375,6 @@ config ZONE_DMA
- config PGTABLE_LEVELS
- 	int
- 	default 2 if !PPC64
--	default 3 if PPC_64K_PAGES && !PPC_BOOK3S_64
- 	default 4
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index cf2978e235f3..202ae006aa39 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -759,109 +759,6 @@ void flush_dcache_icache_hugepage(struct page *page)
  
- source "arch/powerpc/sysdev/Kconfig"
-diff --git a/arch/powerpc/include/asm/nohash/64/pgalloc.h b/arch/powerpc/include/asm/nohash/64/pgalloc.h
-index 66d086f85bd5..ded453f9b5a8 100644
---- a/arch/powerpc/include/asm/nohash/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/64/pgalloc.h
-@@ -171,12 +171,9 @@ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ #endif /* CONFIG_HUGETLB_PAGE */
  
- #define __pmd_free_tlb(tlb, pmd, addr)		      \
- 	pgtable_free_tlb(tlb, pmd, PMD_CACHE_INDEX)
--#ifndef CONFIG_PPC_64K_PAGES
- #define __pud_free_tlb(tlb, pud, addr)		      \
- 	pgtable_free_tlb(tlb, pud, PUD_INDEX_SIZE)
- 
--#endif /* CONFIG_PPC_64K_PAGES */
+-/*
+- * We have 4 cases for pgds and pmds:
+- * (1) invalid (all zeroes)
+- * (2) pointer to next table, as normal; bottom 6 bits == 0
+- * (3) leaf pte for huge page _PAGE_PTE set
+- * (4) hugepd pointer, _PAGE_PTE = 0 and bits [2..6] indicate size of table
+- *
+- * So long as we atomically load page table pointers we are safe against teardown,
+- * we can follow the address down to the the page and take a ref on it.
+- * This function need to be called with interrupts disabled. We use this variant
+- * when we have MSR[EE] = 0 but the paca->irq_soft_mask = IRQS_ENABLED
+- */
+-pte_t *__find_linux_pte(pgd_t *pgdir, unsigned long ea,
+-			bool *is_thp, unsigned *hpage_shift)
+-{
+-	pgd_t pgd, *pgdp;
+-	pud_t pud, *pudp;
+-	pmd_t pmd, *pmdp;
+-	pte_t *ret_pte;
+-	hugepd_t *hpdp = NULL;
+-	unsigned pdshift = PGDIR_SHIFT;
 -
- #define check_pgt_cache()	do { } while (0)
- 
- #endif /* _ASM_POWERPC_PGALLOC_64_H */
-diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
-index e77ed9761632..3efbd8a1720a 100644
---- a/arch/powerpc/include/asm/nohash/64/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
-@@ -10,10 +10,6 @@
- #include <asm/barrier.h>
- #include <asm/asm-const.h>
- 
--#ifdef CONFIG_PPC_64K_PAGES
--#error "Page size not supported"
--#endif
+-	if (hpage_shift)
+-		*hpage_shift = 0;
 -
- #define FIRST_USER_ADDRESS	0UL
- 
- /*
-diff --git a/arch/powerpc/include/asm/nohash/64/slice.h b/arch/powerpc/include/asm/nohash/64/slice.h
-index 1a32d1fae6af..30adfdd4afde 100644
---- a/arch/powerpc/include/asm/nohash/64/slice.h
-+++ b/arch/powerpc/include/asm/nohash/64/slice.h
-@@ -2,10 +2,6 @@
- #ifndef _ASM_POWERPC_NOHASH_64_SLICE_H
- #define _ASM_POWERPC_NOHASH_64_SLICE_H
- 
--#ifdef CONFIG_PPC_64K_PAGES
--#define get_slice_psize(mm, addr)	MMU_PAGE_64K
--#else /* CONFIG_PPC_64K_PAGES */
- #define get_slice_psize(mm, addr)	MMU_PAGE_4K
--#endif /* !CONFIG_PPC_64K_PAGES */
- 
- #endif /* _ASM_POWERPC_NOHASH_64_SLICE_H */
-diff --git a/arch/powerpc/include/asm/nohash/pte-book3e.h b/arch/powerpc/include/asm/nohash/pte-book3e.h
-index dd40d200f274..813918f40765 100644
---- a/arch/powerpc/include/asm/nohash/pte-book3e.h
-+++ b/arch/powerpc/include/asm/nohash/pte-book3e.h
-@@ -60,13 +60,8 @@
- #define _PAGE_SPECIAL	_PAGE_SW0
- 
- /* Base page size */
--#ifdef CONFIG_PPC_64K_PAGES
--#define _PAGE_PSIZE	_PAGE_PSIZE_64K
--#define PTE_RPN_SHIFT	(28)
--#else
- #define _PAGE_PSIZE	_PAGE_PSIZE_4K
- #define	PTE_RPN_SHIFT	(24)
--#endif
- 
- #define PTE_WIMGE_SHIFT (19)
- #define PTE_BAP_SHIFT	(2)
-diff --git a/arch/powerpc/include/asm/pgtable-be-types.h b/arch/powerpc/include/asm/pgtable-be-types.h
-index a89c67b62680..5932a9883eb7 100644
---- a/arch/powerpc/include/asm/pgtable-be-types.h
-+++ b/arch/powerpc/include/asm/pgtable-be-types.h
-@@ -34,10 +34,8 @@ static inline __be64 pmd_raw(pmd_t x)
- }
- 
- /*
-- * 64 bit hash always use 4 level table. Everybody else use 4 level
-- * only for 4K page size.
-+ * 64 bit always use 4 level table
-  */
--#if defined(CONFIG_PPC_BOOK3S_64) || !defined(CONFIG_PPC_64K_PAGES)
- typedef struct { __be64 pud; } pud_t;
- #define __pud(x)	((pud_t) { cpu_to_be64(x) })
- #define __pud_raw(x)	((pud_t) { (x) })
-@@ -51,7 +49,6 @@ static inline __be64 pud_raw(pud_t x)
- 	return x.pud;
- }
- 
--#endif /* CONFIG_PPC_BOOK3S_64 || !CONFIG_PPC_64K_PAGES */
- #endif /* CONFIG_PPC64 */
- 
- /* PGD level */
-@@ -77,7 +74,7 @@ typedef struct { unsigned long pgprot; } pgprot_t;
-  * With hash config 64k pages additionally define a bigger "real PTE" type that
-  * gathers the "second half" part of the PTE for pseudo 64k pages
-  */
--#if defined(CONFIG_PPC_64K_PAGES) && defined(CONFIG_PPC_BOOK3S_64)
-+#ifdef CONFIG_PPC_64K_PAGES
- typedef struct { pte_t pte; unsigned long hidx; } real_pte_t;
- #else
- typedef struct { pte_t pte; } real_pte_t;
-diff --git a/arch/powerpc/include/asm/pgtable-types.h b/arch/powerpc/include/asm/pgtable-types.h
-index 3b0edf041b2e..02e75e89c93e 100644
---- a/arch/powerpc/include/asm/pgtable-types.h
-+++ b/arch/powerpc/include/asm/pgtable-types.h
-@@ -24,17 +24,14 @@ static inline unsigned long pmd_val(pmd_t x)
- }
- 
- /*
-- * 64 bit hash always use 4 level table. Everybody else use 4 level
-- * only for 4K page size.
-+ * 64 bit always use 4 level table
-  */
--#if defined(CONFIG_PPC_BOOK3S_64) || !defined(CONFIG_PPC_64K_PAGES)
- typedef struct { unsigned long pud; } pud_t;
- #define __pud(x)	((pud_t) { (x) })
- static inline unsigned long pud_val(pud_t x)
- {
- 	return x.pud;
- }
--#endif /* CONFIG_PPC_BOOK3S_64 || !CONFIG_PPC_64K_PAGES */
- #endif /* CONFIG_PPC64 */
- 
- /* PGD level */
-@@ -54,7 +51,7 @@ typedef struct { unsigned long pgprot; } pgprot_t;
-  * With hash config 64k pages additionally define a bigger "real PTE" type that
-  * gathers the "second half" part of the PTE for pseudo 64k pages
-  */
--#if defined(CONFIG_PPC_64K_PAGES) && defined(CONFIG_PPC_BOOK3S_64)
-+#ifdef CONFIG_PPC_64K_PAGES
- typedef struct { pte_t pte; unsigned long hidx; } real_pte_t;
- #else
- typedef struct { pte_t pte; } real_pte_t;
-diff --git a/arch/powerpc/include/asm/task_size_64.h b/arch/powerpc/include/asm/task_size_64.h
-index eab4779f6b84..c993482237ed 100644
---- a/arch/powerpc/include/asm/task_size_64.h
-+++ b/arch/powerpc/include/asm/task_size_64.h
-@@ -20,7 +20,7 @@
- /*
-  * For now 512TB is only supported with book3s and 64K linux page size.
-  */
--#if defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_PPC_64K_PAGES)
-+#ifdef CONFIG_PPC_64K_PAGES
- /*
-  * Max value currently used:
-  */
-diff --git a/arch/powerpc/mm/tlb_low_64e.S b/arch/powerpc/mm/tlb_low_64e.S
-index 9ed90064f542..58959ce15415 100644
---- a/arch/powerpc/mm/tlb_low_64e.S
-+++ b/arch/powerpc/mm/tlb_low_64e.S
-@@ -24,11 +24,7 @@
- #include <asm/kvm_booke_hv_asm.h>
- #include <asm/feature-fixups.h>
- 
--#ifdef CONFIG_PPC_64K_PAGES
--#define VPTE_PMD_SHIFT	(PTE_INDEX_SIZE+1)
--#else
- #define VPTE_PMD_SHIFT	(PTE_INDEX_SIZE)
--#endif
- #define VPTE_PUD_SHIFT	(VPTE_PMD_SHIFT + PMD_INDEX_SIZE)
- #define VPTE_PGD_SHIFT	(VPTE_PUD_SHIFT + PUD_INDEX_SIZE)
- #define VPTE_INDEX_SIZE (VPTE_PGD_SHIFT + PGD_INDEX_SIZE)
-@@ -167,13 +163,11 @@ MMU_FTR_SECTION_ELSE
- 	ldx	r14,r14,r15		/* grab pgd entry */
- ALT_MMU_FTR_SECTION_END_IFSET(MMU_FTR_USE_TLBRSRV)
- 
--#ifndef CONFIG_PPC_64K_PAGES
- 	rldicl	r15,r16,64-PUD_SHIFT+3,64-PUD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
- 	cmpdi	cr0,r14,0
- 	bge	tlb_miss_fault_bolted	/* Bad pgd entry or hugepage; bail */
- 	ldx	r14,r14,r15		/* grab pud entry */
--#endif /* CONFIG_PPC_64K_PAGES */
- 
- 	rldicl	r15,r16,64-PMD_SHIFT+3,64-PMD_INDEX_SIZE-3
- 	clrrdi	r15,r15,3
-@@ -682,18 +676,7 @@ normal_tlb_miss:
- 	 * order to handle the weird page table format used by linux
- 	 */
- 	ori	r10,r15,0x1
--#ifdef CONFIG_PPC_64K_PAGES
--	/* For the top bits, 16 bytes per PTE */
--	rldicl	r14,r16,64-(PAGE_SHIFT-4),PAGE_SHIFT-4+4
--	/* Now create the bottom bits as 0 in position 0x8000 and
--	 * the rest calculated for 8 bytes per PTE
+-	if (is_thp)
+-		*is_thp = false;
+-
+-	pgdp = pgdir + pgd_index(ea);
+-	pgd  = READ_ONCE(*pgdp);
+-	/*
+-	 * Always operate on the local stack value. This make sure the
+-	 * value don't get updated by a parallel THP split/collapse,
+-	 * page fault or a page unmap. The return pte_t * is still not
+-	 * stable. So should be checked there for above conditions.
 -	 */
--	rldicl	r15,r16,64-(PAGE_SHIFT-3),64-15
--	/* Insert the bottom bits in */
--	rlwimi	r14,r15,0,16,31
--#else
- 	rldicl	r14,r16,64-(PAGE_SHIFT-3),PAGE_SHIFT-3+4
--#endif
- 	sldi	r15,r10,60
- 	clrrdi	r14,r14,3
- 	or	r10,r15,r14
-@@ -732,11 +715,7 @@ finish_normal_tlb_miss:
+-	if (pgd_none(pgd))
+-		return NULL;
+-	else if (pgd_huge(pgd)) {
+-		ret_pte = (pte_t *) pgdp;
+-		goto out;
+-	} else if (is_hugepd(__hugepd(pgd_val(pgd))))
+-		hpdp = (hugepd_t *)&pgd;
+-	else {
+-		/*
+-		 * Even if we end up with an unmap, the pgtable will not
+-		 * be freed, because we do an rcu free and here we are
+-		 * irq disabled
+-		 */
+-		pdshift = PUD_SHIFT;
+-		pudp = pud_offset(&pgd, ea);
+-		pud  = READ_ONCE(*pudp);
+-
+-		if (pud_none(pud))
+-			return NULL;
+-		else if (pud_huge(pud)) {
+-			ret_pte = (pte_t *) pudp;
+-			goto out;
+-		} else if (is_hugepd(__hugepd(pud_val(pud))))
+-			hpdp = (hugepd_t *)&pud;
+-		else {
+-			pdshift = PMD_SHIFT;
+-			pmdp = pmd_offset(&pud, ea);
+-			pmd  = READ_ONCE(*pmdp);
+-			/*
+-			 * A hugepage collapse is captured by pmd_none, because
+-			 * it mark the pmd none and do a hpte invalidate.
+-			 */
+-			if (pmd_none(pmd))
+-				return NULL;
+-
+-			if (pmd_trans_huge(pmd) || pmd_devmap(pmd)) {
+-				if (is_thp)
+-					*is_thp = true;
+-				ret_pte = (pte_t *) pmdp;
+-				goto out;
+-			}
+-			/*
+-			 * pmd_large check below will handle the swap pmd pte
+-			 * we need to do both the check because they are config
+-			 * dependent.
+-			 */
+-			if (pmd_huge(pmd) || pmd_large(pmd)) {
+-				ret_pte = (pte_t *) pmdp;
+-				goto out;
+-			} else if (is_hugepd(__hugepd(pmd_val(pmd))))
+-				hpdp = (hugepd_t *)&pmd;
+-			else
+-				return pte_offset_kernel(&pmd, ea);
+-		}
+-	}
+-	if (!hpdp)
+-		return NULL;
+-
+-	ret_pte = hugepte_offset(*hpdp, ea, pdshift);
+-	pdshift = hugepd_shift(*hpdp);
+-out:
+-	if (hpage_shift)
+-		*hpage_shift = pdshift;
+-	return ret_pte;
+-}
+-EXPORT_SYMBOL_GPL(__find_linux_pte);
+-
+ int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+ 		unsigned long end, int write, struct page **pages, int *nr)
+ {
+diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+index d3d61d29b4f1..9f4ccd15849f 100644
+--- a/arch/powerpc/mm/pgtable.c
++++ b/arch/powerpc/mm/pgtable.c
+@@ -30,6 +30,7 @@
+ #include <asm/pgalloc.h>
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
++#include <asm/hugetlb.h>
  
- 	/* Check page size, if not standard, update MAS1 */
- 	rldicl	r11,r14,64-8,64-8
--#ifdef CONFIG_PPC_64K_PAGES
--	cmpldi	cr0,r11,BOOK3E_PAGESZ_64K
--#else
- 	cmpldi	cr0,r11,BOOK3E_PAGESZ_4K
--#endif
- 	beq-	1f
- 	mfspr	r11,SPRN_MAS1
- 	rlwimi	r11,r14,31,21,24
-@@ -857,14 +836,12 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_TLBRSRV)
- 	cmpdi	cr0,r15,0
- 	bge	virt_page_table_tlb_miss_fault
- 
--#ifndef CONFIG_PPC_64K_PAGES
- 	/* Get to PUD entry */
- 	rldicl	r11,r16,64-VPTE_PUD_SHIFT,64-PUD_INDEX_SIZE-3
- 	clrrdi	r10,r11,3
- 	ldx	r15,r10,r15
- 	cmpdi	cr0,r15,0
- 	bge	virt_page_table_tlb_miss_fault
--#endif /* CONFIG_PPC_64K_PAGES */
- 
- 	/* Get to PMD entry */
- 	rldicl	r11,r16,64-VPTE_PMD_SHIFT,64-PMD_INDEX_SIZE-3
-@@ -1106,14 +1083,12 @@ htw_tlb_miss:
- 	cmpdi	cr0,r15,0
- 	bge	htw_tlb_miss_fault
- 
--#ifndef CONFIG_PPC_64K_PAGES
- 	/* Get to PUD entry */
- 	rldicl	r11,r16,64-(PUD_SHIFT-3),64-PUD_INDEX_SIZE-3
- 	clrrdi	r10,r11,3
- 	ldx	r15,r10,r15
- 	cmpdi	cr0,r15,0
- 	bge	htw_tlb_miss_fault
--#endif /* CONFIG_PPC_64K_PAGES */
- 
- 	/* Get to PMD entry */
- 	rldicl	r11,r16,64-(PMD_SHIFT-3),64-PMD_INDEX_SIZE-3
-@@ -1132,9 +1107,7 @@ htw_tlb_miss:
- 	 * 4K page we need to extract a bit from the virtual address and
- 	 * insert it into the "PA52" bit of the RPN.
- 	 */
--#ifndef CONFIG_PPC_64K_PAGES
- 	rlwimi	r15,r16,32-9,20,20
--#endif
- 	/* Now we build the MAS:
- 	 *
- 	 * MAS 0   :	Fully setup with defaults in MAS4 and TLBnCFG
-@@ -1144,11 +1117,7 @@ htw_tlb_miss:
- 	 * MAS 2   :	Use defaults
- 	 * MAS 3+7 :	Needs to be done
- 	 */
--#ifdef CONFIG_PPC_64K_PAGES
--	ori	r10,r15,(BOOK3E_PAGESZ_64K << MAS3_SPSIZE_SHIFT)
--#else
- 	ori	r10,r15,(BOOK3E_PAGESZ_4K << MAS3_SPSIZE_SHIFT)
--#endif
- 
- BEGIN_MMU_FTR_SECTION
- 	srdi	r16,r10,32
-diff --git a/arch/powerpc/mm/tlb_nohash.c b/arch/powerpc/mm/tlb_nohash.c
-index ac23dc1c6535..b892e5b3010c 100644
---- a/arch/powerpc/mm/tlb_nohash.c
-+++ b/arch/powerpc/mm/tlb_nohash.c
-@@ -433,11 +433,7 @@ void tlb_flush_pgtable(struct mmu_gather *tlb, unsigned long address)
- 		unsigned long rid = (address & rmask) | 0x1000000000000000ul;
- 		unsigned long vpte = address & ~rmask;
- 
--#ifdef CONFIG_PPC_64K_PAGES
--		vpte = (vpte >> (PAGE_SHIFT - 4)) & ~0xfffful;
--#else
- 		vpte = (vpte >> (PAGE_SHIFT - 3)) & ~0xffful;
--#endif
- 		vpte |= rid;
- 		__flush_tlb_page(tlb->mm, vpte, tsize, 0);
- 	}
-@@ -625,21 +621,12 @@ static void early_init_this_mmu(void)
- 
- 	case PPC_HTW_IBM:
- 		mas4 |= MAS4_INDD;
--#ifdef CONFIG_PPC_64K_PAGES
--		mas4 |=	BOOK3E_PAGESZ_256M << MAS4_TSIZED_SHIFT;
--		mmu_pte_psize = MMU_PAGE_256M;
--#else
- 		mas4 |=	BOOK3E_PAGESZ_1M << MAS4_TSIZED_SHIFT;
- 		mmu_pte_psize = MMU_PAGE_1M;
--#endif
- 		break;
- 
- 	case PPC_HTW_NONE:
--#ifdef CONFIG_PPC_64K_PAGES
--		mas4 |=	BOOK3E_PAGESZ_64K << MAS4_TSIZED_SHIFT;
--#else
- 		mas4 |=	BOOK3E_PAGESZ_4K << MAS4_TSIZED_SHIFT;
--#endif
- 		mmu_pte_psize = mmu_virtual_psize;
- 		break;
- 	}
+ static inline int is_exec_fault(void)
+ {
+@@ -299,3 +300,106 @@ unsigned long vmalloc_to_phys(void *va)
+ 	return __pa(pfn_to_kaddr(pfn)) + offset_in_page(va);
+ }
+ EXPORT_SYMBOL_GPL(vmalloc_to_phys);
++
++/*
++ * We have 4 cases for pgds and pmds:
++ * (1) invalid (all zeroes)
++ * (2) pointer to next table, as normal; bottom 6 bits == 0
++ * (3) leaf pte for huge page _PAGE_PTE set
++ * (4) hugepd pointer, _PAGE_PTE = 0 and bits [2..6] indicate size of table
++ *
++ * So long as we atomically load page table pointers we are safe against teardown,
++ * we can follow the address down to the the page and take a ref on it.
++ * This function need to be called with interrupts disabled. We use this variant
++ * when we have MSR[EE] = 0 but the paca->irq_soft_mask = IRQS_ENABLED
++ */
++pte_t *__find_linux_pte(pgd_t *pgdir, unsigned long ea,
++			bool *is_thp, unsigned *hpage_shift)
++{
++	pgd_t pgd, *pgdp;
++	pud_t pud, *pudp;
++	pmd_t pmd, *pmdp;
++	pte_t *ret_pte;
++	hugepd_t *hpdp = NULL;
++	unsigned pdshift = PGDIR_SHIFT;
++
++	if (hpage_shift)
++		*hpage_shift = 0;
++
++	if (is_thp)
++		*is_thp = false;
++
++	pgdp = pgdir + pgd_index(ea);
++	pgd  = READ_ONCE(*pgdp);
++	/*
++	 * Always operate on the local stack value. This make sure the
++	 * value don't get updated by a parallel THP split/collapse,
++	 * page fault or a page unmap. The return pte_t * is still not
++	 * stable. So should be checked there for above conditions.
++	 */
++	if (pgd_none(pgd))
++		return NULL;
++	else if (pgd_huge(pgd)) {
++		ret_pte = (pte_t *) pgdp;
++		goto out;
++	} else if (is_hugepd(__hugepd(pgd_val(pgd))))
++		hpdp = (hugepd_t *)&pgd;
++	else {
++		/*
++		 * Even if we end up with an unmap, the pgtable will not
++		 * be freed, because we do an rcu free and here we are
++		 * irq disabled
++		 */
++		pdshift = PUD_SHIFT;
++		pudp = pud_offset(&pgd, ea);
++		pud  = READ_ONCE(*pudp);
++
++		if (pud_none(pud))
++			return NULL;
++		else if (pud_huge(pud)) {
++			ret_pte = (pte_t *) pudp;
++			goto out;
++		} else if (is_hugepd(__hugepd(pud_val(pud))))
++			hpdp = (hugepd_t *)&pud;
++		else {
++			pdshift = PMD_SHIFT;
++			pmdp = pmd_offset(&pud, ea);
++			pmd  = READ_ONCE(*pmdp);
++			/*
++			 * A hugepage collapse is captured by pmd_none, because
++			 * it mark the pmd none and do a hpte invalidate.
++			 */
++			if (pmd_none(pmd))
++				return NULL;
++
++			if (pmd_trans_huge(pmd) || pmd_devmap(pmd)) {
++				if (is_thp)
++					*is_thp = true;
++				ret_pte = (pte_t *) pmdp;
++				goto out;
++			}
++			/*
++			 * pmd_large check below will handle the swap pmd pte
++			 * we need to do both the check because they are config
++			 * dependent.
++			 */
++			if (pmd_huge(pmd) || pmd_large(pmd)) {
++				ret_pte = (pte_t *) pmdp;
++				goto out;
++			} else if (is_hugepd(__hugepd(pmd_val(pmd))))
++				hpdp = (hugepd_t *)&pmd;
++			else
++				return pte_offset_kernel(&pmd, ea);
++		}
++	}
++	if (!hpdp)
++		return NULL;
++
++	ret_pte = hugepte_offset(*hpdp, ea, pdshift);
++	pdshift = hugepd_shift(*hpdp);
++out:
++	if (hpage_shift)
++		*hpage_shift = pdshift;
++	return ret_pte;
++}
++EXPORT_SYMBOL_GPL(__find_linux_pte);
 -- 
 2.13.3
 
