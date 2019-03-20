@@ -5,30 +5,38 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA8CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2863BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D65221841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED93721841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfCTD40 (ORCPT
+        id S1727555AbfCTD7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 23:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
+        Tue, 19 Mar 2019 23:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfCTD4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 23:56:25 -0400
+        id S1726823AbfCTD7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 23:59:02 -0400
 Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E3820857;
-        Wed, 20 Mar 2019 03:56:24 +0000 (UTC)
-Date:   Tue, 19 Mar 2019 23:56:22 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id EDD19204FD;
+        Wed, 20 Mar 2019 03:58:59 +0000 (UTC)
+Date:   Tue, 19 Mar 2019 23:58:58 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: KASAN use after free
-Message-ID: <20190319235622.0e76463e@oasis.local.home>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        <will.deacon@arm.com>, <joel@joelfernandes.org>,
+        <namhyung@kernel.org>, <akpm@linux-foundation.org>,
+        <tglx@linutronix.de>, <rppt@linux.ibm.com>,
+        <linux@dominikbrodowski.net>, <adobriyan@gmail.com>, <cai@lca.pw>,
+        <ard.biesheuvel@linaro.org>, <axboe@kernel.dk>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: User Stack Tracer Causes Crash
+Message-ID: <20190319235858.084b75b1@oasis.local.home>
+In-Reply-To: <897cf5cf-fc24-8a64-cb28-847f2d2e63d2@windriver.com>
+References: <897cf5cf-fc24-8a64-cb28-847f2d2e63d2@windriver.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -38,130 +46,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Wed, 20 Mar 2019 11:15:10 +0800
+He Zhe <zhe.he@windriver.com> wrote:
 
-I ran the latest kernel (5.1-rc1) with full KASAN enabled, and ran the
-ftrace tests, and hit the following:
+> Hi,
+> 
+> User stack tracer causes crash and hang since the following commit till now(5.1-rc1).
+> 
+> c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
 
-==================================================================
-BUG: KASAN: use-after-free in destroy_hist_field+0x30/0x70
-Read of size 8 at addr ffff888086df2210 by task bash/1694
-
-CPU: 6 PID: 1694 Comm: bash Not tainted 5.1.0-rc1-test+ #15
-Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
-Call Trace:
- dump_stack+0x71/0xa0
- ? destroy_hist_field+0x30/0x70
- print_address_description.cold.3+0x9/0x1fb
- ? destroy_hist_field+0x30/0x70
- ? destroy_hist_field+0x30/0x70
- kasan_report.cold.4+0x1a/0x33
- ? __kasan_slab_free+0x100/0x150
- ? destroy_hist_field+0x30/0x70
- destroy_hist_field+0x30/0x70
- track_data_destroy+0x55/0xe0
- destroy_hist_data+0x1f0/0x350
- hist_unreg_all+0x203/0x220
- event_trigger_open+0xbb/0x130
- do_dentry_open+0x296/0x700
- ? stacktrace_count_trigger+0x30/0x30
- ? generic_permission+0x56/0x200
- ? __x64_sys_fchdir+0xd0/0xd0
- ? inode_permission+0x55/0x200
- ? security_inode_permission+0x18/0x60
- path_openat+0x633/0x22b0
- ? path_lookupat.isra.50+0x420/0x420
- ? __kasan_kmalloc.constprop.12+0xc1/0xd0
- ? kmem_cache_alloc+0xe5/0x260
- ? getname_flags+0x6c/0x2a0
- ? do_sys_open+0x149/0x2b0
- ? do_syscall_64+0x73/0x1b0
- ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
- ? _raw_write_lock_bh+0xe0/0xe0
- ? __kernel_text_address+0xe/0x30
- ? unwind_get_return_address+0x2f/0x50
- ? __list_add_valid+0x2d/0x70
- ? deactivate_slab.isra.62+0x1f4/0x5a0
- ? getname_flags+0x6c/0x2a0
- ? set_track+0x76/0x120
- do_filp_open+0x11a/0x1a0
- ? may_open_dev+0x50/0x50
- ? _raw_spin_lock+0x7a/0xd0
- ? _raw_write_lock_bh+0xe0/0xe0
- ? __alloc_fd+0x10f/0x200
- do_sys_open+0x1db/0x2b0
- ? filp_open+0x50/0x50
- do_syscall_64+0x73/0x1b0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fa7b24a4ca2
-Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 85 7a 0d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
-RSP: 002b:00007fffbafb3af0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 000055d3648ade30 RCX: 00007fa7b24a4ca2
-RDX: 0000000000000241 RSI: 000055d364a55240 RDI: 00000000ffffff9c
-RBP: 00007fffbafb3bf0 R08: 0000000000000020 R09: 0000000000000002
-R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000003 R14: 0000000000000001 R15: 000055d364a55240
-
-Allocated by task 1694:
- __kasan_kmalloc.constprop.12+0xc1/0xd0
- kmem_cache_alloc_trace+0x11a/0x280
- create_hist_field+0x54/0x460
- create_var_ref+0x2f/0xb0
- event_hist_trigger_func+0x19cb/0x26a0
- event_trigger_write+0x1a7/0x250
- vfs_write+0xe1/0x240
- ksys_write+0xa1/0x130
- do_syscall_64+0x73/0x1b0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 1694:
- __kasan_slab_free+0x111/0x150
- kfree+0x8d/0x1c0
- destroy_hist_data+0x13b/0x350
- hist_unreg_all+0x203/0x220
- event_trigger_open+0xbb/0x130
- do_dentry_open+0x296/0x700
- path_openat+0x633/0x22b0
- do_filp_open+0x11a/0x1a0
- do_sys_open+0x1db/0x2b0
- do_syscall_64+0x73/0x1b0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff888086df2208
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 8 bytes inside of
- 192-byte region [ffff888086df2208, ffff888086df22c8)
-The buggy address belongs to the page:
-page:ffffea00021b7c00 count:1 mapcount:0 mapping:ffff8880d000cc40 index:0x0 compound_mapcount: 0
-flags: 0xffff000010200(slab|head)
-raw: 000ffff000010200 ffffea00021b7708 ffffea000312ee08 ffff8880d000cc40
-raw: 0000000000000000 00000000001e001e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888086df2100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888086df2180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888086df2200: fc fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                         ^
- ffff888086df2280: fb fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc
- ffff888086df2300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-Disabling lock debugging due to kernel taint
-
-I can easily reproduce it with the following commands:
-
-# cd /sys/kernel/debug/tracing
-# echo 'hist:keys=pid:vals=hitcount:ts0=common_timestamp.usecs:sort=hitcount:size=2048:clock=global if comm=="ping"' > \
-  events/sched/sched_waking/trigger
-# echo 'hist:keys=next_pid:vals=hitcount:wakeup_lat=common_timestamp.usecs-$ts0:sort=hitcount:size=2048:clock=global:onmax($wakeup_lat).save(next_comm,prev_pid,prev_prio,prev_comm) if next_comm=="ping"' > \
-  events/sched/sched_switch/trigger
-# echo '!hist:keys=next_pid:vals=hitcount:wakeup_lat=common_timestamp.usecs-$ts0:sort=hitcount:size=2048:clock=global:onmax($wakeup_lat).save(next_comm,prev_pid,prev_prio,prev_comm) if next_comm=="ping"' > \
-  events/sched/sched_switch/trigger
-
-And boom, KASAN complains.
-
-I tried to debug it, but the hist code is rather complex, and I can't
-figure out how the var_refs is associated to the fields. I figured I'd
-pass it off to you.
+Can you send me your .config.
 
 -- Steve
+
+> 
+> echo 1 > /proc/sys/kernel/stack_tracer_enabled
+> echo userstacktrace > /sys/kernel/debug/tracing/trace_options
+> echo 1 > /sys/kernel/debug/tracing/events/enable
+> dmesg
+> 
