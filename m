@@ -2,162 +2,311 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3B1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F86C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDE22146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA1A2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8oTTR8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfCTPo3 (ORCPT
+        id S1727239AbfCTPo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:44:29 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.228]:25826 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726688AbfCTPo0 (ORCPT
+        Wed, 20 Mar 2019 11:44:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36483 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbfCTPo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:44:26 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id C310042BF8CB5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:36:05 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6dG9hNhI3dnCe6dG9hFmJ8; Wed, 20 Mar 2019 10:36:05 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=47548 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6dG9-0014wD-BU; Wed, 20 Mar 2019 10:36:05 -0500
-To:     Robin Holt <robinmholt@gmail.com>
-Cc:     Cliff Whickman <cpw@sgi.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190227042454.GA29535@embeddedor>
- <480940a4-1b7c-564e-2921-37c5b7e0a5b9@embeddedor.com>
- <CAPp3RGpDZ1oNBOCfizjyrQvp6yGqS89iB_QkjRRqL4FAfZRTXg@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [sgi-xp] Missing break or false positive?
-Message-ID: <7ff0aeb7-9011-f205-f55a-5066b07f060b@embeddedor.com>
-Date:   Wed, 20 Mar 2019 10:36:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 11:44:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e4so2412565edi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TZEW0QTWGI2itMTHEFhP2D9fIsafqR333YOhPjFNM9w=;
+        b=S8oTTR8rzERcSJwEOu+GkBultmNYvDzxXsHzEg/geBsb7vIO/tzxgLghyaPQtd72jw
+         MK2Ax9rgl9NlkUpyrafYOTrHRUjYxbqB48/FPq6sHpzPaYJAZGoFAhtfCJdLxm0mIYum
+         FQIH6Ai/kRPwHtSJ+LhwMO+3+4/IHYDwN7VHxHWeEl+9vtu5S5JGvoHtKeZ253TRyTep
+         IM/2okJTLrozWNjWT3nFYoEzp6tdNWNC3PBrjOZi5T1SWyaIa8888nPM9/MwMsvlJCLn
+         vf/7bwUx85FujgFKsv9kXu3mlC+YJh56D/o34ARJmE5gjPULgKD+hah42rsFb8Mo7DzK
+         F4LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TZEW0QTWGI2itMTHEFhP2D9fIsafqR333YOhPjFNM9w=;
+        b=fvowBmQJ3UOQaj9rUZeFxGnrBrG7cS3A4slHZBuhmrNw5hTqC5utmRm2FhKp81Oc95
+         zPXT87H6ibXF6x+fj1ffP/VJfKCuPt6iH/mFrZGbry8oWs0jzPM7IuZQGJ6OtyZigZ0d
+         qjVd/B2a5ZJ9vwUvkzs+HCUFOLjDw34lkTa4mCOKd/1UXSmiKuJUE9OSaZ834LgCPOAb
+         Vy0qO833Gl0s1suT2j24Fg0XmI+Uzotk4nVnvltdn5IQdDPzpU3xWlNFUWRZuyqfOWu2
+         HRmTqCV4Iu+Hby+gkAN8PkgsmMJLz58yMeV3V3Ue/zedqC9LqtNLgRuiTUPLOF8Eemd9
+         0g7Q==
+X-Gm-Message-State: APjAAAXrNnB7luwsBBFnR7Kt3rLHgjfr9hlfKfUvPQsrWu04wwueH0PK
+        A5h+/ciD5xffjvzLQ2vkQfE=
+X-Google-Smtp-Source: APXvYqzB8yVo4kaPKlKqDJ6nw5+BGhB059mp+BR/LB98HeLoMk23pCHZzvHpO5kj5UlWNuCl+m6x2A==
+X-Received: by 2002:a50:f4ee:: with SMTP id v43mr7952998edm.25.1553096693347;
+        Wed, 20 Mar 2019 08:44:53 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id a51sm741963edd.57.2019.03.20.08.44.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 20 Mar 2019 08:44:52 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 08:44:50 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Hines <srhines@google.com>
+Cc:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: Clang warning in drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+Message-ID: <20190320154450.GA20310@archlinux-ryzen>
+References: <20190320005406.GA16412@archlinux-ryzen>
+ <SN6PR12MB280017BDAB60B61088B221C287410@SN6PR12MB2800.namprd12.prod.outlook.com>
+ <20190320043440.GA23335@archlinux-ryzen>
+ <63518f1f-b808-77b0-aac6-ee1ece669c4b@amd.com>
+ <CAAzmS6_LL1bveq0HaHMqE-T2ciuZu=zd4HOFfwW99P1n0cmakA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPp3RGpDZ1oNBOCfizjyrQvp6yGqS89iB_QkjRRqL4FAfZRTXg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6dG9-0014wD-BU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:47548
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <CAAzmS6_LL1bveq0HaHMqE-T2ciuZu=zd4HOFfwW99P1n0cmakA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/20/19 10:23 AM, Robin Holt wrote:
-> I am sorry for my delayed response.  I missed the earlier email.
+On Wed, Mar 20, 2019 at 07:58:09AM -0700, Stephen Hines wrote:
+> Why are there 2 different enums for this same thing at all? By casting, you
+> are reducing type safety in the kernel, which can cause bugs later (should
+> the two enums diverge in encoding). In my opinion, the proper solution is
+> to remove one of the enums or provide an explicit helper that does the
+> conversion (along with assertions for handling any unexpected cases). The
+> helper function should not be doing a direct cast, since a bug could change
+> the integer value of one (or both) of these enums so that they don't match
+> up.
 > 
-> On Wed, Mar 20, 2019 at 9:37 AM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
-> ...
->>> I'm taking a look into the following piece of code in drivers/misc/sgi-xp/xpc_uv.c:
-> ...
->>> and I'm trying to figure out if the following warning is due to a missing break
->>> at the end of the case, or if this is just a false positive and a /* fall through */
->>> annotation should be added:
-> 
-> The fall-through is by design.  The protocol previously had a windows
-> of failure where a connection
-> could be in the process of being established and a failure could be
-> detected prior to the
-> handling of the establishment message.  I added the new open complete
-> message and leveraged
-> the fall-through to mark the connection established.
+> Thanks,
+> Steve
 > 
 
-Great. I see now.
+Indeed, I would suggest something like this (if this was to be a build
+time error, this would need to be a macro instead of a function):
 
-> Please let me know if you do not intend to submit a patch for this.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+index a71668b8a7d0..451478cf4f35 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+@@ -541,13 +541,13 @@ int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
+ 
+ 	if (!enable) {
+ 		info.disable_features = (struct ta_ras_disable_features_input) {
+-			.block_id =  head->block,
+-			.error_type = head->type,
++			.block_id =  amdgpu_ras_block_to_ta(head->block),
++			.error_type = amdgpu_ras_error_to_ta(head->type),
+ 		};
+ 	} else {
+ 		info.enable_features = (struct ta_ras_enable_features_input) {
+-			.block_id =  head->block,
+-			.error_type = head->type,
++			.block_id =  amdgpu_ras_block_to_ta(head->block),
++			.error_type = amdgpu_ras_error_to_ta(head->type),
+ 		};
+ 	}
+ 
+@@ -647,8 +647,8 @@ int amdgpu_ras_error_inject(struct amdgpu_device *adev,
+ {
+ 	struct ras_manager *obj = amdgpu_ras_find_obj(adev, &info->head);
+ 	struct ta_ras_trigger_error_input block_info = {
+-		.block_id = info->head.block,
+-		.inject_error_type = info->head.type,
++		.block_id = amdgpu_ras_block_to_ta(info->head.block),
++		.inject_error_type = amdgpu_ras_error_to_ta(info->head.type),
+ 		.sub_block_index = info->head.sub_block_index,
+ 		.address = info->address,
+ 		.value = info->value,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
+index 7a35316baab0..c8576ab6e057 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
+@@ -197,6 +197,64 @@ static inline int amdgpu_ras_reset_gpu(struct amdgpu_device *adev,
+ 	return 0;
+ }
+ 
++static inline enum ta_ras_block
++amdgpu_ras_block_to_ta(enum amdgpu_ras_block block)
++{
++	switch (block) {
++	case AMDGPU_RAS_BLOCK__UMC:
++		return TA_RAS_BLOCK__UMC;
++	case AMDGPU_RAS_BLOCK__SDMA:
++		return TA_RAS_BLOCK__SDMA;
++	case AMDGPU_RAS_BLOCK__GFX:
++		return TA_RAS_BLOCK__GFX;
++	case AMDGPU_RAS_BLOCK__MMHUB:
++		return TA_RAS_BLOCK__MMHUB;
++	case AMDGPU_RAS_BLOCK__ATHUB:
++		return TA_RAS_BLOCK__ATHUB;
++	case AMDGPU_RAS_BLOCK__PCIE_BIF:
++		return TA_RAS_BLOCK__PCIE_BIF;
++	case AMDGPU_RAS_BLOCK__HDP:
++		return TA_RAS_BLOCK__HDP;
++	case AMDGPU_RAS_BLOCK__XGMI_WAFL:
++		return TA_RAS_BLOCK__XGMI_WAFL;
++	case AMDGPU_RAS_BLOCK__DF:
++		return TA_RAS_BLOCK__DF;
++	case AMDGPU_RAS_BLOCK__SMN:
++		return TA_RAS_BLOCK__SMN;
++	case AMDGPU_RAS_BLOCK__SEM:
++		return TA_RAS_BLOCK__SEM;
++	case AMDGPU_RAS_BLOCK__MP0:
++		return TA_RAS_BLOCK__MP0;
++	case AMDGPU_RAS_BLOCK__MP1:
++		return TA_RAS_BLOCK__MP1;
++	case AMDGPU_RAS_BLOCK__FUSE:
++		return TA_RAS_BLOCK__FUSE;
++	default:
++		WARN(1, "amdgpu_ras_block_to_ta fell through with a value of %d\n", block);
++		return TA_RAS_BLOCK__UMC;
++	}
++}
++
++static inline enum ta_ras_error_type
++amdgpu_ras_error_to_ta(enum amdgpu_ras_error_type error)
++{
++	switch (error) {
++	case AMDGPU_RAS_ERROR__NONE:
++		return TA_RAS_ERROR__NONE;
++	case AMDGPU_RAS_ERROR__PARITY:
++		return TA_RAS_ERROR__PARITY;
++	case AMDGPU_RAS_ERROR__SINGLE_CORRECTABLE:
++		return TA_RAS_ERROR__SINGLE_CORRECTABLE;
++	case AMDGPU_RAS_ERROR__MULTI_UNCORRECTABLE:
++		return TA_RAS_ERROR__MULTI_UNCORRECTABLE;
++	case AMDGPU_RAS_ERROR__POISON:
++		return TA_RAS_ERROR__POISON;
++	default:
++		WARN(1, "amdgpu_ras_error_to_ta fell through with a value of %d\n", error);
++		return TA_RAS_ERROR__NONE;
++	}
++}
++
+ /* called in ip_init and ip_fini */
+ int amdgpu_ras_init(struct amdgpu_device *adev);
+ void amdgpu_ras_post_init(struct amdgpu_device *adev);
+
+> On Wed, Mar 20, 2019 at 2:37 AM Koenig, Christian <Christian.Koenig@amd.com>
+> wrote:
 > 
-
-I will send a patch to add the fall-through comment and fix the following
-warning:
-
-drivers/misc/sgi-xp/xpc_uv.c: In function ‘xpc_handle_activate_mq_msg_uv’:
-drivers/misc/sgi-xp/xpc_uv.c:573:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   xpc_wakeup_channel_mgr(part);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/misc/sgi-xp/xpc_uv.c:575:2: note: here
-  case XPC_ACTIVATE_MQ_MSG_MARK_ENGAGED_UV:
-  ^~~~
-
-Notice that this is part of the ongoing efforts to enable -Wimplicit-fallthrough.
-
-Thanks, Robin.
---
-Gustavo
+> > Am 20.03.19 um 05:34 schrieb Nathan Chancellor:
+> > > On Wed, Mar 20, 2019 at 01:31:27AM +0000, Pan, Xinhui wrote:
+> > >> these two enumerated types are same for now. both of them might change
+> > in the future.
+> > >>
+> > >> I have not used clang, but would  .block_id =  (int)head->block fix
+> > your warning? If such change is acceptable, I can make one then.
+> > >>
+> > >> Thanks
+> > >> xinhui
+> > >>
+> > >>
+> > >> -----Original Message-----
+> > >> From: Nathan Chancellor <natechancellor@gmail.com>
+> > >> Sent: 2019年3月20日 8:54
+> > >> To: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian <
+> > Christian.Koenig@amd.com>; Zhou, David(ChunMing) <David1.Zhou@amd.com>;
+> > Pan, Xinhui <Xinhui.Pan@amd.com>
+> > >> Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org;
+> > linux-kernel@vger.kernel.org; clang-built-linux@googlegroups.com
+> > >> Subject: Clang warning in drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> > >>
+> > >> Hi all,
+> > >>
+> > >> The introduction of this file in commit dbd249c24427 ("drm/amdgpu: add
+> > amdgpu_ras.c to support ras (v2)") introduces the following Clang
+> > >> warnings:
+> > >>
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:544:23: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_block' to different
+> > enumeration type 'enum ta_ras_block' [-Wenum-conversion]
+> > >>                          .block_id =  head->block,
+> > >>                                       ~~~~~~^~~~~
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:545:24: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_error_type' to different
+> > enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
+> > >>                          .error_type = head->type,
+> > >>                                        ~~~~~~^~~~
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:549:23: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_block' to different
+> > enumeration type 'enum ta_ras_block' [-Wenum-conversion]
+> > >>                          .block_id =  head->block,
+> > >>                                       ~~~~~~^~~~~
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:550:24: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_error_type' to different
+> > enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
+> > >>                          .error_type = head->type,
+> > >>                                        ~~~~~~^~~~
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:650:26: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_block' to different
+> > enumeration type 'enum ta_ras_block' [-Wenum-conversion]
+> > >>                  .block_id = info->head.block,
+> > >>                              ~~~~~~~~~~~^~~~~
+> > >> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:651:35: warning: implicit
+> > conversion from enumeration type 'enum amdgpu_ras_error_type' to different
+> > enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
+> > >>                  .inject_error_type = info->head.type,
+> > >>                                       ~~~~~~~~~~~^~~~
+> > >> 6 warnings generated.
+> > >>
+> > >> Normally, I would sent a fix for this myself but I am not entirely sure
+> > why these two enumerated types exist when one would do since they have the
+> > same values minus the prefix. In fact, the ta_ras_{block,error_type} values
+> > are never used aside from being defined. Some clarification would be
+> > appreciated.
+> > >>
+> > >> Thank you,
+> > >> Nathan
+> > > Hi Xinhui,
+> > >
+> > > Yes, explicitly casting these six spots to int would resolve this
+> > > warning.
+> >
+> > Another question is if it is such a good idea to just silence the warning?
+> >
+> > Maybe add a amdgpu_ras_error_to_ta() helper to do this casting?
+> >
+> > When the enums drift away from each other then we can still add warnings
+> > to that helper to make sure we don't accidentally cast invalid values
+> > around.
+> >
+> > Regards,
+> > Christian.
+> >
+> > >
+> > > Thank you for the quick response!
+> > > Nathan
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups
+> > "Clang Built Linux" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an
+> > email to clang-built-linux+unsubscribe@googlegroups.com.
+> > To post to this group, send email to clang-built-linux@googlegroups.com.
+> > To view this discussion on the web visit
+> > https://groups.google.com/d/msgid/clang-built-linux/63518f1f-b808-77b0-aac6-ee1ece669c4b%40amd.com
+> > .
+> > For more options, visit https://groups.google.com/d/optout.
+> >
