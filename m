@@ -2,166 +2,128 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D49C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9BA21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAAA2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYDMbaf0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mQ6kri7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfCTJ7W (ORCPT
+        id S1727597AbfCTKAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:59:22 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36500 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfCTJ7W (ORCPT
+        Wed, 20 Mar 2019 06:00:07 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:41250 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfCTKAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:59:22 -0400
-Received: by mail-it1-f196.google.com with SMTP id h9so9385185itl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:59:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s2voj6kjaLi6fKovfCR/88xY1mnaSXnV0VQQW9aYLas=;
-        b=JYDMbaf0YUF3eOTaoaFwUe3CxvxxMo7gejjtbDw95GMO9vUIsR2u4jhbxb/8nQ0fy6
-         m6wn+rcYWlW6YHJoSOyz7Uu9aTKGqXNqqFU4zf7N1SmOgxrDGfHoQ6UR6uU9EEU8EeyG
-         zFbxfCNX6lr3uAZ8X4mfsdaj1z7cTD2wl+WP/5kWf5g5c7IUOHtTCuUbNRj+rAgCHXWI
-         /lR62pUrei+SwFhBxmHZG6HNaaCZVtlq3bQf6Mk7Zf1QoT+1TxUFo90O2RLX3kVXUzEA
-         b6phamX/1j02VTV4LGuMZQQuc35jaIE34WG6kQOYNEXk1R88iO+L6KAWgq9xE8c9KTjn
-         qCwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s2voj6kjaLi6fKovfCR/88xY1mnaSXnV0VQQW9aYLas=;
-        b=jpySXSs236s4viYAQ/fKbrD0iVdjjLi6GiyvfsEUHLfFIRBjtoSurKilFgJ+BJAU1E
-         jXA+at883qpajPCMSqP0BEBIYcARVa7pj+tUWbExZztA9UoEn9liidIUvUdONqJSgmUs
-         usp1APomWA3Ob7+EaaQwcvHBN0+y5GsTnaD6lR0grLVhz/8eiVivSE6WdOdER4C7dXSD
-         8VObXVNm4Hy8GT5NDhE41WxF0BOihHpj3EPzOoqkAKmrrrsu8A4A37xzI2H3d+N01EKN
-         SX6YMLNQi8TdMAkoGzJx/pR5RDQb1kChpy3WoEl3ECA2OUd2L0vW6Dr5tG4jmg6YrgjU
-         NO9w==
-X-Gm-Message-State: APjAAAW/jXbjGylG7j0G/E/06FATX11YCuWu3q31KF43I0PvmWAV3FYc
-        1/YYTBi7j/FnVQCM0tKAla63FPCXZ+ks0FsFTfD+ymWEsTykGA==
-X-Google-Smtp-Source: APXvYqyq3qgpYQBtHCrpio74vOfqV9roX8R/fvAEM9gdqE0d/5SmhT4xZ4ZXx0J15TTgRIGJ9xKgFwo+wZYUVtGwSbc=
-X-Received: by 2002:a02:84ab:: with SMTP id f40mr4094497jai.72.1553075961022;
- Wed, 20 Mar 2019 02:59:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
-In-Reply-To: <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 20 Mar 2019 10:59:09 +0100
-Message-ID: <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Josef Bacik <jbacik@fb.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Xin Long <lucien.xin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 Mar 2019 06:00:07 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190320100003epoutp03d8abc180b33bf134e32de9e8b1072d39~NomWeGDXn2912029120epoutp03b;
+        Wed, 20 Mar 2019 10:00:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190320100003epoutp03d8abc180b33bf134e32de9e8b1072d39~NomWeGDXn2912029120epoutp03b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1553076003;
+        bh=cgNzCydZsdjYKV2Hj4+0wnbQBP7npt6wfB6szDEcwbQ=;
+        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
+        b=mQ6kri7KyMqxkIBkU3hFSipxFnUQQ2rJ/jtMYyzBRx+wyKYgxLs5YvoX7+Dm7Zd56
+         B8qeyefuxCsLPpdWUjq4wk79Jv1LXFUFcS5TjoU4J8zjBegpNgWBZ2s3uaJGWYZDdv
+         iVC9IGrCCCR2v+8FaZ8iq+4NZLJnN43i5YOcPa6A=
+Received: from epsmges2p2.samsung.com (unknown [182.195.42.70]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20190320100003epcas2p315b98bcdde146ff2ee6c37a3a7bff406~NomWNaAeH2635226352epcas2p3_;
+        Wed, 20 Mar 2019 10:00:03 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E9.9C.04207.32F029C5; Wed, 20 Mar 2019 19:00:03 +0900 (KST)
+Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190320100002epcas2p2c85f13b20896f837aa5a48643b917680~NomVqAe0m2116921169epcas2p2s;
+        Wed, 20 Mar 2019 10:00:02 +0000 (GMT)
+X-AuditID: b6c32a46-d4bff7000000106f-91-5c920f239636
+Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p2new.samsung.com
+        (Symantec Messaging Gateway) with SMTP id 63.16.03620.22F029C5; Wed, 20 Mar
+        2019 19:00:02 +0900 (KST)
+Received: from AMDC3061.digital.local ([106.116.147.40]) by mmp2.samsung.com
+        (Oracle Communications Messaging Server 7.0.5.31.0 64bit (built May  5
+        2014)) with ESMTPA id <0PON005YLT3TTP70@mmp2.samsung.com>; Wed, 20 Mar 2019
+        19:00:02 +0900 (KST)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     krzk@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, kgene@kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        stable@vger.kernel.org
+Subject: [PATCH RESEND] ARM: dts: exynos: Fix audio (microphone) routing on
+ Odroid XU3
+Date:   Wed, 20 Mar 2019 10:59:50 +0100
+Message-id: <20190320095950.23566-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-reply-to: <20190319205522.GD16150@kozik-lap>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCmqa4y/6QYg09TZC2uXDzEZLFxxnpW
+        i/lHzrFa9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWa4/cZbdo3XuE3eLwm3ZWiwUbHzE6
+        8Hhs+NzE5rFpVSebx+Yl9R59W1YxenzeJBfAGsVlk5Kak1mWWqRvl8CVcffEEvaC2ewVfRv3
+        sjUwtrN1MXJySAiYSFxtfc4EYgsJ7GCU6Pgg1cXIBWR/Z5Q4c7oTrmhabxMzRGIDo0Tryels
+        EM4vRoljEz4yg1SxCRhK9B7tYwSxRQSEJe4tXc4OUsQscJJJonnWDHaQhLBAhMSb+4dYQWwW
+        AVWJVTuvgDXzClhLPJ83hxlinbzE6g0HgGwODk4BfYn5dx1B5kgIbGGTaPn4mhWixkXi09pN
+        UOdJSzxbtZERoqiZUaJn9212CGcCo8T94wsYIaqsJQ4fvwjWzSzAJ9Fx+C87yAYJAV6JjjYh
+        iBIPidMtzVCvNTFKnP05mwVoxAJGhlWMYqkFxbnpqcVGBUZ6xYm5xaV56XrJ+bmbGMGRqeW2
+        g3HJOZ9DjAIcjEo8vBVPJ8QIsSaWFVfmHmKU4GBWEuEtSpwYI8SbklhZlVqUH19UmpNafIhR
+        moNFSZz3ofTcaCGB9MSS1OzU1ILUIpgsEwenVAPjsfbzsn57OMQ/zH5d1Sx3JoM7c59sEJ/p
+        L+NrQaWLqzj+8m2SStLtY2IWu8eWXJD0ceuJX/XiZeob1jPozD5Xu0ROSXhVZi7fL5N0Gw6b
+        L3r++TE1BpzG0Rfae7uYf03l5WAoUvthJLNGW7Jgf9QhxytJFYcStkx+xh2jU+x6y3aO06WW
+        DiWW4oxEQy3mouJEAJackR7IAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMLMWRmVeSWpSXmKPExsVy+t9jQV0l/kkxBiv+mFpcuXiIyWLjjPWs
+        FvOPnGO16H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gs1h65y27RuvcIu8XhN+2sFgs2PmJ0
+        4PHY8LmJzWPTqk42j81L6j36tqxi9Pi8SS6ANYrLJiU1J7MstUjfLoEr4+6JJewFs9kr+jbu
+        ZWtgbGfrYuTkkBAwkZjW28TcxcjFISSwjlHi2dLJTBDOL0aJ20ueM4FUsQkYSvQe7WMEsUUE
+        hCXuLV3ODmIzC5xkkpi4KADEFhaIkHhz/xAriM0ioCqxaucVZhCbV8Ba4vm8OcwQ2+QlVm84
+        AGRzcHAK6EvMv+sIEhYS0JPYvLmBfQIjzwJGhlWMkqkFxbnpucVGBUZ5qeV6xYm5xaV56XrJ
+        +bmbGIFBt+2wVv8OxsdL4g8xCnAwKvHwXng+IUaINbGsuDL3EKMEB7OSCG9R4sQYId6UxMqq
+        1KL8+KLSnNTiQ4zSHCxK4rz8+ccihQTSE0tSs1NTC1KLYLJMHJxSDYwb+v5z/Avb0ORfWBFx
+        4tNDyUn88wqOPdlb8jPbr3xfqniTWdmjoiXr9Ou/NGlmJl/e3NzrlZe1b8IZ02fCi57r7OHj
+        3LGrf+ut6VfSs5295qeZb87Wnrh2Y56YuOjNSw8+fqmyd1+TVefBs/ZfvEbWAofeV9l+i9Tc
+        2Ay3W52U1T//yrOj7YYSS3FGoqEWc1FxIgBmCewONgIAAA==
+X-CMS-MailID: 20190320100002epcas2p2c85f13b20896f837aa5a48643b917680
+CMS-TYPE: 102P
+X-CMS-RootMailID: 20190320100002epcas2p2c85f13b20896f837aa5a48643b917680
+References: <20190319205522.GD16150@kozik-lap>
+        <CGME20190320100002epcas2p2c85f13b20896f837aa5a48643b917680@epcas2p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 10:56 AM Andrey Ryabinin
-<aryabinin@virtuozzo.com> wrote:
->
-> On 3/17/19 11:49 PM, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit c981f254cc82f50f8cb864ce6432097b23195b9c
-> > Author: Al Viro <viro@zeniv.linux.org.uk>
-> > Date:   Sun Jan 7 18:19:09 2018 +0000
-> >
-> >     sctp: use vmemdup_user() rather than badly open-coding memdup_user()
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137bcecf200000
-> > start commit:   c981f254 sctp: use vmemdup_user() rather than badly open-c..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=10fbcecf200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=177bcecf200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=ec1b7575afef85a0e5ca
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a9a84b400000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17199bb3400000
-> >
-> > Reported-by: syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com
-> > Fixes: c981f254 ("sctp: use vmemdup_user() rather than badly open-coding memdup_user()")
->
-> From bisection log:
->
->         testing release v4.17
->         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
->         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #1: crashed: kernel panic: corrupted stack end in worker_thread
->         run #2: crashed: kernel panic: Out of memory and no killable processes...
->         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
->         run #8: crashed: kernel panic: Out of memory and no killable processes...
->         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
->         testing release v4.16
->         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
->         run #0: OK
->         run #1: OK
->         run #2: OK
->         run #3: OK
->         run #4: OK
->         run #5: crashed: kernel panic: Out of memory and no killable processes...
->         run #6: OK
->         run #7: crashed: kernel panic: Out of memory and no killable processes...
->         run #8: OK
->         run #9: OK
->         testing release v4.15
->         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
->         all runs: OK
->         # git bisect start v4.16 v4.15
->
-> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
+The name of CODEC input widget to which microphone is connected through
+the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
+on Odroid XU3.
 
-Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
-looks like the right range, no?
+Cc: <stable@vger.kernel.org> # v4.14+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+index 3a37267e6134..c3c2d85267da 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -22,7 +22,7 @@
+ 			"Headphone Jack", "HPL",
+ 			"Headphone Jack", "HPR",
+ 			"Headphone Jack", "MICBIAS",
+-			"IN1", "Headphone Jack",
++			"IN12", "Headphone Jack",
+ 			"Speakers", "SPKL",
+ 			"Speakers", "SPKR",
+ 			"I2S Playback", "Mixer DAI TX",
+--
+2.17.1
 
->         testing commit c14376de3a1befa70d9811ca2872d47367b48767 with gcc (GCC) 8.1.0
->         run #0: crashed: kernel panic: Out of memory and no killable processes...
->         run #1: crashed: kernel panic: Out of memory and no killable processes...
->         run #2: crashed: kernel panic: Out of memory and no killable processes...
->         run #3: crashed: kernel panic: Out of memory and no killable processes...
->         run #4: OK
->         run #5: OK
->         run #6: crashed: WARNING: ODEBUG bug in netdev_freemem
->         run #7: crashed: no output from test machine
->         run #8: OK
->         run #9: OK
->         # git bisect bad c14376de3a1befa70d9811ca2872d47367b48767
->
-> Why c14376de3a1befa70d9811ca2872d47367b48767 is bad? There was no stack corruption.
-> It looks like the syzbot were bisecting a different bug - "kernel panic: Out of memory and no killable processes..."
-> And bisection for that bug seems to be correct. kvmalloc() in vmemdup_user() may eat up all memory unlike kmalloc which is limited by KMALLOC_MAX_SIZE (4MB usually).
-
-Please see https://github.com/google/syzkaller/blob/master/docs/syzbot.md#bisection
-for answer.
