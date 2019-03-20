@@ -2,145 +2,166 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA208C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA95C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966EA2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015E22184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="E86h7Snk"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="VIcUcS0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfCTFCK (ORCPT
+        id S1726603AbfCTFE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:02:10 -0400
-Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:9390
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbfCTFCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:02:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QN2S4xwKCFGbKgCnAUdQejuBQOq/M0X6QvMF1IsNhD8=;
- b=E86h7SnkRyR3NyY+0mbwJecFytkJ26XZ5iBACmh4xCWVt5C7jpPFFG3J6bpJnM7J9QSVD7w3UJ4VtOy/zcAv5BVj+LIx27DI9tpoFev36msLY00ezC8e0V0fte0r6WH2UmHDLnzteZAipCF6ujS+8gFb66mI3TQCgQO+vWH9P54=
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com (20.179.9.32) by
- DB8PR05MB5850.eurprd05.prod.outlook.com (20.179.8.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Wed, 20 Mar 2019 05:02:00 +0000
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660]) by DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660%2]) with mapi id 15.20.1709.015; Wed, 20 Mar 2019
- 05:02:00 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>,
-        "pakki001@umn.edu" <pakki001@umn.edu>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Ilya Lesokhin <ilyal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [PATCH v4] net: mlx5: Add a missing check on idr_find, free buf
-Thread-Topic: [PATCH v4] net: mlx5: Add a missing check on idr_find, free buf
-Thread-Index: AQHU3py0/Q+8rPAh+0G/hpfTLlAQ7KYT9K8AgAACLYA=
-Date:   Wed, 20 Mar 2019 05:02:00 +0000
-Message-ID: <c44f3a3f0d74e65b1db9544cf50555f76c8daab4.camel@mellanox.com>
-References: <20190319214244.20212-1-pakki001@umn.edu>
-         <d65ddd7e-6553-00a4-c261-bd88b7476626@gmail.com>
-In-Reply-To: <d65ddd7e-6553-00a4-c261-bd88b7476626@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a2f6691-a9d6-4f79-a6cd-08d6acf12f83
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB8PR05MB5850;
-x-ms-traffictypediagnostic: DB8PR05MB5850:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-microsoft-antispam-prvs: <DB8PR05MB58509FE69C38F890B6151122BE410@DB8PR05MB5850.eurprd05.prod.outlook.com>
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39860400002)(396003)(366004)(189003)(199004)(71190400001)(5660300002)(2906002)(81156014)(71200400001)(58126008)(8676002)(26005)(66066001)(53936002)(110136005)(2501003)(316002)(6512007)(186003)(54906003)(305945005)(81166006)(102836004)(4326008)(14444005)(6246003)(97736004)(105586002)(99286004)(6506007)(106356001)(6116002)(68736007)(446003)(3846002)(14454004)(7736002)(229853002)(53546011)(6486002)(36756003)(6436002)(478600001)(86362001)(486006)(8936002)(256004)(25786009)(11346002)(2616005)(476003)(118296001)(2171002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB5850;H:DB8PR05MB5898.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h628XENRIFHc0hBbNKiSP6w9IaL8jKtGHMYgiX79v052nA+7x7f3btBYCTHbG7hVIkRQIVPtTLGsvmkZq5cQm7Oh5lR8Oo5ceaEAKDKVR0GOE5SP/1IIcZKHs6I77X4vD6KwrdP2LGwm55V0RLpOi31sklV9FJajOjdDWVvbgp5VhUZ7PuB6Z/pNdSHDGZ6UdtJm8LgI9/DRIaRq0soOkQSjkXzYG2u30j33Jbevyq9fjN+uPY/cL08g+F8OCLmmZ3CAiI9fAQNgrYZf+1/AoxhbYvU9WuxMresLSAhyMwRDyYgEAkBdBhOr6Ojo9cy0gb3nnywCakq8GHbF4csthsGq9I+8XzCUFfgpSMmumKL/oUG93IUeejXBPXib8njc8kD5j14wO2ud2I4f2B0M4U6VNv5nVT4gSp0t7TDME04=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2254E96E98CAB14C92D91125D030440E@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 20 Mar 2019 01:04:26 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:45241 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfCTFEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 01:04:25 -0400
+Received: by mail-vk1-f193.google.com with SMTP id v187so244385vkf.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rK7t3TnHuKaR+TBsU+HUhoAK3+roKKtGkZrEDN32xiQ=;
+        b=VIcUcS0lFCMtlXcvDBIL4K/VqTXV60edsQ1/lYeqLV7x2HxhomvoSla6j87VAe2Oyc
+         H5xTVCVfN4dpjNNfQRieKZR7VwcCw0nBHMJ2A0wIb3o15+i8q7CJjM41kMe5wDEvWCbR
+         8b/cBEi7zLuraqc7Qv1qd1hUwxZc+pmnauUlkGtYIdRWCWk33hv3chKL3swIw29uQAN6
+         kU/H9hMy29m4fins9hqrmbA6fJy6Xs74kdGhwZLLeumYjfBaM3d1Oja84toLOVg+WNyH
+         LlIspUKk+tFvi6DWD5Uo2+htmASCquO9HBLDKtzjW7K/gxrpHqnE8FCZUMMsFHoG/ZPf
+         K8IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rK7t3TnHuKaR+TBsU+HUhoAK3+roKKtGkZrEDN32xiQ=;
+        b=fhqW6+vOZt+yd66nD3n8hiNj1O5laFVVP2OivL4lW4QZk3/+1FNze41jwSFQG0NyhL
+         omqoRe54fnaru0uolPGcWcW08K90+eiFNvcco/kxtADp23yDQ71U5IwUNJzi9pcghSdP
+         DoxpG9JQeIT9Kf0xvNt2vrhBj+plbdZ4jg/lMxZmL7h0Evlbz6fdawRYHeymNUb+BkIT
+         87ERWKA7mbLTkztzdyMkRXjFcnQ0D1hnUZaorWTXVj/zJuJ6sR3EbXwnRBeck1iHvfxf
+         9ndin4KGD6m1ThcUoH7LOCg1t64CVbC6MjFtB1EKw9SqjD/2DN1x+aPJImWTrY5Jx7Ae
+         lEvg==
+X-Gm-Message-State: APjAAAXk1TbE5s1gXAZFGx3uqjW4Gm911qPtaWLjpHzsF3WB8YhjrccT
+        nGdiLoUO4i4tq7ILTK0Ws3kph1vRU+wrZkMypfs9Pg==
+X-Google-Smtp-Source: APXvYqwbpXSLP383uh064BpC4hXr9L4DlltgGQDNmPa5bqBp6r5+jonsKHtXQNZkEvMixYC6+oxT+a6B8Vlz1Nw4M4w=
+X-Received: by 2002:a1f:8750:: with SMTP id j77mr3567585vkd.56.1553058264090;
+ Tue, 19 Mar 2019 22:04:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a2f6691-a9d6-4f79-a6cd-08d6acf12f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 05:02:00.2575
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB5850
+References: <20190315095108.9195-1-jian-hong@endlessm.com> <s5himwkpehk.wl-tiwai@suse.de>
+In-Reply-To: <s5himwkpehk.wl-tiwai@suse.de>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Wed, 20 Mar 2019 13:05:33 +0800
+Message-ID: <CAPpJ_ec7oWi+ymtHXVwBMWS7=WtGmtPX6GNd+VOKX9xFzGZEVA@mail.gmail.com>
+Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTAzLTE5IGF0IDIxOjU0IC0wNzAwLCBFcmljIER1bWF6ZXQgd3JvdGU6DQo+
-IA0KPiBPbiAwMy8xOS8yMDE5IDAyOjQyIFBNLCBBZGl0eWEgUGFra2kgd3JvdGU6DQo+ID4gaWRy
-X2ZpbmQoKSBjYW4gcmV0dXJuIGEgTlVMTCB2YWx1ZSB0byAnZmxvdycgd2hpY2ggaXMgdXNlZCB3
-aXRob3V0DQo+ID4gYQ0KPiA+IGNoZWNrLiBUaGUgcGF0Y2ggYWRkcyBhIGNoZWNrIHRvIGF2b2lk
-IHBvdGVudGlhbCBOVUxMIHBvaW50ZXINCj4gPiBkZXJlZmVyZW5jZS4NCj4gPiANCj4gPiBJbiBj
-YXNlIG9mIG1seDVfZnBnYV9zYnVfY29ubl9zZW5kbXNnKCkgZmFpbHVyZSwgZnJlZSBidWYgYWxs
-b2NhdGVkDQo+ID4gdXNpbmcga3phbGxvYy4NCj4gPiANCj4gPiBGaXhlczogYWI0MTJlMWRkN2Ri
-ICgibmV0L21seDU6IEFjY2VsLCBhZGQgVExTIHJ4IG9mZmxvYWQNCj4gPiByb3V0aW5lcyIpDQo+
-ID4gLS0tDQo+ID4gdjM6IFJlb3JkZXIgYnVmIGFsbG9jYXRpb25zIGFuZCBmbG93IGNoZWNrLg0K
-PiA+IHYyOiBmYWlsdXJlIHRvIHJldHVybiBpbiBjYXNlIG9mIGZsb3cgZmFpbHVyZS4NCj4gPiB2
-MTogRmFpbGVkIHRvIGZyZWUgYnVmIGluIGNhc2Ugb2YgZmxvdyBmYWlsdXJlLg0KPiA+IA0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEFkaXR5YSBQYWtraSA8cGFra2kwMDFAdW1uLmVkdT4NCj4gPiAtLS0N
-Cj4gPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZwZ2EvdGxzLmMg
-fCAxNA0KPiA+ICsrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
-b25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnBnYS90bHMuYw0KPiA+IGIvZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZwZ2EvdGxzLmMNCj4gPiBpbmRleCA1Y2Y1
-ZjJhOWQ1MWYuLjhkZTY0ZTg4YzY3MCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
-cm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnBnYS90bHMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbmV0
-L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9mcGdhL3Rscy5jDQo+ID4gQEAgLTIxNywxNSAr
-MjE3LDIxIEBAIGludCBtbHg1X2ZwZ2FfdGxzX3Jlc3luY19yeChzdHJ1Y3QNCj4gPiBtbHg1X2Nv
-cmVfZGV2ICptZGV2LCB1MzIgaGFuZGxlLCB1MzIgc2VxLA0KPiA+ICAJdm9pZCAqY21kOw0KPiA+
-ICAJaW50IHJldDsNCj4gPiAgDQo+ID4gKwlyY3VfcmVhZF9sb2NrKCk7DQo+ID4gKwlmbG93ID0g
-aWRyX2ZpbmQoJm1kZXYtPmZwZ2EtPnRscy0+cnhfaWRyLCBudG9obChoYW5kbGUpKTsNCj4gPiAr
-CXJjdV9yZWFkX3VubG9jaygpOw0KPiANCj4gVGhpcyBsb29rcyBzdXNwZWN0IChldmVuIGJlZm9y
-ZSB5b3VyIHBhdGNoKQ0KPiANCj4gV2hhdCBwcmV2ZW50cyBmbG93IGZyb20gZGlzYXBwZWFyaW5n
-IGFmdGVyIHRoaXMgcmN1X3JlYWRfbG9jaygpID8NCj4gDQo+IElNTyB5b3VyIHBhdGNoIG1pZ2h0
-IHByZXZlbnQgYSBOVUxMIGRlcmVmLCBidXQgbm90IHVzZS1hZnRlci1mcmVlLg0KDQpUaGF0IGNy
-b3NzZWQgbXkgbWluZCB3aGVuIGkgcmV2aWV3ZWQgdGhpcyBwYXRjaCBidXQgc2luY2UgdGhpcyBp
-cyBhbg0Kb2xkIGlzc3VlIGkganVzdCBwdXQgYSB0b2RvIGFzaWRlIHRvIGhhbmRsZSBpdCBsYXRl
-cg0KDQppIHRoaW5rIHRoZSBhdXRob3IgZGlkbid0IHdhbnQgdG8gZGVhbCB3aXRoIHVzZS1hZnRl
-ci1mcmVlIGhlcmUsIGJ1dA0Kb25seSB3YW50ZWQgdG8ga2VlcCB0aGUgZGF0YSBzdHJ1Y3R1cmUg
-c2FmZSBhZ2FpbnN0IGFkZC9yZW1vdmUNCm9wZXJhdGlvbnMuDQoNCkFueXdheSBhbGwgd2UgbmVl
-ZCBoZXJlIGlzDQogDQpyY3VfcmVhZF9sb2NrKCkNCmZsb3cgPSBpZHJfZmluZCguLikNCm1seDVf
-ZnBnYV90bHNfZmxvd190b19jbWQoZmxvdywgY21kKTsgDQpyY3VfcmVhZF91bmxvY2soKQ0KDQpX
-aWxsIGZpeCBpdCB1cCBpbiBhIGZvbGxvdyB1cCBwYXRjaCwNCg0KVGhhbmsgeW91IEVyaWMgISEN
-Cg0KDQo+IA0KPiA+ICsNCj4gPiArCWlmICghZmxvdykgew0KPiA+ICsJCVdBUk5fT05DRSgxLCAi
-UmVjZWl2ZWQgTlVMTCBwb2ludGVyIGZvciBoYW5kbGVcbiIpOw0KPiA+ICsJCXJldHVybiAtRUlO
-VkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAgCWJ1ZiA9IGt6YWxsb2Moc2l6ZSwgR0ZQX0FUT01J
-Qyk7DQo+ID4gIAlpZiAoIWJ1ZikNCj4gPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gPiAgDQo+ID4g
-IAljbWQgPSAoYnVmICsgMSk7DQo+ID4gIA0KPiA+IC0JcmN1X3JlYWRfbG9jaygpOw0KPiA+IC0J
-ZmxvdyA9IGlkcl9maW5kKCZtZGV2LT5mcGdhLT50bHMtPnJ4X2lkciwgbnRvaGwoaGFuZGxlKSk7
-DQo+ID4gLQlyY3VfcmVhZF91bmxvY2soKTsNCj4gPiAgCW1seDVfZnBnYV90bHNfZmxvd190b19j
-bWQoZmxvdywgY21kKTsNCj4gPiAgDQo+ID4gIAlNTFg1X1NFVCh0bHNfY21kLCBjbWQsIHN3aWQs
-IG50b2hsKGhhbmRsZSkpOw0KPiA+IEBAIC0yMzgsNiArMjQ0LDggQEAgaW50IG1seDVfZnBnYV90
-bHNfcmVzeW5jX3J4KHN0cnVjdA0KPiA+IG1seDVfY29yZV9kZXYgKm1kZXYsIHUzMiBoYW5kbGUs
-IHUzMiBzZXEsDQo+ID4gIAlidWYtPmNvbXBsZXRlID0gbWx4X3Rsc19rZnJlZV9jb21wbGV0ZTsN
-Cj4gPiAgDQo+ID4gIAlyZXQgPSBtbHg1X2ZwZ2Ffc2J1X2Nvbm5fc2VuZG1zZyhtZGV2LT5mcGdh
-LT50bHMtPmNvbm4sIGJ1Zik7DQo+ID4gKwlpZiAocmV0IDwgMCkNCj4gPiArCQlrZnJlZShidWYp
-Ow0KPiA+ICANCj4gPiAgCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPiANCg==
+Takashi Iwai <tiwai@suse.de> =E6=96=BC 2019=E5=B9=B43=E6=9C=8815=E6=97=A5 =
+=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=887:24=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, 15 Mar 2019 10:51:09 +0100,
+> Jian-Hong Pan wrote:
+> >
+> > Some Acer AIO desktops like Veriton Z6860G, Z4860G and Z4660G cannot
+> > record sound from headset MIC.  This patch adds the
+> > ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk to fix this issue.
+> >
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > ---
+> > v2: According to Realtek's suggestion, change the COEF 0x4f from 0xd429=
+ to
+> >     0x5029.  Thanks to Realtek!
+>
+> It'd be nicer if we get either Acked-by or Reviewed-by tag from
+> Realtek.  Kailang?
+
+Hi Kailang,
+
+May we have your Acked-by or Reviewed-by tag for this patch?
+Signed-off will also be great!
+
+Thank you
+Jian-Hong Pan
+
+> thanks,
+>
+> Takashi
+>
+> >
+> >  sound/pci/hda/patch_realtek.c | 17 ++++++++++++++---
+> >  1 file changed, 14 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realte=
+k.c
+> > index 384719d5c44e..191830d4fa40 100644
+> > --- a/sound/pci/hda/patch_realtek.c
+> > +++ b/sound/pci/hda/patch_realtek.c
+> > @@ -5687,6 +5687,7 @@ enum {
+> >       ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
+> >       ALC225_FIXUP_WYSE_AUTO_MUTE,
+> >       ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
+> > +     ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+> >  };
+> >
+> >  static const struct hda_fixup alc269_fixups[] =3D {
+> > @@ -6685,6 +6686,16 @@ static const struct hda_fixup alc269_fixups[] =
+=3D {
+> >               .chained =3D true,
+> >               .chain_id =3D ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+> >       },
+> > +     [ALC286_FIXUP_ACER_AIO_HEADSET_MIC] =3D {
+> > +             .type =3D HDA_FIXUP_VERBS,
+> > +             .v.verbs =3D (const struct hda_verb[]) {
+> > +                     { 0x20, AC_VERB_SET_COEF_INDEX, 0x4f },
+> > +                     { 0x20, AC_VERB_SET_PROC_COEF, 0x5029 },
+> > +                     { }
+> > +             },
+> > +             .chained =3D true,
+> > +             .chain_id =3D ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
+> > +     },
+> >  };
+> >
+> >  static const struct snd_pci_quirk alc269_fixup_tbl[] =3D {
+> > @@ -6701,9 +6712,9 @@ static const struct snd_pci_quirk alc269_fixup_tb=
+l[] =3D {
+> >       SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP=
+_ASPIRE_V5_PINS),
+> >       SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP=
+_ACER_AIO_MIC_NO_PRESENCE),
+> >       SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_C=
+HROME_BOOK),
+> > -     SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP=
+_ACER_AIO_MIC_NO_PRESENCE),
+> > -     SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP=
+_ACER_AIO_MIC_NO_PRESENCE),
+> > -     SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP=
+_ACER_AIO_MIC_NO_PRESENCE),
+> > +     SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP=
+_ACER_AIO_HEADSET_MIC),
+> > +     SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP=
+_ACER_AIO_HEADSET_MIC),
+> > +     SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP=
+_ACER_AIO_HEADSET_MIC),
+> >       SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_=
+FIXUP_ACER_HEADSET_MIC),
+> >       SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M10=
+1Z),
+> >       SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_D=
+ELL_XPS),
+> > --
+> > 2.20.1
+> >
+> >
