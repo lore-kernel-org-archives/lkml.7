@@ -2,210 +2,157 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D9BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C83C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8E62186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V9QDC1MJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACBE2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfCTPsv (ORCPT
+        id S1727386AbfCTPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:48:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52428 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfCTPsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:48:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yIV/CqdM2K4P3aYr3Az75saF2I7GZs2msAV2eZYu8Zw=; b=V9QDC1MJMhZKVI723uY7pqqd7
-        K8BY8QSRf6AAYRsWFCtu2HAKlGi+jGZgc7F0IoFVQmZ1cqSoVV4mK4sQSahZ7O1uR7tDb9wcG50kp
-        vTxCIXCU2UI5NVNNWg/0IAt0lazwSHGBooIFTyjuV/HRsMOFxbyGs5r9WEYWoUTKXoFKSbAizQr1T
-        lKKUSyDRB3q60xqe/YFLvXKhH64tBp1/oGSUoMr9DQcrez6FP3JSQu2QDV1rkAtcB6UmabFeCk8QE
-        ZJrBf1B+K5YgY/nwG0vwS4Ij2OYdqGdn/JNYyn+u46O81UOsDxJsI6ZC8Ryq7xAgc/CQN9SlDI2hd
-        fYz1FXZrA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6dSG-000461-TZ; Wed, 20 Mar 2019 15:48:37 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BD5AA2847D055; Wed, 20 Mar 2019 16:48:33 +0100 (CET)
-Date:   Wed, 20 Mar 2019 16:48:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/8] perf/x86: Add msr probe interface
-Message-ID: <20190320154833.GH6058@hirez.programming.kicks-ass.net>
-References: <20190318182116.17388-1-jolsa@kernel.org>
- <20190318182116.17388-2-jolsa@kernel.org>
+        Wed, 20 Mar 2019 11:48:59 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:56804 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727366AbfCTPs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:48:59 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id D0CEF1FF4C;
+        Wed, 20 Mar 2019 16:48:56 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id AFF4A1FF45;
+        Wed, 20 Mar 2019 16:48:56 +0100 (CET)
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Evan Green <evgreen@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190301192017.39770-1-dianders@chromium.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <9d697122-50db-ea20-faf7-119214a96de1@free.fr>
+Date:   Wed, 20 Mar 2019 16:48:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318182116.17388-2-jolsa@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190301192017.39770-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Mar 20 16:48:57 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 07:21:09PM +0100, Jiri Olsa wrote:
-> Adding perf_msr_probe function to provide interface for
-> checking up on MSR register and add its related event
-> attributes if it passes the check.
-> 
-> User defines following struct for each MSR register:
-> 
->   struct perf_msr {
->        u64                       msr;
->        struct attribute        **attrs;
->        bool                    (*test)(int idx, void *data);
->        bool                      no_check;
->   };
-> 
-> Where:
->   msr      - is the MSR address
->   attrs    - is attributes array to add if the check passed
->   test     - is test function pointer
->   no_check - is bool that bypass the check and adds the
->               attribute without any test
-> 
-> The array of struct perf_msr is passed into:
-> 
->   perf_msr_probe(struct perf_msr *msr, int cnt,
->                 struct attribute **attrs, void *data)
-> 
-> Together with:
->   cnt   - which is the number of struct msr array elements
->   attrs - which is an array placeholder for added attributes
->           and needs to be big enough
->   data  -which is user pointer passed to the test function
-> 
-> The perf_msr_probe will executed test code, read the MSR and
-> check the value is != 0. If all these tests pass, related
-> attributes are added into attrs array.
-> 
-> Also adding MSR_ATTR macro helper to define attribute array
-> from single attribute. It will be used in following patches.
+On 01/03/2019 20:20, Douglas Anderson wrote:
 
-Somewhere along the line you lost the explanation of _why_ we're doing
-this; namely: virt sucks.
-
-Also, recently GregKH had a chance to look at perf code and we scored
-fairly high on the WTF'o'meter for what we're doing with the attribute
-stuff.
-
-He pointed me to sysfs attribute_group::is_visible functions to replace
-some of our 'creative' code.
-
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> If you're bisecting why your peripherals stopped working, it's
+> probably this CL.  Specifically if you see this in your dmesg:
+>   Unexpected global fault, this could be serious
+> ...then it's almost certainly this CL.
+> 
+> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
+> is insecure and effectively disables the protection they provide.
+> There are few reasons to allow unmatched stream bypass, and even fewer
+> good ones.
+> 
+> This patch starts the transition over to make it much harder to run
+> your system insecurely.  Expected steps:
+> 
+> 1. By default disable bypass (so anyone insecure will notice) but make
+>    it easy for someone to re-enable bypass with just a KConfig change.
+>    That's this patch.
+> 
+> 2. After people have had a little time to come to grips with the fact
+>    that they need to set their IOMMUs properly and have had time to
+>    dig into how to do this, the KConfig will be eliminated and bypass
+>    will simply be disabled.  Folks who are truly upset and still
+>    haven't fixed their system can either figure out how to add
+>    'arm-smmu.disable_bypass=n' to their command line or revert the
+>    patch in their own private kernel.  Of course these folks will be
+>    less secure.
+> 
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  arch/x86/events/Makefile |  2 +-
->  arch/x86/events/probe.c  | 36 ++++++++++++++++++++++++++++++++++++
->  arch/x86/events/probe.h  | 22 ++++++++++++++++++++++
->  3 files changed, 59 insertions(+), 1 deletion(-)
->  create mode 100644 arch/x86/events/probe.c
->  create mode 100644 arch/x86/events/probe.h
 > 
-> diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-> index b8ccdb5c9244..ec29a466444a 100644
-> --- a/arch/x86/events/Makefile
-> +++ b/arch/x86/events/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-y					+= core.o
-> +obj-y					+= core.o probe.o
->  obj-y					+= amd/
->  obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
->  obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
-> diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
-> new file mode 100644
-> index 000000000000..0052b730c55e
-> --- /dev/null
-> +++ b/arch/x86/events/probe.c
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/export.h>
-> +#include <linux/bits.h>
-> +#include "probe.h"
-> +
-> +unsigned long
-> +perf_msr_probe(struct perf_msr *msr, int cnt,
-> +	       struct attribute **attrs, void *data)
-> +{
-> +	unsigned long avail = 0;
-> +	unsigned int bit;
-> +	u64 val;
-> +
-> +	if (cnt >= BITS_PER_LONG)
-> +		return 0;
-> +
-> +	for (bit = 0; bit < cnt; bit++) {
-> +		struct attribute **a = msr[bit].attrs;
-> +
-> +		if (!msr[bit].no_check) {
-> +			if (msr[bit].test && !msr[bit].test(bit, data))
-> +				continue;
-> +			if (rdmsrl_safe(msr[bit].msr, &val) || !val)
-> +				continue;
-> +		}
-> +
-> +		while (*a)
-> +			*attrs++ = *a++;
-> +
-> +		avail |= bit;
-> +	}
-> +
-> +	*attrs = NULL;
-> +	return avail;
-> +}
-> +EXPORT_SYMBOL_GPL(perf_msr_probe);
-> diff --git a/arch/x86/events/probe.h b/arch/x86/events/probe.h
-> new file mode 100644
-> index 000000000000..42dd666533c3
-> --- /dev/null
-> +++ b/arch/x86/events/probe.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ARCH_X86_EVENTS_PROBE_H__
-> +#define __ARCH_X86_EVENTS_PROBE_H__
-> +#include <linux/sysfs.h>
-> +
-> +#define MSR_ATTR(__n)				\
-> +static struct attribute *msr_##__n[] = {	\
-> +	&__n.attr.attr,				\
-> +	NULL,					\
-> +}
-> +
-> +struct perf_msr {
-> +	u64			  msr;
-> +	struct attribute	**attrs;
-> +	bool			(*test)(int idx, void *data);
-> +	bool			  no_check;
-> +};
-> +
-> +unsigned long
-> +perf_msr_probe(struct perf_msr *msr, int cnt,
-> +	       struct attribute **attrs, void *data);
-> +#endif /* __ARCH_X86_EVENTS_PROBE_H__ */
-> -- 
-> 2.17.2
+> Changes in v2:
+> - Flipped default to 'yes' and changed comments a lot.
 > 
+>  drivers/iommu/Kconfig    | 25 +++++++++++++++++++++++++
+>  drivers/iommu/arm-smmu.c |  3 ++-
+>  2 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 1ca1fa107b21..a4210672804a 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -359,6 +359,31 @@ config ARM_SMMU
+>  	  Say Y here if your SoC includes an IOMMU device implementing
+>  	  the ARM SMMU architecture.
+>  
+> +config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
+> +	bool "Default to disabling bypass on ARM SMMU v1 and v2"
+> +	depends on ARM_SMMU
+> +	default y
+> +	help
+> +	  Say Y here to (by default) disable bypass streams such that
+> +	  incoming transactions from devices that are not attached to
+> +	  an iommu domain will report an abort back to the device and
+> +	  will not be allowed to pass through the SMMU.
+> +
+> +	  Any old kernels that existed before this KConfig was
+> +	  introduced would default to _allowing_ bypass (AKA the
+> +	  equivalent of NO for this config).  However the default for
+> +	  this option is YES because the old behavior is insecure.
+> +
+> +	  There are few reasons to allow unmatched stream bypass, and
+> +	  even fewer good ones.  If saying YES here breaks your board
+> +	  you should work on fixing your board.  This KConfig option
+> +	  is expected to be removed in the future and we'll simply
+> +	  hardcode the bypass disable in the code.
+> +
+> +	  NOTE: the kernel command line parameter
+> +	  'arm-smmu.disable_bypass' will continue to override this
+> +	  config.
+> +
+>  config ARM_SMMU_V3
+>  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+>  	depends on ARM64
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 045d93884164..930c07635956 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -110,7 +110,8 @@ static int force_stage;
+>  module_param(force_stage, int, S_IRUGO);
+>  MODULE_PARM_DESC(force_stage,
+>  	"Force SMMU mappings to be installed at a particular stage of translation. A value of '1' or '2' forces the corresponding stage. All other values are ignored (i.e. no stage is forced). Note that selecting a specific stage will disable support for nested translation.");
+> -static bool disable_bypass;
+> +static bool disable_bypass =
+> +	IS_ENABLED(CONFIG_ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT);
+>  module_param(disable_bypass, bool, S_IRUGO);
+>  MODULE_PARM_DESC(disable_bypass,
+>  	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+
+I'm hoping someone can clear my confusion:
+
+drivers/iommu/arm-smmu.c
+defines a boolean module_param: disable_bypass
+It is used to select the s2cr_init_val, and whether sCR0_USFCFG is set.
+
+drivers/iommu/iommu.c
+defines iommu_def_domain_type differently, based on CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+
+How do these two similar concepts interact? (bypass vs passthrough)
+
+Regards.
