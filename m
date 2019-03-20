@@ -2,141 +2,180 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7402CC10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29ACC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3406621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF4A21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Ty928puG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kxy8Dz6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfCTR2Q (ORCPT
+        id S1727159AbfCTR2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:28:16 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33974 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfCTR2P (ORCPT
+        Wed, 20 Mar 2019 13:28:20 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:36392 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfCTR2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:28:15 -0400
-Received: by mail-qk1-f193.google.com with SMTP id n6so14605170qkf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:28:14 -0700 (PDT)
+        Wed, 20 Mar 2019 13:28:19 -0400
+Received: by mail-it1-f194.google.com with SMTP id h9so72054itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:28:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tSWuSdEcPYnHEfL0STXoy4MtzUjvAM2sSMLxODD5rr4=;
-        b=Ty928puG0UE0fSO6SynDB4Fhl8Euko9ZNiFE5tZwWj6E351Z380XM6ZjlnTP/pvLHw
-         /6XrcBKqvWxbQZ8YAka/vwBF1gfAUxrUO2jr2bSO2IANkjd51hlZt6jPOMOB/Sbl+eP2
-         Xma+BCYo+vsrOzxK5jTSEE1HPtQ1VUquZJbMpu4ZJNEUlRVujl/aFWuYLOCf8rgx7lHG
-         g5qAVfljauvNsd6mhBgtTcXBwOSv9tAJXzmiDUGgX7PuA4jsXIrjtfJtrtZVCgc8SmEq
-         KE08m/Vo6MLvrXtunm7SExLxA+fRWRhs9YimaOfGbp6Zt4lAZBUFxBQqadT5aVHnNQMK
-         J9tw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Sy/loxk9uhnrLnMhnuT+3tkOvukk3oNzVzGpJ9cgV4=;
+        b=Kxy8Dz6stwyxwLbrKwLEkhDP7+JX1vBCSelQBj3IiTgMbYFq0ttLkr133eQHDAygkP
+         rRBWvyGcJujJHP/Ek+DWxb2176AlvrVqSC4ti/lui3i/ebPC+Hg5zCz4n9ZcqhemHugX
+         9T7MUyL57bFqrhTLfQ4oouOiMXMjjQRexb3c8V2K6GeCbcOj6pdOUApOyTneqt8CIx5j
+         wP4NBNGsR2HBILeZdh3z6tJNszVh5jVw177mEIZ0KrWth6vpeE1AugafULfkibR4jhxX
+         6bKEN5jgoFdEfSPOWNDsjIL9iTVwrVMyAi3QtDxMYkNHuMugtzxHWuBuMadeDeuer2GT
+         tBGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tSWuSdEcPYnHEfL0STXoy4MtzUjvAM2sSMLxODD5rr4=;
-        b=uUWJu74kzt/PJiZTAPBP0SIEdByJSijRD9ZBa8ExOZ5/70SgIr2yw9OzamCFTzeh54
-         NGARq3KMreIRNIoVv0k9yByQ9E7PdoQlOlLMUwg7NcgmqSRZmIT4N2FhXsHMpnXjmrWv
-         qGYFolw2hege2UCpGN5/68smVdil8gn2IQ0UOSYBNnFZqdkzTRW0BpZHZ0B6LEDDm+KW
-         VHo/JlUqQHAphy9e9RFDifiE/mte3i8g3yXoVWf0ZNi44KBbt/aJARTqe8uEktOjNsRb
-         RZpZ9pDmmgJvKGDvgFU89r+IsHFniKnhCM6OrKDbAd5b4lUlysNUPLpVSENKGdSCXuPX
-         xZtQ==
-X-Gm-Message-State: APjAAAXw2gp554o+q4dQnoAnk3exekOeIFVh+92+ASmgMmcOm5+Jn5St
-        4kfBj5MYe242/T0c1zKU+ogM0g==
-X-Google-Smtp-Source: APXvYqzheRklgsnMnTk39gR30DOhmUawStPG7DBb0YaR6Dg6rFjs7Gthgo8LLCFuzhjs7G5S/2dM3Q==
-X-Received: by 2002:a37:b386:: with SMTP id c128mr7311385qkf.330.1553102894068;
-        Wed, 20 Mar 2019 10:28:14 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f189sm1447324qkb.79.2019.03.20.10.28.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 10:28:13 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        mikhail.v.gavrilov@gmail.com, vbabka@suse.cz,
-        pasha.tatashin@soleen.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/compaction: abort search if isolation fails
-Date:   Wed, 20 Mar 2019 13:27:52 -0400
-Message-Id: <20190320172752.51406-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Sy/loxk9uhnrLnMhnuT+3tkOvukk3oNzVzGpJ9cgV4=;
+        b=KL4skoocrPYw7qJwFACyHEQeviLXXa8x93q62zmqZfC3kaVTOmtRiuTRw2RJs48RFx
+         7UytabJtkSkGxMoHQ8tjmyr8YMqMTyxGcoyuQ7tuih0qOn+3eyuzkwCYw+c+LDhEcQgv
+         omAXOtPSQhABfbreAV1oTVS5ev2UvvMUJuBHAM9y9JDBcFH9lFLfemmVMeRvDgwxXj21
+         C4QlUseUZ8FDm7oaFeNT0OEQNUQL+J48aIqvJ4SigLFRmOC+AkaFgUYxI0gAo2Mk5/S6
+         CM+mvh8m8KQJ8kslic+Yxe1KrzU34a2G985xBlDen+BiFQuNJSzSg+kPUJEtAcShPPst
+         YrcQ==
+X-Gm-Message-State: APjAAAVnqzifs/agmVxymOS4rdXiOYY//h80yLb0IRVGEK4EJ8kO3zzG
+        Pnr+vboGhB7wTc9RQ4+xt176YMiyhcj4t7sTmd+Ohg==
+X-Google-Smtp-Source: APXvYqwKiY9GzxGkF9bDw/N3iNl6361G48bq0qjXeJx75IRx5XjIFsj0np1Gt5z3KyIAvnzg68DQE9sFCeyQHsxMjrU=
+X-Received: by 2002:a24:5208:: with SMTP id d8mr5926514itb.137.1553102898386;
+ Wed, 20 Mar 2019 10:28:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com> <1553085490-42870-2-git-send-email-shiwanglai@hisilicon.com>
+In-Reply-To: <1553085490-42870-2-git-send-email-shiwanglai@hisilicon.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 20 Mar 2019 11:28:07 -0600
+Message-ID: <CANLsYkyooCaEjRtq0OnNkSKPhe6MPKVbL14Fao=pQ1j3Riw5Pg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: coresight: Support
+ non-configurable funnel
+To:     Wanglai Shi <shiwanglai@hisilicon.com>
+Cc:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        xuwei <xuwei5@hisilicon.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Suzhuangluan <suzhuangluan@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running LTP oom01 in a tight loop or memory stress testing put the
-system in a low-memory situation could triggers random memory
-corruption like page flag corruption below due to in
-fast_isolate_freepages(), if isolation fails, next_search_order() does
-not abort the search immediately could lead to improper accesses.
+Hi Wanglai,
 
-UBSAN: Undefined behaviour in ./include/linux/mm.h:1195:50
-index 7 is out of range for type 'zone [5]'
-Call Trace:
- dump_stack+0x62/0x9a
- ubsan_epilogue+0xd/0x7f
- __ubsan_handle_out_of_bounds+0x14d/0x192
- __isolate_free_page+0x52c/0x600
- compaction_alloc+0x886/0x25f0
- unmap_and_move+0x37/0x1e70
- migrate_pages+0x2ca/0xb20
- compact_zone+0x19cb/0x3620
- kcompactd_do_work+0x2df/0x680
- kcompactd+0x1d8/0x6c0
- kthread+0x32c/0x3f0
- ret_from_fork+0x35/0x40
-------------[ cut here ]------------
-kernel BUG at mm/page_alloc.c:3124!
-invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-RIP: 0010:__isolate_free_page+0x464/0x600
-RSP: 0000:ffff888b9e1af848 EFLAGS: 00010007
-RAX: 0000000030000000 RBX: ffff888c39fcf0f8 RCX: 0000000000000000
-RDX: 1ffff111873f9e25 RSI: 0000000000000004 RDI: ffffed1173c35ef6
-RBP: ffff888b9e1af898 R08: fffffbfff4fc2461 R09: fffffbfff4fc2460
-R10: fffffbfff4fc2460 R11: ffffffffa7e12303 R12: 0000000000000008
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000007
-FS:  0000000000000000(0000) GS:ffff888ba8e80000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc7abc00000 CR3: 0000000752416004 CR4: 00000000001606a0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- compaction_alloc+0x886/0x25f0
- unmap_and_move+0x37/0x1e70
- migrate_pages+0x2ca/0xb20
- compact_zone+0x19cb/0x3620
- kcompactd_do_work+0x2df/0x680
- kcompactd+0x1d8/0x6c0
- kthread+0x32c/0x3f0
- ret_from_fork+0x35/0x40
+On Wed, 20 Mar 2019 at 06:53, Wanglai Shi <shiwanglai@hisilicon.com> wrote:
+>
+> From: Leo Yan <leo.yan@linaro.org>
+>
+> Document DT binding for non-configurable funnel and give an example
+> for it.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Fixes: dbe2d4e4f12e ("mm, compaction: round-robin the order while searching the free lists for a target")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/compaction.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This patch needs to be sent on its own.
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 6aebf1eb8d98..41cec13c4c9c 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1245,6 +1245,10 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
- /* Search orders in round-robin fashion */
- static int next_search_order(struct compact_control *cc, int order)
- {
-+	/* If isolation fails, abort the search. */
-+	if (order == -1)
-+		return -1;
-+
- 	order--;
- 	if (order < 0)
- 		order = cc->order - 1;
--- 
-2.17.2 (Apple Git-113)
 
+> ---
+>  .../devicetree/bindings/arm/coresight.txt     | 45 +++++++++++++++++--
+>  1 file changed, 42 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index f8aff65ab921..e63ec3362af8 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
+>  sink. Each CoreSight component device should use these properties to describe
+>  its hardware characteristcs.
+>
+> -* Required properties for all components *except* non-configurable replicators:
+> +* Required properties for all components *except* non-configurable replicators
+> +  and non-configurable funnels:
+>
+>         * compatible: These have to be supplemented with "arm,primecell" as
+>           drivers are using the AMBA bus interface.  Possible values include:
+> @@ -24,7 +25,7 @@ its hardware characteristcs.
+>                   discovered at boot time when the device is probed.
+>                         "arm,coresight-tmc", "arm,primecell";
+>
+> -               - Trace Funnel:
+> +               - Trace Programmable Funnel:
+>                         "arm,coresight-funnel", "arm,primecell";
+>
+>                 - Embedded Trace Macrocell (version 3.x) and
+> @@ -65,11 +66,12 @@ its hardware characteristcs.
+>           "stm-stimulus-base", each corresponding to the areas defined in "reg".
+>
+>  * Required properties for devices that don't show up on the AMBA bus, such as
+> -  non-configurable replicators:
+> +  non-configurable replicators and non-configurable funnels:
+>
+>         * compatible: Currently supported value is (note the absence of the
+>           AMBA markee):
+>                 - "arm,coresight-replicator"
+> +               - "arm,coresight-funnel"
+>
+>         * port or ports: see "Graph bindings for Coresight" below.
+>
+> @@ -200,6 +202,43 @@ Example:
+>                 };
+>         };
+>
+> +       funnel {
+> +               /*
+> +                * non-configurable funnel don't show up on the AMBA
+> +                * bus.  As such no need to add "arm,primecell".
+> +                */
+> +               compatible = "arm,coresight-funnel";
+> +               clocks = <&crg_ctrl HI3660_PCLK>;
+> +               clock-names = "apb_pclk";
+> +
+> +               out-ports {
+> +                       port {
+> +                               combo_funnel_out: endpoint {
+> +                                       remote-endpoint = <&top_funnel_in>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               in-ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               combo_funnel_in0: endpoint {
+> +                                       remote-endpoint = <&cluster0_etf_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               combo_funnel_in1: endpoint {
+> +                                       remote-endpoint = <&cluster1_etf_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         funnel@20040000 {
+>                 compatible = "arm,coresight-funnel", "arm,primecell";
+>                 reg = <0 0x20040000 0 0x1000>;
+> --
+> 2.17.1
+>
