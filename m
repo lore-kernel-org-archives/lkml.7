@@ -2,109 +2,78 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F522C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0617C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEEC2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3802184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ndwItXzc";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XGEixebS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YICuk7Zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfCTNMx (ORCPT
+        id S1727713AbfCTNOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:12:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39082 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfCTNMx (ORCPT
+        Wed, 20 Mar 2019 09:14:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50662 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfCTNOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:12:53 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 551696077A; Wed, 20 Mar 2019 13:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553087572;
-        bh=8cQFGJzruBoiOgswrjb5Wx0cq9dJamop5K9KAFud7Ss=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ndwItXzcFREELCeXi196ZnMyPHha6a0/TfHCtcFs2k44NJNUmUZij8T6f1o/1dgtj
-         WNQCg31O/EQxw8oTlJhl1erSdP5TwjxosOymyxtspCXYJR+hOGXEkPOJVqzw2cDHcL
-         UgKyHGBXjlC3/9SIVdQjY5HY4CB3kjiqqa5MbFDo=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 966B6602FC;
-        Wed, 20 Mar 2019 13:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553087571;
-        bh=8cQFGJzruBoiOgswrjb5Wx0cq9dJamop5K9KAFud7Ss=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XGEixebSdfkGiGCEC6R7QMIAWWWqsYy33KQEIvDH+OmHgPnC6FRbwwILmgn/txFWt
-         h6Sl5qUnjtQ4Xf6lRvvN3vrUJN463iHf2mXIXWy44V+AdOWmTtixBvgByIBO/oGvWG
-         QAKR+DbcRAK3gPBPIknQvD8Ln7AZPSII+j9WYrcY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 966B6602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] staging: rtlwifi: Fix potential NULL pointer dereference
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20190313161336.20182-1-pakki001@umn.edu>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <4c393bbd-9d93-6f6e-fc82-133304cfdf69@codeaurora.org>
-Date:   Wed, 20 Mar 2019 18:42:45 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 09:14:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0Y9UJzgLCZfKamuHvPKJ/dcF8diQvlm9dYrIZuFqaMQ=; b=YICuk7Zveju1OZnRt7qLn+i2u
+        JtrQ6jW7YsvAlfpy+hMD8iwn+t+GLrF/xhAd/7KsAIdTLygNS59njk4489XmSIITPfej9uloqShkY
+        gw4C0mrjMFwxlwkGQVu6dOXuxxVldx9+HIuSMQ52dj+eK5buCSLJnSgo6DiSzN62T29tBQ1jsS0VE
+        2Nv0XlwUYuEPWWuGYMS7MyrQ4ddLq1rK8xr7jDMckbiIklZeYhf7m55A74QXoR13rBUJllUO3vdar
+        vtx28CNHlB00aeim3GRwTR6Rx/RI6O6n42emrZOp9FXRHDP0eyKECt4D1rq/jt8dFqSgTx4T8hiMR
+        xhBqfJqnA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6b3C-0002su-8s; Wed, 20 Mar 2019 13:14:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 094312391A9C7; Wed, 20 Mar 2019 14:14:33 +0100 (CET)
+Date:   Wed, 20 Mar 2019 14:14:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Subject: Re: [RFC][PATCH 4/8] perf/x86: Remove PERF_X86_EVENT_COMMITTED
+Message-ID: <20190320131432.GK6521@hirez.programming.kicks-ass.net>
+References: <20190314130113.919278615@infradead.org>
+ <20190314130705.750219024@infradead.org>
+ <CABPqkBQr4VbNQG9R9j8Di=6fSziUw1s_QLyE9L7nsMTdWd8GtQ@mail.gmail.com>
+ <20190319210018.GP5996@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190313161336.20182-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319210018.GP5996@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 19, 2019 at 10:00:18PM +0100, Peter Zijlstra wrote:
+> On Tue, Mar 19, 2019 at 01:48:18PM -0700, Stephane Eranian wrote:
+> > On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > For x86_pmu_commit_txn(), cpuc->n_events is updated, but we can
+> > > trivially compute the desired value with cpuc->n_txn -- the number of
+> > > events added in this transaction.
+> > >
+> > I suggest you put this explanation in the code so that it is easier to
+> > understand.
+> 
+> Right, I actually attempted writing that comment a few times but every
+> time it became a mess. I'll try again, because you're quite right, this
+> is a bit magical.
 
-On 3/13/2019 9:43 PM, Aditya Pakki wrote:
-> phydm.internal is allocated using kzalloc which is used multiple
-> times without a check for NULL pointer. This patch avoids such a
-> scenario.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->   drivers/staging/rtlwifi/phydm/rtl_phydm.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> index 9930ed954abb..37c7fcb72b65 100644
-> --- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> +++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-> @@ -181,6 +181,9 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
->   	rtlpriv->phydm.internal =
->   		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
->   
-> +	if (!rtlpriv->phydm.internal)
-> +		return -ENOMEM;
-> +
-
-
-
-Although, it is good to add a check but nobody is checking this 
-functions returned value.
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Can you fix that cleanly ? Otherwise i will do.
-
-Cheers,
-Mukesh
-
-
->   	_rtl_phydm_init_com_info(rtlpriv, ic, params);
->   
->   	odm_init_all_timers(dm);
+Ha! I found the comment, it's in patch 8 :-)
