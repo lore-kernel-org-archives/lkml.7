@@ -2,282 +2,81 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BB6C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516EFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAD62184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D7C2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDd2dfHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfCTNju (ORCPT
+        id S1728098AbfCTNkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:39:50 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44240 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfCTNju (ORCPT
+        Wed, 20 Mar 2019 09:40:06 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:44398 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfCTNkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:39:50 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7C1CA281753;
-        Wed, 20 Mar 2019 13:39:47 +0000 (GMT)
-Date:   Wed, 20 Mar 2019 14:39:44 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [RFC PATCH 06/20] lib: Add video format information library
-Message-ID: <20190320143944.10454b3b@collabora.com>
-In-Reply-To: <a2ecd9e599e0b536c2a005e5feb140463566788e.1553032382.git-series.maxime.ripard@bootlin.com>
-References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
-        <a2ecd9e599e0b536c2a005e5feb140463566788e.1553032382.git-series.maxime.ripard@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Mar 2019 09:40:06 -0400
+Received: by mail-pf1-f169.google.com with SMTP id a3so1939279pff.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 06:40:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=10bfi8c9aasvRCzXb6fZaP3wXcQwybcEs2fMQNWvwkY=;
+        b=pDd2dfHBnJqg5Smba+IKApiNySdvZa9EtoVYUdWF4pXD0EESHUDX8DRdrCP1ei+08d
+         JqfAQrGiGrH47uWS2QrGSX+RHuCm6AyE0Xze4DXnGcFroCOTbgDTK0YGj9F6uPZrvm0+
+         WR1+Bf5cYYtZSKX11bKLzJmiudElO3VYRRJjTshXSgt59Ls/0nMDEpWJH2KMEu09CU5a
+         ekHTWj/m+BkHlOY4ltXRxq/ZeaO3La7mkRy6lJIzk5qeDMyGxu20rw66cdIHKx8d5IiN
+         MTIKhG+6zIPxhnFtsM0TB8p39vJ0rCGI50yulpFLmiLEVfu5KrKBBst78VyO0enOksAC
+         6W8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=10bfi8c9aasvRCzXb6fZaP3wXcQwybcEs2fMQNWvwkY=;
+        b=hK7KrNjRvxDZ0B8zsBE0rvKpmZ3T7fO3W44uj8bB7LQaVaegKKJfDHNNg8ipnhnJH8
+         mLHfB1qpR6sYnQhk9TKrStfh2rTFYR7rZ9q4LULHm/I3HWX9eeij9y+htdxNcbFa3ZFD
+         ag5v0j/Gs2zK99LulV5jXlHAMhTdL6o56wj5xMXD3VXjV7Q3lC8Os8rAfNYGwRMz25cj
+         8xJoy+sCSvqnXkSZ+ctrj8ElJar/FYf6OJI/KOSKEBhbq6nopKs9pSJnuCzShyJWKQyy
+         G5AwOnjfJRAgjlTPgnMn08gBz74CXazXbcatLZ8YiDbEtnuPUqUGDfGAB/g2+zwuo5O4
+         sY5g==
+X-Gm-Message-State: APjAAAVPO+39IcvJmX7kQ8qKKtueP6mMeStXF1G//mEaxOBwPHIYwUvQ
+        Yiq4Bk9MSdtOc98a8zXTDlo8eKS5dPA=
+X-Google-Smtp-Source: APXvYqx8bfS6DvNDYRqicnNzErTC24QJb6A9EwJkDKnEEKEB8WOU9Wp4yRe8TQo7T8NDBIxG3qyfZg==
+X-Received: by 2002:a65:448b:: with SMTP id l11mr7851720pgq.450.1553089205068;
+        Wed, 20 Mar 2019 06:40:05 -0700 (PDT)
+Received: from localhost ([114.143.122.221])
+        by smtp.gmail.com with ESMTPSA id x62sm3681224pfx.117.2019.03.20.06.40.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 06:40:04 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCHv1 0/2] qcom: pms405: adc fixes
+Date:   Wed, 20 Mar 2019 19:09:56 +0530
+Message-Id: <cover.1553088982.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 22:57:11 +0100
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+A couple of fixes to the adc node in PMS405 to get thermistors to work
+correctly.
 
-> Move the DRM formats API to turn this into a more generic image formats API
-> to be able to leverage it into some other places of the kernel, such as
-> v4l2 drivers.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  include/linux/image-formats.h | 240 +++++++++++-
->  lib/Kconfig                   |   7 +-
->  lib/Makefile                  |   3 +-
->  lib/image-formats-selftests.c | 326 +++++++++++++++-
->  lib/image-formats.c           | 760 +++++++++++++++++++++++++++++++++++-
->  5 files changed, 1336 insertions(+)
->  create mode 100644 include/linux/image-formats.h
->  create mode 100644 lib/image-formats-selftests.c
->  create mode 100644 lib/image-formats.c
-> 
+Amit Kucheria (2):
+  arm64: dts: qcom: pms405: calibrate the VADC correctly
+  arm64: dts: qcom: pms405: Rename adc outputs as per schematics
 
-[...]
+ arch/arm64/boot/dts/qcom/pms405.dtsi | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-> --- /dev/null
-> +++ b/lib/image-formats.c
-> @@ -0,0 +1,760 @@
-> +#include <linux/bug.h>
-> +#include <linux/image-formats.h>
-> +#include <linux/kernel.h>
-> +#include <linux/math64.h>
-> +
-> +#include <uapi/drm/drm_fourcc.h>
-> +
-> +static const struct image_format_info formats[] = {
-> +	{
-
-...
-
-> +	},
-> +};
-> +
-> +#define __image_format_lookup(_field, _fmt)			\
-> +	({							\
-> +		const struct image_format_info *format = NULL;	\
-> +		unsigned i;					\
-> +								\
-> +		for (i = 0; i < ARRAY_SIZE(formats); i++)	\
-> +			if (formats[i]._field == _fmt)		\
-> +				format = &formats[i];		\
-> +								\
-> +		format;						\
-> +	})
-> +
-> +/**
-> + * __image_format_drm_lookup - query information for a given format
-> + * @drm: DRM fourcc pixel format (DRM_FORMAT_*)
-> + *
-> + * The caller should only pass a supported pixel format to this function.
-> + *
-> + * Returns:
-> + * The instance of struct image_format_info that describes the pixel format, or
-> + * NULL if the format is unsupported.
-> + */
-> +const struct image_format_info *__image_format_drm_lookup(u32 drm)
-> +{
-> +	return __image_format_lookup(drm_fmt, drm);
-> +}
-> +EXPORT_SYMBOL(__image_format_drm_lookup);
-> +
-> +/**
-> + * image_format_drm_lookup - query information for a given format
-> + * @drm: DRM fourcc pixel format (DRM_FORMAT_*)
-> + *
-> + * The caller should only pass a supported pixel format to this function.
-> + * Unsupported pixel formats will generate a warning in the kernel log.
-> + *
-> + * Returns:
-> + * The instance of struct image_format_info that describes the pixel format, or
-> + * NULL if the format is unsupported.
-> + */
-> +const struct image_format_info *image_format_drm_lookup(u32 drm)
-> +{
-> +	const struct image_format_info *format;
-> +
-> +	format = __image_format_drm_lookup(drm);
-> +
-> +	WARN_ON(!format);
-> +	return format;
-> +}
-> +EXPORT_SYMBOL(image_format_drm_lookup);
-
-I think this function and the DRM formats table should be moved in
-drivers/gpu/drm/drm_image_format.c since they are DRM specific. The
-remaining functions can IMHO be placed in include/linux/image-formats.h
-as static inline funcs. This way you can get rid of lib/image-formats.c
-and the associated Kconfig entry.
-
-> +
-> +/**
-> + * image_format_plane_cpp - determine the bytes per pixel value
-> + * @format: pointer to the image_format
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The bytes per pixel value for the specified plane.
-> + */
-> +unsigned int image_format_plane_cpp(const struct image_format_info *format,
-> +				    int plane)
-> +{
-> +	if (!format || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	return format->cpp[plane];
-> +}
-> +EXPORT_SYMBOL(image_format_plane_cpp);
-> +
-> +/**
-> + * image_format_plane_width - width of the plane given the first plane
-> + * @format: pointer to the image_format
-> + * @width: width of the first plane
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The width of @plane, given that the width of the first plane is @width.
-> + */
-> +unsigned int image_format_plane_width(int width,
-> +				      const struct image_format_info *format,
-> +				      int plane)
-> +{
-> +	if (!format || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	if (plane == 0)
-> +		return width;
-> +
-> +	return width / format->hsub;
-> +}
-> +EXPORT_SYMBOL(image_format_plane_width);
-> +
-> +/**
-> + * image_format_plane_height - height of the plane given the first plane
-> + * @format: pointer to the image_format
-> + * @height: height of the first plane
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The height of @plane, given that the height of the first plane is @height.
-> + */
-> +unsigned int image_format_plane_height(int height,
-> +				       const struct image_format_info *format,
-> +				       int plane)
-> +{
-> +	if (!format || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	if (plane == 0)
-> +		return height;
-> +
-> +	return height / format->vsub;
-> +}
-> +EXPORT_SYMBOL(image_format_plane_height);
-> +
-> +/**
-> + * image_format_block_width - width in pixels of block.
-> + * @format: pointer to the image_format
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The width in pixels of a block, depending on the plane index.
-> + */
-> +unsigned int image_format_block_width(const struct image_format_info *format,
-> +				      int plane)
-> +{
-> +	if (!format || plane < 0 || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	if (!format->block_w[plane])
-> +		return 1;
-> +
-> +	return format->block_w[plane];
-> +}
-> +EXPORT_SYMBOL(image_format_block_width);
-> +
-> +/**
-> + * image_format_block_height - height in pixels of a block
-> + * @info: pointer to the image_format
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The height in pixels of a block, depending on the plane index.
-> + */
-> +unsigned int image_format_block_height(const struct image_format_info *format,
-> +				       int plane)
-> +{
-> +	if (!format || plane < 0 || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	if (!format->block_h[plane])
-> +		return 1;
-> +
-> +	return format->block_h[plane];
-> +}
-> +EXPORT_SYMBOL(image_format_block_height);
-> +
-> +/**
-> + * image_format_min_pitch - computes the minimum required pitch in bytes
-> + * @info: pixel format info
-> + * @plane: plane index
-> + * @buffer_width: buffer width in pixels
-> + *
-> + * Returns:
-> + * The minimum required pitch in bytes for a buffer by taking into consideration
-> + * the pixel format information and the buffer width.
-> + */
-> +uint64_t image_format_min_pitch(const struct image_format_info *info,
-> +				int plane, unsigned int buffer_width)
-> +{
-> +	if (!info || plane < 0 || plane >= info->num_planes)
-> +		return 0;
-> +
-> +	return DIV_ROUND_UP_ULL((u64)buffer_width * info->char_per_block[plane],
-> +			    image_format_block_width(info, plane) *
-> +			    image_format_block_height(info, plane));
-> +}
-> +EXPORT_SYMBOL(image_format_min_pitch);
+-- 
+2.17.1
 
