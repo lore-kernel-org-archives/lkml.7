@@ -2,115 +2,114 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5A3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA399C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FE52184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8982C2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="J3+DENYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfCTPZV (ORCPT
+        id S1727192AbfCTP1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:25:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43810 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbfCTPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:25:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0A8C0AAC4;
-        Wed, 20 Mar 2019 15:25:20 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 16:25:16 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
-Subject: Re: ratelimit API: was: [RFC PATCH] printk: Introduce "store now but
- print later" prefix.
-Message-ID: <20190320152516.3gbmaj5xoyxkivyt@pathway.suse.cz>
-References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
- <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
- <201903050123.x251N312025685@www262.sakura.ne.jp>
- <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
- <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Wed, 20 Mar 2019 11:27:18 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:37344 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfCTP1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:27:17 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 44B883F5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:27:16 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CW_LLI9y23XJ for <linux-kernel@vger.kernel.org>;
+        Wed, 20 Mar 2019 10:27:15 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id E3FE7BE7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:27:15 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id s3so2491860itl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=gRegdW0Vp32TTwcRwpYr4FmCrFCirUJNOAYEJ5vzjtw=;
+        b=J3+DENYuvYqwCOu+pPdJN+D2rPCmz2ActBpNZtlQS0s1N3ufbgHzTJa+pF/kc2mb89
+         0gCJMAW5LPC3I+KBSHvHSJGBFwCFwX+iptQ7650iMKljz8C1w5BwNuqdXwElp2LwLtZc
+         zQh+5ANjwtAU3fFw1wtmuPtxuJY6AdHLKIbLdL0EFvH5v4FpMRvIv5tcroZkHZUJR0LY
+         Fxpbh7UJy+hGNHeq+QdXzXx5fXljJYnVTv6STeZQ+oQYXO+p2bzTZpY9/bI3Zaz2hCXa
+         99Pcdz7gOYMFCg7H8lpzfcFTV/49bpdcX7RtgBBCzXfHVy9KOy+Dj2pDfzn4sVDOqtGf
+         aB/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gRegdW0Vp32TTwcRwpYr4FmCrFCirUJNOAYEJ5vzjtw=;
+        b=OPI6qbWT9rZDkvyPqD836vK2K0PvyTOfxQ8W3/wjAFD71yLr87XgH7UV/d5mEuGtj+
+         RGLfG/j1XZlTXRn1NMcS3fXh9FLjh/0zwKaulQnpz6cKHuYSwTlhO8b6B24pjokD2pMs
+         tfRC3XobhRwQxM8KilS3sQXBX2u/tRm7citzuiS4Ezy7RBmCEg6CoJds1l+4kkzXwqyf
+         i6F7nEGClJEvxMhqvofoHsqhfrMORtoaaUx8zwmfk3go+xd+jLIUEaoW8ukvsfnz9ECs
+         AUULoS4J6Jigr17ZUBTSqX6+KxCTGxOvwDshmq/I05W3ni7U3uwxiFUYI57LwMNElNgm
+         BZDg==
+X-Gm-Message-State: APjAAAXIOz4CH1wo8piJpoknuZgDc9RCX3Bywjrj4QdAjsHpe7Fnxv3L
+        xaB7L9Gvgd9gjGg7L68eUOkaaGuYbPXJO7V9uGn7BWoQGwRXIMM91PUyswsGrZ30o1G/SWMi/AO
+        ZnkvNEYIo3vyYUQ7cmLjP/sW3tEtf
+X-Received: by 2002:a02:b510:: with SMTP id l16mr5491649jaj.13.1553095635464;
+        Wed, 20 Mar 2019 08:27:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyBV7QdKKUjEZ1/gxxhpw0SlCp9GmDwccNurPAzXuaqQ17sJ/z1lFlUDEvyrThV2c7t9oCfTw==
+X-Received: by 2002:a02:b510:: with SMTP id l16mr5491615jaj.13.1553095635019;
+        Wed, 20 Mar 2019 08:27:15 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id l62sm1195945ita.12.2019.03.20.08.27.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 08:27:14 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Richard Leitner <richard.leitner@skidata.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] usb: usb251xb: fix to avoid potential NULL pointer dereference
+Date:   Wed, 20 Mar 2019 10:27:11 -0500
+Message-Id: <20190320152711.28749-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-03-07 03:24:25, Tetsuo Handa wrote:
-> On 2019/03/06 19:04, Petr Mladek wrote:
-> > I did not mean serializing. I meant to avoid printing the warnings
-> > at all until OOM killer finishes its job.
-> 
-> But your ratelimit_reset() below requires serializing.
-> 
-> > 
-> > 
-> >> Also, both nopage_rs in warn_alloc() and oom_rs in oom_kill_process() are not
-> >> working well. This is because ___ratelimit() function assumes that operations
-> >> to be ratelimited complete fast enough to be able to repeat many times within
-> >> a second. If one operation to be ratelimited takes many seconds (or even
-> >> minutes), ___ratelimit() becomes always true and can not ratelimit at all.
-> > 
-> > The current ratelimiting is time driven. We might need an event
-> > driven variant. It might even be done with the current
-> > implementation if we add something like:
-> > 
-> > void ratelimit_reset(struct ratelimit_state *rs)
-> > {
-> > 	unsigned long flags;
-> > 
-> > 	raw_spin_irqsave(&rs->lock, flags);
-> > 
-> > 	rs->begin   = jiffies;
-> > 	rs->printed = 0;
-> > 
-> > 	raw_spin_unlock_irqrestore(&rs->lock, flags);
-> > }
-> > 
-> > We could call this when some event "solved" the problem.
-> 
-> This requires serialization among threads using "rs". I already
-> proposed ratelimit_reset() for memcg's OOM problem at
-> https://lkml.kernel.org/r/201810180246.w9I2koi3011358@www262.sakura.ne.jp
-> but it was not accepted.
+of_match_device in usb251xb_probe can fail and returns a NULL pointer.
+The patch avoids a potential NULL pointer dereference in this scenario.
 
-IMHO, the main problem was that the patch tried to work around
-the ratelimit API weakness by a custom code.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
 
-I believe that using an improved/extended ratelimit API with
-a sane semantic would be more acceptable.
+---
+v2: Fix version changes below sign off
+v1: avoid return in case of error, per Richard's suggestion.
+---
+ drivers/usb/misc/usb251xb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 4d72b7d1d383..bbfdb7447d6f 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -612,7 +612,7 @@ static int usb251xb_probe(struct usb251xb *hub)
+ 							   dev);
+ 	int err;
+ 
+-	if (np) {
++	if (np && of_id) {
+ 		err = usb251xb_get_ofdata(hub,
+ 					  (struct usb251xb_data *)of_id->data);
+ 		if (err) {
+-- 
+2.17.1
 
-> > It means that it makes sense to enable the related
-> > ratelimited messages again because they would describe
-> > another problem.
-> 
-> ___ratelimit() could also check number of not-yet-flushed
-> printk() records (e.g. log_next_seq - console_seq <= $some_threshold).
-
-The number is almost useless without more information, for example,
-how fast the consoles are, how many lines will get filtered
-by a console_loglevel, if the console_sem owner is sleeping,
-how many messages are being added by other CPUs.
-
-I believe that we do not really need it. The ratelimit_reset()
-user should know when the messages can get skipped because
-they describe the same situation again and again.
-
-Best Regards,
-Petr
