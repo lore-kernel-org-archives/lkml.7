@@ -2,149 +2,81 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A0BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CA2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F301A2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fpAlI1DZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1CF152184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfCTNmj (ORCPT
+        id S1728081AbfCTNnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:42:39 -0400
-Received: from mail-eopbgr810055.outbound.protection.outlook.com ([40.107.81.55]:21321
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        Wed, 20 Mar 2019 09:43:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59442 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727141AbfCTNmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:42:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=No7F+TFr4t3WGkzlfoLIbeS5GYNXc4YPUYMq2DktRnc=;
- b=fpAlI1DZb1cG51NFhaMzZ7jmECurQJwUdcf9mHkYvzPgUTTofaYPOdlnYQKrGsGuHpVtbl32KUKbXfq4QsBBSAbX+1TdPvJtBMjqJIGgMEpzyjCD13aAZvlyEHxh+Fb2mcj9YfwFH1kmwo5Gw6/tBQZqTqWaOi/CNKgAXmOg6gU=
-Received: from SN4PR0201CA0013.namprd02.prod.outlook.com
- (2603:10b6:803:2b::23) by BLUPR02MB1652.namprd02.prod.outlook.com
- (2a01:111:e400:525f::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1730.15; Wed, 20 Mar
- 2019 13:42:36 +0000
-Received: from BL2NAM02FT034.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by SN4PR0201CA0013.outlook.office365.com
- (2603:10b6:803:2b::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
- Transport; Wed, 20 Mar 2019 13:42:35 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT034.mail.protection.outlook.com (10.152.77.161) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
- via Frontend Transport; Wed, 20 Mar 2019 13:42:35 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1h6bUI-0000VU-Ty; Wed, 20 Mar 2019 06:42:34 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1h6bUD-0008V6-QC; Wed, 20 Mar 2019 06:42:29 -0700
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2KDgS54012466;
-        Wed, 20 Mar 2019 06:42:28 -0700
-Received: from [172.23.37.92] (helo=xhdharinik40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1h6bUB-0008UV-OK; Wed, 20 Mar 2019 06:42:28 -0700
-From:   Harini Katakam <harini.katakam@xilinx.com>
-To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <michal.simek@xilinx.com>, <harinikatakamlinux@gmail.com>,
-        <harini.katakam@xilinx.com>
-Subject: [PATCH] net: macb: Add null check for PCLK and HCLK
-Date:   Wed, 20 Mar 2019 19:12:22 +0530
-Message-ID: <1553089342-2789-1-git-send-email-harini.katakam@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(39850400004)(376002)(346002)(2980300002)(199004)(189003)(4326008)(478600001)(336012)(426003)(36386004)(81156014)(81166006)(2906002)(8676002)(486006)(50466002)(2616005)(476003)(126002)(44832011)(36756003)(48376002)(186003)(77096007)(26005)(9786002)(316002)(8936002)(50226002)(51416003)(107886003)(63266004)(16586007)(7696005)(106002)(110136005)(54906003)(106466001)(305945005)(5660300002)(47776003)(356004)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR02MB1652;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        id S1725905AbfCTNnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 09:43:09 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CDAD0460D765BBBC3C65;
+        Wed, 20 Mar 2019 21:43:06 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Wed, 20 Mar 2019
+ 21:42:58 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] watchdog: sb_wdog: Make sbwdog_set and sbwdog_pet static
+Date:   Wed, 20 Mar 2019 21:42:50 +0800
+Message-ID: <20190320134250.13348-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 943f78d6-edea-484c-bbf1-08d6ad39e939
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BLUPR02MB1652;
-X-MS-TrafficTypeDiagnostic: BLUPR02MB1652:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BLUPR02MB165262DD515081742F03D156C9410@BLUPR02MB1652.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 098291215C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: KBnRFgQRLILjRP1SI2sJCk+fYvOc4pyTGOtpqWH+7tXvVjZC9KvKQbvzP+Ii0C6aF5aa28rv1QoEWcBTHzAV9rN6IRhmKRrE6Q1rWXvduZ2O0Taam153YvvCl0cpRy+UY34tbfBtQVKhmuHM+nrcdOo1i0x4xu9XvjOSdOfmF4mgW7RZ4S/VeEzVFZKGxAbaqEXCUk8dHOAQ6X6ustEnAsqRIpLjA/6w1slyaF9c9t8tqrfw+XDx24r/BxggPoMYUULvZq9F5zbqAyKIdvI6JYxWv4RSpL3OsObkGn+0K+9mTAksEk/I3Ly1EfDnZqn5T5GXVXsNjB9eERJpVJXwSiGI9JxFSMqiMAdSj2Mn4ivaqOlcadseobm4aisVJej1+oeE1us9u1sx6aFAEBuuxUBAYlbrRh6scUn3QvZAyuY=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2019 13:42:35.5378
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 943f78d6-edea-484c-bbf1-08d6ad39e939
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR02MB1652
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both PCLK and HCLK are "required" clocks according to macb devicetree
-documentation. There is a chance that devm_clk_get doesn't return a
-negative error but just a NULL clock structure instead. In such a case
-the driver proceeds as usual and uses pclk value 0 to calculate MDC
-divisor which is incorrect. Hence fix the same in clock initialization.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Fix sparse warning:
+
+drivers/watchdog/sb_wdog.c:70:6: warning: symbol 'sbwdog_set' was not declared. Should it be static?
+drivers/watchdog/sb_wdog.c:84:6: warning: symbol 'sbwdog_pet' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Changes from RFC:
-Use IS_ERR_OR_NULL
-Add error for NULL condition
+ drivers/watchdog/sb_wdog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 98c2352..a44171f 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3370,14 +3370,20 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
- 		*hclk = devm_clk_get(&pdev->dev, "hclk");
- 	}
- 
--	if (IS_ERR(*pclk)) {
-+	if (IS_ERR_OR_NULL(*pclk)) {
- 		err = PTR_ERR(*pclk);
-+		if (!err)
-+			err = -ENODEV;
-+
- 		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
- 		return err;
- 	}
- 
--	if (IS_ERR(*hclk)) {
-+	if (IS_ERR_OR_NULL(*hclk)) {
- 		err = PTR_ERR(*hclk);
-+		if (!err)
-+			err = -ENODEV;
-+
- 		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
- 		return err;
- 	}
+diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
+index 3abae50..8264fced 100644
+--- a/drivers/watchdog/sb_wdog.c
++++ b/drivers/watchdog/sb_wdog.c
+@@ -67,7 +67,7 @@ static DEFINE_SPINLOCK(sbwd_lock);
+  *
+  * wdog is the iomem address of the cfg register
+  */
+-void sbwdog_set(char __iomem *wdog, unsigned long t)
++static void sbwdog_set(char __iomem *wdog, unsigned long t)
+ {
+ 	spin_lock(&sbwd_lock);
+ 	__raw_writeb(0, wdog);
+@@ -81,7 +81,7 @@ void sbwdog_set(char __iomem *wdog, unsigned long t)
+  *
+  * wdog is the iomem address of the cfg register
+  */
+-void sbwdog_pet(char __iomem *wdog)
++static void sbwdog_pet(char __iomem *wdog)
+ {
+ 	spin_lock(&sbwd_lock);
+ 	__raw_writeb(__raw_readb(wdog) | 1, wdog);
 -- 
-2.7.4
+2.7.0
+
 
