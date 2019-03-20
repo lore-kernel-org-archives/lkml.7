@@ -2,132 +2,126 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBFDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5AEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5D821873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D278C2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="g0zbp/IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfCTUV5 (ORCPT
+        id S1727534AbfCTUWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:21:57 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.250]:47887 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbfCTUV4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:21:56 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 6265B13EF9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:21:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6hilhDwY72qH76hilhexjk; Wed, 20 Mar 2019 15:21:55 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=34556 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6hij-003rqT-Rx; Wed, 20 Mar 2019 15:21:54 -0500
-Subject: Re: [PATCH] parport: ieee1284: mark expected switch fall-through
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20190212174318.GA22735@embeddedor>
- <4d221d8f-f4d0-90f7-dccf-3af67d4b0c53@embeddedor.com>
- <7b9bcd42-47fa-05cd-2e92-0124109f9aa2@embeddedor.com>
- <20190320201235.GA11793@kroah.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <32608962-7998-1628-222e-472f3ed60ef2@embeddedor.com>
-Date:   Wed, 20 Mar 2019 15:21:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 16:22:01 -0400
+Received: from node.akkea.ca ([192.155.83.177]:39200 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfCTUWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 16:22:00 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id CB9AC4E204B; Wed, 20 Mar 2019 20:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553113318; bh=28gJDAeYHl4IhB3qxEV8or3e+uBqMpDNryGUZGJTh0U=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=g0zbp/INYUXZ7KaF44V2ZyGF2VafHp3GOqV9DXOjNHC7ycuPdZoJGSOscxZ1KoFBG
+         9BhT0+lM6f+6R4ZSABVBpQW7591xvwuoy3JpcjhbiJUmTHeZPkU03eRy+XEjQIC7vC
+         4PBNngxWz00dCkzJMbG0BP/p+7sQR9jIWlOUBodg=
+To:     Tomas Novotny <tomas@novotny.cz>
+Subject: Re: [PATCH v2 1/5] iio: light: vcnl4000 use word writes instead of  byte writes
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-In-Reply-To: <20190320201235.GA11793@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6hij-003rqT-Rx
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34556
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 50
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Date:   Wed, 20 Mar 2019 13:21:58 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190320155322.3fd9f080@tomas.local.tbs-biometrics.cz>
+References: <20190317154802.15174-1-angus@akkea.ca>
+ <20190317154802.15174-2-angus@akkea.ca>
+ <20190320155322.3fd9f080@tomas.local.tbs-biometrics.cz>
+Message-ID: <16a2d3e86f296fac2f56fb47e1f1afac@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tomas,
 
-
-On 3/20/19 3:12 PM, Greg KH wrote:
-> On Wed, Mar 20, 2019 at 03:06:04PM -0500, Gustavo A. R. Silva wrote:
->> Greg,
->>
->> Can you take this, please?
+On 2019-03-20 07:53, Tomas Novotny wrote:
+> Hi Angus,
 > 
-> Will do, give me a week or so to catch up...
+> On Sun, 17 Mar 2019 08:47:58 -0700
+> "Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+> 
+>> The VCNL4200 datasheet says that word read and writes should be used
+>> to access the registers.
+>> 
+>> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>> ---
+>>  drivers/iio/light/vcnl4000.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/iio/light/vcnl4000.c 
+>> b/drivers/iio/light/vcnl4000.c
+>> index 04fd0d4b6f19..5295330b65e2 100644
+>> --- a/drivers/iio/light/vcnl4000.c
+>> +++ b/drivers/iio/light/vcnl4000.c
+>> @@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data 
+>> *data)
+>>  	data->rev = (ret >> 8) & 0xf;
+>> 
+>>  	/* Set defaults and enable both channels */
+>> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 
+>> 0x00);
+>> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 
+>> 0x00);
+> 
+> minor note: the 0x00 looks like a byte. 0 or 0x0000 would be slightly 
+> better?
+> The same below.
+> 
+>>  	if (ret < 0)
+>>  		return ret;
+>> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 
+>> 0x00);
+>> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 
+>> 0x00);
+> 
+> The VCNL4200_PS_CONF1 definition is a bit misleading with word write. 
+> Because
+> PS_CONF1 is only a low byte of command code 0x03. The high byte of 0x03 
+> is
+> PS_CONF2. I would rename it.
 > 
 
-Sure thing.
+As far as a base address for the register that is correct based on the 
+names in the datasheet. I suppose I could add something like:
 
-Thanks
---
-Gustavo
+#define VCNL4200_PS_CONF  VCNL4200_PS_CONF1
+
+and change the reference here if you think that would be more clear.
+
+>>  	if (ret < 0)
+>>  		return ret;
+> 
+> Anyway, the main point is that I've tested this patch on VCNL4200 and 
+> it
+> works, so:
+> Tested-by: Tomas Novotny <tomas@novotny.cz>
+> 
+> T.
+
+Thanks for testing it
+Angus
