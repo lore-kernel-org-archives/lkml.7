@@ -2,122 +2,127 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A94CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD78218A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E323721841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfCTSHA (ORCPT
+        id S1727265AbfCTSMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:07:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44270 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbfCTSG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:06:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CF8A78;
-        Wed, 20 Mar 2019 11:06:59 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CC453F614;
-        Wed, 20 Mar 2019 11:06:55 -0700 (PDT)
-Subject: Re: [PATCH v7 9/10] KVM: arm64: docs: document KVM support of pointer
- authentication
-To:     Kristina Martsenko <kristina.martsenko@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-10-git-send-email-amit.kachhap@arm.com>
- <7bf19035-02ba-ae47-b08c-7d7622a45dbf@arm.com>
- <648d66dd-519c-7567-a3e1-c23208f68cf2@arm.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <52d3f9c8-fc27-bf3d-f8f3-1b3921508a8c@arm.com>
-Date:   Wed, 20 Mar 2019 18:06:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 20 Mar 2019 14:12:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32888 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726438AbfCTSMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:12:10 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KIC1Re019655
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:12:09 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbqhej4e1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:12:05 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 20 Mar 2019 18:11:23 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 18:11:19 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KIBKWf22347814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 18:11:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 188FEB205F;
+        Wed, 20 Mar 2019 18:11:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED1A9B2067;
+        Wed, 20 Mar 2019 18:11:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 18:11:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7D6A416C2A3C; Wed, 20 Mar 2019 11:12:10 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 11:12:10 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
+        Mike Galbraith <efault@gmx.de>
+Subject: Re: [PATCH v2] rcu: Allow to eliminate softirq processing from
+ rcutree
+Reply-To: paulmck@linux.ibm.com
+References: <20190318022434.GE4102@linux.ibm.com>
+ <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
+ <20190320113219.d6c3gouqbnsnl5nj@linutronix.de>
+ <20190320152146.GH4102@linux.ibm.com>
+ <20190320154440.GA16332@linux.ibm.com>
+ <20190320160547.s5lbeahr2y4jlzwt@linutronix.de>
+ <20190320161500.GK4102@linux.ibm.com>
+ <20190320163532.mr32oi53iaueuizw@linutronix.de>
+ <20190320173001.GM4102@linux.ibm.com>
+ <20190320175952.yh6yfy64vaiurszw@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <648d66dd-519c-7567-a3e1-c23208f68cf2@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320175952.yh6yfy64vaiurszw@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032018-0068-0000-0000-000003A8A138
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01177176; UDB=6.00615785; IPR=6.00957872;
+ MB=3.00026076; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 18:11:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032018-0069-0000-0000-000047E1F443
+Message-Id: <20190320181210.GO4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=936 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 20/03/2019 15:04, Kristina Martsenko wrote:
-> On 20/03/2019 13:37, Julien Thierry wrote:
->> Hi Amit,
->>
->> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
->>> This adds sections for KVM API extension for pointer authentication.
->>> A brief description about usage of pointer authentication for KVM guests
->>> is added in the arm64 documentations.
+On Wed, Mar 20, 2019 at 06:59:52PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-03-20 10:30:01 [-0700], Paul E. McKenney wrote:
+> > On Wed, Mar 20, 2019 at 05:35:32PM +0100, Sebastian Andrzej Siewior wrote:
+> > > On 2019-03-20 09:15:00 [-0700], Paul E. McKenney wrote:
+> > > > I am considering making it a module_param() to avoid namespace pollution,
+> > > > as it would become something like rcutree.nosoftirq.
+> > > > 
+> > > > Thoughts?
+> > > 
+> > > nope, perfect.
+> > 
+> > Please see below for an untested patch.  Thoughts?
 > 
-> [...]
+> > -	if (rcu_softirq_enabled) {
+> > +	if (!nosoftirq) {
+> >  		raise_softirq(RCU_SOFTIRQ);
+> >  	} else {
 > 
->>> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
->>> index 7de9eee..b5c66bc 100644
->>> --- a/Documentation/virtual/kvm/api.txt
->>> +++ b/Documentation/virtual/kvm/api.txt
->>> @@ -2659,6 +2659,12 @@ Possible features:
->>>  	  Depends on KVM_CAP_ARM_PSCI_0_2.
->>>  	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
->>>  	  Depends on KVM_CAP_ARM_PMU_V3.
->>> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS:
->>> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC:
->>> +	  Enables Pointer authentication for the CPU.
->>> +	  Depends on KVM_CAP_ARM_PTRAUTH and only on arm64 architecture. If
->>> +	  set, then the KVM guest allows the execution of pointer authentication
->>> +	  instructions. Otherwise, KVM treats these instructions as undefined.
->>>  
->>
->> Overall I feel one could easily get confused to whether
->> PTRAUTH_ADDRESS/GENERIC are two individual features, whether one is a
->> superset of the other, if the names are just an alias of one another, etc...
->>
->> I think the doc should at least stress out that *both* flags are
->> required to enable ptrauth in a guest. However it raises the question,
->> if we don't plan to support the features individually (because we
->> can't), should we really expose two feature flags? I seems odd to
->> introduce two flags that only do something if used together...
-> 
-> Why can't we support the features individually? For example, if we ever
-> get a system where all CPUs support address authentication and none of
-> them support generic authentication, then we could still support address
-> authentication in the guest.
-> 
-> 
+> This double negation looks weird. Can we flip the logic somehow?
+> /me testing if it works…
 
-That's a good point, I didn't think of that.
+We could name it something like "use_softirq" and initialize it to true.
+I am OK either way.
 
-Although, currently we don't have a way to detect that we are in such a
-configuration. So as is, both flags are required to enable either
-feature, and I feel the documentation should be clear on that aspect.
+							Thanx, Paul
 
-Another option would be to introduce a flag that enables both for now,
-and if one day we decide to support the configuration you mentioned we
-could add "more modular" flags that allow you to control those features
-individually. While a bit cumbersome, I would find that less awkward
-than having two flags that only do something if both are present.
-
-Thanks,
-
--- 
-Julien Thierry
