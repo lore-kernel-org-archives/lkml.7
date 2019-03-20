@@ -2,68 +2,98 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE02C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3A42184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15ECB2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tc0l0Thp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfCTJaD (ORCPT
+        id S1727099AbfCTJbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:30:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:31823 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfCTJaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:30:02 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 870FC30FD859;
-        Wed, 20 Mar 2019 09:30:02 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4C7B5D9C4;
-        Wed, 20 Mar 2019 09:29:57 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 17:29:53 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "zhengbin (A)" <zhengbin13@huawei.com>
-Cc:     axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, houtao1@huawei.com,
-        yanaijie@huawei.com, jianchao.w.wang@oracle.com
-Subject: Re: [PATCH] blk-mq: fix a hung issue when set device state to
- blocked and restore running
-Message-ID: <20190320092951.GA9051@ming.t460p>
-References: <1553068921-6605-1-git-send-email-zhengbin13@huawei.com>
- <20190320081110.GA8408@ming.t460p>
- <c0821276-2127-e6d8-97b0-b96628d11ba7@huawei.com>
+        Wed, 20 Mar 2019 05:31:36 -0400
+Received: from mail-oi1-f181.google.com ([209.85.167.181]:37752 "EHLO
+        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfCTJbg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 05:31:36 -0400
+Received: by mail-oi1-f181.google.com with SMTP id v84so1257948oif.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wYyv2ZRwsPoVYMyEVcGnCp48q/ptTtHxZyIeAzw8TOY=;
+        b=tc0l0ThpVqoLtsaB2H8fQq1clVPc94UjnPBYF2ByG9flAjBIPjypcsro+IYe1PEGCa
+         CQkscJRiqJORBddBsZK7WxneeF8IyStb95Z3Y/87wjluzqADh87MW+MGvu/0FP9XXlrY
+         ePzaLgPzxLf+rThI8d3hIUcf3KEQ08yBvEXV3j4PwXiwy/6RrHS8psTj4ogWkw0m7Y0u
+         nxUPpcc16p+Ifl7KACsD3KUfxZZY/KJOzIAhsKtcYaS9dcgMoZXqyZ0TmJe3QVCXksHt
+         sHzeoeZKnR+2k/mG3JdAnRLNKU69HjMANpkCIgvJqpKEBjG81IYmlmUMEARQX2MpSs3i
+         bB2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wYyv2ZRwsPoVYMyEVcGnCp48q/ptTtHxZyIeAzw8TOY=;
+        b=MlWgo3Nuq6m5odSIxis+P3KDJTsRnTDmmUZ0NzDhgO9ldbCvNP4T2yyxX/Gl1SRnpM
+         3O5l4tzG2MP7uwiif7YJ9YRpNMjlSg7DQnXM28EM96gu97rs/kM86JtIsUPcEdz5t9ec
+         2fqTR8bmjogYc1+bU//3yuugg9v0LTENhvOQPuROR2hcaXOEbxRevb+QLGAZvzBXf3j1
+         KemcO66oRf9WU+mOhBkAS+8cO2h6vvZzOXkQ0H25eW7rzObukpFKOM0rZ/S51MjH1tpE
+         Zzmkhl4PHz2dMKZrNv56xjQgc5f+Wgs0QR5lUxMMLJn/MPcYMVAe8Ub+6B2fwIxsATlL
+         rfEw==
+X-Gm-Message-State: APjAAAUUrt1rvkEjvJOa6OxL1jgx1YAQf6vsTUohg8rhrrGzhRPM5MEM
+        MNPy7HPzCMXjyh7kWDnwJl9HAE0t1on5GGpekVeMHA==
+X-Google-Smtp-Source: APXvYqwcMzacKuaEiDuiYLfXrPSCi0BX/25WTim2iqBWs851azpZMa+Y1+bF0kIi0EdzOA4PXJ9yBT5f9snTwTgS1pY=
+X-Received: by 2002:aca:b589:: with SMTP id e131mr4554174oif.91.1553074295380;
+ Wed, 20 Mar 2019 02:31:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0821276-2127-e6d8-97b0-b96628d11ba7@huawei.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 20 Mar 2019 09:30:02 +0000 (UTC)
+References: <20190313064557.GA14531@unicorn.suse.cz> <CADVatmMem3t-Lx42vU+-xN94FW5hbXjaBz3jgW6nkVouyWW-Qg@mail.gmail.com>
+ <20190317180546.GA26013@unicorn.suse.cz>
+In-Reply-To: <20190317180546.GA26013@unicorn.suse.cz>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Wed, 20 Mar 2019 09:30:59 +0000
+Message-ID: <CADVatmNVf+8fLsZjETx5nmYKmdQCg0Moqv5W3S0i4gtX9uMn=w@mail.gmail.com>
+Subject: Re: regression (bisected): "modprobe parport_pc" hangs in current mainline
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 04:52:40PM +0800, zhengbin (A) wrote:
-> Thanks for your quick reply, I will study BLK_STS_DEV_RESOURCE in detail
-> 
-> > BLK_STS_DEV_RESOURCE means that the driver will rerun hw queue, so
-> > maybe you need to investigate why it is returned from scsi driver first.
-> because we set the device state to blocked,
-> scsi_queue_rq-->prep_to_mq(return BLK_STS_RESOURCE)
-> 	     -->out_put_budget  transfer BLK_STS_RESOURCE to BLK_STS_DEV_RESOURCE
-> In this situtation, the request does not send to the driver.
+Hi Michal,
 
-Then the queue will be run when the scsi_device becomes un-blocked,
-see scsi_internal_device_unblock_nowait().
+On Sun, Mar 17, 2019 at 6:05 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+>
+> On Sun, Mar 17, 2019 at 05:01:37PM +0000, Sudip Mukherjee wrote:
+> > On Wed, Mar 13, 2019 at 6:45 AM Michal Kubecek <mkubecek@suse.cz> wrote:
+> > > I encountered a regression in current (post-5.0) mainline kernel which I
+> > > bisected to commit 1aec4211204d ("parport: daisy: use new parport device
+> > > model"). Running "modprobe parport_pc" hangs up:
+> >
+> > Can you please send me your .config so that I can test it from my side.
+>
+> Attaching two versions: config-full.gz is the real life config from the
+> machine where I found the issue and config-mini.gz is a minimized config
+> I was using while bisecting the issue. (I made a mistake and thought
+> that I have seen the issue with snapshot before both parport commits so
+> that I ran a full bisect instead of simply checking the two parport
+> commits which came in the merge window.)
+
+Sorry, I didn't get the chance to look at it yet and have kept it
+pending for this weekend. But just had a quick look and I was
+wondering if the machine on which you are trying the modprobe has an
+actual parallel port or the machine is not having any parallel port.
+And also will you be able to send me a dmesg please.
 
 
-Thanks,
-Ming
+-- 
+Regards
+Sudip
