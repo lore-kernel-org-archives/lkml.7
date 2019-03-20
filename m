@@ -2,192 +2,160 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D35C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEB7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C21218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCEC218CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CjMocSBa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EAOjxP6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfCTUrq (ORCPT
+        id S1727534AbfCTUs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:47:46 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44783 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfCTUrm (ORCPT
+        Wed, 20 Mar 2019 16:48:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36325 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTUs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:47:42 -0400
-Received: by mail-ua1-f68.google.com with SMTP id r21so1239923uan.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:47:41 -0700 (PDT)
+        Wed, 20 Mar 2019 16:48:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t206so2992163oib.3;
+        Wed, 20 Mar 2019 13:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3ETB6cmcCj3KBLuC5+XEE51LlvnHdqbAufRctEtts7U=;
-        b=CjMocSBako73Be6kKHR0FGSHMorgn092yiG8Y38w8+d1XN2nGhZ/j7BCOvwLcQ+PvX
-         3p43KYyfC72UFNFkOZ+IPP7CKUAQ7CettsqkN01DOh2I6ibrSWSLLOPZGUTKnybZJ4uB
-         5aFn6MCeEEC4ke67vboTEhYxDjPKSk3/2Ek7IqkunV63EWh8ho5DbK3P8S/PaFfn9GNX
-         8g+rAUOL+jtU7Vy6YC45B3AILPe51kDSaXCJBv9ZCmXSyg6j4onXWSSMo3hIjazGvkzI
-         o0lfqsAEZ1KOSqRNNMB+qQkIFEeVXovwszBYxcg1L2mqTz2juPj9/jxFTmLSK4iCsxIH
-         baGA==
+        bh=rkf20fehmYLH1YP5jLWlVRh0irPw1QZbgsIQvR8Hnag=;
+        b=EAOjxP6lykTvlsBncOWYV1Rg5YLZP0ouoSC51dlyQGcNnuhNpJpTxcxKh2vuk8OXPG
+         eu5otKNktAl57mo+KsHPBrbUDtGFkkxFZs4Qiuh/49dPnefhTNV8qGTf3YE0gdpMhGMV
+         LBYEKlD9M4pkm6mM0WrD2h3uuxubJldxkoYZzvpdoYRr32Ek5mWvsFgJDpwwQ+rGC8cm
+         wMukqTlw1Ychw1ZeGgeKyTYLptPO70AdizUFx/hpsFI4PCYqGefIEgekcGXcameQonDg
+         7qojkrJ00v/Kpk5h3TXJk71zjfrG27tEnQC4eaE6/pAEtvIgUKXPPKJrzHhF0pYlEehS
+         Xvzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3ETB6cmcCj3KBLuC5+XEE51LlvnHdqbAufRctEtts7U=;
-        b=UEW3jwBR/DDhL9BdevThr4QpT/3L9YqBOrwtBMqnvejT1FheFyLfbiORoxqMRzLTT9
-         ZyyrR6X1leoH2aqO3a1SqhHeLI6yMMwzdsE//EqS0ia/d6D0URhIxwgBkfn/I+pN3kDH
-         P4kaUbPgJYTu0wi80Zab3kFSN3csJBMVF5S65d/2838266shp1IeY0Bg4yMMsJQgHO+m
-         NmtlI1PCCCHMUaQaywqoTZAxoQaHYXiQFcq27n42xMXLkZS4d+Z+O8923fTbx5i/iyXE
-         g8apOlorNdjdXRdEYrIl5/ic2a937fvZPvbxF7Z7aYfkjMq289Ufw/4D+yRqtE7JEFWg
-         33Xw==
-X-Gm-Message-State: APjAAAU5PiiFletGfb+vJ4+39a8YAbSmG+KHZNSul8BbINdhgiYWa13T
-        LrWumF2Ai3jynjcazFjpvrQn7vot3Mpemp++RzLsLA==
-X-Google-Smtp-Source: APXvYqwCvzeW2wQE0oWuq/a0rz0045SXnb5K/5NX5MCf9adNKjA/9NSMKZrd+3QZoqVgSPEbd1mTfGIst6+VmqzKHh4=
-X-Received: by 2002:ab0:6193:: with SMTP id h19mr5364285uan.47.1553114860767;
- Wed, 20 Mar 2019 13:47:40 -0700 (PDT)
+        bh=rkf20fehmYLH1YP5jLWlVRh0irPw1QZbgsIQvR8Hnag=;
+        b=mz1Ux9sl7SpJD4eD15oGmR+sGRPG/ISGl2HzKn+bugGfCSA9RhsfXDqaF+Lv7nIyIp
+         fUmP+7esH3DHKSUC7omPxYKZc7xEO5f3zg3AGkBX1P3YUNJsRdP4/W/vv82s9+bHAGxB
+         zd8CAFPLyElm7XMGj9qFduuMeVknaD79EZxIlEzR6QsA9SvZdcv2TiE9st9/hMs30BLf
+         tlYmWb/yiu3X3CcFt2BFFSDwLY2axP4mClt0ERa013AiKpIeAELwl/BYga9DkOjlZeXZ
+         YeJ2POCDq/PoVSmyRXjJsQQjDjTg17M/4BnPc2+OEU8ebhxK/E0L2L3angIaEX1qu5y2
+         gJLw==
+X-Gm-Message-State: APjAAAVsA9JvwURDIrF0A4chO26/AS+dOuJ6s4pdPkSjFIhR46UX1OUx
+        Xwho3OvtOUkYRnzpYPj2+HBEn1kInxiTMQ6r778=
+X-Google-Smtp-Source: APXvYqzihIMVVRCn9dzb8ELnlf1ptftrwD2n1QDCQys2LFhxcidQERbvWaYi27RBN/CNc92MCTIDDz9a9IxcuBX3Z5U=
+X-Received: by 2002:a54:4e02:: with SMTP id a2mr6732386oiy.140.1553114907404;
+ Wed, 20 Mar 2019 13:48:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190314130113.919278615@infradead.org> <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net> <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190319182041.GO5996@hirez.programming.kicks-ass.net>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Wed, 20 Mar 2019 13:47:28 -0700
-Message-ID: <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
+References: <20190301182922.8309-1-martin.blumenstingl@googlemail.com>
+ <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com> <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
+ <20190307140959.10092d45@xps13> <ccb95e75-e62f-c510-cabd-853481f77fc8@amlogic.com>
+ <CAFBinCBd=dOZjv4KEDY9ODOONDO=WtaBqAMRi_a+gH3_iZEAHQ@mail.gmail.com>
+ <CAFBinCA7LLK6K3ZqauJy2N-z5-kTfuTztmoSQ=Bk4A5Xagxddw@mail.gmail.com> <8134890a-457d-7803-01a4-1832f925f65f@amlogic.com>
+In-Reply-To: <8134890a-457d-7803-01a4-1832f925f65f@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 20 Mar 2019 21:48:16 +0100
+Message-ID: <CAFBinCBfkr-yyR4Vbd1HVmXVCOKuK-Kw1HKz4SMt9G3eA49HQQ@mail.gmail.com>
+Subject: Re: [RFC PATCH nand-next 0/2] meson-nand: support for older SoCs
+To:     Liang Yang <liang.yang@amlogic.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, jianxin.pan@amlogic.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 11:20 AM Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Liang,
+
+On Wed, Mar 20, 2019 at 4:32 AM Liang Yang <liang.yang@amlogic.com> wrote:
 >
-> On Tue, Mar 19, 2019 at 10:52:01AM -0700, Stephane Eranian wrote:
-> > > Not quite; the control on its own doesn't directly write the MSR. And
-> > > even when the work-around is allowed, we'll not set the MSR unless there
-> > > is also demand for PMC3.
-> > >
-> > Trying to understand this better here. When the workaround is enabled
-> > (tfa=0), you lose PMC3 and transactions operate normally.
+> Hi Martin,
 >
-> > When it is disabled (tfa=1), transactions are all aborted and PMC3 is
-> > available.
->
-> Right, but we don't expose tfa.
->
-> > If you are saying that when there is a PMU event requesting PMC3, then
-> > you need PMC3 avail, so you set the MSR so that tfa=1 forcing all
-> > transactions to abort.
->
-> Right, so when allow_tfa=1 (default), we only set tfa=1 when PMC3 is
-> requested.
->
-> This has the advantage that,
->
->   TSX only workload -> works
->   perf 4 counteres -> works
->
-> Only when you need both of them, do you get 'trouble'.
->
-> > But in that case, you are modifying the execution of the workload when
-> > you are monitoring it, assuming it uses TSX.
->
-> We assume you are not in fact using TSX, not a lot of code does. If you
-> do use TSX a lot, and you don't want to interfere, you have to set
-> allow_tfa=0 and live with one counter less.
->
-> Any which way around you turn this stone, it sucks.
->
-> > You want lowest overhead and no modifications to how the workload
-> > operates, otherwise how representative is the data you are collecting?
->
-> Sure; but there are no good choices here. This 'fix' will break
-> something. We figured TSX+4-counter-perf was the least common scenario.
->
-> We konw of people that rely on 4 counter being present; you want to
-> explain to them how when doing an update their program suddently doesn't
-> work anymore?
->
-> Or you want to default to tfa=1; but then you have to explain to those
-> people relying on TSX why their workload stopped working.
->
-> > I understand that there is no impact on apps not using TSX, well,
-> > except on context switch where you have to toggle that MSR.
->
-> There is no additional code in the context switch; only the perf event
-> scheduling code prods at the MSR.
->
-> > But for workloads using TSX, there is potentially an impact.
->
-> Yes, well, if you're a TSX _and_ perf user, you now have an extra knob
-> to play with; that's not something I can do anything about. We're forced
-> to make a choice here.
->
-> > > Yeah, meh. You're admin, you can 'fix' it. In practise I don't expect
-> > > most people to care about the knob, and the few people that do, should
-> > > be able to make it work.
+> Thanks for your time.
+> On 2019/3/20 4:27, Martin Blumenstingl wrote:
+> > Hello Liang,
 > >
-> > I don't understand how this can work reliably.
->
-> > You have a knob to toggle that MSR.
->
-> No, we don't have this knob.
->
-> > Then, you have another one inside perf_events
->
-> Only this knob exists allow_tfa.
->
-> > and then the sysadmin has to make sure nobody (incl. NMI watchdog) is
-> > using the PMU when this all happens.
->
-> You're very unlucky if the watchdog runs on PMC3, normally it runs on
-> Fixed1 or something. Esp early after boot. (Remember, we schedule fixed
-> counters first, and then general purpose counters, with a preference for
-> lower counters).
->
-> Anyway, you can trivially switch it off if you want.
->
-> > How can this be a practical solution? Am I missing something here?
->
-> It works just fine; it is unfortunate that we have this interaction but
-> that's not something we can do anything about. We're forced to deal with
-> this.
->
-Right now, if I do:
+> > On Sat, Mar 16, 2019 at 11:55 AM Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > [...]
+> >>> Martin, Now i am not sure whether NFC driver leads to kernel panic when
+> >>> calling kmem_cache_alloc_trace.
+> >> thank you for confirming that it works for you on GXL
+> >>
+> >> I'm not sure that this is a NFC driver problem.
+> >> after enabling CONFIG_SLAB_FREELIST_HARDENED in my kernel config the
+> >> crash moves. it's now crashing in slub.c's kfree() at
+> >> BUG_ON(!PageCompound(page));
+> > I added some debug prints in meson_nfc_read_buf() to get some details
+> > about the info buffer before the crash,
+> > format is: meson_nfc_read_buf <virtual address> <physical address>
+> >
+> > during my first test three different addresses are used:
+> > - meson_nfc_read_buf e9e6c640 0x29e6c640 (works fine)
+> > - meson_nfc_read_buf e9e6c680 0x29e6c680 (works fine)
+> > - meson_nfc_read_buf ee39a34b 0x2e39a34b (crashes during kfree)
+> >
+> > so I tried playing around with the allocation size (see the attached
+> > patch) and changed it to:
+> >    kzalloc(PER_INFO_BYTE + 64, GFP_KERNEL)
+> > this results in the following addresses being used:
+> > - meson_nfc_read_buf e9ea4280 0x29ea4280 (works fine)
+> > - meson_nfc_read_buf e9ea4300 0x29ea4300 (works fine)
+> > (there is no crash anymore)
+> >
+> > Liang, are there any special requirements on the "info address" like
+> > the alignment?
+> It must be 4 bytes alignment. i have met it previously when debugging
+> NFC driver on AXG platform, but it is not specified on spec. Now i am
+> confused that how to get the no aligned address "xe39a34b" when using
+> kmalloc; i think it should return the aligned address. doesn't it?
+thank you for confirming the 4-byte alignment requirement!
+I have no explanation for the unaligned address returned by kzalloc().
+I'll ask on the linux-mm mailing list if they have a hint why this
+happens.
 
-echo 0 > /sys/bus/event_source/devices/cpu/allow_tsx_force_abort
+> > also do you know why the PER_INFO_BYTE buffer is allocated dynamically
+> > in meson_nfc_read_buf() instead of allocating it at initialization?
+> > I'm not saying that it should be changed! I'm curious because there's
+> > per-meson_nfc_nand_chip info and data buffers which are allocated at
+> > initialization time.
+> > NAND scan or initialization is divided into three stages:
+> nand_scan_ident->nand_attach->nand_scan_tail. info and data buffer which
+> depend on the result of nand_scan_ident are allocated on nand_attach; so
+> nand_scan_ident can not use the info buffer on meson_nfc_nand_chip.
+thank you for the explanation!
 
-Then I don't have the guarantee on when there will be no abort when I
-return from the echo.
-the MSR is accessed only on PMU scheduling. I would expect a sysadmin
-to want some guarantee
-if this is to be switched on/off at runtime. If not, then having a
-boot time option is better in my opinion.
+> Allocating a fixed size info buffer before nand_scan_ident and attach it
+> on the struct meson_nfc; Or considering not use dma for reading data
+> less than 8 bytes. Both can reduce kmalloc and kfree calling. Thanks.
+both suggestions sound reasonable.
+however, I will search for the root cause of the unaligned address
+first before changing the Meson NFC driver.
 
-This other bit I noticed is that cpuc->tfa_shadow is used to avoid the
-wrmsr(), but I don't see the
-code that makes sure the init value (0) matches the value of the MSR.
-Is this MSR guarantee to be
-zero on reset? How about on kexec()?
+[...]
+> > [    2.227374] ------------[ cut here ]------------
+> > [    2.231968] WARNING: CPU: 1 PID: 1 at
+> > drivers/mtd/nand/raw/nand_base.c:5503 nand_scan_with_ids+0x1718/0x171c
+> > [    2.241760] No oob scheme defined for oobsize 1280
+> > ...
+> > (the "No oob scheme defined for oobsize 1280" message is expected)
+> >
+> miss mtd_set_ooblayout(mtd, &meson_ooblayout_ops) on function
+> meson_nand_attach_chip.
+thank you for the suggestion. I didn't have time to test this on my
+board yet but I'll let you know about my results during the weekend.
+Does the missing mtd_set_ooblayout() call also affect GXL or AXG boards?
 
-> But if you're a TSX+perf user, have your boot scripts do:
->
->   echo 0 > /sys/bus/event_source/devices/cpu/allow_tsx_force_abort
->
-> and you'll not use PMC3 and TSX will be 'awesome'. If you don't give a
-> crap about TSX (most people), just boot and be happy.
->
-> If you do care about TSX+perf and want to dynamically toggle for some
-> reason, you just have to be a little careful.
+
+Regards
+Martin
