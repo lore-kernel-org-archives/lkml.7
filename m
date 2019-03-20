@@ -2,151 +2,119 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B63C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339B42175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRSjBEvu"
+	by mail.kernel.org (Postfix) with ESMTP id 5E9862175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfCTBKv (ORCPT
+        id S1727487AbfCTBLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:10:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39518 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfCTBKv (ORCPT
+        Tue, 19 Mar 2019 21:11:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727099AbfCTBLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:10:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i17so625873pfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 18:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hIdsISv5yPCS5cuuuJe1mtyrZh/Lcqy2MMFx/vVZ7bA=;
-        b=rRSjBEvuq6CwPO6V8PH4QpUhIcHsuJza6P4nOekQnxYO9upU6QfONfU7Di8xmmLY5T
-         tuWWsYMB5NiYqWVk78vNyqORKp/d4ZMAUSJ/Skney/omDNoBJqjkTDKMIj2QGWjxYwLB
-         DkxUhvqhj4Nhr2kOpHknroYrlpltyEGKDrnLPFZTsRDgYDdsmqLutK8qY8p+rFNvjRAB
-         PmH9xtdWdo36iAELA9Zmnn8XsL8Ofyrkrl6uQv2mvWLXbOndc+cMQJYlS/q1MToeTQeB
-         QUlgeEKe12NnNZPyCSR/jXPyuBQVkHyZzugzRsiaFWed6LgtIFISI0ObvmnHT5v1wQUy
-         cfOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hIdsISv5yPCS5cuuuJe1mtyrZh/Lcqy2MMFx/vVZ7bA=;
-        b=UEWw2sySwDWzdc7BqPJ0XWxC+ycVkD+6D4MqLRrACEOwiwcxgBbik8QVb1NpRkLPQh
-         tOK6MolFO9eEm3sE7Y2CDiDXrPaI7PSSu5RQVyCAQTBrWjdObAHyfzfSDLCbJhLE4tHN
-         P7641mFtA/unIa58gEiYfzvnAk44sy7I/KnJH/3Awm+nf/kOZE2VJMaxHqOcvXMslfit
-         PchA7j5PsSO+xM0XQyHDP/c4TsNcuj3R6YGPqbrRh5Rb4JLQiVa+PxhD37GE4bxXdX3H
-         2RBaTY4K4AbZX1B1/i5aG5FTzWajon9pb92Q6SAJToYeo+t/fNR4Qd3azy/gc70inyCF
-         BJeg==
-X-Gm-Message-State: APjAAAUNDxugyTa0+rau9zQKOhypp/StGaXMng76vkSuZVTrWNaXP4g9
-        udzSp4HqhCNI6zZFn6mm/EuiNg==
-X-Google-Smtp-Source: APXvYqzNqxQ10Cek3L6LMJxVKefwkQ2rsGRE5G0ZuTEekssOFYsim2t3TLLX3pEP6tJmdMNScHADlA==
-X-Received: by 2002:a63:e554:: with SMTP id z20mr11865916pgj.234.1553044250539;
-        Tue, 19 Mar 2019 18:10:50 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id b8sm332538pfi.129.2019.03.19.18.10.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 18:10:49 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 18:10:49 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-cc:     Chintan Pandya <cpandya@codeaurora.org>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver : staging : ion: optimization for decreasing
- memory fragmentaion
-In-Reply-To: <1552561599-23662-1-git-send-email-huangzhaoyang@gmail.com>
-Message-ID: <alpine.DEB.2.21.1903191809420.18028@chino.kir.corp.google.com>
-References: <1552561599-23662-1-git-send-email-huangzhaoyang@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 19 Mar 2019 21:11:11 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K19ekg045940
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 21:11:10 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbakrafq8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 21:11:09 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 20 Mar 2019 01:11:02 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 01:10:59 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K1B3k946596286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 01:11:03 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ED5852052;
+        Wed, 20 Mar 2019 01:11:03 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.93.235])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A677C5204F;
+        Wed, 20 Mar 2019 01:11:02 +0000 (GMT)
+Subject: Re: [PATCH 2/6] security/keys/encrypted: Clean up
+ request_trusted_key()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     keyrings@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 19 Mar 2019 21:10:52 -0400
+In-Reply-To: <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
+References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <155297558570.2276575.11731393787282486177.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <1553040398.4899.149.camel@linux.ibm.com>
+         <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032001-0016-0000-0000-00000264EB9A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032001-0017-0000-0000-000032C00283
+Message-Id: <1553044252.4899.165.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=938 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019, Zhaoyang Huang wrote:
-
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+On Tue, 2019-03-19 at 17:20 -0700, Dan Williams wrote:
+> On Tue, Mar 19, 2019 at 5:07 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > On Mon, 2019-03-18 at 23:06 -0700, Dan Williams wrote:
 > 
-> Two action for this patch:
-> 1. set a batch size for system heap's shrinker, which can have it buffer
-> reasonable page blocks in pool for future allocation.
-> 2. reverse the order sequence when free page blocks, the purpose is also
-> to have system heap keep as more big blocks as it can.
+> > > diff --git a/security/keys/key.c b/security/keys/key.c
+> > > index 696f1c092c50..9045b62afb04 100644
+> > > --- a/security/keys/key.c
+> > > +++ b/security/keys/key.c
+> > > @@ -706,6 +706,7 @@ struct key_type *key_type_lookup(const char *type)
+> > >  found_kernel_type:
+> > >       return ktype;
+> > >  }
+> > > +EXPORT_SYMBOL_GPL(key_type_lookup);
 > 
-> By testing on an android system with 2G RAM, the changes with setting
-> batch = 48MB can help reduce the fragmentation obviously and improve
-> big block allocation speed for 15%.
+> This needs to be moved to patch1.
 > 
-> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> ---
->  drivers/staging/android/ion/ion_heap.c        | 12 +++++++++++-
->  drivers/staging/android/ion/ion_system_heap.c |  2 +-
->  2 files changed, 12 insertions(+), 2 deletions(-)
+> > Only the kernel is calling key_type_lookup().  Why does
+> > key_type_lookup() need to be exported?
 > 
-> diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
-> index 31db510..9e9caf2 100644
-> --- a/drivers/staging/android/ion/ion_heap.c
-> +++ b/drivers/staging/android/ion/ion_heap.c
-> @@ -16,6 +16,8 @@
->  #include <linux/vmalloc.h>
->  #include "ion.h"
->  
-> +unsigned long ion_heap_batch = 0;
+> This patch series adds several new callers outside of keys-subsystem
+> core that need this export, the first one being encrypted-keys itself
+> in patch1.
 
-static?
+It's needed, because they could be compiled as kernel modules, not
+builtin (eg. EVM).
 
-> +
->  void *ion_heap_map_kernel(struct ion_heap *heap,
->  			  struct ion_buffer *buffer)
->  {
-> @@ -303,7 +305,15 @@ int ion_heap_init_shrinker(struct ion_heap *heap)
->  	heap->shrinker.count_objects = ion_heap_shrink_count;
->  	heap->shrinker.scan_objects = ion_heap_shrink_scan;
->  	heap->shrinker.seeks = DEFAULT_SEEKS;
-> -	heap->shrinker.batch = 0;
-> +	heap->shrinker.batch = ion_heap_batch;
->  
->  	return register_shrinker(&heap->shrinker);
->  }
-> +
-> +static int __init ion_system_heap_batch_init(char *arg)
-> +{
-> +	 ion_heap_batch = memparse(arg, NULL);
-> +
+Mimi
 
-No bounds checking?  What are the legitimate upper and lower bounds here?
+> 
+> drivers/nvdimm/security.c:57:   type = key_type_lookup("encrypted");
+> fs/ecryptfs/keystore.c:1627:    type = key_type_lookup("encrypted");
+> security/integrity/evm/evm_crypto.c:361:        type =
+> key_type_lookup("encrypted");
+> security/keys/encrypted-keys/encrypted.c:440:   type =
+> key_type_lookup("trusted");
+> 
 
-> +	return 0;
-> +}
-> +early_param("ion_batch", ion_system_heap_batch_init);
-> diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-> index 701eb9f..d249f8d 100644
-> --- a/drivers/staging/android/ion/ion_system_heap.c
-> +++ b/drivers/staging/android/ion/ion_system_heap.c
-> @@ -182,7 +182,7 @@ static int ion_system_heap_shrink(struct ion_heap *heap, gfp_t gfp_mask,
->  	if (!nr_to_scan)
->  		only_scan = 1;
->  
-> -	for (i = 0; i < NUM_ORDERS; i++) {
-> +	for (i = NUM_ORDERS - 1; i >= 0; i--) {
->  		pool = sys_heap->pools[i];
->  
->  		if (only_scan) {
-
-Can we get a Documentation update on how we can use ion_batch and what the 
-appropriate settings are (and in what circumstances)?
