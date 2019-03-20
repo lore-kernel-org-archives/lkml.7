@@ -2,60 +2,62 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82192C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FED3218A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F264218A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPx/ICyS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N1pCWZkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfCTUZq (ORCPT
+        id S1727493AbfCTUZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:25:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44247 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfCTUZq (ORCPT
+        Wed, 20 Mar 2019 16:25:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42967 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfCTUZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:25:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i2so2588288pgj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:25:45 -0700 (PDT)
+        Wed, 20 Mar 2019 16:25:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p6so2596811pgh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=HiftAZ1wMxpcuv9eoeBNDyTOl/+5hkrxRMwR+7h1t0U=;
-        b=XPx/ICyS5hw93ueeuCoRBA6RUAhzQKIDoihdw9SCsLC3O92PgIjCT+z9HQglDF0Sal
-         FA/YUMoTcG1OW4KSFOxRRHO+gnfgwR0mZHw0QAbi4zGjrwOze/wZDXjx57PuLX5f8Oov
-         B5PJ3xC9ods1SvFY4+UwFOrDFrWVyk0GEUkumL1yv3qf0pSdVPD6URQBMcwm7tyT14ih
-         RqqYZNIZXHQcDmgqwOML6Rr0cVLcvJLBQyIE1FaTwIdcU041TkC2zU2IzybtORxPQxXI
-         3EoQKy5jgAeDWqoWJwUc65F6SbeF5juNmIhPUrGfT9UQpBgm+2L3HrkYwSozF8sQXUd5
-         phSg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=L+i8r+Ov28fU+nFY1Y6bbaTmlcsDjinSwAthT9sIfbw=;
+        b=N1pCWZkqdRt+/zwSfF3Dozr1kvZuge0KCJt6rJoqj9fLsA2OgLL65Frvr4kvOapgF/
+         6T8hBFtIpLMg5Qe8qdT1epc4e0qLxUwC4UMOcAXRLaSyLL3+92ti1dYbEcBaHlcZL3+o
+         e92MZvxHU4n2xpc6tJdlmrul4XV28QtaHwFxusx4KhgrBTvpcjDGe6zW4LtCASA0DNvl
+         PasCllZ/UCms+h2JTsHMKNZ2wTUiN6KUZ3Ngq5wWsBV8aGxNFabfLiCZaL5egr9auIGS
+         x8DVDIFZH5Vd/faf4Hh9BhbzNFwzBg9qDGtjkpXyBknj6icugwAktcHcrUyJXifTP0F7
+         MumA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HiftAZ1wMxpcuv9eoeBNDyTOl/+5hkrxRMwR+7h1t0U=;
-        b=GqaR3fd360kAd6NMN8R4vBVSPrltwDiYnQA4tf9R3WgkjzoRbO5OTcRPbUJ6A90a85
-         r7DZB/j3n21wgZe9dVK2KOQbQ73GpdOzBgC5MqK/Q5uYXnVr3uBR6okMdpukejHSeIkU
-         o85UQAjypAoVlZaNTgvdXVtjSGzzKMMFYaJ7waUtC/xIkK0s/3z/0bby9Iozo6ws3v87
-         YlHtrK80VO9s7mFrE46E1e7t7L3fgzftEvdkTar1quy+CTq7zh/a7jgaYaEzPje2KA5G
-         +NIhgcdh+Zl8ibJEJZUhT7OlI7SVuifdakUndI9vdJju9G+++09tmiya0d/Xo0irk04r
-         x3gQ==
-X-Gm-Message-State: APjAAAVNOeLGO4bVWFBIp8JsxlmaFVNSFMuDboxoX9pnWA8nXV4TKFdO
-        REjG7nC9gEtNAUacCYakUuFevo5bFhE=
-X-Google-Smtp-Source: APXvYqz4wss951sLWPtwYy7F5lLxRDhDMeDxdaHp9hkQU9aPaxGy0gJrJwOaRydFr2jJrNCngpFSRw==
-X-Received: by 2002:a63:535c:: with SMTP id t28mr30564380pgl.128.1553113544855;
-        Wed, 20 Mar 2019 13:25:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=L+i8r+Ov28fU+nFY1Y6bbaTmlcsDjinSwAthT9sIfbw=;
+        b=PrSw6Jpd9ijFdTB9iMPIMdSJQ54ZaKEu2sDMISOcPFuK8vrfq/AQEn5NrJEmJo6md2
+         KbUGZ9ZR37LueFxJMhSvye86Db1q3vGRiwviwkdc6Gy4/rqp4trMs2JqYNlTPxE1BhTe
+         jinnhV4ZTMME5fnvsKqZGyJrRJD2YC0J/E8FmlUaL40PW3Ucb4+ypdCHQluM4I41QSU5
+         FFXNzM+56wHKZRmNThP32+kW6Jq1Bew5LeN5sqQguD2BJI4cV3A8i5XyizOOCSkJaMvK
+         1NiC7sX1y9SjXNt+4CXHGo1YVRBVkkIx1e6jQzYAcEFC+gBQ6qAyGTzyHrFGBHDbBYOe
+         uymA==
+X-Gm-Message-State: APjAAAXkm8pu0WDFUvUEzHsXM72GUTE+8zXeOwIM9yD364R9sV7AxbeT
+        yr97PS+deR+XZlzPmJGLK6lXNSExe5o=
+X-Google-Smtp-Source: APXvYqxG9PgqnD0R2mBm3PGLhzwpCZvemlb/tuMsdUsM+3lQrsRZeEffCSmU6L1EAQxKw6KKx63hrw==
+X-Received: by 2002:a17:902:a511:: with SMTP id s17mr10336596plq.262.1553113548417;
+        Wed, 20 Mar 2019 13:25:48 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:4e72:b9ff:fe99:466a])
-        by smtp.gmail.com with ESMTPSA id u187sm866338pfu.113.2019.03.20.13.25.43
+        by smtp.gmail.com with ESMTPSA id u187sm866338pfu.113.2019.03.20.13.25.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 20 Mar 2019 13:25:43 -0700 (PDT)
+        Wed, 20 Mar 2019 13:25:47 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
+Cc:     Youlin Wang <wwx575822@notesmail.huawei.com>,
         Tanglei Han <hantanglei@huawei.com>,
         Zhuangluan Su <suzhuangluan@hisilicon.com>,
         Ryan Grachek <ryan@edited.us>,
@@ -63,24 +65,22 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Wei Xu <xuwei5@hisilicon.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH 0/3] DMA dts changes for hi3660
-Date:   Wed, 20 Mar 2019 13:25:37 -0700
-Message-Id: <1553113540-28726-1-git-send-email-john.stultz@linaro.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 2/3] arm64: dts: hi3660: Add hisi asp dma device
+Date:   Wed, 20 Mar 2019 13:25:39 -0700
+Message-Id: <1553113540-28726-3-git-send-email-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553113540-28726-1-git-send-email-john.stultz@linaro.org>
+References: <1553113540-28726-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here are a few dts changes which didn't get picked up
-for the last merge window to enable support for code
-changes that did land in v5.1.
+From: Youlin Wang <wwx575822@notesmail.huawei.com>
 
-Let me know if you have any objecitons or feedback!
-
-thanks
--john
+Add asp-dma device to hi3660 dts
 
 Cc: Tanglei Han <hantanglei@huawei.com>
 Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
@@ -91,17 +91,37 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
+Signed-off-by: Tanglei Han <hantanglei@huawei.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2: Removed undocumented bindings
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-John Stultz (2):
-  arm64: dts: hi3660: Add dma to uart nodes
-  arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
-
-Youlin Wang (1):
-  arm64: dts: hi3660: Add hisi asp dma device
-
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index a3eeab1..fb5498d 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -567,6 +567,16 @@
+ 			dma-type = "hi3660_dma";
+ 		};
+ 
++		asp_dmac: dma-controller@e804b000 {
++			compatible = "hisilicon,hisi-pcm-asp-dma-1.0";
++			reg = <0x0 0xe804b000 0x0 0x1000>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
++			dma-requests = <32>;
++			interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "asp_dma_irq";
++		};
++
+ 		rtc0: rtc@fff04000 {
+ 			compatible = "arm,pl031", "arm,primecell";
+ 			reg = <0x0 0Xfff04000 0x0 0x1000>;
 -- 
 2.7.4
 
