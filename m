@@ -2,130 +2,107 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C944C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85680C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1BE218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D1E218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553105980;
+	bh=4SJ/Up3cDDPePUJg/0kKUL6GnPbqbPguuFBh6AwGmy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kRKSmnXsl8HsO2/9gObIxh9Xa4BN4ftzGb+KSbpA9bSwSA2vb1S3gW6JApq+vOrF3
+	 oHhyubu63CZcOGAfDol7GBFMX5EJdmmOdop6OMhNlktGMo/Bnvy/yZVihoKpws/eE7
+	 H6QmCCUIQEEIuD+V86ljcYloVllw7Df4mSoyxRTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfCTSSv (ORCPT
+        id S1727422AbfCTSTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52202 "EHLO mail.kernel.org"
+        Wed, 20 Mar 2019 14:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfCTSSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:18:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726529AbfCTSTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:19:38 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E980218A3;
-        Wed, 20 Mar 2019 18:18:49 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 14:18:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-Message-ID: <20190320141847.0fd9a832@gandalf.local.home>
-In-Reply-To: <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
-References: <20190318153840.906404905@infradead.org>
-        <20190318155140.058627431@infradead.org>
-        <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
-        <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7800218C3;
+        Wed, 20 Mar 2019 18:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553105977;
+        bh=4SJ/Up3cDDPePUJg/0kKUL6GnPbqbPguuFBh6AwGmy0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d0ufPN6ZmHafDJPnX6bN8mc5sqaopIpAekuEaxciqf31eiTA4mzeKLcEHrRrzDrSl
+         IUysqgJFj1c5lbQSmll++h157RhnxiF6H9tVI5EhvchQDLUvvFGGQOjoyYxgx0x9T+
+         xJhXPZw2lgsH3mgmP75pP8I6mcF7dDtTFsbB750I=
+Date:   Wed, 20 Mar 2019 19:19:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] virt: vbox: Implement passing requestor info to the host
+ for VirtualBox 6.0.x
+Message-ID: <20190320181934.GA3907@kroah.com>
+References: <20190320093519.26029-1-hdegoede@redhat.com>
+ <20190320094601.GA30735@kroah.com>
+ <29c6e212-6233-364f-5a90-564f91bca989@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29c6e212-6233-364f-5a90-564f91bca989@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 10:26:17 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-
->  - Steven has this crazy model of "more underscores are better". They
-> aren't. They don't help if things nest anyway, but what does help is
-> meaningful names. Both when things don't nest, and when looking at
-> generated asm files.
-
-Note, at the time I had Ingo as a mentor ;-)
-
->  include/linux/compiler.h | 35 ++++++++++++++++++-----------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
+On Wed, Mar 20, 2019 at 10:52:05AM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 445348facea9..8aaf7cd026b0 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -53,23 +53,24 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
->   * "Define 'is'", Bill Clinton
->   * "Define 'if'", Steven Rostedt
->   */
-> -#define if(cond, ...) __trace_if( (cond , ## __VA_ARGS__) )
-> -#define __trace_if(cond) \
-> -	if (__builtin_constant_p(!!(cond)) ? !!(cond) :			\
-> -	({								\
-> -		int ______r;						\
-> -		static struct ftrace_branch_data			\
-> -			__aligned(4)					\
-> -			__section("_ftrace_branch")			\
-> -			______f = {					\
-> -				.func = __func__,			\
-> -				.file = __FILE__,			\
-> -				.line = __LINE__,			\
-> -			};						\
-> -		______r = !!(cond);					\
-> -		______f.miss_hit[______r]++;					\
-> -		______r;						\
-> -	}))
-> +#define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-> +
-> +#define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-> +
-> +#define __trace_if_value(cond) ({			\
-> +	static struct ftrace_branch_data		\
-> +		__aligned(4)				\
-> +		__section("_ftrace_branch")		\
-> +		__if_trace = {				\
-> +			.func = __func__,		\
-> +			.file = __FILE__,		\
-> +			.line = __LINE__,		\
-> +		};					\
-> +	(cond) ?					\
-> +		(__if_trace.miss_hit[1]++,1) :		\
-> +		(__if_trace.miss_hit[0]++,0);		\
+> On 20-03-19 10:46, Greg Kroah-Hartman wrote:
+> > On Wed, Mar 20, 2019 at 10:35:19AM +0100, Hans de Goede wrote:
+> > > VirtualBox 6.0.x has a new feature where the guest kernel driver passes
+> > > info about the origin of the request (e.g. userspace or kernelspace) to
+> > > the hypervisor.
+> > > 
+> > > If we do not pass this information then when running the 6.0.x userspace
+> > > guest-additions tools on a 6.0.x host, some requests will get denied
+> > > with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
+> > > the mounting of shared folders marked to be auto-mounted.
+> > > 
+> > > This commit implements passing the requestor info to the host, fixing this.
+> > > 
+> > > Cc: stable@vger.kernel.org
+> > 
+> > This feels like support for a "new feature", so why would this need to
+> > go to older kernels?
+> > 
+> > It's not our fault that vb implemented a non-backwards-compatible change
+> > for their new release, right?  So why should we be forced to add new
+> > features to stable kernels?
+> 
+> From a technical point of view I completely agree with you and I'm unhappy
+> with this breakage after vb agreed with me to keep ABI compatibility so
+> that we could add a version of the vboxguest driver to the mainline kernel.
 
-Probably want to add a space between the comma and the numbers.
+So they broke that agreement, ugh.  That implies they will do it again?
 
-But other than that.
+> OTOH this is going to bite users out there, which is why I added the Cc:
+> stable. But this is entirely your call.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Let me think about it...
 
--- Steve
+> > I have no problem to add this for 5.2, but not for older stuff.
+> 
+> Can we at least at it as a fix to 5.1 ? It is not very adventurous.
 
-> +})
-> +
->  #endif /* CONFIG_PROFILE_ALL_BRANCHES */
->  
->  #else
+Sure, let me go review it now.
+
+thanks,
+
+greg k-h
