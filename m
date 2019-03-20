@@ -2,236 +2,396 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73336C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2D8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3442184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D3C2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ExE5tP7f"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LUTjayQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfCTISE (ORCPT
+        id S1727776AbfCTISd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:18:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40299 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfCTISE (ORCPT
+        Wed, 20 Mar 2019 04:18:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43511 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfCTISc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:18:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u68so1163650lff.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:18:01 -0700 (PDT)
+        Wed, 20 Mar 2019 04:18:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d17so1621682wre.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=siP39SFJ8UOjZv5/fRFAasm28Vpi2DbwWeM9YLtISs4=;
-        b=ExE5tP7fHiUklXNMVdmE3HmLyStsHG2u6GsLXginSp61ryMxFqAo8MUy0ez+a1Odyn
-         CF6hAAH8imCWIy4EQ/V/TBOgJCSq9vAOI3wD7Xw+M35kl4ZTsL3Zo/5Ah86PYBFz+v6z
-         1MnUvueZBolynmkRnBdOXeddbKN9NZD1vcZiw=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zNSEjT5R1wgFC31DWWn380G0jbuTgx5ZPt4C6o89+Po=;
+        b=LUTjayQSyQFaw+u03MiWndNtuCiDM3+S1tWRq8Logugkywc31EVAkpVb2j5sCAq4i1
+         e8JVVw4h7cadDdAidI9/MIDYj6GX0io7Ztsroknvi3B9OM3IRXJScirkrKBPsPFXby2Y
+         mfB3gzpnax80ObEwCFsKC7J2DX3F9L7uzdAVMUZwR6ReLfEWuU1Js7A+oBEoedMZFMWi
+         BI9duAXWSdbJZi8Wli43n2a+7siMBsD1JlypzGpoh0OK/gCx71XxNFdPA7jokPGUZ3uE
+         HMGsYxWF7PJiuB87TX5JFJsG6trwonyvF53P7lApnn8FTqzxX30Vl2NdlPk/d7NoJ51n
+         Oohw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=siP39SFJ8UOjZv5/fRFAasm28Vpi2DbwWeM9YLtISs4=;
-        b=nNU0b+BaSrZJ5W3xfKvBbIVf+PlKd1kAKtA0mRGlYz0ZUDXO9SaU3ZVfNjUOm1rjtp
-         njXBuLnkmtFqHFygNserxNo3s5eRGXW3XOPSq0D8bBXzdmzQv2WyMmCYqBYEx+j8f8MA
-         Eu/0++6YHbT+ul1Lp0FVSa1bJTc/eZlwdaDtCaBmlK259pf81Vtu+MzMPNI3OF7K22Vt
-         ykSHmKRXyXhXVN63R6CUsAZRV2CQxAjbkJNKboFwtuszTBzo0KpfCN0B5MsGyqK5R/PE
-         mFL6/Ym4HkPKMq1T/u+NpdPqZCzO7iAjhUf+9aOur0UA2RTybpYm5InA5eU8aesFxPbj
-         dQ6w==
-X-Gm-Message-State: APjAAAW7Oq0MMhXDiQ9kRAsvBmVF8puH88A6jk9FedX/gHyr+gQQ8+jS
-        tHA9zkW0cYj/+1K2eA2E38wgDQ==
-X-Google-Smtp-Source: APXvYqw//N9a92XO0MPOmxiyqug/stJkVRnFMbb6LqBsbgH1o8vZJr7h4VtNn0o11rAMoNkOY6ysgg==
-X-Received: by 2002:a19:c314:: with SMTP id t20mr15491043lff.114.1553069880916;
-        Wed, 20 Mar 2019 01:18:00 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y1sm223019ljj.13.2019.03.20.01.17.59
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zNSEjT5R1wgFC31DWWn380G0jbuTgx5ZPt4C6o89+Po=;
+        b=PfymV3NtiNkxVFIW1kNRv5cBy4B6qGPgPigz2hlsTK5o14HFYmHULpyR1A6ADa1XgT
+         zNVogXKyVD/FAry9wQmnK7MZao3XvULXUM9ucEckEu0b1n8Utt/d5g/s74cWW+jPm7rN
+         JoUwXsIg/YHzU0ab7m+spHm8u/+rY/ffmcddPCYaAQ2Jt3p0bdvub8bg3n5tBjLds8wc
+         f58jUr6bSYvWJcLpZcMwtuxUPCDqaQ79FGTz5ZWLpzMqRFH7QWnOSHnthb7QPyakQidG
+         Yry4UWRgZdS6FZkSE0j5+K7NPtOYzivPZKK+KsUz4xUTQ8PAVJw95nVsaZBwBfdf05qR
+         3dKw==
+X-Gm-Message-State: APjAAAWpASBje346VDR0MG0FHtkS5pNVAsOnkOzhaihoi9HL3mOQk8JG
+        d5Vq/XZpIqmxIlSt3uWsoRAbhRWiO1IfJVl6
+X-Google-Smtp-Source: APXvYqyiUIai+eALfU7Xl435xIlJQAoCA41cJbKYw0JkZq0D4sW/LUnQox+kKZ7DvgVjb/2mqissYw==
+X-Received: by 2002:a5d:54c4:: with SMTP id x4mr7853794wrv.296.1553069909445;
+        Wed, 20 Mar 2019 01:18:29 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id u7sm1201862wrn.44.2019.03.20.01.18.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 01:18:00 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] tracing: eliminate const char[] auto variables
-Date:   Wed, 20 Mar 2019 09:17:57 +0100
-Message-Id: <20190320081757.6037-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190318213427.22108-1-linux@rasmusvillemoes.dk>
-References: <20190318213427.22108-1-linux@rasmusvillemoes.dk>
+        Wed, 20 Mar 2019 01:18:28 -0700 (PDT)
+Subject: Re: [PATCH 4/4] clk: meson: meson8b: add the VPU clock trees
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190319215121.29340-1-martin.blumenstingl@googlemail.com>
+ <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <0439a93e-8338-efca-9a7d-8285710400fb@baylibre.com>
+Date:   Wed, 20 Mar 2019 09:18:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319215121.29340-5-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Automatic const char[] variables cause unnecessary code
-generation. For example, the this_mod variable leads to
+On 19/03/2019 22:51, Martin Blumenstingl wrote:
+> The VPU clock tree is slightly different on all three supported SoCs:
+> 
+> Meson8 only has an input mux (which chooses between "fclk_div4",
+> "fclk_div3", "fclk_div5" and "fclk_div7"), a divider and a gate.
+> 
+> Meson8b has two VPU clock trees, each with an input mux (using the same
+> parents as the input mux on Meson8), divider and a gates. The final VPU
+> clock is a glitch-free mux which chooses between VPU_1 and VPU_2.
+> 
+> Meson8m2 uses a similar clock tree as Meson8b but the last input clock
+> is different: instead of using "fclk_div7" as input Meson8m2 uses
+> "gp_pll". This was probably done in hardware to improve the accuracy of
+> the clock because fclk_div7 gives us 2550MHz / 7 = 364.286MHz while
+> GP_PLL can achieve 364.0MHz.
 
-    3f04:       48 b8 5f 5f 74 68 69 73 5f 6d   movabs $0x6d5f736968745f5f,%rax # __this_m
-    3f0e:       4c 8d 44 24 02                  lea    0x2(%rsp),%r8
-    3f13:       48 8d 7c 24 10                  lea    0x10(%rsp),%rdi
-    3f18:       48 89 44 24 02                  mov    %rax,0x2(%rsp)
-    3f1d:       4c 89 e9                        mov    %r13,%rcx
-    3f20:       b8 65 00 00 00                  mov    $0x65,%eax # e
-    3f25:       48 c7 c2 00 00 00 00            mov    $0x0,%rdx
-                        3f28: R_X86_64_32S      .rodata.str1.1+0x18d
-    3f2c:       be 48 00 00 00                  mov    $0x48,%esi
-    3f31:       c7 44 24 0a 6f 64 75 6c         movl   $0x6c75646f,0xa(%rsp) # odul
-    3f39:       66 89 44 24 0e                  mov    %ax,0xe(%rsp)
+This could be a reason, but they only implement frequency scaling for the VPU
+in the recent 4.9 kernel releases... but we should also implement it upstream
+once we solve how to switch these dual clocks in a clean fashion.
 
-i.e., the string gets built on the stack at runtime. Similar code can be
-found for the other instances I'm replacing here. Putting the string
-in .rodata reduces the combined .text+.rodata size and saves time and
-stack space at runtime.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/clk/meson/meson8b.c | 167 ++++++++++++++++++++++++++++++++++++
+>  drivers/clk/meson/meson8b.h |   9 +-
+>  2 files changed, 175 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> index 0d08f1ef7af8..8e091c2d10e6 100644
+> --- a/drivers/clk/meson/meson8b.c
+> +++ b/drivers/clk/meson/meson8b.c
+> @@ -1761,6 +1761,147 @@ static struct clk_regmap meson8m2_gp_pll = {
+>  	},
+>  };
+>  
+> +static const char * const mmeson8b_vpu_0_1_parent_names[] = {
+> +	"fclk_div4", "fclk_div3", "fclk_div5", "fclk_div7"
+> +};
+> +
+> +static const char * const mmeson8m2_vpu_0_1_parent_names[] = {
+> +	"fclk_div4", "fclk_div3", "fclk_div5", "gp_pll"
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_0_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 9,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_0_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
+> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8m2_vpu_0_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 9,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_0_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
+> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_0_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_0_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vpu_0_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_0 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.bit_idx = 8,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vpu_0",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vpu_0_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_1_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 25,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_1_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = mmeson8b_vpu_0_1_parent_names,
+> +		.num_parents = ARRAY_SIZE(mmeson8b_vpu_0_1_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8m2_vpu_1_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.mask = 0x3,
+> +		.shift = 25,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_1_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = mmeson8m2_vpu_0_1_parent_names,
+> +		.num_parents = ARRAY_SIZE(mmeson8m2_vpu_0_1_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_1_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.shift = 16,
+> +		.width = 7,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu_1_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "vpu_1_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu_1 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.bit_idx = 24,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "vpu_1",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "vpu_1_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap meson8b_vpu = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_VPU_CLK_CNTL,
+> +		.mask = 1,
+> +		.shift = 31,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "vpu",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = (const char *[]){ "vpu_0", "vpu_1" },
+> +		.num_parents = 2,
+> +		.flags = CLK_SET_RATE_NO_REPARENT,
+> +	},
+> +};
+> +
+>  /* Everything Else (EE) domain gates */
+>  
+>  static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
+> @@ -2024,6 +2165,9 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
+>  		[CLKID_MALI_0_SEL]	    = &meson8b_mali_0_sel.hw,
+>  		[CLKID_MALI_0_DIV]	    = &meson8b_mali_0_div.hw,
+>  		[CLKID_MALI]		    = &meson8b_mali_0.hw,
+> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
+> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
+> +		[CLKID_VPU]		    = &meson8b_vpu_0.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2210,6 +2354,13 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
+>  		[CLKID_MALI_1_DIV]	    = &meson8b_mali_1_div.hw,
+>  		[CLKID_MALI_1]		    = &meson8b_mali_1.hw,
+>  		[CLKID_MALI]		    = &meson8b_mali.hw,
+> +		[CLKID_VPU_0_SEL]	    = &meson8b_vpu_0_sel.hw,
+> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
+> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
+> +		[CLKID_VPU_1_SEL]	    = &meson8b_vpu_1_sel.hw,
+> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
+> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
+> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2398,6 +2549,13 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
+>  		[CLKID_MALI]		    = &meson8b_mali.hw,
+>  		[CLKID_GP_PLL_DCO]	    = &meson8m2_gp_pll_dco.hw,
+>  		[CLKID_GP_PLL]		    = &meson8m2_gp_pll.hw,
+> +		[CLKID_VPU_0_SEL]	    = &meson8m2_vpu_0_sel.hw,
+> +		[CLKID_VPU_0_DIV]	    = &meson8b_vpu_0_div.hw,
+> +		[CLKID_VPU_0]		    = &meson8b_vpu_0.hw,
+> +		[CLKID_VPU_1_SEL]	    = &meson8m2_vpu_1_sel.hw,
+> +		[CLKID_VPU_1_DIV]	    = &meson8b_vpu_1_div.hw,
+> +		[CLKID_VPU_1]		    = &meson8b_vpu_1.hw,
+> +		[CLKID_VPU]		    = &meson8b_vpu.hw,
+>  		[CLK_NR_CLKS]		    = NULL,
+>  	},
+>  	.num = CLK_NR_CLKS,
+> @@ -2562,6 +2720,15 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
+>  	&meson8b_mali,
+>  	&meson8m2_gp_pll_dco,
+>  	&meson8m2_gp_pll,
+> +	&meson8b_vpu_0_sel,
+> +	&meson8m2_vpu_0_sel,
+> +	&meson8b_vpu_0_div,
+> +	&meson8b_vpu_0,
+> +	&meson8b_vpu_1_sel,
+> +	&meson8m2_vpu_1_sel,
+> +	&meson8b_vpu_1_div,
+> +	&meson8b_vpu_1,
+> +	&meson8b_vpu,
+>  };
+>  
+>  static const struct meson8b_clk_reset_line {
+> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+> index a45f7102c558..e775f91ccce9 100644
+> --- a/drivers/clk/meson/meson8b.h
+> +++ b/drivers/clk/meson/meson8b.h
+> @@ -35,6 +35,7 @@
+>  #define HHI_VID_DIVIDER_CNTL		0x198 /* 0x66 offset in data sheet */
+>  #define HHI_SYS_CPU_CLK_CNTL0		0x19c /* 0x67 offset in data sheet */
+>  #define HHI_MALI_CLK_CNTL		0x1b0 /* 0x6c offset in data sheet */
+> +#define HHI_VPU_CLK_CNTL		0x1bc /* 0x6f offset in data sheet */
+>  #define HHI_HDMI_CLK_CNTL		0x1cc /* 0x73 offset in data sheet */
+>  #define HHI_NAND_CLK_CNTL		0x25c /* 0x97 offset in data sheet */
+>  #define HHI_MPLL_CNTL			0x280 /* 0xa0 offset in data sheet */
+> @@ -149,8 +150,14 @@
+>  #define CLKID_MALI_1		180
+>  #define CLKID_GP_PLL_DCO	181
+>  #define CLKID_GP_PLL		182
+> +#define CLKID_VPU_0_SEL		183
+> +#define CLKID_VPU_0_DIV		184
+> +#define CLKID_VPU_0		185
+> +#define CLKID_VPU_1_SEL		186
+> +#define CLKID_VPU_1_DIV		187
+> +#define CLKID_VPU_1		189
+>  
+> -#define CLK_NR_CLKS		183
+> +#define CLK_NR_CLKS		191
+>  
+>  /*
+>   * include the CLKID and RESETID that have
+> 
 
-The simplest fix, and what I've done for the this_mod case, is to just
-make the variable static.
-
-However, for the "<faulted>" case where the same string is used twice,
-that prevents the linker from merging those two literals, so instead use
-a macro - that also keeps the two instances automatically in
-sync (instead of only the compile-time strlen expression).
-
-Finally, for the two runs of spaces, it turns out that the "build
-these strings on the stack" is not the worst part of what gcc does -
-it turns print_func_help_header_irq() into "if (tgid) { /*
-print_event_info + five seq_printf calls */ } else { /* print
-event_info + another five seq_printf */}". Taking inspiration from a
-suggestion from Al Viro, use %.*s to make snprintf either stop after
-the first two spaces or print the whole string. As a bonus, the
-seq_printfs now fit on single lines (at least, they are not longer
-than the existing ones in the function just above), making it easier
-to see that the ascii art lines up.
-
-x86-64 defconfig + CONFIG_FUNCTION_TRACER:
-
-$ scripts/stackdelta /tmp/stackusage.{0,1}
-./kernel/trace/ftrace.c ftrace_mod_callback     152     136     -16
-./kernel/trace/trace.c  trace_default_header    56      32      -24
-./kernel/trace/trace.c  tracing_mark_raw_write  96      72      -24
-./kernel/trace/trace.c  tracing_mark_write      104     80      -24
-
-bloat-o-meter
-
-add/remove: 1/0 grow/shrink: 0/4 up/down: 14/-375 (-361)
-Function                                     old     new   delta
-this_mod                                       -      14     +14
-ftrace_mod_callback                          577     542     -35
-tracing_mark_raw_write                       444     374     -70
-tracing_mark_write                           616     540     -76
-trace_default_header                         600     406    -194
-
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
-I played around with various versions using field width, but the use
-of tgid-dependent strings in the last two cases made gcc keep
-iffyfying the whole thing. So I came up with this instead.
-
- kernel/trace/ftrace.c |  2 +-
- kernel/trace/trace.c  | 34 +++++++++++++---------------------
- 2 files changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index fa79323331b2..e232dd31cfae 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3879,7 +3879,7 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
- static bool module_exists(const char *module)
- {
- 	/* All modules have the symbol __this_module */
--	const char this_mod[] = "__this_module";
-+	static const char this_mod[] = "__this_module";
- 	char modname[MAX_PARAM_PREFIX_LEN + sizeof(this_mod) + 2];
- 	unsigned long val;
- 	int n;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 21153e64bf1c..b869e5a0dc79 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3556,25 +3556,18 @@ static void print_func_help_header_irq(struct trace_buffer *buf, struct seq_file
- 				       unsigned int flags)
- {
- 	bool tgid = flags & TRACE_ITER_RECORD_TGID;
--	const char tgid_space[] = "          ";
--	const char space[] = "  ";
-+	const char *space = "          ";
-+	int prec = tgid ? 10 : 2;
- 
- 	print_event_info(buf, m);
- 
--	seq_printf(m, "#                          %s  _-----=> irqs-off\n",
--		   tgid ? tgid_space : space);
--	seq_printf(m, "#                          %s / _----=> need-resched\n",
--		   tgid ? tgid_space : space);
--	seq_printf(m, "#                          %s| / _---=> hardirq/softirq\n",
--		   tgid ? tgid_space : space);
--	seq_printf(m, "#                          %s|| / _--=> preempt-depth\n",
--		   tgid ? tgid_space : space);
--	seq_printf(m, "#                          %s||| /     delay\n",
--		   tgid ? tgid_space : space);
--	seq_printf(m, "#           TASK-PID %sCPU#  ||||    TIMESTAMP  FUNCTION\n",
--		   tgid ? "   TGID   " : space);
--	seq_printf(m, "#              | |   %s  |   ||||       |         |\n",
--		   tgid ? "     |    " : space);
-+	seq_printf(m, "#                          %.*s  _-----=> irqs-off\n", prec, space);
-+	seq_printf(m, "#                          %.*s / _----=> need-resched\n", prec, space);
-+	seq_printf(m, "#                          %.*s| / _---=> hardirq/softirq\n", prec, space);
-+	seq_printf(m, "#                          %.*s|| / _--=> preempt-depth\n", prec, space);
-+	seq_printf(m, "#                          %.*s||| /     delay\n", prec, space);
-+	seq_printf(m, "#           TASK-PID %.*sCPU#  ||||    TIMESTAMP  FUNCTION\n", prec, "   TGID   ");
-+	seq_printf(m, "#              | |   %.*s  |   ||||       |         |\n", prec, "     |    ");
- }
- 
- void
-@@ -6304,13 +6297,13 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	struct ring_buffer *buffer;
- 	struct print_entry *entry;
- 	unsigned long irq_flags;
--	const char faulted[] = "<faulted>";
- 	ssize_t written;
- 	int size;
- 	int len;
- 
- /* Used in tracing_mark_raw_write() as well */
--#define FAULTED_SIZE (sizeof(faulted) - 1) /* '\0' is already accounted for */
-+#define FAULTED_STR "<faulted>"
-+#define FAULTED_SIZE (sizeof(FAULTED_STR) - 1) /* '\0' is already accounted for */
- 
- 	if (tracing_disabled)
- 		return -EINVAL;
-@@ -6342,7 +6335,7 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 
- 	len = __copy_from_user_inatomic(&entry->buf, ubuf, cnt);
- 	if (len) {
--		memcpy(&entry->buf, faulted, FAULTED_SIZE);
-+		memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
- 		cnt = FAULTED_SIZE;
- 		written = -EFAULT;
- 	} else
-@@ -6383,7 +6376,6 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	struct ring_buffer_event *event;
- 	struct ring_buffer *buffer;
- 	struct raw_data_entry *entry;
--	const char faulted[] = "<faulted>";
- 	unsigned long irq_flags;
- 	ssize_t written;
- 	int size;
-@@ -6423,7 +6415,7 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	len = __copy_from_user_inatomic(&entry->id, ubuf, cnt);
- 	if (len) {
- 		entry->id = -1;
--		memcpy(&entry->buf, faulted, FAULTED_SIZE);
-+		memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
- 		written = -EFAULT;
- 	} else
- 		written = cnt;
--- 
-2.20.1
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
