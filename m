@@ -2,165 +2,142 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75253C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78131C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F10F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451D620835
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Dz13dbwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfCTBX6 (ORCPT
+        id S1727218AbfCTB3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:23:58 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:55628 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726801AbfCTBX5 (ORCPT
+        Tue, 19 Mar 2019 21:29:24 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:25874 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfCTB3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:23:57 -0400
+        Tue, 19 Mar 2019 21:29:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1553045364; x=1584581364;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=E38eZeQ9viQA5lcPyg6T8ZDnldIgV4Gx/PClWhyMd1Y=;
+  b=Dz13dbwyBOzM+BqGbKwiwJO9Gte2lntOxcaJtXSKJbAAACFe239wAE17
+   9htXUFydaoU0VKD4hxYePcjv0OhTlC18rjIhj8dv7GEHOEui2Adp5Xdw4
+   zUuaYzqBuS+DDs4lHAgpOnE0ZvS7ND08cS9sPTNOO3gA/CImErj4i4B6Y
+   MWZ+O66JOL4HqiJ7KhhcVaR8oqkSQfH/548Oqc/ZhZ0qrQTDXZI6q8nxI
+   7yfpB3NnSwE38hxtaNHOu5J01wXKujGgkRKlcAu4Qwnc58R1BX0vDF2TF
+   WEyDapUayK0AhuorpxYWatOdk/QHb2LNphewFYGBzxjpAYFE5iTfKQwsS
+   A==;
 X-IronPort-AV: E=Sophos;i="5.60,246,1549900800"; 
-   d="scan'208";a="57182664"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 20 Mar 2019 09:23:56 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 6659E4CD447D;
-        Wed, 20 Mar 2019 09:23:24 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 20 Mar 2019 09:24:01 +0800
-Date:   Wed, 20 Mar 2019 09:23:18 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-CC:     <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190320012318.GF1590@localhost.localdomain>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+   d="scan'208";a="105533605"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2019 09:29:24 +0800
+IronPort-SDR: UyC1AfKo5AeepZUZkML4jvpdboQ/a5Kdar40DYnOjZocuv0E9BanWWWrUYd0ltp9BH+nfBr6Lw
+ LO0nCDuuED3XtPIm/W8FAgXLVY6tSZiHI8mnNfjp2D/QEZYI29RBYC9fkRuILMQbhww6EUii1T
+ oXMvh06rJFFTKxL6d0Tq9pcSIcP9OYVHpwg+PEYykkRieYTHqYz6Hoytcs8i9mw/kCQaZZjClR
+ +KGz7GEY19Lp1H81spiWfcsx0lQNA8R0/PKvaspF9JvyRj5RqnNrSys3CNfVO7+BFD/jbB+tkw
+ ADqHxtrX7S3YMFJrCGrNmjUk
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 19 Mar 2019 18:07:01 -0700
+IronPort-SDR: ehNFdQnfwd/m+YDcdOgF4/akeWcqQ3xEoATR/qDhm0CgvHERM2qSgNbKPtT1SgneCBv3gXpAlK
+ 0dg9EyZye1LX9w283yHtxHJQ4jePb/p2fcX/U5aJGmgAmUDpuiTeyjXv0suiDQYO8IeTYYr56M
+ KTJv6mKsqJUIMlBOMPaDg+KKcVlep0E97KU2vS99NXtgN4O2G9j8BHEHK1GBNAEgXaYRNiSxk6
+ yZZIuOVDGZP8s0bcranNx5mZYr3AaSvD8vRuDZRUtlOycyQirn5qKYruxh8wlVUYOqH+Un7vhx
+ tYk=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.70.138]) ([10.111.70.138])
+  by uls-op-cesaip01.wdc.com with ESMTP; 19 Mar 2019 18:29:24 -0700
+Subject: Re: [v1 PATCH 4/4] RISC-V: Support nr_cpus command line option.
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>
+References: <20190319222028.4293-1-atish.patra@wdc.com>
+ <20190319222028.4293-4-atish.patra@wdc.com>
+ <BYAPR04MB5816217E1BD06F0EB68E15A7E7400@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BYAPR04MB58168FE99AA058FB79A0650EE7400@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <17dc2df7-a730-1461-2577-1a05ec27d32d@wdc.com>
+Date:   Tue, 19 Mar 2019 18:29:23 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: 6659E4CD447D.AB6DA
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+In-Reply-To: <BYAPR04MB58168FE99AA058FB79A0650EE7400@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:19:31PM +0800, Pingfan Liu wrote:
+On 3/19/19 4:58 PM, Damien Le Moal wrote:
+> On 2019/03/20 8:56, Damien Le Moal wrote:
+>> On 2019/03/20 7:20, Atish Patra wrote:
+>>> If nr_cpus command line option is set, maximum possible cpu should be
+>>> set to that value.
+>>>
+>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>>> ---
+>>>   arch/riscv/kernel/smpboot.c | 10 +++++++++-
+>>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+>>> index 609475c5..a8fe590c 100644
+>>> --- a/arch/riscv/kernel/smpboot.c
+>>> +++ b/arch/riscv/kernel/smpboot.c
+>>> @@ -86,11 +86,19 @@ void __init setup_smp(void)
+>>>   		}
+>>>   
+>>>   		cpuid_to_hartid_map(cpuid) = hart;
+>>> -		set_cpu_possible(cpuid, true);
+>>
+>> This looks weird: the code being changed does not match what patch 3/4 did.
+> 
+> Arg... Ignore this one. My bad. Morning here, I need more coffee :)
+> 
+:).
 
-Hi Pingfan,
+>>
+>>>   		cpuid++;
+>>>   	}
+>>>   
+>>>   	BUG_ON(!found_boot_cpu);
+>>> +
+>>> +	if (cpuid > nr_cpu_ids)
+>>> +		pr_warn("Total number of cpus [%d] are greater than configured via nr_cpus [%d]\n",
+>>
+>> "The total number of cpus [%d] is greater than nr_cpus option value [%d]\n"
+>>
 
-I wonder your test method and test case.
-Do you test it in the Qemu guest or real machine.
+ok. I will fix it in v2.
 
-Thanks,
-Chao Fan
-
->crashkernel=x@y option may fail to reserve the required memory region if
->KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
->skip the required region.
->
->Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Ingo Molnar <mingo@redhat.com>
->Cc: Borislav Petkov <bp@alien8.de>
->Cc: "H. Peter Anvin" <hpa@zytor.com>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Will Deacon <will.deacon@arm.com>
->Cc: Nicolas Pitre <nico@linaro.org>
->Cc: Pingfan Liu <kernelfans@gmail.com>
->Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
->Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->Cc: linux-kernel@vger.kernel.org
->---
->v1 -> v2: fix some trival format
->
-> arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
-> 1 file changed, 24 insertions(+), 2 deletions(-)
->
->diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
->index 9ed9709..e185318 100644
->--- a/arch/x86/boot/compressed/kaslr.c
->+++ b/arch/x86/boot/compressed/kaslr.c
->@@ -109,6 +109,7 @@ enum mem_avoid_index {
-> 	MEM_AVOID_BOOTPARAMS,
-> 	MEM_AVOID_MEMMAP_BEGIN,
-> 	MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
->+	MEM_AVOID_CRASHKERNEL,
-> 	MEM_AVOID_MAX,
-> };
+Regards,
+Atish
+>>> +			cpuid, nr_cpu_ids);
+>>> +
+>>> +	for (cpuid = 1; cpuid < nr_cpu_ids; cpuid++) {
+>>> +		if (cpuid_to_hartid_map(cpuid) != INVALID_HARTID)
+>>> +			set_cpu_possible(cpuid, true);
+>>> +	}
+>>>   }
+>>>   
+>>>   int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+>>>
+>>
+>>
 > 
->@@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
-> 	}
-> }
 > 
->+/* parse crashkernel=x@y option */
->+static void mem_avoid_crashkernel_simple(char *option)
->+{
->+	unsigned long long crash_size, crash_base;
->+	char *cur = option;
->+
->+	crash_size = memparse(option, &cur);
->+	if (option == cur)
->+		return;
->+
->+	if (*cur == '@') {
->+		option = cur + 1;
->+		crash_base = memparse(option, &cur);
->+		if (option == cur)
->+			return;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
->+	}
->+}
-> 
-> static void handle_mem_options(void)
-> {
->@@ -250,7 +270,7 @@ static void handle_mem_options(void)
-> 	u64 mem_size;
-> 
-> 	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
->-		!strstr(args, "hugepages"))
->+		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
-> 		return;
-> 
-> 	tmp_cmdline = malloc(len + 1);
->@@ -286,6 +306,8 @@ static void handle_mem_options(void)
-> 				goto out;
-> 
-> 			mem_limit = mem_size;
->+		} else if (strstr(param, "crashkernel")) {
->+			mem_avoid_crashkernel_simple(val);
-> 		}
-> 	}
-> 
->@@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
-> 
-> 	/* We don't need to set a mapping for setup_data. */
-> 
->-	/* Mark the memmap regions we need to avoid */
->+	/* Mark the regions we need to avoid */
-> 	handle_mem_options();
-> 
-> #ifdef CONFIG_X86_VERBOSE_BOOTUP
->-- 
->2.7.4
->
->
->
-
 
