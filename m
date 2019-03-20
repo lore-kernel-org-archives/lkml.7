@@ -2,45 +2,43 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F83C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBFDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54202218A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5D821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfCTUVe (ORCPT
+        id S1727503AbfCTUV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:21:34 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.172]:33002 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbfCTUVe (ORCPT
+        Wed, 20 Mar 2019 16:21:57 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.250]:47887 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbfCTUV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:21:34 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 61F97F155F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:21:32 -0500 (CDT)
+        Wed, 20 Mar 2019 16:21:56 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 6265B13EF9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:21:55 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 6hiOhhmTciQer6hiOhVPz6; Wed, 20 Mar 2019 15:21:32 -0500
+        id 6hilhDwY72qH76hilhexjk; Wed, 20 Mar 2019 15:21:55 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=34546 helo=[192.168.1.76])
+Received: from [189.250.104.39] (port=34556 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1h6hhl-003rHS-8G; Wed, 20 Mar 2019 15:21:31 -0500
-Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190208180202.GA16603@embeddedor>
+        id 1h6hij-003rqT-Rx; Wed, 20 Mar 2019 15:21:54 -0500
+Subject: Re: [PATCH] parport: ieee1284: mark expected switch fall-through
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190212174318.GA22735@embeddedor>
+ <4d221d8f-f4d0-90f7-dccf-3af67d4b0c53@embeddedor.com>
+ <7b9bcd42-47fa-05cd-2e92-0124109f9aa2@embeddedor.com>
+ <20190320201235.GA11793@kroah.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
@@ -86,15 +84,15 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
-Date:   Wed, 20 Mar 2019 15:20:51 -0500
+Message-ID: <32608962-7998-1628-222e-472f3ed60ef2@embeddedor.com>
+Date:   Wed, 20 Mar 2019 15:21:52 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190208180202.GA16603@embeddedor>
+In-Reply-To: <20190320201235.GA11793@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -103,13 +101,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.104.39
 X-Source-L: No
-X-Exim-ID: 1h6hhl-003rHS-8G
+X-Exim-ID: 1h6hij-003rqT-Rx
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34546
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34556
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 46
+X-Email-Count: 50
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -117,89 +115,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-Friendly ping:
 
-Who can take this?
+On 3/20/19 3:12 PM, Greg KH wrote:
+> On Wed, Mar 20, 2019 at 03:06:04PM -0500, Gustavo A. R. Silva wrote:
+>> Greg,
+>>
+>> Can you take this, please?
+> 
+> Will do, give me a week or so to catch up...
+> 
+
+Sure thing.
 
 Thanks
 --
 Gustavo
-
-On 2/8/19 12:02 PM, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/mtd/chips/cfi_util.c: In function ‘cfi_build_cmd’:
-> drivers/mtd/chips/cfi_util.c:110:10: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    onecmd |= (onecmd << (chip_mode * 32));
->    ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/mtd/chips/cfi_util.c:112:2: note: here
->   case 4:
->   ^~~~
-> drivers/mtd/chips/cfi_util.c:113:10: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    onecmd |= (onecmd << (chip_mode * 16));
->    ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/mtd/chips/cfi_util.c:114:2: note: here
->   case 2:
->   ^~~~
-> drivers/mtd/chips/cfi_util.c: In function ‘cfi_merge_status’:
-> drivers/mtd/chips/cfi_util.c:163:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    res |= (onestat >> (chip_mode * 32));
->    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/mtd/chips/cfi_util.c:165:2: note: here
->   case 4:
->   ^~~~
-> drivers/mtd/chips/cfi_util.c:166:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    res |= (onestat >> (chip_mode * 16));
->    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/mtd/chips/cfi_util.c:167:2: note: here
->   case 2:
->   ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enabling
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/mtd/chips/cfi_util.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/mtd/chips/cfi_util.c b/drivers/mtd/chips/cfi_util.c
-> index 6f16552cd59f..e3b266ee06af 100644
-> --- a/drivers/mtd/chips/cfi_util.c
-> +++ b/drivers/mtd/chips/cfi_util.c
-> @@ -109,10 +109,13 @@ map_word cfi_build_cmd(u_long cmd, struct map_info *map, struct cfi_private *cfi
->  	case 8:
->  		onecmd |= (onecmd << (chip_mode * 32));
->  #endif
-> +		/* fall through */
->  	case 4:
->  		onecmd |= (onecmd << (chip_mode * 16));
-> +		/* fall through */
->  	case 2:
->  		onecmd |= (onecmd << (chip_mode * 8));
-> +		/* fall through */
->  	case 1:
->  		;
->  	}
-> @@ -162,10 +165,13 @@ unsigned long cfi_merge_status(map_word val, struct map_info *map,
->  	case 8:
->  		res |= (onestat >> (chip_mode * 32));
->  #endif
-> +		/* fall through */
->  	case 4:
->  		res |= (onestat >> (chip_mode * 16));
-> +		/* fall through */
->  	case 2:
->  		res |= (onestat >> (chip_mode * 8));
-> +		/* fall through */
->  	case 1:
->  		;
->  	}
-> 
