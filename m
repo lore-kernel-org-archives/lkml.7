@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3130C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E36C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D29A218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F56E218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfCTVWS (ORCPT
+        id S1727718AbfCTVW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:22:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56091 "EHLO
+        Wed, 20 Mar 2019 17:22:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56088 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfCTVWP (ORCPT
+        with ESMTP id S1727381AbfCTVWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:22:15 -0400
+        Wed, 20 Mar 2019 17:22:14 -0400
 Received: from [5.148.53.5] (helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1h6iez-0005LQ-FY; Wed, 20 Mar 2019 21:22:05 +0000
+        id 1h6iez-0005LS-NE; Wed, 20 Mar 2019 21:22:05 +0000
 From:   Colin King <colin.king@canonical.com>
 To:     Stanley Chu <stanley.chu@mediatek.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
@@ -34,9 +34,11 @@ To:     Stanley Chu <stanley.chu@mediatek.com>,
         linux-mediatek@lists.infradead.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: [PATCH][next] scsi: phy: mediatek: fix typo in author's email address
-Date:   Wed, 20 Mar 2019 21:22:04 +0000
-Message-Id: <20190320212205.5726-1-colin.king@canonical.com>
+Date:   Wed, 20 Mar 2019 21:22:05 +0000
+Message-Id: <20190320212205.5726-2-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320212205.5726-1-colin.king@canonical.com>
+References: <20190320212205.5726-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
