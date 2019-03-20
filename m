@@ -2,94 +2,150 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B02FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6167C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA28421850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765422184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L1gd38/3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FudfDBAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfCTJcf (ORCPT
+        id S1727210AbfCTJeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:32:35 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53505 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTJce (ORCPT
+        Wed, 20 Mar 2019 05:34:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33668 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCTJef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:32:34 -0400
-Received: by mail-it1-f196.google.com with SMTP id w85so6298030itc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cKVEZSve2zu2cXVRSLdqOuBFfFmZNsci9pM14FVbTa4=;
-        b=L1gd38/3IUcv35k4u2P8bTI56uQ4ryHg7Dtm09dAk0MRzlWf3O1wbvpQ+KEKC2cB/f
-         LVQ7tabma/PmIgZXcbzraJ65sJDRpMjRw9j0PEd9+atP2gKI1PhMCl2W+hqPH4RcrxYw
-         HRMZ7m9LVSmHqrqzULfI0sayxlVNIFOgfmdcaDBIlkc8SU5DIxA/Qmw803r4crqwNT6e
-         VMXFfkwj1yQ/hK6Jhepw54OQ0+DnskzFImMaGrhBgOsxKJpu9oWm2hRVgoGrt58HlVNX
-         ji6wHA8l6EMuyCx7kuoGiuMvEoULeffJbkcUoaNJ6ipKuWtRb85kOwbDpIqYpIwxHb82
-         5evQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cKVEZSve2zu2cXVRSLdqOuBFfFmZNsci9pM14FVbTa4=;
-        b=uBrqc/0aU7kVdePJxfKUiVDGxNyIO6ULZZk2CPjN9SwY4muxfFQg3abNzSlXa3hp7j
-         luPrln2mRm/GH+6NYYJWw4bsFII5gzqkTGtKVwNq7E/lc0DuX8Vuh3gtB/lxuVF0SVi5
-         js4KpkwIVrK8Dg7dsL+J2yy372Vd4Fug+GpMTj2y9i5P6xmkaQ1xXR9XJAy6GM11SAdB
-         uLGp5TnX7mkbAfEqNO03Z2EepINC7dcZcH6brXZGquJ2yMnwsNSyE2tKl4eKWmdrrTyZ
-         veBdKgpANbIub5SgopFltrgHAJpmtgNsi15k7OIpIlQhZlOG8nuUKRzuo11jx6LlKwCk
-         4Bpw==
-X-Gm-Message-State: APjAAAU/sd/ndalhhiNYE9NB+/YigI1WcNB5x5d9MsFv7TX+LA/v/5HM
-        BNqXOLtOHErox8SGfUFgCmCS1B1SQkXS2qzuLGFvTA==
-X-Google-Smtp-Source: APXvYqwGZz64S+Xmpqemv33DqVIdLhrtGLvmcYnAH1bLETyDXoJcbzhgF1GXmuPayyviJn0g9RWtUWykn9ZlDKgERio=
-X-Received: by 2002:a24:ecc5:: with SMTP id g188mr4181367ith.97.1553074353723;
- Wed, 20 Mar 2019 02:32:33 -0700 (PDT)
+        Wed, 20 Mar 2019 05:34:35 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2K9XqbB097653;
+        Wed, 20 Mar 2019 04:33:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553074432;
+        bh=dRu4mEIkh/n5bBWff4XyaPuG/oRp0w42scvWFUpjYg8=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=FudfDBAHIaJta+z1kNcyOlIFFafQZtK8d/R8lMIYvEphaRxd+qWmi6yOE20AbHAVy
+         DGF60ie0QAXdRE9Nn2rDns5/hrrviE3ZR++yvCi7Zd8tV/FbWjm1p4xIBHZyUta2Ka
+         Yu3ZVwO3EGBHOciH/RDuEozlVObuMsCTAbMJhF1o=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2K9Xqjv099370
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 Mar 2019 04:33:52 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 20
+ Mar 2019 04:33:50 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Wed, 20 Mar 2019 04:33:50 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2K9Xk34014230;
+        Wed, 20 Mar 2019 04:33:47 -0500
+Subject: Re: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     Damian Kos <dkos@cadence.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>, <jbergsagel@ti.com>,
+        <quentin.schulz@bootlin.com>, <piotrs@cadence.com>,
+        <rafalc@cadence.com>
+References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
+ <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
+Message-ID: <ce6ed2e6-90d5-fc7a-4d6d-ab27d62c5432@ti.com>
+Date:   Wed, 20 Mar 2019 11:33:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1536345427-31425-1-git-send-email-volodymyr_babchuk@epam.com> <20190311130348.2157-1-volodymyr_babchuk@epam.com>
-In-Reply-To: <20190311130348.2157-1-volodymyr_babchuk@epam.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Wed, 20 Mar 2019 10:32:22 +0100
-Message-ID: <CAHUa44EPe0K4pRg1DeBQx5NAgVtGqgrnZCJEawXOgG=HqfzedQ@mail.gmail.com>
-Subject: Re: [PATCH v3] optee: allow to work without static shared memory
-To:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Volodymyr Babchuk <vlad.babchuk@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Volodymyr,
+Damian, ping.
 
-On Mon, Mar 11, 2019 at 2:04 PM Volodymyr Babchuk
-<Volodymyr_Babchuk@epam.com> wrote:
->
-> From: Volodymyr Babchuk <vlad.babchuk@gmail.com>
->
-> On virtualized systems it is possible that OP-TEE will provide
-> only dynamic shared memory support. So it is fine to boot
-> without static SHM enabled if dymanic one is supported.
->
-> Signed-off-by: Volodymyr Babchuk <vlad.babchuk@gmail.com>
-> ---
->
->  Changes from V2:
->   - rebased onto upstream
->
->  drivers/tee/optee/core.c | 80 ++++++++++++++++++++++++----------------
->  1 file changed, 49 insertions(+), 31 deletions(-)
->
+On 31/01/2019 14:08, Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 30/01/2019 13:03, Damian Kos wrote:
+>> Hello!
+>>
+>> This is the series of patches that will add support for the Cadence's DPI/DP
+>> bridge. Please note that this is a preliminary version of the driver and there
+>> will be more patches in the future with updates, fixes and improvements.
+>> Please keep that in mind when looking at FIXME/TODO/XXX comments.
+>>
+>> Initially, MHDP driver was developed as a DRM bridge driver and was planed to
+>> be placed in drivers/gpu/drm/bridge/mhdp.c.  However, there was already
+>> a driver for Cadence's DP controller developed by RockChip, but that driver
+>> uses the different DRM framework and looks like a part of a bigger system.
+>> Both controllers (including firmware) are quite different internally
+>> (MST/FEC/DSC support, link training done by driver, additional commands, IRQ's
+>> etc.) but they have similar register map, except for Framer/Streamer (which is
+>> noticeably different), so they appear similar.
+>>
+>> The following patches contain:
+>> - Moving common code to drivers/gpu/drm/bridge/cdns-mhdp-common.* and
+>>   modifying it a bit (mostly new prefixes for functions and data types) so it
+>>   can be used by two, higher level, drivers.
+>> - Modifying existing RockChip's DP driver to use the common code after changes
+>>   made to it (use the new cdns_mhdp_device structure and new function names).
+>> - Modifying DRM helpers a bit. Some are required for new driver, some are
+>>   updates from DP 1.2 to 1.3 or 1.4.
+>> - Adding documentation for device tree bindings.
+>> - Adding preliminary Cadence DPI/DP bridge driver.
+>>
+>> Some of the things that will be added later on include (but are not limited
+>> to):
+>> - DSC support
+>> - FEC support
+>> - HDCP support
+> 
+> A few random comments/questions after a quick look at the patches.
+> 
+> The names of the source files and the kernel Kconfig are only about
+> "Cadence DP". But the DT bindings is for cdns,mhdp8546, and the
+> resulting module file is mhdp8546.ko. I think more consistency here
+> would be good.
+> 
+> I presume the part number (or family? are there other similar parts with
+> similar part numbers?) is relevant, so it should be in the Kconfig
+> option and help text, and probably in the file names too. The module
+> name should have "cdns" prefix there, similar to the source files and
+> the cdns-dsi.ko.
+> 
+> Or maybe the same driver will handle all Cadence DP parts, in which case
+> generic filenames are fine, but then the resulting kernel module should
+> also be just "cdns-mhdp.ko".
+> 
+> I see some audio functions in the code, but it's not mentioned in the DT
+> bindings. I'm not an audio guy, but the display bridges with audio
+> support I have seen have had DT bindings for the audio source too. Is
+> audio supported in the current driver?
+> 
+>  Tomi
+> 
 
-Looks good, I'm picking this up.
-
-Thanks,
-Jens
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
