@@ -2,108 +2,95 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F3EC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F792146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rl32XMDZ"
+	by mail.kernel.org (Postfix) with ESMTP id E06622146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfCTO6Z (ORCPT
+        id S1728376AbfCTO7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:58:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33542 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfCTO6Y (ORCPT
+        Wed, 20 Mar 2019 10:59:05 -0400
+Received: from hosting.pavoucek.net ([46.28.107.168]:55592 "EHLO
+        hosting.pavoucek.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfCTO7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:58:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id b12so2017195pgk.0;
-        Wed, 20 Mar 2019 07:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dHkQ8pRvpoFo4RQChFFu3tC+HH+rIROba4OSWsLJP1A=;
-        b=rl32XMDZCyRZl0G/fSZwXv8o8ZmwF0/vxdQNe3kejHIEnBr8xxsyB2RQCRTcRuJf/a
-         ClDw/stva9m8TzAqsjpZ0IJ902ZH6Knm6QGh0f+skIyL0wLFg+ARwarg7Uh/dew4tb+M
-         a82JPpuZPokEwpl0MqLNCzdhdmPBWslEq6WrMR1Hefq3prxFNYVSVGFFVBh5uO8BWMGA
-         zlUXkajFrY3/Ww9jLyEqTTlghusR7DFJWRtypkEKjNYK9Ey7Ut+VBIEAR5VNLS4jgrKr
-         rvajjZ4wWMvZfN5uH8ijuqndZJzRNMoT2jWIZkokxBecvvHosJrkDWiyaE9oa6VTe+Do
-         pAaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dHkQ8pRvpoFo4RQChFFu3tC+HH+rIROba4OSWsLJP1A=;
-        b=PGk10R3jy4nqKwHXwf0uqP63yAX4lnd2kfYZjhjLSbnR57dXoIMLu2tpjbBsqU1z07
-         y58vazSqFuIA8ECcoxx3DjfkarPaK4bJIlpE+sUQhuT2X1emVOa7mC1TpVTSVCj8+8hW
-         X/AnDvya9Zuff+ePmBNWI1cO4xYFPGcT6wmDJpQB41CMN20l1UKTK5K360DgLApeWd+b
-         foxMVwKz+fjlDCZO4yvwQkD6ZfrO9ZdrPK7onOzjL4yrUgqdGFZA4ydBWSvd0ZR/9ZPm
-         UL42FMbj/PGu5J7j/+Rr1oySDffg6n4oUVdKDt25CSGR3n7O21dQ6QTBWh7fX0JC89OK
-         vyEA==
-X-Gm-Message-State: APjAAAXKn4yLtFIwbCHGKSQX7ICtdxAU+ebF7w5upra/OaU/Flr+nwCj
-        cPkBrKAaEyrgUzO7lG5b5rpS546l
-X-Google-Smtp-Source: APXvYqyX5X3jEwhow8CvVYvj26zIBgg0SAA6ITrznsgLoY1zl6T79CTep40ednBXSksoDgYNC/y8Jw==
-X-Received: by 2002:a17:902:2bab:: with SMTP id l40mr8342742plb.273.1553093904333;
-        Wed, 20 Mar 2019 07:58:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v5sm7863564pgr.4.2019.03.20.07.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 07:58:23 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 07:58:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH -next] usb: typec: fusb302: Make fusb302_irq_work static
-Message-ID: <20190320145822.GB10980@roeck-us.net>
-References: <20190320141202.19452-1-yuehaibing@huawei.com>
+        Wed, 20 Mar 2019 10:59:05 -0400
+X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Mar 2019 10:59:04 EDT
+Received: from tomas.local.tbs-biometrics.cz (unknown [176.74.132.138])
+        (Authenticated sender: tomas@novotny.cz)
+        by hosting.pavoucek.net (Postfix) with ESMTPSA id 65E66102FFE;
+        Wed, 20 Mar 2019 15:53:22 +0100 (CET)
+Date:   Wed, 20 Mar 2019 15:53:22 +0100
+From:   Tomas Novotny <tomas@novotny.cz>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] iio: light: vcnl4000 use word writes instead of
+ byte writes
+Message-ID: <20190320155322.3fd9f080@tomas.local.tbs-biometrics.cz>
+In-Reply-To: <20190317154802.15174-2-angus@akkea.ca>
+References: <20190317154802.15174-1-angus@akkea.ca>
+        <20190317154802.15174-2-angus@akkea.ca>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320141202.19452-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 10:12:02PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> drivers/usb/typec/tcpm/fusb302.c:1454:6: warning:
->  symbol 'fusb302_irq_work' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Hi Angus,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On Sun, 17 Mar 2019 08:47:58 -0700
+"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
 
+> The VCNL4200 datasheet says that word read and writes should be used
+> to access the registers.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  drivers/usb/typec/tcpm/fusb302.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/iio/light/vcnl4000.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
-> index 261b829..457fe7a 100644
-> --- a/drivers/usb/typec/tcpm/fusb302.c
-> +++ b/drivers/usb/typec/tcpm/fusb302.c
-> @@ -1451,7 +1451,7 @@ static irqreturn_t fusb302_irq_intn(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 04fd0d4b6f19..5295330b65e2 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  	data->rev = (ret >> 8) & 0xf;
 >  
-> -void fusb302_irq_work(struct work_struct *work)
-> +static void fusb302_irq_work(struct work_struct *work)
->  {
->  	struct fusb302_chip *chip = container_of(work, struct fusb302_chip,
->  						 irq_work);
-> -- 
-> 2.7.0
-> 
-> 
+>  	/* Set defaults and enable both channels */
+> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 0x00);
+> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0x00);
+
+minor note: the 0x00 looks like a byte. 0 or 0x0000 would be slightly better?
+The same below.
+
+>  	if (ret < 0)
+>  		return ret;
+> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 0x00);
+> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0x00);
+
+The VCNL4200_PS_CONF1 definition is a bit misleading with word write. Because
+PS_CONF1 is only a low byte of command code 0x03. The high byte of 0x03 is
+PS_CONF2. I would rename it.
+
+>  	if (ret < 0)
+>  		return ret;
+
+Anyway, the main point is that I've tested this patch on VCNL4200 and it
+works, so:
+Tested-by: Tomas Novotny <tomas@novotny.cz>
+
+T.
