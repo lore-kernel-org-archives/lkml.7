@@ -2,216 +2,98 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383F3C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65149C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085A321841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B543213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 04:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="36qL7z0C"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PzUxnAzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfCTERq (ORCPT
+        id S1727182AbfCTES3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 00:17:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41628 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfCTERq (ORCPT
+        Wed, 20 Mar 2019 00:18:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19849 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfCTES2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 00:17:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2K4EO0X118415;
-        Wed, 20 Mar 2019 04:17:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=LpDdTveu9Pyz7AEhASEdQ2wlPx0GffNcfh/cp7mr9PQ=;
- b=36qL7z0CZAvapdr1fU9bsnQAzAN7MQhJ/vj05/JLz3UqFApkXJhRS/q972NrUu43h8og
- nHrupLrPf/hqjST3AFUzKinEmoykfSaEaTZnh2XH/jidnkEdckXP2zvqWTaUMAJP3+cu
- g1pcMFUjybyZi+w3wxy/6EOclcKU6q6azeh2jDa1EJGiLF3Mx7udDLhQpVA+NfkLUlGc
- P/S86n0ImxltncHLnCJCSvUJuTqHX+Ka+HYBKm4gcXdVtTFMdbatw8dqk8LHkrdm38+E
- y8C/AS3pTsfpBcvmkmJQT+4uAc5VvLVK/xZo8S86yvK8ygdnwexurllzOPXiow8A7Blw zA== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2r8rjure65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 04:17:36 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2K4HYmK012343
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 04:17:35 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2K4HXlD003651;
-        Wed, 20 Mar 2019 04:17:33 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Mar 2019 21:17:33 -0700
-Subject: Re: general protection fault in loop_validate_file (2)
-To:     Jan Kara <jack@suse.cz>
-Cc:     syzbot <syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com>,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        penguin-kernel@i-love.sakura.ne.jp
-References: <00000000000098bf7d05845616d7@google.com>
- <cb7aa6d1-6d1e-a9ac-239a-1b5d8160f8cd@oracle.com>
- <20190319094136.GE17334@quack2.suse.cz>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <a6a6fda6-4911-69a1-9db1-97e3ec7cce99@oracle.com>
-Date:   Wed, 20 Mar 2019 12:21:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 20 Mar 2019 00:18:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c91bf160000>; Tue, 19 Mar 2019 21:18:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Mar 2019 21:18:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Mar 2019 21:18:27 -0700
+Received: from [10.25.74.141] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Mar
+ 2019 04:18:24 +0000
+Subject: Re: [PATCH v3] ARM: tegra: enforce PM requirement
+To:     Dmitry Osipenko <digetx@gmail.com>, <linux@armlinux.org.uk>,
+        <jhogan@kernel.org>, <jonathanh@nvidia.com>, <treding@nvidia.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1551255628-4794-1-git-send-email-spujar@nvidia.com>
+ <6e5bf310-12b5-26a3-f466-95cc56c6932a@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <226b42a9-766f-2124-6af9-891694ad1195@nvidia.com>
+Date:   Wed, 20 Mar 2019 09:48:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190319094136.GE17334@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903200037
+In-Reply-To: <6e5bf310-12b5-26a3-f466-95cc56c6932a@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553055510; bh=J31mxn0xE6EJ1K4K+0budBSjg7LEa82DFKPhOdancq0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PzUxnAzhi2Fdz/2Kfc7Cj4SU3ca1SiCBANc+btNXgB5viRLS8cOI5pjwlfBRWJefT
+         mNe6Aoc4EXLIx4fSnkQmIs7ZCf1B+3URDKaomRjMcEX3mAN0VPQ3kSm/zNPwIGb+VC
+         H/zfVlQumRbg9F2nMmpm3UBULpGVfCM9pXlvD3ir/yZNLamA0FJ/mbM8oeXxxZkJlu
+         LrPFSGnP98hsuUgnUL493088zK+9XcxmLfXsYxXkDnGuwF+bSGT2349p9g8UHfvDNT
+         Quirhh+ByvWBtIsS3JnBl+bqeyTCqyfzLg8n3avKNXWbPirVnc1unPIts+JYXNhM7q
+         ZTEeQDZTUQ1iw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 3/19/19 5:41 PM, Jan Kara wrote:
-> On Mon 18-03-19 20:27:02, Dongli Zhang wrote:
->> Hi Jan,
+On 2/27/2019 7:01 PM, Dmitry Osipenko wrote:
+> 27.02.2019 11:20, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Currently runtime PM is enabled for Tegra HDA driver. One of the concern
+>> raised was about handling !PM case in HDA driver. In this case, there is
+>> a need to manage clocks and power explicitly in the driver and reviewers
+>> were not really convinced about this. The consensus at the end was to
+>> enforce PM requirement to keep things simple, rather driver mentioning a
+>> dependency on PM. This is how it is done for ARM 64-bit Tegra platforms
+>> and the same can be done for 32-bit Tegra platforms too.
 >>
->> Indeed there is another issue implicitly reported by below console output from
->> syzkaller:
+>> Finally the objective is to remove dependency on PM availability for all
+>> Tegra drivers. The detailed discussion can be found in following patch,
+>> https://patchwork.ozlabs.org/patch/1031007/
 >>
->> [  245.524424][ T9455] loop_reread_partitions: partition scan of loop0 () failed
->> (rc=-13)
->> [  245.563340][ T9499] kasan: CONFIG_KASAN_INLINE enabled
->> [  245.576412][ T9489] __loop_clr_fd: partition scan of loop0 failed (rc=-13)
->> [  245.581275][ T9499] kasan: GPF could be caused by NULL-ptr deref or user
->> memory access
->> [  245.602596][ T9499] general protection fault: 0000 [#1] PREEMPT SMP KASAN
->>
->> I think rc=-13 is because of below code at line 168:
->>
->> 162 int __blkdev_reread_part(struct block_device *bdev)
->> 163 {
->> 164         struct gendisk *disk = bdev->bd_disk;
->> 165
->> 166         if (!disk_part_scan_enabled(disk) || bdev != bdev->bd_contains)
->> 167                 return -EINVAL;
->> 168         if (!capable(CAP_SYS_ADMIN))
->> 169                 return -EACCES;
->> 170
->> 171         lockdep_assert_held(&bdev->bd_mutex);
->> 172
->> 173         return rescan_partitions(disk, bdev);
->> 174 }
->> 175 EXPORT_SYMBOL(__blkdev_reread_part);
->>
->> I can reproduce this by 'chown username /dev/loop0' on my test machine.
->>
->> Taking 'losetup -d /dev/loop0' as sample, as /dev/loop0 belongs to my username,
->> I am able to detach the loop without 'su'.
->>
->> However, because of above line 168, the partition scan would fail.
->>
->> Should we always assume the user should have admin privilege to detach
->> the loop and this is not a bug?
-> 
-> Firstly, __blkdev_reread_part() is used for all devices so we have to be
-> *very* careful when we relax the permission checks there.
-> 
-> Secondly, I'm not convinced it is always safe to allow non-priviledged user
-> to force repartitioning of a device. That exposes the whole partition table
-> parsing code to non-priviledged user and thus increases possible attack
-> surface.
-> 
-> But in this specific case we call __blkdev_reread_part() only to tear down
-> partitions. So in this specific case calling it by unpriviledged user is
-> fine plus leaving stale partitions behind is certainly not nice. What we
-> could do is:
-> 
-> Export drop_partitions() functionality as a function like
-> __blkdev_drop_part() that would call drop_partitions(bdev->bd_disk, bdev).
-> It would expect (and assert) that &bdev->bd_mutex is already locked. It
-> should probably also replicate the check:
-> 
->         if (!disk_part_scan_enabled(disk) || bdev != bdev->bd_contains)
->                 return -EINVAL;
-> 
-> from __blkdev_reread_part(). And we can call this from __loop_clr_fd().
-> 
-> Then we can just unexport __blkdev_reread_part() (since only loop.c is
-> using it) and fold it inside blkdev_reread_part().
-> 
-> What do you think?
-> 
-> 								Honza
-> 
-
-The idea is to duplicate a new caller of drop_partitions() which is specifically
-used by loop. I think it works. It is safe as well as the functionality is
-limited within loop.
-
-However, perhaps we should not regard this as a bug? Below is the sample to
-reproduce this issue:
-
-$ dd if=/dev/zero of=tmp.raw bs=1M count=100 oflag=direct
-
-$ parted tmp.raw --script mklabel msdos mkpart primary 0% 50% mkpart primary 50%
-100%
-
-$ sudo chown zhang /dev/loop0
-
-$ losetup -P /dev/loop0 tmp.raw
-
-$ ls -l /dev | grep loop0
-brw-rw---- 1 zhang disk      7,   0 Mar  20 11:42 loop0   --> user (zhang)
-brw-rw---- 1 root  disk    259,   0 Mar  20 11:42 loop0p1 --> root
-brw-rw---- 1 root  disk    259,   1 Mar  20 11:42 loop0p2 --> root
-
-$ losetup -d /dev/loop
-
-From above case, /dev/loop0 is owned by user (zhang), while the partitions are
-owned by root.
-
-Should the detach of loop owned by user also unmaps all related partitions owned
-by root?
-
-Perhaps we should assume the '-P' option is always used by root?
-
-
-This is similar to the fact that the administrator should always use '-P' in
-order to enforce partscan when the loop is detached. Otherwise, the partitions
-belong to the loop would remain after 'losetup -d'.
-
-
-Another example is from kpartx as below. If the partitions are mapped via
-'kpartx -av', the user should always run 'kpartx -d' to remove all partition
-mappings.
-
-Otherwise, there would be dm-0 and dm-1 left.
-
-$ sudo kpartx -av  tmp.raw
-add map loop0p1 (253:0): 0 102400 linear 7:0 1
-add map loop0p2 (253:1): 0 102399 linear 7:0 102401
-
-$ ls -l /dev/mapper/
-total 0
-crw------- 1 root root 10, 236 3月  20 11:16 control
-lrwxrwxrwx 1 root root       7 3月  20 11:21 loop0p1 -> ../dm-0
-lrwxrwxrwx 1 root root       7 3月  20 11:21 loop0p2 -> ../dm-1
-
-$ sudo losetup -d /dev/loop0
-
-$ ls -l /dev/mapper/
-total 0
-crw------- 1 root root 10, 236 3月  20 11:16 control
-lrwxrwxrwx 1 root root       7 3月  20 11:21 loop0p1 -> ../dm-0
-lrwxrwxrwx 1 root root       7 3月  20 11:21 loop0p2 -> ../dm-1
-
-Dongli Zhang
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>> Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
+>> ---
+> The commit message is okay to me this time, thanks! I'm still not super-h=
+appy to lose the !PM option because of its value in regards to the PM debug=
+ging, but again we can just do something better in that regards later on if=
+ will be really needed.
+>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Do we have any further concerns over the patch? Request maintainers for=20
+merge otherwise.
