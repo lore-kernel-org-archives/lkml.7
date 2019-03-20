@@ -2,91 +2,132 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E956EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2666DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B368D217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA4820857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="W8TdeH1r"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L2pIgyCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfCTCyM (ORCPT
+        id S1727194AbfCTC7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 22:54:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36477 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCTCyM (ORCPT
+        Tue, 19 Mar 2019 22:59:54 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42718 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCTC7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 22:54:12 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p10so804312pff.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 19:54:11 -0700 (PDT)
+        Tue, 19 Mar 2019 22:59:54 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w139so628541oie.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 19:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZLDJSIDvB3voIXsx3uaIAW5/phZOL5lOm5TrZxnVa50=;
-        b=W8TdeH1rNuB5b7L4HYe6T4ot2Z7cNQML4UOSN4kNWhJwDsCv8m/yKb4n94cYQln62B
-         ABuU0zaHOU0uBbrW2tWrwQhwahzzKwSGfIz+resLx4c8H2VoowZgQ6Om1TGZHrsZsvYr
-         J2BdNs3lu0j69OjSomINVqWM0VxgHMssnRYiF9Ig9BJJlxhJvq+N7KIs7x/g9MSorbP5
-         S8SlTmRShCKeHuCw82BrIvc/JunPq2Fun+/bGb77dXkcjTkWfApLpUc4YLtQrH2vtcvS
-         JQQ6mql+uJ8ns7bbt8DdaeCNrBdUoManuYa/EjxQ4aXHx9w+kw0q3IXfMvCZsRxC7PV4
-         AgWQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yMr1RUBK1VUjq0K0x9zOXPkgJoLdgDs5VbUJMJruWbo=;
+        b=L2pIgyCChQcpLOr/swrUbZsmcACIcg4yzS8kckFZQYTxtm8Ghb3VBzU/pbAnRj0+hv
+         9d6XymhlDQKXAWaCUzBpi+8FILodW5+sdiozjW+CSXkAoVulczBeKB8kgq0LN4s5iYEk
+         ZNH4C/hddgQvW6XWIqqIPyw7TXGsfrue0n3RY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ZLDJSIDvB3voIXsx3uaIAW5/phZOL5lOm5TrZxnVa50=;
-        b=a8t8CQc8tooIdAN3w1QJK+z8QI8MWpcms43AzcTNaRpzLAjX29EupEh4juJvA1fwmh
-         A2+Oj4qg3w7KXgNgqJuELGsufxTTn0x+M2Zxn8LkSx+yBLnvieDgX+F9V/keDUD5OefW
-         f7dN0Xb5WISGIDbxeDqZGZ5RbhD7ES6x4sVqLrBnyF0MBGS1f146WsWwRv8Dng4f1HNu
-         Gq7oQfAZGTjMp7FfuQ0q1I66s87lOB8F3KpZCi4XN5yWdYBHVAKFphKnGU7i1XJlKF+3
-         qFYl8bPxbCSEelVNbBfRyAQG79JnJhPsuvA+B77gzBOD33kPqKeQlu/J8Nxnt/NVx5V8
-         oeaA==
-X-Gm-Message-State: APjAAAXpCdr7UrZXd9/9Pd9c6SpoUCbN4Q1GBxkR0mc1X64Q0S1mW029
-        0QV2PnAtg2V5Eb2foTX6zdOpiA==
-X-Google-Smtp-Source: APXvYqytu3Q0SPwwuneKuggYzZxtsGo2d/pAI1t5XD4kd9KWfw/AyQMgpfAiVAsyvRRFFs7MCd5K8g==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr5197734ply.14.1553050451456;
-        Tue, 19 Mar 2019 19:54:11 -0700 (PDT)
-Received: from localhost (2001-b011-7001-1ed7-23f1-a55b-5e6a-d75e.dynamic-ip6.hinet.net. [2001:b011:7001:1ed7:23f1:a55b:5e6a:d75e])
-        by smtp.gmail.com with ESMTPSA id l5sm561016pfi.97.2019.03.19.19.54.10
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yMr1RUBK1VUjq0K0x9zOXPkgJoLdgDs5VbUJMJruWbo=;
+        b=NolB3WR4b3em9VI4SKxnP/P7HtJw3awlVOn7sLn3VcjnhtrN5oMDC3nhmu55ZjIiXB
+         LD2pvlUBQpW/kwpwOHZ54AWFFJX7kuoj6NFci9QcpkfjDHywxaIBu33HsjFyS1tK0vZz
+         qDrOsTlpcbgeoUp9A6uASDb6qTY2pkljJPU3RiCYdy/VkEPlrlv0V9wHEnHH4VnUn2zI
+         BRw8cGkQl2ppcVOVUfbb94ZCEeCIbVohwW1safOMopFO1ylKruWwT5Gs3I9AkKjiz7gZ
+         R4M9X9TDm2/4f1g2aOjmYEkMMV6OZ6FeopOzN8glpb7mW/MzQ7/8osGWyOHamT5r+hC0
+         Iuyw==
+X-Gm-Message-State: APjAAAU+pgDzPP8AKrD6qqQH/hFVHGU3fDuPm6A3DqXYUWG87jus6s5C
+        qbcSGN9gQDfN9UaVsGxAy2UScTZ/ichaCQ==
+X-Google-Smtp-Source: APXvYqxNuifXZVztNT/jXaO8UjxV2bb/AmVbXaI7aFVDWR9bB0U6+XRZZWlVKRJT9S9D5f/5QA4jJQ==
+X-Received: by 2002:aca:4812:: with SMTP id v18mr3323563oia.36.1553050793075;
+        Tue, 19 Mar 2019 19:59:53 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id 92sm342656oti.60.2019.03.19.19.59.50
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 19:54:10 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 19:54:10 -0700 (PDT)
-X-Google-Original-Date: Tue, 19 Mar 2019 19:41:18 PDT (-0700)
-Subject:     Re: [PATCH v4 1/2] sh: mm: make use of new memblocks_present() helper
-In-Reply-To: <c9f13314-204b-10a5-e9eb-2c4d8fca6c90@deltatee.com>
-CC:     robh@kernel.org, dalias@libc.org, ysato@users.sourceforge.jp,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        sbates@raithlin.com, Christoph Hellwig <hch@infradead.org>,
-        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     logang@deltatee.com
-Message-ID: <mhng-bc5a03c7-1387-43e2-bd72-fb03e344e196@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 19 Mar 2019 19:59:51 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id v7so633289oie.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 19:59:50 -0700 (PDT)
+X-Received: by 2002:aca:b7c4:: with SMTP id h187mr3760677oif.112.1553050789996;
+ Tue, 19 Mar 2019 19:59:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.3917a1471bfc8cbdfdde8026566b3857caff5762.1553009355.git-series.maxime.ripard@bootlin.com>
+ <9d9fe5c2dc58f9398cb6b1e9bb208640d25ae816.1553009355.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <9d9fe5c2dc58f9398cb6b1e9bb208640d25ae816.1553009355.git-series.maxime.ripard@bootlin.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 20 Mar 2019 11:59:38 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5BH25EEXN1KFsQigJo-K_KCfM0vmwVYJmj1-fkw+189Cg@mail.gmail.com>
+Message-ID: <CAAFQd5BH25EEXN1KFsQigJo-K_KCfM0vmwVYJmj1-fkw+189Cg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] media: uapi: Add H264 low-level decoder API
+ compound controls.
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        jenskuske@gmail.com, Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 10:56:52 PDT (-0700), logang@deltatee.com wrote:
-> Hey Palmer,
->
-> On 2019-01-23 12:56 p.m., Palmer Dabbelt wrote:
->>> @Palmer: if you can just look at taking the second patch, I'll resubmit
->>> the first one to the appropriate list.
->>
->> Works for me.  I'll queue the second patch into my staging branch, targeted for
->> the next merge window.
->
-> It doesn't look like my sparesmem patch made it into v5.1-rc1. Did it
-> fall through the cracks?
+Hi Maxime,
 
-It must have, sorry.  Is this what you're referring to?
+On Wed, Mar 20, 2019 at 12:29 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> From: Pawel Osciak <posciak@chromium.org>
+>
+> Stateless video codecs will require both the H264 metadata and slices in
+> order to be able to decode frames.
+>
+> This introduces the definitions for a new pixel format for H264 slices that
+> have been parsed, as well as the structures used to pass the metadata from
+> the userspace to the kernel.
+>
+> Co-Developped-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Signed-off-by: Pawel Osciak <posciak@chromium.org>
+> Signed-off-by: Guenter Roeck <groeck@chromium.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/media/uapi/v4l/biblio.rst            |   9 +-
+>  Documentation/media/uapi/v4l/ext-ctrls-codec.rst   | 569 ++++++++++++++-
+>  Documentation/media/uapi/v4l/pixfmt-compressed.rst |  19 +-
+>  Documentation/media/uapi/v4l/vidioc-queryctrl.rst  |  30 +-
+>  Documentation/media/videodev2.h.rst.exceptions     |   5 +-
+>  drivers/media/v4l2-core/v4l2-ctrls.c               |  42 +-
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +-
+>  include/media/h264-ctrls.h                         | 192 +++++-
+>  include/media/v4l2-ctrls.h                         |  13 +-
+>  include/uapi/linux/videodev2.h                     |   1 +-
+>  10 files changed, 880 insertions(+), 1 deletion(-)
+>  create mode 100644 include/media/h264-ctrls.h
+>
 
-    https://patchwork.kernel.org/patch/10754911/
+Thanks for the patch and addressing my comments patiently!
+
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+
+Best regards,
+Tomasz
