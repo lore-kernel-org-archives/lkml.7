@@ -2,680 +2,122 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A0BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD90C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3C02146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C072B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCD+PBTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfCTSvl (ORCPT
+        id S1727515AbfCTSvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:51:41 -0400
-Received: from foss.arm.com ([217.140.101.70]:44942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfCTSue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:50:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2B841AED;
-        Wed, 20 Mar 2019 11:50:33 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 38AEE3F59C;
-        Wed, 20 Mar 2019 11:50:32 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 14/25] coresight: Rename of_coresight to coresight-platform
-Date:   Wed, 20 Mar 2019 18:49:31 +0000
-Message-Id: <1553107783-3340-15-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
-References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+        Wed, 20 Mar 2019 14:51:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41344 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfCTSvo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:51:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t7so3117108otk.8;
+        Wed, 20 Mar 2019 11:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XNMPwWvFba4JuAksv3Ts/sq+FdMZEQ3WIMOUGxHjzJI=;
+        b=CCD+PBTjFlkwB+0/IrPzvlBko46ds79+Muf1cZOJ92mMMOdNVO5zplGlQ5x6GHYRel
+         788HN8hAgErRWvGSy+efoxQ/+TgXpWsf/wCdE625zEVbBB8/4bHYanoTZoTeYocJluxD
+         b1Foprou+5lt+IffB4ehTpnactRE4Vx1ZufX2Zykjk24ObmL9VWukIu6G2h9IRSACb9N
+         oA3/B/xPDnWwARgdQpD5MYmzoS4eS36k9C8Kelwfkq06Kp2W99qvJet+ArBanpCUTvno
+         tVagB+0KsSBzNAS3wHS8usq0VOWUiOwHlcm2Qcd2fDgX3eIl+p6JAqaSFwwfZefMZIKH
+         JQSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XNMPwWvFba4JuAksv3Ts/sq+FdMZEQ3WIMOUGxHjzJI=;
+        b=bwjtqDXm1ePXOun5ypQ+/dgdt+8eh3lRpsU1ekpj13CSOVwfFj/ywUcOQQImdi0xzY
+         1KJtbzSUltIQXuIn5qsLCcfAKsu+HXCAjAu1bTtRhPP0jBosF5xw+oW4/gKUMBSCDHZ/
+         jH9/Kcg2PU0oWeQKf5L7+D9Yf8Gqes+INmC/3aqlQQ2j5WEMi9IluOlBksCvyPEjks0b
+         fghjm/PuVggJvUL+nttxVXyfgMvAW8rvtFO/7aEmaY09hiAp7DeEp6rlsB2Ckg4/f9SI
+         FjfuFkNWFijbSgENzmW1g3oSWY+YEBc/XGdfVcUoLvDd5Pz5at/NL9FQfcbefpiUvx9f
+         FSyw==
+X-Gm-Message-State: APjAAAXWDpYPj47vFYLwHF9ntIWmTeZ5pU6AWdHJ8ngg644ilAPRbzss
+        id+M+Tc3T+QFZ6DDAATuI+J+obsjQguKR60tuf8=
+X-Google-Smtp-Source: APXvYqx4bdeP/n6pHORM8a+LXrO9DEvxXSmxNZJAC1yVVxzeAuIC05KqKfczN+sSEx57Pg31TnlDlWizYSFOXDvrfyM=
+X-Received: by 2002:a05:6830:2118:: with SMTP id i24mr7147820otc.224.1553107902852;
+ Wed, 20 Mar 2019 11:51:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
+In-Reply-To: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
+From:   =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
+Date:   Wed, 20 Mar 2019 20:51:30 +0200
+Message-ID: <CAPWNY8UmDAKeF+SNMKDxki=-=s+UPx9WXQvSoFqWmUCsNvv=1g@mail.gmail.com>
+Subject: Re: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James.Bottomley@hansenpartnership.com,
+        linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the firmware handling file to a more generic
-name, in preparation for adding ACPI support.
+On Tue, Mar 19, 2019 at 10:31 PM Tadeusz Struk <tadeusz.struk@intel.com> wr=
+ote:
+>
+> The poll condition should only check response_length,
+> because reads should only be issued if there is data to read.
+> The response_read flag only prevents double writes.
+> The problem was that the write set the response_read to false,
+> enqued a tpm job, and returned. Then application called poll
+> which checked the response_read flag and returned EPOLLIN.
+> Then the application called read, but got nothing.
+> After all that the async_work kicked in.
+> Added also mutex_lock around the poll check to prevent
+> other possible race conditions.
+>
+> Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
+> Reported-by: Mantas Mikul=C4=97nas <grawity@gmail.com>
+> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+> ---
+>  drivers/char/tpm/tpm-dev-common.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev=
+-common.c
+> index 5eecad233ea1..7312d3214381 100644
+> --- a/drivers/char/tpm/tpm-dev-common.c
+> +++ b/drivers/char/tpm/tpm-dev-common.c
+> @@ -203,12 +203,14 @@ __poll_t tpm_common_poll(struct file *file, poll_ta=
+ble *wait)
+>         __poll_t mask =3D 0;
+>
+>         poll_wait(file, &priv->async_wait, wait);
+> +       mutex_lock(&priv->buffer_mutex);
+>
+> -       if (!priv->response_read || priv->response_length)
+> +       if (priv->response_length)
+>                 mask =3D EPOLLIN | EPOLLRDNORM;
+>         else
+>                 mask =3D EPOLLOUT | EPOLLWRNORM;
+>
+> +       mutex_unlock(&priv->buffer_mutex);
+>         return mask;
+>  }
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/Makefile             |   3 +-
- drivers/hwtracing/coresight/coresight-platform.c | 298 +++++++++++++++++++++++
- drivers/hwtracing/coresight/of_coresight.c       | 297 ----------------------
- 3 files changed, 299 insertions(+), 299 deletions(-)
- create mode 100644 drivers/hwtracing/coresight/coresight-platform.c
- delete mode 100644 drivers/hwtracing/coresight/of_coresight.c
+Thanks, this patch seems to work, and I apologize for not responding
+to test the patches earlier.
 
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 3b435aa..3c0ac42 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -2,8 +2,7 @@
- #
- # Makefile for CoreSight drivers.
- #
--obj-$(CONFIG_CORESIGHT) += coresight.o coresight-etm-perf.o
--obj-$(CONFIG_OF) += of_coresight.o
-+obj-$(CONFIG_CORESIGHT) += coresight.o coresight-etm-perf.o coresight-platform.o
- obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o \
- 					     coresight-tmc-etf.o \
- 					     coresight-tmc-etr.o
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-new file mode 100644
-index 0000000..514cc2b
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -0,0 +1,298 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_graph.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/amba/bus.h>
-+#include <linux/coresight.h>
-+#include <linux/cpumask.h>
-+#include <asm/smp_plat.h>
-+
-+#ifdef CONFIG_OF
-+static int of_dev_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
-+
-+static struct device *
-+of_coresight_get_endpoint_device(struct device_node *endpoint)
-+{
-+	struct device *dev = NULL;
-+
-+	/*
-+	 * If we have a non-configurable replicator, it will be found on the
-+	 * platform bus.
-+	 */
-+	dev = bus_find_device(&platform_bus_type, NULL,
-+			      endpoint, of_dev_node_match);
-+	if (dev)
-+		return dev;
-+
-+	/*
-+	 * We have a configurable component - circle through the AMBA bus
-+	 * looking for the device that matches the endpoint node.
-+	 */
-+	return bus_find_device(&amba_bustype, NULL,
-+			       endpoint, of_dev_node_match);
-+}
-+
-+static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
-+{
-+	return of_property_read_bool(ep, "slave-mode");
-+}
-+
-+static void of_coresight_get_ports_legacy(const struct device_node *node,
-+					  int *nr_inport, int *nr_outport)
-+{
-+	struct device_node *ep = NULL;
-+	int in = 0, out = 0;
-+
-+	do {
-+		ep = of_graph_get_next_endpoint(node, ep);
-+		if (!ep)
-+			break;
-+
-+		if (of_coresight_legacy_ep_is_input(ep))
-+			in++;
-+		else
-+			out++;
-+
-+	} while (ep);
-+
-+	*nr_inport = in;
-+	*nr_outport = out;
-+}
-+
-+static struct device_node *of_coresight_get_port_parent(struct device_node *ep)
-+{
-+	struct device_node *parent = of_graph_get_port_parent(ep);
-+
-+	/*
-+	 * Skip one-level up to the real device node, if we
-+	 * are using the new bindings.
-+	 */
-+	if (of_node_name_eq(parent, "in-ports") ||
-+	    of_node_name_eq(parent, "out-ports"))
-+		parent = of_get_next_parent(parent);
-+
-+	return parent;
-+}
-+
-+static inline struct device_node *
-+of_coresight_get_input_ports_node(const struct device_node *node)
-+{
-+	return of_get_child_by_name(node, "in-ports");
-+}
-+
-+static inline struct device_node *
-+of_coresight_get_output_ports_node(const struct device_node *node)
-+{
-+	return of_get_child_by_name(node, "out-ports");
-+}
-+
-+static inline int
-+of_coresight_count_ports(struct device_node *port_parent)
-+{
-+	int i = 0;
-+	struct device_node *ep = NULL;
-+
-+	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
-+		i++;
-+	return i;
-+}
-+
-+static void of_coresight_get_ports(const struct device_node *node,
-+				   int *nr_inport, int *nr_outport)
-+{
-+	struct device_node *input_ports = NULL, *output_ports = NULL;
-+
-+	input_ports = of_coresight_get_input_ports_node(node);
-+	output_ports = of_coresight_get_output_ports_node(node);
-+
-+	if (input_ports || output_ports) {
-+		if (input_ports) {
-+			*nr_inport = of_coresight_count_ports(input_ports);
-+			of_node_put(input_ports);
-+		}
-+		if (output_ports) {
-+			*nr_outport = of_coresight_count_ports(output_ports);
-+			of_node_put(output_ports);
-+		}
-+	} else {
-+		/* Fall back to legacy DT bindings parsing */
-+		of_coresight_get_ports_legacy(node, nr_inport, nr_outport);
-+	}
-+}
-+
-+static int of_coresight_alloc_memory(struct device *dev,
-+			struct coresight_platform_data *pdata)
-+{
-+	if (pdata->nr_outport) {
-+		pdata->conns = devm_kzalloc(dev, pdata->nr_outport *
-+					    sizeof(*pdata->conns),
-+					    GFP_KERNEL);
-+		if (!pdata->conns)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+int of_coresight_get_cpu(const struct device_node *node)
-+{
-+	int cpu;
-+	struct device_node *dn;
-+
-+	dn = of_parse_phandle(node, "cpu", 0);
-+	/* Affinity defaults to CPU0 */
-+	if (!dn)
-+		return 0;
-+	cpu = of_cpu_node_to_id(dn);
-+	of_node_put(dn);
-+
-+	/* Affinity to CPU0 if no cpu nodes are found */
-+	return (cpu < 0) ? 0 : cpu;
-+}
-+EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
-+
-+/*
-+ * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-+ * and fill the connection information in @conn
-+ *
-+ * Parses the local port, remote device name and the remote port.
-+ *
-+ * Returns :
-+ *	 1	- If the parsing is successful and a connection record
-+ *		  was created for an output connection.
-+ *	 0	- If the parsing completed without any fatal errors.
-+ *	-Errno	- Fatal error, abort the scanning.
-+ */
-+static int of_coresight_parse_endpoint(struct device *dev,
-+				       struct device_node *ep,
-+				       struct coresight_connection *conn)
-+{
-+	int ret = 0;
-+	struct of_endpoint endpoint, rendpoint;
-+	struct device_node *rparent = NULL;
-+	struct device_node *rep = NULL;
-+	struct device *rdev = NULL;
-+
-+	do {
-+		/* Parse the local port details */
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			break;
-+		/*
-+		 * Get a handle on the remote endpoint and the device it is
-+		 * attached to.
-+		 */
-+		rep = of_graph_get_remote_endpoint(ep);
-+		if (!rep)
-+			break;
-+		rparent = of_coresight_get_port_parent(rep);
-+		if (!rparent)
-+			break;
-+		if (of_graph_parse_endpoint(rep, &rendpoint))
-+			break;
-+
-+		/* If the remote device is not available, defer probing */
-+		rdev = of_coresight_get_endpoint_device(rparent);
-+		if (!rdev) {
-+			ret = -EPROBE_DEFER;
-+			break;
-+		}
-+
-+		conn->outport = endpoint.port;
-+		conn->child_name = devm_kstrdup(dev,
-+						dev_name(rdev),
-+						GFP_KERNEL);
-+		conn->child_port = rendpoint.port;
-+		/* Connection record updated */
-+		ret = 1;
-+	} while (0);
-+
-+	of_node_put(rparent);
-+	of_node_put(rep);
-+	put_device(rdev);
-+
-+	return ret;
-+}
-+
-+struct coresight_platform_data *
-+of_get_coresight_platform_data(struct device *dev,
-+			       const struct device_node *node)
-+{
-+	int ret = 0;
-+	struct coresight_platform_data *pdata;
-+	struct coresight_connection *conn;
-+	struct device_node *ep = NULL;
-+	const struct device_node *parent = NULL;
-+	bool legacy_binding = false;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* Use device name as sysfs handle */
-+	pdata->name = dev_name(dev);
-+	pdata->cpu = of_coresight_get_cpu(node);
-+
-+	/* Get the number of input and output port for this component */
-+	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
-+
-+	/* If there are no output connections, we are done */
-+	if (!pdata->nr_outport)
-+		return pdata;
-+
-+	ret = of_coresight_alloc_memory(dev, pdata);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	parent = of_coresight_get_output_ports_node(node);
-+	/*
-+	 * If the DT uses obsoleted bindings, the ports are listed
-+	 * under the device and we need to filter out the input
-+	 * ports.
-+	 */
-+	if (!parent) {
-+		legacy_binding = true;
-+		parent = node;
-+		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
-+	}
-+
-+	conn = pdata->conns;
-+
-+	/* Iterate through each output port to discover topology */
-+	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
-+		/*
-+		 * Legacy binding mixes input/output ports under the
-+		 * same parent. So, skip the input ports if we are dealing
-+		 * with legacy binding, as they processed with their
-+		 * connected output ports.
-+		 */
-+		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
-+			continue;
-+
-+		ret = of_coresight_parse_endpoint(dev, ep, conn);
-+		switch (ret) {
-+		case 1:
-+			conn++;		/* Fall through */
-+		case 0:
-+			break;
-+		default:
-+			return ERR_PTR(ret);
-+		}
-+	}
-+
-+	return pdata;
-+}
-+EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
-+#endif
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-deleted file mode 100644
-index 7045930..0000000
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ /dev/null
-@@ -1,297 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2012, The Linux Foundation. All rights reserved.
-- */
--
--#include <linux/types.h>
--#include <linux/err.h>
--#include <linux/slab.h>
--#include <linux/clk.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/of_graph.h>
--#include <linux/of_platform.h>
--#include <linux/platform_device.h>
--#include <linux/amba/bus.h>
--#include <linux/coresight.h>
--#include <linux/cpumask.h>
--#include <asm/smp_plat.h>
--
--
--static int of_dev_node_match(struct device *dev, void *data)
--{
--	return dev->of_node == data;
--}
--
--static struct device *
--of_coresight_get_endpoint_device(struct device_node *endpoint)
--{
--	struct device *dev = NULL;
--
--	/*
--	 * If we have a non-configurable replicator, it will be found on the
--	 * platform bus.
--	 */
--	dev = bus_find_device(&platform_bus_type, NULL,
--			      endpoint, of_dev_node_match);
--	if (dev)
--		return dev;
--
--	/*
--	 * We have a configurable component - circle through the AMBA bus
--	 * looking for the device that matches the endpoint node.
--	 */
--	return bus_find_device(&amba_bustype, NULL,
--			       endpoint, of_dev_node_match);
--}
--
--static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
--{
--	return of_property_read_bool(ep, "slave-mode");
--}
--
--static void of_coresight_get_ports_legacy(const struct device_node *node,
--					  int *nr_inport, int *nr_outport)
--{
--	struct device_node *ep = NULL;
--	int in = 0, out = 0;
--
--	do {
--		ep = of_graph_get_next_endpoint(node, ep);
--		if (!ep)
--			break;
--
--		if (of_coresight_legacy_ep_is_input(ep))
--			in++;
--		else
--			out++;
--
--	} while (ep);
--
--	*nr_inport = in;
--	*nr_outport = out;
--}
--
--static struct device_node *of_coresight_get_port_parent(struct device_node *ep)
--{
--	struct device_node *parent = of_graph_get_port_parent(ep);
--
--	/*
--	 * Skip one-level up to the real device node, if we
--	 * are using the new bindings.
--	 */
--	if (of_node_name_eq(parent, "in-ports") ||
--	    of_node_name_eq(parent, "out-ports"))
--		parent = of_get_next_parent(parent);
--
--	return parent;
--}
--
--static inline struct device_node *
--of_coresight_get_input_ports_node(const struct device_node *node)
--{
--	return of_get_child_by_name(node, "in-ports");
--}
--
--static inline struct device_node *
--of_coresight_get_output_ports_node(const struct device_node *node)
--{
--	return of_get_child_by_name(node, "out-ports");
--}
--
--static inline int
--of_coresight_count_ports(struct device_node *port_parent)
--{
--	int i = 0;
--	struct device_node *ep = NULL;
--
--	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
--		i++;
--	return i;
--}
--
--static void of_coresight_get_ports(const struct device_node *node,
--				   int *nr_inport, int *nr_outport)
--{
--	struct device_node *input_ports = NULL, *output_ports = NULL;
--
--	input_ports = of_coresight_get_input_ports_node(node);
--	output_ports = of_coresight_get_output_ports_node(node);
--
--	if (input_ports || output_ports) {
--		if (input_ports) {
--			*nr_inport = of_coresight_count_ports(input_ports);
--			of_node_put(input_ports);
--		}
--		if (output_ports) {
--			*nr_outport = of_coresight_count_ports(output_ports);
--			of_node_put(output_ports);
--		}
--	} else {
--		/* Fall back to legacy DT bindings parsing */
--		of_coresight_get_ports_legacy(node, nr_inport, nr_outport);
--	}
--}
--
--static int of_coresight_alloc_memory(struct device *dev,
--			struct coresight_platform_data *pdata)
--{
--	if (pdata->nr_outport) {
--		pdata->conns = devm_kzalloc(dev, pdata->nr_outport *
--					    sizeof(*pdata->conns),
--					    GFP_KERNEL);
--		if (!pdata->conns)
--			return -ENOMEM;
--	}
--
--	return 0;
--}
--
--int of_coresight_get_cpu(const struct device_node *node)
--{
--	int cpu;
--	struct device_node *dn;
--
--	dn = of_parse_phandle(node, "cpu", 0);
--	/* Affinity defaults to CPU0 */
--	if (!dn)
--		return 0;
--	cpu = of_cpu_node_to_id(dn);
--	of_node_put(dn);
--
--	/* Affinity to CPU0 if no cpu nodes are found */
--	return (cpu < 0) ? 0 : cpu;
--}
--EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
--
--/*
-- * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-- * and fill the connection information in @conn
-- *
-- * Parses the local port, remote device name and the remote port.
-- *
-- * Returns :
-- *	 1	- If the parsing is successful and a connection record
-- *		  was created for an output connection.
-- *	 0	- If the parsing completed without any fatal errors.
-- *	-Errno	- Fatal error, abort the scanning.
-- */
--static int of_coresight_parse_endpoint(struct device *dev,
--				       struct device_node *ep,
--				       struct coresight_connection *conn)
--{
--	int ret = 0;
--	struct of_endpoint endpoint, rendpoint;
--	struct device_node *rparent = NULL;
--	struct device_node *rep = NULL;
--	struct device *rdev = NULL;
--
--	do {
--		/* Parse the local port details */
--		if (of_graph_parse_endpoint(ep, &endpoint))
--			break;
--		/*
--		 * Get a handle on the remote endpoint and the device it is
--		 * attached to.
--		 */
--		rep = of_graph_get_remote_endpoint(ep);
--		if (!rep)
--			break;
--		rparent = of_coresight_get_port_parent(rep);
--		if (!rparent)
--			break;
--		if (of_graph_parse_endpoint(rep, &rendpoint))
--			break;
--
--		/* If the remote device is not available, defer probing */
--		rdev = of_coresight_get_endpoint_device(rparent);
--		if (!rdev) {
--			ret = -EPROBE_DEFER;
--			break;
--		}
--
--		conn->outport = endpoint.port;
--		conn->child_name = devm_kstrdup(dev,
--						dev_name(rdev),
--						GFP_KERNEL);
--		conn->child_port = rendpoint.port;
--		/* Connection record updated */
--		ret = 1;
--	} while (0);
--
--	of_node_put(rparent);
--	of_node_put(rep);
--	put_device(rdev);
--
--	return ret;
--}
--
--struct coresight_platform_data *
--of_get_coresight_platform_data(struct device *dev,
--			       const struct device_node *node)
--{
--	int ret = 0;
--	struct coresight_platform_data *pdata;
--	struct coresight_connection *conn;
--	struct device_node *ep = NULL;
--	const struct device_node *parent = NULL;
--	bool legacy_binding = false;
--
--	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
--		return ERR_PTR(-ENOMEM);
--
--	/* Use device name as sysfs handle */
--	pdata->name = dev_name(dev);
--	pdata->cpu = of_coresight_get_cpu(node);
--
--	/* Get the number of input and output port for this component */
--	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
--
--	/* If there are no output connections, we are done */
--	if (!pdata->nr_outport)
--		return pdata;
--
--	ret = of_coresight_alloc_memory(dev, pdata);
--	if (ret)
--		return ERR_PTR(ret);
--
--	parent = of_coresight_get_output_ports_node(node);
--	/*
--	 * If the DT uses obsoleted bindings, the ports are listed
--	 * under the device and we need to filter out the input
--	 * ports.
--	 */
--	if (!parent) {
--		legacy_binding = true;
--		parent = node;
--		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
--	}
--
--	conn = pdata->conns;
--
--	/* Iterate through each output port to discover topology */
--	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
--		/*
--		 * Legacy binding mixes input/output ports under the
--		 * same parent. So, skip the input ports if we are dealing
--		 * with legacy binding, as they processed with their
--		 * connected output ports.
--		 */
--		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
--			continue;
--
--		ret = of_coresight_parse_endpoint(dev, ep, conn);
--		switch (ret) {
--		case 1:
--			conn++;		/* Fall through */
--		case 0:
--			break;
--		default:
--			return ERR_PTR(ret);
--		}
--	}
--
--	return pdata;
--}
--EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
--- 
-2.7.4
+Any chance it'll be submitted for stable 5.0.x as well?
 
+--=20
+Mantas Mikul=C4=97nas
