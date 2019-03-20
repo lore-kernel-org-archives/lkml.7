@@ -3,84 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96BCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253B621850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B8F2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfCTLLJ (ORCPT
+        id S1727813AbfCTLMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 07:11:09 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20811 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727319AbfCTLLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 07:11:09 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-190-gGw3zY5nP3eJLsUE3SxWEw-1; Wed, 20 Mar 2019 11:11:05 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 20 Mar 2019 11:12:07 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 20 Mar 2019 11:12:07 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Andy Lutomirski' <luto@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: RE: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Topic: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU3ceS4xXYBMxxoEiV6xS01ZPx8qYUXb/A
-Date:   Wed, 20 Mar 2019 11:12:07 +0000
-Message-ID: <30998bcd55a34ed38b681f9bb3e3fb87@AcuMS.aculab.com>
-References: <20190318094128.1488-1-elena.reshetova@intel.com>
- <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
-In-Reply-To: <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 20 Mar 2019 07:12:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:38134 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727366AbfCTLMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 07:12:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D8E91650;
+        Wed, 20 Mar 2019 04:12:53 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 626FD3F575;
+        Wed, 20 Mar 2019 04:12:49 -0700 (PDT)
+Subject: Re: [PATCH] kvm: arm: Fix handling of stage2 huge mappings
+To:     marc.zyngier@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        will.deacon@arm.com, catalin.marinas@arm.com, james.morse@arm.com,
+        julien.thierry@arm.com, wanghaibin.wang@huawei.com,
+        lious.lilei@hisilicon.com, lishuo1@hisilicon.com,
+        zhengxiang9@huawei.com, yuzenghui@huawei.com,
+        christoffer.dall@arm.com
+References: <25971fd5-3774-3389-a82a-04707480c1e0@huawei.com>
+ <1553004668-23296-1-git-send-email-suzuki.poulose@arm.com>
+ <86d0mmynaz.wl-marc.zyngier@arm.com>
+ <5e7e40b4-7983-4440-179a-6f107cee5994@arm.com>
+ <20190320101126.11ff63af@why.wild-wind.fr.eu.org>
+ <4daf0783-fc50-3346-0732-1e3f53c8ccbc@arm.com>
+ <20190320103511.11d777b9@why.wild-wind.fr.eu.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <c27d5828-3924-e209-82b6-c9168007867b@arm.com>
+Date:   Wed, 20 Mar 2019 11:12:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MC-Unique: gGw3zY5nP3eJLsUE3SxWEw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20190320103511.11d777b9@why.wild-wind.fr.eu.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQW5keSBMdXRvbWlyc2tpDQo+IFNlbnQ6IDE4IE1hcmNoIDIwMTkgMjA6MTYNCi4uLg0K
-PiA+IEFzIGEgcmVzdWx0IHRoaXMgcGF0Y2ggaW50cm9kdWNlcyA4IGJpdHMgb2YgcmFuZG9tbmVz
-cw0KPiA+IChiaXRzIDQgLSAxMSBhcmUgcmFuZG9taXplZCwgYml0cyAwLTMgbXVzdCBiZSB6ZXJv
-IGR1ZSB0byBzdGFjayBhbGlnbm1lbnQpDQo+ID4gYWZ0ZXIgcHRfcmVncyBsb2NhdGlvbiBvbiB0
-aGUgdGhyZWFkIHN0YWNrLg0KPiA+IFRoZSBhbW91bnQgb2YgcmFuZG9tbmVzcyBjYW4gYmUgYWRq
-dXN0ZWQgYmFzZWQgb24gaG93IG11Y2ggb2YgdGhlDQo+ID4gc3RhY2sgc3BhY2Ugd2Ugd2lzaC9j
-YW4gdHJhZGUgZm9yIHNlY3VyaXR5Lg0KPiANCj4gV2h5IGRvIHlvdSBuZWVkIGZvdXIgemVybyBi
-aXRzIGF0IHRoZSBib3R0b20/ICB4ODZfNjQgTGludXggb25seQ0KPiBtYWludGFpbnMgOCBieXRl
-IHN0YWNrIGFsaWdubWVudC4NCg0KSVNUUiB0aGF0IHRoZSBnY2MgZGV2ZWxvcGVycyBhcmJpdHJh
-cmlseSBjaGFuZ2VkIHRoZSBhbGlnbm1lbnQNCmEgZmV3IHllYXJzIGFnby4NCklmIHRoZSBzdGFj
-ayBpcyBvbmx5IDggYnl0ZSBhbGlnbmVkIGFuZCB5b3UgYWxsb2NhdGUgYSB2YXJpYWJsZSB0aGF0
-DQpyZXF1aXJlcyAxNiBieXRlIGFsaWdubWVudCB5b3UgbmVlZCBnY2MgdG8gZ2VuZXJhdGUgdGhl
-IGV4dHJhIHN0YWNrDQpmcmFtZSB0byBhbGlnbiB0aGUgc3RhY2suDQpJIGRvbid0IHJlbWVtYmVy
-IHNlZWluZyB0aGUgcmVsZXZhbnQgZ2NjIG9wdGlvbnMgb24gdGhlIGxpbnV4DQpnY2MgY29tbWFu
-ZCBsaW5lcy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
-bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
-cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Marc,
 
+On 20/03/2019 10:35, Marc Zyngier wrote:
+> On Wed, 20 Mar 2019 10:23:39 +0000
+> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> 
+> Hi Suzuki,
+> 
+>> Marc,
+>>
+>> On 20/03/2019 10:11, Marc Zyngier wrote:
+>>> On Wed, 20 Mar 2019 09:44:38 +0000
+>>> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>>    
+>>>> Hi Marc,
+>>>>
+>>>> On 20/03/2019 08:15, Marc Zyngier wrote:
+>>>>> Hi Suzuki,
+>>>>>
+>>>>> On Tue, 19 Mar 2019 14:11:08 +0000,
+>>>>> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+
+...
+
+>>>>>> +		if (!pmd_thp_or_huge(old_pmd)) {
+>>>>>> +			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
+>>>>>> +			goto retry;
+>>>>>   
+>>
+>>>>>> +		if (!stage2_pud_huge(kvm, old_pud)) {
+>>>>>> +			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
+>>>>>   
+>>
+>>>> We should really get rid of the S2_P{U/M}D_* definitions, as they are
+>>>> always the same as the host. The only thing that changes is the PGD size
+>>>> which varies according to the IPA and the concatenation.
+>>>>   
+>>
+>> Also what do you think about using  P{M,U}D_* instead of S2_P{M,U}D_*
+>> above ? I could make that change with the respin.
+> 
+> Given that this is a fix, I'd like it to be as small as obvious as
+> possible, making it easier to backport.
+> 
+> I'm happy to take another patch for 5.2 that will drop the whole S2_P*
+> if we still think that this should be the case (though what I'd really
+> like is to have architectural levels instead of these arbitrary
+> definitions).
+
+I only meant the two new instances added above in the patch. Of course, I
+could send something to fix the existing ones.
+
+Cheers
+Suzuki
