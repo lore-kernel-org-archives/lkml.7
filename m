@@ -2,138 +2,125 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4450FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD17FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182692184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F862183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:42:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daipzmQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfCTCfv (ORCPT
+        id S1727246AbfCTCmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 22:35:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727052AbfCTCfv (ORCPT
+        Tue, 19 Mar 2019 22:42:08 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55284 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfCTCmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 22:35:51 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K2Y3je089244
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:35:50 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbacc5svn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:35:49 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 20 Mar 2019 02:35:47 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 02:35:43 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K2Zh4U60817420
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 02:35:43 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F054A4204B;
-        Wed, 20 Mar 2019 02:35:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1FBF4203F;
-        Wed, 20 Mar 2019 02:35:41 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.235])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 02:35:41 +0000 (GMT)
-Subject: Re: [PATCH 2/6] security/keys/encrypted: Clean up
- request_trusted_key()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     keyrings@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 19 Mar 2019 22:35:31 -0400
-In-Reply-To: <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
-References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <155297558570.2276575.11731393787282486177.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <1553040398.4899.149.camel@linux.ibm.com>
-         <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
+        Tue, 19 Mar 2019 22:42:07 -0400
+Received: by mail-it1-f195.google.com with SMTP id w18so29331243itj.4;
+        Tue, 19 Mar 2019 19:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Kr+RfcbNmLFGxezrVVwyPZmhnYgmN1h2XaSmiI3F1s8=;
+        b=daipzmQKeiDGAuOkK5KJp4dQdISACL1QOaKns5W8Bq+2Kvb8bcdNwtAz3+rtczy4aD
+         I0AeTdJhDYpEL1tYsEj43yT9zDA+KBbwoyk/q0SuXN4Yk5mI2+BuGQwUv1MU9JY0sxbX
+         T1Hkam9xuyPusEgxBasUYSVcy2VGb3l9+bTt5oy3N7h/9aad/c3JJJ67lyM4q2K2BlFi
+         0qvqYV3qe3dasc5dUhLMQP2YeZiiar96ov4eledprPm8TdERvOPdzFBWQ4GMNfZZpygG
+         HohjDT6+2Rh017TXkI6APRm8dL2rJHgThHPOTcF7hFKHs0PNjKqt/9s+1QHYC3iYSIBU
+         2Eig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Kr+RfcbNmLFGxezrVVwyPZmhnYgmN1h2XaSmiI3F1s8=;
+        b=M+jr7hAs6xD2/qjdDpmtL+MvqiQ4OMgXu48MgxNJmWD1G8UxrZuqFNoXtiC+A5SfRA
+         gVNaI8IlPU2Xtp4q57GHRZ7hqPpqijQX7Q3pnCAn7Vl7iQs6yR5NyUudi9jRCTcrflYL
+         cZ3v/sJuyL1XcO4zw88Ws5CK/ATJwXbaifikDYoWCcjnBMrCyQAbxtQ04iccukiW+WsV
+         gBSwEEO8xjIml3zDveF3TzR2eAOVyrUG6nw1Rtihjonv7iI4P8RBfV7j8oUgJCLdB6Ke
+         +pHuinmcx0Vuz7pcoWuKYqUx+uVxdHZJG9dOzVAgYWTh07WRuWug1lE87ma42zVXThSU
+         RseQ==
+X-Gm-Message-State: APjAAAVyNcwFZl4VjHigsd+mv8c0Yz+4c5VKoITODzKL6Vd7sU14YWal
+        d6W9sq6MVhEZUEhmuhc5IYGDUxthc8wqQy90F58=
+X-Google-Smtp-Source: APXvYqxxndfQViHK4a7LCZOilcf9GKOWE5QEz/a3HewfH5jOdzoAYSl9GXJ8TRVZwsB84b3FatuA5JaV/YEAz3pkT1w=
+X-Received: by 2002:a24:9:: with SMTP id 9mr3519924ita.127.1553049726641; Tue,
+ 19 Mar 2019 19:42:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <1553005870-28018-1-git-send-email-chongguiguzi@gmail.com> <1553049084.13542.2.camel@realtek.com>
+In-Reply-To: <1553049084.13542.2.camel@realtek.com>
+From:   =?UTF-8?B?6LCi5qyi?= <chongguiguzi@gmail.com>
+Date:   Wed, 20 Mar 2019 10:41:54 +0800
+Message-ID: <CAJ3e5OY-vuuenepfugTwZesksAhzAjHC8rENKcrWLJTqiYm8=Q@mail.gmail.com>
+Subject: Re: [PATCH] net:rtlwifi:move spin_lock_bh to spin_lock in tasklet
+To:     Pkshih <pkshih@realtek.com>
+Cc:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032002-0028-0000-0000-00000356147D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032002-0029-0000-0000-00002414B3DF
-Message-Id: <1553049331.4899.177.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200015
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 17:20 -0700, Dan Williams wrote:
-> On Tue, Mar 19, 2019 at 5:07 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > On Mon, 2019-03-18 at 23:06 -0700, Dan Williams wrote:
-> >
-> > < snip >
-> >
-> > > +/*
-> > > + * request_trusted_key - request the trusted key
-> > > + *
-> > > + * Trusted keys are sealed to PCRs and other metadata. Although userspace
-> > > + * manages both trusted/encrypted key-types, like the encrypted key type
-> > > + * data, trusted key type data is not visible decrypted from userspace.
-> > > + */
-> > > +static struct key *request_trusted_key(const char *trusted_desc,
-> > > +                             const u8 **master_key, size_t *master_keylen)
-> > > +{
-> > > +     struct trusted_key_payload *tpayload;
-> > > +     struct key_type *type;
-> > > +     struct key *tkey;
-> > > +
-> > > +     type = key_type_lookup("trusted");
-> >
-> > The associated key_type_put() will need to be called.
-> 
-> Yes.
+Thank you so much for your useful advice.
 
-I don't know if defining a key_type_lookup() wrapper, perhaps named
-is_key_type_available(), would help.  Both key_type_lookup() and
-key_type_put() would be called.  The existing code could then remain
-the same.
-
-Mimi
-
-> 
+Pkshih <pkshih@realtek.com> =E4=BA=8E2019=E5=B9=B43=E6=9C=8820=E6=97=A5=E5=
+=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=8810:31=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, 2019-03-19 at 22:31 +0800, Jeff Xie wrote:
+> > It is unnecessary to call spin_lock_bh in a tasklet.
 > >
-> > > +     if (IS_ERR(type)) {
-> > > +             tkey = (struct key *)type;
-> > > +             goto error;
-> > > +     }
-> > > +     tkey = request_key(type, trusted_desc, NULL);
-> > > +     if (IS_ERR(tkey))
-> > > +             goto error;
-> > > +
-> > > +     down_read(&tkey->sem);
-> > > +     tpayload = tkey->payload.data[0];
-> > > +     *master_key = tpayload->key;
-> > > +     *master_keylen = tpayload->key_len;
-> > > +error:
-> > > +     return tkey;
-> > > +}
-> > > +
+> > Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
 > >
-
+> > ---
+> >  drivers/net/wireless/realtek/rtlwifi/pci.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c
+> > b/drivers/net/wireless/realtek/rtlwifi/pci.c
+> > index 48ca521..4055e0a 100644
+> > --- a/drivers/net/wireless/realtek/rtlwifi/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+> > @@ -499,16 +499,16 @@ static void _rtl_pci_tx_chk_waitq(struct ieee8021=
+1_hw
+> > *hw)
+> >
+> >                       memset(&tcb_desc, 0, sizeof(struct rtl_tcb_desc))=
+;
+> >
+> > -                     spin_lock_bh(&rtlpriv->locks.waitq_lock);
+> > +                     spin_lock(&rtlpriv->locks.waitq_lock);
+> >                       if (!skb_queue_empty(&mac->skb_waitq[tid]) &&
+> >                           (ring->entries - skb_queue_len(&ring->queue) =
+>
+> >                            rtlhal->max_earlymode_num)) {
+> >                               skb =3D skb_dequeue(&mac->skb_waitq[tid])=
+;
+> >                       } else {
+> > -                             spin_unlock_bh(&rtlpriv->locks.waitq_lock=
+);
+> > +                             spin_unlock(&rtlpriv->locks.waitq_lock);
+> >                               break;
+> >                       }
+> > -                     spin_unlock_bh(&rtlpriv->locks.waitq_lock);
+> > +                     spin_unlock(&rtlpriv->locks.waitq_lock);
+> >
+> >                       /* Some macaddr can't do early mode. like
+> >                        * multicast/broadcast/no_qos data
+>
+> The mail subject should be 'rtlwifi: move ....', and the other looks good=
+ to me.
+>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+>
+>
