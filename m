@@ -2,124 +2,108 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61127C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE01C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31830218C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D787218CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:51:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kwckhekQ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S1O9kHKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfCTUvM (ORCPT
+        id S1727566AbfCTUvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:51:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38775 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCTUvM (ORCPT
+        Wed, 20 Mar 2019 16:51:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42652 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbfCTUvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:51:12 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 10so2780954pfo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:51:11 -0700 (PDT)
+        Wed, 20 Mar 2019 16:51:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so2640747pgh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:51:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6bBWW5lzJVi43yo3GwV4pOvldByRAqRY95Wr3nj2muY=;
-        b=kwckhekQFIPvRbe+/VnH/VX/rWc1RVYDffFR7j9vTKlguk4omTWuVs0Eq8SOBJ6VKM
-         Qtn/AbBreyeUVv6nX0CpM3lktplYVGyWuTjNIXTJSgakRLhcU2BEOh/dQ8nGdQ6zLNn8
-         iB8Iy5q45c0SXG/cvFc7Uvh8RgD/tVeXlAcF5qvIvMZJ4XnOape524pS/UMItSfbryMN
-         yV0bET4RtZRCI2zmMSyup5R+eCAp2QAi75yuwrqlx2e7gp/zDm78hk/tJlAkKgFwUdn4
-         CGbQgkU1XPWPQJy0Aa9TCaOboCf4Kyvke70g4I0q6Tay7ISM7mA6dV+riQk4xNgvJHqW
-         SUwg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g+r58zUzKkd46kafe10Zzb0WJpKDqL0ZbHfu9A1I5ZY=;
+        b=S1O9kHKDYCN8MuWYYqnMF2Gyx2u8YJdgu1KvTS6/h6lW9URvU9/naiUw1uY5dNTgyq
+         uwSMu3+huDMeITkU/wwPJfHV37EYgiH+1mR5v72LeVAo8iz0bfz/5XY6kpW+5HZWKWB1
+         sxE6PjV9WsaObdluAUF7AmD6hkqkgQYIp4t1U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6bBWW5lzJVi43yo3GwV4pOvldByRAqRY95Wr3nj2muY=;
-        b=YX1tlDS5UKRSuU/W2EpjdwWFbWS+QMeh1vOWAduXcgvhujyt0NbetKMeBaTyn5GXsH
-         UR9nlxgIfHt7Oms0liWAuPxERKrIAgPi1GVqXW1CwlP5tSmv96/wTEc+yOk5VL+Rk0tt
-         u9m84Nm2x1HXi54WoGKhoCmUOQuNa0ZeR6IxwSVevlP8tgTVPzfcb4ZDrdValForTBdN
-         bp7+31fbZfgW9T7x6kja0SCkV3EURQyHeKtN1TlKHo95AKLHpqGg0JF0IqYYertJdInQ
-         q989BxSuY2nOIXUSFby50eoJ7A0nRqz9uy7IQBYIh4SnisTkmK85pwUt5lf6ytbtcHwE
-         C6bg==
-X-Gm-Message-State: APjAAAVf1ZmRw8Rip/Fh8IwRnOzwD4KGxmuosXxXsyz3neaUIzWTWcVN
-        gbpBxwB3Uf/58ozNce4mLA5sN4LAsTXLq3KFzAP6Ig==
-X-Google-Smtp-Source: APXvYqyAImv2MO/xdkxJsWg3HOhBMjSjQjwKnPMv+fnT9H4ZHvaKaC8poNU//6/M61MO4d6tbi1i+F5sj+nNJJWt7nQ=
-X-Received: by 2002:a63:84c7:: with SMTP id k190mr3281666pgd.255.1553115071196;
- Wed, 20 Mar 2019 13:51:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190308001723.GA11197@archlinux-ryzen> <20190320190752.GA28744@archlinux-ryzen>
-In-Reply-To: <20190320190752.GA28744@archlinux-ryzen>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 20 Mar 2019 13:50:59 -0700
-Message-ID: <CAKwvOd=6916txvLmtEC3BcZgjLTNdtU-ou=YM+_dsd8CC-T_zw@mail.gmail.com>
-Subject: Re: -Wsometimes-uninitialized Clang warning in net/tipc/node.c
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windriver.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g+r58zUzKkd46kafe10Zzb0WJpKDqL0ZbHfu9A1I5ZY=;
+        b=GqbrJiOv8xk+cGZ6+zfOAw81ECpGQE3HUxC2j5CDfm677N+1rfYb4hmHedwN+5ZI2l
+         tq0Ia9la8yj+hsRxw5/jdXX6gB4Cl1u4zxOeX9TZwTpKgZ8rrFdywQNhLbpF0/P22+/+
+         5eItKhpXjGwBgq+mzM40uQVP9PFnws6zk1V2lck7LsVcEIwXBxDfbdrmqXfdTwOT/SGV
+         Hw1R1UhhiVsC1wOwii979G93dKQBzefQMVcRoosQiH8rhx8SDaNyjSi6+b0ncfHL/sbi
+         Ts0QtvZcxIiUtWzRzKhwcCGyKJIEPuKdLjUeHumft66Pg4sHI7H5r9gyjhpujlIc0vbX
+         /hiw==
+X-Gm-Message-State: APjAAAVD/tRwjwjF1p98b5/GJ/8a5KpqW+ifDgb57jN36wbTtypmKjT7
+        llqd5BvK8OgHR9q/d0ubNpoDPg==
+X-Google-Smtp-Source: APXvYqyXFt21Z0luGHpGxXvyHZqtzLqvwvN2RbqQuE7jMoudhSy9+GNB9w2/OxluMWf7A7zsf6fLFQ==
+X-Received: by 2002:a17:902:7b93:: with SMTP id w19mr9940719pll.141.1553115103140;
+        Wed, 20 Mar 2019 13:51:43 -0700 (PDT)
+Received: from [10.136.4.147] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id o76sm9372018pfa.156.2019.03.20.13.51.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 13:51:42 -0700 (PDT)
+Subject: Re: [PATCH net-next 0/2] net: phy: Move Omega PHY entry to Cygnus PHY
+ driver
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
-        tipc-discussion@lists.sourceforge.net, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        murali.policharla@broadcom.com
+References: <20190320195313.15658-1-f.fainelli@gmail.com>
+From:   Arun Parameswaran <arun.parameswaran@broadcom.com>
+Message-ID: <b4882cd3-c6c7-6af8-2204-6627434b03cf@broadcom.com>
+Date:   Wed, 20 Mar 2019 13:51:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190320195313.15658-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 12:07 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, Mar 07, 2019 at 05:17:23PM -0700, Nathan Chancellor wrote:
-> > Hi all,
-> >
-> > We are trying to get Clang's -Wsometimes-uninitialized turned on for the
-> > kernel as it can catch some bugs that GCC can't. This warning came up:
-> >
-> > net/tipc/node.c:831:6: warning: variable 'maddr' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-> >         if (!tipc_link_is_establishing(l)) {
-> >             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > net/tipc/node.c:847:46: note: uninitialized use occurs here
-> >         tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
-> >                                                     ^~~~~
-> > net/tipc/node.c:831:2: note: remove the 'if' if its condition is always true
-> >         if (!tipc_link_is_establishing(l)) {
-> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence this warning
-> >         struct tipc_media_addr *maddr;
-> >                                      ^
-> >                                       = NULL
-> > 1 warning generated.
-> >
-> > This definitely appears to be a legitimate warning but I'm not sure of
-> > the proper solution (should maddr be initialized to NULL or should it be
-> > set to something different in the else branch). Your input would be
-> > greatly appreciated.
-> >
-> > Cheers,
-> > Nathan
->
-> Gentle ping (if there was a response to this, I didn't receive it). I
-> know I sent it in the middle of a merge window so I get if it slipped
-> through the cracks.
->
-> Thanks,
-> Nathan
+Thanks Florian.
 
-The use in tipc_bearer_xmit() isn't even guaranteed to set the in/out
-parameter, so even if the if is taken doesn't guarantee that maddr is
-always initialized before calling tipc_bearer_xmit().
 
-At the minimum, we should initialize maddr to NULL.  I think we'd
-prefer to risk the possibility of a null pointer dereference to the
-possibility of working with uninitialized memory.  To be clear, both
-are bad, but one is easier to spot/debug later than the other.
+For the patch series,
 
-Thanks for bringing this up for discussion, sorry I missed it before.
--- 
-Thanks,
-~Nick Desaulniers
+Acked-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+
+
+On 2019-03-20 12:53 p.m., Florian Fainelli wrote:
+> Hi,
+> 
+> In order to pave the way for adding some specific Omega PHY features
+> that may not be desirable on other products covered by the bcm7xxx PHY
+> driver, split the Omega PHY entry into the Cygnus PHY driver such that
+> the PHY drivers are reflective of product lines/business units
+> maintaining them within Broadcom.
+> 
+> No functional changes intended.
+> 
+> Florian Fainelli (2):
+>   net: phy: Prepare for moving Omega out of bcm7xxx
+>   net: phy: Move Omega PHY entry to Cygnus PHY driver
+> 
+>  drivers/net/phy/Kconfig       |   5 +-
+>  drivers/net/phy/bcm-cygnus.c  | 147 +++++++++++++++++++++++++++++++++-
+>  drivers/net/phy/bcm-phy-lib.c |  52 ++++++++++++
+>  drivers/net/phy/bcm-phy-lib.h |  20 +++++
+>  drivers/net/phy/bcm7xxx.c     |  76 +-----------------
+>  5 files changed, 225 insertions(+), 75 deletions(-)
+> 
