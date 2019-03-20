@@ -2,247 +2,170 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A636DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0BFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2512175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DE12186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCTOh3 (ORCPT
+        id S1727405AbfCTOhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:37:29 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37605 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCTOh3 (ORCPT
+        Wed, 20 Mar 2019 10:37:39 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.31]:20634 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbfCTOhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:37:29 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z16so1321985qtn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:37:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=//vG8eTUhNqm9XVfvQN+UoQ34r3k2yFLti14LuKsEkQ=;
-        b=KfDc25YGp1kaZj5haOWRMKPjVBtbrLm7HZZZ3kCEpZMZAazPbfkWsaKWJwZgLNbuRQ
-         oQ4PSw2WHfGW/bjwbqDtnH/PFV67LzBhZbgNLOeZ323wWLDtuiRLp2/Y+kRAqTQfmxSF
-         eB8Ddg4BQ0uSF+QTE1lp1u17aTfMw989epzcYPty/kNNfX8Jf+bnN/ewHGPSyO7pfhVC
-         g3R28OvTKK8dKG6lbv2o08nANDQU/VTiK6OnfG+YlNlzv8u3DyEchYhyyDkDZYxLajIO
-         6raoi+kXA1Osjc7Q8Fa6XOPaohuh6OjUUYedBYE8HY/c7oltUBuwGxgxkblIxH6gcIZV
-         jCHw==
-X-Gm-Message-State: APjAAAXWBhMcYEN/e8PWJugEwKw8hCncLY2pi6vNmyYF02xAt/zB3c2J
-        QpVt/oXycG14gbiSQhsA2pdluqYK6j9HwJ3cD65FSQ==
-X-Google-Smtp-Source: APXvYqzcfwNl3a9FEFbzKU+u8hOUEZZ7tjV7tcH29Rz6xDHnk40XMRsZevgnpBYyG2Rb1XE4UxCJYLJz7L6oH4nt79o=
-X-Received: by 2002:ac8:2cd6:: with SMTP id 22mr7288141qtx.112.1553092647349;
- Wed, 20 Mar 2019 07:37:27 -0700 (PDT)
+        Wed, 20 Mar 2019 10:37:39 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id A8E2E111998
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:37:37 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6cLZhluR74FKp6cLZhzcdQ; Wed, 20 Mar 2019 09:37:37 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=44656 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6cLW-000Vse-UD; Wed, 20 Mar 2019 09:37:37 -0500
+Subject: Re: [sgi-xp] Missing break or false positive?
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190227042454.GA29535@embeddedor>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <480940a4-1b7c-564e-2921-37c5b7e0a5b9@embeddedor.com>
+Date:   Wed, 20 Mar 2019 09:37:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <LaQHUFs--3-1@tutanota.com>
-In-Reply-To: <LaQHUFs--3-1@tutanota.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 20 Mar 2019 15:37:16 +0100
-Message-ID: <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
-Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
-To:     hotwater438@tutanota.com
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>, bigeasy@linutronix.de,
-        Dmitry Torokhov <dtor@chromium.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190227042454.GA29535@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6cLW-000Vse-UD
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:44656
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladislav,
+Hi all,
 
-I really appreciate the contribution, there are a few issues with the
-formatting of the patch, thanks for taking care of those (I'll inline
-the problems).
+Friendly ping:
 
-On Wed, Mar 20, 2019 at 2:28 PM <hotwater438@tutanota.com> wrote:
->
-> Desciption: This patch add's additional quirk to force
-> IRQ_TRIGGER_FALLING flag which resolves issues with ELAN1200:04F3:303E
-> touchpad. Issues are the next:
-> - Journalctl floods with next report:
-> i2c_hid i2c-ELAN1200:00: i2c_hid_get_input: incomplete report (16/65535)
-> - Five finger tap kills i2c_hid
-> - When you scroll anything, and release one finger, driver thought you are still scrolling
+Who can provide some feedback on this?
 
-You don't need to be that "formal" in the commit message.
-The "description" part describes too much what the patch is (while we
-can just read the code), the important part is the issues you are
-fixing.
+Thanks
+--
+Gustavo
 
-I'd like you to rewrite this in a way that doesn't feel like you are
-writing a bug report.
-
-For instance, you could write (but you can change this too):
----
-The ELAN1200:04F3:303E touchpad exposes several issues, all caused by
-an error setting the correct IRQ_TRIGGER flag:
-- ...
-- ...
-- ...
-
-Fix all of these with a new quirk that corrects the trigger flag
-announced by the ACPI tables.
----
-
-I know writing good commit message is a tricky part :)
-
->
-> The reason why i2c_hid_init_irq was moved is told by Hans De Goede
-> <hdegoede@redhat.com>:
-> i2c_hid_init_irq now checks for a quirk, so we must setup the quirks before we init the irq, and we cannot setup the quirk earlier, so we must init the irq later.
-
-I am pretty sure you can paraphrase Hans in your commit message
-without having to formally quote him (Hans, please shout if you
-disagree).
-But this is a definitively good point to raise: your patch touches a
-general path, so it might have unexpected issues if not carefully
-reviewed by us.
-
->
->
-> Patch is created by help of ELANTECH and RedHat guys (Hans De Goede <hdegoede@redhat.com>, Benjamin Tissoires <btissoir@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>) and me (Vladislav Dalechyn <hotwater438@tutanota.com>.
-
-Don't take it wrong, but that's not how we give credit in a patch.
-In your case, if you do not have any Elantech engineer who agreed to
-sign off the patch, you can definitively mention them this way.
-But the other guys (Hans, Andy and myself) are well known kernel
-developers in the input and HID subsystems, so we usually take the
-fame by adding our Reviewed-by or Signed-off-by tag at the end of the
-commit message. (Also note that Andy is working for Intel ;-P )
-
-If you feel that these persons have an equal participation in the
-creation of the patch, you should ask for their Signed-off-by in the
-patch. My gut feelings tell me they would gladly give a Reviewed-by
-because they helped you on the patch, but they are not the "author",
-so the Signed-off-by should be you only.
-
-And yes, you should sign your work here saying that you wrote this
-code in accordance to the Developer's Certificate of Origin 1.1
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst)
-
-Then, either Jiri or myself will have a special role, and we will add
-our own signed-of-by as the maintainers of the HID tree certifying
-that this patch has been accepted by one of us.
-
->
-> ---
-> drivers/hid/hid-ids.h              |  1 +
-> drivers/hid/i2c-hid/i2c-hid-core.c | 17 +++++++++++------
-> 2 files changed, 12 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index b6d93f4ad037..dc44b5661669 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -389,6 +389,7 @@
-> #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W 0x0401
-> #define USB_DEVICE_ID_HP_X2 0x074d
-> #define USB_DEVICE_ID_HP_X2_10_COVER 0x0755
-> +#define USB_DEVICE_ID_ELAN_TOUCHPAD 0x303e
-
-I know Hans wanted you to use USB here, but I'd think we should have a
-I2C_DEVICE_ID_*
-There is no guarantees that this same PID will be used in a different
-chip over USB.
-We tend to not car about USB/I2C for the vendor IDs: the vendors
-decided to reuse their USB VID, which makes our life easier.
-
->
-> #define USB_VENDOR_ID_ELECOM 0x056e
-> #define USB_DEVICE_ID_ELECOM_BM084 0x0061
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 90164fed08d3..16b55c45e2e8 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -50,7 +50,8 @@
-> #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET BIT(1)
-> #define I2C_HID_QUIRK_NO_RUNTIME_PM BIT(2)
-> #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP BIT(3)
-> -#define I2C_HID_QUIRK_BOGUS_IRQ BIT(4)
-> +#define I2C_HID_QUIRK_BOGUS_IRQ BIT(4)
-
-your mail client is playing with tabs and spaces, but I don't expect
-the line above to be changed at all.
-
-> +#define I2C_HID_QUIRK_FORCE_TRIGGER_FALLING BIT(5)
->
-> /* flags */
-> #define I2C_HID_STARTED 0
-> @@ -182,8 +183,10 @@ static const struct i2c_hid_quirks {
-> I2C_HID_QUIRK_NO_RUNTIME_PM },
-> { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
-> I2C_HID_QUIRK_NO_RUNTIME_PM },
-> + { USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ELAN_TOUCHPAD,
-> + I2C_HID_QUIRK_BOGUS_IRQ | I2C_HID_QUIRK_FORCE_TRIGGER_FALLING },
-> { USB_VENDOR_ID_ELAN, HID_ANY_ID,
-> - I2C_HID_QUIRK_BOGUS_IRQ },
-> + I2C_HID_QUIRK_BOGUS_IRQ },
-
-same here, this line should not be changed.
-
-
-> { 0, 0 }
-> };
->
-> @@ -854,6 +857,8 @@ static int i2c_hid_init_irq(struct i2c_client *client)
->
-> if (!irq_get_trigger_type(client->irq))
-> irqflags = IRQF_TRIGGER_LOW;
-> + if (ihid->quirks & I2C_HID_QUIRK_FORCE_TRIGGER_FALLING)
-> + irqflags = IRQF_TRIGGER_FALLING;
-
-again, indentation problems, tabs are missing
-
->
-> ret = request_threaded_irq(client->irq, NULL, i2c_hid_irq,
->    irqflags | IRQF_ONESHOT, client->name, ihid);
-> @@ -1123,10 +1128,6 @@ static int i2c_hid_probe(struct i2c_client *client,
-> if (ret < 0)
-> goto err_pm;
->
-> - ret = i2c_hid_init_irq(client);
-> - if (ret < 0)
-> - goto err_pm;
-> -
-> hid = hid_allocate_device();
-> if (IS_ERR(hid)) {
-> ret = PTR_ERR(hid);
-
-the next call is "goto err_irq", which should be changed to "goto err_pm"
-
-> @@ -1149,6 +1150,10 @@ static int i2c_hid_probe(struct i2c_client *client,
->
-> ihid->quirks = i2c_hid_lookup_quirk(hid->vendor, hid->product);
->
-> + ret = i2c_hid_init_irq(client);
-> + if (ret < 0)
-> + goto err_pm;
-
-this should be "err_mem_free"
-
-> +
-> ret = hid_add_device(hid);
-> if (ret) {
-> if (ret != -ENODEV)
-
-next one should be "err_irq"
-
-and the err_irq and err_mem_free should be inverted at the end of probe.
-
-Cheers,
-Benjamin
-
+On 2/26/19 10:24 PM, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> I'm taking a look into the following piece of code in drivers/misc/sgi-xp/xpc_uv.c:
+> 
+>  561         case XPC_ACTIVATE_MQ_MSG_CHCTL_OPENCOMPLETE_UV: {
+>  562                 struct xpc_activate_mq_msg_chctl_opencomplete_uv *msg;
+>  563 
+>  564                 if (!part_setup)
+>  565                         break;
+>  566 
+>  567                 msg = container_of(msg_hdr, struct
+>  568                                 xpc_activate_mq_msg_chctl_opencomplete_uv, hdr);
+>  569                 spin_lock_irqsave(&part->chctl_lock, irq_flags);
+>  570                 part->chctl.flags[msg->ch_number] |= XPC_CHCTL_OPENCOMPLETE;
+>  571                 spin_unlock_irqrestore(&part->chctl_lock, irq_flags);
+>  572 
+>  573                 xpc_wakeup_channel_mgr(part);
+>  574         }
+> 
+> and I'm trying to figure out if the following warning is due to a missing break
+> at the end of the case, or if this is just a false positive and a /* fall through */
+> annotation should be added:
+> 
+> drivers/misc/sgi-xp/xpc_uv.c: In function ‘xpc_handle_activate_mq_msg_uv’:
+> drivers/misc/sgi-xp/xpc_uv.c:573:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    xpc_wakeup_channel_mgr(part);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/misc/sgi-xp/xpc_uv.c:575:2: note: here
+>   case XPC_ACTIVATE_MQ_MSG_MARK_ENGAGED_UV:
+>   ^~~~
+> 
+> The piece of code above was introduced by the following commit in 2009:
+> 
+> efdd06ed181a88a11e612238c1ac04668e665395
+> 
+> The cases are pretty similar, and the fact that this code was introduced
+> in the middle of the switch statement and not at the end or the beginning,
+> leads me to believe that this is a false positive.  On the other hand,
+> all the other cases end with a break or a return but this one.  So, I
+> better ask your opinions about this.
+> 
+> Thanks
 > --
-> 2.20.1
->
+> Gustavo
+> 
