@@ -2,49 +2,52 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7DCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C4BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B0820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCA020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfCTIVN (ORCPT
+        id S1727819AbfCTIVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:21:13 -0400
-Received: from shell.v3.sk ([90.176.6.54]:52062 "EHLO shell.v3.sk"
+        Wed, 20 Mar 2019 04:21:14 -0400
+Received: from shell.v3.sk ([90.176.6.54]:52055 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfCTIVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725996AbfCTIVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 04:21:13 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 4DA301032F9;
-        Wed, 20 Mar 2019 09:21:10 +0100 (CET)
+        by zimbra.v3.sk (Postfix) with ESMTP id 7147B1031D6;
+        Wed, 20 Mar 2019 09:21:09 +0100 (CET)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EQtIo5fiYdzu; Wed, 20 Mar 2019 09:21:02 +0100 (CET)
+        with ESMTP id LeYd0latangE; Wed, 20 Mar 2019 09:21:03 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B0CAA103300;
-        Wed, 20 Mar 2019 09:21:01 +0100 (CET)
+        by zimbra.v3.sk (Postfix) with ESMTP id CF9A01032F9;
+        Wed, 20 Mar 2019 09:21:02 +0100 (CET)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Sx44oySFPF33; Wed, 20 Mar 2019 09:21:00 +0100 (CET)
+        with ESMTP id f69T-clbkTR3; Wed, 20 Mar 2019 09:21:01 +0100 (CET)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 53BB51032F8;
+        by zimbra.v3.sk (Postfix) with ESMTPSA id D4A511032FA;
         Wed, 20 Mar 2019 09:21:00 +0100 (CET)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Russell King <linux@armlinux.org.uk>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] dt-bindings: improve the Armada DRM bindings
-Date:   Wed, 20 Mar 2019 09:20:52 +0100
-Message-Id: <20190320082057.856943-1-lkundrak@v3.sk>
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 2/5] dt-bindings: display: armada: Rename the binding doc file
+Date:   Wed, 20 Mar 2019 09:20:54 +0100
+Message-Id: <20190320082057.856943-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320082057.856943-1-lkundrak@v3.sk>
+References: <20190320082057.856943-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,20 +55,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Use a more generic name, since it will document more compatible LCD
+controllers than just that of Dove. Also, there's no point putting it in
+a separate directory.
 
-this is the third spin of a patch set that aims to complete the Armada
-DRM binding documentation. Apart from collecting the Review-by tags, the
-only change is the order of the compatible strings for the LCDC node.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-What is documented corresponds to the armada-devel branch of
-git://git.armlinux.org.uk/~rmk/linux-arm.git with these differencies:
+---
+Changes since v1:
+- Choose a better name than armada/marvell-armada-drm.txt, since
+  there will be no display-subsystem master node and thus it will
+  only document just the LCDC.
 
-* Documentation of the bus-width property of the LCDC
-* The MMP2 compatible strings.
+ .../{armada/marvell,dove-lcd.txt =3D> marvell,armada-lcdc.txt}    | 0
+ MAINTAINERS                                                     | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/display/{armada/marvell,dove-lc=
+d.txt =3D> marvell,armada-lcdc.txt} (100%)
 
-Patches to the driver for the above were sent out separately.
-
-Lubo
-
+diff --git a/Documentation/devicetree/bindings/display/armada/marvell,dov=
+e-lcd.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc=
+.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/display/armada/marvell,dove=
+-lcd.txt
+rename to Documentation/devicetree/bindings/display/marvell,armada-lcdc.t=
+xt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e71aa05fef29..890cbd6e0b7b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8966,7 +8966,7 @@ T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git=
+ drm-armada-devel
+ T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git drm-armada-fixes
+ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+-F:	Documentation/devicetree/bindings/display/armada/
++F:	Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+ F:	Documentation/devicetree/bindings/reserved-memory/marvell,armada-fram=
+ebuffer.txt
+=20
+ MARVELL CRYPTO DRIVER
+--=20
+2.20.1
 
