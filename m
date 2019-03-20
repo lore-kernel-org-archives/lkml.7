@@ -2,124 +2,149 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE34FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E000EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C5720850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7UfZTT4"
+	by mail.kernel.org (Postfix) with ESMTP id B833F20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfCTTMo (ORCPT
+        id S1726981AbfCTTNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:12:44 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42119 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfCTTMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:12:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j89so2954450edb.9;
-        Wed, 20 Mar 2019 12:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TL+8kxvyagAH2+UQJWdEe0qicZtZcsa3JWStB/XAppQ=;
-        b=U7UfZTT4afuFunh2nfXOy2fZPqzz2Z4fag1zu500d1CkGYOZoM62Pf9o0gCMpRzng3
-         luZ3+drZbO9QsmaaoQT/fUHJR+2EoN5zo0WEz9Q8pDQeJDki01AJOu7mFzr2PNBK6zOw
-         Ux26gNgKpAADo7KEMJb45+Vhq+ovbOq3bMJdE/LK++1oIGaeItHWtWpG5pXaqG4gbRZF
-         EX59us9pI1pw44BN7AkgymAG2Rj91Gk+H5D7/3YHCNfBbLISCAMjEkv9HAfITMArkIrL
-         b+9OKRgSKZJBhiUGMfUCc3eLi97huHMdG431E8xlvyumgHB9Xywrqkwmm4v1GR2tI6g9
-         zR4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TL+8kxvyagAH2+UQJWdEe0qicZtZcsa3JWStB/XAppQ=;
-        b=pIQSNbT04FKNQh/DRKFCJ0qiPMYmOEflY96HiFRe+Gmwyvd5vfAgH8kgyv0MJj6y5D
-         DcQKL182bplS2hYgqNOAYMAWeEfT4HmMH2ldCh6o2bkI3ZQxZM+4r659dW25NCTbhzG4
-         wiJU77Fo2e0/7RLi0Aeuu8JpuG2LFeSb9GfMb7GfhYQAnvVQdYpRt/wdCXLdMngr75tB
-         UbyBhHcLh1rRhPqLz3Qy0F1chEjfk8k1rUg6RElCgQDyVZdz86dck/AtcaBdNIPDYlJJ
-         exAwyjE3Sy+QUweU976UyqqM/mNHVQTD2UrhFPMYWI8y1X7Qg69E4eNozdpBGJDZJ+eu
-         gl1g==
-X-Gm-Message-State: APjAAAU+PjPxuPOqlr7e/X0umN+2zV3nUb5QRb/RsieFNDB+cgqL2seO
-        OWyFWMiRywilDxQg3aGFpR8=
-X-Google-Smtp-Source: APXvYqzf8cvXyWRG3dRyFTgxZTUZNTzAEIsU7x/76Y/DWUmGs2BjAbWOlRKOtQ2AMkI1//tMn7Z9vg==
-X-Received: by 2002:a17:906:3d41:: with SMTP id q1mr17659033ejf.71.1553109161579;
-        Wed, 20 Mar 2019 12:12:41 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id i46sm894046ede.32.2019.03.20.12.12.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 20 Mar 2019 12:12:40 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 12:12:38 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Achim Leubner <achim_leubner@adaptec.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] scsi: gdth: Only call dma_free_coherent when buf is not
- NULL in ioc_general
-Message-ID: <20190320191238.GF28744@archlinux-ryzen>
-References: <20190307231839.3330-1-natechancellor@gmail.com>
+        Wed, 20 Mar 2019 15:13:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8939 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbfCTTNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:13:20 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 12:13:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="330415797"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Mar 2019 12:13:18 -0700
+Date:   Wed, 20 Mar 2019 12:13:18 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add
+ __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
+Message-ID: <20190320191318.GF30469@linux.intel.com>
+References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
+ <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307231839.3330-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 04:18:39PM -0700, Nathan Chancellor wrote:
-> When building with -Wsometimes-uninitialized, Clang warns:
+On Wed, Mar 20, 2019 at 11:30:26AM -0700, Xing, Cedric wrote:
+> > +/**
+> > + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
+> > + *
+> > + * %eax:        ENCLU leaf, must be EENTER or ERESUME
+> > + * %rbx:        TCS, must be non-NULL
+> > + * %rcx:        Optional pointer to 'struct sgx_enclave_exception'
+> > + *
+> > + * Return:
+> > + *  0 on a clean entry/exit to/from the enclave
+> > + *  -EINVAL if ENCLU leaf is not allowed or if TCS is NULL
+> > + *  -EFAULT if ENCLU or the enclave faults
+> > + *
+> > + * Note that __vdso_sgx_enter_enclave() is not compliant with the x86-
+> > 64 ABI.
+> > + * All registers except RSP must be treated as volatile from the
+> > +caller's
+> > + * perspective, including but not limited to GPRs, EFLAGS.DF, MXCSR,
+> > FCW, etc...
+> > + * Conversely, the enclave being run must preserve the untrusted RSP
+> > and stack.
 > 
-> drivers/scsi/gdth.c:3662:6: warning: variable 'paddr' is used
-> uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
-> 
-> Don't attempt to call dma_free_coherent when buf is NULL (meaning that
-> we never called dma_alloc_coherent and initialized paddr), which avoids
-> this warning.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/402
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/scsi/gdth.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/gdth.c b/drivers/scsi/gdth.c
-> index e7f1dd4f3b66..0ca9b4393770 100644
-> --- a/drivers/scsi/gdth.c
-> +++ b/drivers/scsi/gdth.c
-> @@ -3697,8 +3697,9 @@ static int ioc_general(void __user *arg, char *cmnd)
->  
->  	rval = 0;
->  out_free_buf:
-> -	dma_free_coherent(&ha->pdev->dev, gen.data_len + gen.sense_len, buf,
-> -			paddr);
-> +	if (buf)
-> +		dma_free_coherent(&ha->pdev->dev, gen.data_len + gen.sense_len,
-> +				  buf, paddr);
->  	return rval;
->  }
->   
-> -- 
-> 2.21.0
-> 
+> By requiring preservation of RSP at both AEX and EEXIT, this precludes
+> the possibility of using the untrusted stack as temporary storage by
+> enclaves. While that looks reasonable at first glance, I'm afraid it
+> isn't the case in reality. The untrusted stack is inarguably the most
+> convenient way for data exchange between an enclave and its enclosing
+> process,
 
-Gentle ping (if there was a response to this, I didn't receive it). I
-know I sent it in the middle of a merge window so I get if it slipped
-through the cracks.
+I vehemently disagree with "inarguably".  IMO, passing data via registers
+is much more convenient.
 
-Thanks,
-Nathan
+Even if you qualify your assertion with "data of arbitrary size unknown
+at build time", I still disagree.  Using the untrusted stack allows for
+trickery when a debugger is involved, other than that I see no advantages
+over allocating virtual memory and handing the pointer to the enclave
+at launch time.  Sure, it requires a few more lines of code to setup,
+but it's literally ~20 LoC out of thousands required to sign, build and
+launch an enclave, but it doesn't require playing games with the stack.
+
+Not to mention that the entire concept of using the untrusted stack is
+based on the assumption that the enclave is making ocalls, e.g. stateless
+enclaves or libraries that use a message queue have zero need/benefit
+for using the untrusted stack.
+
+> and is in fact being used for that purpose by almost all existing enclaves
+> to date.
+
+That's a bit misleading, since almost all existing enclaves are built
+against Intel's SDK, which just so happens to unconditionally use the
+untrusted stack.  It's not like all enclave developers made a concious
+decision to use the untrusted stack.  If Intel rewrote the SDK to use
+a different method then one could argue that the new approach is the
+most common method of passing data.
+
+> Given the expectation that this API will be used by all future SGX
+> application, it looks unwise to ban the most convenient and commonly
+> used approach for data exchange.
+> 
+> Given an enclave can touch everything (registers and memory) of the
+> enclosing process, it's reasonable to restrict the enclave by means
+> of "calling convention" to allow the enclosing process to retain its
+> context. And for that purpose, SGX ISA does offer 2 registers (i.e.
+> RSP and RBP) for applications to choose. Instead of preserving RSP,
+> I'd prefer RBP, which will end up with more flexibility in all SGX
+> applications in future.
+
+I disagree that the SGX ISA intends for applications to choose between
+preserving RSP and RBP, e.g. the SDM description of SSA.UR{B,S}P states:
+
+  Non-Enclave (outside) {RBP,stack} pointer. Saved by EENTER, restored on AEX.
+
+To me, the "Saved/restored" wording implies that URBP and URSP should
+*never* be touched by the enclave.  Sure, the proposed vDSO interface
+doesn't require RBP to be preserved, but only because the goal was to
+deviate from hardware as little as possible, not because anyone wants
+to encourage enclaves to muck with RBP.
