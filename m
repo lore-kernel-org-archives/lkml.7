@@ -2,132 +2,90 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BC1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED0C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35152146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D872184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfCTQ5X (ORCPT
+        id S1727246AbfCTQ6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:57:23 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.164]:38624 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726788AbfCTQ5X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:57:23 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id A2D8ACDD38
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:57:21 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6eWnhcPoviQer6eWnhQ5jn; Wed, 20 Mar 2019 11:57:21 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=54032 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6eWB-001qrp-Rd; Wed, 20 Mar 2019 11:57:20 -0500
-Date:   Wed, 20 Mar 2019 11:56:43 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] regulator: axp20x: Mark expected switch fall-throughs
-Message-ID: <20190320165643.GA3886@embeddedor>
+        Wed, 20 Mar 2019 12:58:23 -0400
+Received: from sauhun.de ([88.99.104.3]:54944 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfCTQ6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 12:58:22 -0400
+Received: from localhost (p5486CF7E.dip0.t-ipconnect.de [84.134.207.126])
+        by pokefinder.org (Postfix) with ESMTPSA id 6F02B4A1348;
+        Wed, 20 Mar 2019 17:58:20 +0100 (CET)
+Date:   Wed, 20 Mar 2019 17:58:20 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] i2c: designware: Add support for an interface
+ clock
+Message-ID: <20190320165820.pjydd5ophxoulwza@ninjato>
+References: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551361930-24434-3-git-send-email-gareth.williams.jx@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xfr6vjbdofsxw5tr"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6eWB-001qrp-Rd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.104.39]:54032
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <1551361930-24434-3-git-send-email-gareth.williams.jx@renesas.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
 
-This patch fixes the following warnings:
+--xfr6vjbdofsxw5tr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-drivers/regulator/axp20x-regulator.c: In function ‘axp20x_set_dcdc_freq’:
-drivers/regulator/axp20x-regulator.c:1023:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   reg = AXP803_DCDC_FREQ_CTRL;
-drivers/regulator/axp20x-regulator.c:1025:2: note: here
-  case AXP806_ID:
-  ^~~~
-drivers/regulator/axp20x-regulator.c: In function ‘axp20x_set_dcdc_workmode’:
-drivers/regulator/axp20x-regulator.c:1115:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   reg = AXP806_DCDC_MODE_CTRL2;
-drivers/regulator/axp20x-regulator.c:1121:2: note: here
-  case AXP221_ID:
-  ^~~~
+On Thu, Feb 28, 2019 at 01:52:10PM +0000, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+>=20
+> The Synopsys I2C Controller has an interface clock, but most SoCs hide
+> this away. However, on some SoCs you need to explicitly enable the
+> interface clock in order to access the registers. Therefore, add=20
+> support for an optional interface clock.
+>=20
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Notice that in this particular case, I moved the whole comment
-"Fall through to the check below.", which contains the "Fall through"
-comment, at the bottom of the case, which is what GCC is expecting
-to find.
+Applied to for-next, thanks!
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
 
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
+--xfr6vjbdofsxw5tr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 07e10c8b0a22..152053361862 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -1021,7 +1021,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		 * (See include/linux/mfd/axp20x.h)
- 		 */
- 		reg = AXP803_DCDC_FREQ_CTRL;
--		/* Fall through to the check below.*/
-+		/* Fall through - to the check below.*/
- 	case AXP806_ID:
- 		/*
- 		 * AXP806 also have DCDC work frequency setting register at a
-@@ -1112,12 +1112,12 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- 		break;
- 
- 	case AXP806_ID:
--		reg = AXP806_DCDC_MODE_CTRL2;
- 		/*
- 		 * AXP806 DCDC regulator IDs have the same range as AXP22X.
--		 * Fall through to the check below.
- 		 * (See include/linux/mfd/axp20x.h)
- 		 */
-+		reg = AXP806_DCDC_MODE_CTRL2;
-+		 /* Fall through - to the check below. */
- 	case AXP221_ID:
- 	case AXP223_ID:
- 	case AXP809_ID:
--- 
-2.21.0
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyScSsACgkQFA3kzBSg
+Kba/Fw//ZY5silg+MDSe2w4nAQY0r1OsdEGU1eHK7QCZlVV8NtBAkThhCsXNDFFK
+SI05H3PSl1VhMzWlD+hAwX4REJ27xqeoFtgKwSrN/BoxYmxK8/3p3TPRBOgbYdaB
+3H8kFD0TChviM+tIDPnUGWK/AiQ+FYl0QG/VUgJN1xkhf3AVj2fIruoU7pwyAI1a
+HOTvJf1yDp0yAKK/WCerDd5NaUfVI/XqKUf4sx+p8BTBt7KWnHrDrQOj5GrEMg6g
+he/BwENfDMaGbSBhMPWJEWxvwG/8G3e49C1w66xxwhBGSEH/MEyR+pVA1p+uDjfL
+OMrdtxrlOTntamR0wGbKBV7dY9Bgz0zrbpd8dhV9Qc9WWrqHaaYeP36LgKIyAcib
+SmWKEumv0b7uRhlM/kvH7yP7lwFdzLUXTzVvyGbQonbywimHs20DPtymxDaixsHv
+bqybg99UXSB4I+MRhm3KChsurNv05jVZQavPQOeqihqNFG6yysZWYQd/HW5Z8/cl
+LKUhtvRbMtcSk/jUf16ioiq1qymUTAwLnAcYIs5kVINXdVsWUyJDAtis6QOI+bDP
+R6dwjontf8gpQSp2tP/ISOFfIiR/IRK8/Iw6S4ma3UqrIU5MfOHUtfGgVrpVPOlR
+/q9Fj6R03Z97GbqQaLbfoDs7S0VVO06ZggqZb4PikONM17dp4uw=
+=tTfE
+-----END PGP SIGNATURE-----
 
+--xfr6vjbdofsxw5tr--
