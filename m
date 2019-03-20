@@ -2,152 +2,111 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7F3C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDA3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4DE21909
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D9D218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:44:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lcrHgEg4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7V/2UXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfCTUnL (ORCPT
+        id S1727239AbfCTUof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:43:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40253 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfCTUnK (ORCPT
+        Wed, 20 Mar 2019 16:44:35 -0400
+Received: from mail-it1-f181.google.com ([209.85.166.181]:38639 "EHLO
+        mail-it1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTUoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:43:10 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x12so4233255qts.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:43:10 -0700 (PDT)
+        Wed, 20 Mar 2019 16:44:34 -0400
+Received: by mail-it1-f181.google.com with SMTP id m18so1014566ita.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=2RLae5TxRnlaqkXd+oED+3b1Dwsri72MEioaQj3Oulg=;
-        b=lcrHgEg4Qfep15DQxX+bHhuyKyVVdmSuCCHmm0pqnrjeZt12Hp1KKQToATIau34B5P
-         bCdAVNkHxXCnmo0CWbW+LVRsojBOGZIT4RwH9eskGG1dYel05xR5BJ7TDMb6bKLFqUzB
-         RmeoH7wS9bXaw9c4sZ9wYOxqa4biXgAujOMa5Yjgn+N0yDF9jz20u3VvLtkJDR0d2wqx
-         dlA5kBBZvUlqXW+HHowZEB1sg0ufmIClYpAhfxQh7XUrBW7mNVJpwGWNXs1KpJI49GF0
-         nzB+9ejLNQ5tuYK4SG3l7IZigpQenAh0iHQBZQcqxHSrjlDsigdBdC5Net74aLFHoA1a
-         sixw==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JJDKmFv5bZNPCu04WpjAA88xvIr2zAgmNLvX0lslkL8=;
+        b=i7V/2UXpSKTF6f3Eq4eh7Nr+eew7WnxY7s3LITeIt8bE2pcEonk4Vh2s6B8K0wmVPA
+         C0ZnkESyjDioVq1EDkRD78qYN/IaCGI29GThbCS6q/aGAImCR0X3ENTNorqGRAISt6mY
+         /Xe9KSMGLZ6Aq3MnExjhsdn7LgMEDKiZvgdnl4a6pP1JP/Uv1kHGfTOmNoZlXvYiVlQ5
+         as7spl9ulm8yrinOpA8qJqaqctDGQyj2htnSyQ79MuCI4thz+HhK5eShsW55xzb0J/Ma
+         zQSybh5Ewgs2PV5+vQfSMiJzhA1pZ0/xdS8hgBQHnlcCFqgNlHXSfNsGKrMAZvKanCnC
+         yeVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2RLae5TxRnlaqkXd+oED+3b1Dwsri72MEioaQj3Oulg=;
-        b=JHKdGCYASxyZZiqVBUWiTazz85aF0CFGra64+TkBd7fUM2P8z2Cz9vyECpqumyrHNT
-         RizIn4F8gDzzeCA5kIciOYZ2nSCd1MGWpdAIoN6cLYypGaw+1HC5py1Eiymzqq90fBxo
-         bjSqNEQMGWaR4YPZA5r04ADUcwti1KeeQy9R4Er+/46j4nXhLCKNTZS9YBjcjN2PtIGi
-         uIxo108UeRmI0UjxQ1kULcpOjxaYg3A7u5FNRIPgNRG6ivZXFRNPbOu7N6a4qWMdJ3VE
-         GNHNBTYQrcImPqgdFv2+H/mvYEFXs7ZI22KRJrZaONTcJqQ8VFzeRxey2gjEdg/NP/+f
-         eCXA==
-X-Gm-Message-State: APjAAAUqEihglJPXAu1uycdf83D7c5t9B6Tqne/UUv7aflq0ehSwHk9/
-        7Qctrbaj1ufmB6tGbzMS3aQ+kA==
-X-Google-Smtp-Source: APXvYqwzCP9jQqLKW0C4jmyp3fUsgGIIOy4gfG1whZqkYd5q01aerQ0qLQhXJnxRnA2EQyz0NZU8DQ==
-X-Received: by 2002:aed:302f:: with SMTP id 44mr8986876qte.178.1553114589845;
-        Wed, 20 Mar 2019 13:43:09 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o19sm1971787qkl.65.2019.03.20.13.43.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 13:43:09 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, osalvador@suse.de, anshuman.khandual@arm.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, stable@vger.kernel.org
-Subject: [RESEND PATCH] mm/hotplug: fix notification in offline error path
-Date:   Wed, 20 Mar 2019 16:42:55 -0400
-Message-Id: <20190320204255.53571-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JJDKmFv5bZNPCu04WpjAA88xvIr2zAgmNLvX0lslkL8=;
+        b=W4Wgp0wwioVW3WJeiGxCO2qn9eLdEjb8CrEBogNyv55fKkSj2sd4m596JEg1giN+PY
+         ATwjsB5in8bmDuGi9RIsr6ac5uqvz5sX1Ovmcg153qCGMbbv2OGF0bS26Gvy1xzKgw7g
+         516yMsmHw1+kxZUIjdLtG6zGlYkIU8r88LVkDrY7xw1tg9HQq1ZzsNQUCiBEt4IxnUXU
+         NuX6CxFTJY57YUffM/ICPSYelZjfdgGOuClbQzLJDcHziozplEGZAqk3305155C06ISY
+         ISNPjKdvqlqA1LW8452NKnqp+moTsvAdnbyAdu5nRHzElBNiak25Dcq/xRKU0GS8N5Jh
+         /cFw==
+X-Gm-Message-State: APjAAAUkFLrd5Px8NMQeOWaRdAKTSdpF1tadd4i+dgkKzX2Jz6FiuYVk
+        bUSH6ibUpr8BahQ+sXL1xwA=
+X-Google-Smtp-Source: APXvYqzPGvDMrNnrksMtAtVrmQB8cHsZ9mRp1JCnPrtQ0TYivnEWi9uR3t3mb30pnrQKw11lMrA+GA==
+X-Received: by 2002:a24:2847:: with SMTP id h68mr222999ith.82.1553114673911;
+        Wed, 20 Mar 2019 13:44:33 -0700 (PDT)
+Received: from tzanussi-mobl ([2601:246:0:7004:98e9:b645:1289:9c63])
+        by smtp.googlemail.com with ESMTPSA id f26sm1369536ioh.55.2019.03.20.13.44.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 13:44:33 -0700 (PDT)
+Message-ID: <1553114672.2015.4.camel@gmail.com>
+Subject: Re: dell_smbios KASAN bug
+From:   Tom Zanussi <tzanussi@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 20 Mar 2019 15:44:32 -0500
+In-Reply-To: <20190320163227.3aa924c2@gandalf.local.home>
+References: <1553106560.2080.5.camel@gmail.com>
+         <20190320144146.08ecd5e4@gandalf.local.home>
+         <1553108749.2079.1.camel@gmail.com>
+         <20190320151353.1a223c0e@gandalf.local.home>
+         <1553110221.2034.1.camel@gmail.com>
+         <20190320154534.46ebab51@gandalf.local.home>
+         <1553113736.2015.2.camel@gmail.com>
+         <20190320163227.3aa924c2@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When start_isolate_page_range() returned -EBUSY in __offline_pages(), it
-calls memory_notify(MEM_CANCEL_OFFLINE, &arg) with an uninitialized
-"arg". As the result, it triggers warnings below. Also, it is only
-necessary to notify MEM_CANCEL_OFFLINE after MEM_GOING_OFFLINE.
+On Wed, 2019-03-20 at 16:32 -0400, Steven Rostedt wrote:
+> On Wed, 20 Mar 2019 15:28:56 -0500
+> Tom Zanussi <tzanussi@gmail.com> wrote:
+> 
+> > > > Unfortunately, no.  
+> > > 
+> > > That's really weird. I would recommend throwing in a bunch of
+> > > printks
+> > > to see if things are being freed and set, to make sure this code
+> > > is
+> > > hit
+> > > and something else isn't just corrupting it.
+> > >   
+> > 
+> > Actually the patch does make the KASAN bug go away - I'm so used to
+> > building without modules that I forgot to rebuild the module after
+> > applying the patch, sigh.
+> 
+> I wasn't about to say anything. That's why I suggested adding printks
+> and trying it again ;-)
+> 
 
-page:ffffea0001200000 count:1 mapcount:0 mapping:0000000000000000
-index:0x0
-flags: 0x3fffe000001000(reserved)
-raw: 003fffe000001000 ffffea0001200008 ffffea0001200008 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: unmovable page
-WARNING: CPU: 25 PID: 1665 at mm/kasan/common.c:665
-kasan_mem_notifier+0x34/0x23b
-CPU: 25 PID: 1665 Comm: bash Tainted: G        W         5.0.0+ #94
-Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20
-10/25/2017
-RIP: 0010:kasan_mem_notifier+0x34/0x23b
-RSP: 0018:ffff8883ec737890 EFLAGS: 00010206
-RAX: 0000000000000246 RBX: ff10f0f4435f1000 RCX: f887a7a21af88000
-RDX: dffffc0000000000 RSI: 0000000000000020 RDI: ffff8881f221af88
-RBP: ffff8883ec737898 R08: ffff888000000000 R09: ffffffffb0bddcd0
-R10: ffffed103e857088 R11: ffff8881f42b8443 R12: dffffc0000000000
-R13: 00000000fffffff9 R14: dffffc0000000000 R15: 0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000560fbd31d730 CR3: 00000004049c6003 CR4: 00000000001606a0
-Call Trace:
- notifier_call_chain+0xbf/0x130
- __blocking_notifier_call_chain+0x76/0xc0
- blocking_notifier_call_chain+0x16/0x20
- memory_notify+0x1b/0x20
- __offline_pages+0x3e2/0x1210
- offline_pages+0x11/0x20
- memory_block_action+0x144/0x300
- memory_subsys_offline+0xe5/0x170
- device_offline+0x13f/0x1e0
- state_store+0xeb/0x110
- dev_attr_store+0x3f/0x70
- sysfs_kf_write+0x104/0x150
- kernfs_fop_write+0x25c/0x410
- __vfs_write+0x66/0x120
- vfs_write+0x15a/0x4f0
- ksys_write+0xd2/0x1b0
- __x64_sys_write+0x73/0xb0
- do_syscall_64+0xeb/0xb78
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f14f75cc3b8
-RSP: 002b:00007ffe84d01d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 00007f14f75cc3b8
-RDX: 0000000000000008 RSI: 0000563f8e433d70 RDI: 0000000000000001
-RBP: 0000563f8e433d70 R08: 000000000000000a R09: 00007ffe84d018f0
-R10: 000000000000000a R11: 0000000000000246 R12: 00007f14f789e780
-R13: 0000000000000008 R14: 00007f14f7899740 R15: 0000000000000008
+Yeah, when a simple printk doesn't work, you know there's something
+idiotic going on.  Thanks for the tip ;-)
 
-Fixes: 7960509329c2 ("mm, memory_hotplug: print reason for the offlining failure")
-CC: stable@vger.kernel.org # 5.0.x
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/memory_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tom
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0e0a16021fd5..0082d699be94 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1699,12 +1699,12 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 
- failed_removal_isolated:
- 	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-+	memory_notify(MEM_CANCEL_OFFLINE, &arg);
- failed_removal:
- 	pr_debug("memory offlining [mem %#010llx-%#010llx] failed due to %s\n",
- 		 (unsigned long long) start_pfn << PAGE_SHIFT,
- 		 ((unsigned long long) end_pfn << PAGE_SHIFT) - 1,
- 		 reason);
--	memory_notify(MEM_CANCEL_OFFLINE, &arg);
- 	/* pushback to free area */
- 	mem_hotplug_done();
- 	return ret;
--- 
-2.17.2 (Apple Git-113)
-
+> -- Steve
