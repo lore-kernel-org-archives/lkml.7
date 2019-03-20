@@ -2,121 +2,162 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BBEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D37C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7BE2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97D52186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfCTNEh (ORCPT
+        id S1727840AbfCTNEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:04:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:33273 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfCTNEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:04:34 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44PVW34B1Cz9sPY; Thu, 21 Mar 2019 00:04:31 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: b5b4453e7912f056da1ca7572574cada32ecb60c
-X-Patchwork-Hint: ignore
-In-Reply-To: <20190313131438.8212-1-mpe@ellerman.id.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     arnd@arndb.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-        john.stultz@linaro.org, tglx@linutronix.de, jaydee@email.cz
-Subject: Re: powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
-Message-Id: <44PVW34B1Cz9sPY@ozlabs.org>
-Date:   Thu, 21 Mar 2019 00:04:31 +1100 (AEDT)
+        Wed, 20 Mar 2019 09:04:53 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34662 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfCTNEx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 09:04:53 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k2so2367180qtm.1;
+        Wed, 20 Mar 2019 06:04:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+wddUSSDius11UZyiAbEzXtYgG8gvmxfQ0FLbE4Ctdg=;
+        b=sQtloULPHQksH1WlGY6iMyptaTBWv3XkjzYquW55kmOUS1eK4Kpv5v+mNZe69wXCnc
+         rjJyiy/xsfQzRec1BHhjmi7eThEdGMsH39g70YHX1W4B05i7s60NV8jFD4AMd/GPW1lj
+         oL46zeus4gwOrCM7ZAuuKmjcIbAYyQyDgu3P5Tt9Uabsn+cMKaxeBZ5Huj22T4XwnnZP
+         a49ME/430y9KXUC6Nfit4fSanGtDxjBiKQF4oFg6s5uNq9RD5sVPG2m4wgP9ns8GVKVn
+         dgnw849SQUjzOg1Fso9MKjjIi7IEE08W9RPx/FhAd+x/HuTVkUMPfc8Wq7IvfoKM2czD
+         4+Pg==
+X-Gm-Message-State: APjAAAVrmB+u13vi6NCxQl3gBo/QKDCrjQSddFrW9ZwUNiZYNrvho1TA
+        tC++GF7uk1r5Ou2i61GNDyU9zIMmZF2zE4ck8uo=
+X-Google-Smtp-Source: APXvYqySSLwR+4OGaKtI9pztTfCuIlZ5by7SMM6vCOJotO2MKZcP5LG/Y6qq4L04GPO5POq+Cxc1GPkYZ29VIKVxXF4=
+X-Received: by 2002:ac8:2692:: with SMTP id 18mr4684094qto.343.1553087091631;
+ Wed, 20 Mar 2019 06:04:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQu9hmeSgKO_B1LhXqq9Z923H25HXNS9XYNvFi55WrFYw@mail.gmail.com>
+ <CAK8P3a0-7LRE4ByO2Uf4tb5mR49SbZzBu0AgHpS=03FAMWFLgQ@mail.gmail.com> <CAK7LNATjXoNrbt2SSgR4omiQEBppOkF6mdcVJjpw2B+ihGQvGw@mail.gmail.com>
+In-Reply-To: <CAK7LNATjXoNrbt2SSgR4omiQEBppOkF6mdcVJjpw2B+ihGQvGw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 Mar 2019 14:04:34 +0100
+Message-ID: <CAK8P3a3Y+r95FNpHjPznD5g1PSS=OuYdzT8VH9XNY2DTUhB-Tw@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        Michael Ellerman <mpe@ellerman.id.au>, X86 ML <x86@kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-13 at 13:14:38 UTC, Michael Ellerman wrote:
-> Jakub Drnec reported:
->   Setting the realtime clock can sometimes make the monotonic clock go
->   back by over a hundred years. Decreasing the realtime clock across
->   the y2k38 threshold is one reliable way to reproduce. Allegedly this
->   can also happen just by running ntpd, I have not managed to
->   reproduce that other than booting with rtc at >2038 and then running
->   ntp. When this happens, anything with timers (e.g. openjdk) breaks
->   rather badly.
-> 
-> And included a test case (slightly edited for brevity):
->   #define _POSIX_C_SOURCE 199309L
->   #include <stdio.h>
->   #include <time.h>
->   #include <stdlib.h>
->   #include <unistd.h>
-> 
->   long get_time(void) {
->     struct timespec tp;
->     clock_gettime(CLOCK_MONOTONIC, &tp);
->     return tp.tv_sec + tp.tv_nsec / 1000000000;
->   }
-> 
->   int main(void) {
->     long last = get_time();
->     while(1) {
->       long now = get_time();
->       if (now < last) {
->         printf("clock went backwards by %ld seconds!\n", last - now);
->       }
->       last = now;
->       sleep(1);
->     }
->     return 0;
->   }
-> 
-> Which when run concurrently with:
->  # date -s 2040-1-1
->  # date -s 2037-1-1
-> 
-> Will detect the clock going backward.
-> 
-> The root cause is that wtom_clock_sec in struct vdso_data is only a
-> 32-bit signed value, even though we set its value to be equal to
-> tk->wall_to_monotonic.tv_sec which is 64-bits.
-> 
-> Because the monotonic clock starts at zero when the system boots the
-> wall_to_montonic.tv_sec offset is negative for current and future
-> dates. Currently on a freshly booted system the offset will be in the
-> vicinity of negative 1.5 billion seconds.
-> 
-> However if the wall clock is set past the Y2038 boundary, the offset
-> from wall to monotonic becomes less than negative 2^31, and no longer
-> fits in 32-bits. When that value is assigned to wtom_clock_sec it is
-> truncated and becomes positive, causing the VDSO assembly code to
-> calculate CLOCK_MONOTONIC incorrectly.
-> 
-> That causes CLOCK_MONOTONIC to jump ahead by ~4 billion seconds which
-> it is not meant to do. Worse, if the time is then set back before the
-> Y2038 boundary CLOCK_MONOTONIC will jump backward.
-> 
-> We can fix it simply by storing the full 64-bit offset in the
-> vdso_data, and using that in the VDSO assembly code. We also shuffle
-> some of the fields in vdso_data to avoid creating a hole.
-> 
-> The original commit that added the CLOCK_MONOTONIC support to the VDSO
-> did actually use a 64-bit value for wtom_clock_sec, see commit
-> a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to
-> 32 bits kernel") (Nov 2005). However just 3 days later it was
-> converted to 32-bits in commit 0c37ec2aa88b ("[PATCH] powerpc: vdso
-> fixes (take #2)"), and the bug has existed since then AFAICS.
-> 
-> Fixes: 0c37ec2aa88b ("[PATCH] powerpc: vdso fixes (take #2)")
-> Cc: stable@vger.kernel.org # v2.6.15+
-> Link: http://lkml.kernel.org/r/HaC.ZfES.62bwlnvAvMP.1STMMj@seznam.cz
-> Reported-by: Jakub Drnec <jaydee@email.cz>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+On Wed, Mar 20, 2019 at 11:19 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> On Wed, Mar 20, 2019 at 6:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Mar 20, 2019 at 7:41 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> > > It is unclear to me how to fix it.
+> > > That's why I ended up with "depends on !MIPS".
+> > >
+> > >
+> > >   MODPOST vmlinux.o
+> > > arch/mips/mm/sc-mips.o: In function `mips_sc_prefetch_enable.part.2':
+> > > sc-mips.c:(.text+0x98): undefined reference to `mips_gcr_base'
+> > > sc-mips.c:(.text+0x9c): undefined reference to `mips_gcr_base'
+> > > sc-mips.c:(.text+0xbc): undefined reference to `mips_gcr_base'
+> > > sc-mips.c:(.text+0xc8): undefined reference to `mips_gcr_base'
+> > > sc-mips.c:(.text+0xdc): undefined reference to `mips_gcr_base'
+> > > arch/mips/mm/sc-mips.o:sc-mips.c:(.text.unlikely+0x44): more undefined
+> > > references to `mips_gcr_base'
+> > >
+> > >
+> > > Perhaps, MIPS folks may know how to fix it.
+> >
+> > I would guess like this:
+> >
+> > diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
+> > index 8bc5df49b0e1..a27483fedb7d 100644
+> > --- a/arch/mips/include/asm/mips-cm.h
+> > +++ b/arch/mips/include/asm/mips-cm.h
+> > @@ -79,7 +79,7 @@ static inline int mips_cm_probe(void)
+> >   *
+> >   * Returns true if a CM is present in the system, else false.
+> >   */
+> > -static inline bool mips_cm_present(void)
+> > +static __always_inline bool mips_cm_present(void)
+> >  {
+> >  #ifdef CONFIG_MIPS_CM
+> >         return mips_gcr_base != NULL;
+> > @@ -93,7 +93,7 @@ static inline bool mips_cm_present(void)
+> >   *
+> >   * Returns true if the system implements an L2-only sync region, else false.
+> >   */
+> > -static inline bool mips_cm_has_l2sync(void)
+> > +static __always_inline bool mips_cm_has_l2sync(void)
+> >  {
+> >  #ifdef CONFIG_MIPS_CM
+> >         return mips_cm_l2sync_base != NULL;
+> >
+>
+>
+> Thanks, I applied the above, but I still see
+>  undefined reference to `mips_gcr_base'
+>
+>
+> I attached .config to produce this error.
+>
+> I use prebuilt mips-linux-gcc from
+> https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
 
-Applied to powerpc fixes.
+I got to this patch experimentally, it fixes the problem for me:
 
-https://git.kernel.org/powerpc/c/b5b4453e7912f056da1ca7572574cada
+diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
+index 394673991bab..d70d02da038b 100644
+--- a/arch/mips/mm/sc-mips.c
++++ b/arch/mips/mm/sc-mips.c
+@@ -181,7 +181,7 @@ static int __init mips_sc_probe_cm3(void)
+        return 0;
+ }
 
-cheers
+-static inline int __init mips_sc_probe(void)
++static __always_inline int __init mips_sc_probe(void)
+ {
+        struct cpuinfo_mips *c = &current_cpu_data;
+        unsigned int config1, config2;
+diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
+index 830c93a010c3..186c28463bf3 100644
+--- a/arch/mips/include/asm/bitops.h
++++ b/arch/mips/include/asm/bitops.h
+@@ -548,7 +548,7 @@ static inline unsigned long __fls(unsigned long word)
+  * Returns 0..SZLONG-1
+  * Undefined if no bit exists, so code should check against 0 first.
+  */
+-static inline unsigned long __ffs(unsigned long word)
++static __always_inline unsigned long __ffs(unsigned long word)
+ {
+        return __fls(word & -word);
+ }
+
+
+It does look like a gcc bug though, as at least some of the references
+are from a function that got split out from an inlined function but that
+has no remaining call sites.
+
+       Arnd
