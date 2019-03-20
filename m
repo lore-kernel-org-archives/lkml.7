@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD595C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AF4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2FA21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAA620850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CCYeqD0S"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="VAnn82FZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfCTTAj (ORCPT
+        id S1727553AbfCTTBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:00:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53883 "EHLO
+        Wed, 20 Mar 2019 15:01:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35579 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfCTTAi (ORCPT
+        with ESMTP id S1727099AbfCTTBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:00:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q16so328022wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:00:36 -0700 (PDT)
+        Wed, 20 Mar 2019 15:01:05 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y197so321896wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ktddu76WvPbH/e8wAG7UqSfwslqPcY4HSdFqx+VFTkc=;
-        b=CCYeqD0S+iTcgZE45mxeAPvWF/Ok/KAYKsoB9rrSXQawpo0fBd8UOJ/MUYJicGxrfJ
-         t+zp29pYhJNEswtNIvOj9MYKN+uKxWE1O6AfVECcDmRCw5Co/6wClZuadCCp0+tIFEaw
-         oGuJz51mUPKJ3+cwTV5xz0qNWjbE/vVXagmApSR1Jzk2xTjnhbKLfifkjeNDTLVdGpY/
-         QWswkQfLk1pg7ygp6w9c3GlFIvlaF5lHELq8nxUhJZKoU6Z1+h8vndhbcG3HgFk6tKe4
-         H89/losBcFKTVlW9PKMgL5tCKfsp7+NjBby+g5LOEZhysIzaFq0KQeB74J2UDmhj0RMU
-         jFDw==
+        bh=zcRCVq3B+iwwZzRJrXnuwilWuPQVL4V6o04ieqitPfQ=;
+        b=VAnn82FZaA+TzmputmzDuvnrv9DkO+e3kVqRf/9CsVPjSsK7w1oOCIiKvWBqX2nXAM
+         pPN0l4GN5Hqz/sudxKvFQg2z6ep7u6o5s5N20rNC2zn1gXVQ6zlt8tLpfEIqLpo8ljky
+         2g8DFTjYa/IcBIm3L0XGUaV/jn+QEOBCj0Tu3yC9t7hP9inYbT+ZGgtKl+VRM+iDcJOc
+         BIQrCJVB46y8knCG+lhZIODTXV1sv87iChZ0n6kcLxKKmS0NMBi8OSUZBF/MPh5lpFIq
+         L0KV2kInrD+emk6DSe6yBJAucoKfBz42nSRLEJSkCI72hXvV8mvjxI68f5K0wZ9MTow/
+         ci/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ktddu76WvPbH/e8wAG7UqSfwslqPcY4HSdFqx+VFTkc=;
-        b=L3FaBROAbyXUlLnMlZts3OjcXrKtGVVrBBlY/6M6NZlPnifLVgttTrSzDPKKA/qjwZ
-         o4Nc7MbHXSHsJ/Y9bBQyvRKJNhnzg9QKds+RazySN4AthFM7RS1p9BiwTkh0gXy4c8BY
-         DAMbkXqnDnMkDhA9T1//HeYBvOPGWScy7FFSv6Kh+vpQWdObs0uq5GkGPWHe7JYzwDu0
-         0s092UYZ5qF9zeMjq/+pXVkFcvcmIJlfDLhUijnE62h9FxvKm0kgjGYWbLqNeWIGKR1o
-         LxqVjqYvplK12y0dPA07XAqbLlZCaFNWZWWgmWyPjNh2+BC3ww1yD5PKQPJPQXQn41X+
-         NdEg==
-X-Gm-Message-State: APjAAAUqxDVZCqg+YArLUd+MxfzmjIks0xmTafYiu/222mA/7Yt5vp49
-        8eKjlMivOHjzEFVlDSzX4xpqug==
-X-Google-Smtp-Source: APXvYqzM7Sa4kAtDERQfjedrwWTwL45BwWDXIJfXMHSQ/ahCbP8nuHeXgEv7Wm996SCNIXTXnWG6kA==
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr9160511wmc.107.1553108436068;
-        Wed, 20 Mar 2019 12:00:36 -0700 (PDT)
+        bh=zcRCVq3B+iwwZzRJrXnuwilWuPQVL4V6o04ieqitPfQ=;
+        b=DDbxq8JZDaRqEm0elZHPWD60kj3mto9+wgk3ee5JNEjxRSJYO2Px1Sxanhds8Ndxb2
+         7VA6X16aCG+tlBiqhHigjYsuBm11nA0evk303rp4myCPp9i4cgDMQAxbI1gIHCiV/7tj
+         I4MPadYtuMCKIRB6cD6c5p+IrtZCeMBNWhhxcqCX/WW1U5nXSgpdsjqjIgb5VnuQhHv7
+         DBwTSAR5OIkRrULv7ViiK8ZwkxfaHjaPY7tAzHqNTTMnFMz5oQH8knbSNJ2jXQHfcmxW
+         6FuNzMVTEeasY6Y3NfMai6aBjdnpG2bBK58V3IW3TDVcOkdcdfBZTaor2TZTGoFJJw0q
+         JBHQ==
+X-Gm-Message-State: APjAAAXsLqph2TX6UkuSHhvBBQIPnsRqdQBdS/MY0prKbdy0SuvgwLlN
+        VuCDrcvQa5br2FdbczFz/EFLKQ==
+X-Google-Smtp-Source: APXvYqzS5ga6x8HSaHitv63vGSSRGgTpCEJB73C3HaCJrQXrEQIWWjmzSTsUWcpD18/D5JWHAFsjjA==
+X-Received: by 2002:a1c:4d:: with SMTP id 74mr9029583wma.129.1553108462606;
+        Wed, 20 Mar 2019 12:01:02 -0700 (PDT)
 Received: from [172.20.1.106] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id o127sm4851367wmo.20.2019.03.20.12.00.35
+        by smtp.gmail.com with ESMTPSA id t2sm5487793wra.9.2019.03.20.12.01.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 12:00:35 -0700 (PDT)
+        Wed, 20 Mar 2019 12:01:01 -0700 (PDT)
 To:     Alban Crequy <alban.crequy@gmail.com>, ast@kernel.org,
         daniel@iogearbox.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         alban@kinvolk.io, iago@kinvolk.io
 References: <20190320173332.18105-1-alban@kinvolk.io>
- <20190320173332.18105-3-alban@kinvolk.io>
+ <20190320173332.18105-4-alban@kinvolk.io>
 From:   Quentin Monnet <quentin.monnet@netronome.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
@@ -109,13 +109,14 @@ Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
  oHhplrRgXwPBSOkMMlLKu+FJsmYVFeLAJ81sfmFuTTliRb3Fl2Q27cEr7kNKlsz/t6vLSEN2
  j8x+tWD8x53SEOSn94g2AyJA9Txh2xBhWGuZ9CpBuXjtPrnRSd8xdrw36AL53goTt/NiLHUd
  RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH bpf-next v1 3/7] tools: bpftool: create map of maps
-Message-ID: <d856c20f-662b-60ac-996e-8148337a50e9@netronome.com>
-Date:   Wed, 20 Mar 2019 19:00:34 +0000
+Subject: Re: [PATCH bpf-next v1 4/7] tools: bpftool: implement map exec
+ command
+Message-ID: <391274e4-7634-a1ac-5969-02403abd77ac@netronome.com>
+Date:   Wed, 20 Mar 2019 19:01:01 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190320173332.18105-3-alban@kinvolk.io>
+In-Reply-To: <20190320173332.18105-4-alban@kinvolk.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
@@ -124,279 +125,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alban, thanks for those patches!
-
 2019-03-20 18:33 UTC+0100 ~ Alban Crequy <alban.crequy@gmail.com>
 > From: Alban Crequy <alban@kinvolk.io>
 > 
-> Before this patch, there was no way to fill attr.inner_map_fd, necessary
-> for array_of_maps or hash_of_maps.
+> The map exec commands allows to open an existing map and pass the file
+> descriptor to a child process. This enables applications to use an
+> existing BPF map even when they don't support bpffs.
 > 
-> This patch adds keyword 'innermap' to pass the innermap, either as an id
-> or as a pinned map.
-> 
-> Example of commands:
-> 
-> $ sudo bpftool map create /sys/fs/bpf/innermap type hash \
->         key 8 value 8 entries 64 name innermap flags 1
-> $ sudo bpftool map create /sys/fs/bpf/outermap type hash_of_maps \
->         innermap pinned /sys/fs/bpf/innermap key 64 value 4 \
->         entries 64 name myoutermap flags 1
-> $ sudo bpftool map show pinned /sys/fs/bpf/outermap
-> 47: hash_of_maps  name myoutermap  flags 0x1
-> 	key 64B  value 4B  max_entries 64  memlock 12288B
+> Example of usage:
+>     # bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99
+>     anon_inode:bpf-map
 > 
 > Documentation and bash completion updated as well.
 > 
 > Signed-off-by: Alban Crequy <alban@kinvolk.io>
-> 
 > ---
-> 
-> Previous version of this patch was sent while bpf-next was closed.
-> https://marc.info/?l=linux-kernel&m=155180393501258&w=2
-> 
-> Since then, the following changes were done:
-> - error management when calling map_parse_fd (review from Jakub)
-> - fix documentation and bash completion (review from Quentin)
-> ---
->  .../bpf/bpftool/Documentation/bpftool-map.rst |  9 ++-
->  tools/bpf/bpftool/bash-completion/bpftool     |  9 +++
->  tools/bpf/bpftool/map.c                       | 75 +++++++++++++++++--
->  3 files changed, 83 insertions(+), 10 deletions(-)
+>  .../bpf/bpftool/Documentation/bpftool-map.rst | 11 ++++
+>  tools/bpf/bpftool/bash-completion/bpftool     | 22 +++++++-
+>  tools/bpf/bpftool/map.c                       | 53 +++++++++++++++++++
+>  3 files changed, 85 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/bpf/bpftool/Documentation/bpftool-map.rst b/tools/bpf/bpftool/Documentation/bpftool-map.rst
-> index 5c984ffc9f01..b685641bfd74 100644
+> index b685641bfd74..dfd8352fa453 100644
 > --- a/tools/bpf/bpftool/Documentation/bpftool-map.rst
 > +++ b/tools/bpf/bpftool/Documentation/bpftool-map.rst
-> @@ -23,7 +23,7 @@ MAP COMMANDS
+> @@ -30,6 +30,7 @@ MAP COMMANDS
+>  |	**bpftool** **map getnext**    *MAP* [**key** *DATA*]
+>  |	**bpftool** **map delete**     *MAP*  **key** *DATA*
+>  |	**bpftool** **map pin**        *MAP*  *FILE*
+> +|	**bpftool** **map exec**       *MAP*  **fd** *FD* **cmd** -- *CMD*
+>  |	**bpftool** **map event_pipe** *MAP* [**cpu** *N* **index** *M*]
+>  |	**bpftool** **map peek**       *MAP*
+>  |	**bpftool** **map push**       *MAP* **value** *VALUE*
+> @@ -101,6 +102,10 @@ DESCRIPTION
+>  		  contain a dot character ('.'), which is reserved for future
+>  		  extensions of *bpffs*.
 >  
->  |	**bpftool** **map { show | list }**   [*MAP*]
->  |	**bpftool** **map create**     *FILE* **type** *TYPE* **key** *KEY_SIZE* **value** *VALUE_SIZE* \
-> -|		**entries** *MAX_ENTRIES* **name** *NAME* [**flags** *FLAGS*] [**dev** *NAME*]
-> +|		**entries** *MAX_ENTRIES* **name** *NAME* [**flags** *FLAGS*] [**dev** *NAME*] [**innermap** MAP]
->  |	**bpftool** **map dump**       *MAP*
->  |	**bpftool** **map update**     *MAP* [**key** *DATA*] [**value** *VALUE*] [*UPDATE_FLAGS*]
->  |	**bpftool** **map lookup**     *MAP* [**key** *DATA*]
-> @@ -60,10 +60,15 @@ DESCRIPTION
->  		  Output will start with map ID followed by map type and
->  		  zero or more named attributes (depending on kernel version).
->  
-> -	**bpftool map create** *FILE* **type** *TYPE* **key** *KEY_SIZE* **value** *VALUE_SIZE*  **entries** *MAX_ENTRIES* **name** *NAME* [**flags** *FLAGS*] [**dev** *NAME*]
-> +	**bpftool map create** *FILE* **type** *TYPE* **key** *KEY_SIZE* **value** *VALUE_SIZE*  **entries** *MAX_ENTRIES* **name** *NAME* [**flags** *FLAGS*] [**dev** *NAME*] [**innermap** MAP]
->  		  Create a new map with given parameters and pin it to *bpffs*
->  		  as *FILE*.
->  
-> +		  To create a map of type **array_of_maps** or
-> +		  **hash_of_maps**, the additional parameter **innermap** needs
-> +		  to reference an existing map with the type and size of the
-> +		  maps in the values.
+> +	**bpftool map exec**     *MAP*  **fd** *FD* **cmd** -- *CMD*
+> +                  Load map and exec an external command, passing the file
+> +                  descriptor.
 > +
->  	**bpftool map dump**    *MAP*
->  		  Dump all entries in a given *MAP*.
+
+Please use tabs for indent.
+
+Could you please add a line to explain that the process spawned get the
+the link to the map in the file descriptor passed as *FD*? I'm being
+pedantic, I know it's not that hard to understand with the examples,
+just trying to make things as clear as possible for users reading the page.
+
+I have nothing against the double dash in the examples or the commit
+log, but putting it in the description in the command itself makes it
+look like it is some kind of mandatory syntax. Would you consider
+removing the occurrences above?
+
+We don't really "exec" the map... Just thinking... Would another keyword
+like "pass" or "passfd" be more relevant?
+
+>  	**bpftool** **map event_pipe** *MAP* [**cpu** *N* **index** *M*]
+>  		  Read events from a BPF_MAP_TYPE_PERF_EVENT_ARRAY map.
 >  
+> @@ -254,6 +259,12 @@ would be lost as soon as bpftool exits).
+>    key: 00 00 00 00  value: 22 02 00 00
+>    Found 1 element
+>  
+> +**# bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99**
+> +
+> +::
+> +
+> +  anon_inode:bpf-map
+> +
+>  SEE ALSO
+>  ========
+>  	**bpf**\ (2),
 > diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-> index b803827d01e8..9e37de8bb227 100644
+> index 9e37de8bb227..63cd53c4d3a7 100644
 > --- a/tools/bpf/bpftool/bash-completion/bpftool
 > +++ b/tools/bpf/bpftool/bash-completion/bpftool
-> @@ -461,6 +461,14 @@ _bpftool()
->                              _sysfs_get_netdevs
->                              return 0
->                              ;;
-> +                        innermap)
-> +                            COMPREPLY+=( $( compgen -W "id pinned" -- "$cur" ) )
+> @@ -583,6 +583,26 @@ _bpftool()
+>                      fi
+>                      return 0
+>                      ;;
+> +                exec)
+> +                    case $prev in
+> +                        $command)
+> +                            COMPREPLY=( $( compgen -W "$MAP_TYPE" -- "$cur" ) )
 > +                            return 0
 > +                            ;;
-> +                        id)
-> +                            _bpftool_get_map_ids
+> +                        fd)
 > +                            return 0
 > +                            ;;
->                          *)
->                              _bpftool_once_attr 'type'
->                              _bpftool_once_attr 'key'
-> @@ -469,6 +477,7 @@ _bpftool()
->                              _bpftool_once_attr 'name'
->                              _bpftool_once_attr 'flags'
->                              _bpftool_once_attr 'dev'
-> +                            _bpftool_once_attr 'innermap'
->                              return 0
->                              ;;
->                      esac
+> +                        cmd)
+> +                            COMPREPLY=( $(compgen -c -- "$cur" ) )
+> +                            return 0
+> +                            ;;
+> +                        *)
+> +                            _bpftool_once_attr 'fd'
+> +                            _bpftool_once_attr 'cmd'
+> +                            return 0
+> +                            ;;
+> +                    esac
+> +                    ;;
+>                  event_pipe)
+>                      case $prev in
+>                          $command)
+> @@ -610,7 +630,7 @@ _bpftool()
+>                      [[ $prev == $object ]] && \
+>                          COMPREPLY=( $( compgen -W 'delete dump getnext help \
+>                              lookup pin event_pipe show list update create \
+> -                            peek push enqueue pop dequeue' -- \
+> +                            peek push enqueue pop dequeue exec' -- \
+>                              "$cur" ) )
+>                      ;;
+>              esac
 > diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-> index 18f9bc3aed4f..a576f2a019be 100644
+> index a576f2a019be..768497364cee 100644
 > --- a/tools/bpf/bpftool/map.c
 > +++ b/tools/bpf/bpftool/map.c
-> @@ -1100,6 +1100,7 @@ static int do_create(int argc, char **argv)
->  	struct bpf_create_map_attr attr = { NULL, };
->  	const char *pinfile;
->  	int err, fd;
-> +	int inner_map_fd = -1;
+> @@ -883,6 +883,58 @@ static int do_update(int argc, char **argv)
+>  	return err;
+>  }
+>  
+> +static int do_exec(int argc, char **argv)
+> +{
+> +	struct bpf_map_info info = {};
+> +	__u32 len = sizeof(info);
+> +	int fd, ret;
+> +	__u32 outfd = 0;
 
-Nit: reverse-Christmas tree for declaring the variables.
+Reverse-Christmas tree.
 
->  
->  	if (!REQ_ARGS(7))
->  		return -1;
-> @@ -1108,48 +1109,75 @@ static int do_create(int argc, char **argv)
->  	while (argc) {
->  		if (is_prefix(*argv, "type")) {
->  			NEXT_ARG();
-> -			if (!REQ_ARGS(1))
-> +			if (!REQ_ARGS(1)) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  
->  			if (attr.map_type) {
->  				p_err("map type already specified");
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
->  			}
->  
->  			attr.map_type = map_type_from_str(*argv);
->  			if ((int)attr.map_type < 0) {
->  				p_err("unrecognized map type: %s", *argv);
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
->  			}
->  			NEXT_ARG();
->  		} else if (is_prefix(*argv, "name")) {
->  			NEXT_ARG();
-> -			if (!REQ_ARGS(1))
-> +			if (!REQ_ARGS(1)) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  			attr.name = GET_ARG();
->  		} else if (is_prefix(*argv, "key")) {
->  			if (parse_u32_arg(&argc, &argv, &attr.key_size,
-> -					  "key size"))
-> +					  "key size")) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  		} else if (is_prefix(*argv, "value")) {
->  			if (parse_u32_arg(&argc, &argv, &attr.value_size,
-> -					  "value size"))
-> +					  "value size")) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  		} else if (is_prefix(*argv, "entries")) {
->  			if (parse_u32_arg(&argc, &argv, &attr.max_entries,
-> -					  "max entries"))
-> +					  "max entries")) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  		} else if (is_prefix(*argv, "flags")) {
->  			if (parse_u32_arg(&argc, &argv, &attr.map_flags,
-> -					  "flags"))
-> +					  "flags")) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  		} else if (is_prefix(*argv, "dev")) {
->  			NEXT_ARG();
-> -			if (!REQ_ARGS(1))
-> +			if (!REQ_ARGS(1)) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
-> +			}
->  
->  			if (attr.map_ifindex) {
->  				p_err("offload device already specified");
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
->  			}
->  
-> @@ -1157,28 +1185,59 @@ static int do_create(int argc, char **argv)
->  			if (!attr.map_ifindex) {
->  				p_err("unrecognized netdevice '%s': %s",
->  				      *argv, strerror(errno));
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
->  				return -1;
->  			}
->  			NEXT_ARG();
-> +		} else if (is_prefix(*argv, "innermap")) {
+> +
+> +	if (argc < 2)
+> +		usage();
+> +
+> +	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
+> +	if (fd < 0)
+> +		return -1;
+> +
+> +	while (argc) {
+> +		if (is_prefix(*argv, "fd")) {
+> +			if (parse_u32_arg(&argc, &argv, &outfd,
+> +					  "out fd"))
+> +				return -1;
+> +		} else if (is_prefix(*argv, "cmd")){
 > +			NEXT_ARG();
-> +			if (!REQ_ARGS(1)) {
-> +				if (inner_map_fd != -1)
-> +					close(inner_map_fd);
+> +			if (!REQ_ARGS(1))
 > +				return -1;
-> +			}
 > +
-> +			if (inner_map_fd != -1) {
-> +				close(inner_map_fd);
-> +				p_err("innermap already specified");
-> +				return -1;
-> +			}
+> +			break;
+> +		} else {
+> +			p_err("unknown arg %s", *argv);
+> +			return -1;
+> +		}
+> +	}
 > +
-> +			inner_map_fd = map_parse_fd(&argc, &argv);
-> +			if (inner_map_fd < 0)
-> +				return -1;
->  		} else {
->  			p_err("unknown arg %s", *argv);
-> +			if (inner_map_fd != -1)
-> +				close(inner_map_fd);
->  			return -1;
->  		}
->  	}
->  
->  	if (!attr.name) {
->  		p_err("map name not specified");
-> +		if (inner_map_fd != -1)
-> +			close(inner_map_fd);
->  		return -1;
->  	}
->  
->  	set_max_rlimit();
->  
-> +	if (inner_map_fd != -1)
-> +		attr.inner_map_fd = inner_map_fd;
+> +	if (outfd == 0) {
+> +		p_err("invalid fd");
+> +		return -1;
+> +	}
+> +	if (*argv == NULL) {
+> +		p_err("empty command");
+> +		return -1;
+> +	}
 > +
->  	fd = bpf_create_map_xattr(&attr);
->  	if (fd < 0) {
->  		p_err("map create failed: %s", strerror(errno));
-> +		if (inner_map_fd != -1)
-> +			close(inner_map_fd);
->  		return -1;
-
-You might want to move all those
-
-	if (inner_map_fd != -1)
-		close(inner_map_fd);
-	return -1;
-
-at the end of the function under a label, and jump there with a goto for
-the 15 or so occurrences of the pattern?
-
->  	}
->  
-> +	if (inner_map_fd != -1)
-> +		close(inner_map_fd);
 > +
->  	err = do_pin_fd(fd, pinfile);
->  	close(fd);
->  	if (err)
-> @@ -1243,7 +1302,7 @@ static int do_help(int argc, char **argv)
->  		"Usage: %s %s { show | list }   [MAP]\n"
->  		"       %s %s create     FILE type TYPE key KEY_SIZE value VALUE_SIZE \\\n"
->  		"                              entries MAX_ENTRIES name NAME [flags FLAGS] \\\n"
-> -		"                              [dev NAME]\n"
-> +		"                              [dev NAME] [innermap MAP]\n"
->  		"       %s %s dump       MAP\n"
->  		"       %s %s update     MAP [key DATA] [value VALUE] [UPDATE_FLAGS]\n"
->  		"       %s %s lookup     MAP [key DATA]\n"
+
+Spurious blank line.
+
+> +	ret = dup2(fd, (int)outfd);
+> +	if (ret == -1) {
+> +		p_err("dup2 failed: %s", strerror(errno));
+> +		return -1;
+> +	}
+> +
+> +	execvp(argv[0], argv);
+> +	p_err("execvp failed: %s", strerror(errno));
+> +	return -1;
+> +}
+> +
+>  static void print_key_value(struct bpf_map_info *info, void *key,
+>  			    void *value)
+>  {
+> @@ -1355,6 +1407,7 @@ static const struct cmd cmds[] = {
+>  	{ "enqueue",	do_update },
+>  	{ "pop",	do_pop_dequeue },
+>  	{ "dequeue",	do_pop_dequeue },
+> +	{ "exec",	do_exec },
+>  	{ 0 }
+>  };
+>  
 > 
 
+Please also add the new command in the interactive help (do_help()).
+
+By the way, I like this new command a lot!
