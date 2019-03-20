@@ -2,157 +2,117 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A56C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F3D21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E997621874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aogvwp1J";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fAP1VKAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfCTThD (ORCPT
+        id S1727086AbfCTThR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:37:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55856 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726006AbfCTThC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:37:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8CABDAD88;
-        Wed, 20 Mar 2019 19:37:00 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 20:36:59 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
-        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
-        jpoimboe@redhat.com, khlebnikov@yandex-team.ru, jeyu@kernel.org,
-        matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH v2 3/8] livepatch: Add klp-convert tool
-In-Reply-To: <20190318192011.GA23157@redhat.com>
-Message-ID: <alpine.LSU.2.21.1903202021570.29796@pobox.suse.cz>
-References: <20190301141313.15057-1-jmoreira@suse.de> <20190301141313.15057-4-jmoreira@suse.de> <20190318192011.GA23157@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 20 Mar 2019 15:37:17 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46600 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfCTThR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:37:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D6FAF602AE; Wed, 20 Mar 2019 19:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553110635;
+        bh=9zaHzkeM463//IkYhrQ5tOjwBRqgT+gb/DtAbGX/xeA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aogvwp1JwfWeN1QErAyr65s5CG8uZPZ6Tb4tD4VBzZ2ZD5DF7rQWCIm9CYfrGktcI
+         y26C95dSLLef3edY6+ByiNzLZAp6KbhG71jf8y4DZtW3jyecvyFzxHBAX0Fkt7gjXQ
+         WSU11iXGXt2a33uGXvkC5IH4NVbKsuLZ5j+jIRpM=
+Received: from [10.79.162.149] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3272960159;
+        Wed, 20 Mar 2019 19:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553110634;
+        bh=9zaHzkeM463//IkYhrQ5tOjwBRqgT+gb/DtAbGX/xeA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fAP1VKAt7TSARouRsMMsstOWNN02EniZO0hu/F1VTFDhp14ZIdzxQx2B+LCcB68Ke
+         JAEwWAlQ8oNbUscFZn/RY4WYCJdHHhFImn47JwqgdxjLgKEP8Ox/s7RBs9zq3hlIsJ
+         iDVaEw5VPsmgNHVpBjTqbbqHZqqcYFOtcvvUaNTo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3272960159
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH -next] irqchip/brcmstb-l2: Make two init functions static
+To:     Yue Haibing <yuehaibing@huawei.com>, cernekee@gmail.com,
+        f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, computersforpeace@gmail.com,
+        gregory.0xf0@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+References: <20190320142220.3224-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <e1418be9-881b-3460-a820-44432d29419f@codeaurora.org>
+Date:   Thu, 21 Mar 2019 01:07:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190320142220.3224-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > [ ... snip ... ]
-> > +
-> > +/* Checks if sympos is valid, otherwise prints valid sympos list */
-> > +static bool valid_sympos(struct sympos *sp)
-> > +{
-> > +	struct symbol_entry *e;
-> > +	int counter = 0;
-> > +
-> > +	list_for_each_entry(e, &symbols, list) {
-> > +		if ((strcmp(e->symbol_name, sp->symbol_name) == 0) &&
-> > +		    (strcmp(e->object_name, sp->object_name) == 0)) {
-> > +			if (counter == sp->pos)
-> > +				return true;
-> > +			counter++;
-> > +		}
-> > +	}
-> > +
-> > +	WARN("Provided KLP_SYMPOS does not match a symbol: %s.%s,%d",
-> > +			sp->object_name, sp->symbol_name, sp->pos);
-> > +	print_valid_module_relocs(sp->symbol_name);
-> > +
-> > +	return false;
-> > +}
-> 
-> I believe there is an off-by-one error condition either here, or in
-> livepatch kernel core sympos disambiguator code (in which case, external
-> tools like kpatch-build would also need to be adjusted).
-> 
-> The scenarios that I've observed using klp-convert and kpatch-build:
-> 
->   sympos == 0, uniquely named symbol
->   sympos == 1, non-unique symbol name, first instance
->   sympos == 2, non-unique symbol name, second instance
->   ...
 
-Yes, that is exactly how we defined it back then.
- 
-> When I built a klp-convert selftest, I made sure that the target module
-> contained multiple symbols of the same name across two .o files.
-> However, when I tried to use a KLP_MODULE_RELOC annotation in the
-> livepatch to resolve to the second (ie, last) symbol, using a sympos=2,
-> klp-convert kept telling me that the only valid KLP_SYMPOS were 0 and 1.
-> 
-> The following code adjusts klp-convert to match the sympos logic, as I
-> understand it in livepatch/core.c and kpatch-build;
-> 
->   [squash] livepatch/klp-convert: fix klp-convert off-by-one sympos 
->   https://github.com/torvalds/linux/commit/1ed8e5baa98f7920bbbaa562278b3ed44552e01f
-> 
-> This change also adds a check that sympos == 0 is in fact a uniquely
-> named symbol.
+On 3/20/2019 7:52 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fix sparse warnings:
+>
+> drivers/irqchip/irq-brcmstb-l2.c:278:12: warning:
+>   symbol 'brcmstb_l2_edge_intc_of_init' was not declared. Should it be static?
+> drivers/irqchip/irq-brcmstb-l2.c:285:12: warning:
+>   symbol 'brcmstb_l2_lvl_intc_of_init' was not declared. Should it be static?
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/irqchip/irq-brcmstb-l2.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+> index 83364fe..5e4ca13 100644
+> --- a/drivers/irqchip/irq-brcmstb-l2.c
+> +++ b/drivers/irqchip/irq-brcmstb-l2.c
+> @@ -275,14 +275,14 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+>   	return ret;
+>   }
+>   
+> -int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
+> +static int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
+>   	struct device_node *parent)
+>   {
+>   	return brcmstb_l2_intc_of_init(np, parent, &l2_edge_intc_init);
+>   }
+>   IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_edge_intc_of_init);
+>   
+> -int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
+> +static int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
+>   	struct device_node *parent)
+>   {
+>   	return brcmstb_l2_intc_of_init(np, parent, &l2_lvl_intc_init);
 
-Looks good to me. Maybe we can even make it simpler and use similar 
-approach as in klp_find_callback() and klp_find_object_symbol() from 
-kernel/livepatch/core.c. On the other hand, given that we want to print 
-useful output in all cases, the code might happen to be more complicated 
-and definitely ugly. 
- 
-> > [ ... snip ... ]
-> > +
-> > +int main(int argc, const char **argv)
-> > +{
-> > +	const char *klp_in_module, *klp_out_module, *symbols_list;
-> > +	struct rela *rela, *tmprela;
-> > +	struct section *sec, *aux;
-> > +	struct sympos sp;
-> > +	struct elf *klp_elf;
-> > +
-> > +	if (argc != 4) {
-> > +		WARN("Usage: %s <Symbols.list> <input.ko> <out.ko>", argv[0]);
-> > +		return -1;
-> > +	}
-> > +
-> > +	symbols_list = argv[1];
-> > +	klp_in_module = argv[2];
-> > +	klp_out_module = argv[3];
-> > +
-> > +	klp_elf = elf_open(klp_in_module);
-> > +	if (!klp_elf) {
-> > +		WARN("Unable to read elf file %s\n", klp_in_module);
-> > +		return -1;
-> > +	}
-> > +
-> > +	if (!load_syms_lists(symbols_list))
-> > +		return -1;
-> > +
-> > +	if (!load_usr_symbols(klp_elf)) {
-> > +		WARN("Unable to load user-provided sympos");
-> > +		return -1;
-> > +	}
-> > +
-> > +	list_for_each_entry_safe(sec, aux, &klp_elf->sections, list) {
-> > +		if (!is_rela_section(sec))
-> > +			continue;
-> > +
-> > +		list_for_each_entry_safe(rela, tmprela, &sec->relas, list) {
-> > +			if (!must_convert(rela->sym))
-> > +				continue;
-> > +
-> > +			if (!find_missing_position(rela->sym, &sp)) {
-> > +				WARN("Unable to find missing symbol");
-> 
-> A really minor suggestion, but I found it useful to tell the user
-> exactly which symbol was missing:
-> 
->   [squash] livepatch/klp-convert: add missing symbol name to warning 
->   https://github.com/torvalds/linux/commit/7a41a8f3d9b9e11f0c75914cb925af1486c1ecc6
 
-I think that Joao has exactly the same hunk staged somewhere 
-already. You are right. The message is not much informative.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Miroslav
+
+Thanks,
+Mukesh
+
