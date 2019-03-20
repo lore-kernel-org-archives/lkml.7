@@ -2,242 +2,104 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA10DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31863C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56C62175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B69B2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfCTK5z (ORCPT
+        id S1727716AbfCTLAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:57:55 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53733 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfCTK5y (ORCPT
+        Wed, 20 Mar 2019 07:00:33 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:55968 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTLAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:57:54 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6Yum-0001P8-FD; Wed, 20 Mar 2019 11:57:44 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6Yuk-0008QV-Se; Wed, 20 Mar 2019 11:57:42 +0100
-Date:   Wed, 20 Mar 2019 11:57:42 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V7 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190320105742.jdabsbcoebbyftqr@pengutronix.de>
-References: <1553058067-18793-1-git-send-email-Anson.Huang@nxp.com>
- <1553058067-18793-3-git-send-email-Anson.Huang@nxp.com>
- <20190320081856.wkw55pmw57i4ifdj@pengutronix.de>
- <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+        Wed, 20 Mar 2019 07:00:33 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2KAwoWH033716;
+        Wed, 20 Mar 2019 19:58:50 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Wed, 20 Mar 2019 19:58:50 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126094122116.bbtec.net [126.94.122.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2KAwn1v033709
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 20 Mar 2019 19:58:50 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
+References: <000000000000db3d130584506672@google.com>
+ <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+ <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+ <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+ <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
+ <CACT4Y+Z2FL=t8cHceXMGvG2QfChKdJYprVvBonu9X+jJaL0HMQ@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <a06830e7-e396-6dd5-d9d5-2a7b1df9efc1@i-love.sakura.ne.jp>
+Date:   Wed, 20 Mar 2019 19:58:48 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM6PR0402MB3911185E2D7E96FD3224BCBDF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CACT4Y+Z2FL=t8cHceXMGvG2QfChKdJYprVvBonu9X+jJaL0HMQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Anson,
+On 2019/03/20 19:42, Dmitry Vyukov wrote:
+>> I mean, yes, I agree, kernel bug bisection won't be perfect. But do
+>> you see anything actionable here?
 
-On Wed, Mar 20, 2019 at 10:17:50AM +0000, Anson Huang wrote:
-> > On Wed, Mar 20, 2019 at 05:06:21AM +0000, Anson Huang wrote:
-> > > +	/* make sure counter is disabled for programming prescale */
-> > > +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> > > +	saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
-> > > +	if (saved_cmod) {
-> > > +		val &= ~PWM_IMX_TPM_SC_CMOD;
-> > > +		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > 
-> > I thought we agreed on not stopping the counter if the PS field isn't changed?
+Allow users to manually tell bisection range when
+automatic bisection found a wrong commit.
+
+Also, allow users to specify reproducer program
+when automatic bisection found a wrong commit.
+
+Yes, this is anti automation. But since automation can't become perfect,
+I'm suggesting manual adjustment. Even if we involve manual adjustment,
+the syzbot's plenty CPU resources for building/testing kernels is highly
+appreciated (compared to doing manual bisection by building/testing kernels
+on personal PC environments).
+
 > 
-> If the PS field no need to change, the round state should already return the period
-> equal to current period settings, so this function will NOT be called, right?
+> I see the larger long term bisection quality improvement (for syzbot
+> and for everybody else) in doing some actual testing for each kernel
+> commit before it's being merged into any kernel tree, so that we have
+> less of these a single program triggers 3 different bugs, stray
+> unrelated bugs, broken release boots, etc. I don't see how reliable
+> bisection is possible without that.
 > 
->          if (real_state.period != tpm->real_period) {
->                  if (tpm->user_count > 1) {
->                          ret = -EBUSY;
->                          goto exit;
->                  }
-> 
-> 	pwm_imx_tpm_setup_period(chip, param);
->                  tpm->real_period = real_state.period;
->         } 
 
-If the PS field is already right .period might still not match as its
-value depends on SC.PS and MOD.MOD.
-
-> > > +	val &= ~PWM_IMX_TPM_SC_PS;
-> > > +	val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p.prescale);
-> > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > > +
-> > > +	/*
-> > > +	 * set period count: according to RM, the MOD register is
-> > > +	 * updated immediately after CMOD[1:0] = 2b'00 above
-> > > +	 */
-> > 
-> > So the current period isn't completed? That's wrong.
-> 
-> So you mean we have to wait for the current period to finish here?
-> I did NOT know this, so we have to compare the counter value with
-
-Yeah, see https://patchwork.ozlabs.org/patch/1021566/ which documents
-this but waits for feedback by Thierry since some time.
-
-> the MOD value until they match then proceed the period change?
-
-If the hardware doesn't support you here (usually it does) I think it's
-not reliable enough to try to sync in software. I assume you can get the
-right wave form if you don't change SC.PS but only MOD.MOD? So maybe the
-sanest approach is to refuse changing SC.PS if the PWM is running.
-
-Or disable (which also should wait for the current period to finish),
-poll for the end (or use an irq?) and then setup the new configuration.
-
-> > > +{
-> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > +	struct pwm_state c;
-> > > +	u32 val, sc_val;
-> > > +	u64 tmp;
-> > > +
-> > > +	pwm_imx_tpm_get_state(chip, pwm, &c);
-> > > +
-> > > +	if (state.duty_cycle != c.duty_cycle) {
-> > > +		/* set duty counter */
-> > > +		tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD;
-> > > +		tmp *= state.duty_cycle;
-> > > +		val = DIV_ROUND_CLOSEST_ULL(tmp, state.period);
-> > > +		writel(val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> > > +	}
-> > > +
-> > > +	if (state.enabled != c.enabled) {
-> > 
-> > This is wrong. If the PWM was running (c.enabled == true) and you are
-> > supposed to disable (state.enabled == false) you enable the hardware once
-> > more.
-> 
-> A little confused here, as the case you assume, inside this block, there is another
-> check for state.enabled, if it is false, the polarity will be set to channel disabled mode,
-> the polarity setting is combined together with the enable status here, am I wrong?  
-
-Ah, you're right. I missed that probably because I saw register accesses
-after the state.enabled != c.enabled check.
-
-> > > +			val |= (state.polarity == PWM_POLARITY_NORMAL) ?
-> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x2) :
-> > > +				FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0x1);
-> > 
-> > Introduce PWM_IMX_TPM_CnSC_ELS_POLARITY_NORMAL and use it
-> > together with PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED here. If you
-> > put the FIELD_PREP into the definition the line doesn't get excessively long.
-> > 
-> 
-> I put the FIELD_PREP into definition, the line still long, but I agree using definition is better.
-> 
-> #define PWM_IMX_TPM_CnSC_ELS_INVERSED   FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 1)
-> #define PWM_IMX_TPM_CnSC_ELS_NORMAL     FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 2)
-> 
->                          val |= (state->polarity == PWM_POLARITY_NORMAL) ?
->                                  PWM_IMX_TPM_CnSC_ELS_NORMAL :
->                                  PWM_IMX_TPM_CnSC_ELS_INVERSED;
-> 
-> > Maybe also add
-> > 
-> > 	#define PWM_IMX_TPM_CnSC_ELS_INACTIVE FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0)
-> > 
-> 
-> I did NOT use the FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 0) at all, so why add it?
-> I don't quite understand.
-
-You use it implicitly in pwm_imx_tpm_apply_hw() if state.enabled ==
-false and c.enabled == true:
-
-	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-	val &= ~(PWM_IMX_TPM_CnSC_ELS | ...);
-	...
-	writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-
-> > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
-> > > +			      struct pwm_device *pwm,
-> > > +			     struct pwm_state *state)
-> > > +{
-> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > +	struct imx_tpm_pwm_param param;
-> > > +	struct pwm_state real_state;
-> > > +	int ret;
-> > > +
-> > > +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
-> > > +	if (ret)
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&tpm->lock);
-> > > +
-> > > +	/*
-> > > +	 * TPM counter is shared by multiple channels, so
-> > > +	 * prescale and period can NOT be modified when
-> > > +	 * there are multiple channels in use with different
-> > > +	 * period settings.
-> > > +	 */
-> > > +	if (real_state.period != tpm->real_period) {
-> > > +		if (tpm->user_count > 1) {
-> > > +			ret = -EBUSY;
-> > > +			goto exit;
-> > > +		}
-> > > +
-> > > +		pwm_imx_tpm_config_counter(chip, param);
-> > > +		tpm->real_period = real_state.period;
-> > > +	}
-> > 
-> > Maybe add a comment that this could still be optimized. For example if
-> > pwm_imx_tpm_round_state returned prescale = 5 but prescale is currently 6,
-> > you might still be able to configure
-> 
-> You meant for multiple users request different period case? In this block, if there is
-> ONLY one user and the requested period can be met by HW, it will anyway re-configure
-> the HW for the prescale and period I think, or I did NOT get your point?
-
-My idea has a flaw. I thought that if there is another user, the
-duty_cycle can still be represented if the actually used prescale value
-is slightly higher. But then there is still a problem with the period
-length that I missed. So my remark was wrong, sorry for that.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+syzbot currently cannot test kernels with custom patches (unless "#syz test:" requests).
+Are you saying that syzbot will become be able to test kernels with custom patches?
