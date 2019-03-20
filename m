@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F30C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15AE2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125BB2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfCTMcm (ORCPT
+        id S1727697AbfCTMcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:32:42 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51813 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727521AbfCTMcm (ORCPT
+        Wed, 20 Mar 2019 08:32:51 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:34691 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbfCTMcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:32:42 -0400
-X-Originating-IP: 182.72.246.220
+        Wed, 20 Mar 2019 08:32:51 -0400
 Received: from localhost (unknown [182.72.246.220])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id C71AB4000F;
-        Wed, 20 Mar 2019 12:32:39 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E1A6824000E;
+        Wed, 20 Mar 2019 12:32:48 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/7] rtc: xgene: fix possible race condition
-Date:   Wed, 20 Mar 2019 13:32:27 +0100
-Message-Id: <20190320123233.13519-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/7] rtc: xgene: set range
+Date:   Wed, 20 Mar 2019 13:32:28 +0100
+Message-Id: <20190320123233.13519-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320123233.13519-1-alexandre.belloni@bootlin.com>
+References: <20190320123233.13519-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,56 +41,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
-
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-struct before requesting the IRQ.
+CCVR is a 32bit second counter.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-xgene.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-xgene.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
-index 153820876a82..2f741f455c30 100644
+index 2f741f455c30..e360f8917556 100644
 --- a/drivers/rtc/rtc-xgene.c
 +++ b/drivers/rtc/rtc-xgene.c
-@@ -168,6 +168,10 @@ static int xgene_rtc_probe(struct platform_device *pdev)
- 	if (IS_ERR(pdata->csr_base))
- 		return PTR_ERR(pdata->csr_base);
- 
-+	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(pdata->rtc))
-+		return PTR_ERR(pdata->rtc);
-+
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
- 		dev_err(&pdev->dev, "No IRQ resource\n");
-@@ -198,15 +202,15 @@ static int xgene_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
--					 &xgene_rtc_ops, THIS_MODULE);
--	if (IS_ERR(pdata->rtc)) {
--		clk_disable_unprepare(pdata->clk);
--		return PTR_ERR(pdata->rtc);
--	}
--
+@@ -205,6 +205,7 @@ static int xgene_rtc_probe(struct platform_device *pdev)
  	/* HW does not support update faster than 1 seconds */
  	pdata->rtc->uie_unsupported = 1;
-+	pdata->rtc->ops = &xgene_rtc_ops;
-+
-+	ret = rtc_register_device(pdata->rtc);
-+	if (ret) {
-+		clk_disable_unprepare(pdata->clk);
-+		return ret;
-+	}
+ 	pdata->rtc->ops = &xgene_rtc_ops;
++	pdata->rtc->range_max = U32_MAX;
  
- 	return 0;
- }
+ 	ret = rtc_register_device(pdata->rtc);
+ 	if (ret) {
 -- 
 2.20.1
 
