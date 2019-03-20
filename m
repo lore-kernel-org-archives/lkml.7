@@ -2,118 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D961DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0A8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACC62184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVAeOn5m"
+	by mail.kernel.org (Postfix) with ESMTP id D36B72184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553093877;
+	bh=T0v3mC9gcjZco22oC2GtkruAbqGtQdlJ6jnw55IJ6GI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DBNzfhwahRmtjYl5hRrRDixS4LUAQR3FePlkB44+uLitKBSe5OQQj7nHpULLDPIyI
+	 P2Nz1AfR9DtvfpPQFevq/Zjfr9+39KlJDFdnGwaBOupRXoiTUyisWimOswFCzYLnk2
+	 oXvkiLuQyIWVyCTB7q44hJDEqtAbgtKjGemwq7T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfCTO5t (ORCPT
+        id S1728382AbfCTO54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:57:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33466 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfCTO5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:57:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b12so2016029pgk.0;
-        Wed, 20 Mar 2019 07:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xW98coCfzYxTBvXFzTO2cKOFYscWujwDg237aas+aNE=;
-        b=oVAeOn5mXDT7xWp8Nazq1oY7g4GLdWMQgWcxEklEMDeEKx92a/FfEq+O2nVrLyPQ8f
-         JXFo72LP20RrTkcrTxbnu6ggfFyMnCGpC9x3hKI3aTfkySif5v/80zj6ISD98uTqIGYt
-         Kff3wFQ/Fo80jUc9CZYkQHFJ1CCKedvH+54v6jp8HGVFlq927+Vz4XburpzCBdYIJ9YO
-         +aMMLv+YotkJANkEFO9Y4nrUWt9T9oLiYMyE59/Hq9+0Hg9Pt2mMszDYI/gewLv4/cPQ
-         uqADzBMVT0wqpqpg8nnVGiHdEV5I1eRE5zF9zsXut/4+G9AYj8Te+UFaWeDRAGu7qD02
-         EhUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xW98coCfzYxTBvXFzTO2cKOFYscWujwDg237aas+aNE=;
-        b=awoD7Cl32p3cXdUc6h0a2/5iFeQ6+xiPBCPfIx8+x2dLmRC1A1qgBhEirgbAnKAlL0
-         b0y1KsdggKDKgKy6PDy9G6tRfcH+9Hn/0kx9pRgw9gbVqjp2MKF8YZhwCkB+rkVZC+L1
-         2bpuQTd12hjo2igE4R8kptd5yKCp3ZpjvazrgPuuRdNaQhJkbCMoTc3/AVYlnmKRNOXT
-         jA0ZKEeuV1zhLyeRTxfyk3XywuBI6pYBOfT3XBURfxwb4Emry9xtMoQnEjF3FLv+t0k5
-         s7GXntaD2sIZnnR2GNXoSvIotVTyrixdrnfl3Pv15YcQN/NzmLoevlZ/HYuNFrpBPq/2
-         u93g==
-X-Gm-Message-State: APjAAAW72Hr9sQNRiPr71PMwSGudRtebluN8kF3RuKohvhFMdiXnmAZJ
-        m+lmGYeELEXfXUz6vBG899q8NCXx
-X-Google-Smtp-Source: APXvYqz4/qp6HNKn/+WSiUfyZYP5VWN/9NDoOvTkpOckeLNLIbQmM3NZMVNFvuenESsakOQp2KZhzw==
-X-Received: by 2002:a62:e411:: with SMTP id r17mr20298816pfh.127.1553093868289;
-        Wed, 20 Mar 2019 07:57:48 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k27sm3309432pgb.70.2019.03.20.07.57.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 07:57:47 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 07:57:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH -next] watchdog: sb_wdog: Make sbwdog_set and sbwdog_pet
- static
-Message-ID: <20190320145746.GA10980@roeck-us.net>
-References: <20190320134250.13348-1-yuehaibing@huawei.com>
+        Wed, 20 Mar 2019 10:57:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfCTO54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:57:56 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0202146E;
+        Wed, 20 Mar 2019 14:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553093876;
+        bh=T0v3mC9gcjZco22oC2GtkruAbqGtQdlJ6jnw55IJ6GI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y88DFhQ9w/2i5vAndYVhVq4E68epUb3PVlWKsjHBErQbCu31AVKIf8XjhUsirCatU
+         HwmetE+ahbdrIFscyeSGcxqC7ZtjIH+dpzptQcgwN+0VjOmioD5XlHHRlMzqRLOspN
+         vtzfhlz0fQfFmgnUDK+D/g9RialJU7LzQxgs4LCA=
+Date:   Wed, 20 Mar 2019 22:57:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] ARM: DTS: imx6q-logicpd: Reduce inrush current on
+ start
+Message-ID: <20190320145723.GE8337@dragon>
+References: <20190306140402.17122-1-aford173@gmail.com>
+ <20190306140402.17122-2-aford173@gmail.com>
+ <20190320124446.GO4980@dragon>
+ <CAHCN7x+DKh8bR17C90o-zKKnFqWe_Yz5EM68xEiSY0W6ufNARA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190320134250.13348-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAHCN7x+DKh8bR17C90o-zKKnFqWe_Yz5EM68xEiSY0W6ufNARA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 09:42:50PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+On Wed, Mar 20, 2019 at 08:41:27AM -0500, Adam Ford wrote:
+> On Wed, Mar 20, 2019 at 7:45 AM Shawn Guo <shawnguo@kernel.org> wrote:
+> >
+> > On Wed, Mar 06, 2019 at 08:04:00AM -0600, Adam Ford wrote:
+> > > The main 3.3V regulator sources a series of additional regulators.
+> > > This patch adds a small delay, so when the 3.3V regulator comes
+> > > on it delays a bit before the subsequent regulators can come on.
+> > > This reduces the inrush current a bit on the external DC power
+> > > supply.
+> > >
+> > > Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
+> > > i.MX6QD EVM")
+> >
+> > Same comment as patch #1.
 > 
-> Fix sparse warning:
-> 
-> drivers/watchdog/sb_wdog.c:70:6: warning: symbol 'sbwdog_set' was not declared. Should it be static?
-> drivers/watchdog/sb_wdog.c:84:6: warning: symbol 'sbwdog_pet' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> The sourcing regulator occasionally cuts out because the inrush is so
+> high.  I would argue that preventing a hardware issue like that would
+> be a 'fix' and if it helps, I could add that to the description.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Yes, if you would like to get it in as a fix, please elaborate the real
+world issue it fixes.
 
-> ---
->  drivers/watchdog/sb_wdog.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
-> index 3abae50..8264fced 100644
-> --- a/drivers/watchdog/sb_wdog.c
-> +++ b/drivers/watchdog/sb_wdog.c
-> @@ -67,7 +67,7 @@ static DEFINE_SPINLOCK(sbwd_lock);
->   *
->   * wdog is the iomem address of the cfg register
->   */
-> -void sbwdog_set(char __iomem *wdog, unsigned long t)
-> +static void sbwdog_set(char __iomem *wdog, unsigned long t)
->  {
->  	spin_lock(&sbwd_lock);
->  	__raw_writeb(0, wdog);
-> @@ -81,7 +81,7 @@ void sbwdog_set(char __iomem *wdog, unsigned long t)
->   *
->   * wdog is the iomem address of the cfg register
->   */
-> -void sbwdog_pet(char __iomem *wdog)
-> +static void sbwdog_pet(char __iomem *wdog)
->  {
->  	spin_lock(&sbwd_lock);
->  	__raw_writeb(__raw_readb(wdog) | 1, wdog);
-> -- 
-> 2.7.0
-> 
-> 
+Shawn
