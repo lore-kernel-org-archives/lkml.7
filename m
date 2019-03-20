@@ -2,136 +2,132 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C53C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BC1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6D92146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35152146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfCTQ4v (ORCPT
+        id S1727227AbfCTQ5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:56:51 -0400
-Received: from anholt.net ([50.246.234.109]:34632 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfCTQ4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:56:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 94D5B10A2EE3;
-        Wed, 20 Mar 2019 09:56:50 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id j5GBNwkULtEM; Wed, 20 Mar 2019 09:56:49 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 19DA510A2E9D;
-        Wed, 20 Mar 2019 09:56:49 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id A3C0F2FE4653; Wed, 20 Mar 2019 09:56:48 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v2 1/2] drm/file: Rehabilitate the firstopen hook for non-legacy drivers
-In-Reply-To: <20190320154809.14823-2-paul.kocialkowski@bootlin.com>
-References: <20190320154809.14823-1-paul.kocialkowski@bootlin.com> <20190320154809.14823-2-paul.kocialkowski@bootlin.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Wed, 20 Mar 2019 09:56:45 -0700
-Message-ID: <87zhpph4c2.fsf@anholt.net>
+        Wed, 20 Mar 2019 12:57:23 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.164]:38624 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726788AbfCTQ5X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 12:57:23 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id A2D8ACDD38
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:57:21 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6eWnhcPoviQer6eWnhQ5jn; Wed, 20 Mar 2019 11:57:21 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=54032 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6eWB-001qrp-Rd; Wed, 20 Mar 2019 11:57:20 -0500
+Date:   Wed, 20 Mar 2019 11:56:43 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] regulator: axp20x: Mark expected switch fall-throughs
+Message-ID: <20190320165643.GA3886@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6eWB-001qrp-Rd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.39]:54032
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+This patch fixes the following warnings:
 
-> The firstopen DRM driver hook was initially used to perform hardware
-> initialization, which is now considered legacy. Only a single user of
-> firstopen remains at this point (savage).
->
-> In some specific cases, non-legacy drivers may also need to implement
-> these hooks. For instance on VC4, we need to allocate a 16 MiB buffer
-> for the GPU. Because it's not required for fbcon, it's a waste to
-> allocate it before userspace starts using the DRM device.
->
-> Using firstopen and lastclose for this allocation seems like the best
-> fit, so re-habilitate the hook to allow it to be called for non-legacy
-> drivers.
->
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  drivers/gpu/drm/drm_file.c | 3 +--
->  include/drm/drm_drv.h      | 2 +-
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-> index b1838a41ad43..c011b5cbfb6b 100644
-> --- a/drivers/gpu/drm/drm_file.c
-> +++ b/drivers/gpu/drm/drm_file.c
-> @@ -266,8 +266,7 @@ static int drm_setup(struct drm_device * dev)
->  {
->  	int ret;
->=20=20
-> -	if (dev->driver->firstopen &&
-> -	    drm_core_check_feature(dev, DRIVER_LEGACY)) {
-> +	if (dev->driver->firstopen) {
->  		ret =3D dev->driver->firstopen(dev);
->  		if (ret !=3D 0)
->  			return ret;
-> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-> index ca46a45a9cce..aa14607e54d4 100644
-> --- a/include/drm/drm_drv.h
-> +++ b/include/drm/drm_drv.h
-> @@ -236,7 +236,7 @@ struct drm_driver {
->  	 * to set/unset the VT into raw mode.
->  	 *
->  	 * Legacy drivers initialize the hardware in the @firstopen callback,
-> -	 * which isn't even called for modern drivers.
-> +	 * modern drivers can use it for other purposes only.
->  	 */
->  	void (*lastclose) (struct drm_device *);
+drivers/regulator/axp20x-regulator.c: In function ‘axp20x_set_dcdc_freq’:
+drivers/regulator/axp20x-regulator.c:1023:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   reg = AXP803_DCDC_FREQ_CTRL;
+drivers/regulator/axp20x-regulator.c:1025:2: note: here
+  case AXP806_ID:
+  ^~~~
+drivers/regulator/axp20x-regulator.c: In function ‘axp20x_set_dcdc_workmode’:
+drivers/regulator/axp20x-regulator.c:1115:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   reg = AXP806_DCDC_MODE_CTRL2;
+drivers/regulator/axp20x-regulator.c:1121:2: note: here
+  case AXP221_ID:
+  ^~~~
 
-Our usage in vc4 is not very different from what we called "hardware
-initialization" in other devices.  I would rather just delete this
-sentence entirely.
+Notice that in this particular case, I moved the whole comment
+"Fall through to the check below.", which contains the "Fall through"
+comment, at the bottom of the case, which is what GCC is expecting
+to find.
 
-The only alternative I can think of to using a firstopen/lastclose-style
-allocation for this would be to allocate the bin bo on the first
-(non-dumb?) V3D BO allocation and refcount those to free the binner.
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/regulator/axp20x-regulator.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyScM0ACgkQtdYpNtH8
-nugXdBAAqeJen5dW0cJEUJfdGcNykhWS8fCDegYx5D1IHRSC20FtJuEoEJouqhN5
-c93b6+WzetYIi3KNhB7Hz2xWiI0UtDREd7yT+M+5HAeFo7FW3JYquPJVeD7NS8hu
-IpoJpGD2RDjyLbpp8H8nbWD2qIgZKvYtK155fp3CORM+t7RfPRFFV8bavCDWdhpH
-CG2IGbyhK0CD6dUM4inlEXCVHxWsVr9Zdy4prmzMohY2wSky0fE3LcE3Ls7jDply
-fz9G/oK8jQ49lXLG1owZnH9zBeVlgJrV6ZMEv5mxICYKT7ko5Wi57mvWqUR+3iBW
-arZMtWG03FT0qkcW3/LuDtGDojFVjE2DnEwc9DOh64WcE0+2v7HMyKRsqbFVahUL
-RKJ/rCev4mnIHTBEDoFtwr4+MaQT0jIPXkPRZ3XbwBjVti4Z5jdrWCLP5upnGFCT
-KK7mobXfSVh8c2u1wenfAamDqTVXSaONCw/DqDD5oJbVPuq3e7JLTY6OMmAgW0Ib
-lLdO+tSRarHOA4UYvh1Zx1pQKp/mLL77DeGYB5Z4HLjwfymS0A/J8Na11ADqUmEw
-IULBhO4HWYbq5CpgAvtg07L6NSFkzQv/C6bNKhNM2uxhbgtt6YGLTPF7qVhAlqhB
-SRsxE22UKPDVAy6zsoZXve4ogBOSkc/Xz43urLiNRE7d+fIkRCY=
-=4MEm
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 07e10c8b0a22..152053361862 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -1021,7 +1021,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ 		 * (See include/linux/mfd/axp20x.h)
+ 		 */
+ 		reg = AXP803_DCDC_FREQ_CTRL;
+-		/* Fall through to the check below.*/
++		/* Fall through - to the check below.*/
+ 	case AXP806_ID:
+ 		/*
+ 		 * AXP806 also have DCDC work frequency setting register at a
+@@ -1112,12 +1112,12 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
+ 		break;
+ 
+ 	case AXP806_ID:
+-		reg = AXP806_DCDC_MODE_CTRL2;
+ 		/*
+ 		 * AXP806 DCDC regulator IDs have the same range as AXP22X.
+-		 * Fall through to the check below.
+ 		 * (See include/linux/mfd/axp20x.h)
+ 		 */
++		reg = AXP806_DCDC_MODE_CTRL2;
++		 /* Fall through - to the check below. */
+ 	case AXP221_ID:
+ 	case AXP223_ID:
+ 	case AXP809_ID:
+-- 
+2.21.0
+
