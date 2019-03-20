@@ -2,47 +2,148 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ACFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8311FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA9A20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34ACD20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="ef5Vhsqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfCTAfX (ORCPT
+        id S1727183AbfCTAjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:35:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44331 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfCTAfX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:35:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 17:35:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,246,1549958400"; 
-   d="scan'208";a="124100212"
-Received: from unknown (HELO [10.239.196.108]) ([10.239.196.108])
-  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2019 17:35:20 -0700
-Subject: Re: [PATCH v3] perf annotate/report: Remove hist__account_cycles from
- callback
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1552684577-29041-1-git-send-email-yao.jin@linux.intel.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <9bf3bdff-1b7f-e471-5b35-9d788248eeb9@linux.intel.com>
-Date:   Wed, 20 Mar 2019 08:35:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 19 Mar 2019 20:39:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42712 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCTAjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 20:39:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p6so393776pgh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fw2SnfNZh6Q5aAZEchB8oXJSxEn5TTtivFGT/Wmn9O0=;
+        b=ef5VhsqpT4n/SiDyPPUj8mDY+z/m3w9EWBMGHidPtDY8WDjr29qvkP5SjuB33VGM/B
+         c3K5AJ+tEOFTRJnKGmDuoOmNglsgHvVwW9O6gq7MyM73DDHVuMVJyRnMxu3+2tF0y6mo
+         nwH3ztovVPLOcIvgPUZ5GSP0vvCKiWep2aCyr4pZMdW+Y9zMEGxqPKSyUV/Spp2qxkdY
+         J4baEn7+Zh+jaLWrRi/dBScSrZROONLENpH4AjnON18QXty7dfiDl6tIksyPj+hzrD+u
+         PN2IMAZ47IhYiRgRnW0327O7tWM4zIPfE5aLdViYQflfw3MqsVyYD/spLLGf3j08WLpy
+         wVsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Fw2SnfNZh6Q5aAZEchB8oXJSxEn5TTtivFGT/Wmn9O0=;
+        b=glcK22TY4W0qUFhTWKExOxPNJF/tIgzh9lO0f07dDAp6r/uRkMQII5nGwOPSioEKDN
+         LVcag2bxlT+lFBuO3wrwf9QrtjhXDv0gvVDuKJiNU8a5QTB+JcwprQmbvh5FSib28egj
+         UWsbPfVH8y3c0w+huxfDHIgSjaudHot+Gbev/mAww1au6Uh0t48erU2k9ubDD+PcfcxW
+         ViFdBZkrHheP0Yo8l+krEmVvUFh6uMXfjpknIdYoxCMREmESAC9LXojZ6J+fbm6CLviv
+         7IzwCDy4oJu1bprxXrd7Hx4EOZP9+7mmR7QR90UMuqjr7lFbGziXTkRmusJCwVAlB4qq
+         a2Fg==
+X-Gm-Message-State: APjAAAUn725rV1VLZzfQJMw4ZcgJ6K4bJpa1uGnHm17RT10mRmFuSGKP
+        P8Y+XEraPsXJbgbzdTKFruMSVrmwgQU=
+X-Google-Smtp-Source: APXvYqyFdNlki+GFEK/DWL1BPz7riZ0qD7GXaje+ywpG+ZcrvoCGsKRfmhztSJgDTXxuG7XcKTbUQA==
+X-Received: by 2002:a63:cd02:: with SMTP id i2mr25654168pgg.111.1553042362946;
+        Tue, 19 Mar 2019 17:39:22 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id e1sm282843pfn.73.2019.03.19.17.39.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 17:39:21 -0700 (PDT)
+Subject: Re: [PATCH] vfio/spapr_tce: Make symbol 'tce_iommu_driver_ops' static
+To:     Wang Hai <wanghai26@huawei.com>, alex.williamson@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190320064723.46604-1-wanghai26@huawei.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <75489f18-1d0f-53d1-807e-e5002147f5c2@ozlabs.ru>
+Date:   Wed, 20 Mar 2019 11:39:17 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <1552684577-29041-1-git-send-email-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190320064723.46604-1-wanghai26@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,128 +151,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nobody like this patch? :)
 
-In my test, for a 72MB perf.data (with LBR data), the perf annotate 
-processing speed:
 
-Before: 10.2s
-After: 2.2s
+On 20/03/2019 17:47, Wang Hai wrote:
+> Fixes the following sparse warning:
+> 
+> drivers/vfio/vfio_iommu_spapr_tce.c:1401:36: warning:
+>  symbol 'tce_iommu_driver_ops' was not declared. Should it be static?
+> 
+> Fixes: 5ffd229c0273 ("powerpc/vfio: Implement IOMMU driver for VFIO")
+> Signed-off-by: Wang Hai <wanghai26@huawei.com>
 
-Thanks
-Jin Yao
 
-On 3/16/2019 5:16 AM, Jin Yao wrote:
-> The hist__account_cycles is executed when the hist_iter__branch_callback
-> is called. But it looks it's not necessary. In hist__account_cycles, it
-> already walks on all branch entries.
-> 
-> This patch moves the hist__account_cycles out of callback, now the data
-> processing is much faster than before.
-> 
-> Previous code has an issue that the ch[offset].num++
-> (in __symbol__account_cycles) is executed repeatedly since
-> hist__account_cycles is called in each hist_iter__branch_callback,
-> so the counting of ch[offset].num is not correct (too big).
-> With this patch, the issue is fixed. And we don't need the code of
-> "ch->reset >= ch->num / 2" to check if there are too many overlaps
-> (in annotation__count_and_fill), otherwise some data would be
-> hidden.
-> 
-> Now, we can try, for example:
-> 
-> perf record -b ...
-> perf annotate or perf report -s symbol
-> 
-> The before/after output should be no change.
-> 
->   v3:
->   ---
->   Fix the crash in stdio mode.
->   Like previous code, it needs the checking of ui__has_annotation()
->   before hist__account_cycles()
-> 
->   v2:
->   ---
->   1. Cover the similar perf report
->   2. Remove the checking code "ch->reset >= ch->num / 2"
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+I am curious - what exactly did you do to get this warning?
+
+Anyway,
+
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+
 > ---
->   tools/perf/builtin-annotate.c |  4 ++--
->   tools/perf/builtin-report.c   | 11 +++++------
->   tools/perf/util/annotate.c    |  2 +-
->   3 files changed, 8 insertions(+), 9 deletions(-)
+>  drivers/vfio/vfio_iommu_spapr_tce.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 67f9d9f..77deb3a 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -159,8 +159,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
->   	struct perf_evsel *evsel = iter->evsel;
->   	int err;
->   
-> -	hist__account_cycles(sample->branch_stack, al, sample, false);
-> -
->   	bi = he->branch_info;
->   	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
->   
-> @@ -199,6 +197,8 @@ static int process_branch_callback(struct perf_evsel *evsel,
->   	if (a.map != NULL)
->   		a.map->dso->hit = 1;
->   
-> +	hist__account_cycles(sample->branch_stack, al, sample, false);
-> +
->   	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
->   	return ret;
->   }
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 1921aaa..493e115 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -136,9 +136,6 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
->   	if (!ui__has_annotation() && !rep->symbol_ipc)
->   		return 0;
->   
-> -	hist__account_cycles(sample->branch_stack, al, sample,
-> -			     rep->nonany_branch_mode);
-> -
->   	if (sort__mode == SORT_MODE__BRANCH) {
->   		bi = he->branch_info;
->   		err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-> @@ -181,9 +178,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
->   	if (!ui__has_annotation() && !rep->symbol_ipc)
->   		return 0;
->   
-> -	hist__account_cycles(sample->branch_stack, al, sample,
-> -			     rep->nonany_branch_mode);
-> -
->   	bi = he->branch_info;
->   	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
->   	if (err)
-> @@ -282,6 +276,11 @@ static int process_sample_event(struct perf_tool *tool,
->   	if (al.map != NULL)
->   		al.map->dso->hit = 1;
->   
-> +	if (ui__has_annotation() || rep->symbol_ipc) {
-> +		hist__account_cycles(sample->branch_stack, &al, sample,
-> +				     rep->nonany_branch_mode);
-> +	}
-> +
->   	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
->   	if (ret < 0)
->   		pr_debug("problem adding hist entry, skipping event\n");
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 5f6dbbf..e8080c0 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1015,7 +1015,7 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
->   		float ipc = n_insn / ((double)ch->cycles / (double)ch->num);
->   
->   		/* Hide data when there are too many overlaps. */
-> -		if (ch->reset >= 0x7fff || ch->reset >= ch->num / 2)
-> +		if (ch->reset >= 0x7fff)
->   			return;
->   
->   		for (offset = start; offset <= end; offset++) {
+> diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+> index 8dbb270..6b64e45 100644
+> --- a/drivers/vfio/vfio_iommu_spapr_tce.c
+> +++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+> @@ -1398,7 +1398,7 @@ static void tce_iommu_detach_group(void *iommu_data,
+>  	mutex_unlock(&container->lock);
+>  }
+>  
+> -const struct vfio_iommu_driver_ops tce_iommu_driver_ops = {
+> +static const struct vfio_iommu_driver_ops tce_iommu_driver_ops = {
+>  	.name		= "iommu-vfio-powerpc",
+>  	.owner		= THIS_MODULE,
+>  	.open		= tce_iommu_open,
 > 
+
+-- 
+Alexey
