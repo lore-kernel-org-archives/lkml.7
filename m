@@ -2,193 +2,166 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97279C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB2320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D05F217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I4MFqD4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfCTAJo (ORCPT
+        id S1727384AbfCTAPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:09:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:40906 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbfCTAJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:09:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 17:09:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,246,1549958400"; 
-   d="scan'208";a="153261074"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2019 17:09:42 -0700
-Date:   Tue, 19 Mar 2019 17:09:42 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        chao.gao@intel.com
-Subject: Re: [PATCH v2 2/2] kvm/vmx: Using hardware cpuid faulting to avoid
- emulation overhead
-Message-ID: <20190320000942.GN25575@linux.intel.com>
-References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
- <20190318114324.14198-3-xiaoyao.li@linux.intel.com>
- <20190318163832.GB13528@linux.intel.com>
- <085cc389df4d734ee173bb4c199776591d197a21.camel@linux.intel.com>
- <20190319142849.GB25575@linux.intel.com>
- <73fefa02cafb0e94de0c2928185560e092fe137e.camel@linux.intel.com>
+        Tue, 19 Mar 2019 20:15:15 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:5629 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfCTAPO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 20:15:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9186120000>; Tue, 19 Mar 2019 17:15:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Mar 2019 17:15:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Mar 2019 17:15:12 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Mar
+ 2019 00:15:12 +0000
+Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
+ versions
+To:     Dave Chinner <david@fromorbit.com>,
+        Jerome Glisse <jglisse@redhat.com>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190308213633.28978-1-jhubbard@nvidia.com>
+ <20190308213633.28978-2-jhubbard@nvidia.com>
+ <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
+ <20190319134724.GB3437@redhat.com> <20190319141416.GA3879@redhat.com>
+ <20190319212346.GA26298@dastard> <20190319220654.GC3096@redhat.com>
+ <20190319235752.GB26298@dastard>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <e091a534-2b24-f632-a3bb-342958512815@nvidia.com>
+Date:   Tue, 19 Mar 2019 17:15:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73fefa02cafb0e94de0c2928185560e092fe137e.camel@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190319235752.GB26298@dastard>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553040915; bh=JzKfgOBbaoVH9pmp6GyGxjfhu9ko3sMvr9QDvovZSwY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=I4MFqD4eEiuzA5NlvzD55jVQhcTiA3I4SFlvhPa3mUXdLBjXVKf2y2yKsPdOkmw5r
+         7WW93xZmuA69Iqz1sdjjcnzpldvNdKMdlAPJv/OWWgpnsfRAj59w+ainBQoQX5flpH
+         Rj0rpTdE4Wyy6ECsEWJveymWT5VHNQ87cYxhxjm3oL6Z4UYYddlG1h6+JNbxqBeb9y
+         y0k0wQ/UhADbGt414GKbQM8A5eDTe3w9EvWNDQU+eFdnwg26wyv9euuSkboLKPdNZE
+         ftRF7qaxfBfaY2r1snR5Jotc2RM+OOr7vISZPOKGuuljIHR7xeQYvrQc+mjuTYOt0D
+         tb6PntrfpDGNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 01:51:28AM +0800, Xiaoyao Li wrote:
-> On Tue, 2019-03-19 at 07:28 -0700, Sean Christopherson wrote:
-> > On Tue, Mar 19, 2019 at 12:37:23PM +0800, Xiaoyao Li wrote:
-> > > On Mon, 2019-03-18 at 09:38 -0700, Sean Christopherson wrote:
-> > > > On Mon, Mar 18, 2019 at 07:43:24PM +0800, Xiaoyao Li wrote:
-> > > > > Current cpuid faulting of guest is purely emulated in kvm, which
-> > > > > exploits
-> > > > > CPUID vm exit to inject #GP to guest. However, if host hardware cpu has
-> > > > > X86_FEATURE_CPUID_FAULT, we can just use the hardware cpuid faulting for
-> > > > > guest to avoid the vm exit overhead.
-> > > > 
-> > > > Heh, I obviously didn't look at this patch before responding to patch 1/2.
-> > > > 
-> > > > > Note: cpuid faulting takes higher priority over CPUID instruction vm
-> > > > > exit (Intel SDM vol3.25.1.1).
-> > > > > 
-> > > > > Since cpuid faulting only exists on some Intel's cpu, just apply this
-> > > > > optimization to vmx.
-> > > > > 
-> > > > > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > > > > ---
-> > > > >  arch/x86/include/asm/kvm_host.h |  2 ++
-> > > > >  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++++----
-> > > > >  arch/x86/kvm/x86.c              | 15 ++++++++++++---
-> > > > >  3 files changed, 29 insertions(+), 7 deletions(-)
-> > > > > 
-> > > > > diff --git a/arch/x86/include/asm/kvm_host.h
-> > > > > b/arch/x86/include/asm/kvm_host.h
-> > > > > index ce79d7bfe1fd..14cad587b804 100644
-> > > > > --- a/arch/x86/include/asm/kvm_host.h
-> > > > > +++ b/arch/x86/include/asm/kvm_host.h
-> > > > > @@ -1339,6 +1339,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long
-> > > > > msw);
-> > > > >  void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
-> > > > >  int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
-> > > > >  
-> > > > > +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64
-> > > > > data);
-> > > > > +
-> > > > >  int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > > > >  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
-> > > > >  
-> > > > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > > > index 2c59e0209e36..6b413e471dca 100644
-> > > > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > > > @@ -1037,7 +1037,7 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
-> > > > >  
-> > > > >  static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
-> > > > >  {
-> > > > > -	u64 host_val;
-> > > > > +	u64 host_val, guest_val;
-> > > > >  
-> > > > >  	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
-> > > > >  		return;
-> > > > > @@ -1045,10 +1045,12 @@ static void vmx_save_host_cpuid_fault(struct
-> > > > > vcpu_vmx *vmx)
-> > > > >  	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
-> > > > >  	vmx->host_msr_misc_features_enables = host_val;
-> > > > >  
-> > > > > -	/* clear cpuid fault bit to avoid it leak to guest */
-> > > > > -	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > > > > +	guest_val = vmx->vcpu.arch.msr_misc_features_enables;
-> > > > > +
-> > > > > +	/* we can use the hardware cpuid faulting to avoid emulation
-> > > > > overhead */
-> > > > > +	if ((host_val ^ guest_val) &
-> > > > > MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
-> > > > >  		wrmsrl(MSR_MISC_FEATURES_ENABLES,
-> > > > > -		       host_val &
-> > > > > ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > > > > +		       host_val ^
-> > > > > MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-> > > > >  	}
-> > > > >  }
-> > > > >  
-> > > > > @@ -2057,6 +2059,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu,
-> > > > > struct
-> > > > > msr_data *msr_info)
-> > > > >  		else
-> > > > >  			vmx->pt_desc.guest.addr_a[index / 2] = data;
-> > > > >  		break;
-> > > > > +	case MSR_MISC_FEATURES_ENABLES:
-> > > > > +		if (!kvm_supported_msr_misc_features_enables(vcpu,
-> > > > > data))
-> > > > > +			return 1;
-> > > > > +		if (boot_cpu_has(X86_FEATURE_CPUID_FAULT)) {
-> > > > > +			if (vmx->loaded_cpu_state)
-> > > > 
-> > > > No need for two separate if statements.  And assuming we're checking the
-> > > > existing shadow value when loading guest/host state, the WRMSR should
-> > > > only be done if the host's value is non-zero.
-> > > 
-> > > I'll combine these two if statements into one.
-> > > 
-> > > I cannot understand why the WRMSR should only be done if the host's value is
-> > > non-zero. I think there is no depedency with host's value, if using the
-> > > hardware
-> > > cpuid faulting. We just need to set the value to real hardware MSR.
-> > 
-> > What I was trying to say in patch 1/2 regarding save/restore, is that I
-> > don't think it is worthwhile to voluntarily switch hardware's value.  In
-> > other words, do the WRMSR if and only if it's absolutely necessary.  And
-> > that means only installing the guest's value if the host's value is
-> > non-zero and host_val != guest_val.  If the host's value is zero, then
-> > the guest's value is irrelevant as CPUID faulting behavior will naturally
-> > be taken care of when intercepting CPUID.  And for obvious reasons the
-> > WRMSR can be skipped if host and guest want the same value.
+On 3/19/19 4:57 PM, Dave Chinner wrote:
+> On Tue, Mar 19, 2019 at 06:06:55PM -0400, Jerome Glisse wrote:
+>> On Wed, Mar 20, 2019 at 08:23:46AM +1100, Dave Chinner wrote:
+>>> On Tue, Mar 19, 2019 at 10:14:16AM -0400, Jerome Glisse wrote:
+>>>> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
+>>>>> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
+>>>>>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
+>>>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>>> [...]
+>>>> Forgot to mention one thing, we had a discussion with Andrea and Jan
+>>>> about set_page_dirty() and Andrea had the good idea of maybe doing
+>>>> the set_page_dirty() at GUP time (when GUP with write) not when the
+>>>> GUP user calls put_page(). We can do that by setting the dirty bit
+>>>> in the pte for instance. They are few bonus of doing things that way:
+>>>>     - amortize the cost of calling set_page_dirty() (ie one call for
+>>>>       GUP and page_mkclean()
+>>>>     - it is always safe to do so at GUP time (ie the pte has write
+>>>>       permission and thus the page is in correct state)
+>>>>     - safe from truncate race
+>>>>     - no need to ever lock the page
+>>>
+>>> I seem to have missed this conversation, so please excuse me for
+>>
+>> The set_page_dirty() at GUP was in a private discussion (it started
+>> on another topic and drifted away to set_page_dirty()).
+>>
+>>> asking a stupid question: if it's a file backed page, what prevents
+>>> background writeback from cleaning the dirty page ~30s into a long
+>>> term pin? i.e. I don't see anything in this proposal that prevents
+>>> the page from being cleaned by writeback and putting us straight
+>>> back into the situation where a long term RDMA is writing to a clean
+>>> page....
+>>
+>> So this patchset does not solve this issue.
 > 
-> The purpose of this patch is always using hardware cpuid fault if hardware cpu
-> has this feature. Because emuated cpuid faulting needs entire vmexit process,
-> but using hardware cpuid faulting just adds two WRMSR in save/restore cycle only
-> when host_val != guest_val.
-> 
-> Also I conclude the handling ou said as below:
-> When host's value is zero, we do nothing to this MSR, and let guest ues emulated
-> cpuid faulting through CPUID intercepting.
-> When host's value is non-zero, we load the guest'value into hardware MSR, which
-> means we use hardware cpuid faulting.
-> 
-> So the difference is when host value is zero, you choose to use emulated cpuid
-> faulting. What's meaning of chooseing emualtion or hardware feature based on
-> host's value?
+> OK, so it just kicks the can further down the road.
 
-To save cycles by avoiding WRMSR whenever possible.  WRMSR is expensive, even
-if it's limited to vcpu_{load,put}(), e.g. a workload that triggers a lot of
-exits to userspace isn't going to be thrilled about the extra 250-300 cycles
-added to each round trip.
+Hi Dave,
 
-On the other hand, emulating CPUID faulting only adds a VM-Exit to userspace
-CPUID instructions that will fault anyways, and faults aren't exactly fast
-paths.  Most uses of CPUID in userspace are in application startup, e.g. a
-hanful of CPUIDs to determine what features can be used.  So even if the ~1000
-cycles added by the VM-Exit is somehow meaningful to the fault path, its
-impact is limited to a tiny number of instructions executed in the guest,
-whereas doing WRMSR affects every vcpu_{load,put}.
+My take on this is that all of the viable solution proposals so far require
+tracking of gup-pinned pages. That's why I'm trying to get started now on 
+at least the tracking aspects: it seems like the tracking part is now well
+understood. And it does have some lead time, because I expect the call site
+conversions probably have to go through various maintainers' trees.
+
+However, if you are thinking that this is unwise, and that's it's smarter 
+to wait until the entire design is completely worked out, I'm open to that,
+too. 
+
+Thoughts?
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+>>     [3..N] decide what to do for GUPed page, so far the plans seems
+>>          to be to keep the page always dirty and never allow page
+>>          write back to restore the page in a clean state. This does
+>>          disable thing like COW and other fs feature but at least
+>>          it seems to be the best thing we can do.
+> 
+> So the plan for GUP vs writeback so far is "break fsync()"? :)
+> 
+> We might need to work on that a bit more...
+> 
+> Cheers,
+> 
+> Dave.
+> 
