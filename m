@@ -2,107 +2,96 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CF8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BBEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F026A2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BED2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfCTQEe (ORCPT
+        id S1727442AbfCTQFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:04:34 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.119]:30151 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726403AbfCTQEd (ORCPT
+        Wed, 20 Mar 2019 12:05:01 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:58479 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfCTQFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:04:33 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 2CEFCB7A1C
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:04:33 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6dhhhOIexdnCe6dhhhGNKc; Wed, 20 Mar 2019 11:04:33 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=52026 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6dgV-001L1l-3E; Wed, 20 Mar 2019 11:04:32 -0500
-Date:   Wed, 20 Mar 2019 11:03:18 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] sgi-xpc: mark expected switch fall-through
-Message-ID: <20190320160318.GA20599@embeddedor>
+        Wed, 20 Mar 2019 12:05:00 -0400
+Received: from [192.168.1.110] ([95.115.36.242]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N2E5Q-1h0d9R1qsI-013i9b; Wed, 20 Mar 2019 17:04:43 +0100
+Subject: Re: [PATCH] gpio: amd-fch: Fix bogus SPDX identifier
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>
+References: <alpine.DEB.2.21.1903191513170.2537@nanos.tec.linutronix.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <4dcdcd9c-e599-5b8a-b628-4b02b7a092a1@metux.net>
+Date:   Wed, 20 Mar 2019 17:04:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1903191513170.2537@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6dgV-001L1l-3E
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.104.39]:52026
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:pNDxqNxY4MYTRj22m6ZnA0Wy2dH6VXGqvDeF15P+Wpeb/RPogfg
+ i8z9Hnl/R8tZpjD3QQuH1mBN/7qNi+d6KXoZFi2q98B/bMGWpdh3TUXd617+65YR2uiBIDL
+ ROGOIhndOZ4o/NbH71g7bTw1sp1GmIw9bmoyL7IqaGQ0io4TNTx352HlzQ3BMdprKxzzRxI
+ Fv99e/uINXQBKCY7R8FyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WQqBjdcYMMA=:Mci81vkBMA0ZWGnL3o4+Ls
+ 9hdDdUubDeWxK5YWhjvlqWPiX1ns1C9hjbuqWQTrI3UE4GJkEC9IIRYiaNBDti3SFyjGgzMmL
+ dHj9fOs6M6Fvck5LBG8TtTlKqmwTsLVRBVnHEE7V0uqH9JKtkP1/MWF7Vbp6vaFPA6paBQshC
+ +A/rZKAkHItIhfuOhTpXuDe/7uVR9RyMjeOYyzQgFdonfDP/nQwlBXlDqPkyNp7Wx2LOMZLzW
+ iv9jnZ8TDIDoUPkwAEBLbk3Hmzu2BKS3zcBuAC1ssoWpWlAK4VTfFiVg91yB9Jo41eKkJ/lXY
+ 6HpwFn2Z4sys7DpRkskkmTNoAncFoQEVyU15owNejI9tUaXOvyXmbm0aYjklFoA+UFt4x7VFh
+ bis9oCA7VuEHzLx1WImV08dxTcbRoxr5o34QTv4IdA+zj3MRGQv86Rm2Dk0YGYSnvCFZ47q0X
+ ykp1UftZUNa9NOgvol6WzxCk6C9SSsdt6jA5at5JOqZxLztCBZ1j1H9xAz6+AGsXdXComvUZh
+ VH1X50OpzJPmOdbvY9V6aVEGiV495V4uXjUFtttcsMcQiflp6fLCoB41k5opEbrjME1K0ytJ/
+ CRVjekcK/veGnfiK1syxDyP2K+GwZ6pjqdzwbLFpcExeAw4jzWapP6SqyoxMeZlPmDeRYzheE
+ 4mRVjCBKPyJhHzjwSrGXXe1lne0cZAgeQ/mJWSLNtaux82BYQ/1ufIXZGSs7uJAlRGzA8aWGG
+ c9LtomrrFWQhUoLT54VZRQBh5OhngB+9cQ3n5p8UHikNhQRh17mSjrV3Prc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+On 19.03.19 15:28, Thomas Gleixner wrote:
+> spdxcheck.py complains:
+> 
+>  include/linux/platform_data/gpio/gpio-amd-fch.h: 1:28 Invalid License ID: GPL+
+> 
+> which is correct because GPL+ is not a valid identifier. Of course this
+> could have been caught by checkpatch.pl _before_ submitting or merging the
+> patch.
+> 
+>  WARNING: 'SPDX-License-Identifier: GPL+ */' is not supported in LICENSES/...
+>  #271: FILE: include/linux/platform_data/gpio/gpio-amd-fch.h:1:
+>  +/* SPDX-License-Identifier: GPL+ */
+> 
+> Fix it under the assumption that the author meant GPL-2.0+, which makes
+> sense as the corresponding C file is using that identifier.
 
-This patch fixes the following warning:
+Your assumption is correct.
 
-drivers/misc/sgi-xp/xpc_uv.c: In function ‘xpc_handle_activate_mq_msg_uv’:
-drivers/misc/sgi-xp/xpc_uv.c:573:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   xpc_wakeup_channel_mgr(part);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/misc/sgi-xp/xpc_uv.c:575:2: note: here
-  case XPC_ACTIVATE_MQ_MSG_MARK_ENGAGED_UV:
-  ^~~~
+Acked-By: Enrico Weigelt <info@metux.net>
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
+I just wonder, why checkpatch.pl didn't bleat me.
 
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
+Thanks for the fix.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/misc/sgi-xp/xpc_uv.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/sgi-xp/xpc_uv.c b/drivers/misc/sgi-xp/xpc_uv.c
-index 9e443df44b3b..0c6de97dd347 100644
---- a/drivers/misc/sgi-xp/xpc_uv.c
-+++ b/drivers/misc/sgi-xp/xpc_uv.c
-@@ -572,6 +572,7 @@ xpc_handle_activate_mq_msg_uv(struct xpc_partition *part,
- 
- 		xpc_wakeup_channel_mgr(part);
- 	}
-+		/* fall through */
- 	case XPC_ACTIVATE_MQ_MSG_MARK_ENGAGED_UV:
- 		spin_lock_irqsave(&part_uv->flags_lock, irq_flags);
- 		part_uv->flags |= XPC_P_ENGAGED_UV;
+--mtx
+
+
 -- 
-2.21.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
