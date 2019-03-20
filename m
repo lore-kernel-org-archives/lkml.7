@@ -2,153 +2,167 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A518C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1106DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C120218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F25218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hxrl7QjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfCTVdL (ORCPT
+        id S1727559AbfCTVhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:33:11 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.154]:34952 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727084AbfCTVdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:33:11 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 9C71C400C52D3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 16:33:09 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6iphhDkZQ90on6iphhU3b0; Wed, 20 Mar 2019 16:33:09 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.100.204] (port=37022 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6ipc-0006Du-R9; Wed, 20 Mar 2019 16:33:09 -0500
-Subject: Re: [PATCH][next] scsi: phy: mediatek: fix typo in author's email
- address
-To:     Colin King <colin.king@canonical.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190320212205.5726-1-colin.king@canonical.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <3e4f18e8-9324-e4c5-4b11-dc57eddd41e2@embeddedor.com>
-Date:   Wed, 20 Mar 2019 16:33:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190320212205.5726-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 20 Mar 2019 17:37:54 -0400
+Received: from mail-eopbgr770131.outbound.protection.outlook.com ([40.107.77.131]:20558
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727381AbfCTVhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 17:37:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=72O19RTsI1ctsnsQ5beIAK5lCvWm+ee/hJdcjd5NDQc=;
+ b=hxrl7QjYZnTubCAqaRp/8p++nSkpCbcO8JEPNOEu1p+0l75FugGnEYztcOZv7KCijYbr8ifYVk1hnI6CyJE2P6rIm6KfSD3qp94mKDPrW1EcMlSHq2V806HwmoapjuL6YShGryIgSZKC4OS+Ags4YoaaQTOiflD7Ma+GKgjiffI=
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
+ DM5PR2101MB0967.namprd21.prod.outlook.com (52.132.133.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.5; Wed, 20 Mar 2019 21:37:50 +0000
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::c92a:a5e0:ee92:5f6]) by DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::c92a:a5e0:ee92:5f6%5]) with mapi id 15.20.1730.008; Wed, 20 Mar 2019
+ 21:37:50 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Thread-Topic: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Thread-Index: AQHU0tIYcblOk9ffn0yRsYTt0Z4pWaYVIKsQ
+Date:   Wed, 20 Mar 2019 21:37:49 +0000
+Message-ID: <DM5PR2101MB0918F6A089C461EEA4457998D7410@DM5PR2101MB0918.namprd21.prod.outlook.com>
+References: <20190304213357.16652-1-decui@microsoft.com>
+ <20190304213357.16652-2-decui@microsoft.com>
+In-Reply-To: <20190304213357.16652-2-decui@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.100.204
-X-Source-L: No
-X-Exim-ID: 1h6ipc-0006Du-R9
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.100.204]:37022
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-20T21:37:46.2345424Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e434203d-b77d-43fb-8540-83db36fb089c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b897d5c-575a-4146-da8d-08d6ad7c4d1c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB0967;
+x-ms-traffictypediagnostic: DM5PR2101MB0967:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR2101MB096737ED8E6B152B3A1F2DFFD7410@DM5PR2101MB0967.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 098291215C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(376002)(346002)(136003)(396003)(199004)(189003)(486006)(99286004)(446003)(2906002)(33656002)(8936002)(6116002)(10090500001)(3846002)(476003)(22452003)(6636002)(105586002)(478600001)(316002)(2501003)(66066001)(256004)(11346002)(106356001)(1511001)(110136005)(54906003)(305945005)(7736002)(6246003)(74316002)(186003)(4326008)(26005)(14454004)(2201001)(71190400001)(71200400001)(7416002)(25786009)(6436002)(55016002)(81156014)(81166006)(52536014)(8676002)(9686003)(53936002)(5660300002)(86612001)(97736004)(76176011)(86362001)(8990500004)(6506007)(102836004)(6346003)(68736007)(10290500003)(229853002)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0967;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: B0iAlPyXXcXlWe6h6Y6uOf/jcE4EeWaMof0wXHRcDcnpSmeznxI0CMI//0bJCNS53S/xzz7VLBaXBqe794Q254bNVxyG9BdO+keAT+YB2LG6VMbIyDL4j5WyF6OMS83BqPhZWWzuUsr4fGrxSolUffmN3TALTOeBvMEeS8aztiRSpDlwqKLbDYqZJivIF9uQ6oGzz7Vq13E1/b3fbbMSz6QLF0I/BNCmDigpBVDOPpbP8XN1xf+gLlfb6B0tNSP4tGVRVq5iS5RGFcFOJUToHnAtgTLA+qbDJXX4d0EmOKUG/Pvet3K79bcITh0OA19o/8MhvIxcCVzGYTScqWNHAEjPYaxdVGkjyXVyzSVIOJ2WaFKyTvYQsf13Npj8DR7QyppD6wkOSenIvSCwHkIDUBloQd4LJ3OHPn9tPjoE1VI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b897d5c-575a-4146-da8d-08d6ad7c4d1c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 21:37:49.3704
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0967
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dexuan Cui <decui@microsoft.com>
+>
+> After a device is just created in new_pcichild_device(), hpdev->refs is s=
+et
+> to 2 (i.e. the initial value of 1 plus the get_pcichild()).
+>=20
+> When we hot remove the device from the host, in Linux VM we first call
+> hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
+> then schedules a work of hv_eject_device_work(), so hpdev->refs becomes 3
+> (let's ignore the paired get/put_pcichild() in other places). But in
+> hv_eject_device_work(), currently we only call put_pcichild() twice,
+> meaning the 'hpdev' struct can't be freed in put_pcichild(). This patch
+> adds one put_pcichild() to fix the memory leak.
+>=20
+> BTW, the device can also be removed when we run "rmmod pci-hyperv". On th=
+is
+> path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
+> hpdev->refs is 2, and we do correctly call put_pcichild() twice in
+> pci_devices_present_work().
+>=20
+> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsof=
+t Hyper-V VMs")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: <stable@vger.kernel.org>
 
+Exiting new_pcichild_device() with hpdev->refs set to 2 seems OK to me.
+There is the reference in the hbus->children list, and there is the referen=
+ce that
+is returned to the caller.  But what is strange is that pci_devices_present=
+_work()
+overwrites the reference returned in local variable hpdev without doing a
+put_pcichild().  It seems like the "normal" reference count should be 1 whe=
+n the
+child device is not being manipulated, not 2.  The fix would be to add a ca=
+ll to
+put_pcichild() when the return value from new_pcichild_device() is overwrit=
+ten.
+Then remove the call to put_pcichild() in pci_device_present_work() when mi=
+ssing
+children are moved to the local list. The children have been moved from one=
+ list
+to another, so there's no need to decrement the reference count.  Then when
+everything in the local list is deleted, the reference is correctly decreme=
+nted,
+presumably freeing the memory.
 
-On 3/20/19 4:22 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a typo in the module author's email address. Fix this.
-> 
+With this approach, the code in hv_eject_device_work() is correct.  There's
+one call to put_pcichild() to reflect removing the child device from the hb=
+us->
+children list, and one call to put_pcichild() to pair with the get_pcichild=
+() in
+hv_pci_eject_device().
 
-This is priceless!
+Your patch works, but to me it leaves the ref count in an unnatural state
+most of the time.
 
-Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Thanks, Colin.
---
-Gustavo
-
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/phy/mediatek/phy-mtk-ufs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/mediatek/phy-mtk-ufs.c b/drivers/phy/mediatek/phy-mtk-ufs.c
-> index 9a80a76d7990..cf94f5c35dc5 100644
-> --- a/drivers/phy/mediatek/phy-mtk-ufs.c
-> +++ b/drivers/phy/mediatek/phy-mtk-ufs.c
-> @@ -241,5 +241,5 @@ static struct platform_driver ufs_mtk_phy_driver = {
->  module_platform_driver(ufs_mtk_phy_driver);
->  
->  MODULE_DESCRIPTION("Universal Flash Storage (UFS) MediaTek MPHY");
-> -MODULE_AUTHOR("Stanley Chu <stanley.chu@medaitek.com>");
-> +MODULE_AUTHOR("Stanley Chu <stanley.chu@mediatek.com>");
->  MODULE_LICENSE("GPL v2");
-> 
+Michael
