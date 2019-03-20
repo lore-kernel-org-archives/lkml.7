@@ -2,128 +2,252 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D135DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D43C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A094C2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dHLfdoH/"
+	by mail.kernel.org (Postfix) with ESMTP id 686B02175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfCTFN0 (ORCPT
+        id S1727700AbfCTFNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:13:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50520 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfCTFNY (ORCPT
+        Wed, 20 Mar 2019 01:13:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44250 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727207AbfCTFNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:13:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2K5DLh3086590;
-        Wed, 20 Mar 2019 00:13:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553058801;
-        bh=2hqGN48azZJhcaQjzffHINkwfBKOGB9X714mQRt7KMk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dHLfdoH/9t6+CkauCvu3IpM2DjiqmjF2vkeQmWmIGIpHuz0y09YoIoSx2fVSJcilp
-         1MpVz7LGzOAdz1CNJ81pZOjyITGCLlye+W6kCaYYcYdY7LLnxerHrW9Y+LjwbtDHbC
-         +exfNpXXPztjGYxx2gXOGkgwtKLn5C4ZknJh6Nts=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2K5DLjZ025689
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Mar 2019 00:13:21 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 20
- Mar 2019 00:13:20 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Wed, 20 Mar 2019 00:13:20 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2K5DIke012247;
-        Wed, 20 Mar 2019 00:13:19 -0500
-Subject: Re: [PATCH] tools: PCI: exit with error code when test fails
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1537455773-13470-1-git-send-email-jjhiblot@ti.com>
- <20181004111144.GC5233@e107981-ln.cambridge.arm.com>
- <20181116120113.GB3228@e107981-ln.cambridge.arm.com>
- <20190319154322.GA12647@e107981-ln.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <285c3f6f-edfb-db9f-4816-82a8c4b5c97d@ti.com>
-Date:   Wed, 20 Mar 2019 10:42:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 01:13:25 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K56LNQ130259
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:24 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rbbpc8bqt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:13:24 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 20 Mar 2019 05:13:16 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 05:13:13 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5DIqp60096634
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 05:13:18 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9C60A405F;
+        Wed, 20 Mar 2019 05:13:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14A06A404D;
+        Wed, 20 Mar 2019 05:13:18 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 05:13:18 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0043EA0129;
+        Wed, 20 Mar 2019 16:13:16 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Greg Kurz <groug@kaod.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 4/7] ocxl: Allow external drivers to use OpenCAPI contexts
+Date:   Wed, 20 Mar 2019 16:08:56 +1100
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320050901.310-1-alastair@au1.ibm.com>
+References: <20190313041524.14644-1-alastair@au1.ibm.com>
+ <20190320050901.310-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319154322.GA12647@e107981-ln.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032005-0020-0000-0000-000003256783
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032005-0021-0000-0000-000021778432
+Message-Id: <20190320050901.310-5-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=665 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alastair D'Silva <alastair@d-silva.org>
 
+Most OpenCAPI operations require a valid context, so
+exposing these functions to external drivers is necessary.
 
-On 19/03/19 9:13 PM, Lorenzo Pieralisi wrote:
-> On Fri, Nov 16, 2018 at 12:01:13PM +0000, Lorenzo Pieralisi wrote:
->> On Thu, Oct 04, 2018 at 12:11:44PM +0100, Lorenzo Pieralisi wrote:
->>> On Thu, Sep 20, 2018 at 05:02:53PM +0200, Jean-Jacques Hiblot wrote:
->>>> This makes it easier to use pcitest in automated setups.
->>>>
->>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->>>> ---
->>>>  tools/pci/pcitest.c | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
->>>> index af146bb..5adc8cd 100644
->>>> --- a/tools/pci/pcitest.c
->>>> +++ b/tools/pci/pcitest.c
->>>> @@ -143,6 +143,7 @@ static int run_test(struct pci_test *test)
->>>>  	}
->>>>  
->>>>  	fflush(stdout);
->>>> +	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
->>>>  }
->>>>  
->>>>  int main(int argc, char **argv)
->>>> @@ -231,6 +232,5 @@ int main(int argc, char **argv)
->>>>  		return -EINVAL;
->>>>  	}
->>>>  
->>>> -	run_test(test);
->>>> -	return 0;
->>>> +	return run_test(test);
->>>>  }
->>>> -- 
->>>> 2.7.4
->>>>
->>>
->>> Hi Kishon,
->>>
->>> are you OK with this patch ? Please let me know.
->>
->> Please let me know, I need your ACK on this to queue it.
-> 
-> Hi Kishon,
-> 
-> I will merge this patch unless you have something against it,
-> please let me know.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Reviewed-by: Greg Kurz <groug@kaod.org>
+---
+ drivers/misc/ocxl/context.c       |  9 +++++--
+ drivers/misc/ocxl/file.c          |  2 +-
+ drivers/misc/ocxl/ocxl_internal.h |  6 -----
+ include/misc/ocxl.h               | 45 +++++++++++++++++++++++++++++++
+ 4 files changed, 53 insertions(+), 9 deletions(-)
 
-Sorry for missing this earlier.
+diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+index 371ef17bba33..9a37e9632cd9 100644
+--- a/drivers/misc/ocxl/context.c
++++ b/drivers/misc/ocxl/context.c
+@@ -8,6 +8,7 @@ struct ocxl_context *ocxl_context_alloc(void)
+ {
+ 	return kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
+ }
++EXPORT_SYMBOL_GPL(ocxl_context_alloc);
+ 
+ int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+ 		struct address_space *mapping)
+@@ -43,6 +44,7 @@ int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+ 	ocxl_afu_get(afu);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ocxl_context_init);
+ 
+ /*
+  * Callback for when a translation fault triggers an error
+@@ -63,7 +65,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
+ 	wake_up_all(&ctx->events_wq);
+ }
+ 
+-int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
++int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+ {
+ 	int rc;
+ 
+@@ -75,7 +77,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
+ 	}
+ 
+ 	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
+-			current->mm->context.id, ctx->tidr, amr, current->mm,
++			mm->context.id, ctx->tidr, amr, mm,
+ 			xsl_fault_error, ctx);
+ 	if (rc)
+ 		goto out;
+@@ -85,6 +87,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
+ 	mutex_unlock(&ctx->status_mutex);
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(ocxl_context_attach);
+ 
+ static vm_fault_t map_afu_irq(struct vm_area_struct *vma, unsigned long address,
+ 		u64 offset, struct ocxl_context *ctx)
+@@ -243,6 +246,7 @@ int ocxl_context_detach(struct ocxl_context *ctx)
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ocxl_context_detach);
+ 
+ void ocxl_context_detach_all(struct ocxl_afu *afu)
+ {
+@@ -280,3 +284,4 @@ void ocxl_context_free(struct ocxl_context *ctx)
+ 	ocxl_afu_put(ctx->afu);
+ 	kfree(ctx);
+ }
++EXPORT_SYMBOL_GPL(ocxl_context_free);
+diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
+index 1f17f8706e29..665422c6c8a0 100644
+--- a/drivers/misc/ocxl/file.c
++++ b/drivers/misc/ocxl/file.c
+@@ -94,7 +94,7 @@ static long afu_ioctl_attach(struct ocxl_context *ctx,
+ 		return -EINVAL;
+ 
+ 	amr = arg.amr & mfspr(SPRN_UAMOR);
+-	rc = ocxl_context_attach(ctx, amr);
++	rc = ocxl_context_attach(ctx, amr, current->mm);
+ 	return rc;
+ }
+ 
+diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+index 05930a29f606..4fc7e9597ede 100644
+--- a/drivers/misc/ocxl/ocxl_internal.h
++++ b/drivers/misc/ocxl/ocxl_internal.h
+@@ -133,15 +133,9 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
+  */
+ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+ 
+-struct ocxl_context *ocxl_context_alloc(void);
+-int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+-			struct address_space *mapping);
+-int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+ int ocxl_context_mmap(struct ocxl_context *ctx,
+ 			struct vm_area_struct *vma);
+-int ocxl_context_detach(struct ocxl_context *ctx);
+ void ocxl_context_detach_all(struct ocxl_afu *afu);
+-void ocxl_context_free(struct ocxl_context *ctx);
+ 
+ int ocxl_sysfs_register_afu(struct ocxl_afu *afu);
+ void ocxl_sysfs_unregister_afu(struct ocxl_afu *afu);
+diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+index 7d611ea68a59..a5e94da6c8db 100644
+--- a/include/misc/ocxl.h
++++ b/include/misc/ocxl.h
+@@ -116,6 +116,51 @@ const struct ocxl_fn_config *ocxl_function_config(struct ocxl_fn *fn);
+  */
+ void ocxl_function_close(struct ocxl_fn *fn);
+ 
++// Context allocation
++
++/**
++ * Allocate space for a new OpenCAPI context
++ *
++ * Returns NULL on failure
++ */
++struct ocxl_context *ocxl_context_alloc(void);
++
++/**
++ * Initialize an OpenCAPI context
++ *
++ * @ctx: The OpenCAPI context to initialize
++ * @afu: The AFU the context belongs to
++ * @mapping: The mapping to unmap when the context is closed (may be NULL)
++ */
++int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
++			struct address_space *mapping);
++
++/**
++ * Free an OpenCAPI context
++ *
++ * @ctx: The OpenCAPI context to free
++ */
++void ocxl_context_free(struct ocxl_context *ctx);
++
++/**
++ * Grant access to an MM to an OpenCAPI context
++ * @ctx: The OpenCAPI context to attach
++ * @amr: The value of the AMR register to restrict access
++ * @mm: The mm to attach to the context
++ *
++ * Returns 0 on success, negative on failure
++ */
++int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
++				struct mm_struct *mm);
++
++/**
++ * Detach an MM from an OpenCAPI context
++ * @ctx: The OpenCAPI context to attach
++ *
++ * Returns 0 on success, negative on failure
++ */
++int ocxl_context_detach(struct ocxl_context *ctx);
++
+ // AFU Metadata
+ 
+ /**
+-- 
+2.20.1
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Thanks,
-> Lorenzo
-> 
