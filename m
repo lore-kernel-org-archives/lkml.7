@@ -2,144 +2,131 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085FCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B11C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDF520828
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0403220828
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xC44Ga7p"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bzw2JUtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfCTAUN (ORCPT
+        id S1727520AbfCTAVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:20:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42665 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbfCTAUN (ORCPT
+        Tue, 19 Mar 2019 20:21:00 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46830 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfCTAVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:20:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 103so521786otd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:20:12 -0700 (PDT)
+        Tue, 19 Mar 2019 20:21:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z25so526296qti.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RnMBtikaXl7CNIq06JeyQDH720IPf6TuGSxsVbdcOY8=;
-        b=xC44Ga7pi5Alb5AHzgTOYHLrZzCQ1gQMDGOMT0TUcS3VeOB9zlLyT7nUyw6w8PPcLr
-         dn5G74X92KOUotxVsgKVoiZqo6WiIhPU1pmdgQ+OOmxifgXA5vNOnpPaMEWkOHl4BNaI
-         d+e+CsgO6QY2hdthwkmuT4sxhZYgKrKyHXa5CNDvAMYTlPhPcYyFU45eIWCGbBLLCyYA
-         7nUKKpvlg5YMKwzW1hPpHOSqqQs88OUplrwOjsW4YyjgYJODdjcw4R5/BcXgPgd4kwBA
-         qqmPQrtXlDirootQ85Bvw9flHEZ5z4yuRMVs/bTxh74/QI0uYtIgqIUj20Dnb9VP0J77
-         CSmA==
+        bh=zQmCD3sREUOQwH4FPp6CA4aVK08SIwr97WyKhXdZnQg=;
+        b=bzw2JUttAidp/yj9zNb21J2mklrB4ORgex6qHvNV60XXoeRTiL2ESkymUJXXScOhHW
+         6UfHgZ7wAsXNBOIuWhTM4mjapWTuMJZThYvwqBXaDegUjzFo2hRQvQ7yBG3F8zjRC3lf
+         B0uRPP1X7i1Fm7+CpAmtBJ1sVvvD0DbnZr1oo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RnMBtikaXl7CNIq06JeyQDH720IPf6TuGSxsVbdcOY8=;
-        b=Yn1WMjzYqnO3yvCNY/Shze0FZzHATA3iQEbouHglI/w69RQVu5G9lnVi/LPG0vG2eW
-         sEdS/pKzONjFGcb/fGVIERwU4kP0yIFyzGCzBm2Ay1b4xOecqDrgfXph2OFObtRvZUvo
-         QQmlVfH6iWxzxLjhWD4j+Zzfa3ZIUFIUnWdrPeeD5SGwUIcj/GWiDbk/HKh3+2OkbBjt
-         Ex9qfuFwPcGNqgLRDYDmGHg2vw1GYp64bPg2BR4lkARNGbvavc0wU4NbY+ITAvbt7Ad1
-         PqtFuhvUdcE7AyvWDySXZK7u8iUdxIKjpFkWzYFSIR/1d+83Y1X74YBxt8xt/BsHU7kP
-         ahPg==
-X-Gm-Message-State: APjAAAWZs6l73xPa0tYz3gjinul2DwhZNZ804fiGmTTrVWw5xfkINcYu
-        8qWechUIAlKeCbRUeU1QP/v5psbZyhU8i9mCGYsC4Q==
-X-Google-Smtp-Source: APXvYqxjcI6kl6gsVvMv5j5K+gU6BLBF8kBoBhDKtl6e3oqOMBw2b18tT9fRmIoYEK6AecF404b79NTHBv461C3Twq0=
-X-Received: by 2002:a9d:4d0b:: with SMTP id n11mr3019821otf.98.1553041212574;
- Tue, 19 Mar 2019 17:20:12 -0700 (PDT)
+        bh=zQmCD3sREUOQwH4FPp6CA4aVK08SIwr97WyKhXdZnQg=;
+        b=EM4z6XAeX8BZ1FNUUsCaklNtMttt6cTeHVXLbP1lgd690ArZWeqC1KcYw+NKpGVS5A
+         hQxCrZmoJFV1ab7b6rZpmTCXvDcfVXKTZddO+8gAsCwWCxnl+YIa2bnkeFgStNwHEro6
+         1qd3TmaT+nw4rVTn68cB8oa622r1nsU2qHTo+2LaAwXWSnbCVGZFzopH/y8z+R+VU7XK
+         8Vd/QHHHLxVDvyKPl248WOzLrWoZn5d13TJhr7uh4PNo0OxC/Ih3liWxHvm3J/aeFVGM
+         e2EW4ody6Xp024ucEACUsa/F440xBFJ96ntLQ5Dr8Ofx7nL3zxy4YyHcrX6+Rr3sV99X
+         PPIQ==
+X-Gm-Message-State: APjAAAUkkEI6BZrGv7V1qVqSXSm7sfDA9gbCguERti4K14c7SeN950N5
+        kDncz0nD+DpXHzQcbJ4C7E2oCOY3D5j6HEStymvZAA==
+X-Google-Smtp-Source: APXvYqxe7hcm85vJxzxb+3t+Kp2FxLDCiQS1m2UbUsHfl7Y/EfaBLiyfZcg8Qx2I3W4SsvM+/rsaTGK1MvV+z0Qwo2Q=
+X-Received: by 2002:ac8:1884:: with SMTP id s4mr4584119qtj.339.1553041258782;
+ Tue, 19 Mar 2019 17:20:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <155297557534.2276575.16264199708584900090.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155297558570.2276575.11731393787282486177.stgit@dwillia2-desk3.amr.corp.intel.com>
- <1553040398.4899.149.camel@linux.ibm.com>
-In-Reply-To: <1553040398.4899.149.camel@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 Mar 2019 17:20:01 -0700
-Message-ID: <CAPcyv4heLwdJR+xKZfvx5TAvqsKr3sNCda_ovivguLKbiXhyYg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] security/keys/encrypted: Clean up request_trusted_key()
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     keyrings@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20181210011504.122604-1-drinkcat@chromium.org>
+ <CANMq1KAmFKpcxi49wJyfP4N01A80B2d-2RGY2Wrwg0BvaFxAxg@mail.gmail.com>
+ <20190111102155.in5rctq5krs4ewfi@8bytes.org> <CANMq1KCq7wEYXKLZGCZczZ_yQrmK=MkHbUXESKhHnx5G_CMNVg@mail.gmail.com>
+ <789fb2e6-0d80-b6de-adf3-57180a50ec3e@suse.cz> <CANMq1KCfhWdWtXP_PRd_LEEcWV8SQg=hOy4V7_grqtL873uUCg@mail.gmail.com>
+ <CANMq1KBKF9aRj+8t+AQusNLOF5jrHJ4qY5C00AKXkO6e-8wKuQ@mail.gmail.com> <20190319105637.4949b00b854e955d61c0359d@linux-foundation.org>
+In-Reply-To: <20190319105637.4949b00b854e955d61c0359d@linux-foundation.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 20 Mar 2019 08:20:47 +0800
+Message-ID: <CANMq1KAWbfNJQt=RaK-+us7eS6ReLFqaEbO3hMPfBy_w3ukj7A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Levin Alexander <Alexander.Levin@microsoft.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>, hch@infradead.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, stable@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 5:07 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+On Wed, Mar 20, 2019 at 1:56 AM Andrew Morton <akpm@linux-foundation.org> wrote:
 >
-> On Mon, 2019-03-18 at 23:06 -0700, Dan Williams wrote:
+> On Tue, 19 Mar 2019 15:41:43 +0800 Nicolas Boichat <drinkcat@chromium.org> wrote:
 >
-> < snip >
+> > On Mon, Feb 25, 2019 at 8:23 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > On Thu, Feb 14, 2019 at 1:12 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> > > >
+> > > > On 1/22/19 11:51 PM, Nicolas Boichat wrote:
+> > > > > Hi Andrew,
+> > > > >
+> > > > > On Fri, Jan 11, 2019 at 6:21 PM Joerg Roedel <joro@8bytes.org> wrote:
+> > > > >>
+> > > > >> On Wed, Jan 02, 2019 at 01:51:45PM +0800, Nicolas Boichat wrote:
+> > > > >> > Does anyone have any further comment on this series? If not, which
+> > > > >> > maintainer is going to pick this up? I assume Andrew Morton?
+> > > > >>
+> > > > >> Probably, yes. I don't like to carry the mm-changes in iommu-tree, so
+> > > > >> this should go through mm.
+> > > > >
+> > > > > Gentle ping on this series, it seems like it's better if it goes
+> > > > > through your tree.
+> > > > >
+> > > > > Series still applies cleanly on linux-next, but I'm happy to resend if
+> > > > > that helps.
+> > > >
+> > > > Ping, Andrew?
+> > >
+> > > Another gentle ping, I still don't see these patches in mmot[ms]. Thanks.
+> >
+> > Andrew: AFAICT this still applies cleanly on linux-next/master, so I
+> > don't plan to resend... is there any other issues with this series?
+> >
+> > This is a regression, so it'd be nice to have it fixed in mainline, eventually.
 >
-> > +/*
-> > + * request_trusted_key - request the trusted key
-> > + *
-> > + * Trusted keys are sealed to PCRs and other metadata. Although userspace
-> > + * manages both trusted/encrypted key-types, like the encrypted key type
-> > + * data, trusted key type data is not visible decrypted from userspace.
-> > + */
-> > +static struct key *request_trusted_key(const char *trusted_desc,
-> > +                             const u8 **master_key, size_t *master_keylen)
-> > +{
-> > +     struct trusted_key_payload *tpayload;
-> > +     struct key_type *type;
-> > +     struct key *tkey;
-> > +
-> > +     type = key_type_lookup("trusted");
->
-> The associated key_type_put() will need to be called.
+> Sorry, seeing "iommu" and "arm" made these escape my gimlet eye.
 
-Yes.
+Thanks for picking them up!
 
->
-> > +     if (IS_ERR(type)) {
-> > +             tkey = (struct key *)type;
-> > +             goto error;
-> > +     }
-> > +     tkey = request_key(type, trusted_desc, NULL);
-> > +     if (IS_ERR(tkey))
-> > +             goto error;
-> > +
-> > +     down_read(&tkey->sem);
-> > +     tpayload = tkey->payload.data[0];
-> > +     *master_key = tpayload->key;
-> > +     *master_keylen = tpayload->key_len;
-> > +error:
-> > +     return tkey;
-> > +}
-> > +
->
->
->
-> > diff --git a/security/keys/key.c b/security/keys/key.c
-> > index 696f1c092c50..9045b62afb04 100644
-> > --- a/security/keys/key.c
-> > +++ b/security/keys/key.c
-> > @@ -706,6 +706,7 @@ struct key_type *key_type_lookup(const char *type)
-> >  found_kernel_type:
-> >       return ktype;
-> >  }
-> > +EXPORT_SYMBOL_GPL(key_type_lookup);
+> I'm only seeing acks on [1/3].  What's the review status of [2/3] and [3/3]?
 
-This needs to be moved to patch1.
-
-> Only the kernel is calling key_type_lookup().  Why does
-> key_type_lookup() need to be exported?
-
-This patch series adds several new callers outside of keys-subsystem
-core that need this export, the first one being encrypted-keys itself
-in patch1.
-
-drivers/nvdimm/security.c:57:   type = key_type_lookup("encrypted");
-fs/ecryptfs/keystore.c:1627:    type = key_type_lookup("encrypted");
-security/integrity/evm/evm_crypto.c:361:        type =
-key_type_lookup("encrypted");
-security/keys/encrypted-keys/encrypted.c:440:   type =
-key_type_lookup("trusted");
+Replied on the notification, [2/3] had a Ack, [3/3] is somewhat controversial.
