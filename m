@@ -2,116 +2,165 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F579C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D878C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB48218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pNnN1UQ+"
+	by mail.kernel.org (Postfix) with ESMTP id 144AE218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfCTUlQ (ORCPT
+        id S1727529AbfCTUl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:41:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46655 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfCTUlQ (ORCPT
+        Wed, 20 Mar 2019 16:41:28 -0400
+Received: from gateway36.websitewelcome.com ([50.116.125.2]:20875 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726465AbfCTUl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:41:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 9so2507045pfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:41:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xfmFuvaJ0wiTzFqRDTGnHEWpM2PkxsELB6wVDBsD18U=;
-        b=pNnN1UQ+XORt+TRWJwPDl7EEkMemyu8NvQuWdAK86UoPMlbgx+ooMYuciotXnR9A3F
-         K9rxTov0MqI9m+UKsDKTXDBW9B/FzrlleM5Rk3OpuIZHAw6asvDavGX8tRJ/0lApaiLK
-         UKaE4nIA0tjfxvCUZKTdhv3s31C3rzBtGMMbOLS+XamDuYH9imAAn8eUCelkjeEnmtIJ
-         6qctFGTVxbOB64LKYNsoGmEIHyfwuIgz115VrDO0rJ5wBDibrguG3+c5/Zs9HqW19Bu/
-         aBF8TkYJLiUeVOs01Lfvolj8Xe7lCelwoQ1xJqrAUrygIdFa6nwpUze7r+1bf6gdKDRA
-         ybtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xfmFuvaJ0wiTzFqRDTGnHEWpM2PkxsELB6wVDBsD18U=;
-        b=YrS9X2Us0LLK6xLsFOKLut4lkkCG7YcNwYFEV7I7RuJ+omnk4bbajdS5CPeAq95tJ9
-         JmTOdwncifCwllNIraZCx2Goi/wudqb2xSnie8RmIQW6Yg2KkxoIW34m9/unBYR310Jn
-         wmKsJE+FxqbvHcfwMUAEQoiNADPlmkAEKl4NBDERuEqTnBy+moqCzjb+2N4Oue8x78sc
-         gaS4d4obQrYPAwXaDQxff0JbycGutCA3WC0/aGhZaiRQ2R3h0ynIB0LVuIpSoGmVASQB
-         OSEbmx/+vO5dDkfDGdCVJSwjL8ovZkrqH2S+hkjogOFy5ec7tTLtDeXyU8Rvo6hpcLfA
-         wl5w==
-X-Gm-Message-State: APjAAAXFClj7SLE1YfVmYv6OJG80i1v8FzWvyUJki1wEtrgtRuWnmkJp
-        dShSPcWtagTJoQOkkOkf6syhQwYG/CQF+mcGmJF/4Q==
-X-Google-Smtp-Source: APXvYqwgYdwVETosN63EOr07l+mqB8apd/5S7F6xTujO0/nzQEAmNCIc8JLltiTsu/MI+k7epo8TpleIo+0gwoiBYn8=
-X-Received: by 2002:a62:e904:: with SMTP id j4mr31920496pfh.174.1553114475025;
- Wed, 20 Mar 2019 13:41:15 -0700 (PDT)
+        Wed, 20 Mar 2019 16:41:28 -0400
+X-Greylist: delayed 1408 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Mar 2019 16:41:27 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 0F889400C991E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:34:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6hexhDrzh2qH76hexhetDm; Wed, 20 Mar 2019 15:17:59 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=34502 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6hew-003pZX-J1; Wed, 20 Mar 2019 15:17:58 -0500
+Subject: Re: [PATCH] mtd: lpddr_cmds: Mark expected switch fall-through
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190208181210.GA8388@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
+Date:   Wed, 20 Mar 2019 15:17:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190308005735.GA4122@archlinux-ryzen> <20190320190849.GB28744@archlinux-ryzen>
-In-Reply-To: <20190320190849.GB28744@archlinux-ryzen>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 20 Mar 2019 13:41:03 -0700
-Message-ID: <CAKwvOdkekJw-wLn=9K=xKE0X260MZCCRtD1r5Erp=fQTwn+p9w@mail.gmail.com>
-Subject: Re: -Wsometimes-uninitialized Clang warning in drivers/net/ethernet/broadcom/bnxt/bnxt.c
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, eddie.wai@broadcom.com,
-        huangjw@broadcom.com, prashant@broadcom.com, mchan@broadcom.com,
-        vasundhara-v.volam@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190208181210.GA8388@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6hew-003pZX-J1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:34502
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 30
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Broadcom folks from commit c0c050c58d84 ("bnxt_en: New Broadcom
-ethernet driver.").  Looks like Michael wrote and is still maintaining
-the driver.
+Hi all,
 
-On Wed, Mar 20, 2019 at 12:08 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, Mar 07, 2019 at 05:57:35PM -0700, Nathan Chancellor wrote:
-> > Hi all,
-> >
-> > We are trying to get Clang's -Wsometimes-uninitialized turned on for the
-> > kernel as it can catch some bugs that GCC can't. This warning came up:
-> >
-> > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:6: warning: variable 'len' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-> >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
-> >             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1703:19: note: uninitialized use occurs here
-> >         cpr->rx_bytes += len;
-> >                          ^~~
-> > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:2: note: remove the 'if' if its condition is always false
-> >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
-> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1540:18: note: initialize the variable 'len' to silence this warning
-> >         unsigned int len;
-> >                         ^
-> >                          = 0
-> > 1 warning generated.
-> >
-> > It seems like the logical change to make is this; however, I am not sure
-> > if this has any other unintended consequences since this is a rather
-> > dense function. I would much appreciate your input, especially if there
-> > is a better way to fix it.
+Friendly ping:
 
-I agree that `goto next_rx_no_prod_no_len` appears to be most correct;
-though I don't understand why this function is a mix of early return
-codes, vs setting rc then updating *raw_cons.  The alternative is
-probably zero initializing len, but I'm not sure whether *raw_cons
-should be updated in that case or not.  Thanks for bringing this up
-and the patch.  Sorry for the delay in review.  Can folks at Broadcom
-please clarify?
+Who can take this?
 
--- 
-Thanks,
-~Nick Desaulniers
+Thanks
+--
+Gustavo
+
+On 2/8/19 12:12 PM, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/mtd/lpddr/lpddr_cmds.c: In function ‘chip_ready’:
+> drivers/mtd/lpddr/lpddr_cmds.c:319:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (mode == FL_READY && chip->oldstate == FL_READY)
+>       ^
+> drivers/mtd/lpddr/lpddr_cmds.c:322:2: note: here
+>   default:
+>   ^~~~~~~
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enabling
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/mtd/lpddr/lpddr_cmds.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmds.c
+> index b13557fe52bd..76a4c73e100e 100644
+> --- a/drivers/mtd/lpddr/lpddr_cmds.c
+> +++ b/drivers/mtd/lpddr/lpddr_cmds.c
+> @@ -318,6 +318,7 @@ static int chip_ready(struct map_info *map, struct flchip *chip, int mode)
+>  		/* Only if there's no operation suspended... */
+>  		if (mode == FL_READY && chip->oldstate == FL_READY)
+>  			return 0;
+> +		/* fall through */
+>  
+>  	default:
+>  sleep:
+> 
