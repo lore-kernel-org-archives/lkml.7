@@ -2,208 +2,108 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E91C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5AEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4883120830
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E42020830
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 03:33:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMzlih3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfCTDcy (ORCPT
+        id S1727605AbfCTDdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 23:32:54 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:17343 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfCTDcy (ORCPT
+        Tue, 19 Mar 2019 23:33:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46718 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCTDdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 23:32:54 -0400
-Received: from [10.28.18.125] (10.28.18.125) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 20 Mar
- 2019 11:33:53 +0800
-Subject: Re: [RFC PATCH nand-next 0/2] meson-nand: support for older SoCs
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Miquel Raynal <miquel.raynal@bootlin.com>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <jianxin.pan@amlogic.com>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190301182922.8309-1-martin.blumenstingl@googlemail.com>
- <98776767-c4d7-1207-6d42-97105f289bec@amlogic.com>
- <CAFBinCC7P40sqrDGTuM8M=jVOFTgZLDUK6rGdNpigFoepyCASw@mail.gmail.com>
- <20190307140959.10092d45@xps13>
- <ccb95e75-e62f-c510-cabd-853481f77fc8@amlogic.com>
- <CAFBinCBd=dOZjv4KEDY9ODOONDO=WtaBqAMRi_a+gH3_iZEAHQ@mail.gmail.com>
- <CAFBinCA7LLK6K3ZqauJy2N-z5-kTfuTztmoSQ=Bk4A5Xagxddw@mail.gmail.com>
-From:   Liang Yang <liang.yang@amlogic.com>
-Message-ID: <8134890a-457d-7803-01a4-1832f925f65f@amlogic.com>
-Date:   Wed, 20 Mar 2019 11:33:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
-MIME-Version: 1.0
-In-Reply-To: <CAFBinCA7LLK6K3ZqauJy2N-z5-kTfuTztmoSQ=Bk4A5Xagxddw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.125]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+        Tue, 19 Mar 2019 23:33:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a22so668305pgg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2sJe92bhnpO9W3zP6D6Lfh7Em54TgNNN+e+i4jBa+9c=;
+        b=eMzlih3kUT+ThDkBVS0KVtCIsvnexBC/s9m2Dsz5GuiQmJrzofi5TtXGujFZoxTuaP
+         13GpTrLSoX93LN5L3pgrWT396Yh5N2EnuCImdue8cokb/HOvGxKL9KMW7PqHPYARg8UO
+         QtLRKcsDc0bDFkpW4XQ62DyXMy5rvnRyy2KIxLYlmqcy4b9parY6+8ikkgH0KwtijfBw
+         AloS8B3UP92JnKaBy7GmAdcO7dUSmC/NtAv4reFbQ956dvQpFUxyR+KvPEbkdYB18Ivw
+         Gai/+A7yeeGbM/qpAWFy1SYbDn2/73MC7HVKAX38TtEyL1FV+0OnHsCd+cRrROwK1VRd
+         jlXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2sJe92bhnpO9W3zP6D6Lfh7Em54TgNNN+e+i4jBa+9c=;
+        b=YiOrKhgP9/34eswTjs2x5vavbVH1kubggDVljtgrmpQxHTDYQyaifM2OnWDnw9/uop
+         vy8arPvVgwAUmZm7upFbWDnVMJUgaQaXn9/364Qt1wznuBxiRTvebkL1wD3eO+/7cbSD
+         KVFVziqzi16JsowEekWiXrFXDcdPsn4TvuXZ0VaRgpUvq6JcL8D6vXoyPdO1OgttzGh/
+         Mh+tdqzby5+PeSK81Q7ww7bzJMBpEsVc1hxGZ527DzdxpVdlWoQsL8E4Jo8BIt5brgQm
+         xcO8Gloxk2W/qcK/LyA8GnKfL6tE/3d0VQAU4OtnW2bqNnSgEnI7HwLPlSBZATVLS4l9
+         BGXA==
+X-Gm-Message-State: APjAAAUxepDOcm2H27CLfI2gCk2DMvfRihd6llZFYqTZ6uu44kCLNtAn
+        kPy1LZcrbtsYMzIdyrGaCjc=
+X-Google-Smtp-Source: APXvYqy+a9yMx9TqWMBRExGNZpydCo9mA7f4UEIkaHVs2JmoPaTiktj+eKX4iAtsb/cZKfPd/J7GsQ==
+X-Received: by 2002:a65:60da:: with SMTP id r26mr5194564pgv.294.1553052799196;
+        Tue, 19 Mar 2019 20:33:19 -0700 (PDT)
+Received: from localhost.localdomain ([154.223.142.197])
+        by smtp.gmail.com with ESMTPSA id v18sm566909pfm.165.2019.03.19.20.33.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 20:33:18 -0700 (PDT)
+From:   Zhouyi Zhou <zhouzhouyi@gmail.com>
+To:     paulmck@linux.ibm.com, paulmck@linux.vnet.ibm.com,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org
+Cc:     Zhouyi Zhou <zhouzhouyi@gmail.com>
+Subject: [PATCH] RCU: Adjust comments for force_qs_rnp
+Date:   Wed, 20 Mar 2019 03:33:00 +0000
+Message-Id: <1553052780-3789-1-git-send-email-zhouzhouyi@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Previously, threads blocked on offlining CPUS are migrated to root
+rcu_node, so there is a need to initiate RCU priority boosting on root
+rcu_node,
 
-Thanks for your time.
-On 2019/3/20 4:27, Martin Blumenstingl wrote:
-> Hello Liang,
-> 
-> On Sat, Mar 16, 2019 at 11:55 AM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> [...]
->>> Martin, Now i am not sure whether NFC driver leads to kernel panic when
->>> calling kmem_cache_alloc_trace.
->> thank you for confirming that it works for you on GXL
->>
->> I'm not sure that this is a NFC driver problem.
->> after enabling CONFIG_SLAB_FREELIST_HARDENED in my kernel config the
->> crash moves. it's now crashing in slub.c's kfree() at
->> BUG_ON(!PageCompound(page));
-> I added some debug prints in meson_nfc_read_buf() to get some details
-> about the info buffer before the crash,
-> format is: meson_nfc_read_buf <virtual address> <physical address>
-> 
-> during my first test three different addresses are used:
-> - meson_nfc_read_buf e9e6c640 0x29e6c640 (works fine)
-> - meson_nfc_read_buf e9e6c680 0x29e6c680 (works fine)
-> - meson_nfc_read_buf ee39a34b 0x2e39a34b (crashes during kfree)
-> 
-> so I tried playing around with the allocation size (see the attached
-> patch) and changed it to:
->    kzalloc(PER_INFO_BYTE + 64, GFP_KERNEL)
-> this results in the following addresses being used:
-> - meson_nfc_read_buf e9ea4280 0x29ea4280 (works fine)
-> - meson_nfc_read_buf e9ea4300 0x29ea4300 (works fine)
-> (there is no crash anymore)
-> 
-> Liang, are there any special requirements on the "info address" like
-> the alignment?
-It must be 4 bytes alignment. i have met it previously when debugging 
-NFC driver on AXG platform, but it is not specified on spec. Now i am 
-confused that how to get the no aligned address "xe39a34b" when using 
-kmalloc; i think it should return the aligned address. doesn't it?
+Current RCU does not migrate blocked tasks even if all corresponding CPUs
+offline. 
+commit d19fb8d1f3f6 ("rcu: Don't migrate blocked tasks even if all corresponding CPUs offline")'
 
-> also do you know why the PER_INFO_BYTE buffer is allocated dynamically
-> in meson_nfc_read_buf() instead of allocating it at initialization?
-> I'm not saying that it should be changed! I'm curious because there's
-> per-meson_nfc_nand_chip info and data buffers which are allocated at
-> initialization time.
-> NAND scan or initialization is divided into three stages: 
-nand_scan_ident->nand_attach->nand_scan_tail. info and data buffer which 
-depend on the result of nand_scan_ident are allocated on nand_attach; so 
-nand_scan_ident can not use the info buffer on meson_nfc_nand_chip.
-Allocating a fixed size info buffer before nand_scan_ident and attach it 
-on the struct meson_nfc; Or considering not use dma for reading data 
-less than 8 bytes. Both can reduce kmalloc and kfree calling. Thanks.
-> 
-> meson_nfc_read_buf debug log with PER_INFO_BYTE allocation:
-> [    2.032914] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.033005] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.037717] meson_nfc_read_buf: about to kfree info
-> [    2.042535] meson_nfc_read_buf: kfree'd info
-> [    2.046794] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.051552] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.056261] meson_nfc_read_buf: about to kfree info
-> [    2.061086] meson_nfc_read_buf: kfree'd info
-> [    2.065356] meson_nfc_read_buf e9e6c680 0x29e6c680
-> [    2.070102] meson_nfc_dma_buffer_setup 0x29e6c680
-> [    2.074810] meson_nfc_read_buf: about to kfree info
-> [    2.079635] meson_nfc_read_buf: kfree'd info
-> [    2.083978] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.088684] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.093334] meson_nfc_read_buf: about to kfree info
-> [    2.098199] meson_nfc_read_buf: kfree'd info
-> [    2.102446] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.107208] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.111883] meson_nfc_read_buf: about to kfree info
-> [    2.116765] meson_nfc_read_buf: kfree'd info
-> [    2.120996] meson_nfc_read_buf e9e6c640 0x29e6c640
-> [    2.125762] meson_nfc_dma_buffer_setup 0x29e6c640
-> [    2.130433] meson_nfc_read_buf: about to kfree info
-> [    2.135294] meson_nfc_read_buf: kfree'd info
-> [    2.139545] Could not find a valid ONFI parameter page, trying
-> bit-wise majority to recover it
-> [    2.148173] ONFI parameter recovery failed, aborting
-> [    2.153058] meson_nfc_read_buf e9e6c680 0x29e6c680
-> [    2.157831] meson_nfc_dma_buffer_setup 0x29e6c680
-> [    2.162527] meson_nfc_read_buf: about to kfree info
-> [    2.167369] meson_nfc_read_buf: kfree'd info
-> [    2.171611] meson_nfc_read_buf ee39a34b 0x2e39a34b
-> [    2.176383] meson_nfc_dma_buffer_setup 0x2e39a34b
-> [    2.181076] meson_nfc_read_buf: about to kfree info
-> [    2.185932] ------------[ cut here ]------------
-> [    2.190503] kernel BUG at mm/slub.c:3950!
-> [    2.194491] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
-> ...
-> 
-> meson_nfc_read_buf debug log with PER_INFO_BYTE+64 allocation:
-> [    2.033019] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.033112] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.037847] meson_nfc_read_buf: about to kfree info
-> [    2.042642] meson_nfc_read_buf: kfree'd info
-> [    2.046909] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.051659] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.056374] meson_nfc_read_buf: about to kfree info
-> [    2.061192] meson_nfc_read_buf: kfree'd info
-> [    2.065461] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.070208] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.074922] meson_nfc_read_buf: about to kfree info
-> [    2.079742] meson_nfc_read_buf: kfree'd info
-> [    2.084087] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.088789] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.093440] meson_nfc_read_buf: about to kfree info
-> [    2.098303] meson_nfc_read_buf: kfree'd info
-> [    2.102553] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.107316] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.111990] meson_nfc_read_buf: about to kfree info
-> [    2.116870] meson_nfc_read_buf: kfree'd info
-> [    2.121103] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.125868] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.130540] meson_nfc_read_buf: about to kfree info
-> [    2.135400] meson_nfc_read_buf: kfree'd info
-> [    2.139652] Could not find a valid ONFI parameter page, trying
-> bit-wise majority to recover it
-> [    2.148276] ONFI parameter recovery failed, aborting
-> [    2.153165] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.157938] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.162634] meson_nfc_read_buf: about to kfree info
-> [    2.167475] meson_nfc_read_buf: kfree'd info
-> [    2.171717] meson_nfc_read_buf e9ea4280 0x29ea4280
-> [    2.176489] meson_nfc_dma_buffer_setup 0x29ea4280
-> [    2.181183] meson_nfc_read_buf: about to kfree info
-> [    2.186025] meson_nfc_read_buf: kfree'd info
-> [    2.190265] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xde
-> [    2.196598] nand: Hynix NAND 8GiB 3,3V 8-bit
-> [    2.200840] nand: 8192 MiB, MLC, erase size: 4096 KiB, page size:
-> 16384, OOB size: 1280
-> [    2.208829] meson_nfc_read_buf e9ea4300 0x29ea4300
-> [    2.213581] meson_nfc_dma_buffer_setup 0x29ea4300
-> [    2.218291] meson_nfc_read_buf: about to kfree info
-> [    2.223115] meson_nfc_read_buf: kfree'd info
-> [    2.227374] ------------[ cut here ]------------
-> [    2.231968] WARNING: CPU: 1 PID: 1 at
-> drivers/mtd/nand/raw/nand_base.c:5503 nand_scan_with_ids+0x1718/0x171c
-> [    2.241760] No oob scheme defined for oobsize 1280
-> ...
-> (the "No oob scheme defined for oobsize 1280" message is expected)
-> 
-miss mtd_set_ooblayout(mtd, &meson_ooblayout_ops) on function 
-meson_nand_attach_chip.
-> 
-> Regards
-> Martin
-> 
+Consequently, rcu does not initiate RCU priority boosting on root rcu_node.
+commit 1be0085b515e ("rcu: Don't initiate RCU priority boosting on root rcu_node")'
+
+So I think the comments for force_qs_rnp should be adjusted.
+
+Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+---
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index acd6ccf..efddffb 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2548,9 +2548,9 @@ void rcu_sched_clock_irq(int user)
+ }
+ 
+ /*
+- * Scan the leaf rcu_node structures, processing dyntick state for any that
+- * have not yet encountered a quiescent state, using the function specified.
+- * Also initiate boosting for any threads blocked on the root rcu_node.
++ * Scan the leaf rcu_node structures, initiating boost for any threads blocked
++ * on them, processing dyntick state for any that have not yet encountered a
++ * quiescent state, using the function specified.
+  *
+  * The caller must have suppressed start of new grace periods.
+  */
+-- 
+2.1.4
+
