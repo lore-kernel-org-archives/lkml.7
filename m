@@ -4,105 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE09C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE102146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F2F20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YWEQk0i3"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Jo2+Tufb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfCTQb5 (ORCPT
+        id S1727484AbfCTQeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:31:57 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44573 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfCTQbw (ORCPT
+        Wed, 20 Mar 2019 12:34:14 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:33278 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfCTQeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:31:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w5so3208040qtb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:31:51 -0700 (PDT)
+        Wed, 20 Mar 2019 12:34:14 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id B8F23C03
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 16:34:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wh5aPjf7FJ7p for <linux-kernel@vger.kernel.org>;
+        Wed, 20 Mar 2019 11:34:12 -0500 (CDT)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 7E2ECBB0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:34:12 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id f5so2008689ita.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wbEx3hMagtlG7gtXzbw55L8OpDPeq7CK2cOpXhk6DvE=;
-        b=YWEQk0i3DNve9X7odkA0YaqSFB+S7FYiv8C2wDlK/DFq6VaqBKPXsMVfzU++p0s+TD
-         2QipDN2VY1q2PndUDXCpYdcP39GOrAaX5JTzhOnZAGh1GL7HPSv19zZjt0i3ePp92tE5
-         KFJNorfx2+MYSutVG731h2Zw6MKmQKtmum02Q=
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=q+EDH+6Mpk7eQdDDKdoqyLJUnDYxgp9LJfW7iLiBop4=;
+        b=Jo2+TufbfbReQoiRUoZqJFNHA2n96MbDED/Hn4ItFSvb7g7SobN1CLZw3FELFp/1+N
+         5yY1UKIFKopBqNgBRw7kBBBn3KkbHUqUcPsxj1cItZNYyK0z1zxUMdAPSvUVsMctblrQ
+         Ko2kjRN2wylx8+rnC48OSKPwT2WCpdiVXeN7vPP0Ovtgb3Ic2tNvNe1NVaZg9eB+9+G9
+         7o8nXC0IzbTT/NFzazGqP8+bLhGHxSotoOPmvQ5xZqCGA3/dw82qHqil6h2BUis40pca
+         mRlSODc8NCqiZb1G+ZFQUzgJio1ylpkePzOGNaWszbddTVJdHGLy8V1uBaWosD2xtVdL
+         4AcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wbEx3hMagtlG7gtXzbw55L8OpDPeq7CK2cOpXhk6DvE=;
-        b=T3OOonzWTfd5w1Y53438tX+VZW4x0oPPeMdd38D+b1f+QUKk8XstPLx+3eph4MFEQi
-         yqXez/FYGO+YRcur6tK16PgafJ7EtSUgeJCMahTfukNn/al/+MWzBekkp3OPzDSBmlD8
-         xjnomJWkiH5pXJ0xycPVsN8nuO9o4LjVWmyi2dzOaZEi/jHXQqhyh74qj4ARXur5hliB
-         GTjSPi5y9ajcpnETZh4Ve4f77jOkWivIj8XHnZ+w97+9cgyPDmDhc93SCbJWpc3luf9h
-         Zg2vNpBnbCGQCfzmH3R76s1YaneGw4T/xc1zuu9odvJ00DqhBt1P9XuIIpipYX684UPl
-         Sbpg==
-X-Gm-Message-State: APjAAAXuCi9A+ukmgZbINUxq8qGFTySoD/O8Bfxmf1fbSex+WrVN+SsO
-        RwzSXCi5ltlmuCHdv+/aa9ww/JQEi04=
-X-Google-Smtp-Source: APXvYqwUF3xe/DWcZKtonrv9q/U0k5qLbP3U0nAhFQKHu/SfL9W8qYNP1+vPEf/zpj0obFGYk+wJ4g==
-X-Received: by 2002:a0c:8b63:: with SMTP id d35mr7274369qvc.148.1553099510901;
-        Wed, 20 Mar 2019 09:31:50 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id h10sm2289721qta.3.2019.03.20.09.31.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=q+EDH+6Mpk7eQdDDKdoqyLJUnDYxgp9LJfW7iLiBop4=;
+        b=oR8Tjnz0kntT5DFHGa856EaJk1fTwbu5y2EoygYUK5ygFkZgVYR8wJ31fhUJ3Koi4P
+         dXHh/t7nWqTRcAlqBjhzVHAylSSxOvBAvTuDsidDGTLVrQ3bnCt90j7Z08vqgAYUG/Ae
+         a16Gp3g/xvhHvjjzHZXJsuDBXFStcac+z7FvFNME6CzO+WYMcjKK8MiNX8sHf5LLjqCN
+         Z0s0/girGyl9gl4ECk4ercSsEJmAjBnmFyzRcKtwRLygB75Pqj+ZQWW9iCWBdi5YQh0L
+         taQiey3rijcFCtVDyrPYaEMY8Y51QbM9bn+/IxJP4W0ml6G9jdPlx9lzdrQRkHeJFSAG
+         PJMQ==
+X-Gm-Message-State: APjAAAUSFdE9O2CMQvkhxPaKA0GWxeYlrZ+BVhShRI1czyCMrvxa00/Z
+        PHmoBP4WiIlN31l57mMmqeYOgs+01uhBAOJA+DQWb6pCCxZ7KKTPIR9WkdIHdsA4RJkgYi77Lv3
+        PyK0p+aTk9Xe0goTzdEDBqXV1Ri3H
+X-Received: by 2002:a6b:e418:: with SMTP id u24mr6034367iog.128.1553099652168;
+        Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxrY/1U5mkoGHQeZKC+qtMD7silrz0rUE8pAJQE0wsi4YjFssAsY4T7oDVattVSIjDMbl61Jw==
+X-Received: by 2002:a6b:e418:: with SMTP id u24mr6034352iog.128.1553099652000;
+        Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id 134sm1266177itx.29.2019.03.20.09.34.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 09:31:50 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, qais.yousef@arm.com, rdunlap@infradead.org,
-        rostedt@goodmis.org, Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Subject: [PATCH v5 3/3] init/config: Do not select BUILD_BIN2C for IKCONFIG
-Date:   Wed, 20 Mar 2019 12:31:16 -0400
-Message-Id: <20190320163116.39275-3-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-In-Reply-To: <20190320163116.39275-1-joel@joelfernandes.org>
-References: <20190320163116.39275-1-joel@joelfernandes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Mar 2019 09:34:11 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] thunderbolt: Fix to check return value of ida_simple_get
+Date:   Wed, 20 Mar 2019 11:34:09 -0500
+Message-Id: <20190320163409.30746-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 13610aa908dc ("kernel/configs: use .incbin directive to
-embed config_data.gz"), IKCONFIG no longer uses BUILD_BIN2C so prevent
-it from being selected in Kconfig.
+In enumerate_services, ida_simple_get on failure can return an error and
+leaks memory. The patch ensures that the dev_set_name is set on non
+failure cases, and releases memory during failure.
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
 ---
- init/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+v2: Remove kfree in device_register failure
+v1: Missed cleanup of svc in case of allocation failure and
+device_register failure.
+---
+ drivers/thunderbolt/xdomain.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index ea75bfbf7dfa..ffcb2f90543f 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -562,7 +562,6 @@ config BUILD_BIN2C
+diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
+index e27dd8beb94b..e0642dcb8b9b 100644
+--- a/drivers/thunderbolt/xdomain.c
++++ b/drivers/thunderbolt/xdomain.c
+@@ -740,6 +740,7 @@ static void enumerate_services(struct tb_xdomain *xd)
+ 	struct tb_service *svc;
+ 	struct tb_property *p;
+ 	struct device *dev;
++	int id;
  
- config IKCONFIG
- 	tristate "Kernel .config support"
--	select BUILD_BIN2C
- 	---help---
- 	  This option enables the complete Linux kernel ".config" file
- 	  contents to be saved in the kernel. It provides documentation
+ 	/*
+ 	 * First remove all services that are not available anymore in
+@@ -768,7 +769,12 @@ static void enumerate_services(struct tb_xdomain *xd)
+ 			break;
+ 		}
+ 
+-		svc->id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
++		id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
++		if (id < 0) {
++			kfree(svc);
++			break;
++		}
++		svc->id = id;
+ 		svc->dev.bus = &tb_bus_type;
+ 		svc->dev.type = &tb_service_type;
+ 		svc->dev.parent = &xd->dev;
 -- 
-2.21.0.225.g810b269d1ac-goog
+2.17.1
 
