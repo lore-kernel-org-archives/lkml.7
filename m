@@ -2,101 +2,69 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D37C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA3AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83D52184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+CutXz8"
+	by mail.kernel.org (Postfix) with ESMTP id 117F92183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 01:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCTByK (ORCPT
+        id S1727572AbfCTBzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 21:54:10 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43498 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfCTByK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 21:54:10 -0400
-Received: by mail-io1-f67.google.com with SMTP id x3so521408iol.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 18:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hdt+D6p9E7l7lnV6StTuQf0AYgJKugS80mLd0f4DexY=;
-        b=h+CutXz8gO4OJgPl4VPG+zVIErRIvBJ8IxVKR32U5P2BVfmfeiaWXN7ZnnV1dGf6fb
-         Tk47u6O1mN4D5oYTSKa5XtllNaJr2T7aO4WIG9hhBUaxObEn7tCGDa6n4Hm27rE/gEFj
-         d8B6FAW+YaLKbyQsPUaqaZR3n+2QTxBLkja8nEru3FSUt/wECjlLIYZqlA/Yw7VGSJJh
-         3hnP5mpWolKnbsea1EaCRevc9gqsr2lSEAfK7tmp2V0kE5D+N4awLn2afGVYdLAWYoky
-         s0OH+E3KsStUuymTAzcYImjUKzgt0oQZodQB4Hww8g+JYnFSxi27ETyPUOlkgoioW5eJ
-         077w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hdt+D6p9E7l7lnV6StTuQf0AYgJKugS80mLd0f4DexY=;
-        b=NOnpgBfCk2d2P3hA8nzYLOgr5tGHvcGNzKHg1uBRV5YQIXcEvfo6XDzmoJXipyZ6OY
-         pbVp8kTSvKNj8IEVrGlvesESAek/9HfrePT1DfqP2GSnXjw2FH13/1gkGyriga8VSYxa
-         VFkUciFVvjB/mSx36RXJnVIBWcxqahzWxsf0hv/vdi2buHNTtOyFfg5UHnCbNcfbhWgD
-         vBO9aywxz0hpQWLTOzLDGQTp8KH+ZG1S2vcWQ3FjejWzz1D5+V6vkom0PeaDGwt/Esgo
-         8Zm0mck4QlKDYPXqsiJPhsQU/REvOfdkoy/nJZ8NIohodyVX172kKR8BkY1bZDVv6kJz
-         C+Cg==
-X-Gm-Message-State: APjAAAWTJXIXcakMY/ivKkW4p1jovZX6dqSCAj1opTFpdqmRUJa7sKZH
-        GysK8FmcA0Vqvs09Cq1bBnsqw674+sYAsiAiK4vjkA==
-X-Google-Smtp-Source: APXvYqy58uB1G39PjKRQnEJaHqQLPKQNA3wtlDLGu6OkofTWBgV1yxorPTL6P/pMBq03FauOHAuxprk+ELik8kGEH/U=
-X-Received: by 2002:a6b:720c:: with SMTP id n12mr3719620ioc.110.1553046849245;
- Tue, 19 Mar 2019 18:54:09 -0700 (PDT)
+        Tue, 19 Mar 2019 21:55:03 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726801AbfCTBzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 21:55:03 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4629E82398EEED7160C6;
+        Wed, 20 Mar 2019 09:55:01 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 20 Mar 2019 09:54:55 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <bridge@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, <nikolay@cumulusnetworks.com>,
+        <roopa@cumulusnetworks.com>
+Subject: [PATCH net-next] net: bridge: use eth_broadcast_addr() to assign broadcast address
+Date:   Wed, 20 Mar 2019 10:06:57 +0800
+Message-ID: <20190320020657.31423-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190319235619.260832-1-surenb@google.com> <20190319235619.260832-2-surenb@google.com>
- <20190320110249.652ec153@canb.auug.org.au> <CAJuCfpFEqv+x2GnSeU_JLQ3ahvfgNVPYyoRAxkDHcvVw-4r=jg@mail.gmail.com>
- <20190320111516.6e151efe@canb.auug.org.au>
-In-Reply-To: <20190320111516.6e151efe@canb.auug.org.au>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 19 Mar 2019 18:53:58 -0700
-Message-ID: <CAJuCfpHyGmhkF+LThARQTrcpAYf2ASMxLokE56dZcOEOHb7QtQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] psi: introduce state_mask to represent stalled psi states
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>, lizefan@huawei.com,
-        Johannes Weiner <hannes@cmpxchg.org>, axboe@kernel.dk,
-        dennis@kernel.org, Dennis Zhou <dennisszhou@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-mm <linux-mm@kvack.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 5:15 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Suren,
->
-> On Tue, 19 Mar 2019 17:06:50 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
-> >
-> > Sorry about that. This particular patch has not changed since then,
-> > that's why I kept all the lines there. Please let me know if I should
-> > remove it and re-post the patchset.
->
-> As long as anyone who is going to apply this patch is aware, there is
-> no need to repost just for that.  In the future, if you are modifying a
-> patch that you are resubmitting, you should start from the original
-> patch (not the version that someone else has applied to their git tree
-> or quilt series).
+This patch is to use eth_broadcast_addr() to assign broadcast address
+insetad of memset().
 
-Got it. Thanks!
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/bridge/br_multicast.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> --
-> Cheers,
-> Stephen Rothwell
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index a0e369179f6d..b257342c0860 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -517,7 +517,7 @@ struct net_bridge_port_group *br_multicast_new_port_group(
+ 	if (src)
+ 		memcpy(p->eth_addr, src, ETH_ALEN);
+ 	else
+-		memset(p->eth_addr, 0xff, ETH_ALEN);
++		eth_broadcast_addr(p->eth_addr);
+ 
+ 	return p;
+ }
+-- 
+2.20.1
+
