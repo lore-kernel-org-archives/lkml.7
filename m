@@ -2,175 +2,105 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5EEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C317DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21ABD2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pOO5e5bD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pDrdQayL"
+	by mail.kernel.org (Postfix) with ESMTP id 9940E20685
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfCTJuc (ORCPT
+        id S1727506AbfCTJwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:50:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51626 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfCTJuZ (ORCPT
+        Wed, 20 Mar 2019 05:52:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37493 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCTJwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:50:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 91C2260E7A; Wed, 20 Mar 2019 09:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553075423;
-        bh=DYGp4mJemThF5cybfUDtR3jNQYuv3Ul5MNkBVbP0sSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOO5e5bDcMcTLGJ0vw3WuXXXLqQeiVshJVe8Yiv4Zui2ydXwCs+//sNLREmMmVX0p
-         e5JdeafAFWbGXSQS+1FbtF2wUV+L1YzwCfGNbxbKDoRDsKFXXUQ9MYJcJkpDJM5gNW
-         zVXsMIuNaeHk3dOr3sEXkqHPN7No3/muLAatDd1s=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2FA356072E;
-        Wed, 20 Mar 2019 09:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553075422;
-        bh=DYGp4mJemThF5cybfUDtR3jNQYuv3Ul5MNkBVbP0sSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDrdQayL0GkEkOUFDOIUrv5VsiN5iIsH0FQT87oElq9a0WLvdsm6KRWZExOhxgSm+
-         3kHCe4zdzEwpbGeWpcVM90HYdmQVjJShU/LUn2E3HeM06nxaOoA1PlV27Upm3u2+o6
-         NubMuEsDbIY+QmKqcAOpnAbLPXaSwwgeE4I0X7Uk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2FA356072E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-scsi@vger.kernel.org,
-        swboyd@chromium.org, ulf.hansson@linaro.org,
-        viresh.kumar@linaro.org, dianders@chromium.org, rafael@kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [RFC v2 11/11] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
-Date:   Wed, 20 Mar 2019 15:19:18 +0530
-Message-Id: <20190320094918.20234-12-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190320094918.20234-1-rnayak@codeaurora.org>
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
+        Wed, 20 Mar 2019 05:52:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so506889wrm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:52:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iZRyTYuUQUUo3qbf5oF6NaALqEbZIa8lBEhAHa+zZ64=;
+        b=iLaVT8AGUHImuTlv8gj3T6p4HmOI0yX62niIqpftp4MY64SFX0UfHdWQfAO6CeFuOR
+         GuefBAHibEO34xTXhyob17NU0puTP6p/UrW4rCOqVcDmG1SDbXwzA8iM+4nlsVNOa+34
+         Ydo3I1ixKTXBN4dvwhx/PlO6hPB3Wo53NzZecyyLdMln5SpnL9DhhltlGwxnQmGQghvB
+         JgO/qdPrELxMZu/E0N1lW3VXNpXMpM5ZR+3KpvMHI07KY4CsenDQAQbmTVXUkjM7J9q7
+         VHqqJ5kYLFFqAYeZI6OybE1Xx94WTAnNwkLlgMwHz+dTEwn+TNjrugo0JcKLJg8QjwwE
+         O3Ew==
+X-Gm-Message-State: APjAAAVsWJx/H2i1DhduMqRyzYPm2SR/zb+t+wyw8NGPDpWLA9pYLDj7
+        VAbElcD5ylCTPsanYAnkDYfoAQ==
+X-Google-Smtp-Source: APXvYqwKAVUToUxzYOvdfVmOs4OeGrRx1HyjNLA2Pxp3YQo3VzltHohgGrvfjPbNDj7MnRSmzgeMdQ==
+X-Received: by 2002:adf:efca:: with SMTP id i10mr9375207wrp.265.1553075527145;
+        Wed, 20 Mar 2019 02:52:07 -0700 (PDT)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id q63sm1578016wma.21.2019.03.20.02.52.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 02:52:06 -0700 (PDT)
+Subject: Re: [PATCH] virt: vbox: Implement passing requestor info to the host
+ for VirtualBox 6.0.x
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190320093519.26029-1-hdegoede@redhat.com>
+ <20190320094601.GA30735@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <29c6e212-6233-364f-5a90-564f91bca989@redhat.com>
+Date:   Wed, 20 Mar 2019 10:52:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320094601.GA30735@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables for DSI and MDP based on the perf state/clk
-requirements, and add the power-domains property to specify the
-scalable power domain.
+Hi,
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+On 20-03-19 10:46, Greg Kroah-Hartman wrote:
+> On Wed, Mar 20, 2019 at 10:35:19AM +0100, Hans de Goede wrote:
+>> VirtualBox 6.0.x has a new feature where the guest kernel driver passes
+>> info about the origin of the request (e.g. userspace or kernelspace) to
+>> the hypervisor.
+>>
+>> If we do not pass this information then when running the 6.0.x userspace
+>> guest-additions tools on a 6.0.x host, some requests will get denied
+>> with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
+>> the mounting of shared folders marked to be auto-mounted.
+>>
+>> This commit implements passing the requestor info to the host, fixing this.
+>>
+>> Cc: stable@vger.kernel.org
+> 
+> This feels like support for a "new feature", so why would this need to
+> go to older kernels?
+> 
+> It's not our fault that vb implemented a non-backwards-compatible change
+> for their new release, right?  So why should we be forced to add new
+> features to stable kernels?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index a3af4a1757b4..675954fde391 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1857,6 +1857,59 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		mdp_opp_table: mdp-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-19200000 {
-+				opp-hz = /bits/ 64 <19200000>;
-+				required-opps = <&rpmhpd_opp_min_svs>;
-+			};
-+
-+			opp-171428571 {
-+				opp-hz = /bits/ 64 <171428571>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-344000000 {
-+				opp-hz = /bits/ 64 <344000000>;
-+				required-opps = <&rpmhpd_opp_svs_l1>;
-+			};
-+
-+			opp-430000000 {
-+				opp-hz = /bits/ 64 <430000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
-+
-+		dsi_opp_table: dsi-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-19200000 {
-+				opp-hz = /bits/ 64 <19200000>;
-+				required-opps = <&rpmhpd_opp_min_svs>;
-+			};
-+
-+			opp-180000000 {
-+				opp-hz = /bits/ 64 <180000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-275000000 {
-+				opp-hz = /bits/ 64 <275000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
-+
-+			opp-328580000 {
-+				opp-hz = /bits/ 64 <328580000>;
-+				required-opps = <&rpmhpd_opp_svs_l1>;
-+			};
-+
-+			opp-358000000 {
-+				opp-hz = /bits/ 64 <358000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
-@@ -1901,6 +1954,8 @@
- 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
- 				assigned-clock-rates = <300000000>,
- 						       <19200000>;
-+				operating-points-v2 = <&mdp_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				interrupt-parent = <&mdss>;
- 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1947,6 +2002,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi0_phy>;
- 				phy-names = "dsi";
-@@ -2013,6 +2070,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi1_phy>;
- 				phy-names = "dsi";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+ From a technical point of view I completely agree with you and I'm unhappy
+with this breakage after vb agreed with me to keep ABI compatibility so
+that we could add a version of the vboxguest driver to the mainline kernel.
 
+OTOH this is going to bite users out there, which is why I added the Cc:
+stable. But this is entirely your call.
+
+> I have no problem to add this for 5.2, but not for older stuff.
+
+Can we at least at it as a fix to 5.1 ? It is not very adventurous.
+
+Regards,
+
+Hans
