@@ -2,212 +2,123 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A8CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71499C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A542146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF062184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 11:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="gcf1VQNm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zAQFlvTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfCTLkh (ORCPT
+        id S1727991AbfCTLo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 07:40:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37099 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbfCTLkg (ORCPT
+        Wed, 20 Mar 2019 07:44:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40567 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfCTLo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 07:40:36 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so1758587pfr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:40:36 -0700 (PDT)
+        Wed, 20 Mar 2019 07:44:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 3so866556oir.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 04:44:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=RCzSIHq/usPy1SZSQl4aky3KfYzMolvPk3ngnvcAqB0=;
-        b=gcf1VQNmdgpJRQ41liTULY7pjTT02PSquAtMmpT7qdqhzHjGflyPwQJvGbWh28oRC2
-         evQvkj/C9BjxV/XDViNJtRhpbb1U3n2/AR/kDXo1UwOTpY/97LmgjhK0qTUNEzqQcgET
-         QDI5jrdtYPUVA8yoEAuXjgfnR9Vyyn+m1gx+NkTnHbfMzwHQLauJJDs6N0/AYVgmxpnw
-         h2O7KWscOowKN9p8SMdQ34urzUmZZnEKflZqRciRYcVC4Ao38l85oA+dngA4u229RIXX
-         IBHE9RZcTbZYvko51Hzpn+OANJb7iFvs3Kt5uqqgePxBj3T/pnIEQRlP8gyc+FU8iedN
-         hRng==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pb9BBWRMDf0NMbm5WI5qoWMAvnwsvdVTg76HNYPXrdE=;
+        b=zAQFlvTYOBHLpoCFXuN78FGCf2O/JqnuWJS6zP/rwWDolySAwreRWu6MhuCKZqo2gN
+         a5eQWd42hyW1hCn1SEYG1FyJKvTKyIEGleRIWNSGFaFJfdXafI4RU3bqKsh5kIUHPGnW
+         IhobsAfnCiPkwpJwZQk3+QyNXbX1OKPKW9YWiTZ9LCQZiWug1vBZN2reIZS/I0deZmUk
+         JjzKGoQwJofSD8OAvOrHeQ3Q9Y657QqOBa66Zkru9rArlPZYCVGmX4ZJdFA+UNUkE+K+
+         pbqiy/IsOJdQb+HnfB/Iu1GuAGanGaLVE043OZEMccDQRxqPZYVFi4M9tle4MnI18RCE
+         JStg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RCzSIHq/usPy1SZSQl4aky3KfYzMolvPk3ngnvcAqB0=;
-        b=R9i01Uq6+XItT9gPWu1v6I0KpP41YbcC9F5usl8wjAofC0lH/STEm8uDb/fC1G7bLk
-         0pvkoM8XkjLVPV8hKzQCgEyzx4lGFaVaGCcbbFSFWbNuJrYD3luC2niPQTCitcB+KMd+
-         ZweS+Ynm1BvMO6TxABp6yrK/ccZqZxhhprGlM7USTSMMzI7eJSrw2H49emsA3UabndnM
-         VWR5yFyALCFuVqy1eYVxmxqMCjATLS8oeDJKCNoEadUTDiqgG2I9GRZGucp1vq+QIQl1
-         bDteQxucHAZtqkTB5xQ5g1XLI9tVkeZDsvpVV7ieF31tA6wPr220JVc4yWXA35IAdN5f
-         y54g==
-X-Gm-Message-State: APjAAAVRsR0VbGxUG2hLgl2bp1In2kVs+yTsw0fH/2pNyC/G02wzAXhi
-        0h2OeZn9lkwLL96jyg4+miEBIdfCERA=
-X-Google-Smtp-Source: APXvYqza85BUy6fs9DQa6l9ISK1FvQyHyK3dX850CcjwXj4JGgF5Q8iEu+XY+Y1ewjGasROh+XrGPA==
-X-Received: by 2002:a17:902:2865:: with SMTP id e92mr7611762plb.312.1553082035739;
-        Wed, 20 Mar 2019 04:40:35 -0700 (PDT)
-Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
-        by smtp.gmail.com with ESMTPSA id x5sm2214225pgp.68.2019.03.20.04.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 04:40:34 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: max8925: Convert to regulator core's simplified DT parsing code
-Date:   Wed, 20 Mar 2019 19:40:23 +0800
-Message-Id: <20190320114023.19801-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pb9BBWRMDf0NMbm5WI5qoWMAvnwsvdVTg76HNYPXrdE=;
+        b=gXPpO99W22p42REoE9MvKpuO9LJGvd6uQDKfDtsHqWP1u/gSj0CrGG4U463D9ee4WW
+         RUclU/1Xk3A47twf44Qw9vA6EFF5CEtDNQty0w1LpF2dXWl1FdgtCrNc++bSV/4MlMIU
+         22QstOp9AE2AJOv0RdQFXyxOPd15zgV1bTKmIHeHuHQerPVhNBqFZVME5mcBkWA/mKRy
+         k3E0rbBVGrqxCmWdp6HUaOCudeN3ah6X0MLFtheG180EIjd+a/DtimHN2OleU1nnKpuU
+         UZKEeqAAVRHwm+Z9+rJSuMXiarW48NFBHaXVMqgOApJCgVJZHP02rWIDdiU/ZC2Oe2SQ
+         sBLw==
+X-Gm-Message-State: APjAAAWa3Maq4xwT6+9Qyp3ZZT38HSq+cA5cg94VVANtPRWwUKgXBNTZ
+        X9q+bEnpaKBleZfZKjBz0zRfPA==
+X-Google-Smtp-Source: APXvYqya7ruXXcic+5hzX3x7o1Ii1ZMZYPzwT/krtYdKjqHT1eQQ/rUj7AKfRDe7wbeIoI9M4ensIw==
+X-Received: by 2002:aca:e84c:: with SMTP id f73mr4980047oih.163.1553082296914;
+        Wed, 20 Mar 2019 04:44:56 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id a14sm706759otl.46.2019.03.20.04.44.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 04:44:55 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 19:44:50 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: juno: Enable smmu_pcie for Juno r1/r2
+Message-ID: <20190320114450.GB17539@leoy-ThinkPad-X240s>
+References: <20190320083105.8954-1-leo.yan@linaro.org>
+ <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2566ce76-a8b2-c8ac-9f3f-4b99101f7661@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regulator core's simplified DT parsing code to simply the driver
-implementation.
+Hi Robin,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/max8925-regulator.c | 76 ++++-----------------------
- 1 file changed, 9 insertions(+), 67 deletions(-)
+On Wed, Mar 20, 2019 at 11:24:18AM +0000, Robin Murphy wrote:
+> Hi Leo,
+> 
+> On 20/03/2019 08:31, Leo Yan wrote:
+> > Though PCIe controller has been enabled on Juno r1/r2, but it misses to
+> > enable its connected SMMU.  From the testing, even without set this SMMU
+> > status property to 'okay', the PCIe NIC device still works well.  Since
+> > the SMMU is not enabled in DT binding and its iommu_groups is not
+> > created properly, finally this prevents to enable vfio-pci for NIC
+> > device with KVM.
+> 
+> FWIW, whilst it might appear to be fine, there are still potential issues
+> once the DMA API sees this SMMU and starts using it, which is why this
+> particular change remains as one of my oldest local hacks that I've never
+> yet considered upstreamable.
+> 
+> The IOMMU DMA ops happen to work for light usage now as a side-effect of
+> 122fac030e912 combined with the current top-down allocation behaviour, but
+> as soon as IOVA usage/fragmentation leads to 32-bit DMA addresses below
+> 0x8000000, or full 40-bit addresses, being allocated then data loss and
+> other problems will happen (for the reasons explained on the other thread).
+> Similarly, it's also going to be fragile to any internal changes in the IOVA
+> allocator.
+>
+> Until we have a decent solution for handling such 'windowed' DMA
+> restrictions (there do exist other systems with similar behaviour) I'd be
+> very wary of enabling the PCIe SMMU for all users who may not be aware of
+> the caveats. Given that the lack of stream IDs and SR-IOV support prevents
+> Juno from being a realistic virtualisation platform anyway, I'm not
+> convinced there's enough benefit to justify the risk.
 
-diff --git a/drivers/regulator/max8925-regulator.c b/drivers/regulator/max8925-regulator.c
-index 39b63ddefeb2..aed6727982cd 100644
---- a/drivers/regulator/max8925-regulator.c
-+++ b/drivers/regulator/max8925-regulator.c
-@@ -159,6 +159,8 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
- {								\
- 	.desc	= {						\
- 		.name	= "SDV" #_id,				\
-+		.of_match = of_match_ptr("SDV" #_id),		\
-+		.regulators_node = of_match_ptr("regulators"),	\
- 		.ops	= &max8925_regulator_sdv_ops,		\
- 		.type	= REGULATOR_VOLTAGE,			\
- 		.id	= MAX8925_ID_SD##_id,			\
-@@ -175,6 +177,8 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
- {								\
- 	.desc	= {						\
- 		.name	= "LDO" #_id,				\
-+		.of_match = of_match_ptr("LDO" #_id),		\
-+		.regulators_node = of_match_ptr("regulators"),	\
- 		.ops	= &max8925_regulator_ldo_ops,		\
- 		.type	= REGULATOR_VOLTAGE,			\
- 		.id	= MAX8925_ID_LDO##_id,			\
-@@ -187,34 +191,6 @@ static const struct regulator_ops max8925_regulator_ldo_ops = {
- 	.enable_reg	= MAX8925_LDOCTL##_id,			\
- }
- 
--#ifdef CONFIG_OF
--static struct of_regulator_match max8925_regulator_matches[] = {
--	{ .name	= "SDV1",},
--	{ .name = "SDV2",},
--	{ .name = "SDV3",},
--	{ .name = "LDO1",},
--	{ .name = "LDO2",},
--	{ .name = "LDO3",},
--	{ .name = "LDO4",},
--	{ .name = "LDO5",},
--	{ .name = "LDO6",},
--	{ .name = "LDO7",},
--	{ .name = "LDO8",},
--	{ .name = "LDO9",},
--	{ .name = "LDO10",},
--	{ .name = "LDO11",},
--	{ .name = "LDO12",},
--	{ .name = "LDO13",},
--	{ .name = "LDO14",},
--	{ .name = "LDO15",},
--	{ .name = "LDO16",},
--	{ .name = "LDO17",},
--	{ .name = "LDO18",},
--	{ .name = "LDO19",},
--	{ .name = "LDO20",},
--};
--#endif
--
- static struct max8925_regulator_info max8925_regulator_info[] = {
- 	MAX8925_SDV(1, 637.5, 1425, 12.5),
- 	MAX8925_SDV(2,   650, 2225,   25),
-@@ -242,37 +218,6 @@ static struct max8925_regulator_info max8925_regulator_info[] = {
- 	MAX8925_LDO(20, 750, 3900, 50),
- };
- 
--#ifdef CONFIG_OF
--static int max8925_regulator_dt_init(struct platform_device *pdev,
--				    struct regulator_config *config,
--				    int ridx)
--{
--	struct device_node *nproot, *np;
--	int rcount;
--
--	nproot = pdev->dev.parent->of_node;
--	if (!nproot)
--		return -ENODEV;
--	np = of_get_child_by_name(nproot, "regulators");
--	if (!np) {
--		dev_err(&pdev->dev, "failed to find regulators node\n");
--		return -ENODEV;
--	}
--
--	rcount = of_regulator_match(&pdev->dev, np,
--				&max8925_regulator_matches[ridx], 1);
--	of_node_put(np);
--	if (rcount < 0)
--		return rcount;
--	config->init_data =	max8925_regulator_matches[ridx].init_data;
--	config->of_node = max8925_regulator_matches[ridx].of_node;
--
--	return 0;
--}
--#else
--#define max8925_regulator_dt_init(x, y, z)	(-1)
--#endif
--
- static int max8925_regulator_probe(struct platform_device *pdev)
- {
- 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-@@ -281,7 +226,7 @@ static int max8925_regulator_probe(struct platform_device *pdev)
- 	struct max8925_regulator_info *ri;
- 	struct resource *res;
- 	struct regulator_dev *rdev;
--	int i, regulator_idx;
-+	int i;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
- 	if (!res) {
-@@ -290,10 +235,8 @@ static int max8925_regulator_probe(struct platform_device *pdev)
- 	}
- 	for (i = 0; i < ARRAY_SIZE(max8925_regulator_info); i++) {
- 		ri = &max8925_regulator_info[i];
--		if (ri->vol_reg == res->start) {
--			regulator_idx = i;
-+		if (ri->vol_reg == res->start)
- 			break;
--		}
- 	}
- 
- 	if (i == ARRAY_SIZE(max8925_regulator_info)) {
-@@ -303,12 +246,11 @@ static int max8925_regulator_probe(struct platform_device *pdev)
- 	}
- 	ri->i2c = chip->i2c;
- 
--	config.dev = &pdev->dev;
-+	config.dev = chip->dev;
- 	config.driver_data = ri;
- 
--	if (max8925_regulator_dt_init(pdev, &config, regulator_idx))
--		if (pdata)
--			config.init_data = pdata;
-+	if (pdata)
-+		config.init_data = pdata;
- 
- 	rdev = devm_regulator_register(&pdev->dev, &ri->desc, &config);
- 	if (IS_ERR(rdev)) {
--- 
-2.17.1
+Ah, I didn't connect the 'windowde' DMA restriction with the IOMMU
+property setting in dt, which actually is deliberate.
 
+Please drop this patch and will leave it to you.  Thanks a lot for
+related info.
+
+[...]
+
+Thanks,
+Leo Yan
