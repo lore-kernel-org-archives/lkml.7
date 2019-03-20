@@ -2,182 +2,134 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DATE_IN_FUTURE_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA98C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8D5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8ED20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF78E2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 02:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCTCTK (ORCPT
+        id S1727124AbfCTC2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 22:19:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726749AbfCTCTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 22:19:09 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K2EBxf134150
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:19:08 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rb8qqrqxq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:19:08 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
-        Wed, 20 Mar 2019 02:19:07 -0000
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 02:19:03 -0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K2J3S134603074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 02:19:03 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 265716A047;
-        Wed, 20 Mar 2019 02:19:03 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58CC56A051;
-        Wed, 20 Mar 2019 02:19:01 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.131.215])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 02:19:01 +0000 (GMT)
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware
- TPM
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
-Date:   Tue, 19 Mar 2019 19:19:00 -0700
-In-Reply-To: <CAPcyv4hXKQcdLnKG6rPNOJr2wjq31uCCr+16S5Yu6S5A_5UGrA@mail.gmail.com>
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <1552955080.2785.26.camel@linux.ibm.com>
-         <CAA9_cmcOD2zPaaNbkYAaH5DRDRAebPkW+hwPA0zPKY4kU8R-rg@mail.gmail.com>
-         <1552956989.2785.31.camel@linux.ibm.com>
-         <CAPcyv4hXKQcdLnKG6rPNOJr2wjq31uCCr+16S5Yu6S5A_5UGrA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032002-8235-0000-0000-00000E6FD588
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01176872; UDB=6.00615598; IPR=6.00957559;
- MB=3.00026062; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 02:19:06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032002-8236-0000-0000-000044D69C00
-Message-Id: <1553048340.9408.16.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=995 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200013
+        Tue, 19 Mar 2019 22:28:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58160 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726573AbfCTC2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 22:28:40 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4F637A36BDE19A7B6F17;
+        Wed, 20 Mar 2019 10:28:38 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Wed, 20 Mar 2019
+ 10:28:33 +0800
+From:   Wang Hai <wanghai26@huawei.com>
+To:     <davem@davemloft.net>, <idosch@mellanox.com>,
+        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
+        <f.fainelli@gmail.com>
+CC:     <amritha.nambiar@intel.com>, <joe@perches.com>,
+        <dmitry.torokhov@gmail.com>, <andriy.shevchenko@linux.intel.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] net-sysfs: Fix memory leak in netdev_register_kobject
+Date:   Wed, 20 Mar 2019 14:25:05 -0400
+Message-ID: <20190320182505.18642-1-wanghai26@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 18:55 -0700, Dan Williams wrote:
-> On Mon, Mar 18, 2019 at 5:56 PM James Bottomley <jejb@linux.ibm.com>
-> wrote:
-> > 
-> > On Mon, 2019-03-18 at 17:30 -0700, Dan Williams wrote:
-> > > On Mon, Mar 18, 2019 at 5:24 PM James Bottomley
-> > > <jejb@linux.ibm.com> wrote:
-> > > > 
-> > > > On Mon, 2019-03-18 at 16:45 -0700, Dan Williams wrote:
-> > > > > Rather than fail initialization of the trusted.ko module,
-> > > > > arrange for the module to load, but rely on
-> > > > > trusted_instantiate() to fail trusted-key operations.
-> > > > 
-> > > > What actual problem is this fixing?  To me it would seem like
-> > > > an enhancement to make the trusted module fail at load time if
-> > > > there's no TPM rather than waiting until first use to find out
-> > > > it can never work. Is there some piece of user code that
-> > > > depends on the successful insertion of trusted.ko?
-> > > 
-> > > The module dependency chain relies on it. If that can be broken
-> > > that would also be an acceptable fix.
-> > > 
-> > > I found this through the following dependency chain: libnvdimm.ko
-> > > -> encrypted_keys.ko -> trusted.ko.
-> > > 
-> > > "key_type_trusted" is the symbol that encrypted_keys needs
-> > > regardless of whether the tpm is present.
-> > 
-> > That's a nasty dependency caused by every key type module exporting
-> > a symbol for its key type.  It really seems that key types should
-> > be looked up by name not symbol to prevent more of these dependency
-> > issues from spreading.  Something like this (untested and
-> > definitely won't work without doing an EXPORT_SYMBOL on
-> > key_type_lookup).
-> > 
-> > If it does look acceptable we can also disentangle the nasty module
-> > dependencies in the encrypted key code around masterkey which alone
-> > should be a huge improvement because that code is too hacky to
-> > live.
-> > 
-> > James
-> > 
-> > ---
-> > diff --git a/security/keys/encrypted-keys/masterkey_trusted.c
-> > b/security/keys/encrypted-keys/masterkey_trusted.c
-> > index dc3d18cae642..b98416f091e2 100644
-> > --- a/security/keys/encrypted-keys/masterkey_trusted.c
-> > +++ b/security/keys/encrypted-keys/masterkey_trusted.c
-> > @@ -19,6 +19,7 @@
-> >  #include <keys/trusted-type.h>
-> >  #include <keys/encrypted-type.h>
-> >  #include "encrypted.h"
-> > +#include "../internal.h"
-> > 
-> >  /*
-> >   * request_trusted_key - request the trusted key
-> > @@ -32,8 +33,14 @@ struct key *request_trusted_key(const char
-> > *trusted_desc,
-> >  {
-> >         struct trusted_key_payload *tpayload;
-> >         struct key *tkey;
-> > +       struct key_type *type;
-> > 
-> > -       tkey = request_key(&key_type_trusted, trusted_desc, NULL);
-> > +       type = key_type_lookup("trusted");
-> > +       if (IS_ERR(type)) {
-> > +               tkey = (struct key *)type;
-> > +               goto error;
-> > +       }
-> > +       tkey = request_key(type, trusted_desc, NULL);
-> >         if (IS_ERR(tkey))
-> >                 goto error;
-> 
-> 
-> This falls over with the need to pin the module while any key that
-> needs service from the hosting key_type operations might be live in
-> the system.
-> 
-> I could hang a "struct module *" off of the key_type so the host
-> module can be pinned, but that requires teaching all consumers of the
-> key_type module lifetime. Not impossible, but I think too big for a
-> fix, and I'd rather go with this local fixup to drop the dependency
-> on tpm_default_chip() successfully enumerating a TPM.
+When registering struct net_device, it will call
+	register_netdevice ->
+		netdev_register_kobject ->
+			device_initialize(dev);
+			dev_set_name(dev, "%s", ndev->name)
+			device_add(dev)
+			register_queue_kobjects(ndev)
 
-Heh, well this proved to be a can of worms and no mistake. 
-Unfortunately all of this does need fixing otherwise the keyctl syscall
-has exactly the same problem.  But I think I agree it's getting way out
-of scope for the bug you found.
+In netdev_register_kobject(), if device_add(dev) or
+register_queue_kobjects(ndev) failed. Register_netdevice()
+will return error, causing netdev_freemem(ndev) to be
+called to free net_device, however put_device(&dev->dev)->..->
+kobject_cleanup() won't be called, resulting in a memory leak.
 
-James
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff8881f4fad168 (size 8):
+comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
+hex dump (first 8 bytes):
+  77 70 61 6e 30 00 ff ff                          wpan0...
+backtrace:
+  [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
+  [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+  [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:281
+  [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
+  [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/net-sysfs.c:1727
+  [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:8711
+  [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [ieee802154]
+  [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee802154]
+  [<00000000e4b3df51>] 0xffffffffc1500e0e
+  [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/platform.c:614
+  [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
+  [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd.c:671
+  [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/dd.c:945
+  [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:1022
+  [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.c:304
+  [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:645
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1fa5ae857bb1 ("driver core: get rid of struct device's bus_id string array")
+Signed-off-by: Wang Hai <wanghai26@huawei.com>
+---
+v2 -> v3:
+ - Change kfree_const(dev->kobj.name) to put_device(dev), fix the
+   problem of freeing kobj
+ - Improve the description of the cause of the bug
+
+v1 -> v2:
+ - Fix the commit id of Fixes
+ - Improve the description of the cause of the bug, no code changes.
+---
+ net/core/net-sysfs.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 4ff661f..8e568422 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1745,16 +1745,20 @@ int netdev_register_kobject(struct net_device *ndev)
+ 
+ 	error = device_add(dev);
+ 	if (error)
+-		return error;
++		goto error_put_device;
+ 
+ 	error = register_queue_kobjects(ndev);
+-	if (error) {
+-		device_del(dev);
+-		return error;
+-	}
++	if (error)
++		goto error_device_del;
+ 
+ 	pm_runtime_set_memalloc_noio(dev, true);
+ 
++	return 0;
++
++error_device_del:
++	device_del(dev);
++error_put_device:
++	put_device(dev);
+ 	return error;
+ }
+ 
+-- 
+1.8.3.1
 
