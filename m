@@ -2,175 +2,124 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B860C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D39FC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC2821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C3D21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="JfVC2UZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfCTUGI (ORCPT
+        id S1727276AbfCTUGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:06:08 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.36]:38976 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbfCTUGI (ORCPT
+        Wed, 20 Mar 2019 16:06:23 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35998 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfCTUGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:06:08 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 7DCA6400D235D
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:06:06 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6hTShhS5miQer6hTShV5m0; Wed, 20 Mar 2019 15:06:06 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=33968 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h6hTR-003iuG-Ql; Wed, 20 Mar 2019 15:06:06 -0500
-Subject: Re: [PATCH] parport: ieee1284: mark expected switch fall-through
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20190212174318.GA22735@embeddedor>
- <4d221d8f-f4d0-90f7-dccf-3af67d4b0c53@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <7b9bcd42-47fa-05cd-2e92-0124109f9aa2@embeddedor.com>
-Date:   Wed, 20 Mar 2019 15:06:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 16:06:23 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p10so2706876pff.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xdDPEIia79uGc35RkRI3ur8MSsWm0kMcfVaI5TTx+RA=;
+        b=JfVC2UZ3idGczEJfuKhFb6uueH8DsRD90IWXap15PjjPUEQ/wGnAhKyQm4trxg6KZ/
+         6Zgwl+ch6gTyuGc9qGkFeFl93J1D+d+wAmZW+Ho4YNhe2b5T0y7tHQH3DBkWQ6fJbA2C
+         0n4dFne4HxAKBDrv5Cufv5ZAKWx0ELuAIhkWZFcAstSPUoi2yWMwhax1MIS77KfgkLej
+         UW/pWfnIfUGQ5YxSUBjtrkng1yrESMvw4Z1B0IdgLC43X/mACMGliwnJdRJcIRttlF1o
+         cfwYF5Fg4oq9FojaMoOARf7XoHxM+qkS3fe4rATMrX3dIZUTsPM/muRnrSaxajvEUISJ
+         8g8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xdDPEIia79uGc35RkRI3ur8MSsWm0kMcfVaI5TTx+RA=;
+        b=BBuYBOAi8HR7MAzQDIfkn9IR9SEJr252t/uqxbig2nCuS2l889jGD+SU/OebXg2ID2
+         ypNcQrH2CeEzS3XO2MNHgU9nD+6XFg9p4/Rbcsgy/w0wUOZHU56RqOjYdrdlzyqWYssf
+         iDXBAhCRB3FbCE4MLt/8NDD+13lANH9V8nEjps/nKVoeImohZCBzF9oUIYkTGLmQGAct
+         J0+HlBaGG3orurMmAvm61+SUs9tYrxI+9zhJPNBUikB/d7m0WIQtjqd9JSfreII+/EHN
+         jhLI67RyvXILypxTpUvvL3//aHnbvToEH3fM/TnQsC4332jJQabPIxdD9Nq6gKE+3q1r
+         9c8w==
+X-Gm-Message-State: APjAAAUQDNgyHeyd5GzvO25m7umjNYnm8ifvJXCNnD9CQv8sdd10Thti
+        R/9jisVL/HX/LPm3Ja+Wr5PY2Q==
+X-Google-Smtp-Source: APXvYqzVedx5gZe6dfDZ+RS3y+wJAKBZ1Y145g8sZk5aggQU82ObyiBMnLWSTbtOXiv/TNQWDIrGSA==
+X-Received: by 2002:a65:6483:: with SMTP id e3mr9477237pgv.273.1553112382216;
+        Wed, 20 Mar 2019 13:06:22 -0700 (PDT)
+Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id g67sm7237602pfg.13.2019.03.20.13.06.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 13:06:22 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 13:06:19 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Kimberly Brown <kimbrownkd@gmail.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
+ ring_buffer_info mutex
+Message-ID: <20190320130619.07e49c97@shemminger-XPS-13-9360>
+In-Reply-To: <20190317014927.GA60356@ubu-Virtual-Machine>
+References: <cover.1550806305.git.kimbrownkd@gmail.com>
+        <cover.1552592620.git.kimbrownkd@gmail.com>
+        <262046fa9e89d5f483ecd5972d86f4f9608dbcc3.1552592620.git.kimbrownkd@gmail.com>
+        <20190314154533.17c8a362@shemminger-XPS-13-9360>
+        <20190317014927.GA60356@ubu-Virtual-Machine>
 MIME-Version: 1.0
-In-Reply-To: <4d221d8f-f4d0-90f7-dccf-3af67d4b0c53@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h6hTR-003iuG-Ql
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:33968
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg,
+On Sat, 16 Mar 2019 21:49:28 -0400
+Kimberly Brown <kimbrownkd@gmail.com> wrote:
 
-Can you take this, please?
+> On Thu, Mar 14, 2019 at 03:45:33PM -0700, Stephen Hemminger wrote:
+> > On Thu, 14 Mar 2019 13:05:15 -0700
+> > "Kimberly Brown" <kimbrownkd@gmail.com> wrote:
+> >   
+> > > Fix a race condition that can result in a ring buffer pointer being set
+> > > to null while a "_show" function is reading the ring buffer's data. This
+> > > problem was discussed here:
+> > > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org
+> > > %2Flkml%2F2018%2F10%2F18%2F779&amp;data=02%7C01%7Csthemmin%40microsoft.com
+> > > %7C1d7557d667b741bdbb6008d6a8b8620f%7C72f988bf86f141af91ab2d7cd011db47%7C1
+> > > %7C0%7C636881907217609564&amp;sdata=1bUbLaxsODANM7lCBR8lxyYajNpufuwUW%2FOl
+> > > vtGu2hU%3D&amp;reserved=0
+> > > 
+> > > To fix the race condition, add a new mutex lock to the
+> > > "hv_ring_buffer_info" struct. Add a new function,
+> > > "hv_ringbuffer_pre_init()", where a channel's inbound and outbound
+> > > ring_buffer_info mutex locks are initialized.
+> > >
+> > >  ... snip ...    
+> > 
+> > Adding more locks will solve the problem but it seems like overkill.
+> > Why not either use a reference count or an RCU style access for the
+> > ring buffer?  
+> 
+> I agree that a reference count or RCU could also solve this problem.
+> Using mutex locks seemed like the most straightforward solution, but
+> I'll certainly switch to a different approach if it's better!
+> 
+> Are you concerned about the extra memory required for the mutex locks,
+> read performance, or something else?
 
-Thanks
---
-Gustavo
+Locks in control path are ok, but my concern is performance of the
+data path which puts packets in/out of rings. To keep reasonable performance,
+no additional locking should be added in those paths.
 
-On 2/25/19 12:23 PM, Gustavo A. R. Silva wrote:
-> Hi,
-> 
-> Friendly ping:
-> 
-> Who can take this, please?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 2/12/19 11:43 AM, Gustavo A. R. Silva wrote:
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warning:
->>
->> drivers/parport/ieee1284.c: In function ‘parport_read’:
->> drivers/parport/ieee1284.c:722:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (parport_negotiate (port, IEEE1284_MODE_NIBBLE)) {
->>       ^
->> drivers/parport/ieee1284.c:726:2: note: here
->>   case IEEE1284_MODE_NIBBLE:
->>   ^~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> Notice that, in this particular case, the code comment is modified
->> in accordance with what GCC is expecting to find.
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/parport/ieee1284.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/parport/ieee1284.c b/drivers/parport/ieee1284.c
->> index f12b9da69255..90fb73575495 100644
->> --- a/drivers/parport/ieee1284.c
->> +++ b/drivers/parport/ieee1284.c
->> @@ -722,7 +722,7 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
->>  		if (parport_negotiate (port, IEEE1284_MODE_NIBBLE)) {
->>  			return -EIO;
->>  		}
->> -		/* fall through to NIBBLE */
->> +		/* fall through - to NIBBLE */
->>  	case IEEE1284_MODE_NIBBLE:
->>  		DPRINTK (KERN_DEBUG "%s: Using nibble mode\n", port->name);
->>  		fn = port->ops->nibble_read_data;
->>
+So if data path is using RCU, can/should the control operations also
+use it?
