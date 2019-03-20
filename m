@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28C7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92122C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9FF21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD8821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnZWe4g7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LORM5MVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfCTRfq (ORCPT
+        id S1727468AbfCTRf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:35:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36483 "EHLO
+        Wed, 20 Mar 2019 13:35:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45267 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfCTRfq (ORCPT
+        with ESMTP id S1726897AbfCTRf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:35:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e4so2736883edi.3;
-        Wed, 20 Mar 2019 10:35:44 -0700 (PDT)
+        Wed, 20 Mar 2019 13:35:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m16so2692369edd.12;
+        Wed, 20 Mar 2019 10:35:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gOntEnwdVMv2nWTdNHFeAl7MkTJs/Nh4RmrIjAmjfx4=;
-        b=QnZWe4g7WJ70DLHmylklns8+OWOZLWasrWklAi7FesEPF5iwnBUDuekFH79v3WnVw4
-         xQTyL8wXOLU3hsosu0bUSNntmPyxS0pi/fmu2Q1RkbsX81ALG5Ha/k4hJOptkMQ0SHFb
-         tZFETcl7VxDa214o2Wdok4C7ikXsz8+LK0fl5ATqKFSRR7e0QdoRW9Pb6lJEdQDfbtPp
-         d/TCfxnFxNskWsWKb9ggB687dlFNZ8/z7qQF64ecI43CdI5kTeoqap5XXXqn1vfIcgo+
-         KqDPUXtBnnuk0e6zB20GqhOe6SK3w7L7jn/aPhQMBip1I1BHb7ToFa8mS5ZcfYv1GVAd
-         7oHg==
+        bh=yxkFxOstgye8P+oM5yJDIcooGGf5Gy5OyQ9cdtrDtq4=;
+        b=LORM5MVW4Ay6Ye/3qm3rR2RJ/oaoijM+bjZ1jrK8t6o5euW+5qEvyenxUgZAvXvgpI
+         nvNowIUCkLTdtqepEF+UTlQioY5fnos47wpsrdeQN9bXh+YAxNM5hxtm6H1BCENvO2Ii
+         kET9YS7QBPE/o6HvaQ5+RUvLadAUw9wkDLsRjSCImPHbfaMpcnFHgP70sB80UKpoBK3K
+         3wg3X6HfvpeQy+obHzRrAGQVSZx6ICkOO+SOqcQ7vwMLd2fDKhaEGgqsWbxXcHhL9hzR
+         Q77q/3umw6HD1Qx8gVOsurBP2B5v3hxVd4qJv2oagknRHj+cAl3VYOu225QxjV0CHU25
+         fjbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=gOntEnwdVMv2nWTdNHFeAl7MkTJs/Nh4RmrIjAmjfx4=;
-        b=AF31AcAqoIA/sLnhRS041gJtN/vhcz3tj07LwZvBp6tCYsXKmcKgieI4jj2MKlFrP8
-         zcwWwZ9y1IR8ss1WxuW++GBORK047JCuocRhRdAwnHqQpDMt/wBz0sNBIWPH+nGiggqF
-         UP92HVIjK0WuAWpZc137YI6O+R47Ltak2u7OIxNI21+we4VX0fMFkOazX1nBetTsEfXi
-         XHSx2RvVO3bPA53O6to5V1wQaGnPsiS6uYZuWCV+m80PZokT3Xwu7FLKc2j0Ris5/zH/
-         2kwe7oGYi5C+aDi0ryCts56MyLq8oBaNaGEMotzXtDbTP5EscnwL7AX2R1DuYF86gOgn
-         /pzg==
-X-Gm-Message-State: APjAAAXa0z5EiDZzrcOhAinxl8wtr5NhUc5kZaV3BfVdDKKcIdRGGjSF
-        s97EF98HpZyantmBwWAVvXE=
-X-Google-Smtp-Source: APXvYqwhffRHsxsCi4vtuPGs7X4i1FQaLCLd5IFApXDuOvvIt0jQv44VptL0+vO+CEEy5hCOWOHH6Q==
-X-Received: by 2002:a17:906:6d8f:: with SMTP id h15mr17786831ejt.107.1553103344214;
-        Wed, 20 Mar 2019 10:35:44 -0700 (PDT)
+        bh=yxkFxOstgye8P+oM5yJDIcooGGf5Gy5OyQ9cdtrDtq4=;
+        b=GsIzGL65KGsfgGBnnxJ8m8A51KGngVlJ/F4CfZ+UeaPxMSnSbB21rZfxVMgIsuxIB4
+         MnOnZWE3fWrS4Ic69fVhES//XC4bCKwiBHite1sRoqOiN60np/HDwTXpTB96G1iD5LBu
+         CcQ4kml3TtgHTi3O+il5gVwQXmCSjQ8iu40WRpPRUsAPOo9cURj2iMZItf0xnQrvFA7C
+         bUCnEwJMnYiA4ErHNDF1yzgLa9RPSJVN8Y6gBofBeWC/O9kZ1GGIetF+Gnra4L8hOMYV
+         +nydbuCrTtuAm18rhrBOSVMh9NLqk26yqqmrZNMt2+GwxJ2txnAFwS0O8Ihrn7RvTWsE
+         MlAQ==
+X-Gm-Message-State: APjAAAXD03cfD5vXHX7GlVhZXDi4vKqZYsCst1wP3g0TPyPHVLnJ7s5e
+        BTHy0N2S/bZhnoi+ycIQmsM=
+X-Google-Smtp-Source: APXvYqxfnpN6jzM92LPKcFqrTc0aQjMfs0y3c+5e7+ygniaCMzYTeVX8FxqSt2hBMtVu+8w9KUXDyA==
+X-Received: by 2002:a50:be05:: with SMTP id a5mr20795439edi.87.1553103355859;
+        Wed, 20 Mar 2019 10:35:55 -0700 (PDT)
 Received: from neptune.fritz.box ([178.19.216.175])
-        by smtp.gmail.com with ESMTPSA id 5sm828606edp.50.2019.03.20.10.35.43
+        by smtp.gmail.com with ESMTPSA id 5sm828606edp.50.2019.03.20.10.35.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 10:35:43 -0700 (PDT)
+        Wed, 20 Mar 2019 10:35:54 -0700 (PDT)
 From:   Alban Crequy <alban.crequy@gmail.com>
 X-Google-Original-From: Alban Crequy <alban@kinvolk.io>
 To:     ast@kernel.org, daniel@iogearbox.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alban@kinvolk.io, iago@kinvolk.io,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: [PATCH bpf-next v1 6/7] tools: bpftool: fix bpffs mount when pinning subdirectories
-Date:   Wed, 20 Mar 2019 18:33:31 +0100
-Message-Id: <20190320173332.18105-6-alban@kinvolk.io>
+        alban@kinvolk.io, iago@kinvolk.io
+Subject: [PATCH bpf-next v1 7/7] tools: bpftool: add error message on map pinning failure
+Date:   Wed, 20 Mar 2019 18:33:32 +0100
+Message-Id: <20190320173332.18105-7-alban@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190320173332.18105-1-alban@kinvolk.io>
 References: <20190320173332.18105-1-alban@kinvolk.io>
@@ -77,96 +76,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alban Crequy <alban@kinvolk.io>
 
-When trying to pin at a path such as /sys/fs/bpf/subdir/mymap while the
-bpffs is mounted at the standard path and the "subdir" directory didn't
-exist, bpftool was failing and attempting to mount the bpffs on
-/sys/fs/bpf/subdir/. The mount obviously failed, since "subdir" didn't
-exist.
+Symptoms, when "dir" does not exist:
 
-Commit 3fc27b71b894 ("tools: bpftool: try to mount bpffs if required for
-pinning objects") says:
+$ sudo bpftool map create /sys/fs/bpf/dir/fooB type hash key 8 value 8 entries 8 name fooB flags 1
+$ echo $?
+255
 
-    The code for mnt_bpffs() is a copy of function bpf_mnt_fs() from
-    iproute2 package (under lib/bpf.c, taken at commit 4b73d52f8a81), with
-    modifications regarding handling of error messages.
+This patch prints an error message when the map pinning fails.
 
-However, the function bpf_mnt_fs() from iproute2 only works when its
-parameter is the root of the bpffs (e.g. "/sys/fs/bfs").
-
-iproute2/tc actually only mounts at the standard path "/sys/fs/bfs" or
-at the path from the environment variable $TC_BPF_MNT. This patch
-implements a similar strategy but uses the environment variable name
-$BPFTOOL_BPF_MNT.
-
-This patch still will not do the mkdir automatically. But at least,
-there will be no error message about the mount.
-
-Fixes: 3fc27b71b894 ("tools: bpftool: try to mount bpffs if required for pinning objects")
-Cc: Quentin Monnet <quentin.monnet@netronome.com>
 Signed-off-by: Alban Crequy <alban@kinvolk.io>
 ---
- tools/bpf/bpftool/common.c | 20 ++++++++++++++++----
- tools/bpf/bpftool/main.h   |  6 ++++++
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ tools/bpf/bpftool/map.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index e560cd8f66bc..4783cbbe8037 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -168,6 +168,8 @@ int mount_bpffs_for_pin(const char *name)
- 	char *file;
- 	char *dir;
- 	int err = 0;
-+	const char *mnt_env = getenv(BPF_DIR_MNT_ENV);
-+	static const char *mnt;
+diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+index 9befcabc299d..c825eb1bbf8f 100644
+--- a/tools/bpf/bpftool/map.c
++++ b/tools/bpf/bpftool/map.c
+@@ -1305,8 +1305,10 @@ static int do_create(int argc, char **argv)
  
- 	file = malloc(strlen(name) + 1);
- 	strcpy(file, name);
-@@ -183,13 +185,23 @@ int mount_bpffs_for_pin(const char *name)
- 		goto out_free;
- 	}
- 
--	err = mnt_fs(dir, "bpf", err_str, ERR_MAX_LEN);
-+	mnt = mnt_env ? : BPF_DIR_MNT;
-+
-+	// Don't try to mount if wrong prefix: we don't want a leftover mount that is
-+	// not going to help.
-+	if (!is_prefix(mnt, dir)) {
-+		p_err("refuse to mount BPF file system (%s) to pin the object (%s): wrong directory",
-+		      mnt, name);
-+		err = -1;
-+		goto out_free;
+ 	err = do_pin_fd(fd, pinfile);
+ 	close(fd);
+-	if (err)
++	if (err) {
++		p_err("failed to pin map to %s", pinfile);
+ 		return err;
 +	}
-+
-+	err = mnt_fs(mnt, "bpf", err_str, ERR_MAX_LEN);
- 	if (err) {
- 		err_str[ERR_MAX_LEN - 1] = '\0';
--		p_err("can't mount BPF file system to pin the object (%s): %s",
--		      name, err_str);
-+		p_err("can't mount BPF file system (%s) to pin the object (%s): %s",
-+		      mnt, name, err_str);
- 	}
--
- out_free:
- 	free(file);
- 	return err;
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index 7fc2973446d0..a2e28e600b72 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -18,6 +18,12 @@
  
- #define ptr_to_u64(ptr)	((__u64)(unsigned long)(ptr))
- 
-+/* If bpffs is not mounted, it can be automatically mounted at this location.
-+ * The location can be changed with the environment variable $BPFTOOL_BPF_MNT.
-+ */
-+#define BPF_DIR_MNT	"/sys/fs/bpf"
-+#define BPF_DIR_MNT_ENV	"BPFTOOL_BPF_MNT"
-+
- #define NEXT_ARG()	({ argc--; argv++; if (argc < 0) usage(); })
- #define NEXT_ARGP()	({ (*argc)--; (*argv)++; if (*argc < 0) usage(); })
- #define BAD_ARG()	({ p_err("what is '%s'?", *argv); -1; })
+ 	if (json_output)
+ 		jsonw_null(json_wtr);
 -- 
 2.20.1
 
