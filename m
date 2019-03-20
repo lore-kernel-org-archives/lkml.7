@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB04C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308DAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E1F21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058C121873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 20:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ISHXmiqj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MlAMyX5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfCTUOh (ORCPT
+        id S1727496AbfCTUOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 16:14:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34446 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfCTUOd (ORCPT
+        Wed, 20 Mar 2019 16:14:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37334 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727428AbfCTUOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 16:14:33 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v64so2727925pfb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:14:33 -0700 (PDT)
+        Wed, 20 Mar 2019 16:14:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q206so2594112pgq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pzF3BIq/bSUrt5CiUncmfOK09+4gjk83OwCemwmZOC4=;
-        b=ISHXmiqji7ZAl3cOwKGcGQYdywmxiykkyZrWAoB41PY7EfkDHCe48W13KqCCiTUoVh
-         ahdYus4RPs0zWi0rRYkmThH7ABHLbyARGHg0YbvveSdF3Qpq6Vsy4T8lC6i+2x8kaEgG
-         sGcQBfWPw47B+om3sCcWZNCy9oOODLKYtgbTw=
+        bh=Hp4Jwra8sW2ZJSDFgSFps3KEk5Cy8kXn9Jxt4Fgsuac=;
+        b=MlAMyX5JYcKg3R9nMP7fej4tApEpYE+ouo8ez9+E56ACnK6aZYdW+vc4jsCNBegF2A
+         +afYxDlXD4+bbZxXxOr2Rhp7gdp/UsArPhwVMi18ktgtxcUdY1Xm2I9CWRiuM3TzdmFE
+         99WZpk/3xGZjLsnzQGOcpUGyz9HELpFdFU/uQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pzF3BIq/bSUrt5CiUncmfOK09+4gjk83OwCemwmZOC4=;
-        b=etSJG3bvDvAELkEwCpZW0d/zwZTflB/T7HVI24KDPQ+2La5lsgk+kLd9WsDyfy1dsm
-         QHiVW/NKOLRAz4sf1yC1jdNZW0F50BXsRbA+gefgUp04ktadS3C2eJ/fykS9vyXj5owZ
-         dVj6tc2HzPUYbamiKnAkSyAwlxNHm8Cxyqjkw0iXWu60HHjqKI4u7UJuaf6o1PqHQllN
-         pvzggPnOs3O0RO+Hdymp4VIFrqV2xn24e+15JqcT+46wgON3D3RVfKozivLvCg8wRqPd
-         R3rKfrCxlyTLsC8C8pj++ohX80O31I9ZJOqESif1zpQAe3CeGlNRDrazh/DHboiRt8fT
-         JxoA==
-X-Gm-Message-State: APjAAAUL3gUCi12BQs4uDzXVQWI+fDNU7OY2Snwa3L5e193YTefKBV1d
-        r87hKzggpnUMkhqK1B7BctJ0DA==
-X-Google-Smtp-Source: APXvYqygQqT0Fn+zIyI4V89ZqEdcJ07iT2KEcX7LKombmuwHs0lA+QsdHql0VLtKPWKkhenNtjh2Rg==
-X-Received: by 2002:a63:2045:: with SMTP id r5mr2959436pgm.394.1553112873100;
-        Wed, 20 Mar 2019 13:14:33 -0700 (PDT)
+        bh=Hp4Jwra8sW2ZJSDFgSFps3KEk5Cy8kXn9Jxt4Fgsuac=;
+        b=Q4+YZLbBYJZCh5Tg4s7boSI4ybf5hxUb5BD8hwmOm1bql2Qs/enz4HODAFDMrFE3BH
+         7yJFGWiMvcC4OEml+DTButrNTbs4Au2QIrHbz4km0p/ooTKFrZ//7wxV1oMIW4btcb5b
+         QLRPSGkPFvFE+N1JQ8E8wujhr3uEsq3d0faTk88T6XXLY7JYnVulilG8wy4GQRUhDD0u
+         6yBwRg+BGXPpx+u7enpdOSIHOEQABm0gq1X3GQJWdVK2VSkc6uyCv2NBu/L99ptXVwE8
+         VQ2EWqq7zzm1ISPyr+H3eZiKaxfwksL2V4ezTfz6JFwqaXCTwtBupqY96RsrtkZglDs5
+         mdEQ==
+X-Gm-Message-State: APjAAAWpNCIdakkdWbvL4HBwWJteZtaegXHAa30p5mBraofml/OAWsUk
+        kq5luE1hnatR+O6GekKHvp3Y0A==
+X-Google-Smtp-Source: APXvYqw/ldDFSf4W8BjbtxL7tqDsxeLt8XQ1cW4nPUpxd240cYASZN+W0OsX/LdnVBVIECVvZbAtjA==
+X-Received: by 2002:a17:902:ba98:: with SMTP id k24mr25137491pls.185.1553112874033;
+        Wed, 20 Mar 2019 13:14:34 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id z77sm6220388pfi.155.2019.03.20.13.14.31
+        by smtp.gmail.com with ESMTPSA id z77sm6220388pfi.155.2019.03.20.13.14.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 13:14:32 -0700 (PDT)
+        Wed, 20 Mar 2019 13:14:33 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     mka@chromium.org, ryandcase@chromium.org,
@@ -62,9 +62,9 @@ Cc:     mka@chromium.org, ryandcase@chromium.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/4] ARM: dts: rockchip: Fix gpu opp node names for rk3288
-Date:   Wed, 20 Mar 2019 13:14:00 -0700
-Message-Id: <20190320201402.114309-2-dianders@chromium.org>
+Subject: [PATCH 3/4] ARM: dts: rockchip: Remove #address/#size-cells from rk3288 mipi_dsi
+Date:   Wed, 20 Mar 2019 13:14:01 -0700
+Message-Id: <20190320201402.114309-3-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
 In-Reply-To: <20190320201402.114309-1-dianders@chromium.org>
 References: <20190320201402.114309-1-dianders@chromium.org>
@@ -75,57 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device tree compiler yells like this:
-  Warning (unit_address_vs_reg):
-  /gpu-opp-table/opp@100000000:
-  node has a unit name, but no reg property
+They are pointless.  As dtc points out:
+  Warning (avoid_unnecessary_addr_size):
+  /mipi@ff960000:
+  unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-Let's match the cpu opp node names and use a dash.
+Let's remove them.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/boot/dts/rk3288.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index e9f454248398..79cd3c53e737 100644
+index 79cd3c53e737..99a7620bddac 100644
 --- a/arch/arm/boot/dts/rk3288.dtsi
 +++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1282,27 +1282,27 @@
- 	gpu_opp_table: gpu-opp-table {
- 		compatible = "operating-points-v2";
+@@ -1119,8 +1119,6 @@
+ 		clock-names = "ref", "pclk";
+ 		power-domains = <&power RK3288_PD_VIO>;
+ 		rockchip,grf = <&grf>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		status = "disabled";
  
--		opp@100000000 {
-+		opp-100000000 {
- 			opp-hz = /bits/ 64 <100000000>;
- 			opp-microvolt = <950000>;
- 		};
--		opp@200000000 {
-+		opp-200000000 {
- 			opp-hz = /bits/ 64 <200000000>;
- 			opp-microvolt = <950000>;
- 		};
--		opp@300000000 {
-+		opp-300000000 {
- 			opp-hz = /bits/ 64 <300000000>;
- 			opp-microvolt = <1000000>;
- 		};
--		opp@400000000 {
-+		opp-400000000 {
- 			opp-hz = /bits/ 64 <400000000>;
- 			opp-microvolt = <1100000>;
- 		};
--		opp@500000000 {
-+		opp-500000000 {
- 			opp-hz = /bits/ 64 <500000000>;
- 			opp-microvolt = <1200000>;
- 		};
--		opp@600000000 {
-+		opp-600000000 {
- 			opp-hz = /bits/ 64 <600000000>;
- 			opp-microvolt = <1250000>;
- 		};
+ 		ports {
 -- 
 2.21.0.225.g810b269d1ac-goog
 
