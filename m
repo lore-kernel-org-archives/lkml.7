@@ -2,65 +2,108 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE38EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFD3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64462184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0972184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="etilclbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfCTOjV (ORCPT
+        id S1728268AbfCTOjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:39:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35400 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726686AbfCTOjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:39:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0D63CABD5;
-        Wed, 20 Mar 2019 14:39:20 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 15:39:19 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] printk: Remove no longer used console_silent().
-Message-ID: <20190320143919.6n7az5yi5hbhipk4@pathway.suse.cz>
-References: <1552917923-16601-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190318143421.GB29374@tigerII.localdomain>
+        Wed, 20 Mar 2019 10:39:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50540 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfCTOjk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 10:39:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8bDDiC9zgyi/MQcMouS7nG4D1gn03i8mK1JY09omNT4=; b=etilclbD7GLJUVzYWL9uXpXV4
+        uMNGH/9tJumu03Pildc9FUiUk6l0zi497VSrb07ErLhpHjeWzbY1kyOz0kphRzbmWeGMIaUA5p2D5
+        MzFKDLaoSCTpJCTnsq1nXgByGPXRQhhNS3amkJcA6QkRKAhYxXldGGSvsloKxv0eYn5SzSdJuc6zF
+        2Ro/VQnstf0Un+HHyJq7E/9a8PpjV6Di7A4mEojrIKqEoLxZaZtUOP2IasDR0oV6EH81Ma9yGS5Aj
+        uNTVhW/jgEvWY4TnBDamQ+u5SVoKL45urH+Ev/ClXb1t1ojze4NrnBeFYDpALhNXmbgRMX0F06Qpk
+        iDBjCqnbA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6cNX-0002T2-D8; Wed, 20 Mar 2019 14:39:39 +0000
+Subject: Re: linux-next: Tree for Mar 20 (drivers/gpu/drm/i915/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20190320141849.34e569f8@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6a6bb676-39fc-295a-74eb-a83c439e5b22@infradead.org>
+Date:   Wed, 20 Mar 2019 07:39:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318143421.GB29374@tigerII.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190320141849.34e569f8@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-03-18 23:34:21, Sergey Senozhatsky wrote:
-> On (03/18/19 23:05), Tetsuo Handa wrote:
-> > console_silent() is no longer used after the removal of
-> > arch/mn10300/kernel/mn10300-watchdog.c in Linux 4.17-rc1.
+On 3/19/19 8:18 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> [..]
+> Changes since 20190319:
 > 
-> > -static inline void console_silent(void)
-> > -{
-> > -	console_loglevel = CONSOLE_LOGLEVEL_SILENT;
-> > -}
-> 
-> I would keep it, I guess, and would instead covert
-> 
-> kernel/debug/kdb/kdb_io.c:              console_loglevel = CONSOLE_LOGLEVEL_SILENT
-> 
-> to use proper API (console_silent()).
 
-I agree with Sergey.
+using: gcc (SUSE Linux) 4.8.5
 
-Best Regards,
-Petr
+beginning yesterday (20190319), I am seeing problems in i915_reg.h on x86_64:
+(multiple instances of one macro in the header file)
+
+
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
+../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
+
+
+
+-- 
+~Randy
