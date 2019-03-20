@@ -3,58 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D7C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CCA2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB272175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfCTSlt (ORCPT
+        id S1727404AbfCTSsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfCTSlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:41:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5CA2146E;
-        Wed, 20 Mar 2019 18:41:48 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 14:41:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <tzanussi@gmail.com>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: dell_smbios KASAN bug
-Message-ID: <20190320144146.08ecd5e4@gandalf.local.home>
-In-Reply-To: <1553106560.2080.5.camel@gmail.com>
-References: <1553106560.2080.5.camel@gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 20 Mar 2019 14:48:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48646 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727166AbfCTSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:48:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B22A6AFBF;
+        Wed, 20 Mar 2019 18:48:50 +0000 (UTC)
+Message-ID: <1553107714.2927.2.camel@suse.de>
+Subject: Re: [PATCH] mm: mempolicy: make mbind() return -EIO when
+ MPOL_MF_STRICT is specified
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     chrubis@suse.cz, vbabka@suse.cz, kirill@shutemov.name,
+        akpm@linux-foundation.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Wed, 20 Mar 2019 19:48:34 +0100
+In-Reply-To: <3c880e88-6eb7-cd6d-fbf3-394b89355e10@linux.alibaba.com>
+References: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
+         <20190320081643.3c4m5tec5vx653sn@d104.suse.de>
+         <3c880e88-6eb7-cd6d-fbf3-394b89355e10@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 13:29:20 -0500
-Tom Zanussi <tzanussi@gmail.com> wrote:
+On Wed, 2019-03-20 at 11:31 -0700, Yang Shi wrote:
+> No, this is not correct. queue_pages_pmd() may return 0, which means
+> THP 
+> gets split. If it returns 0 the code should just fall through instead
+> of 
+> returning.
 
-> Hi,
-> 
-> While looking into an unrelated problem, I hit this KASAN use-after-
-> free warning, so thought I'd let you know.
-> 
-> I have no idea how to fix it, but let me know if you need more info.
-> 
+Right, I overlooked that.
 
-Could you run with debug in the kernel command line, and see if you hit
-any failed messages from the dell_smbios_init() call?
+> It sounds not correct to me. We need check if there is existing page
+> on 
+> the node which is not allowed by the policy. This is what 
+> queue_pages_required() does.
 
+Bleh, I guess it was too early in the morning.
+That is the whole point of it actually, so that was quite wrong.
 
--- Steve
+Sorry for trying to mislead you ;-)
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+-- 
+Oscar Salvador
+SUSE L3
