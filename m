@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B987C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FBCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08A6218A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C766521874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553103006;
-	bh=fnYmP+5AVb9WuIxi1SpEgJcWN/lQ+7e/1IqnLBgAF+s=;
+	s=default; t=1553103012;
+	bh=L1J+MvzZQHBtaZqkDP2py1Cd9qMf0Gv5u4Fp5+MUtxE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IJbz1awvWcHQLzH0VjzLNIjuvTFFgpZ5tRNBRzMtAuDKDKTP5bGwgcAf59RGzVkGD
-	 hRYPeAk6QCoCrjh95nTvvelg19NEMCzV4ik6gjgkMtquQSPGqglHBN5MtY3JLwwwpq
-	 x0Ti67m2rMXnCwxEZq7wHoehpdSc+K6sTRK95al0=
+	b=f6tPNbBzNd4AhcSJGOdwunjVQE+J4UrxCkvP+yoBS3HuCD4mT4UNskPTZXV0cDUos
+	 buRTL0T90hdD0wp7TFTm3vf9Ia36Kckd/Yc289H9yEGpeKdfRbRleVHAEr1Cm2Xc3m
+	 Z8jwO52rwE2dLCTvdgYZTleg49mC4wvNjVv4CMYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfCTRaA (ORCPT
+        id S1727520AbfCTRaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:30:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44210 "EHLO
+        Wed, 20 Mar 2019 13:30:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44636 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfCTR3y (ORCPT
+        with ESMTP id S1727502AbfCTRaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:29:54 -0400
+        Wed, 20 Mar 2019 13:30:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+OEx9YeAxPnGppiGBXPW7dN02Mh41WHNKlOf7E50Plw=; b=UXeo/8hxkZ2O
-        VjmHpWQxbsPDTRrQcNU/Ym31epBSUO8v4vcpTVZ2oRm3IQER/4ll6DrnPNJfEGdIxr3D2kDMQ+TNj
-        YKDVIXrsI7YkZ5odkA9vty3ocHFhfa6WoPYa1GrXILleCtvqMYqiFR7o1+TB7TtEegwgNSBjTH3os
-        1OTjU=;
+        List-Archive; bh=Fl5b0C2/XLReQ3ulbr+C75GtihFM6509WoNXr+Zl7DE=; b=In37qWUaCu/a
+        eqZ9QthPaGn7XrtTHT3+C/D5UYZylsx/CU3BvV7iQNFLJNcthcpeMF4IWBcdKBGn9u30TMDulBsFO
+        y4FVJTe/2VTMGDS5gW3Ay6J7eToaoCiBomPYfAzwTgL6m9VH4R4IkFnQhfzb163lfakfQOdWz4Tec
+        AmsHU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6f2C-00019D-Cd; Wed, 20 Mar 2019 17:29:48 +0000
+        id 1h6f2U-00019p-26; Wed, 20 Mar 2019 17:30:06 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id C6E0B1126E4C; Wed, 20 Mar 2019 17:29:47 +0000 (GMT)
+        id 8B0771126E4C; Wed, 20 Mar 2019 17:30:05 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc:     Harald Geyer <harald@ccbib.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Applied "regulator: gpio: Reword the binding document" to the regulator tree
-In-Reply-To: 
+To:     Phil Edworthy <phil.edworthy@renesas.com>
+Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: dw: Add support for an optional interface clock" to the spi tree
+In-Reply-To:  <1553010727-23157-4-git-send-email-gareth.williams.jx@renesas.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190320172947.C6E0B1126E4C@debutante.sirena.org.uk>
-Date:   Wed, 20 Mar 2019 17:29:47 +0000 (GMT)
+Message-Id: <20190320173005.8B0771126E4C@debutante.sirena.org.uk>
+Date:   Wed, 20 Mar 2019 17:30:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: gpio: Reword the binding document
+   spi: dw: Add support for an optional interface clock
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,78 +89,67 @@ to this mail.
 Thanks,
 Mark
 
-From 80c94557e94f25df5df00fd94e2a58bf31230fce Mon Sep 17 00:00:00 2001
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
-Date: Sat, 16 Mar 2019 21:25:51 +0100
-Subject: [PATCH] regulator: gpio: Reword the binding document
+From 560ee7e9100916e30e126a53d127ca54745b2a8e Mon Sep 17 00:00:00 2001
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Date: Tue, 19 Mar 2019 15:52:07 +0000
+Subject: [PATCH] spi: dw: Add support for an optional interface clock
 
-Reword the binding document to make it clear how the propeties work
-and which properties affect which other properties.
+The Synopsys SSI Controller has an interface clock, but most SoCs hide
+this away. However, on some SoCs you need to explicitly enable the
+interface clock in order to access the registers. Therefore, add support
+for an optional interface clock.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Harald Geyer <harald@ccbib.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org
-To: devicetree@vger.kernel.org
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/regulator/gpio-regulator.txt     | 30 ++++++++++++++-----
- 1 file changed, 22 insertions(+), 8 deletions(-)
+ drivers/spi/spi-dw-mmio.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..dd25e73b5d79 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -4,16 +4,30 @@ Required properties:
- - compatible		: Must be "regulator-gpio".
- - regulator-name	: Defined in regulator.txt as optional, but required
- 			  here.
--- states		: Selection of available voltages and GPIO configs.
--                          if there are no states, then use a fixed regulator
-+- gpios			: Array of one or more GPIO pins used to select the
-+			  regulator voltage/current listed in "states".
-+- states		: Selection of available voltages/currents provided by
-+			  this regulator and matching GPIO configurations to
-+			  achieve them. If there are no states in the "states"
-+			  array, use a fixed regulator instead.
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 4bd59a93d988..de952b17bc10 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -30,6 +30,7 @@
+ struct dw_spi_mmio {
+ 	struct dw_spi  dws;
+ 	struct clk     *clk;
++	struct clk     *pclk;
+ 	void           *priv;
+ };
  
- Optional properties:
--- enable-gpio		: GPIO to use to enable/disable the regulator.
--- gpios			: GPIO group used to control voltage.
--- gpios-states		: gpios pin's initial states array. 0: LOW, 1: HIGH.
--			  defualt is LOW if nothing is specified.
-+- enable-gpios		: GPIO used to enable/disable the regulator.
-+			  Warning, the GPIO phandle flags are ignored and the
-+			  GPIO polarity is controlled solely by the presence
-+			  of "enable-active-high" DT property. This is due to
-+			  compatibility with old DTs.
-+- enable-active-high	: Polarity of "enable-gpio" GPIO is active HIGH.
-+			  Default is active LOW.
-+- gpios-states		: On operating systems, that don't support reading back
-+			  gpio values in output mode (most notably linux), this
-+			  array provides the state of GPIO pins set when
-+			  requesting them from the gpio controller. Systems,
-+			  that are capable of preserving state when requesting
-+			  the lines, are free to ignore this property.
-+			  0: LOW, 1: HIGH. Default is LOW if nothing else
-+			  is specified.
- - startup-delay-us	: Startup time in microseconds.
--- enable-active-high	: Polarity of GPIO is active high (default is low).
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
+@@ -172,6 +173,14 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-@@ -30,7 +44,7 @@ Example:
- 		regulator-max-microvolt = <2600000>;
- 		regulator-boot-on;
++	/* Optional clock needed to access the registers */
++	dwsmmio->pclk = devm_clk_get_optional(&pdev->dev, "pclk");
++	if (IS_ERR(dwsmmio->pclk))
++		return PTR_ERR(dwsmmio->pclk);
++	ret = clk_prepare_enable(dwsmmio->pclk);
++	if (ret)
++		goto out_clk;
++
+ 	dws->bus_num = pdev->id;
  
--		enable-gpio = <&gpio0 23 0x4>;
-+		enable-gpios = <&gpio0 23 0x4>;
- 		gpios = <&gpio0 24 0x4
- 			 &gpio0 25 0x4>;
- 		states = <1800000 0x3
+ 	dws->max_freq = clk_get_rate(dwsmmio->clk);
+@@ -199,6 +208,8 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out:
++	clk_disable_unprepare(dwsmmio->pclk);
++out_clk:
+ 	clk_disable_unprepare(dwsmmio->clk);
+ 	return ret;
+ }
+@@ -208,6 +219,7 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 	struct dw_spi_mmio *dwsmmio = platform_get_drvdata(pdev);
+ 
+ 	dw_spi_remove_host(&dwsmmio->dws);
++	clk_disable_unprepare(dwsmmio->pclk);
+ 	clk_disable_unprepare(dwsmmio->clk);
+ 
+ 	return 0;
 -- 
 2.20.1
 
