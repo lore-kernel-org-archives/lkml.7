@@ -2,107 +2,106 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF7FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB09C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023EA21909
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F67F218C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ZRFeFu8F"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lEIw2rGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfCTSUi (ORCPT
+        id S1727488AbfCTSVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:20:38 -0400
-Received: from a9-114.smtp-out.amazonses.com ([54.240.9.114]:42366 "EHLO
-        a9-114.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726529AbfCTSUh (ORCPT
+        Wed, 20 Mar 2019 14:21:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41118 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfCTSVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:20:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1553106035;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=K1oZPjp4GkcjqhAlXwpdoC8QkuglFFzbfMFyEVG/ri8=;
-        b=ZRFeFu8FwB5PFoGiDISVj+TujSsdT5LxaFcBw24dBiAw3s8dX/ozHAP1goU14WUg
-        89KwN2HZZEh3k+MaWDIK1WvM+y2GhhhEygM0P19pgj3L/y0/W4HuxQZDM2NFI52YXiI
-        kp0kPy8HrfMfhkCmTppF60aC/AJ380WhvTMj0UOo=
-Date:   Wed, 20 Mar 2019 18:20:35 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [RFC 0/2] guarantee natural alignment for kmalloc()
-In-Reply-To: <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz>
-Message-ID: <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
-References: <20190319211108.15495-1-vbabka@suse.cz> <01000169988d4e34-b4178f68-c390-472b-b62f-a57a4f459a76-000000@email.amazonses.com> <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 20 Mar 2019 14:21:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2KIIbK7053772;
+        Wed, 20 Mar 2019 18:20:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=44zS0rN0lFkOKd6owGCH9o48+inXYzKGH8Y3xOZr3d0=;
+ b=lEIw2rGQOqbZoDy1Fx1cztis0YIYy+h23nBD3fz5f7s1GOVC/pwi41ONdn5wK+UzZQF/
+ lPak5ajMWP26oCtjOoGwxLT2qVLJO/0MHPX5SY+TeWO7Z4hqmi5u42Z4Zb4FgPB7RpGv
+ Bt7fVSX+oAHhzaOsXA9juLVBXBtbdbI/rfqG3sQsZJp3iSOnvoHr+KOo8dZ5KYv7+Bba
+ PDSr/j9FcRfU7UKAV3D8qTubT/4fwwvChTQi9T4HnloI5QexUlhMTxVlLmFaCr7SS+i5
+ Th6tSJYIvi+JrHT/QSuJEJbisAav/FnYNUeOiL7BEvkYlEVT+9PetrrjoP1WxZwsAR+d Gw== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2r8rjuvj0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 18:20:47 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2KIKlvG029360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 18:20:47 GMT
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2KIKlxQ001966;
+        Wed, 20 Mar 2019 18:20:47 GMT
+Received: from [10.132.106.120] (/10.132.106.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 Mar 2019 11:20:46 -0700
+Subject: Re: [PATCH] tracing: Kernel access to ftrace instances
+To:     Steven Rostedt <rostedt@goodmis.org>
+References: <1552692925-17240-1-git-send-email-divya.indi@oracle.com>
+ <1552692925-17240-2-git-send-email-divya.indi@oracle.com>
+ <20190319161655.2824746c@gandalf.local.home>
+Cc:     linux-kernel@vger.kernel.org
+From:   divya.indi@oracle.com
+Organization: Oracle Corporation
+Message-ID: <8cb583dd-1712-f4c3-fa6f-191fa042137f@oracle.com>
+Date:   Wed, 20 Mar 2019 11:20:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.03.20-54.240.9.114
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+In-Reply-To: <20190319161655.2824746c@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903200134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019, Vlastimil Babka wrote:
+Sure, thanks for taking the time to review.
 
-> > This means that the alignments are no longer uniform for all kmalloc
-> > caches and we get back to code making all sorts of assumptions about
-> > kmalloc alignments.
+There are a few issues with the patch styling and some minor modifications. I will shortly send the v2 for the same.
+
+
+Regards,
+Divya
+
+
+On 03/19/2019 01:16 PM, Steven Rostedt wrote:
+> On Fri, 15 Mar 2019 16:35:25 -0700
+> Divya Indi <divya.indi@oracle.com> wrote:
 >
-> Natural alignment to size is rather well defined, no? Would anyone ever
-> assume a larger one, for what reason?
-> It's now where some make assumptions (even unknowingly) for natural
-> There are two 'odd' sizes 96 and 192, which will keep cacheline size
-> alignment, would anyone really expect more than 64 bytes?
-
-I think one would expect one set of alighment for any kmalloc object.
-
-> > Currently all kmalloc objects are aligned to KMALLOC_MIN_ALIGN. That will
-> > no longer be the case and alignments will become inconsistent.
+>> Ftrace provides the feature “instances” that provides the capability to
+>> create multiple Ftrace ring buffers. However, currently these buffers
+>> are created/accessed via userspace only. The kernel APIs providing these
+>> features are not exported, hence cannot be used by other kernel
+>> components.
+>>
+>> This patch aims to extend this infrastructure to provide the
+>> flexibility to create/log/remove/ enable-disable existing trace events
+>> to these buffers from within the kernel.
+>>
+>>
+> Thanks for sending this. I'm currently working on some other changes,
+> but will look in this when I'm finished with the other work. Should be
+> within this week.
 >
-> KMALLOC_MIN_ALIGN is still the minimum, but in practice it's larger
-> which is not a problem.
+> -- Steve
 
-"In practice" refers to the current way that slab allocators arrange
-objects within the page. They are free to do otherwise if new ideas come
-up for object arrangements etc.
-
-The slab allocators already may have to store data in addition to the user
-accessible part (f.e. for RCU or ctor). The "natural alighnment" of a
-power of 2 cache is no longer as you expect for these cases. Debugging is
-not the only case where we extend the object.
-
-> Also let me stress again that nothing really changes except for SLOB,
-> and SLUB with debug options. The natural alignment for power-of-two
-> sizes already happens as SLAB and SLUB both allocate objects starting on
-> the page boundary. So people make assumptions based on that, and then
-> break with SLOB, or SLUB with debug. This patch just prevents that
-> breakage by guaranteeing those natural assumptions at all times.
-
-As explained before there is nothing "natural" here. Doing so restricts
-future features and creates a mess within the allocator of exceptions for
-debuggin etc etc (see what happened to SLAB). "Natural" is just a
-simplistic thought of a user how he would arrange power of 2 objects.
-These assumption should not be made but specified explicitly.
-
-> > I think its valuable that alignment requirements need to be explicitly
-> > requested.
->
-> That's still possible for named caches created by kmem_cache_create().
-
-So lets leave it as it is now then.
