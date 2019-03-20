@@ -2,208 +2,112 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8C0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788D8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279F02186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5202C2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfCTOiH (ORCPT
+        id S1728043AbfCTOiK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 Mar 2019 10:38:10 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:40684 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfCTOiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 10:38:07 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:49408 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfCTOiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:38:05 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 910874DB60;
-        Wed, 20 Mar 2019 15:38:00 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id e8P2zbHU0YLS; Wed, 20 Mar 2019 15:37:47 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path resolution
-Date:   Thu, 21 Mar 2019 01:37:12 +1100
-Message-Id: <20190320143717.2523-1-cyphar@cyphar.com>
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 4CF2D67A6F5;
+        Wed, 20 Mar 2019 15:38:03 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 20 Mar
+ 2019 15:38:02 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 20 Mar 2019 15:38:02 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] ARM: dts: ls1021a: Remove unused properties from QSPI
+ node
+Thread-Topic: [PATCH 1/2] ARM: dts: ls1021a: Remove unused properties from
+ QSPI node
+Thread-Index: AQHU3yqFXJZexsQt7kWNElKCZIKffQ==
+Date:   Wed, 20 Mar 2019 14:38:02 +0000
+Message-ID: <20190320143800.3555-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.42]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 4CF2D67A6F5.AFE33
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the holiday break is over, it's time to re-send this patch
-series (with a few additions, due to new information we got from
-CVE-2019-5736 -- which this patchset mostly protected against but had
-some holes with regards to #!-style scripts).
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Patch changelog:
-  v5:
-    * In response to CVE-2019-5736 (one of the vectors showed that
-      open(2)+fexec(3) cannot be used to scope binfmt_script's implicit
-      open_exec()), AT_* flags have been re-added and are now piped
-      through to binfmt_script (and other binfmt_* that use open_exec)
-      but are only supported for execveat(2) for now.
-  v4:
-    * Remove AT_* flag reservations, as they require more discussion.
-    * Switch to path_is_under() over __d_path() for breakout checking.
-    * Make O_XDEV no longer block openat("/tmp", "/", O_XDEV) -- dirfd
-      is now ignored for absolute paths to match other flags.
-    * Improve the dirfd_path_init() refactor and move it to a separate
-      commit.
-    * Remove reference to Linux-capsicum.
-    * Switch "proclink" name to "magic link".
-  v3: [resend]
-  v2:
-    * Made ".." resolution with AT_THIS_ROOT and AT_BENEATH safe(r) with
-      some semi-aggressive __d_path checking (see patch 3).
-    * Disallowed "proclinks" with AT_THIS_ROOT and AT_BENEATH, in the
-      hopes they can be re-enabled once safe.
-    * Removed the selftests as they will be reimplemented as xfstests.
-    * Removed stat(2) support, since you can already get it through
-      O_PATH and fstatat(2).
+After switching to the new FSL QSPI driver the properties
+'fsl,qspi-has-second-chip' and 'big-endian' are not used anymore.
 
-The need for some sort of control over VFS's path resolution (to avoid
-malicious paths resulting in inadvertent breakouts) has been a very
-long-standing desire of many userspace applications. This patchset is a
-revival of Al Viro's old AT_NO_JUMPS[1,2] patchset (which was a variant
-of David Drysdale's O_BENEATH patchset[3] which was a spin-off of the
-Capsicum project[4]) with a few additions and changes made based on the
-previous discussion within [5] as well as others I felt were useful.
+The driver now uses the 'reg' property to determine the bus and
+the chipselect. The endianness is selected by the driver depending
+on which SoC is used.
 
-In line with the conclusions of the original discussion of AT_NO_JUMPS,
-the flag has been split up into separate flags:
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 1 -
+ arch/arm/boot/dts/ls1021a.dtsi              | 1 -
+ 2 files changed, 2 deletions(-)
 
-  * O_XDEV blocks all mountpoint crossings (upwards, downwards, or
-    through absolute links). Absolute pathnames alone in openat(2) do
-    not trigger this.
-
-  * O_NOMAGICLINKS blocks resolution through /proc/$pid/fd-style links.
-    This is done by blocking the usage of nd_jump_link() during
-    resolution in a filesystem. The term "magic links" is used to match
-    with the only reference to these links in Documentation/, but I'm
-    happy to change the name.
-
-    It should be noted that this is different to the scope of O_NOFOLLOW
-    in that it applies to all path components. However, you can do
-    open(O_NOFOLLOW|O_NOMAGICLINKS|O_PATH) on a "magic link" and it will
-    *not* fail (assuming that no parent component was a "magic link"),
-    and you will have an fd for the "magic link".
-
-  * O_BENEATH disallows escapes to outside the starting dirfd's tree,
-    using techniques such as ".." or absolute links. Absolute paths in
-    openat(2) are also disallowed. Conceptually this flag is to ensure
-    you "stay below" a certain point in the filesystem tree -- but this
-    requires some additional to protect against various races that would
-    allow escape using ".." (see patch 4 for more detail).
-
-    Currently O_BENEATH implies O_NOMAGICLINKS, because it can trivially
-    beam you around the filesystem (breaking the protection). In future,
-    there might be similar safety checks as in patch 4, but that
-    requires more discussion.
-
-In addition, two new flags were added that expand on the above ideas:
-
-  * O_NOSYMLINKS does what it says on the tin. No symlink resolution is
-    allowed at all, including "magic links". Just as with O_NOMAGICLINKS
-    this can still be used with (O_PATH|O_NOFOLLOW) to open an fd for
-    the symlink as long as no parent path had a symlink component.
-
-  * O_THISROOT is an extension of O_BENEATH that, rather than blocking
-    attempts to move past the root, forces all such movements to be
-    scoped to the starting point. This provides chroot(2)-like
-    protection but without the cost of a chroot(2) for each filesystem
-    operation, as well as being safe against race attacks that chroot(2)
-    is not.
-
-    If a race is detected (as with O_BENEATH) then an error is
-    generated, and similar to O_BENEATH it is not permitted to cross
-    "magic links" with O_THISROOT.
-
-    The primary need for this is from container runtimes, which
-    currently need to do symlink scoping in userspace[6] when opening
-    paths in a potentially malicious container. There is a long list of
-    CVEs that could have bene mitigated by having O_THISROOT (such as
-    CVE-2017-1002101, CVE-2017-1002102, CVE-2018-15664, and
-    CVE-2019-5736, just to name a few).
-
-In addition, a mirror set of AT_* flags have been added (though
-currently these are only supported for execveat(2) -- and not for any
-other syscall). The need for these is explained in the final patch in
-the series (it's motivated by CVE-2019-5736).
-
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Christian Brauner <christian@brauner.io>
-Cc: David Drysdale <drysdale@google.com>
-Cc: Tycho Andersen <tycho@tycho.ws>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: <containers@lists.linux-foundation.org>
-Cc: <linux-fsdevel@vger.kernel.org>
-Cc: <linux-api@vger.kernel.org>
-
-[1]: https://lwn.net/Articles/721443/
-[2]: https://lore.kernel.org/patchwork/patch/784221/
-[3]: https://lwn.net/Articles/619151/
-[4]: https://lwn.net/Articles/603929/
-[5]: https://lwn.net/Articles/723057/
-[6]: https://github.com/cyphar/filepath-securejoin
-
-Aleksa Sarai (5):
-  namei: split out nd->dfd handling to dirfd_path_init
-  namei: O_BENEATH-style path resolution flags
-  namei: O_THISROOT: chroot-like path resolution
-  namei: aggressively check for nd->root escape on ".." resolution
-  binfmt_*: scope path resolution of interpreters
-
- fs/binfmt_elf.c                  |   2 +-
- fs/binfmt_elf_fdpic.c            |   2 +-
- fs/binfmt_em86.c                 |   4 +-
- fs/binfmt_misc.c                 |   2 +-
- fs/binfmt_script.c               |   2 +-
- fs/exec.c                        |  26 +++-
- fs/fcntl.c                       |   2 +-
- fs/namei.c                       | 205 ++++++++++++++++++++++---------
- fs/open.c                        |  13 +-
- include/linux/binfmts.h          |   1 +
- include/linux/fcntl.h            |   3 +-
- include/linux/fs.h               |   9 +-
- include/linux/namei.h            |   8 ++
- include/uapi/asm-generic/fcntl.h |  17 +++
- include/uapi/linux/fcntl.h       |   6 +
- 15 files changed, 228 insertions(+), 74 deletions(-)
-
+diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+index ba1ddd93b8f8..dcb1d9bd0922 100644
+--- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
++++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+@@ -204,7 +204,6 @@
+ };
+ 
+ &qspi {
+-	fsl,qspi-has-second-chip;
+ 	status = "okay";
+ 
+ 	flash: flash@0 {
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index b4f2723ecd86..2bcc00de88d4 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -186,7 +186,6 @@
+ 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "qspi_en", "qspi";
+ 			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
+-			big-endian;
+ 			status = "disabled";
+ 		};
+ 
 -- 
-2.21.0
-
+2.17.1
