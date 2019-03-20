@@ -2,115 +2,86 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CD3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390692184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="RoHc0M+m"
+	by mail.kernel.org (Postfix) with ESMTP id 7F5152184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfCTPRd (ORCPT
+        id S1727248AbfCTPRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:17:33 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:36965 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfCTPRc (ORCPT
+        Wed, 20 Mar 2019 11:17:37 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55741 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfCTPRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:17:32 -0400
-Received: by mail-yw1-f65.google.com with SMTP id w66so2281553ywd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 08:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OhLRzKALkL3nGCjb3PwqNOmA2gedhLWmXCa0Qs6Xno4=;
-        b=RoHc0M+mP1OLL2NFx7yn0/QZP0q9J4PSXJCspDpu2GvQy80YCp+vHgtbaCoGul+3P+
-         Rmdypv9kb+z8+SBV8PNgLm9H+Diuky8488orR8L0rA4iGBtKmBdSpWP8D+8sKNWBh6JQ
-         RYJkDl6deB3XivuEVx+EDKilrJGInJIGZs8uOsKSL0+IHhuGmS5vxe/Ef5+cv+8qaaw7
-         wkxZKtwmn2YJuoAkmBKq4Ec/dHdjoYZ17k17PonRqx+W0Rv68LJZBnhDaqNd1yZ38mXr
-         hjxcBvunvGMk9KlXOc4FWbVu/7eB2VrNa2XTNPDLX9KymLPPhWkznZenwHbwjx+77mIm
-         Wuaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OhLRzKALkL3nGCjb3PwqNOmA2gedhLWmXCa0Qs6Xno4=;
-        b=oHhSurLdvABU166fnX4CMN7Wntrpn3ynp9H6Ci/vbhN9TpV5655ViUJ1YAF8mJhgpK
-         WCTXrDtP192fx1Ewiewxwpu9H37YnR9E7ocYAh4KORXJjtsPV4GbEJ+MRa2rKYXPPaOz
-         YXIZ/vhpziwwvONr6aILr8ffcBeS65uDB7dcgYKg2QMSHemlA5gk5TfA4eOX1g1+o7lO
-         n8ni+gDEvBRWztiNJ/s6vhVQwGQoA15AfN8X+pWXpqOqP4HHaOS/eipZgZhXzzf+LZ9D
-         djjcIv6OX0e1ZgBVF9z2dTIdQYOSOg6275w77eesW7arNtUzP2KJOMvrrDVP/CpEvhjv
-         DQ/w==
-X-Gm-Message-State: APjAAAUJUSiBdLdAx3p5VGWLrJQ5FZh9C5/y93Iwh/NZoGGYXN02+opC
-        y+oqSaec0hLhLP9sVWGo3G7bSw==
-X-Google-Smtp-Source: APXvYqzQr2CLK/fwULYQq3VNkBV55f/ClfMVaFfphcBAPGFFc6pKU5cyV5HL+5E4NBw0hPocFM4CVA==
-X-Received: by 2002:a81:2209:: with SMTP id i9mr7365425ywi.293.1553095051413;
-        Wed, 20 Mar 2019 08:17:31 -0700 (PDT)
-Received: from kudzu.us (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id f185sm972052ywf.18.2019.03.20.08.17.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 08:17:30 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 11:17:29 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     dave.jiang@intel.com, allenbh@gmail.com,
-        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: Re: [PATCH -next] ntb: intel: Make intel_ntb3_peer_db_addr static
-Message-ID: <20190320151728.GA19781@kudzu.us>
-References: <20190320140812.5952-1-yuehaibing@huawei.com>
+        Wed, 20 Mar 2019 11:17:36 -0400
+X-Originating-IP: 90.88.33.153
+Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 7683D6000B;
+        Wed, 20 Mar 2019 15:17:33 +0000 (UTC)
+Message-ID: <8d6f1e9191638e243616ac7832b1b650a80d85ad.camel@bootlin.com>
+Subject: Re: [PATCH 3/3] drm/vc4: Don't liberate the binner BO at runtime
+ suspend
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Eben Upton <eben@raspberrypi.org>
+Date:   Wed, 20 Mar 2019 16:17:32 +0100
+In-Reply-To: <87o96alk7k.fsf@anholt.net>
+References: <20190315162538.4120-1-paul.kocialkowski@bootlin.com>
+         <20190315162538.4120-3-paul.kocialkowski@bootlin.com>
+         <87o96alk7k.fsf@anholt.net>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320140812.5952-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 10:08:12PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> drivers/ntb/hw/intel/ntb_hw_gen3.c:535:5: warning:
->  symbol 'intel_ntb3_peer_db_addr' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Hi,
 
-Looks good to me.  Added to the ntb branch,
+Le samedi 16 mars 2019 à 11:58 -0700, Eric Anholt a écrit :
+> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+> 
+> > The binner BO is a pre-requisite to GPU operations, so we must ensure
+> > that it is always allocated when the GPU is in use.
+> > 
+> > Because the buffer is allocated from the same pool as other GPU buffers,
+> > we might run into a situation where we are out of memory at runtime
+> > resume. This causes the binner BO allocation to fail and results in all
+> > subsequent operations to fail, resulting in a major hang in userspace.
+> > 
+> > Now that we allocate the buffer at firstopen and liberate it at
+> > lastclose, we can just keep it alive during runtime suspend.
+> 
+> I think this needs to be squashed into the previous patch, as otherwise
+> coming from suspended, a firstopen -> resume -> render will leak a copy
+> of the bin BO.
 
-Thanks,
-Jon
+Woops, you're definitely right: vc4_allocate_bin_bo won't check whether
+we already have allocated it or not. I'll send a new version with both
+patches squashed.
 
-> ---
->  drivers/ntb/hw/intel/ntb_hw_gen3.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/ntb/hw/intel/ntb_hw_gen3.c b/drivers/ntb/hw/intel/ntb_hw_gen3.c
-> index f475b56..c339716 100644
-> --- a/drivers/ntb/hw/intel/ntb_hw_gen3.c
-> +++ b/drivers/ntb/hw/intel/ntb_hw_gen3.c
-> @@ -532,9 +532,9 @@ static int intel_ntb3_mw_set_trans(struct ntb_dev *ntb, int pidx, int idx,
->  	return 0;
->  }
->  
-> -int intel_ntb3_peer_db_addr(struct ntb_dev *ntb, phys_addr_t *db_addr,
-> -				resource_size_t *db_size,
-> -				u64 *db_data, int db_bit)
-> +static int intel_ntb3_peer_db_addr(struct ntb_dev *ntb, phys_addr_t *db_addr,
-> +				   resource_size_t *db_size,
-> +				   u64 *db_data, int db_bit)
->  {
->  	phys_addr_t db_addr_base;
->  	struct intel_ntb_dev *ndev = ntb_ndev(ntb);
-> -- 
-> 2.7.0
-> 
-> 
+Cheers,
+
+Paul
+
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
