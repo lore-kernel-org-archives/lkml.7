@@ -3,121 +3,178 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A74C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F824C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3C72064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3E820828
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfCTFck (ORCPT
+        id S1727359AbfCTFfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:32:40 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58052 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfCTFck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:32:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 22:32:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,247,1549958400"; 
-   d="scan'208";a="308697115"
-Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 22:32:38 -0700
-From:   fei.yang@intel.com
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        zhangjerry@google.com, andrzej.p@collabora.com,
-        plr.vincent@gmail.com, fei.yang@intel.com, jingx.shen@intel.com,
-        john.stultz@linaro.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
-Date:   Tue, 19 Mar 2019 22:32:20 -0700
-Message-Id: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 Mar 2019 01:35:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbfCTFfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 01:35:31 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K5YjxD095890
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:35:29 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbbvnrfh0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 01:35:29 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 20 Mar 2019 05:35:23 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 05:35:20 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K5ZN0U55246994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 05:35:23 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F212FAE04D;
+        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB729AE053;
+        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Mar 2019 05:35:22 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9F624A02C7;
+        Wed, 20 Mar 2019 16:35:21 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/5] ocxl: Clean up printf formats
+Date:   Wed, 20 Mar 2019 16:34:45 +1100
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320053448.2098-1-alastair@au1.ibm.com>
+References: <20190313040702.14276-1-alastair@au1.ibm.com>
+ <20190320053448.2098-1-alastair@au1.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032005-0008-0000-0000-000002CF644E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032005-0009-0000-0000-0000223B79E3
+Message-Id: <20190320053448.2098-3-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Yang <fei.yang@intel.com>
+From: Alastair D'Silva <alastair@d-silva.org>
 
-The following kernel panic happens due to the io_data buffer gets deallocated
-before the async io is completed. Add a check for the case where io_data buffer
-should be deallocated by ffs_user_copy_worker.
+Use %# instead of using a literal '0x'
 
-[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
-[   41.672099] #PF error: [normal kernel read fault]
-[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-[   41.683687] Oops: 0000 [#1] PREEMPT SMP
-[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-[   41.705309] Workqueue: adb ffs_user_copy_worker
-[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.705331] Call Trace:
-[   41.705338]  vfree+0x50/0xb0
-[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-[   41.705344]  process_one_work+0x19f/0x3e0
-[   41.705348]  worker_thread+0x3f/0x3b0
-[   41.829766]  kthread+0x12b/0x150
-[   41.833371]  ? process_one_work+0x3e0/0x3e0
-[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-[   41.843695]  ret_from_fork+0x3a/0x50
-[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-[   41.876880] CR2: 0000000000000048
-[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.985930] Kernel panic - not syncing: Fatal exception
-[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[   42.009525] Rebooting in 10 seconds..
-[   52.014376] ACPI MEMORY or I/O RESET_REG.
-
-Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-Signed-off-by: Fei Yang <fei.yang@intel.com>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
-V2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
+ drivers/misc/ocxl/config.c  |  6 +++---
+ drivers/misc/ocxl/context.c |  2 +-
+ drivers/misc/ocxl/trace.h   | 10 +++++-----
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
- drivers/usb/gadget/function/f_fs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 20413c2..47be961 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- error_mutex:
- 	mutex_unlock(&epfile->mutex);
- error:
--	ffs_free_buffer(io_data);
-+	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
-+		ffs_free_buffer(io_data);
- 	return ret;
+diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+index 8f2c5d8bd2ee..0ee7856b033d 100644
+--- a/drivers/misc/ocxl/config.c
++++ b/drivers/misc/ocxl/config.c
+@@ -178,9 +178,9 @@ static int read_dvsec_vendor(struct pci_dev *dev)
+ 	pci_read_config_dword(dev, pos + OCXL_DVSEC_VENDOR_DLX_VERS, &dlx);
+ 
+ 	dev_dbg(&dev->dev, "Vendor specific DVSEC:\n");
+-	dev_dbg(&dev->dev, "  CFG version = 0x%x\n", cfg);
+-	dev_dbg(&dev->dev, "  TLX version = 0x%x\n", tlx);
+-	dev_dbg(&dev->dev, "  DLX version = 0x%x\n", dlx);
++	dev_dbg(&dev->dev, "  CFG version = %#x\n", cfg);
++	dev_dbg(&dev->dev, "  TLX version = %#x\n", tlx);
++	dev_dbg(&dev->dev, "  DLX version = %#x\n", dlx);
+ 	return 0;
  }
  
+diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+index c10a940e3b38..3498a0199bde 100644
+--- a/drivers/misc/ocxl/context.c
++++ b/drivers/misc/ocxl/context.c
+@@ -134,7 +134,7 @@ static vm_fault_t ocxl_mmap_fault(struct vm_fault *vmf)
+ 	vm_fault_t ret;
+ 
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	pr_debug("%s: pasid %d address 0x%lx offset 0x%llx\n", __func__,
++	pr_debug("%s: pasid %d address %#lx offset %#llx\n", __func__,
+ 		ctx->pasid, vmf->address, offset);
+ 
+ 	if (offset < ctx->afu->irq_base_offset)
+diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
+index bcb7ff330c1e..68bf2f173a1a 100644
+--- a/drivers/misc/ocxl/trace.h
++++ b/drivers/misc/ocxl/trace.h
+@@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(ocxl_context,
+ 		__entry->tidr = tidr;
+ 	),
+ 
+-	TP_printk("linux pid=%d spa=0x%p pasid=0x%x pidr=0x%x tidr=0x%x",
++	TP_printk("linux pid=%d spa=%p pasid=%#x pidr=%#x tidr=%#x",
+ 		__entry->pid,
+ 		__entry->spa,
+ 		__entry->pasid,
+@@ -61,7 +61,7 @@ TRACE_EVENT(ocxl_terminate_pasid,
+ 		__entry->rc = rc;
+ 	),
+ 
+-	TP_printk("pasid=0x%x rc=%d",
++	TP_printk("pasid=%#x rc=%d",
+ 		__entry->pasid,
+ 		__entry->rc
+ 	)
+@@ -87,7 +87,7 @@ DECLARE_EVENT_CLASS(ocxl_fault_handler,
+ 		__entry->tfc = tfc;
+ 	),
+ 
+-	TP_printk("spa=%p pe=0x%llx dsisr=0x%llx dar=0x%llx tfc=0x%llx",
++	TP_printk("spa=%p pe=%#llx dsisr=%#llx dar=%#llx tfc=%#llx",
+ 		__entry->spa,
+ 		__entry->pe,
+ 		__entry->dsisr,
+@@ -127,7 +127,7 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
+ 		__entry->irq_offset = irq_offset;
+ 	),
+ 
+-	TP_printk("pasid=0x%x irq_id=%d virq=%u hw_irq=%d irq_offset=0x%llx",
++	TP_printk("pasid=%#x irq_id=%d virq=%u hw_irq=%d irq_offset=%#llx",
+ 		__entry->pasid,
+ 		__entry->irq_id,
+ 		__entry->virq,
+@@ -150,7 +150,7 @@ TRACE_EVENT(ocxl_afu_irq_free,
+ 		__entry->irq_id = irq_id;
+ 	),
+ 
+-	TP_printk("pasid=0x%x irq_id=%d",
++	TP_printk("pasid=%#x irq_id=%d",
+ 		__entry->pasid,
+ 		__entry->irq_id
+ 	)
 -- 
-2.7.4
+2.20.1
 
