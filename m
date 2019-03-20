@@ -2,130 +2,140 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE09C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B059BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2F20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Jo2+Tufb"
+	by mail.kernel.org (Postfix) with ESMTP id 8827020850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfCTQeO (ORCPT
+        id S1727558AbfCTQei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:34:14 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:33278 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfCTQeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:34:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id B8F23C03
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 16:34:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wh5aPjf7FJ7p for <linux-kernel@vger.kernel.org>;
-        Wed, 20 Mar 2019 11:34:12 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 7E2ECBB0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:34:12 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id f5so2008689ita.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=q+EDH+6Mpk7eQdDDKdoqyLJUnDYxgp9LJfW7iLiBop4=;
-        b=Jo2+TufbfbReQoiRUoZqJFNHA2n96MbDED/Hn4ItFSvb7g7SobN1CLZw3FELFp/1+N
-         5yY1UKIFKopBqNgBRw7kBBBn3KkbHUqUcPsxj1cItZNYyK0z1zxUMdAPSvUVsMctblrQ
-         Ko2kjRN2wylx8+rnC48OSKPwT2WCpdiVXeN7vPP0Ovtgb3Ic2tNvNe1NVaZg9eB+9+G9
-         7o8nXC0IzbTT/NFzazGqP8+bLhGHxSotoOPmvQ5xZqCGA3/dw82qHqil6h2BUis40pca
-         mRlSODc8NCqiZb1G+ZFQUzgJio1ylpkePzOGNaWszbddTVJdHGLy8V1uBaWosD2xtVdL
-         4AcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=q+EDH+6Mpk7eQdDDKdoqyLJUnDYxgp9LJfW7iLiBop4=;
-        b=oR8Tjnz0kntT5DFHGa856EaJk1fTwbu5y2EoygYUK5ygFkZgVYR8wJ31fhUJ3Koi4P
-         dXHh/t7nWqTRcAlqBjhzVHAylSSxOvBAvTuDsidDGTLVrQ3bnCt90j7Z08vqgAYUG/Ae
-         a16Gp3g/xvhHvjjzHZXJsuDBXFStcac+z7FvFNME6CzO+WYMcjKK8MiNX8sHf5LLjqCN
-         Z0s0/girGyl9gl4ECk4ercSsEJmAjBnmFyzRcKtwRLygB75Pqj+ZQWW9iCWBdi5YQh0L
-         taQiey3rijcFCtVDyrPYaEMY8Y51QbM9bn+/IxJP4W0ml6G9jdPlx9lzdrQRkHeJFSAG
-         PJMQ==
-X-Gm-Message-State: APjAAAUSFdE9O2CMQvkhxPaKA0GWxeYlrZ+BVhShRI1czyCMrvxa00/Z
-        PHmoBP4WiIlN31l57mMmqeYOgs+01uhBAOJA+DQWb6pCCxZ7KKTPIR9WkdIHdsA4RJkgYi77Lv3
-        PyK0p+aTk9Xe0goTzdEDBqXV1Ri3H
-X-Received: by 2002:a6b:e418:: with SMTP id u24mr6034367iog.128.1553099652168;
-        Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxrY/1U5mkoGHQeZKC+qtMD7silrz0rUE8pAJQE0wsi4YjFssAsY4T7oDVattVSIjDMbl61Jw==
-X-Received: by 2002:a6b:e418:: with SMTP id u24mr6034352iog.128.1553099652000;
-        Wed, 20 Mar 2019 09:34:12 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id 134sm1266177itx.29.2019.03.20.09.34.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 09:34:11 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Wed, 20 Mar 2019 12:34:38 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32608 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbfCTQeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 12:34:37 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 09:34:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,249,1549958400"; 
+   d="scan'208";a="156739860"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 20 Mar 2019 09:34:34 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 20 Mar 2019 18:34:33 +0200
+Date:   Wed, 20 Mar 2019 18:34:33 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3] thunderbolt: Fix to check return value of ida_simple_get
-Date:   Wed, 20 Mar 2019 11:34:09 -0500
-Message-Id: <20190320163409.30746-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex initialisation
+Message-ID: <20190320163433.GD7752@kuha.fi.intel.com>
+References: <20190318174906.10429-1-marc.zyngier@arm.com>
+ <20190319114511.GS7752@kuha.fi.intel.com>
+ <20190320160708.5f31ff10@why.wild-wind.fr.eu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320160708.5f31ff10@why.wild-wind.fr.eu.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In enumerate_services, ida_simple_get on failure can return an error and
-leaks memory. The patch ensures that the dev_set_name is set on non
-failure cases, and releases memory during failure.
+Hi Marc,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+On Wed, Mar 20, 2019 at 04:07:08PM +0000, Marc Zyngier wrote:
+> On Tue, 19 Mar 2019 13:45:11 +0200
+> Heikki Krogerus <heikki.krogerus@linux.intel.com> wrote:
+> 
+> Heikki,
+> 
+> > On Mon, Mar 18, 2019 at 05:49:06PM +0000, Marc Zyngier wrote:
+> > > Running a kernel with the fusb302 driver and lockdep enabled
+> > > leads to an unpleasant warning:
+> > > 
+> > > [    4.617477] INFO: trying to register non-static key.
+> > > [    4.617930] the code is fine but needs lockdep annotation.
+> > > [    4.618418] turning off the locking correctness validator.
+> > > [    4.618913] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc1-00007-g3542533f3fc9 #13
+> > > [    4.619620] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+> > > [    4.620454] Call trace:
+> > > [    4.620693]  dump_backtrace+0x0/0x138
+> > > [    4.621028]  show_stack+0x24/0x30
+> > > [    4.621336]  dump_stack+0xbc/0x104
+> > > [    4.621649]  register_lock_class+0x594/0x598
+> > > [    4.622036]  __lock_acquire+0x80/0x11b8
+> > > [    4.622384]  lock_acquire+0xdc/0x260
+> > > [    4.622711]  __mutex_lock+0x90/0x8a0
+> > > [    4.623037]  mutex_lock_nested+0x3c/0x50
+> > > [    4.623394]  _fusb302_log+0x88/0x1f0
+> > > [    4.623721]  fusb302_log+0x7c/0xa0
+> > > [    4.624033]  tcpm_init+0x5c/0x190
+> > > [    4.624336]  tcpm_init+0x3c/0x130
+> > > [    4.624640]  tcpm_register_port+0x574/0x878
+> > > [    4.625019]  fusb302_probe+0x2c8/0x590
+> > > 
+> > > Despite what the message says, the code isn't fine, as it tries to
+> > > make use of the fusb302_log facility pretty early. This requires the
+> > > logbuffer_lock mutex to be initialised, but that only happens much
+> > > later. Boo.
+> > > 
+> > > Hoist the fusb302_debugfs_init call before tcpm_register_port so that
+> > > we can enjoy a working mutex. At Guenter's request, also add teardown
+> > > of the debugfs facility on the error path.
+> > > 
+> > > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>  
+> > 
+> > After applying this there was no more "fusb302" debugfs directory, and
+> > attempt to unload the fusb302 module dead locked. Also, attempt to
+> > reboot caused this to happen on my GDPWin board after applying the
+> > patch:
+> > 
+> >         BUG: Dentry 0000000012f2a05d{i=149,n=i2c-fusb302}  still in use (1) [unmount of sysfs sysfs]
+> >         WARNING: CPU: 3 PID: 1639 at fs/dcache.c:1529 umount_check.cold.55+0x2e/0x3a
+> >         Modules linked in: intel_xhci_usb_role_switch roles pi3usb30532 typec i915 intel_gtt intel_cht_int33fe [last unloaded: tcpm]
+> >         CPU: 3 PID: 1639 Comm: umount Not tainted 5.1.0-rc1-heikki+ #916
+> >         Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
+> >         RIP: 0010:umount_check.cold.55+0x2e/0x3a
+> >         ...
+> > 
+> > Note. Your patch has also a conflict with patches from Hans, I
+> > think with this one: https://patchwork.kernel.org/patch/10847275/
+> > I can take care of that, but you can also rebase the next version on
+> > top of my typec-next branch to solve that problem:
+> > https://github.com/krohei/linux/commits/typec-next
+> 
+> OK, this is very weird. I can't reproduce any of the issues you're
+> reporting:
+> 
+> - the patch applies cleanly on top of typec-next
+> - removing the fusb302 module works
+> - I see the debugfs file whenever fsusb302 is inserted
+> 
+> Maybe you were trying this on another branch?
 
----
-v2: Remove kfree in device_register failure
-v1: Missed cleanup of svc in case of allocation failure and
-device_register failure.
----
- drivers/thunderbolt/xdomain.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+No, the branch is correct. Actually, I tested this on top of mainline
+and linux-next. I saw that happen on both.
 
-diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-index e27dd8beb94b..e0642dcb8b9b 100644
---- a/drivers/thunderbolt/xdomain.c
-+++ b/drivers/thunderbolt/xdomain.c
-@@ -740,6 +740,7 @@ static void enumerate_services(struct tb_xdomain *xd)
- 	struct tb_service *svc;
- 	struct tb_property *p;
- 	struct device *dev;
-+	int id;
- 
- 	/*
- 	 * First remove all services that are not available anymore in
-@@ -768,7 +769,12 @@ static void enumerate_services(struct tb_xdomain *xd)
- 			break;
- 		}
- 
--		svc->id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
-+		id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
-+		if (id < 0) {
-+			kfree(svc);
-+			break;
-+		}
-+		svc->id = id;
- 		svc->dev.bus = &tb_bus_type;
- 		svc->dev.type = &tb_service_type;
- 		svc->dev.parent = &xd->dev;
+On these Intel Cherrytrail based boards like my GDBWin, fusb302 is one
+of the functions of a weir MFD device (the driver for that device is
+drivers/platform/x86/intel_cht_int33fe.c). It's entirely possible that
+we are doing something wrong in that driver, and your patch just makes
+the problem visible.
+
+I'll continue debugging.
+
+
+thanks,
+
 -- 
-2.17.1
-
+heikki
