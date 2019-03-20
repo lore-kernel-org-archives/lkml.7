@@ -2,79 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434CBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037FAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDC92175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DAD2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfCTKVB (ORCPT
+        id S1727681AbfCTKVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:21:01 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35161 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfCTKVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:21:01 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h6YKy-0000qq-LI; Wed, 20 Mar 2019 11:20:44 +0100
-Date:   Wed, 20 Mar 2019 11:20:44 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     KY Srinivasan <kys@microsoft.com>
-cc:     Kangjie Lu <kjlu@umn.edu>, "pakki001@umn.edu" <pakki001@umn.edu>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hyperv: a potential NULL pointer dereference
-In-Reply-To: <CY4PR21MB0773FB535B3F4177CA9662C0A04B0@CY4PR21MB0773.namprd21.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.1903201119240.1906@nanos.tec.linutronix.de>
-References: <20190314054651.1315-1-kjlu@umn.edu> <CY4PR21MB0773FB535B3F4177CA9662C0A04B0@CY4PR21MB0773.namprd21.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 20 Mar 2019 06:21:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5713 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727529AbfCTKVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:21:48 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D42F4F35A92E9DDB29AB;
+        Wed, 20 Mar 2019 18:21:45 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 20 Mar 2019 18:21:37 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] scsi: hisi_sas: Add softreset in hisi_sas_I_T_nexus_reset()
+Date:   Wed, 20 Mar 2019 18:21:34 +0800
+Message-ID: <1553077294-129863-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019, KY Srinivasan wrote:
-> > -----Original Message-----
-> > From: Kangjie Lu <kjlu@umn.edu>
-> > Sent: Wednesday, March 13, 2019 10:47 PM
-> > To: kjlu@umn.edu
-> > Cc: pakki001@umn.edu; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Stephen Hemminger
-> > <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Thomas
-> > Gleixner <tglx@linutronix.de>; Ingo Molnar <mingo@redhat.com>; Borislav
-> > Petkov <bp@alien8.de>; H. Peter Anvin <hpa@zytor.com>; x86@kernel.org;
-> > linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: [PATCH] hyperv: a potential NULL pointer dereference
-> > 
-> > In case alloc_page, the fix returns -ENOMEM to avoid the potential
-> > NULL pointer dereference.
-> > 
-> Thanks.
-> 
-> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-Did you mean: Reviewed-by or Acked-by?
+We found out that for v2 hw, a SATA disk can not be written to after
+the system comes up.
 
-You cannot sign off on a patch from
-someone else which you are not picking up and transporting it further.
+In commit ffb1c820b8b6 ("scsi: hisi_sas: remove the check of sas_dev
+status in hisi_sas_I_T_nexus_reset()"), we introduced a path where we may
+issue an internal abort for a SATA device, but without following it with a
+softreset.
+
+We need to always follow an internal abort with a software reset, as per HW
+programming flow, so add this.
+
+Fixes: ffb1c820b8b6 ("scsi: hisi_sas: remove the check of sas_dev status in hisi_sas_I_T_nexus_reset()")
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+
+Hi James, Martin,
+
+Please consider this patch for 5.1 fixes. It's fixes a big regression,
+where we can no longer access SATA disks, like here:
+https://storage.kernelci.org/next/master/next-20190213/arm64/defconfig/gcc-7/lab-collabora/boot-hip07-d05.html
 
 Thanks,
+John
 
-	tglx
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 3c3cf89f713f..14bac4966c87 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -1801,6 +1801,12 @@ static int hisi_sas_I_T_nexus_reset(struct domain_device *device)
+ 	}
+ 	hisi_sas_dereg_device(hisi_hba, device);
+ 
++	if (dev_is_sata(device)) {
++		rc = hisi_sas_softreset_ata_disk(device);
++		if (rc)
++			return TMF_RESP_FUNC_FAILED;
++	}
++
+ 	rc = hisi_sas_debug_I_T_nexus_reset(device);
+ 
+ 	if ((rc == TMF_RESP_FUNC_COMPLETE) || (rc == -ENODEV))
+-- 
+2.17.1
+
