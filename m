@@ -2,108 +2,134 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFD3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918E6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0972184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610602184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:40:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="etilclbD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vzd125ZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfCTOjk (ORCPT
+        id S1728037AbfCTOk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:39:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50540 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCTOjk (ORCPT
+        Wed, 20 Mar 2019 10:40:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40478 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfCTOk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:39:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8bDDiC9zgyi/MQcMouS7nG4D1gn03i8mK1JY09omNT4=; b=etilclbD7GLJUVzYWL9uXpXV4
-        uMNGH/9tJumu03Pildc9FUiUk6l0zi497VSrb07ErLhpHjeWzbY1kyOz0kphRzbmWeGMIaUA5p2D5
-        MzFKDLaoSCTpJCTnsq1nXgByGPXRQhhNS3amkJcA6QkRKAhYxXldGGSvsloKxv0eYn5SzSdJuc6zF
-        2Ro/VQnstf0Un+HHyJq7E/9a8PpjV6Di7A4mEojrIKqEoLxZaZtUOP2IasDR0oV6EH81Ma9yGS5Aj
-        uNTVhW/jgEvWY4TnBDamQ+u5SVoKL45urH+Ev/ClXb1t1ojze4NrnBeFYDpALhNXmbgRMX0F06Qpk
-        iDBjCqnbA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6cNX-0002T2-D8; Wed, 20 Mar 2019 14:39:39 +0000
-Subject: Re: linux-next: Tree for Mar 20 (drivers/gpu/drm/i915/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190320141849.34e569f8@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6a6bb676-39fc-295a-74eb-a83c439e5b22@infradead.org>
-Date:   Wed, 20 Mar 2019 07:39:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 20 Mar 2019 10:40:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u10so17982372wmj.5;
+        Wed, 20 Mar 2019 07:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=63lUCKzou0hKfO0w+V6Cio4BeboSTxW84Eh4nTzwxsM=;
+        b=Vzd125ZFTuWtYphi13aF3UM8xmSExJHfC09VqlBSXM8QEGQGkjj8a/G4u0xUVWxq50
+         KGActoHGWYrUoQpD/4Y6TbIDbZTD/OSlbXa4cifeXn070lCv6Y6avSJeYpuc3yYEkTOH
+         OIyr45wPD/TkW5CTa/cIjmnT2+t7vuupwABMfV1LVN3j9Dfk3CWuHcPaIRh/OaNulhe6
+         1jy6LcJ1R953IFmkyYWSdlsSK3a6TlSfh/v3mFWcnDdRk/wsna1BGs91I7SaZspRHIk1
+         u/ByT3PZteHrWOeJ6/s8IDC725sao0KCFqbYqZWb90RaIgz+CZ6hOAJAPbG0RSKjDjGU
+         pGUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=63lUCKzou0hKfO0w+V6Cio4BeboSTxW84Eh4nTzwxsM=;
+        b=NHW6Ir83/IDJVN5UUu6VbTDuyS6T+vvC3dt4TToC3YEF2qZVJlCjEScmrvs89hDP5C
+         DzSldiQNfrcLysj94Sg0Ay43b6zyrtmSPezj/sdoJXQcjzzSrCIaCs+Nb/+zp7AXNUpK
+         aF8qlr3GyTIex9+HsCrWXIHBZPgA0licQa0t5WzMEUzxEjqBJgA3asrANPSP9x3u7NAP
+         7EH/BTLOt5E36d1X4biOlc67EszdGra5uYSW61uaxlPsRHIqbYXPZaUZg7b5BoAaroqo
+         0h2IRFTYrfDw/6YOA6ajVho8Pg58xfjTWwsKtxZNpbkxTbIBgE11C3moanKy9DvIHvBd
+         srfA==
+X-Gm-Message-State: APjAAAVDHkJG/0WOQLY2MEV7z7JSXmXQDLT8PDO/YwXQ1AsGHwYLf2Nm
+        +FTMO9CHwtPFkVY1MYIlcOg=
+X-Google-Smtp-Source: APXvYqy2vehQ4w1sNvQHIK58PnXeQOX8/aXLrDPAzBtZ2No4z0wtJ9+TVE5c0KF86+piralA7Sxtyg==
+X-Received: by 2002:a1c:ed10:: with SMTP id l16mr6511616wmh.118.1553092825868;
+        Wed, 20 Mar 2019 07:40:25 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id c10sm2738646wrr.1.2019.03.20.07.40.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 07:40:25 -0700 (PDT)
+References: <20190319163622.30607-1-wsa+renesas@sang-engineering.com>
+User-agent: mu4e 1.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] staging: media: imx: imx7-mipi-csis: simplify getting .driver_data
+In-reply-to: <20190319163622.30607-1-wsa+renesas@sang-engineering.com>
+Date:   Wed, 20 Mar 2019 14:40:23 +0000
+Message-ID: <m3y359vcbs.fsf@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190320141849.34e569f8@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/19 8:18 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190319:
-> 
+Hi Wolfram,
+Thanks for the patch.
+On Tue 19 Mar 2019 at 16:36, Wolfram Sang wrote:
+> We should get 'driver_data' from 'struct device' directly. Going 
+> via
+> platform_device is an unneeded step back and forth.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
 
-using: gcc (SUSE Linux) 4.8.5
+---
+Cheers,
+	Rui
 
-beginning yesterday (20190319), I am seeing problems in i915_reg.h on x86_64:
-(multiple instances of one macro in the header file)
+> ---
+>
+> Build tested only. buildbot is happy.
+>
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c 
+> b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 2ddcc42ab8ff..44569c63e4de 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -1039,8 +1039,7 @@ static int mipi_csis_probe(struct 
+> platform_device *pdev)
+>  
+>  static int mipi_csis_pm_suspend(struct device *dev, bool 
+>  runtime)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
+> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
+>  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+>  	int ret = 0;
+>  
+> @@ -1064,8 +1063,7 @@ static int mipi_csis_pm_suspend(struct 
+> device *dev, bool runtime)
+>  
+>  static int mipi_csis_pm_resume(struct device *dev, bool 
+>  runtime)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
+> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
+>  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+>  	int ret = 0;
 
-
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-../drivers/gpu/drm/i915/i915_reg.h:167:27: error: first argument to ‘__builtin_choose_expr’ not a constant
-../include/linux/build_bug.h:16:45: error: bit-field ‘<anonymous>’ width not an integer constant
-
-
-
--- 
-~Randy
