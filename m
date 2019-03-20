@@ -2,129 +2,95 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE671C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C4CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF102175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC33D2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="e2ssjAx/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ddqdt/lt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfCTMNn (ORCPT
+        id S1727520AbfCTMRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:13:43 -0400
-Received: from kadath.azazel.net ([81.187.231.250]:45520 "EHLO
-        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTMNm (ORCPT
+        Wed, 20 Mar 2019 08:17:02 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37110 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfCTMRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:13:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
-         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=K+BS3UVbmz6lIBbC1bue6JFHcJxWC6jm7YXAXxS2wUM=; b=e2ssjAx/NCQpiYAehjV7nx2N6k
-        xCFmQieu5XIbV9lO0clBz7ElsU1Svgl4XbYDhnOFYV5HRLlT05LGPX61kCF6N3s5XrXEYO4evBbHK
-        UeDvcAkBwMYi8WDC3pRKZdeG3yRN+RS8qUXNrq4iRGxmSSBKhKQT7v7EpEWw2J4yNCNhc7HcIBWz6
-        zYLwUiMl71hOy2voYrus6Ycia37SEb5QltkK52nOgvwzNuFlKannt8OILszBhTALXqAWpqMhn1+Zo
-        y0+anEPuv2rNL7Jq/tV9CHmuhZxcyYncIwd+IapqQ6Q4caKIaMjZSbU3K5927tXt2+GjN4/SHqhRq
-        mC7OVetg==;
-Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
-        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jeremy@azazel.net>)
-        id 1h6a5x-0002pe-V4; Wed, 20 Mar 2019 12:13:22 +0000
-Date:   Wed, 20 Mar 2019 12:13:20 +0000
-From:   Jeremy Sowden <jeremy@azazel.net>
-To:     Julius Niedworok <julius.n@gmx.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, ga58taw@mytum.de,
-        linux-wireless@vger.kernel.org, david@redhat.com, nc@net.in.tum.de,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-Message-ID: <20190320121320.myrxmtfccaoybyih@azazel.net>
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
- <20190306200206.60916-1-julius.n@gmx.net>
- <87k1hazo6r.fsf@purkki.adurom.net>
- <20190307193045.a7awwn6mycloccq5@mission-control>
- <87h8c98q4l.fsf@codeaurora.org>
- <20190311145240.akms2pz2hxsalmaz@azazel.net>
- <D78A58DC-E38B-4BD8-9D11-A873FFE16602@gmx.net>
+        Wed, 20 Mar 2019 08:17:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u2so1697727lfd.4;
+        Wed, 20 Mar 2019 05:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8altSk6k/Ezj4RpXnU3MDDzmmxlz8G3TW5qqD7DO/ho=;
+        b=Ddqdt/ltX4pGcmedF67d9Y5RXDn2KRqUtbs4fnFF+0tRBkW+8/GCdV9szygYsZVdnw
+         soascqcZ5bsUEm4/tvCPlP6VDxl16ohs2AYpgq/zE/AnQOUimKfsmYRqLjx/tuYFWHhE
+         zJV8x0fkE3WEdwsnvLfnPMWMyKh6M3qkPbblwxEPHe7oQQJyFTvobmI4cy8PezaTtZzg
+         eFuyFYXHFFGhkCDC+nkm7pF/oeM8e2nwgK/v03nKqIpa9vZCRYCJjTq2/xYk9WZC3PRi
+         KB4jAksP4SuLfrX1zgBzlrsax+NTZmewq28uh78eSGOWp79NGugbBFSPgPP462o84ay8
+         ZS0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8altSk6k/Ezj4RpXnU3MDDzmmxlz8G3TW5qqD7DO/ho=;
+        b=DQLJNSyVwXmqa1mmuMN+q6AnRT6Gy/IDpf09r/yw3XIAUAtoR12EekKMqUpVHDUkmX
+         aeptWC3/MOo21NmFa5jACuujEsKkxy7PSjkdrY2FT226A3fy2pE5WCMVFfMhak2/HBNy
+         BlO5XJ0GdhbDHIaDCYCAJXIl61p93q0ctaE8hbDqO2FCMMuB1K6+7Ob/O92HVv//AmwY
+         kOPNn+mEaBvfRE1dB6yPKWUj53s13nfJkOYq04FdnGUzvgAnYoZ1sMbZMIFfalOi5gp+
+         MwowOi3j10vlRwM+SKl2oxLcrEvQNE2kIiuZCrdEsLpxjoFHn/rqZR0KE6dwrEpgnkQM
+         z64g==
+X-Gm-Message-State: APjAAAUL37W9sQZHzdHwOzPIBYzo9fmLNeCoENmTLlUuUosirZOX9ita
+        kdMD90FFapN4VTPZFPrQ3ICqz/bpFnBDrUCMZh0=
+X-Google-Smtp-Source: APXvYqzKTSDYrqYhRLSFjOKswIcFaT0JOk4SYTgKy2/jBiJqv4E9ehlV7AGHrI/g3hf+q2IKlJTqnMbg1+kFzXomN4E=
+X-Received: by 2002:a19:f208:: with SMTP id q8mr13604741lfh.107.1553084219461;
+ Wed, 20 Mar 2019 05:16:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gobq5cnyp6n7jj7v"
-Content-Disposition: inline
-In-Reply-To: <D78A58DC-E38B-4BD8-9D11-A873FFE16602@gmx.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
-X-SA-Exim-Mail-From: jeremy@azazel.net
-X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
+References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+In-Reply-To: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 20 Mar 2019 09:16:49 -0300
+Message-ID: <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        DEVICETREE <devicetree@vger.kernel.org>,
+        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dialog Opensource Support <support.opensource@diasemi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Steve,
 
---gobq5cnyp6n7jj7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On 2019-03-19, at 16:07:32 +0100, Julius Niedworok wrote:
-> On 11.03.2019 15:52, Jeremy Sowden wrote:
-> > It's the value that matters, not the type.  It will only be too big
-> > for the buffer if the result of casting local->force_tx_status to
-> > int is less than -9 or greeater than 99.
-> >
-> >  scnprintf(buf, size(buf), "%lld\n",
-> >            (long long)local->force_tx_status)
-> >
-> > would also be fine if the value were in range.  Note also that
-> > scnprintf will not overrun the buffer: it will truncate the string.
+On Wed, Mar 20, 2019 at 9:06 AM Steve Twiss
+<stwiss.opensource@diasemi.com> wrote:
 >
-> Thanks for the clarification :)
+> The PHY used on the Freescale i.MX6Q/DL SABRE boards is qualified as
+> 'rgmii' instead of 'rgmii-id'. Meaning the RX and TX delays that were
 
-You're welcome. :)
+This patch declares it as 'rgmii-id', which contradicts the commit log.
 
-> > As it happens, arguments to variadic functions are subject to the
-> > "default argument promotions," so if local->force_tx_status is in
-> > fact a bool (I can't find the definition), it would be promoted to
-> > int and the cast is superfluous.
+> previously added by the MAC when required, but are now provided
+> internally by the PHY (and the MAC should no longer add the RX or TX
+> delays in this case).
 >
-> Yes - the cast is superfluous. We still think it might be useful to
-> keep it there to make the point that the value will be casted.
-> However, if you prefer to omit the cast, we are happy to take it out.
+> This patch fixes the network problems seen on the Freescale i.MX6Q/DL
 
-If I were maintaining this code, I'd probably take it out.  However, I
-did have to check the documentation to verify that the cast wasn't
-required, and I know the more obscure corners of the C standard pretty
-well, so it may cause less confusion to keep it.
-
-J.
-
---gobq5cnyp6n7jj7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAlySLlcACgkQ0Z7UzfnX
-9sNIMQ//fDp3IMBLu8+HwPUXtM2AkLgb9rCRP5CRwci6vn8rV5oz3LS3QMcA7jFp
-l3f0QBBR46ci5rYYT0j51coOagA0OYwvm1rdeodnvCpXm4uNveBoHYpjuYsSWpuf
-HNlauDby25BT57hyzvccO//gpig5BAcBa7tXunbvPao69AGB2txfPBOXgkFdBzP5
-wgZ+4ajlneiliNdLVxEOn7pNNV0fFcn4msz4tqi2ek7ooWwTZquvDqwcz4/hfcqd
-te3xsqY1lTYk3xOzBuk0gNbCcf0+vQEW9Z72VWbJtuJsm9ydz/JNRjzRFbxMTNdF
-tg4fNARhN3U4rn0/vOXtLfLcdYBgzMlvAXy/Mh/QX72ME2Uz9sLktZGgwNCXje5p
-7QkVkYI3JYrK+YlAN8oYb5C+mK5hTJg6Zj6RXaR8vuRpV+r/qvU7pr+JTzBYLs5N
-C/2SM1CcCFA/7P+JyIFUbM1dDRRjq2vtNQ7as2+JFNvAlnzwpMrJ7hsQz73ZxIdf
-/xSe3m3RyI3bHhAPFVJFAchL/lLAkvNhHccwFaIrBsSpYfXihxK/TNX4LfXDYeTl
-ZLJ/IHDMaHVAvkOdfa3zgs2Hb7aMgWsCfrq5hzbG+pF7pXJSvPM2/KoT7ZiCmh6l
-1xSMO+jgWFPBMCgO7T6IB7si7QgrINZmLy20/lNY4KAVIIAi8l8=
-=tpY5
------END PGP SIGNATURE-----
-
---gobq5cnyp6n7jj7v--
+Please provide a Fixes tag. It would be good to know if this fix needs
+to be applied to older kernels.
