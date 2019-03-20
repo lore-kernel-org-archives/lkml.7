@@ -2,157 +2,175 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_HK_NAME_DR,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04089C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F91CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C563021850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dCn/aejq"
+	by mail.kernel.org (Postfix) with ESMTP id 07F2C2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfCTKmt (ORCPT
+        id S1727876AbfCTKmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:42:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42744 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfCTKms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:42:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id c4so1480801ioh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hcRJyjpf1Os+dJaolVe49RgmT+5cszRgDCVwAxJ0n0o=;
-        b=dCn/aejqzrOp2WKxTwq/E2q4ZQe5ezVUloPkEz/OKE/qjj1mOYEqYUmimO810pIJ+U
-         RIF9iElA5ZHfbnOZM8VkouD8O4dDbFRtiqz/FYb+Dgg4XN27hOJOQTcuWabryiYXrcCw
-         mHShwR4k8ruf6hD6aJk6HxpZBKoWmmN+5Myg9rR5x0ZBEHYD+gvxN95MIC4SLvTnefzU
-         liUpF4/YunuRUFelrz9xfIaZxT3AMlEaGvPtzAZj1trQzA0F0lWmreA80Mmm+omZvGar
-         0WmQYvG5ZEuPtACYumZ36jDhhRZOoQwpcMAp+ZPPCvXtIPvUhB0cTQtQzWzMUkWVrMgp
-         1JLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hcRJyjpf1Os+dJaolVe49RgmT+5cszRgDCVwAxJ0n0o=;
-        b=BK4ve+kzR9AKoHydryeB+6qOd8g9gu1hCsu55RmdiEBupZHPYRoIeHwsI2NdRkKuYF
-         kaG+G7cjfPaTGVBif9PnxlnnQuNSfWfYYglBVmar2mtJiWzKlUJWq5wjtArK4Kt97WT0
-         mMCXW+Ed1k8ps1JoEP4jhud3WVdsUbERA/Amjwu1gIaoUY13nEu8xwwaUjZRZ94L4ohc
-         1d5eAFpQbWQfIN8vIE95n3TBW0/d7ZRFu1IGbVHhfESULQadgFiUpqiciNfNmkKv6tA6
-         Ym3PnYoLHFO2fh34xUG6kcO86FjJl+rFZXkhcSI6WMNQuABempcTJGWcwywNtYlTw8IG
-         irNw==
-X-Gm-Message-State: APjAAAUOXFeloUDFTyl6M41gbPqFEyiT9S9Q5/UKTIPoTfJcw93nPP/f
-        0XBm4NyxH5Ud80e549Mer+QPw7Wal6NUqWn2kLg/ew==
-X-Google-Smtp-Source: APXvYqzjMWw1VAe6d0dwLUq9BqrdXjp1tDL6LI2XgDfmt5Gaf1BAro95sT8+BQTH/BIxxPU/7xp5c9SPzJR5QPKrtOY=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr4426278ior.271.1553078567797;
- Wed, 20 Mar 2019 03:42:47 -0700 (PDT)
+        Wed, 20 Mar 2019 06:42:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53476 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727215AbfCTKmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:42:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BC3692D7E4;
+        Wed, 20 Mar 2019 10:42:49 +0000 (UTC)
+Received: from work-vm (unknown [10.36.118.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E2B7E5D9C4;
+        Wed, 20 Mar 2019 10:42:45 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 10:42:43 +0000
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Liu Bo <obuil.liubo@gmail.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        miklos@szeredi.hu, Stefan Hajnoczi <stefanha@redhat.com>,
+        sweil@redhat.com, swhiteho@redhat.com
+Subject: Re: [PATCH 18/52] virtio-fs: Map cache using the values from the
+ capabilities
+Message-ID: <20190320104242.GC2791@work-vm>
+References: <20181210171318.16998-1-vgoyal@redhat.com>
+ <20181210171318.16998-19-vgoyal@redhat.com>
+ <CANQeFDB86oQfE3v4viUOox2O1rkUVu+uGcQjPVkN3Se1ysvshQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
- <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
- <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp> <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
-In-Reply-To: <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 20 Mar 2019 11:42:36 +0100
-Message-ID: <CACT4Y+Z2FL=t8cHceXMGvG2QfChKdJYprVvBonu9X+jJaL0HMQ@mail.gmail.com>
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Josef Bacik <jbacik@fb.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Xin Long <lucien.xin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANQeFDB86oQfE3v4viUOox2O1rkUVu+uGcQjPVkN3Se1ysvshQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 20 Mar 2019 10:42:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 11:38 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+* Liu Bo (obuil.liubo@gmail.com) wrote:
+> On Mon, Dec 10, 2018 at 9:57 AM Vivek Goyal <vgoyal@redhat.com> wrote:
 > >
-> > On 2019/03/20 18:59, Dmitry Vyukov wrote:
-> > >> From bisection log:
-> > >>
-> > >>         testing release v4.17
-> > >>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-> > >>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
-> > >>         run #2: crashed: kernel panic: Out of memory and no killable processes...
-> > >>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         run #8: crashed: kernel panic: Out of memory and no killable processes...
-> > >>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>         testing release v4.16
-> > >>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
-> > >>         run #0: OK
-> > >>         run #1: OK
-> > >>         run #2: OK
-> > >>         run #3: OK
-> > >>         run #4: OK
-> > >>         run #5: crashed: kernel panic: Out of memory and no killable processes...
-> > >>         run #6: OK
-> > >>         run #7: crashed: kernel panic: Out of memory and no killable processes...
-> > >>         run #8: OK
-> > >>         run #9: OK
-> > >>         testing release v4.15
-> > >>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
-> > >>         all runs: OK
-> > >>         # git bisect start v4.16 v4.15
-> > >>
-> > >> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
-> > >
-> > > Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
-> > > looks like the right range, no?
+> > Instead of assuming we had the fixed bar for the cache, use the
+> > value from the capabilities.
 > >
-> > No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
-> > "Stack corruption" can't manifest as "Out of memory and no killable processes".
+> > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> > ---
+> >  fs/fuse/virtio_fs.c | 32 +++++++++++++++++---------------
+> >  1 file changed, 17 insertions(+), 15 deletions(-)
 > >
-> > "kernel panic: Out of memory and no killable processes..." is completely
-> > unrelated to "kernel panic: corrupted stack end in wb_workfn".
->
->
-> Do you think this predicate is possible to code? Looking at the
-> examples we have, distinguishing different bugs does not look feasible
-> to me. If the predicate is not accurate, you just trade one set of
-> false positives to another set of false positives and then you at the
-> beginning of an infinite slippery slope refining it.
-> Also, if we see a different bug (assuming we can distinguish them),
-> does it mean that the original bug is not present? Or it's also
-> present, but we just hit the other one first? This also does not look
-> feasible to answer. And if you give a wrong answer, bisection goes the
-> wrong way and we are where we started. Just with more complex code and
-> things being even harder to explain to other people.
-> I mean, yes, I agree, kernel bug bisection won't be perfect. But do
-> you see anything actionable here?
+> > diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> > index 60d496c16841..55bac1465536 100644
+> > --- a/fs/fuse/virtio_fs.c
+> > +++ b/fs/fuse/virtio_fs.c
+> > @@ -14,11 +14,6 @@
+> >  #include <uapi/linux/virtio_pci.h>
+> >  #include "fuse_i.h"
+> >
+> > -enum {
+> > -       /* PCI BAR number of the virtio-fs DAX window */
+> > -       VIRTIO_FS_WINDOW_BAR = 2,
+> > -};
+> > -
+> >  /* List of virtio-fs device instances and a lock for the list */
+> >  static DEFINE_MUTEX(virtio_fs_mutex);
+> >  static LIST_HEAD(virtio_fs_instances);
+> > @@ -518,7 +513,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> >         struct dev_pagemap *pgmap;
+> >         struct pci_dev *pci_dev;
+> >         phys_addr_t phys_addr;
+> > -       size_t len;
+> > +       size_t bar_len;
+> >         int ret;
+> >         u8 have_cache, cache_bar;
+> >         u64 cache_offset, cache_len;
+> > @@ -551,17 +546,13 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> >          }
+> >
+> >         /* TODO handle case where device doesn't expose BAR? */
+> > -       ret = pci_request_region(pci_dev, VIRTIO_FS_WINDOW_BAR,
+> > -                                "virtio-fs-window");
+> > +       ret = pci_request_region(pci_dev, cache_bar, "virtio-fs-window");
+> >         if (ret < 0) {
+> >                 dev_err(&vdev->dev, "%s: failed to request window BAR\n",
+> >                         __func__);
+> >                 return ret;
+> >         }
+> >
+> > -       phys_addr = pci_resource_start(pci_dev, VIRTIO_FS_WINDOW_BAR);
+> > -       len = pci_resource_len(pci_dev, VIRTIO_FS_WINDOW_BAR);
+> > -
+> >         mi = devm_kzalloc(&pci_dev->dev, sizeof(*mi), GFP_KERNEL);
+> >         if (!mi)
+> >                 return -ENOMEM;
+> > @@ -586,6 +577,17 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> >         pgmap->ref = &mi->ref;
+> >         pgmap->type = MEMORY_DEVICE_FS_DAX;
+> >
+> > +       phys_addr = pci_resource_start(pci_dev, cache_bar);
+> > +       bar_len = pci_resource_len(pci_dev, cache_bar);
+> > +
+> > +       if (cache_offset + cache_len > bar_len) {
+> > +               dev_err(&vdev->dev,
+> > +                       "%s: cache bar shorter than cap offset+len\n",
+> > +                       __func__);
+> > +               return -EINVAL;
+> > +       }
+> > +       phys_addr += cache_offset;
+> > +
+> >         /* Ideally we would directly use the PCI BAR resource but
+> >          * devm_memremap_pages() wants its own copy in pgmap.  So
+> >          * initialize a struct resource from scratch (only the start
+> > @@ -594,7 +596,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> >         pgmap->res = (struct resource){
+> >                 .name = "virtio-fs dax window",
+> >                 .start = phys_addr,
+> > -               .end = phys_addr + len,
+> > +               .end = phys_addr + cache_len,
+> 
+> Just in case you haven't noticed/fixed this problem, it should be
+> 
+> + .end = phys_addr + cache_len - 1,
+> 
+> because resource_size() counts %size as "end - start + 1".
+> The end result of the above is a "conflicting page map" warning when
+> specifying a second virtio-fs pci device.
 
-I see the larger long term bisection quality improvement (for syzbot
-and for everybody else) in doing some actual testing for each kernel
-commit before it's being merged into any kernel tree, so that we have
-less of these a single program triggers 3 different bugs, stray
-unrelated bugs, broken release boots, etc. I don't see how reliable
-bisection is possible without that.
+Thanks for spotting this! I think we'd seen that message once but not
+noticed where from.
+
+> I'll send a patch for this, and feel free to take it along with the
+> patchset if needed.
+> 
+
+Dave
+
+> thanks,
+> liubo
+> 
+> >         };
+> >
+> >         fs->window_kaddr = devm_memremap_pages(&pci_dev->dev, pgmap);
+> > @@ -607,10 +609,10 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> >                 return ret;
+> >
+> >         fs->window_phys_addr = phys_addr;
+> > -       fs->window_len = len;
+> > +       fs->window_len = cache_len;
+> >
+> > -       dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr 0x%llx len %zu\n",
+> > -               __func__, fs->window_kaddr, phys_addr, len);
+> > +       dev_dbg(&vdev->dev, "%s: cache kaddr 0x%px phys_addr 0x%llx len %llx\n",
+> > +               __func__, fs->window_kaddr, phys_addr, cache_len);
+> >
+> >         fs->dax_dev = alloc_dax(fs, NULL, &virtio_fs_dax_ops);
+> >         if (!fs->dax_dev)
+> > --
+> > 2.13.6
+> >
+--
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
