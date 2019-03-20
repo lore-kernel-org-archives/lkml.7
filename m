@@ -2,86 +2,92 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8472FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF4AC10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F56206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FCF2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 08:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfCTI0X (ORCPT
+        id S1727218AbfCTI3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 04:26:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbfCTI0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 04:26:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3EBD2368B3;
-        Wed, 20 Mar 2019 08:26:23 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-62.ams2.redhat.com [10.36.116.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 96B582E02C;
-        Wed, 20 Mar 2019 08:26:22 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id CD60511A86; Wed, 20 Mar 2019 09:26:16 +0100 (CET)
-Date:   Wed, 20 Mar 2019 09:26:16 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc:     Alexander Pateenok <pateenoc@gmail.com>,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: Indirect call in vesafb driver
-Message-ID: <20190320082616.twns6kjvgapdg4lq@sirius.home.kraxel.org>
-References: <20190313145418.bwta37cogo7a4qtt@K55DR>
- <20190319164651.4ec9e3d1@alans-desktop>
+        Wed, 20 Mar 2019 04:29:47 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34897 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfCTI3q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 04:29:46 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h6WbN-0007Ez-FR; Wed, 20 Mar 2019 09:29:33 +0100
+Date:   Wed, 20 Mar 2019 09:29:32 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+cc:     lantianyu1986@gmail.com, Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, rkrcmar@redhat.com, devel@linuxdriverproject.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        michael.h.kelley@microsoft.com, vkuznets@redhat.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] x86/Hyper-V: Fix definition HV_MAX_FLUSH_REP_COUNT
+In-Reply-To: <a379e291-b622-3535-8436-2cf3f3446c74@redhat.com>
+Message-ID: <alpine.DEB.2.21.1903200928100.1816@nanos.tec.linutronix.de>
+References: <20190222104844.1847-1-Tianyu.Lan@microsoft.com> <a379e291-b622-3535-8436-2cf3f3446c74@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319164651.4ec9e3d1@alans-desktop>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 20 Mar 2019 08:26:23 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 04:46:51PM +0000, Alan Cox wrote:
-> On Wed, 13 Mar 2019 17:54:18 +0300
-> Alexander Pateenok <pateenoc@gmail.com> wrote:
+On Fri, 15 Mar 2019, Paolo Bonzini wrote:
+
+> On 22/02/19 11:48, lantianyu1986@gmail.com wrote:
+> > From: Lan Tianyu <Tianyu.Lan@microsoft.com>
+> > 
+> > The max flush rep count of HvFlushGuestPhysicalAddressList hypercall
+> > is equal with how many entries of union hv_gpa_page_range can be populated
+> > into the input parameter page. The origin code lacks parenthesis around
+> > PAGE_SIZE - 2 * sizeof(u64). This patch is to fix it.
+> > 
+> > Cc: <stable@vger.kernel.org>
+> > Fixs: cc4edae4b9(x86/hyper-v: Add HvFlushGuestAddressList hypercall support)
+> > Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
+> > ---
+> >  arch/x86/include/asm/hyperv-tlfs.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> > index 705dafc2d11a..2bdbbbcfa393 100644
+> > --- a/arch/x86/include/asm/hyperv-tlfs.h
+> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> > @@ -841,7 +841,7 @@ union hv_gpa_page_range {
+> >   * count is equal with how many entries of union hv_gpa_page_range can
+> >   * be populated into the input parameter page.
+> >   */
+> > -#define HV_MAX_FLUSH_REP_COUNT (PAGE_SIZE - 2 * sizeof(u64) /	\
+> > +#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
+> >  				sizeof(union hv_gpa_page_range))
+> >  
+> >  struct hv_guest_mapping_flush_list {
+> > 
 > 
-> > Hi,
-> > 
-> > There're several indirect calls in inline assembly in vesafb driver
-> > (drivers/video/fbdev/vesafb.c), and these calls cannot be automatically
-> > changed to retpolines. It's in vesafb_pan_display():
-> > 
-> >    73        __asm__ __volatile__(
-> >    74                "call *(%%edi)"
-> > 
-> > and in vesa_setpalette():
-> > 
-> >   113        __asm__ __volatile__(
-> >   114         "call *(%%esi)"
-> > 
-> > Is there need to use CALL_NOSPEC ?
-> 
-> Vesafb is from the time on the dinosaurs but yes any vesa bios code will
-> not be speculatively hardened. I'd also doubt anyone is actually using
-> vesafb in the first place but it should use nospec
+> Queued for after he merge window, with the fixed "Fixes" tag.
 
-Note that even when using vesafb the display panning is disabled by
-default, and vesa_setpalette() is only used with 8bit depth (256 color
-mode).
+That's upstream already:
 
-Also note that only 32bit builds will try to call vesa bios code ...
+  9cd05ad2910b ("x86/hyper-v: Fix definition of HV_MAX_FLUSH_REP_COUNT")
 
-cheers,
-  Gerd
+Thanks,
 
+	tglx
