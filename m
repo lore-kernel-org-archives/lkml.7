@@ -7,172 +7,183 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3525C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96167C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89AE22175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDB02175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EN0Qv39N"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TQXZxeT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfCTKIM (ORCPT
+        id S1727707AbfCTKGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:08:12 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8626 "EHLO pegase1.c-s.fr"
+        Wed, 20 Mar 2019 06:06:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34560 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfCTKGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:06:50 -0400
+        id S1726802AbfCTKGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:06:46 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44PQYz3P3qz9vC02;
-        Wed, 20 Mar 2019 11:06:47 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44PQYt25T2z9vC06;
+        Wed, 20 Mar 2019 11:06:42 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=EN0Qv39N; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=TQXZxeT2; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id CIAH3mzzheRG; Wed, 20 Mar 2019 11:06:47 +0100 (CET)
+        with ESMTP id WVE-TlxJpOpn; Wed, 20 Mar 2019 11:06:42 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYz2Cfrz9vByx;
-        Wed, 20 Mar 2019 11:06:47 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYt0wpbz9vByx;
+        Wed, 20 Mar 2019 11:06:42 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553076407; bh=vudUPerMLQi3dd/zw5E0qPtrcqQHJnlkft2XxIn5fdE=;
+        t=1553076402; bh=j/pbUh2lV6lGY76AVFXOvIL2hKV9TjaV0N8Gw3Pr04w=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=EN0Qv39NEobTKZbM7BSI5/z2axMW5Tkn7YmmKz+6/wz0RcICQGysDUiUW4r8elKDB
-         iW+kY8b/Iad+E/g7BUZLY7h9H6Yc8JJOVCflulXmwlvz9pWAz7G6Rrj9pDjvWG4zf1
-         PKz3oyWqp4kSwkUVetOEJKUT/15h0CoXC7wiirtQ=
+        b=TQXZxeT2AMBg0RuIwxGIBu/Mz7ipdNXYjx89M9BIkmNvi7nBnhuUtRa6CeFIzbGFc
+         P+i+qT1Q8Eeg3UIOyZWDFUXdd55QxDqlMJymSPKw9m0CA+u6BXZMmjnp0fQXGuUz/f
+         YXQ5VMkCvEg3S5z/OgPP+xQZWICNf8sw8rtmb+1w=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 692CB8B918;
-        Wed, 20 Mar 2019 11:06:48 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 31AFA8B919;
+        Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JIEmtOOUOzOU; Wed, 20 Mar 2019 11:06:48 +0100 (CET)
+        with ESMTP id tXCopxwffxpb; Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 464CF8B911;
-        Wed, 20 Mar 2019 11:06:48 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E0BC8B911;
+        Wed, 20 Mar 2019 11:06:43 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 289B063AEF; Wed, 20 Mar 2019 10:06:48 +0000 (UTC)
-Message-Id: <abcfa513ee7e9df2184b7c94441fe0a615b80ed6.1553076180.git.christophe.leroy@c-s.fr>
+        id E57DE63AEF; Wed, 20 Mar 2019 10:06:42 +0000 (UTC)
+Message-Id: <03f48e9485ad3d536d08405d0a65c221b8c93f1a.1553076180.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1553076180.git.christophe.leroy@c-s.fr>
 References: <cover.1553076180.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 12/27] powerpc/mm: add a helper to populate hugepd
+Subject: [PATCH v1 07/27] powerpc/book3e: hugetlbpage is only for
+ CONFIG_PPC_FSL_BOOK3E
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 10:06:48 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 10:06:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchs adds a subarch helper to populate hugepd.
+As per Kconfig.cputype, only CONFIG_PPC_FSL_BOOK3E gets to
+select SYS_SUPPORTS_HUGETLBFS so simplify accordingly.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/book3s/64/hugetlb.h     |  5 +++++
- arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  8 ++++++++
- arch/powerpc/include/asm/nohash/hugetlb-book3e.h |  6 ++++++
- arch/powerpc/mm/hugetlbpage.c                    | 20 +-------------------
- 4 files changed, 20 insertions(+), 19 deletions(-)
+ arch/powerpc/mm/Makefile             |  2 +-
+ arch/powerpc/mm/hugetlbpage-book3e.c | 47 +++++++++++++++---------------------
+ 2 files changed, 20 insertions(+), 29 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/hugetlb.h b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-index 2f9cf2bc601c..177c81079209 100644
---- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
-+++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-@@ -101,6 +101,11 @@ static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
- 	return hugepd_page(hpd) + idx;
- }
+diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
+index 3c1bd9fa23cd..2c23d1ece034 100644
+--- a/arch/powerpc/mm/Makefile
++++ b/arch/powerpc/mm/Makefile
+@@ -37,7 +37,7 @@ obj-y				+= hugetlbpage.o
+ ifdef CONFIG_HUGETLB_PAGE
+ obj-$(CONFIG_PPC_BOOK3S_64)	+= hugetlbpage-hash64.o
+ obj-$(CONFIG_PPC_RADIX_MMU)	+= hugetlbpage-radix.o
+-obj-$(CONFIG_PPC_BOOK3E_MMU)	+= hugetlbpage-book3e.o
++obj-$(CONFIG_PPC_FSL_BOOK3E)	+= hugetlbpage-book3e.o
+ endif
+ obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += hugepage-hash64.o
+ obj-$(CONFIG_PPC_SUBPAGE_PROT)	+= subpage-prot.o
+diff --git a/arch/powerpc/mm/hugetlbpage-book3e.c b/arch/powerpc/mm/hugetlbpage-book3e.c
+index c911fe9bfa0e..61915f4d3c7f 100644
+--- a/arch/powerpc/mm/hugetlbpage-book3e.c
++++ b/arch/powerpc/mm/hugetlbpage-book3e.c
+@@ -11,8 +11,9 @@
  
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	*hpdp = __hugepd(__pa(new) | HUGEPD_VAL_BITS | (shift_to_mmu_psize(pshift) << 2));
-+}
+ #include <asm/mmu.h>
+ 
+-#ifdef CONFIG_PPC_FSL_BOOK3E
+ #ifdef CONFIG_PPC64
++#include <asm/paca.h>
 +
- void flush_hugetlb_page(struct vm_area_struct *vma, unsigned long vmaddr);
- 
- #endif
-diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-index 209e6a219835..eb90c2db7601 100644
---- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H
- #define _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H
- 
-+#define PAGE_SHIFT_8M		23
-+
- static inline pte_t *hugepd_page(hugepd_t hpd)
+ static inline int tlb1_next(void)
  {
- 	if (WARN_ON(!hugepd_ok(hpd)))
-@@ -29,4 +31,10 @@ static inline void flush_hugetlb_page(struct vm_area_struct *vma,
- 	flush_tlb_page(vma, vmaddr);
+ 	struct paca_struct *paca = get_paca();
+@@ -29,28 +30,6 @@ static inline int tlb1_next(void)
+ 	tcd->esel_next = next;
+ 	return this;
  }
- 
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT |
-+			 (pshift == PAGE_SHIFT_8M ? _PMD_PAGE_8M : _PMD_PAGE_512K));
-+}
-+
- #endif /* _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H */
-diff --git a/arch/powerpc/include/asm/nohash/hugetlb-book3e.h b/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-index e94f1cd048ee..51439bcfe313 100644
---- a/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-+++ b/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-@@ -28,4 +28,10 @@ static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
- 
- void flush_hugetlb_page(struct vm_area_struct *vma, unsigned long vmaddr);
- 
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	/* We use the old format for PPC_FSL_BOOK3E */
-+	*hpdp = __hugepd(((unsigned long)new & ~PD_HUGE) | pshift);
-+}
-+
- #endif /* _ASM_POWERPC_NOHASH_HUGETLB_BOOK3E_H */
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 29d1568c7775..26a57ebaf5cf 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -26,12 +26,6 @@
- #include <asm/hugetlb.h>
- #include <asm/pte-walk.h>
- 
--#define PAGE_SHIFT_64K	16
--#define PAGE_SHIFT_512K	19
--#define PAGE_SHIFT_8M	23
--#define PAGE_SHIFT_16M	24
--#define PAGE_SHIFT_16G	34
--
- bool hugetlb_disabled = false;
- 
- unsigned int HPAGE_SHIFT;
-@@ -95,19 +89,7 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
- 	for (i = 0; i < num_hugepd; i++, hpdp++) {
- 		if (unlikely(!hugepd_none(*hpdp)))
- 			break;
--		else {
--#ifdef CONFIG_PPC_BOOK3S_64
--			*hpdp = __hugepd(__pa(new) | HUGEPD_VAL_BITS |
--					 (shift_to_mmu_psize(pshift) << 2));
--#elif defined(CONFIG_PPC_8xx)
--			*hpdp = __hugepd(__pa(new) | _PMD_USER |
--					 (pshift == PAGE_SHIFT_8M ? _PMD_PAGE_8M :
--					  _PMD_PAGE_512K) | _PMD_PRESENT);
 -#else
--			/* We use the old format for PPC_FSL_BOOK3E */
--			*hpdp = __hugepd(((unsigned long)new & ~PD_HUGE) | pshift);
+-static inline int tlb1_next(void)
+-{
+-	int index, ncams;
+-
+-	ncams = mfspr(SPRN_TLB1CFG) & TLBnCFG_N_ENTRY;
+-
+-	index = this_cpu_read(next_tlbcam_idx);
+-
+-	/* Just round-robin the entries and wrap when we hit the end */
+-	if (unlikely(index == ncams - 1))
+-		__this_cpu_write(next_tlbcam_idx, tlbcam_index);
+-	else
+-		__this_cpu_inc(next_tlbcam_idx);
+-
+-	return index;
+-}
+-#endif /* !PPC64 */
+-#endif /* FSL */
+-
+-#if defined(CONFIG_PPC_FSL_BOOK3E) && defined(CONFIG_PPC64)
+-#include <asm/paca.h>
+ 
+ static inline void book3e_tlb_lock(void)
+ {
+@@ -93,6 +72,23 @@ static inline void book3e_tlb_unlock(void)
+ 	paca->tcd_ptr->lock = 0;
+ }
+ #else
++static inline int tlb1_next(void)
++{
++	int index, ncams;
++
++	ncams = mfspr(SPRN_TLB1CFG) & TLBnCFG_N_ENTRY;
++
++	index = this_cpu_read(next_tlbcam_idx);
++
++	/* Just round-robin the entries and wrap when we hit the end */
++	if (unlikely(index == ncams - 1))
++		__this_cpu_write(next_tlbcam_idx, tlbcam_index);
++	else
++		__this_cpu_inc(next_tlbcam_idx);
++
++	return index;
++}
++
+ static inline void book3e_tlb_lock(void)
+ {
+ }
+@@ -134,10 +130,7 @@ void book3e_hugetlb_preload(struct vm_area_struct *vma, unsigned long ea,
+ 	unsigned long psize, tsize, shift;
+ 	unsigned long flags;
+ 	struct mm_struct *mm;
+-
+-#ifdef CONFIG_PPC_FSL_BOOK3E
+ 	int index;
 -#endif
--		}
-+		hugepd_populate(hpdp, new, pshift);
+ 
+ 	if (unlikely(is_kernel_addr(ea)))
+ 		return;
+@@ -161,11 +154,9 @@ void book3e_hugetlb_preload(struct vm_area_struct *vma, unsigned long ea,
+ 		return;
  	}
- 	/* If we bailed from the for loop early, an error occurred, clean up */
- 	if (i < num_hugepd) {
+ 
+-#ifdef CONFIG_PPC_FSL_BOOK3E
+ 	/* We have to use the CAM(TLB1) on FSL parts for hugepages */
+ 	index = tlb1_next();
+ 	mtspr(SPRN_MAS0, MAS0_ESEL(index) | MAS0_TLBSEL(1));
+-#endif
+ 
+ 	mas1 = MAS1_VALID | MAS1_TID(mm->context.id) | MAS1_TSIZE(tsize);
+ 	mas2 = ea & ~((1UL << shift) - 1);
 -- 
 2.13.3
 
