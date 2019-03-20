@@ -2,130 +2,163 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE62EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2507CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714A621850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cACuFUq6"
+	by mail.kernel.org (Postfix) with ESMTP id ED6262184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 06:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfCTGrZ (ORCPT
+        id S1727362AbfCTGsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 02:47:25 -0400
-Received: from mail-eopbgr70048.outbound.protection.outlook.com ([40.107.7.48]:46350
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726169AbfCTGrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 02:47:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RkOjd0mJEhxlRnzhIhy8Cdki0a5nyRib1h/pCbWDIfM=;
- b=cACuFUq6FGWrICOs27ShIUOuK17UzrFYI9h6Pv7Hqww6YpsDI7k5zSLAZZWrtF1Y2in6V2xq8GTs2H5tBrFGmj7mVQZcphg0yOqReOAltKyqAKZY/TlJTi34aeBkGzMj95aZBGDg5o/Uw2mDVpqQ8YMg9tzmtai+0yiMbcRsJZ0=
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
- AM6PR0402MB3735.eurprd04.prod.outlook.com (52.133.29.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Wed, 20 Mar 2019 06:47:20 +0000
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::7cb2:3013:bfa9:8ddd]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::7cb2:3013:bfa9:8ddd%4]) with mapi id 15.20.1730.013; Wed, 20 Mar 2019
- 06:47:20 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] clk: imx7ulp: remove snvs clock
-Thread-Topic: [PATCH 1/2] clk: imx7ulp: remove snvs clock
-Thread-Index: AQHUz0NtVPRcCCKjzkOVq1EKU+GmAqYUMvYA
-Date:   Wed, 20 Mar 2019 06:47:20 +0000
-Message-ID: <AM6PR0402MB39113020252197C138A83DBBF5410@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db8b24c3-00bd-411a-6fb1-08d6acffe678
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR0402MB3735;
-x-ms-traffictypediagnostic: AM6PR0402MB3735:
-x-microsoft-antispam-prvs: <AM6PR0402MB3735F95AF13736351A335FF7F5410@AM6PR0402MB3735.eurprd04.prod.outlook.com>
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(136003)(346002)(396003)(13464003)(199004)(189003)(71200400001)(110136005)(6116002)(3846002)(53546011)(71190400001)(229853002)(68736007)(2501003)(6436002)(478600001)(55016002)(9686003)(8936002)(256004)(6506007)(53936002)(186003)(26005)(6246003)(5660300002)(2906002)(97736004)(86362001)(11346002)(446003)(66066001)(99286004)(52536014)(14444005)(7696005)(7416002)(33656002)(316002)(102836004)(74316002)(305945005)(25786009)(76176011)(4326008)(8676002)(486006)(81156014)(81166006)(14454004)(105586002)(476003)(44832011)(106356001)(7736002)(2201001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3735;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8UhPtuckUhMJcPoXtvD0/ZiusLMgaC/QsP7Li4iIEmCl4DTSiSRBxfQoavBz9P9hZYlmyn2efz3tjWXCADd314kA5FZ8A+eEb/f2hponI5/BVwN/PZYYvY7DhhI6eOkGTtfL+guDy1mraJV8+DRQmogAQfeUykPvSeKgXYt4jQ6tLuLh3jZjNb885sjb7839DoWpgUr/9dR9aeapuOz2zDFSHOpMn2BIHVVJhccFODUCVyGq5ekK8cxzdaKWFYXW/Hqyej+nx81rbcL8zPxn6C+PxTyv1FGWHiRN5vBJFPY9ZnG4Cud1suqQr28e7mhCJDoxOhpBPiapLtXtQWySSslIK3amHqyMxm0Qau4kxDy4dc5rNhTnimmEk4E3Sl66COCqGMbIvgpyTTB+QTFQ+pZ0VPXF31lSH6yVtz9sUWc=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 20 Mar 2019 02:48:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24802 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726169AbfCTGsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 02:48:15 -0400
+X-UUID: 7e1cab0520674881afbe688c90c5af3b-20190320
+X-UUID: 7e1cab0520674881afbe688c90c5af3b-20190320
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 909345915; Wed, 20 Mar 2019 14:47:59 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 20 Mar 2019 14:47:57 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 20 Mar 2019 14:47:57 +0800
+Message-ID: <1553064478.28297.3.camel@mtksdaap41>
+Subject: Re: [PATCH] gpu/drm: mediatek: call mtk_dsi_stop() after
+ mtk_drm_crtc_atomic_disable()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 20 Mar 2019 14:47:58 +0800
+In-Reply-To: <CAJMQK-gSWiqu-cdBpsz54U_427bB7w3vZ01u6n2L0Ghd9vG6Dw@mail.gmail.com>
+References: <20190318040915.101218-1-hsinyi@chromium.org>
+         <1553051356.20221.23.camel@mtksdaap41>
+         <CAJMQK-gSWiqu-cdBpsz54U_427bB7w3vZ01u6n2L0Ghd9vG6Dw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db8b24c3-00bd-411a-6fb1-08d6acffe678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 06:47:20.1503
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3735
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGluZy4uLg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1YW5nDQo+IFNlbnQ6IDIwMTnE6jLUwjI4yNUg
-MTY6NTYNCj4gVG86IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyBz
-aGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVu
-Z3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNv
-bT47IGd1c3Rhdm9AZW1iZWRkZWRvci5jb207IGxpbnV4LQ0KPiBjbGtAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBDYzogZGwtbGlu
-dXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIDEvMl0gY2xrOiBp
-bXg3dWxwOiByZW1vdmUgc252cyBjbG9jaw0KPiANCj4gU2luY2UgaS5NWDdVTFAgQjAgY2hpcCwg
-dGhlIFNOVlMgbW9kdWxlIGlzIG1vdmVkIGludG8gTTQgZG9tYWluIGFuZCBpdHMNCj4gY2xvY2sg
-aXMgYWxzbyBtb3ZlZCBpbnRvIFBDQzAgd2hpY2ggaXMgY29udG9ybGxlZCBieSBNNCwgTGludXgg
-a2VybmVsIHNob3VsZA0KPiBOT1QgYWRkIGl0IGludG8gY2xvY2sgdHJlZS4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvY2xrL2lteC9jbGstaW14N3VscC5jIHwgMSAtDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBk
-ZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14N3Vs
-cC5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gaW5kZXggY2UzMDY2My4uNjY2
-ODIxMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gKysr
-IGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCj4gQEAgLTE1MSw3ICsxNTEsNiBAQCBz
-dGF0aWMgdm9pZCBfX2luaXQgaW14N3VscF9jbGtfcGNjMl9pbml0KHN0cnVjdA0KPiBkZXZpY2Vf
-bm9kZSAqbnApDQo+ICAJY2xrc1tJTVg3VUxQX0NMS19ETUExXQkJPSBpbXhfY2xrX2h3X2dhdGUo
-ImRtYTEiLA0KPiAibmljMV9jbGsiLCBiYXNlICsgMHgyMCwgMzApOw0KPiAgCWNsa3NbSU1YN1VM
-UF9DTEtfUkdQSU8yUDFdCT0gaW14X2Nsa19od19nYXRlKCJyZ3BpbzJwMSIsDQo+ICJuaWMxX2J1
-c19jbGsiLCBiYXNlICsgMHgzYywgMzApOw0KPiAgCWNsa3NbSU1YN1VMUF9DTEtfRE1BX01VWDFd
-CT0NCj4gaW14X2Nsa19od19nYXRlKCJkbWFfbXV4MSIsICJuaWMxX2J1c19jbGsiLCBiYXNlICsg
-MHg4NCwgMzApOw0KPiAtCWNsa3NbSU1YN1VMUF9DTEtfU05WU10JCT0gaW14X2Nsa19od19nYXRl
-KCJzbnZzIiwNCj4gIm5pYzFfYnVzX2NsayIsIGJhc2UgKyAweDhjLCAzMCk7DQo+ICAJY2xrc1tJ
-TVg3VUxQX0NMS19DQUFNXQkJPSBpbXhfY2xrX2h3X2dhdGUoImNhYW0iLA0KPiAibmljMV9jbGsi
-LCBiYXNlICsgMHg5MCwgMzApOw0KPiAgCWNsa3NbSU1YN1VMUF9DTEtfTFBUUE00XQk9IGlteDd1
-bHBfY2xrX2NvbXBvc2l0ZSgibHB0cG00IiwNCj4gcGVyaXBoX2J1c19zZWxzLCBBUlJBWV9TSVpF
-KHBlcmlwaF9idXNfc2VscyksIHRydWUsIGZhbHNlLCB0cnVlLCBiYXNlICsNCj4gMHg5NCk7DQo+
-ICAJY2xrc1tJTVg3VUxQX0NMS19MUFRQTTVdCT0gaW14N3VscF9jbGtfY29tcG9zaXRlKCJscHRw
-bTUiLA0KPiBwZXJpcGhfYnVzX3NlbHMsIEFSUkFZX1NJWkUocGVyaXBoX2J1c19zZWxzKSwgdHJ1
-ZSwgZmFsc2UsIHRydWUsIGJhc2UgKw0KPiAweDk4KTsNCj4gLS0NCj4gMi43LjQNCg0K
+Hi, Hsin-yi:
+
+On Wed, 2019-03-20 at 13:39 +0800, Hsin-Yi Wang wrote:
+> On Wed, Mar 20, 2019 at 11:09 AM CK Hu <ck.hu@mediatek.com> wrote:
+> >
+> > Hi, Hsin-yi:
+> >
+> > On Mon, 2019-03-18 at 12:09 +0800, Hsin-Yi Wang wrote:
+> > > mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+> > > ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+> > > ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+> > > irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+> > > happens sometimes when turning off the screen.
+> > >
+> > > In drm_atomic_helper.c#disable_outputs(),
+> > > the calling sequence when turning off the screen is:
+> > >
+> > > 1. mtk_dsi_encoder_disable()
+> > >      --> mtk_output_dsi_disable()
+> > >        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+> > >          --> mtk_dsi_poweroff();
+> > > 2. mtk_drm_crtc_atomic_disable()
+> > >      --> drm_crtc_wait_one_vblank();
+> > >      ...
+> > >        --> mtk_dsi_ddp_stop()
+> > >          --> mtk_dsi_poweroff();
+> > >
+> >
+> > Thanks for your inference, but I wonder this patch meet all
+> > consideration. In MT8173 with a bridge chip, the timing to disable dsi
+> > signal output would influence bridge chip output garbage or not. It's
+> > better that you could test this on MT8173, or let this patch go for
+> > weeks and wait for someone to test. If no one care about MT8173, I could
+> > accept this patch.
+> We care about MT8173, but it's not easy to test since we have to bring
+> the whole kernel to >= 4.19 to be able to test latest dsi driver.
+> The patch (0707632b5bac) that added mtk_dsi_stop() was after MT8173
+> (on 3.18), for panel without bridge, so I think without mtk_dsi_stop()
+> was also working fine for MT8173.
+
+OK, I find that in the first version of this driver, there is no
+mtk_dsi_stop() before mtk_dsi_poweroff(), so I think MT8173 does not do
+mtk_dsi_stop(). So maybe this works fine for MT8173.
+
+Regards,
+CK
+
+> 
+> >
+> > > Change to make mtk_dsi_stop() called in mtk_dsi_ddp_stop() instead of
+> > > mtk_output_dsi_disable().
+> >
+> > mtk_dsi_poweroff() has reference count, why not just move mtk_dsi_stop()
+> > into mtk_dsi_poweroff()?
+> Yes, we can also call mtk_dsi_stop() in mtk_dsi_poweroff() when
+> refcount is 0. I can send v2 if you think this way is better.
+> 
+> Thanks
+> >
+> > Regards,
+> > CK
+> >
+> > >
+> > > Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > index b00eb2d2e086..cdd9637dd517 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > @@ -696,7 +696,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+> > >               }
+> > >       }
+> > >
+> > > -     mtk_dsi_stop(dsi);
+> > >       mtk_dsi_poweroff(dsi);
+> > >
+> > >       dsi->enabled = false;
+> > > @@ -857,6 +856,7 @@ static void mtk_dsi_ddp_stop(struct mtk_ddp_comp *comp)
+> > >  {
+> > >       struct mtk_dsi *dsi = container_of(comp, struct mtk_dsi, ddp_comp);
+> > >
+> > > +     mtk_dsi_stop(dsi);
+> > >       mtk_dsi_poweroff(dsi);
+> > >  }
+> > >
+> > > @@ -1178,6 +1178,8 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+> > >       struct mtk_dsi *dsi = platform_get_drvdata(pdev);
+> > >
+> > >       mtk_output_dsi_disable(dsi);
+> > > +     mtk_dsi_stop(dsi);
+> > > +     mtk_dsi_poweroff(dsi);
+> > >       component_del(&pdev->dev, &mtk_dsi_component_ops);
+> > >
+> > >       return 0;
+> >
+> >
+
+
