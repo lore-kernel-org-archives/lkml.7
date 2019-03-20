@@ -2,147 +2,99 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A48C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09292175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:08:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S1aUtcUr"
+	by mail.kernel.org (Postfix) with ESMTP id 9453B21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbfCTKIz (ORCPT
+        id S1727388AbfCTKKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:08:55 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8615 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfCTKGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:06:38 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44PQYk6v4wz9vByy;
-        Wed, 20 Mar 2019 11:06:34 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S1aUtcUr; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id MCxzExgMd-u1; Wed, 20 Mar 2019 11:06:34 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44PQYk5k54z9vByx;
-        Wed, 20 Mar 2019 11:06:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553076394; bh=TdkFaqEZaF4rEmRCkdUJ4i7IZPhv3teZiDofQzCOris=;
-        h=From:Subject:To:Cc:Date:From;
-        b=S1aUtcUr4Q0o53gWaQbmoATi2pbMjdkdstCgy8We7M0HMue3b83A8sehEJLxmBz0E
-         hL/HmcJb015VZhbksPGK6mZqWHRbnmB83EZQUqHKUedi0LZR6X6rsT6KHTUfVuW4Rc
-         iVRhnUBVXy1XPMETCIdkmizQ2MOluku1gYmqPNds=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D338B8B91A;
-        Wed, 20 Mar 2019 11:06:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id NG4fGzSDtkKW; Wed, 20 Mar 2019 11:06:35 +0100 (CET)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A7C558B911;
-        Wed, 20 Mar 2019 11:06:35 +0100 (CET)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 7CC3863AEF; Wed, 20 Mar 2019 10:06:35 +0000 (UTC)
-Message-Id: <cover.1553076180.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 00/27] Reduce ifdef mess in hugetlbpage.c and slice.c
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        aneesh.kumar@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 Mar 2019 10:06:35 +0000 (UTC)
+        Wed, 20 Mar 2019 06:10:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41718 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfCTKKy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 06:10:54 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 16A2126C024
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] selftests/bpf: Add arm target register definitions
+Date:   Wed, 20 Mar 2019 12:10:54 +0200
+Message-Id: <20190320101054.1880-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main purpose of this series is to reduce the amount of #ifdefs in
-hugetlbpage.c and slice.c
+eBPF "restricted C" code can be compiled with LLVM/clang using target
+triplets like armv7l-unknown-linux-gnueabihf and loaded/run with small
+cross-compiled gobpf/elf [1] programs without requiring a full BCC
+port which is also undesirable on small embedded systems due to its
+size footprint. The only missing pieces are these helper macros which
+otherwise have to be redefined by each eBPF arm program.
 
-At the same time, it does some cleanup by reducing the number of BUG_ON()
-and dropping unused functions.
+[1] https://github.com/iovisor/gobpf/tree/master/elf
 
-It also removes 64k pages related code in nohash/64 as 64k pages are
-can only by selected on book3s/64
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+ tools/testing/selftests/bpf/bpf_helpers.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Christophe Leroy (27):
-  powerpc/mm: Don't BUG() in hugepd_page()
-  powerpc/mm: don't BUG in add_huge_page_size()
-  powerpc/mm: don't BUG() in slice_mask_for_size()
-  powerpc/book3e: drop mmu_get_tsize()
-  powerpc/mm: drop slice_set_user_psize()
-  powerpc/64: only book3s/64 supports CONFIG_PPC_64K_PAGES
-  powerpc/book3e: hugetlbpage is only for CONFIG_PPC_FSL_BOOK3E
-  powerpc/mm: move __find_linux_pte() out of hugetlbpage.c
-  powerpc/mm: make hugetlbpage.c depend on CONFIG_HUGETLB_PAGE
-  powerpc/mm: make gup_hugepte() static
-  powerpc/mm: split asm/hugetlb.h into dedicated subarch files
-  powerpc/mm: add a helper to populate hugepd
-  powerpc/mm: define get_slice_psize() all the time
-  powerpc/mm: no slice for nohash/64
-  powerpc/mm: cleanup ifdef mess in add_huge_page_size()
-  powerpc/mm: move hugetlb_disabled into asm/hugetlb.h
-  powerpc/mm: cleanup HPAGE_SHIFT setup
-  powerpc/mm: cleanup remaining ifdef mess in hugetlbpage.c
-  powerpc/mm: drop slice DEBUG
-  powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
-  powerpc/mm: hand a context_t over to slice_mask_for_size() instead of
-    mm_struct
-  powerpc/mm: move slice_mask_for_size() into mmu.h
-  powerpc/mm: remove a couple of #ifdef CONFIG_PPC_64K_PAGES in
-    mm/slice.c
-  powerpc: define subarch SLB_ADDR_LIMIT_DEFAULT
-  powerpc/mm: flatten function __find_linux_pte()
-  powerpc/mm: flatten function __find_linux_pte() step 2
-  powerpc/mm: flatten function __find_linux_pte() step 3
-
- arch/powerpc/Kconfig                             |   3 +-
- arch/powerpc/include/asm/book3s/64/hugetlb.h     |  73 +++++++
- arch/powerpc/include/asm/book3s/64/mmu.h         |  22 +-
- arch/powerpc/include/asm/book3s/64/slice.h       |   7 +-
- arch/powerpc/include/asm/hugetlb.h               |  87 +-------
- arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  45 +++++
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h     |  18 ++
- arch/powerpc/include/asm/nohash/32/slice.h       |   2 +
- arch/powerpc/include/asm/nohash/64/pgalloc.h     |   3 -
- arch/powerpc/include/asm/nohash/64/pgtable.h     |   4 -
- arch/powerpc/include/asm/nohash/64/slice.h       |  12 --
- arch/powerpc/include/asm/nohash/hugetlb-book3e.h |  45 +++++
- arch/powerpc/include/asm/nohash/pte-book3e.h     |   5 -
- arch/powerpc/include/asm/page.h                  |  12 +-
- arch/powerpc/include/asm/pgtable-be-types.h      |   7 +-
- arch/powerpc/include/asm/pgtable-types.h         |   7 +-
- arch/powerpc/include/asm/pgtable.h               |   3 -
- arch/powerpc/include/asm/slice.h                 |   8 +-
- arch/powerpc/include/asm/task_size_64.h          |   2 +-
- arch/powerpc/kernel/fadump.c                     |   1 +
- arch/powerpc/kernel/setup-common.c               |   8 +-
- arch/powerpc/mm/Makefile                         |   4 +-
- arch/powerpc/mm/hash_utils_64.c                  |   1 +
- arch/powerpc/mm/hugetlbpage-book3e.c             |  52 ++---
- arch/powerpc/mm/hugetlbpage-hash64.c             |  16 ++
- arch/powerpc/mm/hugetlbpage.c                    | 245 ++++-------------------
- arch/powerpc/mm/pgtable.c                        | 114 +++++++++++
- arch/powerpc/mm/slice.c                          | 132 ++----------
- arch/powerpc/mm/tlb_low_64e.S                    |  31 ---
- arch/powerpc/mm/tlb_nohash.c                     |  13 --
- arch/powerpc/platforms/Kconfig.cputype           |   4 +
- 31 files changed, 438 insertions(+), 548 deletions(-)
- create mode 100644 arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
- delete mode 100644 arch/powerpc/include/asm/nohash/64/slice.h
- create mode 100644 arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-
+diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
+index c81fc350f7ad..41f8a4b676a4 100644
+--- a/tools/testing/selftests/bpf/bpf_helpers.h
++++ b/tools/testing/selftests/bpf/bpf_helpers.h
+@@ -274,6 +274,9 @@ static int (*bpf_skb_adjust_room)(void *ctx, __s32 len_diff, __u32 mode,
+ #elif defined(__TARGET_ARCH_s930x)
+ 	#define bpf_target_s930x
+ 	#define bpf_target_defined
++#elif defined(__TARGET_ARCH_arm)
++	#define bpf_target_arm
++	#define bpf_target_defined
+ #elif defined(__TARGET_ARCH_arm64)
+ 	#define bpf_target_arm64
+ 	#define bpf_target_defined
+@@ -296,6 +299,8 @@ static int (*bpf_skb_adjust_room)(void *ctx, __s32 len_diff, __u32 mode,
+ 	#define bpf_target_x86
+ #elif defined(__s390x__)
+ 	#define bpf_target_s930x
++#elif defined(__arm__)
++	#define bpf_target_arm
+ #elif defined(__aarch64__)
+ 	#define bpf_target_arm64
+ #elif defined(__mips__)
+@@ -333,6 +338,19 @@ static int (*bpf_skb_adjust_room)(void *ctx, __s32 len_diff, __u32 mode,
+ #define PT_REGS_SP(x) ((x)->gprs[15])
+ #define PT_REGS_IP(x) ((x)->psw.addr)
+ 
++#elif defined(bpf_target_arm)
++
++#define PT_REGS_PARM1(x) ((x)->uregs[0])
++#define PT_REGS_PARM2(x) ((x)->uregs[1])
++#define PT_REGS_PARM3(x) ((x)->uregs[2])
++#define PT_REGS_PARM4(x) ((x)->uregs[3])
++#define PT_REGS_PARM5(x) ((x)->uregs[4])
++#define PT_REGS_RET(x) ((x)->uregs[14])
++#define PT_REGS_FP(x) ((x)->uregs[11]) /* Works only with CONFIG_FRAME_POINTER */
++#define PT_REGS_RC(x) ((x)->uregs[0])
++#define PT_REGS_SP(x) ((x)->uregs[13])
++#define PT_REGS_IP(x) ((x)->uregs[12])
++
+ #elif defined(bpf_target_arm64)
+ 
+ #define PT_REGS_PARM1(x) ((x)->regs[0])
 -- 
-2.13.3
+2.21.0
 
