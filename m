@@ -2,82 +2,109 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A27C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1D3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ADD2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684BC2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:08:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBKnLfOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfCTHHM (ORCPT
+        id S1727471AbfCTHIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:07:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38839 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbfCTHHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:07:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 00:07:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,248,1549958400"; 
-   d="scan'208";a="143525931"
-Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.185.23.11]) ([10.185.23.11])
-  by orsmga002.jf.intel.com with ESMTP; 20 Mar 2019 00:07:09 -0700
-Subject: Re: [Intel-wired-lan] [PATCH net-next] igc: Make
- igc_write_rss_indir_tbl static
-To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        jeffrey.t.kirsher@intel.com
-Cc:     netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20190319145507.22388-1-yuehaibing@huawei.com>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <92371ea1-e9d7-e0b1-1c7a-a374f3c68681@intel.com>
-Date:   Wed, 20 Mar 2019 09:07:08 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 20 Mar 2019 03:08:53 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52446 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727246AbfCTHIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 03:08:52 -0400
+Received: by mail-it1-f194.google.com with SMTP id g17so30002384ita.2;
+        Wed, 20 Mar 2019 00:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pT/tFO87Fgg1H9sne6N3fiyT9w1xy0s9QxvBKnrOsNg=;
+        b=RBKnLfOaoYZH6YSRrbOOjqP5okECkvx5w3jxFNXbU+A3iqb7XzbkXbtAEh6dI+eJeM
+         A92Xat6XcYslJigA3vgnud583kbULVb4jviFiexBmtmGSOH0udiT6rc7GhVuYRgLjWcC
+         iVbdA/GGfPJajnlNj1M853xZohkaNyYvxt8hQjdITu4L48ePXT0G3gUIqC3dBrfKVC/r
+         wwAHUAMlDEs9SGSnRaBLoInQ3Wq/J4ziupbnl6ZdHiskzDq0Vs7v8sEFKL7bxQKY7/d+
+         TgLRz7KWRURpMDboNT6MOobRGubn3HD7LQUYpw8FAl1wPIkjWjSz8Gai39LExbkfDJet
+         dcPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pT/tFO87Fgg1H9sne6N3fiyT9w1xy0s9QxvBKnrOsNg=;
+        b=YkZzuPKZX17GsKVdIV333Hc1MYcDzOLSMTtXyFfxVQ9azugN9l4p4ub6+WKaQ6fDvA
+         nVx+zPtyRi0t07+PCZIcgDUr35do6QYVkS9I7X6TYKe2WJPcVhD7+0puPBHqAhOruCcV
+         d48t9qz/OzOF8GpMw2hskJGakhyV1Pe13DtwQSjUpUbp2lJ3wOu0O5NFirUBRwVTmcvz
+         DRZGhUSk9nn/IliiMveghBtdY4/cc/ZzULsTpvEv0OLxb4IrHUAFN1plrDxnavAXZl2y
+         qf8XAE+9XcalBmftrGy4S6lD52HFecQ/WfTB0yMQHtSe2lWI9fhi9lr0SDZzScJBD8xe
+         gUUw==
+X-Gm-Message-State: APjAAAUW3gWlWG0q+Y9Ccf6l+di2YL8/J86ZZT/1jgtlVKjq5DxgMGKi
+        QIq1EFw+VkZ+090lIwYUN0RQR/ZNxhAndXlteTI/cu4G
+X-Google-Smtp-Source: APXvYqwLTODjbF1xk7xH3NiAxu0gsXWKnF/C0FMAZ2mRagTLLlseCUjnu5dVkyVrMnQ7owXByFvRGVeXkH0t1PtWJVE=
+X-Received: by 2002:a05:660c:a54:: with SMTP id j20mr4241072itl.158.1553065731632;
+ Wed, 20 Mar 2019 00:08:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190319145507.22388-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1553012645-28989-1-git-send-email-chongguiguzi@gmail.com>
+In-Reply-To: <1553012645-28989-1-git-send-email-chongguiguzi@gmail.com>
+From:   Menion <menion@gmail.com>
+Date:   Wed, 20 Mar 2019 08:08:40 +0100
+Message-ID: <CAJVZm6dUfAB8Q5CDCpiZhwAJcRiL=N8d3Aa-wxQx3_2ybzZROg@mail.gmail.com>
+Subject: Re: [PATCH] net:mwl8k:move spin_lock_bh to spin_lock in tasklet
+To:     Jeff Xie <chongguiguzi@gmail.com>
+Cc:     buytenh@wantstofly.org, kvalo@codeaurora.org, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/2019 16:55, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> drivers/net/ethernet/intel/igc/igc_ethtool.c:646:6:
->   warning: symbol 'igc_write_rss_indir_tbl' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Is it possible that this solves this long standing issue? :
+https://www.spinics.net/lists/linux-wireless/msg151171.html
+Bye
+
+Il giorno mar 19 mar 2019 alle ore 17:25 Jeff Xie
+<chongguiguzi@gmail.com> ha scritto:
+>
+> It is unnecessary to call spin_lock_bh in a tasklet.
+>
+> Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
 > ---
->   drivers/net/ethernet/intel/igc/igc_ethtool.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-> index eff37a6..5442394 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-> @@ -643,7 +643,7 @@ static int igc_set_coalesce(struct net_device *netdev,
->   	return 0;
->   }
->   
-> -void igc_write_rss_indir_tbl(struct igc_adapter *adapter)
-> +static void igc_write_rss_indir_tbl(struct igc_adapter *adapter)
->   {
->   	struct igc_hw *hw = &adapter->hw;
->   	u32 reg = IGC_RETA(0);
-> 
-The 'igc_write_rss_indir_tbl' method is declared in igc.h and used in 
-igc_main.c
-Please, refer to latest Jeff next-queue, there is latest patches used 
-these methods.
+>  drivers/net/wireless/marvell/mwl8k.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
+> index 8e4e9b6..21a86cc 100644
+> --- a/drivers/net/wireless/marvell/mwl8k.c
+> +++ b/drivers/net/wireless/marvell/mwl8k.c
+> @@ -4631,7 +4631,7 @@ static void mwl8k_tx_poll(unsigned long data)
+>
+>         limit = 32;
+>
+> -       spin_lock_bh(&priv->tx_lock);
+> +       spin_lock(&priv->tx_lock);
+>
+>         for (i = 0; i < mwl8k_tx_queues(priv); i++)
+>                 limit -= mwl8k_txq_reclaim(hw, i, limit, 0);
+> @@ -4641,7 +4641,7 @@ static void mwl8k_tx_poll(unsigned long data)
+>                 priv->tx_wait = NULL;
+>         }
+>
+> -       spin_unlock_bh(&priv->tx_lock);
+> +       spin_unlock(&priv->tx_lock);
+>
+>         if (limit) {
+>                 writel(~MWL8K_A2H_INT_TX_DONE,
+> --
+> 2.7.4
+>
