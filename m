@@ -2,153 +2,183 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6732C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E74C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFED22186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDAC2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbfCTPn5 (ORCPT
+        id S1727092AbfCTPoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:43:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36986 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726295AbfCTPn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:43:56 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KFfebg023344
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:43:55 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbqbq48yt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:43:54 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 20 Mar 2019 15:43:52 -0000
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 15:43:49 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KFhoug17563706
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 15:43:50 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 110C5B2065;
-        Wed, 20 Mar 2019 15:43:50 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7622B2066;
-        Wed, 20 Mar 2019 15:43:49 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 15:43:49 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 4B51116C30D6; Wed, 20 Mar 2019 08:44:40 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 08:44:40 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v2] rcu: Allow to eliminate softirq processing from
- rcutree
-Reply-To: paulmck@linux.ibm.com
-References: <20190315111130.4902-1-bigeasy@linutronix.de>
- <20190318022434.GE4102@linux.ibm.com>
- <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
- <20190320113219.d6c3gouqbnsnl5nj@linutronix.de>
- <20190320152146.GH4102@linux.ibm.com>
+        Wed, 20 Mar 2019 11:44:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6802 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfCTPoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:44:25 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA7F1C13071D;
+        Wed, 20 Mar 2019 15:44:24 +0000 (UTC)
+Received: from x230.aquini.net (dhcp-17-61.bos.redhat.com [10.18.17.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2F9E5D73F;
+        Wed, 20 Mar 2019 15:44:23 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 11:44:20 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     chrubis@suse.cz, vbabka@suse.cz, kirill@shutemov.name,
+        osalvador@suse.de, akpm@linux-foundation.org,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: mempolicy: make mbind() return -EIO when
+ MPOL_MF_STRICT is specified
+Message-ID: <20190320154420.GE23194@x230.aquini.net>
+References: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190320152146.GH4102@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032015-0068-0000-0000-000003A88F92
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01177127; UDB=6.00615755; IPR=6.00957822;
- MB=3.00026075; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 15:43:51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032015-0069-0000-0000-000047E1A171
-Message-Id: <20190320154440.GA16332@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200118
+In-Reply-To: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 20 Mar 2019 15:44:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 08:21:46AM -0700, Paul E. McKenney wrote:
-> On Wed, Mar 20, 2019 at 12:32:19PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2019-03-19 12:44:19 [+0100], To Paul E. McKenney wrote:
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 0f31b79eb6761..0a719f726e149 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > …
-> > > +/*
-> > > + * Spawn per-CPU RCU core processing kthreads.
-> > > + */
-> > > +static int __init rcu_spawn_core_kthreads(void)
-> > > +{
-> > > +	int cpu;
-> > > +
-> > > +	for_each_possible_cpu(cpu)
-> > > +		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
-> > > +	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
-> > 
-> > and this needs to become
-> > -       if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
-> > +       if (!IS_ENABLED(CONFIG_RCU_BOOST) && rcu_softirq_enabled)
-> > 
-> > With this change and hunk that I just sent to Joel I get thee three RCU
-> > modes with and without BOOST booted.
-> > 
-> > Unless there is something (and Paul agrees that the Joel hunk is
-> > correct) I would post a v3 with those changes included.
+On Wed, Mar 20, 2019 at 02:35:56AM +0800, Yang Shi wrote:
+> When MPOL_MF_STRICT was specified and an existing page was already
+> on a node that does not follow the policy, mbind() should return -EIO.
+> But commit 6f4576e3687b ("mempolicy: apply page table walker on
+> queue_pages_range()") broke the rule.
 > 
-> Well, I did get a bunch of grace-period hangs of various sorts when I
-> ran rcutorture like this:
+> And, commit c8633798497c ("mm: mempolicy: mbind and migrate_pages
+> support thp migration") didn't return the correct value for THP mbind()
+> too.
 > 
-> 	tools/testing/selftests/rcutorture/bin/kvm.sh --memory 1G --bootargs rcunosoftirq
+> If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it reaches
+> queue_pages_to_pte_range() or queue_pages_pmd() to check if an existing
+> page was already on a node that does not follow the policy.  And,
+> non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
+> MPOL_MF_MOVE_ALL was specified.
 > 
-> I also got a silent hard hang on TREE03.  And an rcutorture forward-progress
-> failure, which goes along with the grace-period hangs.
+> Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
 > 
-> So something does need adjustment.  I will try again with this change.
-
-And it does seem to work better.  I will give it more intense testing
-later on, but in the meantime I have merged this change into your
-earlier patch.
-
-We will see whether or not I am able summon up the courage to push it
-into v5.2, however.  ;-)
-
-							Thanx, Paul
-
-> > > +		return 0;
-> > > +	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
-> > > +	return 0;
-> > > +}
-> > > +early_initcall(rcu_spawn_core_kthreads);
-> > 
-> > Sebastian
-> > 
-
+> Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
+> Reported-by: Cyril Hrubis <chrubis@suse.cz>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: stable@vger.kernel.org
+> Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  mm/mempolicy.c | 40 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 33 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index abe7a67..401c817 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -447,6 +447,13 @@ static inline bool queue_pages_required(struct page *page,
+>  	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
+>  }
+>  
+> +/*
+> + * The queue_pages_pmd() may have three kind of return value.
+> + * 1 - pages are placed on he right node or queued successfully.
+> + * 0 - THP get split.
+> + * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
+> + *        page was already on a node that does not follow the policy.
+> + */
+>  static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>  				unsigned long end, struct mm_walk *walk)
+>  {
+> @@ -456,7 +463,7 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>  	unsigned long flags;
+>  
+>  	if (unlikely(is_pmd_migration_entry(*pmd))) {
+> -		ret = 1;
+> +		ret = -EIO;
+>  		goto unlock;
+>  	}
+>  	page = pmd_page(*pmd);
+> @@ -473,8 +480,15 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>  	ret = 1;
+>  	flags = qp->flags;
+>  	/* go to thp migration */
+> -	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
+> +	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+> +		if (!vma_migratable(walk->vma)) {
+> +			ret = -EIO;
+> +			goto unlock;
+> +		}
+> +
+>  		migrate_page_add(page, qp->pagelist, flags);
+> +	} else
+> +		ret = -EIO;
+>  unlock:
+>  	spin_unlock(ptl);
+>  out:
+> @@ -499,8 +513,10 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	ptl = pmd_trans_huge_lock(pmd, vma);
+>  	if (ptl) {
+>  		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+> -		if (ret)
+> +		if (ret > 0)
+>  			return 0;
+> +		else if (ret < 0)
+> +			return ret;
+>  	}
+>  
+>  	if (pmd_trans_unstable(pmd))
+> @@ -521,11 +537,16 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  			continue;
+>  		if (!queue_pages_required(page, qp))
+>  			continue;
+> -		migrate_page_add(page, qp->pagelist, flags);
+> +		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+> +			if (!vma_migratable(vma))
+> +				break;
+> +			migrate_page_add(page, qp->pagelist, flags);
+> +		} else
+> +			break;
+>  	}
+>  	pte_unmap_unlock(pte - 1, ptl);
+>  	cond_resched();
+> -	return 0;
+> +	return addr != end ? -EIO : 0;
+>  }
+>  
+>  static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
+> @@ -595,7 +616,12 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+>  	unsigned long endvma = vma->vm_end;
+>  	unsigned long flags = qp->flags;
+>  
+> -	if (!vma_migratable(vma))
+> +	/*
+> +	 * Need check MPOL_MF_STRICT to return -EIO if possible
+> +	 * regardless of vma_migratable
+> +	 */ 
+> +	if (!vma_migratable(vma) &&
+> +	    !(flags & MPOL_MF_STRICT))
+>  		return 1;
+>  
+>  	if (endvma > end)
+> @@ -622,7 +648,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+>  	}
+>  
+>  	/* queue pages from current vma */
+> -	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
+> +	if (flags & MPOL_MF_VALID)
+>  		return 0;
+>  	return 1;
+>  }
+> -- 
+> 1.8.3.1
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
