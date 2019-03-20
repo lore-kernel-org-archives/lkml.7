@@ -7,129 +7,94 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FAFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7FFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA7B2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295052184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553066404;
-	bh=2R86JuAXmJSN2vrRSyP9wfLMx8KdM8WmaZexVVPDbOY=;
+	s=default; t=1553066531;
+	bh=wjlPGvObJppWxDU+1KOukyxfd/bETKdwwdcEW4b+0H4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NDt5c7l4Q0ZDNQNGCzqPytx15R+uiLTYjIxdfrAeqElWlgRcg75d/LEa8GCtPVfEw
-	 wLhnk5eOxBH5jk9w2ZxD2Fpke3tFsPDDymbP1xGIA3LqSaOp1DA3mZlKB0ShHwHjfH
-	 wBwHJ1n64bL/1KbcqU7m1vS1pcEx7p/xBxNOPq8k=
+	b=wJrKXwZvLSH0jMdMKM3SJnzSwUKQepAvZe7LgW15RQS2679FK08SokvPy47K3EwgM
+	 /q0GxgLi7lnIEohtY2IBqBsDe/Za/VGDrILK1CSfqxRATJvfuoQLtuewrgLbg500md
+	 BYioxE0hH6ALozmFAbwcR0Y6m+ursZIgZ+kuD8sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfCTHUD (ORCPT
+        id S1727075AbfCTHWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53026 "EHLO mail.kernel.org"
+        Wed, 20 Mar 2019 03:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfCTHUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:20:02 -0400
+        id S1726303AbfCTHWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 03:22:09 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AF2421841;
-        Wed, 20 Mar 2019 07:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2C921841;
+        Wed, 20 Mar 2019 07:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553066402;
-        bh=2R86JuAXmJSN2vrRSyP9wfLMx8KdM8WmaZexVVPDbOY=;
+        s=default; t=1553066528;
+        bh=wjlPGvObJppWxDU+1KOukyxfd/bETKdwwdcEW4b+0H4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0i2ISWq5s5ZYQA9xNo5/hdn14lVvmIuqPT+GvvuLaBzgje/pqYhrDIYo236dcXkpp
-         5x90U5SlngwPOkmk+qGHX5urrBAgdKgBs7nWyIRgjj7GLZP+hQ+untqhwtAIsnaNBl
-         OhOK0lo8UUfhu98J1mEFM/3PD+LfGWFdjDZEyOec=
-Date:   Wed, 20 Mar 2019 08:19:58 +0100
+        b=Vs/ot4AagNi1x/g7pbQHXIgd7K4TuGKxVAJxMw/CCZXh80ERYOSwC5dXk0JKJijl9
+         Y6vDjuAhu+rzBUcM91mNk/iiWKk2+aRFQuSai6eAQWdVzTE0bZnS+9DFiLbzslf6R9
+         pHzR6LME3NtevfG2S1OcDt1C6aK6hRp3Zd0W5rO0=
+Date:   Wed, 20 Mar 2019 08:22:06 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     George Hilliard <thirtythreeforty@gmail.com>
 Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/11] staging: mt7621-mmc: Fix warning when reloading
- module with debug msgs enabled
-Message-ID: <20190320071958.GA1914@kroah.com>
+Subject: Re: [PATCH v2 06/11] staging: mt7621-mmc: Initialize completions a
+ single time during probe
+Message-ID: <20190320072206.GB1914@kroah.com>
 References: <20190319022012.11051-1-thirtythreeforty@gmail.com>
- <20190319022012.11051-4-thirtythreeforty@gmail.com>
+ <20190319022012.11051-7-thirtythreeforty@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190319022012.11051-4-thirtythreeforty@gmail.com>
+In-Reply-To: <20190319022012.11051-7-thirtythreeforty@gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 08:20:04PM -0600, George Hilliard wrote:
-> The kernel complained:
+On Mon, Mar 18, 2019 at 08:20:07PM -0600, George Hilliard wrote:
+> The module was initializing completions whenever it was going to wait on
+> them, and not when the completion was allocated.  This is incorrect
+> according to the completion docs:
 > 
->     [  510.277151] WARNING: CPU: 0 PID: 395 at fs/proc/generic.c:360 proc_register+0xf0/0x108
->     [  510.292891] proc_dir_entry '/proc/msdc_debug' already registered
+>     Calling init_completion() on the same completion object twice is
+>     most likely a bug [...]
 > 
-> when doing a modprobe/rmmod/modprobe of this module if debug messages
-> are compiled in.  Fix this by removing the proc entry when the module is
-> unloaded.
+> Re-initialization is also unnecessary because the module never uses
+> complete_all().  Fix this by only ever initializing the completion a
+> single time.
 > 
 > Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 > ---
->  drivers/staging/mt7621-mmc/dbg.c | 15 ++++++++++++---
->  drivers/staging/mt7621-mmc/dbg.h |  3 ++-
->  drivers/staging/mt7621-mmc/sd.c  |  4 ++++
->  3 files changed, 18 insertions(+), 4 deletions(-)
+>  drivers/staging/mt7621-mmc/sd.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/staging/mt7621-mmc/dbg.c b/drivers/staging/mt7621-mmc/dbg.c
-> index fda3ba38ba37..2310f3bcc16e 100644
-> --- a/drivers/staging/mt7621-mmc/dbg.c
-> +++ b/drivers/staging/mt7621-mmc/dbg.c
-> @@ -294,9 +294,18 @@ static const struct file_operations msdc_debug_fops = {
->  	.release	= single_release,
->  };
->  
-> -void msdc_debug_proc_init(void)
-> +// Keep ahold of the proc entry we create so it can be freed during
-> +// module removal
-> +struct proc_dir_entry *msdc_debug_proc_entry;
-> +
-> +void __init msdc_debug_proc_init(void)
->  {
-> -	proc_create("msdc_debug", 0660, NULL, &msdc_debug_fops);
-> +	msdc_debug_proc_entry = proc_create("msdc_debug", 0660,
-> +					    NULL, &msdc_debug_fops);
-> +}
-> +
-> +void __exit msdc_debug_proc_deinit(void)
-> +{
-> +	proc_remove(msdc_debug_proc_entry);
->  }
-> -EXPORT_SYMBOL_GPL(msdc_debug_proc_init);
->  #endif
-> diff --git a/drivers/staging/mt7621-mmc/dbg.h b/drivers/staging/mt7621-mmc/dbg.h
-> index 2d447b2d92ae..d100324aa3fe 100644
-> --- a/drivers/staging/mt7621-mmc/dbg.h
-> +++ b/drivers/staging/mt7621-mmc/dbg.h
-> @@ -93,7 +93,8 @@ enum msdc_dbg {
->  
->  extern unsigned int sd_debug_zone[4];
->  #define TAG "msdc"
-> -void msdc_debug_proc_init(void);
-> +void __init msdc_debug_proc_init(void);
-> +void __exit msdc_debug_proc_deinit(void);
->  
->  u32 msdc_time_calc(u32 old_L32, u32 old_H32, u32 new_L32, u32 new_H32);
->  void msdc_performance(u32 opcode, u32 sizes, u32 bRx, u32 ticks);
 > diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-> index 9074848a8251..306b3b46f7c9 100644
+> index 89fbc0a1dec7..c272aa780719 100644
 > --- a/drivers/staging/mt7621-mmc/sd.c
 > +++ b/drivers/staging/mt7621-mmc/sd.c
-> @@ -1841,6 +1841,10 @@ static int __init mt_msdc_init(void)
+> @@ -467,7 +467,9 @@ static unsigned int msdc_command_start(struct msdc_host   *host,
+>  	host->cmd     = cmd;
+>  	host->cmd_rsp = resp;
 >  
->  static void __exit mt_msdc_exit(void)
->  {
-> +#if defined(MT6575_SD_DEBUG)
-> +	msdc_debug_proc_deinit();
-> +#endif
+> -	init_completion(&host->cmd_done);
+> +	// The completion should have been consumed by the previous command
+> +	// response handler, because the mmc requests should be serialized
+> +	BUG_ON(completion_done(&host->cmd_done));
 
-You shouldn't need a #ifdef in .c code.  In the .h file provide an
-"empty" function for this if the option is not defined.  Then you can
-just call this function in the .c file no matter what.
+Adding new BUG_ON() calls is not ok.  That crashes the machine and will
+break everyone.  If this really is a potential error that could happen,
+then handle it.  If not, then do not even put this there, it's not
+needed.
+
+All of the BUG_ON() entries need to be removed in the end from this code
+anyway.
 
 thanks,
 
