@@ -2,91 +2,70 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A132C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE50AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47692075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A9B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfCTMwd (ORCPT
+        id S1727536AbfCTMw5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:52:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37304 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725996AbfCTMwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:52:33 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3714C3AE664F8A08E120;
-        Wed, 20 Mar 2019 20:52:31 +0800 (CST)
-Received: from SHA1000170415.huawei.com (100.106.92.139) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 20 Mar 2019 20:52:22 +0800
-From:   Wanglai Shi <shiwanglai@hisilicon.com>
-To:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <xuwei5@hisilicon.com>, <alexander.shishkin@linux.intel.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leo.yan@linaro.org>, <suzhuangluan@hisilicon.com>
-Subject: [PATCH v2 0/3] Support static funnel and CoreSight DT on Hikey960
-Date:   Wed, 20 Mar 2019 20:38:07 +0800
-Message-ID: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 Mar 2019 08:52:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:33255 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfCTMw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 08:52:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44PVFg1bDqz9sPC;
+        Wed, 20 Mar 2019 23:52:55 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc: Make some functions static
+In-Reply-To: <CA+7wUszPviAFVjyU-=qAJfOpe_NxmimWd2-tc148NLUEc4Oj0w@mail.gmail.com>
+References: <20190312203140.31785-1-malat@debian.org> <607b412d-e5a2-5d08-7fb9-53a24e6c76d4@c-s.fr> <CA+7wUszPviAFVjyU-=qAJfOpe_NxmimWd2-tc148NLUEc4Oj0w@mail.gmail.com>
+Date:   Wed, 20 Mar 2019 23:52:53 +1100
+Message-ID: <87tvfxyafu.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [100.106.92.139]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+Mathieu Malaterre <malat@debian.org> writes:
+> On Tue, Mar 12, 2019 at 10:14 PM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>>
+>>
+>> Le 12/03/2019 à 21:31, Mathieu Malaterre a écrit :
+>> > In commit cb9e4d10c448 ("[POWERPC] Add support for 750CL Holly board")
+>> > new functions were added. Since these functions can be made static,
+>> > make it so. While doing so, it turns out that holly_power_off and
+>> > holly_halt are unused, so remove them.
+>>
+>> I would have said 'since these functions are only used in this C file,
+>> make them static'.
+>>
+>> I think this could be split in two patches:
+>> 1/ Remove unused functions, ie holly_halt() and holly_power_off().
+>> 2/ Make the other ones static.
+>
+> Michael do you want two patches ?
 
-Since before there have no platforms use static funnel in mainline
-kernel (though maybe some in-house SoC has used it but didn't upstream
-for mainline kernel yet so we don't be aware for it), when enable
-CoreSight DT binding for hikey960, we found the SoC uses the static
-funnel in the link path and but it's not supported in CoreSight funnel
-driver.
+That would be better if it's not too much trouble. A patch with a title
+of "Make some functions static" shouldn't really be deleting functions
+entirely.
 
-So patches 0001/0002 are two patches to support static funnel, this
-first patch is to update DT documentation to support static funnel (we
-call it as non-configurable funnel in documentation); the second patch
-is to support the static funnel in the CoreSight funnel driver.
-
-Credits to Suzuki shared code for CoreSight replicator refactoring,
-patches 0001/0002 heavily follows up the same fashion in Suzuki's shared
-code.
-
-Patch 0003 is the DT binding for CoreSight enabling on Hikey960, and
-it's the first consumer for use static funnel binding.
-
-This patch set has been tested on Hikey960 with perf command for trace
-data recording and decoding with below commands:
-
-  # perf record -e cs_etm/@20010000.etf/ --per-thread ./main
-  # perf report --tui
-
-
-Leo Yan (2):
-  dt-bindings: arm: coresight: Support non-configurable funnel
-  coresight: funnel: Support static funnel
-
-Wanglai Shi (1):
-  arm64: dts: hi3660: Add CoreSight support
-
- .../devicetree/bindings/arm/coresight.txt     |  45 +-
- .../boot/dts/hisilicon/hi3660-coresight.dtsi  | 456 ++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |   2 +
- .../hwtracing/coresight/coresight-funnel.c    | 112 +++--
- 4 files changed, 585 insertions(+), 30 deletions(-)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-
--- 
-2.17.1
-
+cheers
