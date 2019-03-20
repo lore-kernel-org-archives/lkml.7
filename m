@@ -2,200 +2,173 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E044CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E34C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3A621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86572218A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553102976;
+	bh=VBn8U8iX7R+SefDj+Uj7FKU7du0t+PjelTqr7TBKtaM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ZRrmp6OW9SeB6oHmkjSdnRTeg/azm8LwhdwgIG3oCoWd62Z+YejCJnIzG8Q/DugCZ
+	 QJ/vzWSvY3AfTrU1vZTx7FimLISbvSOyWkziQcJScudeZ4KCWEArBD/1OhLm04pxE/
+	 If3XAYtPQZgQz7jJw8BPcs39B9IfLL7PGi9rb9HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfCTR3T (ORCPT
+        id S1727368AbfCTR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:29:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726644AbfCTR3S (ORCPT
+        Wed, 20 Mar 2019 13:29:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43516 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbfCTR3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:29:18 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KHO6Mv114482
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:29:17 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbrpgkytt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 13:29:17 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 20 Mar 2019 17:29:14 -0000
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 20 Mar 2019 17:29:10 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2KHTBXO21364986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Mar 2019 17:29:11 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97A39B2066;
-        Wed, 20 Mar 2019 17:29:11 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6876CB206B;
-        Wed, 20 Mar 2019 17:29:11 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Mar 2019 17:29:11 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E05EF16C1B3D; Wed, 20 Mar 2019 10:30:01 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 10:30:01 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v2] rcu: Allow to eliminate softirq processing from
- rcutree
-Reply-To: paulmck@linux.ibm.com
-References: <20190315111130.4902-1-bigeasy@linutronix.de>
- <20190318022434.GE4102@linux.ibm.com>
- <20190319114419.qlsw3i5bmndoyvao@linutronix.de>
- <20190320113219.d6c3gouqbnsnl5nj@linutronix.de>
- <20190320152146.GH4102@linux.ibm.com>
- <20190320154440.GA16332@linux.ibm.com>
- <20190320160547.s5lbeahr2y4jlzwt@linutronix.de>
- <20190320161500.GK4102@linux.ibm.com>
- <20190320163532.mr32oi53iaueuizw@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320163532.mr32oi53iaueuizw@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032017-0068-0000-0000-000003A89C10
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01177162; UDB=6.00615777; IPR=6.00957858;
- MB=3.00026075; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-20 17:29:13
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032017-0069-0000-0000-000047E1DB4F
-Message-Id: <20190320173001.GM4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903200129
+        Wed, 20 Mar 2019 13:29:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=rp6NB9xNNh4uX2mxx8BntkrwhxEbDT3leRORdwcGVvU=; b=NA11nkwnF+k+
+        0iSdQCMJMnQcqTYmyitGs3kGpHBOOnQZ8BKSccnaRK6qDEweou6Qlv/JpoyuYuexvvTEBoBNep5d+
+        MHfL4AX6FLH5n53hDtcRlOzUF3uuZFzXv9IcXEZnarqXDILVLqvD10/puaj/XoHMpaOcCJ0enJyjr
+        kfEk0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h6f1s-00018C-DV; Wed, 20 Mar 2019 17:29:28 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id EADBE1126E4D; Wed, 20 Mar 2019 17:29:27 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
+        sbkim73@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org,
+        m.szyprowski@samsung.com, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: samsung: i2s: Don't use register read to determine slave/master mode" to the asoc tree
+In-Reply-To:  <20190319121102.28069-1-s.nawrocki@samsung.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190320172927.EADBE1126E4D@debutante.sirena.org.uk>
+Date:   Wed, 20 Mar 2019 17:29:27 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 05:35:32PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2019-03-20 09:15:00 [-0700], Paul E. McKenney wrote:
-> > I am considering making it a module_param() to avoid namespace pollution,
-> > as it would become something like rcutree.nosoftirq.
-> > 
-> > Thoughts?
-> 
-> nope, perfect.
+The patch
 
-Please see below for an untested patch.  Thoughts?
+   ASoC: samsung: i2s: Don't use register read to determine slave/master mode
 
-							Thanx, Paul
+has been applied to the asoc tree at
 
-------------------------------------------------------------------------
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d377a2166b79..767cdea30a1c 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3672,6 +3672,10 @@
- 			the propagation of recent CPU-hotplug changes up
- 			the rcu_node combining tree.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From f29eec793d4d16a1019abac1ac0702d07adae78e Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Tue, 19 Mar 2019 13:11:02 +0100
+Subject: [PATCH] ASoC: samsung: i2s: Don't use register read to determine
+ slave/master mode
+
+We can simplify the code by caching the CPU DAI master/slave
+information rather than reading previously set register bit.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/samsung/i2s.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
+
+diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+index ab471d550d17..9722940da6a4 100644
+--- a/sound/soc/samsung/i2s.c
++++ b/sound/soc/samsung/i2s.c
+@@ -88,12 +88,6 @@ struct samsung_i2s_priv {
+ 	struct platform_device *pdev;
+ 	struct platform_device *pdev_sec;
  
-+	rcutree.nosoftirq=	[KNL]
-+			If set, move all RCU_SOFTIRQ processing to per-CPU
-+			rcuc kthreads.  Defaults to using RCU_SOFTIRQ.
+-	/* Memory mapped SFR region */
+-	void __iomem *addr;
+-
+-	/* Spinlock protecting access to the device's registers */
+-	spinlock_t lock;
+-
+ 	/* Lock for cross interface checks */
+ 	spinlock_t pcm_lock;
+ 
+@@ -122,6 +116,15 @@ struct samsung_i2s_priv {
+ 	/* The clock provider's data */
+ 	struct clk *clk_table[3];
+ 	struct clk_onecell_data clk_data;
 +
- 	rcutree.rcu_fanout_exact= [KNL]
- 			Disable autobalancing of the rcu_node combining
- 			tree.  This is used by rcutorture, and might
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 961dbc7b8949..e4baba8800f3 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -98,6 +98,9 @@ struct rcu_state rcu_state = {
- /* Dump rcu_node combining tree at boot to verify correct setup. */
- static bool dump_tree;
- module_param(dump_tree, bool, 0444);
-+/* Move RCU_SOFTIRQ to rcuc kthreads. */
-+static bool nosoftirq;
-+module_param(nosoftirq, bool, 0444);
- /* Control rcu_node-tree auto-balancing at boot time. */
- static bool rcu_fanout_exact;
- module_param(rcu_fanout_exact, bool, 0444);
-@@ -2330,15 +2333,6 @@ static void rcu_wake_cond(struct task_struct *t, int status)
- 		wake_up_process(t);
++	/* Spinlock protecting member fields below */
++	spinlock_t lock;
++
++	/* Memory mapped SFR region */
++	void __iomem *addr;
++
++	/* A flag indicating the I2S slave mode operation */
++	bool slave_mode;
+ };
+ 
+ /* Returns true if this is the 'overlay' stereo DAI */
+@@ -130,15 +133,6 @@ static inline bool is_secondary(struct i2s_dai *i2s)
+ 	return i2s->drv->id == SAMSUNG_I2S_ID_SECONDARY;
  }
  
--static bool rcu_softirq_enabled = true;
--
--static int __init rcunosoftirq_setup(char *str)
+-/* If operating in SoC-Slave mode */
+-static inline bool is_slave(struct i2s_dai *i2s)
 -{
--	rcu_softirq_enabled = false;
--	return 0;
--}
--__setup("rcunosoftirq", rcunosoftirq_setup);
+-	struct samsung_i2s_priv *priv = i2s->priv;
 -
- /*
-  * Wake up this CPU's rcuc kthread to do RCU core processing.
-  */
-@@ -2349,7 +2343,7 @@ static void invoke_rcu_core(void)
+-	u32 mod = readl(priv->addr + I2SMOD);
+-	return (mod & (1 << priv->variant_regs->mss_off)) ? true : false;
+-}
+-
+ /* If this interface of the controller is transmitting data */
+ static inline bool tx_active(struct i2s_dai *i2s)
+ {
+@@ -715,6 +709,7 @@ static int i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	mod &= ~(sdf_mask | lrp_rlow | mod_slave);
+ 	mod |= tmp;
+ 	writel(mod, priv->addr + I2SMOD);
++	priv->slave_mode = (mod & mod_slave);
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 	pm_runtime_put(dai->dev);
  
- 	if (!cpu_online(smp_processor_id()))
- 		return;
--	if (rcu_softirq_enabled) {
-+	if (!nosoftirq) {
- 		raise_softirq(RCU_SOFTIRQ);
- 	} else {
- 		local_irq_save(flags);
-@@ -2424,7 +2418,7 @@ static int __init rcu_spawn_core_kthreads(void)
+@@ -917,7 +912,7 @@ static int config_setup(struct i2s_dai *i2s)
+ 	set_rfs(i2s, rfs);
  
- 	for_each_possible_cpu(cpu)
- 		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
--	if (!IS_ENABLED(CONFIG_RCU_BOOST) && rcu_softirq_enabled)
-+	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !nosoftirq)
+ 	/* Don't bother with PSR in Slave mode */
+-	if (is_slave(i2s))
++	if (priv->slave_mode)
  		return 0;
- 	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
- 	return 0;
-@@ -3467,7 +3461,7 @@ void __init rcu_init(void)
- 	rcu_init_one();
- 	if (dump_tree)
- 		rcu_dump_rcu_node_tree();
--	if (rcu_softirq_enabled)
-+	if (!nosoftirq)
- 		open_softirq(RCU_SOFTIRQ, rcu_core_si);
  
- 	/*
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index eb99e750a930..c5a2acb2c7af 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -72,6 +72,8 @@ static void __init rcu_bootup_announce_oddness(void)
- 		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
- 	if (gp_cleanup_delay)
- 		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
-+	if (nosoftirq)
-+		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
- 	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
- 		pr_info("\tRCU debug extended QS entry/exit.\n");
- 	rcupdate_announce_bootup_oddness();
+ 	if (!(priv->quirks & QUIRK_NO_MUXPSR)) {
+-- 
+2.20.1
 
