@@ -2,183 +2,162 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E74C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3B1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDAC2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDE22146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 15:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfCTPoZ (ORCPT
+        id S1727167AbfCTPo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 11:44:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:6802 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbfCTPoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 11:44:25 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AA7F1C13071D;
-        Wed, 20 Mar 2019 15:44:24 +0000 (UTC)
-Received: from x230.aquini.net (dhcp-17-61.bos.redhat.com [10.18.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2F9E5D73F;
-        Wed, 20 Mar 2019 15:44:23 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 11:44:20 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     chrubis@suse.cz, vbabka@suse.cz, kirill@shutemov.name,
-        osalvador@suse.de, akpm@linux-foundation.org,
-        stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: mempolicy: make mbind() return -EIO when
- MPOL_MF_STRICT is specified
-Message-ID: <20190320154420.GE23194@x230.aquini.net>
-References: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
+        Wed, 20 Mar 2019 11:44:29 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.228]:25826 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726688AbfCTPo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 11:44:26 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id C310042BF8CB5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 10:36:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6dG9hNhI3dnCe6dG9hFmJ8; Wed, 20 Mar 2019 10:36:05 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=47548 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6dG9-0014wD-BU; Wed, 20 Mar 2019 10:36:05 -0500
+To:     Robin Holt <robinmholt@gmail.com>
+Cc:     Cliff Whickman <cpw@sgi.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190227042454.GA29535@embeddedor>
+ <480940a4-1b7c-564e-2921-37c5b7e0a5b9@embeddedor.com>
+ <CAPp3RGpDZ1oNBOCfizjyrQvp6yGqS89iB_QkjRRqL4FAfZRTXg@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [sgi-xp] Missing break or false positive?
+Message-ID: <7ff0aeb7-9011-f205-f55a-5066b07f060b@embeddedor.com>
+Date:   Wed, 20 Mar 2019 10:36:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 20 Mar 2019 15:44:24 +0000 (UTC)
+In-Reply-To: <CAPp3RGpDZ1oNBOCfizjyrQvp6yGqS89iB_QkjRRqL4FAfZRTXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h6dG9-0014wD-BU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:47548
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 02:35:56AM +0800, Yang Shi wrote:
-> When MPOL_MF_STRICT was specified and an existing page was already
-> on a node that does not follow the policy, mbind() should return -EIO.
-> But commit 6f4576e3687b ("mempolicy: apply page table walker on
-> queue_pages_range()") broke the rule.
+
+
+On 3/20/19 10:23 AM, Robin Holt wrote:
+> I am sorry for my delayed response.  I missed the earlier email.
 > 
-> And, commit c8633798497c ("mm: mempolicy: mbind and migrate_pages
-> support thp migration") didn't return the correct value for THP mbind()
-> too.
+> On Wed, Mar 20, 2019 at 9:37 AM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+> ...
+>>> I'm taking a look into the following piece of code in drivers/misc/sgi-xp/xpc_uv.c:
+> ...
+>>> and I'm trying to figure out if the following warning is due to a missing break
+>>> at the end of the case, or if this is just a false positive and a /* fall through */
+>>> annotation should be added:
 > 
-> If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it reaches
-> queue_pages_to_pte_range() or queue_pages_pmd() to check if an existing
-> page was already on a node that does not follow the policy.  And,
-> non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
-> MPOL_MF_MOVE_ALL was specified.
+> The fall-through is by design.  The protocol previously had a windows
+> of failure where a connection
+> could be in the process of being established and a failure could be
+> detected prior to the
+> handling of the establishment message.  I added the new open complete
+> message and leveraged
+> the fall-through to mark the connection established.
 > 
-> Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
+
+Great. I see now.
+
+> Please let me know if you do not intend to submit a patch for this.
 > 
-> Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
-> Reported-by: Cyril Hrubis <chrubis@suse.cz>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: stable@vger.kernel.org
-> Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  mm/mempolicy.c | 40 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 33 insertions(+), 7 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index abe7a67..401c817 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -447,6 +447,13 @@ static inline bool queue_pages_required(struct page *page,
->  	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
->  }
->  
-> +/*
-> + * The queue_pages_pmd() may have three kind of return value.
-> + * 1 - pages are placed on he right node or queued successfully.
-> + * 0 - THP get split.
-> + * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
-> + *        page was already on a node that does not follow the policy.
-> + */
->  static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
->  				unsigned long end, struct mm_walk *walk)
->  {
-> @@ -456,7 +463,7 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
->  	unsigned long flags;
->  
->  	if (unlikely(is_pmd_migration_entry(*pmd))) {
-> -		ret = 1;
-> +		ret = -EIO;
->  		goto unlock;
->  	}
->  	page = pmd_page(*pmd);
-> @@ -473,8 +480,15 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
->  	ret = 1;
->  	flags = qp->flags;
->  	/* go to thp migration */
-> -	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-> +	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-> +		if (!vma_migratable(walk->vma)) {
-> +			ret = -EIO;
-> +			goto unlock;
-> +		}
-> +
->  		migrate_page_add(page, qp->pagelist, flags);
-> +	} else
-> +		ret = -EIO;
->  unlock:
->  	spin_unlock(ptl);
->  out:
-> @@ -499,8 +513,10 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  	ptl = pmd_trans_huge_lock(pmd, vma);
->  	if (ptl) {
->  		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
-> -		if (ret)
-> +		if (ret > 0)
->  			return 0;
-> +		else if (ret < 0)
-> +			return ret;
->  	}
->  
->  	if (pmd_trans_unstable(pmd))
-> @@ -521,11 +537,16 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  			continue;
->  		if (!queue_pages_required(page, qp))
->  			continue;
-> -		migrate_page_add(page, qp->pagelist, flags);
-> +		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-> +			if (!vma_migratable(vma))
-> +				break;
-> +			migrate_page_add(page, qp->pagelist, flags);
-> +		} else
-> +			break;
->  	}
->  	pte_unmap_unlock(pte - 1, ptl);
->  	cond_resched();
-> -	return 0;
-> +	return addr != end ? -EIO : 0;
->  }
->  
->  static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
-> @@ -595,7 +616,12 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->  	unsigned long endvma = vma->vm_end;
->  	unsigned long flags = qp->flags;
->  
-> -	if (!vma_migratable(vma))
-> +	/*
-> +	 * Need check MPOL_MF_STRICT to return -EIO if possible
-> +	 * regardless of vma_migratable
-> +	 */ 
-> +	if (!vma_migratable(vma) &&
-> +	    !(flags & MPOL_MF_STRICT))
->  		return 1;
->  
->  	if (endvma > end)
-> @@ -622,7 +648,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->  	}
->  
->  	/* queue pages from current vma */
-> -	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-> +	if (flags & MPOL_MF_VALID)
->  		return 0;
->  	return 1;
->  }
-> -- 
-> 1.8.3.1
-> 
-Acked-by: Rafael Aquini <aquini@redhat.com>
+
+I will send a patch to add the fall-through comment and fix the following
+warning:
+
+drivers/misc/sgi-xp/xpc_uv.c: In function ‘xpc_handle_activate_mq_msg_uv’:
+drivers/misc/sgi-xp/xpc_uv.c:573:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   xpc_wakeup_channel_mgr(part);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/misc/sgi-xp/xpc_uv.c:575:2: note: here
+  case XPC_ACTIVATE_MQ_MSG_MARK_ENGAGED_UV:
+  ^~~~
+
+Notice that this is part of the ongoing efforts to enable -Wimplicit-fallthrough.
+
+Thanks, Robin.
+--
+Gustavo
