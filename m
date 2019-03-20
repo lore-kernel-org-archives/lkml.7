@@ -2,147 +2,67 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9534C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D9C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767EE2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jt8oTMv7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fs5Lon0c"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF302175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 12:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfCTMJw (ORCPT
+        id S1727227AbfCTMKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 08:09:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58160 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfCTMJw (ORCPT
+        Wed, 20 Mar 2019 08:10:34 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:44731 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfCTMKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 08:09:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 721F261132; Wed, 20 Mar 2019 12:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553083791;
-        bh=AYlVRFsJ1EMDkewEnL7RGOeKBt+otADotoLzbyCJOww=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jt8oTMv7s7im0/EH4Kv2veP2Y+lSY4Azqfa0jnhJZjC/d+9k4EBnA+88ijTF5V/ev
-         xuqxdVHQpcdbJjE3VJjacgtMfpxHXs6TGK8eUNeezuSSLAVoBqKltigr/N/5xZIFkG
-         tJo0torcvxP1HnS8YlY0TI3xFnaL+1cYjcZTcqAI=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5F1360E59;
-        Wed, 20 Mar 2019 12:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553083789;
-        bh=AYlVRFsJ1EMDkewEnL7RGOeKBt+otADotoLzbyCJOww=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fs5Lon0credtjwGh2UCZ8s9yTdBeLL15nZHksfBMJtUf1hfpo6G0jm7DTYMtxvuMi
-         biljnfeH2zkvRQK5b69mA6r3+k/mLiCZ1ar1bVOXQG3w3LyRNqPYeB2W+MPl/+DxaY
-         vJ/63TLcg2m01RygEp+/ppd7rwtnbIazuwR3GINI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5F1360E59
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] thunderbolt: Fix to check for kmemdup failure
-To:     Aditya Pakki <pakki001@umn.edu>, pakki001@um.edu
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20190318224417.7500-1-pakki001@umn.edu>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <3984668e-9ac6-1e47-01fc-dfab8cd77cae@codeaurora.org>
-Date:   Wed, 20 Mar 2019 17:39:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Mar 2019 08:10:34 -0400
+X-Originating-IP: 182.72.246.220
+Received: from localhost (unknown [182.72.246.220])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id A84C540002;
+        Wed, 20 Mar 2019 12:10:31 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] rtc: sd3078: fix manufacturer name
+Date:   Wed, 20 Mar 2019 13:10:23 +0100
+Message-Id: <20190320121023.12632-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190318224417.7500-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The proper manufacturer name is Shenzhen whwave.
 
-On 3/19/2019 4:14 AM, Aditya Pakki wrote:
-> Memory allocated via kmemdup might fail and return a NULL pointer.
-> This patch adds a check on the return value of kmemdup and passes the
-> error upstream.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->   drivers/thunderbolt/switch.c | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-> index cd96994dc094..c05d77073ee7 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -1294,13 +1294,13 @@ int tb_switch_configure(struct tb_switch *sw)
->   	return tb_plug_events_active(sw, true);
->   }
->   
-> -static void tb_switch_set_uuid(struct tb_switch *sw)
-> +static int tb_switch_set_uuid(struct tb_switch *sw)
->   {
->   	u32 uuid[4];
->   	int cap;
->   
->   	if (sw->uuid)
-> -		return;
-> +		return 0;
->   
->   	/*
->   	 * The newer controllers include fused UUID as part of link
-> @@ -1323,6 +1323,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
->   	}
->   
->   	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
-> +	if (!sw->uuid)
-> +		return -ENOMEM;
-> +	return 0;
->   }
->   
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Change looks good to me.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a71734c41693..f933c06bff4f 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -667,9 +667,9 @@ config RTC_DRV_S5M
+ 	  will be called rtc-s5m.
+ 
+ config RTC_DRV_SD3078
+-    tristate "ZXW Crystal SD3078"
++    tristate "ZXW Shenzhen whwave SD3078"
+     help
+-      If you say yes here you get support for the ZXW Crystal
++      If you say yes here you get support for the ZXW Shenzhen whwave
+       SD3078 RTC chips.
+ 
+       This driver can also be built as a module. If so, the module
+-- 
+2.20.1
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-but, we should add check for `tb_sw_read  ` this as well.
-
-
-Cheers,
-Mukesh
-
-
->   static int tb_switch_add_dma_port(struct tb_switch *sw)
-> @@ -1372,7 +1375,9 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
->   
->   	if (status) {
->   		tb_sw_info(sw, "switch flash authentication failed\n");
-> -		tb_switch_set_uuid(sw);
-> +		ret = tb_switch_set_uuid(sw);
-> +		if (ret)
-> +			return ret;
->   		nvm_set_auth_status(sw, status);
->   	
->   
-> @@ -1Reviewed-by: Andy Shevchenko<andriy.shevchenko@linux.intel.com>422,7 +1427,9 @@ int tb_switch_add(struct tb_switch *sw)
->   		}
->   		tb_sw_dbg(sw, "uid: %#llx\n", sw->uid);
->   
-> -		tb_switch_set_uuid(sw);
-> +		ret = tb_switch_set_uuid(sw);
-> +		if (ret)
-> +			return ret;
->   
->   		for (i = 0; i <= sw->config.max_port_number; i++) {
->   			if (sw->ports[i].disabled) {
