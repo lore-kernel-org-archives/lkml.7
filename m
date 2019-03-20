@@ -2,130 +2,123 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9380C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13761C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9550A218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553125030;
-	bh=gG2iKCeWscUvUIf07huDC9Y72Ah0Z90Pl30uhhrzxCI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HLJAXETxCfhONWCZsf+sAZbU2K3GZTTligRTZiMRb6jQOjz+UHZrecvtl/BTxG4Z7
-	 5KSSGHl+IWJKsTb+zEimY/00YJcrECw8b3t+L/4R2CqhIXIV+oz7s8WxXuplCy2OXX
-	 G3m/5PUHxUEexEsnEcMXvlCOIR/NtsIrZpoEMyfc=
+	by mail.kernel.org (Postfix) with ESMTP id C7FE3218A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 23:43:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g/+3+Sio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfCTXhJ (ORCPT
+        id S1727569AbfCTXnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 19:37:09 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45793 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfCTXhI (ORCPT
+        Wed, 20 Mar 2019 19:43:04 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53178 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfCTXnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 19:37:08 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m16so3474350edd.12;
-        Wed, 20 Mar 2019 16:37:07 -0700 (PDT)
+        Wed, 20 Mar 2019 19:43:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a184so950756wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 16:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Yq9DaKQ00cZ1pNB/118bquMfFjN67tRouuMKGnaosxo=;
+        b=g/+3+SiohpvgLWqF76bydKQh5mu3EafovnZgDZ7H6/rShY7jkXb92VfHqPorpwnnyp
+         E5bqm7lBlCiuMSNGgqtLTnYv8+ZkQ3eroyokx08VONoxlJnTd0fqAhhUkMs/BrEYTfki
+         HdiBuMQdrCbPO0jsvDzOqAPk93XqIrdqH+yl2Ii0Yz1BBNBilfyZAivga7sR5AS2YnvJ
+         0remWZ0gAnTstQl4/jSZCTl2WQef3gSBoiTqztTMb4sVFhTpejS9OoJyoLSNWNEY0aEP
+         EiP/j76a9E7HxcTigiDBoLEzp6TZUEHsElILgMJQho+boyzAYP63Lrawb7C+ccvAFng7
+         ZrSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ushezcBHXWI6B6QX5Mtp0NVcZN/Sz1kfM0fpYGf14CU=;
-        b=jKO3wib2HwaJzXGdQbXLJgaoSmVhe90wXbFSMVz73En//1ewgG3TqRYG0srErsudv1
-         pBDTrwUEw2F3/y74czooMbs1ak5ppMeZYCK7fluqOqF4O/j9dvr4UUP9oaR0Bc2RxeMM
-         /pHKQJNjS8+fY/q5WTm8G1d1Po//mGBACFLoeJ5dNCa6MZqu8xH/mC3yPvgB/vY/sKUo
-         gnQEUNDWQZZR0yJsFNIXlKw2uqNocnHqkipog6K7yQ5L+F9qsB9f4JbJobQihcM9+AsF
-         P4h6Vvb3BIVE/VT3WrBN59yas7qIQSKMevgXMUIYAOs8EPudCYpTu1aFNGf4B1a9ddL4
-         ZH6w==
-X-Gm-Message-State: APjAAAVtmKzYskWgXPbSNIrlyNvCK7HcHwDWUATNA3KHWaGt/ynNFxEa
-        R9iTg6o/SyfE7QLeSIxjy0IzkRsLdCwsqzE18p9ynQ==
-X-Google-Smtp-Source: APXvYqz++R+/GdBRojULH4zPAbG+3babyd18AmltFRWtyso/FMYBEtpnJWZR8efanqTSytMU9G2/K2Pbbt09rSmlKLk=
-X-Received: by 2002:a50:b8e2:: with SMTP id l89mr393297ede.140.1553125026988;
- Wed, 20 Mar 2019 16:37:06 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Yq9DaKQ00cZ1pNB/118bquMfFjN67tRouuMKGnaosxo=;
+        b=fmHSy56B5v8MZScFqAc3WwGmTvRkY7ou8d3vyVDZ769LmK6GL+DkFw5OAALsmqOama
+         T2tH4BuONIj6zzu4jNHHkduW2vzMtXDAVtZXwy5Pqvzj6mEdnaDbWPneikhYzSy1PGUc
+         wQGdtio235T0C8xftznBVupFw9RQug2EMRLuT8NtWH/YcZR1Bxx64cgxhcMqeRj1HuZr
+         dCYkvGJW++vJWiIO9MG717pShxk1f69So4/DQl/NteC04ReFDmsP1PLHsX2ErXGBq3yf
+         5CXf86S6Qe+ivuMiBKqMllMkt0ZbupSLwwVjQpp7uym0U+Zl0ErFQ0fqZoXs2ERT4Ww0
+         d6Cg==
+X-Gm-Message-State: APjAAAXIpi7yFweGEtsZavaXmd1PIzhgIvXKDrghVAQ4gigF5TLV30CR
+        a7q3gwjfbHWhQ2QDsesaUbt2tgp5tI5EUC13bEfqCQ==
+X-Google-Smtp-Source: APXvYqwNG337fMRQuhO2GxyuPqxFSpQGhhmTb79a1MxvqX9C1ZpTUKXaFwquUwh6UdvyP/bq+oYGIqzY2ivcuINprAU=
+X-Received: by 2002:a1c:9691:: with SMTP id y139mr467757wmd.64.1553125381390;
+ Wed, 20 Mar 2019 16:43:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20180817163442.10065-1-calvin.walton@kepstin.ca> <20180817163442.10065-3-calvin.walton@kepstin.ca>
-In-Reply-To: <20180817163442.10065-3-calvin.walton@kepstin.ca>
-From:   Len Brown <lenb@kernel.org>
-Date:   Wed, 20 Mar 2019 19:36:55 -0400
-Message-ID: <CAJvTdKmXSQyY-Jdv7OkseHEE-76oDPLeJ8v8ShApDRKqWsukSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] [WIP] tools/power turbostat: Also read package
- power on AMD F17h (Zen)
-To:     Calvin Walton <calvin.walton@kepstin.ca>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
+References: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
+ <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com> <02E7334B1630744CBDC55DA8586225837F7FB935@ORSMSX102.amr.corp.intel.com>
+In-Reply-To: <02E7334B1630744CBDC55DA8586225837F7FB935@ORSMSX102.amr.corp.intel.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 20 Mar 2019 16:42:48 -0700
+Message-ID: <CALAqxLXqPSt2X=vo1qsyz4mwPkKj9s2g2VSqQbrWUkG2KYSjaQ@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
+To:     "Yang, Fei" <fei.yang@intel.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        "Shen, JingX" <jingx.shen@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Calvin,
-I'm inclined to apply this -- because it will not break anything,
-and it would at least enable testing by people, who have this hardware.
+On Wed, Mar 20, 2019 at 4:28 PM Yang, Fei <fei.yang@intel.com> wrote:
+>
+> > Hey Fei,
+> >  So while this patch does resolve the issues I was seeing with mainline=
+ kernels and recent changes to adbd,
+> > Josh pointed out that it wouldn't resolve the issues I was seeing with =
+older kernels which is slightly different (but still related to aio usage).
+> >
+> > On the older kernels I'm hitting scheduling while atomic on reboot, whi=
+ch seems to be due to ffs_aio_cancel() taking a spinlock then calling usb_e=
+p_dequeue() which might sleep.
+> >
+> > It seems a fix for this was tried earlier with d52e4d0c0c428 ("usb:
+> > gadget: ffs: Fix BUG when userland exits with submitted AIO
+> > transfers") which was then reverted by a9c859033f6e.
+> >
+> > Elsewhere it seems the ffs driver takes effort to drop any locks before=
+ calling usb_ep_dequeue(), so this seems like
+> > that should be addressed, but it also seems like recent change to the d=
+wc3 driver has been made to avoid sleeping
+> > in that path (see fec9095bdef4 ("usb: dwc3: gadget: remove wait_end_tra=
+nsfer")), which may be why I'm not seeing
+> > the problem with mainline (and your patch here, of coarse). But that al=
+so doesn't clarify if its still a potential issue
+> > w/ non-dwc3 platforms.
+> >
+> > So for older kernels, do you have a suggestion of which approach is adv=
+ised?  Does usb_ep_dequeue need to avoid
+> > sleeping or do we need to rework the ffs_aio_cancel logic?
+>
+> Are you seeing this issue with Android? When running adb reboot?
+> I have tried 4.19 and 4.9 kernel with Android P-dessert on one of the Int=
+el platforms, but no luck on reproducing the issue.
 
-thoughts?
--Len
+You probably need to be running AOSP/master to trigger this. The
+changes which uncovered this landed just last week.
 
-On Fri, Aug 17, 2018 at 12:35 PM Calvin Walton <calvin.walton@kepstin.ca> wrote:
->
-> The package power can also be read from an MSR. It's not clear exactly
-> what is included, and whether it's aggregated over all nodes or
-> reported separately.
->
-> It does look like this is reported separately per CCX (I get a single
-> value on the Ryzen R7 1700), but it might be reported separately per-
-> die (node?) on larger processors. If that's the case, it would have to
-> be recorded per node and aggregated for the socket.
->
-> Note that although Zen has these MSRs reporting power, it looks like
-> the actual RAPL configuration (power limits, configured TDP) is done
-> through PCI configuration space. I have not yet found any public
-> documentation for this.
->
-> Signed-off-by: Calvin Walton <calvin.walton@kepstin.ca>
-> ---
->  tools/power/x86/turbostat/turbostat.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-> index 89d4e2e75774..675c894b8595 100644
-> --- a/tools/power/x86/turbostat/turbostat.c
-> +++ b/tools/power/x86/turbostat/turbostat.c
-> @@ -1973,6 +1973,11 @@ int get_counters(struct thread_data *t, struct core_data *c, struct pkg_data *p)
->                         return -16;
->                 p->rapl_dram_perf_status = msr & 0xFFFFFFFF;
->         }
-> +       if (do_rapl & RAPL_AMD_F17H) {
-> +               if (get_msr(cpu, MSR_PKG_ENERGY_STAT, &msr))
-> +                       return -13;
-> +               p->energy_pkg = msr & 0xFFFFFFFF;
-> +       }
->         if (DO_BIC(BIC_PkgTmp)) {
->                 if (get_msr(cpu, MSR_IA32_PACKAGE_THERM_STATUS, &msr))
->                         return -17;
-> @@ -3986,10 +3991,13 @@ void rapl_probe_amd(unsigned int family, unsigned int model)
->         switch (family) {
->         case 0x17: /* Zen, Zen+ */
->                 do_rapl = RAPL_AMD_F17H | RAPL_PER_CORE_ENERGY;
-> -               if (rapl_joules)
-> +               if (rapl_joules) {
-> +                       BIC_PRESENT(BIC_Pkg_J);
->                         BIC_PRESENT(BIC_Cor_J);
-> -               else
-> +               } else {
-> +                       BIC_PRESENT(BIC_PkgWatt);
->                         BIC_PRESENT(BIC_CorWatt);
-> +               }
->                 break;
->         default:
->                 return;
-> --
-> 2.18.0
->
+> I will get back to you if I could reproduce the issue. I'm afraid I won=
+=E2=80=99t be able to do much by just looking at the code.
 
+So as discussed in further mails, the main issue seems to be the dwc3
+code was sleeping in its ep_dequeue logic, which isn't safe as
+ffs_aio_cancel calls it while holding a spinlock. Upstream the dw3c
+driver has been fixed, but -stable kernels still have the issue.
 
--- 
-Len Brown, Intel Open Source Technology Center
+thanks
+-john
