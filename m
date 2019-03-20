@@ -2,101 +2,247 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEC9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A636DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8566D2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DC95j/c/"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2512175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 14:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfCTOe3 (ORCPT
+        id S1726971AbfCTOh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 10:34:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40772 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfCTOe2 (ORCPT
+        Wed, 20 Mar 2019 10:37:29 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37605 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfCTOh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 10:34:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t5so3022754wri.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9gf5vEOicvdaLY+Lte1r0sJrNaxQUSIFlZ/Cjd0HhPE=;
-        b=DC95j/c/26SpIrVNxjTurhze0RXRKhsltdoAkDdL3sj01cVf17jiiMPaV6ducB6mAK
-         Qj30OG7Z3SpJykLrOR3uMKjHPHbV96XCCCMsA+WVy99Q8Wc6U8GRap6r5E5ldBPUtumi
-         8s+1RSLJscQLmoFWjoCuaoffYfSBefHfkxbx4AbYdKOj7zchr1aZHfG+lCCiClKrSJYK
-         GW7yaNc1eHiM4j7yhTQiLkDPDKvvdpTg0bpRbM0jR6WmkCcVkBVgj+ldW+K9nJXLFWm3
-         CHXuOwROs+84/QvbGB9NJZS4wj24Ns1nGWYzoORXtl1y7KezFMnYWtgPzuNwpalzCAcv
-         PDTg==
+        Wed, 20 Mar 2019 10:37:29 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z16so1321985qtn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 07:37:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9gf5vEOicvdaLY+Lte1r0sJrNaxQUSIFlZ/Cjd0HhPE=;
-        b=paddLKQzNrDon/yXAVpL3RLoPdjAIIQrQdHN/htecMQ9HCVQl8QioX/8s+64nLQudI
-         ox6iW0xDb9gjwyxGEvU3PhnLdsUcSd1wmk3J7D/tBbBQLB9jbIDssFVr6gyhYVsFo9VH
-         qpf4hDKO8+T2Y4GoCWX3H0EVisIOIKpG5kvP9Zl6X1d2rhwlgN52aGHo9KlIXnGPsIiw
-         LESPAHvLxFx2AXXggHX6KI9uNrpcvXVOw1CmIV44cyxpWO945kK6KkW+jn5hMDn1LuHQ
-         xDgPbqewN+d0RS7bJNC8CvPUX4pGqVDFCDxo0e+9OnM8uD2Y7u7bEI7QGcfG4xPbjg4T
-         2zSA==
-X-Gm-Message-State: APjAAAVWviyO4T3nICRieXNQa+up5+C+bpdjYggfq3Zmv4gXlNWBZbys
-        GuH4EM3Ohe5EFipiHLROHlFxB2W4CcU=
-X-Google-Smtp-Source: APXvYqxnMirFz/1J9mXZKf/Y2crwc4hIqvgsBO6bLfm0QgF4ufTdHcUx8Kt2TO1E/pvR8YGBVutxBw==
-X-Received: by 2002:adf:ea81:: with SMTP id s1mr12090139wrm.277.1553092467120;
-        Wed, 20 Mar 2019 07:34:27 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id n11sm5552905wrt.63.2019.03.20.07.34.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 07:34:26 -0700 (PDT)
-Subject: Re: [PATCH v2] nvmem: core: Set no-read-write provider to avoid
- userspace read/write
-To:     Gaurav Kohli <gkohli@codeaurora.org>, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org
-References: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <48a71861-c60b-7fe7-d4af-5269cd7c20eb@linaro.org>
-Date:   Wed, 20 Mar 2019 14:34:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=//vG8eTUhNqm9XVfvQN+UoQ34r3k2yFLti14LuKsEkQ=;
+        b=KfDc25YGp1kaZj5haOWRMKPjVBtbrLm7HZZZ3kCEpZMZAazPbfkWsaKWJwZgLNbuRQ
+         oQ4PSw2WHfGW/bjwbqDtnH/PFV67LzBhZbgNLOeZ323wWLDtuiRLp2/Y+kRAqTQfmxSF
+         eB8Ddg4BQ0uSF+QTE1lp1u17aTfMw989epzcYPty/kNNfX8Jf+bnN/ewHGPSyO7pfhVC
+         g3R28OvTKK8dKG6lbv2o08nANDQU/VTiK6OnfG+YlNlzv8u3DyEchYhyyDkDZYxLajIO
+         6raoi+kXA1Osjc7Q8Fa6XOPaohuh6OjUUYedBYE8HY/c7oltUBuwGxgxkblIxH6gcIZV
+         jCHw==
+X-Gm-Message-State: APjAAAXWBhMcYEN/e8PWJugEwKw8hCncLY2pi6vNmyYF02xAt/zB3c2J
+        QpVt/oXycG14gbiSQhsA2pdluqYK6j9HwJ3cD65FSQ==
+X-Google-Smtp-Source: APXvYqzcfwNl3a9FEFbzKU+u8hOUEZZ7tjV7tcH29Rz6xDHnk40XMRsZevgnpBYyG2Rb1XE4UxCJYLJz7L6oH4nt79o=
+X-Received: by 2002:ac8:2cd6:: with SMTP id 22mr7288141qtx.112.1553092647349;
+ Wed, 20 Mar 2019 07:37:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <LaQHUFs--3-1@tutanota.com>
+In-Reply-To: <LaQHUFs--3-1@tutanota.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 20 Mar 2019 15:37:16 +0100
+Message-ID: <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     hotwater438@tutanota.com
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>, bigeasy@linutronix.de,
+        Dmitry Torokhov <dtor@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vladislav,
+
+I really appreciate the contribution, there are a few issues with the
+formatting of the patch, thanks for taking care of those (I'll inline
+the problems).
+
+On Wed, Mar 20, 2019 at 2:28 PM <hotwater438@tutanota.com> wrote:
+>
+> Desciption: This patch add's additional quirk to force
+> IRQ_TRIGGER_FALLING flag which resolves issues with ELAN1200:04F3:303E
+> touchpad. Issues are the next:
+> - Journalctl floods with next report:
+> i2c_hid i2c-ELAN1200:00: i2c_hid_get_input: incomplete report (16/65535)
+> - Five finger tap kills i2c_hid
+> - When you scroll anything, and release one finger, driver thought you are still scrolling
+
+You don't need to be that "formal" in the commit message.
+The "description" part describes too much what the patch is (while we
+can just read the code), the important part is the issues you are
+fixing.
+
+I'd like you to rewrite this in a way that doesn't feel like you are
+writing a bug report.
+
+For instance, you could write (but you can change this too):
+---
+The ELAN1200:04F3:303E touchpad exposes several issues, all caused by
+an error setting the correct IRQ_TRIGGER flag:
+- ...
+- ...
+- ...
+
+Fix all of these with a new quirk that corrects the trigger flag
+announced by the ACPI tables.
+---
+
+I know writing good commit message is a tricky part :)
+
+>
+> The reason why i2c_hid_init_irq was moved is told by Hans De Goede
+> <hdegoede@redhat.com>:
+> i2c_hid_init_irq now checks for a quirk, so we must setup the quirks before we init the irq, and we cannot setup the quirk earlier, so we must init the irq later.
+
+I am pretty sure you can paraphrase Hans in your commit message
+without having to formally quote him (Hans, please shout if you
+disagree).
+But this is a definitively good point to raise: your patch touches a
+general path, so it might have unexpected issues if not carefully
+reviewed by us.
+
+>
+>
+> Patch is created by help of ELANTECH and RedHat guys (Hans De Goede <hdegoede@redhat.com>, Benjamin Tissoires <btissoir@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>) and me (Vladislav Dalechyn <hotwater438@tutanota.com>.
+
+Don't take it wrong, but that's not how we give credit in a patch.
+In your case, if you do not have any Elantech engineer who agreed to
+sign off the patch, you can definitively mention them this way.
+But the other guys (Hans, Andy and myself) are well known kernel
+developers in the input and HID subsystems, so we usually take the
+fame by adding our Reviewed-by or Signed-off-by tag at the end of the
+commit message. (Also note that Andy is working for Intel ;-P )
+
+If you feel that these persons have an equal participation in the
+creation of the patch, you should ask for their Signed-off-by in the
+patch. My gut feelings tell me they would gladly give a Reviewed-by
+because they helped you on the patch, but they are not the "author",
+so the Signed-off-by should be you only.
+
+And yes, you should sign your work here saying that you wrote this
+code in accordance to the Developer's Certificate of Origin 1.1
+(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst)
+
+Then, either Jiri or myself will have a special role, and we will add
+our own signed-of-by as the maintainers of the HID tree certifying
+that this patch has been accepted by one of us.
+
+>
+> ---
+> drivers/hid/hid-ids.h              |  1 +
+> drivers/hid/i2c-hid/i2c-hid-core.c | 17 +++++++++++------
+> 2 files changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index b6d93f4ad037..dc44b5661669 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -389,6 +389,7 @@
+> #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W 0x0401
+> #define USB_DEVICE_ID_HP_X2 0x074d
+> #define USB_DEVICE_ID_HP_X2_10_COVER 0x0755
+> +#define USB_DEVICE_ID_ELAN_TOUCHPAD 0x303e
+
+I know Hans wanted you to use USB here, but I'd think we should have a
+I2C_DEVICE_ID_*
+There is no guarantees that this same PID will be used in a different
+chip over USB.
+We tend to not car about USB/I2C for the vendor IDs: the vendors
+decided to reuse their USB VID, which makes our life easier.
+
+>
+> #define USB_VENDOR_ID_ELECOM 0x056e
+> #define USB_DEVICE_ID_ELECOM_BM084 0x0061
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 90164fed08d3..16b55c45e2e8 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -50,7 +50,8 @@
+> #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET BIT(1)
+> #define I2C_HID_QUIRK_NO_RUNTIME_PM BIT(2)
+> #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP BIT(3)
+> -#define I2C_HID_QUIRK_BOGUS_IRQ BIT(4)
+> +#define I2C_HID_QUIRK_BOGUS_IRQ BIT(4)
+
+your mail client is playing with tabs and spaces, but I don't expect
+the line above to be changed at all.
+
+> +#define I2C_HID_QUIRK_FORCE_TRIGGER_FALLING BIT(5)
+>
+> /* flags */
+> #define I2C_HID_STARTED 0
+> @@ -182,8 +183,10 @@ static const struct i2c_hid_quirks {
+> I2C_HID_QUIRK_NO_RUNTIME_PM },
+> { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
+> I2C_HID_QUIRK_NO_RUNTIME_PM },
+> + { USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ELAN_TOUCHPAD,
+> + I2C_HID_QUIRK_BOGUS_IRQ | I2C_HID_QUIRK_FORCE_TRIGGER_FALLING },
+> { USB_VENDOR_ID_ELAN, HID_ANY_ID,
+> - I2C_HID_QUIRK_BOGUS_IRQ },
+> + I2C_HID_QUIRK_BOGUS_IRQ },
+
+same here, this line should not be changed.
 
 
-On 17/03/2019 14:12, Gaurav Kohli wrote:
-> Current nvmem framework allows user space to read all register space
-> populated by nvmem binary file, In case we don't want to expose value
-> of registers to userspace and only want kernel space to read cell
-> value from nvmem_cell_read_u32.
-> 
-> To protect the same, Add no-read-write property to prevent read
-> from userspace.
-> 
+> { 0, 0 }
+> };
+>
+> @@ -854,6 +857,8 @@ static int i2c_hid_init_irq(struct i2c_client *client)
+>
+> if (!irq_get_trigger_type(client->irq))
+> irqflags = IRQF_TRIGGER_LOW;
+> + if (ihid->quirks & I2C_HID_QUIRK_FORCE_TRIGGER_FALLING)
+> + irqflags = IRQF_TRIGGER_FALLING;
 
-Can you explain the real need of this?
-Is there any issue you are noticing while reading nvmem content from 
-userspace?
+again, indentation problems, tabs are missing
 
-I don't think this is the right way to do this, its misleading in many 
-ways. Also this should not be a part of DT binding.
+>
+> ret = request_threaded_irq(client->irq, NULL, i2c_hid_irq,
+>    irqflags | IRQF_ONESHOT, client->name, ihid);
+> @@ -1123,10 +1128,6 @@ static int i2c_hid_probe(struct i2c_client *client,
+> if (ret < 0)
+> goto err_pm;
+>
+> - ret = i2c_hid_init_irq(client);
+> - if (ret < 0)
+> - goto err_pm;
+> -
+> hid = hid_allocate_device();
+> if (IS_ERR(hid)) {
+> ret = PTR_ERR(hid);
 
-If we decide that we need this feature, then better way to do this using 
-a new Kernel config.
+the next call is "goto err_irq", which should be changed to "goto err_pm"
 
-thanks,
-srini
+> @@ -1149,6 +1150,10 @@ static int i2c_hid_probe(struct i2c_client *client,
+>
+> ihid->quirks = i2c_hid_lookup_quirk(hid->vendor, hid->product);
+>
+> + ret = i2c_hid_init_irq(client);
+> + if (ret < 0)
+> + goto err_pm;
+
+this should be "err_mem_free"
+
+> +
+> ret = hid_add_device(hid);
+> if (ret) {
+> if (ret != -ENODEV)
+
+next one should be "err_irq"
+
+and the err_irq and err_mem_free should be inverted at the end of probe.
+
+Cheers,
+Benjamin
+
+> --
+> 2.20.1
+>
