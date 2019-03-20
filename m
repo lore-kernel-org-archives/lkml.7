@@ -2,144 +2,149 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02191C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AECC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4B0218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544F5218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 21:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553118694;
+	bh=VunNxwyG/PhJmnc4NOsGLzI86dcxS9go0EUh8pgk/Rs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oSN6GlVVvIu7pNB30tsLg/OU81thx9W4LjaLfDpCHGysjhHfhwA0BbqWlY4qyjeSo
+	 iLSkXZsIbrxQtvRX9Z0M9A7RQm94tzw228tJNJK8PTed3fa97l+z3CC9Irhx4Hw3Ju
+	 /WNiIZdaulk/PG7z5pG83f3fErGc4QHdciRLMmeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfCTVuF (ORCPT
+        id S1727603AbfCTVvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 17:50:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45914 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfCTVuF (ORCPT
+        Wed, 20 Mar 2019 17:51:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40323 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfCTVvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 17:50:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gportay)
-        with ESMTPSA id 2DCB72817E9
-Date:   Wed, 20 Mar 2019 17:50:13 -0400
-From:   =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Derek Basehore <dbasehore@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        Lin Huang <hl@rock-chips.com>
-Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
- parameters to TF-A.
-Message-ID: <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
-References: <20190319181323.22804-1-gael.portay@collabora.com>
- <20190319181323.22804-4-gael.portay@collabora.com>
- <20190320003352.GN112750@google.com>
+        Wed, 20 Mar 2019 17:51:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u68so3076411lff.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFrXG5qc1aUtScwVWNQp/5mCoDnizoN1TRnTd6X2ckw=;
+        b=I2S5l4EG3lG/fb/hD3y7ZF7E5weaw12ztaizoHY26ZGDtCX+45F/XVqPykxjHQMS+3
+         GPCUhUw8AU/neg9T2oc+HWDyw/EFAL2iBxhpZUzdMeR7Umb78k/5q5I+7agHe8PW6Yeo
+         mZiKxKboRm2UCN10QzNvj9+LXHCx9gTtKO1eA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFrXG5qc1aUtScwVWNQp/5mCoDnizoN1TRnTd6X2ckw=;
+        b=O1NXfMnAodqqLSiCrjuYhIYlT7DooLnlA3ByIOWSXOEynjtuoClI1Uz9ARoHyHjx+J
+         RETgBa6GTheOXAbxf37Vl2CDASdpzw2F6+sXd0ZP4thvn0KFQSOwrt5yA0eHbldVuUtm
+         nAr50fo54js8V8wSjx1S3Y3uIyUVIQySpVBwqurrMd5nyds7aysoYSndJmcd9FG1BOu+
+         /wCI5LJr1dgbp4QdVIs+au6KjhXJRLQcrGHXcBYmwTZYSaDs/vXmb2jW+Knug07hgGhc
+         vtl1EJ5Bg7YViMl0lrg2NzA7h7eeqeEUgatpparmjixsaze0m5bg6GwipOTHXRYLfHkB
+         5hew==
+X-Gm-Message-State: APjAAAVbsHX0OtfBVeQd9eJKoUT0EEj8yVahyxLEjbmO3Xt5DZp61g8M
+        n/Hgwo//9H9W2zLoUv9LXr+vT2+32ag=
+X-Google-Smtp-Source: APXvYqzEQWPRCLPAf/LYda9UhtRV5LvsQtCqTWi/4v3gkQqezjsE3C4IdNYcPjkprw1/kDl1F2Rpiw==
+X-Received: by 2002:ac2:4203:: with SMTP id y3mr50640lfh.11.1553118689648;
+        Wed, 20 Mar 2019 14:51:29 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id 13sm582231lfy.2.2019.03.20.14.51.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 14:51:28 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id g7so3077137lfh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 14:51:28 -0700 (PDT)
+X-Received: by 2002:ac2:4424:: with SMTP id w4mr41645lfl.148.1553118287299;
+ Wed, 20 Mar 2019 14:44:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190320003352.GN112750@google.com>
-User-Agent: NeoMutt/20180716
+References: <20190222194808.15962-1-mr.nuke.me@gmail.com> <20190320205233.GE251185@google.com>
+In-Reply-To: <20190320205233.GE251185@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 20 Mar 2019 14:44:31 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjDY1C+E0gUHmb6O3THwoTNpm=-qthDRcW+sG2RB430Mw@mail.gmail.com>
+Message-ID: <CAHk-=wjDY1C+E0gUHmb6O3THwoTNpm=-qthDRcW+sG2RB430Mw@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/MSI: Don't touch MSI bits when the PCI device is disconnected
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>, austin_bolen@dell.com,
+        Alex Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Shyam_Iyer@dell.com,
+        Lukas Wunner <lukas@wunner.de>, Sinan Kaya <okaya@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-On Tue, Mar 19, 2019 at 05:33:52PM -0700, Matthias Kaehlcke wrote:
-> ...
-> > @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
-> >  
-> >  	mutex_lock(&dmcfreq->lock);
-> >  
-> > +	if (target_rate >= dmcfreq->odt_dis_freq)
-> > +		odt_enable = true;
-> > +
-> > +	/*
-> > +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
-> > +	 * timings and to enable or disable the ODT (on-die termination)
-> > +	 * resistors.
-> > +	 */
-> > +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-> > +		      dmcfreq->odt_pd_arg1,
-> > +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-> > +		      odt_enable, 0, 0, 0, &res);
-> 
-> Is it necessary/desirable to make this call for every frequency
-> change? IIUC it should be only needed when odt_enable changes and the
-> driver could track the state. If the DDR frequency doesn't change too
-> often and the overhead of the call is small it shouldn't be really
-> important though.
+On Wed, Mar 20, 2019 at 1:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
+> AFAICT, the consensus there was that it would be better to find some
+> sort of platform solution instead of dealing with it in individual
+> drivers.  The PCI core isn't really a driver, but I think the same
+> argument applies to it: if we had a better way to recover from readl()
+> errors, that way would work equally well in nvme-pci and the PCI core.
 
-I will test your solution first to make sure there is no regression to
-run that call for frequency change only.
+I think that patches with the pattern "if (disconnected) don't do IO"
+are fundamentally broken and we should look for alternatives in all
+cases.
 
-Also, the call takes around 300us.
+They are fundamentally broken because they are racy: if it's an actual
+sudden disconnect in the middle of IO, there's no guarantee that we'll
+even be notified in time.
 
-> > ...
-> > @@ -334,6 +357,34 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> >  
-> > +	/* Try to find the optional reference to the pmu syscon */
-> > +	node = of_parse_phandle(np, "rockchip,pmu", 0);
-> > +	if (node) {
-> 
-> The 'optional' part doesn't seem to be accurate: according to the
-> binding (https://lore.kernel.org/patchwork/patch/1052322/) the
-> property is required and the code below assumes that data->regmap_pmu
-> is set.
->
+They are fundamentally broken because they add new magic special cases
+that very few people will ever test, and the people who do test them
+tend to do so with old irrelevant kernels.
 
-Indeed.
+Finally, they are fundamentally broken because they always end up
+being just special cases. One or two special case accesses in a
+driver, or perhaps all accesses of a particular type in just _one_
+special driver.
 
-> > +		data->regmap_pmu = syscon_node_to_regmap(node);
-> > +		if (IS_ERR(data->regmap_pmu))
-> > +			return PTR_ERR(data->regmap_pmu);
-> > +	}
-> > +
-> > +	/* Get DDR type */
-> 
-> nit: the comment doesn't add much value, thanks to good variable
-> naming this is evident from the code.
-> 
-> > +	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-> > +	ddr_type = (val >> RK3399_PMUGRF_DDRTYPE_SHIFT) &
-> > +		    RK3399_PMUGRF_DDRTYPE_MASK;
-> > +
-> > +	/* Get the odt_dis_freq parameter in function of the DDR type */
-> 
-> nit: ditto
-> 
-> (if you prefer to keep these comments I'm not opposed to keeping them,
-> but I don't think they are needed)
->
+Yes, yes, I realize that people want error reporting, and that
+hot-removal can cause various error conditions (perhaps just parity
+errors for the IO, but also perhaps other random errors caused by
+firmware perhaps doing special HW setup).
 
-I will remove all the comments in the v3.
+But the "you get a fatal interrupt, so avoid the IO" kind of model is
+completely broken, and needs to just be fixed differently. See above
+why it's so completely broken.
 
-> Cheers
-> 
-> Matthias
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+So if the hw is set up to send some kinf of synchronous interrupt or
+machine check that cannot sanely be handled (perhaps because it will
+just repeat forever), we should try to just disable said thing.
 
-Regards,
-Gaël
+PCIe allows for just polling for errors on the bridges, afaik. It's
+been years since I looked at it, and maybe I'm wrong. And I bet there
+are various "platform-specific value add" registers etc that may need
+tweaking outside of any standard spec for PCIe error reporting. But
+let's do that in a platform driver, to set up the platform to not do
+the silly "I'm just going to die if I see an error" thing.
+
+It's way better to have a model where you poll each bridge once a
+minute (or one an hour) and let people know "guys, your hardware
+reports errors", than make random crappy changes to random drivers
+because the hardware was set up to die on said errors.
+
+And if some MIS person wants the "hardware will die" setting, then
+they can damn well have that, and then it's not out problem, but it
+also means that we don't start changing random drivers for that insane
+setting. It's dead, Jim, and it was the users choice.
+
+Notice how in neither case does it make sense to try to do some "if
+(disconnected) dont_do_io()" model for the drivers.
+
+                  Linus
