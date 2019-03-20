@@ -2,124 +2,82 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53447C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D126C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1C72184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F1D2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 10:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfCTKqZ (ORCPT
+        id S1727899AbfCTKqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 06:46:25 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52965 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTKqZ (ORCPT
+        Wed, 20 Mar 2019 06:46:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36749 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCTKqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 06:46:25 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1h6Yjn-0000Qn-K5; Wed, 20 Mar 2019 11:46:23 +0100
-Message-ID: <1553078780.7071.8.camel@pengutronix.de>
-Subject: Re: [PATCH v1 4/6] reset: hi6220: Add support for AO reset
- controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Peter Griffin <peter.griffin@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, xuwei5@hisilicon.com,
-        mturquette@baylibre.com, sboyd@kernel.org
-Cc:     john.stultz@linaro.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        yuq825@gmail.com
-Date:   Wed, 20 Mar 2019 11:46:20 +0100
-In-Reply-To: <1552937931-23050-5-git-send-email-peter.griffin@linaro.org>
-References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
-         <1552937931-23050-5-git-send-email-peter.griffin@linaro.org>
+        Wed, 20 Mar 2019 06:46:33 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t206so1404752oib.3;
+        Wed, 20 Mar 2019 03:46:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1N0WovuFJcK1Y3w5s7NmQZB+eZFDUE7KETPZdg9U0gA=;
+        b=ZJwBuOvsW4a8lfaiVm69K/PKae0H9qgGZLjZpFLkckd/V1R87BhIyY+mKyH5yRld3y
+         xr5PJQ2jRjhvtwGl3FjzVsMEMP6+EofEe/Vd8aSo897Uc0BaW6m9C0dK46k7uimLjNhq
+         P8R+BzdStgHpV1u2A/SSAk25lbPu0/QnEUafd2rg+A2yOAGjN90SLUW4sc8N2VzfafPQ
+         4SKVx1sFqLENBXmvWzwq3b4NUTcv26ear0ww3unL4JDAY2g7kqxPDL7J/EnW4q+xH+OQ
+         pxiy/8paZF7NJv0uP7pzXMuOb/Se6uZwmWVT+sMIlUpWgmL3r2hPsT6KNdIjDbUIKVun
+         +AIQ==
+X-Gm-Message-State: APjAAAVawwxOZ34db9BSBcd7uY5MpYDBY//S223u/4ewpDxwQ6Zk6Trk
+        dG17ygUCcfDgEavnWy+QtTD0Rro+x/uTCl2iQsQ=
+X-Google-Smtp-Source: APXvYqzQqweK7jcXzAI8LE3xGKHBu6b/9Vqxcgnb3Fb8HTIuCJKUUZg68WQMs4lTyrp+/bVWq9+R/NdBFcaB8Ry718U=
+X-Received: by 2002:aca:304e:: with SMTP id w75mr4725561oiw.176.1553078792888;
+ Wed, 20 Mar 2019 03:46:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1552974845-1590-1-git-send-email-harini.katakam@xilinx.com> <74d29e0e-d55e-e983-add1-361f7c4af948@microchip.com>
+In-Reply-To: <74d29e0e-d55e-e983-add1-361f7c4af948@microchip.com>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Wed, 20 Mar 2019 16:16:22 +0530
+Message-ID: <CAFcVECKqatju7P7WAR0cLGePkAvDcJ8Sb-KKxvjpvtNuEtWSWw@mail.gmail.com>
+Subject: Re: [RFC PATCH] net: macb: Add null check for PCLK and HCLK
+To:     Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Cc:     Harini Katakam <harini.katakam@xilinx.com>,
+        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Hi Claudiu,
 
-On Mon, 2019-03-18 at 19:38 +0000, Peter Griffin wrote:
-> This is required to bring Mali450 gpu out of reset.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  drivers/reset/hisilicon/hi6220_reset.c | 51 +++++++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-> index d5e5229..0cd5f92 100644
-> --- a/drivers/reset/hisilicon/hi6220_reset.c
-> +++ b/drivers/reset/hisilicon/hi6220_reset.c
-> @@ -36,6 +36,7 @@
->  enum hi6220_reset_ctrl_type {
->  	PERIPHERAL,
->  	MEDIA,
-> +	AO,
->  };
->  
->  struct hi6220_reset_data {
-> @@ -95,6 +96,47 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
->  	.deassert = hi6220_media_deassert,
->  };
->  
-> +#define AO_SCTRL_SC_PW_CLKEN0     0x800
-> +#define AO_SCTRL_SC_PW_CLKDIS0    0x804
-> +
-> +#define AO_SCTRL_SC_PW_RSTEN0     0x810
-> +#define AO_SCTRL_SC_PW_RSTDIS0    0x814
-> +
-> +#define AO_SCTRL_SC_PW_ISOEN0     0x820
-> +#define AO_SCTRL_SC_PW_ISODIS0    0x824
-> +#define AO_MAX_INDEX              12
-> +
-> +static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
-> +			       unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +	struct regmap *regmap = data->regmap;
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
+On Tue, Mar 19, 2019 at 9:51 PM <Claudiu.Beznea@microchip.com> wrote:
+>
+>
+>
+> On 19.03.2019 07:54, Harini Katakam wrote:
+<snip>
+> > -     if (IS_ERR(*pclk)) {
+> > +     if (IS_ERR(*pclk) || (*pclk == NULL)) {
+>
+> You can use IS_ERR_OR_NULL() macro.
+>
+Yes will fix, thanks.
+Also the error code from this function will end up being 0 below
+even if pointer is NULL. Will fix that.
 
-What if two regmap_writes return a different error code? Better check
-for ret and return individually. Also, no need to issue two more writes
-if the first one failed.
+Regards,
+Harini
 
-> +	return ret;
-> +}
-> +
-> +static int hi6220_ao_deassert(struct reset_controller_dev *rc_dev,
-> +				 unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +	struct regmap *regmap = data->regmap;
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTDIS0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISODIS0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKEN0, BIT(idx));
-
-Same as above. Otherwise this looks fine. With this fixed, I could pick
-up patches 2, 4, and 5.
-
-regards
-Philipp
+> >               err = PTR_ERR(*pclk);
+> >               dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
+> >               return err;
+> >       }
