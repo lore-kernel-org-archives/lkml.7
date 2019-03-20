@@ -2,75 +2,79 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80819C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5504C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D76120850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D09F20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfCTRPt (ORCPT
+        id S1727237AbfCTRQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:15:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33980 "EHLO mx1.redhat.com"
+        Wed, 20 Mar 2019 13:16:30 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:33898 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfCTRPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:15:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726529AbfCTRQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 13:16:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 41F2A20184;
+        Wed, 20 Mar 2019 18:16:27 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id I9kNGSrCEPPJ; Wed, 20 Mar 2019 18:16:23 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 99C3F300521D;
-        Wed, 20 Mar 2019 17:15:48 +0000 (UTC)
-Received: from [10.10.122.62] (ovpn-122-62.rdu2.redhat.com [10.10.122.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3ED960BE2;
-        Wed, 20 Mar 2019 17:15:47 +0000 (UTC)
-Subject: Re: [PATCH][next] scsi: target: fix unsigned comparision with less
- than zero
-To:     Colin King <colin.king@canonical.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
-References: <20190320163709.28767-1-colin.king@canonical.com>
- <5C9274D9.30706@redhat.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5C927543.2020907@redhat.com>
-Date:   Wed, 20 Mar 2019 12:15:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        by a.mx.secunet.com (Postfix) with ESMTPS id B86D6200A7;
+        Wed, 20 Mar 2019 18:16:23 +0100 (CET)
+Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Mar 2019
+ 18:16:22 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 03272318050E;
+ Wed, 20 Mar 2019 18:16:23 +0100 (CET)
+Date:   Wed, 20 Mar 2019 18:16:22 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     "Su Yanjun <suyj.fnst@cn.fujitsu.com>" <suyj.fnst@cn.fujitsu.com>
+CC:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
+        <fw@strlen.de>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] net: xfrm: Add '_rcu' tag for rcu protected pointer
+ in netns_xfrm
+Message-ID: <20190320171622.GA6035@gauss3.secunet.de>
+References: <1551923648-17656-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+ <20190311101006.GK3758@gauss3.secunet.de>
+ <b2beff03-f789-5c8b-bd69-57ece92372f8@gmail.com>
+ <20190319151503.GW6035@gauss3.secunet.de>
+ <91cf303a-7d44-2c15-8b7a-8b2eb797a234@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <5C9274D9.30706@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 20 Mar 2019 17:15:48 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <91cf303a-7d44-2c15-8b7a-8b2eb797a234@cn.fujitsu.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-G-Data-MailSecurity-for-Exchange-State: 0
+X-G-Data-MailSecurity-for-Exchange-Error: 0
+X-G-Data-MailSecurity-for-Exchange-Sender: 23
+X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+X-G-Data-MailSecurity-for-Exchange-Guid: 181D3464-E827-464D-B547-5AEC87B90C9B
+X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/20/2019 12:14 PM, Mike Christie wrote:
-> On 03/20/2019 11:37 AM, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently an error return is being assigned to an unsigned
->> size_t varianle and then checked if the result is less than
->> zero which will always be false.  Fix this by making ret
+On Wed, Mar 20, 2019 at 08:53:54AM +0800, Su Yanjun <suyj.fnst@cn.fujitsu.com> wrote:
 > 
-> What kernel version was this made against?
-> 
-> For Martin's 5.2 queue branch, with these scsi changes it looks like
-> strlcpy returns a size_t. And then below it looks like we compare the
-> return value from that function to the buffer size and the max len of
-> the string we support. We do not seem to check for less than zero.
-> 
-> 
+> Firs of all, I didn't produce it on my test machine.
 
-My mistake. I was looking at len and not ret.
+First of all, you should provide better quality patches.
 
-Patch looks ok to me.
+All of your recent patches had issues, some were sorted 
+out before applying other not. Bugs happen, but it is
+not acceptable that all your patches are buggy.
 
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-
+I've reverted this patch like Eric suggested.
