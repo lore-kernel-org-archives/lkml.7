@@ -2,96 +2,160 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7165C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11604C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EEB2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC09A2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W8uI6sdX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VDvm2ezT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfCTWWf (ORCPT
+        id S1727649AbfCTWX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:22:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56380 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfCTWWf (ORCPT
+        Wed, 20 Mar 2019 18:23:58 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40685 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfCTWX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 18:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BYzz+wefXr4lloqI93uXDNGiX+SSPf7icG7IRc4Yt04=; b=W8uI6sdXml3fAevCDrWwImtHG
-        fw27fYYpuql/HGmotiTsTisODfKQkxqg2wPPIx0Mbg6Zh/GLXGNOiGPblPryAXvx5viQ152N2gxKY
-        X3ygJiAZGjzfy3Nz7TIE72mvDVbp1lANpWZYK6fGKPd+XNC4eYgQ0iBsnBg10ox9DGC91PcCHqP1H
-        Gn7MXCZqHCjtp4Z3wFej6xchuOHrN28Gc3kPhfckj0z1wznaxt83uiOYROXL1oSQbDF632woyqzBh
-        BeTLxeR/QW6G68NlFMoKkz3WVYn2yE/6T6lEXbqPEJMyv7am9Avr+qzt4ndMkYRTIHBu9S/0LsA2P
-        BlAVDPP7Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6jbK-0002LJ-IW; Wed, 20 Mar 2019 22:22:23 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 93BA8984EED; Wed, 20 Mar 2019 23:22:20 +0100 (CET)
-Date:   Wed, 20 Mar 2019 23:22:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-Message-ID: <20190320222220.GA2490@worktop.programming.kicks-ass.net>
-References: <20190314130113.919278615@infradead.org>
- <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net>
- <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net>
- <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
+        Wed, 20 Mar 2019 18:23:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u9so2795180pgo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 15:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HVtqGmXbZxaBYT0i3IO+Bltyf6TuxosWLQJmzgi7yIg=;
+        b=VDvm2ezT+bX3RoM7rRcb/w4Le92U1gQT/asbGQ6znt9/fbDRF4sakYG8bN5os7RM5d
+         1TSO5UfNZxIYmgsig7Prqbkcu8c4U4tR5vvFVM+vEI7jnUiQ5DzBF9jhQYfPOCGOke+n
+         yp00YVJtWSKKLrFEhfIt02bN4J5/7TvZ2+kO1AQ0zKGJp1Vqg1bQOmb3fRNaYJD8VUOs
+         Yt4VyJ1HA8sedE2Xu7eRMg+tcNcjhywfqH5nwtKjtaFDrGoM5QU8x9mXIW1/XW5GnHmo
+         TWwZId8Ts+UYp2apeyu3ujSjwufQa2fCTZoPFTO4CZ0pzayaO4QAA5cDxVnQHho9M15f
+         jgeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HVtqGmXbZxaBYT0i3IO+Bltyf6TuxosWLQJmzgi7yIg=;
+        b=rRuqYc3sKa59WwF6y0Rg9obFZAEF5U4Alo0cXB73XrADaaGdQAut750CE0c+vFb+q8
+         y4I4V4hmn+6MLpNIoqFxa/Tnpoaylqmzm42DAv1y+/0sqZlITc/7GioCHRZstnPOkkJt
+         vAnq2/dq+hfCrd58Uj1dlf1BGW6v38Ru5dRcd7pYjO5lTNouk07E/pQqG4uqZgBWX0HE
+         9oBA54lV/WGoEbKT2SaIR5K+Aop41FpCJhyBfHLjNZJcfQ/zxhMtODtBqhkTAoLu8dL8
+         LMIIA81pfOV+QbtuoVStaqdIReyaZIasy01pQ+9muQ7cLkHGU+viZFYJe7N6693IhybO
+         B3xQ==
+X-Gm-Message-State: APjAAAUInuEhW5Y+Pi1IZ+5yAlcJeW+QibRFw901La4zvUFjsv9GHGiW
+        wqPho+ALtK4rkvAyHYciVUTjnc7s7KxCWVfsoFxapg==
+X-Google-Smtp-Source: APXvYqyjQw8E4BiIlv65kKJCMmUkqX82agugdnay/x7rJQLspZBe8B0IqGJyzRfX+d1ho7fh1ifDOemIMEq2VI919VU=
+X-Received: by 2002:a63:c511:: with SMTP id f17mr335258pgd.202.1553120635943;
+ Wed, 20 Mar 2019 15:23:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190320180340.25795-1-natechancellor@gmail.com>
+In-Reply-To: <20190320180340.25795-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 20 Mar 2019 15:23:44 -0700
+Message-ID: <CAKwvOdn0fcGSsX7XQD2v9iV=FMM6z5shqN4=Zjkkyyrd+y8rWw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: ufs-mediatek: Avoid using ret uninitialized in ufs_mtk_setup_clocks
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 01:47:28PM -0700, Stephane Eranian wrote:
+On Wed, Mar 20, 2019 at 11:06 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/scsi/ufs/ufs-mediatek.c:112:7: warning: variable 'ret' is used
+> uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>                 if (on)
+>                     ^~
+> drivers/scsi/ufs/ufs-mediatek.c:120:9: note: uninitialized use occurs
+> here
+>         return ret;
+>                ^~~
+> drivers/scsi/ufs/ufs-mediatek.c:112:3: note: remove the 'if' if its
+> condition is always true
+>                 if (on)
+>                 ^~~~~~~
+> drivers/scsi/ufs/ufs-mediatek.c:108:7: warning: variable 'ret' is used
+> uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>                 if (!on)
+>                     ^~~
+> drivers/scsi/ufs/ufs-mediatek.c:120:9: note: uninitialized use occurs
+> here
+>         return ret;
+>                ^~~
+> drivers/scsi/ufs/ufs-mediatek.c:108:3: note: remove the 'if' if its
+> condition is always true
+>                 if (!on)
+>                 ^~~~~~~~
+> drivers/scsi/ufs/ufs-mediatek.c:96:9: note: initialize the variable
+> 'ret' to silence this warning
+>         int ret;
+>                ^
+>                 = 0
+> 2 warnings generated.
+>
+> Remove the default case and initialize ret to -EINVAL to properly fix
+> this warning.
+>
+> Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/426
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index c3b78fc83d3f..34aecad04468 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -93,7 +93,7 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
+>                                 enum ufs_notify_change_status status)
+>  {
+>         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+> -       int ret;
+> +       int ret = -EINVAL;
+>
+>         /*
+>          * In case ufs_mtk_init() is not yet done, simply ignore.
+> @@ -112,9 +112,6 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
+>                 if (on)
+>                         ret = phy_power_on(host->mphy);
+>                 break;
+> -       default:
+> -               ret = -EINVAL;
+> -               break;
+>         }
+>
+>         return ret;
+> --
+> 2.21.0
+>
 
-> Right now, if I do:
-> 
-> echo 0 > /sys/bus/event_source/devices/cpu/allow_tsx_force_abort
-> 
-> Then I don't have the guarantee on when there will be no abort when I
-> return from the echo.  the MSR is accessed only on PMU scheduling. I
-> would expect a sysadmin to want some guarantee if this is to be
-> switched on/off at runtime. If not, then having a boot time option is
-> better in my opinion.
-
-Something like cycling the nmi watchdog or:
-
-  perf stat -a -e cycles sleep 1
-
-should be enough to force reschedule the events on every CPU.
-
-Again, I'm not adverse to 'fixing' this if it can be done with limited
-LoC. But I don't really see this as critical.
-
-> This other bit I noticed is that cpuc->tfa_shadow is used to avoid the
-> wrmsr(), but I don't see the code that makes sure the init value (0)
-> matches the value of the MSR.  Is this MSR guarantee to be zero on
-> reset? 
-
-That was my understanding.
-
-> How about on kexec()?
-
-Good point, we might want to fix that.
+The enum being switched on (enum ufs_notify_change_status) only has 2
+values; so the default case is impossible.  A switch is probably
+overkill, but this change is fine as is.  Thanks for sending it.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+-- 
+Thanks,
+~Nick Desaulniers
