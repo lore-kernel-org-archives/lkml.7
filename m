@@ -2,99 +2,166 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77431C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435FA2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9BA21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 09:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f5u4dNhF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYDMbaf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfCTJ7E (ORCPT
+        id S1727574AbfCTJ7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 05:59:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52230 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCTJ7D (ORCPT
+        Wed, 20 Mar 2019 05:59:22 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36500 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfCTJ7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 05:59:03 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a184so5857561wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:59:02 -0700 (PDT)
+        Wed, 20 Mar 2019 05:59:22 -0400
+Received: by mail-it1-f196.google.com with SMTP id h9so9385185itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 02:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NHxzUBD5WbtN8rV3XpofLZKwOM97I5NkDo0qq5NT9Xw=;
-        b=f5u4dNhFvFEHCIeUIdeVcYflxSs/oXA77Nr67GscEinq5T8pPO3McRjyroISxMbgRD
-         GNsinldFJQ4S9bhm8jlYIlHkN2IhK48k10R3uMDC0/AC1QKMywOgfz40TzA3ULqqjBbD
-         7nBBANNH7b/MxKzhORYliEat3ID0WupgGnBtyptvEWh0hamezA1yvIKewyCzdNyCW0Zd
-         8hcWEqcsrLGSVkukdPiD0oEDLyIZxR7VxVrQjfGO2kaNupReyctc/yrwEZlxue1aGIh2
-         Of+TsP7SU2itVfpMjGBWtQXMJT4mPxnx4tx16/+OEjBkIdq4FsiuCSLhHg8Nv0FVSvcm
-         +1mA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s2voj6kjaLi6fKovfCR/88xY1mnaSXnV0VQQW9aYLas=;
+        b=JYDMbaf0YUF3eOTaoaFwUe3CxvxxMo7gejjtbDw95GMO9vUIsR2u4jhbxb/8nQ0fy6
+         m6wn+rcYWlW6YHJoSOyz7Uu9aTKGqXNqqFU4zf7N1SmOgxrDGfHoQ6UR6uU9EEU8EeyG
+         zFbxfCNX6lr3uAZ8X4mfsdaj1z7cTD2wl+WP/5kWf5g5c7IUOHtTCuUbNRj+rAgCHXWI
+         /lR62pUrei+SwFhBxmHZG6HNaaCZVtlq3bQf6Mk7Zf1QoT+1TxUFo90O2RLX3kVXUzEA
+         b6phamX/1j02VTV4LGuMZQQuc35jaIE34WG6kQOYNEXk1R88iO+L6KAWgq9xE8c9KTjn
+         qCwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NHxzUBD5WbtN8rV3XpofLZKwOM97I5NkDo0qq5NT9Xw=;
-        b=kiFij6MoaHz0SK2+CgCnQqPR0h6pMY0/G2yFCN4SGbGKtobDxbQyYHjmNoBLeTBtyi
-         vOneLEIkTWVJoyQ8o/AIkDTzS/Vd8aObfs3+m0vDrIrgGh+p3Q0DRO/Ecd7cok1tC6JK
-         ntnd7kMaQdlkOaMcJe0jLwfbBjXCrf5SlmHnUFBv1sNG18uisgZYzj7wwKMmVj9qHVj9
-         aB87xOKRlokd45QrNiCIT7culSoFk0yIrQMNjwoETws0Ybav2WwkjuvXW3hRic86DmoF
-         vIEy3eGvoTXttsd9+jD9OANZGWGCSUYov7CnrkEnWsmPN9B95Vlzzq9GjbwVKlPSo7ma
-         dZHw==
-X-Gm-Message-State: APjAAAWc4ekP+/9v/y80ZENq8EZtpci7vVApgO4zEP1SO/NjKysJ2qQb
-        PNzlmS0KZN7mLoudMw6YAtUq8A==
-X-Google-Smtp-Source: APXvYqyK0gIkE5IeWA83yhRNf5jZz0xuMNIyqfnMZfoas6sI0qOJDnhTpbXj3iO71ZFboiac7uIF/Q==
-X-Received: by 2002:a1c:39d7:: with SMTP id g206mr6073261wma.99.1553075941718;
-        Wed, 20 Mar 2019 02:59:01 -0700 (PDT)
-Received: from dell ([2.31.167.140])
-        by smtp.gmail.com with ESMTPSA id w24sm1642832wmi.40.2019.03.20.02.59.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 02:59:01 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 09:58:59 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Stuart Menefy <stuart.menefy@mathembedded.com>
-Cc:     Sangbeom Kim <sbkim73@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] mfd: sec: Put one element structure
- initialisation on one line
-Message-ID: <20190320095859.GK4731@dell>
-References: <20190213222402.20541-1-stuart.menefy@mathembedded.com>
- <20190213222402.20541-2-stuart.menefy@mathembedded.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s2voj6kjaLi6fKovfCR/88xY1mnaSXnV0VQQW9aYLas=;
+        b=jpySXSs236s4viYAQ/fKbrD0iVdjjLi6GiyvfsEUHLfFIRBjtoSurKilFgJ+BJAU1E
+         jXA+at883qpajPCMSqP0BEBIYcARVa7pj+tUWbExZztA9UoEn9liidIUvUdONqJSgmUs
+         usp1APomWA3Ob7+EaaQwcvHBN0+y5GsTnaD6lR0grLVhz/8eiVivSE6WdOdER4C7dXSD
+         8VObXVNm4Hy8GT5NDhE41WxF0BOihHpj3EPzOoqkAKmrrrsu8A4A37xzI2H3d+N01EKN
+         SX6YMLNQi8TdMAkoGzJx/pR5RDQb1kChpy3WoEl3ECA2OUd2L0vW6Dr5tG4jmg6YrgjU
+         NO9w==
+X-Gm-Message-State: APjAAAW/jXbjGylG7j0G/E/06FATX11YCuWu3q31KF43I0PvmWAV3FYc
+        1/YYTBi7j/FnVQCM0tKAla63FPCXZ+ks0FsFTfD+ymWEsTykGA==
+X-Google-Smtp-Source: APXvYqyq3qgpYQBtHCrpio74vOfqV9roX8R/fvAEM9gdqE0d/5SmhT4xZ4ZXx0J15TTgRIGJ9xKgFwo+wZYUVtGwSbc=
+X-Received: by 2002:a02:84ab:: with SMTP id f40mr4094497jai.72.1553075961022;
+ Wed, 20 Mar 2019 02:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190213222402.20541-2-stuart.menefy@mathembedded.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+In-Reply-To: <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 Mar 2019 10:59:09 +0100
+Message-ID: <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Feb 2019, Stuart Menefy wrote:
+On Wed, Mar 20, 2019 at 10:56 AM Andrey Ryabinin
+<aryabinin@virtuozzo.com> wrote:
+>
+> On 3/17/19 11:49 PM, syzbot wrote:
+> > syzbot has bisected this bug to:
+> >
+> > commit c981f254cc82f50f8cb864ce6432097b23195b9c
+> > Author: Al Viro <viro@zeniv.linux.org.uk>
+> > Date:   Sun Jan 7 18:19:09 2018 +0000
+> >
+> >     sctp: use vmemdup_user() rather than badly open-coding memdup_user()
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137bcecf200000
+> > start commit:   c981f254 sctp: use vmemdup_user() rather than badly open-c..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=10fbcecf200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=177bcecf200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=ec1b7575afef85a0e5ca
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a9a84b400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17199bb3400000
+> >
+> > Reported-by: syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com
+> > Fixes: c981f254 ("sctp: use vmemdup_user() rather than badly open-coding memdup_user()")
+>
+> From bisection log:
+>
+>         testing release v4.17
+>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
+>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+>         run #8: crashed: kernel panic: Out of memory and no killable processes...
+>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+>         testing release v4.16
+>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+>         run #0: OK
+>         run #1: OK
+>         run #2: OK
+>         run #3: OK
+>         run #4: OK
+>         run #5: crashed: kernel panic: Out of memory and no killable processes...
+>         run #6: OK
+>         run #7: crashed: kernel panic: Out of memory and no killable processes...
+>         run #8: OK
+>         run #9: OK
+>         testing release v4.15
+>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+>         all runs: OK
+>         # git bisect start v4.16 v4.15
+>
+> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
 
-> Change the layout of the initialisation of structures with one
-> element to a single line of code. This keeps the coding style
-> consistent.
-> 
-> Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-> ---
->  drivers/mfd/sec-core.c | 58 +++++++++++++++++---------------------------------
->  1 file changed, 19 insertions(+), 39 deletions(-)
+Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
+looks like the right range, no?
 
-Applied, thanks.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>         testing commit c14376de3a1befa70d9811ca2872d47367b48767 with gcc (GCC) 8.1.0
+>         run #0: crashed: kernel panic: Out of memory and no killable processes...
+>         run #1: crashed: kernel panic: Out of memory and no killable processes...
+>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+>         run #3: crashed: kernel panic: Out of memory and no killable processes...
+>         run #4: OK
+>         run #5: OK
+>         run #6: crashed: WARNING: ODEBUG bug in netdev_freemem
+>         run #7: crashed: no output from test machine
+>         run #8: OK
+>         run #9: OK
+>         # git bisect bad c14376de3a1befa70d9811ca2872d47367b48767
+>
+> Why c14376de3a1befa70d9811ca2872d47367b48767 is bad? There was no stack corruption.
+> It looks like the syzbot were bisecting a different bug - "kernel panic: Out of memory and no killable processes..."
+> And bisection for that bug seems to be correct. kvmalloc() in vmemdup_user() may eat up all memory unlike kmalloc which is limited by KMALLOC_MAX_SIZE (4MB usually).
+
+Please see https://github.com/google/syzkaller/blob/master/docs/syzbot.md#bisection
+for answer.
