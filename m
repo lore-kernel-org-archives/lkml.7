@@ -2,190 +2,131 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945D3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027C0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED27213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3064213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 16:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DYgAEAsE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UywNX07N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfCTQkj (ORCPT
+        id S1726935AbfCTQlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 12:40:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56255 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfCTQki (ORCPT
+        Wed, 20 Mar 2019 12:41:14 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:51165 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfCTQlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 12:40:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 4so21250577wmf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:40:36 -0700 (PDT)
+        Wed, 20 Mar 2019 12:41:13 -0400
+Received: by mail-it1-f194.google.com with SMTP id m137so16943157ita.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 09:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CSpxD+Em8c1yn0zP54uXSGGJszwaxnNkwEeBQYwfo0A=;
-        b=DYgAEAsE/rVesKg354nCw5eEVFy78snfgi0HyFpp7blxU7A67XEZUYAqKlx5nw+UbP
-         hVRIxDt9UD4ggyr/ryn/DdWa3jGxBCRo1CfdowoqP5DawfOTMfHEBSVuFbsrjMzLBSTx
-         57+JQTF6rGwRj7nkiTu0qBzMw/GlliKuFtwGKW/57px9TOKBFlX85+3wk86ZK6wDCaQz
-         wqF53dhhDKUop+FAZ3ba7W0JwhtSLMSQckwotPzu5R190cFKfYk3Wd5OKXoflEFBY1zh
-         SW/JnXqlYe9saX3MqqoYODKLhaFPrkMQfcJkmXJwQLjE6c/WF2ew9Tx4Z1nW2Xb8ejzp
-         d42g==
+         :cc;
+        bh=bcz2X3rYB5zZtDIi8EJT+BJ0Pk5ZKo4YGjuBqA9GmJA=;
+        b=UywNX07NpIqXq9KKOTUtnJBxgsz+VWQ1iZnqnL/XEgvyDEaL2niy0l592t0EmSt2DT
+         zg/1H2jU2pv32VdKmNwfNDzLVI+Px8KW6PY1+gIHG1QQ8hcL0eUKhi/ULi3ImZSIn5Z9
+         HNrJFpzt4e6M+ri/sPGbREenPyL8OJsIrEkG2qNYmbjM6LIU+SfgihL3/NiZ+9lP9Oyr
+         iLLGa3H93rZ+ddSIr5ZfdDAcr+GAdJXIPAsPzIVWF2WumwYU2U3Q6ksaWjiPU0/u+ewY
+         OosrNPKlHipbtGoMQogz8RM3z725uT1GyqgBUs8QFqpeQlwWxmslwFlr32afZLrU3xmh
+         414Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CSpxD+Em8c1yn0zP54uXSGGJszwaxnNkwEeBQYwfo0A=;
-        b=X97ytUyJSY205A9rdvK7rvkw52C00SpEnKLzgxpdK+7Yh1AXbfFO2MJOpRkV4ZuCc9
-         AHnEc4b3caaneewR5A/DkUR8nPtwVlpIgktAXMPBJIYvwc20yUKSrEg+nOQEpLQBU6w5
-         aK5B2qbBo+UwWQo5zguO9ALLjrGzYM3UVreg4MYvepMouR/38KBv5+fVDW2a7pjFwJD/
-         5eGQWoYPWnBQkzp8oFvw1p3Lvvc99DpOth29iCglObTz3lfd607sjCwlYhqprQJlAnZ5
-         Rv4/Cb1iqafULb78zwAjv450SLqqWExibuTvWPayjhIEy0ASX1p4VLfIP51MB2I1b58N
-         ItdA==
-X-Gm-Message-State: APjAAAX0iwAfFcin3O6OgpDnyx/dnpeupJrk2fuddbaBVJJBTUz53g+2
-        HCmryXVxHlR+zGz5PiEY+6F5qNxSX4xMBtTNvRIqDw==
-X-Google-Smtp-Source: APXvYqybCeEgGDy14hvBneety12aezej9o+puIYjTjgbLpYonKCoZe2hbdAKTf73ylFtg0jYgqPDsa/QuKpcjKZYV1k=
-X-Received: by 2002:a1c:7311:: with SMTP id d17mr9338945wmb.115.1553100036057;
- Wed, 20 Mar 2019 09:40:36 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=bcz2X3rYB5zZtDIi8EJT+BJ0Pk5ZKo4YGjuBqA9GmJA=;
+        b=HbqV5nscsDeOcWpVZKc+5HbpQTPgOX2bMeCT2G7W2EfdLjaqT38Nbo0HOi/JdKqy9o
+         3uEqLfo2YaB+b8AwWXkF7QFfV2kYz1jr7SaaN7bcacxM+SqqngJrlCCCmoUSbqmIOYhN
+         Wts+8fd8jcDhgsGbwtEjnudj2o6HBh0HkPEz4LoToWN3vFLZCIcHf/gpa3LsxHE5TM40
+         0OnzgY/2xH2cqC0YZjDmQis0tT0M1ztmBdKdpjURysQMr3s1ZzS4ScZ6MB5WpYJ4earA
+         lu1TvhAJwDVCR4ExrvYZzfYgUYT3iqV1zFC5Zz2+XdNViaQouTXJrNhX3HZuNyI7VEU/
+         3zag==
+X-Gm-Message-State: APjAAAX8DVuGtpI2oHESoaTQi1CUm17mlQYejYgTYX9BjjnsxAuhZmn7
+        tH4lCaXoJBThu3IoIxzf65AQ7r+NSHtYEaFy1lRV+Q==
+X-Google-Smtp-Source: APXvYqx/GCS2GW6b16PQG8tu9E3hqQL567rBNhBjPN1d4PXV+UqVzJrG8Zct5d+XMxGH1ypx2deNBcGYqi1BKnuBffQ=
+X-Received: by 2002:a24:3281:: with SMTP id j123mr2010716ita.166.1553100072185;
+ Wed, 20 Mar 2019 09:41:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
-In-Reply-To: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 20 Mar 2019 09:40:25 -0700
-Message-ID: <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com>
-Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
-To:     fei.yang@intel.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, andrzej.p@collabora.com,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Shen Jing <jingx.shen@intel.com>
+References: <000000000000dbe73a057cd65da2@google.com> <00000000000010f4270584595484@google.com>
+ <BL0PR1501MB20039998B662DCC11E2B38D79A410@BL0PR1501MB2003.namprd15.prod.outlook.com>
+In-Reply-To: <BL0PR1501MB20039998B662DCC11E2B38D79A410@BL0PR1501MB2003.namprd15.prod.outlook.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 Mar 2019 17:41:01 +0100
+Message-ID: <CACT4Y+anbSEh89LaFeT2Bi4qVM1Maf_0x11ynrfCk9PNvg9UXw@mail.gmail.com>
+Subject: Re: general protection fault in fib6_purge_rt
+To:     Jon Maloy <jon.maloy@ericsson.com>
+Cc:     syzbot <syzbot+a25307ad099309f1c2b9@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:32 PM <fei.yang@intel.com> wrote:
+On Wed, Mar 20, 2019 at 4:59 PM Jon Maloy <jon.maloy@ericsson.com> wrote:
 >
-> From: Fei Yang <fei.yang@intel.com>
+> This one identifies the same culprit as syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com, but points to a different bug.
+> That bug has also been fixed, in commit adba75be0d23  ("tipc: fix lockdep warning when reinitilaizing sockets"), applied in 4.20 but not present in 4.16, - the source of the dump.
+> Once again, a dump from 4.20/5.0 might be a help.
+
+
+Looking at the bisection log maybe this reproducer triggers multiple
+kernel bugs.
+All crashes including the latest ones and other info are always
+available on the dashboard.
+
+
+> ///jon
 >
-> The following kernel panic happens due to the io_data buffer gets dealloc=
-ated
-> before the async io is completed. Add a check for the case where io_data =
-buffer
-> should be deallocated by ffs_user_copy_worker.
 >
-> [   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0=
-000000000000048
-> [   41.672099] #PF error: [normal kernel read fault]
-> [   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-> [   41.683687] Oops: 0000 [#1] PREEMPT SMP
-> [   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U         =
-   5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-> [   41.705309] Workqueue: adb ffs_user_copy_worker
-> [   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-> [   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 f=
-f 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <=
-4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-> [   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-> [   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 000000000=
-0000000
-> [   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000f=
-fffffff
-> [   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 000000000=
-0000037
-> [   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffff=
-ffffff2
-> [   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: fffffffff=
-fffffff
-> [   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlG=
-S:0000000000000000
-> [   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 000000000=
-03406e0
-> [   41.705331] Call Trace:
-> [   41.705338]  vfree+0x50/0xb0
-> [   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-> [   41.705344]  process_one_work+0x19f/0x3e0
-> [   41.705348]  worker_thread+0x3f/0x3b0
-> [   41.829766]  kthread+0x12b/0x150
-> [   41.833371]  ? process_one_work+0x3e0/0x3e0
-> [   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-> [   41.843695]  ret_from_fork+0x3a/0x50
-> [   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_=
-gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xh=
-ci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_i=
-pc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-> [   41.876880] CR2: 0000000000000048
-> [   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-> [   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-> [   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 f=
-f 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <=
-4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-> [   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-> [   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 000000000=
-0000000
-> [   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000f=
-fffffff
-> [   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 000000000=
-0000037
-> [   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffff=
-ffffff2
-> [   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: fffffffff=
-fffffff
-> [   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlG=
-S:0000000000000000
-> [   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 000000000=
-03406e0
-> [   41.985930] Kernel panic - not syncing: Fatal exception
-> [   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocat=
-ion range: 0xffffffff80000000-0xffffffffbfffffff)
-> [   42.009525] Rebooting in 10 seconds..
-> [   52.014376] ACPI MEMORY or I/O RESET_REG.
+> > -----Original Message-----
+> > From: syzbot <syzbot+a25307ad099309f1c2b9@syzkaller.appspotmail.com>
+> > Sent: 18-Mar-19 08:28
+> > To: davem@davemloft.net; Jon Maloy <jon.maloy@ericsson.com>;
+> > kuznet@ms2.inr.ac.ru; linux-kernel@vger.kernel.org;
+> > netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tipc-
+> > discussion@lists.sourceforge.net; ying.xue@windriver.com; yoshfuji@linux-
+> > ipv6.org
+> > Subject: Re: general protection fault in fib6_purge_rt
+> >
+> > syzbot has bisected this bug to:
+> >
+> > commit 52dfae5c85a4c1078e9f1d5e8947d4a25f73dd81
+> > Author: Jon Maloy <jon.maloy@ericsson.com>
+> > Date:   Thu Mar 22 19:42:52 2018 +0000
+> >
+> >      tipc: obtain node identity from interface by default
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1116d2a3200000
+> > start commit:   52dfae5c tipc: obtain node identity from interface by defa..
+> > git tree:       linux-next
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1316d2a3200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1516d2a3200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=a25307ad099309f1c2b9
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b2c56f200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b8890b200000
+> >
+> > Reported-by: syzbot+a25307ad099309f1c2b9@syzkaller.appspotmail.com
+> > Fixes: 52dfae5c ("tipc: obtain node identity from interface by default")
 >
-> Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-> Signed-off-by: Fei Yang <fei.yang@intel.com>
-> Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> ---
-> V2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
-
-
-Hey Fei,
-  So while this patch does resolve the issues I was seeing with
-mainline kernels and recent changes to adbd, Josh pointed out that it
-wouldn't resolve the issues I was seeing with older kernels which is
-slightly different (but still related to aio usage).
-
-On the older kernels I'm hitting scheduling while atomic on reboot,
-which seems to be due to ffs_aio_cancel() taking a spinlock then
-calling usb_ep_dequeue() which might sleep.
-
-It seems a fix for this was tried earlier with d52e4d0c0c428 ("usb:
-gadget: ffs: Fix BUG when userland exits with submitted AIO
-transfers") which was then reverted by a9c859033f6e.
-
-Elsewhere it seems the ffs driver takes effort to drop any locks
-before calling usb_ep_dequeue(), so this seems like that should be
-addressed, but it also seems like recent change to the dwc3 driver has
-been made to avoid sleeping in that path (see fec9095bdef4 ("usb:
-dwc3: gadget: remove wait_end_transfer")), which may be why I'm not
-seeing the problem with mainline (and your patch here, of coarse).
-But that also doesn't clarify if its still a potential issue w/
-non-dwc3 platforms.
-
-So for older kernels, do you have a suggestion of which approach is
-advised?  Does usb_ep_dequeue need to avoid sleeping or do we need to
-rework the ffs_aio_cancel logic?
-
-thanks
--john
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/BL0PR1501MB20039998B662DCC11E2B38D79A410%40BL0PR1501MB2003.namprd15.prod.outlook.com.
+> For more options, visit https://groups.google.com/d/optout.
