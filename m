@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E16C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55010C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2994C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F23E218D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 22:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553120936;
-	bh=7qNIu5zgGAAtXgzPcQJ3wYLhrF26mDQPfCCJ1WqB8EQ=;
+	s=default; t=1553120938;
+	bh=7EZgmwtuEsvwVHPQ/07GZzDLcHSqmF8xNnJg/Uj8n9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UI8+7GkacIrPT2YIrcoH7gI4P9dyzETEXY6fvkOEqmTpFhJ7mgzdBR7JnZf4FYwyQ
-	 Ieji5/j/JWJ2hpCzmhS9WaqVnRr4O2uY0dAjQBVDcjY8Tibeiv66ujAgI1EfCSSbEd
-	 oBY8slyD6gKFgJ99nVmkx+yT+EJcPH5hTzFGf/WM=
+	b=ivNB4P17bRzluaq+k2FIafQWRtT28xydpJ+9X1LXm4MMZ9YCWBYp7a5Jr+BaMAGJB
+	 SwM4ZLJQjdjaSoFPREW6SZwjtw+MnJusb9P555nrH0Tf3uSK5/lqK2JA0hzHR82A4B
+	 MxyeQDjwC8OCoU09Thew6cLVMjNppbPLmPq4hX08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfCTW2z (ORCPT
+        id S1727714AbfCTW24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 18:28:55 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46078 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbfCTW2v (ORCPT
+        Wed, 20 Mar 2019 18:28:56 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:33432 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfCTW2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 18:28:51 -0400
-Received: by mail-yw1-f66.google.com with SMTP id j128so3315034ywg.12;
-        Wed, 20 Mar 2019 15:28:50 -0700 (PDT)
+        Wed, 20 Mar 2019 18:28:54 -0400
+Received: by mail-yw1-f67.google.com with SMTP id a199so3375556ywa.0;
+        Wed, 20 Mar 2019 15:28:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7xNmYnQsl8UJtiV0CU/tgLUrv0vvHpQBBgA3eiMC6KQ=;
-        b=VZyIhzg/vL7xRCsLheE8ezlNVmYdhnoRtp/zpMun8NOvCiC3/IYUi7P/lVY9KiG3CM
-         aTT5GR7c/J12w9xVRmTTEeYQ46k8oq2yeFnJDoMtM5JV8tkShQfFZ41jcMLde2Yvzl37
-         +WZ5MMc7F0xsyXwaqivYi9mzpZJddkEtxy2Wdj5P5ZM6QnJthUpppm8Zx7pbj+Bk1iDE
-         FtEecxkgGXuZAHtJ22/iLLylMhOLQgufvP/sju0+KvA3XeIEsvDhAIul+5cG5pN8khsJ
-         NT3joBqauU5c3d2W/wps7QWxDAGxDkzEjzHljYFg/MRyXrFxVhCE2APHPR/ywmjerRgS
-         lmbw==
-X-Gm-Message-State: APjAAAVJSLjE9xK7ykIR1IU/FoiD/FpH/6BsMKDbuCJlpRVX0pfxxeQI
-        Xwv/iUj25HIG4ooeOWttYeI=
-X-Google-Smtp-Source: APXvYqyK/6Ghd74kvYhCkKGbDwRh2ZfNdWJRPzBbtXfcu+i+DL6vWjisPUBWHmWGp/QQGjsTN0zCtA==
-X-Received: by 2002:a25:dd8:: with SMTP id 207mr291070ybn.379.1553120929839;
-        Wed, 20 Mar 2019 15:28:49 -0700 (PDT)
+        bh=Bx9EJikvDMDGUCNAwxp4SdiC4KEOqeo4PV+oxcc7bOY=;
+        b=IasSFqtBfIra77EMpkfxc+vdxCG82hYuduGtDF/TNWQ0ZJXOQkWGcnipX9QvepY8RW
+         MNFb/PVGRWtnZ7NASrbvA6jNXSazF3IYKhHeIjSnJgtD8ZVMWOfhHHjxanWO26vaRdis
+         WmLjNGtooFwrcBIcosIuh0DAoL6H3XPoUvTw7yqccvFIioo1bk2AKvZLPrgjx97Dh6GU
+         XMUAydm3dzL/CoIdTepa1lzwxZ2kkGFGokAFnzhxlQRhdOzALMclPvbiqx613g0/CNV9
+         8lxNd0WgkmT5h/m7bp9di3185ve0rRclBhJxgEwm5E8GRHxEyZtscesh2eYBJVoKvhgY
+         m7Pw==
+X-Gm-Message-State: APjAAAV908AyDKKe+cFaATdxk6+QywxiTlDnduIOpftEZzJqOLaBRT+s
+        FXN6BvLQ+JinvKbTQlvjffg=
+X-Google-Smtp-Source: APXvYqwB1B3dKfMqnsDAG+nmoEINKciwiZmKc32r/lIlls0no3VQOd2mh4fBVo4UDYofa2t3eVLq9g==
+X-Received: by 2002:a25:65d4:: with SMTP id z203mr345117ybb.370.1553120933151;
+        Wed, 20 Mar 2019 15:28:53 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id p17sm1067949ywg.27.2019.03.20.15.28.47
+        by smtp.gmail.com with ESMTPSA id p1sm1067327ywg.12.2019.03.20.15.28.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Mar 2019 15:28:49 -0700 (PDT)
-Received: by 42.do-not-panic.com (sSMTP sendmail emulation); Wed, 20 Mar 2019 22:28:46 +0000
+        Wed, 20 Mar 2019 15:28:52 -0700 (PDT)
+Received: by 42.do-not-panic.com (sSMTP sendmail emulation); Wed, 20 Mar 2019 22:28:49 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     akpm@linux-foundation.org, keescook@chromium.org
 Cc:     sandeen@redhat.com, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 2/6] test_sysctl: load module before testing for it
-Date:   Wed, 20 Mar 2019 22:28:27 +0000
-Message-Id: <20190320222831.8243-3-mcgrof@kernel.org>
+Subject: [PATCH 3/6] test_sysctl: ignore diff output on verify_diff_w()
+Date:   Wed, 20 Mar 2019 22:28:28 +0000
+Message-Id: <20190320222831.8243-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190320222831.8243-1-mcgrof@kernel.org>
 References: <20190320222831.8243-1-mcgrof@kernel.org>
@@ -67,10 +67,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the test script checks for the existance of the
-sysctl test module's directory path prior to loading it.
-We must first try to load the module prior to checking for
-that path. This fixes the order for the load / test.
+When verify_diff_w() is used we care about the result, not
+the verbose output, and although we use -q, that still
+gives us a chatty message about if the files differ or not.
+Since verify_diff_w() uses stdinput the chatty message says
+whether or not "-" matches the target file, and this just
+seems rather odd. Better to just ignore that messsage all
+together, what we really care about i sthe results, the
+return value and we check for that.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
@@ -78,18 +82,17 @@ Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index 87df7e52a97a..e0c8404da6b0 100755
+index e0c8404da6b0..f51987d0d32d 100755
 --- a/tools/testing/selftests/sysctl/sysctl.sh
 +++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -823,8 +823,8 @@ function parse_args()
- test_reqs
- allow_user_defaults
- check_production_sysctl_writes_strict
--test_modprobe
- load_req_mod
-+test_modprobe
+@@ -179,7 +179,7 @@ verify()
  
- trap "test_finish" EXIT
+ verify_diff_w()
+ {
+-	echo "$TEST_STR" | diff -q -w -u - $1
++	echo "$TEST_STR" | diff -q -w -u - $1 > /dev/null
+ 	return $?
+ }
  
 -- 
 2.18.0
