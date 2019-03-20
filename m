@@ -7,55 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E34C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF44C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86572218A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE27021841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 17:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553102976;
-	bh=VBn8U8iX7R+SefDj+Uj7FKU7du0t+PjelTqr7TBKtaM=;
+	s=default; t=1553102980;
+	bh=wTy5EpbiGZz487Cojr+F9cuzYGbnKPOUu9c7WA1dcn4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ZRrmp6OW9SeB6oHmkjSdnRTeg/azm8LwhdwgIG3oCoWd62Z+YejCJnIzG8Q/DugCZ
-	 QJ/vzWSvY3AfTrU1vZTx7FimLISbvSOyWkziQcJScudeZ4KCWEArBD/1OhLm04pxE/
-	 If3XAYtPQZgQz7jJw8BPcs39B9IfLL7PGi9rb9HU=
+	b=GXaOHnEJSX+PNLBR8qhHArRee6r8+lL3jvNmBoEkFYGgw524WaRM+1vr6/HIbAWpF
+	 VQTq8TJeo67I7y/KkgJ1LLKre6meyYxzwr7JTsn1TEvFs8Qoa0sx4Gd/AnVmfPDxly
+	 7NDxfH1rstpC0cj+NZjntlC8RVMKH2fnONcqvMHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfCTR3e (ORCPT
+        id S1727008AbfCTR3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 13:29:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43516 "EHLO
+        Wed, 20 Mar 2019 13:29:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43624 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726644AbfCTR3e (ORCPT
+        with ESMTP id S1726644AbfCTR3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 13:29:34 -0400
+        Wed, 20 Mar 2019 13:29:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=rp6NB9xNNh4uX2mxx8BntkrwhxEbDT3leRORdwcGVvU=; b=NA11nkwnF+k+
-        0iSdQCMJMnQcqTYmyitGs3kGpHBOOnQZ8BKSccnaRK6qDEweou6Qlv/JpoyuYuexvvTEBoBNep5d+
-        MHfL4AX6FLH5n53hDtcRlOzUF3uuZFzXv9IcXEZnarqXDILVLqvD10/puaj/XoHMpaOcCJ0enJyjr
-        kfEk0=;
+        List-Archive; bh=nDzRGumfDbLVrf5ScV6Slqf2nMzmo4SkNg7oEB93QcU=; b=hQftAoIMniaJ
+        04yJwObi7hGnJuVVZ5q0xaM+R65NeE2g26np7/FfC3YSKH3Z72EfFVeT+d2WF5K+zEhu2N7OTHiil
+        i7/2N6w7i5gWQa9QAvPLhKLrROwFUyD/HHQ1/1HWOxVzUj3w9RviPV3yn1Q2c8EWEWF36lQ9nMUIl
+        3Mlao=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6f1s-00018C-DV; Wed, 20 Mar 2019 17:29:28 +0000
+        id 1h6f1w-00018f-O8; Wed, 20 Mar 2019 17:29:32 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id EADBE1126E4D; Wed, 20 Mar 2019 17:29:27 +0000 (GMT)
+        id 492211126E4C; Wed, 20 Mar 2019 17:29:32 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
-        sbkim73@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org,
-        m.szyprowski@samsung.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: samsung: i2s: Don't use register read to determine slave/master mode" to the asoc tree
-In-Reply-To:  <20190319121102.28069-1-s.nawrocki@samsung.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: jz4740: Depend on MIPS instead of MACH_JZ4740" to the asoc tree
+In-Reply-To:  <20190319140014.26796-1-paul@crapouillou.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190320172927.EADBE1126E4D@debutante.sirena.org.uk>
-Date:   Wed, 20 Mar 2019 17:29:27 +0000 (GMT)
+Message-Id: <20190320172932.492211126E4C@debutante.sirena.org.uk>
+Date:   Wed, 20 Mar 2019 17:29:32 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: i2s: Don't use register read to determine slave/master mode
+   ASoC: jz4740: Depend on MIPS instead of MACH_JZ4740
 
 has been applied to the asoc tree at
 
@@ -88,87 +87,33 @@ to this mail.
 Thanks,
 Mark
 
-From f29eec793d4d16a1019abac1ac0702d07adae78e Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Tue, 19 Mar 2019 13:11:02 +0100
-Subject: [PATCH] ASoC: samsung: i2s: Don't use register read to determine
- slave/master mode
+From 0f91d24f2c78e24303594395db58a0e983606a8c Mon Sep 17 00:00:00 2001
+From: Paul Cercueil <paul@crapouillou.net>
+Date: Tue, 19 Mar 2019 15:00:14 +0100
+Subject: [PATCH] ASoC: jz4740: Depend on MIPS instead of MACH_JZ4740
 
-We can simplify the code by caching the CPU DAI master/slave
-information rather than reading previously set register bit.
+Depending on MACH_JZ4740 prevent us from creating a generic kernel that
+works on more than one MIPS board. Instead, we just depend on MIPS being
+set.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ sound/soc/jz4740/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index ab471d550d17..9722940da6a4 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -88,12 +88,6 @@ struct samsung_i2s_priv {
- 	struct platform_device *pdev;
- 	struct platform_device *pdev_sec;
- 
--	/* Memory mapped SFR region */
--	void __iomem *addr;
--
--	/* Spinlock protecting access to the device's registers */
--	spinlock_t lock;
--
- 	/* Lock for cross interface checks */
- 	spinlock_t pcm_lock;
- 
-@@ -122,6 +116,15 @@ struct samsung_i2s_priv {
- 	/* The clock provider's data */
- 	struct clk *clk_table[3];
- 	struct clk_onecell_data clk_data;
-+
-+	/* Spinlock protecting member fields below */
-+	spinlock_t lock;
-+
-+	/* Memory mapped SFR region */
-+	void __iomem *addr;
-+
-+	/* A flag indicating the I2S slave mode operation */
-+	bool slave_mode;
- };
- 
- /* Returns true if this is the 'overlay' stereo DAI */
-@@ -130,15 +133,6 @@ static inline bool is_secondary(struct i2s_dai *i2s)
- 	return i2s->drv->id == SAMSUNG_I2S_ID_SECONDARY;
- }
- 
--/* If operating in SoC-Slave mode */
--static inline bool is_slave(struct i2s_dai *i2s)
--{
--	struct samsung_i2s_priv *priv = i2s->priv;
--
--	u32 mod = readl(priv->addr + I2SMOD);
--	return (mod & (1 << priv->variant_regs->mss_off)) ? true : false;
--}
--
- /* If this interface of the controller is transmitting data */
- static inline bool tx_active(struct i2s_dai *i2s)
- {
-@@ -715,6 +709,7 @@ static int i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	mod &= ~(sdf_mask | lrp_rlow | mod_slave);
- 	mod |= tmp;
- 	writel(mod, priv->addr + I2SMOD);
-+	priv->slave_mode = (mod & mod_slave);
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 	pm_runtime_put(dai->dev);
- 
-@@ -917,7 +912,7 @@ static int config_setup(struct i2s_dai *i2s)
- 	set_rfs(i2s, rfs);
- 
- 	/* Don't bother with PSR in Slave mode */
--	if (is_slave(i2s))
-+	if (priv->slave_mode)
- 		return 0;
- 
- 	if (!(priv->quirks & QUIRK_NO_MUXPSR)) {
+diff --git a/sound/soc/jz4740/Kconfig b/sound/soc/jz4740/Kconfig
+index 1a354a6b6e87..b3f9c41b4319 100644
+--- a/sound/soc/jz4740/Kconfig
++++ b/sound/soc/jz4740/Kconfig
+@@ -1,6 +1,6 @@
+ config SND_JZ4740_SOC
+ 	tristate "SoC Audio for Ingenic JZ4740 SoC"
+-	depends on MACH_JZ4740 || COMPILE_TEST
++	depends on MIPS || COMPILE_TEST
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
+ 	help
+ 	  Say Y or M if you want to add support for codecs attached to
 -- 
 2.20.1
 
