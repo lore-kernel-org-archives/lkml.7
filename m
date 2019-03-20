@@ -2,102 +2,136 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF990C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F65C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6E82186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553058426;
-	bh=8p/yQVuYxwPBUvtN5pJ6q3FFkPCc2jHRg4Ry482iwVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k+28210izLAjGw7Wt2pUtKh4GjN6VCRFZhLAqv4JZ7kZLq7+o5hBpmYxSfXy8clOE
-	 1Hv2ImQlTPH3MxIezXMEB7EI1dAbFGnuRdBAy47zgvIVUuT/4p0z6rNry3Cyd/Pw/Q
-	 nn6Z1UpsXCD+swhghuFcVpUTet4byMuzepl1gxgc=
+	by mail.kernel.org (Postfix) with ESMTP id 0679C2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 05:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfCTFHF (ORCPT
+        id S1726362AbfCTFJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 01:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfCTFHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 01:07:04 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2482184E;
-        Wed, 20 Mar 2019 05:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553058424;
-        bh=8p/yQVuYxwPBUvtN5pJ6q3FFkPCc2jHRg4Ry482iwVw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XC2uir3Xk/AX1uJ8bdb1jKQJ3kKkm7tM4nADXJ46Rw6BMufgdgUfmciBN6WOO6pf9
-         v3iWaJ+RUrn5x/HwsX3BpJ1+iLLndn9fG9LQ5Qf+WeKTLbtOoSUj1gW+hZCZqQZKLB
-         CxfwzlJTesAblrINzQ8FtW/YZxpWLW6CLFuUNnEk=
-Date:   Wed, 20 Mar 2019 06:06:59 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jon Masters <jcm@jonmasters.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Steve French <smfrench@gmail.com>,
-        lsf-pc@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [LSF/MM TOPIC] FS, MM, and stable trees
-Message-ID: <20190320050659.GA16580@kroah.com>
-References: <20190212170012.GF69686@sasha-vm>
- <CAH2r5mviqHxaXg5mtVe30s2OTiPW2ZYa9+wPajjzz3VOarAUfw@mail.gmail.com>
- <CAOQ4uxjMYWJPF8wFF_7J7yy7KCdGd8mZChfQc5GzNDcfqA7UAA@mail.gmail.com>
- <20190213073707.GA2875@kroah.com>
- <CAOQ4uxgQGCSbhppBfhHQmDDXS3TGmgB4m=Vp3nyyWTFiyv6z6g@mail.gmail.com>
- <20190213091803.GA2308@kroah.com>
- <20190213192512.GH69686@sasha-vm>
- <20190213195232.GA10047@kroah.com>
- <79d10599-70d2-7d06-1cee-6e52d36233bf@jonmasters.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79d10599-70d2-7d06-1cee-6e52d36233bf@jonmasters.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 20 Mar 2019 01:09:45 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34514 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbfCTFJp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 01:09:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v64so1037793pfb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 22:09:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zRNsdf+V/AK4P0Z2aSwS4lRRtyqJz6mWGX6inLxUzcw=;
+        b=dXn3OpVA+JwYevRmwxKsasjxmmX1X1AYutU/a3mFKMF00ytKxwXgR+Z6P8vBeXfQpv
+         fnt+JtyroNJby6Oj6TmbG2Fz7dtNDFnpx0x+m1Dm9Y/LbpUsysVv+fmB7pAxM3m2NPNR
+         L42CQWzroAZI9Vlv2U1ZrW9HnYIMo0SgujnFsZiZmR1WPlWxB+ZYA/yvcZffcuCcMd1f
+         Bts1hvyHTLXVOSunPM1/ecvA9lZDElarQlPYJv+Q5+0MWL1bnAbhbL+JSCSazLOJJz7L
+         P6iTDqshb72vgZ0tuW5zVSk9DvGb49oXHPAGKehlBIc4gOL8OxsH5Gv/NRMynxzaUhGY
+         ETkQ==
+X-Gm-Message-State: APjAAAWgZDyl070ngCfBuq2kb3tGMN9qSM1YFmbmCRsN4Cmkpwle4f87
+        8cJZd7lvwhXHzS6na6xunFZoO03kck0=
+X-Google-Smtp-Source: APXvYqwPAI1uQcQkOu6TsbGPh4BpCrHfy7St/TgYZeLCzp0v/5kAh9lS3UJX6Bw722ElXp09XHgbpw==
+X-Received: by 2002:a17:902:2bab:: with SMTP id l40mr5876361plb.273.1553058583841;
+        Tue, 19 Mar 2019 22:09:43 -0700 (PDT)
+Received: from localhost ([122.177.144.121])
+        by smtp.gmail.com with ESMTPSA id p86sm1298564pfa.104.2019.03.19.22.09.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 22:09:42 -0700 (PDT)
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will.deacon@arm.com>, Boris Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
+Subject: [PATCH v3 0/3] Append new variables to vmcoreinfo (PTRS_PER_PGD for arm64 and MAX_PHYSMEM_BITS for all archs)
+Date:   Wed, 20 Mar 2019 10:39:31 +0530
+Message-Id: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 11:46:09PM -0400, Jon Masters wrote:
-> On 2/13/19 2:52 PM, Greg KH wrote:
-> > On Wed, Feb 13, 2019 at 02:25:12PM -0500, Sasha Levin wrote:
-> 
-> >> So really, it sounds like a low hanging fruit: we don't really need to
-> >> write much more testing code code nor do we have to refactor existing
-> >> test suites. We just need to make sure the right tests are running on
-> >> stable kernels. I really want to clarify what each subsystem sees as
-> >> "sufficient" (and have that documented somewhere).
-> > 
-> > kernel.ci and 0-day and Linaro are starting to add the fs and mm tests
-> > to their test suites to address these issues (I think 0-day already has
-> > many of them).  So this is happening, but not quite obvious.  I know I
-> > keep asking Linaro about this :(
-> 
-> We're working on investments for LDCG[0] in 2019 that include kernel CI
-> changes for server use cases. Please keep us informed of what you folks
-> ultimately want to see, and I'll pass on to the steering committee too.
-> 
-> Ultimately I've been pushing for a kernel 0-day project for Arm. That's
-> probably going to require a lot of duplicated effort since the original
-> 0-day project isn't open, but creating an open one could help everyone.
+Changes since v2:
+----------------
+- v2 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+- Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+  ifdef sections, as suggested by Kazu.
+- Updated vmcoreinfo documentation to add description about
+  'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
 
-Why are you trying to duplicate it on your own?  That's what kernel.ci
-should be doing, please join in and invest in that instead.  It's an
-open source project with its own governance and needs sponsors, why
-waste time and money doing it all on your own?
+Changes since v1:
+----------------
+- v1 was sent out as a single patch which can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
 
-thanks,
+- v2 breaks the single patch into two independent patches:
+  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
 
-greg k-h
+This patchset primarily fixes the regression reported in user-space
+utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+with the availability of 52-bit address space feature in underlying
+kernel. These regressions have been reported both on CPUs which don't
+support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+and also on prototype platforms (like ARMv8 FVP simulator model) which
+support ARMv8.2 extensions and are running newer kernels.
+
+The reason for these regressions is that right now user-space tools
+have no direct access to these values (since these are not exported
+from the kernel) and hence need to rely on a best-guess method of
+determining value of 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' supported
+by underlying kernel.
+
+Exporting these values via vmcoreinfo will help user-land in such cases.
+In addition, as per suggestion from makedumpfile maintainer (Kazu),
+it makes more sense to append 'MAX_PHYSMEM_BITS' to
+vmcoreinfo in the core code itself rather than in arm64 arch-specific
+code, so that the user-space code for other archs can also benefit from
+this addition to the vmcoreinfo and use it as a standard way of
+determining 'SECTIONS_SHIFT' value in user-land.
+
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+
+Bhupesh Sharma (3):
+  arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
+  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+  Documentation/vmcoreinfo: Add documentation for 'MAX_PHYSMEM_BITS'
+
+ Documentation/kdump/vmcoreinfo.txt | 5 +++++
+ arch/arm64/kernel/crash_core.c     | 1 +
+ kernel/crash_core.c                | 1 +
+ 3 files changed, 7 insertions(+)
+
+-- 
+2.7.4
+
