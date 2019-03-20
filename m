@@ -2,175 +2,152 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10F8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70003C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832672146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4962184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553107963;
+	bh=HUxD4zz8Zf+WY2iSBbRgjfg2I0iw9IDkAFSzHi5UwbM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qNF44G2J96sJK+pLXgZsnqKTThwjQ21h5NLg46b45GGmj/ig7hNzvLdtzHx8P2JPF
+	 Bf0BWgr714SY6WAME4h+7bme3Sjq4xLI7neH0SQLq6/IBoQedR7nevyv+8rJZU9NjH
+	 VrB7eGVxzSBAgcz6voevbrNII72hCI2gEFJKS+pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfCTSwa (ORCPT
+        id S1727746AbfCTSwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:52:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:44808 "EHLO foss.arm.com"
+        Wed, 20 Mar 2019 14:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfCTSuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:50:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58691174E;
-        Wed, 20 Mar 2019 11:50:14 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D2D183F59C;
-        Wed, 20 Mar 2019 11:50:12 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        robert.walker@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 03/25] coresight: replicator: Prepare for merging with dynamic-replicator
-Date:   Wed, 20 Mar 2019 18:49:20 +0000
-Message-Id: <1553107783-3340-4-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
-References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+        id S1727381AbfCTSwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:52:39 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CAF62146E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553107958;
+        bh=HUxD4zz8Zf+WY2iSBbRgjfg2I0iw9IDkAFSzHi5UwbM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0coyyM/RhxAfI7QyrQoNtZcSaFX+1PKfm8ZtUTnCUTbpoeWM+5zvMmhsCx1J5+TCC
+         lFqIVy++YNJNaUWAJCaS2JDQqHvDnnyqfAtkCXmBUh4b86ovIQFdKV0hHo2YN0xG9J
+         PClAxccVOq0TdIE13GtfH7QhDQG59xdr4qx+3gdM=
+Received: by mail-wr1-f44.google.com with SMTP id g12so3986162wrm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:52:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4tLqh3dyGt/EHsrdRla/gtTJsB2HcUqpW71QHIV9plJB2ri3p
+        Tu8Aq/Tq5HYwJQ3Vw8qO273G1++yg+0T+7tMKkQ53A==
+X-Google-Smtp-Source: APXvYqz+3EH7OAApLS1c3Ky5zJprm9XIhGC4yft3gC9LcO7BNV9y3r8KWkfsUvGPzeeN1MoMmQNqJWkPB9IfWDq2mhc=
+X-Received: by 2002:adf:e743:: with SMTP id c3mr9313755wrn.330.1553107956638;
+ Wed, 20 Mar 2019 11:52:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
+ <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 20 Mar 2019 11:52:25 -0700
+X-Gmail-Original-Message-ID: <CALCETrVKAUK-jZ7Knp7RetTL055p3iK1D8Wyr6=hPq5HkePkFg@mail.gmail.com>
+Message-ID: <CALCETrVKAUK-jZ7Knp7RetTL055p3iK1D8Wyr6=hPq5HkePkFg@mail.gmail.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave()
+ to wrap SGX enclave transitions
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a preparatory step to merge the separate drivers for static and
-dynamic replicators, annotate the static replicator specific details.
-Also refactor the probe routine to make it generic in order to merge
-the drivers easily.
+On Wed, Mar 20, 2019 at 11:30 AM Xing, Cedric <cedric.xing@intel.com> wrote=
+:
+>
+> > +/**
+> > + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
+> > + *
+> > + * %eax:        ENCLU leaf, must be EENTER or ERESUME
+> > + * %rbx:        TCS, must be non-NULL
+> > + * %rcx:        Optional pointer to 'struct sgx_enclave_exception'
+> > + *
+> > + * Return:
+> > + *  0 on a clean entry/exit to/from the enclave
+> > + *  -EINVAL if ENCLU leaf is not allowed or if TCS is NULL
+> > + *  -EFAULT if ENCLU or the enclave faults
+> > + *
+> > + * Note that __vdso_sgx_enter_enclave() is not compliant with the x86-
+> > 64 ABI.
+> > + * All registers except RSP must be treated as volatile from the
+> > +caller's
+> > + * perspective, including but not limited to GPRs, EFLAGS.DF, MXCSR,
+> > FCW, etc...
+> > + * Conversely, the enclave being run must preserve the untrusted RSP
+> > and stack.
+>
+> By requiring preservation of RSP at both AEX and EEXIT, this precludes th=
+e possibility of using the untrusted stack as temporary storage by enclaves=
+. While that looks reasonable at first glance, I'm afraid it isn't the case=
+ in reality. The untrusted stack is inarguably the most convenient way for =
+data exchange between an enclave and its enclosing process, and is in fact =
+being used for that purpose by almost all existing enclaves to date. Given =
+the expectation that this API will be used by all future SGX application, i=
+t looks unwise to ban the most convenient and commonly used approach for da=
+ta exchange.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight-replicator.c | 62 +++++++++++++---------
- 1 file changed, 36 insertions(+), 26 deletions(-)
+I'm going to go out on a limb and say that this is a good thing.
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index feac983..43cbcf1 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -56,58 +56,68 @@ static const struct coresight_ops replicator_cs_ops = {
- 	.link_ops	= &replicator_link_ops,
- };
- 
--static int replicator_probe(struct platform_device *pdev)
-+static int replicator_probe(struct device *dev)
- {
--	int ret;
--	struct device *dev = &pdev->dev;
-+	int ret = 0;
- 	struct coresight_platform_data *pdata = NULL;
- 	struct replicator_drvdata *drvdata;
- 	struct coresight_desc desc = { 0 };
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = dev->of_node;
- 
- 	if (np) {
- 		pdata = of_get_coresight_platform_data(dev, np);
- 		if (IS_ERR(pdata))
- 			return PTR_ERR(pdata);
--		pdev->dev.platform_data = pdata;
-+		dev->platform_data = pdata;
- 	}
- 
- 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 
--	drvdata->dev = &pdev->dev;
--	drvdata->atclk = devm_clk_get(&pdev->dev, "atclk"); /* optional */
-+	drvdata->dev = dev;
-+	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
- 	if (!IS_ERR(drvdata->atclk)) {
- 		ret = clk_prepare_enable(drvdata->atclk);
- 		if (ret)
- 			return ret;
- 	}
--	pm_runtime_get_noresume(&pdev->dev);
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--	platform_set_drvdata(pdev, drvdata);
-+
-+	dev_set_drvdata(dev, drvdata);
- 
- 	desc.type = CORESIGHT_DEV_TYPE_LINK;
- 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
- 	desc.ops = &replicator_cs_ops;
--	desc.pdata = pdev->dev.platform_data;
--	desc.dev = &pdev->dev;
-+	desc.pdata = dev->platform_data;
-+	desc.dev = dev;
- 	drvdata->csdev = coresight_register(&desc);
- 	if (IS_ERR(drvdata->csdev)) {
- 		ret = PTR_ERR(drvdata->csdev);
--		goto out_disable_pm;
-+		goto out_disable_clk;
- 	}
- 
--	pm_runtime_put(&pdev->dev);
-+	pm_runtime_put(dev);
- 
--	return 0;
--
--out_disable_pm:
--	if (!IS_ERR(drvdata->atclk))
-+out_disable_clk:
-+	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
--	pm_runtime_put_noidle(&pdev->dev);
--	pm_runtime_disable(&pdev->dev);
-+	return ret;
-+}
-+
-+static int static_replicator_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = replicator_probe(&pdev->dev);
-+
-+	if (ret) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		pm_runtime_disable(&pdev->dev);
-+	}
- 
- 	return ret;
- }
-@@ -139,18 +149,18 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
- 			   replicator_runtime_resume, NULL)
- };
- 
--static const struct of_device_id replicator_match[] = {
-+static const struct of_device_id static_replicator_match[] = {
- 	{.compatible = "arm,coresight-replicator"},
- 	{}
- };
- 
--static struct platform_driver replicator_driver = {
--	.probe          = replicator_probe,
-+static struct platform_driver static_replicator_driver = {
-+	.probe          = static_replicator_probe,
- 	.driver         = {
- 		.name   = "coresight-replicator",
--		.of_match_table = replicator_match,
-+		.of_match_table = static_replicator_match,
- 		.pm	= &replicator_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(replicator_driver);
-+builtin_platform_driver(static_replicator_driver);
--- 
-2.7.4
+Using the untrusted stack as a way to exchange data is very
+convenient, but that doesn't mean it's a good idea.  Here are some
+problems it causes:
 
+ - It prevents using a normal function to wrap enclave entry (as we're
+seeing with this patch set).
+
+ - It makes quite a few unfortunate assumptions about the layout of
+the untrusted stack.  It assumes that the untrusted stack is
+arbitrarily expandable, which is entirely untrue in languages like Go.
+It assumes that the untrusted stack isn't further constrained by
+various CFI mechanisms (e.g. CET), and, as of last time I checked, the
+interaction between CET and SGX was still not specified.  It also
+assumes that the untrusted stack doesn't have ABI-imposed layout
+restrictions related to unwinding, and, as far as I know, this means
+that current enclaves with current enclave runtimes can interact quite
+poorly with debuggers, exception handling, and various crash dumping
+technologies.
+
+ - It will make it quite unpleasant to call into an enclave in a
+coroutine depending on how the host untrusted runtime implements
+coroutines.
+
+So I think it's a *good* thing if the effect is to make enclave SDKs
+change their memory management so that untrusted buffers are
+explicitly supplied by the host runtime.  Honestly, I would have much
+preferred if the architecture did not give the enclave access to RSP
+and RBP at all.  (And, for that matter, RIP.)
