@@ -2,142 +2,91 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91620C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F43C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE88213F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DDB213F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 13:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfCTNeH (ORCPT
+        id S1727902AbfCTNeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 09:34:07 -0400
-Received: from relay.sw.ru ([185.231.240.75]:59890 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfCTNeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 09:34:06 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1h6bLg-0000UM-PB; Wed, 20 Mar 2019 16:33:40 +0300
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Josef Bacik <jbacik@fb.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Xin Long <lucien.xin@gmail.com>
-References: <000000000000db3d130584506672@google.com>
- <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
- <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
- <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
- <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com>
-Date:   Wed, 20 Mar 2019 16:34:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 20 Mar 2019 09:34:21 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40235 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfCTNeV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 09:34:21 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x12so2455220qts.7;
+        Wed, 20 Mar 2019 06:34:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lxb+cto02BIatCH7Gsn3jweAO4W1kfw2CVhMuPz2fqU=;
+        b=Cfeb3wPaKiU9JH8ehNkOHiAq/mUbUXMdOnbFWoURTfzhCk0khmFrXUs7XnwYyj/s7Y
+         gGUgnGVXpzb2ZddE+Dj/lGW9N2/9WDt+N2Z76gFyH3OKoQ1pS+DxLf1roiiKgtHrXea/
+         QUHuM9LSaUCUOsRM9jUHqzTqbTDUCeNfQURah8dhEb+wwoUQ6xK3IWrwObzZlPzJIu1o
+         XyyKX4rEV8SHpYWvYgSuB2paQ/06dsAg8v/SrDXQxwAh+/OEKq6VgAYi/gSnNEdq5yXY
+         N/9tdVQWzAV5cu4mBqygwgqgjLPzq0WfZ+3RVsrXnndmDMDzKEBhrMpo9FUTHpdrfVFf
+         s9gg==
+X-Gm-Message-State: APjAAAX7WOEWCei9NqVuoM8Zat7MCT/H7J0FKkGnNI6HpYj6sj9CX+qD
+        O6Gc3++b4LodGAbNaLMA7wUqNmbktXnfCEjP91o=
+X-Google-Smtp-Source: APXvYqz9MW7CJwO9dJ+S+7Q1aJsu3zP2Bpyeyex9t6Dgx6Q7wQ4uZyS7kKe5y9Us8CNX6vU0d8jy9lg1/AmI+RSWdPc=
+X-Received: by 2002:a0c:9487:: with SMTP id j7mr1278926qvj.180.1553088860133;
+ Wed, 20 Mar 2019 06:34:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com> <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 Mar 2019 14:34:02 +0100
+Message-ID: <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> I've added your patch to my randconfig test setup and will let you
+> know if I see anything noticeable. I'm currently testing clang-arm32,
+> clang-arm64 and gcc-x86.
 
+This is the only additional bug that has come up so far:
 
-On 3/20/19 1:38 PM, Dmitry Vyukov wrote:
-> On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> On 2019/03/20 18:59, Dmitry Vyukov wrote:
->>>> From bisection log:
->>>>
->>>>         testing release v4.17
->>>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
->>>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
->>>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
->>>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
->>>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
->>>>         testing release v4.16
->>>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
->>>>         run #0: OK
->>>>         run #1: OK
->>>>         run #2: OK
->>>>         run #3: OK
->>>>         run #4: OK
->>>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
->>>>         run #6: OK
->>>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
->>>>         run #8: OK
->>>>         run #9: OK
->>>>         testing release v4.15
->>>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
->>>>         all runs: OK
->>>>         # git bisect start v4.16 v4.15
->>>>
->>>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
->>>
->>> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
->>> looks like the right range, no?
->>
->> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
->> "Stack corruption" can't manifest as "Out of memory and no killable processes".
->>
->> "kernel panic: Out of memory and no killable processes..." is completely
->> unrelated to "kernel panic: corrupted stack end in wb_workfn".
-> 
-> 
-> Do you think this predicate is possible to code?
+`.exit.text' referenced in section `.alt.smp.init' of
+drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
+`exit.text' of drivers/char/ipmi/ipmi_msghandler.o
 
-Something like bellow probably would work better than current behavior.
-
-For starters, is_duplicates() might just compare 'crash' title with 'target_crash' title and its duplicates titles.
-syzbot has some knowledge about duplicates with different crash titles when people use "syz dup" command.
-Also it might be worth to experiment with using neural networks to identify duplicates.
-
-
-target_crash = 'kernel panic: corrupted stack end in wb_workfn'
-test commit:
-	bad = false;
-	skip = true;
-	foreach run:
-		run_started, crashed, crash := run_repro();
-
-		//kernel built, booted, reproducer launched successfully
-		if (run_started)
-			skip = false;
-		if (crashed && is_duplicates(crash, target_crash))
-			bad = true;
-	
-	if (skip)
-		git bisect skip;
-	else if (bad)
-		git bisect bad;
-	else
-		git bisect good;
+diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
+index 201100226301..84b12e33104d 100644
+--- a/arch/arm/kernel/atags.h
++++ b/arch/arm/kernel/atags.h
+@@ -5,7 +5,7 @@ void convert_to_tag_list(struct tag *tags);
+ const struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer,
+        unsigned int machine_nr);
+ #else
+-static inline const struct machine_desc *
++static __always_inline const struct machine_desc *
+ setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
+ {
+        early_print("no ATAGS support: can't continue\n");
