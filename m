@@ -2,101 +2,125 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B1CC10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07306C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287E221850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D016A2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 07:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfCTHuC (ORCPT
+        id S1727605AbfCTHvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 03:50:02 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:34568 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726802AbfCTHuC (ORCPT
+        Wed, 20 Mar 2019 03:51:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726802AbfCTHvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 03:50:02 -0400
-X-UUID: 2e6fc7c51e58446989dccb26774ac9f5-20190320
-X-UUID: 2e6fc7c51e58446989dccb26774ac9f5-20190320
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 29587343; Wed, 20 Mar 2019 15:49:45 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 20 Mar
- 2019 15:49:43 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 20 Mar 2019 15:49:42 +0800
-Message-ID: <1553068182.10179.166.camel@mhfsdcap03>
-Subject: Re: [PATCH v2] usb: introduce usb_ep_type_string() function
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "Dmitry Torokhov" <dtor@chromium.org>,
-        Johan Hovold <johan@kernel.org>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 20 Mar 2019 15:49:42 +0800
-In-Reply-To: <87r2b2ujao.fsf@linux.intel.com>
-References: <28a8e9f1518e47c35e4563706cbe592b972a7f9d.1552977710.git.chunfeng.yun@mediatek.com>
-         <1552982059.10179.143.camel@mhfsdcap03> <20190319092331.GA21652@kroah.com>
-         <1553044567.10179.148.camel@mhfsdcap03> <87r2b2ujao.fsf@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Mar 2019 03:51:08 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2K7og6r056644
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:51:07 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rbfykm9gh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 03:51:07 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 20 Mar 2019 07:51:02 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Mar 2019 07:50:59 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2K7p1JK7012436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Mar 2019 07:51:01 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEE7FA4054;
+        Wed, 20 Mar 2019 07:51:01 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BC4BA4060;
+        Wed, 20 Mar 2019 07:51:01 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.84])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 20 Mar 2019 07:51:00 +0000 (GMT)
+Date:   Wed, 20 Mar 2019 09:50:59 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        pasha.tatashin@oracle.com, mhocko@suse.com,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
+References: <20190320073540.12866-1-bhe@redhat.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320073540.12866-1-bhe@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19032007-0012-0000-0000-000003050380
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032007-0013-0000-0000-0000213C1539
+Message-Id: <20190320075058.GB13626@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903200066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
+Hi,
 
-On Wed, 2019-03-20 at 08:55 +0200, Felipe Balbi wrote:
-> Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+On Wed, Mar 20, 2019 at 03:35:38PM +0800, Baoquan He wrote:
+> The code comment above sparse_add_one_section() is obsolete and
+> incorrect, clean it up and write new one.
 > 
-> > Hi Greg,
-> >
-> > On Tue, 2019-03-19 at 10:23 +0100, Greg Kroah-Hartman wrote:
-> >> On Tue, Mar 19, 2019 at 03:54:19PM +0800, Chunfeng Yun wrote:
-> >> > 
-> >> > Hi Felipe & Mathias,
-> >> > 
-> >> > Could you please comment this patch, if there is some-effect on dwc3 and
-> >> > xhci, I'll remove its change.
-> > typo: some-effect/side-effect
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/sparse.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> well, we don't really know if there are tools parsing the output. The
-> side-effect _does_ exist (i.e. you change the string :-), what we don't
-> know is if this will cause problems to possibly existing tools.
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 77a0554fa5bd..0a0f82c5d969 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -674,9 +674,12 @@ static void free_map_bootmem(struct page *memmap)
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
 > 
-> Personally, I don't mind the patch, but if it breaks existing parsers,
-> that would be a little annoying.
-Thank you for the feedback.
+>  /*
+> - * returns the number of sections whose mem_maps were properly
+> - * set.  If this is <=0, then that means that the passed-in
+> - * map was not consumed and must be freed.
+> + * sparse_add_one_section - add a memory section
 
-I'll abandon the changes about dwc3 & xhci
+Please mention that this is only intended for memory hotplug
+
+> + * @nid:	The node to add section on
+> + * @start_pfn:	start pfn of the memory range
+> + * @altmap:	device page map
+> + *
+> + * Return 0 on success and an appropriate error code otherwise.
+
+s/Return/Return:/ please
+
+>   */
+>  int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+>  				     struct vmem_altmap *altmap)
+> -- 
+> 2.17.2
 > 
 
+-- 
+Sincerely yours,
+Mike.
 
