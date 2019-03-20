@@ -2,110 +2,140 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B15C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0D9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE382077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8AAoeR4"
+	by mail.kernel.org (Postfix) with ESMTP id A496720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfCTAyL (ORCPT
+        id S1727480AbfCTAzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:54:11 -0400
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:37304 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfCTAyK (ORCPT
+        Tue, 19 Mar 2019 20:55:31 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:39859 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727062AbfCTAza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:54:10 -0400
-Received: by mail-ed1-f54.google.com with SMTP id v21so511197edq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=SIu1f/sjw06XHj4pPICcBegeKBWN4+eHSsg+jniAAUk=;
-        b=q8AAoeR4h8TsrN4Y+jSwUb95HGe10gEyKV28DsjZHhYhhd/aSE1upt1HLKzGFUZvPq
-         VvucMBs2pwdG29cCgBMKKtd81BguHPCw845RGI2hM5FOxFYf36kJuoXd7OKM3KhdkhVm
-         p5Y2qZ53TDrh3YkS7fN36ae9Jn/7h1RETp5N1gwYMXeP9/58D80ajG72P0A3WDt3/wln
-         bz/PK0cHMvEf8fo8qKyc+HgKzjpn64niJ7bLExmHIwqsc5mIkK90dIdU/y21d8jiOZhO
-         vL9sB0zLkju8w6NtJztz/YDIPGJvs5Wh2YXDmN0HwSM2dkwI0u8tyaJQ+nUVGP/jAO3f
-         Ez7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=SIu1f/sjw06XHj4pPICcBegeKBWN4+eHSsg+jniAAUk=;
-        b=Fvx2a5Ld4ns9YY3xK4+q14HvNUlL99nrlCDGt73SKVaVlxOt9fxCGikE0BF0e76Blm
-         oOO5HHCmuSeU2uuQn1Vdiil7SYpi4yOQ0Wc+YCD3o/4sCo5BfLDMrWwtRPzQfa3ptDu3
-         k7lEOAeI1BGNvfAhr9ATKNh21K9D6SoVR1T47wDznOmzRky0eEe+Z0s40FZCBSoq0Zb+
-         50TVZkHgHp8rsk5h+Mfrp4QK59ga9QUrMinRPpHZtX5SpGODVT2k8pUzVJZEZvPPFhP8
-         Khb+9REVHbi1cO7KdZMwAz8KYEn80EnOhvrUT2lffbcyq/mWLho0i4hsoWi4qnqR0jMH
-         jEDw==
-X-Gm-Message-State: APjAAAXVjvm+T3NbtP4BnBE2LzSxpV5wSuTA/oOwbB1Yp0kx0APKipH1
-        MG5+8X0qZEJJQiV6gnrmckM=
-X-Google-Smtp-Source: APXvYqzsRggGc+VQm56WC4vkrRpTZPBHiVpXWkrj+Iw6k6KKwC9xsMdO//5Kvn1JMxR9t3/FXYaH3w==
-X-Received: by 2002:a50:97d5:: with SMTP id f21mr18125379edb.293.1553043249031;
-        Tue, 19 Mar 2019 17:54:09 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id j34sm169742edb.30.2019.03.19.17.54.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 19 Mar 2019 17:54:08 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 17:54:06 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Clang warning in drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-Message-ID: <20190320005406.GA16412@archlinux-ryzen>
+        Tue, 19 Mar 2019 20:55:30 -0400
+X-IronPort-AV: E=Sophos;i="5.60,246,1549900800"; 
+   d="scan'208";a="57180461"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 20 Mar 2019 08:55:23 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 4EA4E4CD447D;
+        Wed, 20 Mar 2019 08:54:55 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 20 Mar 2019 08:55:29 +0800
+Subject: Re: WARNING: suspicious RCU usage in xfrm_alloc_userspi
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com>,
+        <davem@davemloft.net>, <herbert@gondor.apana.org.au>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <steffen.klassert@secunet.com>, <syzkaller-bugs@googlegroups.com>
+References: <0000000000007783a2058474a0b9@google.com>
+ <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
+From:   "Su Yanjun <suyj.fnst@cn.fujitsu.com>" <suyj.fnst@cn.fujitsu.com>
+Message-ID: <aab926e8-61a3-2fc8-6f8c-d64db133f167@cn.fujitsu.com>
+Date:   Wed, 20 Mar 2019 08:55:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 4EA4E4CD447D.ABE5C
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-The introduction of this file in commit dbd249c24427 ("drm/amdgpu: add
-amdgpu_ras.c to support ras (v2)") introduces the following Clang
-warnings:
+On 2019/3/20 0:23, Eric Dumazet wrote:
+> CC Su Yanjun
+>
+> On 03/19/2019 09:02 AM, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    b9998194 Add linux-next specific files for 20190318
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=17a2e24d200000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=59cd5d43b5df6955
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=59752237f7ab21c3f3c3
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e70cb3200000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17292127200000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com
+>>
+>> =============================
+>> WARNING: suspicious RCU usage
+>> 5.1.0-rc1-next-20190318 #5 Not tainted
+>> -----------------------------
+>> net/xfrm/xfrm_user.c:1080 suspicious rcu_dereference_check() usage!
+>>
+>> other info that might help us debug this:
+>>
+>>
+>> rcu_scheduler_active = 2, debug_locks = 1
+>> 1 lock held by syz-executor085/7946:
+>>   #0: 00000000a55031b5 (&net->xfrm.xfrm_cfg_mutex){+.+.}, at: xfrm_netlink_rcv+0x61/0x90 net/xfrm/xfrm_user.c:2691
+>>
+>> stack backtrace:
+>> CPU: 0 PID: 7946 Comm: syz-executor085 Not tainted 5.1.0-rc1-next-20190318 #5
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>   lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
+>>   xfrm_nlmsg_unicast net/xfrm/xfrm_user.c:1080 [inline]
+>>   xfrm_alloc_userspi+0x7d5/0xa80 net/xfrm/xfrm_user.c:1356
+>>   xfrm_user_rcv_msg+0x458/0x770 net/xfrm/xfrm_user.c:2684
+>>   netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+>>   xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2692
+>>   netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+>>   netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+>>   netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+>>   sock_sendmsg_nosec net/socket.c:651 [inline]
+>>   sock_sendmsg+0xdd/0x130 net/socket.c:661
+>>   ___sys_sendmsg+0x806/0x930 net/socket.c:2260
+>>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2298
+>>   __do_sys_sendmsg net/socket.c:2307 [inline]
+>>   __se_sys_sendmsg net/socket.c:2305 [inline]
+>>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2305
+>>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> RIP: 0033:0x440499
+>> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+>> RSP: 002b:00007ffcf12caf08 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+>> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440499
+>> RDX: 0000000000000000 RSI: 00000000200006c0 RDI: 0000000000000003
+>> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000040
+>>
+>>
+>> ---
+>> This bug is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>
+>> syzbot will keep track of this bug report. See:
+>> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
+>> syzbot can test patches for this bug, for details see:
+>> https://goo.gl/tpsmEJ#testing-patches
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:544:23: warning: implicit conversion from enumeration type 'enum amdgpu_ras_block' to different enumeration type 'enum ta_ras_block' [-Wenum-conversion]
-                        .block_id =  head->block,
-                                     ~~~~~~^~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:545:24: warning: implicit conversion from enumeration type 'enum amdgpu_ras_error_type' to different enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
-                        .error_type = head->type,
-                                      ~~~~~~^~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:549:23: warning: implicit conversion from enumeration type 'enum amdgpu_ras_block' to different enumeration type 'enum ta_ras_block' [-Wenum-conversion]
-                        .block_id =  head->block,
-                                     ~~~~~~^~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:550:24: warning: implicit conversion from enumeration type 'enum amdgpu_ras_error_type' to different enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
-                        .error_type = head->type,
-                                      ~~~~~~^~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:650:26: warning: implicit conversion from enumeration type 'enum amdgpu_ras_block' to different enumeration type 'enum ta_ras_block' [-Wenum-conversion]
-                .block_id = info->head.block,
-                            ~~~~~~~~~~~^~~~~
-drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:651:35: warning: implicit conversion from enumeration type 'enum amdgpu_ras_error_type' to different enumeration type 'enum ta_ras_error_type' [-Wenum-conversion]
-                .inject_error_type = info->head.type,
-                                     ~~~~~~~~~~~^~~~
-6 warnings generated.
+I  got it.
 
-Normally, I would sent a fix for this myself but I am not entirely sure
-why these two enumerated types exist when one would do since they have
-the same values minus the prefix. In fact, the ta_ras_{block,error_type}
-values are never used aside from being defined. Some clarification would
-be appreciated.
+Thanks
 
-Thank you,
-Nathan
+
+
