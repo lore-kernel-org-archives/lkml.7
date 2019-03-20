@@ -1,232 +1,198 @@
 Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC1C10F0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA285C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F42E2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553108245;
-	bh=jU9CC7/cwUq1tn+oMCzXLh4scS18THRBZAue4BKsS7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nJl4s4WMI2m7hTi565/4PTK1tZfpRTZpBccCGK/tJYjARQ+NUHOtDSk9i5vmW5n4N
-	 o+Aw8MEGWqr2i0jCpyTLP87YanhfyVFbxP5eNF1ieJtDTcaVhB9aRyQR/+tnQQ8Qdf
-	 Sfuru6+muMpuXMkCYvWZ9ZYnRBj0EJD1F018VF4I=
+	by mail.kernel.org (Postfix) with ESMTP id 852DA21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="JSmyPecH";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="M6JU9abf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfCTS5Y (ORCPT
+        id S1727468AbfCTS5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727062AbfCTS5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:57:23 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C52206BA;
-        Wed, 20 Mar 2019 18:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553108242;
-        bh=jU9CC7/cwUq1tn+oMCzXLh4scS18THRBZAue4BKsS7g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aWPdUEOCxrvBlwDE+7K2wdjzuuigEDqZTaAD+vsE1JIMwEnZkBxK0E6Tk8a7ZEGj6
-         IUXiiFPhx9crVD9zlnZpaBDlDWvI4qPTJlGJtoYALy7RJlA2xgYpcDNV5NOkWAwmlm
-         P1lYonc179XpoR+OPMvwkl92YibgKft0h7rTS7Ss=
-Date:   Wed, 20 Mar 2019 11:57:20 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-Message-ID: <20190320185719.GB180195@gmail.com>
-References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
- <20190319170911.GB202956@gmail.com>
+        Wed, 20 Mar 2019 14:57:35 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:50432 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727062AbfCTS5e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:57:34 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KIoGio015674;
+        Wed, 20 Mar 2019 11:57:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=l37ta0odjHkXOKVWzO/JIZlwYKfiZyYsjhOpLEq+ob0=;
+ b=JSmyPecHKg8zBtKYaVotRmoKQLRFgOzZPVaHoAovelE7TLLD3H/Y6GUbcGdSirwBxkZn
+ vSLI4F8hVVW+ar/gQQzmaHVeiNiibcY2YzbLe/vQhpu5lVEIXSF8VtTVvJlA7ypDMHo0
+ DCKrCVZBJ9NDJAOfNtPlI+CbX11e8H45v+8/Ny12qvOTd7g1bOdNjDPlP0t+ICdwerSt
+ KFrP/RiyXArk52COo9fdabJ20Cs0htUWpGo/GSlcAjry3+enCYZuEB7/abnqSPHh0rQ0
+ QSDA7z7AJaK8BR2oUl6kqFpEiToudVvY73zuOOnfGMsJsnIgvYeNkM6guhh3gDd3rODv xw== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2rbjvm1ttv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 20 Mar 2019 11:57:26 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 20 Mar
+ 2019 11:57:25 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (104.47.34.53) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 20 Mar 2019 11:57:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l37ta0odjHkXOKVWzO/JIZlwYKfiZyYsjhOpLEq+ob0=;
+ b=M6JU9abfbz6XkQHw3xB6Dpnx/AkGtkBscgRBhiLG8NugPIrucV16gfssG8gat/nTT4navit7a9Zz1x0rcVod7lgs8rcpgmGDxpFrkEl+IWOrsnJ9VW5v/cq/YE8WJCpbjP1fagZRK4j58ZxE2Jyv8a8A+rYpDdjphUS+36XhRWE=
+Received: from BL0PR18MB2305.namprd18.prod.outlook.com (52.132.30.25) by
+ BL0PR18MB2259.namprd18.prod.outlook.com (52.132.30.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Wed, 20 Mar 2019 18:57:24 +0000
+Received: from BL0PR18MB2305.namprd18.prod.outlook.com
+ ([fe80::d42:95e4:7e1c:76b6]) by BL0PR18MB2305.namprd18.prod.outlook.com
+ ([fe80::d42:95e4:7e1c:76b6%5]) with mapi id 15.20.1709.015; Wed, 20 Mar 2019
+ 18:57:24 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] iommu/iova: Fix tracking of recently failed iova address
+Thread-Topic: [PATCH v2] iommu/iova: Fix tracking of recently failed iova
+ address
+Thread-Index: AQHU307AEdaxNF9UUkmc+mwpnWSWUw==
+Date:   Wed, 20 Mar 2019 18:57:23 +0000
+Message-ID: <20190320185718.jhr6gvs7jdbn4x3p@rric.localdomain>
+References: <20190315155553.11857-1-rrichter@marvell.com>
+ <7515342b-f4b2-9406-5249-93ae7880835a@arm.com>
+In-Reply-To: <7515342b-f4b2-9406-5249-93ae7880835a@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P191CA0012.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:8b::25) To BL0PR18MB2305.namprd18.prod.outlook.com
+ (2603:10b6:207:43::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.191.24.140]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea1c95ec-eb05-410d-cea4-08d6ad65e349
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BL0PR18MB2259;
+x-ms-traffictypediagnostic: BL0PR18MB2259:
+x-microsoft-antispam-prvs: <BL0PR18MB22597F17B1527028F9D918DCD9410@BL0PR18MB2259.namprd18.prod.outlook.com>
+x-forefront-prvs: 098291215C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(305945005)(6436002)(81156014)(256004)(316002)(9686003)(53936002)(105586002)(106356001)(6486002)(4326008)(71190400001)(6512007)(54906003)(8936002)(25786009)(71200400001)(1076003)(97736004)(5660300002)(6916009)(99286004)(8676002)(52116002)(6506007)(76176011)(186003)(7736002)(66066001)(486006)(102836004)(53546011)(478600001)(3846002)(476003)(2906002)(68736007)(6116002)(86362001)(11346002)(26005)(14454004)(386003)(14444005)(81166006)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR18MB2259;H:BL0PR18MB2305.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XyHEiuqnHK5J5Z0J6x3J24POzC/6vSM8QFpG/oAHppySdz+ZgoNn0FKe613h9Tvy5fv5K5pPzvp5bjPj/iEVtThJHsJhfLTLOV0wTytvE2jFdmuqdVUypB6lPRv710Eev/Btx8UPu+nq/QaawyIbZf2zC9Qr/YYhHRZepccgIor4Y8kjTYUhSo4bmRVCIpfOz2aApR2yXgEsSbmdcf4ejpNY+mI3wv2f6qLhcB0FomCSJRKLhm55GBcqIzSgAATk7tVnXmOf+PrFlXHrhsOEU9BsYoHJHTE7UFb4dXfMCHUNdKRf4UYWh+FlyhBkJ82ee+2EraXSftOLA0TD61EkmGM0CHCOBg5hVDuhjtCmZi3xDxDB77PJL5kpypo0iFWA5zX8bvB7vwTbdEBi3VtqaJnDsjtzkYVG8RJ2OMXnZwU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6E854B9372BE4340AD425230E1258AD2@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319170911.GB202956@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea1c95ec-eb05-410d-cea4-08d6ad65e349
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 18:57:23.8692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2259
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_11:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
-> On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
-> > When running the sha1-asm crypto selftest on arm with
-> > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
-> > 
-> >     usercopy: Kernel memory overwrite attempt detected to spans
-> > multiple pages (offset 0, size 42)!
-> >     ------------[ cut here ]------------
-> >     kernel BUG at mm/usercopy.c:102!
-> >     Internal error: Oops - BUG: 0 [#1] SMP ARM
-> >     Modules linked in:
-> >     CPU: 0 PID: 35 Comm: cryptomgr_test Not tainted
-> > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
-> >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-> >     PC is at usercopy_abort+0x68/0x90
-> >     LR is at usercopy_abort+0x68/0x90
-> >     pc : [<c030fd60>]    lr : [<c030fd60>]    psr: 60000013
-> >     sp : ea54bc60  ip : 00000010  fp : cccccccd
-> >     r10: 00000000  r9 : c0e0ce04  r8 : ea54d009
-> >     r7 : ea54d00a  r6 : 00000000  r5 : 0000002a  r4 : c09d1120
-> >     r3 : dd6cd422  r2 : dd6cd422  r1 : 2abb4000  r0 : 0000005f
-> >     Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-> >     Control: 30c5387d  Table: 40003000  DAC: fffffffd
-> >     Process cryptomgr_test (pid: 35, stack limit = 0x(ptrval))
-> >     Stack: (0xea54bc60 to 0xea54c000)
-> >     bc60: c09d1120 c09d1120 c09d1120 00000000 0000002a 0000002a
-> > 00000000 c0310060
-> >     bc80: 0000002a 00000000 000001c0 00000000 00000000 c0eb11e8
-> > ea54cfe0 ea538c00
-> >     bca0: 00000000 ea54cfe0 ebef73e0 0000002a ea538c20 ea54bd84
-> > 0000003a c0427a30
-> >     bcc0: ea54bdbc 00000000 00000000 c081cf70 eb074280 c081cf70
-> > 0000002a c081cf80
-> >     bce0: 0000000e c07da138 ea54bd0c 00000000 c084061c c04248e8
-> > c0e0a408 eb074240
-> >     bd00: eb074200 c04253c8 eb074280 ea550000 00000012 dd6cd422
-> > ebef7480 eb074200
-> >     bd20: ea54bd84 c081cf64 ea537200 00000002 00000000 00000014
-> > c084061c c0428c38
-> >     bd40: ea54bd84 ea54bdbc c081cd34 00000000 c0e4e4b4 ea538c40
-> > 00000002 eabe4e80
-> >     bd60: ea538c00 00000400 ea4f7a00 ea4f7a60 eb074240 00000060
-> > 00000006 c09d544c
-> >     bd80: 00000038 00000003 00000000 00000038 ea54bd7c 00000001
-> > eb074200 00000000
-> >     bda0: 00000000 dead4ead ffffffff ffffffff ea54bdb0 ea54bdb0
-> > 00000000 c081cf70
-> >     bdc0: c081ce68 c081ce78 ea4f7480 eb000780 00000dc0 eb000780
-> > c0e4ee80 443e9884
-> >     bde0: 6ed23b1c a14aaeba e52951f9 f17046e5 fefefefe fefefefe
-> > fefefefe fefefefe
-> >     be00: eb000780 c04292c4 c0e0a638 60000013 60000013 c0305298
-> > ea4f7a00 c03062bc
-> >     be20: eb000780 00000cc0 ea4f7a00 dd6cd422 00000cc0 ea538c00
-> > 00000002 eabe4e40
-> >     be40: ea537200 00000007 00000000 ea4f7a00 eb074200 c0429314
-> > eb074200 ea538c00
-> >     be60: ea4f7a00 0000000a eabe4e80 c084061c c08405fc 00000006
-> > c04dace8 00000006
-> >     be80: 00000000 c084065c ea537200 0000000e 00000400 eb04de08
-> > ea4f71a8 c0429420
-> >     bea0: 00000400 ea537200 0000000e ea537200 0000000e c0429374
-> > 00000400 ffffffff
-> >     bec0: 000000a2 c042a414 00000103 c0e0a408 00000000 c0e0a438
-> > c0e5a2a0 c0e5a2a0
-> >     bee0: 00000001 00000001 00000017 ffffe000 00000000 60000013
-> > c0e5a2a0 c0269470
-> >     bf00: c09c9ed0 ea54bf5c 00000103 00000000 00000000 c0e0a408
-> > ea537280 0000000e
-> >     bf20: 00000400 c0426500 00000000 eb04de08 ea4f71a8 c02694f4
-> > c09c9ed0 ea54bf5c
-> >     bf40: ea54bf28 c02699d0 ea54bf5c dd6cd422 ea537200 dd6cd422
-> > c09c9ed0 ea537200
-> >     bf60: ea4af1c0 ea54a000 ea537200 c0426500 00000000 eb04de08
-> > ea4f71a8 c0426524
-> >     bf80: ea4f7180 c023dcec ea54a000 ea4af1c0 c023dbb4 00000000
-> > 00000000 00000000
-> >     bfa0: 00000000 00000000 00000000 c02010d8 00000000 00000000
-> > 00000000 00000000
-> >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > 00000000 00000000
-> >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > 00000000 00000000
-> >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
-> > (__check_object_size+0x2d8/0x448)
-> >     [<c0310060>] (__check_object_size) from [<c0427a30>]
-> > (build_test_sglist+0x268/0x2d8)
-> >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
-> > (test_hash_vec_cfg+0x110/0x694)
-> >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
-> > (__alg_test_hash+0x158/0x1b8)
-> >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
-> >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
-> >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
-> >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
-> >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
-> >     Exception stack(0xea54bfb0 to 0xea54bff8)
-> >     bfa0:                                     00000000 00000000
-> > 00000000 00000000
-> >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > 00000000 00000000
-> >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> >     Code: e58de000 e98d0012 e1a0100c ebfd6712 (e7f001f2)
-> >     ---[ end trace 190b3cf48e720f78 ]---
-> >     BUG: sleeping function called from invalid context at
-> > include/linux/percpu-rwsem.h:34
-> >     in_atomic(): 0, irqs_disabled(): 128, pid: 35, name: cryptomgr_test
-> >     CPU: 0 PID: 35 Comm: cryptomgr_test Tainted: G      D
-> > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
-> >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-> >     [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
-> >     [<c020ae58>] (show_stack) from [<c07c3624>] (dump_stack+0x7c/0x9c)
-> >     [<c07c3624>] (dump_stack) from [<c0242e14>] (___might_sleep+0xf4/0x158)
-> >     [<c0242e14>] (___might_sleep) from [<c0230210>] (exit_signals+0x2c/0x258)
-> >     [<c0230210>] (exit_signals) from [<c0223d6c>] (do_exit+0x114/0xa20)
-> >     [<c0223d6c>] (do_exit) from [<c020b160>] (die+0x304/0x344)
-> >     [<c020b160>] (die) from [<c020b388>] (do_undefinstr+0x80/0x190)
-> >     [<c020b388>] (do_undefinstr) from [<c0201b24>] (__und_svc_finish+0x0/0x3c)
-> >     Exception stack(0xea54bc10 to 0xea54bc58)
-> >     bc00:                                     0000005f 2abb4000
-> > dd6cd422 dd6cd422
-> >     bc20: c09d1120 0000002a 00000000 ea54d00a ea54d009 c0e0ce04
-> > 00000000 cccccccd
-> >     bc40: 00000010 ea54bc60 c030fd60 c030fd60 60000013 ffffffff
-> >     [<c0201b24>] (__und_svc_finish) from [<c030fd60>] (usercopy_abort+0x68/0x90)
-> >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
-> > (__check_object_size+0x2d8/0x448)
-> >     [<c0310060>] (__check_object_size) from [<c0427a30>]
-> > (build_test_sglist+0x268/0x2d8)
-> >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
-> > (test_hash_vec_cfg+0x110/0x694)
-> >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
-> > (__alg_test_hash+0x158/0x1b8)
-> >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
-> >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
-> >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
-> >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
-> >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
-> >     Exception stack(0xea54bfb0 to 0xea54bff8)
-> >     bfa0:                                     00000000 00000000
-> > 00000000 00000000
-> >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> > 00000000 00000000
-> >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > 
-> 
-> Well, this must happen with the new (in 5.1) crypto self-tests implementation
-> for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
-> understand why hardened usercopy considers it a bug though, as there's no buffer
-> overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
-> buffer that was allocated with __get_free_pages():
-> 
-> 	__get_free_pages(GFP_KERNEL, 1)
-> 
-> ... where 1 means an order-1 allocation.
-> 
-> If it copies to offset=4064 len=42, for example, then hardened usercopy
-> considers it a bug even though the buffer is 8192 bytes long.  Why?
-> 
-> It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
-> with ITER_KVEC.
-> 
-> - Eric
+On 18.03.19 15:19:23, Robin Murphy wrote:
+> On 15/03/2019 15:56, Robert Richter wrote:
+> > We track the smallest size that failed for a 32 bit allocation. The
+> > Size decreases only and if we actually walked the tree and noticed an
+> > allocation failure. Current code is broken and wrongly updates the
+> > size value even if we did not try an allocation. This leads to
+> > increased size values and we might go the slow path again even if we
+> > have seen a failure before for the same or a smaller size.
+>=20
+> That description wasn't too clear (since it rather contradicts itself by
+> starting off with "XYZ happens" when the whole point is that XYZ doesn't
+> actually happen properly), but having gone and looked at the code in cont=
+ext
+> I think I understand it now - specifically, it's that the early-exit path
+> for detecting that a 32-bit allocation request is too big to possibly
+> succeed should never have gone via the route which assigns to
+> max32_alloc_size.
+>=20
+> In that respect, the diff looks correct, so modulo possibly tweaking the
+> commit message,
+>=20
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Kees, any thoughts on why hardened usercopy rejects copies spanning a page
-boundary when they seem to be fine?
+Robin, thanks for your review.
 
-- Eric
+I hope the following description is better now.
+
+Thanks,
+
+-Robert
+
+-- >8 --
+From: Robert Richter <rrichter@marvell.com>
+Subject: [PATCH v2] iommu/iova: Fix tracking of recently failed iova addres=
+s
+ size
+
+If a 32 bit allocation request is too big to possibly succeed, it
+early exits with a failure and then should never update max32_alloc_
+size. This patch fixes current code, now the size is only updated if
+the slow path failed while walking the tree. Without the fix the
+allocation may enter the slow path again even if there was a failure
+before of a request with the same or a smaller size.
+
+Cc: <stable@vger.kernel.org> # 4.20+
+Fixes: bee60e94a1e2 ("iommu/iova: Optimise attempts to allocate iova from 3=
+2bit address range")
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+---
+ drivers/iommu/iova.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index f8d3ba247523..2de8122e218f 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -207,8 +207,10 @@ static int __alloc_and_insert_iova_range(struct iova_d=
+omain *iovad,
+ 		curr_iova =3D rb_entry(curr, struct iova, node);
+ 	} while (curr && new_pfn <=3D curr_iova->pfn_hi);
+=20
+-	if (limit_pfn < size || new_pfn < iovad->start_pfn)
++	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
++		iovad->max32_alloc_size =3D size;
+ 		goto iova32_full;
++	}
+=20
+ 	/* pfn_lo will point to size aligned address if size_aligned is set */
+ 	new->pfn_lo =3D new_pfn;
+@@ -222,7 +224,6 @@ static int __alloc_and_insert_iova_range(struct iova_do=
+main *iovad,
+ 	return 0;
+=20
+ iova32_full:
+-	iovad->max32_alloc_size =3D size;
+ 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+ 	return -ENOMEM;
+ }
+--=20
+2.20.1
+
