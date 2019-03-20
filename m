@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AF4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AB7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEAA620850
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6B620850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="VAnn82FZ"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="yyt/nvWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfCTTBF (ORCPT
+        id S1727510AbfCTTBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:01:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35579 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfCTTBF (ORCPT
+        Wed, 20 Mar 2019 15:01:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46830 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfCTTBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:01:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y197so321896wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:01:03 -0700 (PDT)
+        Wed, 20 Mar 2019 15:01:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o1so3971708wrs.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zcRCVq3B+iwwZzRJrXnuwilWuPQVL4V6o04ieqitPfQ=;
-        b=VAnn82FZaA+TzmputmzDuvnrv9DkO+e3kVqRf/9CsVPjSsK7w1oOCIiKvWBqX2nXAM
-         pPN0l4GN5Hqz/sudxKvFQg2z6ep7u6o5s5N20rNC2zn1gXVQ6zlt8tLpfEIqLpo8ljky
-         2g8DFTjYa/IcBIm3L0XGUaV/jn+QEOBCj0Tu3yC9t7hP9inYbT+ZGgtKl+VRM+iDcJOc
-         BIQrCJVB46y8knCG+lhZIODTXV1sv87iChZ0n6kcLxKKmS0NMBi8OSUZBF/MPh5lpFIq
-         L0KV2kInrD+emk6DSe6yBJAucoKfBz42nSRLEJSkCI72hXvV8mvjxI68f5K0wZ9MTow/
-         ci/A==
+        bh=XBhIq3aqso0G04zXT+QC3Zu+3j3tuTRQXg8+qUd02lI=;
+        b=yyt/nvWtHxXqRjMpiHjiXnMPMpBiiGIwJ+u+Gu99sbWTeYKDBVkAzRfHvd52nhYfpu
+         otp5K/A3JVCs319iTobudv91ns2JZ/APRwrQgYHogWT3HAV4AsP1d6gDuU3QDm9+Xqzo
+         U7JKwL5NeK+m9QEAAsEWgRE1Ujrx0YCN+5p17hwCyAVhBtjK6pR6eeiz92lBr9+Uscki
+         7/frSDdX5wCqGw7gC3delyMgcDQ/SLXjwIc7y814P8/laViIIOjE4HTR8l8pFy0uz4k6
+         DwzlmJITVYuXsg5EHebAL1QJovf5x6Ib0MnwVe8muLtO/ubq0vHBWKXkEAd+clJW4+gf
+         Jfmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=zcRCVq3B+iwwZzRJrXnuwilWuPQVL4V6o04ieqitPfQ=;
-        b=DDbxq8JZDaRqEm0elZHPWD60kj3mto9+wgk3ee5JNEjxRSJYO2Px1Sxanhds8Ndxb2
-         7VA6X16aCG+tlBiqhHigjYsuBm11nA0evk303rp4myCPp9i4cgDMQAxbI1gIHCiV/7tj
-         I4MPadYtuMCKIRB6cD6c5p+IrtZCeMBNWhhxcqCX/WW1U5nXSgpdsjqjIgb5VnuQhHv7
-         DBwTSAR5OIkRrULv7ViiK8ZwkxfaHjaPY7tAzHqNTTMnFMz5oQH8knbSNJ2jXQHfcmxW
-         6FuNzMVTEeasY6Y3NfMai6aBjdnpG2bBK58V3IW3TDVcOkdcdfBZTaor2TZTGoFJJw0q
-         JBHQ==
-X-Gm-Message-State: APjAAAXsLqph2TX6UkuSHhvBBQIPnsRqdQBdS/MY0prKbdy0SuvgwLlN
-        VuCDrcvQa5br2FdbczFz/EFLKQ==
-X-Google-Smtp-Source: APXvYqzS5ga6x8HSaHitv63vGSSRGgTpCEJB73C3HaCJrQXrEQIWWjmzSTsUWcpD18/D5JWHAFsjjA==
-X-Received: by 2002:a1c:4d:: with SMTP id 74mr9029583wma.129.1553108462606;
-        Wed, 20 Mar 2019 12:01:02 -0700 (PDT)
+        bh=XBhIq3aqso0G04zXT+QC3Zu+3j3tuTRQXg8+qUd02lI=;
+        b=FsHS0/Yqx4zgAAuvkBHyOr/i+ZW8v9ADCdbJm9G5zFroVZmVEeiIeuSLDSjO/lpuS1
+         2T55ll0H6Y71I4lUwletWKhPbjzZPlO8vm3erKdq/W6fZOOB7Hea9mztugRUlzEM6qgU
+         +S190QbslqQNwcggPKpFbKSX7VwsgPVzHQnCsYVmCB7B/x8Kqt9WcUA5/HkPnqPD23N1
+         h81Sgk/W5aMXNZdeilP/G88hYacLldpazaOAPni01G2FKvvq3n18i75CluYJ/tSa0fuV
+         T8xXzJDomY90hlWVYaHHzrVEyAAgJh+YKZMDqed7dOXVJXIu7yged5lC5ACRybBntW3Y
+         nHdA==
+X-Gm-Message-State: APjAAAVUcZWvXvr+k/4+AvuxFA58aFNMEwo5zXUPDMLC9ADyxnV3xoOc
+        1U8qwXJeSaZAALpeKO5i8Lli9QWCfGw=
+X-Google-Smtp-Source: APXvYqw0zQAEMUgKOWMwAMiZHIEnO0Vh7OMwmXi1bh5My5/jAToW3ykUMDLLunZRU81L/E5HaaEKnw==
+X-Received: by 2002:adf:e2cf:: with SMTP id d15mr22377557wrj.325.1553108475257;
+        Wed, 20 Mar 2019 12:01:15 -0700 (PDT)
 Received: from [172.20.1.106] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id t2sm5487793wra.9.2019.03.20.12.01.01
+        by smtp.gmail.com with ESMTPSA id j3sm9094551wrg.54.2019.03.20.12.01.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 12:01:01 -0700 (PDT)
+        Wed, 20 Mar 2019 12:01:14 -0700 (PDT)
 To:     Alban Crequy <alban.crequy@gmail.com>, ast@kernel.org,
         daniel@iogearbox.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         alban@kinvolk.io, iago@kinvolk.io
 References: <20190320173332.18105-1-alban@kinvolk.io>
- <20190320173332.18105-4-alban@kinvolk.io>
+ <20190320173332.18105-6-alban@kinvolk.io>
 From:   Quentin Monnet <quentin.monnet@netronome.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
@@ -109,14 +109,14 @@ Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
  oHhplrRgXwPBSOkMMlLKu+FJsmYVFeLAJ81sfmFuTTliRb3Fl2Q27cEr7kNKlsz/t6vLSEN2
  j8x+tWD8x53SEOSn94g2AyJA9Txh2xBhWGuZ9CpBuXjtPrnRSd8xdrw36AL53goTt/NiLHUd
  RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH bpf-next v1 4/7] tools: bpftool: implement map exec
- command
-Message-ID: <391274e4-7634-a1ac-5969-02403abd77ac@netronome.com>
-Date:   Wed, 20 Mar 2019 19:01:01 +0000
+Subject: Re: [PATCH bpf-next v1 6/7] tools: bpftool: fix bpffs mount when
+ pinning subdirectories
+Message-ID: <f247bd50-57aa-0320-e5de-a715a5f15491@netronome.com>
+Date:   Wed, 20 Mar 2019 19:01:14 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190320173332.18105-4-alban@kinvolk.io>
+In-Reply-To: <20190320173332.18105-6-alban@kinvolk.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
@@ -128,194 +128,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 2019-03-20 18:33 UTC+0100 ~ Alban Crequy <alban.crequy@gmail.com>
 > From: Alban Crequy <alban@kinvolk.io>
 > 
-> The map exec commands allows to open an existing map and pass the file
-> descriptor to a child process. This enables applications to use an
-> existing BPF map even when they don't support bpffs.
+> When trying to pin at a path such as /sys/fs/bpf/subdir/mymap while the
+> bpffs is mounted at the standard path and the "subdir" directory didn't
+> exist, bpftool was failing and attempting to mount the bpffs on
+> /sys/fs/bpf/subdir/. The mount obviously failed, since "subdir" didn't
+> exist.
 > 
-> Example of usage:
->     # bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99
->     anon_inode:bpf-map
+> Commit 3fc27b71b894 ("tools: bpftool: try to mount bpffs if required for
+> pinning objects") says:
 > 
-> Documentation and bash completion updated as well.
+>     The code for mnt_bpffs() is a copy of function bpf_mnt_fs() from
+>     iproute2 package (under lib/bpf.c, taken at commit 4b73d52f8a81), with
+>     modifications regarding handling of error messages.
 > 
+> However, the function bpf_mnt_fs() from iproute2 only works when its
+> parameter is the root of the bpffs (e.g. "/sys/fs/bfs").
+For bpftool, the point was to be able to mount the bpffs at any mount
+point the user wanted to use. So one way to fix that would be to simply
+prevent the mount attempt if the directory does not exist. Another one
+would be to attempt to create the directories (but I guess that sounds
+more hazardous already). I'm not really sure we should restrict mounting
+to the default /sys/fs/bpf. I understand the environment variable still
+allows it, so why not, but I find it less straightforward. Maybe others
+will have an opinion.
+
+> 
+> iproute2/tc actually only mounts at the standard path "/sys/fs/bfs" or
+> at the path from the environment variable $TC_BPF_MNT. This patch
+> implements a similar strategy but uses the environment variable name
+> $BPFTOOL_BPF_MNT.
+> 
+> This patch still will not do the mkdir automatically. But at least,
+> there will be no error message about the mount.
+> 
+> Fixes: 3fc27b71b894 ("tools: bpftool: try to mount bpffs if required for pinning objects")
+> Cc: Quentin Monnet <quentin.monnet@netronome.com>
 > Signed-off-by: Alban Crequy <alban@kinvolk.io>
 > ---
->  .../bpf/bpftool/Documentation/bpftool-map.rst | 11 ++++
->  tools/bpf/bpftool/bash-completion/bpftool     | 22 +++++++-
->  tools/bpf/bpftool/map.c                       | 53 +++++++++++++++++++
->  3 files changed, 85 insertions(+), 1 deletion(-)
+>  tools/bpf/bpftool/common.c | 20 ++++++++++++++++----
+>  tools/bpf/bpftool/main.h   |  6 ++++++
+>  2 files changed, 22 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/bpf/bpftool/Documentation/bpftool-map.rst b/tools/bpf/bpftool/Documentation/bpftool-map.rst
-> index b685641bfd74..dfd8352fa453 100644
-> --- a/tools/bpf/bpftool/Documentation/bpftool-map.rst
-> +++ b/tools/bpf/bpftool/Documentation/bpftool-map.rst
-> @@ -30,6 +30,7 @@ MAP COMMANDS
->  |	**bpftool** **map getnext**    *MAP* [**key** *DATA*]
->  |	**bpftool** **map delete**     *MAP*  **key** *DATA*
->  |	**bpftool** **map pin**        *MAP*  *FILE*
-> +|	**bpftool** **map exec**       *MAP*  **fd** *FD* **cmd** -- *CMD*
->  |	**bpftool** **map event_pipe** *MAP* [**cpu** *N* **index** *M*]
->  |	**bpftool** **map peek**       *MAP*
->  |	**bpftool** **map push**       *MAP* **value** *VALUE*
-> @@ -101,6 +102,10 @@ DESCRIPTION
->  		  contain a dot character ('.'), which is reserved for future
->  		  extensions of *bpffs*.
+> diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
+> index e560cd8f66bc..4783cbbe8037 100644
+> --- a/tools/bpf/bpftool/common.c
+> +++ b/tools/bpf/bpftool/common.c
+> @@ -168,6 +168,8 @@ int mount_bpffs_for_pin(const char *name)
+>  	char *file;
+>  	char *dir;
+>  	int err = 0;
+> +	const char *mnt_env = getenv(BPF_DIR_MNT_ENV);
+> +	static const char *mnt;
+
+Reverse-Christmas tree style for the declarations, please.
+
 >  
-> +	**bpftool map exec**     *MAP*  **fd** *FD* **cmd** -- *CMD*
-> +                  Load map and exec an external command, passing the file
-> +                  descriptor.
-> +
-
-Please use tabs for indent.
-
-Could you please add a line to explain that the process spawned get the
-the link to the map in the file descriptor passed as *FD*? I'm being
-pedantic, I know it's not that hard to understand with the examples,
-just trying to make things as clear as possible for users reading the page.
-
-I have nothing against the double dash in the examples or the commit
-log, but putting it in the description in the command itself makes it
-look like it is some kind of mandatory syntax. Would you consider
-removing the occurrences above?
-
-We don't really "exec" the map... Just thinking... Would another keyword
-like "pass" or "passfd" be more relevant?
-
->  	**bpftool** **map event_pipe** *MAP* [**cpu** *N* **index** *M*]
->  		  Read events from a BPF_MAP_TYPE_PERF_EVENT_ARRAY map.
+>  	file = malloc(strlen(name) + 1);
+>  	strcpy(file, name);
+> @@ -183,13 +185,23 @@ int mount_bpffs_for_pin(const char *name)
+>  		goto out_free;
+>  	}
 >  
-> @@ -254,6 +259,12 @@ would be lost as soon as bpftool exits).
->    key: 00 00 00 00  value: 22 02 00 00
->    Found 1 element
->  
-> +**# bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99**
+> -	err = mnt_fs(dir, "bpf", err_str, ERR_MAX_LEN);
+> +	mnt = mnt_env ? : BPF_DIR_MNT;
 > +
-> +::
+> +	// Don't try to mount if wrong prefix: we don't want a leftover mount that is
+> +	// not going to help.
+
+Please stick to /* */-style comments.
+
+> +	if (!is_prefix(mnt, dir)) {
+> +		p_err("refuse to mount BPF file system (%s) to pin the object (%s): wrong directory",
+
+Not all users know that bpftool attempts to mount the bpffs, I fear this
+message might sound a bit obscure. Maybe something along
+"<dir> is not in bpffs or under an expected mountpoint, cannot pin ..."?
+
+> +		      mnt, name);
+> +		err = -1;
+> +		goto out_free;
+> +	}
 > +
-> +  anon_inode:bpf-map
-> +
->  SEE ALSO
->  ========
->  	**bpf**\ (2),
-> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-> index 9e37de8bb227..63cd53c4d3a7 100644
-> --- a/tools/bpf/bpftool/bash-completion/bpftool
-> +++ b/tools/bpf/bpftool/bash-completion/bpftool
-> @@ -583,6 +583,26 @@ _bpftool()
->                      fi
->                      return 0
->                      ;;
-> +                exec)
-> +                    case $prev in
-> +                        $command)
-> +                            COMPREPLY=( $( compgen -W "$MAP_TYPE" -- "$cur" ) )
-> +                            return 0
-> +                            ;;
-> +                        fd)
-> +                            return 0
-> +                            ;;
-> +                        cmd)
-> +                            COMPREPLY=( $(compgen -c -- "$cur" ) )
-> +                            return 0
-> +                            ;;
-> +                        *)
-> +                            _bpftool_once_attr 'fd'
-> +                            _bpftool_once_attr 'cmd'
-> +                            return 0
-> +                            ;;
-> +                    esac
-> +                    ;;
->                  event_pipe)
->                      case $prev in
->                          $command)
-> @@ -610,7 +630,7 @@ _bpftool()
->                      [[ $prev == $object ]] && \
->                          COMPREPLY=( $( compgen -W 'delete dump getnext help \
->                              lookup pin event_pipe show list update create \
-> -                            peek push enqueue pop dequeue' -- \
-> +                            peek push enqueue pop dequeue exec' -- \
->                              "$cur" ) )
->                      ;;
->              esac
-> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-> index a576f2a019be..768497364cee 100644
-> --- a/tools/bpf/bpftool/map.c
-> +++ b/tools/bpf/bpftool/map.c
-> @@ -883,6 +883,58 @@ static int do_update(int argc, char **argv)
+> +	err = mnt_fs(mnt, "bpf", err_str, ERR_MAX_LEN);
+>  	if (err) {
+>  		err_str[ERR_MAX_LEN - 1] = '\0';
+> -		p_err("can't mount BPF file system to pin the object (%s): %s",
+> -		      name, err_str);
+> +		p_err("can't mount BPF file system (%s) to pin the object (%s): %s",
+> +		      mnt, name, err_str);
+>  	}
+> -
+
+No need to remove the empty line?
+
+>  out_free:
+>  	free(file);
 >  	return err;
->  }
+> diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
+> index 7fc2973446d0..a2e28e600b72 100644
+> --- a/tools/bpf/bpftool/main.h
+> +++ b/tools/bpf/bpftool/main.h
+> @@ -18,6 +18,12 @@
 >  
-> +static int do_exec(int argc, char **argv)
-> +{
-> +	struct bpf_map_info info = {};
-> +	__u32 len = sizeof(info);
-> +	int fd, ret;
-> +	__u32 outfd = 0;
-
-Reverse-Christmas tree.
-
-> +
-> +	if (argc < 2)
-> +		usage();
-> +
-> +	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-> +	if (fd < 0)
-> +		return -1;
-> +
-> +	while (argc) {
-> +		if (is_prefix(*argv, "fd")) {
-> +			if (parse_u32_arg(&argc, &argv, &outfd,
-> +					  "out fd"))
-> +				return -1;
-> +		} else if (is_prefix(*argv, "cmd")){
-> +			NEXT_ARG();
-> +			if (!REQ_ARGS(1))
-> +				return -1;
-> +
-> +			break;
-> +		} else {
-> +			p_err("unknown arg %s", *argv);
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	if (outfd == 0) {
-> +		p_err("invalid fd");
-> +		return -1;
-> +	}
-> +	if (*argv == NULL) {
-> +		p_err("empty command");
-> +		return -1;
-> +	}
-> +
-> +
-
-Spurious blank line.
-
-> +	ret = dup2(fd, (int)outfd);
-> +	if (ret == -1) {
-> +		p_err("dup2 failed: %s", strerror(errno));
-> +		return -1;
-> +	}
-> +
-> +	execvp(argv[0], argv);
-> +	p_err("execvp failed: %s", strerror(errno));
-> +	return -1;
-> +}
-> +
->  static void print_key_value(struct bpf_map_info *info, void *key,
->  			    void *value)
->  {
-> @@ -1355,6 +1407,7 @@ static const struct cmd cmds[] = {
->  	{ "enqueue",	do_update },
->  	{ "pop",	do_pop_dequeue },
->  	{ "dequeue",	do_pop_dequeue },
-> +	{ "exec",	do_exec },
->  	{ 0 }
->  };
+>  #define ptr_to_u64(ptr)	((__u64)(unsigned long)(ptr))
 >  
+> +/* If bpffs is not mounted, it can be automatically mounted at this location.
+> + * The location can be changed with the environment variable $BPFTOOL_BPF_MNT.
+
+Could you please document that in the manual pages? Otherwise very few
+people will ever discover this variable. I don't think we have mentioned
+anywhere that we try to mount the file system yet, but we could have it
+in both bpftool-prog and bpftool-map I suppose.
+
+> + */
+> +#define BPF_DIR_MNT	"/sys/fs/bpf"
+> +#define BPF_DIR_MNT_ENV	"BPFTOOL_BPF_MNT"
+
+Could we rename those macros into BPFFS_MNT_* maybe?
+
+> +
+>  #define NEXT_ARG()	({ argc--; argv++; if (argc < 0) usage(); })
+>  #define NEXT_ARGP()	({ (*argc)--; (*argv)++; if (*argc < 0) usage(); })
+>  #define BAD_ARG()	({ p_err("what is '%s'?", *argv); -1; })
 > 
 
-Please also add the new command in the interactive help (do_help()).
-
-By the way, I like this new command a lot!
