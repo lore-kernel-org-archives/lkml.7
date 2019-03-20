@@ -2,197 +2,129 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA285C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8350C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852DA21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="JSmyPecH";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="M6JU9abf"
+	by mail.kernel.org (Postfix) with ESMTP id BF4742190A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 18:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553108352;
+	bh=jp8AbSaqwT21JnyYDjKNO3C8evoJ6yy8quSVRfFSrac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B8OkjokrNkBxE/NSOAwNbR2KJ5HbZ9vO0Rabm+stUKBGtvcrt4sgnzY6MKF9XuTn/
+	 Q7EHurCLtqkI+/PEaMJvKbIUY78Ggn2eAAgjMa4EXTSZ8Kj5KanjSu5AhX1xTl/ZtN
+	 bicVhE6uXToSecOFrw5Lmpu+Q/wBbDNws6CB+WPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfCTS5f (ORCPT
+        id S1727471AbfCTS7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 14:57:35 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:50432 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727062AbfCTS5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 14:57:34 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2KIoGio015674;
-        Wed, 20 Mar 2019 11:57:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=l37ta0odjHkXOKVWzO/JIZlwYKfiZyYsjhOpLEq+ob0=;
- b=JSmyPecHKg8zBtKYaVotRmoKQLRFgOzZPVaHoAovelE7TLLD3H/Y6GUbcGdSirwBxkZn
- vSLI4F8hVVW+ar/gQQzmaHVeiNiibcY2YzbLe/vQhpu5lVEIXSF8VtTVvJlA7ypDMHo0
- DCKrCVZBJ9NDJAOfNtPlI+CbX11e8H45v+8/Ny12qvOTd7g1bOdNjDPlP0t+ICdwerSt
- KFrP/RiyXArk52COo9fdabJ20Cs0htUWpGo/GSlcAjry3+enCYZuEB7/abnqSPHh0rQ0
- QSDA7z7AJaK8BR2oUl6kqFpEiToudVvY73zuOOnfGMsJsnIgvYeNkM6guhh3gDd3rODv xw== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2rbjvm1ttv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 20 Mar 2019 11:57:26 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 20 Mar
- 2019 11:57:25 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (104.47.34.53) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 20 Mar 2019 11:57:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l37ta0odjHkXOKVWzO/JIZlwYKfiZyYsjhOpLEq+ob0=;
- b=M6JU9abfbz6XkQHw3xB6Dpnx/AkGtkBscgRBhiLG8NugPIrucV16gfssG8gat/nTT4navit7a9Zz1x0rcVod7lgs8rcpgmGDxpFrkEl+IWOrsnJ9VW5v/cq/YE8WJCpbjP1fagZRK4j58ZxE2Jyv8a8A+rYpDdjphUS+36XhRWE=
-Received: from BL0PR18MB2305.namprd18.prod.outlook.com (52.132.30.25) by
- BL0PR18MB2259.namprd18.prod.outlook.com (52.132.30.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Wed, 20 Mar 2019 18:57:24 +0000
-Received: from BL0PR18MB2305.namprd18.prod.outlook.com
- ([fe80::d42:95e4:7e1c:76b6]) by BL0PR18MB2305.namprd18.prod.outlook.com
- ([fe80::d42:95e4:7e1c:76b6%5]) with mapi id 15.20.1709.015; Wed, 20 Mar 2019
- 18:57:24 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] iommu/iova: Fix tracking of recently failed iova address
-Thread-Topic: [PATCH v2] iommu/iova: Fix tracking of recently failed iova
- address
-Thread-Index: AQHU307AEdaxNF9UUkmc+mwpnWSWUw==
-Date:   Wed, 20 Mar 2019 18:57:23 +0000
-Message-ID: <20190320185718.jhr6gvs7jdbn4x3p@rric.localdomain>
-References: <20190315155553.11857-1-rrichter@marvell.com>
- <7515342b-f4b2-9406-5249-93ae7880835a@arm.com>
-In-Reply-To: <7515342b-f4b2-9406-5249-93ae7880835a@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P191CA0012.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:209:8b::25) To BL0PR18MB2305.namprd18.prod.outlook.com
- (2603:10b6:207:43::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [77.191.24.140]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ea1c95ec-eb05-410d-cea4-08d6ad65e349
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BL0PR18MB2259;
-x-ms-traffictypediagnostic: BL0PR18MB2259:
-x-microsoft-antispam-prvs: <BL0PR18MB22597F17B1527028F9D918DCD9410@BL0PR18MB2259.namprd18.prod.outlook.com>
-x-forefront-prvs: 098291215C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(305945005)(6436002)(81156014)(256004)(316002)(9686003)(53936002)(105586002)(106356001)(6486002)(4326008)(71190400001)(6512007)(54906003)(8936002)(25786009)(71200400001)(1076003)(97736004)(5660300002)(6916009)(99286004)(8676002)(52116002)(6506007)(76176011)(186003)(7736002)(66066001)(486006)(102836004)(53546011)(478600001)(3846002)(476003)(2906002)(68736007)(6116002)(86362001)(11346002)(26005)(14454004)(386003)(14444005)(81166006)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR18MB2259;H:BL0PR18MB2305.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XyHEiuqnHK5J5Z0J6x3J24POzC/6vSM8QFpG/oAHppySdz+ZgoNn0FKe613h9Tvy5fv5K5pPzvp5bjPj/iEVtThJHsJhfLTLOV0wTytvE2jFdmuqdVUypB6lPRv710Eev/Btx8UPu+nq/QaawyIbZf2zC9Qr/YYhHRZepccgIor4Y8kjTYUhSo4bmRVCIpfOz2aApR2yXgEsSbmdcf4ejpNY+mI3wv2f6qLhcB0FomCSJRKLhm55GBcqIzSgAATk7tVnXmOf+PrFlXHrhsOEU9BsYoHJHTE7UFb4dXfMCHUNdKRf4UYWh+FlyhBkJ82ee+2EraXSftOLA0TD61EkmGM0CHCOBg5hVDuhjtCmZi3xDxDB77PJL5kpypo0iFWA5zX8bvB7vwTbdEBi3VtqaJnDsjtzkYVG8RJ2OMXnZwU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6E854B9372BE4340AD425230E1258AD2@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Mar 2019 14:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfCTS7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 14:59:10 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3333218D4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553108350;
+        bh=jp8AbSaqwT21JnyYDjKNO3C8evoJ6yy8quSVRfFSrac=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mRIf6w3QFh3e9I8TEAE+h2PxblsGDwAvz/vvD8Akc66cH92WI1V37lsdfwOx4+xnd
+         JLwYPXQAmxsZPJPnkaIC9PuN/GyDZDVoR3K3um+rtpcmpAB1nH7GpqTGRQs+2gFosD
+         MPn8HQc+0pW04uhAeiyRhhiaezb/4rABISJifUvM=
+Received: by mail-wm1-f42.google.com with SMTP id n19so338877wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 11:59:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAUsWbzqRTiYcZByaEtL1yu3uuwje4weGAi5CoJt+olPZo8a4rCC
+        38fcZiPwcP+Uq3+XykNwbUFo+cm37JYH94nMG723/Q==
+X-Google-Smtp-Source: APXvYqxwIcCiG/Gdmna67jJuGq9jz6L0ZUfjptg7uIOTyqb3ubKH2KDCqdqte/JGYbWypFZXNpHHzKgiEzukbcTdOzM=
+X-Received: by 2002:a1c:9a41:: with SMTP id c62mr9266896wme.108.1553108348098;
+ Wed, 20 Mar 2019 11:59:08 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea1c95ec-eb05-410d-cea4-08d6ad65e349
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2019 18:57:23.8692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2259
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-20_11:,,
- signatures=0
+References: <20190319221415.baov7x6zoz7hvsno@brauner.io> <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io> <20190320015249.GC129907@google.com>
+ <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com>
+ <20190320035953.mnhax3vd47ya4zzm@brauner.io> <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
+ <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org> <20190320182649.spryp5uaeiaxijum@brauner.io>
+ <CAKOZuevHbQtrq+Nb-jw1L7O72BmAzcXmbUnfnseeXZjX4PE4tg@mail.gmail.com> <20190320185156.7bq775vvtsxqlzfn@brauner.io>
+In-Reply-To: <20190320185156.7bq775vvtsxqlzfn@brauner.io>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 20 Mar 2019 11:58:57 -0700
+X-Gmail-Original-Message-ID: <CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com>
+Message-ID: <CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com>
+Subject: Re: pidfd design
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.03.19 15:19:23, Robin Murphy wrote:
-> On 15/03/2019 15:56, Robert Richter wrote:
-> > We track the smallest size that failed for a 32 bit allocation. The
-> > Size decreases only and if we actually walked the tree and noticed an
-> > allocation failure. Current code is broken and wrongly updates the
-> > size value even if we did not try an allocation. This leads to
-> > increased size values and we might go the slow path again even if we
-> > have seen a failure before for the same or a smaller size.
->=20
-> That description wasn't too clear (since it rather contradicts itself by
-> starting off with "XYZ happens" when the whole point is that XYZ doesn't
-> actually happen properly), but having gone and looked at the code in cont=
-ext
-> I think I understand it now - specifically, it's that the early-exit path
-> for detecting that a 32-bit allocation request is too big to possibly
-> succeed should never have gone via the route which assigns to
-> max32_alloc_size.
->=20
-> In that respect, the diff looks correct, so modulo possibly tweaking the
-> commit message,
->=20
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+On Wed, Mar 20, 2019 at 11:52 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> You're misunderstanding. Again, I said in my previous mails it should
+> accept pidfds optionally as arguments, yes. But I don't want it to
+> return the status fds that you previously wanted pidfd_wait() to return.
+> I really want to see Joel's pidfd_wait() patchset and have more people
+> review the actual code.
 
-Robin, thanks for your review.
+Just to make sure that no one is forgetting a material security consideration:
 
-I hope the following description is better now.
+$ ls /proc/self
+attr             exe        mountinfo      projid_map    status
+autogroup        fd         mounts         root          syscall
+auxv             fdinfo     mountstats     sched         task
+cgroup           gid_map    net            schedstat     timers
+clear_refs       io         ns             sessionid     timerslack_ns
+cmdline          latency    numa_maps      setgroups     uid_map
+comm             limits     oom_adj        smaps         wchan
+coredump_filter  loginuid   oom_score      smaps_rollup
+cpuset           map_files  oom_score_adj  stack
+cwd              maps       pagemap        stat
+environ          mem        personality    statm
 
-Thanks,
+A bunch of this stuff makes sense to make accessible through a syscall
+interface that we expect to be used even in sandboxes.  But a bunch of
+it does not.  For example, *_map, mounts, mountstats, and net are all
+namespace-wide things that certain policies expect to be unavailable.
+stack, for example, is a potential attack surface.  Etc.
 
--Robert
+As it stands, if you create a fresh userns and mountns and try to
+mount /proc, there are some really awful and hideous rules that are
+checked for security reasons.  All these new APIs either need to
+return something more restrictive than a proc dirfd or they need to
+follow the same rules.  And I'm afraid that the latter may be a
+nonstarter if you expect these APIs to be used in libraries.
 
--- >8 --
-From: Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v2] iommu/iova: Fix tracking of recently failed iova addres=
-s
- size
+Yes, this is unfortunate, but it is indeed the current situation.  I
+suppose that we could return magic restricted dirfds, or we could
+return things that aren't dirfds and all and have some API that gives
+you the dirfd associated with a procfd but only if you can see
+/proc/PID.
 
-If a 32 bit allocation request is too big to possibly succeed, it
-early exits with a failure and then should never update max32_alloc_
-size. This patch fixes current code, now the size is only updated if
-the slow path failed while walking the tree. Without the fix the
-allocation may enter the slow path again even if there was a failure
-before of a request with the same or a smaller size.
-
-Cc: <stable@vger.kernel.org> # 4.20+
-Fixes: bee60e94a1e2 ("iommu/iova: Optimise attempts to allocate iova from 3=
-2bit address range")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
----
- drivers/iommu/iova.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index f8d3ba247523..2de8122e218f 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -207,8 +207,10 @@ static int __alloc_and_insert_iova_range(struct iova_d=
-omain *iovad,
- 		curr_iova =3D rb_entry(curr, struct iova, node);
- 	} while (curr && new_pfn <=3D curr_iova->pfn_hi);
-=20
--	if (limit_pfn < size || new_pfn < iovad->start_pfn)
-+	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
-+		iovad->max32_alloc_size =3D size;
- 		goto iova32_full;
-+	}
-=20
- 	/* pfn_lo will point to size aligned address if size_aligned is set */
- 	new->pfn_lo =3D new_pfn;
-@@ -222,7 +224,6 @@ static int __alloc_and_insert_iova_range(struct iova_do=
-main *iovad,
- 	return 0;
-=20
- iova32_full:
--	iovad->max32_alloc_size =3D size;
- 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
- 	return -ENOMEM;
- }
---=20
-2.20.1
-
+--Andy
