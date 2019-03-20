@@ -2,119 +2,102 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB6C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EEAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCC320857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9E220857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 19:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HXQgE8zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfCTTmC (ORCPT
+        id S1727490AbfCTTmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 15:42:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58552 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbfCTTmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 15:42:01 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 749743001566;
-        Wed, 20 Mar 2019 19:42:00 +0000 (UTC)
-Received: from hmswarspite.think-freely.org (ovpn-121-76.rdu2.redhat.com [10.10.121.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 362351001E6B;
-        Wed, 20 Mar 2019 19:41:56 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 15:41:53 -0400
-From:   Neil Horman <nhorman@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        Kai Huang <kai.huang@linux.intel.com>
-Subject: Re: [PATCH v19,RESEND 01/27] x86/cpufeatures: Add Intel-defined SGX
- feature bit
-Message-ID: <20190320194153.GS23302@hmswarspite.think-freely.org>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-2-jarkko.sakkinen@linux.intel.com>
+        Wed, 20 Mar 2019 15:42:21 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33346 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbfCTTmU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 15:42:20 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k189so9653183qkc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 12:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VbrnenGSNs7Bb+kAyHYWxxdHjU+QoptUXg7QX+PaZ/Y=;
+        b=HXQgE8zfQxOptIu1OfFHgkh1M4Y85bpzO+ebVd4rPpXL49zCno2cViFhK0erMuRplB
+         bceo3+yUwbJNYNi49nF27k4owhMHCyk+Ozc9aAnPDIr+8dvvikp+w6dkudHZ7QibukjG
+         of1vSuPT4BErfsZIRPRxCHT+QKbxBxYZQ7KQI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VbrnenGSNs7Bb+kAyHYWxxdHjU+QoptUXg7QX+PaZ/Y=;
+        b=l8H5W83ZhbVTp6QoONxtQzn3iw1l64uffqAnOoLI1T0VfJ1aKHkZwE5oDN/L6HUk3V
+         ndXlOmHf3FPJziRJd++nZlduk1xIHKcM8oq7aBq8FZS/M+JkKZPjeO9ZCGej8YrF0k1h
+         AIWNJBn5gSRwANEJq7+QYHNmEXmpk85eqm+465i9484ZEw/xO012EulB9eI/lKFEG+0W
+         rbUNZ+n3ndeidx3zXX8d3Uz2oaOd4dEByBXWrJIUoQMLggAlUPG6gKDxHV/gcJg/LkD5
+         ZLCwtkpJFG8IifzNq7yeC49OGLP2QL4/WosP2zEny4ubYm/bEaHAtZE9T/ecxwv5osPc
+         ypHw==
+X-Gm-Message-State: APjAAAUBO/Lzmh8yNhjMEvnRpNTN+vy+JD3Fq+m4+nlOdD9m/NcXSXUT
+        WKDjeWJxn3P2UXHEXYIiF3KmIw==
+X-Google-Smtp-Source: APXvYqwcB37vMB2GCE52Uua6m/iA9pSMhkqnSfm0d418ctJ/k3gXQolJrEwPE58AnsbdheKSey46zw==
+X-Received: by 2002:a37:6510:: with SMTP id z16mr7531586qkb.341.1553110939836;
+        Wed, 20 Mar 2019 12:42:19 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id r64sm1481783qkc.27.2019.03.20.12.42.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 12:42:18 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 15:42:18 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, qais.yousef@arm.com,
+        dietmar.eggemann@arm.com, linux@manojrajarao.com, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        mhiramat@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>, yhs@fb.com
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
+ kernel easier
+Message-ID: <20190320194218.GA80310@google.com>
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <20190320113111.d68a7c71c2c163bbc7d5f6aa@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190320162119.4469-2-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 20 Mar 2019 19:42:01 +0000 (UTC)
+In-Reply-To: <20190320113111.d68a7c71c2c163bbc7d5f6aa@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 06:20:53PM +0200, Jarkko Sakkinen wrote:
-> From: Kai Huang <kai.huang@linux.intel.com>
+On Wed, Mar 20, 2019 at 11:31:11AM -0700, Andrew Morton wrote:
+> On Wed, 20 Mar 2019 12:31:14 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
 > 
-> X86_FEATURE_SGX reflects whether or not the CPU supports Intel's
-> Software Guard eXtensions (SGX).
+> > Introduce in-kernel headers and other artifacts which are made available
+> > as an archive through proc (/proc/kheaders.tar.xz file).
 > 
-> Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Reviewed-by: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/include/asm/cpufeatures.h       | 1 +
->  arch/x86/include/asm/disabled-features.h | 8 +++++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 981ff9479648..a16325db4cff 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -236,6 +236,7 @@
->  /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
->  #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
->  #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
-> +#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
->  #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
->  #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
->  #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
-> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-> index a5ea841cc6d2..74de07d0f390 100644
-> --- a/arch/x86/include/asm/disabled-features.h
-> +++ b/arch/x86/include/asm/disabled-features.h
-> @@ -62,6 +62,12 @@
->  # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
->  #endif
->  
-> +#ifdef CONFIG_INTEL_SGX
-> +# define DISABLE_SGX_CORE	0
-> +#else
-> +# define DISABLE_SGX_CORE	(1 << (X86_FEATURE_SGX & 31))
-> +#endif
-> +
->  /*
->   * Make sure to add features to the correct mask
->   */
-> @@ -74,7 +80,7 @@
->  #define DISABLED_MASK6	0
->  #define DISABLED_MASK7	(DISABLE_PTI)
->  #define DISABLED_MASK8	0
-> -#define DISABLED_MASK9	(DISABLE_MPX|DISABLE_SMAP)
-> +#define DISABLED_MASK9	(DISABLE_MPX|DISABLE_SMAP|DISABLE_SGX_CORE)
->  #define DISABLED_MASK10	0
->  #define DISABLED_MASK11	0
->  #define DISABLED_MASK12	0
-> -- 
-> 2.19.1
-> 
-Just out of curiosity, would it be worthwhile to separate out the cpufeature
-patches here to post and integrate them separately?  It would at least reduce
-the size of this patch set slightly, as these aren't controversial changes
+> Lazyass here hasn't been following the recent review discussion and is
+> going to try cheating.  Are there significant outstanding concerns now,
+> or are we good to go?
 
-Neil
+Looks to me like it is pretty solid. v4->v5 was just cosmetic changes,
+rebasing etc. Unless Masahiro has any other concerns, it could be a
+linux-next candidate. I tested it quite heavily, but would be nice to get
+some linux-next testing as well.
+
+thanks,
+
+ - Joel
 
