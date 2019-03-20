@@ -2,108 +2,102 @@ Return-Path: <SRS0=4Jrr=RX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2259FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E53C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBD2217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B1920835
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Mar 2019 00:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uQAnIj3z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUfr4toC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfCTAtR (ORCPT
+        id S1727558AbfCTAtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 20:49:17 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:47030 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727410AbfCTAtR (ORCPT
+        Tue, 19 Mar 2019 20:49:24 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51505 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfCTAtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 20:49:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 9so342320pfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 17:49:16 -0700 (PDT)
+        Tue, 19 Mar 2019 20:49:24 -0400
+Received: by mail-it1-f195.google.com with SMTP id e24so29071001itl.1;
+        Tue, 19 Mar 2019 17:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=woHC6P4IWHeqMPl0bBWCL/dn49O6TQqdOp+Q3BiQuPY=;
-        b=uQAnIj3za4wrrwn7MJzIR0I98MQQmbfVD3GTktU1sIuzy5cmsKWcdvzDQC4X6+rvH8
-         w6u3rtLEP3oq281/rdAsfnHNFTiEDCD5Sq/aJeDMIBS8t3a6+grQhuDmmBMk4JHa3+/k
-         vq109n8sn+nAr2NyC3hsMZ+mU8VNNF7BEmW4jvJ89MlAHHM46CkcB5DqEGtK12AxOjVO
-         4K0U+0pKhoX0dyV4I9HW97CCS2DdyN6mtY+USRwB529UqmXR3VHrgbratA6CuBBPSImx
-         GSfAWkTfQlWwzTArpKAOkbTyMSllPqqThJxy7nPNbDUOsu4BQtT9rDdopXMu1e/mjCSK
-         mYYw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V6ZmU8RH3kZEJ7cTWiZiVzlEIo9tb9b5FAkkpXmhF+M=;
+        b=hUfr4toCN2xzTgVy6w6QSckL2xcIfyJP/j8iVR+WDbxTMHrygNbZQ+WfxazwC8hVVa
+         jQqyBtLUkhpH+D4cdsiFGsF4Bi7+2WsvF78T0dj7PUeTfm1F3voTcq40gZSOHRefGYJk
+         rwRy/qc+212PQcfwmqsyqu187dNdVBgCNBtO0m+q79IwC7wZTXO5YGPX4YfrR6SusSs6
+         b92InqktY9WtHrYsQ8ldYrjJ8u2n16Zi6Kyn2+RQTM9URxekXZBd+DfWEVQjo6M04lL4
+         0Zukc8vA3oE+wQCW58HXP5aM6eHeKzqAsq06NI0J5wIZyNf3MIq4RcHdogZd7kjBzjw9
+         5XRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=woHC6P4IWHeqMPl0bBWCL/dn49O6TQqdOp+Q3BiQuPY=;
-        b=HzPeuiV91HHsfsQYatCykfYB5n8YLq3N4fH7vzOQCLl2BaPridwpDzouYwIlVy6NjH
-         ic9fEzotV7ix1dmHBVwzP+dstY6ayM+WH22tHDI72UmZ10mjZaezvcU3+moDFBzC4afk
-         0c2qRxvyy48MLHxqbV+6D8ot+YHRSG4ZYh67INd5oSH8Vx4m+EDuZb9qcG4cJZQmKu5x
-         G5xJotBBJotlEWNXLGjZtAU+uQL0tJHGwDvdrfpyLjFiy+J/feeaI7Z25HdOrAjSRUhi
-         BrXQ9WUvjQpvR1Dx9nfxiewHCW1Cfawyh4+WlfXNYhn+zgTG5V2+XzKd5h2xFRg86A6y
-         w/iA==
-X-Gm-Message-State: APjAAAVZ7Mrgj1tP6zBdTSYWLR2i0gCRBKz55ievWJaPTRD3vV8HsyUI
-        jNtxDDYkWWoALwmaJmS+EYIwBg==
-X-Google-Smtp-Source: APXvYqzU9Et7B/EaHRkr6v8Rip9mhd6P1ZraR9Jxn1pAooOpa+WFbT96w8mMoXRsA/HzvaCyFOLoog==
-X-Received: by 2002:a17:902:ea8c:: with SMTP id cv12mr5255204plb.123.1553042956167;
-        Tue, 19 Mar 2019 17:49:16 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id e1sm297905pfn.73.2019.03.19.17.49.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Mar 2019 17:49:15 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 17:49:14 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     chrubis@suse.cz, vbabka@suse.cz, kirill@shutemov.name,
-        osalvador@suse.de, akpm@linux-foundation.org,
-        stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT
- is specified
-In-Reply-To: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.1903191748090.18028@chino.kir.corp.google.com>
-References: <1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V6ZmU8RH3kZEJ7cTWiZiVzlEIo9tb9b5FAkkpXmhF+M=;
+        b=Kb8Tre+39Josw1WFJgzr/UnFafh5RNRwgq8MOe2DXihLSfJqy1aidVPk5Dqk2zzYLO
+         2p73tb18U7k0FWyD9u0lYutXYhEboJSc7hnqlNzJkDIUWpFYEexgoHNJn+oFQork+UBh
+         6/sP5kP24MxPNgU6Y3hVYzEZ9G328gFn6G9AH8X0Ugf4yIlHIbnYjRm0PaGekBnOgRVH
+         b0jLsUhDPoaSGP8Eu53nXaj6qILBQj4h/GvSQMFV5cvXzxWOYvNcOSJsQdyO9qiY0h3f
+         Qd1ExbW8UrBRyJRmaTypsSWVMJ8QXc1IRWsq0PLo0JqUma/r2gxfblgXdsNi6tXjIN26
+         PqWA==
+X-Gm-Message-State: APjAAAVrJCesqDISWDaptLlaFewTnUoKRN76GKlfCfqQPm7kCVH621e+
+        hRFZ/FQyUQLOKqpwqOH9ExFISmAULPVmI6fMoulEVRsCgmTTug==
+X-Google-Smtp-Source: APXvYqzkIOBojYOqTyr2csUkhcuWohViHjyeQiv2HsY+4ZOce855nijwOYlJLrWHRRSIrbqykAALE0tEp1JZaNkWEEY=
+X-Received: by 2002:a24:7294:: with SMTP id x142mr2994668itc.26.1553042963541;
+ Tue, 19 Mar 2019 17:49:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1553013397-29263-1-git-send-email-chongguiguzi@gmail.com> <20190319192242.GA3773@ziepe.ca>
+In-Reply-To: <20190319192242.GA3773@ziepe.ca>
+From:   =?UTF-8?B?6LCi5qyi?= <chongguiguzi@gmail.com>
+Date:   Wed, 20 Mar 2019 08:49:12 +0800
+Message-ID: <CAJ3e5OamBadQ7e1-hmS=rjCwTAa9LiUVJH3+nc1kRCymV5OPcQ@mail.gmail.com>
+Subject: Re: [PATCH] infiniband:qplib_fp:move spin_lock_bh to spin_lock in tasklet
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        dledford@redhat.com, nux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019, Yang Shi wrote:
+It was only called in the tasklet context.
 
-> When MPOL_MF_STRICT was specified and an existing page was already
-> on a node that does not follow the policy, mbind() should return -EIO.
-> But commit 6f4576e3687b ("mempolicy: apply page table walker on
-> queue_pages_range()") broke the rule.
-> 
-> And, commit c8633798497c ("mm: mempolicy: mbind and migrate_pages
-> support thp migration") didn't return the correct value for THP mbind()
-> too.
-> 
-> If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it reaches
-> queue_pages_to_pte_range() or queue_pages_pmd() to check if an existing
-> page was already on a node that does not follow the policy.  And,
-> non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
-> MPOL_MF_MOVE_ALL was specified.
-> 
-> Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
-> 
-> Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
-> Reported-by: Cyril Hrubis <chrubis@suse.cz>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: stable@vger.kernel.org
-> Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+root@jeff:~/git/linux-next# git grep -in  bnxt_qplib_service_nq
+drivers/infiniband/hw/bnxt_re/qplib_fp.c:236:static void
+bnxt_qplib_service_nq(unsigned long data)
+drivers/infiniband/hw/bnxt_re/qplib_fp.c:390:
+tasklet_init(&nq->worker, bnxt_qplib_service_nq,
 
-Acked-by: David Rientjes <rientjes@google.com>
 
-Thanks.  I think this needs stable for 4.0+, can you confirm?
+  thanks.
+
+Jason Gunthorpe <jgg@ziepe.ca> =E4=BA=8E2019=E5=B9=B43=E6=9C=8820=E6=97=A5=
+=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=883:22=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, Mar 20, 2019 at 12:36:37AM +0800, Jeff Xie wrote:
+> > It is unnecessary to call spin_lock_bh in a tasklet.
+> >
+> > Signed-off-by: Jeff Xie <chongguiguzi@gmail.com>
+> > ---
+> >  drivers/infiniband/hw/bnxt_re/qplib_fp.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> I'm curious, how did you prove this was always in a tasklet?
+>
+> Jason
+
+
+
+--=20
+jeff
