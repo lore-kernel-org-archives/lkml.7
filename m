@@ -2,216 +2,726 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B8CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176EAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B695321874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28E921874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfCUNm2 (ORCPT
+        id S1728752AbfCUNmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:42:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58915 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbfCUNm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:42:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6xxW-0003SA-On; Thu, 21 Mar 2019 14:42:14 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h6xxU-0002Sq-5V; Thu, 21 Mar 2019 14:42:12 +0100
-Date:   Thu, 21 Mar 2019 14:42:12 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V8 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190321134212.hypmz4enz7z5wamg@pengutronix.de>
-References: <1553128960-17923-1-git-send-email-Anson.Huang@nxp.com>
- <1553128960-17923-3-git-send-email-Anson.Huang@nxp.com>
- <20190321091950.tkzem7cbgvtynr5m@pengutronix.de>
- <DB3PR0402MB3916CE06E6EF103470915905F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190321104112.xits5qgk7tsuhdps@pengutronix.de>
- <DB3PR0402MB3916094B2F7A4D878785C676F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB3916094B2F7A4D878785C676F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 21 Mar 2019 09:42:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728530AbfCUNk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:40:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ACA30AF94;
+        Thu, 21 Mar 2019 13:40:54 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 57946E00BF; Thu, 21 Mar 2019 14:40:54 +0100 (CET)
+Message-Id: <2b8f7ef8e08653d3ce0520c0642cd27995d0c79b.1553170807.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
+References: <cover.1553170807.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v4 12/22] ethtool: provide string sets with
+ GET_STRSET request
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 Mar 2019 14:40:54 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Requests a contents of one or more string sets, i.e. indexed arrays of
+strings; this information is provided by ETHTOOL_GSSET_INFO and
+ETHTOOL_GSTRINGS commands of ioctl interface. There are three types of
+requests:
 
-On Thu, Mar 21, 2019 at 12:47:32PM +0000, Anson Huang wrote:
-> > On Thu, Mar 21, 2019 at 09:54:15AM +0000, Anson Huang wrote:
-> > > > On Thu, Mar 21, 2019 at 12:47:57AM +0000, Anson Huang wrote:
-> > > > > +static void pwm_imx_tpm_setup_period(struct pwm_chip *chip,
-> > > > > +				     struct imx_tpm_pwm_param *p) {
-> > > > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > > > +	u32 val, saved_cmod, cur_prescale;
-> > > > > +
-> > > > > +	/* make sure counter is disabled for programming prescale */
-> > > >
-> > > > @Thierry: What is your thought here? IMHO this should only be
-> > > > allowed if all affected PWMs are off.
-> > >
-> > > As we already make sure that ONLY when there is ONLY 1 user and the
-> > > requested period is different from the current period, then this
-> > > function will be called, so there is impossible that multiple PWMs are active
-> > and the period is requested to be changed.
-> > > Am I right?
-> > 
-> > This problem is not about two PWMs. If you reconfigure a running PWM the
-> > requirement is that the hardware completes a whole period with the old
-> > configuration and then immediately starts a new period with the new
-> > parameters. If you stop the counter, the last period with the old parameters
-> > is disturbed.
-> 
-> So, I think simply return error if the counter is running and there is a new PS change
-> request, right?
+  - no NLM_F_DUMP, no device: get "global" stringsets
+  - no NLM_F_DUMP, with device: get string sets related to the device
+  - NLM_F_DUMP, no device: get device related string sets for all devices
 
-That's the general idea yes. If you cannot fulfil the request without
-violating the guarantees you have to adhere, refuse the request with an
-error.
+It's possible to request all string sets of given type or only specific
+sets. With ETHA_STRSET_COUNTS flag, only set sizes (number of strings) are
+returned.
 
-> > > > > +		 */
-> > > > > +		state->polarity = PWM_POLARITY_NORMAL;
-> > > > > +
-> > > > > +	/* get channel status */
-> > > > > +	state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true :
-> > > > > +false; }
-> > > > > +
-> > > > > +static void pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
-> > > > > +				 struct pwm_device *pwm,
-> > > > > +				 struct pwm_state *state)
-> > > >
-> > > > pwm_imx_tpm_apply_hw is called with the mutex hold. Is this necessary?
-> > > > Please either call it without the mutex or annotate the function
-> > > > that the caller is supposed to hold it.
-> > >
-> > > OK, will make sure call it without mutex hold.
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ Documentation/networking/ethtool-netlink.txt |  46 +-
+ include/uapi/linux/ethtool.h                 |   2 +
+ include/uapi/linux/ethtool_netlink.h         |  43 ++
+ net/ethtool/Makefile                         |   2 +-
+ net/ethtool/netlink.c                        |   8 +
+ net/ethtool/netlink.h                        |   4 +
+ net/ethtool/strset.c                         | 447 +++++++++++++++++++
+ 7 files changed, 549 insertions(+), 3 deletions(-)
+ create mode 100644 net/ethtool/strset.c
 
-Reading through the reference manual I noticed that there might be a
-stall: If you write two values to CnV the second write is ignored if the
-first wasn't latched yet. That might mean that you cannot release the
-mutex before the newly configured state is active. This is related to
-the request to not let .apply return before the configured state is
-active, but I didn't thought this to an end what the real consequences
-have to be.
-
-> > > If counter is enabled, and for edge aligned PWM mode(EPWM), the
-> > > register is updated After written and TPM counter changes from MOD to
-> > > zero, same as period count update, HW will make sure the period finish..
-> > 
-> > Looking into my concern again, it is actually the other way around:
-> > Assuming a single used PWM channel that runs at duty_cycle=500 +
-> > period=1000. Then pwm_imx_tpm_apply() is called with state-
-> > >duty_cycle=700 and state->period=800. pwm_imx_tpm_apply() calls
-> > pwm_imx_tpm_setup_period() to configure for .period=1000. Now if the
-> > PWM completes a period before pwm_imx_tpm_apply_hw() sets up CnV to
-> > the value corresponding to duty_cycle=700, it produces a waveform with
-> > duty_cycle=500 and period=800 which is bad. This is another limitation that
-> > can be worked around in software with some effort (which might or might
-> > not be worth to spend).
-> 
-> I am sure that on i.MX7ULP platform we used for backlight ONLY, it should NOT
-> that matter if this case happen, unless the counter is disabled, then the effort spend
-> on this case will be huge, so I plan to leave it as what it is if you don't mind.
-
-That means you have to add this to the list of limitations.
-
-> > > > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip,
-> > > > > +			      struct pwm_device *pwm,
-> > > > > +			     struct pwm_state *state)
-> > > > > +{
-> > > > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > > > +	struct imx_tpm_pwm_param param;
-> > > > > +	struct pwm_state real_state;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	ret = pwm_imx_tpm_round_state(chip, &param, state, &real_state);
-> > > > > +	if (ret)
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	mutex_lock(&tpm->lock);
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * TPM counter is shared by multiple channels, so
-> > > > > +	 * prescale and period can NOT be modified when
-> > > > > +	 * there are multiple channels in use with different
-> > > > > +	 * period settings.
-> > > > > +	 */
-> > > > > +	if (real_state.period != tpm->real_period) {
-> > > > > +		if (tpm->user_count > 1) {
-> > > > > +			ret = -EBUSY;
-> > > > > +			goto exit;
-> > > > > +		}
-> > > > > +
-> > > > > +		pwm_imx_tpm_setup_period(chip, &param);
-> > > > > +		tpm->real_period = real_state.period;
-> > > > > +	}
-> > > > > +
-> > > > > +	pwm_imx_tpm_apply_hw(chip, pwm, &real_state);
-> > > > > +
-> > > > > +exit:
-> > > > > +	mutex_unlock(&tpm->lock);
-> > > >
-> > > > .apply is supposed to sleep until the newly configured state is active.
-> > > > This is missing here, right?
-> > >
-> > > NOT quite understand, you meant .apply could be sleep if mutex is hold
-> > > by other thread?
-> > 
-> > No. .apply is supposed to only return when the new configuration is active.
-> > So if the PWM is running in its previous configuration, you setup the registers
-> > such that the new configuration gets active in the next period, you must not
-> > yet return to the caller until the new period started.
-> 
-> That bring me back to previous question, we can add waiting for period finish
-> And then return from .apply, but we also need a timeout for the wait, what should
-> The timeout value be? 100mS? Or even several seconds?
-
-A sane value would be the duration of the previously configured period
-length as this is the theoretical upper limit for this delay.
-
-Best regards
-Uwe
-
+diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+index 5e5d785fe215..1508c16a236e 100644
+--- a/Documentation/networking/ethtool-netlink.txt
++++ b/Documentation/networking/ethtool-netlink.txt
+@@ -127,6 +127,8 @@ List of message types
+ ---------------------
+ 
+     ETHNL_CMD_EVENT			notification only
++    ETHNL_CMD_GET_STRSET
++    ETHNL_CMD_SET_STRSET		response only
+ 
+ All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
+ to indicate the type.
+@@ -167,6 +169,46 @@ and also multiple events of the same type (e.g. two or more newly registered
+ devices).
+ 
+ 
++GET_STRSET
++----------
++
++Requests contents of a string set as provided by ioctl commands
++ETHTOOL_GSSET_INFO and ETHTOOL_GSTRINGS. String sets are not user writeable so
++that the corresponding SET_STRSET message is only used in kernel replies.
++There are two types of string sets: global (independent of a device, e.g.
++device feature names) and device specific (e.g. device private flags).
++
++Request contents:
++
++    ETHA_STRSET_DEV		(nested)	device identification
++    ETHA_STRSET_COUNTS		(flag)		request only string counts
++    ETHA_STRSET_STRINGSET	(nested)	string set to request
++        ETHA_STRINGSET_ID		(u32)		set id
++
++Kernel response contents:
++
++    ETHA_STRSET_DEV		(nested)	device identification
++    ETHA_STRSET_STRINGSET	(nested)	string set to request
++        ETHA_STRINGSET_ID		(u32)		set id
++        ETHA_STRINGSET_COUNT		(u32)		number of strings
++        ETHA_STRINGSET_STRINGS		(nested)	array of strings
++            ETHA_STRING_INDEX			(u32)		string index
++            ETHA_STRING_VALUE			(string)	string value
++
++ETHA_STRSET_DEV, if present, identifies the device to request device specific
++string sets for. Depending on its presence a and NLM_F_DUMP flag, there are
++three type of GET_STRSET requests:
++
++ - no NLM_F_DUMP, no device: get "global" stringsets
++ - no NLM_F_DUMP, with device: get string sets related to the device
++ - NLM_F_DUMP, no device: get device related string sets for all devices
++
++If there is no ETHA_STRSET_STRINGSET attribute, all string sets of requested
++type are returned, otherwise only those specified in the request. Flag
++ETHA_STRSET_COUNTS tells kernel to only return string counts of the sets, not
++the actual strings.
++
++
+ Request translation
+ -------------------
+ 
+@@ -201,7 +243,7 @@ ETHTOOL_STXCSUM			n/a
+ ETHTOOL_GSG			n/a
+ ETHTOOL_SSG			n/a
+ ETHTOOL_TEST			n/a
+-ETHTOOL_GSTRINGS		n/a
++ETHTOOL_GSTRINGS		ETHNL_CMD_GET_STRSET
+ ETHTOOL_PHYS_ID			n/a
+ ETHTOOL_GSTATS			n/a
+ ETHTOOL_GTSO			n/a
+@@ -229,7 +271,7 @@ ETHTOOL_FLASHDEV		n/a
+ ETHTOOL_RESET			n/a
+ ETHTOOL_SRXNTUPLE		n/a
+ ETHTOOL_GRXNTUPLE		n/a
+-ETHTOOL_GSSET_INFO		n/a
++ETHTOOL_GSSET_INFO		ETHNL_CMD_GET_STRSET
+ ETHTOOL_GRXFHINDIR		n/a
+ ETHTOOL_SRXFHINDIR		n/a
+ ETHTOOL_GFEATURES		n/a
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 3652b239dad1..eaea804972f6 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -574,6 +574,8 @@ enum ethtool_stringset {
+ 	ETH_SS_TUNABLES,
+ 	ETH_SS_PHY_STATS,
+ 	ETH_SS_PHY_TUNABLES,
++
++	ETH_SS_COUNT
+ };
+ 
+ /**
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index 988519bc6e37..66aeb436b822 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -14,6 +14,8 @@
+ enum {
+ 	ETHNL_CMD_NOOP,
+ 	ETHNL_CMD_EVENT,		/* only for notifications */
++	ETHNL_CMD_GET_STRSET,
++	ETHNL_CMD_SET_STRSET,		/* only for reply */
+ 
+ 	__ETHNL_CMD_CNT,
+ 	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
+@@ -98,6 +100,47 @@ enum {
+ 	ETHA_EVENT_MAX = (__ETHA_EVENT_CNT - 1)
+ };
+ 
++/* string sets */
++
++enum {
++	ETHA_STRING_UNSPEC,
++	ETHA_STRING_INDEX,			/* u32 */
++	ETHA_STRING_VALUE,			/* string */
++
++	__ETHA_STRING_CNT,
++	ETHA_STRING_MAX = (__ETHA_STRING_CNT - 1)
++};
++
++enum {
++	ETHA_STRINGS_UNSPEC,
++	ETHA_STRINGS_STRING,			/* nest - ETHA_STRINGS_* */
++
++	__ETHA_STRINGS_CNT,
++	ETHA_STRINGS_MAX = (__ETHA_STRINGS_CNT - 1)
++};
++
++enum {
++	ETHA_STRINGSET_UNSPEC,
++	ETHA_STRINGSET_ID,			/* u32 */
++	ETHA_STRINGSET_COUNT,			/* u32 */
++	ETHA_STRINGSET_STRINGS,			/* nest - ETHA_STRINGS_* */
++
++	__ETHA_STRINGSET_CNT,
++	ETHA_STRINGSET_MAX = (__ETHA_STRINGSET_CNT - 1)
++};
++
++/* GET_STRINGSET / SET_STRINGSET */
++
++enum {
++	ETHA_STRSET_UNSPEC,
++	ETHA_STRSET_DEV,			/* nest - ETHA_DEV_* */
++	ETHA_STRSET_COUNTS,			/* flag */
++	ETHA_STRSET_STRINGSET,			/* nest - ETHA_STRSET_* */
++
++	__ETHA_STRSET_CNT,
++	ETHA_STRSET_MAX = (__ETHA_STRSET_CNT - 1)
++};
++
+ /* generic netlink info */
+ #define ETHTOOL_GENL_NAME "ethtool"
+ #define ETHTOOL_GENL_VERSION 1
+diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+index 11782306593b..11ceb00821b3 100644
+--- a/net/ethtool/Makefile
++++ b/net/ethtool/Makefile
+@@ -4,4 +4,4 @@ obj-y				+= ioctl.o common.o
+ 
+ obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+ 
+-ethtool_nl-y	:= netlink.o bitset.o
++ethtool_nl-y	:= netlink.o bitset.o strset.o
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 18f300e42d21..3559f5c7040f 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -152,6 +152,7 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+ /* GET request helpers */
+ 
+ const struct get_request_ops *get_requests[__ETHNL_CMD_CNT] = {
++	[ETHNL_CMD_GET_STRSET]		= &strset_request_ops,
+ };
+ 
+ /**
+@@ -556,6 +557,13 @@ static struct notifier_block ethnl_netdev_notifier = {
+ /* genetlink setup */
+ 
+ static const struct genl_ops ethtool_genl_ops[] = {
++	{
++		.cmd	= ETHNL_CMD_GET_STRSET,
++		.doit	= ethnl_get_doit,
++		.start	= ethnl_get_start,
++		.dumpit	= ethnl_get_dumpit,
++		.done	= ethnl_get_done,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 625f912144b1..32d85bb5c49a 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -275,4 +275,8 @@ struct get_request_ops {
+ 	void (*cleanup)(struct common_req_info *req_info);
+ };
+ 
++/* request handlers */
++
++extern const struct get_request_ops strset_request_ops;
++
+ #endif /* _NET_ETHTOOL_NETLINK_H */
+diff --git a/net/ethtool/strset.c b/net/ethtool/strset.c
+new file mode 100644
+index 000000000000..808ab6b4b387
+--- /dev/null
++++ b/net/ethtool/strset.c
+@@ -0,0 +1,447 @@
++// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
++
++#include <linux/ethtool.h>
++#include <linux/phy.h>
++#include "netlink.h"
++#include "common.h"
++
++enum strset_type {
++	ETH_SS_TYPE_NONE,
++	ETH_SS_TYPE_LEGACY,
++	ETH_SS_TYPE_SIMPLE,
++};
++
++struct strset_info {
++	enum strset_type type;
++	bool per_dev;
++	bool free_data;
++	unsigned int count;
++	union {
++		const char (*legacy)[ETH_GSTRING_LEN];
++		const char * const *simple;
++		void *ptr;
++	} data;
++};
++
++static const struct strset_info info_template[] = {
++	[ETH_SS_TEST] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= true,
++	},
++	[ETH_SS_STATS] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= true,
++	},
++	[ETH_SS_PRIV_FLAGS] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= true,
++	},
++	[ETH_SS_NTUPLE_FILTERS] = {
++		.type		= ETH_SS_TYPE_NONE,
++	},
++	[ETH_SS_FEATURES] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= false,
++		.count		= ARRAY_SIZE(netdev_features_strings),
++		.data		= { .legacy = netdev_features_strings },
++	},
++	[ETH_SS_RSS_HASH_FUNCS] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= false,
++		.count		= ARRAY_SIZE(rss_hash_func_strings),
++		.data		= { .legacy = rss_hash_func_strings },
++	},
++	[ETH_SS_TUNABLES] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= false,
++		.count		= ARRAY_SIZE(tunable_strings),
++		.data		= { .legacy = tunable_strings },
++	},
++	[ETH_SS_PHY_STATS] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= true,
++	},
++	[ETH_SS_PHY_TUNABLES] = {
++		.type		= ETH_SS_TYPE_LEGACY,
++		.per_dev	= false,
++		.count		= ARRAY_SIZE(phy_tunable_strings),
++		.data		= { .legacy = phy_tunable_strings },
++	},
++};
++
++struct strset_data {
++	struct common_req_info		reqinfo_base;
++	u32				req_ids;
++	bool				counts_only;
++
++	/* everything below here will be reset for each device in dumps */
++	struct common_reply_data	repdata_base;
++	struct strset_info		info[ETH_SS_COUNT];
++};
++
++static const struct nla_policy get_strset_policy[ETHA_STRSET_MAX + 1] = {
++	[ETHA_STRSET_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_STRSET_DEV]		= { .type = NLA_NESTED },
++	[ETHA_STRSET_COUNTS]		= { .type = NLA_FLAG },
++	[ETHA_STRSET_STRINGSET]		= { .type = NLA_NESTED },
++};
++
++static const struct nla_policy get_stringset_policy[ETHA_STRINGSET_MAX + 1] = {
++	[ETHA_STRINGSET_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_STRINGSET_ID]		= { .type = NLA_U32 },
++	[ETHA_STRINGSET_COUNT]		= { .type = NLA_REJECT },
++	[ETHA_STRINGSET_STRINGS]	= { .type = NLA_REJECT },
++};
++
++static bool id_requested(const struct strset_data *data, u32 id)
++{
++	return data->req_ids & (1U << id);
++}
++
++static bool include_set(const struct strset_data *data, u32 id)
++{
++	bool per_dev;
++
++	BUILD_BUG_ON(ETH_SS_COUNT >= BITS_PER_BYTE * sizeof(data->req_ids));
++
++	if (data->req_ids)
++		return id_requested(data, id);
++
++	per_dev = data->info[id].per_dev;
++	if (data->info[id].type == ETH_SS_TYPE_NONE)
++		return false;
++	return data->repdata_base.dev ? per_dev : !per_dev;
++}
++
++const char *str_value(const struct strset_info *info, unsigned int i)
++{
++	switch (info->type) {
++	case ETH_SS_TYPE_LEGACY:
++		return info->data.legacy[i];
++	case ETH_SS_TYPE_SIMPLE:
++		return info->data.simple[i];
++	default:
++		WARN_ONCE(1, "unexpected string set type");
++		return "";
++	}
++}
++
++static int get_strset_id(const struct nlattr *nest, u32 *val,
++			 struct genl_info *info)
++{
++	struct nlattr *tb[ETHA_STRINGSET_MAX + 1];
++	int ret;
++
++	ret = nla_parse_nested_strict(tb, ETHA_STRINGSET_MAX, nest,
++				      get_stringset_policy,
++				      info ? info->extack : NULL);
++	if (ret < 0)
++		return ret;
++	if (!tb[ETHA_STRINGSET_ID])
++		return -EINVAL;
++
++	*val = nla_get_u32(tb[ETHA_STRINGSET_ID]);
++	return 0;
++}
++
++/* parse_request() handler */
++static int parse_strset(struct common_req_info *req_info, struct sk_buff *skb,
++			struct genl_info *info, const struct nlmsghdr *nlhdr)
++{
++	struct strset_data *data =
++		container_of(req_info, struct strset_data, reqinfo_base);
++	struct nlattr *attr;
++	int rem, ret;
++
++	ret = nlmsg_validate(nlhdr, GENL_HDRLEN, ETHA_STRSET_MAX,
++			     get_strset_policy, info ? info->extack : NULL);
++	if (ret < 0)
++		return ret;
++
++	nlmsg_for_each_attr(attr, nlhdr, GENL_HDRLEN, rem) {
++		u32 id;
++
++		switch (nla_type(attr)) {
++		case ETHA_STRSET_DEV:
++			req_info->dev = ethnl_dev_get(info, attr);
++			if (IS_ERR(req_info->dev)) {
++				ret = PTR_ERR(req_info->dev);
++				req_info->dev = NULL;
++				return ret;
++			}
++			break;
++		case ETHA_STRSET_COUNTS:
++			data->counts_only = true;
++			break;
++		case ETHA_STRSET_STRINGSET:
++			ret = get_strset_id(attr, &id, info);
++			if (ret < 0)
++				return ret;
++			if (ret >= ETH_SS_COUNT)
++				return -EOPNOTSUPP;
++			data->req_ids |= (1U << id);
++			break;
++		default:
++			ETHNL_SET_ERRMSG(info,
++					 "unexpected attribute in ETHNL_CMD_GET_STRSET message");
++			return genl_err_attr(info, -EINVAL, attr);
++		}
++	}
++
++	return 0;
++}
++
++static void free_strset(struct strset_data *data)
++{
++	unsigned int i;
++
++	for (i = 0; i < ETH_SS_COUNT; i++)
++		if (data->info[i].free_data) {
++			kfree(data->info[i].data.ptr);
++			data->info[i].data.ptr = NULL;
++			data->info[i].free_data = false;
++		}
++}
++
++static int prepare_one_stringset(struct strset_info *info,
++				 struct net_device *dev, unsigned int id,
++				 bool counts_only)
++{
++	const struct ethtool_ops *ops = dev->ethtool_ops;
++	void *strings;
++	int count, ret;
++
++	if (id == ETH_SS_PHY_STATS && dev->phydev &&
++	    !ops->get_ethtool_phy_stats)
++		ret = phy_ethtool_get_sset_count(dev->phydev);
++	else if (ops->get_sset_count && ops->get_strings)
++		ret = ops->get_sset_count(dev, id);
++	else
++		ret = -EOPNOTSUPP;
++	if (ret <= 0) {
++		info->count = 0;
++		return 0;
++	}
++
++	count = ret;
++	if (!counts_only) {
++		strings = kcalloc(count, ETH_GSTRING_LEN, GFP_KERNEL);
++		if (!strings)
++			return -ENOMEM;
++		if (id == ETH_SS_PHY_STATS && dev->phydev &&
++		    !ops->get_ethtool_phy_stats)
++			phy_ethtool_get_strings(dev->phydev, strings);
++		else
++			ops->get_strings(dev, id, strings);
++		info->data.legacy = strings;
++		info->free_data = true;
++	}
++	info->count = count;
++
++	return 0;
++}
++
++/* prepare_data() handler */
++static int prepare_strset(struct common_req_info *req_info,
++			  struct genl_info *info)
++{
++	struct strset_data *data =
++		container_of(req_info, struct strset_data, reqinfo_base);
++	struct net_device *dev = data->repdata_base.dev;
++	unsigned int i;
++	int ret;
++
++	BUILD_BUG_ON(ARRAY_SIZE(info_template) != ETH_SS_COUNT);
++	memcpy(&data->info, &info_template, sizeof(data->info));
++
++	if (!dev) {
++		for (i = 0; i < ETH_SS_COUNT; i++) {
++			if (id_requested(data, i) &&
++			    data->info[i].per_dev) {
++				ETHNL_SET_ERRMSG(info,
++						 "requested per device strings without dev");
++				return -EINVAL;
++			}
++		}
++	}
++
++	ret = ethnl_before_ops(dev);
++	if (ret < 0)
++		goto err_strset;
++	for (i = 0; i < ETH_SS_COUNT; i++) {
++		if (!include_set(data, i) || !data->info[i].per_dev)
++			continue;
++		if (WARN_ONCE(data->info[i].type != ETH_SS_TYPE_LEGACY,
++			      "unexpected string set type %u",
++			      data->info[i].type))
++			goto err_ops;
++
++		ret = prepare_one_stringset(&data->info[i], dev, i,
++					    data->counts_only);
++		if (ret < 0)
++			goto err_ops;
++	}
++	ethnl_after_ops(dev);
++
++	return 0;
++err_ops:
++	ethnl_after_ops(dev);
++err_strset:
++	free_strset(data);
++	return ret;
++}
++
++static int legacy_set_size(const char (*set)[ETH_GSTRING_LEN],
++			   unsigned int count)
++{
++	unsigned int len = 0;
++	unsigned int i;
++
++	for (i = 0; i < count; i++)
++		len += nla_total_size(nla_total_size(sizeof(u32)) +
++				      ethnl_str_size(set[i]));
++	len = 2 * nla_total_size(sizeof(u32)) + nla_total_size(len);
++
++	return nla_total_size(len);
++}
++
++static int simple_set_size(const char * const *set, unsigned int count)
++{
++	unsigned int len = 0;
++	unsigned int i;
++
++	for (i = 0; i < count; i++)
++		len += nla_total_size(nla_total_size(sizeof(u32)) +
++				      ethnl_str_size(set[i]));
++	len = 2 * nla_total_size(sizeof(u32)) + nla_total_size(len);
++
++	return nla_total_size(len);
++}
++
++static int set_size(const struct strset_info *info, bool counts_only)
++{
++	if (info->count == 0)
++		return 0;
++	if (counts_only)
++		return nla_total_size(2 * nla_total_size(sizeof(u32)));
++
++	switch (info->type) {
++	case ETH_SS_TYPE_LEGACY:
++		return legacy_set_size(info->data.legacy, info->count);
++	case ETH_SS_TYPE_SIMPLE:
++		return simple_set_size(info->data.simple, info->count);
++	default:
++		return -EINVAL;
++	};
++}
++
++/* reply_size() handler */
++static int strset_size(const struct common_req_info *req_info)
++{
++	const struct strset_data *data =
++		container_of(req_info, struct strset_data, reqinfo_base);
++	unsigned int i;
++	int len = 0;
++	int ret;
++
++	len += dev_ident_size();
++	for (i = 0; i < ETH_SS_COUNT; i++) {
++		const struct strset_info *info = &data->info[i];
++
++		if (!include_set(data, i) || info->type == ETH_SS_TYPE_NONE)
++			continue;
++
++		ret = set_size(info, data->counts_only);
++		if (ret < 0)
++			return ret;
++		len += ret;
++	}
++
++	return len;
++}
++
++static int fill_string(struct sk_buff *skb, const struct strset_info *info,
++		       u32 idx)
++{
++	struct nlattr *string = ethnl_nest_start(skb, ETHA_STRINGS_STRING);
++
++	if (!string)
++		return -EMSGSIZE;
++	if (nla_put_u32(skb, ETHA_STRING_INDEX, idx) ||
++	    nla_put_string(skb, ETHA_STRING_VALUE, str_value(info, idx)))
++		return -EMSGSIZE;
++	nla_nest_end(skb, string);
++
++	return 0;
++}
++
++static int fill_set(struct sk_buff *skb, const struct strset_data *data, u32 id)
++{
++	const struct strset_info *info = &data->info[id];
++	struct nlattr *strings;
++	struct nlattr *nest;
++	unsigned int i = (unsigned int)(-1);
++
++	if (info->type == ETH_SS_TYPE_NONE)
++		return -EOPNOTSUPP;
++	if (info->count == 0)
++		return 0;
++	nest = ethnl_nest_start(skb, ETHA_STRSET_STRINGSET);
++	if (!nest)
++		return -EMSGSIZE;
++
++	if (nla_put_u32(skb, ETHA_STRINGSET_ID, id) ||
++	    nla_put_u32(skb, ETHA_STRINGSET_COUNT, info->count))
++		goto err;
++
++	if (!data->counts_only) {
++		strings = ethnl_nest_start(skb, ETHA_STRINGSET_STRINGS);
++		if (!strings)
++			goto err;
++		for (i = 0; i < info->count; i++) {
++			if (fill_string(skb, info, i) < 0)
++				goto err;
++		}
++		nla_nest_end(skb, strings);
++	}
++
++	nla_nest_end(skb, nest);
++	return 0;
++
++err:
++	nla_nest_cancel(skb, nest);
++	return -EMSGSIZE;
++}
++
++/* fill_reply() handler */
++static int fill_strset(struct sk_buff *skb,
++		       const struct common_req_info *req_info)
++{
++	const struct strset_data *data =
++		container_of(req_info, struct strset_data, reqinfo_base);
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < ETH_SS_COUNT; i++)
++		if (include_set(data, i)) {
++			ret = fill_set(skb, data, i);
++			if (ret < 0)
++				return ret;
++		}
++
++	return 0;
++}
++
++const struct get_request_ops strset_request_ops = {
++	.request_cmd		= ETHNL_CMD_GET_STRSET,
++	.reply_cmd		= ETHNL_CMD_SET_STRSET,
++	.dev_attrtype		= ETHA_STRSET_DEV,
++	.data_size		= sizeof(struct strset_data),
++	.repdata_offset		= offsetof(struct strset_data, repdata_base),
++	.allow_nodev_do		= true,
++
++	.parse_request		= parse_strset,
++	.prepare_data		= prepare_strset,
++	.reply_size		= strset_size,
++	.fill_reply		= fill_strset,
++};
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.21.0
+
