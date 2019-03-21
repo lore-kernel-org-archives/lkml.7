@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D815BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A534C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B1A21916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F8921917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553194324;
-	bh=b+KtGlM29SB3cEBuuD49MrxLKjuRB3pnPgG5u94NeZo=;
+	s=default; t=1553194329;
+	bh=tivakt/YLgfjn9clfj4mcvtQ37VYhzR0azMnNsQgQAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KgK1zOk4QYuIeQhHxAuUTvz1wwM19by9lSVNc7KmbaEuNF2tCHHh7SKoYCoeIeWj2
-	 NSIamaIz7AiiGN8nYWwVS1zsEQNGwLSAnaCp/BP2qOxzsFLkH/lDeNw/Yf2Ttbaten
-	 4kUNXzkBGwNwXoj4SXy1IBB0sB9GfQVUhHtIdwrI=
+	b=F1VhTC5RAGAtW0BlpSo9WqRqOgobIXdVTWKY9h6WCmJ8XOxYFBZth1tumL+mNTu4s
+	 0CDY4PrFT/OebS5tU3+q8qDp6Mrpsk9k1ZaSAwTIe/sryJZPmWHk4aW+puGKO5Faw2
+	 +3DIQhpYZUIEU0yUJQxuR0+66qYtRZ/nWUDQQ44I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfCUSwD (ORCPT
+        id S1728825AbfCUSwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbfCUSwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:52:01 -0400
+        id S1728566AbfCUSwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:52:05 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF94218D8;
-        Thu, 21 Mar 2019 18:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C808A2190A;
+        Thu, 21 Mar 2019 18:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553194321;
-        bh=b+KtGlM29SB3cEBuuD49MrxLKjuRB3pnPgG5u94NeZo=;
+        s=default; t=1553194324;
+        bh=tivakt/YLgfjn9clfj4mcvtQ37VYhzR0azMnNsQgQAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVp1fN4v4ti9OL3nBMZoR5ZYmIspp/mJ9NxHTnRSnYlgv4fZmKSTlJNbk5ZF9EMrQ
-         lUeoaTizxxud+xPcnLP7xdVuW9ToP6OkbhmJ6GZuNUtSON+7BNAiCCVQv+exAz32T1
-         uI03kvyeIAScc8YzEj34GSxbIgwbZ5PN8NXd6rQU=
+        b=LoisYfpCrzIs77qoHQxklAGunuTsR4fvsbcRdFSWN/u7o5afkkZtNpdF12N4JP/3S
+         n72MxZrO1kopO/6aEU2P/l6nqV4lhe/vtN0yiXK9l9ocilVhBCTCYnEvSmi4z8mw1s
+         dJigz1umMz4F5ZhRiJHU3VT9bAgcJeAnxenx1iog=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 02/44] perf record: Allow to limit number of reported perf.data files
-Date:   Thu, 21 Mar 2019 15:51:00 -0300
-Message-Id: <20190321185142.11441-3-acme@kernel.org>
+Subject: [PATCH 03/44] perf record: Clarify help for --switch-output
+Date:   Thu, 21 Mar 2019 15:51:01 -0300
+Message-Id: <20190321185142.11441-4-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
@@ -61,175 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-When doing long term recording and waiting for some event to snapshot
-on, we often only care about the last minute or so.
+The help description for --switch-output looks like there are multiple
+comma separated fields. But it's actually a choice of different options.
+Make it clear and less confusing.
 
-The --switch-output command line option supports rotating the perf.data
-file when the size exceeds a threshold. But the disk would still be
-filled with unnecessary old files.
+Before:
 
-Add a new option to only keep a number of rotated files, so that the
-disk space usage can be limited.
+  % perf record -h
+  ...
+          --switch-output[=<signal,size,time>]
+                            Switch output when receive SIGUSR2 or cross size,time threshold
+
+After:
+
+  % perf record -h
+  ...
+
+          --switch-output[=<signal or size[BKMG] or time[smhd]>]
+                            Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 20190314225002.30108-3-andi@firstfloor.org
-Link: https://lkml.kernel.org/n/tip-y5u2lik0ragt4vlktz6qc9ks@git.kernel.org
+LPU-Reference: 20190314225002.30108-4-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-9yecyuha04nyg8toyd1b2pgi@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  4 ++++
- tools/perf/builtin-record.c              | 30 +++++++++++++++++++++++-
- tools/perf/util/data.c                   | 11 ++++-----
- tools/perf/util/data.h                   |  2 +-
- 4 files changed, 39 insertions(+), 8 deletions(-)
+ tools/perf/builtin-record.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 8f0c2be34848..8fe4dffcadd0 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -495,6 +495,10 @@ overhead. You can still switch them on with:
- 
-   --switch-output --no-no-buildid  --no-no-buildid-cache
- 
-+--switch-max-files=N::
-+
-+When rotating perf.data with --switch-output, only keep N files.
-+
- --dry-run::
- Parse options then exit. --dry-run can be used to detect errors in cmdline
- options.
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a468d882e74f..02d7c40b2d10 100644
+index 02d7c40b2d10..e7144a1c1c82 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -62,6 +62,9 @@ struct switch_output {
- 	unsigned long	 time;
- 	const char	*str;
- 	bool		 set;
-+	char		 **filenames;
-+	int		 num_files;
-+	int		 cur_file;
- };
- 
- struct record {
-@@ -892,6 +895,7 @@ record__switch_output(struct record *rec, bool at_exit)
- {
- 	struct perf_data *data = &rec->data;
- 	int fd, err;
-+	char *new_filename;
- 
- 	/* Same Size:      "2015122520103046"*/
- 	char timestamp[] = "InvalidTimestamp";
-@@ -912,7 +916,7 @@ record__switch_output(struct record *rec, bool at_exit)
- 
- 	fd = perf_data__switch(data, timestamp,
- 				    rec->session->header.data_offset,
--				    at_exit);
-+				    at_exit, &new_filename);
- 	if (fd >= 0 && !at_exit) {
- 		rec->bytes_written = 0;
- 		rec->session->header.data_size = 0;
-@@ -922,6 +926,21 @@ record__switch_output(struct record *rec, bool at_exit)
- 		fprintf(stderr, "[ perf record: Dump %s.%s ]\n",
- 			data->path, timestamp);
- 
-+	if (rec->switch_output.num_files) {
-+		int n = rec->switch_output.cur_file + 1;
-+
-+		if (n >= rec->switch_output.num_files)
-+			n = 0;
-+		rec->switch_output.cur_file = n;
-+		if (rec->switch_output.filenames[n]) {
-+			remove(rec->switch_output.filenames[n]);
-+			free(rec->switch_output.filenames[n]);
-+		}
-+		rec->switch_output.filenames[n] = new_filename;
-+	} else {
-+		free(new_filename);
-+	}
-+
- 	/* Output tracking events */
- 	if (!at_exit) {
- 		record__synthesize(rec, false);
-@@ -1973,6 +1992,8 @@ static struct option __record_options[] = {
- 			  &record.switch_output.set, "signal,size,time",
- 			  "Switch output when receive SIGUSR2 or cross size,time threshold",
+@@ -1989,8 +1989,8 @@ static struct option __record_options[] = {
+ 	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
+ 		    "Record timestamp boundary (time of first/last samples)"),
+ 	OPT_STRING_OPTARG_SET(0, "switch-output", &record.switch_output.str,
+-			  &record.switch_output.set, "signal,size,time",
+-			  "Switch output when receive SIGUSR2 or cross size,time threshold",
++			  &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
++			  "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
  			  "signal"),
-+	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
-+		   "Limit number of switch output generated files"),
- 	OPT_BOOLEAN(0, "dry-run", &dry_run,
- 		    "Parse options then exit"),
- #ifdef HAVE_AIO_SUPPORT
-@@ -2059,6 +2080,13 @@ int cmd_record(int argc, const char **argv)
- 		alarm(rec->switch_output.time);
- 	}
- 
-+	if (rec->switch_output.num_files) {
-+		rec->switch_output.filenames = calloc(sizeof(char *),
-+						      rec->switch_output.num_files);
-+		if (!rec->switch_output.filenames)
-+			return -EINVAL;
-+	}
-+
- 	/*
- 	 * Allow aliases to facilitate the lookup of symbols for address
- 	 * filters. Refer to auxtrace_parse_filters().
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index c6b67efea11a..6a64f713710d 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -361,9 +361,9 @@ ssize_t perf_data__write(struct perf_data *data,
- 
- int perf_data__switch(struct perf_data *data,
- 			   const char *postfix,
--			   size_t pos, bool at_exit)
-+			   size_t pos, bool at_exit,
-+			   char **new_filepath)
- {
--	char *new_filepath;
- 	int ret;
- 
- 	if (check_pipe(data))
-@@ -371,15 +371,15 @@ int perf_data__switch(struct perf_data *data,
- 	if (perf_data__is_read(data))
- 		return -EINVAL;
- 
--	if (asprintf(&new_filepath, "%s.%s", data->path, postfix) < 0)
-+	if (asprintf(new_filepath, "%s.%s", data->path, postfix) < 0)
- 		return -ENOMEM;
- 
- 	/*
- 	 * Only fire a warning, don't return error, continue fill
- 	 * original file.
- 	 */
--	if (rename(data->path, new_filepath))
--		pr_warning("Failed to rename %s to %s\n", data->path, new_filepath);
-+	if (rename(data->path, *new_filepath))
-+		pr_warning("Failed to rename %s to %s\n", data->path, *new_filepath);
- 
- 	if (!at_exit) {
- 		close(data->file.fd);
-@@ -396,7 +396,6 @@ int perf_data__switch(struct perf_data *data,
- 	}
- 	ret = data->file.fd;
- out:
--	free(new_filepath);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 6aef8746469f..259868a39019 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -70,7 +70,7 @@ ssize_t perf_data_file__write(struct perf_data_file *file,
-  */
- int perf_data__switch(struct perf_data *data,
- 			   const char *postfix,
--			   size_t pos, bool at_exit);
-+			   size_t pos, bool at_exit, char **new_filepath);
- 
- int perf_data__create_dir(struct perf_data *data, int nr);
- int perf_data__open_dir(struct perf_data *data);
+ 	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
+ 		   "Limit number of switch output generated files"),
 -- 
 2.20.1
 
