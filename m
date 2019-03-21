@@ -2,214 +2,108 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC54C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6C921916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A136021916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ki9RGjJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfCUWnE convert rfc822-to-8bit (ORCPT
+        id S1727135AbfCUWoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:43:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38116 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfCUWnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:43:04 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D39683082A51;
-        Thu, 21 Mar 2019 22:43:03 +0000 (UTC)
-Received: from x1.home (ovpn-116-218.phx2.redhat.com [10.3.116.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B18E60857;
-        Thu, 21 Mar 2019 22:43:00 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 16:43:00 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, christoffer.dall@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com
-Subject: Re: [PATCH v6 08/22] vfio: VFIO_IOMMU_CACHE_INVALIDATE
-Message-ID: <20190321164300.12dc2dcb@x1.home>
-In-Reply-To: <20190317172232.1068-9-eric.auger@redhat.com>
-References: <20190317172232.1068-1-eric.auger@redhat.com>
-        <20190317172232.1068-9-eric.auger@redhat.com>
-Organization: Red Hat
+        Thu, 21 Mar 2019 18:44:08 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:39810 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCUWoI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:44:08 -0400
+Received: by mail-ot1-f42.google.com with SMTP id f10so279535otb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 15:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ufo9tkQtT9X/G/nbRpAYnlQuSFN9dNW1Mr3gsTT7VG4=;
+        b=Ki9RGjJuMeoHpuX4xKKtTMBxTZL8D5VEmj8pK9y7gg+jvub5q2z1bcmWgn1D/eKc83
+         SEMyOuRtGk303pgxckBcFOtxLhYjKWK8WKrthKlLjI1zpm1x74Xkqapf6spMVhyZNf7R
+         ObjgrZaFbG8jb5Kb/TJJsDo12jEbhvHrUvIlDDbdpbtEtgp7RJS0J0HSkkGHJqeGtblK
+         vlil9EEMtnXoHE5JRMQzkfFLf/OkqSBCGxNoH72osi90uN2NSoeUDE4V8MFc58KAd+yZ
+         rF2zKDtbtEOmSaQb5om7/2tCIKPGmNGPKLR1kN6H59Atjfvf9cGAx8T2zhE/Um/rs8dv
+         TO+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ufo9tkQtT9X/G/nbRpAYnlQuSFN9dNW1Mr3gsTT7VG4=;
+        b=SJK50GafPZYF8xfF7/cXG1i1In391MseuYabogi4mFBTUgqsZBrtLkhvplfCQ6SDJE
+         fj+5jbkeMXwd1/3hwyzaABSrG2Mq8pNKHx62MbJXLQxIIlY8zy5yb17O8t1JAnubaTc2
+         E5vAktn5Ci1CKmtQKh6hozvt9KoVqxmR8xAAHVUqT5ZTfXYReYJcy+oDMn8+8CKFZAe8
+         86TM+OPcnMh9rbbiT4IXVVJJAD+GO0Q1fhC0Bv4UdfFchDtllPFdck6ujHYBcKX7tC2J
+         5qosj1cxO52OYPbU56z1mumwdEtfUPNlRp2m89DlgdFjN5c0Ku2xLo0FvoEy+CEol3Yc
+         xUbw==
+X-Gm-Message-State: APjAAAUZ7rOqcGmVX8/mb5bQOPiIuT3pvBNQj+6q0WNIuvofvreGpEln
+        S4GveuiIBOWf1wCEi2RlLY9iHdBxUjEkTGDGHMXevSkd
+X-Google-Smtp-Source: APXvYqwpyuadGnhaz8VBI50TcyqI2tTvpQeTyzeZr2SnFv9EqcrfG185kIhHRe2dKZUD2rqDuemmqQrmeNqXDV3fpls=
+X-Received: by 2002:a9d:7656:: with SMTP id o22mr4149965otl.216.1553208247000;
+ Thu, 21 Mar 2019 15:44:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 21 Mar 2019 22:43:04 +0000 (UTC)
+References: <20190313064557.GA14531@unicorn.suse.cz> <CADVatmMem3t-Lx42vU+-xN94FW5hbXjaBz3jgW6nkVouyWW-Qg@mail.gmail.com>
+ <20190317180546.GA26013@unicorn.suse.cz> <CADVatmNVf+8fLsZjETx5nmYKmdQCg0Moqv5W3S0i4gtX9uMn=w@mail.gmail.com>
+ <20190320211813.GE29968@unicorn.suse.cz>
+In-Reply-To: <20190320211813.GE29968@unicorn.suse.cz>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Thu, 21 Mar 2019 22:43:30 +0000
+Message-ID: <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
+Subject: Re: regression (bisected): "modprobe parport_pc" hangs in current mainline
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 Mar 2019 18:22:18 +0100
-Eric Auger <eric.auger@redhat.com> wrote:
+HI Michal,
 
-> From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
-> 
-> When the guest "owns" the stage 1 translation structures,  the host
-> IOMMU driver has no knowledge of caching structure updates unless
-> the guest invalidation requests are trapped and passed down to the
-> host.
-> 
-> This patch adds the VFIO_IOMMU_CACHE_INVALIDATE ioctl with aims
-> at propagating guest stage1 IOMMU cache invalidations to the host.
-> 
-> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> ---
-> 
-> v2 -> v3:
-> - introduce vfio_iommu_for_each_dev back in this patch
-> 
-> v1 -> v2:
-> - s/TLB/CACHE
-> - remove vfio_iommu_task usage
-> - commit message rewording
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 47 +++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       | 13 +++++++++
->  2 files changed, 60 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 222e9199edbf..12a40b9db6aa 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -113,6 +113,26 @@ struct vfio_regions {
->  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->  					(!list_empty(&iommu->domain_list))
->  
+On Wed, Mar 20, 2019 at 9:18 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+>
+> On Wed, Mar 20, 2019 at 09:30:59AM +0000, Sudip Mukherjee wrote:
+> > Sorry, I didn't get the chance to look at it yet and have kept it
+> > pending for this weekend. But just had a quick look and I was
+> > wondering if the machine on which you are trying the modprobe has an
+> > actual parallel port or the machine is not having any parallel port.
+> > And also will you be able to send me a dmesg please.
+>
+> Attaching dmesg output from a virtual machine which doesn't seem to have
+> a (virtual) parallel port. This part:
+>
+> [   63.962283] parport_pc 00:05: reported by Plug and Play ACPI
+> [   63.962469] parport0: PC-style at 0x378, irq 7 [PCSPP,TRISTATE]
+> [   64.061723] ppdev: user-space parallel port driver
+>
+> was after I manually killed "/sbin/modprobe -q -- parport_lowlevel" which
+> was started during boot.
 
-static struct foo {
-	struct iommu_domain *domain;
-	void *data;
-};
+Thanks for testing. I am unable to reproduce the problem in VM or in
+machine, with or without parallel port. But from your logs it looks
+like you have an alias set for "parport_lowlevel". When parport module
+is being loaded if it does not find any port in its list, it will try
+to load "parport_lowlevel" and that is where you are getting the
+deadlock. "parport_lowlevel" is not a real module, but instead should
+be an alias pointing to some real module. I tried by setting an alias
+of parport_lowlevel" as parport_pc but still could not get the
+problem.
+Can you please check in your VM or machine what do you have the alias
+as? It should be either in "/etc/modprobe.conf" or some conf file in
+"/etc/modprobe.d" folder. And also, will you be able to test a debug
+patch on your VM?
 
-> +/* iommu->lock must be held */
-> +static int
-> +vfio_iommu_for_each_dev(struct vfio_iommu *iommu, void *data,
-> +			int (*fn)(struct device *, void *))
-> +{
-> +	struct vfio_domain *d;
-> +	struct vfio_group *g;
-> +	int ret = 0;
-
-	struct foo bar = { .data = data };
-
-> +
-> +	list_for_each_entry(d, &iommu->domain_list, next) {
-
-		bar.domain = d->domain;
-
-> +		list_for_each_entry(g, &d->group_list, next) {
-> +			ret = iommu_group_for_each_dev(g->iommu_group,
-> +						       data, fn);
-
-							s/data/&bar/
-
-> +			if (ret)
-> +				break;
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
->  static int put_pfn(unsigned long pfn, int prot);
->  
->  /*
-> @@ -1681,6 +1701,15 @@ vfio_attach_pasid_table(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static int vfio_cache_inv_fn(struct device *dev, void *data)
-> +{
-
-struct foo *bar = data;
-
-> +	struct vfio_iommu_type1_cache_invalidate *ustruct =
-> +		(struct vfio_iommu_type1_cache_invalidate *)data;
-
-... = bar->data;
-
-> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
-
-... = bar->domain;
-
-¯\_(ツ)_/¯ seems more efficient that doing a lookup.
-
-> +
-> +	return iommu_cache_invalidate(d, dev, &ustruct->info);
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -1767,6 +1796,24 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  	} else if (cmd == VFIO_IOMMU_DETACH_PASID_TABLE) {
->  		vfio_detach_pasid_table(iommu);
->  		return 0;
-> +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
-> +		struct vfio_iommu_type1_cache_invalidate ustruct;
-> +		int ret;
-> +
-> +		minsz = offsetofend(struct vfio_iommu_type1_cache_invalidate,
-> +				    info);
-> +
-> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (ustruct.argsz < minsz || ustruct.flags)
-> +			return -EINVAL;
-> +
-> +		mutex_lock(&iommu->lock);
-> +		ret = vfio_iommu_for_each_dev(iommu, &ustruct,
-> +					      vfio_cache_inv_fn);
-
-Guess what has a version field that never gets checked ;)
-
-Thanks,
-Alex
-
-> +		mutex_unlock(&iommu->lock);
-> +		return ret;
->  	}
->  
->  	return -ENOTTY;
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 329d378565d9..29f0ef2d805d 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -776,6 +776,19 @@ struct vfio_iommu_type1_attach_pasid_table {
->  #define VFIO_IOMMU_ATTACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 22)
->  #define VFIO_IOMMU_DETACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 23)
->  
-> +/**
-> + * VFIO_IOMMU_CACHE_INVALIDATE - _IOWR(VFIO_TYPE, VFIO_BASE + 24,
-> + *			struct vfio_iommu_type1_cache_invalidate)
-> + *
-> + * Propagate guest IOMMU cache invalidation to the host.
-> + */
-> +struct vfio_iommu_type1_cache_invalidate {
-> +	__u32   argsz;
-> +	__u32   flags;
-> +	struct iommu_cache_invalidate_info info;
-> +};
-> +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
-
+-- 
+Regards
+Sudip
