@@ -2,357 +2,116 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B66C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72C6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACED218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F75218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfCUH7t (ORCPT
+        id S1727944AbfCUIBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:59:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfCUH7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:59:49 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8968F74C1;
-        Thu, 21 Mar 2019 07:59:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C713B5D9C4;
-        Thu, 21 Mar 2019 07:59:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] vfs: Convert functionfs to fs_context
-From:   David Howells <dhowells@redhat.com>
-To:     balbi@kernel.org
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 07:59:47 +0000
-Message-ID: <155315518700.21302.17394925275943156425.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 21 Mar 2019 04:01:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727870AbfCUIBo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 04:01:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2L7sf07084981
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 04:01:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rc5ftu166-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 04:01:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 21 Mar 2019 08:01:33 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 21 Mar 2019 08:01:29 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2L81ZGS49545430
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 08:01:35 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 526674C052;
+        Thu, 21 Mar 2019 08:01:35 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E44354C05A;
+        Thu, 21 Mar 2019 08:01:34 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 21 Mar 2019 08:01:34 +0000 (GMT)
+Date:   Thu, 21 Mar 2019 09:01:33 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        x86@kernel.org, linux-mtd@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Dave Hansen <dave@sr71.net>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] compiler: allow all arches to enable
+ CONFIG_OPTIMIZE_INLINING
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 21 Mar 2019 07:59:48 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19032108-0016-0000-0000-00000265702D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032108-0017-0000-0000-000032C08DCF
+Message-Id: <20190321080133.GB3916@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=508 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903210058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Felipe Balbi <balbi@kernel.org>
-cc: Michał Nazarewicz <mina86@mina86.com>
-cc: linux-usb@vger.kernel.org
----
+On Wed, Mar 20, 2019 at 03:20:27PM +0900, Masahiro Yamada wrote:
+> Commit 60a3cdd06394 ("x86: add optimized inlining") introduced
+> CONFIG_OPTIMIZE_INLINING, but it has been available only for x86.
+> 
+> The idea is obviously arch-agnostic although we need some code fixups.
+> This commit moves the config entry from arch/x86/Kconfig.debug to
+> lib/Kconfig.debug so that all architectures (except MIPS for now) can
+> benefit from it.
+> 
+> At this moment, I added "depends on !MIPS" because fixing 0day bot reports
+> for MIPS was complex to me.
+> 
+> I tested this patch on my arm/arm64 boards.
+> 
+> This can make a huge difference in kernel image size especially when
+> CONFIG_OPTIMIZE_FOR_SIZE is enabled.
+> 
+> For example, I got 3.5% smaller arm64 kernel image for v5.1-rc1.
+> 
+>   dec       file
+>   18983424  arch/arm64/boot/Image.before
+>   18321920  arch/arm64/boot/Image.after
 
- drivers/usb/gadget/function/f_fs.c |  232 ++++++++++++++++++------------------
- 1 file changed, 119 insertions(+), 113 deletions(-)
+Well, this will change, since now people (have to) start adding
+__always_inline annotations on all architectures, most likely until
+all have about the same amount of annotations like x86. This will
+reduce the benefit.
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 20413c276c61..1b8061cdf87c 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -17,6 +17,7 @@
- #include <linux/blkdev.h>
- #include <linux/pagemap.h>
- #include <linux/export.h>
-+#include <linux/fs_parser.h>
- #include <linux/hid.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-@@ -1447,9 +1448,9 @@ struct ffs_sb_fill_data {
- 	struct ffs_data *ffs_data;
- };
- 
--static int ffs_sb_fill(struct super_block *sb, void *_data, int silent)
-+static int ffs_sb_fill(struct super_block *sb, struct fs_context *fc)
- {
--	struct ffs_sb_fill_data *data = _data;
-+	struct ffs_sb_fill_data *data = fc->fs_private;
- 	struct inode	*inode;
- 	struct ffs_data	*ffs = data->ffs_data;
- 
-@@ -1482,147 +1483,152 @@ static int ffs_sb_fill(struct super_block *sb, void *_data, int silent)
- 	return 0;
- }
- 
--static int ffs_fs_parse_opts(struct ffs_sb_fill_data *data, char *opts)
--{
--	ENTER();
-+enum {
-+	Opt_no_disconnect,
-+	Opt_rmode,
-+	Opt_fmode,
-+	Opt_mode,
-+	Opt_uid,
-+	Opt_gid,
-+};
- 
--	if (!opts || !*opts)
--		return 0;
-+static const struct fs_parameter_spec ffs_fs_param_specs[] = {
-+	fsparam_bool	("no_disconnect",	Opt_no_disconnect),
-+	fsparam_u32	("rmode",		Opt_rmode),
-+	fsparam_u32	("fmode",		Opt_fmode),
-+	fsparam_u32	("mode",		Opt_mode),
-+	fsparam_u32	("uid",			Opt_uid),
-+	fsparam_u32	("gid",			Opt_gid),
-+	{}
-+};
- 
--	for (;;) {
--		unsigned long value;
--		char *eq, *comma;
--
--		/* Option limit */
--		comma = strchr(opts, ',');
--		if (comma)
--			*comma = 0;
--
--		/* Value limit */
--		eq = strchr(opts, '=');
--		if (unlikely(!eq)) {
--			pr_err("'=' missing in %s\n", opts);
--			return -EINVAL;
--		}
--		*eq = 0;
-+static const struct fs_parameter_description ffs_fs_fs_parameters = {
-+	.name		= "kAFS",
-+	.specs		= ffs_fs_param_specs,
-+};
- 
--		/* Parse value */
--		if (kstrtoul(eq + 1, 0, &value)) {
--			pr_err("%s: invalid value: %s\n", opts, eq + 1);
--			return -EINVAL;
--		}
-+static int ffs_fs_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct ffs_sb_fill_data *data = fc->fs_private;
-+	struct fs_parse_result result;
-+	int opt;
- 
--		/* Interpret option */
--		switch (eq - opts) {
--		case 13:
--			if (!memcmp(opts, "no_disconnect", 13))
--				data->no_disconnect = !!value;
--			else
--				goto invalid;
--			break;
--		case 5:
--			if (!memcmp(opts, "rmode", 5))
--				data->root_mode  = (value & 0555) | S_IFDIR;
--			else if (!memcmp(opts, "fmode", 5))
--				data->perms.mode = (value & 0666) | S_IFREG;
--			else
--				goto invalid;
--			break;
-+	ENTER();
- 
--		case 4:
--			if (!memcmp(opts, "mode", 4)) {
--				data->root_mode  = (value & 0555) | S_IFDIR;
--				data->perms.mode = (value & 0666) | S_IFREG;
--			} else {
--				goto invalid;
--			}
--			break;
-+	opt = fs_parse(fc, &ffs_fs_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
- 
--		case 3:
--			if (!memcmp(opts, "uid", 3)) {
--				data->perms.uid = make_kuid(current_user_ns(), value);
--				if (!uid_valid(data->perms.uid)) {
--					pr_err("%s: unmapped value: %lu\n", opts, value);
--					return -EINVAL;
--				}
--			} else if (!memcmp(opts, "gid", 3)) {
--				data->perms.gid = make_kgid(current_user_ns(), value);
--				if (!gid_valid(data->perms.gid)) {
--					pr_err("%s: unmapped value: %lu\n", opts, value);
--					return -EINVAL;
--				}
--			} else {
--				goto invalid;
--			}
--			break;
-+	switch (opt) {
-+	case Opt_no_disconnect:
-+		data->no_disconnect = result.boolean;
-+		break;
-+	case Opt_rmode:
-+		data->root_mode  = (result.uint_32 & 0555) | S_IFDIR;
-+		break;
-+	case Opt_fmode:
-+		data->perms.mode = (result.uint_32 & 0666) | S_IFREG;
-+		break;
-+	case Opt_mode:
-+		data->root_mode  = (result.uint_32 & 0555) | S_IFDIR;
-+		data->perms.mode = (result.uint_32 & 0666) | S_IFREG;
-+		break;
- 
--		default:
--invalid:
--			pr_err("%s: invalid option\n", opts);
--			return -EINVAL;
--		}
-+	case Opt_uid:
-+		data->perms.uid = make_kuid(current_user_ns(), result.uint_32);
-+		if (!uid_valid(data->perms.uid))
-+			goto unmapped_value;
-+		break;
-+	case Opt_gid:
-+		data->perms.gid = make_kgid(current_user_ns(), result.uint_32);
-+		if (!gid_valid(data->perms.gid))
-+			goto unmapped_value;
-+		break;
- 
--		/* Next iteration */
--		if (!comma)
--			break;
--		opts = comma + 1;
-+	default:
-+		return -ENOPARAM;
- 	}
- 
- 	return 0;
--}
- 
--/* "mount -t functionfs dev_name /dev/function" ends up here */
-+unmapped_value:
-+	return invalf(fc, "%s: unmapped value: %u", param->key, result.uint_32);
-+}
- 
--static struct dentry *
--ffs_fs_mount(struct file_system_type *t, int flags,
--	      const char *dev_name, void *opts)
--{
--	struct ffs_sb_fill_data data = {
--		.perms = {
--			.mode = S_IFREG | 0600,
--			.uid = GLOBAL_ROOT_UID,
--			.gid = GLOBAL_ROOT_GID,
--		},
--		.root_mode = S_IFDIR | 0500,
--		.no_disconnect = false,
--	};
--	struct dentry *rv;
--	int ret;
-+/*
-+ * Set up the superblock for a mount.
-+ */
-+static int ffs_fs_get_tree(struct fs_context *fc)
-+{
-+	struct ffs_sb_fill_data *ctx = fc->fs_private;
- 	void *ffs_dev;
- 	struct ffs_data	*ffs;
- 
- 	ENTER();
- 
--	ret = ffs_fs_parse_opts(&data, opts);
--	if (unlikely(ret < 0))
--		return ERR_PTR(ret);
-+	if (!fc->source)
-+		return invalf(fc, "No source specified");
- 
--	ffs = ffs_data_new(dev_name);
-+	ffs = ffs_data_new(fc->source);
- 	if (unlikely(!ffs))
--		return ERR_PTR(-ENOMEM);
--	ffs->file_perms = data.perms;
--	ffs->no_disconnect = data.no_disconnect;
-+		return -ENOMEM;
-+	ffs->file_perms = ctx->perms;
-+	ffs->no_disconnect = ctx->no_disconnect;
- 
--	ffs->dev_name = kstrdup(dev_name, GFP_KERNEL);
-+	ffs->dev_name = kstrdup(fc->source, GFP_KERNEL);
- 	if (unlikely(!ffs->dev_name)) {
- 		ffs_data_put(ffs);
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
- 	}
- 
--	ffs_dev = ffs_acquire_dev(dev_name);
-+	ffs_dev = ffs_acquire_dev(ffs->dev_name);
- 	if (IS_ERR(ffs_dev)) {
- 		ffs_data_put(ffs);
--		return ERR_CAST(ffs_dev);
-+		return PTR_ERR(ffs_dev);
- 	}
-+
- 	ffs->private_data = ffs_dev;
--	data.ffs_data = ffs;
-+	ctx->ffs_data = ffs;
-+	return vfs_get_super(fc, vfs_get_independent_super, ffs_sb_fill);
-+}
-+
-+static void ffs_fs_free_fc(struct fs_context *fc)
-+{
-+	struct ffs_sb_fill_data *ctx = fc->fs_private;
-+
-+	if (ctx) {
-+		if (ctx->ffs_data) {
-+			ffs_release_dev(ctx->ffs_data);
-+			ffs_data_put(ctx->ffs_data);
-+		}
- 
--	rv = mount_nodev(t, flags, &data, ffs_sb_fill);
--	if (IS_ERR(rv) && data.ffs_data) {
--		ffs_release_dev(data.ffs_data);
--		ffs_data_put(data.ffs_data);
-+		kfree(ctx);
- 	}
--	return rv;
-+}
-+
-+static const struct fs_context_operations ffs_fs_context_ops = {
-+	.free		= ffs_fs_free_fc,
-+	.parse_param	= ffs_fs_parse_param,
-+	.get_tree	= ffs_fs_get_tree,
-+};
-+
-+static int ffs_fs_init_fs_context(struct fs_context *fc)
-+{
-+	struct ffs_sb_fill_data *ctx;
-+
-+	ctx = kzalloc(sizeof(struct ffs_sb_fill_data), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->perms.mode = S_IFREG | 0600;
-+	ctx->perms.uid = GLOBAL_ROOT_UID;
-+	ctx->perms.gid = GLOBAL_ROOT_GID;
-+	ctx->root_mode = S_IFDIR | 0500;
-+	ctx->no_disconnect = false;
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &ffs_fs_context_ops;
-+	return 0;
- }
- 
- static void
-@@ -1640,7 +1646,7 @@ ffs_fs_kill_sb(struct super_block *sb)
- static struct file_system_type ffs_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "functionfs",
--	.mount		= ffs_fs_mount,
-+	.init_fs_context = ffs_fs_init_fs_context,
- 	.kill_sb	= ffs_fs_kill_sb,
- };
- MODULE_ALIAS_FS("functionfs");
+Not sure if it's really a win that we get the inline vs
+__always_inline discussion now on all architectures.
 
