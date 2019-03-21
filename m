@@ -2,103 +2,84 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C632C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6C7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE891218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553177404;
-	bh=rnRw+AkvaMCkKfrfuFnhKNySXtJDZ2PnEMQgzO0kfo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R17bWwmE0kg+3vnyhkT8M/sLhi8fwepnTjUBCqQiGb94e/27TrRdwgPuCFMcrGsWa
-	 ZNk3KFf3O9BBgjgUFjeLKY2aTD/6CcSVEBTs0C9yEG7XS43gbnuXCQlz2L6+EsKkGj
-	 pyAcceirtoTQz7sQnrnVxLp31VYBAA9FmqG7Fd1U=
+	by mail.kernel.org (Postfix) with ESMTP id 05A38218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfCUOKC (ORCPT
+        id S1728326AbfCUOKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:10:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36206 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfCUOKC (ORCPT
+        Thu, 21 Mar 2019 10:10:07 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38233 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUOKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Bc3pjv3YxVHeczY2f0224D+0dbGquztKuGS1ny6IG+s=; b=K6/VhOZ0X+snuiuSaHoeZYxOn
-        UEDlu4D9eTV49h4C/5AuuDjYFxHW3PmNfyg+jLZl9yu/a7rNfPIOOl9JfUjf9ugm8FWfZMlF9BcvF
-        mYs+BYbJyYME+VNKZq51c7E5pXYFcKRHvhaTG1olp5R4G7jyfzisqpa8kqPcUxKZUrqHc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h6yOD-0005R8-8L; Thu, 21 Mar 2019 14:09:49 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A9F0211288EC; Thu, 21 Mar 2019 14:09:48 +0000 (GMT)
-Date:   Thu, 21 Mar 2019 14:09:48 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        tiwai@suse.com, lgirdwood@gmail.com
-Subject: Re: [alsa-devel] [PATCH] ASoC: dapm: Fix NULL pointer dereference in
- snd_soc_dapm_new_dai
-Message-ID: <20190321140948.GD5684@sirena.org.uk>
-References: <1553163085-16845-1-git-send-email-pankaj.laxminarayan.bharadiya@intel.com>
- <20190321123156.GB5684@sirena.org.uk>
- <13b5c552-69a6-f1e0-174c-b5aa48560858@linux.intel.com>
+        Thu, 21 Mar 2019 10:10:05 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h6yOM-0005eL-PN; Thu, 21 Mar 2019 15:09:59 +0100
+Date:   Thu, 21 Mar 2019 15:09:53 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ali Saidi <alisaidi@amazon.com>
+cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Anthony Liguori <aliguori@amazon.com>
+Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
+ mmap_base
+In-Reply-To: <20190312173248.13490-3-alisaidi@amazon.com>
+Message-ID: <alpine.DEB.2.21.1903211508440.1784@nanos.tec.linutronix.de>
+References: <20190312173248.13490-1-alisaidi@amazon.com> <20190312173248.13490-3-alisaidi@amazon.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k4f25fnPtRuIRUb3"
-Content-Disposition: inline
-In-Reply-To: <13b5c552-69a6-f1e0-174c-b5aa48560858@linux.intel.com>
-X-Cookie: Hackers of the world, unite!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/mixed; boundary="8323329-783148278-1553177398=:1784"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---k4f25fnPtRuIRUb3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--8323329-783148278-1553177398=:1784
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Thu, Mar 21, 2019 at 08:59:55AM -0500, Pierre-Louis Bossart wrote:
-> On 3/21/19 7:31 AM, Mark Brown wrote:
-> > On Thu, Mar 21, 2019 at 03:41:25PM +0530, Pankaj Bharadiya wrote:
+On Tue, 12 Mar 2019, Ali Saidi wrote:
 
-> > This is very non-obvious - it's not at all clear why we'd need the text
-> > to free controls.  If there is an issue here it seems like it'd be
-> > better to make sure that snd_soc_dapm_free_kcontrol() can cope with that
-> > being NULL, that will be clearer and also avoid potential issues with
-> > other callers.
+> Increase mmap_base by the worst-case brk randomization so that
+> the stack and heap remain apart.
+> 
+> In Linux 4.13 a change was committed that special cased the kernel ELF
+> loader when the loader is invoked directly (eab09532d400; binfmt_elf: use
+> ELF_ET_DYN_BASE only for PIE). Generally, the loader isn’t invoked
+> directly and this issue is limited to cases where it is, (e.g to set a
+> non-inheritable LD_LIBRARY_PATH, testing new versions of the loader). In
+> those rare cases, the loader doesn't take into account the amount of brk
+> randomization that will be applied by arch_randomize_brk(). This can
+> lead to the stack and heap being arbitrarily close to each other.
 
-> I believe the issue is real, but you need to look at the entire code to figure it out
+That explains not why you need this change. What's the consequence of them
+being close to each other?
 
-Yeah, I'm fairly sure there's an actual issue here - it's just that the
-fix is obscure and feels fragile.
+Thanks,
 
---k4f25fnPtRuIRUb3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyTmysACgkQJNaLcl1U
-h9C+eQf7Bnc/qA2kIaN+pwHVUzmOvzF4woWYt1c8PNct6q6whX8CI++mtMcTFLp6
-OihVNA9Y81AS9mM4v/UFOeR8DT66/8X6N3gpo8x9UCrzDjPT4fa/6RdxEJOt9njX
-05SU+q1FLg3K4+cjq0e9chDN0WpWRbgKQKJnlvmyaSRA/T6MDbYiMq9Okm8KXg+Q
-8sub2DQnSz3NNfUOTftQ90TqAibcTEvvGbx78XPZCMBYtC6MncpMXboh8ctvWUyw
-zcNsn+ZAP9+CSHZnX7lPWJke+b92wZfZGQeIsbQocFsicGQDreY43zW13y7CBxw9
-d6bDevREUeUMWbYiH6HxTjsiogcpJw==
-=C3gk
------END PGP SIGNATURE-----
-
---k4f25fnPtRuIRUb3--
+	tglx
+--8323329-783148278-1553177398=:1784--
