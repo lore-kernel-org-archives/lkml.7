@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF91FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE59C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D16021917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABDE218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="BbLV4RLD"
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="Rd/NcxI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfCUWQJ (ORCPT
+        id S1727481AbfCUWQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:16:09 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44981 "EHLO
+        Thu, 21 Mar 2019 18:16:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39336 "EHLO
         mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfCUWQE (ORCPT
+        with ESMTP id S1727415AbfCUWQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:16:04 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w5so397105qtb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 15:16:03 -0700 (PDT)
+        Thu, 21 Mar 2019 18:16:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t28so437678qte.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 15:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=criticallink.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s0UWPcv45YDJ6fJXV9UJPLaAr8ooymlKhZRtGYGNJeo=;
-        b=BbLV4RLDEgeW1nsgRPdI4SPa4CMGxHfMuiWXTrUBqLRmCiu6LqWifE2Vg1o1Ki+1dQ
-         by4xgp1XPXOcnYrrdkmYHSVqr2TFknVsj+FBTHbActaJCF4yUj/gHyutOEH7ffkHdqBX
-         x2aafF/qj06QVstJAyv2zFdiqYc8M3BHH4JzMUa5jV21XSoagrLgEnbvBxn8sOea/KxQ
-         B/9csYbxa1eG0U40KRmCsBAKfBv9kv/NGMMO+nVuHD9RkCr2amWCL6DRNKD4MfSj1okd
-         DCi69EylJSNjvedlIleSB4V4QKGHTgSq02quxGzfwhr56O0Dv85K59kyUA7VnR87+nOS
-         pxmw==
+        bh=PaAiK0DR2sIQWzoKy9Rm5Q9ewZFtpvbkDJA7a+dgNIQ=;
+        b=Rd/NcxI3SiTqghKLtjSSi1Yv28GGZ5BOQx3mDk4NUx9AFttyl7VoBpY54e/v8KJMWA
+         bk/e25I4k7LbksAsM5o95GzMKquXi14B860qYXdfuQK9Ggp6qR5vGIl0YwXTD6PIXgos
+         WPP4soeT8fF/8qI+GWDRie/n8PRHERwT1ehRO85Zw3SAFx7jVquWlepCwtqF8qMXVa04
+         yENVJHPLxfVAqv2Nq7rqEb36bg/phHF0SxrWRDCsJf09l2bYG0puJgWn5Ph+CWwC8z4P
+         7imCkSkCTz+HQrVQDYND4Nsb6A+UZhiFgTK+ExloSKme8FOWbN7ERco0P5Ssi2xj9Sno
+         RNWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s0UWPcv45YDJ6fJXV9UJPLaAr8ooymlKhZRtGYGNJeo=;
-        b=GAk76fBQQqTf4RudqVbjtqrB0MTIUJJOp4B7QmqvwplP9+FqDs3lBTxQDNmD2A76Vp
-         DfzhyrkTTiqCsPnI8W3IoqM9sXPgb3Z2bjYTL6modz81G8Zy2LR4Fu/5JD1arqNxiTPo
-         3E3hgdF4zZBIWwe2Q3CkvYPssjEyZToQKf10x0buvbAKTc2dfxGC2U3mT6ydYMX2BjKg
-         O6KSSmTiXJ6AjYzGbmaSsboaF4JiFh8dFFoPpMokBvfuAb5m++LJekkXJLNYhLSVtfZR
-         z28VQOxSCE6l4s85iC7g9V2oWClqGsD1c7clN6NimmqidEB3VuxmSkdxyxYDOSWcVp8L
-         uFEg==
-X-Gm-Message-State: APjAAAVaIiS2yP5hC3P5240ly3rf25gB7d0l1EyuelGv4VhR5wi7Py7L
-        8va3R/9+VEkSVQrvKCv0RGmlUQ==
-X-Google-Smtp-Source: APXvYqwzwIZ2p8lX4ACrpomWcq8ueJyK1xSgw+G4qos9cfxnxt+dYC25L1EUvZtrKjyiSeYH5x6a+g==
-X-Received: by 2002:ac8:7545:: with SMTP id b5mr5282235qtr.239.1553206563395;
-        Thu, 21 Mar 2019 15:16:03 -0700 (PDT)
+        bh=PaAiK0DR2sIQWzoKy9Rm5Q9ewZFtpvbkDJA7a+dgNIQ=;
+        b=fmscPUGhRWB2x4RevgsRyNgomJTgr6Ln4hGTL2/1RLgGWiN4ZCPkLk54mzqtL9IqmW
+         kWeeH7gWt1hi0Wc++9ZDmQi03ttZCDw+avsB19ZwGUb7qdxPEbBzytq11NwyfJVk/r0k
+         bQqA/Z8WC1+Zjt/ujRj33TdAY+/6Evb3D1ssMZt2uMnzremYD5fco/2qyyDkPHSbztfO
+         cwLxfFvyOLJZGTS/a9LlZIAKAh9OeXwjg09SpQJ4UcATRAIkdqWnjEP1i2bR4Gt/RD+r
+         NBUfG2aa3QM2JgviLBjFLcBV9VDL+7KlE34bt82nDJ2JzaUrpvuIBYgLtcWb0BFQXpyB
+         rZTQ==
+X-Gm-Message-State: APjAAAX6XxSv8bFxuT/tO2uWDpTjQG345m3vtD4yTPUwaYvn43bnNaib
+        21qzEJwTSxECrHqZVlPN5aW6xg==
+X-Google-Smtp-Source: APXvYqxW8KY5acPBbd3l0z7nMTSHAl2jEQL/aIeaTfianJL+n6xtWTDQ5tXC94y66IRi+2VRm6PqsA==
+X-Received: by 2002:ac8:3202:: with SMTP id x2mr5262310qta.56.1553206564811;
+        Thu, 21 Mar 2019 15:16:04 -0700 (PDT)
 Received: from jcormier-MS-7A93.syr.criticallink.com (static-72-90-70-109.syrcny.fios.verizon.net. [72.90.70.109])
-        by smtp.gmail.com with ESMTPSA id w37sm3895968qtw.27.2019.03.21.15.16.02
+        by smtp.gmail.com with ESMTPSA id w37sm3895968qtw.27.2019.03.21.15.16.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 15:16:02 -0700 (PDT)
+        Thu, 21 Mar 2019 15:16:03 -0700 (PDT)
 From:   "Cormier, Jonathan" <jcormier@criticallink.com>
 To:     Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
 Cc:     Bob Duke <bduke@criticallink.com>,
@@ -69,9 +69,9 @@ Cc:     Bob Duke <bduke@criticallink.com>,
         Jyri Sarha <jsarha@ti.com>,
         Misael Lopez Cruz <misael.lopez@ti.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/7] ASoC: tlv320aic26: Fix regmap by setting reg_defaults and reg_stride
-Date:   Thu, 21 Mar 2019 18:15:47 -0400
-Message-Id: <20190321221549.13765-6-jcormier@criticallink.com>
+Subject: [PATCH v2 6/7] ASoC: tlv320aic26: hw_params was unintentionally clearing AIC26 master mode
+Date:   Thu, 21 Mar 2019 18:15:48 -0400
+Message-Id: <20190321221549.13765-7-jcormier@criticallink.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190321221549.13765-1-jcormier@criticallink.com>
 References: <20190321221549.13765-1-jcormier@criticallink.com>
@@ -82,61 +82,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tlv320aic26 codec wasn't being setup correctly on bootup due to
-a misconfigured regmap cache.
+Commit 5b0959d472c2 ("ASoC: tlv320aic26: Use snd_soc_update_bits()")
+broke setting AIC26_REG_AUDIO_CTRL3 in master mode when fsref happens
+to be 48000. The master mode bit was getting cleared.
 
-Fixes: b7e9f3973279 "ASoC: tlv320aic26: Convert to direct regmap API usage"
+Also fix setting AIC26_REG_DAC_GAIN and AIC26_REG_AUDIO_CTRL2 which
+was broke by same commit.
+
+Fixes 5b0959d472c2 ("ASoC: tlv320aic26: Use snd_soc_update_bits()")
 Signed-off-by: Cormier, Jonathan <jcormier@criticallink.com>
 ---
- sound/soc/codecs/tlv320aic26.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ sound/soc/codecs/tlv320aic26.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/codecs/tlv320aic26.c b/sound/soc/codecs/tlv320aic26.c
-index db1d1704ae5c..cd1bcb9cbfe1 100644
+index cd1bcb9cbfe1..c6ff4ca29d43 100644
 --- a/sound/soc/codecs/tlv320aic26.c
 +++ b/sound/soc/codecs/tlv320aic26.c
-@@ -41,6 +41,27 @@ struct aic26 {
- 	int keyclick_len;
- };
+@@ -138,11 +138,12 @@ static int aic26_hw_params(struct snd_pcm_substream *substream,
+ 	snd_soc_component_write(component, AIC26_REG_PLL_PROG2, reg);
  
-+static const struct reg_default aic26_reg[] = {
-+	/* Page 0 */
-+	{ 0x00A0, 0x0000 }, { 0x00C0, 0x0000 }, { 0x00E0, 0x0000 },
-+	{ 0x0120, 0x0000 }, { 0x0140, 0x0000 },
-+	/* Page 1 */
-+	{ 0x0800, 0x0000 }, { 0x0820, 0x8000 }, { 0x0860, 0x0002 },
-+	{ 0x0880, 0xFFFF },
-+	/* Page 2 */
-+	{ 0x1000, 0x0000 }, { 0x1020, 0x8000 }, { 0x1040, 0xFFFF },
-+	{ 0x1060, 0xC580 }, { 0x1080, 0x4410 }, { 0x10A0, 0xAFC0 },
-+	{ 0x10C0, 0x0000 }, { 0x10E0,  27619 }, { 0x1100, -27034 },
-+	{ 0x1120,  26461 }, { 0x1140,  27619 }, { 0x1160, -27034 },
-+	{ 0x1180,  26461 }, { 0x11A0,  32131 }, { 0x11C0, -31506 },
-+	{ 0x11E0,  32131 }, { 0x1200, -31506 }, { 0x1220,  27619 },
-+	{ 0x1240, -27034 }, { 0x1260,  26461 }, { 0x1280,  27619 },
-+	{ 0x12A0, -27034 }, { 0x12C0,  26461 }, { 0x12E0,  32131 },
-+	{ 0x1300, -31506 }, { 0x1320,  32131 }, { 0x1340, -31506 },
-+	{ 0x1360, 0x1004 }, { 0x1380, 0x0000 }, { 0x13A0, 0x0000 },
-+	{ 0x13C0, 0xFE00 },
-+};
-+
- static const struct snd_soc_dapm_widget tlv320aic26_dapm_widgets[] = {
- SND_SOC_DAPM_INPUT("MICIN"),
- SND_SOC_DAPM_INPUT("AUX"),
-@@ -336,6 +357,13 @@ static const struct snd_soc_component_driver aic26_soc_component_dev = {
- static const struct regmap_config aic26_regmap = {
- 	.reg_bits = 16,
- 	.val_bits = 16,
-+	/* AIC26_PAGE_ADDR(0, 0x01) */
-+	.reg_stride = 0x20,
-+
-+	.max_register = AIC26_REG_AUDIO_CTRL5,
-+	.reg_defaults = aic26_reg,
-+	.num_reg_defaults = ARRAY_SIZE(aic26_reg),
-+	.cache_type = REGCACHE_RBTREE,
- };
+ 	/* Audio Control 3 (master mode, fsref rate) */
++	reg = 0;
+ 	if (aic26->master)
+-		reg = 0x0800;
++		reg |= 0x0800;
+ 	if (fsref == 48000)
+-		reg = 0x2000;
+-	snd_soc_component_update_bits(component, AIC26_REG_AUDIO_CTRL3, 0xf800, reg);
++		reg |= 0x2000;
++	snd_soc_component_update_bits(component, AIC26_REG_AUDIO_CTRL3, 0x2800, reg);
  
- /* ---------------------------------------------------------------------
+ 	/* Audio Control 1 (FSref divisor) */
+ 	reg = wlen | aic26->datfm | (divisor << 3) | divisor;
+@@ -167,7 +168,7 @@ static int aic26_mute(struct snd_soc_dai *dai, int mute)
+ 		reg = 0x8080;
+ 	else
+ 		reg = 0;
+-	snd_soc_component_update_bits(component, AIC26_REG_DAC_GAIN, 0x8000, reg);
++	snd_soc_component_update_bits(component, AIC26_REG_DAC_GAIN, 0x8080, reg);
+ 
+ 	return 0;
+ }
+@@ -302,7 +303,7 @@ static ssize_t aic26_keyclick_set(struct device *dev,
+ 	struct aic26 *aic26 = dev_get_drvdata(dev);
+ 
+ 	snd_soc_component_update_bits(aic26->component, AIC26_REG_AUDIO_CTRL2,
+-			    0x8000, 0x800);
++			    0x8000, 0x8000);
+ 
+ 	return count;
+ }
 -- 
 2.21.0
 
