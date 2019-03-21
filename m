@@ -2,85 +2,129 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E52C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E29EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BF821917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553205673;
-	bh=RqktEUR9yOk0zLZRmahdS+ZsEoiSeEPg4KuUwJHc2WY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1OCKbJ+VCoPPvpzENPDor89kuZTFdG/k1ee/tpFhaWN9Pk5vf5IUSb/els8UrqtdH
-	 GBSLDVP5PkUiOEPdJVSMK9sI4hSLTEBGaGoj85jnz7ygYeUk36ALvQD01UO8NZWwb/
-	 xQMzbQHNXUCeIyuzIzyr1jtexqQH/i9pAAvVkCCw=
+	by mail.kernel.org (Postfix) with ESMTP id 7148A21917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfCUWBL (ORCPT
+        id S1727494AbfCUWBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:01:11 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:54010 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbfCUWBJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:01:09 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 9F11EEF1;
-        Thu, 21 Mar 2019 22:01:07 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 15:01:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [RFC PATCH v2 0/1] improve vmap allocation
-Message-Id: <20190321150106.198f70e1e949e2cb8cc06f1c@linux-foundation.org>
-In-Reply-To: <20190321190327.11813-1-urezki@gmail.com>
-References: <20190321190327.11813-1-urezki@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 21 Mar 2019 18:01:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53200 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727215AbfCUWA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:00:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
+   d="scan'208";a="216357233"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 1157830217F; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     x86@kernel.org
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 02/17] x86, lto: Mark all top level asm statements as .text
+Date:   Thu, 21 Mar 2019 14:59:54 -0700
+Message-Id: <20190321220009.29334-3-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190321220009.29334-1-andi@firstfloor.org>
+References: <20190321220009.29334-1-andi@firstfloor.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 20:03:26 +0100 "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
+From: Andi Kleen <ak@linux.intel.com>
 
-> Hello.
-> 
-> This is the v2 of the https://lkml.org/lkml/2018/10/19/786 rework. Instead of
-> referring you to that link, i will go through it again describing the improved
-> allocation method and provide changes between v1 and v2 in the end.
-> 
-> ...
->
+With gcc 8 toplevel assembler statements that do not mark themselves
+as .text may end up in other sections. I had boot crashes because
+various assembler statements ended up in the middle of the initcall
+section.
 
-> Performance analysis
-> --------------------
+Always mark all the top level assembler statements as text
+so that they switch to the right section.
 
-Impressive numbers.  But this is presumably a worst-case microbenchmark.
+For AMD "vide", which is only used on 32bit kernels, I also
+marked it as 32bit only.
 
-Are you able to describe the benefits which are observed in some
-real-world workload which someone cares about?
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ arch/x86/include/asm/paravirt_types.h | 2 +-
+ arch/x86/kernel/cpu/amd.c             | 5 ++++-
+ arch/x86/kernel/kprobes/core.c        | 1 +
+ arch/x86/lib/error-inject.c           | 1 +
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
-It's a lot of new code. I t looks decent and I'll toss it in there for
-further testing.  Hopefully someone will be able to find the time for a
-detailed review.
-
-Trivial point: the code uses "inline" a lot.  Nowadays gcc cheerfully
-ignores that and does its own thing.  You might want to look at the
-effects of simply deleting all that.  Is the generated code better or
-worse or the same?  If something really needs to be inlined then use
-__always_inline, preferably with a comment explaining why it is there.
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 2474e434a6f7..e246577a643b 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -372,7 +372,7 @@ extern struct paravirt_patch_template pv_ops;
+ 
+ #define DEF_NATIVE(ops, name, code)					\
+ 	__visible extern const char start_##ops##_##name[], end_##ops##_##name[];	\
+-	asm(NATIVE_LABEL("start_", ops, name) code NATIVE_LABEL("end_", ops, name))
++	asm(".text\n\t" NATIVE_LABEL("start_", ops, name) code NATIVE_LABEL("end_", ops, name))
+ 
+ unsigned paravirt_patch_ident_64(void *insnbuf, unsigned len);
+ unsigned paravirt_patch_default(u8 type, void *insnbuf,
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 01004bfb1a1b..fb6a64bd765f 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -82,11 +82,14 @@ static inline int wrmsrl_amd_safe(unsigned msr, unsigned long long val)
+  *	performance at the same time..
+  */
+ 
++#ifdef CONFIG_X86_32
+ extern __visible void vide(void);
+-__asm__(".globl vide\n"
++__asm__(".text\n"
++	".globl vide\n"
+ 	".type vide, @function\n"
+ 	".align 4\n"
+ 	"vide: ret\n");
++#endif
+ 
+ static void init_amd_k5(struct cpuinfo_x86 *c)
+ {
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index a034cb808e7e..31ab91c9c4e9 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -715,6 +715,7 @@ NOKPROBE_SYMBOL(kprobe_int3_handler);
+  * calls trampoline_handler() runs, which calls the kretprobe's handler.
+  */
+ asm(
++	".text\n"
+ 	".global kretprobe_trampoline\n"
+ 	".type kretprobe_trampoline, @function\n"
+ 	"kretprobe_trampoline:\n"
+diff --git a/arch/x86/lib/error-inject.c b/arch/x86/lib/error-inject.c
+index 3cdf06128d13..be5b5fb1598b 100644
+--- a/arch/x86/lib/error-inject.c
++++ b/arch/x86/lib/error-inject.c
+@@ -6,6 +6,7 @@
+ asmlinkage void just_return_func(void);
+ 
+ asm(
++	".text\n"
+ 	".type just_return_func, @function\n"
+ 	".globl just_return_func\n"
+ 	"just_return_func:\n"
+-- 
+2.20.1
 
