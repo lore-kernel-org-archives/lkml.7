@@ -2,167 +2,279 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA28C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FC0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902B7218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88C320850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qrIjZ77m";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YV4A9AA0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqH/wR/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbfCUJsD (ORCPT
+        id S1728321AbfCUJsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:48:03 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:33304 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbfCUJsC (ORCPT
+        Thu, 21 Mar 2019 05:48:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44846 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728221AbfCUJse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:48:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1553161682; x=1584697682;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Q6hXRzC0vGA645ktNicxb3BEemwCUqYLlnUqgkKeibE=;
-  b=qrIjZ77mNl0IvV0w9BjFCptV3Sry+iaZKuudtfrbe+Lr/oH32DM/L+ML
-   MT5obrWDP3nI1NShouQyrbPowLLO2oqtyrcs7WT5qR62AjbnxNIiVi9Pu
-   nFvoVC5LY6SLINrqEbd94b73KtPGM/LM7vn9WmRCrd62YkSCk14CUkSeQ
-   DfIpgKLZD36ewBhWJfOLNtAXI8JBQBvRb82v3ow4slAwBUDVIQKP5OzcC
-   wT3QUcbdluHZ7FIr08A4Sg1jENdBWLQGCDQnRzoOTm4HdHwy34iFLeiae
-   l8V4Gtrzx7t5r8if2sIWXssa3z0WRkmyqHU0Z5YyYMXUWBYk9Pck/+utA
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,252,1549900800"; 
-   d="scan'208";a="105647572"
-Received: from mail-by2nam05lp2053.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.53])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Mar 2019 17:48:01 +0800
+        Thu, 21 Mar 2019 05:48:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i2so3834732pgj.11;
+        Thu, 21 Mar 2019 02:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4LbwOC8XHClkPLqdxM/n9B1nf499u0WZ63uDkO9yh54=;
- b=YV4A9AA0s8p93yLutItilWhmdWe2FfRLk+lLWcH46KyrJH/w49GsXSA+pzspkGgfKrafBOLpzsD6YIh2jacQwhdPYmyCYwUh70BOj2cD2xwpDREq2l182dR76mnqR5PTGpRIUV/8AcN+L92z4oOyesR2YR2Mf8lPsmHPsMB8qa0=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5757.namprd04.prod.outlook.com (20.179.21.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 09:47:59 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::d197:7b59:7e0d:e819]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::d197:7b59:7e0d:e819%4]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 09:47:59 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v2 5/5] RISC-V: Fix memory reservation in setup_bootmem()
-Thread-Topic: [PATCH v2 5/5] RISC-V: Fix memory reservation in setup_bootmem()
-Thread-Index: AQHU38sqoeGxllaIbUykcsHRC35P2A==
-Date:   Thu, 21 Mar 2019 09:47:58 +0000
-Message-ID: <20190321094710.16552-6-anup.patel@wdc.com>
-References: <20190321094710.16552-1-anup.patel@wdc.com>
-In-Reply-To: <20190321094710.16552-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PN1PR0101CA0013.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:e::23) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.18.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 177279ee-b41f-4faa-49d8-08d6ade24d20
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:MN2PR04MB5757;
-x-ms-traffictypediagnostic: MN2PR04MB5757:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB5757890C2563B5CA57C7995B8D420@MN2PR04MB5757.namprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(346002)(136003)(366004)(396003)(189003)(199004)(54906003)(1076003)(68736007)(110136005)(316002)(6436002)(81166006)(2906002)(78486014)(8936002)(5660300002)(25786009)(50226002)(6486002)(52116002)(102836004)(6506007)(36756003)(386003)(26005)(9456002)(186003)(76176011)(97736004)(99286004)(11346002)(446003)(476003)(486006)(2616005)(44832011)(81156014)(105586002)(14454004)(4326008)(72206003)(106356001)(256004)(86362001)(55236004)(6512007)(71190400001)(7736002)(71200400001)(66066001)(3846002)(478600001)(305945005)(6116002)(53936002)(2171002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5757;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Eb3W4JB1Mdxp/nq209Dc01qXKnHHc2l03eOvJOgRGR0M7lys0Ltd1157F1RvBDAC9AYzrGCVEQmypGkFjjOmyvWOVfiNaJGPeSADMNorTlqyu/Y2iztwhIqx+L9C6VnRPaIBCYwY1fckkXIuPhNfVCWGABIPo0v3jsCclR6tgMnJWGW7O8ldX6tXVGaOSqUKIwAHB8+8quGrO/wpputA00DFGT89qpS+ehFzAMXZv7I8n8E4Kq28rAcMOujzQJP/K8QWYcrC8Idhb7KazgAhEHYbc27zMtvbEx5M3CCSc7hGrysrMozt+upOBsEitLaZ1yTwwNg9+bQcalhAsP/YsDOVz9alf9Bbae7LkLloHk9HJNiu+Tj6xaVgRTbLOfIsgppatsWZrz3PqSqR5M3QMYL4sQ4djhJEU9f5sHodBK4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ocz0zB/stkpYS4tUok9BjiTKdDf6L41friGOZWezph0=;
+        b=qqH/wR/y/P7qe80sfNAA+HgENoFmmMyZZop0OcyDPkrJOJMbwPYH1oQnKegboKnc9n
+         YvlgHSEQLCY9aCaYE+Nyo4PW8Z6i6HgBI3YwsSgNoVD7ifmYWFwrF2EAxuiwhcQeKnLC
+         eVop1aiLwJPns+hY2WfPKY0HYx1JTN01PUume3GJhAJ/e9Hn2kn7Rp/mIjMem14ats5D
+         zMAXDpR6fHp3CPQ1VMIFUOF/cNY6JrZnourv3xNFEfHU1YiubZqV4eSJ0b6HiupMTmVc
+         6ztAG/AheXMORB03qLD0a15+iQUfFoUlGSgbXvYsSpaj0MPMo68c1WMF0uUKqRi/2Snc
+         hePg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ocz0zB/stkpYS4tUok9BjiTKdDf6L41friGOZWezph0=;
+        b=iUVJEo+NO1cgPe/MqxGVgHmkHq62mP0QRDzPbKq+SjCyFGNlCVP9oq7q5s4wb+G+Ad
+         XT4DTT5UaRdV2qXg0ZQGutNHzrZ73SfZ29BHc8Gav350EzEiwaR4QxOlDyLrKJIvVO5k
+         JHfahbJpXb5vhUxHcOkWw4CUAWg/r4yws0PFyy0KEiMfvNH48aQiYKiSSXxjKN4jFZUD
+         sPTg07WBl7bB7+4uK2GT+8jZWPccJfomUXpg2FmWgLxsM5zUKARE/7GzBbAqfcdzsPpG
+         dwJi+Hyt8HDNuKlQbq6sCGnPPdUQBJhgb3BDjri3zbAIfyBN58Q/0o+NXMz4vNk2bB4Z
+         UORg==
+X-Gm-Message-State: APjAAAXBKeTamht1g4eqJp25PjtmsTnL9c0xyyE1Cb+ODLj+aNJMFAHs
+        UYldNbED9QhPOvP74Cgd2k58MLGxBHVwdHzDTj0=
+X-Google-Smtp-Source: APXvYqwKmORtw4sM7TuLb635MlZCwJMD1T43grnhHASKRaclgFNJi7V3m008Hb1ZDDLbQJljhfdamPyXhrvy/cj9JnU=
+X-Received: by 2002:a63:2c3:: with SMTP id 186mr2466936pgc.161.1553161713046;
+ Thu, 21 Mar 2019 02:48:33 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 177279ee-b41f-4faa-49d8-08d6ade24d20
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 09:47:58.9921
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5757
+References: <LaQHUFs--3-1@tutanota.com> <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+ <9151d116-958c-9298-9427-fe803a163e9f@redhat.com> <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
+ <CAHp75VcOG9H8u+tZyNN682r7+jsRZi8VoPPZ2uJPch1gNyFgmQ@mail.gmail.com> <220FEDBD-9A71-4C14-A7D6-3850D515865F@canonical.com>
+In-Reply-To: <220FEDBD-9A71-4C14-A7D6-3850D515865F@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 21 Mar 2019 11:48:21 +0200
+Message-ID: <CAHp75VdTMn_v8ag11jo6aYtuiWL4bhvSzCnhaUBtuqSQxxnT_w@mail.gmail.com>
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        hotwater438@tutanota.com, Jiri Kosina <jikos@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the setup_bootmem() reserves memory from RAM start to the
-kernel end. This prevents us from exploring ways to use the RAM below
-(or before) the kernel start hence this patch updates setup_bootmem()
-to only reserve memory from the kernel start to the kernel end.
++Cc: Mario
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
- arch/riscv/mm/init.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Mario, do you have any insights about the issue with touchpad on Dell
+system described below?
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 2e2f2567964c..99b42380d17d 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -18,6 +18,8 @@
- #include <asm/pgtable.h>
- #include <asm/io.h>
-=20
-+extern char _start[];
-+
- static void __init zone_sizes_init(void)
- {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES] =3D { 0, };
-@@ -93,15 +95,17 @@ void __init setup_bootmem(void)
-=20
- 	/* Find the memory region containing the kernel */
- 	for_each_memblock(memory, reg) {
--		phys_addr_t vmlinux_end =3D __pa(_end);
-+		phys_addr_t vmlinux_end =3D __pa(&_end);
-+		phys_addr_t vmlinux_start =3D __pa(&_start);
- 		phys_addr_t end =3D reg->base + reg->size;
-=20
- 		if (reg->base <=3D vmlinux_end && vmlinux_end <=3D end) {
- 			/*
--			 * Reserve from the start of the region to the end of
-+			 * Reserve from the start of the kernel to the end of
- 			 * the kernel
- 			 */
--			memblock_reserve(reg->base, vmlinux_end - reg->base);
-+			memblock_reserve(vmlinux_start,
-+					 vmlinux_end - vmlinux_start);
- 			mem_size =3D min(reg->size, (phys_addr_t)-PAGE_OFFSET);
- 		}
- 	}
-@@ -177,7 +181,6 @@ struct mapping_ops {
-=20
- static inline void *__load_addr(void *ptr, uintptr_t load_pa)
- {
--	extern char _start;
- 	uintptr_t va =3D (uintptr_t)ptr;
- 	uintptr_t sz =3D (uintptr_t)(&_end) - (uintptr_t)(&_start);
-=20
+On Thu, Mar 21, 2019 at 6:08 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> at 01:18, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> > On Wed, Mar 20, 2019 at 6:55 PM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> >> at 23:39, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>> On 3/20/19 3:37 PM, Benjamin Tissoires wrote:
+> >
+> >>> Benjamin, what I find interesting here is that the BOGUS_IRQ quirk
+> >>> is also used on Elan devices, I suspect that these Elan devices
+> >>> likely also need the I2C_HID_QUIRK_FORCE_TRIGGER_FALLING quirk
+> >>> and then they probably will no longer need the bogus IRQ flag,
+> >>> if you know about bugreports with an acpidump for any of the devices
+> >>> needing the bogus IRQ quirk, then I (or you) can check how the IRQ is
+> >>> declared there, I suspect it will be declared as level-low, just like
+> >>> with the laptop this patch was written for. And it probably need to
+> >>> be edge-falling instead of level-low just like this case.
+> >>
+> >> First, I=E2=80=99ve already tried using IRQF_TRIGGER_FALLING, unfortun=
+ately it
+> >> doesn=E2=80=99t solve the issue for me.
+> >>
+> >> I talked to Elan once, and they confirm the correct IRQ trigger is lev=
+el
+> >> low. So forcing falling trigger may break other platforms.
+> >
+> > As far as I understood Vladislav the quirk he got from Elan as well.
+>
+> Ok, then this is really weird.
+>
+> >
+> >> Recently we found that Elan touchpad doesn=E2=80=99t like GpioInt() fr=
+om its _CRS.
+> >> Once the Interrupt() is used instead, the issue goes away.
+> >
+> > IIRC i2c core tries to get interrupt from Interrupt() resource and
+> > then falls back to GpioInt().
+> > See i2c_acpi_get_info() and i2c_device_probe().
+>
+> Here=E2=80=99s its ASL:
+>
+>      Scope (\_SB.PCI0.I2C4)
+>      {
+>          Device (TPD0)
+>          {
+>              Name (_ADR, One)  // _ADR: Address
+>              Name (_HID, "DELL08AE")  // _HID: Hardware ID
+>              Name (_CID, "PNP0C50" /* HID Protocol Device (I2C bus) */)  =
+// _CID: Compatible ID
+>              Name (_UID, One)  // _UID: Unique ID
+>              Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
+>              Name (SBFB, ResourceTemplate ()
+>              {
+>                  I2cSerialBusV2 (0x002C, ControllerInitiated, 0x00061A80,
+>                      AddressingMode7Bit, "\\_SB.PCI0.I2C4",
+>                      0x00, ResourceConsumer, , Exclusive,
+>                      )
+>              })
+>              Name (SBFG, ResourceTemplate ()
+>              {
+>                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0=
+000,
+>                      "\\_SB.GPO1", 0x00, ResourceConsumer, ,
+>                      )
+>                      {   // Pin list
+>                          0x0012
+>                      }
+>              })
+>              Name (SBFI, ResourceTemplate ()
+>              {
+>                  Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive=
+AndWake, ,, )
+>                  {
+>                      0x0000003C,
+>                  }
+>              })
+>              Method (_INI, 0, NotSerialized)  // _INI: Initialize
+>              {
+>              }
+>              Method (_STA, 0, NotSerialized)  // _STA: Status
+>              {
+>                  If ((TCPD =3D=3D One))
+>                  {
+>                      Return (0x0F)
+>                  }
+>
+>                  Return (Zero)
+>              }
+>              Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource S=
+ettings
+>              {
+>                  If ((OSYS < 0x07DC))
+>                  {
+>                      Return (SBFI) /* \_SB_.PCI0.I2C4.TPD0.SBFI */
+>                  }
+>
+>                  Return (ConcatenateResTemplate (SBFB, SBFG))
+>              }
+>              Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Me=
+thod
+>              {
+>                  If ((Arg0 =3D=3D ToUUID ("3cdff6f7-4267-4555-ad05-b30a3d=
+8938de") /* HID I2C Device */))
+>                  {
+>                      If ((Arg2 =3D=3D Zero))
+>                      {
+>                          If ((Arg1 =3D=3D One))
+>                          {
+>                              Return (Buffer (One)
+>                              {
+>                                   0x03                                   =
+          // .
+>                              })
+>                          }
+>                          Else
+>                          {
+>                              Return (Buffer (One)
+>                              {
+>                                   0x00                                   =
+          // .
+>                              })
+>                          }
+>                      }
+>                      ElseIf ((Arg2 =3D=3D One))
+>                      {
+>                          Return (0x20)
+>                      }
+>                      Else
+>                      {
+>                          Return (Buffer (One)
+>                          {
+>                               0x00                                       =
+      // .
+>                          })
+>                      }
+>                  }
+>                  ElseIf ((Arg0 =3D=3D ToUUID ("ef87eb82-f951-46da-84ec-14=
+871ac6f84b")))
+>                  {
+>                      If ((Arg2 =3D=3D Zero))
+>                      {
+>                          If ((Arg1 =3D=3D One))
+>                          {
+>                              Return (Buffer (One)
+>                              {
+>                                   0x03                                   =
+          // .
+>                              })
+>                          }
+>                      }
+>
+>                      If ((Arg2 =3D=3D One))
+>                      {
+>                          Return (ConcatenateResTemplate (SBFB, SBFG))
+>                      }
+>
+>                      Return (Buffer (One)
+>                      {
+>                           0x00                                           =
+  // .
+>                      })
+>                  }
+>                  }
+>                  Else
+>                  {
+>                      Return (Buffer (One)
+>                      {
+>                           0x00                                           =
+  // .
+>                      })
+>                  }
+>              }
+>          }
+>      }
+>
+> Change SBFG to SBFI in its _CRS can workaround the issue.
+> Is ASL in this form possible to do the flow you described?
+>
+> Kai-Heng
+>
+> >
+> >> But I am not sure how to patch its DSDT/SSDT in i2c-hid.
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+>
+>
+
+
 --=20
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
