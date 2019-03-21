@@ -2,90 +2,83 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3DCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30293C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C3F21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30DE21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:10:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xCU6CFsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfCUPJk (ORCPT
+        id S1728449AbfCUPKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:09:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5726 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727881AbfCUPJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:09:40 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C36234C16555B3AA113A;
-        Thu, 21 Mar 2019 23:09:32 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
- 23:09:21 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <jesper.nilsson@axis.com>, <lars.persson@axis.com>,
-        <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@axis.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] pinctrl: artpec6: Make two functions static
-Date:   Thu, 21 Mar 2019 23:09:09 +0800
-Message-ID: <20190321150909.3576-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Thu, 21 Mar 2019 11:10:03 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47246 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727881AbfCUPKD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:10:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1553181001; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=Rvw3eYzR213BH12vsryzVAbYH3MZt38Fuwhwieyydws=;
+        b=xCU6CFsalyF4hn/chR8PjeqgP9jlNDhaHT630EcZ3hiO5zzUZoO/WYqARSnjGUHCu+z+uw
+        hFgirGmcPTu+2kJGDJpLhtH8MXPgEWJnfCXPJfSiL0SQfxkYtZ7tzrNva1t5sbcEmQJd/g
+        v/Tv9IGy9CkvSUryLPE0vnahsfuAJLA=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/3] dt-bindings: usb: Add usb-phy property to the jz4740-musb node
+Date:   Thu, 21 Mar 2019 16:09:54 +0100
+Message-Id: <20190321150956.6629-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
+from devicetree.
 
-Fix sparse warnings:
-
-drivers/pinctrl/pinctrl-artpec6.c:691:5: warning:
- symbol 'artpec6_pmx_enable' was not declared. Should it be static?
-drivers/pinctrl/pinctrl-artpec6.c:705:6: warning:
- symbol 'artpec6_pmx_disable' was not declared. Should it be static?
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pinctrl/pinctrl-artpec6.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
-index d89dc43..e836850 100644
---- a/drivers/pinctrl/pinctrl-artpec6.c
-+++ b/drivers/pinctrl/pinctrl-artpec6.c
-@@ -688,8 +688,9 @@ static void artpec6_pmx_select_func(struct pinctrl_dev *pctldev,
- 	}
- }
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+index 620355cee63f..23213779f193 100644
+--- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+@@ -8,9 +8,15 @@ Required properties:
+ - interrupt-names: must be "mc"
+ - clocks: phandle to the "udc" clock
+ - clock-names: must be "udc"
++- usb-phy: phandle to the USB PHY
  
--int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
--		       unsigned int group)
-+static int artpec6_pmx_enable(struct pinctrl_dev *pctldev,
-+			      unsigned int function,
-+			      unsigned int group)
- {
- 	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+ Example:
  
-@@ -702,8 +703,9 @@ int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
- 	return 0;
- }
++usb_phy: usb-phy@0 {
++	compatible = "usb-nop-xceiv";
++	#phy-cells = <0>;
++};
++
+ udc: usb@13040000 {
+ 	compatible = "ingenic,jz4740-musb";
+ 	reg = <0x13040000 0x10000>;
+@@ -21,4 +27,6 @@ udc: usb@13040000 {
  
--void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
--			 unsigned int group)
-+static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
-+				unsigned int function,
-+				unsigned int group)
- {
- 	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
- 
+ 	clocks = <&cgu JZ4740_CLK_UDC>;
+ 	clock-names = "udc";
++
++	usb-phy = <&usb_phy>;
+ };
 -- 
-2.7.0
-
+2.11.0
 
