@@ -2,148 +2,172 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF47C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD23C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB41218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Stgr0XbK"
+	by mail.kernel.org (Postfix) with ESMTP id 577E2218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfCUAPG (ORCPT
+        id S1727614AbfCUAPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 20:15:06 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39655 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbfCUAPA (ORCPT
+        Wed, 20 Mar 2019 20:15:11 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.172]:48152 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727734AbfCUAPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 20:15:00 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p27so3551560edc.6;
-        Wed, 20 Mar 2019 17:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2gmLGJ4vQN/k7ohWxy1pugeNlW0+fmahjpUGJcf7onA=;
-        b=Stgr0XbKKLDoruo+DsABjsnuLf6ain1AvNNo6ODIY4C03zYFN5XypwKhg2G+ICLVl8
-         MdpnRpqzuCkHPZEDEjaQKRjzw9YPYAdfDasd214Kbwek9zDenV+THZL4GND2jjuNR9I4
-         BrkuUcjtc3WRRIYxhg39JJ8NgwjmR8rMyElUjIDTTvuX0yfHHWFmVfrRBba1MAKd8pN1
-         XT5SvirvjGyIX9vJOe+SoSihcEs3Td5yZl4ALtc6hnrouwqSGFYrGM/i56cgXtWeOIII
-         Pc/TQ10D+8KtxdOdqVnZBnrX155oETtuzq6GsiGfjCoLil13w4K3mCzF8INhnGpYT2FG
-         amCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2gmLGJ4vQN/k7ohWxy1pugeNlW0+fmahjpUGJcf7onA=;
-        b=oPK3qcnDcPjJguWFo9u+jZaAjCKZ+XcvGXl86/RClH16DonaerKeb6NkKJa/TjHsi6
-         KFu2U7p6iEB/AlNHEEuTY+HB7DHo+9r/Ou9ic7HswyDp1Kddv0TD3yzOFMlxGN2gEs8M
-         qE2MuEGNfWZDJHDbRcrDJ9dXdQ+XOOwUUg3GpUBtQS8MYgNpFLw34SSwW6tWGlrlY+PS
-         DlCsAOIhiEZtOBNlukOMox9MT5xdopNZSs9iD4flx7aB8bBdHruZOPsaAR9hvJ0aveOk
-         wPZEuJ4WKNz/X8Py/PqV5mRCtdLUCiCO/fb0+3lBcqA/QcfWUGD2bVAI4s3Sy1Ws9sJs
-         74Xg==
-X-Gm-Message-State: APjAAAVdA5f8jXr/EdBkQO1JRKEbsHuciI/UnTlW/WrAd4+p2u9gu5SC
-        qCA7INK49CRTzAgBLds1BlM=
-X-Google-Smtp-Source: APXvYqx1ASfFSYpHyfhpgM6DZrA2N9rMOFFJG7tJYsGIRPGNIvUm29wNJZaBL3/HM/RKn14POok8IA==
-X-Received: by 2002:a17:906:4e58:: with SMTP id g24mr529326ejw.190.1553127299210;
-        Wed, 20 Mar 2019 17:14:59 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j34sm1107660edb.30.2019.03.20.17.14.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 17:14:58 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/5] drm: rockchip: add fixed screen size DVI-D support for rk3066 hdmi
-Date:   Thu, 21 Mar 2019 01:14:40 +0100
-Message-Id: <20190321001440.31057-6-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190321001440.31057-1-jbx6244@gmail.com>
-References: <20190321001440.31057-1-jbx6244@gmail.com>
+        Wed, 20 Mar 2019 20:15:09 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 24FD02E5B1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:15:09 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6lMThVmQcYTGM6lMThiPCx; Wed, 20 Mar 2019 19:15:09 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.100.204] (port=41960 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h6lMS-001SEo-HF; Wed, 20 Mar 2019 19:15:08 -0500
+Subject: Re: [PATCH] watchdog: alim7101: Mark expected switch fall-through
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190320181658.GA6749@embeddedor>
+ <e041fd69-0cbc-edb8-cc30-037b333e29cc@roeck-us.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <9a839da8-d2ba-a856-16a7-2ed180ca7864@embeddedor.com>
+Date:   Wed, 20 Mar 2019 19:15:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <e041fd69-0cbc-edb8-cc30-037b333e29cc@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.100.204
+X-Source-L: No
+X-Exim-ID: 1h6lMS-001SEo-HF
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.100.204]:41960
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fixed screen size DVI-D support
-for rk3066 hdmi with an extra patch.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- drivers/gpu/drm/rockchip/rk3066_hdmi.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-index ff8f86152..f656da769 100644
---- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-@@ -349,11 +349,12 @@ static int rk3066_hdmi_setup(struct rk3066_hdmi *hdmi,
- 	if (hdmi->hdmi_data.sink_is_hdmi) {
- 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK,
- 			  HDMI_VIDEO_MODE_HDMI);
--		rk3066_hdmi_config_avi(hdmi, mode);
- 	} else {
- 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK, 0);
- 	}
- 
-+	rk3066_hdmi_config_avi(hdmi, mode);
-+
- 	rk3066_hdmi_config_phy(hdmi);
- 
- 	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_E);
-@@ -462,15 +463,26 @@ rk3066_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 		connector_status_connected : connector_status_disconnected;
- }
- 
-+static const struct drm_display_mode edid_cea_modes[] = {
-+	/* 4 - 1280x720@60Hz 16:9 */
-+	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 74250, 1280, 1390,
-+		   1430, 1650, 0, 720, 725, 730, 750, 0,
-+		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-+	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-+};
-+
- static int rk3066_hdmi_connector_get_modes(struct drm_connector *connector)
- {
- 	struct rk3066_hdmi *hdmi = to_rk3066_hdmi(connector);
-+	struct drm_display_mode *mode = NULL;
- 	struct edid *edid;
- 	int ret = 0;
- 
- 	if (!hdmi->ddc)
- 		return 0;
- 
-+	hdmi->hdmi_data.sink_is_hdmi = false;
-+
- 	edid = drm_get_edid(connector, hdmi->ddc);
- 	if (edid) {
- 		hdmi->hdmi_data.sink_is_hdmi = drm_detect_hdmi_monitor(edid);
-@@ -479,6 +491,17 @@ static int rk3066_hdmi_connector_get_modes(struct drm_connector *connector)
- 		kfree(edid);
- 	}
- 
-+	if ((ret == 0) || (hdmi->hdmi_data.sink_is_hdmi == false)) {
-+		hdmi->hdmi_data.sink_is_hdmi = false;
-+
-+		mode = drm_mode_duplicate(hdmi->drm_dev, &edid_cea_modes[0]);
-+		if (!mode)
-+			return ret;
-+		mode->type |= DRM_MODE_TYPE_PREFERRED;
-+		drm_mode_probed_add(connector, mode);
-+		ret++;
-+	}
-+
- 	return ret;
- }
- 
--- 
-2.11.0
+On 3/20/19 7:12 PM, Guenter Roeck wrote:
+> On 3/20/19 11:16 AM, Gustavo A. R. Silva wrote:
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warning:
+>>
+>> drivers/watchdog/alim7101_wdt.c: In function ‘fop_ioctl’:
+>> drivers/watchdog/alim7101_wdt.c:279:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>     wdt_keepalive();
+>>     ^~~~~~~~~~~~~~~
+>> drivers/watchdog/alim7101_wdt.c:282:2: note: here
+>>    case WDIOC_GETTIMEOUT:
+>>    ^~~~
+>>
+>> Notice that, in this particular case, the /* Fall through */
+>> comment is placed at the very bottom of the case statement,
+>> which is what GCC is expecting to find.
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> This patch is part of the ongoing efforts to enabling
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
 
+Thanks, Guenter. :)
+
+--
+Gustavo
+
+>> ---
+>>   drivers/watchdog/alim7101_wdt.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
+>> index 12f7ea62dddd..f5ada07e9202 100644
+>> --- a/drivers/watchdog/alim7101_wdt.c
+>> +++ b/drivers/watchdog/alim7101_wdt.c
+>> @@ -277,8 +277,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>>               return -EINVAL;
+>>           timeout = new_timeout;
+>>           wdt_keepalive();
+>> -        /* Fall through */
+>>       }
+>> +        /* Fall through */
+>>       case WDIOC_GETTIMEOUT:
+>>           return put_user(timeout, p);
+>>       default:
+>>
+> 
