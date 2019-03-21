@@ -2,132 +2,75 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC38C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F572C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90B4218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ik55Wz8u"
+	by mail.kernel.org (Postfix) with ESMTP id 01799218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfCUGAI (ORCPT
+        id S1727614AbfCUGBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 02:00:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:34571 "EHLO pegase1.c-s.fr"
+        Thu, 21 Mar 2019 02:01:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28099 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbfCUGAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 02:00:08 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Px2s3S2VzB09ZN;
-        Thu, 21 Mar 2019 07:00:05 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Ik55Wz8u; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wswbAT7RI93K; Thu, 21 Mar 2019 07:00:05 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Px2s2JGMzB09ZM;
-        Thu, 21 Mar 2019 07:00:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553148005; bh=Iw6NoawQM0GrtLmPpbr42oycLqMZGHJByjvdQTVvx8k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ik55Wz8uVogNzpAewAr4LAyO7zslcDWA8fZoqloH+6Ajl0q30XMPWaervWp6PK/uk
-         Yssm34mYuAayxU3iTtRSdhpMrov7CQZMCxvswDyfI1ZYkuSmmWUnsHAuLTZPeoYolx
-         HXlVJ+tRkOEYTjds6uqLV2gqs9ROmlL2DdZw25Fk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B5708B7CC;
-        Thu, 21 Mar 2019 07:00:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xRVnTIWARwtR; Thu, 21 Mar 2019 07:00:06 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 771D68B74C;
-        Thu, 21 Mar 2019 07:00:05 +0100 (CET)
-Subject: Re: [PATCH] powerpc/highmem: change BUG_ON() to WARN_ON()
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <0365f99ce2b9273e269a241394957cba924f995e.1551951985.git.christophe.leroy@c-s.fr>
- <87va0c23s8.fsf@concordia.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <9048ba12-a014-3ebe-c414-26f87401c758@c-s.fr>
-Date:   Thu, 21 Mar 2019 07:00:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        id S1725923AbfCUGBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 02:01:04 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Mar 2019 23:01:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,251,1549958400"; 
+   d="scan'208";a="124509653"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by orsmga007.jf.intel.com with SMTP; 20 Mar 2019 23:01:00 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 21 Mar 2019 08:00:59 +0200
+Date:   Thu, 21 Mar 2019 08:00:59 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thunderbolt: Fix to check the return value of kmemdup
+Message-ID: <20190321060059.GE3622@lahna.fi.intel.com>
+References: <20190319183834.14503-1-pakki001@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <87va0c23s8.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319183834.14503-1-pakki001@umn.edu>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 21/03/2019 à 06:29, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> In arch/powerpc/mm/highmem.c, BUG_ON() is called only when
->> CONFIG_DEBUG_HIGHMEM is selected, this means the BUG_ON() is
->> not vital and can be replaced by a a WARN_ON
->>
->> At the sametime, use IS_ENABLED() instead of #ifdef to clean a bit.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/mm/highmem.c | 12 ++++--------
->>   1 file changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/powerpc/mm/highmem.c b/arch/powerpc/mm/highmem.c
->> index 82a0e37557a5..b68c9f20fbdf 100644
->> --- a/arch/powerpc/mm/highmem.c
->> +++ b/arch/powerpc/mm/highmem.c
->> @@ -56,7 +54,7 @@ EXPORT_SYMBOL(kmap_atomic_prot);
->>   void __kunmap_atomic(void *kvaddr)
->>   {
->>   	unsigned long vaddr = (unsigned long) kvaddr & PAGE_MASK;
->> -	int type __maybe_unused;
->> +	int type;
+On Tue, Mar 19, 2019 at 01:38:34PM -0500, Aditya Pakki wrote:
+> uuid in add_switch is allocted via kmemdup which can fail. The patch
+> logs the error in such a scenario.
 > 
-> Why don't we move type into the block below.
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  drivers/thunderbolt/icm.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+> index e3fc920af682..8df8057cd79e 100644
+> --- a/drivers/thunderbolt/icm.c
+> +++ b/drivers/thunderbolt/icm.c
+> @@ -473,6 +473,7 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
+>  		goto out;
+>  
+>  	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
+> +	WARN_ONCE(!sw->uuid, "%s: sw->uuid = NULL", __func__);
 
-Yes you're right, when Mathieu introduced the __maybe_unused, I was 
-wrongly thinging that kmap_atomic_idx() was doing something important 
-that had to be done also when DEBUG was not selected, but indeed it does 
-nothing else than returning the type.
+I don't think it is good idea to continue here since uuid is kind of
+needed. Maybe do the same as above (goto out) with a useful error
+message along the lines of "cannot allocate memory for switch" or so.
 
-I'll send a new patch.
-
-Christophe
-
-> 
-> eg:
-> 
->> @@ -66,12 +64,11 @@ void __kunmap_atomic(void *kvaddr)
->>   
-> -  	type = kmap_atomic_idx();
->>   
->> -#ifdef CONFIG_DEBUG_HIGHMEM
->> -	{
->> +	if (IS_ENABLED(CONFIG_DEBUG_HIGHMEM)) {
->    		int type = kmap_atomic_idx();
->>   		unsigned int idx;
->>   
->>   		idx = type + KM_TYPE_NR * smp_processor_id();
->> -		BUG_ON(vaddr != __fix_to_virt(FIX_KMAP_BEGIN + idx));
->> +		WARN_ON(vaddr != __fix_to_virt(FIX_KMAP_BEGIN + idx));
-> 
-> 
-> cheers
-> 
+Remember to use tb_switch_put() in that case.
