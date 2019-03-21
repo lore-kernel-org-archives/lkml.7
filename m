@@ -2,72 +2,59 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDADC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C7BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F8F218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:23:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oTKVpzlK"
+	by mail.kernel.org (Postfix) with ESMTP id 4EDEC218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfCUVXr (ORCPT
+        id S1726998AbfCUV1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:23:47 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:37766 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfCUVXq (ORCPT
+        Thu, 21 Mar 2019 17:27:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43110 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfCUV1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:23:46 -0400
-Received: by mail-wr1-f45.google.com with SMTP id w10so159523wrm.4;
-        Thu, 21 Mar 2019 14:23:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=GlEgjC7rM/FH6ai247TwK0lttdcBNFbYswanrV+V0Pw=;
-        b=oTKVpzlKfMnSuqZlTNnKHZ4INNdhQvAnpRKFzL4pEL9jyxU5goerdpCO84zyqTpe2F
-         M5w+HIhlPtHHxp+peCO9poKWUFdkXYJ8vXw7kdvwSJgb0OpgtNO4xTomppFrCwp4OTCk
-         cdcwOxfEIOymxmIVF0iI1K+ng9XaNuu6GTE6FvbFohLjccAyGbVSg7N4Gjm7Ss90ZMrS
-         /kNtWMNk/WeTMp/LLJX8ylSnFkibW0vTPV2vAx7WX3I0cPX3f5wUvOHWpCKIyTEXdnES
-         I4xZevExF5FBWWt64ad0n6d8phS7VIhGljQ5mnt9BCQiv35uPuzJf57HceeS5Ajhb1iY
-         st7A==
+        Thu, 21 Mar 2019 17:27:34 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so136567wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:27:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
          :mime-version:content-language:content-transfer-encoding;
-        bh=GlEgjC7rM/FH6ai247TwK0lttdcBNFbYswanrV+V0Pw=;
-        b=OvMxCctDt5gm6GptLf+KIYOMwYllci1iahFE+wMGSHjjgKQAbCRYMnHEdkBvTrUqw6
-         eRcfWnQAQOF7QHxG32+kRgNCtKUcHqkV0Xto0VTCMglC3mRa/w/5burZLElKVX4sCKAb
-         P0ufD+NSeZmneadXmQrR723lAVP+/tOO4nOFe8jHN0c5kJl9dEi8LajroqSRHD3tP9B5
-         09YGb3m2l052q/IAQNVfEJ7lVBK2y/3EyERI82sDLFwFcvCLN/j2mtyp57r+ozIgvf5s
-         uJPhKRQd1JKiAJy8o8/ppMOHODwvgkA66wuCpQECEm4iZuKmmqNpRCifd+dw+xDudwDK
-         zrWA==
-X-Gm-Message-State: APjAAAUOWMlStf8doTTs8B777NfO6sflHZSHR0SxFv91dSZScKNI96e1
-        1agGH1Sc7ctCP2GST517Z1o=
-X-Google-Smtp-Source: APXvYqwKmuzeHPUaSiKmDr86bmzepk+dkVNaANnVEg+duOc36OVSfclp2Jd0NREoykOI1wy227TZCQ==
-X-Received: by 2002:adf:cd90:: with SMTP id q16mr3889509wrj.75.1553203424989;
-        Thu, 21 Mar 2019 14:23:44 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bc4:dc00:8497:d0ab:971a:d627? (p200300EA8BC4DC008497D0AB971AD627.dip0.t-ipconnect.de. [2003:ea:8bc4:dc00:8497:d0ab:971a:d627])
-        by smtp.googlemail.com with ESMTPSA id n13sm8806897wrw.67.2019.03.21.14.23.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 14:23:44 -0700 (PDT)
-To:     John Linville <linville@tuxdriver.com>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: New ethtool sub-feature and ethtool-netlink
-Message-ID: <4ecd48b3-92d6-38a1-11db-5c7b6a0ae341@gmail.com>
-Date:   Thu, 21 Mar 2019 22:23:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        bh=Rqm7ac/x/Lallc3QWbJp9N4x7jU0ErblacsYj2QBmhI=;
+        b=UL9LkoanOsIBJliTIkyhLLRxxnSFvPueBTZMay2ZxiAmMLDJ8LxXm0ZxeM4WtfeFmb
+         pNA01aBlttnJijJKTwX84W1e2WWkaUnplm8HGG1RlFSKVvaDR9DV6Lg/lcZqP9c30M/v
+         AbLrxR4XO/1WP93FpUCa2Bwr/nJpcLy37O1e9T3plRp8NxIkvaMri4bSDkj6nhYMv+La
+         4rQCr+zPXW2uY8Xo0KO5OBbOtMR7EzyZQ8yqMaGWM0AuYp/rDHgiiVDAPtyQf6qVKi3t
+         4qcIoAFN3asHODxXq6E3PnHK0t5JjkasTsrtZjhby2IQCwlSLNv8myQnxV/VlVdl3ype
+         RmOg==
+X-Gm-Message-State: APjAAAW8Q+bhDwfyvYuP5rWAQztUmT+M5JAQmefQJtOAK0eICbU9yVPR
+        qt+TRIahTKvBll+x6sNEnWpGYuhfz+U=
+X-Google-Smtp-Source: APXvYqwiWg6Iohg5BJo5XEifNmfI7HEZWCT9HVcJ/VU7ZChAbCcY8XWR89jPnl1QoBc5sXOkBUhsQQ==
+X-Received: by 2002:a5d:63c4:: with SMTP id c4mr3862294wrw.307.1553203651906;
+        Thu, 21 Mar 2019 14:27:31 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (host42-239-dynamic.117-80-r.retail.telecomitalia.it. [80.117.239.42])
+        by smtp.gmail.com with ESMTPSA id w10sm7539967wrn.32.2019.03.21.14.27.30
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 14:27:31 -0700 (PDT)
+To:     linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@sssup.it>,
+        =?UTF-8?Q?R=c3=b4mulo_Silva_de_Oliveira?= 
+        <romulo.deoliveira@ufsc.br>, LKML <linux-kernel@vger.kernel.org>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: BUG-RT: scheduling while in atomic in the watchdog's hrtimer
+Message-ID: <d2eb047a-6c07-e176-aa2a-68a425efd0ae@redhat.com>
+Date:   Thu, 21 Mar 2019 22:27:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
@@ -77,11 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal / John,
+Hi,
 
-I have an ethtool extension in the pipe that adds one more PHY tunable
-sub-feature (for Fast Link Down support). Are smaller extensions still
-ok for ethtool, or IOW: When do you think is ethtool-netlink going to
-be stable enough so that other developers can add features?
+In the 4.19/5.0-rt configured !SMP, the following chain of events can
+take place:
 
-Heiner
+------------------------------ %< -------------------------------------
+smp_apic_timer_interrupt(){
+	hrtimer_interrupt() {
+		__hrtimer_run_queues() {
+			watchdog_timer_fn() {
+				stop_one_cpu_nowait() {
+					#ifdef !CONFIG_SMP
+						schedule_work() {
+							queue_work() {
+								queue_work_on() {
+								/* phew, long, ah!?.... */	
+									local_lock_irqsave() {
+										__local_lock_irqsave() {
+											__local_lock_irq() {
+												spin_lock_irqsave() {
+													rt_spin_lock()...
+														/* from here on you already know...*/
+														/* a lot of } */
+------------------------------ >% -------------------------------------
+
+And this can cause a scheduling while in atomic.
+
+Tracking down, the commit that introduced the stop_one_cpu_nowait()->
+queue_work_on() to the path was:
+
+------------------------------ %< -------------------------------------
+commit 9cf57731b63e37ed995b46690adc604891a9a28f
+Author: Peter Zijlstra 
+Date:   Thu Jun 7 10:52:03 2018 +0200
+
+    watchdog/softlockup: Replace "watchdog/%u" threads with cpu_stop_work
+    
+    Oleg suggested to replace the "watchdog/%u" threads with
+    cpu_stop_work. That removes one thread per CPU while at the same time
+    fixes softlockup vs SCHED_DEADLINE.
+    
+    But more importantly, it does away with the single
+    smpboot_update_cpumask_percpu_thread() user, which allows
+    cleanups/shrinkage of the smpboot interface.
+    
+    Suggested-by: Oleg Nesterov 
+    Signed-off-by: Peter Zijlstra (Intel) 
+    Cc: Linus Torvalds 
+    Cc: Peter Zijlstra 
+    Cc: Thomas Gleixner 
+    Cc: linux-kernel@vger.kernel.org
+    Signed-off-by: Ingo Molnar 
+------------------------------ >% -------------------------------------
+
+Later modified by:
+
+------------------------------ %< -------------------------------------
+commit be45bf5395e0886a93fc816bbe41a008ec2e42e2
+Author: Peter Zijlstra 
+Date:   Fri Jul 13 12:42:08 2018 +0200
+
+    watchdog/softlockup: Fix cpu_stop_queue_work() double-queue bug
+    
+    When scheduling is delayed for longer than the softlockup interrupt
+    period it is possible to double-queue the cpu_stop_work, causing list
+    corruption.
+    
+    Cure this by adding a completion to track the cpu_stop_work's
+    progress.
+    
+    Reported-by: kernel test robot 
+    Tested-by: Rong Chen 
+    Signed-off-by: Peter Zijlstra (Intel) 
+    Cc: Linus Torvalds 
+    Cc: Peter Zijlstra 
+    Cc: Thomas Gleixner 
+    Fixes: 9cf57731b63e ("watchdog/softlockup: Replace "watchdog/%u" threads with cpu_stop_work")
+    Link: http://lkml.kernel.org/r/20180713104208.GW2494@hirez.programming.kicks-ass.net
+    Signed-off-by: Ingo Molnar 
+------------------------------ >% -------------------------------------
+
+I hit it while trying the automata model against the 4.19-rt/5.0-rt 
+kernels.
+
+You can find more about it here:
+http://bristot.me/another-bug-found-with-the-model/
+
+Thanks
+-- Daniel
