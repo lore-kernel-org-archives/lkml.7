@@ -2,106 +2,504 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B37C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1DE218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KaOZitfg"
+	by mail.kernel.org (Postfix) with ESMTP id EFC7821901
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfCUObB (ORCPT
+        id S1728397AbfCUObd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:31:01 -0400
-Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:50085
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726787AbfCUObB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:31:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iXLCcK1JVgwZITKMXToYb89BibY5Di317ob/qimVnnE=;
- b=KaOZitfgsQO+38J+3un70RgXhnmvudYIKpBlylSdO9ysNkt8uV+Nkw4Q22Kf2aXcFNYpStoyRUNmWD5oVFyzYQTKd5u3XgaWisl7ZOO23o6wPrdFOyOGWzVx7u9YP9/IIlP4fV7Wpd+7zlZCuawX02oH/62ZAx3NTCURSqd81Y8=
-Received: from DB6PR0501MB2709.eurprd05.prod.outlook.com (10.172.226.16) by
- DB6PR0501MB2277.eurprd05.prod.outlook.com (10.168.55.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 14:30:55 +0000
-Received: from DB6PR0501MB2709.eurprd05.prod.outlook.com
- ([fe80::e595:dbdf:132d:3ef7]) by DB6PR0501MB2709.eurprd05.prod.outlook.com
- ([fe80::e595:dbdf:132d:3ef7%7]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 14:30:55 +0000
+        Thu, 21 Mar 2019 10:31:33 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52145 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726787AbfCUObc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:31:32 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from junhan@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 21 Mar 2019 16:31:27 +0200
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x2LEVPDQ016027;
+        Thu, 21 Mar 2019 10:31:25 -0400
+Received: (from junhan@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x2LEVPIu021136;
+        Thu, 21 Mar 2019 10:31:25 -0400
 From:   Junhan Zhou <Junhan@mellanox.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
+To:     Borislav Petkov <bp@alien8.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     Liming Sun <lsun@mellanox.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] EDAC, mellanox: Add ECC support for BlueField DDR4
-Thread-Topic: [PATCH v2] EDAC, mellanox: Add ECC support for BlueField DDR4
-Thread-Index: AQHU3bnnCVZsl7M9ekuQKIg4AeI5waYRw3IAgARaC0A=
-Date:   Thu, 21 Mar 2019 14:30:55 +0000
-Message-ID: <DB6PR0501MB270922D61D8F228A31A664CDB3420@DB6PR0501MB2709.eurprd05.prod.outlook.com>
+Cc:     Junhan Zhou <Junhan@mellanox.com>, Liming Sun <lsun@mellanox.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] EDAC, mellanox: Add ECC support for BlueField DDR4
+Date:   Thu, 21 Mar 2019 10:31:07 -0400
+Message-Id: <1553178667-21073-1-git-send-email-Junhan@mellanox.com>
+X-Mailer: git-send-email 2.1.2
+In-Reply-To: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
 References: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
- <1552934340-10103-1-git-send-email-Junhan@mellanox.com>
- <6a56e799-b5fd-8437-6339-9c88acb3bbe5@infradead.org>
-In-Reply-To: <6a56e799-b5fd-8437-6339-9c88acb3bbe5@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db403722-775b-4476-8e4d-08d6ae09d423
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB6PR0501MB2277;
-x-ms-traffictypediagnostic: DB6PR0501MB2277:
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Junhan@mellanox.com; 
-x-microsoft-antispam-prvs: <DB6PR0501MB227797991C20125A20052945B3420@DB6PR0501MB2277.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(346002)(39860400002)(199004)(189003)(6116002)(8676002)(8936002)(81156014)(81166006)(3846002)(6436002)(68736007)(305945005)(74316002)(72206003)(7736002)(106356001)(33656002)(71200400001)(4326008)(53936002)(105586002)(6246003)(54906003)(71190400001)(256004)(110136005)(316002)(99286004)(478600001)(229853002)(97736004)(66066001)(186003)(102836004)(476003)(486006)(25786009)(446003)(2906002)(80792005)(26005)(9686003)(6506007)(55016002)(5660300002)(52536014)(14454004)(11346002)(7696005)(86362001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2277;H:DB6PR0501MB2709.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Rmf9uTQKcUay0ugVlJ6Rq52iE0toNxXh9AvgRMMiVNktzMKdRwlgLng8qQrpDU68Afmhontq6xrcE8JOjZr9jrWkYashIe58oAug8q73bD5w5gtIqXYwCWiahVStvFyirRC7zJiwTHATeevKsLyntgEc+8ivvx3AglOa4I6bdQwfFNca32NWohXf5deQ8zlZuJDkpVyjVcwfWliz8BUoPf4Ou49DzlMvl7xIp3mgRLJHDM/XWKDkxZEyXH5ptYW+hpBVGcCA0p5bdYYAve3UmTM0qLqK0THPwx5/1ykfJKU6k3XYAeJ2R+cJU7irCRswP3yAlxtb4UMp1LjxVFexjSFJ4YC07nO4ebE34RjZUGDGDc+Q4/CVtw3CacgYGLg6B2Unh4Y5matLCJ9eX+WgaYEfemUOdn9TgQ6R0TO98M0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db403722-775b-4476-8e4d-08d6ae09d423
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 14:30:55.4941
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2277
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ICtjb25maWcgRURBQ19CTFVFRklFTEQNCj4gPiArCXRyaXN0YXRlICJNZWxsYW5veCBCbHVl
-RmllbGQgTWVtb3J5IEVDQyINCj4gPiArCWRlcGVuZHMgb24gKE1FTExBTk9YX1BMQVRGT1JNICYm
-IEFSTTY0ICYmIEFDUEkpIHx8DQo+IENPTVBJTEVfVEVTVA0KPiANCj4gSGksDQo+IA0KPiBXaGls
-ZSBJIGFtIGluIGZhdm9yIG9mIHVzaW5nIENPTVBJTEVfVEVTVCB3aGVuZXZlciBwb3NzaWJsZSwg
-SSBkb24ndCBzZWUNCj4gaG93IHRoYXQgaXMgcG9zc2libGUgaGVyZSBpZjoNCj4gDQo+ICMgTUVM
-TEFOT1hfUExBVEZPUk0gaXMgbm90IHNldA0KPiAjIEFSTTY0IGlzIG5vdCBzZXQNCj4gIyBBQ1BJ
-IGlzIG5vdCBzZXQNCj4gQ09NUElMRV9URVNUPXkNCj4gDQo+IENhbiB5b3UgcGxlYXNlIGV4cGxh
-aW4/DQo+IA0KPiBUaGFua3MuDQo+IA0KPiB+UmFuZHkNCg0KR29vZCBwb2ludC4gSSB0cmllZCBj
-b21waWxpbmcgaXQgYWdhaW5zdCB0aGUgeDg2IGFyY2hpdGVjdHVyZSBhbmQgaXQgZmFpbHMgYmVj
-YXVzZSBpdCBjYW4ndCBmaW5kIHRoZSBkZWZpbml0aW9uIGZvciBhcm1fc21jY2Nfc21jKCkuIEJ1
-dCBpdCB3b3VsZCBjb21waWxlIGZvciB0aGUgQVJNNjQgYXJjaGl0ZWN0dXJlIHdpdGggYm90aCBB
-Q1BJIGFuZCBNRUxMQU5PWCBfUExBVEZPUk0gbm90IHNldCwgc28gSSdsbCBjaGFuZ2UgaXQgdG8g
-QVJNNjQgJiYgKChNRUxMQU5PWF9QTEFURk9STSAmJiBBQ1BJKSB8fCBDT01QSUxFX1RFU1QpIGlu
-c3RlYWQuDQpUaGUgZGVwZW5kZW5jeSBvbiBBQ1BJIGlzIGJlY2F1c2Ugb3VyIEJsdWVGaWVsZCBT
-b0MgZmlybXdhcmUgb25seSB1c2VzIEFDUEkgdG8gcGFzcyB0aGUgZGV2aWNlIG1hcHBpbmdzLCBh
-bmQgTUVMTEFOT1hfUExBVEZPUk0gYmVjYXVzZSB0aGlzIGRldmljZSBpcyBvbmx5IHNlZW4gb24g
-dGhlIE1lbGxhbm94IEJsdWVGaWVsZCBTb0Mgc28gaXQgd291bGQgYmUgcG9pbnRsZXNzIHRvIGJl
-IHVzZWQgZWxzZXdoZXJlLCBidXQgdGhlc2UgZG9lc24ndCBwcmV2ZW50IGl0IGZyb20gYmVpbmcg
-Y29tcGlsZWQuDQoNCi1KdW5oYW4NCg==
+Add ECC support for Mellanox BlueField SoC DDR controller.
+This requires SMC to the running Arm Trusted Firmware to report
+what is the current memory configuration.
+
+Signed-off-by: Junhan Zhou <Junhan@mellanox.com>
+---
+ MAINTAINERS                   |   5 +
+ drivers/edac/Kconfig          |   7 +
+ drivers/edac/Makefile         |   1 +
+ drivers/edac/bluefield_edac.c | 396 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 409 insertions(+)
+ create mode 100644 drivers/edac/bluefield_edac.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf7..394d6c9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5539,6 +5539,11 @@ S:	Supported
+ F:	drivers/edac/aspeed_edac.c
+ F:	Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
+ 
++EDAC-BLUEFIELD
++M:	Junhan Zhou <Junhan@mellanox.com>
++S:	Supported
++F:	drivers/edac/bluefield_edac.c
++
+ EDAC-CALXEDA
+ M:	Robert Richter <rric@kernel.org>
+ L:	linux-edac@vger.kernel.org
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 47eb4d1..404d853 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -504,4 +504,11 @@ config EDAC_ASPEED
+ 	  First, ECC must be configured in the bootloader. Then, this driver
+ 	  will expose error counters via the EDAC kernel framework.
+ 
++config EDAC_BLUEFIELD
++	tristate "Mellanox BlueField Memory ECC"
++	depends on ARM64 && ((MELLANOX_PLATFORM && ACPI) || COMPILE_TEST)
++	help
++	  Support for error detection and correction on the
++	  Mellanox BlueField SoCs.
++
+ endif # EDAC
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 89ad4a84..0294a67 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -84,3 +84,4 @@ obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
+ obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
+ obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
+ obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
++obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
+diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
+new file mode 100644
+index 0000000..88f51f7
+--- /dev/null
++++ b/drivers/edac/bluefield_edac.c
+@@ -0,0 +1,396 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Bluefield-specific EDAC driver.
++ *
++ * Copyright (c) 2019 Mellanox Technologies.
++ */
++
++#include <linux/acpi.h>
++#include <linux/arm-smccc.h>
++#include <linux/edac.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include "edac_module.h"
++
++#define DRIVER_NAME		"bluefield-edac"
++
++/*
++ * Mellanox BlueField EMI (External Memory Interface) register definitions.
++ * Registers which have individual bitfields have a union defining the
++ * bitfields following the address define.
++ */
++
++#define MLXBF_EMI_DRAM_ECC_COUNT 0x340
++
++union mlxbf_emi_dram_ecc_count {
++	struct {
++		u32 single_error_count : 16;
++		u32 double_error_count : 16;
++	};
++
++	u32 word;
++};
++
++#define MLXBF_EMI_DRAM_ECC_ERROR 0x348
++
++union mlxbf_emi_dram_ecc_error {
++	struct {
++		u32 dram_ecc_single : 1;
++		u32 __reserved_0    : 15;
++		u32 dram_ecc_double : 1;
++		u32 __reserved_1    : 15;
++	};
++
++	u32 word;
++};
++
++#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT 0x354
++
++union mlxbf_emi_dram_ecc_latch_select {
++	struct {
++		u32 dram_ecc_first : 1;
++		u32 __reserved_0   : 15;
++		u32 edge_sel       : 4;
++		u32 __reserved_1   : 4;
++		u32 start          : 1;
++		u32 __reserved_2   : 7;
++	};
++
++	u32 word;
++};
++
++#define MLXBF_EMI_DRAM_ERR_ADDR_0 0x358
++
++#define MLXBF_EMI_DRAM_ERR_ADDR_1 0x37c
++
++#define MLXBF_EMI_DRAM_SYNDROM 0x35c
++
++union mlxbf_emi_dram_syndrom {
++	struct {
++		u32 derr         : 1;
++		u32 serr         : 1;
++		u32 __reserved_0 : 14;
++		/* ECC syndrome (error bit according to the Hamming code). */
++		u32 syndrom      : 10;
++		u32 __reserved_1 : 6;
++	};
++
++	u32 word;
++};
++
++#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0 0x364
++
++union mlxbf_emi_dram_additional_info_0 {
++	struct {
++		u32 err_bank     : 4;
++		u32 err_lrank    : 2;
++		u32 __reserved_0 : 2;
++		u32 err_prank    : 2;
++		u32 __reserved_1 : 6;
++		u32 err_edge     : 8;
++		u32 __reserved_2 : 8;
++	};
++
++	u32 word;
++};
++
++#define MLXBF_EDAC_DIMM_PER_MC		2
++#define MLXBF_EDAC_ERROR_GRAIN		8
++
++/*
++ * Request MLNX_SIP_GET_DIMM_INFO
++ *
++ * Retrieve information about DIMM on a certain slot.
++ *
++ * Call register usage:
++ * a0: MLNX_SIP_GET_DIMM_INFO
++ * a1: (Memory controller index) << 16 | (Dimm index in memory controller)
++ * a2-7: not used.
++ *
++ * Return status:
++ * a0: dimm_info_smc union defined below describing the DIMM.
++ * a1-3: not used.
++ */
++#define MLNX_SIP_GET_DIMM_INFO		0x82000008
++
++/* Format for the SMC response about the memory information */
++union dimm_info_smc {
++	struct {
++		unsigned long size_GB : 16;
++		unsigned long is_rdimm : 1;
++		unsigned long is_lrdimm : 1;
++		unsigned long is_nvdimm : 1;
++		unsigned long __reserved0 : 2;
++		unsigned long ranks : 3;
++		unsigned long package_X : 8;	/* Bits per memory package */
++		unsigned long __reserved1 : 32;
++	};
++	unsigned long val;
++};
++
++struct bluefield_edac_priv {
++	int dimm_ranks[MLXBF_EDAC_DIMM_PER_MC];
++	void __iomem *emi_base;
++};
++
++static unsigned long smc_call1(unsigned long smc_op, unsigned long smc_arg)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(smc_op, smc_arg, 0, 0, 0, 0, 0, 0, &res);
++
++	return res.a0;
++}
++
++/*
++ * Gather the ECC information from the External Memory Interface registers
++ * and report it to the edac handler.
++ */
++static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
++					int error_cnt,
++					int is_single_ecc)
++{
++	struct bluefield_edac_priv *priv = mci->pvt_info;
++	union mlxbf_emi_dram_additional_info_0 edai0;
++	union mlxbf_emi_dram_ecc_latch_select edels;
++	union mlxbf_emi_dram_syndrom eds;
++	enum hw_event_mc_err_type ecc_type;
++	unsigned long ecc_dimm_addr;
++	int ecc_dimm;
++	u32 edea0;
++	u32 edea1;
++
++	ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
++				   HW_EVENT_ERR_UNCORRECTED;
++
++	/*
++	 * Tell the External Memory Interface to populate the relevant
++	 * registers with information about the last ECC error occurrence.
++	 */
++	edels.word = 0;
++	edels.start = 1;
++	writel(edels.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_LATCH_SELECT);
++
++	/*
++	 * Verify that the ECC reported info in the registers is of the
++	 * same type as the one asked to report. If not, just report the
++	 * error without the detailed information.
++	 */
++	eds.word = readl(priv->emi_base + MLXBF_EMI_DRAM_SYNDROM);
++
++	if ((is_single_ecc && !eds.serr) || (!is_single_ecc && !eds.derr)) {
++		edac_mc_handle_error(ecc_type, mci, error_cnt, 0, 0, 0,
++				     0, 0, -1, mci->ctl_name, "");
++		return;
++	}
++
++	edai0.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ADDITIONAL_INFO_0);
++
++	ecc_dimm = edai0.err_prank >= 2 && priv->dimm_ranks[0] <= 2;
++
++	edea0 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_0);
++	edea1 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_1);
++
++	ecc_dimm_addr = ((unsigned long)edea1 << 32) | edea0;
++
++	edac_mc_handle_error(ecc_type, mci, error_cnt,
++			     ecc_dimm_addr / 0x1000, ecc_dimm_addr & 0xfff,
++			     eds.syndrom, ecc_dimm, 0, 0, mci->ctl_name, "");
++}
++
++static void bluefield_edac_check(struct mem_ctl_info *mci)
++{
++	union mlxbf_emi_dram_ecc_error edee = { .word = 0 };
++	struct bluefield_edac_priv *priv = mci->pvt_info;
++	union mlxbf_emi_dram_ecc_count edec;
++
++	/*
++	 * The memory controller might not be initialized by the firmware
++	 * when there isn't memory, which may lead to bad register readings.
++	 */
++	if (mci->edac_cap == EDAC_FLAG_NONE)
++		return;
++
++	edec.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ECC_COUNT);
++
++	if (edec.single_error_count) {
++		edee.dram_ecc_single = 1;
++
++		bluefield_gather_report_ecc(mci, edec.single_error_count, 1);
++	}
++
++	if (edec.double_error_count) {
++		edee.dram_ecc_double = 1;
++
++		bluefield_gather_report_ecc(mci, edec.double_error_count, 0);
++	}
++
++	/* Write to clear reported errors. */
++	if (edec.word)
++		writel(edee.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_ERROR);
++}
++
++/* Initialize the DIMMs information for the given memory controller. */
++static void bluefield_edac_init_dimms(struct mem_ctl_info *mci)
++{
++	struct bluefield_edac_priv *priv = mci->pvt_info;
++	int mem_ctrl_idx = mci->mc_idx;
++	union dimm_info_smc smc_info;
++	struct dimm_info *dimm;
++	unsigned long smc_arg;
++	int is_empty = 1;
++	int i;
++
++	for (i = 0; i < MLXBF_EDAC_DIMM_PER_MC; i++) {
++		dimm = mci->dimms[i];
++
++		smc_arg = mem_ctrl_idx << 16 | i;
++		smc_info = (union dimm_info_smc) {
++			.val = smc_call1(MLNX_SIP_GET_DIMM_INFO, smc_arg),
++		};
++
++		if (!smc_info.size_GB) {
++			dimm->mtype = MEM_EMPTY;
++			continue;
++		}
++
++		is_empty = 0;
++
++		dimm->edac_mode = EDAC_SECDED;
++
++		if (smc_info.is_nvdimm)
++			dimm->mtype = MEM_NVDIMM;
++		else if (smc_info.is_lrdimm)
++			dimm->mtype = MEM_LRDDR4;
++		else if (smc_info.is_rdimm)
++			dimm->mtype = MEM_RDDR4;
++		else
++			dimm->mtype = MEM_DDR4;
++
++		dimm->nr_pages = smc_info.size_GB * 256 * 1024;
++		dimm->grain = MLXBF_EDAC_ERROR_GRAIN;
++
++		/* Mem controller for BlueField only supports x4, x8 and x16 */
++		if (smc_info.package_X == 4)
++			dimm->dtype = DEV_X4;
++		else if (smc_info.package_X == 8)
++			dimm->dtype = DEV_X8;
++		else if (smc_info.package_X == 16)
++			dimm->dtype = DEV_X16;
++		else
++			dimm->dtype = DEV_UNKNOWN;
++
++		priv->dimm_ranks[i] = smc_info.ranks;
++	}
++
++	if (is_empty)
++		mci->edac_cap = EDAC_FLAG_NONE;
++	else
++		mci->edac_cap = EDAC_FLAG_SECDED;
++}
++
++static int bluefield_edac_mc_probe(struct platform_device *pdev)
++{
++	struct bluefield_edac_priv *priv;
++	struct device *dev = &pdev->dev;
++	struct edac_mc_layer layers[1];
++	struct mem_ctl_info *mci;
++	struct resource *emi_res;
++	unsigned int mc_idx;
++	int rc, ret;
++
++	/* Read the MSS (Memory SubSystem) index from ACPI table. */
++	if (device_property_read_u32(dev, "mss_number", &mc_idx)) {
++		dev_warn(dev, "bf_edac: MSS number unknown\n");
++		return -EINVAL;
++	}
++
++	emi_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!emi_res)
++		return -EINVAL;
++
++	layers[0].type = EDAC_MC_LAYER_SLOT;
++	layers[0].size = MLXBF_EDAC_DIMM_PER_MC;
++	layers[0].is_virt_csrow = true;
++
++	mci = edac_mc_alloc(mc_idx, ARRAY_SIZE(layers), layers, sizeof(*priv));
++	if (!mci)
++		return -ENOMEM;
++
++	priv = mci->pvt_info;
++
++	priv->emi_base = devm_ioremap_resource(dev, emi_res);
++	if (IS_ERR(priv->emi_base)) {
++		dev_err(dev, "failed to map EMI IO resource\n");
++		ret = PTR_ERR(priv->emi_base);
++		goto err;
++	}
++
++	mci->pdev = dev;
++	mci->mtype_cap = MEM_FLAG_DDR4 | MEM_FLAG_RDDR4 |
++			 MEM_FLAG_LRDDR4 | MEM_FLAG_NVDIMM;
++	mci->edac_ctl_cap = EDAC_FLAG_SECDED;
++
++	mci->mod_name = DRIVER_NAME;
++	mci->ctl_name = "BlueField_Memory_Controller";
++	mci->dev_name = dev_name(dev);
++	mci->edac_check = bluefield_edac_check;
++
++	/* Initialize mci with the actual populated DIMM information. */
++	bluefield_edac_init_dimms(mci);
++
++	platform_set_drvdata(pdev, mci);
++
++	/* Register with EDAC core */
++	rc = edac_mc_add_mc(mci);
++	if (rc) {
++		dev_err(dev, "failed to register with EDAC core\n");
++		ret = rc;
++		goto err;
++	}
++
++	/* Only POLL mode supported so far. */
++	edac_op_state = EDAC_OPSTATE_POLL;
++
++	return 0;
++
++err:
++	edac_mc_free(mci);
++
++	return ret;
++
++}
++
++static int bluefield_edac_mc_remove(struct platform_device *pdev)
++{
++	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
++
++	edac_mc_del_mc(&pdev->dev);
++	edac_mc_free(mci);
++
++	return 0;
++}
++
++static const struct acpi_device_id bluefield_mc_acpi_ids[] = {
++	{"MLNXBF08", 0},
++	{}
++};
++
++MODULE_DEVICE_TABLE(acpi, bluefield_mc_acpi_ids);
++
++static struct platform_driver bluefield_edac_mc_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++		.acpi_match_table = bluefield_mc_acpi_ids,
++	},
++	.probe = bluefield_edac_mc_probe,
++	.remove = bluefield_edac_mc_remove,
++};
++
++module_platform_driver(bluefield_edac_mc_driver);
++
++MODULE_DESCRIPTION("Mellanox BlueField memory edac driver");
++MODULE_AUTHOR("Mellanox Technologies");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.2
+
