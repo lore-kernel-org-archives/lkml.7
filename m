@@ -2,198 +2,111 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA661C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD23DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AF2218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A037218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KimGcrND"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="maxJHzBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfCUO3p (ORCPT
+        id S1728249AbfCUOap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:29:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54373 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCUO3O (ORCPT
+        Thu, 21 Mar 2019 10:30:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43166 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfCUOap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:29:14 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LET5PR047537;
-        Thu, 21 Mar 2019 09:29:05 -0500
+        Thu, 21 Mar 2019 10:30:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LEUYSc111619;
+        Thu, 21 Mar 2019 09:30:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553178545;
-        bh=uFi+1SzGXHIF123ig+D8JoF8Hv2kpWsHuTGuksp3bkw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KimGcrNDaUZgrwrXm8jWVMubPfS83kjTf+q35he7dvgHwSgAIBElgxKRotT+pkXxY
-         edQ+EQsVKGsSGK1C4JHW0n+7VkJBEzawKlLAbTni/WibZEFwNEY3AqDhQdLbmq48rL
-         mwOOBcTMVVJ/SlfzpBWsHosEQDkeAfqfFbmHncCI=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LET5Fe025808
+        s=ti-com-17Q1; t=1553178634;
+        bh=lmdj9m3Tlqqujkt2bXVsNqnfozvdSnd5oEb1xpg9pyE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=maxJHzBfRpVmynz1kPQpAS3opnwUjAQ7GQLvXarXpt5aKaRwmbbKXP8Vq5j4n8hAD
+         jVGfsXauSFFFtzjXUVEemzdR44xdPoEHZefmv+nqVwZyzo0Doy2nz7eVeSKpav1YgC
+         7YmZC7mWkGUDfDQejHjIE2/tgXd+ECzNwIcp2DfU=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LEUYnS012665
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 09:29:05 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 21 Mar 2019 09:30:34 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 09:29:04 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 09:30:34 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 09:29:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LET4u5031315;
-        Thu, 21 Mar 2019 09:29:04 -0500
-From:   Dan Murphy <dmurphy@ti.com>
+ Thu, 21 Mar 2019 09:30:33 -0500
+Received: from [172.22.80.91] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LEUXWW001583;
+        Thu, 21 Mar 2019 09:30:33 -0500
+Subject: Re: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <tony@atomide.com>, <lee.jones@linaro.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver references
-Date:   Thu, 21 Mar 2019 09:28:37 -0500
-Message-ID: <20190321142838.22985-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.12.2
-In-Reply-To: <20190321142838.22985-1-dmurphy@ti.com>
+        <linux-leds@vger.kernel.org>
 References: <20190321142838.22985-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8534f562-a7d1-cae5-c944-966f9d4a8089@ti.com>
+Date:   Thu, 21 Mar 2019 09:30:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190321142838.22985-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the LM3532 backlight driver references from the ti-lmu
-code as dedicated driver support is available.
+All
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+On 3/21/19 9:28 AM, Dan Murphy wrote:
+> Add the lm3532 device tree documentation.
+> Remove lm3532 device tree reference from the ti_lmu devicetree
+> documentation.
+> 
+> With the addition of the dedicated lm3532 documentation the device
+> can be removed from the ti_lmu.txt.
+> 
+> The reason for this is that the lm3532 dt documentation now defines
+> the ability to control LED output strings against different control
+> banks or groups multiple strings to be controlled by a single control
+> bank.
+> 
+> Another addition was for ALS lighting control and configuration.  The
+> LM3532 has a feature that can take in the ALS reading from 2 separate
+> ALS devices and adjust the brightness on the strings that are configured
+> to support this feature.
+> 
+> Finally the device specific properties were moved to the parent node as these
+> properties are not control bank configurable.  These include the runtime ramp
+> and the ALS configuration.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v5 - Moved ramping range to below property definition, updated keyboard label -
+> https://lore.kernel.org/patchwork/patch/1050412/
+> 
+<snip>
 
-v5 - No changes - https://lore.kernel.org/patchwork/patch/1050411/
+I missed the v5 in $subject
 
-v4 - No changes - https://lore.kernel.org/patchwork/patch/1050123/
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1049025/
-v2 - Removed LM3532 register definitions from ti-lmu-register - https://lore.kernel.org/patchwork/patch/1048808/
+But this patch set is v5
 
- drivers/mfd/ti-lmu.c                | 11 --------
- include/linux/mfd/ti-lmu-register.h | 44 -----------------------------
- include/linux/mfd/ti-lmu.h          |  1 -
- 3 files changed, 56 deletions(-)
-
-diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
-index 37d0bdb291c3..b06cb908d1aa 100644
---- a/drivers/mfd/ti-lmu.c
-+++ b/drivers/mfd/ti-lmu.c
-@@ -54,14 +54,6 @@ static void ti_lmu_disable_hw(void *data)
- 		gpiod_set_value(lmu->en_gpio, 0);
- }
- 
--static const struct mfd_cell lm3532_devices[] = {
--	{
--		.name          = "ti-lmu-backlight",
--		.id            = LM3532,
--		.of_compatible = "ti,lm3532-backlight",
--	},
--};
--
- #define LM363X_REGULATOR(_id)			\
- {						\
- 	.name          = "lm363x-regulator",	\
-@@ -141,7 +133,6 @@ static const struct ti_lmu_data chip##_data =	\
- 	.max_register = max_reg,		\
- }						\
- 
--TI_LMU_DATA(lm3532, LM3532_MAX_REG);
- TI_LMU_DATA(lm3631, LM3631_MAX_REG);
- TI_LMU_DATA(lm3632, LM3632_MAX_REG);
- TI_LMU_DATA(lm3633, LM3633_MAX_REG);
-@@ -211,7 +202,6 @@ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- }
- 
- static const struct of_device_id ti_lmu_of_match[] = {
--	{ .compatible = "ti,lm3532", .data = &lm3532_data },
- 	{ .compatible = "ti,lm3631", .data = &lm3631_data },
- 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
- 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
-@@ -222,7 +212,6 @@ static const struct of_device_id ti_lmu_of_match[] = {
- MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
- 
- static const struct i2c_device_id ti_lmu_ids[] = {
--	{ "lm3532", LM3532 },
- 	{ "lm3631", LM3631 },
- 	{ "lm3632", LM3632 },
- 	{ "lm3633", LM3633 },
-diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
-index 2125c7c02818..f09510561a55 100644
---- a/include/linux/mfd/ti-lmu-register.h
-+++ b/include/linux/mfd/ti-lmu-register.h
-@@ -15,50 +15,6 @@
- 
- #include <linux/bitops.h>
- 
--/* LM3532 */
--#define LM3532_REG_OUTPUT_CFG			0x10
--#define LM3532_ILED1_CFG_MASK			0x03
--#define LM3532_ILED2_CFG_MASK			0x0C
--#define LM3532_ILED3_CFG_MASK			0x30
--#define LM3532_ILED1_CFG_SHIFT			0
--#define LM3532_ILED2_CFG_SHIFT			2
--#define LM3532_ILED3_CFG_SHIFT			4
--
--#define LM3532_REG_RAMPUP			0x12
--#define LM3532_REG_RAMPDN			LM3532_REG_RAMPUP
--#define LM3532_RAMPUP_MASK			0x07
--#define LM3532_RAMPUP_SHIFT			0
--#define LM3532_RAMPDN_MASK			0x38
--#define LM3532_RAMPDN_SHIFT			3
--
--#define LM3532_REG_ENABLE			0x1D
--
--#define LM3532_REG_PWM_A_CFG			0x13
--#define LM3532_PWM_A_MASK			0x05	/* zone 0 */
--#define LM3532_PWM_ZONE_0			BIT(2)
--
--#define LM3532_REG_PWM_B_CFG			0x14
--#define LM3532_PWM_B_MASK			0x09	/* zone 1 */
--#define LM3532_PWM_ZONE_1			BIT(3)
--
--#define LM3532_REG_PWM_C_CFG			0x15
--#define LM3532_PWM_C_MASK			0x11	/* zone 2 */
--#define LM3532_PWM_ZONE_2			BIT(4)
--
--#define LM3532_REG_ZONE_CFG_A			0x16
--#define LM3532_REG_ZONE_CFG_B			0x18
--#define LM3532_REG_ZONE_CFG_C			0x1A
--#define LM3532_ZONE_MASK			(BIT(2) | BIT(3) | BIT(4))
--#define LM3532_ZONE_0				0
--#define LM3532_ZONE_1				BIT(2)
--#define LM3532_ZONE_2				BIT(3)
--
--#define LM3532_REG_BRT_A			0x70	/* zone 0 */
--#define LM3532_REG_BRT_B			0x76	/* zone 1 */
--#define LM3532_REG_BRT_C			0x7C	/* zone 2 */
--
--#define LM3532_MAX_REG				0x7E
--
- /* LM3631 */
- #define LM3631_REG_DEVCTRL			0x00
- #define LM3631_LCD_EN_MASK			BIT(1)
-diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
-index 1ef51ed36be5..7762c1bce55d 100644
---- a/include/linux/mfd/ti-lmu.h
-+++ b/include/linux/mfd/ti-lmu.h
-@@ -22,7 +22,6 @@
- #define LMU_EVENT_MONITOR_DONE		0x01
- 
- enum ti_lmu_id {
--	LM3532,
- 	LM3631,
- 	LM3632,
- 	LM3633,
+Dan
 -- 
-2.21.0.5.gaeb582a983
-
+------------------
+Dan Murphy
