@@ -2,58 +2,59 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ABFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4DC218CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423D1218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsscLUai"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5/8Bqk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfCUAO5 (ORCPT
+        id S1727745AbfCUAPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 20:14:57 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37944 "EHLO
+        Wed, 20 Mar 2019 20:15:01 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40511 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfCUAO5 (ORCPT
+        with ESMTP id S1727679AbfCUAO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 20:14:57 -0400
-Received: by mail-ed1-f65.google.com with SMTP id q14so3568060edr.5;
-        Wed, 20 Mar 2019 17:14:55 -0700 (PDT)
+        Wed, 20 Mar 2019 20:14:58 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h22so3565216edw.7;
+        Wed, 20 Mar 2019 17:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Mt43KCQtSq+Z0hTpKWdP/GlYFqR1KKeRasY/ohVUwWQ=;
-        b=BsscLUaiouFE8pG1hTBCU5am0SgQhN2ivGtqNZL1Zz44BXq/wQcJV8zlSE3ovT5yvX
-         MlQekwvd9BVx75/s5TW3yE4O76irbPkFDPOD6I8a59WTRKvWWU2CiVZh3g+CU4IRDci9
-         5OF1pHMxEL0eraxrR3uaWWnJ1zk16f53YeZcFBz/24JuyDWBRvN8Qlx453wk/31kRWrx
-         Wtjjr0o328g7rIQ5pH2nnkQW3XobBmutWjh7oyohI9SYR9P+d4E7mfiCeoDVDkpK0MKY
-         cGSTlUdU60DN2bIu+bgW3jeCM4hlN6x4NU/hU66RvoMJG87d2BKI0vb3CQwrNbX3uSLr
-         rWJw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WgnfejoohWcdh8LAG9lSSLEUXDC2hzIwdSjwLa5g5iI=;
+        b=X5/8Bqk0R2CuS7lKySOQguWH2ZW9uuQQNvxSmQ2s+TwtTmosA/ynjQICjSySkFSg+T
+         aBKlaCe0zotysRKOtmNZgUpSHcSg+EKVRGktMAAxcePl0ZisI41djsChJRygzi28Flmt
+         hCYfUtMVqmkGN6qvlOBZnziwR381BH53hcsRP1BNhQ8hTzF8RD2uK5bqfHXVCvYOtlf6
+         B8YZJj7XNjnaPc6mxSkYgYDgZe4xvfQOap+b5t6yJExncrInWBUXBLw+HyHZvZM5kEA5
+         dm0nRtCptUcWk/3an/hcSXCRWlWenoweNaSpGlC4L9BRPrRS0ZwpE9PMsBjBxrBMMlXb
+         VWHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Mt43KCQtSq+Z0hTpKWdP/GlYFqR1KKeRasY/ohVUwWQ=;
-        b=eEcq1OBPR8tQRAce0JzXnGMqYRaXCTcwwN2FQ5cqUUNOlhls3CSbU8h267/givZs2E
-         +F6cNQpfXXTufAkV/KLL1rgVN8UU2Xbu1ODzUtZ92mgn2Ql2FOIdbcUyVjbA88eqI+Ba
-         J9Hz3Wapdp+ZJGShhpYhFPH4mjbt/47URjGAC4K3dwvnctAfZZC7z4HPvFioRm9p92A9
-         F8cCpmufLXi/nTFpw3O03GdbNctI/7VbyyMnFMssLaZdpIzNz5i+kPNxmknNC90CoE0o
-         9Ee64DUoLRA2Cu8BH/TvCztp1OVmvzNOYL2l4DcHYQeDyjFH1E9Uk7y0Na4fksEQeRIy
-         Cqgg==
-X-Gm-Message-State: APjAAAXGu5Ws8pOJWOh1Ir0SDxgdRZE3Vo3mhhQg75qLNiprk1gML+X4
-        YYf+1G43Gambwz7wURlzxRo=
-X-Google-Smtp-Source: APXvYqyZdJKVigVHV+GYKcMElneANHrzCJADLZQAW3/1i1AmmBoCwYGK59wKBrACRf3TY45j57pqTA==
-X-Received: by 2002:a50:926e:: with SMTP id j43mr492698eda.60.1553127294417;
-        Wed, 20 Mar 2019 17:14:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WgnfejoohWcdh8LAG9lSSLEUXDC2hzIwdSjwLa5g5iI=;
+        b=ASUhTLvx5xyMEmWryj+FDnoPsEezmlZB3T+BYqRJfvgzBvd9uNDQESsQgrpmCXQgtd
+         FiXfOtnYDV5MU5g/jGUqCVEUkYhYgXTF+cHIyaH6nq6N+Leu+uq3zT1u0WS5XIni+UYH
+         E005gcMvH6HjsxoTVmrFBB6N4jAyn1YNzpitnjFvZt8StPQcZAJKVcUVOQMcXej3VcpJ
+         QV8gpDfBTkNC0fcIXlpmPHaT4ZrUFetowz5Db9x1r7YwSjbmo0Rd37AUnPIA8h1yxZjv
+         k46DYedmTe3wLxCtAL9v0TCUHXnUAcVf7Zy5pJgFa9SHn+G9xt5oqM6JlY/GSqJH/adv
+         FTzQ==
+X-Gm-Message-State: APjAAAVzJbnugLWG0XiXx3ANqMj8b71QmQrDcP4xgm0ZSk9bFjtjiO1D
+        4bN4P3JITYgXcfErWtmO8I4=
+X-Google-Smtp-Source: APXvYqwcFQYlDPfG8eljpron08J42gxy7am2u5pvLHFSAyHWMSbnrvJY2Yo6GPjwJTM8SEiaX5u1xw==
+X-Received: by 2002:a17:906:4bc8:: with SMTP id x8mr517764ejv.114.1553127296772;
+        Wed, 20 Mar 2019 17:14:56 -0700 (PDT)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j34sm1107660edb.30.2019.03.20.17.14.53
+        by smtp.gmail.com with ESMTPSA id j34sm1107660edb.30.2019.03.20.17.14.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2019 17:14:53 -0700 (PDT)
+        Wed, 20 Mar 2019 17:14:56 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
@@ -61,170 +62,104 @@ Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/5] Enable rk3066 VOP and HDMI for MK808
-Date:   Thu, 21 Mar 2019 01:14:35 +0100
-Message-Id: <20190321001440.31057-1-jbx6244@gmail.com>
+Subject: [PATCH v5 2/5] ARM: dts: rockchip: add rk3066 hdmi nodes
+Date:   Thu, 21 Mar 2019 01:14:37 +0100
+Message-Id: <20190321001440.31057-3-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190321001440.31057-1-jbx6244@gmail.com>
+References: <20190321001440.31057-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For testing only.
+From: Zheng Yang <zhengyang@rock-chips.com>
 
-Version: V5
+This patch adds the hdmi nodes to rk3066.
 
-Title: Enable rk3066 VOP and HDMI for MK808.
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-This patch serie only works in combination with a MK808 TV stick and
-a rk3066 processor. Other boxes and tablets with a rk3066
-need extra software for power management and lcd's.
-
-What does it do:
-
-With these kernel patches a MK808 can show 2 penguins and a console
-on a DVI-D monitor in combination with a framebuffer.
-
-Not tested:
-
-HDMI TV
-HDCP
-DRM
-Xorg
-Display managers
-Android
-etc.
-
-Problems:
-
-DRM functions keep changing every rc.
-With v5.0-rc8 the monitor doesn't blank on poweroff, it freezes
-due to a patch revert some time ago.
-
-  drm/rockchip: shutdown drm subsystem on shutdown
-    https://patchwork.kernel.org/patch/10556151/
-  drm/rockchip: Allow driver to be shutdown on reboot/kexec
-    https://patchwork.kernel.org/patch/10556135/
-  [for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"
-    https://patchwork.kernel.org/patch/10714725/
-
-To get the rk3066 hdmi driver accepted DVI-D support is removed.
-(Fixed screen size support for DVI-D with extra patch.)
-
-HDMI sound not included.
-etc.
-
-///////////////////////////////////////////
-Changes V5:
-
-rockchip,rk3066-hdmi.txt
-  add Reviewed-by tag
-
-rk3066_hdmi.c
-  change order in unbind function
-  add goto err_disable_i2c to rk3066_hdmi_bind function
-  change dev_foobar calls to their DRM_* equivalents
-  remove rk3066_hdmi_i2c_irq function
-  use define constants in rk3066_hdmi_encoder_enable function
-  add comment to rk3066_hdmi_config_phy function
-  small text style changes
-  remove DVI-D support
-  (add DVI-D support with extra patch)
-
-rk3066_hdmi.h
-  add define constants
-
-///////////////////////////////////////////
-Changes V4:
-
-rockchip,rk3066-hdmi.txt
-  change document name
-
-rk3066_hdmi.c
-  add more info in commit message
-  replace deprecated drmP.h include
-  small text style changes
-  explain vic variable
-  remove enc_in_format
-  change lock name
-  change regmap name
-  change cmp name
-  replace hdmi->dev by dev
-  use sentinel
-  use HDMI_VIDEO_VSYNC_OFFSET_SHIFT define
-  remove unused module macros
-  change driver name for dmesg
-
-///////////////////////////////////////////
-Changes V3:
-
-updated to v5.0-rc8
-removed patches that are already added to linux-next
-
-rk3066_hdmi.c
-  removed gpl text
-  small style changes
-  removed unused includes
-  add include for:
-    drm_helper_hpd_irq_event
-    drm_helper_probe_single_connector_modes
-  update drm_hdmi_avi_infoframe_from_display_mode function call
-
-rk3066_hdmi.h
-  removed gpl text
-
-rk3066a.dtsi
-  add extra port for hdmi connector node
-
-rk3066a-mk808.dts
-  add hdmi connector node
-  connect hdmi_out with hdmi_con_in
-
-rk3066-hdmi.txt
-  add extra port for hdmi connector node
-
-///////////////////////////////////////////
-
-# How to make rkfs.cpio
-
-find . | cpio -o --format=newc > ../rkfs.cpio
-
-# How to compile/flash
-
-make menuconfig  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-make -j4  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-
-cp ./arch/arm/boot/zImage ../zImage-dtb
-cat ./arch/arm/boot/dts/rk3066a-mk808.dtb >> ../zImage-dtb
-../tools/rkcrc -k ../zImage-dtb ../mk808.img
-sudo ../tools/rkflashtool w 0x4000 0x8000 < ../mk808.img
-sudo ../tools/rkflashtool b
-
-///////////////////////////////////////////
-
-Johan Jonker (3):
-  ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
-  dt-bindings: display: rockchip: add document for rk3066 hdmi
-  drm: rockchip: add fixed screen size DVI-D support for rk3066 hdmi
-
-Zheng Yang (2):
-  drm: rockchip: introduce rk3066 hdmi
-  ARM: dts: rockchip: add rk3066 hdmi nodes
-
- .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 ++
- arch/arm/boot/dts/rk3066a-mk808.dts                |  29 +
- arch/arm/boot/dts/rk3066a.dtsi                     |  52 ++
- drivers/gpu/drm/rockchip/Kconfig                   |   8 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/rk3066_hdmi.c             | 889 +++++++++++++++++++++
- drivers/gpu/drm/rockchip/rk3066_hdmi.h             | 229 ++++++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
- 9 files changed, 1283 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
- create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.c
- create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.h
-
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 653127a37..9c43b985a 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -80,6 +80,10 @@
+ 		vop0_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			vop0_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_vop0>;
++			};
+ 		};
+ 	};
+ 
+@@ -101,6 +105,44 @@
+ 		vop1_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			vop1_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_vop1>;
++			};
++		};
++	};
++
++	hdmi: hdmi@10116000 {
++		compatible = "rockchip,rk3066-hdmi";
++		reg = <0x10116000 0x2000>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_HDMI>;
++		clock-names = "hclk";
++		power-domains = <&power RK3066_PD_VIO>;
++		rockchip,grf = <&grf>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			hdmi_in: port@0 {
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				hdmi_in_vop0: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vop0_out_hdmi>;
++				};
++				hdmi_in_vop1: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vop1_out_hdmi>;
++				};
++			};
++			hdmi_out: port@1 {
++				reg = <1>;
++			};
+ 		};
+ 	};
+ 
+@@ -415,6 +457,16 @@
+ 			};
+ 		};
+ 
++		hdmi {
++			hdmi_hpd: hdmi-hpd {
++				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++			};
++			hdmii2c_xfer: hdmii2c-xfer {
++				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++						<0 RK_PA2 1 &pcfg_pull_none>;
++			};
++		};
++
+ 		pwm0 {
+ 			pwm0_out: pwm0-out {
+ 				rockchip,pins = <RK_GPIO0 3 RK_FUNC_1 &pcfg_pull_none>;
 -- 
 2.11.0
 
