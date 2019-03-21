@@ -2,134 +2,105 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA204C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A05C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B074921874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4426B2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KL/bUo4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfCUNYW (ORCPT
+        id S1728367AbfCUNYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:24:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51074 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbfCUNYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:24:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 06:24:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,252,1549958400"; 
-   d="scan'208";a="157044589"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 21 Mar 2019 06:24:18 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 21 Mar 2019 15:24:18 +0200
-Date:   Thu, 21 Mar 2019 15:24:18 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex initialisation
-Message-ID: <20190321132418.GE7752@kuha.fi.intel.com>
-References: <20190318174906.10429-1-marc.zyngier@arm.com>
- <20190319114511.GS7752@kuha.fi.intel.com>
- <20190320160708.5f31ff10@why.wild-wind.fr.eu.org>
- <20190320163433.GD7752@kuha.fi.intel.com>
+        Thu, 21 Mar 2019 09:24:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39251 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbfCUNYv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:24:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m13so4579197lfb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 06:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vVJB78a97q468PtC/UfYEkUnsmC+RQqZfVfZT6REWsU=;
+        b=KL/bUo4xyk2D2vqLcNy0Qi3m0chmqoLjW/f8R6A4idG0H8fyP9/X9xEcgKTucYUSqc
+         Hmtky9I+CYOSBt4i7jhIWGW5mJxNP/6Vo8rhPVI0roYmRA/Al14q1GVimBGVvRGpoefF
+         TV1t4jf57aeEUZCDdge3YAJCsDL8GWNUlnSqwWV8JyHvDPq3xuNQhn4Af8bpaBYl9Gii
+         TzROjeMjEFt3q17zivjmkylAzNvHaBJbbYbGSnebrV0OiiEcePwqjeDsT76yvDAwJzcW
+         Vl+zkEz58iIXNxBqb6NC8fsOX83cwGffS3ct/eEv0Qp9a9+7YGmsPrHVsd4mnI0XN+0V
+         B7jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vVJB78a97q468PtC/UfYEkUnsmC+RQqZfVfZT6REWsU=;
+        b=IffJiXAeYk2pa5rXp6VJd9I9+cDOTvbaKj5xhi/Qhl7AmIXuhV6Sqq1phUhsG+pkDb
+         PWC8meEwGJWwOdCLt1IAyROmUh+43JA+1mawIK8B/SsoeOlskKLtaliAAQRLliVmv1i2
+         n3MZSygFTkhGXK99914s81xDdfiJqSZ6PpaMbxJQJ0o7JtM8Uve6llXAuUqp9zEXSkiv
+         W6mbPeVbh9lWFlzqnEsRTH9wryFwBMTWy82WYgRcAI/N1+3rO3ZEbs/phyA4hXPKyaiy
+         Kp6v2I4KtMvAI+EsQ6PRzwFhyS8X/U471n6T5k7KMmNk5VpijC/3+v1OExA1luwbnguo
+         PpVQ==
+X-Gm-Message-State: APjAAAWWc8NobEabAUlXxbC1LMMMJVMYyknR3bbS37xXpT4q19t6yHHz
+        AizTCKUCzSXbDVeN9GJensrofA==
+X-Google-Smtp-Source: APXvYqyS4b49xep5ZC0x78z3Fd3D+FdD97/9DKappeKEBXES1DZvXshK11WirrdczCsE/DsH+YXjeA==
+X-Received: by 2002:a19:a40b:: with SMTP id q11mr2041154lfc.33.1553174689175;
+        Thu, 21 Mar 2019 06:24:49 -0700 (PDT)
+Received: from localhost (c-573670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.87])
+        by smtp.gmail.com with ESMTPSA id m18sm851796ljb.35.2019.03.21.06.24.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 06:24:48 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        matthias.bgg@gmail.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH v2] drivers: ufs: Add missing MODULE_* information
+Date:   Thu, 21 Mar 2019 14:24:44 +0100
+Message-Id: <20190321132444.28659-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320163433.GD7752@kuha.fi.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+When building the ufs-mediatek module the following warning shows up:
 
-On Wed, Mar 20, 2019 at 06:34:33PM +0200, Heikki Krogerus wrote:
-> > > After applying this there was no more "fusb302" debugfs directory, and
-> > > attempt to unload the fusb302 module dead locked. Also, attempt to
-> > > reboot caused this to happen on my GDPWin board after applying the
-> > > patch:
-> > > 
-> > >         BUG: Dentry 0000000012f2a05d{i=149,n=i2c-fusb302}  still in use (1) [unmount of sysfs sysfs]
-> > >         WARNING: CPU: 3 PID: 1639 at fs/dcache.c:1529 umount_check.cold.55+0x2e/0x3a
-> > >         Modules linked in: intel_xhci_usb_role_switch roles pi3usb30532 typec i915 intel_gtt intel_cht_int33fe [last unloaded: tcpm]
-> > >         CPU: 3 PID: 1639 Comm: umount Not tainted 5.1.0-rc1-heikki+ #916
-> > >         Hardware name: Default string Default string/Default string, BIOS 5.11 05/25/2017
-> > >         RIP: 0010:umount_check.cold.55+0x2e/0x3a
-> > >         ...
-> > > 
-> > > Note. Your patch has also a conflict with patches from Hans, I
-> > > think with this one: https://patchwork.kernel.org/patch/10847275/
-> > > I can take care of that, but you can also rebase the next version on
-> > > top of my typec-next branch to solve that problem:
-> > > https://github.com/krohei/linux/commits/typec-next
-> > 
-> > OK, this is very weird. I can't reproduce any of the issues you're
-> > reporting:
-> > 
-> > - the patch applies cleanly on top of typec-next
-> > - removing the fusb302 module works
-> > - I see the debugfs file whenever fsusb302 is inserted
-> > 
-> > Maybe you were trying this on another branch?
-> 
-> No, the branch is correct. Actually, I tested this on top of mainline
-> and linux-next. I saw that happen on both.
-> 
-> On these Intel Cherrytrail based boards like my GDBWin, fusb302 is one
-> of the functions of a weir MFD device (the driver for that device is
-> drivers/platform/x86/intel_cht_int33fe.c). It's entirely possible that
-> we are doing something wrong in that driver, and your patch just makes
-> the problem visible.
-> 
-> I'll continue debugging.
+WARNING: modpost: missing MODULE_LICENSE() in
+  drivers/scsi/ufs/ufs-mediatek.o
 
-I figured out what's the problem. It seems that the driver does not
-probe successfully, which is why I don't see that "fusb302" debugfs
-directory.
+Rework to add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
 
-The reason is that if tcpm_register_port() returns with -EPROBE_DEFER,
-we end up with that rootdir already pointing to something, even though
-the entry is destroyed in that case. So next time the driver is
-probed, that "fusb302" directory does get created as rootdir has a
-value, and debugfs_create_file() fails.
+Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/scsi/ufs/ufs-mediatek.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I think the correct fix is to just initialize the mutex earlier.
-Something like this should work:
-
-diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
-index 261b82900fec..8e43ea27f26d 100644
---- a/drivers/usb/typec/tcpm/fusb302.c
-+++ b/drivers/usb/typec/tcpm/fusb302.c
-@@ -211,7 +211,6 @@ static struct dentry *rootdir;
+diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+index c3b78fc83d3f..5e3bda42ac3b 100644
+--- a/drivers/scsi/ufs/ufs-mediatek.c
++++ b/drivers/scsi/ufs/ufs-mediatek.c
+@@ -364,4 +364,9 @@ static struct platform_driver ufs_mtk_pltform = {
+ 	},
+ };
  
- static void fusb302_debugfs_init(struct fusb302_chip *chip)
- {
--       mutex_init(&chip->logbuffer_lock);
-        if (!rootdir)
-                rootdir = debugfs_create_dir("fusb302", NULL);
- 
-@@ -1667,6 +1666,7 @@ static int fusb302_probe(struct i2c_client *client,
-        chip->tcpc_config = fusb302_tcpc_config;
-        chip->tcpc_dev.config = &chip->tcpc_config;
-        mutex_init(&chip->lock);
-+       mutex_init(&chip->logbuffer_lock);
- 
-        chip->tcpc_dev.fwnode =
-                device_get_named_child_node(dev, "connector");
-
-thanks,
-
++MODULE_AUTHOR("Stanley Chu <stanley.chu@mediatek.com>");
++MODULE_AUTHOR("Peter Wang <peter.wang@mediatek.com>");
++MODULE_DESCRIPTION("MediaTek UFS Host Driver");
++MODULE_LICENSE("GPL v2");
++
+ module_platform_driver(ufs_mtk_pltform);
 -- 
-heikki
+2.20.1
+
