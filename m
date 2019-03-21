@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2EEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE0E20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AEE20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/NI9+8v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9UAp7PF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfCUH5z (ORCPT
+        id S1727969AbfCUH5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:57:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41971 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727980AbfCUH5w (ORCPT
+        Thu, 21 Mar 2019 03:57:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41965 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUH5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:57:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d25so3775001pfn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:51 -0700 (PDT)
+        Thu, 21 Mar 2019 03:57:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d25so3774879pfn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mpKILmLRkyNwBst3MsqugK5h65K37vdubXnA/ns4PoM=;
-        b=M/NI9+8v39ow0TZH8xSP79FRm2TCA3ZtbzCo9sItS+/rua97VBuYYRn06QX69qI9/A
-         nrtrEOpl7DC7zWR7UL+FVh9FU/Bq/Met5BTX+0Grsy9xdHJCPeAVBhIpdsc53jFLcSG3
-         lVu6CMFUQaGWgpdFvhCnLKfa4wJxIvqp9GRu0zBUP7kX71sxto3kJNBEHcILKrNKRB2L
-         w6OmIhmIq+nAtIYNRz86tB+r/Q0+ilpIvmqpAO0UheqTDvUK5pqfZ8mV8VsNw1k7qb1F
-         N05PNGQJ1Gp/R2HhHmOpl046FUh86Ts88Dn2fHKM2s/SreqBCpOIJy/V9T3W4xenJihK
-         t8wQ==
+        bh=gN4E+RszNdEs/XGGnrMCPOEE0TDaBFxJ5QKjz55XENw=;
+        b=f9UAp7PFPQW52C7cNsKn37V96Rc83XvkHGMziOJI/zL+jYEAMJ4v+Q0mX/wg+XU+qu
+         LOVW1zPwsOggPCVm0wIv3LGKGyaTd6/ugkYuogQefXHgrwQaRsDK7147QWNL+oQ2Aq9j
+         pPHtmJD/himtwDe2wKm/p3qxNevO2/1j4XShSIDhIE6LhaN/Iin43I+qXJk8ayPFK3OA
+         BhkbY3sfXfi4VY+6Ig2oqB0sFrTXvk3YeqfDc/WSko8BdBR/xcQNnOdd0SKxZf3nxI6l
+         9mwSJRpOOK1aOK986An/H07st67pHQ9NgTTNPen6q7ZA8SAqKiqIdfEZdiEMcbx3iQNW
+         W3vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mpKILmLRkyNwBst3MsqugK5h65K37vdubXnA/ns4PoM=;
-        b=PHSFIdPyaDTWAq7Q5ZkQpXJhiH/Hp7e96f/W+7d5cnLZNSatc28XC3R/FpYvntSU5D
-         kObca1IKxBcuhzCVbN4Y33bm59i01gh5VK1vzHhW0+zUlz8O7IKqzx093sVu6rMD/i5Z
-         IpHRJWFfC6IS8eFUKsGaE5Xh9OgETbmLRifbGhbjXN9TordW5bgdmebmRZT79Q1UygUl
-         ZqxvIUsx8RLeKLJvZbzYZScYXRZmgamwyWjR8mZyDrGJlumCBaZkt1DUHTMdTV9IAesf
-         rtQJt0RAmkpEHML9TghMPBiZPv9CVsP+5mpYc75Uo4ppvWW6noaO/IDLpLOJ/AOOBBc5
-         9u0Q==
-X-Gm-Message-State: APjAAAWVl5RZ12T1oCTwyIPtIpAz/kZf3fZtQP/Av56MNvh0Xu8ezbun
-        APg1W/zSf6IcusDqXWQfobCCo8LI+/hCRw==
-X-Google-Smtp-Source: APXvYqxLZKHvyP5NVlaKhLC4GnlnsUo/wGO8lhU8b0iPCHfZxsA3cr/buBjo+YWugdq6lVXsznvYUQ==
-X-Received: by 2002:a17:902:848c:: with SMTP id c12mr2144808plo.207.1553155071464;
-        Thu, 21 Mar 2019 00:57:51 -0700 (PDT)
+        bh=gN4E+RszNdEs/XGGnrMCPOEE0TDaBFxJ5QKjz55XENw=;
+        b=Uc+DpuU3+Ubz2vzoXKajEdOMr7WwFV4CMnu2LfOVgcOlwiaUlyo51FA+0n+nOZhVQD
+         ls9QFF3N7KgMwB28QZjOC8hvKfesF2UNbpetaoqzyczl8lTQZ/14x0H7YwcCzRuHRn9M
+         K9swsCPXrg3IfwhdpIq3IhQKKnK7nd13r/PWyjhBsbTnPRU4QH1Wbn//ASh5FE94T3Ul
+         XVB1bgsWd8cCHSRKxt0t774nylJGlte+WuMKmDVAqdRwaPm2PyBPD07LTjc8BOYNDuqR
+         f3PtwNvgMGTNtFPrIWm+Mi54EEkmHPPodg/u4uk78BMj3vWaaawooY++ogISDJIHlFq3
+         wk/w==
+X-Gm-Message-State: APjAAAWY+iDE19fBGCqrpOGux4bOgbA5vQHADXt2J9qLPq30pVt6sHHX
+        masy9228QsjoaW8ca0D0hlA=
+X-Google-Smtp-Source: APXvYqwo+Vf4lYvqutm/4AprSJDT0H/rmnS6fV8Z293XFGH+fB6VpJCKR+fJjnxyKel2yEh+g0yuMg==
+X-Received: by 2002:a62:f94b:: with SMTP id g11mr2026623pfm.199.1553155065325;
+        Thu, 21 Mar 2019 00:57:45 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.48
+        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 00:57:51 -0700 (PDT)
+        Thu, 21 Mar 2019 00:57:44 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com,
         linux-kernel@vger.kernel.org, joe@perches.com,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 06/18] locking/lockdep: Update obsolete struct field description
-Date:   Thu, 21 Mar 2019 15:57:13 +0800
-Message-Id: <20190321075725.14054-7-duyuyang@gmail.com>
+Subject: [PATCH v3 04/18] locking/lockdep: Remove useless conditional macro
+Date:   Thu, 21 Mar 2019 15:57:11 +0800
+Message-Id: <20190321075725.14054-5-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 In-Reply-To: <20190321075725.14054-1-duyuyang@gmail.com>
 References: <20190321075725.14054-1-duyuyang@gmail.com>
@@ -71,37 +71,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lock_chain struct definition has outdated comment, update it and add
-struct member description.
+Since #defined(CONFIG_PROVE_LOCKING) is used in the scope of #ifdef
+CONFIG_PROVE_LOCKING, it can be removed.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- include/linux/lockdep.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 79c3873..37706ad 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -199,10 +199,16 @@ struct lock_list {
- };
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index db0473d..eeea722 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1678,7 +1678,7 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	return result;
+ }
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#if defined(CONFIG_TRACE_IRQFLAGS)
+ /*
+  * Forwards and backwards subgraph searching, for the purposes of
+  * proving that two subgraphs can be connected by a new dependency
+@@ -2056,7 +2056,7 @@ static inline void inc_chains(void)
+ 	nr_process_chains++;
+ }
+ 
+-#endif
++#endif /* CONFIG_TRACE_IRQFLAGS */
+ 
+ static void
+ print_deadlock_scenario(struct held_lock *nxt, struct held_lock *prv)
+@@ -2738,7 +2738,7 @@ static inline int validate_chain(struct task_struct *curr,
+ {
+ 	return 1;
+ }
+-#endif
++#endif /* CONFIG_PROVE_LOCKING */
  
  /*
-- * We record lock dependency chains, so that we can cache them:
-+ * struct lock_chain - we record lock dependency chains so that we can cache them
-+ *
-+ * @irq_context: the same as irq_context in held_lock below
-+ * @depth:       the number of held locks in this chain
-+ * @base:        the index in chain_hlocks for this chain
-+ * @entry:       the collided lock chains in lock_chain hash list
-+ * @chain_key:   the hash key of this lock_chain
-  */
- struct lock_chain {
--	/* see BUILD_BUG_ON()s in lookup_chain_cache() */
-+	/* see BUILD_BUG_ON()s in add_chain_cache() */
- 	unsigned int			irq_context :  2,
- 					depth       :  6,
- 					base	    : 24;
+  * We are building curr_chain_key incrementally, so double-check
 -- 
 1.8.3.1
 
