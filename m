@@ -2,93 +2,78 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF08C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A49218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4915218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfCUBmS (ORCPT
+        id S1727789AbfCUBn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:42:18 -0400
-Received: from goldenrod.birch.relay.mailchannels.net ([23.83.209.74]:10330
-        "EHLO goldenrod.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726753AbfCUBmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:42:17 -0400
-X-Sender-Id: techassets|x-authuser|alec@onelabs.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 0A30A5E0F8F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 01:35:14 +0000 (UTC)
-Received: from cp11.deluxehosting.com (100-96-2-14.trex.outbound.svc.cluster.local [100.96.2.14])
-        (Authenticated sender: techassets)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 9FF6F5E05A7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 01:35:13 +0000 (UTC)
-X-Sender-Id: techassets|x-authuser|alec@onelabs.com
-Received: from cp11.deluxehosting.com ([TEMPUNAVAIL]. [207.55.242.133])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.2);
-        Thu, 21 Mar 2019 01:35:13 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: techassets|x-authuser|alec@onelabs.com
-X-MailChannels-Auth-Id: techassets
-X-Stop-Tangy: 40bd2b5a43167921_1553132113870_1464541724
-X-MC-Loop-Signature: 1553132113870:849446948
-X-MC-Ingress-Time: 1553132113869
-Received: from [::1] (port=44060 helo=cp11.deluxehosting.com)
-        by cp11.deluxehosting.com with esmtpa (Exim 4.91)
-        (envelope-from <alec@onelabs.com>)
-        id 1h6mbs-0005KU-9n
-        for linux-kernel@vger.kernel.org; Wed, 20 Mar 2019 21:35:08 -0400
+        Wed, 20 Mar 2019 21:43:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5725 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727043AbfCUBn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 21:43:28 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C09EFBBB4A8A93A6CDF4;
+        Thu, 21 Mar 2019 09:43:26 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
+ 09:43:17 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <ckeepax@opensource.cirrus.com>, <rf@opensource.cirrus.com>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <patches@opensource.cirrus.com>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: wm_adsp: Make some variables static
+Date:   Thu, 21 Mar 2019 09:43:14 +0800
+Message-ID: <20190321014314.17960-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Mar 2019 20:35:08 -0500
-From:   Alec Ari <alec@onelabs.com>
-To:     linux-kernel@vger.kernel.org
-Subject: drm/Kconfig: Remove selection of BACKLIGHT_* options for DRM_RADEON
-Organization: ONE Labs
-Message-ID: <7566f65c2972f6e4a03991650778277c@onelabs.com>
-X-Sender: alec@onelabs.com
-User-Agent: Roundcube Webmail/1.3.7
-X-AuthUser: alec@onelabs.com
-X-Originating-IP: ::1
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- From e38df43127fd9a5db167f5873aee882b60f63f37 Mon Sep 17 00:00:00 2001
- From: Alec Ari <alec@onelabs.com>
-Date: Wed, 20 Mar 2019 20:19:48 -0500
-Subject: drm/Kconfig: Remove selection of BACKLIGHT_* options for 
-DRM_RADEON
+From: YueHaibing <yuehaibing@huawei.com>
 
-Backlight support is not required for base DRM_RADEON
-functionality. Tested on Acer Aspire One w/ Radeon HD 6290.
+Fix sparse warnings:
 
-Signed-off-by: Alec Ari <alec@onelabs.com>
+sound/soc/codecs/wm_adsp.c:309:20: warning: symbol 'wm_adsp1_ops' was not declared. Should it be static?
+sound/soc/codecs/wm_adsp.c:310:20: warning: symbol 'wm_adsp2_ops' was not declared. Should it be static?
+sound/soc/codecs/wm_adsp.c:311:20: warning: symbol 'wm_halo_ops' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-  drivers/gpu/drm/Kconfig | 2 --
-  1 file changed, 2 deletions(-)
+ sound/soc/codecs/wm_adsp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index bd943a71756c..16dd978bd74e 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -193,8 +193,6 @@ config DRM_RADEON
-          select DRM_TTM
-  	select POWER_SUPPLY
-  	select HWMON
--	select BACKLIGHT_CLASS_DEVICE
--	select BACKLIGHT_LCD_SUPPORT
-  	select INTERVAL_TREE
-  	help
-  	  Choose this option if you have an ATI Radeon graphics card.  There
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 644aaf1..4ed587f 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -306,9 +306,9 @@
+ #define HALO_MPU_VIO_ERR_SRC_MASK           0x00007fff
+ #define HALO_MPU_VIO_ERR_SRC_SHIFT                   0
+ 
+-struct wm_adsp_ops wm_adsp1_ops;
+-struct wm_adsp_ops wm_adsp2_ops[];
+-struct wm_adsp_ops wm_halo_ops;
++static struct wm_adsp_ops wm_adsp1_ops;
++static struct wm_adsp_ops wm_adsp2_ops[];
++static struct wm_adsp_ops wm_halo_ops;
+ 
+ struct wm_adsp_buf {
+ 	struct list_head list;
 -- 
-2.20.1
+2.7.0
+
+
