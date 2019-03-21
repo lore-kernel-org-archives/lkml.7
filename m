@@ -7,137 +7,101 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC419C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F8CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE7521874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86B021915
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="0A8vzPEr"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="nmSiY12D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfCUMBA (ORCPT
+        id S1728049AbfCUMBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:01:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44465 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUMA7 (ORCPT
+        Thu, 21 Mar 2019 08:01:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32841 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUMBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:00:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i2so4033770pgj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 05:00:59 -0700 (PDT)
+        Thu, 21 Mar 2019 08:01:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b12so4077377pgk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 05:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=TscW1eDX80dzlSVeGXE1WWMUcyOADw0SvtB+O9khGMQ=;
-        b=0A8vzPErvtsHTyZpIZOcm7t5CSLyYEN1MrQmGw+my7pbso/LD98Mzm+gG3hijuE0Ad
-         xBjRVuCFAp38YSaGjpIpX6Th14vI3U6enrC58VuhYSGU5xnt6qbfBgmHCbLkrgvHiLaP
-         R0o3pBGKn00jA7qgW84wmmjWvWG6B2a1c+vUjeAMpKK9cYng9bLujL8QCeJYu8q4LwhO
-         uh9bdC2ln7+4iM5vhHpDs2cp44qTk4hu7WwrwgL9FGB03pEHXCcEMgN8QUik9O3g2VoR
-         tPM9kmxKiahhSC8X4LtrJP3jTApy01J+AA4IyN3kOQCVzpIf8RhpDOSNO6xydU01LHyC
-         UDYA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=TR/Ou2zwfjvvN7Sy4bS1OUimm20DLap/4ewGftvK3nM=;
+        b=nmSiY12D/RMMzIR/7A/c5V9B6nlV7ego7SS6xnYBYJLdaQTAy8a41LQXntcRdFuhi2
+         mCAzu4LTgsWlx2qmroMf/U42blSN7GvXkmZIUacJiejyQRpmE26YB8uLnxLA4SNjw8OB
+         pPs1OSjSwpMhDqM3PUjirhZXHriJy0s5PIeFsB5oq+Kpr1ERBEchEYjSoYNBdfHsrnL6
+         eaEiX8i8QQFhndHLauaHoNzvY67fCKOa5m3JgCCw1fMJbB4LiKVK0tyzPFvmwsyiMrka
+         G7gRSniqPldlaotr5EXYN8Rm6gCcnXp9sfgmvr+J4n/zIK5GGV8HNVl35v3GrP4V33yI
+         yB0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TscW1eDX80dzlSVeGXE1WWMUcyOADw0SvtB+O9khGMQ=;
-        b=ffAftiTsrBRYHcI0gQQmh/clMJ1K9I6Bjg/Dx7zllsygx6kkEByEaiUokpqPIAq9gL
-         C6u6AJsdT7KyuLY1w4oueLkOSg+Yu+7PyfpGbH5i3VIo695gprGZpW6Yq0pwUtyQnkl3
-         v2IMuIrYEchAIrOtA4/4ysbh8ZPTXR54xC71BdI07uMCLpoIl42Q4yILxnyaA6IoOIsO
-         fcwNrmL900X9wJhz/bRc7+uincb/A0wtdW1bcnznS5n7Cruc8AqU7+CEcnmgcI5pYhLH
-         gvpgOScoTvTRSqi4zUFUqHpSYBqDyiu23Yj3x1kJO03OFjZBnbuuj9DfgtIuHcEUMOs+
-         5Utw==
-X-Gm-Message-State: APjAAAV+Su1jOFRgVZy/26kUBHBsCFhGy5+GB32/5/MCPk2uqaTwKUXt
-        0PfQqvymDgXnssHrFV9c8QLbHw==
-X-Google-Smtp-Source: APXvYqzZRKYbHN1qzSJy41APX0hOSl++HWuDw2mJm/JtOs5LPpCqrWUBwjuxiJTJcVwAI0TCcRa3DQ==
-X-Received: by 2002:a65:5c49:: with SMTP id v9mr3028275pgr.150.1553169658290;
-        Thu, 21 Mar 2019 05:00:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=TR/Ou2zwfjvvN7Sy4bS1OUimm20DLap/4ewGftvK3nM=;
+        b=FdTnhjxLwbHUap/Q5UPqLNKNpQ7LQo18eScH6ac3A3lTmamKoPtbHEMi8hHtocRTYS
+         2R1O7qTbUF6bEbQA4I0UeslxOSAJU+3Cmw/cp59P2DHKHhnyX80AgbuDJd3qRjlyhtdf
+         +N0zw346jvHBfqxNfEQd9HIGOdknCeM1bf8a35hPvais3Uzt09xn2He8S0g6vX58vPut
+         bSGlE6yl+Ts3QCNTFyDn6JistQsN813Y42Alpg4jnJH9m7q2bYXa90K6FLZtqQzomMRU
+         Dt1u+wupLb5MUiWp94CIlx1xt2UKWwm5+KimywouvIHN+FVvffEHTaG/n52RXaJWoufr
+         2CzA==
+X-Gm-Message-State: APjAAAXeWW6zZOcSv4ecJ6/e4QgVtdcVPQH0hAY8K1V6BndZ/4l28p7+
+        W18rBYhBkCS3Ki6r2KmBb7h+Bg==
+X-Google-Smtp-Source: APXvYqyjV1uHTfKdOyoS+oGfTnOjZ7QFJSLEX2snSFDammqccQE4E1n/RZt5zlJCCGSIJqivVSXrMw==
+X-Received: by 2002:a62:3347:: with SMTP id z68mr2999682pfz.76.1553169661986;
+        Thu, 21 Mar 2019 05:01:01 -0700 (PDT)
 Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
-        by smtp.gmail.com with ESMTPSA id 71sm8256258pgc.23.2019.03.21.05.00.54
+        by smtp.gmail.com with ESMTPSA id 71sm8256258pgc.23.2019.03.21.05.00.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 05:00:57 -0700 (PDT)
+        Thu, 21 Mar 2019 05:01:01 -0700 (PDT)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Venkat Reddy Talla <vreddytalla@nvidia.com>,
         Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 1/2] regulator: tps65132: Remove unneeded fields from struct tps65132_regulator
-Date:   Thu, 21 Mar 2019 20:00:37 +0800
-Message-Id: <20190321120038.12013-1-axel.lin@ingics.com>
+Subject: [PATCH 2/2] regulator: tps65132: Constify tps65132_regulator_ops and tps_regs_desc
+Date:   Thu, 21 Mar 2019 20:00:38 +0800
+Message-Id: <20190321120038.12013-2-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190321120038.12013-1-axel.lin@ingics.com>
+References: <20190321120038.12013-1-axel.lin@ingics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These fields are not really need, remove them.
+The tps65132_regulator_ops and tps_regs_desc never need to be modified,
+make them const so compiler can put them to .rodata.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/tps65132-regulator.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+ drivers/regulator/tps65132-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/regulator/tps65132-regulator.c b/drivers/regulator/tps65132-regulator.c
-index 73978dd440f7..1f627e161b99 100644
+index 1f627e161b99..6e22f5ebba2e 100644
 --- a/drivers/regulator/tps65132-regulator.c
 +++ b/drivers/regulator/tps65132-regulator.c
-@@ -55,10 +55,7 @@ struct tps65132_reg_pdata {
+@@ -117,7 +117,7 @@ static int tps65132_regulator_is_enabled(struct regulator_dev *rdev)
+ 	return 1;
+ }
  
- struct tps65132_regulator {
- 	struct device *dev;
--	struct regmap *rmap;
--	struct regulator_desc *rdesc[TPS65132_MAX_REGULATORS];
- 	struct tps65132_reg_pdata reg_pdata[TPS65132_MAX_REGULATORS];
--	struct regulator_dev *rdev[TPS65132_MAX_REGULATORS];
+-static struct regulator_ops tps65132_regulator_ops = {
++static const struct regulator_ops tps65132_regulator_ops = {
+ 	.enable = tps65132_regulator_enable,
+ 	.disable = tps65132_regulator_disable,
+ 	.is_enabled = tps65132_regulator_is_enabled,
+@@ -193,7 +193,7 @@ static int tps65132_of_parse_cb(struct device_node *np,
+ 		.owner = THIS_MODULE,			\
+ 	}
+ 
+-static struct regulator_desc tps_regs_desc[TPS65132_MAX_REGULATORS] = {
++static const struct regulator_desc tps_regs_desc[TPS65132_MAX_REGULATORS] = {
+ 	TPS65132_REGULATOR_DESC(VPOS, outp),
+ 	TPS65132_REGULATOR_DESC(VNEG, outn),
  };
- 
- static int tps65132_regulator_enable(struct regulator_dev *rdev)
-@@ -225,6 +222,8 @@ static int tps65132_probe(struct i2c_client *client,
- {
- 	struct device *dev = &client->dev;
- 	struct tps65132_regulator *tps;
-+	struct regulator_dev *rdev;
-+	struct regmap *rmap;
- 	struct regulator_config config = { };
- 	int id;
- 	int ret;
-@@ -233,9 +232,9 @@ static int tps65132_probe(struct i2c_client *client,
- 	if (!tps)
- 		return -ENOMEM;
- 
--	tps->rmap = devm_regmap_init_i2c(client, &tps65132_regmap_config);
--	if (IS_ERR(tps->rmap)) {
--		ret = PTR_ERR(tps->rmap);
-+	rmap = devm_regmap_init_i2c(client, &tps65132_regmap_config);
-+	if (IS_ERR(rmap)) {
-+		ret = PTR_ERR(rmap);
- 		dev_err(dev, "regmap init failed: %d\n", ret);
- 		return ret;
- 	}
-@@ -244,18 +243,16 @@ static int tps65132_probe(struct i2c_client *client,
- 	tps->dev = dev;
- 
- 	for (id = 0; id < TPS65132_MAX_REGULATORS; ++id) {
--		tps->rdesc[id] = &tps_regs_desc[id];
--
--		config.regmap = tps->rmap;
-+		config.regmap = rmap;
- 		config.dev = dev;
- 		config.driver_data = tps;
- 
--		tps->rdev[id] = devm_regulator_register(dev,
--					tps->rdesc[id], &config);
--		if (IS_ERR(tps->rdev[id])) {
--			ret = PTR_ERR(tps->rdev[id]);
-+		rdev = devm_regulator_register(dev, &tps_regs_desc[id],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret = PTR_ERR(rdev);
- 			dev_err(dev, "regulator %s register failed: %d\n",
--				tps->rdesc[id]->name, ret);
-+				tps_regs_desc[id].name, ret);
- 			return ret;
- 		}
- 	}
 -- 
 2.17.1
 
