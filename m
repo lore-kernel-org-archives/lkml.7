@@ -2,99 +2,88 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B31C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DBAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D0421874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D4821874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfCUSSe (ORCPT
+        id S1728629AbfCUSTC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:18:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33436 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfCUSSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:18:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 02274AE30;
-        Thu, 21 Mar 2019 18:18:32 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8DFC9DA820; Thu, 21 Mar 2019 19:19:47 +0100 (CET)
-Date:   Thu, 21 Mar 2019 19:19:46 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Stable patches that don't apply to older kernels and how to get
- them
-Message-ID: <20190321181946.GA28481@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Greg KH <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190321151413.GB8120@suse.cz>
- <20190321163941.GA11121@kroah.com>
+        Thu, 21 Mar 2019 14:19:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40295 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfCUSTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:19:01 -0400
+Received: from [IPv6:2607:fb90:3258:198e:38c6:f38f:7326:f16d] ([IPv6:2607:fb90:3258:198e:38c6:f38f:7326:f16d])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2LII9Nu235972
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 21 Mar 2019 11:18:10 -0700
+Date:   Thu, 21 Mar 2019 11:18:05 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aac45ef8-0196-b1c4-67ce-26dd0da6d641@redhat.com>
+References: <20190318153840.906404905@infradead.org> <20190318155139.963285969@infradead.org> <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com> <20190318173657.GV6058@hirez.programming.kicks-ass.net> <20190318175135.GE6521@hirez.programming.kicks-ass.net> <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com> <aac45ef8-0196-b1c4-67ce-26dd0da6d641@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321163941.GA11121@kroah.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH 01/25] x86: Make SMAP 64-bit only
+To:     Denys Vlasenko <dvlasenk@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+From:   hpa@zytor.com
+Message-ID: <33D32634-51DC-426D-BE4A-F78B862760D5@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 05:39:41PM +0100, Greg KH wrote:
-> On Thu, Mar 21, 2019 at 04:14:14PM +0100, David Sterba wrote:
-> > Hi,
-> > 
-> > would it be possible to have a git repository with all patches that are
-> > submitted to stable@ but don't apply directly?
-> > 
-> > I get notified by mail, that's fine though it's not that convenient to
-> > see all the pending patches for backport to a given version.
-> > 
-> > My proposal:
-> > 
-> > - create a separate stable-unapplied git repository
-> > 
-> > - if a patch does not apply to a given version, it's stored as-is to a
-> >   directory of the base version (like 4.4)
-> > 
-> > - once a fixed version is applied to stable-queue.git/released-4.4, the
-> >   patch in the other repo is deleted
-> > 
-> > I believe this can be highly automated and once implemented would not
-> > too much additional work to the stable workflow. I could possibly write
-> > a scraper of the mail archives to pick the patches and manage the
-> > repository but I think that a central repository could help other
-> > maintainers too or to spread the load to all interested developers.
-> > 
-> > If something like that already exists, please let me know.
-> 
-> Nothing like this exists, sorry.
-> 
-> And if you want to automate this, wonderful, but I do not have any time
-> to do so, and it does not fit into my workflow at all.  Patches that do
-> not apply are the exception by far, not the rule, so I doubt this would
-> really help out much.
+On March 21, 2019 10:25:05 AM PDT, Denys Vlasenko <dvlasenk@redhat.com> wrote:
+>On 3/18/19 7:10 PM, Linus Torvalds wrote:
+>> On Mon, Mar 18, 2019 at 10:51 AM Peter Zijlstra
+><peterz@infradead.org> wrote:
+>>>
+>>> How about I do a patch that schedules EFLAGS for both 32bit and
+>64bit,
+>>> mark this for backporting to infinity.
+>>>
+>>> And then at the end, after the objtool-ac bits land, I do a patch
+>>> removing the EFLAGS scheduling for x86_64.
+>> 
+>> Sounds sane to me.
+>> 
+>> And we can make it AC-conditional if it's actually shown to be
+>visible
+>> from a performance standpoint.
+>> 
+>> But iirc pushf/popf isn't really that expensive - in fact I think
+>it's
+>> pretty cheap when system flags don't change.
+>
+>I did not see evidence of this. In my testing,
+>POPF is always ~20 cycles, even if popped flags are identical to
+>current
+>state of flags.
 
-I'm concerned about patches that are sent to sable but don't get applied
-in the end. IOW dropped on the floor, unless somebody cares, which is
-probably the maintainers that are known to be overloaded.
-
-So, I'm looking for some kind of help, to extend the stable workflow and
-address the problem where it happens and where the whole mail and git
-machinery already is.
-
-The number of unapplied patches has raised recently for me because I
-started to closely examine which stable versions could be affected. And
-go as far as 4.4.
-
-Why there are otherwise only a few patches that don't apply, I can only
-speculate and I think that differs by subsystem. That stable kernels are
-potentially missing stability fixes should be a concern in general. But
-well, it seems I have to help myself here.
+I think you will find that if you change system flags it is much slower.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
