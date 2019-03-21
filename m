@@ -2,161 +2,203 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028A0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809F1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA3B21900
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4330721900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="H4tl8G2S"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="lKcgAYoU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="enUTaN3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfCUXk0 (ORCPT
+        id S1727244AbfCUXl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:40:26 -0400
-Received: from mail-eopbgr750105.outbound.protection.outlook.com ([40.107.75.105]:63617
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726374AbfCUXkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:40:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnFgwaiIXsQ1O3TcsUebHzVVpnJVlKryNcNrMdWKakQ=;
- b=H4tl8G2SzSaC0sec5xy8jSDQyjuMCv7p9CJive8aFZCDYFS00HTQkcawZqCxj0WvcfgXY2v+iFO39ESVCHPou56TnXlX0U1dSq+pn6EcFlXJ9tV1D5ntyPmG7w/1vPdGc9K1JbVmfB3gJB4dPasEr5Jsd6uldasm1KOEh+QMkgc=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1086.namprd22.prod.outlook.com (10.174.169.148) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 23:40:21 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 23:40:21 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     George Hilliard <thirtythreeforty@gmail.com>
-CC:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH] mips: ralink: allow zboot
-Thread-Topic: [RESEND PATCH] mips: ralink: allow zboot
-Thread-Index: AQHU4AgLQNJaCLPr+E2sTRrwfQ+CsqYWo1mAgAATLgCAAAhLgA==
-Date:   Thu, 21 Mar 2019 23:40:20 +0000
-Message-ID: <20190321234019.5ifoywetz2vnhpne@pburton-laptop>
-References: <20190321170334.15122-1-thirtythreeforty@gmail.com>
- <20190321170334.15122-2-thirtythreeforty@gmail.com>
- <20190321220159.GC7872@darkstar.musicnaut.iki.fi>
- <CACmrr9hj6A_ZgbgO=bHuueav1FEc4jQ2-T9ddASa61Qe4mKR9g@mail.gmail.com>
-In-Reply-To: <CACmrr9hj6A_ZgbgO=bHuueav1FEc4jQ2-T9ddASa61Qe4mKR9g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0029.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::42) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [67.207.99.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 49e2af6f-5515-4e72-1764-08d6ae5694c1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1086;
-x-ms-traffictypediagnostic: MWHPR2201MB1086:
-x-microsoft-antispam-prvs: <MWHPR2201MB108654DB46105C764DF647EAC1420@MWHPR2201MB1086.namprd22.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(366004)(396003)(39850400004)(346002)(376002)(189003)(199004)(76176011)(52116002)(71190400001)(102836004)(6916009)(6506007)(386003)(476003)(186003)(58126008)(99286004)(26005)(6246003)(14454004)(6116002)(97736004)(81156014)(68736007)(14444005)(478600001)(4326008)(256004)(5660300002)(71200400001)(3846002)(8676002)(6486002)(1076003)(486006)(6512007)(305945005)(33716001)(42882007)(54906003)(66066001)(53936002)(81166006)(7736002)(1411001)(316002)(11346002)(229853002)(105586002)(9686003)(93886005)(8936002)(446003)(106356001)(2906002)(6436002)(44832011)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1086;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: v8ktZiZNjkHDtTlUSF3FTUsb0OLizcUjJrx1vX9cUaCoQyzThdv9dVvQu9ZHUixEmobzLEdByNF06Mibzlznv2XbuVy+IXETHxu/FPwIBCp5lbWMO5KfoQx4aQG+TmqFgN07qmKBF0wd35SoeN43Eduoo1zI/U3ogiscdmKB5kKJPYjClSf+XsiBZ8rT+fbkV8F+GU+5CYS3rJSZLLUusxmAWjxlOmwFKAo1ASDtyufFvRKFWhp52L6hH7aFbf3An9LICRI2A3qwzhRq9jhLPTfeswklXSeuUQLq9e6ZveY8UjAkrZl0sp3u2cw2rwe/72VpmI6BtXUc+RN1/ogl4T/FAkqp+VsR8joDvhjeN2Ydg7oZE+8ozhRSEBRPS3ALEdELu4ZRupBbbNQ9vzPhWS1/7bDZh2e4ZaZmC8TQ3eg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9EBC57223C84DD47A70D9EDB4525B54F@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Mar 2019 19:41:58 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:34945 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725999AbfCUXl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:41:58 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0F8B022336;
+        Thu, 21 Mar 2019 19:41:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 21 Mar 2019 19:41:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=isd8Fz4FKjgCWUwIYS11ZkJgQAF
+        kSWWP2WcYJgr79cA=; b=lKcgAYoUaQB2Z1ZiycHGL3FfhQB4g+I9DM1QFBVnTnR
+        amA9bMhFI8frUVPFDyiE+FrLE7U6h2aZYwzkzu+ASpCG1uYje57ZUBGAN8TdQMN4
+        6GAAimN9Ikixwyv9iBgsO7aweX/ikn0h6q7zJkUX1l5bg40EFrnkrCg1axRlp8NK
+        ZDCv8MUhgXJaCejLgPw1exToZXUZHyuUlLrsP4K2p41V0Gd9LGOoWvb/qjxutTdo
+        zX2yO4NBdxd81vjZX/Rr0P1zetpoLq1AdHFXXicLTUvrqct6Zq3iG425GBo9Q/Bn
+        rrSqgMCYNRZsceyQYcWDwW+P1zSa/9YLlLgCemlxz/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=isd8Fz
+        4FKjgCWUwIYS11ZkJgQAFkSWWP2WcYJgr79cA=; b=enUTaN3HpzFFdxYdcHQpsl
+        vhAfIXCqwEN3b2dsUvNBc+ZI8TMQ7WdnC5L2++y21bSNLgPb3VQ+Bgk9kSH9DecQ
+        iJYl7Ey0vNoiSGkZp4ZjNW9wqazo86cGw5uo3G+PKH63avVkxGmL9RWzkrRfzXUT
+        xNgIZX9B+8QhAv78/FbCUlBgl6MPUzeJ2rAZut1BSxUVLonulClEjwxMgQxaESQm
+        ABR45ttR/D82rNY3wnu22qFSWD0cShndizO1sWc90AF59GExY09/HyEAb4srfvpT
+        tHvGIj//nD5fCDmumrb0DggIaw18kQW2HdCIVoSztBKdmKVO3eEG9+FTdpxL1PLQ
+        ==
+X-ME-Sender: <xms:QyGUXB2qSijk4jvskDh2AiolJb-unCqQzYB2gVDNn7MRwJSHs9NQ6A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjedtgdduvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdeimdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredtofer
+    vdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtohgsih
+    hnrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvgedrudej
+    uddrfedurdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtg
+    gtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:QyGUXJWYtrBuaPZY1C6qE9o0x9gac4AU6xWEVFHF8RMBe4DXx6LqPA>
+    <xmx:QyGUXKXZ-Ky7oRKuUuFgyh5ilmNtJZLjwOE5plje9dudc4SmsHY8BQ>
+    <xmx:QyGUXFD6C0agntPFEeM5GmOPn_L21l3Bi6oWhTWGd_8dcv1GckmxoQ>
+    <xmx:RCGUXGLtMHn-b6D2wED3Nh7rZwQOxgr4g6p8UGqOnKWl5woDl5z-JQ>
+Received: from localhost (124-171-31-151.dyn.iinet.net.au [124.171.31.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BA871E49DC;
+        Thu, 21 Mar 2019 19:41:54 -0400 (EDT)
+Date:   Fri, 22 Mar 2019 10:41:25 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v3] docs: Clarify the usage and sign-off requirements for
+ Co-developed-by
+Message-ID: <20190321234125.GB17705@eros.localdomain>
+References: <20190321200103.9333-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49e2af6f-5515-4e72-1764-08d6ae5694c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 23:40:20.9890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321200103.9333-1-sean.j.christopherson@intel.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
+Hi Sean,
 
-On Thu, Mar 21, 2019 at 05:10:38PM -0600, George Hilliard wrote:
-> My version of U-Boot complains if I compile out LZMA support:
+Thanks for working on this, I have been struggling to correctly use (and
+get the co-author to SOB) the Co-developed-by tag :)
+
+On Thu, Mar 21, 2019 at 01:01:03PM -0700, Sean Christopherson wrote:
+> The documentation for Co-developed-by is a bit light on details, e.g. it
+> doesn't explicitly state that:
+> 
+>   - Multiple Co-developed-by tags are perfectly acceptable
+>   - Co-developed-by and Signed-off-by must be paired together
+>   - SOB ordering should still follow standard sign-off procedure
+> 
+> Lack of explicit direciton has resulted in developers taking a variety
+> of approaches, often lacking any intent whatsoever, e.g. scattering SOBs
+> willy-nilly, collecting them all at the end or the beginning, etc...
+> 
+> Tweak the wording to make it clear that multiple co-authors are allowed,
+> and document the expectation that standard sign-off procedures are to
+> be followed.  Provide examples to (hopefully) eliminate any ambiguity.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Niklas Cassel <niklas.cassel@linaro.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
-> =3D> tftpboot 0x81000000 uImage; tftpboot 0x84000000 hawkeye.dtb; bootm
-> 0x81000000 - 0x84000000
-> (snip)
-> Bytes transferred =3D 7349 (1cb5 hex)
-> ## Booting kernel from Legacy Image at 81000000 ...
->    Image Name:   Linux-5.1.0-rc1
->    Image Type:   MIPS Linux Kernel Image (lzma compressed)
->    Data Size:    1465871 Bytes =3D 1.4 MiB
->    Load Address: 80000000
->    Entry Point:  80344338
->    Verifying Checksum ... OK
-> ## Flattened Device Tree blob at 84000000
->    Booting using the fdt blob at 0x84000000
->    Uncompressing Kernel Image ... Unimplemented compression type 3
-> exit not allowed from main input shell.
-> =3D>
-> ---
+> 
+> v1: https://lkml.kernel.org/r/20190320151140.32432-1-sean.j.christopherson@intel.com
+> v2: https://lkml.kernel.org/r/20190321184316.8525-1-sean.j.christopherson@intel.com
+>     Rewrite the blurb to state standard sign-off procedure should be
+>     followed as opposed to dictating the original author's SOB be last.
+> v3: Update a similar blurb in Documentation/process/5.Posting.rst
+> 
+>  Documentation/process/5.Posting.rst          |  8 +++----
+>  Documentation/process/submitting-patches.rst | 24 +++++++++++++++++---
+>  2 files changed, 25 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+> index 4213e580f273..c8cac58f0f93 100644
+> --- a/Documentation/process/5.Posting.rst
+> +++ b/Documentation/process/5.Posting.rst
+> @@ -216,10 +216,10 @@ The tags in common use are:
+>     which can be found in :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
+>     Code without a proper signoff cannot be merged into the mainline.
+>  
+> - - Co-developed-by: states that the patch was also created by another developer
+> -   along with the original author.  This is useful at times when multiple
+> -   people work on a single patch.  Note, this person also needs to have a
+> -   Signed-off-by: line in the patch as well.
+> + - Co-developed-by: states that the patch was co-created by other developer(s)
+> +   along with the original author.  Every Co-developed-by: must be accompanied
+> +   by a Signed-off-by: of the co-author.  Details and examples can be found in
+> +   :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`.
+>  
+>   - Acked-by: indicates an agreement by another developer (often a
+>     maintainer of the relevant code) that the patch is appropriate for
+> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+> index be7d1829c3af..a7a9da68a384 100644
+> --- a/Documentation/process/submitting-patches.rst
+> +++ b/Documentation/process/submitting-patches.rst
+> @@ -545,10 +545,28 @@ person it names - but it should indicate that this person was copied on the
+>  patch.  This tag documents that potentially interested parties
+>  have been included in the discussion.
+>  
+> -A Co-developed-by: states that the patch was also created by another developer
+> +A Co-developed-by: states that the patch was co-created by other developer(s)
+>  along with the original author.  This is useful at times when multiple people
+> -work on a single patch.  Note, this person also needs to have a Signed-off-by:
+> -line in the patch as well.
+> +work on a single patch.  Every Co-developed-by: must be immediately followed by
+> +a Signed-off-by: of the co-author.  Standard sign-off procedure applies, i.e.
+> +the ordering of Co-developed-by:/Signed-off-by: pairs should reflect the
+> +chronological history of the patch insofar as possible.  Notably, the last
+> +Signed-off-by: must always be that of the developer submitting the patch,
+> +regardless of whether they are the original author or a co-author.
+> +
+> +Example of a patch with multiple co-authors, submitted by the original author::
+> +
+> +	Co-developed-by: First Co-Author <first@coauthor.example.org>
+> +	Signed-off-by: First Co-Author <first@coauthor.example.org>
+> +	Co-developed-by: Second Co-Author <second@coauthor.example.org>
+> +	Signed-off-by: Second Co-Author <second@coauthor.example.org>
+> +	Signed-off-by: Original Author <original@author.example.org>
+> +
+> +Example of a patch submitted by a co-author::
+> +
+> +	Signed-off-by: Original Author <original@author.example.org>
+> +	Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
+> +	Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
 
-There you're using a uImage though, which is different to
-CONFIG_SYS_SUPPORTS_ZBOOT. Even without CONFIG_SYS_SUPPORTS_ZBOOT
-enabled, you can build either a compressed or uncompressed uImage.
+As someone who has read the docs then tried with difficulty to use this
+tag I think we should drop the term 'original' from describing any author.
 
-Some platforms enable one of those targets by default but it doesn't
-appear that ralink does, so I guess you're specifying a uImage.lzma
-target when building the kernel? Try doing that when
-CONFIG_SYS_SUPPORTS_ZBOOT isn't enabled - it'll still generate the same
-type of LZMA-compressed uImage.
+The reason is that the two versions above do not explicitly show who is
+the 'original' author.  This means the docs contain noise that makes the
+tag harder to use.  All the tag shows is that one person is submitting a
+patch (the last SOB and sender of the patch) AND someone else worked on
+it (and agrees that they did).
 
-What CONFIG_SYS_SUPPORTS_ZBOOT does is produce a program (vmlinuz) which
-contains a compressed version of vmlinux.bin along with some code to
-decompress it. The decompression is performed by vmlinuz itself, not by
-U-Boot.
+FWIW we are trying to give attribution, right?  We don't need to
+explicitly state who wrote what so I do not believe that 'original' is a
+useful thing to be.  Linus 'originally' wrote Linux but that does not
+say squat about the state of the code right now :)
 
-A uImage in contrast is just the compressed (or uncompressed)
-vmlinux.bin with a header prepended that U-Boot uses to understand what
-it's loading. If the header says the data is compressed with LZMA then
-U-Boot will need to support LZMA decompression.
-
-What U-Boot is complaining about there is that you gave it a uImage
-that's LZMA compressed & your build of U-Boot itself doesn't support
-LZMA. That has nothing to do with CONFIG_SYS_SUPPORTS_ZBOOT or whether
-the kernel binary itself supports any particular compression algorithm -
-it's purely down to the configuration of your copy of U-Boot.
-
-Options would be to rebuild U-Boot with LZMA support enabled, or to use
-a different compression for your uImage that U-Boot already supports.
-eg. you could specify that you want to use gzip:
-
-  $ make ARCH=3Dmips uImage.gz
-
-That would give you an image that will work so long as U-Boot supports
-gzip decompression, or:
-
-  $ make ARCH=3Dmips uImage.bin
-
-That would give you an uncompressed uImage which U-Boot always supports.
-
-Now it could still be valid to select CONFIG_SYS_SUPPORTS_ZBOOT if you
-had a need for a better compression algorithm & couldn't update your
-bootloader to support it, but that would be solving a different problem
-than your commit message claims & it wouldn't matter at all whether the
-bootloader supports a particular compression algorithm.
-
-Thanks,
-    Paul
+thanks,
+Tobin.
