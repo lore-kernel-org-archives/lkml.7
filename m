@@ -2,97 +2,118 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BA5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D91DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D709218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38ED218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QY+7sXuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfCUIcl (ORCPT
+        id S1728026AbfCUIdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:32:41 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:6271 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727874AbfCUIcl (ORCPT
+        Thu, 21 Mar 2019 04:33:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35560 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbfCUIdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:32:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=xuyu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TNGaMx1_1553157149;
-Received: from localhost(mailfrom:xuyu@linux.alibaba.com fp:SMTPD_---0TNGaMx1_1553157149)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 21 Mar 2019 16:32:38 +0800
-From:   Xu Yu <xuyu@linux.alibaba.com>
-To:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] bpf: do not restore dst_reg when cur_state is freed
-Date:   Thu, 21 Mar 2019 16:31:33 +0800
-Message-Id: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 21 Mar 2019 04:33:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Lm6Ht1nRh5ZijQir8LLqGfhx33+hBPtNZBQ0yg69ceI=; b=QY+7sXufr7WtC9R/2011x58ss
+        qZ6ZFUkzGeTy+eYRzwhoNC0pGIF0nyZQZgN7BBSGzCe6QXJ0txBTjLob/sqVK2i/4SdHtT1sgKbsy
+        zhmIwIqNWdojoddsFvD8I0iwLLMKmX5zEjpJ8IHIyb9MIZpZyW6al1kbCXbQ6mzRvCF9v8roKNAAB
+        XMtRJjVK/6JP4aiTVRgxwCmoqxWY5Cn9HB0yr3NcsmhCZwuRreFC5YpeFbmLp19d5hQHxI471mth9
+        hh3OlfKEiDPAXNmAHgD+1FYwQikREWNI4cCQL89QlilggYLybZbH2/mm0C86g1OXF7YJWuWb0CRGx
+        MeMoLA1eA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6t8Z-0006jV-8d; Thu, 21 Mar 2019 08:33:19 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 69FAF2855FC6D; Thu, 21 Mar 2019 09:33:17 +0100 (CET)
+Date:   Thu, 21 Mar 2019 09:33:17 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
+ error_entry
+Message-ID: <20190321083317.GL6058@hirez.programming.kicks-ass.net>
+References: <20190320221534.165ab87b@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320221534.165ab87b@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
-Call trace:
-  dump_stack+0xbf/0x12e
-  print_address_description+0x6a/0x280
-  kasan_report+0x237/0x360
-  sanitize_ptr_alu+0x85a/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-Fault injection trace:
-  kfree+0xea/0x290
-  free_func_state+0x4a/0x60
-  free_verifier_state+0x61/0xe0
-  push_stack+0x216/0x2f0	          <- inject failslab
-  sanitize_ptr_alu+0x2b1/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On Wed, Mar 20, 2019 at 10:15:34PM -0400, Steven Rostedt wrote:
 
-When kzalloc() fails in push_stack(), free_verifier_state() will free
-current verifier state. As push_stack() returns, dst_reg was restored
-if ptr_is_dst_reg is false. However, as member of the cur_state, dst_reg
-is also freed, and error occurs when dereferencing dst_reg.
+> And it would crash similarly each time I tried it, but always at a
+> different place. After spending the day on this, I finally figured it
+> out. The bug is happening in entry_64.S right after error_entry.
+> There's two TRACE_IRQS_OFF in that code path, which if I comment out,
+> the bug goes away. Then it dawned on me that the crash always happens
+> when systemd does a normal page fault. We had this bug before, and it
+> was with the exception trace points.
 
-Simply fix it by checking whether cur_state is NULL before retoring
-dst_reg.
+0ac09f9f8cd1 ("x86, trace: Fix CR2 corruption when tracing page faults")
+d4078e232267 ("x86, trace: Further robustify CR2 handling vs tracing")
 
-Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
----
- kernel/bpf/verifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Or were you talking about:
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ce166a0..018ce4f 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -3368,7 +3368,7 @@ static int sanitize_ptr_alu(struct bpf_verifier_env *env,
- 		*dst_reg = *ptr_reg;
- 	}
- 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
--	if (!ptr_is_dst_reg)
-+	if (!ptr_is_dst_reg && env->cur_state)
- 		*dst_reg = tmp;
- 	return !ret ? -EFAULT : 0;
- }
--- 
-1.8.3.1
+70fb74a5420f ("x86: Save cr2 in NMI in case NMIs take a page fault (for i386)")
 
+> The issue is that a tracepoint can fault (reading vmalloc or whatever).
+> And doing a userspace stack trace most definitely will fault. But if we
+> are coming from a legitimate page fault, the address of that fault (in
+> the CR2 register) will be lost if we fault before we get to the page
+> fault handler. That's exactly what is happening.
+
+Shees, that could've been written much clearer. So you're saying:
+
+idtentry page_fault             do_page_fault           has_error_code=1
+  call error_entry
+    TRACE_IRQS_OFF
+      call trace_hardirqs_off*
+        <tracer stuff>
+	  <fault> # modifies CR2
+  call do_page_fault
+    address = read_cr2(); /* whoopsie */
+
+Right?
+
+> To solve this, a TRACE_IRQS_OFF_CR2 (and ON for consistency) was added
+> that saves the CR2 register. A new trace_hardirqs_off_thunk_cr2 is
+> created that stores the cr2 register, calls the
+> trace_hardirqs_off_caller, then on return restores the cr2 register if
+> it changed, before returning.
+
+Yuck.. also, not consistent with the actual patch. The thunk doesn't
+save/restore CR2.
+
+I really hate making this special TRACE_IRQS_OFF_CR2 thing, it feels far
+too fragile. I'd _much_ rather push the #PF CR2 read much earlier.
+
+Also, argh I fscking hate context tracking. That makes all this so much
+more complicated. It if weren't for CALL_enter_from_user_mode, we could
+pull that TRACE_IRQS_OFF out of error_entry.
+
+Damn... Andy, any bright ideas?
