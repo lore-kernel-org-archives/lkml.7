@@ -2,156 +2,92 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D5AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF564C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EB021917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F127218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH0vdrW5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PD6DSjC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfCUXCV (ORCPT
+        id S1727244AbfCUXFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:02:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41809 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfCUXCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:02:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w30so532445qta.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 16:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jr0o9aAH8U2i6K1qdS9XGG6vuPudU722Wp+0qgcH1UY=;
-        b=DH0vdrW5HrWLC2m5DWcl3u7lzhGbcHNbP5YBsYeIODLg2teReTwDMbqQrWQthtoDKc
-         XtyNGw98Bbu0m0uKzfH/bJAd7ONWR/ITjtyU3P5v7Lscw3cyGdhNQgIKrPe25WDzTmYj
-         IehzBxhSRxRtSwVAZYasYBxbHn5VjtWXuUVR6S8SwxxtnBqEDplp30k4y4vAPfktIpC6
-         8Iypy3RyHoF5soUPEx6P6iVi1iy1YdQjJO3em1xqQo0pk9QkNQ/Vt3tSWv3eMm6exLWv
-         c+4Q4Fwcv1qIqinza5RcQ6/3Cfocpm/n37fjEQSicvvMLSY/q2R0Sb+9jq2c6e/gMf9c
-         IlrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jr0o9aAH8U2i6K1qdS9XGG6vuPudU722Wp+0qgcH1UY=;
-        b=LWx0Z3Js9Idd2nTNyRHPdHdAGa2iZmasIa1kozAblgkYHIXfHBKxq9R5qlNh8Yetqu
-         A/iJNlikV4Z78I8JzwZXu6urXGpRq0qSBDJLyJ4o0aM6ErEvZkGPoHqGgSEMxO0vs50a
-         qVu5m0g5ljZs3aVp3GtrKTbZmk4M1gXE6f5C+EokW3e+t3t8MT7OLtFHRi2PNKWwz0bT
-         BsqeqD8uKcn825kXt9nvMm9WVvUPecbFs2ts9BOWoJ3CxlIXHDbI0rqT++hA9Ug5xC6l
-         OY9fZlNpsIw4dvHyutoPuwQDxytWUwNEYoiI1D3h7g0+YUyByF5P9G8BklOl2OBPH6Tu
-         N01w==
-X-Gm-Message-State: APjAAAUj3nM9Gk6eIvM3wRjAYRHZV56pw+7uoSohzq+n/2fZzsVWtTOa
-        z0MmUlbLlSTeHQZOgbQQ1sY7bD9U7H/NYMK4DCs=
-X-Google-Smtp-Source: APXvYqxHxi89Srq1zwUqJV8b9yrJ78B4HghLbO4qcrhP/PA7s1rCJ8Lw7BQMe1FVovIdbxt6bxn1cWSIq7iH0hV7Bjg=
-X-Received: by 2002:a0c:ea4f:: with SMTP id u15mr5454069qvp.133.1553209339794;
- Thu, 21 Mar 2019 16:02:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190321200157.29678-1-keith.busch@intel.com> <5B5EFBC2-2979-4B9F-A43A-1A14F16ACCE1@nvidia.com>
- <20190321223706.GA29817@localhost.localdomain>
-In-Reply-To: <20190321223706.GA29817@localhost.localdomain>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 21 Mar 2019 16:02:07 -0700
-Message-ID: <CAHbLzkrLyG-j8kRrrQ==4Y4LDDLubvXMF88muyzXWAQWKw1ZSw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Page demotion for memory reclaim
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Zi Yan <ziy@nvidia.com>,
+        Thu, 21 Mar 2019 19:05:23 -0400
+Received: from ozlabs.org ([203.11.71.1]:37197 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfCUXFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:05:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QMnq53jQz9sRy;
+        Fri, 22 Mar 2019 10:05:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553209519;
+        bh=b6q639ISBNCc22gmNm9lf0SV6i81VMdLnismz4oV6As=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PD6DSjC2P7899C17EjlxG+TpJ5fchikz5z4eLi46RUYoOO7TLsQotXMJDrw99Mxcs
+         Qd8N9S3SiB8SvNV/OrL/5K5zft5Xpyy/E/F9QElImjyRjCL/WNOp0Cmwkgc2wlPZxC
+         y5WCblTh1UuGfzXxx3zEh1ERp5L74I5O6l3+wj9jz8aP+uceLAG9J+uHNlYBSrPfYF
+         CJBVLm83dj6nJ8K+yCANMEm40PK/dMThxgW54vsy5rfDNbbZOnSj03VIzZC94e8+wS
+         7XA4fjJnf3DmafQGCRzL/1WE3IrkyX7slEC43wlNW4kNUJEnSpPJt3+uWsc+77PHcp
+         GuPWP2mwHFbxQ==
+Date:   Fri, 22 Mar 2019 10:05:12 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Nellans <dnellans@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: linux-next: build warning after merge of the net-next tree
+Message-ID: <20190322100512.51b5ea25@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/g8GA6XQIB7jGLEa/q1VShjD"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 3:36 PM Keith Busch <keith.busch@intel.com> wrote:
->
-> On Thu, Mar 21, 2019 at 02:20:51PM -0700, Zi Yan wrote:
-> > 1. The name of =E2=80=9Cpage demotion=E2=80=9D seems confusing to me, s=
-ince I thought it was about large pages
-> > demote to small pages as opposite to promoting small pages to THPs. Am =
-I the only
-> > one here?
->
-> If you have a THP, we'll skip the page migration and fall through to
-> split_huge_page_to_list(), then the smaller pages can be considered,
-> migrated and reclaimed individually. Not that we couldn't try to migrate
-> a THP directly. It was just simpler implementation for this first attempt=
-.
->
-> > 2. For the demotion path, a common case would be from high-performance =
-memory, like HBM
-> > or Multi-Channel DRAM, to DRAM, then to PMEM, and finally to disks, rig=
-ht? More general
-> > case for demotion path would be derived from the memory performance des=
-cription from HMAT[1],
-> > right? Do you have any algorithm to form such a path from HMAT?
->
-> Yes, I have a PoC for the kernel setting up a demotion path based on
-> HMAT properties here:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/kbusch/linux.git/commit=
-/?h=3Dmm-migrate&id=3D4d007659e1dd1b0dad49514348be4441fbe7cadb
->
-> The above is just from an experimental branch.
->
-> > 3. Do you have a plan for promoting pages from lower-level memory to hi=
-gher-level memory,
-> > like from PMEM to DRAM? Will this one-way demotion make all pages sink =
-to PMEM and disk?
->
-> Promoting previously demoted pages would require the application do
-> something to make that happen if you turn demotion on with this series.
-> Kernel auto-promotion is still being investigated, and it's a little
-> trickier than reclaim.
+--Sig_/g8GA6XQIB7jGLEa/q1VShjD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Just FYI. I'm currently working on a patchset which tries to promotes
-page from second tier memory (i.e. PMEM) to DRAM via NUMA balancing.
-But, NUMA balancing can't deal with unmapped page cache, they have to
-be promoted from different path, i.e. mark_page_accessed().
+Hi all,
 
-And, I do agree with Keith, promotion is definitely trickier than
-reclaim since kernel can't recognize "hot" pages accurately. NUMA
-balancing is still corse-grained and inaccurate, but it is simple. If
-we would like to implement more sophisticated algorithm, in-kernel
-implementation might be not a good idea.
+After merging the net-next tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-Thanks,
-Yang
+drivers/net/phy/Kconfig:276:warning: prompt redefined
 
->
-> If it sinks to disk, though, the next access behavior is the same as
-> before, without this series.
->
-> > 4. In your patch 3, you created a new method migrate_demote_mapping() t=
-o migrate pages to
-> > other memory node, is there any problem of reusing existing migrate_pag=
-es() interface?
->
-> Yes, we may not want to migrate everything in the shrink_page_list()
-> pages. We might want to keep a page, so we have to do those checks first.=
- At
-> the point we know we want to attempt migration, the page is already
-> locked and not in a list, so it is just easier to directly invoke the
-> new __unmap_and_move_locked() that migrate_pages() eventually also calls.
->
-> > 5. In addition, you only migrate base pages, is there any performance c=
-oncern on migrating THPs?
-> > Is it too costly to migrate THPs?
->
-> It was just easier to consider single pages first, so we let a THP split
-> if possible. I'm not sure of the cost in migrating THPs directly.
->
+Introduced by commit
+
+  17cc9821766c ("net: phy: Move Omega PHY entry to Cygnus PHY driver")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/g8GA6XQIB7jGLEa/q1VShjD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyUGKgACgkQAVBC80lX
+0GzxTgf+L6z3IEpUU+OwKxIsoPP98Q2F0PNUEsrr5HJNL7P1tTaet384dgE6cGlp
+zoJwp11YF1Bwjy+yIAfYeJM9HjpWcMjaCK9fiJtzCIDYrKBGaRStEcTEZCAUibF7
+rmVndLMCf0beLV1LF7HiYa++OY+X6LLaC0eUfyAdRMmBB1tyEffipMQCJqubhWaa
+iMzcK4sWknlLC3rGx8OeDNFqz4Ero9Vh9QsUcymXko8YDWcs4qGYDJiTHD/I2HEi
+fLOBbKuzjfWTzJx1t1GRPtFAg541sZ3lMLcuTNEuF/miIMtLJW8VoYoes1nfbQv4
+g5kOTuTKAMCBX+f7LiDRUqMU9YJaVA==
+=hqRW
+-----END PGP SIGNATURE-----
+
+--Sig_/g8GA6XQIB7jGLEa/q1VShjD--
