@@ -2,111 +2,89 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C8BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA34AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E39218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1152218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:47:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBOk5ieW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfCUHmI (ORCPT
+        id S1727892AbfCUHrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:42:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57014 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbfCUHmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:42:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 22E5DAF6A;
-        Thu, 21 Mar 2019 07:42:05 +0000 (UTC)
-Subject: Re: [RFC 0/2] guarantee natural alignment for kmalloc()
-To:     Christopher Lameter <cl@linux.com>
-Cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-References: <20190319211108.15495-1-vbabka@suse.cz>
- <01000169988d4e34-b4178f68-c390-472b-b62f-a57a4f459a76-000000@email.amazonses.com>
- <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz>
- <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4d2a55dc-b29f-1309-0a8e-83b057e186e6@suse.cz>
-Date:   Thu, 21 Mar 2019 08:42:02 +0100
+        Thu, 21 Mar 2019 03:47:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55903 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbfCUHrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 03:47:42 -0400
+Received: by mail-wm1-f65.google.com with SMTP id o25so1249208wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:47:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RjBN56vlxPNlHGf5pYA5eJmMoSrFv2U0V43LKsadGUU=;
+        b=qBOk5ieWo+itUvulj3M5dJgsiRq2x5SStPvyTOcrgCO2QONvT3Fnjo5uDLlMqqQl9m
+         /1WdZ2L4I2BJGNtsl95JGTXtRaKYBChRZMR+Lm9d5ILhtIQzxK0Nn+2XjeKs9Rg4oJZA
+         Y9XrPf6W//ovFAe/tRzbCI8F3PRyOezY6eHaizCifonTARQijBDcBrheWvxf58K+X5/g
+         nhvuhLDZ08OYZjFQei7PlKUe47y6TVraT8SPLg7omue5znq+ZKDqZsbS+3j1obdQ/t5W
+         lSU1Asc6offYWYF8OmqhxhYY8nu4Oq8PYU6fD+zx3dayhe/9xJcseoJ8ha0gXR2Vckjy
+         s9FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RjBN56vlxPNlHGf5pYA5eJmMoSrFv2U0V43LKsadGUU=;
+        b=coFtMaKx9Uo+AS2r/U8ypQVo9tdxoBM7zmSoznv5WRT7hjg989sH8lUstuNIFO0UYn
+         3g68/5u61bw0BQbgd40Xw5n3X3eymySq04sCxGOaUCDiKOmPvFjDIJD0XYMR8Iqsopcn
+         rDkZiHVmUHo4FdT4gWIMArrSgA70WG9MA4KM6ha7jfjrwWVPYBtJPpD+2P+oGqpRngj/
+         Dhr1EIGrm7r2/P4fFmLcvmdz8EFyCYoIM9n+DUAAWM2UeYznxZbrMYrAB8TDbdnMoUET
+         +JRQxlPyHbijsVoamsT1uvdRBu6qipbEHU72qURITnLDpM1AYWRVL/XuCPhijj/fNPpz
+         qt1A==
+X-Gm-Message-State: APjAAAXlpytFkzYs9lo96FWB/R4jp7y2fOLJ13uuimf0JeHW1E6Yu/Py
+        buwFTlq8HmHwO3geW08JnALi7SIeXbQ=
+X-Google-Smtp-Source: APXvYqzq1gX8/QblnrJDiVJvEYkjUyy4PbuNMqibq9uZXamfuq+rYN9r5Fqjeh38ANFGHBCY9wWqfg==
+X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1516516wmh.128.1553154459387;
+        Thu, 21 Mar 2019 00:47:39 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id n189sm7989840wmb.28.2019.03.21.00.47.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 00:47:38 -0700 (PDT)
+Subject: Re: [PATCH v12 1/4] PM / Domains: Add a generic data pointer to the
+ genpd_power_state struct
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190227195836.24739-1-ulf.hansson@linaro.org>
+ <20190227195836.24739-2-ulf.hansson@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <11aa2536-9f9c-059d-a4d6-3f683be7caeb@linaro.org>
+Date:   Thu, 21 Mar 2019 08:47:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
+In-Reply-To: <20190227195836.24739-2-ulf.hansson@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -115,59 +93,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/19 7:20 PM, Christopher Lameter wrote:
->>> Currently all kmalloc objects are aligned to KMALLOC_MIN_ALIGN. That will
->>> no longer be the case and alignments will become inconsistent.
->>
->> KMALLOC_MIN_ALIGN is still the minimum, but in practice it's larger
->> which is not a problem.
+On 27/02/2019 20:58, Ulf Hansson wrote:
+> Let's add a data pointer to the genpd_power_state struct, to allow a genpd
+> backend driver to store per state specific data. To introduce the pointer,
+> we need to change the way genpd deals with freeing of the corresponding
+> allocated data.
 > 
-> "In practice" refers to the current way that slab allocators arrange
-> objects within the page. They are free to do otherwise if new ideas come
-> up for object arrangements etc.
+> More precisely, let's clarify the responsibility of whom that shall free
+> the data, by adding a ->free_states() callback to the struct
+> generic_pm_domain. The one allocating the data shall assign the callback,
+> to allow genpd to invoke it from genpd_remove().
 > 
-> The slab allocators already may have to store data in addition to the user
-> accessible part (f.e. for RCU or ctor). The "natural alighnment" of a
-> power of 2 cache is no longer as you expect for these cases. Debugging is
-> not the only case where we extend the object.
-
-For plain kmalloc() caches, RCU and ctors don't apply, right.
-
->> Also let me stress again that nothing really changes except for SLOB,
->> and SLUB with debug options. The natural alignment for power-of-two
->> sizes already happens as SLAB and SLUB both allocate objects starting on
->> the page boundary. So people make assumptions based on that, and then
->> break with SLOB, or SLUB with debug. This patch just prevents that
->> breakage by guaranteeing those natural assumptions at all times.
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
 > 
-> As explained before there is nothing "natural" here. Doing so restricts
-> future features
-
-Well, future features will have to deal with the existing named caches
-created with specific alignment.
-
-> and creates a mess within the allocator of exceptions for
-> debuggin etc etc (see what happened to SLAB).
-
-SLAB could be fixed, just nobody cares enough I guess. If I want to
-debug wrong SL*B usage I'll use SLUB.
-
-> "Natural" is just a
-> simplistic thought of a user how he would arrange power of 2 objects.
-> These assumption should not be made but specified explicitly.
-
-Patch 1 does this explicitly for plain kmalloc(). It's unrealistic to
-add 'align' parameter to plain kmalloc() as that would have to create
-caches on-demand for 'new' values of align parameter.
-
->>> I think its valuable that alignment requirements need to be explicitly
->>> requested.
->>
->> That's still possible for named caches created by kmem_cache_create().
+> Changes in v12:
+> 	- None.
 > 
-> So lets leave it as it is now then.
+> ---
+>  drivers/base/power/domain.c | 12 ++++++++++--
+>  include/linux/pm_domain.h   |  4 +++-
+>  2 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 2c334c01fc43..03885c003c6a 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1685,6 +1685,12 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
+>  }
+>  EXPORT_SYMBOL_GPL(pm_genpd_remove_subdomain);
+>  
+> +static void genpd_free_default_power_state(struct genpd_power_state *states,
+> +					   unsigned int state_count)
+> +{
+> +	kfree(states);
+> +}
+> +
+>  static int genpd_set_default_power_state(struct generic_pm_domain *genpd)
+>  {
+>  	struct genpd_power_state *state;
+> @@ -1695,7 +1701,7 @@ static int genpd_set_default_power_state(struct generic_pm_domain *genpd)
+>  
+>  	genpd->states = state;
+>  	genpd->state_count = 1;
+> -	genpd->free = state;
+> +	genpd->free_states = genpd_free_default_power_state;
+>  
+>  	return 0;
+>  }
+> @@ -1811,7 +1817,9 @@ static int genpd_remove(struct generic_pm_domain *genpd)
+>  	list_del(&genpd->gpd_list_node);
+>  	genpd_unlock(genpd);
+>  	cancel_work_sync(&genpd->power_off_work);
+> -	kfree(genpd->free);
+> +	if (genpd->free_states)
 
-That however doesn't work well for the xfs/IO case where block sizes are
-not known in advance:
+Is this test necessary as the free_states function is initialized with
+the genpd_set_default_power_state() in any case?
 
-https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/T/#ec3a292c358d05a6b29cc4a9ce3ae6b2faf31a23f
+> +		genpd->free_states(genpd->states, genpd->state_count);
+> +
+>  	pr_debug("%s: removed %s\n", __func__, genpd->name);
+>  
+>  	return 0;
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 1ed5874bcee0..8e1399231753 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -69,6 +69,7 @@ struct genpd_power_state {
+>  	s64 residency_ns;
+>  	struct fwnode_handle *fwnode;
+>  	ktime_t idle_time;
+> +	void *data;
+>  };
+>  
+>  struct genpd_lock_ops;
+> @@ -110,9 +111,10 @@ struct generic_pm_domain {
+>  			   struct device *dev);
+>  	unsigned int flags;		/* Bit field of configs for genpd */
+>  	struct genpd_power_state *states;
+> +	void (*free_states)(struct genpd_power_state *states,
+> +			    unsigned int state_count);
+>  	unsigned int state_count; /* number of states */
+>  	unsigned int state_idx; /* state that genpd will go to when off */
+> -	void *free; /* Free the state that was allocated for default */
+>  	ktime_t on_time;
+>  	ktime_t accounting_time;
+>  	const struct genpd_lock_ops *lock_ops;
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
