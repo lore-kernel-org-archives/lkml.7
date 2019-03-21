@@ -2,138 +2,113 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC596C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E73218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8CD218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8NiOKE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfCUQOH (ORCPT
+        id S1728550AbfCUQO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:14:07 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:58503 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfCUQOG (ORCPT
+        Thu, 21 Mar 2019 12:14:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33285 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbfCUQO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:14:06 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2LGDkvC016507;
-        Fri, 22 Mar 2019 01:13:47 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Fri, 22 Mar 2019 01:13:46 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2LGDk8J016504
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 22 Mar 2019 01:13:46 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] arm64: dts: rockchip: add rk3399 UART DMAs
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190321144058.16918-1-katsuhiro@katsuster.net>
- <d49f9b76-902a-5393-c983-cdef850c7a9c@arm.com>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <5cb5878b-dc91-764e-1000-66c87024880c@katsuster.net>
-Date:   Fri, 22 Mar 2019 01:13:46 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 21 Mar 2019 12:14:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q1so7305336wrp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yFJGkG2qAlqPkLagE8bY7qsbVsNEEIpaqQcVCEE7FJU=;
+        b=a8NiOKE1Iv7bOyOvNQuERrRLrkPc7oqseMcN/j1YEbBnEF9ExOr5H22hR+LO6Cjzqb
+         +VqAum+u/SCnHzxOSyDDkhBxSxzN7xhdfjj9/CbfTYmS5Ef3EURWyXoYmMxC5n/SXzUY
+         OSxI701Lir4RbDFdzcwd0FpTETnClNmGc4sBqSfC4yZs/GXqAzcRJ6wOp7eySf3dcMXu
+         pzEY1yuGo2itcGdYbUuvdEnevqQuZ5yydcj3EASmad8W1ePvP24suQJM8bKanToJOrc5
+         cJXJOTQ7Oc3wwIrAG9+qGeSwuVfbX2tM6XUDrpsYHvXQjda/1lm4JcpxMqb6MiAQ01Tu
+         23VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yFJGkG2qAlqPkLagE8bY7qsbVsNEEIpaqQcVCEE7FJU=;
+        b=SvqEOc3dScJXwrfnrYAu6uNdEQMcRSGsLfERx0zRuWTZyJdQPm9dmaiy8Xh5JcJLqv
+         Zoz6NYsz/k/XOxoEt9Vo3AdDCyhMlyYUWHX66RivXXeGGMTrB3ly6hr6CduhLjagsHBY
+         SJzYEHrY/5ivaFcgJ/o8JFSDIgLePOKVBtbV1STDYOuO0IrDCHxtbAy0sJVmGJwF4LZe
+         Bk9ENqaXKNUIssYSmCVDjSq0nY8RN4Q0ltxy0nW/FLrwHXmjaxryoKFOhXhKDrFSwIsd
+         Wrm3W5auJuC2AOwXs3fLb3qoaN1QNHa1wYeYTx80WsMFLKdeOb7Oe9GrUJu7H4rrXvLu
+         UMSA==
+X-Gm-Message-State: APjAAAUSPp1tm+ZEw3t0flr94aP3IP1zs3Glx09UJ7/FOBknbJajn+UJ
+        k27O7v3FYVBYpwQ7xx62MKkXhA==
+X-Google-Smtp-Source: APXvYqzBJ7rMmk9uAgdRKuO1mopJiClA277eaCNVOkkXymkr9ObnaF7J4li7fYhBrr6tmxLGydRgjA==
+X-Received: by 2002:a5d:4e51:: with SMTP id r17mr3114077wrt.249.1553184865526;
+        Thu, 21 Mar 2019 09:14:25 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z14sm7959165wrv.78.2019.03.21.09.14.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 09:14:24 -0700 (PDT)
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-kernel@vger.kernel.org, patches@linaro.org
+Subject: [PATCH] perf arm64: Use local headers for target compiler
+Date:   Thu, 21 Mar 2019 16:13:53 +0000
+Message-Id: <20190321161353.16198-1-daniel.thompson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <d49f9b76-902a-5393-c983-cdef850c7a9c@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Robin,
+Currently the set of available syscalls is generated from the
+target compilers default <asm-generic/unistd.h>
+(i.e. /usr/include/asm-generic/unistd.h on a self-hosted system).
+The numeric values are then generated by the host compiler using
+tools/include/uapi/asm/unistd.h .
 
-On 2019/03/22 0:21, Robin Murphy wrote:
-> On 21/03/2019 14:40, Katsuhiro Suzuki wrote:
->> Add UART dma channels as specified by the rk3399 TRM.
-> 
-> No UART4? That's arguably one of the more useful ones, since 1 and 3 
-> often end up muxed to ethernet instead.
-> 
+This leads to some nasty version skew problems (including failed perf
+builds if you are running a bleeding edge distro and want to build an
+older version of perf for testing).
 
-Oops... I forgot to add for UART4. Thank you for pointing out.
+Let's make the target compiler use the local headers too.
 
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Also, does UART DMA actually work yet? I guess I can try for myself once 
-> I get home, but I remember last time I looked it was bailing out because 
-> the 8250 driver wanted a dmaengine feature that the pl330 driver didn't 
-> implement.
-> 
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index c88fd32563eb..1aca6a839e4f 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -56,7 +56,7 @@ create_table()
+ 	echo "};"
+ }
 
-I think it works correctly. Because pl330_irq_handler() that is
-IRQ handler of PL330 is called when my patch applied and handler
-is not called if not applied.
-
-
-Best Regards,
-Katsuhiro Suzuki
-
-> Robin.
-> 
->> Refer:
->> RK3399 TRM V1.4: Chapter 12 DMA Controller
->>
->> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi 
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 0301e3e01b38..4eed7aae6989 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -635,6 +635,8 @@
->>           clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
->>           clock-names = "baudclk", "apb_pclk";
->>           interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        dmas = <&dmac_peri 0>, <&dmac_peri 1>;
->> +        dma-names = "tx", "rx";
->>           reg-shift = <2>;
->>           reg-io-width = <4>;
->>           pinctrl-names = "default";
->> @@ -648,6 +650,8 @@
->>           clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
->>           clock-names = "baudclk", "apb_pclk";
->>           interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        dmas = <&dmac_peri 2>, <&dmac_peri 3>;
->> +        dma-names = "tx", "rx";
->>           reg-shift = <2>;
->>           reg-io-width = <4>;
->>           pinctrl-names = "default";
->> @@ -661,6 +665,8 @@
->>           clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
->>           clock-names = "baudclk", "apb_pclk";
->>           interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        dmas = <&dmac_peri 4>, <&dmac_peri 5>;
->> +        dma-names = "tx", "rx";
->>           reg-shift = <2>;
->>           reg-io-width = <4>;
->>           pinctrl-names = "default";
->> @@ -674,6 +680,8 @@
->>           clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
->>           clock-names = "baudclk", "apb_pclk";
->>           interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        dmas = <&dmac_peri 6>, <&dmac_peri 7>;
->> +        dma-names = "tx", "rx";
->>           reg-shift = <2>;
->>           reg-io-width = <4>;
->>           pinctrl-names = "default";
->>
-> 
+-$gcc -E -dM -x c  $input	       \
+-	|sed -ne 's/^#define __NR_//p' \
+-	|sort -t' ' -k2 -nu	       \
++$gcc -I $incpath/include/uapi -E -dM -x c  $input \
++	|sed -ne 's/^#define __NR_//p'		  \
++	|sort -t' ' -k2 -nu			  \
+ 	|create_table
+--
+2.20.1
 
