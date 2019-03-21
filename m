@@ -2,82 +2,94 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B39C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3D2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6561E218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553177942;
-	bh=cMkdX0KGpz7di4SCPDDKR2SJsCSmXBjSaNSqEy1Dj78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iT6mR9yhw3mAylZgmYHCdhyVj6ZhLjMyKp6hXFyO8gPi/YgsTMlIJOsRygUBLCX/c
-	 vyvT6mLsnM2rEMHgqHb+EHpDWRItLa//KmPcPk2aGNXf/nkZfdIa4/oITepCcdm+oe
-	 /XiTzog7SmcJc/bdMX3BfIdsvbQvh1y5OF4zMdeE=
+	by mail.kernel.org (Postfix) with ESMTP id 841C2218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbfCUOTB (ORCPT
+        id S1728221AbfCUOTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:19:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 10:19:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:5194 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfCUOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:19:00 -0400
-Received: from localhost (unknown [106.201.33.144])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728013AbfCUOTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:19:19 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D74E2075E;
-        Thu, 21 Mar 2019 14:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553177940;
-        bh=cMkdX0KGpz7di4SCPDDKR2SJsCSmXBjSaNSqEy1Dj78=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uGeYqwd19QZIfDE/bu9f9CfOXR5scZKz1fPLprGefOJcUjONvKgZio2dOu0OknO7c
-         87MRaUN2rCPkC672U3+aY1X22GkKfUMlIFv8a+2Rn0wAUK10F2l6RYC6HYfD57kFeV
-         qG1rr/XyeLJroxlqKFxOOtcZWkHAJGkZOGb3azrA=
-Date:   Thu, 21 Mar 2019 19:48:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     dmaengine@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] dmaengine: idma64: Use actual device for DMA transfers
-Message-ID: <20190321141854.GA5348@vkoul-mobl>
-References: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 571403082E23;
+        Thu, 21 Mar 2019 14:19:19 +0000 (UTC)
+Received: from localhost (ovpn-12-72.pek2.redhat.com [10.72.12.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0F4819C57;
+        Thu, 21 Mar 2019 14:19:18 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 22:19:15 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>,
+        William Kucharski <william.kucharski@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
+Message-ID: <20190321141915.GZ18740@MiWiFi-R3L-srv>
+References: <20190320111959.GV19508@bombadil.infradead.org>
+ <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
+ <20190320122243.GX19508@bombadil.infradead.org>
+ <20190320123658.GF13626@rapoport-lnx>
+ <20190320125843.GY19508@bombadil.infradead.org>
+ <20190321064029.GW18740@MiWiFi-R3L-srv>
+ <20190321092138.GY18740@MiWiFi-R3L-srv>
+ <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
+ <20190321103521.GO8696@dhcp22.suse.cz>
+ <EAFD8223-BEED-4985-8CD4-D3410A5898A6@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <EAFD8223-BEED-4985-8CD4-D3410A5898A6@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 21 Mar 2019 14:19:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-03-19, 18:39, Andy Shevchenko wrote:
-> Intel IOMMU, when enabled, tries to find the domain of the device,
-> assuming it's a PCI one, during DMA operations, such as mapping or
-> unmapping. Since we are splitting the actual PCI device to couple of
-> children via MFD framework (see drivers/mfd/intel-lpss.c for details),
-> the DMA device appears to be a platform one, and thus not an actual one
-> that performs DMA. In a such situation IOMMU can't find or allocate
-> a proper domain for its operations. As a result, all DMA operations are
-> failed.
+On 03/21/19 at 05:19am, William Kucharski wrote:
 > 
-> In order to fix this, supply parent of the platform device
-> to the DMA engine framework and fix filter functions accordingly.
 > 
-> We may rely on the fact that parent is a real PCI device, because no
-> other configuration is present in the wild.
+> > On Mar 21, 2019, at 4:35 AM, Michal Hocko <mhocko@kernel.org> wrote:
+> > 
+> > I am sorry to be snarky but hasn't this generated way much more email
+> > traffic than it really deserves? A simply and trivial clean up in the
+> > beginning that was it, right?
 
-Applied, thanks
+Yeah, I'd like to do like this. Will arrange patch and post a new
+version. Sorry about the mail bomb to CCed people.
 
--- 
-~Vinod
+Yet I also would like to hear any suggestion from people who intend to
+improve. Discussions make me know more the status of errno than before.
+
+Thank you all for sharing.
+
+> 
+> That's rather the point; that it did generate a fair amount of email
+> traffic indicates it's worthy of at least a passing mention in a
+> comment somewhere.
+
+We header files to put errno. Only changing in kernel may cause
+difference between it and userspace. I will list each returned value in
+code comment and tell what they are meaning in this function, that could
+be helpful. Thanks.
+
+usr/include/asm-generic/errno-base.h 
+include/uapi/asm-generic/errno-base.h
+
