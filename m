@@ -2,138 +2,79 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102DCC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2690DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65CF218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553180270;
-	bh=JWxj8nksQ6TJk06DnuIJpyiELHXjQgIu2lG938gJHBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rTaKIIYrFJQn4p0HanYNoHTqC3rR/XvU2bftJrdjvw9B+aZDcethhghegwjbDXalK
-	 rUXxD/G1LZICMyOOVNNgCk9GU1tvg53qMV7WvojBTvwcLfah1GRJrwfFryCJsHLOk7
-	 0v4TM1GNF/Hbg18WUKRmds3Xl+jfwdaZwv/t5efc=
+	by mail.kernel.org (Postfix) with ESMTP id F156320811
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfCUO5t (ORCPT
+        id S1728396AbfCUO7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:57:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53126 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727922AbfCUO5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:57:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CD105ABDC;
-        Thu, 21 Mar 2019 14:57:46 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 15:57:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mgorman@techsingularity.net, vbabka@suse.cz,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: mempolicy: remove MPOL_MF_LAZY
-Message-ID: <20190321145745.GS8696@dhcp22.suse.cz>
-References: <1553041659-46787-1-git-send-email-yang.shi@linux.alibaba.com>
+        Thu, 21 Mar 2019 10:59:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2400 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfCUO7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:59:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 07:59:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
+   d="scan'208";a="157068148"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2019 07:59:01 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH] docs: Explicitly state ordering requirements for Co-developed-by
+In-Reply-To: <alpine.DEB.2.21.1903211537340.1784@nanos.tec.linutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190320151140.32432-1-sean.j.christopherson@intel.com> <87lg18e4nx.fsf@intel.com> <20190321142622.GA6519@linux.intel.com> <alpine.DEB.2.21.1903211537340.1784@nanos.tec.linutronix.de>
+Date:   Thu, 21 Mar 2019 17:00:45 +0200
+Message-ID: <87ftrge0gy.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553041659-46787-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 20-03-19 08:27:39, Yang Shi wrote:
-> MPOL_MF_LAZY was added by commit b24f53a0bea3 ("mm: mempolicy: Add
-> MPOL_MF_LAZY"), then it was disabled by commit a720094ded8c ("mm:
-> mempolicy: Hide MPOL_NOOP and MPOL_MF_LAZY from userspace for now")
-> right away in 2012.  So, it is never ever exported to userspace.
-> 
-> And, it looks nobody is interested in revisiting it since it was
-> disabled 7 years ago.  So, it sounds pointless to still keep it around.
+On Thu, 21 Mar 2019, Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Thu, 21 Mar 2019, Sean Christopherson wrote:
+>> On Thu, Mar 21, 2019 at 03:30:10PM +0200, Jani Nikula wrote:
+>> Hmm, and my experience is exclusively limited to contributing code to
+>> someone else's patches.  Rather than dictate exact ordering, what about
+>> deferring to standard sign-off procedure?
+>> 
+>> E.g.:
+>> 
+>>   A Co-developed-by: states that the patch was also created by another developer
+>>   along with the original author.  This is useful at times when multiple people
+>>   work on a single patch.  Co-developed-by: must be immediately followed by a
+>>   Signed-off-by: of the co-author(s).  As per standard sign-off procedure, the
+>>   ordering of Co-developed-by:/Signed-off-by: pairs should reflect the patch's
+>>   handling insofar as possible.  Notably, the last Signed-off-by: must always be
+>>   that of the developer submitting the patch, regardless of whether they are the
+>>   original author or a co-author.
+>
+> Yes, that makes sense.
 
-The above changelog owes us a lot of explanation about why this is
-safe and backward compatible. I am also not sure you can change
-MPOL_MF_INTERNAL because somebody still might use the flag from
-userspace and we want to guarantee it will have the exact same semantic.
+Agreed.
 
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> Hi folks,
-> I'm not sure if you still would like to revisit it later. And, I may be
-> not the first one to try to remvoe it. IMHO, it sounds pointless to still
-> keep it around if nobody is interested in it.
-> 
->  include/uapi/linux/mempolicy.h |  3 +--
->  mm/mempolicy.c                 | 13 -------------
->  2 files changed, 1 insertion(+), 15 deletions(-)
-> 
-> diff --git a/include/uapi/linux/mempolicy.h b/include/uapi/linux/mempolicy.h
-> index 3354774..eb52a7a 100644
-> --- a/include/uapi/linux/mempolicy.h
-> +++ b/include/uapi/linux/mempolicy.h
-> @@ -45,8 +45,7 @@ enum {
->  #define MPOL_MF_MOVE	 (1<<1)	/* Move pages owned by this process to conform
->  				   to policy */
->  #define MPOL_MF_MOVE_ALL (1<<2)	/* Move every page to conform to policy */
-> -#define MPOL_MF_LAZY	 (1<<3)	/* Modifies '_MOVE:  lazy migrate on fault */
-> -#define MPOL_MF_INTERNAL (1<<4)	/* Internal flags start here */
-> +#define MPOL_MF_INTERNAL (1<<3)	/* Internal flags start here */
->  
->  #define MPOL_MF_VALID	(MPOL_MF_STRICT   | 	\
->  			 MPOL_MF_MOVE     | 	\
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index af171cc..67886f4 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -593,15 +593,6 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->  
->  	qp->prev = vma;
->  
-> -	if (flags & MPOL_MF_LAZY) {
-> -		/* Similar to task_numa_work, skip inaccessible VMAs */
-> -		if (!is_vm_hugetlb_page(vma) &&
-> -			(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE)) &&
-> -			!(vma->vm_flags & VM_MIXEDMAP))
-> -			change_prot_numa(vma, start, endvma);
-> -		return 1;
-> -	}
-> -
->  	/* queue pages from current vma */
->  	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
->  		return 0;
-> @@ -1181,9 +1172,6 @@ static long do_mbind(unsigned long start, unsigned long len,
->  	if (IS_ERR(new))
->  		return PTR_ERR(new);
->  
-> -	if (flags & MPOL_MF_LAZY)
-> -		new->flags |= MPOL_F_MOF;
-> -
->  	/*
->  	 * If we are using the default policy then operation
->  	 * on discontinuous address spaces is okay after all
-> @@ -1226,7 +1214,6 @@ static long do_mbind(unsigned long start, unsigned long len,
->  		int nr_failed = 0;
->  
->  		if (!list_empty(&pagelist)) {
-> -			WARN_ON_ONCE(flags & MPOL_MF_LAZY);
->  			nr_failed = migrate_pages(&pagelist, new_page, NULL,
->  				start, MIGRATE_SYNC, MR_MEMPOLICY_MBIND);
->  			if (nr_failed)
-> -- 
-> 1.8.3.1
-> 
+BR,
+Jani.
 
 -- 
-Michal Hocko
-SUSE Labs
+Jani Nikula, Intel Open Source Graphics Center
