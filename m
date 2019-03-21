@@ -2,126 +2,178 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1116EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 04:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5DEC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 04:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A22218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 04:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B442077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 04:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="skk0hlYL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siojCPH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfCUEpn (ORCPT
+        id S1726081AbfCUE5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 00:45:43 -0400
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:59446
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725950AbfCUEpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 00:45:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ll0U3tgB4Zkl2eaGbR3PMfA6NimaGBuU52Bxu797TU=;
- b=skk0hlYLfj0PyqvZNKqmg+qgw75OGC30VOX4TmrFOlawUTgmDoWZ228psGfLPeYFNfXsdzQsX81xtK7wv2iLx2CJGzFubexc8NAZ0qWUSIj+qIY5a91wzDWkp4tYRd3TZWHT9pe9yTenluZls/ywuyxbv9P0CNmEJq98H444Ng0=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6097.eurprd04.prod.outlook.com (20.179.36.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.15; Thu, 21 Mar 2019 04:45:38 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1709.015; Thu, 21 Mar 2019
- 04:45:38 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>
-Subject: RE: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Thread-Topic: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Thread-Index: AQHU2X6XfkrN9ckA80iUx9YseK0a4qYMf0+wgAkPbDA=
-Date:   Thu, 21 Mar 2019 04:45:38 +0000
-Message-ID: <AM0PR04MB44818E7C4A5128BD7993219A88420@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190313093650.18693-1-peng.fan@nxp.com>
- <AM0PR04MB4211FEB4C272759B84BCB6A180440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211FEB4C272759B84BCB6A180440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fa7fc56f-fcaa-42eb-f448-08d6adb810f0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB6097;
-x-ms-traffictypediagnostic: AM0PR04MB6097:
-x-microsoft-antispam-prvs: <AM0PR04MB609726CB711F70BE4EB9FB9688420@AM0PR04MB6097.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(199004)(13464003)(189003)(5660300002)(110136005)(14454004)(186003)(7416002)(14444005)(8936002)(33656002)(256004)(305945005)(71190400001)(81166006)(81156014)(44832011)(229853002)(316002)(99286004)(74316002)(68736007)(4326008)(446003)(9686003)(71200400001)(25786009)(476003)(486006)(6246003)(11346002)(7696005)(76176011)(478600001)(55016002)(86362001)(2906002)(105586002)(2201001)(106356001)(3846002)(66066001)(26005)(6116002)(102836004)(97736004)(8676002)(2501003)(7736002)(6436002)(6506007)(53546011)(52536014)(53936002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6097;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5k/eTpUa9XIK86IDgReEp1q+WJJuLgr52Waqj5dKo6vyIDKqGSz9cn8QNdhtYGhilxvQGGUDMZl/3qI7HnaYjJr3lVSpfON9KsAFHL+uTFCmv3o4yBEw9Mde22YFI4SU1325tp+9Ro9mEB9GodmbbTncl67iRVyKQdMinX5/rVyw/mpDMdc/GOdumMgZytuUCFECMGDE5Qd1gd5zpb3ueufwuw7zV/JzIPIlDQ+TFrvDsti7ONfIec+phYfNKIH4m+PX5S6U8z+AqUVW0DW2PWKG/Q4NrKbzWQXjI+4iOzmypqtjEI2glDvX9soIoK7fhhw2C5CXdQ1xpR6FbNFj2/tl2OQLcV211aI0EH8bDJEGWi2YKeit42niA8aE9jeVuLnmxIg5eD60kiUWnw07PMhfylQ/uuetLHcwDHfsx1I=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 21 Mar 2019 00:57:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46750 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfCUE5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 00:57:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id b9so4188651iot.13;
+        Wed, 20 Mar 2019 21:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3dyLsgRjy52GT6zOA+aLJRUshJeDc3eyQetzOoKEFkc=;
+        b=siojCPH1RG6sCukAfkZk2VjfJF+9XBYR34fEZ5mmaWuNRrN9YBmk+pQzk9PH+2JblD
+         Lmn12S29Ec8LWfYdkHI9mo3dKPoFjqpakChfNHHFVNw4lq0GNCcRG91z3hKClpEhIhI2
+         GLM5F7sEoTSGYtnxJRCn3O+xT12mlXKy9xmV0yzU0stTrecBBK0aUjfdgh4pkIBWnCSF
+         Rx56AjrmXSEhVx57HG4qxjHkIxXFK7B/rWT427+jWHjYzMx6Fk/A396QJ6uDEeSjUmbz
+         nco1JOMfwEOj+VYqww2J5xu8T5UICNQCFhSaFmssY5DmBYsWzBA9qno+zs7NuaeI1aSx
+         LO4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3dyLsgRjy52GT6zOA+aLJRUshJeDc3eyQetzOoKEFkc=;
+        b=kF7BcHAKy170ivcUGSY7X2cFU8TemvynkEZyF6wSGkR4zqdCJumpp7YHzbbkfvon2i
+         sxvwZlEntu+cvqW43qtHYgNavDPqvFRC7944ypAPTw2ViC5ixCObqY/rtcyZNH4MAztV
+         hn83T/G25P+whQQwosPd5bUImSZVjAbhptfaGARv+TNY8QX1/NZpHstprN+bWAo2mRLA
+         ZU7Ckj8gT3yyyfw10p7s/p29RPHDCkHIARBEbUbhFvu3bgqW3m2Wu1pMrBLMfWtjsSod
+         LYayrtoXIZfAe8dCtjoR+FwYUnLo0/2repFHYerS15H7HZfemZfSbINanZSI0LNjPGt/
+         RF9w==
+X-Gm-Message-State: APjAAAXRA7O9TbmOlCCo4Yj/VHwyWQwPH+hCx2wYnMTyBKPKP+vwbkV0
+        iFQUrsGYNtn8F+Ay8HNqnzq+qh3g3WNkQl0IG88=
+X-Google-Smtp-Source: APXvYqysPOoVymEmDIJkeTCu5EOAxrkkxA/slINgH6zE9mD1kpvqjNEjJiKTStjYu4l0yvNtQmzIA6XTnc5gWyQQJd8=
+X-Received: by 2002:a6b:e305:: with SMTP id u5mr1342124ioc.262.1553144268944;
+ Wed, 20 Mar 2019 21:57:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa7fc56f-fcaa-42eb-f448-08d6adb810f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 04:45:38.8627
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6097
+References: <20190222194808.15962-1-mr.nuke.me@gmail.com> <20190320205233.GE251185@google.com>
+ <CAHk-=wjDY1C+E0gUHmb6O3THwoTNpm=-qthDRcW+sG2RB430Mw@mail.gmail.com> <156dec38-438d-1ce9-64fa-af95d37c14bd@gmail.com>
+In-Reply-To: <156dec38-438d-1ce9-64fa-af95d37c14bd@gmail.com>
+From:   Oliver <oohall@gmail.com>
+Date:   Thu, 21 Mar 2019 15:57:37 +1100
+Message-ID: <CAOSf1CHpoO-1zbT75A+DtHZ5nE3xdaMYDr9kVRpJY=EuJHk9EQ@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/MSI: Don't touch MSI bits when the PCI device is disconnected
+To:     Alex G <mr.nuke.me@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, austin_bolen@dell.com,
+        Alex Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Shyam_Iyer@dell.com,
+        Lukas Wunner <lukas@wunner.de>, Sinan Kaya <okaya@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWlzaGVu
-ZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jPUwjE1yNUgMTg6MjQNCj4gVG86IFBlbmcgRmFuIDxwZW5n
-LmZhbkBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVs
-QHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGRsLWxpbnV4LWlteA0KPiA8bGlu
-dXgtaW14QG54cC5jb20+OyBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IERhbmll
-bCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IHZhbi5mcmVlbml4QGdtYWlsLmNvbQ0KPiBTdWJq
-ZWN0OiBSRTogW1BBVENIXSBhcm02NDogZHRzOiBpbXg4cXhwOiBhZGQgbHNpb19tdTIgbm9kZQ0K
-PiANCj4gPiBGcm9tOiBQZW5nIEZhbg0KPiA+DQo+ID4gQWRkIGxzaW9fbXUyIG5vZGUgd2hpY2gg
-Y291bGQgYmUgdXNlZCBjb21tdW5pY2F0ZSB3aXRoIFNDVS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiANCj4gUmV2aWV3ZWQtYnk6IERvbmcg
-QWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQoNCldvdWxkIHlvdSBwaWNrIHVwIHRoaXMg
-cGF0Y2g/DQoNClRoYW5rcywNClBlbmcuDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5n
-DQo+IA0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhw
-LmR0c2kgfCA4ICsrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4
-cXhwLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRz
-aQ0KPiA+IGluZGV4IDE2NzY2ODM4YWM3Ny4uNjRlZWNkNmNiMWU5IDEwMDY0NA0KPiA+IC0tLSBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+IEBAIC0zMzksNiAr
-MzM5LDE0IEBADQo+ID4gIAkJCSNtYm94LWNlbGxzID0gPDI+Ow0KPiA+ICAJCX07DQo+ID4NCj4g
-PiArCQlsc2lvX211MjogbWFpbGJveEA1ZDFkMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
-ZnNsLGlteDhxeHAtbXUiLCAiZnNsLGlteDZzeC1tdSI7DQo+ID4gKwkJCXJlZyA9IDwweDVkMWQw
-MDAwIDB4MTAwMDA+Ow0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc4IElSUV9UWVBF
-X0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQkjbWJveC1jZWxscyA9IDwyPjsNCj4gPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAgCQlsc2lvX211MzogbWFpbGJv
-eEA1ZDFlMDAwMCB7DQo+ID4gIAkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAtbXUiLCAiZnNs
-LGlteDZzeC1tdSI7DQo+ID4gIAkJCXJlZyA9IDwweDVkMWUwMDAwIDB4MTAwMDA+Ow0KPiA+IC0t
-DQo+ID4gMi4xNi40DQoNCg==
+On Thu, Mar 21, 2019 at 12:27 PM Alex G <mr.nuke.me@gmail.com> wrote:
+>
+> On 3/20/19 4:44 PM, Linus Torvalds wrote:
+> > On Wed, Mar 20, 2019 at 1:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>
+> >> AFAICT, the consensus there was that it would be better to find some
+> >> sort of platform solution instead of dealing with it in individual
+> >> drivers.  The PCI core isn't really a driver, but I think the same
+> >> argument applies to it: if we had a better way to recover from readl()
+> >> errors, that way would work equally well in nvme-pci and the PCI core.
+> >
+> > I think that patches with the pattern "if (disconnected) don't do IO"
+> > are fundamentally broken and we should look for alternatives in all
+> > cases.
+> >
+> > They are fundamentally broken because they are racy: if it's an actual
+> > sudden disconnect in the middle of IO, there's no guarantee that we'll
+> > even be notified in time.
+> >
+> > They are fundamentally broken because they add new magic special cases
+> > that very few people will ever test, and the people who do test them
+> > tend to do so with old irrelevant kernels.
+> >
+> > Finally, they are fundamentally broken because they always end up
+> > being just special cases. One or two special case accesses in a
+> > driver, or perhaps all accesses of a particular type in just _one_
+> > special driver.
+> >
+> > Yes, yes, I realize that people want error reporting, and that
+> > hot-removal can cause various error conditions (perhaps just parity
+> > errors for the IO, but also perhaps other random errors caused by
+> > firmware perhaps doing special HW setup).
+> >
+> > But the "you get a fatal interrupt, so avoid the IO" kind of model is
+> > completely broken, and needs to just be fixed differently. See above
+> > why it's so completely broken.
+> >
+> > So if the hw is set up to send some kinf of synchronous interrupt or
+> > machine check that cannot sanely be handled (perhaps because it will
+> > just repeat forever), we should try to just disable said thing.
+> >
+> > PCIe allows for just polling for errors on the bridges, afaik. It's
+> > been years since I looked at it, and maybe I'm wrong. And I bet there
+> > are various "platform-specific value add" registers etc that may need
+> > tweaking outside of any standard spec for PCIe error reporting. But
+> > let's do that in a platform driver, to set up the platform to not do
+> > the silly "I'm just going to die if I see an error" thing.
+> >
+> > It's way better to have a model where you poll each bridge once a
+> > minute (or one an hour) and let people know "guys, your hardware
+> > reports errors", than make random crappy changes to random drivers
+> > because the hardware was set up to die on said errors.
+> >
+> > And if some MIS person wants the "hardware will die" setting, then
+> > they can damn well have that, and then it's not out problem, but it
+> > also means that we don't start changing random drivers for that insane
+> > setting. It's dead, Jim, and it was the users choice.
+> >
+> > Notice how in neither case does it make sense to try to do some "if
+> > (disconnected) dont_do_io()" model for the drivers.
+>
+> I disagree with the idea of doing something you know can cause an error
+> to propagate. That being said, in this particular case we have come to
+> rely a little too much on the if (disconnected) model.
+
+My main gripe with the if (disconnected) model is that it's only
+really good for inactive devices. If a device is being used then odds
+are the driver will do an MMIO before the pci core has had a chance to
+mark the device as broken so you crash anyway.
+
+> You mentioned in the other thread that fixing the GHES driver will pay
+> much higher dividends. I'm working on reviving a couple of changes to do
+> just that. Some industry folk were very concerned about the "don't
+> panic()" approach, and I want to make sure I fairly present their
+> arguments in the cover letter.
+>
+> I'm hoping one day we'll have the ability to use page tables to prevent
+> the situations that we're trying to fix today in less than ideal ways.
+> Although there are other places in msi.c that use if (disconnected), I'm
+> okay with dropping this change -- provided we come up with an equivalent
+> fix.
+
+What's the idea there? Scan the ioremap space for mappings over the
+device BARs and swap them with a normal memory page?
+
+> But even if FFS doesn't crash, do we really want to lose hundreds of
+> milliseconds to SMM --on all cores-- when all it takes is a couple of
+> cycles to check a flag?
+
+Using pci_dev_is_disconnected() to opportunistically avoid waiting for
+MMIO timeouts is fair enough IMO, even if it's a bit ugly. It would
+help your case if you did some measurements to show the improvement
+and look for other cases it might help. It might also be a good idea
+to document when it is appropriate to use pci_is_dev_disconnected() so
+we aren't stuck having the same argument again and again, but that's
+probably a job for Bjorn though.
+
+Oliver
