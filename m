@@ -2,79 +2,70 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C83C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3B620830
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD7120830
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfCUPM4 (ORCPT
+        id S1728516AbfCUPND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:12:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37360 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfCUPM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:12:56 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 982FF307B96A;
-        Thu, 21 Mar 2019 15:12:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4E2B19C57;
-        Thu, 21 Mar 2019 15:12:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <3463221.D14WHduXq3@blindfold>
-References: <3463221.D14WHduXq3@blindfold> <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-block@vger.kernel.org, squashfs-devel@lists.sourceforge.net,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/6] Convert mount_single-using filesystems to fs_context
+        Thu, 21 Mar 2019 11:13:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56180 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727857AbfCUPND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:13:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 28A55AEE6;
+        Thu, 21 Mar 2019 15:13:02 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 9E269DA938; Thu, 21 Mar 2019 16:14:15 +0100 (CET)
+Date:   Thu, 21 Mar 2019 16:14:14 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Stable patches that don't apply to older kernels and how to get them
+Message-ID: <20190321151413.GB8120@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5778.1553181171.1@warthog.procyon.org.uk>
-Date:   Thu, 21 Mar 2019 15:12:52 +0000
-Message-ID: <5779.1553181172@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 21 Mar 2019 15:12:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard Weinberger <richard@nod.at> wrote:
+Hi,
 
-> [    6.004504] RIP: 0010:reconfigure_super+0x17/0x1e0
+would it be possible to have a git repository with all patches that are
+submitted to stable@ but don't apply directly?
 
-Can you load the kernel into gdb and do:
+I get notified by mail, that's fine though it's not that convenient to
+see all the pending patches for backport to a given version.
 
-	i li *reconfigure_super+0x17
+My proposal:
 
-and disassemble the first 32 bytes of that function for me?
+- create a separate stable-unapplied git repository
 
-> Do I miss some other fix?
+- if a patch does not apply to a given version, it's stored as-is to a
+  directory of the base version (like 4.4)
 
-Don't think so - I hadn't noticed that it had oopsed since the crash was lost
-in the log and it seemed to have booted otherwise normally.
+- once a fixed version is applied to stable-queue.git/released-4.4, the
+  patch in the other repo is deleted
 
-Note that I don't know if a lot of the filesystems I've converted work because
-I don't have a way to test all of them.
+I believe this can be highly automated and once implemented would not
+too much additional work to the stable workflow. I could possibly write
+a scraper of the mail archives to pick the patches and manage the
+repository but I think that a central repository could help other
+maintainers too or to spread the load to all interested developers.
 
-
-David
+If something like that already exists, please let me know.
+Thanks.
