@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59962C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21A1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2280B2190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635262190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HTYcrrvG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b7MiIOk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfCURp5 (ORCPT
+        id S1728837AbfCURqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:45:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50054 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbfCURpy (ORCPT
+        Thu, 21 Mar 2019 13:46:01 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52030 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728818AbfCURp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:45:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LHjLQF124779;
-        Thu, 21 Mar 2019 12:45:21 -0500
+        Thu, 21 Mar 2019 13:45:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LHjCa2083275;
+        Thu, 21 Mar 2019 12:45:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553190321;
-        bh=VCFswOP9m176b3VL5yVpVFWVJnFKwvHaDa1u6d0m3Yc=;
+        s=ti-com-17Q1; t=1553190312;
+        bh=R0j882k21jSr+7+ghwqKWDOpETNjQKT5yBM/IuhYmVQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HTYcrrvGoXNDu1xs22CGcVrRP5DJBaT9zUtrR9uk79M4ul1/lhEufg4/2TRV/1ar/
-         Z0oOgQ1vYuuDI67fPODfh/p6pMAMLc23HRRCBJfQyj3dBOCTedlU3oW2JctUDjl+bO
-         DzQfRTayU80bG5vh5zZNuUbrDl20qAIGA3zdSDGI=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LHjLLY006279
+        b=b7MiIOk+vZCp8kz5TiOE0YBgZUZLiFMvhiSEUXHb2OJVgblYoSsNsEWAzM8x3rktN
+         y2ekw7IE0nLDpINH46LJepFpSzITe3/cIMVkWBTHGLNQoNJbPSLYSaJXi495QV/f+0
+         1Ne5cDvPuzGfPXQLI2fBHQ4Oy/K0Pv0AWJK2EoHo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LHjC0Z121578
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 12:45:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 21 Mar 2019 12:45:12 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 12:45:21 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 12:45:11 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 12:45:21 -0500
+ Thu, 21 Mar 2019 12:45:11 -0500
 Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LHiq2Z018392;
-        Thu, 21 Mar 2019 12:45:16 -0500
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LHiq2X018392;
+        Thu, 21 Mar 2019 12:45:07 -0500
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
@@ -62,9 +62,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <tudor.ambarus@microchip.com>, <nsekhar@ti.com>,
         Mason Yang <masonccyang@mxic.com.tw>,
         Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [RFC PATCH v2 5/5] mtd: hyperbus: Add driver for TI's Hyperbus memory controller
-Date:   Thu, 21 Mar 2019 23:15:48 +0530
-Message-ID: <20190321174548.9288-6-vigneshr@ti.com>
+Subject: [RFC PATCH v2 3/5] mtd: Add support for Hyperbus memory devices
+Date:   Thu, 21 Mar 2019 23:15:46 +0530
+Message-ID: <20190321174548.9288-4-vigneshr@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190321174548.9288-1-vigneshr@ti.com>
 References: <20190321174548.9288-1-vigneshr@ti.com>
@@ -77,54 +77,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
-IP is pretty simple and provides direct memory mapped access to
-connected Flash devices.
+Cypress' Hyperbus is Low Signal Count, High Performance Double Data Rate
+Bus interface between a host system master and one or more slave
+interfaces. Hyperbus is used to connect microprocessor, microcontroller,
+or ASIC devices with random access NOR flash memory (called Hyperflash)
+or self refresh DRAM (called HyperRAM).
 
-Add basic support for the IP without DMA. Second ChipSelect is not
-supported for now.
+Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+signal and either Single-ended clock(3.0V parts) or Differential clock
+(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+At bus level, it follows a separate protocol described in Hyperbus
+specification[1].
+
+Hyperflash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+Hyperbus operates at >166MHz frequencies.
+HyperRAM provides direct random read/write access to flash memory
+array.
+
+But, Hyperbus memory controllers seem to abstract implementation details
+and expose a simple MMIO interface to access connected flash.
+
+Add support for registering Hyperflash devices with MTD framework. MTD
+maps framework along with CFI chip support framework are used to support
+communicating with flash.
+
+Framework is modelled along the lines of spi-nor framework. Hyperbus
+memory controller (HBMC) drivers calls hyperbus_register_device() to
+register a single Hyperflash device. Hyperflash core parses MMIO access
+information from DT, sets up the map_info struct, probes CFI flash and
+registers it with MTD framework.
+
+Some HBMC masters need calibration/training sequence[3] to be carried
+out, in order for DLL inside the controller to lock, by reading a known
+string/pattern. This is done by repeatedly reading CFI Query
+Identification String. Calibration needs to be done before trying to detect
+flash as part of CFI flash probe.
+
+HyperRAM is not supported at the moment.
+
+Hyperbus specification can be found at[1]
+Hyperflash datasheet can be found at[2]
+
+[1] https://www.cypress.com/file/213356/download
+[2] https://www.cypress.com/file/213346/download
+[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+    Table 12-5741. HyperFlash Access Sequence
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- drivers/mtd/hyperbus/Kconfig      |  10 +++
- drivers/mtd/hyperbus/Makefile     |   1 +
- drivers/mtd/hyperbus/hbmc_am654.c | 108 ++++++++++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
- create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
+ MAINTAINERS                          |   7 +
+ drivers/mtd/Kconfig                  |   2 +
+ drivers/mtd/Makefile                 |   1 +
+ drivers/mtd/hyperbus/Kconfig         |  11 ++
+ drivers/mtd/hyperbus/Makefile        |   3 +
+ drivers/mtd/hyperbus/hyperbus-core.c | 183 +++++++++++++++++++++++++++
+ include/linux/mtd/hyperbus.h         |  91 +++++++++++++
+ 7 files changed, 298 insertions(+)
+ create mode 100644 drivers/mtd/hyperbus/Kconfig
+ create mode 100644 drivers/mtd/hyperbus/Makefile
+ create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
+ create mode 100644 include/linux/mtd/hyperbus.h
 
-diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-index febbb4cdc25f..4e026eb0f045 100644
---- a/drivers/mtd/hyperbus/Kconfig
-+++ b/drivers/mtd/hyperbus/Kconfig
-@@ -9,3 +9,13 @@ menuconfig MTD_HYPERBUS
- 	  the Hyperbus Controller driver to communicate with
- 	  Hyperflash. See Cypress Hyperbus specification for more
- 	  details
-+
-+if MTD_HYPERBUS
-+
-+config HBMC_AM654
-+	tristate "Hyperbus controller driver for AM65x SoC"
-+	help
-+	 This is the driver for Hyperbus controller on TI's AM65x and
-+	 other SoCs
-+
-+endif # MTD_HYPERBUS
-diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
-index ca61dedd730d..24abd1d43ade 100644
---- a/drivers/mtd/hyperbus/Makefile
-+++ b/drivers/mtd/hyperbus/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 74e28172c637..48f1f227f65b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7188,6 +7188,13 @@ F:	include/uapi/linux/hyperv.h
+ F:	tools/hv/
+ F:	Documentation/ABI/stable/sysfs-bus-vmbus
  
- obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
-+obj-$(CONFIG_HBMC_AM654)	+= hbmc_am654.o
-diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
++HYPERBUS SUPPORT
++M:	Vignesh Raghavendra <vigneshr@ti.com>
++S:	Supported
++F:	drivers/mtd/hyperbus/
++F:	include/linux/mtd/hyperbus.h
++F:	Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
++
+ HYPERVISOR VIRTUAL CONSOLE DRIVER
+ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Odd Fixes
+diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+index 79a8ff542883..a915ff300390 100644
+--- a/drivers/mtd/Kconfig
++++ b/drivers/mtd/Kconfig
+@@ -290,4 +290,6 @@ source "drivers/mtd/spi-nor/Kconfig"
+ 
+ source "drivers/mtd/ubi/Kconfig"
+ 
++source "drivers/mtd/hyperbus/Kconfig"
++
+ endif # MTD
+diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+index 58fc327a5276..04c154906631 100644
+--- a/drivers/mtd/Makefile
++++ b/drivers/mtd/Makefile
+@@ -35,3 +35,4 @@ obj-y		+= chips/ lpddr/ maps/ devices/ nand/ tests/
+ 
+ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor/
+ obj-$(CONFIG_MTD_UBI)		+= ubi/
++obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus/
+diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
 new file mode 100644
-index 000000000000..abf2b0959a35
+index 000000000000..febbb4cdc25f
 --- /dev/null
-+++ b/drivers/mtd/hyperbus/hbmc_am654.c
-@@ -0,0 +1,108 @@
++++ b/drivers/mtd/hyperbus/Kconfig
+@@ -0,0 +1,11 @@
++menuconfig MTD_HYPERBUS
++	tristate "Hyperbus support"
++	select MTD_CFI
++	select MTD_MAP_BANK_WIDTH_2
++	select MTD_CFI_AMDSTD
++	select MTD_COMPLEX_MAPPINGS
++	help
++	  This is the framework for the Hyperbus which can be used by
++	  the Hyperbus Controller driver to communicate with
++	  Hyperflash. See Cypress Hyperbus specification for more
++	  details
+diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
+new file mode 100644
+index 000000000000..ca61dedd730d
+--- /dev/null
++++ b/drivers/mtd/hyperbus/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
+diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+new file mode 100644
+index 000000000000..4c2876c367fc
+--- /dev/null
++++ b/drivers/mtd/hyperbus/hyperbus-core.c
+@@ -0,0 +1,183 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
 +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
@@ -134,105 +219,277 @@ index 000000000000..abf2b0959a35
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/mtd/hyperbus.h>
++#include <linux/mtd/map.h>
 +#include <linux/mtd/mtd.h>
++#include <linux/mtd/cfi.h>
 +#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
++#include <linux/of_address.h>
 +#include <linux/types.h>
 +
-+struct am654_hbmc_priv {
-+	struct hyperbus_ctlr ctlr;
-+	struct hyperbus_device hbdev;
-+	void __iomem	*regbase;
-+};
++#define HYPERBUS_CALIB_COUNT 25
 +
-+static const struct hyperbus_ops am654_hbmc_ops = {
-+	.calibrate = hyperbus_calibrate,
-+};
-+
-+static int am654_hbmc_probe(struct platform_device *pdev)
++static struct hyperbus_device *map_to_hbdev(struct map_info *map)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct am654_hbmc_priv *priv;
-+	struct resource *res;
++	return container_of(map, struct hyperbus_device, map);
++}
++
++static map_word hyperbus_read16(struct map_info *map, unsigned long addr)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++	map_word read_data;
++
++	read_data.x[0] = ctlr->ops->read16(hbdev, addr);
++
++	return read_data;
++}
++
++static void hyperbus_write16(struct map_info *map, map_word d,
++			     unsigned long addr)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->write16(hbdev, addr, d.x[0]);
++}
++
++static void hyperbus_copy_from(struct map_info *map, void *to,
++			       unsigned long from, ssize_t len)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->copy_from(hbdev, to, from, len);
++}
++
++static void hyperbus_copy_to(struct map_info *map, unsigned long to,
++			     const void *from, ssize_t len)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->copy_to(hbdev, to, from, len);
++}
++
++/* Default calibration routine for use by Hyperbus controller.
++ * Controller is calibrated by repeatedly reading known pattern ("QRY"
++ * string from CFI space)
++ * It is not enough to just ensure "QRY" string is read correctly, need
++ * to read mulitple times to ensure stability of the DLL lock.
++ */
++int hyperbus_calibrate(struct hyperbus_device *hbdev)
++{
++	struct map_info *map = &hbdev->map;
++	struct cfi_private cfi;
++	int count = HYPERBUS_CALIB_COUNT;
 +	int ret;
 +
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++	cfi.interleave = 1;
++	cfi.device_type = CFI_DEVICETYPE_X16;
++	cfi_send_gen_cmd(0xF0, 0, 0, map, &cfi, cfi.device_type, NULL);
++	cfi_send_gen_cmd(0x98, 0x55, 0, map, &cfi, cfi.device_type, NULL);
 +
-+	platform_set_drvdata(pdev, priv);
++	while (count--)
++		cfi_qry_present(map, 0, &cfi);
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "failed to get memory resource\n");
-+		return -ENOENT;
++	ret = cfi_qry_present(map, 0, &cfi);
++	cfi_qry_mode_off(0, map, &cfi);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hyperbus_calibrate);
++
++int hyperbus_register_device(struct hyperbus_device *hbdev)
++{
++	const struct hyperbus_ops *ops;
++	struct hyperbus_ctlr *ctlr;
++	struct device_node *np;
++	struct map_info *map;
++	struct resource res;
++	struct device *dev;
++	int ret;
++
++	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
++		pr_err("hyperbus: please fill all the necessary fields!\n");
++		return -EINVAL;
 +	}
 +
-+	priv->regbase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->regbase))
-+		return PTR_ERR(priv->regbase);
++	np = hbdev->np;
++	ctlr = hbdev->ctlr;
++	if (!of_device_is_compatible(np, "cypress,hyperflash"))
++		return -ENODEV;
 +
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		goto disable_pm;
++	hbdev->memtype = HYPERFLASH;
++
++	if (of_address_to_resource(np, 0, &res))
++		return -EINVAL;
++
++	dev = ctlr->dev;
++	map = &hbdev->map;
++	map->size = resource_size(&res);
++	map->virt = devm_ioremap_resource(dev, &res);
++	if (IS_ERR(map->virt))
++		return PTR_ERR(map->virt);
++
++	map->name = dev_name(dev);
++	map->bankwidth = 2;
++
++	simple_map_init(map);
++	ops = ctlr->ops;
++	if (ops) {
++		if (ops->read16)
++			map->read = hyperbus_read16;
++		if (ops->write16)
++			map->write = hyperbus_write16;
++		if (ops->copy_to)
++			map->copy_to = hyperbus_copy_to;
++		if (ops->copy_from)
++			map->copy_from = hyperbus_copy_from;
++
++		if (ops->calibrate && !ctlr->calibrated) {
++			ret = ops->calibrate(hbdev);
++			if (!ret) {
++				dev_err(dev, "Calibration failed\n");
++				return -ENODEV;
++			}
++			ctlr->calibrated = true;
++		}
 +	}
 +
-+	priv->ctlr.dev = &pdev->dev;
-+	priv->ctlr.ops = &am654_hbmc_ops;
-+	priv->hbdev.ctlr = &priv->ctlr;
-+	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
-+	ret = hyperbus_register_device(&priv->hbdev);
++	hbdev->mtd = do_map_probe("cfi_probe", map);
++	if (!hbdev->mtd) {
++		dev_err(dev, "probing of hyperbus device failed\n");
++		return -ENODEV;
++	}
++
++	hbdev->mtd->dev.parent = dev;
++	mtd_set_of_node(hbdev->mtd, np);
++
++	ret = mtd_device_register(hbdev->mtd, NULL, 0);
 +	if (ret) {
-+		dev_err(&pdev->dev, "failed to register controller\n");
-+		pm_runtime_put_sync(&pdev->dev);
-+		goto disable_pm;
++		dev_err(dev, "failed to register mtd device\n");
++		map_destroy(hbdev->mtd);
++		return ret;
 +	}
++	hbdev->registered = true;
 +
 +	return 0;
-+disable_pm:
-+	pm_runtime_disable(&pdev->dev);
-+	return ret;
 +}
++EXPORT_SYMBOL_GPL(hyperbus_register_device);
 +
-+static int am654_hbmc_remove(struct platform_device *pdev)
++int hyperbus_unregister_device(struct hyperbus_device *hbdev)
 +{
-+	struct am654_hbmc_priv *priv = platform_get_drvdata(pdev);
-+	int ret;
++	int ret = 0;
 +
-+	ret = hyperbus_unregister_device(&priv->hbdev);
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
++	if (hbdev && hbdev->mtd && hbdev->registered) {
++		ret = mtd_device_unregister(hbdev->mtd);
++		map_destroy(hbdev->mtd);
++	}
 +
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(hyperbus_unregister_device);
 +
-+static const struct of_device_id am654_hbmc_dt_ids[] = {
-+	{
-+		.compatible = "ti,am654-hbmc",
-+	},
-+	{ /* end of table */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, am654_hbmc_dt_ids);
-+
-+static struct platform_driver am654_hbmc_platform_driver = {
-+	.probe = am654_hbmc_probe,
-+	.remove = am654_hbmc_remove,
-+	.driver = {
-+		.name = "hbmc-am654",
-+		.of_match_table = am654_hbmc_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(am654_hbmc_platform_driver);
-+
-+MODULE_DESCRIPTION("HBMC driver for AM654 SoC");
++MODULE_DESCRIPTION("Hyperbus Framework");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:hbmc-am654");
 +MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
+diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+new file mode 100644
+index 000000000000..57f273e87f29
+--- /dev/null
++++ b/include/linux/mtd/hyperbus.h
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++#ifndef __LINUX_MTD_HYPERBUS_H__
++#define __LINUX_MTD_HYPERBUS_H__
++
++#include <linux/mtd/map.h>
++
++enum hyperbus_memtype {
++	HYPERFLASH,
++	HYPERRAM,
++};
++
++/**
++ * struct hyerbus_device - struct representing Hyperbus slave device
++ * @map: map_info struct for accessing MMIO Hyperbus flash memory
++ * @np:	pointer to Hyperbus slave device node
++ * @mtd: pointer to MTD struct
++ * @ctlr: pointer to Hyperbus controller struct
++ * @memtype: type of memory device: Hyperflash or HyperRAM
++ * @registered: flag to indicate whether device is registered with MTD core
++ */
++
++struct hyperbus_device {
++	struct map_info map;
++	struct device_node *np;
++	struct mtd_info *mtd;
++	struct hyperbus_ctlr *ctlr;
++	enum hyperbus_memtype memtype;
++	bool registered;
++};
++
++/**
++ * struct hyperbus_ops - struct representing custom Hyperbus operations
++ * @read16: read 16 bit of data, usually from register/ID-CFI space
++ * @write16: write 16 bit of data, usually to register/ID-CFI space
++ * @copy_from: copy data from flash memory
++ * @copy_to: copy data to flash memory
++ * @calibrate: calibrate Hyperbus controller
++ */
++
++struct hyperbus_ops {
++	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
++	void (*write16)(struct hyperbus_device *hbdev,
++			unsigned long addr, u16 val);
++	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
++			  unsigned long from, ssize_t len);
++	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
++			const void *from, ssize_t len);
++	int (*calibrate)(struct hyperbus_device *dev);
++};
++
++/**
++ * struct hyperbus_ctlr - struct representing Hyperbus controller
++ * @calibrated: flag to indicate ctlr calibration sequence is complete
++ * @ops: Hyperbus controller ops
++ */
++struct hyperbus_ctlr {
++	struct device *dev;
++	bool calibrated;
++
++	const struct hyperbus_ops *ops;
++};
++
++/**
++ * hyperbus_calibrate - default calibration routine for use by Hyperbus ctlr.
++ * @hbdev: hyperbus_device to be used for calibration
++ *
++ * Return: 0 for success, others for failure.
++ */
++int hyperbus_calibrate(struct hyperbus_device *hbdev);
++
++/**
++ * hyperbus_register_device - probe and register a Hyperbus slave memory device
++ * @hbdev: hyperbus_device struct with dev, np and ctlr field populated
++ *
++ * Return: 0 for success, others for failure.
++ */
++int hyperbus_register_device(struct hyperbus_device *hbdev);
++
++/**
++ * hb_unregister_device - deregister Hyperbus slave memory device
++ * @hbdev: hyperbus_device to be unregistered
++ *
++ * Return: 0 for success, others for failure.
++ */
++int hyperbus_unregister_device(struct hyperbus_device *hbdev);
++
++#endif /* __LINUX_MTD_HYPERBUS_H__ */
 -- 
 2.21.0
 
