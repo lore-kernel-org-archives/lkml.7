@@ -2,190 +2,85 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B733C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF6AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7F721916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE11A21916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qZRSNs7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfCUVmw (ORCPT
+        id S1727018AbfCUVoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:42:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59218 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725999AbfCUVmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:42:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 899E0AEC6;
-        Thu, 21 Mar 2019 21:42:49 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     benniciemanuel78@gmail.com, linux-kernel@vger.kernel.org
-Date:   Fri, 22 Mar 2019 08:42:39 +1100
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>
-Subject: Re: [PATCH] staging: mt7621-pci: Add spaces to Macros in pci-mt7621.c
-In-Reply-To: <20190321202301.806-1-benniciemanuel78@gmail.com>
-References: <20190321202301.806-1-benniciemanuel78@gmail.com>
-Message-ID: <87h8bv7vlc.fsf@notabene.neil.brown.name>
+        Thu, 21 Mar 2019 17:44:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34146 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCUVoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 17:44:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=i7m++E+Xib+uDsp7WuM+xF5x1nfGX9p80KlO1ZOhiz8=; b=qZRSNs7dCUzn/FgvE+RBp5GcE
+        PyFCIgy9sr+dhqNHb55IbM6O7+1jai0tmbHue06hJi1edHn1UxaaRKm4DFMYlL8CpYyYeysf5KeUn
+        B4vUDi80+/c0e370T4+Ulq24ijI2SUc4O+ZJDXmVnL60LUBPr+8tKW4pgkUbMv2pF1nHIBgDJkeel
+        +x2ngxtknSWuHspHItqADpzmtfxqjHz6LByUJd4+/TRSpI5BKRQHS3eHFhQ/rPj1nL3/+wjOUUG3S
+        e7i8rOk++iorCbY3nYIjGRlsHLrYTPoOtmvHjWT7xQXsJpOa3PUK8lw23o+BU6XEzyeijCOp9NV+u
+        jxcQYknxQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h75Tm-0002fY-4W; Thu, 21 Mar 2019 21:44:02 +0000
+Date:   Thu, 21 Mar 2019 14:44:01 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        mhocko@suse.com, rppt@linux.ibm.com,
+        linux-amlogic@lists.infradead.org, liang.yang@amlogic.com,
+        linux@armlinux.org.uk, linux-mtd@lists.infradead.org
+Subject: Re: 32-bit Amlogic (ARM) SoC: kernel BUG in kfree()
+Message-ID: <20190321214401.GC19508@bombadil.infradead.org>
+References: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 21, 2019 at 09:17:34PM +0100, Martin Blumenstingl wrote:
+> Hello,
+> 
+> I am experiencing the following crash:
+>   ------------[ cut here ]------------
+>   kernel BUG at mm/slub.c:3950!
 
-On Thu, Mar 21 2019, Emanuel Bennici wrote:
+        if (unlikely(!PageSlab(page))) {
+                BUG_ON(!PageCompound(page));
 
-> Apply Kernel Coding Style to pci-mt7621.c by adding Tabs
+You called kfree() on the address of a page which wasn't allocated by slab.
 
-which part of Coding Style are you applying here?
-All these macros already are perfectly lined up with Tabs.
-You are adding an extra Tab to each line - why?
+> I have traced this crash to the kfree() in meson_nfc_read_buf().
+> my observation is as follows:
+> - meson_nfc_read_buf() is called 7 times without any crash, the
+> kzalloc() call returns 0xe9e6c600 (virtual address) / 0x29e6c600
+> (physical address)
+> - the eight time meson_nfc_read_buf() is called kzalloc() call returns
+> 0xee39a38b (virtual address) / 0x2e39a38b (physical address) and the
+> final kfree() crashes
+> - changing the size in the kzalloc() call from PER_INFO_BYTE (= 8) to
+> PAGE_SIZE works around that crash
 
-Thanks,
-NeilBrown
+I suspect you're doing something which corrupts memory.  Overrunning
+the end of your allocation or something similar.  Have you tried KASAN
+or even the various slab debugging (eg redzones)?
 
->
-> Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
-> ---
->  drivers/staging/mt7621-pci/pci-mt7621.c | 70 ++++++++++++-------------
->  1 file changed, 35 insertions(+), 35 deletions(-)
->
-> diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt=
-7621-pci/pci-mt7621.c
-> index 379ae780c691..c5d9b7204aef 100644
-> --- a/drivers/staging/mt7621-pci/pci-mt7621.c
-> +++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-> @@ -34,16 +34,16 @@
->  #include "../../pci/pci.h"
->=20=20
->  /* sysctl */
-> -#define MT7621_CHIP_REV_ID		0x0c
-> -#define CHIP_REV_MT7621_E2		0x0101
-> +#define MT7621_CHIP_REV_ID			0x0c
-> +#define CHIP_REV_MT7621_E2			0x0101
->=20=20
->  /* MediaTek specific configuration registers */
-> -#define PCIE_FTS_NUM			0x70c
-> -#define PCIE_FTS_NUM_MASK		GENMASK(15, 8)
-> -#define PCIE_FTS_NUM_L0(x)		((x) & 0xff << 8)
-> +#define PCIE_FTS_NUM				0x70c
-> +#define PCIE_FTS_NUM_MASK			GENMASK(15, 8)
-> +#define PCIE_FTS_NUM_L0(x)			((x) & 0xff << 8)
->=20=20
->  /* rt_sysc_membase relative registers */
-> -#define RALINK_PCIE_CLK_GEN		0x7c
-> +#define RALINK_PCIE_CLK_GEN			0x7c
->  #define RALINK_PCIE_CLK_GEN1		0x80
->=20=20
->  /* Host-PCI bridge registers */
-> @@ -51,44 +51,44 @@
->  #define RALINK_PCI_PCIMSK_ADDR		0x000C
->  #define RALINK_PCI_CONFIG_ADDR		0x0020
->  #define RALINK_PCI_CONFIG_DATA		0x0024
-> -#define RALINK_PCI_MEMBASE		0x0028
-> -#define RALINK_PCI_IOBASE		0x002C
-> +#define RALINK_PCI_MEMBASE			0x0028
-> +#define RALINK_PCI_IOBASE			0x002C
->=20=20
->  /* PCICFG virtual bridges */
-> -#define MT7621_BR0_MASK			GENMASK(19, 16)
-> -#define MT7621_BR1_MASK			GENMASK(23, 20)
-> -#define MT7621_BR2_MASK			GENMASK(27, 24)
-> -#define MT7621_BR_ALL_MASK		GENMASK(27, 16)
-> -#define MT7621_BR0_SHIFT		16
-> -#define MT7621_BR1_SHIFT		20
-> -#define MT7621_BR2_SHIFT		24
-> +#define MT7621_BR0_MASK				GENMASK(19, 16)
-> +#define MT7621_BR1_MASK				GENMASK(23, 20)
-> +#define MT7621_BR2_MASK				GENMASK(27, 24)
-> +#define MT7621_BR_ALL_MASK			GENMASK(27, 16)
-> +#define MT7621_BR0_SHIFT			16
-> +#define MT7621_BR1_SHIFT			20
-> +#define MT7621_BR2_SHIFT			24
->=20=20
->  /* PCIe RC control registers */
-> -#define MT7621_PCIE_OFFSET		0x2000
-> -#define MT7621_NEXT_PORT		0x1000
-> +#define MT7621_PCIE_OFFSET			0x2000
-> +#define MT7621_NEXT_PORT			0x1000
->=20=20
->  #define RALINK_PCI_BAR0SETUP_ADDR	0x0010
->  #define RALINK_PCI_IMBASEBAR0_ADDR	0x0018
-> -#define RALINK_PCI_ID			0x0030
-> -#define RALINK_PCI_CLASS		0x0034
-> -#define RALINK_PCI_SUBID		0x0038
-> -#define RALINK_PCI_STATUS		0x0050
-> +#define RALINK_PCI_ID				0x0030
-> +#define RALINK_PCI_CLASS			0x0034
-> +#define RALINK_PCI_SUBID			0x0038
-> +#define RALINK_PCI_STATUS			0x0050
->=20=20
->  /* Some definition values */
-> -#define PCIE_REVISION_ID		BIT(0)
-> -#define PCIE_CLASS_CODE			(0x60400 << 8)
-> -#define PCIE_BAR_MAP_MAX		GENMASK(30, 16)
-> -#define PCIE_BAR_ENABLE			BIT(0)
-> -#define PCIE_PORT_INT_EN(x)		BIT(20 + (x))
-> -#define PCIE_PORT_CLK_EN(x)		BIT(24 + (x))
-> -#define PCIE_PORT_PERST(x)		BIT(1 + (x))
-> -#define PCIE_PORT_LINKUP		BIT(0)
-> -
-> -#define PCIE_CLK_GEN_EN			BIT(31)
-> -#define PCIE_CLK_GEN_DIS		0
-> -#define PCIE_CLK_GEN1_DIS		GENMASK(30, 24)
-> -#define PCIE_CLK_GEN1_EN		(BIT(27) | BIT(25))
-> -#define MEMORY_BASE			0x0
-> +#define PCIE_REVISION_ID			BIT(0)
-> +#define PCIE_CLASS_CODE				(0x60400 << 8)
-> +#define PCIE_BAR_MAP_MAX			GENMASK(30, 16)
-> +#define PCIE_BAR_ENABLE				BIT(0)
-> +#define PCIE_PORT_INT_EN(x)			BIT(20 + (x))
-> +#define PCIE_PORT_CLK_EN(x)			BIT(24 + (x))
-> +#define PCIE_PORT_PERST(x)			BIT(1 + (x))
-> +#define PCIE_PORT_LINKUP			BIT(0)
-> +
-> +#define PCIE_CLK_GEN_EN				BIT(31)
-> +#define PCIE_CLK_GEN_DIS			0
-> +#define PCIE_CLK_GEN1_DIS			GENMASK(30, 24)
-> +#define PCIE_CLK_GEN1_EN			(BIT(27) | BIT(25))
-> +#define MEMORY_BASE					0x0
->=20=20
->  /**
->   * struct mt7621_pcie_port - PCIe port information
-> --=20
-> 2.19.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyUBU8ACgkQOeye3VZi
-gbm0Mg//XAIJpd0a25L0R/08vcgWK55+7VzyBe46wlzaZToXb1f8dwEsduk5GUzz
-kSE3NMIfxghSzmLCLiYpUmNR3SbPvBSMZbkFCi1+qpJq2UBLMajt33a48KXP220M
-Zwz7aCso/D+da3KjsUGaFNCLkknyf4obq4BJq2UrRHHNKC7dd7lnHfRc18jyMRlN
-dLFdI1Lc8jJmMmbgelb00iuJj3ayDVZ24ifMhiyvbrpnFGNSeH9Y30fE0WRgPnem
-5yxmtx7+3cSlJgnbwzhth+AtH22A1c/lKSDJ3EykghMTBBMJDZxAEgiSuRkClA8j
-sP0NZRvwrQ+BDUxeAF4q4ywbVb8VAcLYjXBWojYFOi44euKAglvork+vbr+HA5t/
-m9HmIkKFTLiBst7gU+uxuQAUhEWZE2ntqWFgJHH6eI8GXjkpl6jbIw6qw6lq63B8
-M7mw44upUCSUpRvRubFPkzQHwZcH7GIk0Ue9t/kz77B288jkvR+76sCOmRJHPI2l
-ovyZmmv3QS/l2paTkkb0KlDjlj5AKm4QbLoIjeC47dxkSh8B6U1U6qBRm0kZOcUI
-bJBq/TBvfaSBTBVso4ijIKZhvnYQtk84VtMeZAtUktac+lg+h07wuMycPYfj62qu
-y/UkYFLmngNblJvYec8wJSzACd6/06/KITHouNhKMJodVoPNeTE=
-=xS/I
------END PGP SIGNATURE-----
---=-=-=--
