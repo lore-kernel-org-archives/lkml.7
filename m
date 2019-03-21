@@ -2,215 +2,176 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0502C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79342C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664F82175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498F0218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndx06Er1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcXy2uvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfCUQnf (ORCPT
+        id S1728628AbfCUQoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:43:35 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41602 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfCUQne (ORCPT
+        Thu, 21 Mar 2019 12:44:07 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:37691 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfCUQoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:43:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id v10so5779756iom.8;
-        Thu, 21 Mar 2019 09:43:33 -0700 (PDT)
+        Thu, 21 Mar 2019 12:44:06 -0400
+Received: by mail-ua1-f65.google.com with SMTP id x1so2146531uaj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WhUIibBwPuGZJJMXSp7g1HHM2FHSlDOq/daC95m5eTo=;
-        b=ndx06Er1hOPA2N7tZqYIR/bARwta1/gJcfw4e6mtfF8nPowSEj+kfAv/QmeRbiQ2cU
-         RDpWkRNp9meBYL0AM6873KmJFuQMqSnH3ZEEt/VrtaTihGaqqc02wiWrnc3cY+9hacpE
-         pHXN2Om6tTXlliSDg3F/owCOcnIDGv23IAR9/f63D8jdhg+jHUuZAjFPCaS29qgaZYdm
-         CLFQtXnc1yVWnywW5q2Fv2SeXi+mcRr5XEduCfyOmVew+kJjVY81LBMfV2AhWkPcOqhL
-         ukWp2bcv6wUMgRmeFKgqiysN+2srjZKUbo6iaf+9C+7LrC5qQI6sCfOic4Hg3M/YUYhZ
-         3GzQ==
+        bh=sM1yGQ5v2jOeD65+zu8wzi19KfsaD9MhkY+UP+i8rUg=;
+        b=DcXy2uvAP5zTVSjJEnNlf1I8WYMJrxPsdqUpdW4xxu64U4Wv0pQapyS0YxEILKEQVZ
+         rSQAoUEYOIeCfqdE2qch5aNCzP5Xjcfot3QHPkfNE5XAqAz4fqAFKytZrjc8gH+Qf2u2
+         VKtXF8takDN6Ac92irH2y4liYu3NhGCTpqXnGiWQsLrsHJtDoA67cExjypDyQxV9WobV
+         n26E4P+adiZTIQiCC9Z9nNgIvo4wJ3phrIlqWCtXEf+dqkPGDC9dYR5MBObAda9zPwLd
+         mRTtEWNoS3ESpTOBtEDSqf/NFmFUEYyqE/Op7OpElbFX5BV15mPEo/QVVbjiFxnX0xGt
+         B83A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WhUIibBwPuGZJJMXSp7g1HHM2FHSlDOq/daC95m5eTo=;
-        b=KgBT7SY4XUKJqFsFUksxQ/SINslMqXkJIeiHgzvR3A06u8eqGf8Yjd5btZVAyhiA1E
-         ShmU4+XUjaxGaIfo964gUMcL/WNc/RS1eVwepcgBAfDd7SF0gEymZ7QWo3lc19yfX9pd
-         6hAgjQcpqg+p6jaiqZXSLlApSjKWpB3p/64VQJK3ODiQSCAzXnvT3o0KXvF8y79rnZUF
-         9aLijUUK5wPRvE2nRXaiwspxeYgVHA8k8wUw2YGf6Hn7fD580Da548924gV0m3vfd7q/
-         7+aqvLoEPKsMpGEH9L692JhDJ3FgeKSTrS3uZ9eZj/7FFd2BNCIf0Osw8ARtUwn+Su36
-         bvvw==
-X-Gm-Message-State: APjAAAXPArlSH7QUJ9sy9S1o/yBREKNQwCimPdHwZ4hhIGxWUHK3GiAF
-        y6U3rQqhDLemA1tVLvoRgxqOA7DOWkvxuXWcuT8=
-X-Google-Smtp-Source: APXvYqxOJS5NstCrn81nR3Q0h4pv0vTWiSN1QkJUc4XQYgh/6Lqa06PB+nM1gVq6kZNIlmDevDPFkZtY93HeYU2/plc=
-X-Received: by 2002:a5d:8757:: with SMTP id k23mr3716300iol.68.1553186613308;
- Thu, 21 Mar 2019 09:43:33 -0700 (PDT)
+        bh=sM1yGQ5v2jOeD65+zu8wzi19KfsaD9MhkY+UP+i8rUg=;
+        b=K3kxsQ+SnmxEZAjjPxxXqB1pzetXOVgAN66ySDrqVPPx/5w08mTs5jUiTOYelzfG7t
+         axJ62jd4RAFGsk+ghDSp1hCpCX+Jsq6QfmNsrZZZiq+8ArZQt19neK5ER+v8+Jz1770C
+         4/QAtaWjtgF7yhDCGgOytM/NYDDa2gFsj7zWRd7jR9uTpvmFCzre73L4XARmvk7Eo2ma
+         AGRfxLSzHAKdUxf+tCuR69K+DMolJ/X528qZrjSDoJs0+9HL3+nFqZu+XxLhVzyasJEv
+         FAG1kAn9AKGU5IAHHQXV/09QAvijtjMlhKPNQl+v99MwYbymKzyzzrA/nliQziCoxPnf
+         6McQ==
+X-Gm-Message-State: APjAAAWWHjwQvr/0cMOFfUpCxyEx0jUVLdoIUEK4iXxG/uS1aZN69mY8
+        oNjXnPUdWfejkWJy8WZpv8wtLW5HZ+XR6cck5GVqRg==
+X-Google-Smtp-Source: APXvYqwKDeU6f51kzOyQfHEEdj7pgJ4eEy6SAn5iX3PI1Tu7l0K630Rk1yPyYFWe7Z9+sbSRfpXikTTytqcOapt4XTY=
+X-Received: by 2002:ab0:719a:: with SMTP id l26mr2465922uao.24.1553186645083;
+ Thu, 21 Mar 2019 09:44:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20170324164902.15226.48358.stgit@localhost.localdomain>
- <20170324170812.15226.97497.stgit@localhost.localdomain> <CALMXkpb3MfLbNoBgLJc0rgMDbPg9yOevKOiq9N8pzVw-aeNb3g@mail.gmail.com>
- <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
-In-Reply-To: <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 21 Mar 2019 09:43:22 -0700
-Message-ID: <CAKgT0Uc68jsuPHKbxxFpeMCQAo2M69DhzA_XGw7Kvou4H3eHPg@mail.gmail.com>
-Subject: Re: [net-next PATCH v3 4/8] net: Change return type of sk_busy_loop
- from bool to void
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Christoph Paasch <christoph.paasch@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Samudrala, Sridhar" <sridhar.samudrala@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Linux API <linux-api@vger.kernel.org>
+References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com> <1551976742-4358-3-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1551976742-4358-3-git-send-email-ludovic.Barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 21 Mar 2019 17:43:28 +0100
+Message-ID: <CAPDyKFoq-pvw=KNPK4XzNu=0Jeu_OPDB0KZrhWVQ88LjNAu5nw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/6] mmc: mmci: add helper functions to define datactrl
+ value for variants
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 2:45 AM Paolo Abeni <pabeni@redhat.com> wrote:
+On Thu, 7 Mar 2019 at 17:39, Ludovic Barre <ludovic.Barre@st.com> wrote:
 >
-> Hi,
+> From: Ludovic Barre <ludovic.barre@st.com>
 >
-> On Wed, 2019-03-20 at 11:35 -0700, Christoph Paasch wrote:
-> > Hello,
-> >
-> > On Fri, Mar 24, 2017 at 3:23 PM Alexander Duyck
-> > <alexander.duyck@gmail.com> wrote:
-> > > From: Alexander Duyck <alexander.h.duyck@intel.com>
-> > >
-> > > > From what I can tell there is only a couple spots where we are actually
-> > > checking the return value of sk_busy_loop. As there are only a few
-> > > consumers of that data, and the data being checked for can be replaced
-> > > with a check for !skb_queue_empty() we might as well just pull the code
-> > > out of sk_busy_loop and place it in the spots that actually need it.
-> > >
-> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@intel.com>
-> > > Acked-by: Eric Dumazet <edumazet@google.com>
-> > > ---
-> > >  include/net/busy_poll.h |    5 ++---
-> > >  net/core/datagram.c     |    8 ++++++--
-> > >  net/core/dev.c          |   25 +++++++++++--------------
-> > >  net/sctp/socket.c       |    9 ++++++---
-> > >  4 files changed, 25 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
-> > > index b82d6ba70a14..c55760f4820f 100644
-> > > --- a/include/net/busy_poll.h
-> > > +++ b/include/net/busy_poll.h
-> > > @@ -74,7 +74,7 @@ static inline bool busy_loop_timeout(unsigned long end_time)
-> > >         return time_after(now, end_time);
-> > >  }
-> > >
-> > > -bool sk_busy_loop(struct sock *sk, int nonblock);
-> > > +void sk_busy_loop(struct sock *sk, int nonblock);
-> > >
-> > >  #else /* CONFIG_NET_RX_BUSY_POLL */
-> > >  static inline unsigned long net_busy_loop_on(void)
-> > > @@ -97,9 +97,8 @@ static inline bool busy_loop_timeout(unsigned long end_time)
-> > >         return true;
-> > >  }
-> > >
-> > > -static inline bool sk_busy_loop(struct sock *sk, int nonblock)
-> > > +static inline void sk_busy_loop(struct sock *sk, int nonblock)
-> > >  {
-> > > -       return false;
-> > >  }
-> > >
-> > >  #endif /* CONFIG_NET_RX_BUSY_POLL */
-> > > diff --git a/net/core/datagram.c b/net/core/datagram.c
-> > > index ea633342ab0d..4608aa245410 100644
-> > > --- a/net/core/datagram.c
-> > > +++ b/net/core/datagram.c
-> > > @@ -256,8 +256,12 @@ struct sk_buff *__skb_try_recv_datagram(struct
-> > > sock *sk, unsigned int flags,
-> > >                 }
-> > >
-> > >                 spin_unlock_irqrestore(&queue->lock, cpu_flags);
-> > > -       } while (sk_can_busy_loop(sk) &&
-> > > -                sk_busy_loop(sk, flags & MSG_DONTWAIT));
-> > > +
-> > > +               if (!sk_can_busy_loop(sk))
-> > > +                       break;
-> > > +
-> > > +               sk_busy_loop(sk, flags & MSG_DONTWAIT);
-> > > +       } while (!skb_queue_empty(&sk->sk_receive_queue));
-> >
-> > since this change I am hitting stalls where it's looping in this
-> > while-loop with syzkaller.
-> >
-> > It worked prior to this change because sk->sk_napi_id was not set thus
-> > sk_busy_loop would make us get out of the loop.
-> >
-> > Now, it keeps on looping because there is an skb in the queue with
-> > skb->len == 0 and we are peeking with an offset, thus
-> > __skb_try_recv_from_queue will return NULL and thus we have no way of
-> > getting out of the loop.
-> >
-> > I'm not sure what would be the best way to fix it. I don't see why we
-> > end up with an skb in the list with skb->len == 0. So, shooting a
-> > quick e-mail, maybe somebody has an idea :-)
-> >
-> > I have the syzkaller-reproducer if needed.
+> This patch adds default helper functions to define datactrl value.
+> Each variant could use these helpers to define datactrl and adds
+> their specific field.
 >
-> IIRC we can have 0 len UDP packet sitting on sk_receive_queue since:
->
-> commit e6afc8ace6dd5cef5e812f26c72579da8806f5ac
-> Author: samanthakumar <samanthakumar@google.com>
-> Date:   Tue Apr 5 12:41:15 2016 -0400
->
->     udp: remove headers from UDP packets before queueing
->
-> Both __skb_try_recv_datagram() and napi_busy_loop() assume that we
-> received some packets if the queue is not empty. When peeking such
-> assumption is not true, we should check if the last packet is changed,
-> as __skb_recv_datagram() already does. So I *think* the root cause of
-> this issue is older than Alex's patch.
-
-I agree.
-
-> The following - completely untested - should avoid the unbounded loop,
-> but it's not a complete fix, I *think* we should also change
-> sk_busy_loop_end() in a similar way, but that is a little more complex
-> due to the additional indirections.
-
-As far as sk_busy_loop_end we could look at just forking sk_busy_loop
-and writing a separate implementation for datagram sockets that uses a
-different loop_end function. It shouldn't take much to change since
-all we would need to do is pass a structure containing the sk and last
-pointers instead of just passing the sk directly as the loop_end
-argument.
-
-> Could you please test it?
->
-> Any feedback welcome!
-
-The change below looks good to me.
-
-> Could you please test it?
->
-> Paolo
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 > ---
-> diff --git a/net/core/datagram.c b/net/core/datagram.c
-> index b2651bb6d2a3..e657289db4ac 100644
-> --- a/net/core/datagram.c
-> +++ b/net/core/datagram.c
-> @@ -279,7 +279,7 @@ struct sk_buff *__skb_try_recv_datagram(struct sock
-> *sk, unsigned int flags,
->                         break;
+>  drivers/mmc/host/mmci.c | 25 +++++++++++++++++++++++++
+>  drivers/mmc/host/mmci.h |  5 +++++
+>  2 files changed, 30 insertions(+)
 >
->                 sk_busy_loop(sk, flags & MSG_DONTWAIT);
-> -       } while (!skb_queue_empty(&sk->sk_receive_queue));
-> +       } while (sk->sk_receive_queue.prev != *last);
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 9e6a2c1..28b76c5 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -983,6 +983,31 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>         mmci_unprep_data(host, data, err);
+>  }
 >
->         error = -EAGAIN;
+> +u32 mmci_dctrl_blksz(struct mmci_host *host)
+> +{
+> +       return (ffs(host->data->blksz) - 1) << 4;
+> +}
+
+Overall, this function and the other helpers added here, could be made
+static inline functions, implemented in mmci.h.
+
+If I understood Russell's point correctly, that's also we he suggested.
+
+> +
+> +u32 mmci_dctrl_dir(struct mmci_host *host)
+> +{
+> +       return host->data->flags & MMC_DATA_READ ? MCI_DPSM_DIRECTION : 0;
+
+As pointed out by Russell, drop this and keep this in the common
+mmci_start_data().
+
+Or you need this for the stm32_sdmmc later? Then perhaps make that a
+separate change on top.
+
+> +}
+> +
+> +u32 mmci_dctrl_ddr(struct mmci_host *host)
+> +{
+> +       if (host->mmc->ios.timing == MMC_TIMING_UHS_DDR50 ||
+> +           host->mmc->ios.timing == MMC_TIMING_MMC_DDR52)
+> +               return host->variant->datactrl_mask_ddrmode;
+
+This seems a bit like an unnecessary helper. How about moving this
+into the ux500v2 and qcom variants ->datactrl() callbacks instead,
+thus we can also remove ->datactrl_mask_ddrmode from the variant
+struct.
+
+Does that make sense?
+
+> +       return 0;
+> +}
+> +
+> +u32 mmci_dctrl_sdio(struct mmci_host *host)
+> +{
+> +       if (host->mmc->card && mmc_card_sdio(host->mmc->card))
+> +               return host->variant->datactrl_mask_sdio;
+> +       return 0;
+> +}
+> +
+>  static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
+>  {
+>         struct variant_data *variant = host->variant;
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index a59049b..32ae41d 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -430,6 +430,11 @@ struct mmci_host {
+>  void mmci_write_clkreg(struct mmci_host *host, u32 clk);
+>  void mmci_write_pwrreg(struct mmci_host *host, u32 pwr);
 >
+> +u32 mmci_dctrl_blksz(struct mmci_host *host);
+> +u32 mmci_dctrl_dir(struct mmci_host *host);
+> +u32 mmci_dctrl_ddr(struct mmci_host *host);
+> +u32 mmci_dctrl_sdio(struct mmci_host *host);
+> +
+>  #ifdef CONFIG_DMA_ENGINE
+>  int mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
+>                         bool next);
+> --
+> 2.7.4
 >
+
+Overall, I have to admit that it's tricky to fine a decent balance of
+callbacks/helpers/variant-data. I guess we simply have to continue
+evolve this, along the lines of what suggest here and just see how it
+turns out. We can always patch the code on top if we find other/better
+solutions along the road.
+
+Kind regards
+Uffe
