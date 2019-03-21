@@ -2,115 +2,78 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4508C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38954C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB16421917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E8F21900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="ysgKI+EA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6pOTW+j0"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="m4TbOO9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfCUXgg (ORCPT
+        id S1727386AbfCUXgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:36:36 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:51367 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726555AbfCUXgg (ORCPT
+        Thu, 21 Mar 2019 19:36:51 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:33337 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfCUXgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:36:36 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Mar 2019 19:36:35 EDT
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 65367247E5;
-        Thu, 21 Mar 2019 19:29:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 21 Mar 2019 19:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=ImA9Z06R/50k8H3at+XhqlWnLjA
-        GXJst6Gjj/b/gR1o=; b=ysgKI+EADcTfFJ467W1qq/1zARCrXYTw2UVuY+zsGBm
-        3doT5dd8RuXrT13ufHt1V5DZAgsMMQaridkGE40WxjqchflEyRIDcgajqFzCo05a
-        YJb3UHA6DGn7861V5AiZ3BSVWOrsgunpOTNLEzVhBurN08xK/HyDDkPR5L641CG0
-        TX8TzqMD3DBHxNSb73MXFBrCzbnkaSulCTNJPMXrLjksgVokbCntRUb4GKwmaysZ
-        aQ4BbWNqNhj2VipjO+5LjBAWfzIrAvxY9iQE6wcNnG+81tsvSWNBAeb78XOB1KIO
-        CD/c0u5FBDaZW/lCDB81N3T6BLmnNqzMmf0IxonVJkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ImA9Z0
-        6R/50k8H3at+XhqlWnLjAGXJst6Gjj/b/gR1o=; b=6pOTW+j0DlDfNapjvf9C/7
-        OwiPss6J7BrBVescn/iRQII4WQTgyJEyJCfkYEvRB6eZZKAT/GdySp80DxcZMeWb
-        mtPCGQnjTyKNOa9c3oNqLd6AQSG3lA7G2k3QFuvBbsO17Y6+SQgvTWpg5DrCRs/X
-        xQntVzeIywsq9ILg9t26RYKzME2e/76+KadxX/jLvIB4vhoXIiVrSyNGBDlo1UWD
-        sKnK9HWCfR7SyLhQGFwUBbjr544e5WuIubjlqIDSmamvR6ZGHdWu1tOuSdFUP290
-        qI3qfeIkpJFsRnfakiOhm/vHZxlIDLwoQ/f3r17tLxdXzm9b5vZl0QQYnSN0FhZw
-        ==
-X-ME-Sender: <xms:cR6UXCeml4LTLJ-YcVPDA44DgM0XaSNzCm3pkB-lRrCpi3aHXyEZQg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjedtgddutdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudejuddrfedurdduhedunecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:cR6UXIEIiiDEckKnSPtbc6OYZ4G7eTv8swrdfQHWsCiaV94uv30ezA>
-    <xmx:cR6UXMWVMQXQfXRwx5kpx-39I61JAWe_foCgV1C36dVSsso4HyzZrQ>
-    <xmx:cR6UXIwVEHk6v78eEee7Zm2r6jQZZX9OTSR-QTfNzBSdH11bUQir4w>
-    <xmx:cx6UXM13f7YIHlwsjiX-KJ38tecQuKCyq8xCiRUXphkO7foh4GsPZw>
-Received: from localhost (124-171-31-151.dyn.iinet.net.au [124.171.31.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2E384E4807;
-        Thu, 21 Mar 2019 19:29:52 -0400 (EDT)
-Date:   Fri, 22 Mar 2019 10:29:25 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Joe Perches <joe@perches.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v2] docs: Clarify the usage and sign-off requirements for
- Co-developed-by
-Message-ID: <20190321232925.GA17705@eros.localdomain>
-References: <20190321184316.8525-1-sean.j.christopherson@intel.com>
- <20190321192341.GG6519@linux.intel.com>
- <0cc879a63943b57b62caddce6866b83a14b42c14.camel@perches.com>
+        Thu, 21 Mar 2019 19:36:50 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 430E58066C;
+        Fri, 22 Mar 2019 12:36:46 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1553211406;
+        bh=ASgEoS06bGTq5chChrbSHAh/0RRrpEwRt0bcX2Jr+UY=;
+        h=From:To:Cc:Subject:Date;
+        b=m4TbOO9lCa1se/e0VyiUAl6t87TJ8IN/JoctjlO0HrAjl/hRBGFcjvcyzjudJnn/L
+         4raUTPIccRI9a9ayuvD1Xg2Do98fz0dTDVJvMCPYpXfCJOVotFgLcpGqu3aV358+cj
+         84zqIwQ4z/DNQFEWrxMH0RI7+ZIg0EJ/27vfkggVEzbPm/SD3ibZWRBp31DnVnUCto
+         wV+tFL5OBDX5NbLuOcDIhEHgWap/OQEu3sQBDgj79kHnyNwM0/6fdv1Gbveubxgb/G
+         1CqfI6qzjuLp1K7iM/vjg4AsAaGFlOLYj1GJuMWxM1xCrd1NoKSPMQwbJz1u2ldCKQ
+         9EKYGYTw32VNg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5c94200b0000>; Fri, 22 Mar 2019 12:36:44 +1300
+Received: from richardl-dl.ws.atlnz.lc (richardl-dl.ws.atlnz.lc [10.33.23.10])
+        by smtp (Postfix) with ESMTP id EE91A13EC40;
+        Fri, 22 Mar 2019 12:36:44 +1300 (NZDT)
+Received: by richardl-dl.ws.atlnz.lc (Postfix, from userid 1481)
+        id C5ABF4C05D3; Fri, 22 Mar 2019 12:36:44 +1300 (NZDT)
+From:   Richard Laing <richard.laing@alliedtelesis.co.nz>
+To:     rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-kernel@vger.kernel.org,
+        Richard Laing <richard.laing@alliedtelesis.co.nz>
+Subject: [PATCH] Add I2C recovery handling for bcm-iproc based devices.
+Date:   Fri, 22 Mar 2019 12:35:27 +1300
+Message-Id: <20190321233528.16568-1-richard.laing@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0cc879a63943b57b62caddce6866b83a14b42c14.camel@perches.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 03:47:26PM -0700, Joe Perches wrote:
-> On Thu, 2019-03-21 at 12:23 -0700, Sean Christopherson wrote:
-> > On Thu, Mar 21, 2019 at 11:43:16AM -0700, Sean Christopherson wrote:
-> > > The documentation for Co-developed-by is a bit light on details, e.g. it
-> > > doesn't explicitly state that:
-> > > 
-> > >   - Multiple Co-developed-by tags are perfectly acceptable
-> > >   - Co-developed-by and Signed-off-by must be paired together
-> > >   - SOB ordering should still follow standard sign-off procedure
-> 
-> While I still think co-developed-by: is unnecessary and
-> almost none of the existing uses of this have this
-> sequence of "Co-developed-by: <name/email>" followed directly
-> by "Signed-off-by: <same name/email>", here's a possible
-> checkpatch addition for it.
+This patch adds I2C bus recovery support to the bcm-iproc I2C driver.
+use the existing generic recovery mechanism by providing the hooks needed
+to get and set the SCL and SDA lines.
 
-Tested-by: Tobin C. Harding <tobin@kernel.org>
+The device must be placed in bit-bang mode before recovery starts and
+returned to normal operation when complete.
 
-Catches missing SOB of co-developer.
+Richard Laing (1):
+  Add i2c recovery handling for bcm-iproc based devices.
 
-Hope this helps,
-Tobin.
+ drivers/i2c/busses/i2c-bcm-iproc.c | 120 +++++++++++++++++++++++++++++++=
+++++++
+ 1 file changed, 120 insertions(+)
+
+--=20
+2.1.4
+
