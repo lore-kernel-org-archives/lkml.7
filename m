@@ -2,159 +2,179 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB38C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5009C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F17218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D232190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J5vcZXWm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AmpxmuUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfCUCQV (ORCPT
+        id S1727742AbfCUCVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:16:21 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55753 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfCUCQU (ORCPT
+        Wed, 20 Mar 2019 22:21:00 -0400
+Received: from mail-io1-f74.google.com ([209.85.166.74]:36166 "EHLO
+        mail-io1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfCUCU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:16:20 -0400
-Received: by mail-it1-f194.google.com with SMTP id z126so2114352itd.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:16:20 -0700 (PDT)
+        Wed, 20 Mar 2019 22:20:59 -0400
+Received: by mail-io1-f74.google.com with SMTP id a7so3967925ioq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2GEtIscopF9TJ/61Pptrydo8k5Yuaic+jv+1XcIshqg=;
-        b=J5vcZXWmGrzS4udQxzOdLyPMxyRjOjH7t8HnBYmnYCvDvDNwQTenP5Dre4Ti+vUajN
-         W/tG9Iesn4TE4Of9yS8cfskAjqUEuC+wr1R27RgZyrmPO8bjYJWP4pkeRkwhHQc9Xqor
-         zjb1lU9I9gwtT1PovemHN1YYu9NQRQsH7P+2U/IiEjfgqAqrmKtqSYyHAPtvWhP2Mj+4
-         Lu3DO4vMHIIVaZnYivNPpCV9dE9ESz8U4dpiiadinKXM2iOJ+n2xpleYprjEWoCjPuzy
-         WDiefNO7m6FPul7iZzuzpyiqhMDKteY7N496ii0MyvU3cKzcjmiRfsClD8obyuM48Dlm
-         Vefg==
+        bh=K3pTWsThSeWn3qKVtJV9nUNsFfNlhwc+y5rcZkUTfsk=;
+        b=AmpxmuUt6biVTVCj7sqKxGtMBMtL4bYJN3OYCwPsQKrqVgi6drvXfA6pWuEygEtKcA
+         w2JhS5dzaMcdDicQKcPrphggz/+oIFPKPaTwRE3nUZqQFV8adJcRURCkCfe7jSPf8hav
+         aPVoapPI6u32/Hb9ut1jGMMnTrFBd8a632/WtpSi3bb2P/iwKibo+oFCGiwI17zZPhEb
+         vxdftZtBZLqbfUvJl9Cx0lMgLHxs6zmJFh4g1V15g/11i0uVEXIUPrN/QxEWrtmYBECW
+         GkBv6y1XE8lWfAIlhZYZelYYOVijEKys1kMbct1Kuko6ixjeSmR0sXkjpCm8zm5pFV5j
+         Go7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2GEtIscopF9TJ/61Pptrydo8k5Yuaic+jv+1XcIshqg=;
-        b=g0NahezSz/iFuNCCftO5YL1wka8uNqs0c96x82/n3bRmxJX0LxemkrIFYD4HccsdRA
-         LpFX7fgzyo8INhBrgL9aCzIGg9wD5fMJA24UYNygtzBniwsk4amSXecU91OGsfdPtHx2
-         d81jJpT4EIAHPIuva5gGvx5hbMnXosjIHE8pIHmpZEJfBdV9jkzpnQa42eHincIc7hEj
-         8qSb0emaeBJwrbStf3epJYHMdvZO2lefuSdtV96+fUiTn1L3pJxpDQhx472JzVmowMUt
-         VVtFWI6klohVy4WE8it47Qds0KQmcqP1wOMDGomAkvlcPrOypfMBlJ6Wil7DhSZoBs66
-         J7Bg==
-X-Gm-Message-State: APjAAAV8vuOmqr6TC+uN0V2vJIt36tvjxg+WjsifkqmpKmdBxGb8iLtI
-        xWg4N3W1Dm7FXfHDqcgEqonK2UTVn4VjBdjbMIUN4g==
-X-Google-Smtp-Source: APXvYqwPw6CoRmrvVLgt57ePisGLXLFvZu0oZI4yJIoRnN8+ErLYE/UyUG4MaX3acADLAb7D6zsFwiMdYZCJcK6kDXg=
-X-Received: by 2002:a05:660c:3cf:: with SMTP id c15mr995985itl.52.1553134579324;
- Wed, 20 Mar 2019 19:16:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
-From:   Furquan Shaikh <furquan@google.com>
-Date:   Wed, 20 Mar 2019 20:16:08 -0600
-Message-ID: <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
-Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devel@acpica.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Evan Green <evgreen@google.com>,
-        Duncan Laurie <dlaurie@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=K3pTWsThSeWn3qKVtJV9nUNsFfNlhwc+y5rcZkUTfsk=;
+        b=BMYoJSNVCSZcd8pfjMfMW7ipA4YqsYCfjBg5Gy7OEu+RgAYtupQOwsN0Fdq2At23ML
+         N8tYw3lP3QAM/PtjqGVn3hAcRom6KuO09hygEZbhN5oRqG1Ivj/DqJLutIW3F110wiJK
+         SxKSzOVGFfxKZq8rXe3UykU4q0XkhSeHXwPyIoV3a8x7/D4fSpk4zX09XZU4OvHhNspJ
+         HYyq/Ot9MuhT42o2MsMC8LzV/X0fnYPPBDY+iIbwQ/Jb+SUX6UA/9BDKEP9XrEsJHxHf
+         Kh8lkHPN5k0UpLetER09JDVKMf7HkhvAUfN0uXo86LpbI314Xs142mgYD0sZOzayocMJ
+         iYhg==
+X-Gm-Message-State: APjAAAVMRZDxxLQNDKZJov3VNQ2lN+n20oIqEJdvzrFkHi17h/7dl+S4
+        emYsaHidZoIXHpc/7JjjgRMcRJnDSj/b
+X-Google-Smtp-Source: APXvYqxd5HC+CQHubvNDXL8uVTI52mEnqkj7OgndnZiH+bT9sMyvHVvSW2oYPYO8DgL5MjynxIj8xPatwEP0
+X-Received: by 2002:a24:2704:: with SMTP id g4mr432290ita.36.1553134858739;
+ Wed, 20 Mar 2019 19:20:58 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 10:20:52 +0800
+In-Reply-To: <20190128072948.45788-1-linfish@google.com>
+Message-Id: <20190321022052.164967-1-linfish@google.com>
+Mime-Version: 1.0
+References: <20190128072948.45788-1-linfish@google.com>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
+Subject: [PATCH v6] [media] v4l: add I / P frame min max QP definitions
+From:   Fish Lin <linfish@google.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Keiichi Watanabe <keiichiw@chromium.org>,
+        Smitha T Murthy <smitha.t@samsung.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fish Lin <linfish@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
-> >
-> > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
-> > clearing ACPI IRQs during suspend/resume") was added to stop clearing
-> > of event status bits unconditionally on suspend and resume paths. This
-> > was done because of an issue
-> > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
-> > lid status stays closed even on resume (which happens because event
-> > status bits are cleared unconditionally on resume). Though this change
-> > fixed the issue on suspend path, it introduced regressions on several
-> > resume paths.
-> >
-> > First regression was reported and fixed on S5 path by the following
-> > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
-> > entering S5"). Next regression was reported and fixed on all legacy
-> > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
-> > events when entering sleep states"). However, regression still exists
-> > on S0ix sleep path since it does not follow the legacy sleep path.
->
-> What exactly is failing?
+Add following V4L2 QP parameters for H.264:
+* V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP
+* V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP
+* V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP
+* V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP
 
-Here is the failure scenario:
+These controls will limit QP range for intra and inter frame,
+provide more manual control to improve video encode quality.
 
-1. Consider the case of trackpad which acts as a wake source.
-2. Since the pad is configured for SCI, GPE_STS gets set for that pad
-during normal interrupts as well (i.e. during probe at boot or when
-using the trackpad)
-3. Now, when the platform decides to enter S0ix, it enables the wake
-on trackpad by enabling appropriate GPE_EN bit.
-4. So, at this point, we are in a situation where GPE_EN as well as
-GPE_STS are set.
-5. Now, if the platform enters S0ix, having GPE_STS set will result in
-unwanted wakes because of stale events.
+Signed-off-by: Fish Lin <linfish@google.com>
+---
+Changelog since v5:
+- Adjust documentation wording.
 
-This is similar to what was fixed on the legacy sleep path:
-https://lkml.org/lkml/2018/8/12/42. However, as S0ix does not follow
-the legacy sleep path, clearing of GPE status does not happen. Thus,
-it is causing failures to go into S0ix on our platforms because of the
-stale wake events as described above.
+Changelog since v4:
+- Fix patch subject and send again.
 
->
-> > In case of S0ix, events are enabled as part of device suspend path. If
-> > status bits for the events are set when they are enabled, it could
-> > result in premature wake from S0ix. This change ensures that status is
-> > cleared for any event that is being enabled so that any stale events
-> > are cleared out.
-> >
-> > Signed-off-by: Furquan Shaikh <furquan@google.com>
-> > ---
-> >  drivers/acpi/acpica/evgpe.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
-> > index 62d3aa74277b4..61455ab42fc87 100644
-> > --- a/drivers/acpi/acpica/evgpe.c
-> > +++ b/drivers/acpi/acpica/evgpe.c
-> > @@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct acpi_gpe_event_info *gpe_event_info)
-> >
-> >         ACPI_FUNCTION_TRACE(ev_enable_gpe);
-> >
-> > -       /* Enable the requested GPE */
-> > +       /* Clear the GPE (of stale events) */
-> > +       status = acpi_hw_clear_gpe(gpe_event_info);
-> > +       if (ACPI_FAILURE(status))
-> > +               return_ACPI_STATUS(status);
->
-> Well, this may cause events to be missed.
+Changelog since v3:
+- Put document in ext-ctrls-codec.rst instead of extended-controls.rst
+  (which was previous version).
 
-Won't those be stale events? i.e. any event that has occurred before
-GPE is enabled should be ignored.
+Changelog since v2:
+- Add interaction with V4L2_CID_MPEG_VIDEO_H264_MIN/MAX_QP
+  description in the document.
 
->
-> >
-> > +       /* Enable the requested GPE */
-> >         status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
-> >         return_ACPI_STATUS(status);
-> >  }
-> > --
-> > 2.21.0.225.g810b269d1ac-goog
-> >
+Changelog since v1:
+- Add description in document.
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        | 24 +++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  4 ++++
+ include/uapi/linux/v4l2-controls.h            |  6 +++++
+ 3 files changed, 34 insertions(+)
+
+diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+index c97fb7923be5..5b2db52d3b4e 100644
+--- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
++++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+@@ -1048,6 +1048,30 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+     Quantization parameter for an B frame for H264. Valid range: from 0
+     to 51.
+
++``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP (integer)``
++    Minimum quantization parameter for the H264 I frame to limit I frame
++    quality to a range. Valid range: from 0 to 51. If
++    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
++    should be chosen to meet both requirements.
++
++``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP (integer)``
++    Maximum quantization parameter for the H264 I frame to limit I frame
++    quality to a range. Valid range: from 0 to 51. If
++    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
++    should be chosen to meet both requirements.
++
++``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP (integer)``
++    Minimum quantization parameter for the H264 P frame to limit P frame
++    quality to a range. Valid range: from 0 to 51. If
++    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
++    should be chosen to meet both requirements.
++
++``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP (integer)``
++    Maximum quantization parameter for the H264 P frame to limit P frame
++    quality to a range. Valid range: from 0 to 51. If
++    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
++    should be chosen to meet both requirements.
++
+ ``V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (integer)``
+     Quantization parameter for an I frame for MPEG4. Valid range: from 1
+     to 31.
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b79d3bbd8350..115fb8debe23 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -828,6 +828,10 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION:
+ 								return "H264 Constrained Intra Pred";
+ 	case V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET:	return "H264 Chroma QP Index Offset";
++	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP:		return "H264 I-Frame Minimum QP Value";
++	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP:		return "H264 I-Frame Maximum QP Value";
++	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP:		return "H264 P-Frame Minimum QP Value";
++	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP:		return "H264 P-Frame Maximum QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP:		return "MPEG4 P-Frame QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP:		return "MPEG4 B-Frame QP Value";
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 06479f2fb3ae..4421baa84177 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -535,6 +535,12 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type {
+ #define V4L2_CID_MPEG_VIDEO_H264_HIERARCHICAL_CODING_LAYER_QP	(V4L2_CID_MPEG_BASE+382)
+ #define V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION	(V4L2_CID_MPEG_BASE+383)
+ #define V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET		(V4L2_CID_MPEG_BASE+384)
++
++#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+390)
++#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+391)
++#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+392)
++#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+393)
++
+ #define V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP	(V4L2_CID_MPEG_BASE+400)
+ #define V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP	(V4L2_CID_MPEG_BASE+401)
+ #define V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP	(V4L2_CID_MPEG_BASE+402)
+--
+2.21.0.225.g810b269d1ac-goog
+
