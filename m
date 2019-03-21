@@ -7,45 +7,40 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB61C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0A5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B85218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6337218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfCUL2e (ORCPT
+        id S1728181AbfCUL3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:28:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53915 "EHLO
+        Thu, 21 Mar 2019 07:29:13 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54173 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbfCUL2e (ORCPT
+        with ESMTP id S1727952AbfCUL3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:28:34 -0400
+        Thu, 21 Mar 2019 07:29:10 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LBSEZY107068
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LBStJ6107108
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 21 Mar 2019 04:28:14 -0700
+        Thu, 21 Mar 2019 04:28:55 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LBSC39107065;
-        Thu, 21 Mar 2019 04:28:12 -0700
-Date:   Thu, 21 Mar 2019 04:28:12 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LBSt9V107100;
+        Thu, 21 Mar 2019 04:28:55 -0700
+Date:   Thu, 21 Mar 2019 04:28:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nick Desaulniers <tipbot@zytor.com>
-Message-ID: <tip-a9c640ac96e19b3966357ec9bb586edd2e1e74de@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, ubizjak@gmail.com,
-        ndesaulniers@google.com, fanc.fnst@cn.fujitsu.com,
-        sfr@canb.auug.org.au, natechancellor@gmail.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org
-Reply-To: ndesaulniers@google.com, fanc.fnst@cn.fujitsu.com,
-          sfr@canb.auug.org.au, natechancellor@gmail.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          tglx@linutronix.de, ubizjak@gmail.com
-In-Reply-To: <20190314221458.83047-1-ndesaulniers@google.com>
-References: <20190314221458.83047-1-ndesaulniers@google.com>
+From:   tip-bot for Colin Ian King <tipbot@zytor.com>
+Message-ID: <tip-725e29db8cb9058976559bc3239c97ef7db40eea@git.kernel.org>
+Cc:     tglx@linutronix.de, colin.king@canonical.com, bp@alien8.de,
+        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
+Reply-To: bp@alien8.de, mingo@kernel.org, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, colin.king@canonical.com, tglx@linutronix.de
+In-Reply-To: <20190314230838.18256-1-colin.king@canonical.com>
+References: <20190314230838.18256-1-colin.king@canonical.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/boot: Restrict header scope to make Clang
- happy
-Git-Commit-ID: a9c640ac96e19b3966357ec9bb586edd2e1e74de
+Subject: [tip:x86/urgent] x86/lib: Fix indentation issue, remove extra tab
+Git-Commit-ID: 725e29db8cb9058976559bc3239c97ef7db40eea
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -59,62 +54,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a9c640ac96e19b3966357ec9bb586edd2e1e74de
-Gitweb:     https://git.kernel.org/tip/a9c640ac96e19b3966357ec9bb586edd2e1e74de
-Author:     Nick Desaulniers <ndesaulniers@google.com>
-AuthorDate: Thu, 14 Mar 2019 15:14:57 -0700
+Commit-ID:  725e29db8cb9058976559bc3239c97ef7db40eea
+Gitweb:     https://git.kernel.org/tip/725e29db8cb9058976559bc3239c97ef7db40eea
+Author:     Colin Ian King <colin.king@canonical.com>
+AuthorDate: Thu, 14 Mar 2019 23:08:38 +0000
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 21 Mar 2019 12:24:38 +0100
 
-x86/boot: Restrict header scope to make Clang happy
+x86/lib: Fix indentation issue, remove extra tab
 
-The inclusion of <linux/kernel.h> was causing issue as the definition of
-__arch_hweight64 from arch/x86/include/asm/arch_hweight.h eventually gets
-included. The definition is problematic when compiled with -m16 (all code
-in arch/x86/boot/ is) as the "D" inline assembly constraint is rejected
-by both compilers when passed an argument of type long long (regardless
-of signedness, anything smaller is fine).
+The increment of buff is indented one level too deeply, clean
+this up by removing a tab.
 
-Because GCC performs inlining before semantic analysis, and
-__arch_hweight64 is dead in this translation unit, GCC does not report
-any issues at compile time.  Clang does the semantic analysis in the
-front end, before inlining (run in the middle) can determine the code is
-dead. I consider this another case of PR33587, which I think we can do
-more work to solve.
-
-It turns out that arch/x86/boot/string.c doesn't actually need
-linux/kernel.h, simply linux/limits.h and linux/compiler.h.
-
-Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: bp@alien8.de
-Cc: niravd@google.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Link: https://bugs.llvm.org/show_bug.cgi?id=33587
-Link: https://github.com/ClangBuiltLinux/linux/issues/347
-Link: https://lkml.kernel.org/r/20190314221458.83047-1-ndesaulniers@google.com
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: kernel-janitors@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190314230838.18256-1-colin.king@canonical.com
 
 ---
- arch/x86/boot/string.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/lib/csum-partial_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
-index 315a67b8896b..90154df8f125 100644
---- a/arch/x86/boot/string.c
-+++ b/arch/x86/boot/string.c
-@@ -13,8 +13,9 @@
-  */
- 
- #include <linux/types.h>
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- #include <linux/errno.h>
-+#include <linux/limits.h>
- #include <asm/asm.h>
- #include "ctype.h"
- #include "string.h"
+diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
+index 9baca3e054be..e7925d668b68 100644
+--- a/arch/x86/lib/csum-partial_64.c
++++ b/arch/x86/lib/csum-partial_64.c
+@@ -94,7 +94,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
+ 				    : "m" (*(unsigned long *)buff), 
+ 				    "r" (zero),  "0" (result));
+ 				--count; 
+-					buff += 8;
++				buff += 8;
+ 			}
+ 			result = add32_with_carry(result>>32,
+ 						  result&0xffffffff); 
