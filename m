@@ -2,200 +2,172 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79C9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DBCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84731218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="lCGngV24"
+	by mail.kernel.org (Postfix) with ESMTP id 30ED3218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfCUOMu (ORCPT
+        id S1728367AbfCUONp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:12:50 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:56953 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUOMt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:12:49 -0400
-X-IronPort-AV: E=Sophos;i="5.58,498,1544511600"; 
-   d="scan'208";a="29815246"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 21 Mar 2019 07:12:48 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.37) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Thu, 21 Mar 2019 07:12:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PRcBGUGp51wOjjC9dykHYQSNkb3tFiZWCTIIuWXASsQ=;
- b=lCGngV24DFk56X71pUt3qsoGxGM3Os6it90hbJHJHJvsHqXSTF8PZSTSaZbi48az+8C59qJiUHHt6SM3hdqtcnkR+in3ogp1cWnFDDMK6BuKI+MX1frB9C2Zf1p1Z+bHL5R/UGtH/c8ZVFyhqfD5wNoIGScXMS5CVf077gjs/dI=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1568.namprd11.prod.outlook.com (10.172.54.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 14:12:45 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44%8]) with mapi id 15.20.1709.015; Thu, 21 Mar 2019
- 14:12:45 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <pthombar@cadence.com>, <andrew@lunn.ch>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
-        <piotrs@cadence.com>, <jank@cadence.com>
-Subject: Re: [PATCH v2 2/3] net: ethernet: cadence: add c45 PHY support in
- MDIO read/write functions.
-Thread-Topic: [PATCH v2 2/3] net: ethernet: cadence: add c45 PHY support in
- MDIO read/write functions.
-Thread-Index: AQHU3/An71ZpHfUAJUOJxJqYX+JEiQ==
-Date:   Thu, 21 Mar 2019 14:12:45 +0000
-Message-ID: <61038e49-28b5-53e2-8b16-e95623b6eb3c@microchip.com>
-References: <20190223152540.GE10693@lunn.ch>
- <1552930948-6755-1-git-send-email-pthombar@cadence.com>
-In-Reply-To: <1552930948-6755-1-git-send-email-pthombar@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0027.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:61::15) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicolas.Ferre@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.6.168.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fb2cc287-9ee2-4be4-e823-08d6ae0749fb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB1568;
-x-ms-traffictypediagnostic: MWHPR11MB1568:
-x-microsoft-antispam-prvs: <MWHPR11MB15683A80369380DFCEB5A584E0420@MWHPR11MB1568.namprd11.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(366004)(396003)(346002)(189003)(199004)(68736007)(81166006)(86362001)(256004)(2906002)(105586002)(6246003)(446003)(72206003)(14454004)(31696002)(52116002)(305945005)(36756003)(76176011)(53546011)(8676002)(2501003)(102836004)(6116002)(81156014)(2616005)(6436002)(386003)(7736002)(476003)(186003)(3846002)(7416002)(6506007)(486006)(110136005)(26005)(54906003)(31686004)(316002)(8936002)(11346002)(4326008)(53936002)(478600001)(229853002)(97736004)(5660300002)(99286004)(106356001)(25786009)(6486002)(6512007)(71200400001)(71190400001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1568;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ex8Wu3hVrGhYS5yXhL0kNDfowItTJu86oY6hya42Fq8vKP6mWCVqGfkGxBWdKUZNKl5EWbN0Gp0Z+LbnEQbru4cF4nMFiPmr9YzxBM0zEbsD1soCuykFg83fLs2phKBi35m1v0BRHyUADKZU8cbLn1Q5ZWP+yg3sIA+5VTLipkZbvPfMspGoO9pMZa2Dd/ci35PltobpuHbs+iniihn64ORDvjH6p5x0CBWUuU330eaABRn8QozVPy5nBv69+/YtUvV/JHZ+FYNDMJocxBtHV0hqQjamJH3/lk5WP3K2gwZxUGwzAteWGnnBFo1cY239g9BMl9pO5mxc26qa15jO/PIpYVKKQ4pzdWOufzR/keOZ9VA9L1QIJlRb6L85+ZSgQLPjGh0xLwGpMP7NF/E6fZLddA1AAImi8zcMjp4RIVw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <31EB6DA2A19EDE46A7AE47A9437A8DAF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 21 Mar 2019 10:13:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56744 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfCUONo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:13:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F9180D;
+        Thu, 21 Mar 2019 07:13:43 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1057D3F575;
+        Thu, 21 Mar 2019 07:13:40 -0700 (PDT)
+Subject: Re: [PATCH v6 05/22] iommu: Introduce cache_invalidate API
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     yi.l.liu@linux.intel.com, kevin.tian@intel.com,
+        vincent.stehle@arm.com, ashok.raj@intel.com, kvm@vger.kernel.org,
+        peter.maydell@linaro.org, marc.zyngier@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, christoffer.dall@arm.com,
+        alex.williamson@redhat.com, robin.murphy@arm.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger.pro@gmail.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-6-eric.auger@redhat.com>
+ <20190320093727.45a86866@jacob-builder>
+ <7ae1df77-18d0-0993-8dab-6af3a4474b42@arm.com>
+ <ad4d18ec-0040-901f-8d37-0fccb3cfd0d5@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <109c3520-dd26-3c0b-35d1-48b169fea982@arm.com>
+Date:   Thu, 21 Mar 2019 14:13:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb2cc287-9ee2-4be4-e823-08d6ae0749fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 14:12:45.0735
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1568
-X-OriginatorOrg: microchip.com
+In-Reply-To: <ad4d18ec-0040-901f-8d37-0fccb3cfd0d5@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JHN1YmplY3QgbGluZSBzaG91bGQgYmU6DQoNCiJuZXQ6IG1hY2I6IEFkZCBjNDUgUEhZIHN1cHBv
-cnQgaW4gTURJTyByZWFkL3dyaXRlIGZ1bmN0aW9ucyINCg0KDQpPbiAxOC8wMy8yMDE5IGF0IDE4
-OjQyLCBQYXJzaHVyYW0gVGhvbWJhcmUgd3JvdGU6DQo+IFNvcnJ5IGZvciBzZW5kaW5nIHRoaXMg
-cGF0Y2ggYWdhaW4sIGJ1dCBJIGRpZG4ndCBzZW50IHByZXZpb3VzDQo+IGVtYWlsIC0taW4tcmVw
-bHktdG8gbGFzdCBjb21tZW50IG9uIHYxIG9mIHRoaXMgcGF0Y2guIFNvDQo+IHJlY3RpZnlpbmcg
-dGhpcyBtaXN0YWtlLg0KPiANCj4gVGhpcyB2ZXJzaW9uIDIgb2YgcGF0Y2ggdG8gbW9kaWZ5IE1E
-SU8gcmVhZC93cml0ZSBmdW5jdGlvbnMgdG8gc3VwcG9ydA0KPiBjb21tdW5pY2F0aW9uIHdpdGgg
-QzQ1IFBIWSBpbiBDYWRlbmNlIGV0aGVybmV0IGNvbnRyb2xsZXIgZHJpdmVyLg0KPiANCj4gQ2hh
-bmdlczoNCj4gCTEuIEFkZGVkIHRpbWVvdXQNCj4gCTIuIFJlbW92ZWQgdW51c2VkIG9wZXJhdGlv
-biBtYWNybyBNQUNCX01BTl9DNDVfUE9TVF9SRUFEX0lOQ1INCj4gDQo+IEkgdGhvdWdodCBvZiBz
-dGFydGluZyB3aXRoIHJlbGF0aXZlbHkgc21hbGxlciwgaW5kZXBlbmRhbnQgYW5kIHNpbXBsZXIg
-Y2hhbmdlcy4NCj4gVGhpcyBwYXRjaCBpcyBpbmRlcGVuZGFudCBvZiBwYXRjaCBzZXJpZXMgYW5k
-IGxvb2tzIHJlbGF0aXZlbHkgc3RyYWlnaHQgZm9yd2FyZA0KPiB3aXRoIGFpbSBvZiBzdXBwb3J0
-aW5nIEM0NSBQSFkgZm9yIHN1cHBvcnQgb2YgaGlnaCBzcGVlZCBQSFkncy4NCg0KTW9zdCBvZiB0
-aGlzIG11c3QgZ28gYmVsb3cgdGhlICItLS0iIGxpbmUgaGVyZXVuZGVyLi4uDQoNCg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogUGFyc2h1cmFtIFRob21iYXJlIDxwdGhvbWJhckBjYWRlbmNlLmNvbT4N
-Cj4gLS0tDQoNClRoZXJlIF4uDQoNCkFuZCB0aGUgY29tbWl0IG1lc3NhZ2UgYmVmb3JlIHNob3Vs
-ZCBsb29rIGxpa2U6DQoiDQpNb2RpZnkgTURJTyByZWFkL3dyaXRlIGZ1bmN0aW9ucyB0byBzdXBw
-b3J0IGNvbW11bmljYXRpb24gd2l0aCBDNDUgUEhZIA0KaW4gQ2FkZW5jZSBldGhlcm5ldCBjb250
-cm9sbGVyIGRyaXZlci4NCiINCg0KPiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFj
-Yi5oICAgICAgfCAgIDE0ICsrKysrLS0NCj4gICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNl
-L21hY2JfbWFpbi5jIHwgICA2MSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLQ0KPiAgIDIg
-ZmlsZXMgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiLmggYi9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuaA0KPiBpbmRleCBhY2M2NmE3Li5kMjVmYTAzIDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuaA0KPiArKysg
-Yi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuaA0KPiBAQCAtNjI5LDEwICs2Mjks
-MTYgQEANCj4gICAjZGVmaW5lIEdFTV9DTEtfRElWOTYJCQkJNQ0KPiAgIA0KPiAgIC8qIENvbnN0
-YW50cyBmb3IgTUFOIHJlZ2lzdGVyICovDQo+IC0jZGVmaW5lIE1BQ0JfTUFOX1NPRgkJCQkxDQo+
-IC0jZGVmaW5lIE1BQ0JfTUFOX1dSSVRFCQkJCTENCj4gLSNkZWZpbmUgTUFDQl9NQU5fUkVBRAkJ
-CQkyDQo+IC0jZGVmaW5lIE1BQ0JfTUFOX0NPREUJCQkJMg0KPiArI2RlZmluZSBNQUNCX01BTl9D
-MjJfU09GICAgICAgICAgICAgICAgICAgICAgICAgMQ0KPiArI2RlZmluZSBNQUNCX01BTl9DMjJf
-V1JJVEUgICAgICAgICAgICAgICAgICAgICAgMQ0KPiArI2RlZmluZSBNQUNCX01BTl9DMjJfUkVB
-RCAgICAgICAgICAgICAgICAgICAgICAgMg0KPiArI2RlZmluZSBNQUNCX01BTl9DMjJfQ09ERSAg
-ICAgICAgICAgICAgICAgICAgICAgMg0KPiArDQo+ICsjZGVmaW5lIE1BQ0JfTUFOX0M0NV9TT0Yg
-ICAgICAgICAgICAgICAgICAgICAgICAwDQo+ICsjZGVmaW5lIE1BQ0JfTUFOX0M0NV9BRERSICAg
-ICAgICAgICAgICAgICAgICAgICAwDQo+ICsjZGVmaW5lIE1BQ0JfTUFOX0M0NV9XUklURSAgICAg
-ICAgICAgICAgICAgICAgICAxDQo+ICsjZGVmaW5lIE1BQ0JfTUFOX0M0NV9SRUFEICAgICAgICAg
-ICAgICAgICAgICAgICAzDQo+ICsjZGVmaW5lIE1BQ0JfTUFOX0M0NV9DT0RFICAgICAgICAgICAg
-ICAgICAgICAgICAyDQoNCg0KWW91IGNoYW5nZWQgdGFicyB0byBzcGFjZXMgaGVyZTogcGxlYXNl
-IGNvbmZvcm0gdG8gcHJlY2VkaW5nIGRyaXZlcidzIA0Kc3R5bGUgYW5kIG90aGVyIGxpbmVzIG9m
-IHRoaXMgLmggZmlsZS4NCg0KPiAgIA0KPiAgIC8qIENhcGFiaWxpdHkgbWFzayBiaXRzICovDQo+
-ICAgI2RlZmluZSBNQUNCX0NBUFNfSVNSX0NMRUFSX09OX1dSSVRFCQkweDAwMDAwMDAxDQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jIGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0KPiBpbmRleCBhZDA5OWZkLi4x
-NzA3MmZkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2Jf
-bWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMN
-Cj4gQEAgLTM0NSwxMSArMzQ1LDMwIEBAIHN0YXRpYyBpbnQgbWFjYl9tZGlvX3JlYWQoc3RydWN0
-IG1paV9idXMgKmJ1cywgaW50IG1paV9pZCwgaW50IHJlZ251bSkNCj4gICAJaWYgKHN0YXR1cyA8
-IDApDQo+ICAgCQlnb3RvIG1kaW9fcmVhZF9leGl0Ow0KPiAgIA0KPiAtCW1hY2Jfd3JpdGVsKGJw
-LCBNQU4sIChNQUNCX0JGKFNPRiwgTUFDQl9NQU5fU09GKQ0KPiAtCQkJICAgICAgfCBNQUNCX0JG
-KFJXLCBNQUNCX01BTl9SRUFEKQ0KPiAtCQkJICAgICAgfCBNQUNCX0JGKFBIWUEsIG1paV9pZCkN
-Cj4gLQkJCSAgICAgIHwgTUFDQl9CRihSRUdBLCByZWdudW0pDQo+IC0JCQkgICAgICB8IE1BQ0Jf
-QkYoQ09ERSwgTUFDQl9NQU5fQ09ERSkpKTsNCj4gKwlpZiAocmVnbnVtICYgTUlJX0FERFJfQzQ1
-KSB7DQo+ICsJCW1hY2Jfd3JpdGVsKGJwLCBNQU4sIChNQUNCX0JGKFNPRiwgTUFDQl9NQU5fQzQ1
-X1NPRikNCj4gKwkJCSAgICB8IE1BQ0JfQkYoUlcsIE1BQ0JfTUFOX0M0NV9BRERSKQ0KPiArCQkJ
-ICAgIHwgTUFDQl9CRihQSFlBLCBtaWlfaWQpDQo+ICsJCQkgICAgfCBNQUNCX0JGKFJFR0EsIChy
-ZWdudW0gPj4gMTYpICYgMHgxRikNCj4gKwkJCSAgICB8IE1BQ0JfQkYoREFUQSwgcmVnbnVtICYg
-MHhGRkZGKQ0KPiArCQkJICAgIHwgTUFDQl9CRihDT0RFLCBNQUNCX01BTl9DNDVfQ09ERSkpKTsN
-Cj4gKw0KPiArCQlzdGF0dXMgPSBtYWNiX21kaW9fd2FpdF9mb3JfaWRsZShicCk7DQo+ICsJCWlm
-IChzdGF0dXMgPCAwKQ0KPiArCQkJZ290byBtZGlvX3JlYWRfZXhpdDsNCj4gKw0KPiArCQltYWNi
-X3dyaXRlbChicCwgTUFOLCAoTUFDQl9CRihTT0YsIE1BQ0JfTUFOX0M0NV9TT0YpDQo+ICsJCQkg
-ICAgfCBNQUNCX0JGKFJXLCBNQUNCX01BTl9DNDVfUkVBRCkNCj4gKwkJCSAgICB8IE1BQ0JfQkYo
-UEhZQSwgbWlpX2lkKQ0KPiArCQkJICAgIHwgTUFDQl9CRihSRUdBLCAocmVnbnVtID4+IDE2KSAm
-IDB4MUYpDQo+ICsJCQkgICAgfCBNQUNCX0JGKENPREUsIE1BQ0JfTUFOX0M0NV9DT0RFKSkpOw0K
-PiArCX0gZWxzZSB7DQo+ICsJCW1hY2Jfd3JpdGVsKGJwLCBNQU4sIChNQUNCX0JGKFNPRiwgTUFD
-Ql9NQU5fQzIyX1NPRikNCj4gKwkJCQl8IE1BQ0JfQkYoUlcsIE1BQ0JfTUFOX0MyMl9SRUFEKQ0K
-PiArCQkJCXwgTUFDQl9CRihQSFlBLCBtaWlfaWQpDQo+ICsJCQkJfCBNQUNCX0JGKFJFR0EsIHJl
-Z251bSkNCj4gKwkJCQl8IE1BQ0JfQkYoQ09ERSwgTUFDQl9NQU5fQzIyX0NPREUpKSk7DQo+ICsJ
-fQ0KPiAgIA0KPiAgIAlzdGF0dXMgPSBtYWNiX21kaW9fd2FpdF9mb3JfaWRsZShicCk7DQo+ICAg
-CWlmIChzdGF0dXMgPCAwKQ0KPiBAQCAtMzc4LDEyICszOTcsMzIgQEAgc3RhdGljIGludCBtYWNi
-X21kaW9fd3JpdGUoc3RydWN0IG1paV9idXMgKmJ1cywgaW50IG1paV9pZCwgaW50IHJlZ251bSwN
-Cj4gICAJaWYgKHN0YXR1cyA8IDApDQo+ICAgCQlnb3RvIG1kaW9fd3JpdGVfZXhpdDsNCj4gICAN
-Cj4gLQltYWNiX3dyaXRlbChicCwgTUFOLCAoTUFDQl9CRihTT0YsIE1BQ0JfTUFOX1NPRikNCj4g
-LQkJCSAgICAgIHwgTUFDQl9CRihSVywgTUFDQl9NQU5fV1JJVEUpDQo+IC0JCQkgICAgICB8IE1B
-Q0JfQkYoUEhZQSwgbWlpX2lkKQ0KPiAtCQkJICAgICAgfCBNQUNCX0JGKFJFR0EsIHJlZ251bSkN
-Cj4gLQkJCSAgICAgIHwgTUFDQl9CRihDT0RFLCBNQUNCX01BTl9DT0RFKQ0KPiAtCQkJICAgICAg
-fCBNQUNCX0JGKERBVEEsIHZhbHVlKSkpOw0KPiArCWlmIChyZWdudW0gJiBNSUlfQUREUl9DNDUp
-IHsNCj4gKwkJbWFjYl93cml0ZWwoYnAsIE1BTiwgKE1BQ0JfQkYoU09GLCBNQUNCX01BTl9DNDVf
-U09GKQ0KPiArCQkJICAgIHwgTUFDQl9CRihSVywgTUFDQl9NQU5fQzQ1X0FERFIpDQo+ICsJCQkg
-ICAgfCBNQUNCX0JGKFBIWUEsIG1paV9pZCkNCj4gKwkJCSAgICB8IE1BQ0JfQkYoUkVHQSwgKHJl
-Z251bSA+PiAxNikgJiAweDFGKQ0KPiArCQkJICAgIHwgTUFDQl9CRihEQVRBLCByZWdudW0gJiAw
-eEZGRkYpDQo+ICsJCQkgICAgfCBNQUNCX0JGKENPREUsIE1BQ0JfTUFOX0M0NV9DT0RFKSkpOw0K
-PiArDQo+ICsJCXN0YXR1cyA9IG1hY2JfbWRpb193YWl0X2Zvcl9pZGxlKGJwKTsNCj4gKwkJaWYg
-KHN0YXR1cyA8IDApDQo+ICsJCQlnb3RvIG1kaW9fd3JpdGVfZXhpdDsNCj4gKw0KPiArCQltYWNi
-X3dyaXRlbChicCwgTUFOLCAoTUFDQl9CRihTT0YsIE1BQ0JfTUFOX0M0NV9TT0YpDQo+ICsJCQkg
-ICAgfCBNQUNCX0JGKFJXLCBNQUNCX01BTl9DNDVfV1JJVEUpDQo+ICsJCQkgICAgfCBNQUNCX0JG
-KFBIWUEsIG1paV9pZCkNCj4gKwkJCSAgICB8IE1BQ0JfQkYoUkVHQSwgKHJlZ251bSA+PiAxNikg
-JiAweDFGKQ0KPiArCQkJICAgIHwgTUFDQl9CRihDT0RFLCBNQUNCX01BTl9DNDVfQ09ERSkNCj4g
-KwkJCSAgICB8IE1BQ0JfQkYoREFUQSwgdmFsdWUpKSk7DQo+ICsJfSBlbHNlIHsNCj4gKwkJbWFj
-Yl93cml0ZWwoYnAsIE1BTiwgKE1BQ0JfQkYoU09GLCBNQUNCX01BTl9DMjJfU09GKQ0KPiArCQkJ
-CXwgTUFDQl9CRihSVywgTUFDQl9NQU5fQzIyX1dSSVRFKQ0KPiArCQkJCXwgTUFDQl9CRihQSFlB
-LCBtaWlfaWQpDQo+ICsJCQkJfCBNQUNCX0JGKFJFR0EsIHJlZ251bSkNCj4gKwkJCQl8IE1BQ0Jf
-QkYoQ09ERSwgTUFDQl9NQU5fQzIyX0NPREUpDQo+ICsJCQkJfCBNQUNCX0JGKERBVEEsIHZhbHVl
-KSkpOw0KPiArCX0NCj4gICANCj4gICAJc3RhdHVzID0gbWFjYl9tZGlvX3dhaXRfZm9yX2lkbGUo
-YnApOw0KPiAgIAlpZiAoc3RhdHVzIDwgMCkNCg0KT3RoZXJ3aXNlIGl0IGxvb2tzIGNvcnJlY3Qg
-dG8gbWUgb24gdGhlIG1hY2IgcG9pbnQtb2Ytdmlldy4NCg0KUGxlYXNlIGNvcnJlY3QgdGhlIGxp
-dHRsZSB0aGluZ3Mgbm90ZWQgYmVmb3JlLCByZS1zZW5kIGluZGVwZW5kZW50bHkgYXMgDQphIHYz
-IGFuZCB3ZSBhbHNvIG1ha2Ugc3VyZSB0aGF0IHRoaW5ncyBhcmUgZ29vZCBvbiB0aGUgcGh5IHNp
-ZGUuDQoNCkJlc3QgcmVnYXJkcywNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+On 21/03/2019 13:54, Auger Eric wrote:
+> Hi Jacob, Jean-Philippe,
+> 
+> On 3/20/19 5:50 PM, Jean-Philippe Brucker wrote:
+>> On 20/03/2019 16:37, Jacob Pan wrote:
+>> [...]
+>>>> +struct iommu_inv_addr_info {
+>>>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>>>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>>>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>>>> +	__u32	flags;
+>>>> +	__u32	archid;
+>>>> +	__u64	pasid;
+>>>> +	__u64	addr;
+>>>> +	__u64	granule_size;
+>>>> +	__u64	nb_granules;
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * First level/stage invalidation information
+>>>> + * @cache: bitfield that allows to select which caches to invalidate
+>>>> + * @granularity: defines the lowest granularity used for the
+>>>> invalidation:
+>>>> + *     domain > pasid > addr
+>>>> + *
+>>>> + * Not all the combinations of cache/granularity make sense:
+>>>> + *
+>>>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>>>> + * granularity	|		|		|
+>>>> cache	|
+>>>> + * -------------+---------------+---------------+---------------+
+>>>> + * DOMAIN	|	N/A	|       Y	|
+>>>> Y	|
+>>>> + * PASID	|	Y	|       Y	|
+>>>> Y	|
+>>>> + * ADDR		|       Y	|       Y	|
+>>>> N/A	|
+>>>> + */
+>>>> +struct iommu_cache_invalidate_info {
+>>>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>>>> +	__u32	version;
+>>>> +/* IOMMU paging structure cache */
+>>>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>>>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>>>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>>>> cache */
+>>> Just a clarification, this used to be an enum. You do intend to issue a
+>>> single invalidation request on multiple cache types? Perhaps for
+>>> virtio-IOMMU? I only see a single cache type in your patch #14. For VT-d
+>>> we plan to issue one cache type at a time for now. So this format works
+>>> for us.
+>>
+>> Yes for virtio-iommu I'd like as little overhead as possible, which
+>> means a single invalidation message to hit both IOTLB and ATC at once,
+>> and the ability to specify multiple pages with @nb_granules.
+> The original request/explanation from Jean-Philippe can be found here:
+> https://lkml.org/lkml/2019/1/28/1497
+> 
+>>
+>>> However, if multiple cache types are issued in a single invalidation.
+>>> They must share a single granularity, not all combinations are valid.
+>>> e.g. dev IOTLB does not support domain granularity. Just a reminder,
+>>> not an issue. Driver could filter out invalid combinations.
+> Sure I will add a comment about this restriction.
+>>
+>> Agreed. Even the core could filter out invalid combinations based on the
+>> table above: IOTLB and domain granularity are N/A.
+> I don't get this sentence. What about vtd IOTLB domain-selective
+> invalidation:
+
+My mistake: I meant dev-IOTLB and domain granularity are N/A
+
+Thanks,
+Jean
+
+> "
+> • IOTLB entries caching mappings associated with the specified domain-id
+> are invalidated.
+> • Paging-structure-cache entries caching mappings associated with the
+> specified domain-id are invalidated.
+> "
+> 
+> Thanks
+> 
+> Eric
+> 
+>>
+>> Thanks,
+>> Jean
+>>
+>>>
+>>>> +	__u8	cache;
+>>>> +	__u8	granularity;
+>>>> +	__u8	padding[2];
+>>>> +	union {
+>>>> +		__u64	pasid;
+>>>> +		struct iommu_inv_addr_info addr_info;
+>>>> +	};
+>>>> +};
+>>>> +
+>>>> +
+>>>>  #endif /* _UAPI_IOMMU_H */
+>>>
+>>> [Jacob Pan]
+>>> _______________________________________________
+>>> iommu mailing list
+>>> iommu@lists.linux-foundation.org
+>>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>>
+>>
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> 
+
