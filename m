@@ -2,143 +2,251 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92782C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42011C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5294D218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070552075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="xb0w3rY6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJgfS45w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfCUOPt (ORCPT
+        id S1728310AbfCUOQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:15:49 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.129]:24711 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfCUOPs (ORCPT
+        Thu, 21 Mar 2019 10:16:01 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38807 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfCUOQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:15:48 -0400
-Received: from [46.226.53.50] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-c.eu-west-1.aws.symcld.net id A1/47-01080-09C939C5; Thu, 21 Mar 2019 14:15:44 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUwTZxzHee6u16PhlrNA+ImCWZNlQ2mhxMj
-  Nv/hLuhEXSIxOZ9QDzraxLV2vxMI/UwTHSyYowgYTigaNMkgJ0YCApgJRICDvvmUolarDZb7A
-  lCiRederTP94ks/zfL+/tyfPQ+HqeTKa4l1O3mHjLBpSRZgSVF9rK05V7k50l37ODhZ2K9nJs
-  R6MrfL5Sdbdd1PBvp4sxtiJzlMke/b2GMaWdJYr2KIrfUq2dbEFpagMrQsFpKFo/B1paK5vRo
-  bLtdNKQ1tTCWm4+s850uC5OEUYFtpi06ldCrMtM8e1T2E6fngI2d+Qrt8utCkOoWFFKVJRBOP
-  B4fGxKaW0UTNVGLSWe1EpChU3swhetagkJhkWKvtnSIkjmO+h+P4EKQXgTD8O1XVDhCSEi8LS
-  wmmlbNoJvv8KMJk3Q+UNb4AJ5gvobZ4XPRRFMxxMPdfLhYcQ3Fo8H4gNZZLgxN3iACMmBv49/
-  AcuMc5EwT2/O5AHGAYau0dwmSNhbnZZIft5GCi4g+TzeBi+7Q+yBurr+oIcA+PusiBvhbe3mg
-  PTA/MIQcWr9pVgb027QmYWGsuKCJntcOKlTynzWvDcPYPJwdUkXPj1avDqsuBF3XDQFAtNv/g
-  I2TSKw8LoGJLHiYeGrnmyAsXVfjRd7UeSzBvg3Om/cYlpZhUM1PiJBkQ0ITbTYTaanFbObNHq
-  ExO1en2SNilRXBuTdVy+NkvH52oP8oJTq9dxBwWdkGfNsmTrbLyzDYnvL9s+uNiBGs8be9BqC
-  tNE0vWuyt3qzzJzsvNMnGDa68i18EIPWktRGqCJ30VtlYM38q79Zov4iD/IQIVpIujHtaJMC3
-  bOKpiNsjSItJT3jK8OVxO2HBsfHUWnSzkYyWTKta2k+PAVxlFMdDiNQkJC1GF23mE1Oz/Vn6I
-  oCmnCaZWUJcxsc65Ueio2gYlNZJ4MNOHk/peiD6FND046t2/pWn6SYE3/oXp13LXOSzv8x9s9
-  iy1VFlVqvnXduvzyKOtXS8aykrwfSwuf2K7XFExPfJu25On46+fLl1JmM1L9D3Ylt8TeOzCzj
-  a7/KaVi0jvTtOZKRkbDw45neUMPv/mOP5JwdGl5dM/In2n74tJGrNPYl+mTowm9W8vcA3MaQj
-  Bx+vW4Q+DeA1yowPkFBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-7.tower-302.messagelabs.com!1553177744!4385855!1
-X-Originating-IP: [104.47.10.57]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22653 invoked from network); 21 Mar 2019 14:15:44 -0000
-Received: from mail-db5eur03lp2057.outbound.protection.outlook.com (HELO EUR03-DB5-obe.outbound.protection.outlook.com) (104.47.10.57)
-  by server-7.tower-302.messagelabs.com with AES256-SHA256 encrypted SMTP; 21 Mar 2019 14:15:44 -0000
+        Thu, 21 Mar 2019 10:16:00 -0400
+Received: by mail-qt1-f196.google.com with SMTP id s1so6720447qte.5;
+        Thu, 21 Mar 2019 07:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jdsZyY7GhIzrotS3rV+OG+KGqizwoeA7aQKnYC4COS8=;
- b=xb0w3rY6A36fUz8JKSpRHVEqVo0X+lA23yNa13Ef93r9w3EViAFu9895uYNPh8VJJF7pWo1Z3EXjApAIYcZKaZL+bu0s9+JkmFtQLBiqeNv1aaBCEe+/W4qmSxyKLVskYEjsWOzxEMLkAua3zzayQL1LmkLth/UbpHBc8oWNhrY=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.17) by
- AM5PR1001MB1026.EURPRD10.PROD.OUTLOOK.COM (10.169.154.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.16; Thu, 21 Mar 2019 14:15:41 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d41f:cfb1:4c72:9a4f]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d41f:cfb1:4c72:9a4f%5]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 14:15:41 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Akshu Agrawal <Akshu.Agrawal@amd.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
- WCLK/BCLK
-Thread-Topic: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
- WCLK/BCLK
-Thread-Index: AQHU3nwe4JN3I6zws0idIYCxN9PAd6YWBFsAgAAX2WA=
-Date:   Thu, 21 Mar 2019 14:15:41 +0000
-Message-ID: <AM5PR1001MB0994B0B76F0166D45990E5F980420@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
- <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
- <20190321122152.GA5684@sirena.org.uk>
-In-Reply-To: <20190321122152.GA5684@sirena.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6198e7f6-61bb-4ec6-9f57-08d6ae07b36d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:AM5PR1001MB1026;
-x-ms-traffictypediagnostic: AM5PR1001MB1026:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-microsoft-antispam-prvs: <AM5PR1001MB1026CE4AC7E0C3254F9FE12AA7420@AM5PR1001MB1026.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(39850400004)(136003)(396003)(199004)(189003)(478600001)(99286004)(54906003)(6436002)(72206003)(110136005)(316002)(71200400001)(71190400001)(8676002)(81166006)(9686003)(7416002)(33656002)(81156014)(14454004)(15650500001)(55236004)(55016002)(5660300002)(4744005)(52536014)(6116002)(3846002)(102836004)(229853002)(107886003)(2906002)(76176011)(7696005)(6506007)(53546011)(105586002)(446003)(106356001)(256004)(476003)(11346002)(25786009)(14444005)(4326008)(74316002)(486006)(26005)(186003)(97736004)(68736007)(86362001)(8936002)(305945005)(66066001)(53936002)(6246003)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1026;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bkGFpQ4/etcxYjW5cisqPoecEYLYpkaTpzw0OAaPv/cAFAi55fzrO4VrEs/xbnKgEkmsmSzJzCjA/6MHTUordi7PkKYz4M3oj6GxGN0gUMavd7rsg4/v4CA1F/LmiskRf2kTrXBXtCrnhHI141izUtijVTIad2NrXcOZ3EFuSxZBhYSwcqbm/SvEz2QfJBH9B2kXdmj6yTA5arZAyxFNOArjdv5gw6Ic0ivNwL2Us1c3LoFgLLL36dixHapEap0urji07S8Ki84q60Hgxlvhx8h2+OaGDk3pXVYQ5C9AlJr0PHMhHH2KnQv6ADAipKy6ZaFManMFlgCABLZzrXZhTqqbr2tQV/e9P/xlbpmyHOcyNLEcH0F/BAsC2pfapt05Zr84rVzQIyEsJPk12/0t/oGaHnJ9y9kCBscs7BRtqbQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rxMWKN8Al/U2Qhlo1yI64BoK/E0UlE5BH7Fj/JDLAUo=;
+        b=HJgfS45w65Ur6LCb8B80w4ZFieBA36S7uy6sA4eQuXFbnJqOlKF/cxkcXe7IOiM4L5
+         6sg4FhVVcPxwZKiDqU3HZLtSv9EdKr+BjsVoC4MFe2EtLfRIjSgncqlgSaVKbCWpH2Vb
+         UFdUc4fHxe8n9TttCbyZ3Y9CEX2nc/8m56fobbwBlGPvONWhItvr6camFUV9UperFmbq
+         IQnM0sWLz3svhKagJn2RddpLBBYmO7InJXWQv2wCK5yFG0glUH00jhAGRWPwxE/R09+N
+         OOKckohZDuOseTbMDEKLdW94zGjnOW3ilqkT6rUFcjTSMWvv7bVQx+kO97nf8+GPUqHM
+         8hmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rxMWKN8Al/U2Qhlo1yI64BoK/E0UlE5BH7Fj/JDLAUo=;
+        b=l6ZeYFwOpKWR1duUQn+hLHt7nHLVXZkSTGMoZOCYDTja3bVfVbEFCTX5/2Zf1t9JUz
+         Du27NTkVbiTpnHqESVWQeWgo4p75phPEUxuCkQX7d0bBiwDkyTJsnjZODXs8xCeRiN9s
+         cspDekQFHP6sBRINSxrnkwqPAgMGc9EOvsjb3CUIbNsGL9elh/z+f0sfYxGVZ+Tmfu+P
+         VTYsNV40u5eCoec3sCMuzJ/2W2LK42095MfMihtNn/UQzobRW9wcyjQh3eJKXQSNQeGG
+         oFJVI903qY5/XQvavjt2e9F6UZ0UJR17WlPC9LBlq3v8xcyQad5QlWcpCx6PjrLT7Tmc
+         /bqg==
+X-Gm-Message-State: APjAAAUlTskx/SSbcxFDJxzJztfkXQ5KpiYLHZWK9KiLZvNBojWPnb4Y
+        BBzYo7FnjkQFPlphpZPlIO0=
+X-Google-Smtp-Source: APXvYqzRzASN5u2pm350BMT4h90k8C1ELhkMrjdpeS1bR3sNRXZEvcUYUVoJrzGS7ByoP7R3w9G00g==
+X-Received: by 2002:ac8:3696:: with SMTP id a22mr3191960qtc.191.1553177757620;
+        Thu, 21 Mar 2019 07:15:57 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id s20sm2973204qth.56.2019.03.21.07.12.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 07:15:56 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 022254039C; Thu, 21 Mar 2019 11:12:30 -0300 (-03)
+Date:   Thu, 21 Mar 2019 11:12:30 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, kernel-team@fb.com,
+        peterz@infradead.org, acme@redhat.com, jolsa@kernel.org,
+        namhyung@kernel.org, sdf@fomichev.me
+Subject: Re: [PATCH v9 perf,bpf 00/15] perf annotation of BPF programs
+Message-ID: <20190321141230.GG3967@kernel.org>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+ <20190321091016.GA30875@krava>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6198e7f6-61bb-4ec6-9f57-08d6ae07b36d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 14:15:41.6722
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321091016.GA30875@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21 March 2019 12:22, Mark Brown wrote:
+Em Thu, Mar 21, 2019 at 10:10:16AM +0100, Jiri Olsa escreveu:
+> On Mon, Mar 11, 2019 at 10:30:36PM -0700, Song Liu wrote:
+> > Changes v8 to v9:
+> > 1. Rebase on top of torvalds/master:
+> >     commit ea295481b6e313b4ea3ca2720ffcafd6005b5643 ;
+> > 2. Change perf-record option --bpf-event to --no-bpf-event.
+> > 
+> > Changes v7 to v8:
+> > 1. Address issues suggested by Jiri and Stanislav.
+> > 
+> > Changes v6 to v7:
+> > 1. Fix minor issues suggested by Jiri.
+> > 
+> > Changes v5 to v6:
+> > 1. Improve side band evlist interface;
+> > 2. Minor style fixes.
+> > 
+> > Changes v4 to v5:
+> > 1. Rebase to latest bpf-next;
+> > 2. Add dependency of 94816add0005 from Arnaldo's tree;
+> > 3. More details in change logs;
+> > 4. Add perf_env__init() to init bpf related lock and rbtrees;
+> > 5. Small clean ups.
+> > 
+> > Changes v3 to v4:
+> > 1. Incorporate feedbacks from Jiri and Namhyung;
+> > 2. Fixed compilation error with different feature-disassembler-four-args;
+> > 3. Split some patches to smaller patches;
+> > 4. Improved error handleing in symbol__disassemble_bpf();
+> > 5. Made side band thread more generic;
+> > 6. Added comments as suggested.
+> > 
+> > Changes v2 to v3:
+> > 1. Remove unnecessary include in header files;
+> > 2. Improved error handling;
+> > 3. Better naming of functions, variables, etc.;
+> > 4. Enable bpf events by default for perf-top.
+> > 
+> > Changes v1 to v2:
+> > 1. Fix compilation error with different feature-disassembler-four-args;
+> > 2. Fix a segfault in perf-record;
+> > 3. Split patches 5/9 and 6/9 so that perf_env changes and perf.data changes
+> >    are in separate patches.
+> > 
+> > This series enables annotation of BPF programs in perf.
+> > 
+> > perf tool gathers information via sys_bpf and (optionally) stores them in
+> > perf.data as headers.
+> > 
+> > Patch 1/15 changes --bpf-event option to --no-bpf-event;
+> > Patch 2/15 to 4/15 introduce new helper functions and use them in perf and
+> >      bpftool;
+> > Patch 5/15 to 9/15 saves information of bpf program in perf_env;
+> > Patch 10/15 adds --bpf-event options to perf-top;
+> > Patch 11/15 to 13/15 enables annotation of bpf progs based on information
+> >      gathered in 5/15 to 9/15;
+> > Patch 14/15 introduces side band polling thread that gathers information
+> >      for special kernel events during perf-record or perf-top.
+> > Patch 15/15 handles information of short living BPF program using the new
+> >      side band polling thread.
+> > 
+> > Commands tested during developments are perf-top, perf-record, perf-report,
+> > and perf-annotate.
+> > 
+> > This set is also available at:
+> > 
+> > https://github.com/liu-song-6/linux/tree/bpf-annotation-v9
+> > 
+> > Thanks!!
+> > 
+> > Song Liu (15):
+> >   perf-record: replace option --bpf-event with --no-bpf-event
+> >   bpf: libbpf: introduce bpf_program__get_prog_info_linear()
+> >   bpf: bpftool: use bpf_program__get_prog_info_linear() in
+> >     prog.c:do_dump()
+> >   perf, bpf: synthesize bpf events with
+> >     bpf_program__get_prog_info_linear()
+> >   perf: change prototype of perf_event__synthesize_bpf_events()
+> >   perf, bpf: save bpf_prog_info in a rbtree in perf_env
+> >   perf, bpf: save bpf_prog_info information as headers to perf.data
+> >   perf, bpf: save btf in a rbtree in perf_env
+> >   perf, bpf: save btf information as headers to perf.data
+> >   perf-top: add option --no-bpf-event
+> >   perf: add -lopcodes to feature-libbfd
+> >   perf, bpf: enable annotation of bpf program
+> >   perf, bpf: process PERF_BPF_EVENT_PROG_LOAD for annotation
+> >   perf: introduce side band thread
+> >   perf, bpf: save bpf_prog_info and btf of short living bpf programs
+> 
+> it still crashes on standard user, like:
+> 
+> 
+> [jolsa@krava perf]$ ./perf record  ./perf bench sched messaging
+> # Running 'sched/messaging' benchmark:
+> # 20 sender and receiver processes per group
+> # 10 groups == 400 processes run
+> 
+>      Total time: 0.143 [sec]
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.282 MB perf.data (6341 samples) ]
+> perf: Segmentation fault
+> Obtained 14 stack frames.
+> ./perf(dump_stack+0x2d) [0x531f8b]
+> ./perf(sighandler_dump_stack+0x2d) [0x53206b]
+> ./perf() [0x444cd9]
+> /lib64/libc.so.6(+0x36f2f) [0x7f64a0ef2f2f]
+> /lib64/libpthread.so.0(+0x88bc) [0x7f64a32518bc]
+> ./perf(perf_evlist__stop_sb_thread+0x47) [0x4f30fc]
+> ./perf() [0x447909]
+> ./perf(cmd_record+0x815) [0x448afc]
+> ./perf() [0x4d4c52]
+> ./perf() [0x4d4ebf]
+> ./perf() [0x4d500e]
+> ./perf(main+0x267) [0x4d537a]
+> /lib64/libc.so.6(__libc_start_main+0xea) [0x7f64a0edf11a]
+> ./perf(_start+0x29) [0x42cbd9]
+> Segmentation fault (core dumped)
+> 
+> 
+> the reason is that you try to open system wide counter
+> and that's not allow for standard user.. so the thread
+> won't get started, but there's code to stop it unconsidtionaly
+> which crashes
+> 
+> 
+> the patch below fixes that for me, but I guess we want
+> to check if th eerror was -EACCESS, if not we should fail
 
-> On Tue, Mar 19, 2019 at 05:49:30PM +0000, Adam Thomson wrote:
->=20
-> > -- #clock-cells :  Should be set to '<0>', only one clock source
-> > provided;
-> > -- clock-output-names : Name given for DAI clocks output;
-> > +- #clock-cells :  Should be set to '<1>', two clock sources provided;
-> > +- clock-output-names : Names given for DAI clock outputs (WCLK &
-> > +BCLK);
->=20
-> This might need some handling later on as it's a binding change, however =
-I can't
-> see any current users so hopefully nobody will notice.
+Right, I'll apply your patch as a stop-gap solution so that I can
+proceed with pushing what we already have, and then we need to polish
+this thing for good.
 
-No I do not believe there are users of this, other than the AMD board which
-doesn't use these bindings. Actually given they're the same bindings, albei=
-t
-with a different number of cells, I've tested the code with just 1 cell and
-1 clock in the DTS and this still works as before so the driver should be
-backwards compatible.
+
+- Arnaldo
+ 
+> jirka
+> 
+> 
+> ---
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 08832fdaa26b..766059bf26ee 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1240,7 +1240,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  
+>  	if (!opts->no_bpf_event)
+>  		bpf_event__add_sb_event(&sb_evlist, &session->header.env);
+> -	perf_evlist__start_sb_thread(sb_evlist, &rec->opts.target);
+> +	if (perf_evlist__start_sb_thread(sb_evlist, &rec->opts.target))
+> +		opts->no_bpf_event = true;
+>  
+>  	err = record__synthesize(rec, false);
+>  	if (err < 0)
+> @@ -1493,7 +1494,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  out_delete_session:
+>  	perf_session__delete(session);
+>  
+> -	perf_evlist__stop_sb_thread(sb_evlist);
+> +	if (!opts->no_bpf_event)
+> +		perf_evlist__stop_sb_thread(sb_evlist);
+>  	return status;
+>  }
+>  
+
+-- 
+
+- Arnaldo
