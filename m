@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D21C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F289FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3586521917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C608A21917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553194453;
-	bh=bmBvl8Owh1QUKPpMvSAHZBuJCi3LGd+QRqua22nE+cw=;
+	s=default; t=1553194456;
+	bh=tE1lnmuO91mxGpc8Usqdv8Vgrlxmq4AQYRE0Zw3cgtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDOdwujA2YbvoQDc74Pem8bwkPRQYb17gMxDYA1uoOyysVFWqm18k0HSKkwLB1ybC
-	 jlvpu/+Qow+//6lJ1LK16LpduHiaIJkJtd5Dq7o7WK8YaCZdTvfezEL8ol4EZzjyTv
-	 /6VuQgBAhSbRE/TS01ged/0GJTcchkqCl/gWo19k=
+	b=Kr26NDMGbvCLT3PD8eI5begcMjV1KNwmoXX+sQZs2m+ZJwDaqEqJQH+cuJcwC7rUe
+	 MJdkx30hvA2C0EU5dPM1xaJu0hnDz0SYeVQNH66C0ihZrgxepNmqv/cx1k1CkyMwDA
+	 2s2Af8Z+P1QtMN9DHeYQRd3LaxOZZyisyRZ/8mAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfCUSyL (ORCPT
+        id S1729079AbfCUSyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbfCUSyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:54:08 -0400
+        id S1729067AbfCUSyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:54:12 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D782196F;
-        Thu, 21 Mar 2019 18:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F6620657;
+        Thu, 21 Mar 2019 18:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553194447;
-        bh=bmBvl8Owh1QUKPpMvSAHZBuJCi3LGd+QRqua22nE+cw=;
+        s=default; t=1553194451;
+        bh=tE1lnmuO91mxGpc8Usqdv8Vgrlxmq4AQYRE0Zw3cgtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7Lw3zo7N1pofBcc7mGsQGFgXE3sFc/Wq6eU/4+nfg7mTFjmKoiK8CE/HInNoI4yK
-         I8rl/BseEsAMzFXLRU6vmz7iwLo8NNnzSrvXgJewh1wWqdpN7UOA5qS2oDCJK1lzPn
-         7Ry8mYzPnmhZqxXD7IgHHp+qTxJuegkdVpxTMYMQ=
+        b=ocJ2f+52LplHgL4X5xU8CWWmvXW0ZOrdO3KyXhiGhQgtBPrIX9wMNeiWFyrB8Yhee
+         4e8Is44vSJtg8qVg2LmxoiFFnsqBkufgwGUdajZZbOt5p0VDzF9PZZIq8sOSKFn2aa
+         QSsfCDH3wmXJYT/dnmAfxRxHxvSBAH2KViIsVAoc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,14 +45,13 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 24/44] perf tests: Fix memory leak by expr__find_other() in test__expr()
-Date:   Thu, 21 Mar 2019 15:51:22 -0300
-Message-Id: <20190321185142.11441-25-acme@kernel.org>
+Subject: [PATCH 25/44] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
+Date:   Thu, 21 Mar 2019 15:51:23 -0300
+Message-Id: <20190321185142.11441-26-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
@@ -67,60 +65,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Changbin Du <changbin.du@gmail.com>
 
   =================================================================
-  ==7506==ERROR: LeakSanitizer: detected memory leaks
+  ==20875==ERROR: LeakSanitizer: detected memory leaks
 
-  Direct leak of 13 byte(s) in 3 object(s) allocated from:
-      #0 0x7f03339d6070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x5625e53aaef0 in expr__find_other util/expr.y:221
-      #2 0x5625e51bcd3f in test__expr tests/expr.c:52
-      #3 0x5625e51528e6 in run_test tests/builtin-test.c:358
-      #4 0x5625e5152baf in test_and_print tests/builtin-test.c:388
-      #5 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
-      #6 0x5625e515572f in cmd_test tests/builtin-test.c:722
-      #7 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #8 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #9 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #10 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #11 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x55bd50005599 in zalloc util/util.h:23
+      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
+      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
+      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
+      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
+      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
+      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
+      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
+      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 075167363f8b ("perf tools: Add a simple expression parser for JSON")
-Link: http://lkml.kernel.org/r/20190316080556.3075-16-changbin.du@gmail.com
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/expr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/evsel-tp-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 01f0706995a9..9acc1e80b936 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -19,7 +19,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	const char *p;
- 	const char **other;
- 	double val;
--	int ret;
-+	int i, ret;
- 	struct parse_ctx ctx;
- 	int num_other;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index ea7acf403727..71f60c0f9faa 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -85,5 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
  
-@@ -56,6 +56,9 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
- 	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
- 	TEST_ASSERT_VAL("find other", other[3] == NULL);
-+
-+	for (i = 0; i < num_other; i++)
-+		free((void *)other[i]);
- 	free((void *)other);
- 
- 	return 0;
++	perf_evsel__delete(evsel);
+ 	return ret;
+ }
 -- 
 2.20.1
 
