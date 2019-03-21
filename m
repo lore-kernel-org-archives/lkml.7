@@ -2,219 +2,128 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ADAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7288C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AF121916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553186504;
-	bh=Zi7xJlRDRyj0wLrmI+0AYzuEnbMkoLyWVgsd13AcYqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sUdbSz0jCRz3HRKyY9PWgZVg228WfxNUTI0sQG1IMlBqrwsZpWdPX95iv1mSpY+yb
-	 yXjmS9usnNN9eO/bWDQUNoOzY2l6SgAenzDfiLzDstI3ASjfhkyAkSJW1VpKWz02e5
-	 Tt6w4q9uOWebznMU1VdB8WZdxtqBN6rw3F7gg01I=
+	by mail.kernel.org (Postfix) with ESMTP id 814FE21902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfCUQlm (ORCPT
+        id S1728563AbfCUQmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfCUQlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:41:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0142190A;
-        Thu, 21 Mar 2019 16:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553186500;
-        bh=Zi7xJlRDRyj0wLrmI+0AYzuEnbMkoLyWVgsd13AcYqQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GRX1ikPO6KddoxtiEkP2jbBziSOctTzlUYisFlbY4bz4KWo9AaRwpLC8B9p5vbYek
-         2dwXFPF5dCg16L0PUxv2IrpvMaP6cjiTbJk4RJFmaCqNbo0ol7zCtB9+WqdFvFN5fb
-         2QdsoMB/tOAUeGXHGQw8glMPgLUJidlNe0bQY7os=
-Date:   Thu, 21 Mar 2019 17:41:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Bin Liu <b-liu@ti.com>, Paul Kocialkowski <contact@paulk.fr>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
- dual role
-Message-ID: <20190321164138.GB11121@kroah.com>
-References: <20180328215213.29538-1-contact@paulk.fr>
- <20180329092326.dayuccomq5zrywqo@flea>
- <1522324644.1746.19.camel@bootlin.com>
- <20180420142524.GB29011@uda0271908>
- <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
- <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
- <20190321130133.zllt5pqbrhiecoch@flea>
+        Thu, 21 Mar 2019 12:42:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:49926 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbfCUQmF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:42:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id z6so5509532ioh.16
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:42:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lucdnKixUea4/G3DSwpS9jSnxM9gJ6/FVEjncwUji1w=;
+        b=unUtl6OgB8orFwOb/3f2AEkWh1sQqPks49GsZQpQA1mRy9Pk0ykhkFE2h5F4FG0WU9
+         L98h6AdNWbuODpbtoLhhVrY4lNnrAvtlFaqdOWSKF8mFBBHGr0mR0AelpBH4vSjT/t7p
+         7zZo/bPOq2SyNjVx3E2KHK1xKiuyjud2diCrO4oAQZYkJKz/iYBfUp66pU2aCfcjFvln
+         1b+aSOxhNZcKDnPt/uQjA/w0XShex0uzHh9W499WxF/YGA+653ylIebwA2CM+eS2vTvm
+         EcodaAoHSDjAzB9u3yNmmzPb9kjhK6iDmz690W7wqFgGmc5gGVdCdqy+aY9guzIuQS7I
+         6hMQ==
+X-Gm-Message-State: APjAAAVFztOc6iKiK61OjMruwnaa3WwiKFAf1I0bJlzfL9YYErgckz8n
+        X60bB62XRWeizxxIXWRopma64FWDF6peO4OEWEntJcwD1tn3
+X-Google-Smtp-Source: APXvYqyyHNE1zJTl3xweQah7qrfBrGByL3s9/gdYLandSqiHWEoHwOI9doo1o2Hs78XuvZ/EbGJc89e+5z3x3AB3+O28CyD7kM8q
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190321130133.zllt5pqbrhiecoch@flea>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a5e:c901:: with SMTP id z1mr3508839iol.304.1553186524977;
+ Thu, 21 Mar 2019 09:42:04 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 09:42:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000017690505849d6b3c@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in hci_uart_set_flow_control
+From:   syzbot <syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com>
+To:     johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 02:01:33PM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> I'm reviving this thread a bit, because I encountered this bug today.
-> 
-> On Thu, Mar 21, 2019 at 11:02:10AM +0100, Bin Liu wrote:
-> > On Sat, Apr 21, 2018 at 12:59:23PM +0200, Paul Kocialkowski wrote:
-> > > Hi,
-> > >
-> > > Le vendredi 20 avril 2018 à 09:25 -0500, Bin Liu a écrit :
-> > > > On Thu, Mar 29, 2018 at 01:57:24PM +0200, Paul Kocialkowski wrote:
-> > > > > Hi,
-> > > > >
-> > > > > On Thu, 2018-03-29 at 11:23 +0200, Maxime Ripard wrote:
-> > > > > > On Wed, Mar 28, 2018 at 11:52:13PM +0200, Paul Kocialkowski wrote:
-> > > > > > > This allows dual-role ports to be reported as having gadget mode
-> > > > > > > by
-> > > > > > > the
-> > > > > > > musb_has_gadget helper. This is required to enable MUSB at all
-> > > > > > > with
-> > > > > > > MUSB
-> > > > > > > glue layers that set the port mode to MUSB_PORT_MODE_DUAL_ROLE
-> > > > > > > at
-> > > > > > > init.
-> > > > > > >
-> > > > > > > Most notably, this allows calling musb_start when needed in the
-> > > > > > > virtual
-> > > > > > > MUSB root HUB, regardless of whether the current mode should be
-> > > > > > > gadget
-> > > > > > > or host.
-> > > > > > >
-> > > > > > > This fixes USB OTG on Allwinner devices that I could test it
-> > > > > > > with,
-> > > > > > > mainly A20 devices.
-> > > > > > >
-> > > > > > > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> > > > > >
-> > > > > > Surely there's more to it than that. The gadget mode of A20 boards
-> > > > > > have been working in the past, including when compiling with mUSB
-> > > > > > setup as dual role.
-> > > > > >
-> > > > > > Is this a regression since a particular commit? Or is there
-> > > > > > another,
-> > > > > > deeper issue overlooked in the commit log?
-> > > > >
-> > > > > The root of the issue here is that musb_start is not called at any
-> > > > > point
-> > > > > without this patch. My understanding of the flow is the following:
-> > > > > when
-> > > > > the PHY detects that there was a VBUS/ID change, it will notify its
-> > > > > listeners (mainly the musb sunxi glue layer). This will then
-> > > > > schedule
-> > > > > the driver's work (sunxi_musb_work), which does nothing since the
-> > > > > SUNXI_MUSB_FL_ENABLED bit was never set. This bit is only set after
-> > > > > calling sunxi_musb_enable, which is called from
-> > > > > musb_platform_enable,
-> > > > > that originates from musb_start.
-> > > > >
-> > > > > Currently I see two places where musb_start is called:
-> > > > > * musb_virthub
-> > > > > * musb_gadget
-> > > > >
-> > > > > In the latter case, it is in turn called from udc_start, which
-> > > > > should
-> > > > > probably (correct me if I'm wrong) happen later in the call chain
-> > > > > than
-> > > > > ID/VBUS change notification time.
-> > > >
-> > > > I don't think it is correct that udc_start() is triggered by ID/VBUS
-> > > > events, but I don't have an Allwinner platform to verify the callflow.
-> > >
-> > > Yes you're right, I didn't make myself very clear here. I didn't
-> > > investigate the udc_start call path much since it was apparently not the
-> > > culprit.
-> > >
-> > > > Have you tried to load with a gadget driver? When a gadget function is
-> > > > bound to UDC, udc_start() is triggered, which in turn calls
-> > > > musb_start().
-> > >
-> > > It does work under that scenario, although my used case here is using
-> > > musb with DUAL_ROLE but no gadget driver loaded. That it, I want the
-> > > musb_start call to originate from the virtual hub, not from the gadget
-> > > side.
-> > >
-> > > > > In the former case, musb_start is called in the root controller hub
-> > > > > control, when setting the USB_PORT_FEAT_POWER feature. This looks
-> > > > > perfectly legit and IMO this is where it should be initially calling
-> > > > > musb_start in the dual role case. The kernel is indeed setting the
-> > > >
-> > > > No actually. A dual-role port should be in b_idle state by default, so
-> > > > logically all actions should go to the gadget path until the port
-> > > > switches to host mode.
-> > >
-> > > It makes sense that the port should be in b_idle state by default, but
-> > > here it fails to switch to host mode when the ID pin detects that it
-> > > should. Or does b_idle state entail that a gadget must be loaded (per
-> > > the USB spec), and thus nothing should (ever) happen until that happens?
-> > >
-> > > I find it really odd to need a gadget device to trigger host mode.
-> > > This patch does fix the issue, but I am puzzled as to why it is needed
-> > > in the first place. The comment above it mentions that "In OTG mode we
-> > > have to wait until we loaded a gadget. We don't really need a gadget if
-> > > we operate as a host but we should not start a session as a device
-> > > without a gadget or else we explode.", which is apparently compatible
-> > > with my use case: a gadget is not really needed and I'm not trying to
-> > > start a session as a device without a gadget loaded.
-> > >
-> > > What do you think?
-> >
-> > Okay, this came down to an argument that whether we should require
-> > loading a gadget driver on a dual-role port to work in host mode,
-> > which is currently required on musb since a long long time ago.
-> >
-> > I understand the requirement is kinda unnecessary, but since it already
-> > exists on musb stack for a long time, I don't plan to change it. Because I
-> > cannot think of a use case in real products that doesn't automatically
-> > load a gadget function on the dual-role port.
-> >
-> > If you can explain a use case in real world (not a engineering lab) that
-> > the gadget driver will not be loaded at linux booting up, but later
-> > based on user's input, I will reconsider my decision. To remove this
-> > requirement from musb stack, the work is more than this patch.
-> 
-> I have one for you: we're working on a device that boots pretty fast,
-> and therefore are pushing as much things as we can to modules. It
-> includes gadgets, the musb driver and glue, etc. That doesn't sound
-> way very different from what a generic distro would do as well.
-> 
-> At boot, the various modules for the hardware are loaded
-> automatically: the musb glue, the musb core, our USB PHY, etc. We end
-> up in a situation where the musb driver is loaded and reported to work
-> properly. The USB cable to the OTG port (in peripheral) might or might
-> not be connected, it's kind of irrelevant.
-> 
-> The gadgets, however, are not loaded automatically.
-> 
-> Now comes a user that wants to use musb as a host, and connect a
-> proper USB adapter, that wires the ID pin properly. In our case, the
-> phy detects it, reports the mode change, and .... nothing.
-> 
-> That doesn't really look like an engineering lab setup to me.
+Hello,
 
-I agree, that sounds like a valid setup.
+syzbot found the following crash on:
 
-Also realize that Android is pushing to have all drivers as modules, so
-you will start to see a whole lot more devices out there be modular
-instead of statically built kernels.  So issues like this are good to
-resolve :)
+HEAD commit:    54c49016 Merge tag 'arc-5.1-rc2' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=150552df200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=79337b501d6aa974d0f6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15397fd7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=151e9e6d200000
 
-thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
 
-greg k-h
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+#PF error: [INSTR]
+PGD a7d75067 P4D a7d75067 PUD 9fa83067 PMD 0
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 1173 Comm: kworker/u5:0 Not tainted 5.1.0-rc1+ #31
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: hci0 hci_power_on
+RIP: 0010:          (null)
+Code: Bad RIP value.
+RSP: 0018:ffff8880a7807a28 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffff87ac4d20 RCX: 0000000000000000
+RDX: 1ffffffff0f589bd RSI: 1ffff11014fff58f RDI: ffff8880a0f6ca00
+RBP: ffff8880a7807b00 R08: ffff8880a7ffa380 R09: 0000000000000004
+R10: ffffed10141ed945 R11: ffff8880a0f6ca2f R12: ffff8880a0f6ca00
+R13: 1ffff11014f00f47 R14: ffff8880a0f6ca10 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 000000009fa85000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  hci_uart_set_flow_control+0x41e/0x600 drivers/bluetooth/hci_ldisc.c:327
+  mrvl_setup+0x22/0x110 drivers/bluetooth/hci_mrvl.c:348
+  hci_uart_setup+0x1c4/0x490 drivers/bluetooth/hci_ldisc.c:418
+  hci_dev_do_open+0x78c/0x1780 net/bluetooth/hci_core.c:1450
+  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 1fd0bc84b188ab23 ]---
+RIP: 0010:          (null)
+Code: Bad RIP value.
+RSP: 0018:ffff8880a7807a28 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffff87ac4d20 RCX: 0000000000000000
+RDX: 1ffffffff0f589bd RSI: 1ffff11014fff58f RDI: ffff8880a0f6ca00
+RBP: ffff8880a7807b00 R08: ffff8880a7ffa380 R09: 0000000000000004
+R10: ffffed10141ed945 R11: ffff8880a0f6ca2f R12: ffff8880a0f6ca00
+R13: 1ffff11014f00f47 R14: ffff8880a0f6ca10 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 000000009fa85000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
