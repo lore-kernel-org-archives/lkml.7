@@ -2,105 +2,79 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A45C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA28DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6EC218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE1A218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfCUCBV (ORCPT
+        id S1727823AbfCUCDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:01:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5161 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727081AbfCUCBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:01:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CE1BE748927B4875688A;
-        Thu, 21 Mar 2019 10:01:19 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
- 10:01:10 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <ckeepax@opensource.cirrus.com>, <rf@opensource.cirrus.com>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] ASoC: wm_adsp: Make some variables static
-Date:   Thu, 21 Mar 2019 10:01:06 +0800
-Message-ID: <20190321020106.11096-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 20 Mar 2019 22:03:04 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:49131 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbfCUCDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:03:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id 186so3879396iox.15
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:03:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1R50ONlQ6mKiAOyj0s+7aiQDS6ROh29uHJivg+HXM6g=;
+        b=fFbcwuRWFD6Mk2ZsVcgNxEocNn5LwJ7TqxB9hIbJlrZuedOyC4mJdYgCKvQfSXbiwo
+         Jorke1HH9ZE2DQ/VMqb1ywj85mRX/HqoeoGuTVnAhLWwBV8tZtkaOKaRFghZyvSyQMob
+         1/HE7H+yxnr6ZfRFtKbJamYEM+BChZtG2oFFm5iLdZeUeBWwvg3FVo5vYoWMTwDbHkYF
+         FvaIltEiYk3N0ju8VyQzTEIkCZzpxZoo39Pg08DcsL/zxmegShPtKV2gTI/j1R4pvII2
+         y6QgmMCQmjKuvvAuW6pcfMFEm6vUBjlgC5DsowPir/CiY6E2wcC+wYNXND+j/udI87I0
+         In+g==
+X-Gm-Message-State: APjAAAWS8ZusctTWsiwmEWZOy9ku2K0qeJKRf926urvd8bZJ5F/g3HJo
+        hdxhMz7c1zJx5+GErMN3ftGXEFtfWZyoRZrqHsh5RGLO7KI8
+X-Google-Smtp-Source: APXvYqyxULQgqaG+X+CPfJEGVPmX6eN5HYfBE4/ShwbEhbe1Ii/ebmkBZZlSW2nqegHHPLJkx27BJaNUYoZq4bVMb6sn+DXVcp7Q
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5d:899a:: with SMTP id m26mr609234iol.5.1553133780355;
+ Wed, 20 Mar 2019 19:03:00 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 19:03:00 -0700
+In-Reply-To: <000000000000445dd9057a7149f1@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000044534c058491234b@google.com>
+Subject: Re: general protection fault in rds_recv_rcvbuf_delta
+From:   syzbot <syzbot+4b4f8163c2e246df3c4c@syzkaller.appspotmail.com>
+To:     chien.yen@oracle.com, davem@davemloft.net,
+        dennis.dalessandro@intel.com, dledford@redhat.com,
+        ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, mike.marciniszyn@intel.com,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        santosh.shilimkar@oracle.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+syzbot has bisected this bug to:
 
-Fix sparse warnings:
+commit b534875d5ab348fb9193692589e2ee82ae768e3a
+Author: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Date:   Wed Jan 6 18:02:59 2016 +0000
 
-sound/soc/codecs/wm_adsp.c:309:20: warning: symbol 'wm_adsp1_ops' was not declared. Should it be static?
-sound/soc/codecs/wm_adsp.c:310:20: warning: symbol 'wm_adsp2_ops' was not declared. Should it be static?
-sound/soc/codecs/wm_adsp.c:311:20: warning: symbol 'wm_halo_ops' was not declared. Should it be static?
+     IB/rdmavt: Add device specific info prints
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: make variables static
----
- sound/soc/codecs/wm_adsp.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13e03843200000
+start commit:   b534875d IB/rdmavt: Add device specific info prints
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10103843200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e03843200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2e0064f906afee10
+dashboard link: https://syzkaller.appspot.com/bug?extid=4b4f8163c2e246df3c4c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11631328c00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1172c7ef400000
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index 644aaf1..c41bffc 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -306,9 +306,9 @@
- #define HALO_MPU_VIO_ERR_SRC_MASK           0x00007fff
- #define HALO_MPU_VIO_ERR_SRC_SHIFT                   0
- 
--struct wm_adsp_ops wm_adsp1_ops;
--struct wm_adsp_ops wm_adsp2_ops[];
--struct wm_adsp_ops wm_halo_ops;
-+static struct wm_adsp_ops wm_adsp1_ops;
-+static struct wm_adsp_ops wm_adsp2_ops[];
-+static struct wm_adsp_ops wm_halo_ops;
- 
- struct wm_adsp_buf {
- 	struct list_head list;
-@@ -4407,13 +4407,13 @@ irqreturn_t wm_halo_wdt_expire(int irq, void *data)
- }
- EXPORT_SYMBOL_GPL(wm_halo_wdt_expire);
- 
--struct wm_adsp_ops wm_adsp1_ops = {
-+static struct wm_adsp_ops wm_adsp1_ops = {
- 	.validate_version = wm_adsp_validate_version,
- 	.parse_sizes = wm_adsp1_parse_sizes,
- 	.region_to_reg = wm_adsp_region_to_reg,
- };
- 
--struct wm_adsp_ops wm_adsp2_ops[] = {
-+static struct wm_adsp_ops wm_adsp2_ops[] = {
- 	{
- 		.sys_config_size = sizeof(struct wm_adsp_system_config_xm_hdr),
- 		.parse_sizes = wm_adsp2_parse_sizes,
-@@ -4474,7 +4474,7 @@ struct wm_adsp_ops wm_adsp2_ops[] = {
- 	},
- };
- 
--struct wm_adsp_ops wm_halo_ops = {
-+static struct wm_adsp_ops wm_halo_ops = {
- 	.sys_config_size = sizeof(struct wm_halo_system_config_xm_hdr),
- 	.parse_sizes = wm_adsp2_parse_sizes,
- 	.validate_version = wm_halo_validate_version,
--- 
-2.7.0
-
-
+Reported-by: syzbot+4b4f8163c2e246df3c4c@syzkaller.appspotmail.com
+Fixes: b534875d ("IB/rdmavt: Add device specific info prints")
