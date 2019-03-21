@@ -2,120 +2,119 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E12C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB61C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B2C21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B85218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfCULXT (ORCPT
+        id S1727934AbfCUL2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:23:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54562 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfCULXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:23:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A55C0374;
-        Thu, 21 Mar 2019 04:23:18 -0700 (PDT)
-Received: from cam-smtp0.cambridge.arm.com (unknown [10.37.10.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 240A83F614;
-        Thu, 21 Mar 2019 04:23:14 -0700 (PDT)
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jianguo Chen <chenjianguo3@huawei.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rob Herring <robh@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Thu, 21 Mar 2019 07:28:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53915 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbfCUL2e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:28:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LBSEZY107068
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 21 Mar 2019 04:28:14 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LBSC39107065;
+        Thu, 21 Mar 2019 04:28:12 -0700
+Date:   Thu, 21 Mar 2019 04:28:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nick Desaulniers <tipbot@zytor.com>
+Message-ID: <tip-a9c640ac96e19b3966357ec9bb586edd2e1e74de@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, ubizjak@gmail.com,
+        ndesaulniers@google.com, fanc.fnst@cn.fujitsu.com,
+        sfr@canb.auug.org.au, natechancellor@gmail.com, hpa@zytor.com,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] irqchip updates for 5.1-rc2
-Date:   Thu, 21 Mar 2019 11:22:37 +0000
-Message-Id: <20190321112237.10325-1-marc.zyngier@arm.com>
-X-Mailer: git-send-email 2.20.1
+Reply-To: ndesaulniers@google.com, fanc.fnst@cn.fujitsu.com,
+          sfr@canb.auug.org.au, natechancellor@gmail.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, ubizjak@gmail.com
+In-Reply-To: <20190314221458.83047-1-ndesaulniers@google.com>
+References: <20190314221458.83047-1-ndesaulniers@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/boot: Restrict header scope to make Clang
+ happy
+Git-Commit-ID: a9c640ac96e19b3966357ec9bb586edd2e1e74de
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Commit-ID:  a9c640ac96e19b3966357ec9bb586edd2e1e74de
+Gitweb:     https://git.kernel.org/tip/a9c640ac96e19b3966357ec9bb586edd2e1e74de
+Author:     Nick Desaulniers <ndesaulniers@google.com>
+AuthorDate: Thu, 14 Mar 2019 15:14:57 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 21 Mar 2019 12:24:38 +0100
 
-Here's a few irqchip updates for 5.1-rc2. Nothing really stands out,
-this is the usual bunch of fixes, cleanups and DT binding updates.
+x86/boot: Restrict header scope to make Clang happy
 
-Please pull,
+The inclusion of <linux/kernel.h> was causing issue as the definition of
+__arch_hweight64 from arch/x86/include/asm/arch_hweight.h eventually gets
+included. The definition is problematic when compiled with -m16 (all code
+in arch/x86/boot/ is) as the "D" inline assembly constraint is rejected
+by both compilers when passed an argument of type long long (regardless
+of signedness, anything smaller is fine).
 
-	M.
+Because GCC performs inlining before semantic analysis, and
+__arch_hweight64 is dead in this translation unit, GCC does not report
+any issues at compile time.  Clang does the semantic analysis in the
+front end, before inlining (run in the middle) can determine the code is
+dead. I consider this another case of PR33587, which I think we can do
+more work to solve.
 
-The following changes since commit 28528fca4908142bd1a3247956cba56c9c667d71:
+It turns out that arch/x86/boot/string.c doesn't actually need
+linux/kernel.h, simply linux/limits.h and linux/compiler.h.
 
-  irqchip/imx-irqsteer: Add multi output interrupts support (2019-02-22 09:23:46 +0000)
+Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: bp@alien8.de
+Cc: niravd@google.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Link: https://bugs.llvm.org/show_bug.cgi?id=33587
+Link: https://github.com/ClangBuiltLinux/linux/issues/347
+Link: https://lkml.kernel.org/r/20190314221458.83047-1-ndesaulniers@google.com
 
-are available in the Git repository at:
+---
+ arch/x86/boot/string.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-5.1-2
-
-for you to fetch changes up to fca269f201a8d9985c0a31fb60b15d4eb57cef80:
-
-  irqchip/mbigen: Don't clear eventid when freeing an MSI (2019-03-21 11:08:26 +0000)
-
-----------------------------------------------------------------
-irqchip updates for 5.1, take #2
-
-- irqsteer error handling fix
-- GICv3 range coalescing fix
-- stm32 coprocessor coexistence fixes
-- mbigen MSI teardown fix
-- non-DT secondary GIC infrastructure removed
-- various cleanups (brcmstb-l2, mmp)
-- new DT bindings (r8a774c0)
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      irqchip/imx-irqsteer: Fix of_property_read_u32() error handling
-
-Fabien Dessenne (2):
-      irqchip/stm32: Don't clear rising/falling config registers at init
-      irqchip/stm32: Don't set rising configuration registers at init
-
-Fabrizio Castro (1):
-      dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
-
-Jianguo Chen (1):
-      irqchip/mbigen: Don't clear eventid when freeing an MSI
-
-Marc Zyngier (1):
-      irqchip/gic: Drop support for secondary GIC in non-DT systems
-
-Rasmus Villemoes (1):
-      irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
-
-YueHaibing (2):
-      irqchip/brcmstb-l2: Make two init functions static
-      irqchip/mmp: Make mmp_irq_domain_ops static
-
- .../bindings/interrupt-controller/renesas,irqc.txt |  1 +
- arch/arm/mach-cns3xxx/core.c                       |  2 +-
- drivers/irqchip/irq-brcmstb-l2.c                   |  4 +-
- drivers/irqchip/irq-gic-v3-its.c                   |  2 +-
- drivers/irqchip/irq-gic.c                          | 45 ++++++++--------------
- drivers/irqchip/irq-imx-irqsteer.c                 |  8 +++-
- drivers/irqchip/irq-mbigen.c                       |  3 ++
- drivers/irqchip/irq-mmp.c                          |  2 +-
- drivers/irqchip/irq-stm32-exti.c                   | 10 -----
- include/linux/irqchip/arm-gic.h                    |  3 +-
- 10 files changed, 32 insertions(+), 48 deletions(-)
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 315a67b8896b..90154df8f125 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -13,8 +13,9 @@
+  */
+ 
+ #include <linux/types.h>
+-#include <linux/kernel.h>
++#include <linux/compiler.h>
+ #include <linux/errno.h>
++#include <linux/limits.h>
+ #include <asm/asm.h>
+ #include "ctype.h"
+ #include "string.h"
