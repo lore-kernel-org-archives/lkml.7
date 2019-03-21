@@ -2,86 +2,107 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5DAC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53BAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF4821916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF672183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:12:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="efS0otfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfCUVKf (ORCPT
+        id S1726969AbfCUVMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:10:35 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:62652 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbfCUVKf (ORCPT
+        Thu, 21 Mar 2019 17:12:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34039 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbfCUVMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:10:35 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2LLAJPi091816;
-        Fri, 22 Mar 2019 06:10:19 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Fri, 22 Mar 2019 06:10:19 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126094122116.bbtec.net [126.94.122.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2LLAEL3091793
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 22 Mar 2019 06:10:19 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: mount.nfs: Protocol error after upgrade to linux/master
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190315110555.0807d015@cakuba.netronome.com>
- <20190315120105.5541ad46@cakuba.netronome.com>
- <20190315165440.53b9db3c@cakuba.netronome.com>
- <CAGXu5jKHRPuaALQcPXvpDeuVgZR+EeRqo9Qj4j3kYatb3HUSSA@mail.gmail.com>
- <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
- <f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp>
- <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com>
- <2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp>
- <CAGXu5jKj-Pq4krHmKd__4MoXBe1FK399cDZnSxdPigZo78tPfA@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e20bf21e-77b0-6403-51b6-3f174d45529e@i-love.sakura.ne.jp>
-Date:   Fri, 22 Mar 2019 06:10:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 21 Mar 2019 17:12:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v12so5063188pgq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JaSfjeC+lkY5s4/k3RvSz0OALUNMfJX+t20AO+2lQPE=;
+        b=efS0otfCxclI4QRPdbkYmbaBtwrZdLNfkgCIQ3Jj6R3fwmDXOSE5BqkCmL6UhTafHo
+         2FSq24nOZaVrLNrP3Vl7yRG13mXKEFUTpc3HogDQs4awvJSej/l8YdrwrBgsrbQCFPmk
+         mcADO7vTSt6+fBmjSnF3QRjmN9tDbnGjW4pxA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JaSfjeC+lkY5s4/k3RvSz0OALUNMfJX+t20AO+2lQPE=;
+        b=FFXXbKNv1hA8jaDa8fgmhJMOLVXk8MXW9ti+tf2r9x6tkHLgFTTOk2fQofC3RPi3Q7
+         Jb5CSW0YM6KwYdtC/pn2k89ciisHPddOcEk8gl3VDZHKHdZ0W6RlyJQzvma98NX0giJl
+         ZYWwcvuVXKuQoCfkjW2IQnUU8AQILG/izF3POT/0R8bUhaT6WeHhBoCUpbvtROojtE7Z
+         Y3rD1BPgCFoYDqS6L8WpZwk0uCT5vimSo5GuYz16am3R9H71SNLLN/TNzrxWN74/YM1I
+         +LHxWaPp7eWyHlPwUg3UOwZTpUu8kUrDqaD5PVt1voVzY04CATs/w5U1eyDO1JCKNReE
+         Igog==
+X-Gm-Message-State: APjAAAVxWsC2zoEi8ksYuZTAZOYmEYSgT40RlaiJGq1YuYF0Umc189dH
+        oeacQaXS9jLfZzC+tIaTrD+M3A==
+X-Google-Smtp-Source: APXvYqx+13ROSLXMWtN/hHKRUAsj2ISQcZnb+XXGKGo7n9ky+rZetVgpQpJH3KD+e5xSot1OCmewOg==
+X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr5753107plb.155.1553202754563;
+        Thu, 21 Mar 2019 14:12:34 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id h126sm12785232pfc.135.2019.03.21.14.12.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 14:12:34 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 14:12:33 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, ryandcase@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] ARM: dts: rockchip: Remove #address/#size-cells from
+ rk3288 mipi_dsi
+Message-ID: <20190321211233.GS112750@google.com>
+References: <20190320201402.114309-1-dianders@chromium.org>
+ <20190320201402.114309-3-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5jKj-Pq4krHmKd__4MoXBe1FK399cDZnSxdPigZo78tPfA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190320201402.114309-3-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/22 1:38, Kees Cook wrote:
-> This is mostly good. I'd like to keep the other LSMs listed though
-> (similar to what I had originally) so that if a legacy-major doesn't
-> initialize, later ones will be. I want to remove the concept of
-> "major" LSMs. The only thing that should matter is init order...
+On Wed, Mar 20, 2019 at 01:14:01PM -0700, Douglas Anderson wrote:
+> They are pointless.  As dtc points out:
+>   Warning (avoid_unnecessary_addr_size):
+>   /mipi@ff960000:
+>   unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+> 
+> Let's remove them.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 79cd3c53e737..99a7620bddac 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -1119,8 +1119,6 @@
+>  		clock-names = "ref", "pclk";
+>  		power-domains = <&power RK3288_PD_VIO>;
+>  		rockchip,grf = <&grf>;
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+>  		status = "disabled";
+>  
+>  		ports {
 
-Excuse me? Are you saying that
-
-  if a legacy-major (which is defined as the "Default security module")
-  doesn't initialize, later ones (any of selinux,smack,tomoyo,apparmor
-  except the one which is defined as "Default security module") will be
-  initialized
-
-? That sounds strange to me. Any of selinux,smack,tomoyo,apparmor can be
-initialized when specified by lsm= kernel command line option (or security=
-kernel command line option if lsm= kernel command line option is not
-specified), won't it?
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
