@@ -2,84 +2,153 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D58C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40BBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2F021917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854DA218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGZBYybR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfCUXIC (ORCPT
+        id S1727330AbfCUXKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:08:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:39866 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfCUXIB (ORCPT
+        Thu, 21 Mar 2019 19:10:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43609 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfCUXKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:08:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id a9so224745iol.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 16:08:01 -0700 (PDT)
+        Thu, 21 Mar 2019 19:10:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l11so82799pgq.10;
+        Thu, 21 Mar 2019 16:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HNV2mzBDg3mmWGermsFnRewT1LJJ+M+8JlmuINeKXnA=;
+        b=HGZBYybROgjUvcNmVNRm2HAj+AeBY5RD8e/6ed22Et1mXYww8vYz3/tm1hCDNd1jD5
+         kI0s0c/YlIZTCW2BGn+aTBfTzRhhPufWf2McEv8I9Eab6NZSFbDQtu+qkcGnd+NSJnc1
+         hJanDzRZ6eAOtmhcYCgW/bK6pf5DBCf2vzIjjQaypj5KkZaSU4DuMOmiHM3DfJ1cUYRd
+         5PxVumsyhpunqRjvsu/BEyUAFL+CCmHi23a+nyBEkvyv0VxGgL8Eq0pkJVYJyTuxOwL7
+         bIC5YdDeHbKEwmcV/gkDWT1K3cfDzqJegDoR5uwwJ+NrCIUwpUhob6VkSFm7hZ0JhM8E
+         2c4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hBKD7f2HkIDdNnRVBYci/PpLhJKAtA+yAwwLcN1m4mU=;
-        b=hLdtbbog04JDppD8G4ZQmi4zih65HIzxCxxkPhg24XBrshv7Z8HTshyFlixw9e/UNQ
-         5VMLCxI8fTUvHov8TKCqg5DvY7YdwyOg2XWbz+xII2vwq/jK3fZy/+1tsl+0roJo1SxC
-         7nZ/e5Nh1wFo4hSkGMQFKfZx8p7mNMM8MFRRuikiGHgQGZERRZxBBFNexcJI7s1llOty
-         fgvEsTQwHcd81ui43Kar47zBwxfVBwEebU34YkHLQIZ/CN2r0bqlCUgQZTuuRmJ2CkXE
-         JIPxuNwHgQiMuq3+ZtEm2CguzBk+9YPSfO2sY2rsdVC0CrBjqtBa0g/h1U1kWaiqGIFo
-         dTnw==
-X-Gm-Message-State: APjAAAU7GFhZ67krwI7Rza6zvfwEOx76i3Rj4N9eSgmVYOSLRgDQ/uX1
-        A3vplYQ1t+SvcZNDdsbPXxcYIQt1mnubW9pu3St7etp6++DY
-X-Google-Smtp-Source: APXvYqxJVB4oaGrUcbyaKassz5VuxuxIcnvlCS6n0Qq5jVohJVdVmypBUNb8WGpIB5LNW2FVjTG2QloPzGNThDZ/EV/w1uowR6pn
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HNV2mzBDg3mmWGermsFnRewT1LJJ+M+8JlmuINeKXnA=;
+        b=PmqRA+JGaehQzwGYAFEjaOO+cuvxkdeCpvicpZSDb5ISDt+Kx6IkkLD6Kqq/TXdnXg
+         Gxz88rqANEk1MKIeFs1sxuiaZ+AXOtXKKz22z4Wkpy4Ju36VDPzBlHYB81Kj5G+PSmPo
+         xP90QOCCir1TySEW2WlYCt1/wWQzlLsLmPnuQG2Nk4Vbt7J9n0lJ65UNKng1RQ0UH68R
+         bNr6rn3VRaHt0jYNH1q9LIlTWN2EWrI4udz1XJmetKONbnYpCMEQGdxKycY5QIS+F5kt
+         ICuE757vDASQlafEPvKzS3zIDaCSiMIljbaMaiJfuZKTTtCjV1bRzP2Dbd3P7Z8oK2yM
+         uM6w==
+X-Gm-Message-State: APjAAAUDmQVm+XZW7XCl3GEXhbCX9iC33wP7IAYJMQ/cxUjvRSd+SGRt
+        bWhSvsNzgp5CRDz70LuVxPM=
+X-Google-Smtp-Source: APXvYqxpGPnEXWTy/CNM0eUStaiUnr1eDrT+W8tcR0A4hyE+hYZvlA6IPvUaqHLuc/BE2x/hn2VlXw==
+X-Received: by 2002:a63:c149:: with SMTP id p9mr5667673pgi.362.1553209845415;
+        Thu, 21 Mar 2019 16:10:45 -0700 (PDT)
+Received: from [10.67.48.231] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id x11sm7586667pfa.154.2019.03.21.16.10.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 16:10:44 -0700 (PDT)
+Subject: Re: linux-next: build warning after merge of the net-next tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>
+References: <20190322100512.51b5ea25@canb.auug.org.au>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <f0d954ad-f35c-c7c5-6de9-eebabcf88617@gmail.com>
+Date:   Thu, 21 Mar 2019 16:10:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:5a8d:: with SMTP id v135mr978231ita.87.1553209680596;
- Thu, 21 Mar 2019 16:08:00 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 16:08:00 -0700
-In-Reply-To: <000000000000c4ba820579737025@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000461a4c0584a2cfd2@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in _decode_session6 (2)
-From:   syzbot <syzbot+240f9766d6be3d69431e@syzkaller.appspotmail.com>
-To:     bhelgaas@google.com, daniel@iogearbox.net, davem@davemloft.net,
-        devel@acpica.org, herbert@gondor.apana.org.au,
-        kuznet@ms2.inr.ac.ru, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lv.zheng@intel.com, mkl@pengutronix.de,
-        netdev@vger.kernel.org, rafael.j.wysocki@intel.com,
-        rjw@rjwysocki.net, robert.moore@intel.com, socketcan@hartkopp.net,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190322100512.51b5ea25@canb.auug.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 3/21/19 4:05 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the net-next tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
+> 
+> drivers/net/phy/Kconfig:276:warning: prompt redefined
+> 
+> Introduced by commit
+> 
+>   17cc9821766c ("net: phy: Move Omega PHY entry to Cygnus PHY driver")
+> 
 
-commit 64fd1c7040880292710e6592ddc88d0d73cfb6fb
-Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Date:   Mon Jun 12 20:48:41 2017 +0000
-
-     ACPI / PM: Run wakeup notify handlers synchronously
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1555b12b200000
-start commit:   64fd1c70 ACPI / PM: Run wakeup notify handlers synchronously
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1755b12b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1355b12b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=93932074d01b4a5
-dashboard link: https://syzkaller.appspot.com/bug?extid=240f9766d6be3d69431e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f35e4d400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1280edbd400000
-
-Reported-by: syzbot+240f9766d6be3d69431e@syzkaller.appspotmail.com
-Fixes: 64fd1c704088 ("ACPI / PM: Run wakeup notify handlers synchronously")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Whoops yes, that should not be there, thanks Stephen.
+--
+Florian
