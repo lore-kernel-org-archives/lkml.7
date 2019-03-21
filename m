@@ -3,36 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B73C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02295C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB3E218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE48218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfCUM0o (ORCPT
+        id S1728231AbfCUM0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:26:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49696 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 08:26:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49722 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727823AbfCUM0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:26:43 -0400
+        id S1727823AbfCUM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 08:26:53 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 871B9AB48;
-        Thu, 21 Mar 2019 12:26:42 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 13:26:42 +0100
-Message-ID: <s5ha7hoct19.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id DCACFAB48;
+        Thu, 21 Mar 2019 12:26:51 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 13:26:51 +0100
+Message-ID: <s5h8sx8ct10.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Jian-Hong Pan" <jian-hong@endlessm.com>
-Cc:     <alsa-devel@alsa-project.org>, "Daniel Drake" <drake@endlessm.com>,
-        <linux@endlessm.com>, "Kailang Yang" <kailang@realtek.com>,
+Cc:     <alsa-devel@alsa-project.org>, "Chris Chiu" <chiu@endlessm.com>,
+        "Daniel Drake" <drake@endlessm.com>, <linux@endlessm.com>,
+        "Kailang Yang" <kailang@realtek.com>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer Aspire Z24-890 with ALC286
-In-Reply-To: <20190321083903.2962-1-jian-hong@endlessm.com>
-References: <20190321083903.2962-1-jian-hong@endlessm.com>
+Subject: Re: [PATCH] ALSA: hda/realtek - Add support for Acer Aspire E5-523G/ES1-432 headset mic
+In-Reply-To: <20190321091730.18638-1-jian-hong@endlessm.com>
+References: <20190321091730.18638-1-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -43,14 +44,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 09:39:04 +0100,
+On Thu, 21 Mar 2019 10:17:31 +0100,
 Jian-Hong Pan wrote:
 > 
-> The Acer Aspire Z24-890 cannot detect the headset MIC until
-> ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk applied.
+> From: Chris Chiu <chiu@endlessm.com>
 > 
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> The Acer laptop Aspire E5-523G and ES1-432 with ALC255 can't detect
+> the headset microphone until ALC255_FIXUP_ACER_MIC_NO_PRESENCE quirk
+> applied.
+> 
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
 > Signed-off-by: Daniel Drake <drake@endlessm.com>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 
 Applied, thanks.
 
