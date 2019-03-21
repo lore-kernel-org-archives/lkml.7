@@ -2,279 +2,252 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEC3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22329C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AED21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:53:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vQfqJVsX"
+	by mail.kernel.org (Postfix) with ESMTP id E3D2B2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfCUOx1 (ORCPT
+        id S1728286AbfCUOyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:53:27 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:34757
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727987AbfCUOx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:53:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bds04wyi1QOhqIvxo3ClNKF0cyUmbspgyjvcvs8P/Rs=;
- b=vQfqJVsXm576lW6cjK6+U4PJAcdM5Jhp7q3uD0ZST3P4QRDp9C88WtBQQjerXf6cWJqRByhtw5UHx6hQcKm0VoRvbPZNtO3I6FqT++EYXLgIFimvjGYZ1imoVMl5mIjo7M9PTYljR4yKv9ESjW98QYWl5Aej23oHJl7C4Dd16qM=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3772.eurprd04.prod.outlook.com (52.134.71.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 14:53:07 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 14:53:06 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thu, 21 Mar 2019 10:54:11 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:29966 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfCUOyK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:54:10 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2LErrIp085086;
+        Thu, 21 Mar 2019 23:53:53 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
+ Thu, 21 Mar 2019 23:53:52 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2LErql3085080
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 21 Mar 2019 23:53:52 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
+ rk3328-rock64
+To:     Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V8 2/5] pwm: Add i.MX TPM PWM driver support
-Thread-Topic: [PATCH V8 2/5] pwm: Add i.MX TPM PWM driver support
-Thread-Index: AQHU33+6HvJ7a8klrE6atPwc3kmOS6YVz3gAgAACysCAABPyAIAAHlowgAAUOACAABEukA==
-Date:   Thu, 21 Mar 2019 14:53:06 +0000
-Message-ID: <DB3PR0402MB39162604F6C2D57FBD56E884F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1553128960-17923-1-git-send-email-Anson.Huang@nxp.com>
- <1553128960-17923-3-git-send-email-Anson.Huang@nxp.com>
- <20190321091950.tkzem7cbgvtynr5m@pengutronix.de>
- <DB3PR0402MB3916CE06E6EF103470915905F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190321104112.xits5qgk7tsuhdps@pengutronix.de>
- <DB3PR0402MB3916094B2F7A4D878785C676F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190321134212.hypmz4enz7z5wamg@pengutronix.de>
-In-Reply-To: <20190321134212.hypmz4enz7z5wamg@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 560531af-cf12-493c-3abb-08d6ae0ceda8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3772;
-x-ms-traffictypediagnostic: DB3PR0402MB3772:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0402MB3772A2190D20688B4EAC7718F5420@DB3PR0402MB3772.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(305945005)(74316002)(33656002)(7736002)(7416002)(45080400002)(6916009)(8676002)(8936002)(81156014)(81166006)(25786009)(54906003)(316002)(53546011)(76176011)(3846002)(26005)(6116002)(186003)(102836004)(6346003)(4326008)(97736004)(6506007)(7696005)(99286004)(93886005)(105586002)(14454004)(106356001)(53936002)(6246003)(68736007)(2906002)(66574012)(486006)(478600001)(229853002)(66066001)(55016002)(6306002)(6436002)(966005)(52536014)(11346002)(71190400001)(71200400001)(446003)(9686003)(5660300002)(44832011)(256004)(14444005)(476003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3772;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 31CEJSS9TVQ8k3JTbHmg/AqsIS+WrcYnByZYdWNHb+3J3lXdks6TCFB8KGG/4WzLWjsUfoYY4dj5304mWNL/U2eL7Asw7riTYClijsszJkA471RiWCK7bjEyy7JgJury865FxrG+E2UFYwx/zp3v6pfKLwR/vMP2P1fpKHsKQlNlY0gv0dB0b78OG4jo7pZL2xHHZIkyflYAoe1kKAmE99e85Gp4xsf/HVU+MLEhp0eTNzDsC40ztJLc1WYcH/AmQJAjksjnrK0+e8iszUS0nig/9TpuoT9KzXnuZgL2GvdE1PsROO3Xm2ThX7kwj6i/kwW6pqP9u6DOhemFNfzMpgoakzUIT41xuegCL/jl5NS/raHp8nnB5sBIUtLebLeImEZAPQ19DEI2KB4UuWS/sBWi9kK1bu5q1xN3LkladVE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190217173407.29189-1-katsuhiro@katsuster.net>
+ <20190217173407.29189-2-katsuhiro@katsuster.net>
+ <d42dd768-d6c1-098d-759f-e3576d0edcc2@katsuster.net>
+ <AM3PR03MB0966F2308C6003C192A68F4DAC770@AM3PR03MB0966.eurprd03.prod.outlook.com>
+ <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
+ <b855ff66-19e5-4ea5-3337-23d5ada1bf1c@katsuster.net>
+ <AM3PR03MB0966C5CA52CE87DFB35D172BAC460@AM3PR03MB0966.eurprd03.prod.outlook.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <77fb7f45-e44a-3cba-f135-6731ac76fb00@katsuster.net>
+Date:   Thu, 21 Mar 2019 23:53:52 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 560531af-cf12-493c-3abb-08d6ae0ceda8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 14:53:06.8368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3772
+In-Reply-To: <AM3PR03MB0966C5CA52CE87DFB35D172BAC460@AM3PR03MB0966.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFV3ZQ0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIFttYWlsdG86dS5rbGVpbmUt
-a29lbmlnQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0M+aciDIx5pelIDIxOjQyDQo+
-IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHRoaWVycnkucmVk
-aW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
-bmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4QGFybWxpbnV4Lm9yZy51
-azsgc3RlZmFuQGFnbmVyLmNoOw0KPiBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgTGVvbmFyZCBD
-cmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IHNjaG5pdHplbHRvbnlAZ21haWwu
-Y29tOyBqYW4udHVlcmtAZW10cmlvbi5jb207IFJvYmluIEdvbmcNCj4gPHlpYmluLmdvbmdAbnhw
-LmNvbT47IGxpbnV4LXB3bUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIFY4IDIvNV0gcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGRyaXZl
-ciBzdXBwb3J0DQo+IA0KPiBIZWxsbywNCj4gDQo+IE9uIFRodSwgTWFyIDIxLCAyMDE5IGF0IDEy
-OjQ3OjMyUE0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gT24gVGh1LCBNYXIgMjEs
-IDIwMTkgYXQgMDk6NTQ6MTVBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiA+ID4g
-T24gVGh1LCBNYXIgMjEsIDIwMTkgYXQgMTI6NDc6NTdBTSArMDAwMCwgQW5zb24gSHVhbmcgd3Jv
-dGU6DQo+ID4gPiA+ID4gPiArc3RhdGljIHZvaWQgcHdtX2lteF90cG1fc2V0dXBfcGVyaW9kKHN0
-cnVjdCBwd21fY2hpcCAqY2hpcCwNCj4gPiA+ID4gPiA+ICsJCQkJICAgICBzdHJ1Y3QgaW14X3Rw
-bV9wd21fcGFyYW0gKnApIHsNCj4gPiA+ID4gPiA+ICsJc3RydWN0IGlteF90cG1fcHdtX2NoaXAg
-KnRwbSA9DQo+IHRvX2lteF90cG1fcHdtX2NoaXAoY2hpcCk7DQo+ID4gPiA+ID4gPiArCXUzMiB2
-YWwsIHNhdmVkX2Ntb2QsIGN1cl9wcmVzY2FsZTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+
-ICsJLyogbWFrZSBzdXJlIGNvdW50ZXIgaXMgZGlzYWJsZWQgZm9yIHByb2dyYW1taW5nIHByZXNj
-YWxlDQo+ICovDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBAVGhpZXJyeTogV2hhdCBpcyB5b3VyIHRo
-b3VnaHQgaGVyZT8gSU1ITyB0aGlzIHNob3VsZCBvbmx5IGJlDQo+ID4gPiA+ID4gYWxsb3dlZCBp
-ZiBhbGwgYWZmZWN0ZWQgUFdNcyBhcmUgb2ZmLg0KPiA+ID4gPg0KPiA+ID4gPiBBcyB3ZSBhbHJl
-YWR5IG1ha2Ugc3VyZSB0aGF0IE9OTFkgd2hlbiB0aGVyZSBpcyBPTkxZIDEgdXNlciBhbmQNCj4g
-PiA+ID4gdGhlIHJlcXVlc3RlZCBwZXJpb2QgaXMgZGlmZmVyZW50IGZyb20gdGhlIGN1cnJlbnQg
-cGVyaW9kLCB0aGVuDQo+ID4gPiA+IHRoaXMgZnVuY3Rpb24gd2lsbCBiZSBjYWxsZWQsIHNvIHRo
-ZXJlIGlzIGltcG9zc2libGUgdGhhdCBtdWx0aXBsZQ0KPiA+ID4gPiBQV01zIGFyZSBhY3RpdmUN
-Cj4gPiA+IGFuZCB0aGUgcGVyaW9kIGlzIHJlcXVlc3RlZCB0byBiZSBjaGFuZ2VkLg0KPiA+ID4g
-PiBBbSBJIHJpZ2h0Pw0KPiA+ID4NCj4gPiA+IFRoaXMgcHJvYmxlbSBpcyBub3QgYWJvdXQgdHdv
-IFBXTXMuIElmIHlvdSByZWNvbmZpZ3VyZSBhIHJ1bm5pbmcgUFdNDQo+ID4gPiB0aGUgcmVxdWly
-ZW1lbnQgaXMgdGhhdCB0aGUgaGFyZHdhcmUgY29tcGxldGVzIGEgd2hvbGUgcGVyaW9kIHdpdGgN
-Cj4gPiA+IHRoZSBvbGQgY29uZmlndXJhdGlvbiBhbmQgdGhlbiBpbW1lZGlhdGVseSBzdGFydHMg
-YSBuZXcgcGVyaW9kIHdpdGgNCj4gPiA+IHRoZSBuZXcgcGFyYW1ldGVycy4gSWYgeW91IHN0b3Ag
-dGhlIGNvdW50ZXIsIHRoZSBsYXN0IHBlcmlvZCB3aXRoDQo+ID4gPiB0aGUgb2xkIHBhcmFtZXRl
-cnMgaXMgZGlzdHVyYmVkLg0KPiA+DQo+ID4gU28sIEkgdGhpbmsgc2ltcGx5IHJldHVybiBlcnJv
-ciBpZiB0aGUgY291bnRlciBpcyBydW5uaW5nIGFuZCB0aGVyZSBpcw0KPiA+IGEgbmV3IFBTIGNo
-YW5nZSByZXF1ZXN0LCByaWdodD8NCj4gDQo+IFRoYXQncyB0aGUgZ2VuZXJhbCBpZGVhIHllcy4g
-SWYgeW91IGNhbm5vdCBmdWxmaWwgdGhlIHJlcXVlc3Qgd2l0aG91dCB2aW9sYXRpbmcNCj4gdGhl
-IGd1YXJhbnRlZXMgeW91IGhhdmUgdG8gYWRoZXJlLCByZWZ1c2UgdGhlIHJlcXVlc3Qgd2l0aCBh
-biBlcnJvci4NCg0KQWxyZWFkeSBhZGQgYmVsb3cgY2hlY2sgaW4gbmV4dCB2ZXJzaW9uOg0KDQog
-ICAgICAgICB2YWwgPSByZWFkbCh0cG0tPmJhc2UgKyBQV01fSU1YX1RQTV9TQyk7DQogICAgICAg
-ICBjbW9kID0gRklFTERfR0VUKFBXTV9JTVhfVFBNX1NDX0NNT0QsIHZhbCk7DQogICAgICAgICBj
-dXJfcHJlc2NhbGUgPSBGSUVMRF9HRVQoUFdNX0lNWF9UUE1fU0NfUFMsIHZhbCk7DQogICAgICAg
-ICBpZiAoY21vZCAmJiBjdXJfcHJlc2NhbGUgIT0gcC0+cHJlc2NhbGUpDQogICAgICAgICAgICAg
-ICAgIHJldHVybiAtRUJVU1k7DQoNCj4gDQo+ID4gPiA+ID4gPiArCQkgKi8NCj4gPiA+ID4gPiA+
-ICsJCXN0YXRlLT5wb2xhcml0eSA9IFBXTV9QT0xBUklUWV9OT1JNQUw7DQo+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiArCS8qIGdldCBjaGFubmVsIHN0YXR1cyAqLw0KPiA+ID4gPiA+ID4gKwlz
-dGF0ZS0+ZW5hYmxlZCA9IEZJRUxEX0dFVChQV01fSU1YX1RQTV9DblNDX0VMUywgdmFsKSA/DQo+
-IHRydWUgOg0KPiA+ID4gPiA+ID4gK2ZhbHNlOyB9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
-PiArc3RhdGljIHZvaWQgcHdtX2lteF90cG1fYXBwbHlfaHcoc3RydWN0IHB3bV9jaGlwICpjaGlw
-LA0KPiA+ID4gPiA+ID4gKwkJCQkgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCj4gPiA+ID4gPiA+
-ICsJCQkJIHN0cnVjdCBwd21fc3RhdGUgKnN0YXRlKQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gcHdt
-X2lteF90cG1fYXBwbHlfaHcgaXMgY2FsbGVkIHdpdGggdGhlIG11dGV4IGhvbGQuIElzIHRoaXMN
-Cj4gbmVjZXNzYXJ5Pw0KPiA+ID4gPiA+IFBsZWFzZSBlaXRoZXIgY2FsbCBpdCB3aXRob3V0IHRo
-ZSBtdXRleCBvciBhbm5vdGF0ZSB0aGUgZnVuY3Rpb24NCj4gPiA+ID4gPiB0aGF0IHRoZSBjYWxs
-ZXIgaXMgc3VwcG9zZWQgdG8gaG9sZCBpdC4NCj4gPiA+ID4NCj4gPiA+ID4gT0ssIHdpbGwgbWFr
-ZSBzdXJlIGNhbGwgaXQgd2l0aG91dCBtdXRleCBob2xkLg0KDQpBZnRlciBmdXJ0aGVyIGNoZWNr
-LCBzaW5jZSB0aGlzIGZ1bmN0aW9uIHdpbGwgY2FsbCBnZXRfc3RhdGUgYW5kIGl0IHdpbGwgYWNj
-ZXNzDQpzaGFyZWQgcmVnaXN0ZXJzLCBzbyBtdXRleCBpcyBuZWNlc3NhcnkgSSB0aGluaywgc28g
-SSB3aWxsIGFkZCBhbm5vdGF0ZSBmb3IgdGhpcw0KZnVuY3Rpb24uDQoNCj4gDQo+IFJlYWRpbmcg
-dGhyb3VnaCB0aGUgcmVmZXJlbmNlIG1hbnVhbCBJIG5vdGljZWQgdGhhdCB0aGVyZSBtaWdodCBi
-ZSBhDQo+IHN0YWxsOiBJZiB5b3Ugd3JpdGUgdHdvIHZhbHVlcyB0byBDblYgdGhlIHNlY29uZCB3
-cml0ZSBpcyBpZ25vcmVkIGlmIHRoZSBmaXJzdA0KPiB3YXNuJ3QgbGF0Y2hlZCB5ZXQuIFRoYXQg
-bWlnaHQgbWVhbiB0aGF0IHlvdSBjYW5ub3QgcmVsZWFzZSB0aGUgbXV0ZXgNCj4gYmVmb3JlIHRo
-ZSBuZXdseSBjb25maWd1cmVkIHN0YXRlIGlzIGFjdGl2ZS4gVGhpcyBpcyByZWxhdGVkIHRvIHRo
-ZSByZXF1ZXN0IHRvDQo+IG5vdCBsZXQgLmFwcGx5IHJldHVybiBiZWZvcmUgdGhlIGNvbmZpZ3Vy
-ZWQgc3RhdGUgaXMgYWN0aXZlLCBidXQgSSBkaWRuJ3QgdGhvdWdodA0KPiB0aGlzIHRvIGFuIGVu
-ZCB3aGF0IHRoZSByZWFsIGNvbnNlcXVlbmNlcyBoYXZlIHRvIGJlLg0KDQpUaGUgcmVmZXJlbmNl
-IG1hbnVhbCBzYXlzIHRoZSByZWdpc3RlciBpcyBOT1QgdXBkYXRlZCB1bnRpbCB0aGUgY3VycmVu
-dCBwZXJpb2QgZmluaXNoZWQNCklmIGNvdW50ZXIgaXMgcnVubmluZywgc28gSSBhZGRlZCBiZWxv
-dyBjaGVjayBmb3IgYm90aCBwZXJpb2QgdXBkYXRlIGFuZCBkdXR5IHVwZGF0ZSwgd2UNCkNhbiBq
-dXN0IHdhaXQgdGhlIHJlZ2lzdGVyIHZhbHVlIHJlYWQgbWF0Y2hlcyB3aGF0IHdlIHdyaXRlOg0K
-DQpQZXJpb2QgdXBkYXRlOg0KICAgICAgICAgd3JpdGVsKHAtPm1vZCwgdHBtLT5iYXNlICsgUFdN
-X0lNWF9UUE1fTU9EKTsNCg0KICAgICAgICAgLyogbWFrZSBzdXJlIE1PRCByZWdpc3RlciBpcyB1
-cGRhdGVkICovDQogICAgICAgICB0aW1lb3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXMo
-dHBtLT5yZWFsX3BlcmlvZCAvDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgTlNFQ19QRVJfTVNFQyArIDEpOw0KICAgICAgICAgd2hpbGUgKHJlYWRsKHRwbS0+
-YmFzZSArIFBXTV9JTVhfVFBNX01PRCAhPSBwLT5tb2QpKSB7DQogICAgICAgICAgICAgICAgIGlm
-ICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKQ0KICAgICAgICAgICAgICAgICAgICAgICAg
-IHJldHVybiA9IC1FVElNRTsNCiAgICAgICAgICAgICAgICAgY3B1X3JlbGF4KCk7DQogICAgICAg
-ICB9DQoNCkR1dHkgdXBkYXRlOg0KICAgICAgICAgICAgICAgICB3cml0ZWwodmFsLCB0cG0tPmJh
-c2UgKyBQV01fSU1YX1RQTV9DblYocHdtLT5od3B3bSkpOw0KDQogICAgICAgICAgICAgICAgIC8q
-IG1ha2Ugc3VyZSBDblYgcmVnaXN0ZXIgaXMgdXBkYXRlZCAqLw0KICAgICAgICAgICAgICAgICB0
-aW1lb3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXModHBtLT5yZWFsX3BlcmlvZCAvDQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBOU0VD
-X1BFUl9NU0VDICsgMSk7DQogICAgICAgICAgICAgICAgIHdoaWxlIChyZWFkbCh0cG0tPmJhc2Ug
-KyBQV01fSU1YX1RQTV9DblYocHdtLT5od3B3bSkpICE9IHZhbCkgew0KICAgICAgICAgICAgICAg
-ICAgICAgICAgIGlmICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKQ0KICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcmV0dXJuID0gLUVUSU1FOw0KICAgICAgICAgICAgICAgICAg
-ICAgICAgIGNwdV9yZWxheCgpOw0KICAgICAgICAgICAgICAgICB9DQoNCg0KPiANCj4gPiA+ID4g
-SWYgY291bnRlciBpcyBlbmFibGVkLCBhbmQgZm9yIGVkZ2UgYWxpZ25lZCBQV00gbW9kZShFUFdN
-KSwgdGhlDQo+ID4gPiA+IHJlZ2lzdGVyIGlzIHVwZGF0ZWQgQWZ0ZXIgd3JpdHRlbiBhbmQgVFBN
-IGNvdW50ZXIgY2hhbmdlcyBmcm9tIE1PRA0KPiA+ID4gPiB0byB6ZXJvLCBzYW1lIGFzIHBlcmlv
-ZCBjb3VudCB1cGRhdGUsIEhXIHdpbGwgbWFrZSBzdXJlIHRoZSBwZXJpb2QNCj4gZmluaXNoLi4N
-Cj4gPiA+DQo+ID4gPiBMb29raW5nIGludG8gbXkgY29uY2VybiBhZ2FpbiwgaXQgaXMgYWN0dWFs
-bHkgdGhlIG90aGVyIHdheSBhcm91bmQ6DQo+ID4gPiBBc3N1bWluZyBhIHNpbmdsZSB1c2VkIFBX
-TSBjaGFubmVsIHRoYXQgcnVucyBhdCBkdXR5X2N5Y2xlPTUwMCArDQo+ID4gPiBwZXJpb2Q9MTAw
-MC4gVGhlbiBwd21faW14X3RwbV9hcHBseSgpIGlzIGNhbGxlZCB3aXRoIHN0YXRlLQ0KPiA+ID4g
-PmR1dHlfY3ljbGU9NzAwIGFuZCBzdGF0ZS0+cGVyaW9kPTgwMC4gcHdtX2lteF90cG1fYXBwbHko
-KSBjYWxscw0KPiA+ID4gcHdtX2lteF90cG1fc2V0dXBfcGVyaW9kKCkgdG8gY29uZmlndXJlIGZv
-ciAucGVyaW9kPTEwMDAuIE5vdyBpZiB0aGUNCj4gPiA+IFBXTSBjb21wbGV0ZXMgYSBwZXJpb2Qg
-YmVmb3JlIHB3bV9pbXhfdHBtX2FwcGx5X2h3KCkgc2V0cyB1cCBDblYNCj4gdG8NCj4gPiA+IHRo
-ZSB2YWx1ZSBjb3JyZXNwb25kaW5nIHRvIGR1dHlfY3ljbGU9NzAwLCBpdCBwcm9kdWNlcyBhIHdh
-dmVmb3JtDQo+ID4gPiB3aXRoDQo+ID4gPiBkdXR5X2N5Y2xlPTUwMCBhbmQgcGVyaW9kPTgwMCB3
-aGljaCBpcyBiYWQuIFRoaXMgaXMgYW5vdGhlcg0KPiA+ID4gbGltaXRhdGlvbiB0aGF0IGNhbiBi
-ZSB3b3JrZWQgYXJvdW5kIGluIHNvZnR3YXJlIHdpdGggc29tZSBlZmZvcnQNCj4gPiA+ICh3aGlj
-aCBtaWdodCBvciBtaWdodCBub3QgYmUgd29ydGggdG8gc3BlbmQpLg0KPiA+DQo+ID4gSSBhbSBz
-dXJlIHRoYXQgb24gaS5NWDdVTFAgcGxhdGZvcm0gd2UgdXNlZCBmb3IgYmFja2xpZ2h0IE9OTFks
-IGl0DQo+ID4gc2hvdWxkIE5PVCB0aGF0IG1hdHRlciBpZiB0aGlzIGNhc2UgaGFwcGVuLCB1bmxl
-c3MgdGhlIGNvdW50ZXIgaXMNCj4gPiBkaXNhYmxlZCwgdGhlbiB0aGUgZWZmb3J0IHNwZW5kIG9u
-IHRoaXMgY2FzZSB3aWxsIGJlIGh1Z2UsIHNvIEkgcGxhbiB0byBsZWF2ZQ0KPiBpdCBhcyB3aGF0
-IGl0IGlzIGlmIHlvdSBkb24ndCBtaW5kLg0KPiANCj4gVGhhdCBtZWFucyB5b3UgaGF2ZSB0byBh
-ZGQgdGhpcyB0byB0aGUgbGlzdCBvZiBsaW1pdGF0aW9ucy4NCg0KT0ssIHdpbGwgdHJ5IGJlc3Qg
-dG8gZGVzY3JpYmUgdGhpcyBzY2VuYXJpbyBpbiBsaW1pdGF0aW9uIG5vdGU7DQoNCj4gDQo+ID4g
-PiA+ID4gPiArc3RhdGljIGludCBwd21faW14X3RwbV9hcHBseShzdHJ1Y3QgcHdtX2NoaXAgKmNo
-aXAsDQo+ID4gPiA+ID4gPiArCQkJICAgICAgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCj4gPiA+
-ID4gPiA+ICsJCQkgICAgIHN0cnVjdCBwd21fc3RhdGUgKnN0YXRlKSB7DQo+ID4gPiA+ID4gPiAr
-CXN0cnVjdCBpbXhfdHBtX3B3bV9jaGlwICp0cG0gPQ0KPiB0b19pbXhfdHBtX3B3bV9jaGlwKGNo
-aXApOw0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgaW14X3RwbV9wd21fcGFyYW0gcGFyYW07DQo+ID4g
-PiA+ID4gPiArCXN0cnVjdCBwd21fc3RhdGUgcmVhbF9zdGF0ZTsNCj4gPiA+ID4gPiA+ICsJaW50
-IHJldDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcmV0ID0gcHdtX2lteF90cG1fcm91
-bmRfc3RhdGUoY2hpcCwgJnBhcmFtLCBzdGF0ZSwNCj4gJnJlYWxfc3RhdGUpOw0KPiA+ID4gPiA+
-ID4gKwlpZiAocmV0KQ0KPiA+ID4gPiA+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiA+ID4g
-PiArDQo+ID4gPiA+ID4gPiArCW11dGV4X2xvY2soJnRwbS0+bG9jayk7DQo+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiArCS8qDQo+ID4gPiA+ID4gPiArCSAqIFRQTSBjb3VudGVyIGlzIHNoYXJl
-ZCBieSBtdWx0aXBsZSBjaGFubmVscywgc28NCj4gPiA+ID4gPiA+ICsJICogcHJlc2NhbGUgYW5k
-IHBlcmlvZCBjYW4gTk9UIGJlIG1vZGlmaWVkIHdoZW4NCj4gPiA+ID4gPiA+ICsJICogdGhlcmUg
-YXJlIG11bHRpcGxlIGNoYW5uZWxzIGluIHVzZSB3aXRoIGRpZmZlcmVudA0KPiA+ID4gPiA+ID4g
-KwkgKiBwZXJpb2Qgc2V0dGluZ3MuDQo+ID4gPiA+ID4gPiArCSAqLw0KPiA+ID4gPiA+ID4gKwlp
-ZiAocmVhbF9zdGF0ZS5wZXJpb2QgIT0gdHBtLT5yZWFsX3BlcmlvZCkgew0KPiA+ID4gPiA+ID4g
-KwkJaWYgKHRwbS0+dXNlcl9jb3VudCA+IDEpIHsNCj4gPiA+ID4gPiA+ICsJCQlyZXQgPSAtRUJV
-U1k7DQo+ID4gPiA+ID4gPiArCQkJZ290byBleGl0Ow0KPiA+ID4gPiA+ID4gKwkJfQ0KPiA+ID4g
-PiA+ID4gKw0KPiA+ID4gPiA+ID4gKwkJcHdtX2lteF90cG1fc2V0dXBfcGVyaW9kKGNoaXAsICZw
-YXJhbSk7DQo+ID4gPiA+ID4gPiArCQl0cG0tPnJlYWxfcGVyaW9kID0gcmVhbF9zdGF0ZS5wZXJp
-b2Q7DQo+ID4gPiA+ID4gPiArCX0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcHdtX2lt
-eF90cG1fYXBwbHlfaHcoY2hpcCwgcHdtLCAmcmVhbF9zdGF0ZSk7DQo+ID4gPiA+ID4gPiArDQo+
-ID4gPiA+ID4gPiArZXhpdDoNCj4gPiA+ID4gPiA+ICsJbXV0ZXhfdW5sb2NrKCZ0cG0tPmxvY2sp
-Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gLmFwcGx5IGlzIHN1cHBvc2VkIHRvIHNsZWVwIHVudGls
-IHRoZSBuZXdseSBjb25maWd1cmVkIHN0YXRlIGlzIGFjdGl2ZS4NCj4gPiA+ID4gPiBUaGlzIGlz
-IG1pc3NpbmcgaGVyZSwgcmlnaHQ/DQo+ID4gPiA+DQo+ID4gPiA+IE5PVCBxdWl0ZSB1bmRlcnN0
-YW5kLCB5b3UgbWVhbnQgLmFwcGx5IGNvdWxkIGJlIHNsZWVwIGlmIG11dGV4IGlzDQo+ID4gPiA+
-IGhvbGQgYnkgb3RoZXIgdGhyZWFkPw0KPiA+ID4NCj4gPiA+IE5vLiAuYXBwbHkgaXMgc3VwcG9z
-ZWQgdG8gb25seSByZXR1cm4gd2hlbiB0aGUgbmV3IGNvbmZpZ3VyYXRpb24gaXMNCj4gYWN0aXZl
-Lg0KPiA+ID4gU28gaWYgdGhlIFBXTSBpcyBydW5uaW5nIGluIGl0cyBwcmV2aW91cyBjb25maWd1
-cmF0aW9uLCB5b3Ugc2V0dXANCj4gPiA+IHRoZSByZWdpc3RlcnMgc3VjaCB0aGF0IHRoZSBuZXcg
-Y29uZmlndXJhdGlvbiBnZXRzIGFjdGl2ZSBpbiB0aGUNCj4gPiA+IG5leHQgcGVyaW9kLCB5b3Ug
-bXVzdCBub3QgeWV0IHJldHVybiB0byB0aGUgY2FsbGVyIHVudGlsIHRoZSBuZXcgcGVyaW9kDQo+
-IHN0YXJ0ZWQuDQo+ID4NCj4gPiBUaGF0IGJyaW5nIG1lIGJhY2sgdG8gcHJldmlvdXMgcXVlc3Rp
-b24sIHdlIGNhbiBhZGQgd2FpdGluZyBmb3IgcGVyaW9kDQo+ID4gZmluaXNoIEFuZCB0aGVuIHJl
-dHVybiBmcm9tIC5hcHBseSwgYnV0IHdlIGFsc28gbmVlZCBhIHRpbWVvdXQgZm9yIHRoZQ0KPiA+
-IHdhaXQsIHdoYXQgc2hvdWxkIFRoZSB0aW1lb3V0IHZhbHVlIGJlPyAxMDBtUz8gT3IgZXZlbiBz
-ZXZlcmFsIHNlY29uZHM/DQo+IA0KPiBBIHNhbmUgdmFsdWUgd291bGQgYmUgdGhlIGR1cmF0aW9u
-IG9mIHRoZSBwcmV2aW91c2x5IGNvbmZpZ3VyZWQgcGVyaW9kDQo+IGxlbmd0aCBhcyB0aGlzIGlz
-IHRoZSB0aGVvcmV0aWNhbCB1cHBlciBsaW1pdCBmb3IgdGhpcyBkZWxheS4NCg0KSSB3aWxsIGp1
-c3QgdXNlIHRwbS0+cmVhbF9wZXJpb2Qgc2F2ZWQgaW4gZHJpdmVyIGRhdGEsIGZvciBmaXJzdCB0
-aW1lIHVwZGF0ZSwgYWx0aG91Z2gNClRwbS0+cmVhbF9wZXJpb2QgaXMgMCwgYnV0IHRoZSBjb3Vu
-dGVyIGlzIGRpc2FibGVkLCBzbyB0aGUgcmVnaXN0ZXIgdXBkYXRlIGlzIGltbWVkaWF0ZWx5LA0K
-RnJvbSBzZWNvbmQgdGltZSwgdGhlIHRwbS0+cmVhbF9wZXJpb2Qgd2lsbCBiZSBwcmV2aW91cyBw
-ZXJpb2QgY29uZmlndXJlZC4NCg0KQW5zb24uDQoNCj4gDQo+IEJlc3QgcmVnYXJkcw0KPiBVd2UN
-Cj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8
-IFV3ZSBLbGVpbmUtS8O2bmlnICAgICAgICAgICAgfA0KPiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0
-aW9ucyAgICAgICAgICAgICAgICAgfA0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0
-aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy5wDQo+IGVuZ3V0cm9uaXguZGUl
-MkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmNvbSU3Q2FlDQo+IDU5NDlm
-MTA5YzU0MDFhMmI1ZDA4ZDZhZTAzMGQ3ZiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAx
-NjM1DQo+ICU3QzAlN0MwJTdDNjM2ODg3NzI1NDY4NTA5ODA1JmFtcDtzZGF0YT00cVUxZUp6bEls
-ZTl2JTJCSHFFcXdiDQo+IEptJTJGa2tBUWxDSDJMdHNGRE1hZVNHSEUlM0QmYW1wO3Jlc2VydmVk
-PTAgIHwNCg==
+Hello Jonas,
+
+Thank you for reply.
+
+On 2019/03/17 21:33, Jonas Karlman wrote:
+> Hello Katsuhiro,
+> 
+> Sorry for the delay, I have not been able to fully test this yet but will do more testing later tonight.
+> 
+> My concern are regarding how to configure a single graph card node to add a hdmi: (and iec958: for spdif) variants using an alsa config file.
+> In LibreELEC I expose HDMI and SPDIF as two different card nodes to simplify applying alsa config files, see [1] and [2] for the alsa config files I use.
+> Do you know how I can configure the hdmi: and iec958: cards and add a "IEC958 Playback" ctl with the combined graph card node?
+> 
+
+Currently I don't know how to and I don't have test environment for
+IEC958 sound. Sorry...
+
+
+> I am also working on NL-PCM/HBR-audio support for dw-hdmi-i2s and it will require "IEC958 Playback" ctl and players such as kodi and mpv only sets AES0-3 for hdmi: and iec958: cards.
+> 
+> [1] https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Rockchip/filesystem/usr/share/alsa/cards/HDMI.conf
+> [2] https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Rockchip/filesystem/usr/share/alsa/cards/SPDIF.conf
+> 
+
+Ah, I don't consider about Non-LPCM sound. I understand your concern.
+
+My patch should be keeping until this problem is solved.
+
+
+I'm going to find test environment and try KODI or mpv. Thank you for
+great information!
+
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+> Regards,
+> Jonas
+> 
+> On 2019-03-17 10:54, Katsuhiro Suzuki wrote:
+>> Hello Jonas,
+>>
+>> How about this topic?
+>>
+>> I think this patch does not have bad effect for multi channel
+>> sound of HDMI. If you don't think so, please tell me.
+>> I wait your sound patch and after re-check this patch.
+>>
+>> Best Regards,
+>> Katsuhiro Suzuki
+>>
+>> On 2019/03/03 4:26, Katsuhiro Suzuki wrote:
+>>> Hello Jonas,
+>>>
+>>> Thanks for your comments.
+>>>
+>>> On 2019/03/03 2:20, Jonas Karlman wrote:
+>>>> On 2019-03-02 15:19, Katsuhiro Suzuki wrote:
+>>>>> Ping...
+>>>>>
+>>>>> On 2019/02/18 2:34, Katsuhiro Suzuki wrote:
+>>>>>> This patch adds HDMI sound (I2S0) node for rock64.
+>>>>>>
+>>>>>> After apply this patch, UART2 will fail to allocate DMA resources
+>>>>>> but UART driver can work fine without DMA.
+>>>>>>
+>>>>>> This error is related to the DMAC of rk3328 (pl330 or compatible).
+>>>>>> DMAC connected to 16 DMA sources. Each sources have ID number that is
+>>>>>> called 'Req number' in rk3328 TRM. Currently total 7 sources has been
+>>>>>> activated as follows:
+>>>>>>
+>>>>>> | Req number | Source | Required  |
+>>>>>> |            |        | channels  |
+>>>>>> |------------+--------+-----------|
+>>>>>> | 14, 15     | I2S1   | 2ch       |
+>>>>>> |  6,  7     | UART2  | 2ch       |
+>>>>>> |     10     | SPDIF  | 1ch       |
+>>>>>> |  8,  9     | SPI0   | 2ch       |
+>>>>>> |------------+--------+-----------|
+>>>>>> |            | Total  | 7ch       |
+>>>>>>
+>>>>>> HDMI audio needs to activate new source I2S0 (Req number 11 and 12).
+>>>>>> I2S0 can work concurrently with other sources, but rk3328 DMAC can
+>>>>>> use max 8 channels at same time. If I2S0 is simply activated by this
+>>>>>> patch, required DMAC channels will be 9. So last one (UART2) cannot
+>>>>>> allocate the DMA resources.
+>>>>>>
+>>>>>> Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
+>>>>>> problem.
+>>>>>>
+>>>>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>>>>>> ---
+>>>>>>     .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 21
+>>>>>> ++++++++++++++++++-
+>>>>>>     1 file changed, 20 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>>>> b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>>>> index 2157a528276b..bfc0930d245c 100644
+>>>>>> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>>>> @@ -68,7 +68,8 @@
+>>>>>>         sound {
+>>>>>>             compatible = "audio-graph-card";
+>>>>>>             label = "rockchip,rk3328";
+>>>>>> -        dais = <&i2s1_p0
+>>>>>> +        dais = <&i2s0_p0
+>>>>>> +            &i2s1_p0
+>>>>>>                 &spdif_p0>;
+>>>> I am working on multi-channel hdmi audio support for dw-hdmi at [1]
+>>>> and are wondering if having multiple dais on one graph card
+>>>> instead of a separate hdmi sound card will affect the ability to
+>>>> define a proper alsa config for multi channel hdmi sound.
+>>>>
+>>>> [1]
+>>>> https://github.com/Kwiboo/linux-rockchip/compare/8874c206d613dc575f5cb6e385e7a866020138d0...92b20eaa6b6dd2cf3418a428f905d10bbc62724f
+>>>>
+>>>>
+>>> It seems a part of multi channel (5.1 ch) has already been supported
+>>> by rockchip-i2s and dw-hdmi. So I applied this patch and tried below
+>>> command.
+>>>     speaker-test -D hw:0,0 -f 48000 -c 6
+>>> It does not return errors.
+>>>
+>>> Would you tell me more details you worried about if something wrong?
+>>>
+>>>
+>>> FYI: Rock64 PCM devices are as follows after applied this patch.
+>>> ~~~~~
+>>> $ cat /proc/asound/pcm
+>>> 00-00: ff000000.i2s-i2s-hifi i2s-hifi-0 :  : playback 1
+>>> 00-01: ff010000.i2s-rk3328-hifi ff410000.codec-1 :  : playback 1 :
+>>> capture 1
+>>> 00-02: ff030000.spdif-dit-hifi dit-hifi-2 :  : playback 1
+>>> ~~~~~
+>>>
+>>> Best Regards,
+>>> Katsuhiro Suzuki
+>>>
+>>>
+>>>> Regards,
+>>>> Jonas
+>>>>
+>>>>>>         };
+>>>>>> @@ -141,6 +142,12 @@
+>>>>>>     &hdmi {
+>>>>>>         status = "okay";
+>>>>>> +
+>>>>>> +    port@0 {
+>>>>>> +        hdmi_p0_0: endpoint {
+>>>>>> +            remote-endpoint = <&i2s0_p0_0>;
+>>>>>> +        };
+>>>>>> +    };
+>>>>>>     };
+>>>>>>     &hdmiphy {
+>>>>>> @@ -256,6 +263,18 @@
+>>>>>>         };
+>>>>>>     };
+>>>>>> +&i2s0 {
+>>>>>> +    status = "okay";
+>>>>>> +
+>>>>>> +    i2s0_p0: port {
+>>>>>> +        i2s0_p0_0: endpoint {
+>>>>>> +            dai-format = "i2s";
+>>>>>> +            mclk-fs = <256>;
+>>>>>> +            remote-endpoint = <&hdmi_p0_0>;
+>>>>>> +        };
+>>>>>> +    };
+>>>>>> +};
+>>>>>> +
+>>>>>>     &i2s1 {
+>>>>>>         status = "okay";
+>>>>>>
+>>>>> _______________________________________________
+>>>>> Linux-rockchip mailing list
+>>>>> Linux-rockchip@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>>>>
+>>>>
+>>>>
+>>>
+> 
+> 
+> 
+
