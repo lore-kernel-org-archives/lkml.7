@@ -2,107 +2,233 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD851C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D378FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E761218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FCD218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfCUGIJ (ORCPT
+        id S1727753AbfCUGIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 02:08:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46860 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfCUGIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 02:08:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 171D3AFF1;
-        Thu, 21 Mar 2019 06:08:08 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     syzbot <syzbot+83e12cf81d2c14842146@syzkaller.appspotmail.com>,
-        bfields@fieldses.org, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Date:   Thu, 21 Mar 2019 17:07:59 +1100
-Subject: Re: general protection fault in __x86_indirect_thunk_rbx
-In-Reply-To: <000000000000b3976c0584940e6e@google.com>
-References: <000000000000b3976c0584940e6e@google.com>
-Message-ID: <87lg187oao.fsf@notabene.neil.brown.name>
+        Thu, 21 Mar 2019 02:08:42 -0400
+Received: from foss.arm.com ([217.140.101.70]:51064 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfCUGIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 02:08:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B945A78;
+        Wed, 20 Mar 2019 23:08:41 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83DC13F71A;
+        Wed, 20 Mar 2019 23:08:37 -0700 (PDT)
+Subject: Re: [PATCH v7 7/10] KVM: arm/arm64: context-switch ptrauth registers
+To:     Julien Thierry <julien.thierry@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>
+References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
+ <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
+ <a3252299-b1ac-3d39-31a4-ca653daa815f@arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <44e16529-4792-0ec2-d2d5-f5c14c6bb2c4@arm.com>
+Date:   Thu, 21 Mar 2019 11:38:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <a3252299-b1ac-3d39-31a4-ca653daa815f@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Julien,
 
-On Wed, Mar 20 2019, syzbot wrote:
+On 3/20/19 5:43 PM, Julien Thierry wrote:
+> Hi Amit,
+> 
+> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
+>> From: Mark Rutland <mark.rutland@arm.com>
+>>
+>> When pointer authentication is supported, a guest may wish to use it.
+>> This patch adds the necessary KVM infrastructure for this to work, with
+>> a semi-lazy context switch of the pointer auth state.
+>>
+>> Pointer authentication feature is only enabled when VHE is built
+>> in the kernel and present in the CPU implementation so only VHE code
+>> paths are modified.
+>>
+>> When we schedule a vcpu, we disable guest usage of pointer
+>> authentication instructions and accesses to the keys. While these are
+>> disabled, we avoid context-switching the keys. When we trap the guest
+>> trying to use pointer authentication functionality, we change to eagerly
+>> context-switching the keys, and enable the feature. The next time the
+>> vcpu is scheduled out/in, we start again. However the host key save is
+>> optimized and implemented inside ptrauth instruction/register access
+>> trap.
+>>
+>> Pointer authentication consists of address authentication and generic
+>> authentication, and CPUs in a system might have varied support for
+>> either. Where support for either feature is not uniform, it is hidden
+>> from guests via ID register emulation, as a result of the cpufeature
+>> framework in the host.
+>>
+>> Unfortunately, address authentication and generic authentication cannot
+>> be trapped separately, as the architecture provides a single EL2 trap
+>> covering both. If we wish to expose one without the other, we cannot
+>> prevent a (badly-written) guest from intermittently using a feature
+>> which is not uniformly supported (when scheduled on a physical CPU which
+>> supports the relevant feature). Hence, this patch expects both type of
+>> authentication to be present in a cpu.
+>>
+>> This switch of key is done from guest enter/exit assembly as preperation
+>> for the upcoming in-kernel pointer authentication support. Hence, these
+>> key switching routines are not implemented in C code as they may cause
+>> pointer authentication key signing error in some situations.
+>>
+>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
+>> , save host key in ptrauth exception trap]
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
+>>   arch/arm64/include/asm/kvm_host.h        |  17 ++++++
+>>   arch/arm64/include/asm/kvm_ptrauth_asm.h | 100 +++++++++++++++++++++++++++++++
+>>   arch/arm64/kernel/asm-offsets.c          |   6 ++
+>>   arch/arm64/kvm/guest.c                   |  14 +++++
+>>   arch/arm64/kvm/handle_exit.c             |  24 +++++---
+>>   arch/arm64/kvm/hyp/entry.S               |   7 +++
+>>   arch/arm64/kvm/reset.c                   |   7 +++
+>>   arch/arm64/kvm/sys_regs.c                |  46 +++++++++++++-
+>>   virt/kvm/arm/arm.c                       |   2 +
+>>   9 files changed, 212 insertions(+), 11 deletions(-)
+>>   create mode 100644 arch/arm64/include/asm/kvm_ptrauth_asm.h
+>>
+[...]
+>> +#ifdef	CONFIG_ARM64_PTR_AUTH
+>> +
+>> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
+> 
+> I don't really see the point of this macro. You move the pointers of
+> kvm_cpu_contexts to point to where the ptr auth registers are (which is
+> in the middle of an array) by adding the offset of APIAKEYLO and then we
+> have to recompute all offsets with this macro.
+> 
+> Why not just pass the kvm_cpu_context pointers to
+> ptrauth_save/restore_state and use the already defined offsets
+> (CPU_AP*_EL1) directly?
+> 
+> I think this would also allow to use one less register for the
+> ptrauth_switch_to_* macros.
+Actually the values of CPU_AP*_EL1 are exceeding the immediate range 
+(i.e 512), so this was done to keep the immediate offset within the range.
+The other way would have been to calculate the destination register but 
+these would add one more add instruction everywhere.
+I should have mentioned them as comments somewhere.
+> 
+>> +
+>> +.macro	ptrauth_save_state base, reg1, reg2
+>> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+>> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
+>> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
+>> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+>> +.endm
+>> +
+>> +.macro	ptrauth_restore_state base, reg1, reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+>> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+>> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+>> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+>> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
+>> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+>> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
+>> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
+>> +	.endm
+> 
+> Nit: Bad indentation.
+oops.
+> 
+>> +
+>> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+>> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+>> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+>> +	cbz	\reg1, skip_switch_to_guest
+>> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+> 
+> As mentioned we probably can get rid of one temporary register and
+> directly pass g_ctxt here.
+> 
+>> +skip_switch_to_guest:
+> 
+> I believe you should use numbered labels for assembly macros, otherwise
+> multiple references to that macros will lead to symbol redefinitions.
+Yes agreed.
 
-> syzbot has bisected this bug to:
->
-> commit dee160df820de41ff2f59a715643680822a0ab06
-> Author: NeilBrown <neilb@suse.com>
-> Date:   Mon Nov 5 01:30:47 2018 +0000
->
->      locks: use properly initialized file_lock when unlocking.
-
-This commit did not make it to mainline.
-It was replaced by
-
-Commit d6367d624137 ("fs/locks: use properly initialized file_lock when unl=
-ocking.")
-
-which added a call to locks_init_lock() in flock_make_lock().
-
-NeilBrown
-
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D13f39fd720=
-0000
-> start commit:   dee160df locks: use properly initialized file_lock when u=
-n..
-> git tree:       linux-next
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D100b9fd720=
-0000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D17f39fd7200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dcaa433e1c8778=
-437
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D83e12cf81d2c148=
-42146
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D15bd9447400=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1121d82b400000
->
-> Reported-by: syzbot+83e12cf81d2c14842146@syzkaller.appspotmail.com
-> Fixes: dee160df ("locks: use properly initialized file_lock when=20=20
-> unlocking.")
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyTKkAACgkQOeye3VZi
-gbne0hAAqYfEfGRgEWYgVOZtRJTccuuxkZBfdZwp07Xn2L8Jq9ypS/6esIlXm1WT
-9WlfcA+812/Tsucz19qISeIhCPkntvvofglJWZRXrQANhQwm7spGHzQ9A2hnYrCq
-CmlnSuFYYCkDWLETpeoIAlMDelGFBP0lJqr4YpQz8+29RqWk5+/Dya6gDeynFivx
-OHNhZ7Fr7juIa6LwtLZFbPdnpVGAzXVPAP6Uy4irBPrnvoHqloQkhao73tlid+GT
-d5IgEzq2QezLXXNXMrC02IAP59/CvTHS0Wp8KE5KxjfG7ztTbwNWDtTSRY7LKWmD
-VMPvwdHzDh+7yp6iZjwGvTftxTbLOhRBhu5+IYvG07KxaCZhgSUW0ApnK3H4K8ER
-KEHQeGG3NhqHeSIaKcRWNwCyADpmWTIcrGjqU2OFM5MBk3Gu+kb7rel3iVXiACW1
-i8XseGhzF2odCSo8ucRNIbhPgO0dWdLYFsCUwJP7JS5K9QFemsx/00uc38y0a6iW
-ouduTKG3Obedd2VOEan8XAPQNgHtNLTKPiGGtK//C+4FyUxEfD8D6yTwE8kgRcbo
-dAhJe2uTE3nMpsvVqIdk/f0E2lCZJO3MfVfH44nbwpIUTH13c50VDRUlugz6JFoe
-NDOOGMkXvzGjRmVWTifQ6JetMopS1VuH0T5TZqjbqXgzap381Ns=
-=d21Y
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Amit
+> 
+>> +.endm
+>> +
+>> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+>> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+>> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+>> +	cbz	\reg1, skip_switch_to_host
+>> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_save_state	\reg1, \reg2, \reg3
+>> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
+>> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+>> +	isb
+>> +skip_switch_to_host:
+> 
+> Same.
+> 
+> Cheers,
+> 
+> Julien
+> 
+>> +.endm
+>> +
+>> +#else /* !CONFIG_ARM64_PTR_AUTH */
+>> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+>> +.endm
+>> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+[...]
+>>
+> 
