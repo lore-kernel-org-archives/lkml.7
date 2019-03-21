@@ -2,42 +2,44 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB6DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D3EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD46218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D682190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfCUU7Q (ORCPT
+        id S1727092AbfCUU7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:59:16 -0400
+        Thu, 21 Mar 2019 16:59:21 -0400
 Received: from mga18.intel.com ([134.134.136.126]:34963 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfCUU7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:59:16 -0400
+        id S1725953AbfCUU7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:59:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:15 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="154548064"
+   d="scan'208";a="154548070"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:14 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:16 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 00/23] perf: Add Icelake support
-Date:   Thu, 21 Mar 2019 13:56:40 -0700
-Message-Id: <20190321205703.4256-1-kan.liang@linux.intel.com>
+Subject: [PATCH V2 01/23] perf/x86: Support outputting XMM registers
+Date:   Thu, 21 Mar 2019 13:56:41 -0700
+Message-Id: <20190321205703.4256-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190321205703.4256-1-kan.liang@linux.intel.com>
+References: <20190321205703.4256-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -45,92 +47,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The patch series intends to add Icelake support for Linux perf.
+Starting from Icelake, XMM registers can be collected in PEBS record.
+But current code only output the pt_regs.
 
-PATCH 1-18: Kernel patches to support Icelake.
- - 1-5: Support adaptive PEBS feature
- - 6-7: Enable core support with some new features, e.g. 8 generic
-   counters, new event constraints, a new fixed counter.
- - 8-11: Enable cstate, rapl, msr and uncore support on Icelake
- - 12-18: Support hardware Metrics counters and SLOT fixed counter for
-   Topdown events.
- - 19: Support CPUID 10.ECX to disable fixed counters
+Add a new struct x86_perf_regs for both pt_regs and xmm_regs.
+XMM registers are 128 bit. To simplify the code, they are handled like
+two different registers, which means setting two bits in the register
+bitmap. This also allows only sampling the lower 64bit bits in XMM.
+The index of XMM registers starts from 32. There are 16 XMM registers.
+So all reserved space for regs are used.
+PERF_REG_X86_MAX stands for the max number of all x86 regs include XMM.
+PERF_REG_GPR_X86_MAX stands for the max number of all x86 general
+purpose registers, which not include XMM.
+PERF_REG_GPR_X86_32_MAX and PERF_REG_GPR_X86_64_MAX are introduced to
+replace PERF_REG_X86_32_MAX and PERF_REG_X86_64_MAX for x86 general
+purpose registers.
 
-PATCH 20-23: Perf tool patches to support XMM, Topdown and event list.
+The REG_RESERVED is also updated to allow the XMM registers.
+XMM is not supported on all platforms. Adding has_xmm_regs to indicate
+the specific platform. Also add checks in x86_pmu_hw_config() to reject
+invalid config of regs_user and regs_intr.
 
-Andi Kleen (12):
-  perf/x86/intel: Extract memory code PEBS parser for reuse
-  perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
-  perf/x86: Support constraint ranges
-  perf/core: Support a REMOVE transaction
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Support overflows on SLOTS
-  perf/x86/intel: Set correct weight for topdown subevent counters
-  perf/x86/intel: Export new top down events for Icelake
-  perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
-  perf, tools: Add support for recording and printing XMM registers
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
+Originally-by: Andi Kleen <ak@linux.intel.com>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
-Kan Liang (11):
-  perf/x86: Support outputting XMM registers
-  perf/x86/intel/ds: Extract code of event update in short period
-  perf/x86/intel: Support adaptive PEBSv4
-  perf/x86/intel: Add Icelake support
-  perf/x86/intel/cstate: Add Icelake support
-  perf/x86/intel/rapl: Add Icelake support
-  perf/x86/msr: Add Icelake support
-  perf/x86/intel/uncore: Add Intel Icelake uncore support
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Disable sampling read slots and topdown
-  perf vendor events intel: Add JSON files for Icelake
+Changes since V1:
+- Avoid the interface changes for perf_reg_value() and
+  perf_output_sample_regs().
+- Remove the extra_regs in struct perf_sample_data.
+- Add struct x86_perf_regs
+- Add has_xmm_regs to indicate the specific platform which support XMM
+  registers collection.
+- Add check in x86_pmu_hw_config() to reject invalid config of regs_user
+  and regs_intr.
 
- arch/x86/events/core.c                        |  81 +-
- arch/x86/events/intel/core.c                  | 422 ++++++++-
- arch/x86/events/intel/cstate.c                |   2 +
- arch/x86/events/intel/ds.c                    | 495 ++++++++--
- arch/x86/events/intel/lbr.c                   |  35 +-
- arch/x86/events/intel/rapl.c                  |   2 +
- arch/x86/events/intel/uncore.c                |   6 +
- arch/x86/events/intel/uncore.h                |   1 +
- arch/x86/events/intel/uncore_snb.c            |  91 ++
- arch/x86/events/msr.c                         |   1 +
- arch/x86/events/perf_event.h                  |  94 +-
- arch/x86/include/asm/intel_ds.h               |   2 +-
- arch/x86/include/asm/msr-index.h              |   4 +
- arch/x86/include/asm/perf_event.h             |  79 +-
- arch/x86/include/uapi/asm/perf_regs.h         |  26 +-
- arch/x86/kernel/perf_regs.c                   |  18 +-
- include/linux/perf_event.h                    |   7 +
- kernel/events/core.c                          |   5 +
- tools/arch/x86/include/uapi/asm/perf_regs.h   |  26 +-
- tools/perf/Documentation/perf-stat.txt        |   9 +-
- tools/perf/Documentation/topdown.txt          | 223 +++++
- tools/perf/arch/x86/include/perf_regs.h       |  29 +-
- tools/perf/arch/x86/util/perf_regs.c          |  16 +
- tools/perf/builtin-stat.c                     |  24 +
- .../pmu-events/arch/x86/icelake/cache.json    | 552 +++++++++++
- .../arch/x86/icelake/floating-point.json      |  90 ++
- .../pmu-events/arch/x86/icelake/frontend.json | 424 +++++++++
- .../pmu-events/arch/x86/icelake/memory.json   | 410 ++++++++
- .../pmu-events/arch/x86/icelake/other.json    | 133 +++
- .../pmu-events/arch/x86/icelake/pipeline.json | 892 ++++++++++++++++++
- .../arch/x86/icelake/virtual-memory.json      | 236 +++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
- tools/perf/util/perf_regs.h                   |   1 +
- tools/perf/util/stat-shadow.c                 |  89 ++
- tools/perf/util/stat.c                        |   4 +
- tools/perf/util/stat.h                        |   8 +
- 36 files changed, 4421 insertions(+), 117 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/frontend.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json
+ arch/x86/events/core.c                | 10 ++++++++++
+ arch/x86/events/perf_event.h          |  2 ++
+ arch/x86/include/asm/perf_event.h     |  5 +++++
+ arch/x86/include/uapi/asm/perf_regs.h | 26 ++++++++++++++++++++++++--
+ arch/x86/kernel/perf_regs.c           | 18 ++++++++++++++----
+ 5 files changed, 55 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447192a8..9378c6b2128f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -560,6 +560,16 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 			return -EINVAL;
+ 	}
+ 
++	if (event->attr.sample_regs_user & ~PEBS_REGS)
++		return -EINVAL;
++	/*
++	 * Besides the general purpose registers, XMM registers may
++	 * be collected in PEBS on some platforms, e.g. Icelake
++	 */
++	if ((event->attr.sample_regs_intr & ~PEBS_REGS) &&
++	    (!x86_pmu.has_xmm_regs || !event->attr.precise_ip))
++		return -EINVAL;
++
+ 	return x86_setup_perfctr(event);
+ }
+ 
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a75955741c50..6428941a5073 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -657,6 +657,8 @@ struct x86_pmu {
+ 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+ 	 */
+ 	int (*check_period) (struct perf_event *event, u64 period);
++
++	unsigned int	has_xmm_regs : 1; /* support XMM regs */
+ };
+ 
+ struct x86_perf_task_context {
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 8bdf74902293..d9f5bbe44b3c 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -248,6 +248,11 @@ extern void perf_events_lapic_init(void);
+ #define PERF_EFLAGS_VM		(1UL << 5)
+ 
+ struct pt_regs;
++struct x86_perf_regs {
++	struct pt_regs	regs;
++	u64		*xmm_regs;
++};
++
+ extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+ #define perf_misc_flags(regs)	perf_misc_flags(regs)
+diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+index f3329cabce5c..b33995313d17 100644
+--- a/arch/x86/include/uapi/asm/perf_regs.h
++++ b/arch/x86/include/uapi/asm/perf_regs.h
+@@ -28,7 +28,29 @@ enum perf_event_x86_regs {
+ 	PERF_REG_X86_R14,
+ 	PERF_REG_X86_R15,
+ 
+-	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+-	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
++	/* These all need two bits set because they are 128bit */
++	PERF_REG_X86_XMM0  = 32,
++	PERF_REG_X86_XMM1  = 34,
++	PERF_REG_X86_XMM2  = 36,
++	PERF_REG_X86_XMM3  = 38,
++	PERF_REG_X86_XMM4  = 40,
++	PERF_REG_X86_XMM5  = 42,
++	PERF_REG_X86_XMM6  = 44,
++	PERF_REG_X86_XMM7  = 46,
++	PERF_REG_X86_XMM8  = 48,
++	PERF_REG_X86_XMM9  = 50,
++	PERF_REG_X86_XMM10 = 52,
++	PERF_REG_X86_XMM11 = 54,
++	PERF_REG_X86_XMM12 = 56,
++	PERF_REG_X86_XMM13 = 58,
++	PERF_REG_X86_XMM14 = 60,
++	PERF_REG_X86_XMM15 = 62,
++
++	/* This does not include the XMMX registers */
++	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
++	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
++
++	/* All registers include the XMMX registers */
++	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
+ };
+ #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index c06c4c16c6b6..421d76895565 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -10,14 +10,14 @@
+ #include <asm/ptrace.h>
+ 
+ #ifdef CONFIG_X86_32
+-#define PERF_REG_X86_MAX PERF_REG_X86_32_MAX
++#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_32_MAX
+ #else
+-#define PERF_REG_X86_MAX PERF_REG_X86_64_MAX
++#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_64_MAX
+ #endif
+ 
+ #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
+ 
+-static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
++static unsigned int pt_regs_offset[PERF_REG_GPR_X86_MAX] = {
+ 	PT_REGS_OFFSET(PERF_REG_X86_AX, ax),
+ 	PT_REGS_OFFSET(PERF_REG_X86_BX, bx),
+ 	PT_REGS_OFFSET(PERF_REG_X86_CX, cx),
+@@ -59,13 +59,23 @@ static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
+ 
+ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ {
++	struct x86_perf_regs *perf_regs;
++
++	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_MAX) {
++		perf_regs = container_of(regs, struct x86_perf_regs, regs);
++		if (!perf_regs->xmm_regs)
++			return 0;
++		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
++	}
++
+ 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
+ 		return 0;
+ 
+ 	return regs_get_register(regs, pt_regs_offset[idx]);
+ }
+ 
+-#define REG_RESERVED (~((1ULL << PERF_REG_X86_MAX) - 1ULL))
++#define REG_RESERVED \
++	(PERF_REG_X86_MAX == 64 ? 0 : ~((1ULL << PERF_REG_X86_MAX)) - 1ULL)
+ 
+ #ifdef CONFIG_X86_32
+ int perf_reg_validate(u64 mask)
 -- 
 2.17.1
 
