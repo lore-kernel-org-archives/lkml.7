@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8657EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4606C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59450218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3102192C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfCULEd (ORCPT
+        id S1727952AbfCULHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:04:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47151 "EHLO
+        Thu, 21 Mar 2019 07:07:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52947 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727575AbfCULEd (ORCPT
+        with ESMTP id S1727575AbfCULHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:04:33 -0400
+        Thu, 21 Mar 2019 07:07:16 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LB462a098373
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LB75AN100759
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 21 Mar 2019 04:04:06 -0700
+        Thu, 21 Mar 2019 04:07:05 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LB45Qh098364;
-        Thu, 21 Mar 2019 04:04:05 -0700
-Date:   Thu, 21 Mar 2019 04:04:05 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LB74U0100756;
+        Thu, 21 Mar 2019 04:07:04 -0700
+Date:   Thu, 21 Mar 2019 04:07:04 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
-Message-ID: <tip-82efcab3b9f3ef59e9713237c6e3c05c3a95c1ae@git.kernel.org>
-Cc:     hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, peterz@infradead.org,
-        mingo@kernel.org, cai@lca.pw, bvanassche@acm.org, tj@kernel.org
-Reply-To: cai@lca.pw, bvanassche@acm.org, tj@kernel.org,
-          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          torvalds@linux-foundation.org, peterz@infradead.org,
-          mingo@kernel.org
-In-Reply-To: <20190311230255.176081-1-bvanassche@acm.org>
-References: <20190311230255.176081-1-bvanassche@acm.org>
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-0c671812f152b628bd87c0af49da032cc2a2c319@git.kernel.org>
+Cc:     mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        moosotc@gmail.com, jpoimboe@redhat.com
+Reply-To: hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          moosotc@gmail.com, jpoimboe@redhat.com
+In-Reply-To: <df92dcbc4b84b02ffa252f46876df125fb56e2d7.1552954176.git.jpoimboe@redhat.com>
+References: <df92dcbc4b84b02ffa252f46876df125fb56e2d7.1552954176.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/urgent] workqueue: Only unregister a registered
- lockdep key
-Git-Commit-ID: 82efcab3b9f3ef59e9713237c6e3c05c3a95c1ae
+Subject: [tip:core/urgent] objtool: Move objtool_file struct off the stack
+Git-Commit-ID: 0c671812f152b628bd87c0af49da032cc2a2c319
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -58,59 +56,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  82efcab3b9f3ef59e9713237c6e3c05c3a95c1ae
-Gitweb:     https://git.kernel.org/tip/82efcab3b9f3ef59e9713237c6e3c05c3a95c1ae
-Author:     Bart Van Assche <bvanassche@acm.org>
-AuthorDate: Mon, 11 Mar 2019 16:02:55 -0700
+Commit-ID:  0c671812f152b628bd87c0af49da032cc2a2c319
+Gitweb:     https://git.kernel.org/tip/0c671812f152b628bd87c0af49da032cc2a2c319
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Mon, 18 Mar 2019 19:09:38 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 21 Mar 2019 12:00:18 +0100
+CommitDate: Thu, 21 Mar 2019 12:02:19 +0100
 
-workqueue: Only unregister a registered lockdep key
+objtool: Move objtool_file struct off the stack
 
-The recent change to prevent use after free and a memory leak introduced an
-unconditional call to wq_unregister_lockdep() in the error handling
-path. If the lockdep key had not been registered yet, then the lockdep core
-emits a warning.
+Objtool uses over 512k of stack, thanks to the hash table embedded in
+the objtool_file struct.  This causes an unnecessarily large stack
+allocation and breaks users with low stack limits.
 
-Only call wq_unregister_lockdep() if wq_register_lockdep() has been
-called first.
+Move the struct off the stack.
 
-Fixes: 009bb421b6ce ("workqueue, lockdep: Fix an alloc_workqueue() error path")
-Reported-by: syzbot+be0c198232f86389c3dd@syzkaller.appspotmail.com
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Fixes: 042ba73fe7eb ("objtool: Add several performance improvements")
+Reported-by: Vassili Karpov <moosotc@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Qian Cai <cai@lca.pw>
-Link: https://lkml.kernel.org/r/20190311230255.176081-1-bvanassche@acm.org
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/df92dcbc4b84b02ffa252f46876df125fb56e2d7.1552954176.git.jpoimboe@redhat.com
 
 ---
- kernel/workqueue.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/objtool/check.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 4026d1871407..ddee541ea97a 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4266,7 +4266,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	INIT_LIST_HEAD(&wq->list);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 0414a0d52262..5dde107083c6 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2184,9 +2184,10 @@ static void cleanup(struct objtool_file *file)
+ 	elf_close(file->elf);
+ }
  
- 	if (alloc_and_link_pwqs(wq) < 0)
--		goto err_free_wq;
-+		goto err_unreg_lockdep;
++static struct objtool_file file;
++
+ int check(const char *_objname, bool orc)
+ {
+-	struct objtool_file file;
+ 	int ret, warnings = 0;
  
- 	if (wq_online && init_rescuer(wq) < 0)
- 		goto err_destroy;
-@@ -4292,9 +4292,10 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	return wq;
- 
--err_free_wq:
-+err_unreg_lockdep:
- 	wq_unregister_lockdep(wq);
- 	wq_free_lockdep(wq);
-+err_free_wq:
- 	free_workqueue_attrs(wq->unbound_attrs);
- 	kfree(wq);
- 	return NULL;
+ 	objname = _objname;
