@@ -2,153 +2,130 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40BBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9915C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854DA218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGZBYybR"
+	by mail.kernel.org (Postfix) with ESMTP id 8DCEA21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfCUXKr (ORCPT
+        id S1727388AbfCUXKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:10:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43609 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfCUXKq (ORCPT
+        Thu, 21 Mar 2019 19:10:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51566 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfCUXKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:10:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l11so82799pgq.10;
-        Thu, 21 Mar 2019 16:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HNV2mzBDg3mmWGermsFnRewT1LJJ+M+8JlmuINeKXnA=;
-        b=HGZBYybROgjUvcNmVNRm2HAj+AeBY5RD8e/6ed22Et1mXYww8vYz3/tm1hCDNd1jD5
-         kI0s0c/YlIZTCW2BGn+aTBfTzRhhPufWf2McEv8I9Eab6NZSFbDQtu+qkcGnd+NSJnc1
-         hJanDzRZ6eAOtmhcYCgW/bK6pf5DBCf2vzIjjQaypj5KkZaSU4DuMOmiHM3DfJ1cUYRd
-         5PxVumsyhpunqRjvsu/BEyUAFL+CCmHi23a+nyBEkvyv0VxGgL8Eq0pkJVYJyTuxOwL7
-         bIC5YdDeHbKEwmcV/gkDWT1K3cfDzqJegDoR5uwwJ+NrCIUwpUhob6VkSFm7hZ0JhM8E
-         2c4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HNV2mzBDg3mmWGermsFnRewT1LJJ+M+8JlmuINeKXnA=;
-        b=PmqRA+JGaehQzwGYAFEjaOO+cuvxkdeCpvicpZSDb5ISDt+Kx6IkkLD6Kqq/TXdnXg
-         Gxz88rqANEk1MKIeFs1sxuiaZ+AXOtXKKz22z4Wkpy4Ju36VDPzBlHYB81Kj5G+PSmPo
-         xP90QOCCir1TySEW2WlYCt1/wWQzlLsLmPnuQG2Nk4Vbt7J9n0lJ65UNKng1RQ0UH68R
-         bNr6rn3VRaHt0jYNH1q9LIlTWN2EWrI4udz1XJmetKONbnYpCMEQGdxKycY5QIS+F5kt
-         ICuE757vDASQlafEPvKzS3zIDaCSiMIljbaMaiJfuZKTTtCjV1bRzP2Dbd3P7Z8oK2yM
-         uM6w==
-X-Gm-Message-State: APjAAAUDmQVm+XZW7XCl3GEXhbCX9iC33wP7IAYJMQ/cxUjvRSd+SGRt
-        bWhSvsNzgp5CRDz70LuVxPM=
-X-Google-Smtp-Source: APXvYqxpGPnEXWTy/CNM0eUStaiUnr1eDrT+W8tcR0A4hyE+hYZvlA6IPvUaqHLuc/BE2x/hn2VlXw==
-X-Received: by 2002:a63:c149:: with SMTP id p9mr5667673pgi.362.1553209845415;
-        Thu, 21 Mar 2019 16:10:45 -0700 (PDT)
-Received: from [10.67.48.231] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id x11sm7586667pfa.154.2019.03.21.16.10.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 16:10:44 -0700 (PDT)
-Subject: Re: linux-next: build warning after merge of the net-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>
-References: <20190322100512.51b5ea25@canb.auug.org.au>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <f0d954ad-f35c-c7c5-6de9-eebabcf88617@gmail.com>
-Date:   Thu, 21 Mar 2019 16:10:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 21 Mar 2019 19:10:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gportay)
+        with ESMTPSA id DC14228198C
+Date:   Thu, 21 Mar 2019 19:10:55 -0400
+From:   =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Derek Basehore <dbasehore@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        Lin Huang <hl@rock-chips.com>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Message-ID: <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190322100512.51b5ea25@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190320220223.GP112750@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/19 4:05 PM, Stephen Rothwell wrote:
-> Hi all,
+Matthias,
+
+On Wed, Mar 20, 2019 at 03:02:23PM -0700, Matthias Kaehlcke wrote:
+> Hi Gaël,
 > 
-> After merging the net-next tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
-> 
-> drivers/net/phy/Kconfig:276:warning: prompt redefined
-> 
-> Introduced by commit
-> 
->   17cc9821766c ("net: phy: Move Omega PHY entry to Cygnus PHY driver")
+> On Wed, Mar 20, 2019 at 05:50:13PM -0400, Gaël PORTAY wrote:
+> > Hi Matthias,
+> > 
+> > On Tue, Mar 19, 2019 at 05:33:52PM -0700, Matthias Kaehlcke wrote:
+> > > ...
+> > > > @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+> > > >  
+> > > >  	mutex_lock(&dmcfreq->lock);
+> > > >  
+> > > > +	if (target_rate >= dmcfreq->odt_dis_freq)
+> > > > +		odt_enable = true;
+> > > > +
+> > > > +	/*
+> > > > +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+> > > > +	 * timings and to enable or disable the ODT (on-die termination)
+> > > > +	 * resistors.
+> > > > +	 */
+> > > > +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+> > > > +		      dmcfreq->odt_pd_arg1,
+> > > > +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+> > > > +		      odt_enable, 0, 0, 0, &res);
+> > > 
+> > > Is it necessary/desirable to make this call for every frequency
+> > > change? IIUC it should be only needed when odt_enable changes and the
+> > > driver could track the state. If the DDR frequency doesn't change too
+> > > often and the overhead of the call is small it shouldn't be really
+> > > important though.
+> > >
+> > 
+> > I will test your solution first to make sure there is no regression to
+> > run that call for frequency change only.
 > 
 
-Whoops yes, that should not be there, thanks Stephen.
---
-Florian
+Oops, I wanted to say when odt_enable changes since last call.
+
+> If there is no frequency change the function returns at the
+> beginning. My suggestion was to only do the call when 'odt_enable'
+> changes, i.e. when a change (up or down) passes the 'odt_dis_freq'
+> threshold.
+> 
+
+So, for a reason that I ignore, if we try to save unecessary calls to
+ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+that follows. The function arm_smccc_smc never returns and the device
+hard hang.
+
+Thanks to your remark, I have also fixed an issue with the odt_dis_freq
+value. Its value is initialized to 0 in the probe function. Thus the
+odt_enable is always true (target_rate > 0). I moved its initialization
+after the timings are parsed from the device-tree; its value is now none
+zero (333000000 in my case).
+
+> > Also, the call takes around 300us.
+> 
+> Thanks for the info!
+> 
+> Matthias
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+Gaël
