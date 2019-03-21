@@ -2,338 +2,142 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D09C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC419C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38081218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE7521874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="0A8vzPEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfCULxN (ORCPT
+        id S1727958AbfCUMBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:53:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59660 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfCULxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:53:10 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9871330820EA;
-        Thu, 21 Mar 2019 11:53:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D4A595C69F;
-        Thu, 21 Mar 2019 11:53:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 6/6] squashfs: Convert to fs_context
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     Phillip Lougher <phillip@squashfs.org.uk>,
-        squashfs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com
-Date:   Thu, 21 Mar 2019 11:53:03 +0000
-Message-ID: <155316918307.30162.1280610442296887419.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155316911807.30162.12050856576466287021.stgit@warthog.procyon.org.uk>
-References: <155316911807.30162.12050856576466287021.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 21 Mar 2019 11:53:09 +0000 (UTC)
+        Thu, 21 Mar 2019 08:01:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44465 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUMA7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 08:00:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so4033770pgj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 05:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=TscW1eDX80dzlSVeGXE1WWMUcyOADw0SvtB+O9khGMQ=;
+        b=0A8vzPErvtsHTyZpIZOcm7t5CSLyYEN1MrQmGw+my7pbso/LD98Mzm+gG3hijuE0Ad
+         xBjRVuCFAp38YSaGjpIpX6Th14vI3U6enrC58VuhYSGU5xnt6qbfBgmHCbLkrgvHiLaP
+         R0o3pBGKn00jA7qgW84wmmjWvWG6B2a1c+vUjeAMpKK9cYng9bLujL8QCeJYu8q4LwhO
+         uh9bdC2ln7+4iM5vhHpDs2cp44qTk4hu7WwrwgL9FGB03pEHXCcEMgN8QUik9O3g2VoR
+         tPM9kmxKiahhSC8X4LtrJP3jTApy01J+AA4IyN3kOQCVzpIf8RhpDOSNO6xydU01LHyC
+         UDYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TscW1eDX80dzlSVeGXE1WWMUcyOADw0SvtB+O9khGMQ=;
+        b=ffAftiTsrBRYHcI0gQQmh/clMJ1K9I6Bjg/Dx7zllsygx6kkEByEaiUokpqPIAq9gL
+         C6u6AJsdT7KyuLY1w4oueLkOSg+Yu+7PyfpGbH5i3VIo695gprGZpW6Yq0pwUtyQnkl3
+         v2IMuIrYEchAIrOtA4/4ysbh8ZPTXR54xC71BdI07uMCLpoIl42Q4yILxnyaA6IoOIsO
+         fcwNrmL900X9wJhz/bRc7+uincb/A0wtdW1bcnznS5n7Cruc8AqU7+CEcnmgcI5pYhLH
+         gvpgOScoTvTRSqi4zUFUqHpSYBqDyiu23Yj3x1kJO03OFjZBnbuuj9DfgtIuHcEUMOs+
+         5Utw==
+X-Gm-Message-State: APjAAAV+Su1jOFRgVZy/26kUBHBsCFhGy5+GB32/5/MCPk2uqaTwKUXt
+        0PfQqvymDgXnssHrFV9c8QLbHw==
+X-Google-Smtp-Source: APXvYqzZRKYbHN1qzSJy41APX0hOSl++HWuDw2mJm/JtOs5LPpCqrWUBwjuxiJTJcVwAI0TCcRa3DQ==
+X-Received: by 2002:a65:5c49:: with SMTP id v9mr3028275pgr.150.1553169658290;
+        Thu, 21 Mar 2019 05:00:58 -0700 (PDT)
+Received: from localhost.localdomain (118-171-142-96.dynamic-ip.hinet.net. [118.171.142.96])
+        by smtp.gmail.com with ESMTPSA id 71sm8256258pgc.23.2019.03.21.05.00.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 05:00:57 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Venkat Reddy Talla <vreddytalla@nvidia.com>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/2] regulator: tps65132: Remove unneeded fields from struct tps65132_regulator
+Date:   Thu, 21 Mar 2019 20:00:37 +0800
+Message-Id: <20190321120038.12013-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Phillip Lougher <phillip@squashfs.org.uk>
-cc: squashfs-devel@lists.sourceforge.net
+These fields are not really need, remove them.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
+ drivers/regulator/tps65132-regulator.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
- fs/squashfs/super.c |  100 ++++++++++++++++++++++++++++-----------------------
- 1 file changed, 55 insertions(+), 45 deletions(-)
-
-diff --git a/fs/squashfs/super.c b/fs/squashfs/super.c
-index 40e657386fa5..672011725eb2 100644
---- a/fs/squashfs/super.c
-+++ b/fs/squashfs/super.c
-@@ -30,6 +30,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/regulator/tps65132-regulator.c b/drivers/regulator/tps65132-regulator.c
+index 73978dd440f7..1f627e161b99 100644
+--- a/drivers/regulator/tps65132-regulator.c
++++ b/drivers/regulator/tps65132-regulator.c
+@@ -55,10 +55,7 @@ struct tps65132_reg_pdata {
  
- #include <linux/fs.h>
-+#include <linux/fs_context.h>
- #include <linux/vfs.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
-@@ -49,26 +50,27 @@
- static struct file_system_type squashfs_fs_type;
- static const struct super_operations squashfs_super_ops;
- 
--static const struct squashfs_decompressor *supported_squashfs_filesystem(short
--	major, short minor, short id)
-+static const struct squashfs_decompressor *supported_squashfs_filesystem(
-+	struct fs_context *fc,
-+	short major, short minor, short id)
- {
- 	const struct squashfs_decompressor *decompressor;
- 
- 	if (major < SQUASHFS_MAJOR) {
--		ERROR("Major/Minor mismatch, older Squashfs %d.%d "
--			"filesystems are unsupported\n", major, minor);
-+		errorf(fc, "Major/Minor mismatch, older Squashfs %d.%d "
-+		       "filesystems are unsupported", major, minor);
- 		return NULL;
- 	} else if (major > SQUASHFS_MAJOR || minor > SQUASHFS_MINOR) {
--		ERROR("Major/Minor mismatch, trying to mount newer "
--			"%d.%d filesystem\n", major, minor);
--		ERROR("Please update your kernel\n");
-+		errorf(fc, "Major/Minor mismatch, trying to mount newer "
-+		       "%d.%d filesystem", major, minor);
-+		errorf(fc, "Please update your kernel");
- 		return NULL;
- 	}
- 
- 	decompressor = squashfs_lookup_decompressor(id);
- 	if (!decompressor->supported) {
--		ERROR("Filesystem uses \"%s\" compression. This is not "
--			"supported\n", decompressor->name);
-+		errorf(fc, "Filesystem uses \"%s\" compression. This is not supported",
-+		       decompressor->name);
- 		return NULL;
- 	}
- 
-@@ -76,7 +78,7 @@ static const struct squashfs_decompressor *supported_squashfs_filesystem(short
- }
- 
- 
--static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
-+static int squashfs_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct squashfs_sb_info *msblk;
- 	struct squashfs_super_block *sblk = NULL;
-@@ -111,7 +113,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	sblk = squashfs_read_table(sb, SQUASHFS_START, sizeof(*sblk));
- 
- 	if (IS_ERR(sblk)) {
--		ERROR("unable to read squashfs_super_block\n");
-+		errorf(fc, "unable to read squashfs_super_block");
- 		err = PTR_ERR(sblk);
- 		sblk = NULL;
- 		goto failed_mount;
-@@ -122,14 +124,15 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	/* Check it is a SQUASHFS superblock */
- 	sb->s_magic = le32_to_cpu(sblk->s_magic);
- 	if (sb->s_magic != SQUASHFS_MAGIC) {
--		if (!silent)
--			ERROR("Can't find a SQUASHFS superblock on %pg\n",
--						sb->s_bdev);
-+		if (!(fc->sb_flags & SB_SILENT))
-+			errorf(fc, "Can't find a SQUASHFS superblock on %pg",
-+			       sb->s_bdev);
- 		goto failed_mount;
- 	}
- 
- 	/* Check the MAJOR & MINOR versions and lookup compression type */
- 	msblk->decompressor = supported_squashfs_filesystem(
-+			fc,
- 			le16_to_cpu(sblk->s_major),
- 			le16_to_cpu(sblk->s_minor),
- 			le16_to_cpu(sblk->compression));
-@@ -146,15 +149,15 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	/* Check block size for sanity */
- 	msblk->block_size = le32_to_cpu(sblk->block_size);
- 	if (msblk->block_size > SQUASHFS_FILE_MAX_SIZE)
--		goto failed_mount;
-+		goto insanity;
- 
- 	/*
- 	 * Check the system page size is not larger than the filesystem
- 	 * block size (by default 128K).  This is currently not supported.
- 	 */
- 	if (PAGE_SIZE > msblk->block_size) {
--		ERROR("Page size > filesystem block size (%d).  This is "
--			"currently not supported!\n", msblk->block_size);
-+		errorf(fc, "Page size > filesystem block size (%d).  This is "
-+		       "currently not supported!", msblk->block_size);
- 		goto failed_mount;
- 	}
- 
-@@ -165,12 +168,12 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	/* Check that block_size and block_log match */
- 	if (msblk->block_size != (1 << msblk->block_log))
--		goto failed_mount;
-+		goto insanity;
- 
- 	/* Check the root inode for sanity */
- 	root_inode = le64_to_cpu(sblk->root_inode);
- 	if (SQUASHFS_INODE_OFFSET(root_inode) > SQUASHFS_METADATA_SIZE)
--		goto failed_mount;
-+		goto insanity;
- 
- 	msblk->inode_table = le64_to_cpu(sblk->inode_table_start);
- 	msblk->directory_table = le64_to_cpu(sblk->directory_table_start);
-@@ -210,7 +213,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	msblk->read_page = squashfs_cache_init("data",
- 		squashfs_max_decompressors(), msblk->block_size);
- 	if (msblk->read_page == NULL) {
--		ERROR("Failed to allocate read_page block\n");
-+		errorf(fc, "Failed to allocate read_page block");
- 		goto failed_mount;
- 	}
- 
-@@ -218,7 +221,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (IS_ERR(msblk->stream)) {
- 		err = PTR_ERR(msblk->stream);
- 		msblk->stream = NULL;
--		goto failed_mount;
-+		goto insanity;
- 	}
- 
- 	/* Handle xattrs */
-@@ -233,7 +236,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	msblk->xattr_id_table = squashfs_read_xattr_id_table(sb,
- 		xattr_id_table_start, &msblk->xattr_table, &msblk->xattr_ids);
- 	if (IS_ERR(msblk->xattr_id_table)) {
--		ERROR("unable to read xattr id index table\n");
-+		errorf(fc, "unable to read xattr id index table");
- 		err = PTR_ERR(msblk->xattr_id_table);
- 		msblk->xattr_id_table = NULL;
- 		if (err != -ENOTSUPP)
-@@ -247,7 +250,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 		le64_to_cpu(sblk->id_table_start), next_table,
- 		le16_to_cpu(sblk->no_ids));
- 	if (IS_ERR(msblk->id_table)) {
--		ERROR("unable to read id index table\n");
-+		errorf(fc, "unable to read id index table");
- 		err = PTR_ERR(msblk->id_table);
- 		msblk->id_table = NULL;
- 		goto failed_mount;
-@@ -263,7 +266,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	msblk->inode_lookup_table = squashfs_read_inode_lookup_table(sb,
- 		lookup_table_start, next_table, msblk->inodes);
- 	if (IS_ERR(msblk->inode_lookup_table)) {
--		ERROR("unable to read inode lookup table\n");
-+		errorf(fc, "unable to read inode lookup table");
- 		err = PTR_ERR(msblk->inode_lookup_table);
- 		msblk->inode_lookup_table = NULL;
- 		goto failed_mount;
-@@ -288,7 +291,7 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	msblk->fragment_index = squashfs_read_fragment_index_table(sb,
- 		le64_to_cpu(sblk->fragment_table_start), next_table, fragments);
- 	if (IS_ERR(msblk->fragment_index)) {
--		ERROR("unable to read fragment index table\n");
-+		errorf(fc, "unable to read fragment index table");
- 		err = PTR_ERR(msblk->fragment_index);
- 		msblk->fragment_index = NULL;
- 		goto failed_mount;
-@@ -299,13 +302,13 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	/* Sanity check directory_table */
- 	if (msblk->directory_table > next_table) {
- 		err = -EINVAL;
--		goto failed_mount;
-+		goto insanity;
- 	}
- 
- 	/* Sanity check inode_table */
- 	if (msblk->inode_table >= msblk->directory_table) {
- 		err = -EINVAL;
--		goto failed_mount;
-+		goto insanity;
- 	}
- 
- 	/* allocate root */
-@@ -334,6 +337,8 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	kfree(sblk);
- 	return 0;
- 
-+insanity:
-+	errorf(fc, "squashfs image failed sanity check");
- failed_mount:
- 	squashfs_cache_delete(msblk->block_cache);
- 	squashfs_cache_delete(msblk->fragment_cache);
-@@ -349,6 +354,28 @@ static int squashfs_fill_super(struct super_block *sb, void *data, int silent)
- 	return err;
- }
- 
-+static int squashfs_get_tree(struct fs_context *fc)
-+{
-+	return vfs_get_block_super(fc, squashfs_fill_super);
-+}
-+
-+static int squashfs_reconfigure(struct fs_context *fc)
-+{
-+	sync_filesystem(fc->root->d_sb);
-+	fc->sb_flags |= SB_RDONLY;
-+	return 0;
-+}
-+
-+static const struct fs_context_operations squashfs_context_ops = {
-+	.get_tree	= squashfs_get_tree,
-+	.reconfigure	= squashfs_reconfigure,
-+};
-+
-+static int squashfs_init_fs_context(struct fs_context *fc)
-+{
-+	fc->ops = &squashfs_context_ops;
-+	return 0;
-+}
- 
- static int squashfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
-@@ -371,14 +398,6 @@ static int squashfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- }
- 
- 
--static int squashfs_remount(struct super_block *sb, int *flags, char *data)
--{
--	sync_filesystem(sb);
--	*flags |= SB_RDONLY;
--	return 0;
--}
--
--
- static void squashfs_put_super(struct super_block *sb)
- {
- 	if (sb->s_fs_info) {
-@@ -397,14 +416,6 @@ static void squashfs_put_super(struct super_block *sb)
- 	}
- }
- 
--
--static struct dentry *squashfs_mount(struct file_system_type *fs_type,
--				int flags, const char *dev_name, void *data)
--{
--	return mount_bdev(fs_type, flags, dev_name, data, squashfs_fill_super);
--}
--
--
- static struct kmem_cache *squashfs_inode_cachep;
- 
- 
-@@ -488,7 +499,7 @@ static void squashfs_destroy_inode(struct inode *inode)
- static struct file_system_type squashfs_fs_type = {
- 	.owner = THIS_MODULE,
- 	.name = "squashfs",
--	.mount = squashfs_mount,
-+	.init_fs_context = squashfs_init_fs_context,
- 	.kill_sb = kill_block_super,
- 	.fs_flags = FS_REQUIRES_DEV
- };
-@@ -499,7 +510,6 @@ static const struct super_operations squashfs_super_ops = {
- 	.destroy_inode = squashfs_destroy_inode,
- 	.statfs = squashfs_statfs,
- 	.put_super = squashfs_put_super,
--	.remount_fs = squashfs_remount
+ struct tps65132_regulator {
+ 	struct device *dev;
+-	struct regmap *rmap;
+-	struct regulator_desc *rdesc[TPS65132_MAX_REGULATORS];
+ 	struct tps65132_reg_pdata reg_pdata[TPS65132_MAX_REGULATORS];
+-	struct regulator_dev *rdev[TPS65132_MAX_REGULATORS];
  };
  
- module_init(init_squashfs_fs);
+ static int tps65132_regulator_enable(struct regulator_dev *rdev)
+@@ -225,6 +222,8 @@ static int tps65132_probe(struct i2c_client *client,
+ {
+ 	struct device *dev = &client->dev;
+ 	struct tps65132_regulator *tps;
++	struct regulator_dev *rdev;
++	struct regmap *rmap;
+ 	struct regulator_config config = { };
+ 	int id;
+ 	int ret;
+@@ -233,9 +232,9 @@ static int tps65132_probe(struct i2c_client *client,
+ 	if (!tps)
+ 		return -ENOMEM;
+ 
+-	tps->rmap = devm_regmap_init_i2c(client, &tps65132_regmap_config);
+-	if (IS_ERR(tps->rmap)) {
+-		ret = PTR_ERR(tps->rmap);
++	rmap = devm_regmap_init_i2c(client, &tps65132_regmap_config);
++	if (IS_ERR(rmap)) {
++		ret = PTR_ERR(rmap);
+ 		dev_err(dev, "regmap init failed: %d\n", ret);
+ 		return ret;
+ 	}
+@@ -244,18 +243,16 @@ static int tps65132_probe(struct i2c_client *client,
+ 	tps->dev = dev;
+ 
+ 	for (id = 0; id < TPS65132_MAX_REGULATORS; ++id) {
+-		tps->rdesc[id] = &tps_regs_desc[id];
+-
+-		config.regmap = tps->rmap;
++		config.regmap = rmap;
+ 		config.dev = dev;
+ 		config.driver_data = tps;
+ 
+-		tps->rdev[id] = devm_regulator_register(dev,
+-					tps->rdesc[id], &config);
+-		if (IS_ERR(tps->rdev[id])) {
+-			ret = PTR_ERR(tps->rdev[id]);
++		rdev = devm_regulator_register(dev, &tps_regs_desc[id],
++					       &config);
++		if (IS_ERR(rdev)) {
++			ret = PTR_ERR(rdev);
+ 			dev_err(dev, "regulator %s register failed: %d\n",
+-				tps->rdesc[id]->name, ret);
++				tps_regs_desc[id].name, ret);
+ 			return ret;
+ 		}
+ 	}
+-- 
+2.17.1
 
