@@ -2,143 +2,159 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5759C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C15C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7585621874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtWPbhBb"
+	by mail.kernel.org (Postfix) with ESMTP id D6B1A21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553180813;
+	bh=qSRDGnLuxAPD25/0y+xaXCYWNbF2FPjOaa0aW3VTPaY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=EMZTBnWEHb3VppRwHo+dmNk5iNlprQE5LOyDgGqOGSv2QGvZC4XE/YXjy2VIpvdZS
+	 eY5IwnL7A/oMtuApHx+yd0yFB5AFe2Te3PK7iXuwJdxsgcviRTpGxnYXmoRXD+DiZj
+	 MZHgJ+dPESAv2YgVZDBkFY4CNpnroV65BpGwWdjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfCUPFm (ORCPT
+        id S1728346AbfCUPGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:05:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34195 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfCUPFl (ORCPT
+        Thu, 21 Mar 2019 11:06:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46940 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbfCUPGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:05:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so7032130wrq.1;
-        Thu, 21 Mar 2019 08:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hv6yaAsToGvbLG7fV3tYjLLtSOAX2hhCHcJKvmm8/j0=;
-        b=LtWPbhBbaeM/6kiw9/bf4bT5upFTXnCB8EQOSQRP7fiGhzO/Em2GZsLpbeXs5YJYS+
-         nGtGw9uwDXKUUsyUaAEClVCKM1dZ5cephP7SJD6kkKYVHdwESVnt7weUwWmrgtPKqCub
-         x0l7MGxrsk404YCfBVvcI5vYeWHh9mKUuNGJ+lrzwE7eZBVvQzmJzbaKwJeuPFQR7A8g
-         Q9Ai6RG3xbcfwzBgvgeeKXkwEb5AUVhzASoxhx5RlelrSE6QPsm7ayM1tsRNJ6oj+xc5
-         OleHmklbXtgKX1It7sTU+2uuUELLzs1gj/+sfJm3coTAyPBrWMqHvKaP3IILCMg+G7gw
-         70rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hv6yaAsToGvbLG7fV3tYjLLtSOAX2hhCHcJKvmm8/j0=;
-        b=rbszDyspvrMLZDn+27OV4Cjnp3iZtMsHf9pevhuwSejZ5vSYfFlSZnqOgpn8xdb7Fk
-         W7Ec9GRSvDNIEBVcsb72uPpB6NHmtb7DwnrqobsFEaL4iTp4hZSmHximBpTTy3U4VFzb
-         zDWlu1ntKHx0GdDQqlzkcUgJ3EejYPpaiNRa+X8BRrmHO2NrCNHlehUjwotBKAICcW7R
-         FQgg5a6gXwILQnpqMK+3MuinCV6BP0y7hZ333zG3A3qUMO02auGZrPzYwVH5B/I6i57f
-         c0GCI7G2HnpbneN+76gZ2yZcnzyhOwttDzuW95FvYDScJkZEmigT0EEqow6gCwdjfqeL
-         CrbQ==
-X-Gm-Message-State: APjAAAVlZbelL2jDlWR+pKUiKJtOxsoNFC8yTpCEXUAlIsF/NStnTvU7
-        8gU8p3OqMafB8Tfz6/elU+0=
-X-Google-Smtp-Source: APXvYqz3hFI/aF9+2vGeU270TQzX6YfvEjR6X1BaASRX5e1HXCnFXFFRoqLo1zkLCKGpUupGH26KXQ==
-X-Received: by 2002:a05:6000:1286:: with SMTP id f6mr2900898wrx.93.1553180739840;
-        Thu, 21 Mar 2019 08:05:39 -0700 (PDT)
-Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
-        by smtp.gmail.com with ESMTPSA id a10sm8888479wrs.19.2019.03.21.08.05.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 08:05:38 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 16:05:37 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     JC Kuo <jckuo@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] phy: tegra: xusb: fix typo in
- tegra186_usb2_pad_probe()
-Message-ID: <20190321150537.GB8939@ulmo>
-References: <20190321085436.94975-1-weiyongjun1@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
-Content-Disposition: inline
-In-Reply-To: <20190321085436.94975-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 21 Mar 2019 11:06:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=lMejGMHO09WdudP4feu/DRcShUbli23XqeoF/IsZeKM=; b=TPrL5G5WLVjt
+        ck0gfGi1hN2o2fyOdQeahHLdvvNZb6bJa8yL1KeafBMlm6CElCuC0W+LD9uCve4gMCQyOHyAvLjBl
+        HJHrkB8eZQ+nU6dyoEnkYmkiu5LdYAHkGfhWMJcmJSGTBQu7LkptfESsTWye5TU1g6Yo0kFShfSoN
+        vhCsQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h6zHI-0005b5-3T; Thu, 21 Mar 2019 15:06:44 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 92D1B11288EC; Thu, 21 Mar 2019 15:06:43 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        alexandre.belloni@bootlin.com, Nicolas.Ferre@microchip.com,
+        robh+dt@kernel.org, Ludovic.Desroches@microchip.com,
+        broonie@kernel.org, Codrin.Ciubotariu@microchip.com,
+        Cristian.Birsan@microchip.com, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: mchp-i2s-mcc: dt-bindings: add DT bindings for I2S Multi-Channel Controller" to the asoc tree
+In-Reply-To:  <20190305112610.9641-1-codrin.ciubotariu@microchip.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190321150643.92D1B11288EC@debutante.sirena.org.uk>
+Date:   Thu, 21 Mar 2019 15:06:43 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---lEGEL1/lMxI0MVQ2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: mchp-i2s-mcc: dt-bindings: add DT bindings for I2S Multi-Channel Controller
 
-On Thu, Mar 21, 2019 at 08:54:36AM +0000, Wei Yongjun wrote:
-> Fix a typo in tegra186_usb2_pad_probe(), 'usb2->clk' should be
-> 'priv->usb2_trk_clk'.
->=20
-> Fixes: b8998e928030 ("phy: tegra: xusb: Add Tegra186 support")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/phy/tegra/xusb-tegra186.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+has been applied to the asoc tree at
 
-Good catch!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->=20
-> diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-t=
-egra186.c
-> index 11ad6e4e4711..a627fe0b8e54 100644
-> --- a/drivers/phy/tegra/xusb-tegra186.c
-> +++ b/drivers/phy/tegra/xusb-tegra186.c
-> @@ -467,8 +467,8 @@ tegra186_usb2_pad_probe(struct tegra_xusb_padctl *pad=
-ctl,
->  	}
-> =20
->  	priv->usb2_trk_clk =3D devm_clk_get(&pad->dev, "trk");
-> -	if (IS_ERR(usb2->clk)) {
-> -		err =3D PTR_ERR(usb2->clk);
-> +	if (IS_ERR(priv->usb2_trk_clk)) {
-> +		err =3D PTR_ERR(priv->usb2_trk_clk);
->  		dev_dbg(&pad->dev, "failed to get usb2 trk clock: %d\n", err);
->  		goto unregister;
->  	}
->=20
->=20
->=20
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---lEGEL1/lMxI0MVQ2
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyTqD0ACgkQ3SOs138+
-s6GUgw/9HS6iD2OHPaeTstUqq7OVEzmQN7eRKd8nYqtSLLswJhubqAlJALcbM2pH
-1S3dgKjBNmmEsFcLw293WZuMZHLAXzmX4fdKFYwNAnNmNBQflXQsy0DhAjDtupyK
-Fts/ASsmq3EKfunnAhog7Ld9xBIrEBA73ahPjY1nOv+prlpiTuq6oZvx+xSayt6G
-uTG1Zl2eBWV1DRwy+oTQo6lqy5OkaRDLRTxdq5Tzv1uwlG3EQ0b18T+cKJR905Pg
-PInaYNeJsFuu3pusoHdqcKgwzMmYP/EXXLH6oUcBhX4qHZJoHn0mIz86ZZA97cA6
-l6oL0+7ZM28jkbjRN0cHP0C6Zlr0vd2iPCxsz7G5rkr0fiVoHGYVOt6+vLhGCsLI
-GRCjYZ0L58fEW90L7nIM/sXKVT5iixS+wRBrxTq9+6ix5AzMnkDFPbiKvQH683ZY
-9EyQb8DUye0AKycFME/atCJtsjQF2t85YXEuQxJ3W2EINzPlvkOw/4mJdxR/nKts
-2GwOxIw9wF073JegGqXWpe0+T1gaJ71om+pIv3QFhe4rCEgSLklHN0wyLTUf/8uO
-+aUkY3CjFIv0rS5vFYUDJAGJSClHd+mY8HYgvTdqmQacC7DppaW7X0YruSVtG1XN
-k1SxuHT8YfqNybwgtjeZhRn/7f02DuDVHDhl4g0uTcigXtjJALE=
-=VM3Q
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---lEGEL1/lMxI0MVQ2--
+From 4c798984c0dcd7649a6ff8a3d64361ba896efe61 Mon Sep 17 00:00:00 2001
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Tue, 5 Mar 2019 11:26:42 +0000
+Subject: [PATCH] ASoC: mchp-i2s-mcc: dt-bindings: add DT bindings for I2S
+ Multi-Channel Controller
+
+This patch adds DT bindings for the new Microchip I2S Multi-Channel
+controller embedded inside sam9x60 SoCs.
+
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/mchp-i2s-mcc.txt           | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt b/Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt
+new file mode 100644
+index 000000000000..91ec83a6faed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt
+@@ -0,0 +1,43 @@
++* Microchip I2S Multi-Channel Controller
++
++Required properties:
++- compatible:     Should be "microchip,sam9x60-i2smcc".
++- reg:            Should be the physical base address of the controller and the
++                  length of memory mapped region.
++- interrupts:     Should contain the interrupt for the controller.
++- dmas:           Should be one per channel name listed in the dma-names property,
++                  as described in atmel-dma.txt and dma.txt files.
++- dma-names:      Identifier string for each DMA request line in the dmas property.
++		  Two dmas have to be defined, "tx" and "rx".
++- clocks:         Must contain an entry for each entry in clock-names.
++                  Please refer to clock-bindings.txt.
++- clock-names:    Should be one of each entry matching the clocks phandles list:
++                  - "pclk" (peripheral clock) Required.
++                  - "gclk" (generated clock) Optional (1).
++
++Optional properties:
++- pinctrl-0:      Should specify pin control groups used for this controller.
++- princtrl-names: Should contain only one value - "default".
++
++
++(1) : Only the peripheral clock is required. The generated clock is optional
++      and should be set mostly when Master Mode is required.
++
++Example:
++
++	i2s@f001c000 {
++		compatible = "microchip,sam9x60-i2smcc";
++		reg = <0xf001c000 0x100>;
++		interrupts = <34 IRQ_TYPE_LEVEL_HIGH 7>;
++		dmas = <&dma0
++			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
++			 AT91_XDMAC_DT_PERID(36))>,
++		       <&dma0
++			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
++			 AT91_XDMAC_DT_PERID(37))>;
++		dma-names = "tx", "rx";
++		clocks = <&i2s_clk>, <&i2s_gclk>;
++		clock-names = "pclk", "gclk";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2s_default>;
++	};
+-- 
+2.20.1
+
