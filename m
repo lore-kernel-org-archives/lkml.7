@@ -2,233 +2,124 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D378FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B346FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FCD218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BECE218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RHDyIDVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfCUGIm (ORCPT
+        id S1726645AbfCUGQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 02:08:42 -0400
-Received: from foss.arm.com ([217.140.101.70]:51064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfCUGIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 02:08:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B945A78;
-        Wed, 20 Mar 2019 23:08:41 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83DC13F71A;
-        Wed, 20 Mar 2019 23:08:37 -0700 (PDT)
-Subject: Re: [PATCH v7 7/10] KVM: arm/arm64: context-switch ptrauth registers
-To:     Julien Thierry <julien.thierry@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
- <a3252299-b1ac-3d39-31a4-ca653daa815f@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <44e16529-4792-0ec2-d2d5-f5c14c6bb2c4@arm.com>
-Date:   Thu, 21 Mar 2019 11:38:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 21 Mar 2019 02:16:48 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38361 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfCUGQs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 02:16:48 -0400
+Received: by mail-it1-f195.google.com with SMTP id m18so2597626ita.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 23:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cv9mS/i7Jb4Kn4RbuLkCyePTLzYeaAxsBm61fRP73/8=;
+        b=RHDyIDVTzZQRFnZE4RITMCGvqJ7WEwNlupU3QWicxZDLauOniDEvgOnSYr48YtuaI2
+         i9+3t1PXaZSrd7b0AUsR2DHm9BGfkB7WrWHs3VM2MhHdUbVRixtHZF7NZrAy2PWkOv2x
+         I+y4MSM6dIDOyh+m0frgdLge+wXR96C3nKdBiMVqbuivruBqGrVbgmm3ft+AR4Dhvnu6
+         0KJLYvEKZ+YZ19eJ6F8WEFeW01CqfsP4Ne2+GP2LYZIxsLs/Z8IfR/Iiu4Kk2NaazRpz
+         vxqnp/SInMRoHPdy2oX5LWpNw8mV4waZP/2capvIERShYvy/3svn/+y9mobF04wu68e8
+         o20A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cv9mS/i7Jb4Kn4RbuLkCyePTLzYeaAxsBm61fRP73/8=;
+        b=bbL7+0n7Qy3cxXgZOOXC8RWQrRphNSzJqI4x4uDhnEWbna6Jmt7KP+5cldlG4BKv2z
+         CxBkieG18WkrnD9WY705jIHhG/i2iTRjA+se2658jJh2rCb1KubAPOQ8WYMXlLF/M8fM
+         j2BpxKU83AbY/psAfnES6NLAwAAhbYBEXr7VRh3K4hzV5YQV2v/2e3gsEvoEKFBaVmFY
+         9r/FW3HjpfXC3DG/38Ss0/ndtL/OKa9Cx20V+atBQnGSRhoAYQMvEyjNV2B2VMt1J6R6
+         1GJiUr2RWurbH9ac3FC9wsgwdO6/RwaLv0cFDUbVVAYV6sw50geuOI7UeLcJeNnTsMN5
+         o5pQ==
+X-Gm-Message-State: APjAAAUEkgmziepXierHF7v4NGetCZmca2LwntvxScehsz7rvGBMZrC6
+        1bWtETGDV7hgglUjgnES1DlTw8ViaEeg1VCJ9SFbjw==
+X-Google-Smtp-Source: APXvYqxNXGlvsgTZkAjtMMZRnbRJhsmEzVY7hmuudTiQTaqvDTRmZUBm0/4mBx8ObqK/6hIysIMQtZ46ZtGW61YxRXY=
+X-Received: by 2002:a02:84ab:: with SMTP id f40mr1410324jai.72.1553149006772;
+ Wed, 20 Mar 2019 23:16:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a3252299-b1ac-3d39-31a4-ca653daa815f@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000b3976c0584940e6e@google.com> <87lg187oao.fsf@notabene.neil.brown.name>
+In-Reply-To: <87lg187oao.fsf@notabene.neil.brown.name>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 21 Mar 2019 07:16:35 +0100
+Message-ID: <CACT4Y+ZwfyCjT_UBq4FwXd8SkmktBXqDFKM87x5fbstYJe4YuA@mail.gmail.com>
+Subject: Re: general protection fault in __x86_indirect_thunk_rbx
+To:     NeilBrown <neilb@suse.com>
+Cc:     syzbot <syzbot+83e12cf81d2c14842146@syzkaller.appspotmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julien,
+On Thu, Mar 21, 2019 at 7:08 AM NeilBrown <neilb@suse.com> wrote:
+>
+> On Wed, Mar 20 2019, syzbot wrote:
+>
+> > syzbot has bisected this bug to:
+> >
+> > commit dee160df820de41ff2f59a715643680822a0ab06
+> > Author: NeilBrown <neilb@suse.com>
+> > Date:   Mon Nov 5 01:30:47 2018 +0000
+> >
+> >      locks: use properly initialized file_lock when unlocking.
+>
+> This commit did not make it to mainline.
+> It was replaced by
+>
+> Commit d6367d624137 ("fs/locks: use properly initialized file_lock when unlocking.")
+>
+> which added a call to locks_init_lock() in flock_make_lock().
+>
+> NeilBrown
 
-On 3/20/19 5:43 PM, Julien Thierry wrote:
-> Hi Amit,
-> 
-> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> When pointer authentication is supported, a guest may wish to use it.
->> This patch adds the necessary KVM infrastructure for this to work, with
->> a semi-lazy context switch of the pointer auth state.
->>
->> Pointer authentication feature is only enabled when VHE is built
->> in the kernel and present in the CPU implementation so only VHE code
->> paths are modified.
->>
->> When we schedule a vcpu, we disable guest usage of pointer
->> authentication instructions and accesses to the keys. While these are
->> disabled, we avoid context-switching the keys. When we trap the guest
->> trying to use pointer authentication functionality, we change to eagerly
->> context-switching the keys, and enable the feature. The next time the
->> vcpu is scheduled out/in, we start again. However the host key save is
->> optimized and implemented inside ptrauth instruction/register access
->> trap.
->>
->> Pointer authentication consists of address authentication and generic
->> authentication, and CPUs in a system might have varied support for
->> either. Where support for either feature is not uniform, it is hidden
->> from guests via ID register emulation, as a result of the cpufeature
->> framework in the host.
->>
->> Unfortunately, address authentication and generic authentication cannot
->> be trapped separately, as the architecture provides a single EL2 trap
->> covering both. If we wish to expose one without the other, we cannot
->> prevent a (badly-written) guest from intermittently using a feature
->> which is not uniformly supported (when scheduled on a physical CPU which
->> supports the relevant feature). Hence, this patch expects both type of
->> authentication to be present in a cpu.
->>
->> This switch of key is done from guest enter/exit assembly as preperation
->> for the upcoming in-kernel pointer authentication support. Hence, these
->> key switching routines are not implemented in C code as they may cause
->> pointer authentication key signing error in some situations.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
->> , save host key in ptrauth exception trap]
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> ---
->>   arch/arm64/include/asm/kvm_host.h        |  17 ++++++
->>   arch/arm64/include/asm/kvm_ptrauth_asm.h | 100 +++++++++++++++++++++++++++++++
->>   arch/arm64/kernel/asm-offsets.c          |   6 ++
->>   arch/arm64/kvm/guest.c                   |  14 +++++
->>   arch/arm64/kvm/handle_exit.c             |  24 +++++---
->>   arch/arm64/kvm/hyp/entry.S               |   7 +++
->>   arch/arm64/kvm/reset.c                   |   7 +++
->>   arch/arm64/kvm/sys_regs.c                |  46 +++++++++++++-
->>   virt/kvm/arm/arm.c                       |   2 +
->>   9 files changed, 212 insertions(+), 11 deletions(-)
->>   create mode 100644 arch/arm64/include/asm/kvm_ptrauth_asm.h
->>
-[...]
->> +#ifdef	CONFIG_ARM64_PTR_AUTH
->> +
->> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
-> 
-> I don't really see the point of this macro. You move the pointers of
-> kvm_cpu_contexts to point to where the ptr auth registers are (which is
-> in the middle of an array) by adding the offset of APIAKEYLO and then we
-> have to recompute all offsets with this macro.
-> 
-> Why not just pass the kvm_cpu_context pointers to
-> ptrauth_save/restore_state and use the already defined offsets
-> (CPU_AP*_EL1) directly?
-> 
-> I think this would also allow to use one less register for the
-> ptrauth_switch_to_* macros.
-Actually the values of CPU_AP*_EL1 are exceeding the immediate range 
-(i.e 512), so this was done to keep the immediate offset within the range.
-The other way would have been to calculate the destination register but 
-these would add one more add instruction everywhere.
-I should have mentioned them as comments somewhere.
-> 
->> +
->> +.macro	ptrauth_save_state base, reg1, reg2
->> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
->> +.endm
->> +
->> +.macro	ptrauth_restore_state base, reg1, reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
->> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
->> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
->> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
->> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
->> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
->> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
->> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
->> +	.endm
-> 
-> Nit: Bad indentation.
-oops.
-> 
->> +
->> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
->> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
->> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
->> +	cbz	\reg1, skip_switch_to_guest
->> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_restore_state	\reg1, \reg2, \reg3
-> 
-> As mentioned we probably can get rid of one temporary register and
-> directly pass g_ctxt here.
-> 
->> +skip_switch_to_guest:
-> 
-> I believe you should use numbered labels for assembly macros, otherwise
-> multiple references to that macros will lead to symbol redefinitions.
-Yes agreed.
+Hi Neil,
 
-Thanks,
-Amit
-> 
->> +.endm
->> +
->> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
->> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
->> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
->> +	cbz	\reg1, skip_switch_to_host
->> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_save_state	\reg1, \reg2, \reg3
->> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_restore_state	\reg1, \reg2, \reg3
->> +	isb
->> +skip_switch_to_host:
-> 
-> Same.
-> 
-> Cheers,
-> 
-> Julien
-> 
->> +.endm
->> +
->> +#else /* !CONFIG_ARM64_PTR_AUTH */
->> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
->> +.endm
->> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
-[...]
->>
-> 
+You are talking to robot. Robot does not understand English prose ;)
+Here is info on how to talk to it:
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+
+In this case I think we need to say:
+
+#syz fix: fs/locks: use properly initialized file_lock when unlocking.
+
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f39fd7200000
+> > start commit:   dee160df locks: use properly initialized file_lock when un..
+> > git tree:       linux-next
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=100b9fd7200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17f39fd7200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=caa433e1c8778437
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=83e12cf81d2c14842146
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bd9447400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1121d82b400000
+> >
+> > Reported-by: syzbot+83e12cf81d2c14842146@syzkaller.appspotmail.com
+> > Fixes: dee160df ("locks: use properly initialized file_lock when
+> > unlocking.")
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/87lg187oao.fsf%40notabene.neil.brown.name.
+> For more options, visit https://groups.google.com/d/optout.
