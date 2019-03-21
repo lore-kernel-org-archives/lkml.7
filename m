@@ -2,226 +2,267 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51296C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C23218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54666218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxHQ9dex"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iv06r2c5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfCUO30 (ORCPT
+        id S1728484AbfCUO3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:29:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46590 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbfCUO3X (ORCPT
+        Thu, 21 Mar 2019 10:29:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43202 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbfCUO3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:29:23 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d1so5139482edd.13;
-        Thu, 21 Mar 2019 07:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4qFQyZDpAIuWe7V2bA6VFG63G9iCMVdOI5wtkeHaJRw=;
-        b=QxHQ9dexD53MZqgNJUKdve/CUGqzrmpxZLLLpsoqEinOj5rhxbos8hCJmyEd1EAHky
-         QT/HCwT9jeE7LFNo+DeuiLfjPp9WUxo04Lq+SOxOsUGuTS2hJnIXT5/K64BPTZyqKYHB
-         1scSHVKc3AoPX+AjPYxtTxB2XIwfO4gug+bAosJTka95gXB7hqbb0VvtePkkR0cHP6qB
-         Z7d4zroMpRlXkesRI2t8ZB7i6doQZJ7eA2gtahMGV9mI+7EyeYeof1Bi5AE/sP51A0p+
-         7FkNg5rapugBYppcbwBNLgKyughR6Z2XroTOWODhsDsj7Tcs5GaGkS7xlQCWF9PlWjaz
-         6MRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4qFQyZDpAIuWe7V2bA6VFG63G9iCMVdOI5wtkeHaJRw=;
-        b=jATwqk5PKtRRaD3LoH0JuospY9fWDuDB1nWnnLdJuugmwBLlsF6N0lpufS9IftIblo
-         0gzDGQgdSNDQYnU6sEPcZdh7eMyz+gi3YE/tUMyi88YK547rmNdjadbWDn8ZnZMonvxC
-         BB5iNG/OO6xOXbeerFQCszTE1Mw6VsCrGTlvFiYeEblJa0YimwpfRjXB0n961EmEHkwM
-         GXqx6kwi0MtVXpejXxKjDWHVBttJAa7N6okFZdBYsmnBCc0IGgW8KtxuBbM3woERF1uo
-         KrnU/T427cSocIetFcZLtw59OVyn9CHWhuMj2BG8NK0mJahQcVZ79TkI49Spy4H7+DXZ
-         2wwA==
-X-Gm-Message-State: APjAAAXQORMQ6x60u587uaiPaQRRwZbG/hM6RHihAiyWo5zhl5Kz4zL/
-        EgeeyyUmOD012a6ADEzK8lCTOIRYMSmLTZCC9Sw=
-X-Google-Smtp-Source: APXvYqzJw8BpYBewnVzQTxrUEk0/z/1uOYUzEWzVwR98rPKj15VdWRkbOQN9rN0bh0fx4y9cKuxDm+b2sMxa7lKuTAY=
-X-Received: by 2002:a17:906:c4f:: with SMTP id t15mr2553795ejf.132.1553178561657;
- Thu, 21 Mar 2019 07:29:21 -0700 (PDT)
+        Thu, 21 Mar 2019 10:29:14 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LET44Z098197;
+        Thu, 21 Mar 2019 09:29:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553178544;
+        bh=e96MrENnQ5ufJW+BM0+s+6fRlxBxT80/ub6fLJwQmjE=;
+        h=From:To:CC:Subject:Date;
+        b=iv06r2c5I0SqhaGz9WTnqgeuQcD9BnLuKRFAvMXQuFoOFDU3dMUk2+T2yhsWwQts0
+         zV+59eWmKkNUnUC7F5X+dPIbjZ3DDSYvSkMgduwi6KAh/jFriEEophPXvx9nuyU2Xf
+         EpE1SyiorZNyRO0wQwicq8UkJSq5GjTAYjw2J09E=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LET41l008322
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Mar 2019 09:29:04 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
+ Mar 2019 09:29:04 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Thu, 21 Mar 2019 09:29:03 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LET3vN004965;
+        Thu, 21 Mar 2019 09:29:03 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <tony@atomide.com>, <lee.jones@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+Date:   Thu, 21 Mar 2019 09:28:35 -0500
+Message-ID: <20190321142838.22985-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
 MIME-Version: 1.0
-References: <20170324164902.15226.48358.stgit@localhost.localdomain>
- <20170324170812.15226.97497.stgit@localhost.localdomain> <CALMXkpb3MfLbNoBgLJc0rgMDbPg9yOevKOiq9N8pzVw-aeNb3g@mail.gmail.com>
- <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
-In-Reply-To: <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 21 Mar 2019 10:28:45 -0400
-Message-ID: <CAF=yD-JwetDu2NjHi=HX=2UHHFKE5i9arCOP7bcEFN-fxvR58Q@mail.gmail.com>
-Subject: Re: [net-next PATCH v3 4/8] net: Change return type of sk_busy_loop
- from bool to void
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Christoph Paasch <christoph.paasch@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Samudrala, Sridhar" <sridhar.samudrala@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 5:46 AM Paolo Abeni <pabeni@redhat.com> wrote:
->
-> Hi,
->
-> On Wed, 2019-03-20 at 11:35 -0700, Christoph Paasch wrote:
-> > Hello,
-> >
-> > On Fri, Mar 24, 2017 at 3:23 PM Alexander Duyck
-> > <alexander.duyck@gmail.com> wrote:
-> > > From: Alexander Duyck <alexander.h.duyck@intel.com>
-> > >
-> > > > From what I can tell there is only a couple spots where we are actually
-> > > checking the return value of sk_busy_loop. As there are only a few
-> > > consumers of that data, and the data being checked for can be replaced
-> > > with a check for !skb_queue_empty() we might as well just pull the code
-> > > out of sk_busy_loop and place it in the spots that actually need it.
-> > >
-> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@intel.com>
-> > > Acked-by: Eric Dumazet <edumazet@google.com>
-> > > ---
-> > >  include/net/busy_poll.h |    5 ++---
-> > >  net/core/datagram.c     |    8 ++++++--
-> > >  net/core/dev.c          |   25 +++++++++++--------------
-> > >  net/sctp/socket.c       |    9 ++++++---
-> > >  4 files changed, 25 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
-> > > index b82d6ba70a14..c55760f4820f 100644
-> > > --- a/include/net/busy_poll.h
-> > > +++ b/include/net/busy_poll.h
-> > > @@ -74,7 +74,7 @@ static inline bool busy_loop_timeout(unsigned long end_time)
-> > >         return time_after(now, end_time);
-> > >  }
-> > >
-> > > -bool sk_busy_loop(struct sock *sk, int nonblock);
-> > > +void sk_busy_loop(struct sock *sk, int nonblock);
-> > >
-> > >  #else /* CONFIG_NET_RX_BUSY_POLL */
-> > >  static inline unsigned long net_busy_loop_on(void)
-> > > @@ -97,9 +97,8 @@ static inline bool busy_loop_timeout(unsigned long end_time)
-> > >         return true;
-> > >  }
-> > >
-> > > -static inline bool sk_busy_loop(struct sock *sk, int nonblock)
-> > > +static inline void sk_busy_loop(struct sock *sk, int nonblock)
-> > >  {
-> > > -       return false;
-> > >  }
-> > >
-> > >  #endif /* CONFIG_NET_RX_BUSY_POLL */
-> > > diff --git a/net/core/datagram.c b/net/core/datagram.c
-> > > index ea633342ab0d..4608aa245410 100644
-> > > --- a/net/core/datagram.c
-> > > +++ b/net/core/datagram.c
-> > > @@ -256,8 +256,12 @@ struct sk_buff *__skb_try_recv_datagram(struct
-> > > sock *sk, unsigned int flags,
-> > >                 }
-> > >
-> > >                 spin_unlock_irqrestore(&queue->lock, cpu_flags);
-> > > -       } while (sk_can_busy_loop(sk) &&
-> > > -                sk_busy_loop(sk, flags & MSG_DONTWAIT));
-> > > +
-> > > +               if (!sk_can_busy_loop(sk))
-> > > +                       break;
-> > > +
-> > > +               sk_busy_loop(sk, flags & MSG_DONTWAIT);
-> > > +       } while (!skb_queue_empty(&sk->sk_receive_queue));
-> >
-> > since this change I am hitting stalls where it's looping in this
-> > while-loop with syzkaller.
-> >
-> > It worked prior to this change because sk->sk_napi_id was not set thus
-> > sk_busy_loop would make us get out of the loop.
-> >
-> > Now, it keeps on looping because there is an skb in the queue with
-> > skb->len == 0 and we are peeking with an offset, thus
-> > __skb_try_recv_from_queue will return NULL and thus we have no way of
-> > getting out of the loop.
-> >
-> > I'm not sure what would be the best way to fix it. I don't see why we
-> > end up with an skb in the list with skb->len == 0. So, shooting a
-> > quick e-mail, maybe somebody has an idea :-)
-> > I have the syzkaller-reproducer if needed.
->
-> IIRC we can have 0 len UDP packet sitting on sk_receive_queue since:
+Add the lm3532 device tree documentation.
+Remove lm3532 device tree reference from the ti_lmu devicetree
+documentation.
 
-Yes, as of header before enqueue pulling zero byte datagrams may be
-queued. And these need to be delivered, among other reason for their
-cmsg metadata.
+With the addition of the dedicated lm3532 documentation the device
+can be removed from the ti_lmu.txt.
 
-> commit e6afc8ace6dd5cef5e812f26c72579da8806f5ac
-> Author: samanthakumar <samanthakumar@google.com>
-> Date:   Tue Apr 5 12:41:15 2016 -0400
->
->     udp: remove headers from UDP packets before queueing
->
-> Both __skb_try_recv_datagram() and napi_busy_loop() assume that we
-> received some packets if the queue is not empty. When peeking such
-> assumption is not true, we should check if the last packet is changed,
-> as __skb_recv_datagram() already does.
+The reason for this is that the lm3532 dt documentation now defines
+the ability to control LED output strings against different control
+banks or groups multiple strings to be controlled by a single control
+bank.
 
-Good catch. The condition in sk_busy_loop_end is not easy to address.
-Since busy poll is an optimization and poll at offset rare, one way
-out may be to amend the __sk_can_busy_loop test in __skb_recv_udp to
-disallow busy polling together with peek at offset.
+Another addition was for ALS lighting control and configuration.  The
+LM3532 has a feature that can take in the ALS reading from 2 separate
+ALS devices and adjust the brightness on the strings that are configured
+to support this feature.
 
-The difference in behavior betwee __skb_try_recv_datagram and
-__skb_recv_datagram also reminds of Alexei's earlier report (without
-busy polling, seemingly with a list corruption introduced elsewhere)
-in
+Finally the device specific properties were moved to the parent node as these
+properties are not control bank configurable.  These include the runtime ramp
+and the ALS configuration.
 
-  [net-next,1/3] net/sock: factor out dequeue/peek with offset code
-  https://patchwork.ozlabs.org/patch/762327/
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
+v5 - Moved ramping range to below property definition, updated keyboard label -
+https://lore.kernel.org/patchwork/patch/1050412/
 
-> So I *think* the root cause of
-> this issue is older than Alex's patch.
->
-> The following - completely untested - should avoid the unbounded loop,
-> but it's not a complete fix, I *think* we should also change
-> sk_busy_loop_end() in a similar way, but that is a little more complex
-> due to the additional indirections.
->
-> Could you please test it?
->
-> Any feedback welcome!
->
->
-> Could you please test it?
->
-> Paolo
-> ---
-> diff --git a/net/core/datagram.c b/net/core/datagram.c
-> index b2651bb6d2a3..e657289db4ac 100644
-> --- a/net/core/datagram.c
-> +++ b/net/core/datagram.c
-> @@ -279,7 +279,7 @@ struct sk_buff *__skb_try_recv_datagram(struct sock
-> *sk, unsigned int flags,
->                         break;
->
->                 sk_busy_loop(sk, flags & MSG_DONTWAIT);
-> -       } while (!skb_queue_empty(&sk->sk_receive_queue));
-> +       } while (sk->sk_receive_queue.prev != *last);
->
->         error = -EAGAIN;
->
->
+v4 - Appended "ti," to TI specific properties, add enable gpio documentation,
+removed an example, moved ramp to optional parent properties - https://lore.kernel.org/patchwork/patch/1050122/
+v3 - No changes - https://lore.kernel.org/patchwork/patch/1049026/
+v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
+added ranges for variable properties, I did not change the label - https://lore.kernel.org/patchwork/patch/1048805/
+
+ .../devicetree/bindings/leds/leds-lm3532.txt  | 101 ++++++++++++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ----
+ 2 files changed, 101 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+new file mode 100644
+index 000000000000..5bd0c025850f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -0,0 +1,101 @@
++* Texas Instruments - lm3532 White LED driver with ambient light sensing
++capability.
++
++The LM3532 provides the 3 high-voltage, low-side current sinks. The device is
++programmable over an I2C-compatible interface and has independent
++current control for all three channels. The adaptive current regulation
++method allows for different LED currents in each current sink thus allowing
++for a wide variety of backlight and keypad applications.
++
++The main features of the LM3532 include dual ambient light sensor inputs
++each with 32 internal voltage setting resistors, 8-bit logarithmic and linear
++brightness control, dual external PWM brightness control inputs, and up to
++1000:1 dimming ratio with programmable fade in and fade out settings.
++
++Required properties:
++	- compatible : "ti,lm3532"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Optional properties:
++	- enable-gpios : gpio pin to enable (active high)/disable the device.
++	- ramp-up-us - The Run time ramp rates/step are from one current
++		       set-point to another after the device has reached its
++		       initial target set point from turn-on
++	- ramp-down-us - The Run time ramp rates/step are from one current
++			 set-point to another after the device has reached its
++			 initial target set point from turn-on
++	Range for ramp settings: 8us - 65536us
++
++Optional properties if ALS mode is used:
++	- ti,als-vmin - Minimum ALS voltage defined in Volts
++	- ti,als-vmax - Maximum ALS voltage defined in Volts
++	Per the data sheet the max ALS voltage is 2V and the min is 0V
++
++	- ti,als1-imp-sel - ALS1 impedance resistor selection in Ohms
++	- ti,als2-imp-sel - ALS2 impedance resistor selection in Ohms
++	Range for impedance select: 37000 Ohms - 1190 Ohms
++	Values above 37kohms will be set to the "High Impedance" setting
++
++	- ti,als-avrg-time-us - Determines the length of time the device needs to
++			  average the two ALS inputs.  This is only used if
++			  the input mode is LM3532_ALS_INPUT_AVRG.
++			     Range: 17920us - 2293760us
++	- ti,als-input-mode - Determines how the device uses the attached ALS
++			   devices.
++			   0x00 - ALS1 and ALS2 input average
++			   0x01 - ALS1 Input
++			   0x02 - ALS2 Input
++			   0x03 - Max of ALS1 and ALS2
++
++Required child properties:
++	- reg : Indicates control bank the LED string is controlled by
++	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
++	- ti,led-mode : Defines if the LED strings are manually controlled or
++			if the LED strings are controlled by the ALS.
++			0x00 - LED strings are I2C controlled via full scale
++			       brightness control register
++			0x01 - LED strings are ALS controlled
++
++Optional LED child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++led-controller@38 {
++	compatible = "ti,lm3532";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x38>;
++
++	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	ramp-up-us = <1024>;
++	ramp-down-us = <65536>;
++
++	ti,als-vmin = <0>;
++	ti,als-vmax = <2000>;
++	ti,als1-imp-sel = <4110>;
++	ti,als2-imp-sel = <2180>;
++	ti,als-avrg-time-us = <17920>;
++	ti,als-input-mode = <0x00>;
++
++	lcd_backlight: led@0 {
++		reg = <0>;
++		led-sources = <2>;
++		ti,led-mode = <1>;
++		label = "backlight";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		ti,led-mode = <0>;
++		label = "platform::kbd_backlight";
++	};
++};
++
++For more product information please see the links below:
++http://www.ti.com/product/LM3532
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index c885cf89b8ce..980394d701a7 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -4,7 +4,6 @@ TI LMU driver supports lighting devices below.
+ 
+    Name                  Child nodes
+   ------      ---------------------------------
+-  LM3532       Backlight
+   LM3631       Backlight and regulator
+   LM3632       Backlight and regulator
+   LM3633       Backlight, LED and fault monitor
+@@ -13,7 +12,6 @@ TI LMU driver supports lighting devices below.
+ 
+ Required properties:
+   - compatible: Should be one of:
+-                "ti,lm3532"
+                 "ti,lm3631"
+                 "ti,lm3632"
+                 "ti,lm3633"
+@@ -23,7 +21,6 @@ Required properties:
+          0x11 for LM3632
+          0x29 for LM3631
+          0x36 for LM3633, LM3697
+-         0x38 for LM3532
+          0x63 for LM3695
+ 
+ Optional property:
+@@ -47,23 +44,6 @@ Optional nodes:
+ [2] ../leds/leds-lm3633.txt
+ [3] ../regulator/lm363x-regulator.txt
+ 
+-lm3532@38 {
+-	compatible = "ti,lm3532";
+-	reg = <0x38>;
+-
+-	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+-
+-	backlight {
+-		compatible = "ti,lm3532-backlight";
+-
+-		lcd {
+-			led-sources = <0 1 2>;
+-			ramp-up-msec = <30>;
+-			ramp-down-msec = <0>;
+-		};
+-	};
+-};
+-
+ lm3631@29 {
+ 	compatible = "ti,lm3631";
+ 	reg = <0x29>;
+-- 
+2.21.0.5.gaeb582a983
+
