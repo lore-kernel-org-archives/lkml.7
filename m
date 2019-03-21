@@ -2,63 +2,162 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C91C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E05218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EB4218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfCUBqX (ORCPT
+        id S1727821AbfCUBrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:46:23 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:57530 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfCUBqW (ORCPT
+        Wed, 20 Mar 2019 21:47:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34612 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727437AbfCUBrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:46:22 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h6mmg-0006cO-Dz; Thu, 21 Mar 2019 09:46:18 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h6mmd-0002dO-Sx; Thu, 21 Mar 2019 09:46:15 +0800
-Date:   Thu, 21 Mar 2019 09:46:15 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Josh Hunt <joshhunt00@gmail.com>
-Cc:     Josh Elsasser <jelsasser@appneta.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Graf <tgraf@suug.ch>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v3 PATCH] rhashtable: Still do rehash when we get EEXIST
-Message-ID: <20190321014615.lepugrlvdff6smkn@gondor.apana.org.au>
-References: <20190123211758.104275-1-jelsasser@appneta.com>
- <20190124030841.n4jtsqka5zji3e62@gondor.apana.org.au>
- <D5A6C2E7-2AB1-46D0-8876-2D6AAAA3937F@appneta.com>
- <A247F887-832E-44AD-AC41-C22E124E44EE@appneta.com>
- <CAKA=qzY4Pzee9BVzRCciW32toeHSz7t0q9LuvQXKLG2fX9fBbg@mail.gmail.com>
- <20190321013952.3quw6bsqptyngzo5@gondor.apana.org.au>
+        Wed, 20 Mar 2019 21:47:00 -0400
+X-UUID: 80907e13167641519f82a5c53c4447c3-20190321
+X-UUID: 80907e13167641519f82a5c53c4447c3-20190321
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 407030585; Thu, 21 Mar 2019 09:46:56 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 09:46:55 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas08.mediatek.inc
+ (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 21 Mar
+ 2019 09:46:54 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 09:46:54 +0800
+Message-ID: <1553132815.18216.18.camel@mtksdaap41>
+Subject: Re: [PATCH v2] gpu/drm: mediatek: call mtk_dsi_stop() after
+ mtk_drm_crtc_atomic_disable()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 21 Mar 2019 09:46:55 +0800
+In-Reply-To: <1553131722.18216.10.camel@mtksdaap41>
+References: <20190320071825.20268-1-hsinyi@chromium.org>
+         <1553131722.18216.10.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321013952.3quw6bsqptyngzo5@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 09:39:52AM +0800, Herbert Xu wrote:
->
-> Dave, could you please apply this? Thanks!
+Hi, Hsin-yi:
 
-I forgot to include the tested-by so here it is for patchwork:
+On Thu, 2019-03-21 at 09:28 +0800, CK Hu wrote:
+> Hi, Hsin-yi:
+> 
+> On Wed, 2019-03-20 at 15:18 +0800, Hsin-Yi Wang wrote:
+> > mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+> > ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+> > ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+> > irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+> > happens sometimes when turning off the screen.
+> > 
+> > In drm_atomic_helper.c#disable_outputs(),
+> > the calling sequence when turning off the screen is:
+> > 
+> > 1. mtk_dsi_encoder_disable()
+> >      --> mtk_output_dsi_disable()
+> >        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+> >        --> mtk_dsi_poweroff();
+> > 2. mtk_drm_crtc_atomic_disable()
+> >      --> drm_crtc_wait_one_vblank();
+> >      ...
+> >        --> mtk_dsi_ddp_stop()
+> >          --> mtk_dsi_poweroff();
+> > 
+> > mtk_dsi_poweroff() has reference count design, change to make mtk_dsi_stop()
+> > called in mtk_dsi_poweroff() when refcount is 0.
+> > 
+> > Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> > change log:
+> > v1->v2:
+> >  * update commit message.
+> >  * call mtk_dsi_stop() in mtk_dsi_poweroff() when refcount is 0.
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > index b00eb2d2e086..e152f37af57d 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > @@ -630,6 +630,8 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+> >  	if (--dsi->refcount != 0)
+> >  		return;
+> >  
+> > +	mtk_dsi_stop(dsi);
+> > +
+> >  	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+> >  		if (dsi->panel) {
+> >  			if (drm_panel_unprepare(dsi->panel)) {
+> 
+> I think you just move mtk_dsi_stop() into mtk_dsi_poweroff() would works
+> fine, but I would rather like calling mtk_dsi_start() and mtk_dsi_stop()
+> in a symmetric manner. That means you may also move below functions into
+> mtk_dsi_poweron():
+> 
+> mtk_dsi_set_mode(dsi);
+> mtk_dsi_clk_hs_mode(dsi, 1);
+> mtk_dsi_start(dsi);
+> 
+> 
+> > @@ -696,7 +698,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+> >  		}
+> >  	}
+> >  
+> > -	mtk_dsi_stop(dsi);
+> >  	mtk_dsi_poweroff(dsi);
+> >  
+> >  	dsi->enabled = false;
+> > @@ -1178,6 +1179,8 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+> >  	struct mtk_dsi *dsi = platform_get_drvdata(pdev);
+> >  
+> >  	mtk_output_dsi_disable(dsi);
+> > +	mtk_dsi_stop(dsi);
+> > +	mtk_dsi_poweroff(dsi);
+> 
+> I think mtk_output_dsi_disable() would call mtk_dsi_poweroff(), and
+> mtk_dsi_poweroff() would call mtk_dsi_stop(), so these two line are
+> redundant. And I think you should remove mtk_dsi_stop() in
+> mtk_output_dsi_disable(), why not in this patch?
 
-Tested-by: Josh Elsasser <jelsasser@appneta.com>
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+You've removed mtk_dsi_stop() in mtk_output_dsi_disable(), I just miss
+it, sorry for this.
+
+Regards,
+CK
+
+> 
+> Regards,
+> CK
+> 
+> >  	component_del(&pdev->dev, &mtk_dsi_component_ops);
+> >  
+> >  	return 0;
+> 
+
+
