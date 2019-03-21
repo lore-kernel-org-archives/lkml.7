@@ -2,146 +2,69 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF56C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155EE218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659AB218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfCUCbg (ORCPT
+        id S1727838AbfCUCbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:31:36 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:44254 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfCUCbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:31:36 -0400
-Received: from shawn.lin?rock-chips.com (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 4C5B0529F8;
-        Thu, 21 Mar 2019 10:31:31 +0800 (CST)
-X-263anti-spam: KSV:0;
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-KSVirus-check: 0
-X-ABS-CHECKED: 4
-Received: from [172.16.12.37] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P24298T139622564935424S1553135489017648_;
-        Thu, 21 Mar 2019 10:31:30 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <058340b6a43ccd0c8b5130e4dda53420>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: wxt@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Cc:     shawn.lin@rock-chips.com, wxt@rock-chips.com
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/2=5d_mmc=3a_dw=5fmmc-rockchip=3a_fix_tra?=
- =?UTF-8?B?bnNmZXIgaGFuZ3Mgb24gcmszMTg444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGlu?=
- =?UTF-8?B?dXgtbW1jLW93bmVyQHZnZXIua2VybmVsLm9yZ+S7o+WPkeOAkQ==?=
-To:     Alexander Kochetkov <al.kochet@gmail.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1553104085-32312-1-git-send-email-al.kochet@gmail.com>
- <1553104085-32312-3-git-send-email-al.kochet@gmail.com>
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <8293b346-15a0-a70d-1bfd-c9b2251c729c@rock-chips.com>
-Date:   Thu, 21 Mar 2019 10:31:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 20 Mar 2019 22:31:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5162 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726914AbfCUCbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:31:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D7A9E32D647EE35AB1ED;
+        Thu, 21 Mar 2019 10:31:35 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
+ 10:31:29 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <arnaldo.melo@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 0/2] minor fixes for perf cs-etm
+Date:   Thu, 21 Mar 2019 10:31:20 +0800
+Message-ID: <20190321023122.21332-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <1553104085-32312-3-git-send-email-al.kochet@gmail.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Caesar Wang
+From: YueHaibing <yuehaibing@huawei.com>
 
-On 2019/3/21 1:48, Alexander Kochetkov wrote:
-> I've found that sometimes dw_mmc in my rk3188 based board stop transfer
-> any data with error:
-> 
-> kernel: dwmmc_rockchip 1021c000.dwmmc: Unexpected command timeout, state 3
-> 
-> Further digging into problem showed that sometimes one of EDMA-based
-> transfers hangs and abort with HTO error. I've made test, that 100%
+v2:
+- patch 1 fix commilt log
+- patch 2 use correct Fixes tag
 
-I'm not sure what 100% means, but Caesar fired QA test for RK3036 with
-EDMA-based dwmmc in vendor 4.4 kernel, and seems not big deal. The
-vendor 4.4 kernel didn't patch anything else wrt EDMA code, but we did
-enhance PL330 code and fix some bug there, so you may have a try.
+This patch series fixes two issue:
+1. fix pass-zero-to-ERR_PTR warning
+2. return correct errcode to upstream callers
 
-> reproduce the error. I found, that setting max_segs parameter to 1 fix
-> the problem.
-> 
-> I guess the problem is hardware related and relates to DMA controller
-> implementation for rk3188. Probably it can relates to missed FLUSHP,
-> see commit 271e1b86e691 ("dmaengine: pl330: add quirk for broken no
-> flushp"). It is possible that pl330 and dw_mmc become out of sync then
-> pl330 driver switch from one scatterlist to another. If we limit
-> scatterlist size to 1, we can avoid switching scatterlists and avoid
-> hardware problem. Setting max_segs to 1 tells mmc core to use maximum
-> one scatterlist for one transfer.
-> 
-> I guess that all other rk3xxx chips that lacks FLUSHP also affected by
-> the problem. So I made fix for all rk3xxx chips from rk2928 to rk3188.
+YueHaibing (2):
+  perf cs-etm: Remove errnoeous ERR_PTR() usage in in
+    cs_etm__process_auxtrace_info
+  perf cs-etm: return errcode in cs_etm__process_auxtrace_info()
 
-Hard to find these acient platforms to test, expecially some was EOL....
+ tools/perf/util/cs-etm.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-> ---
->   drivers/mmc/host/dw_mmc-rockchip.c |   19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-> index 8c86a80..2eed922 100644
-> --- a/drivers/mmc/host/dw_mmc-rockchip.c
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -292,6 +292,24 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
->   	return 0;
->   }
->   
-> +static void dw_mci_rk2928_init_slot(struct dw_mci *host)
-> +{
-> +	struct mmc_host *mmc = host->slot->mmc;
-> +
-> +	if (host->use_dma == TRANS_MODE_EDMAC) {
-> +		/*
-> +		 * Using max_segs > 1 leads to rare EDMA transfer hangs
-> +		 * resulting in HTO errors.
-> +		 */
-> +		mmc->max_segs = 1;
-> +		mmc->max_blk_size = 65535;
-> +		mmc->max_blk_count = 64 * 512;
-> +		mmc->max_req_size =
-> +				mmc->max_blk_size * mmc->max_blk_count;
-> +		mmc->max_seg_size = mmc->max_req_size;
-> +	}
-> +}
-> +
->   static int dw_mci_rockchip_init(struct dw_mci *host)
->   {
->   	/* It is slot 8 on Rockchip SoCs */
-> @@ -314,6 +332,7 @@ static int dw_mci_rockchip_init(struct dw_mci *host)
->   
->   static const struct dw_mci_drv_data rk2928_drv_data = {
->   	.init			= dw_mci_rockchip_init,
-> +	.init_slot		= dw_mci_rk2928_init_slot,
->   };
->   
->   static const struct dw_mci_drv_data rk3288_drv_data = {
-> 
+-- 
+2.7.0
 
 
