@@ -2,61 +2,88 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7256C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190BCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB76205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D2321901
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfCUNOA (ORCPT
+        id S1728283AbfCUNO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 09:14:29 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:40928 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbfCUNN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:13:59 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA4E52083D;
-        Thu, 21 Mar 2019 13:13:58 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 09:13:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        diamon-discuss@lists.linuxfoundation.org,
-        lttng-dev <lttng-dev@lists.lttng.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [diamon-discuss] [RELEASE] LTTng-modules 2.9.11, 2.10.8,
- 2.11.0-rc2 (Linux kernel tracer)
-Message-ID: <20190321091356.38a6988d@gandalf.local.home>
-In-Reply-To: <20190321124122.GA30542@google.com>
-References: <60988959.4070.1541112982406.JavaMail.zimbra@efficios.com>
-        <CAJWu+ooEbjOXgVeq+g4MGEve9PTo7p7UUKjYYHhq-Wz6UbUhfg@mail.gmail.com>
-        <1199524058.2398.1553016874435.JavaMail.zimbra@efficios.com>
-        <20190321124122.GA30542@google.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728249AbfCUNO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:14:28 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 58865202A3;
+        Thu, 21 Mar 2019 14:14:26 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 413551FF37;
+        Thu, 21 Mar 2019 14:14:26 +0100 (CET)
+Subject: Re: [PATCH v2] nvmem: core: Set no-read-write provider to avoid
+ userspace read/write
+To:     Gaurav Kohli <gkohli@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
+References: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
+ <48a71861-c60b-7fe7-d4af-5269cd7c20eb@linaro.org>
+ <5f11070f-bf9b-c313-9a78-e412a2fb2908@codeaurora.org>
+ <865519b5-62c9-3eb3-3855-eebf98bded85@linaro.org>
+ <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <7a1e8f27-9e24-985a-531b-26122077752f@free.fr>
+Date:   Thu, 21 Mar 2019 14:14:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Mar 21 14:14:26 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 08:41:22 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+On 20/03/2019 18:50, Gaurav Kohli wrote:
 
-> Also does it also make sense for lttng ring buffer to use the ftrace code for
-> ring buffer, or make the ftrace ring buffer better and have lttng use it? Or
-> is the lttng ring buffer design too radically different?
+> On 3/20/2019 9:56 PM, Srinivas Kandagatla wrote:
+> 
+>> Am guessing these are some kind of keys or something that you do not 
+>> want user to see.
+> 
+> Yes exactly, there are certain keys or even certain bit that we don't 
+> want to expose to user.
+> 
+>> Is root only option not helping you in this case?
+>
+> Yes we want to protect at root level as well, I mean it is better if we 
+> can avoid exposing to userspace at all.
 
-We tried in the past and never actually got something that we both
-could agree on. Now I believe the user space tools depend on the way
-each one is, so to change one will break the tools that read it.
+NB: root has access to /dev/mem and /dev/kmem (and probably other ways
+into the kernel)
 
--- Steve
+>> We could go down the route of adding new config option something like 
+>> CONFIG_NVMEM_NO_SYSFS_ENTRY to prevent adding nvmem entry in userspace.
+>>
+>> Let me know if you are happy to create a patch for this change?
+> 
+> I am happy with either way, config option or DT binding (seems easy),
+> please let me know we will post new patch for the same.
+
+Device tree nodes are supposed to be hardware descriptions. Obviously,
+implementing security policies such as "hide this information from
+user-space" is not a good fit for a DT node.
+
+The qcom kernel is full of "config knobs" in DT nodes. It would be good
+if you could spread the word, and slowly turn things around :-)
+
+Regards.
