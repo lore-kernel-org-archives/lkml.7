@@ -2,117 +2,100 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3865C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3762C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C685321874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VFLv5OxY"
+	by mail.kernel.org (Postfix) with ESMTP id BB6CA218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553192467;
+	bh=EmTn4zvEP5gRbxj/9wqq4+Yb3fGzCjTOIMl/rebDQ2Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H3TJFqW3eS6ymz2oTUW+CuKI46yzil6UTZZUOVK2N0umcBX8Eev/8d22r9IV28RPp
+	 CTpI0S2T31YwIfCa/E+750aMbEkM4CRcPUw82/dZlgAsHuuuLV7nBMxp+Jy8z9+lEQ
+	 /JMyeoo79H52ZgbZJll7IFAjS7l6J7i98J0M9ZLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfCUSUT (ORCPT
+        id S1728622AbfCUSVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:20:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35464 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728439AbfCUSUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:20:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2Dq+aEiq3y83GeScl43j8vQc0O8xl6udcje1rD+sKWs=; b=VFLv5OxY5CJt6JK7/913rkVwX
-        Kf1teyefXWaR5Zzx486MHBKpalwPKZLddWaHwWclkeQa4XfQua5Tf39LUwwjCUbMxDqiNCeprL2i5
-        6WD5d9Cf/4+Oz+XvmtC/apMxvMYZQINt6cnVeDvvHXCcsPvEEgOwVekq9dLKI4ma/wPOqvHhEiSV1
-        fYgtvl+4dwWmVtWUAEdHFmhTE3hrtvr1J6pGSrJyQlCXvHAkWybuXTwiRTRIsKKiG7iqxpDiDxQ2O
-        MKrBpoLqz2mpT8S2t+A4RoDJLcBhZ7Q7Y1WCBK0Qd2N+Uq9c/Al8itxM5L+7rT0O5x40qqouN0Hyb
-        3U04l4ldw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h72IX-0000Tg-9w; Thu, 21 Mar 2019 18:20:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4288F203CBE13; Thu, 21 Mar 2019 19:20:11 +0100 (CET)
-Date:   Thu, 21 Mar 2019 19:20:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-Message-ID: <20190321182011.GT5996@hirez.programming.kicks-ass.net>
-References: <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net>
- <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net>
- <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
- <20190320222220.GA2490@worktop.programming.kicks-ass.net>
- <20190321123849.GN6521@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
- <20190321171047.GR5996@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211815300.1784@nanos.tec.linutronix.de>
+        Thu, 21 Mar 2019 14:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728131AbfCUSVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:21:06 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FD921925
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 18:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553192465;
+        bh=EmTn4zvEP5gRbxj/9wqq4+Yb3fGzCjTOIMl/rebDQ2Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=q5AC4bQnxb/P57Ed+gMsGqRFfyh9+dGlJZceTN3HJCs0ytzykOlZ/yHxXmJLYI9rf
+         +5fDNgevgLxatrA87Quy0+xHJ+FW/MBVHSD+0PZCNZCOBpCk7tKBT0uYidCWqjsyAX
+         wHmsR0CGb4JIJBi1GWsiIhF5rKmlULvOxasPPK0Q=
+Received: by mail-wm1-f43.google.com with SMTP id v14so3754020wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:21:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAWmLDlcRrZB1RDDbEAuyTWteyQgZ8M2oeN47H8HYo8WLElrNXKX
+        a0IziwJ2VaKiw+ZsSzj/OO6b9+sjIjBK6A2lmUU/vQ==
+X-Google-Smtp-Source: APXvYqweTtbEViLVdDXmT0Ck7StiegnUwWIcDiKt0bUq+hPFyToqJuLumxnI8VwopAST1YsCrADeuBPrbVTTLDtGiN0=
+X-Received: by 2002:a1c:9a41:: with SMTP id c62mr392628wme.108.1553192463866;
+ Thu, 21 Mar 2019 11:21:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903211815300.1784@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190320221534.165ab87b@oasis.local.home> <20190321083317.GL6058@hirez.programming.kicks-ass.net>
+ <20190321090241.GL6521@hirez.programming.kicks-ass.net> <20190321104517.GM6521@hirez.programming.kicks-ass.net>
+ <20190321093242.4a948198@gandalf.local.home> <20190321172203.GS5996@hirez.programming.kicks-ass.net>
+ <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com> <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+In-Reply-To: <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 21 Mar 2019 11:20:52 -0700
+X-Gmail-Original-Message-ID: <CALCETrVaCZKjXj9ZqtvQgLk2DqXwNCh7b5DHvSnNAORsqJXCcQ@mail.gmail.com>
+Message-ID: <CALCETrVaCZKjXj9ZqtvQgLk2DqXwNCh7b5DHvSnNAORsqJXCcQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on error_entry
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 06:17:01PM +0100, Thomas Gleixner wrote:
-> On Thu, 21 Mar 2019, Peter Zijlstra wrote:
-> > On Thu, Mar 21, 2019 at 05:45:41PM +0100, Thomas Gleixner wrote:
-> > > On Thu, 21 Mar 2019, Peter Zijlstra wrote:
-> > > > Subject: perf/x86/intel: Initialize TFA MSR
-> > > > 
-> > > > Stephane reported that we don't initialize the TFA MSR, which could lead
-> > > > to trouble if the RESET value is not 0 or on kexec.
-> > > 
-> > > That sentence doesn't parse.
-> > > 
-> > >   Stephane reported that the TFA MSR is not initialized by the kernel, but
-> > >   the TFA bit could set by firmware or as a leftover from a kexec, which
-> > >   makes the state inconsistent.
-> > > 
-> > > > Reported-by: Stephane Eranian <eranian@google.com>
-> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > > ---
-> > > >  arch/x86/events/intel/core.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > > 
-> > > > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> > > > index 8baa441d8000..2d3caf2d1384 100644
-> > > > --- a/arch/x86/events/intel/core.c
-> > > > +++ b/arch/x86/events/intel/core.c
-> > > > @@ -3575,6 +3575,12 @@ static void intel_pmu_cpu_starting(int cpu)
-> > > >  
-> > > >  	cpuc->lbr_sel = NULL;
-> > > >  
-> > > > +	if (x86_pmu.flags & PMU_FL_TFA) {
-> > > > +		WARN_ON_ONCE(cpuc->tfa_shadow);
-> > > 
-> > > Hmm. I wouldn't warn here as this is a legit state for kexec/kdump and I
-> > > don't think we can figure out whether this comes directly from the
-> > > firmware.
-> > 
-> > Even on kexec, the cpuc will be freshly allocated and zerod I think. We
-> > only inherit hardware state, not software state.
-> 
-> Ouch, misread the patch of course ... What about cpu hotplug? Does that
-> free/alloc or reuse?
+On Thu, Mar 21, 2019 at 11:19 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, Mar 21, 2019 at 11:05 AM Andy Lutomirski <luto@amacapital.net> wrote:
+> >
+> > In the long run, I think the right solution is to rewrite even more of
+> > this mess in C.  We really ought to be able to put the IRQ flag
+> > tracing and the context tracking into C code.
+>
+> Tangentially about this long run thing - can we start discussing just
+> dropping PV mode entirely in the long run? Or even not-so-long run?
+>
+> What are the pressing advantages of paravirt these days? Because I can
+> point to a lot of pressing _disadvantages_, and not all of them are
+> about more complex code as shown by this patch...
+>
 
-re-use I think, but since we kill all events before taking the CPU down,
-it _should_ have cleared the MSR while doing that.
+I dunno.  Lots of people at least use to have serious commercial interest in it.
 
-Might be best to have someone test this.. someone with ucode and a
-machine etc.. :-)
+Hey Xen folks, how close are we to being able to say "if you want to
+run a new kernel, you need to switch to PVH or similar"?
+
+--Andy
