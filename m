@@ -2,154 +2,204 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52064C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB363C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1401A21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B275021874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZOQDErPc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DwowMSYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfCUQz0 (ORCPT
+        id S1728541AbfCUQ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:55:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37702 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbfCUQzZ (ORCPT
+        Thu, 21 Mar 2019 12:56:26 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:46177 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUQ4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:55:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c16so6068349otn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:55:24 -0700 (PDT)
+        Thu, 21 Mar 2019 12:56:25 -0400
+Received: by mail-vs1-f67.google.com with SMTP id w26so4051331vsk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lgLe/zsvfz2aVJmMSIccglHO9Qslr0A9hXgrCfW+8tQ=;
-        b=ZOQDErPc2go4z3WmpoVzTY0Emr+9aUeF0GVuGTZ4g2UIFjUbJq4ekec4bSm6+nArU9
-         dRjFCDxmF2th/MYEsv51OBdq5G3gReq/PSCB0C507hPzrsZ7Meaw6CeLJTd9dcbDMIEa
-         D6QbWMkw4MO0RecE2HI8eQNmwBjVreHHS9p2MW1j4C6zMCgaheqIG6XGtLH0jtaaeT2E
-         +jdR53v+tG17RjiRupD3HAkeVaE/EXmXK2UVJ4fDWuEypCs3D5cqdWhlS2uqO5pyPdpg
-         OmYPnuFKo9u5zbdLqxsHrE5+Wc7joesFcLugqfiTx2+Bkif48YWfnV5nQwkxHut/cSlj
-         xcbg==
+        bh=EeVvaul/ghG8cZ88OaKM9xzNDvHUVRjw3QiM9cFRDuk=;
+        b=DwowMSYppIsZGNYnWrX9dSAy2Emh3sCPzm9r7roJa6uLF4wsBch7PXWw1LQ7qvLYK0
+         C/5ybh8QkwW/0sfBmCuVluOlh0Rwpc2ZHAuLqCyJau51pi5O/fBJA5aFHDe1tHBFx4Bc
+         r1MCmu8Kl1MH4ecBX3TjCIcNfKKrXwP99zt3xldqchbMRGTVN2ebftfZjJLel0CxLxy4
+         plMxsquRvVRIAZ/bj7Rccj4KE+jsOmDDeLpGPC38AKFaCLNH495lqbWTL8vqHZhTqsGL
+         i1Xyl+dZN5R8YFMFsgfUSOj7fN7DE0jmRp0s2xNBaMapEOLLDolsBtqsMnj8DFOGxhjV
+         y3Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lgLe/zsvfz2aVJmMSIccglHO9Qslr0A9hXgrCfW+8tQ=;
-        b=IuXxS2jlsVBu+EKl1p0NxIqx1l1gOPJIkVN1QTDkVBXs15tSsP2feT7SZkoEzqGSRE
-         MFNyRDm9qqBLnq1DKfaWn8+qosw36nYqGQTjav5hWqKd/xnE4Qjuvf6Rvi42kOofHnen
-         4KsFiUUSwmbEy8Yd4oh8vzL1nz1K/dBak8eWx8OSQCklIuAoC/WGjCLT9M8gHiPFpIWW
-         i+9ND2eAh3JO1DyTapvFONbHMM35xreNrGVP98oCOmb+y92PtdFaw5rWMzE0CBIUO/Ls
-         eOEPhB5nb2hlcMWJU3mDXjCl/erysycWiTHAhCcKjUz04xy9o5/8/gDBnBz8HwBVcQxp
-         PiQQ==
-X-Gm-Message-State: APjAAAVUoXbB1nfABUawCciFlGQBBQFPnhaJbHTmn78DSiAqAxLZOv54
-        74G5QNt2IoFBQ3mI8YTaOOoT1/tylERsXUnQLo00vQ==
-X-Google-Smtp-Source: APXvYqz9yhHBIi6L+dYxaz/pPMlHvgXAaMZDEeiVCbYbIFzfWufM6nkeGKKEPQTCVKO8oAHZXJHvtPp6DCEHsNAEvCI=
-X-Received: by 2002:a9d:73c2:: with SMTP id m2mr3190373otk.338.1553187323847;
- Thu, 21 Mar 2019 09:55:23 -0700 (PDT)
+        bh=EeVvaul/ghG8cZ88OaKM9xzNDvHUVRjw3QiM9cFRDuk=;
+        b=BRWQFCArqSS02n3hS2+mByZouet9+BE6me3tbdKySBG/mixCg0LxMMNskzAllYAKFG
+         YaeTELMQpl00hq4Cd3EdwIV9pGmvZc2Z6kkseJvpQ0zeCNZHAA/lx/o/hMubnsgZgvu/
+         n5SNcT7TCy4r99y0kPpzQs76FtlcKppD8fOl6rMTDDuaDQHaSpFLPbynMviI2UcjAPas
+         Q54GyTyEG5oJYuIswcIJCVfe8qAqhhn1kDqp2+6GSWNSwCnXL1hi+VLzs7g/xZty2r/1
+         TI43JHct0AG+dTMhlcgGRjk+1LFvBgsu8MTBGhZs8ZGQszp3UWOKWXtr8dZ21l30iCWP
+         kAOQ==
+X-Gm-Message-State: APjAAAWfk40o6xaNiloqaGyHz7wbJ24ZFifvskYD1q2k5o5HsVyo2wpW
+        WJTOMSVop12ZMw2RB1o1KMOfxllJURZYO1fIjjOMag==
+X-Google-Smtp-Source: APXvYqwqzQSNFkDflJNzParD7ATWhxktAsFQrgHY4C8+1iIRThGFNhX0uqm0gpii01OnXWrVvjs0rBDU32JFJ2WthAo=
+X-Received: by 2002:a67:e451:: with SMTP id n17mr2680387vsm.35.1553187384212;
+ Thu, 21 Mar 2019 09:56:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com> <01b2a950f661e8ebd6acbc45c2f89c8f10063daf.camel@oracle.com>
- <ce355f5c-189c-816c-cde4-fb4e816d44e7@deltatee.com>
-In-Reply-To: <ce355f5c-189c-816c-cde4-fb4e816d44e7@deltatee.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 21 Mar 2019 09:55:12 -0700
-Message-ID: <CAFd5g45LKU+SZAFzn3RNCoxhzum0NAr9t+UJ80SJDMc_FeKgBQ@mail.gmail.com>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Knut Omang <knut.omang@oracle.com>,
-        Kees Cook <keescook@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>, brakmo@fb.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com> <1551976742-4358-4-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1551976742-4358-4-git-send-email-ludovic.Barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 21 Mar 2019 17:55:48 +0100
+Message-ID: <CAPDyKFrkdQf1yq2YKaNMr8vgpd5fH4BAXgO7Qkj-aaw0AB9wRw@mail.gmail.com>
+Subject: Re: [PATCH V2 3/6] mmc: mmci: define get_dctrl_cfg for legacy variant
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 8:56 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+On Thu, 7 Mar 2019 at 17:39, Ludovic Barre <ludovic.Barre@st.com> wrote:
 >
+> From: Ludovic Barre <ludovic.barre@st.com>
 >
+> This patch defines get_dctrl_cfg callback for legacy variants
+> whatever DMA_ENGINE configuration.
 >
-> On 2019-03-20 11:23 p.m., Knut Omang wrote:
-> > Testing drivers, hardware and firmware within production kernels was the use
-> > case that inspired KTF (Kernel Test Framework). Currently KTF is available as a
-> > standalone git repository. That's been the most efficient form for us so far,
-> > as we typically want tests to be developed once but deployed on many different
-> > kernel versions simultaneously, as part of continuous integration.
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++--------
+>  drivers/mmc/host/mmci.h |  3 +++
+>  2 files changed, 39 insertions(+), 8 deletions(-)
 >
-> Interesting. It seems like it's really in direct competition with KUnit.
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 28b76c5..52f9dbf 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -46,12 +46,6 @@
+>
+>  #define DRIVER_NAME "mmci-pl18x"
+>
+> -#ifdef CONFIG_DMA_ENGINE
+> -static void mmci_variant_init(struct mmci_host *host);
+> -#else
+> -static inline void mmci_variant_init(struct mmci_host *host) {}
+> -#endif
+> -
+>  static unsigned int fmax = 515633;
+>
+>  static struct variant_data variant_arm = {
+> @@ -231,7 +225,7 @@ static struct variant_data variant_ux500v2 = {
+>         .irq_pio_mask           = MCI_IRQ_PIO_MASK,
+>         .start_err              = MCI_STARTBITERR,
+>         .opendrain              = MCI_OD,
+> -       .init                   = mmci_variant_init,
+> +       .init                   = mmci_ux500v2_variant_init,
+>  };
+>
+>  static struct variant_data variant_stm32 = {
+> @@ -617,6 +611,29 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
+>         sg_miter_start(&host->sg_miter, data->sg, data->sg_len, flags);
+>  }
+>
+> +u32 mmci_get_dctrl_cfg(struct mmci_host *host)
+> +{
+> +       u32 datactrl;
+> +
+> +       datactrl = MCI_DPSM_ENABLE;
+> +       datactrl |= mmci_dctrl_blksz(host) | mmci_dctrl_dir(host);
+> +       datactrl |= mmci_dctrl_sdio(host) | mmci_dctrl_ddr(host);
+> +
+> +       return datactrl;
+> +}
+> +
+> +u32 mmci_ux500v2_get_dctrl_cfg(struct mmci_host *host)
 
-I won't speak for Knut, but I don't think we are in competition. I see
-KTF as a novel way to do a kind of white box end-to-end testing for
-the Linux kernel, which is a valuable thing, especially in some
-circumstances. I could see KTF having a lot of value for someone who
-wants to maintain out of tree drivers, in particular.
+To be consistent with other variant function names, let's drop the
+"mmci_"* prefix.
 
-Nevertheless, I don't really see KTF as a real unit testing framework
-for a number of different reasons; you pointed out some below, but I
-think the main one being that it requires booting a real kernel on
-actual hardware; I imagine it could be made to work on a VM, but that
-isn't really the point; it fundamentally depends on having part of the
-test, or at least driving the test from userspace on top of the kernel
-under test. Knut, myself, and others, had a previous discussion to
-this effect here: https://lkml.org/lkml/2018/11/24/170
+> +{
+> +       u32 datactrl;
+> +
+> +       datactrl = MCI_DPSM_ENABLE;
+> +       datactrl |= (host->data->blksz << 16);
+> +       datactrl |= mmci_dctrl_dir(host);
+> +       datactrl |= mmci_dctrl_sdio(host) | mmci_dctrl_ddr(host);
+> +
+> +       return datactrl;
+> +}
+> +
+>  /*
+>   * All the DMA operation mode stuff goes inside this ifdef.
+>   * This assumes that you have a generic DMA device interface,
+> @@ -941,6 +958,7 @@ void mmci_dmae_unprep_data(struct mmci_host *host,
+>  static struct mmci_host_ops mmci_variant_ops = {
+>         .prep_data = mmci_dmae_prep_data,
+>         .unprep_data = mmci_dmae_unprep_data,
+> +       .get_datactrl_cfg = mmci_get_dctrl_cfg,
+>         .get_next_data = mmci_dmae_get_next_data,
+>         .dma_setup = mmci_dmae_setup,
+>         .dma_release = mmci_dmae_release,
+> @@ -948,12 +966,22 @@ static struct mmci_host_ops mmci_variant_ops = {
+>         .dma_finalize = mmci_dmae_finalize,
+>         .dma_error = mmci_dmae_error,
+>  };
+> +#else
+> +static struct mmci_host_ops mmci_variant_ops = {
+> +       .get_datactrl_cfg = mmci_get_dctrl_cfg,
+> +}
+> +#endif
+>
+>  void mmci_variant_init(struct mmci_host *host)
+>  {
+>         host->ops = &mmci_variant_ops;
+>  }
+> -#endif
+> +
+> +void mmci_ux500v2_variant_init(struct mmci_host *host)
+> +{
+> +       host->ops = &mmci_variant_ops;
+> +       host->ops->get_datactrl_cfg = mmci_ux500v2_get_dctrl_cfg;
+> +}
+>
+>  static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  {
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 32ae41d..bfc6e54 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -448,6 +448,9 @@ void mmci_dmae_finalize(struct mmci_host *host, struct mmc_data *data);
+>  void mmci_dmae_error(struct mmci_host *host);
+>  #endif
+>
+> +void mmci_variant_init(struct mmci_host *host);
+> +void mmci_ux500v2_variant_init(struct mmci_host *host);
 
-> I didn't really go into it in too much detail but these are my thoughts:
->
-> From a developer perspective I think KTF not being in the kernel tree is
-> a huge negative. I want minimal effort to include my tests in a patch
-> series and minimal effort for other developers to be able to use them.
-> Needing to submit these tests to another project or use another project
-> to run them is too much friction.
->
-> Also I think the goal of having tests that run on any kernel version is
-> a pipe dream. You'd absolutely need a way to encode which kernel
-> versions a test is expected to pass on because the tests might not make
-> sense until a feature is finished in upstream. And this makes it even
-> harder to develop these tests because, when we write them, we might not
-> even know which kernel version the feature will be added to. Similarly,
-> if a feature is removed or substantially changed, someone will have to
-> do a patch to disable the test for subsequent kernel versions and create
-> a new test for changed features. So, IMO, tests absolutely have to be
-> part of the kernel tree so they can be changed with the respective
-> features they test.
->
-> Kunit's ability to run without having to build and run the entire kernel
->  is also a huge plus. (Assuming there's a way to get around the build
-> dependency issues). Because of this, it can be very quick to run these
-> tests which makes development a *lot* easier seeing you don't have to
-> reboot a machine every time you want to test a fix.
+Drop the "mmci_" prefix.
 
-I will reply to your comments directly on your original email. I don't
-want to hijack this thread, in case we want to discuss the topic of
-KUnit vs. KTF further.
+> +
+>  #ifdef CONFIG_MMC_QCOM_DML
+>  void qcom_variant_init(struct mmci_host *host);
+>  #else
+> --
+> 2.7.4
+>
+
+Kind regards
+Uffe
