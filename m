@@ -2,176 +2,134 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F10C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262BCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E882183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA896218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:44:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f4OneVWD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FzQPq3kY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfCUQoK (ORCPT
+        id S1728694AbfCUQoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:44:10 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41288 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfCUQoH (ORCPT
+        Thu, 21 Mar 2019 12:44:19 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53162 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbfCUQoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:44:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v7so5129785oie.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:44:07 -0700 (PDT)
+        Thu, 21 Mar 2019 12:44:19 -0400
+Received: by mail-it1-f195.google.com with SMTP id g17so5305262ita.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:44:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=c253zTARKFb19mRQCljAnAcD7xr/VEPDG/k7eMQBX5k=;
-        b=f4OneVWDuc6BYxGskMWuTp1Y6JvuoFFzC7xoEKsuvNPNTTJ4+dvjtWN5NICAdZ/Io7
-         JpNlu3241T+AKkPZRrfacyKhnsK9ez7TplQjSE2rHD0BbxFpnspS05UhniFtsJRLW0kh
-         SQCXYpjRBuNnsEkZ21QoTZxwtX5zYa4Vjb+E1vyStvoMQkez+OQi3dsXcv+VFn/ycTv5
-         EA4tvQB6D4TVWck/1SJ/22PFOQFQ4EunO6HPrNlaNMwDtrzb3MkCJo+D2EL1Om0kB7zs
-         VSdAwkO6fQZvgnInSwrq6Jlh5bQ9zqsTeJ3dxg3ptL0vECy/qQM48BsQP5gsOP5PBNf7
-         UxNw==
+         :cc;
+        bh=9lH5D7aKN2LtSqPJKNXSlVsrAN0oXPZA5VkWCRZhkq8=;
+        b=FzQPq3kY5oh6oDWUmeefAbpdC1W3cRRXUu5KPfdVQ4LovZeGXHqRp9kQhVuuFhrJqD
+         w0ZhbS2p62UFVh9KaCeAQ8L1lg9qGXyhH1Xrfzg9K4rLmcJfOv12UDZyoM5KkkkFbAIB
+         heKItZa/Qq5aEZiK2n4WEr3aVTrQrOVBiThxcG7dSdrded67mWrFXBZEXia+RNOaj1dm
+         hkColXXv+HphIamf6mWlLWk4Etman5GwDMViW4PDYia4NFcqt9r8Zx05kEzwkMwjo7U7
+         s1WFRMUwpwjwQO02YU/dPD1vsvmVoX2DEkcTYk1DsxYXeQuu7rcRtuk97/cKCrfh6wN/
+         YWMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c253zTARKFb19mRQCljAnAcD7xr/VEPDG/k7eMQBX5k=;
-        b=fKwIbx2z67nxSlBsQmRWeJz1sj7Z6Ptg0bN94cOR96WLYPIu/aYczyOJI0sdTzVWy7
-         Ea53vP5VKWjl+XR9NMdEsktU9PYgU+XBvxBbz4x2vwSvwqyitVyODaqjn60yTlV/4BxF
-         uQXJV1LhHzXzCfpv8opMFN+PwTknKYilsQbaCSCKELeOAABsGvzA5b+sv6ddZDnGcIKG
-         nk+5vbb42dPPGA8k56AZrb4GO5yITZCAGLlEbh/FIIW8rLD60kJ/6OyVEoEDDxjTv5Wt
-         5slxy2ZsDBpf+I27n12rPEl8Lw2fp70hWkOUO7z86FVejI2RV3GbXhe7QODprgy7bXqQ
-         HNOg==
-X-Gm-Message-State: APjAAAWNg8DjHp8D0VRp2DJS0N1pk/sdPztvry+UizfbbAg6a+8/RKHA
-        mpHrNFdFr+Ym5yA+LkMwATfC7DD8wmohs6D6r3i9Hg==
-X-Google-Smtp-Source: APXvYqxO+jxEfk+7D39nCQluStBGJRAsjmkVH4Fpn7RFlrt+C/MBdcZ4OeuTkFZ7tBoywuHxnWP2Vt/VkWKomE5WESc=
-X-Received: by 2002:aca:5843:: with SMTP id m64mr165437oib.114.1553186647097;
- Thu, 21 Mar 2019 09:44:07 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=9lH5D7aKN2LtSqPJKNXSlVsrAN0oXPZA5VkWCRZhkq8=;
+        b=l9WIqYMq2EhUlumD0uWvoAZ9rLTI1VgS26FIPPmnhNpeOz5/Xbhkmzlpl7/zMvbcvg
+         Cv7J4IYIrCsnSeTJHBAKn2i+mxSj2r/329FDqmxQCZlgxLZwQg0HOXlYBY/qc/A12Wsz
+         kPz68mSY7FopkhZFbctgvxPTHm1w5IdnUn8W3/Z+gizugKo9WYiHTW48vwx7+TzI3rrp
+         +/vJTtDsoomrTtk/hEX2//wlN8lOIUvD/C0/6+57ngEMPUKmmePkMNxCX77tUUIZWhby
+         bKTdMUK21qPegZetRQLTG18BDOeJ4hChbRek7KFcvcOqfkzYExovF6vDWb22ikcyEIXl
+         x/PA==
+X-Gm-Message-State: APjAAAVPY9T7RdVdBiM4vcIFqSKRgchXRmYA7u/RT2sl0uZHi8mGJS25
+        aAilPzxT3luDWDyAqHhUq3BdzK/dOrpkZI0757oRDQ==
+X-Google-Smtp-Source: APXvYqwqPBWlctE1wCiV2uyEPYj0bd8DGdcjeXAm6zNclfgviX3PVWFcqwN4zft4Jo98pmwO6fKMARkwqVhOUorRHjM=
+X-Received: by 2002:a02:bb06:: with SMTP id y6mr3537881jan.98.1553186658067;
+ Thu, 21 Mar 2019 09:44:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190321141010.19612-1-brgl@bgdev.pl> <20190321141010.19612-4-brgl@bgdev.pl>
- <06c6fe16-eb33-960c-909a-635e70c3b976@lechnology.com> <CAMpxmJWDn9-W6wGTyZdAHJJnp8vHysNHNcL+qqKMRss664MhrQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJWDn9-W6wGTyZdAHJJnp8vHysNHNcL+qqKMRss664MhrQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 21 Mar 2019 17:43:55 +0100
-Message-ID: <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: da850-evm: enable cpufreq
-To:     David Lechner <david@lechnology.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>
+References: <20190321023122.21332-1-yuehaibing@huawei.com> <20190321023122.21332-3-yuehaibing@huawei.com>
+In-Reply-To: <20190321023122.21332-3-yuehaibing@huawei.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 21 Mar 2019 10:44:07 -0600
+Message-ID: <CANLsYkw8FdtpqAK_o_3-ysCH9jnachKE0twuust1CznxcmoPKA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf cs-etm: return errcode in cs_etm__process_auxtrace_info()
+To:     Yue Haibing <yuehaibing@huawei.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 21 mar 2019 o 17:36 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
+On Wed, 20 Mar 2019 at 20:32, Yue Haibing <yuehaibing@huawei.com> wrote:
 >
-> czw., 21 mar 2019 o 16:53 David Lechner <david@lechnology.com> napisa=C5=
-=82(a):
-> >
-> > On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Enable cpufreq-dt support for da850-evm. The cvdd regulator is fixed
-> > > at 1.2V on this board so disable the lower operating points and enabl=
-e
-> > > the 375MHz opp.
-> >
-> >
-> > The board-da850-evm.c file seems to indicate that this regulator is
-> > variable and comes from the tps65070. This regulator seems to be missin=
-g
-> > from the device tree though, even though it has device tree bindings.
-> >
+> From: YueHaibing <yuehaibing@huawei.com>
 >
-> Oh snap, you're right. I glanced over the 1.2V comment and thought
-> it's the same as other boards, but actually it specifies: .min_uV =3D
-> 950000, .max_uV =3D 1350000, so all the operating points should work on
-> that one.
+> 'err' is set in err path, but it's not returned to callers.
+> Don't always return -EINVAL, return err.
 >
-
-It seems this pmic is defined here[1] and a skeleton included here[2]
-and then the regulator constraints follow.
-
-Bart
-
-[1] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da850-=
-evm.dts#L224
-[2] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da850-=
-evm.dts#L326
-
-> Bart
+> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  tools/perf/util/cs-etm.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 >
-> > Cc: Adam Ford
-> >
-> >
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > ---
-> > >   arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++++
-> > >   1 file changed, 30 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da85=
-0-evm.dts
-> > > index f04bc3e15332..f63867692da4 100644
-> > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > @@ -151,6 +151,15 @@
-> > >                       system-clock-frequency =3D <24576000>;
-> > >               };
-> > >       };
-> > > +
-> > > +     cvdd: regulator0 {
-> > > +             compatible =3D "regulator-fixed";
-> > > +             regulator-name =3D "cvdd";
-> > > +             regulator-min-microvolt =3D <1200000>;
-> > > +             regulator-max-microvolt =3D <1200000>;
-> > > +             regulator-always-on;
-> > > +             regulator-boot-on;
-> > > +     };
-> > >   };
-> > >
-> > >   &ecap2 {
-> > > @@ -191,6 +200,27 @@
-> > >       };
-> > >   };
-> > >
-> > > +&cpu {
-> > > +     cpu-supply =3D <&cvdd>;
-> > > +};
-> > > +
-> > > +/*
-> > > + * DA850-EVM has a fixed CVDD of 1.2V - we cannot go below 300MHz or
-> > > + * above 375MHz.
-> > > + */
-> > > +
-> > > +&opp_100 {
-> > > +     status =3D "disabled";
-> > > +};
-> > > +
-> > > +&opp_200 {
-> > > +     status =3D "disabled";
-> > > +};
-> > > +
-> > > +&opp_375 {
-> > > +     status =3D "okay";
-> > > +};
-> > > +
-> > >   &sata {
-> > >       status =3D "okay";
-> > >   };
-> > >
-> >
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index fd7f1da..2cc773a 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1965,8 +1965,10 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>         session->auxtrace = &etm->auxtrace;
+>
+>         etm->unknown_thread = thread__new(999999999, 999999999);
+> -       if (!etm->unknown_thread)
+> +       if (!etm->unknown_thread) {
+> +               err = -ENOMEM;
+>                 goto err_free_queues;
+> +       }
+>
+>         /*
+>          * Initialize list node so that at thread__zput() we can avoid
+> @@ -1978,8 +1980,10 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>         if (err)
+>                 goto err_delete_thread;
+>
+> -       if (thread__init_map_groups(etm->unknown_thread, etm->machine))
+> +       if (thread__init_map_groups(etm->unknown_thread, etm->machine)) {
+> +               err = -ENOMEM;
+>                 goto err_delete_thread;
+> +       }
+>
+>         if (dump_trace) {
+>                 cs_etm__print_auxtrace_info(auxtrace_info->priv, num_cpu);
+> @@ -2023,5 +2027,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>  err_free_hdr:
+>         zfree(&hdr);
+>
+> -       return -EINVAL;
+> +       return err;
+>  }
+> --
+> 2.7.0
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+Same here Arnaldo, please consider.
+
+>
+>
