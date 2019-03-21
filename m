@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597C5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319A7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231FE2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B7C218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i77uOOny"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEOAkkzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfCUH5v (ORCPT
+        id S1728009AbfCUH55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:57:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36674 "EHLO
+        Thu, 21 Mar 2019 03:57:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45669 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbfCUH5t (ORCPT
+        with ESMTP id S1727992AbfCUH5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:57:49 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p10so3796989pff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:48 -0700 (PDT)
+        Thu, 21 Mar 2019 03:57:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v21so3761206pfm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LUrYg5gPfr5+YxKSU7WKTSl4E1D61tEu6638WRvIWF8=;
-        b=i77uOOnyP+f7aBg07jhf5PvpcDyoT0OZyYqGV5d8al+HiI9IYK5R+OoyUfCPXXqNot
-         Wa5kyTWPMLTNoaXhzVyz5lrcHAzSAurKK2m78S0tm+YsJiwtqgGoBD8jkpuuegTDn1UA
-         eYHOHgdamNQ9d3U90MJp4cgAZQxRLlhWKsWOqMUWnp2BmQJaZdkeTMPsXL3tvsFrQ81W
-         ANb/OeqY0TqcnwCpcjEM/LjD0rXXvYCKkMxM/1+7rUU0PsKa5qFxwGFiKPUkhapx3w00
-         k91Jd4ZaD7akczE47g8pPaJeDiAL0t7+L1MKBvpbiid8p8AS3QOGwINOK2/bTe/nprr+
-         MMgw==
+        bh=1qE83cxju6awRm0ckFh7Wf/e0C0vHrQbiasFOtKekmo=;
+        b=bEOAkkzVZq0VJ2RjXJy3dJdRgvrL0rfFmcZrfDdJSSq7r4uglAKcswj8on2PktGAg4
+         J0XnIrSHlMZRbhhamwVmw0pQbzZK4ROIii5RqcNJMa930AoHQhrXxGLVtdYp0TcWUWht
+         M8zwQYXmCKD5P/KBVDeI51rDjVZ/9KEZDwpcUo9ibhGgk1xkBxd+yY0tYl6TCugnjcbP
+         tUwoDgEIh6kvCsBv7EyP7kSECQZmG+TzS75P7X6pWG+I1ZIyzCODGmQYCb1S6zZ4jLYG
+         DISTXFDf1uSLnf7NRqNQzzu4QSF+k5hS089D6pmWHAZD+nh4T4HZHcR3X8Z7x1ta1VC3
+         3KEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LUrYg5gPfr5+YxKSU7WKTSl4E1D61tEu6638WRvIWF8=;
-        b=b9ZodvzxE4CU6mOy7e7/S9v4/J8ERr99EK19RlfsZPH2+4f5cqEGvkS+2xfEe1EAZy
-         r/7qdec49Lcbl51clJ3eH048aYUd8LGzMip+6Lv6McAI8Af6+05tuJsmndXeDrIX3BW9
-         ZsQiCYcUa0IlxBsDTstoBv/emYRB5nDP/mWRCEH/0FVyWEmzNdoSFukq6RfLzT+0ulL9
-         yOS2kPgD4zsj0Qfws/gs6JxRq6rWiMuKHEV+mTzEKdm+PQLLdAWQgePgvnswyjxghEt1
-         UQe6O0ZIlAKpXLkpZB62V554Pgv3qGgMkKfFM7y+5BvMdMgqGX18LHTMVPUs4K1fsZRM
-         bqVA==
-X-Gm-Message-State: APjAAAWA6k4IHW8NocjcP5PjVbXWpHhUDqzQs7jG5lWL/al1iSyq7pcF
-        Td5I8tsTdwid85mwZq4WHNU=
-X-Google-Smtp-Source: APXvYqxDds3Hgg1HWtxAecK2wNNedNT+eI7TSiZaxomZWHBDA4wL/Hpn2bZ6W1oNEKJ26pyS6VcRlg==
-X-Received: by 2002:a62:45d2:: with SMTP id n79mr2011665pfi.213.1553155068396;
-        Thu, 21 Mar 2019 00:57:48 -0700 (PDT)
+        bh=1qE83cxju6awRm0ckFh7Wf/e0C0vHrQbiasFOtKekmo=;
+        b=DDeR1fN4InJNs4SX/cc/n3p1z0RC79Bc+IkoBgJgNPcf/E6EW9ukit5y49CKnVcoqz
+         UVHYBoLzXv9t/QxtWM5Twe2+PGFCHDqTcKXc4Gm3br9yZc+y1ygo6ZaiJzaIURB6XiWx
+         Fr/nwKbIz5JaaiPJ+La3lQJ3W+8Ar+meSdPE5PuvWUCx3tJrcvs6D3KOk/IfjaC8qewq
+         4FylkGBlNdD6rPkS+FK1QPigNMat1sx+Ne1pRe/pyiQV8Iwi41J2+eRVxzaoP/Kfzul9
+         UMfHa9HFlmNeMl2R65WJSZ5obGJziOsVn4oNPxV+WaeEkoL8RGB54Mg/9Ucc91twhH5a
+         wHqw==
+X-Gm-Message-State: APjAAAVbHIYRYHfhTWAOMy19heS1yvDnXPJES1Dg+6S7ooe1JHvPb84p
+        eUqzylo7oe9emgh4YqVyjEU=
+X-Google-Smtp-Source: APXvYqz0ZJJeZP9iwXdbdOIGuBulKqXV40aGTXkxJiOZHqr6eritZ148c3haBJSB4E9Fe7Sumglr2A==
+X-Received: by 2002:a65:4344:: with SMTP id k4mr2119702pgq.20.1553155074174;
+        Thu, 21 Mar 2019 00:57:54 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.45
+        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 00:57:47 -0700 (PDT)
+        Thu, 21 Mar 2019 00:57:53 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com,
         linux-kernel@vger.kernel.org, joe@perches.com,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 05/18] locking/lockdep: Print the right depth for chain key colission
-Date:   Thu, 21 Mar 2019 15:57:12 +0800
-Message-Id: <20190321075725.14054-6-duyuyang@gmail.com>
+Subject: [PATCH v3 07/18] locking/lockdep: Use lockdep_init_task for task initiation consistently
+Date:   Thu, 21 Mar 2019 15:57:14 +0800
+Message-Id: <20190321075725.14054-8-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 In-Reply-To: <20190321075725.14054-1-duyuyang@gmail.com>
 References: <20190321075725.14054-1-duyuyang@gmail.com>
@@ -71,33 +71,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since chains are separated by irq context, so when printing a chain the
-depth should be consistent with it.
+Despite that there is a lockdep_init_task() which does nothing, lockdep
+initiates tasks by assigning lockdep fields and does so inconsistently. Fix
+this by using lockdep_init_task().
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/lockdep.h  |  7 ++++++-
+ init/init_task.c         |  2 ++
+ kernel/fork.c            |  3 ---
+ kernel/locking/lockdep.c | 11 ++++++++---
+ 4 files changed, 16 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 37706ad..267087e 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -282,6 +282,8 @@ struct held_lock {
+ extern asmlinkage void lockdep_sys_exit(void);
+ extern void lockdep_set_selftest_task(struct task_struct *task);
+ 
++extern inline void lockdep_init_task(struct task_struct *task);
++
+ extern void lockdep_off(void);
+ extern void lockdep_on(void);
+ 
+@@ -406,6 +408,10 @@ static inline void lock_set_subclass(struct lockdep_map *lock,
+ 
+ #else /* !CONFIG_LOCKDEP */
+ 
++static inline void lockdep_init_task(struct task_struct *task)
++{
++}
++
+ static inline void lockdep_off(void)
+ {
+ }
+@@ -498,7 +504,6 @@ enum xhlock_context_t {
+ 	{ .name = (_name), .key = (void *)(_key), }
+ 
+ static inline void lockdep_invariant_state(bool force) {}
+-static inline void lockdep_init_task(struct task_struct *task) {}
+ static inline void lockdep_free_task(struct task_struct *task) {}
+ 
+ #ifdef CONFIG_LOCK_STAT
+diff --git a/init/init_task.c b/init/init_task.c
+index 46dbf54..9460878 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -165,6 +165,8 @@ struct task_struct init_task
+ 	.softirqs_enabled = 1,
+ #endif
+ #ifdef CONFIG_LOCKDEP
++	.lockdep_depth = 0, /* no locks held yet */
++	.curr_chain_key = 0,
+ 	.lockdep_recursion = 0,
+ #endif
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 77059b2..c0d2000 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1869,9 +1869,6 @@ static __latent_entropy struct task_struct *copy_process(
+ 	p->pagefault_disabled = 0;
+ 
+ #ifdef CONFIG_LOCKDEP
+-	p->lockdep_depth = 0; /* no locks held yet */
+-	p->curr_chain_key = 0;
+-	p->lockdep_recursion = 0;
+ 	lockdep_init_task(p);
+ #endif
+ 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index eeea722..05c31d6 100644
+index 05c31d6..ef59651 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -2428,10 +2428,11 @@ static u64 print_chain_key_iteration(int class_idx, u64 chain_key)
- 	struct held_lock *hlock;
- 	u64 chain_key = 0;
- 	int depth = curr->lockdep_depth;
--	int i;
-+	int i = get_first_held_lock(curr, hlock_next);
+@@ -358,6 +358,13 @@ static inline u64 iterate_chain_key(u64 key, u32 idx)
+ 	return k0 | (u64)k1 << 32;
+ }
  
--	printk("depth: %u\n", depth + 1);
--	for (i = get_first_held_lock(curr, hlock_next); i < depth; i++) {
-+	printk("depth: %u (irq_context %u)\n", depth - i + 1,
-+		hlock_next->irq_context);
-+	for (; i < depth; i++) {
- 		hlock = curr->held_locks + i;
- 		chain_key = print_chain_key_iteration(hlock->class_idx, chain_key);
++inline void lockdep_init_task(struct task_struct *task)
++{
++	task->lockdep_depth = 0; /* no locks held yet */
++	task->curr_chain_key = 0;
++	task->lockdep_recursion = 0;
++}
++
+ void lockdep_off(void)
+ {
+ 	current->lockdep_recursion++;
+@@ -4496,9 +4503,7 @@ void lockdep_reset(void)
+ 	int i;
  
+ 	raw_local_irq_save(flags);
+-	current->curr_chain_key = 0;
+-	current->lockdep_depth = 0;
+-	current->lockdep_recursion = 0;
++	lockdep_init_task(current);
+ 	memset(current->held_locks, 0, MAX_LOCK_DEPTH*sizeof(struct held_lock));
+ 	nr_hardirq_chains = 0;
+ 	nr_softirq_chains = 0;
 -- 
 1.8.3.1
 
