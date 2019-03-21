@@ -2,170 +2,69 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1DAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03E82075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876052075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfCUNlg (ORCPT
+        id S1728714AbfCUNls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:41:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36726 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728652AbfCUNl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:41:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E363FAF8C;
-        Thu, 21 Mar 2019 13:41:24 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 956D0E00BF; Thu, 21 Mar 2019 14:41:24 +0100 (CET)
-Message-Id: <aeaa2c05d76be8e87867b6e09cb9ab18dae44d69.1553170807.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
-References: <cover.1553170807.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v4 22/22] ethtool: set message level with
- SET_SETTINGS request
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 14:41:24 +0100 (CET)
+        Thu, 21 Mar 2019 09:41:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24000 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728013AbfCUNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:41:45 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 06:41:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
+   d="scan'208";a="153821280"
+Received: from dilu-mobl2.ccr.corp.intel.com (HELO localhost) ([10.249.254.184])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2019 06:41:41 -0700
+Date:   Thu, 21 Mar 2019 15:41:40 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Paul Zimmerman <pauldzim@gmail.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Regression in suspend-to-ram (TPM related) with 5.1-rc1
+ (BISECTED)
+Message-ID: <20190321134140.GA4603@linux.intel.com>
+References: <CADBGO7_WUoA53gM8EDFy6Q36SDEZPU9V=OUBA0QM20FOko51Rg@mail.gmail.com>
+ <CADBGO7-UkQMxSPdSX9bGVPxSRROj75FA16FuXeFrVmcKVQ_Qdg@mail.gmail.com>
+ <CADBGO7_XnbXiWHB=O1B_+b+CUA9g-bYJHN37VJ2SsxXMNHcPOQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADBGO7_XnbXiWHB=O1B_+b+CUA9g-bYJHN37VJ2SsxXMNHcPOQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow setting device message level using ETHA_SETTINGS_DEBUG nested
-attribute.
+On Tue, Mar 19, 2019 at 04:03:37PM -0700, Paul Zimmerman wrote:
+> So I bisected this down to:
+> 
+> # first bad commit: [a3fbfae82b4cb3ff9928e29f34c64d0507cad874] tpm:
+> take TPM chip power gating out of tpm_transmit()
+> 
+> but this doesn't revert cleanly on Linus' HEAD. Anyone have an idea what
+> could be wrong here?
 
-Unlike in ioctl interface "message level" is called "message mask" (as it
-is in fact used as a bit mask) and put inside a nested attribute to allow
-future extensions.
+Sorry I've been in flu for the early week. I spotted the bug
+immediately.  When I did these patches I did not have TPM 1.x at my
+hand. I used fTPM 2.0 and dTPM 2.0. Stefan did TPM 1.x testing but I
+probably forgot to ask him to try out suspend.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- Documentation/networking/ethtool-netlink.txt |  8 +++-
- net/ethtool/settings.c                       | 45 +++++++++++++++++++-
- 2 files changed, 50 insertions(+), 3 deletions(-)
+Anyway, the bug is obvious and I'll send you a patch to try out.
+Thanks a lot for bisecting this!
 
-diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
-index 603acfbefe29..20e43d42afdd 100644
---- a/Documentation/networking/ethtool-netlink.txt
-+++ b/Documentation/networking/ethtool-netlink.txt
-@@ -345,6 +345,8 @@ to be passed with SET_SETTINGS request:
-     ETHA_SETTINGS_WOL		(nested)	wake on LAN settings
-         ETHA_WOL_MODES			(bitfield32)	wake on LAN modes
-         ETHA_WOL_SOPASS			(binary)	SecureOn(tm) password
-+    ETHA_SETTINGS_DEBUG		(nested)	debugging
-+        ETHA_DEBUG_MSG_MASK		(bitfield32)	message mask
- 
- ETHA_LINKMODES_OURS bit set allows setting advertised link modes. If
- autonegotiation is on (either set now or kept from before), advertised modes
-@@ -360,7 +362,9 @@ selector are set to 0 or 1 according to value. To allow the semantics of the
- ioctl interface where the whole bitmap is set rather than only modified,
- selectors may have also bits not supported by device set and an error is only
- issued if any of them is also set in the value (i.e. if userspace tries to
--enable mode not supported by device).
-+enable mode not supported by device). ETHA_SETTINGS_MSGLEVEL bitfield also
-+allows bits not recognized by kernel in selector as long as the request does
-+not attempt to enable them.
- 
- 
- Request translation
-@@ -379,7 +383,7 @@ ETHTOOL_GREGS			n/a
- ETHTOOL_GWOL			ETHNL_CMD_GET_SETTINGS
- ETHTOOL_SWOL			ETHNL_CMD_SET_SETTINGS
- ETHTOOL_GMSGLVL			ETHNL_CMD_GET_SETTINGS
--ETHTOOL_SMSGLVL			n/a
-+ETHTOOL_SMSGLVL			ETHNL_CMD_SET_SETTINGS
- ETHTOOL_NWAY_RST		n/a
- ETHTOOL_GLINK			ETHNL_CMD_GET_SETTINGS
- ETHTOOL_GEEPROM			n/a
-diff --git a/net/ethtool/settings.c b/net/ethtool/settings.c
-index 53409dd8af34..bc7ca03aa205 100644
---- a/net/ethtool/settings.c
-+++ b/net/ethtool/settings.c
-@@ -538,6 +538,12 @@ static const struct nla_policy set_wol_policy[ETHA_LINKINFO_MAX + 1] = {
- 					    .len = SOPASS_MAX },
- };
- 
-+static const struct nla_policy set_debug_policy[ETHA_DEBUG_MAX + 1] = {
-+	[ETHA_DEBUG_UNSPEC]		= { .type = NLA_REJECT },
-+	[ETHA_DEBUG_MSG_MASK]		= { .type = NLA_BITFIELD32,
-+					    .validation_data = &all_bits },
-+};
-+
- static const struct nla_policy set_settings_policy[ETHA_SETTINGS_MAX + 1] = {
- 	[ETHA_SETTINGS_UNSPEC]		= { .type = NLA_REJECT },
- 	[ETHA_SETTINGS_DEV]		= { .type = NLA_NESTED },
-@@ -547,7 +553,7 @@ static const struct nla_policy set_settings_policy[ETHA_SETTINGS_MAX + 1] = {
- 	[ETHA_SETTINGS_LINK_MODES]	= { .type = NLA_NESTED },
- 	[ETHA_SETTINGS_LINK_STATE]	= { .type = NLA_REJECT },
- 	[ETHA_SETTINGS_WOL]		= { .type = NLA_NESTED },
--	[ETHA_SETTINGS_DEBUG]		= { .type = NLA_REJECT },
-+	[ETHA_SETTINGS_DEBUG]		= { .type = NLA_NESTED },
- };
- 
- static int ethnl_set_link_ksettings(struct genl_info *info,
-@@ -732,6 +738,36 @@ static int update_wol(struct genl_info *info, struct nlattr *nest,
- 	return ret;
- }
- 
-+static int update_debug(struct genl_info *info, struct nlattr *nest,
-+			struct net_device *dev)
-+{
-+	struct nlattr *tb[ETHA_DEBUG_MAX + 1];
-+	u32 msglevel;
-+	int ret;
-+
-+	if (!nest)
-+		return 0;
-+	ret = nla_parse_nested_strict(tb, ETHA_DEBUG_MAX, nest,
-+				      set_debug_policy, info->extack);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!dev->ethtool_ops->get_msglevel ||
-+	    !dev->ethtool_ops->set_msglevel) {
-+		ETHNL_SET_ERRMSG(info,
-+				 "device does not provide msglvl access");
-+		return -EOPNOTSUPP;
-+	}
-+	ret = 0;
-+	msglevel = dev->ethtool_ops->get_msglevel(dev);
-+	if (ethnl_update_bitfield32(&msglevel, tb[ETHA_DEBUG_MSG_MASK])) {
-+		dev->ethtool_ops->set_msglevel(dev, msglevel);
-+		ret = 1;
-+	}
-+
-+	return ret;
-+}
-+
- int ethnl_set_settings(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *tb[ETHA_SETTINGS_MAX + 1];
-@@ -766,6 +802,13 @@ int ethnl_set_settings(struct sk_buff *skb, struct genl_info *info)
- 		if (ret)
- 			req_mask |= ETH_SETTINGS_IM_WOL;
- 	}
-+	if (tb[ETHA_SETTINGS_DEBUG]) {
-+		ret = update_debug(info, tb[ETHA_SETTINGS_DEBUG], dev);
-+		if (ret < 0)
-+			goto out_ops;
-+		if (ret)
-+			req_mask |= ETH_SETTINGS_IM_DEBUG;
-+	}
- 	ret = 0;
- 
- out_ops:
--- 
-2.21.0
-
+/Jarkko
