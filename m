@@ -6,97 +6,78 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1991C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D147BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9246218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FE2218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfCUJVq (ORCPT
+        id S1727981AbfCUJXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:21:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58976 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 05:23:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16889 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfCUJVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:21:46 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AB603F74A8;
-        Thu, 21 Mar 2019 09:21:45 +0000 (UTC)
-Received: from localhost (ovpn-12-72.pek2.redhat.com [10.72.12.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD0F3600C1;
-        Thu, 21 Mar 2019 09:21:42 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 17:21:38 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        pasha.tatashin@oracle.com, mhocko@suse.com,
-        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
-Message-ID: <20190321092138.GY18740@MiWiFi-R3L-srv>
-References: <20190320073540.12866-1-bhe@redhat.com>
- <20190320111959.GV19508@bombadil.infradead.org>
- <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
- <20190320122243.GX19508@bombadil.infradead.org>
- <20190320123658.GF13626@rapoport-lnx>
- <20190320125843.GY19508@bombadil.infradead.org>
- <20190321064029.GW18740@MiWiFi-R3L-srv>
+        id S1727898AbfCUJXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 05:23:34 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 02:23:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,252,1549958400"; 
+   d="scan'208";a="135948047"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 21 Mar 2019 02:23:31 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h6tv8-0001vw-1y; Thu, 21 Mar 2019 11:23:30 +0200
+Date:   Thu, 21 Mar 2019 11:23:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     zhuchangchun <zhuchangchun@cvte.com>, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hendychu@aliyun.com
+Subject: Re: [PATCH] pinctrl: intel: Implements gpio free function
+Message-ID: <20190321092330.GK9224@smile.fi.intel.com>
+References: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
+ <20190321084420.GG3622@lahna.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190321064029.GW18740@MiWiFi-R3L-srv>
+In-Reply-To: <20190321084420.GG3622@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 21 Mar 2019 09:21:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21/19 at 02:40pm, Baoquan He wrote:
-> Hi all,
+On Thu, Mar 21, 2019 at 10:44:20AM +0200, Mika Westerberg wrote:
+> On Thu, Mar 21, 2019 at 10:35:24AM +0800, zhuchangchun wrote:
+> > When we use the gpio to control some peripheral devices,and try to
+> > export the gpio first,then unexport the gpio, we test the signal with
+> > oscilloscope,and find the signal can't meet the requirements,because
+> > after we unexported the gpio,the gpio's register(tx and rx)value can't
+> > be recovered,and this will infruence the device work flow.
 > 
-> On 03/20/19 at 05:58am, Matthew Wilcox wrote:
-> > On Wed, Mar 20, 2019 at 02:36:58PM +0200, Mike Rapoport wrote:
-> > > There are more than a thousand -EEXIST in the kernel, I really doubt all of
-> > > them mean "File exists" ;-)
-> > 
-> > And yet that's what the user will see if it's ever printed with perror()
-> > or similar.  We're pretty bad at choosing errnos; look how abused
-> > ENOSPC is:
-> 
-> When I tried to change -EEXIST to -EBUSY, seems the returned value will
-> return back over the whole path. And -EEXIST is checked explicitly
-> several times during the path. 
-> 
-> acpi_memory_enable_device -> __add_pages .. -> __add_section -> sparse_add_one_section
-> 
-> Only look into hotplug path triggered by ACPI event, there are also
-> device memory and ballon memory paths I haven't checked carefully
-> because not familiar with them.
-> 
-> So from the checking, I tend to agree with Oscar and Mike. There have
-> been so many places to use '-EEXIST' to indicate that stuffs checked have
-> been existing. We can't deny it's inconsistent with term explanation
-> text. While the defense is that -EEXIST is more precise to indicate a
-> static instance has been present when we want to create it, but -EBUSY
-> is a little blizarre. I would rather see -EBUSY is used on a device.
-> When want to stop it or destroy it, need check if it's busy or not.
-> 
-> #define EBUSY           16      /* Device or resource busy */
-> #define EEXIST          17      /* File exists */
-> 
-> Obviously saying resource busy or not, it violates semanics in any
-> language. So many people use EEXIST instead, isn't it the obsolete
+> After you unexport GPIO it can go back to any previous mode it was. If
+> you need to use it as GPIO then why unexport it in the first place?
 
-Surely when we require a lock which is protecting resource, we can also
-return -EBUSY since someone is busy on this resource. For creating one
-instance, just check if the instance exists already, no matter what the
-code comment of the errno is saying, IMHO, it really should not be -EBUSY.
+...and on top of that GPIO sysfs interface is deprecated.
 
-Thanks
-Baoquan
+> > We check the gpio's unexport code work flow, then find the gpio's free
+> > hook function has not been implemented, After we add pinmux_ops' free
+> > function to set exported gpio to recover its original value,the problem
+> > is fixed.
+> 
+> I don't think this is what ->free callback should do (assuming we decide
+> to implement it since we don't implement ->release either). It is
+> supposed to reverse effects of ->request which is what it currently does ;-)
+
+Exactly!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
