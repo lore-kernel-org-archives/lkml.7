@@ -3,205 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251C6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208C2C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F156C218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0C6218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbfCUXCE (ORCPT
+        id S1727213AbfCUXCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:02:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34314 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 19:02:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7149 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726611AbfCUXCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:02:04 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BE98C308620D;
-        Thu, 21 Mar 2019 23:02:03 +0000 (UTC)
-Received: from x1.home (ovpn-116-218.phx2.redhat.com [10.3.116.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A2335D9C5;
-        Thu, 21 Mar 2019 23:02:00 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 17:01:59 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, christoffer.dall@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com
-Subject: Re: [PATCH v6 09/22] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
-Message-ID: <20190321170159.38358f38@x1.home>
-In-Reply-To: <20190317172232.1068-10-eric.auger@redhat.com>
-References: <20190317172232.1068-1-eric.auger@redhat.com>
-        <20190317172232.1068-10-eric.auger@redhat.com>
-Organization: Red Hat
+        id S1727086AbfCUXCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:02:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 16:02:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
+   d="scan'208";a="284777192"
+Received: from jdemuth-mobl.amr.corp.intel.com (HELO tstruk-mobl1.jf.intel.com) ([10.251.150.110])
+  by orsmga004.jf.intel.com with ESMTP; 21 Mar 2019 16:02:13 -0700
+Subject: [PATCH v3] tpm: fix an invalid condition in tpm_common_poll
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, tadeusz.struk@intel.com
+Date:   Thu, 21 Mar 2019 16:02:12 -0700
+Message-ID: <155320933278.5015.1752135965699928631.stgit@tstruk-mobl1.jf.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 21 Mar 2019 23:02:03 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 Mar 2019 18:22:19 +0100
-Eric Auger <eric.auger@redhat.com> wrote:
+The poll condition should only check response_length,
+because reads should only be issued if there is data to read.
+The response_read flag only prevents double writes.
+The problem was that the write set the response_read to false,
+enqued a tpm job, and returned. Then application called poll
+which checked the response_read flag and returned EPOLLIN.
+Then the application called read, but got nothing.
+After all that the async_work kicked in.
+Added also mutex_lock around the poll check to prevent
+other possible race conditions.
 
-> This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
-> to pass/withdraw the guest MSI binding to/from the host.
-> 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> ---
-> v3 -> v4:
-> - add UNBIND
-> - unwind on BIND error
-> 
-> v2 -> v3:
-> - adapt to new proto of bind_guest_msi
-> - directly use vfio_iommu_for_each_dev
-> 
-> v1 -> v2:
-> - s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 58 +++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       | 29 +++++++++++++++++
->  2 files changed, 87 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 12a40b9db6aa..66513679081b 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1710,6 +1710,25 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
->  	return iommu_cache_invalidate(d, dev, &ustruct->info);
->  }
->  
-> +static int vfio_bind_msi_fn(struct device *dev, void *data)
-> +{
-> +	struct vfio_iommu_type1_bind_msi *ustruct =
-> +		(struct vfio_iommu_type1_bind_msi *)data;
-> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
-> +
-> +	return iommu_bind_guest_msi(d, dev, ustruct->iova,
-> +				    ustruct->gpa, ustruct->size);
-> +}
-> +
-> +static int vfio_unbind_msi_fn(struct device *dev, void *data)
-> +{
-> +	dma_addr_t *iova = (dma_addr_t *)data;
-> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
+Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
+Reported-by: Mantas Mikulėnas <grawity@gmail.com>
+Tested-by: Mantas Mikulėnas <grawity@gmail.com>
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+---
+ drivers/char/tpm/tpm-dev-common.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Same as previous, we can encapsulate domain in our own struct to avoid
-a lookup.
-
-> +
-> +	iommu_unbind_guest_msi(d, dev, *iova);
-
-Is it strange that iommu-core is exposing these interfaces at a device
-level if every one of them requires us to walk all the devices?  Thanks,
-
-Alex
-
-> +	return 0;
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -1814,6 +1833,45 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  					      vfio_cache_inv_fn);
->  		mutex_unlock(&iommu->lock);
->  		return ret;
-> +	} else if (cmd == VFIO_IOMMU_BIND_MSI) {
-> +		struct vfio_iommu_type1_bind_msi ustruct;
-> +		int ret;
-> +
-> +		minsz = offsetofend(struct vfio_iommu_type1_bind_msi,
-> +				    size);
-> +
-> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (ustruct.argsz < minsz || ustruct.flags)
-> +			return -EINVAL;
-> +
-> +		mutex_lock(&iommu->lock);
-> +		ret = vfio_iommu_for_each_dev(iommu, &ustruct,
-> +					      vfio_bind_msi_fn);
-> +		if (ret)
-> +			vfio_iommu_for_each_dev(iommu, &ustruct.iova,
-> +						vfio_unbind_msi_fn);
-> +		mutex_unlock(&iommu->lock);
-> +		return ret;
-> +	} else if (cmd == VFIO_IOMMU_UNBIND_MSI) {
-> +		struct vfio_iommu_type1_unbind_msi ustruct;
-> +		int ret;
-> +
-> +		minsz = offsetofend(struct vfio_iommu_type1_unbind_msi,
-> +				    iova);
-> +
-> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (ustruct.argsz < minsz || ustruct.flags)
-> +			return -EINVAL;
-> +
-> +		mutex_lock(&iommu->lock);
-> +		ret = vfio_iommu_for_each_dev(iommu, &ustruct.iova,
-> +					      vfio_unbind_msi_fn);
-> +		mutex_unlock(&iommu->lock);
-> +		return ret;
->  	}
->  
->  	return -ENOTTY;
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 29f0ef2d805d..6763389b6adc 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -789,6 +789,35 @@ struct vfio_iommu_type1_cache_invalidate {
->  };
->  #define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
->  
-> +/**
-> + * VFIO_IOMMU_BIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 25,
-> + *			struct vfio_iommu_type1_bind_msi)
-> + *
-> + * Pass a stage 1 MSI doorbell mapping to the host so that this
-> + * latter can build a nested stage2 mapping
-> + */
-> +struct vfio_iommu_type1_bind_msi {
-> +	__u32   argsz;
-> +	__u32   flags;
-> +	__u64	iova;
-> +	__u64	gpa;
-> +	__u64	size;
-> +};
-> +#define VFIO_IOMMU_BIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 25)
-> +
-> +/**
-> + * VFIO_IOMMU_UNBIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 26,
-> + *			struct vfio_iommu_type1_unbind_msi)
-> + *
-> + * Unregister an MSI mapping
-> + */
-> +struct vfio_iommu_type1_unbind_msi {
-> +	__u32   argsz;
-> +	__u32   flags;
-> +	__u64	iova;
-> +};
-> +#define VFIO_IOMMU_UNBIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 26)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 5eecad233ea1..7312d3214381 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -203,12 +203,14 @@ __poll_t tpm_common_poll(struct file *file, poll_table *wait)
+ 	__poll_t mask = 0;
+ 
+ 	poll_wait(file, &priv->async_wait, wait);
++	mutex_lock(&priv->buffer_mutex);
+ 
+-	if (!priv->response_read || priv->response_length)
++	if (priv->response_length)
+ 		mask = EPOLLIN | EPOLLRDNORM;
+ 	else
+ 		mask = EPOLLOUT | EPOLLWRNORM;
+ 
++	mutex_unlock(&priv->buffer_mutex);
+ 	return mask;
+ }
+ 
 
