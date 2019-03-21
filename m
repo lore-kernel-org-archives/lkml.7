@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3285C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DF9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796162146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359A32146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hbe/7tUR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYmI4zfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfCUH5l (ORCPT
+        id S1727955AbfCUH5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:57:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36658 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUH5k (ORCPT
+        Thu, 21 Mar 2019 03:57:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45652 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUH5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:57:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p10so3796774pff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:39 -0700 (PDT)
+        Thu, 21 Mar 2019 03:57:43 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v21so3760927pfm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I77zwRuXfEdeBhoNz+IOFKnvbLXbCnG7xjarznF2B20=;
-        b=Hbe/7tURPr7Ue6yVHfpjRvISbZHad3AvA24omWZuRKe+Yxp3KtBa1fDBa3IUimerzS
-         w1RzBOcU+vDGwFkxo12LR9niHgKD2rJUE7AFID7kou0mKUBM8wqApE29mowg2ZPlliMD
-         Zs2whoG+wRJ/XKQigCfml0CCZ4LMcHv1OgpXdI9z+ev/qy0fYgtSSUl8RJ/oIkB7rBft
-         K3oX4iKdh9FMXBYYsFLWdYbPpmrlCNVCmnjfKsZugBZwJvMoP8fl/U5Kw65dLUd9VckM
-         UuMShFuj0Hq683+2q6oTgRGjnSLSnaPpr7Kww0cPjy4WVyyagHCqVpp6OrOmtX5p+O79
-         zgYA==
+        bh=ICV2JCxGUwQgyY5us2Dfx+UwHNzy7pzqiOTFmEju5+U=;
+        b=oYmI4zfb1cxnU261zWYaMpQF8GXOawcb4RSwTUQtL5CZzd+VrWsbNBewI3j8YUkuB3
+         UgCvuAkyqWCjXD2FEa7QJpbjeeEVm0JvymTBe2SNcTGpMrLvR/p/Odl9jnPRKgpC+1AA
+         wCdzz/UBSb6fKbsE/MIBOEYsIVYAMN1Uf4qYjeG+Q/rS/IuIfARIKP4/Zwh/JHL0KNd5
+         /7wewuFOPk6YI7pYGVFDiNYtr9Zfv7LpAVhiZys3WPVM1UC9yDOKNMXXYbUOgQy46+/o
+         YhyHGRALpI0cDuAS+wdMglbpjjkT+P/gY40WYRbCh4OpvfZYm9WyUSx2POWE8V+b+QBz
+         x9DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=I77zwRuXfEdeBhoNz+IOFKnvbLXbCnG7xjarznF2B20=;
-        b=N5+wgZyxLwh6wkD0teE30nxgepkLM3D1iV5wf4TOYdPMdpmeAB5yZ85FCcIYJgF7gf
-         72gQHJN4eJ5k/L9cmKiM4lhUH4pyWXxhdewYjDV7K2RgZHcn9Kuv08xygVAVA1EhEY92
-         wV5xXfYkjrEvgKOkLx0ImBgdE3QGOPcF2V+H/dIJwsiPkOy8pSPtINpSFdqKhgf+EPJy
-         ryDKP6GnF9j5eNqZphyhHCmsyDdsnb/rXQfu+o78uzvqgC9P5Z5YU3s2nbDqLxtvQQIC
-         7oeYQJrKxoaU7j2hJnGiqHilpcN6GyZU6mAJp6sXSUAWEieU/HTRigb6r8yJgx0FfjL2
-         2eew==
-X-Gm-Message-State: APjAAAXT0eWDd1pAeVnqoqimcj1EG5jLqiRFv4EgWgFU3MW281HRDRGO
-        sCoLZOFCNUUOygZAE/wLOJ4=
-X-Google-Smtp-Source: APXvYqwvlUtSUTe4mWMiO9Xa7jRCQNlOgdWmPpzoy/99ZZzspDe0qbz5Hgu0l/h2v6CGcDXj6XQlHg==
-X-Received: by 2002:a17:902:8b83:: with SMTP id ay3mr2073583plb.1.1553155059577;
-        Thu, 21 Mar 2019 00:57:39 -0700 (PDT)
+        bh=ICV2JCxGUwQgyY5us2Dfx+UwHNzy7pzqiOTFmEju5+U=;
+        b=b+tTkyuIw6dqvayyE3nCaoTu9zTh/1p7KfBuYfTffqQlPAXmk+OgBNdQ9Zhkd0K/ID
+         a3P7RPF5U82YXEajQOPgvpsvKxBcc/3dKUViN3w81dEB2yWsGdp3+tMHnfGzANUVL1IE
+         36e3Mc4lsoU5LtqodA2QiHiAyOrzrHXIPY7r76RwD/cZntnVeJuENWJxzKhGsru0xOFE
+         /ihu41HuqcQ/hGIBTF7KaTMNF1wC/V0DwxmXxVEUuFnYkPr+2Y2cZzMUyxRG9VQc37YK
+         +l2BaZBiIx+T+3gslc/QyVEMfEaLxXOSABIFkoI7dzeFO3sHwsWMMZWA3J2PL8EsvKXO
+         KL1g==
+X-Gm-Message-State: APjAAAWAU1+dUFBwAYnzpZPwophpX6k1O2KJMFu2xP0zpkB6GTJ0PACg
+        Cll22b5XS3meeHkFfjFIP18=
+X-Google-Smtp-Source: APXvYqyGp7/bsb5rhMH45JuranEKat/rAWpQDq2PRXRvGSgw6+UiT+sPlX/Z071E1/PL6NNR87Xmuw==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15mr2179990pll.211.1553155062430;
+        Thu, 21 Mar 2019 00:57:42 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.36
+        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.57.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 00:57:39 -0700 (PDT)
+        Thu, 21 Mar 2019 00:57:41 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com,
         linux-kernel@vger.kernel.org, joe@perches.com,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 02/18] locking/lockdep: Add description and explanation in lockdep design doc
-Date:   Thu, 21 Mar 2019 15:57:09 +0800
-Message-Id: <20190321075725.14054-3-duyuyang@gmail.com>
+Subject: [PATCH v3 03/18] locking/lockdep: Adjust lock usage bit character checks
+Date:   Thu, 21 Mar 2019 15:57:10 +0800
+Message-Id: <20190321075725.14054-4-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 In-Reply-To: <20190321075725.14054-1-duyuyang@gmail.com>
 References: <20190321075725.14054-1-duyuyang@gmail.com>
@@ -71,130 +71,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-More words are added to lockdep design document regarding key concepts,
-which helps people understand the design as well as read the reports.
+The lock usage bit characters are defined and determined with tricks. Use a
+macro and add some explanation to make it a bit clearer. Then adjust the
+logic to check the usage, which optimizes the code a bit.
+
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- Documentation/locking/lockdep-design.txt | 80 ++++++++++++++++++++++++--------
- 1 file changed, 60 insertions(+), 20 deletions(-)
+ kernel/locking/lockdep.c           | 21 ++++++++++++++++-----
+ kernel/locking/lockdep_internals.h |  1 +
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.txt
-index 49f58a0..1dcceaa 100644
---- a/Documentation/locking/lockdep-design.txt
-+++ b/Documentation/locking/lockdep-design.txt
-@@ -15,51 +15,91 @@ tens of thousands of) instantiations. For example a lock in the inode
- struct is one class, while each inode has its own instantiation of that
- lock class.
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 41137ad..db0473d 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -514,15 +514,26 @@ static inline unsigned long lock_flag(enum lock_usage_bit bit)
  
--The validator tracks the 'state' of lock-classes, and it tracks
--dependencies between different lock-classes. The validator maintains a
--rolling proof that the state and the dependencies are correct.
--
--Unlike an lock instantiation, the lock-class itself never goes away: when
--a lock-class is used for the first time after bootup it gets registered,
--and all subsequent uses of that lock-class will be attached to this
--lock-class.
-+The validator tracks the 'usage state' of lock-classes, and it tracks the
-+dependencies between different lock-classes. The dependency can be
-+understood as lock order, where L1 -> L2 suggests L1 depends on L2, which
-+can also be expressed as a forward dependency (L1 -> L2) or a backward
-+dependency (L2 <- L1). From lockdep's perspective, the two locks (L1 and L2)
-+are not necessarily related as opposed to in some modules an order must be
-+followed. Here it just means that order ever happened. The validator
-+maintains a continuing effort to prove that the lock usages and their
-+dependencies are correct or the validator will shoot a splat if they are
-+potentially incorrect.
-+
-+Unlike a lock instance, a lock-class itself never goes away: when a
-+lock-class's instance is used for the first time after bootup the class gets
-+registered, and all (subsequent) instances of that lock-class will be mapped
-+to the lock-class.
+ static char get_usage_char(struct lock_class *class, enum lock_usage_bit bit)
+ {
++	/*
++	 * The usage character defaults to '.' (i.e., irqs disabled and not in
++	 * irq context), which is the safest usage category.
++	 */
+ 	char c = '.';
  
- State
- -----
+-	if (class->usage_mask & lock_flag(bit + 2))
++	/*
++	 * The order of the following usage checks matters, which will
++	 * result in the outcome character as follows:
++	 *
++	 * - '+': irq is enabled and not in irq context
++	 * - '-': in irq context and irq is disabled
++	 * - '?': in irq context and irq is enabled
++	 */
++	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_TO_ENABLED_STEP)) {
+ 		c = '+';
+-	if (class->usage_mask & lock_flag(bit)) {
+-		c = '-';
+-		if (class->usage_mask & lock_flag(bit + 2))
++		if (class->usage_mask & lock_flag(bit))
+ 			c = '?';
+-	}
++	} else if (class->usage_mask & lock_flag(bit))
++		c = '-';
  
--The validator tracks lock-class usage history into 4 * nSTATEs + 1 separate
--state bits:
-+The validator tracks lock-class usage history and divides the usage into
-+(4 usages * n STATEs + 1) categories:
+ 	return c;
+ }
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index d4c1974..2fd31d5 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -25,6 +25,7 @@ enum lock_usage_bit {
+ #define LOCK_USAGE_READ_MASK 1
+ #define LOCK_USAGE_DIR_MASK  2
+ #define LOCK_USAGE_STATE_MASK (~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
++#define LOCK_USAGE_TO_ENABLED_STEP 2
  
-+Where the 4 usages can be:
- - 'ever held in STATE context'
- - 'ever held as readlock in STATE context'
- - 'ever held with STATE enabled'
- - 'ever held as readlock with STATE enabled'
- 
--Where STATE can be either one of (kernel/locking/lockdep_states.h)
-- - hardirq
-- - softirq
-+Where the n STATEs are coded in kernel/locking/lockdep_states.h and as of
-+now they include:
-+- hardirq
-+- softirq
- 
-+Where the last 1 category is:
- - 'ever used'                                       [ == !unused        ]
- 
--When locking rules are violated, these state bits are presented in the
--locking error messages, inside curlies. A contrived example:
-+When locking rules are violated, these usage bits are presented in the
-+locking error messages, inside curlies, with a total of 2 * n STATEs bits.
-+See a contrived example:
- 
-    modprobe/2287 is trying to acquire lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
- 
-    but task is already holding lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
- 
- 
--The bit position indicates STATE, STATE-read, for each of the states listed
--above, and the character displayed in each indicates:
-+For a given lock, the bit positions from left to right indicate the usage
-+of the lock and readlock (if exists), for each of the n STATEs listed
-+above respectively, and the character displayed at each bit position
-+indicates:
- 
-    '.'  acquired while irqs disabled and not in irq context
-    '-'  acquired in irq context
-    '+'  acquired with irqs enabled
-    '?'  acquired in irq context with irqs enabled.
- 
--Unused mutexes cannot be part of the cause of an error.
-+The bits are illustrated with an example:
-+
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+                         ||||
-+                         ||| \-> softirq disabled and not in softirq context
-+                         || \--> acquired in softirq context
-+                         | \---> hardirq disabled and not in hardirq context
-+                          \----> acquired in hardirq context
-+
-+
-+For a given STATE, whether the lock is ever acquired in that STATE context
-+and whether that STATE is enabled yields four possible cases as shown in the
-+table below. It is worth noting that the bit character is able to indicate
-+which exact case is for the lock as of the reporting time.
-+
-+   -------------------------------------------
-+  |              | irq enabled | irq disabled |
-+   -------------------------------------------
-+  | ever in irq  |      ?      |       -      |
-+   -------------------------------------------
-+  | never in irq |      +      |       .      |
-+   -------------------------------------------
-+
-+The character '-' suggests irq is disabled because if otherwise, the
-+charactor '?' would have been shown instead. Similar deduction can be
-+applied for '+' too.
-+
-+Unused locks (e.g., mutexes) cannot be part of the cause of an error.
- 
- 
- Single-lock state rules:
+ /*
+  * Usage-state bitmasks:
 -- 
 1.8.3.1
 
