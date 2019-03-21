@@ -2,144 +2,222 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2922C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE76C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57E421915
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e9Vfwe6w"
+	by mail.kernel.org (Postfix) with ESMTP id CBAE2218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfCUC1L (ORCPT
+        id S1727811AbfCUC2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:27:11 -0400
-Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:38299
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727660AbfCUC1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:27:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VQ0/86U+EphEVnjdSHAUsonhr/mcz6iFc46MXR1SFvY=;
- b=e9Vfwe6wwOch+8qyKS4X4TVuhx8Z0iOnZq2WuzlXODKeV4XPZiD2M6/aJRbdFstZRjjC8TNOdasUNUqzGs+fAYcZQYEkhZCKSn3C7ho4r0Nk3t//QuywAGTHttKyEExNshyTgSo/aWCBZpIzDzI4XoOsCIArng3KXcqcThc85iU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3785.eurprd04.prod.outlook.com (52.134.71.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.16; Thu, 21 Mar 2019 02:27:06 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
- 02:27:06 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 20 Mar 2019 22:28:23 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34688 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727551AbfCUC2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:28:22 -0400
+X-UUID: 08d051d1e18d4348801a2494801de780-20190321
+X-UUID: 08d051d1e18d4348801a2494801de780-20190321
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2050181406; Thu, 21 Mar 2019 10:28:13 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 10:28:12 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 10:28:10 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <balbi@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Johan Hovold <johan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V9 4/4] arm64: dts: imx8qxp: add system controller watchdog
- support
-Thread-Topic: [PATCH V9 4/4] arm64: dts: imx8qxp: add system controller
- watchdog support
-Thread-Index: AQHU342TWNNzY9c5R0+JM4M29z9vbg==
-Date:   Thu, 21 Mar 2019 02:27:06 +0000
-Message-ID: <1553134884-1720-5-git-send-email-Anson.Huang@nxp.com>
-References: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1553134884-1720-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:203:36::29) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b63e9d8c-b1d6-4840-b3e8-08d6ada4b5ef
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3785;
-x-ms-traffictypediagnostic: DB3PR0402MB3785:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <DB3PR0402MB37854F97014E90880706A2C9F5420@DB3PR0402MB3785.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(136003)(396003)(366004)(199004)(189003)(11346002)(316002)(478600001)(446003)(486006)(2616005)(7736002)(476003)(305945005)(66066001)(8676002)(81156014)(14454004)(386003)(110136005)(6506007)(36756003)(68736007)(6486002)(6436002)(256004)(102836004)(52116002)(105586002)(99286004)(76176011)(81166006)(106356001)(26005)(186003)(97736004)(4326008)(50226002)(4744005)(2501003)(8936002)(25786009)(3846002)(6116002)(6512007)(5660300002)(53936002)(2906002)(86362001)(2201001)(7416002)(71200400001)(71190400001)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3785;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ojLRwGXPomyiTnlDXbDlmrJxo/YBFY/Wi2FEq/ZoSLLnzMeMzHdEqey1Is8C8nPJjmi8z3811wzpkWfijObYKmgB6IyGUshKAVuEnWjSNcHh4SGJBA+E8ADsm5YMb/7DXWT3VE5vleRfxPxE9Vabgs2FFFdC4h2VGwhyh8paL38iE/5mVZZWpxTHtMPPxVWjYUw7YLit7e7T3GyObxAI5d1caY+Rec4B1s0MOZ9q0SOQWh0EBPzhZt+rO/wHq1VppqkbxrZmABy9EnXU9bjQgFmEN2dTxIRvrJ5m5MFqXVhJePQDMvo/e0LFslhTediNCpeU6+uzhdZaUx1Gjc4K4gnTbT/BnZcCDlJcyh4KDDztL2el0w5NMcdGudqOmh2syanUeBRMHR9fcIo8KXW7y0Wf/N3ZRJ1OxaJ/VXYl/XI=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [v3 PATCH] usb: introduce usb_ep_type_string() function
+Date:   Thu, 21 Mar 2019 10:27:56 +0800
+Message-ID: <dfa55cfc48369945983d7cb9f97d09daf2670927.1553134542.git.chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b63e9d8c-b1d6-4840-b3e8-08d6ada4b5ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 02:27:06.3844
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3785
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX8QXP system controller watchdog support.
+In some places, the code prints a human-readable USB endpoint
+transfer type (e.g. "bulk"). This involves a switch statement
+sometimes wrapped around in ({ ... }) block leading to code
+repetition.
+To make this scenario easier, here introduces usb_ep_type_string()
+function, which returns a human-readable name of provided
+endpoint type.
+It also changes a few places switch was used to use this
+new function.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-Changes since V8:
-	- add timeout property.
+v2 changes:
+    1. keep type string consistent with type_show() used in endpoint.c
+v3 changes:
+    1. abandon changes that will break user/kernel apis
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/common/common.c              | 16 ++++++++++++++++
+ drivers/usb/core/hcd.c                   | 17 ++---------------
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c |  6 +-----
+ drivers/usb/gadget/udc/dummy_hcd.c       | 16 +---------------
+ include/linux/usb/ch9.h                  |  8 ++++++++
+ 5 files changed, 28 insertions(+), 35 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 019abce..ca4541e 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -473,4 +473,9 @@
- 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
- 		};
- 	};
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 48277bbc15e4..2174dd9ec176 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -16,6 +16,22 @@
+ #include <linux/usb/otg.h>
+ #include <linux/of_platform.h>
+ 
++static const char *const ep_type_names[] = {
++	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
++	[USB_ENDPOINT_XFER_ISOC] = "isoc",
++	[USB_ENDPOINT_XFER_BULK] = "bulk",
++	[USB_ENDPOINT_XFER_INT] = "intr",
++};
 +
-+	watchdog {
-+		compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-+		timeout-sec =3D <60>;
-+	};
- };
---=20
-2.7.4
++const char *usb_ep_type_string(int ep_type)
++{
++	if (ep_type < 0 || ep_type >= ARRAY_SIZE(ep_type_names))
++		return "unknown";
++
++	return ep_type_names[ep_type];
++}
++EXPORT_SYMBOL_GPL(usb_ep_type_string);
++
+ const char *usb_otg_state_string(enum usb_otg_state state)
+ {
+ 	static const char *const names[] = {
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 3189181bb628..0ccf2efeb40b 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1878,23 +1878,10 @@ void usb_hcd_flush_endpoint(struct usb_device *udev,
+ 		/* kick hcd */
+ 		unlink1(hcd, urb, -ESHUTDOWN);
+ 		dev_dbg (hcd->self.controller,
+-			"shutdown urb %pK ep%d%s%s\n",
++			"shutdown urb %pK ep%d%s-%s\n",
+ 			urb, usb_endpoint_num(&ep->desc),
+ 			is_in ? "in" : "out",
+-			({	char *s;
+-
+-				 switch (usb_endpoint_type(&ep->desc)) {
+-				 case USB_ENDPOINT_XFER_CONTROL:
+-					s = ""; break;
+-				 case USB_ENDPOINT_XFER_BULK:
+-					s = "-bulk"; break;
+-				 case USB_ENDPOINT_XFER_INT:
+-					s = "-intr"; break;
+-				 default:
+-					s = "-iso"; break;
+-				};
+-				s;
+-			}));
++			usb_ep_type_string(usb_endpoint_type(&ep->desc)));
+ 		usb_put_urb (urb);
+ 
+ 		/* list contents may have changed */
+diff --git a/drivers/usb/gadget/udc/aspeed-vhub/epn.c b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
+index 83340f4fdc6e..35941dc125f9 100644
+--- a/drivers/usb/gadget/udc/aspeed-vhub/epn.c
++++ b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
+@@ -593,10 +593,6 @@ static int ast_vhub_epn_disable(struct usb_ep* u_ep)
+ static int ast_vhub_epn_enable(struct usb_ep* u_ep,
+ 			       const struct usb_endpoint_descriptor *desc)
+ {
+-	static const char *ep_type_string[] __maybe_unused = { "ctrl",
+-							       "isoc",
+-							       "bulk",
+-							       "intr" };
+ 	struct ast_vhub_ep *ep = to_ast_ep(u_ep);
+ 	struct ast_vhub_dev *dev;
+ 	struct ast_vhub *vhub;
+@@ -646,7 +642,7 @@ static int ast_vhub_epn_enable(struct usb_ep* u_ep,
+ 	ep->epn.wedged = false;
+ 
+ 	EPDBG(ep, "Enabling [%s] %s num %d maxpacket=%d\n",
+-	      ep->epn.is_in ? "in" : "out", ep_type_string[type],
++	      ep->epn.is_in ? "in" : "out", usb_ep_type_string(type),
+ 	      usb_endpoint_num(desc), maxpacket);
+ 
+ 	/* Can we use DMA descriptor mode ? */
+diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+index baf72f95f0f1..40c6a484e232 100644
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -617,21 +617,7 @@ static int dummy_enable(struct usb_ep *_ep,
+ 		_ep->name,
+ 		desc->bEndpointAddress & 0x0f,
+ 		(desc->bEndpointAddress & USB_DIR_IN) ? "in" : "out",
+-		({ char *val;
+-		 switch (usb_endpoint_type(desc)) {
+-		 case USB_ENDPOINT_XFER_BULK:
+-			 val = "bulk";
+-			 break;
+-		 case USB_ENDPOINT_XFER_ISOC:
+-			 val = "iso";
+-			 break;
+-		 case USB_ENDPOINT_XFER_INT:
+-			 val = "intr";
+-			 break;
+-		 default:
+-			 val = "ctrl";
+-			 break;
+-		 } val; }),
++		usb_ep_type_string(usb_endpoint_type(desc)),
+ 		max, ep->stream_en ? "enabled" : "disabled");
+ 
+ 	/* at this point real hardware should be NAKing transfers
+diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
+index 523aa088f6ab..da82606be605 100644
+--- a/include/linux/usb/ch9.h
++++ b/include/linux/usb/ch9.h
+@@ -36,6 +36,14 @@
+ #include <linux/device.h>
+ #include <uapi/linux/usb/ch9.h>
+ 
++/**
++ * usb_ep_type_string() - Returns human readable-name of the endpoint type.
++ * @ep_type: The endpoint type to return human-readable name for.  If it's not
++ *   any of the types: USB_ENDPOINT_XFER_{CONTROL, ISOC, BULK, INT},
++ *   usually got by usb_endpoint_type(), the string 'unknown' will be returned.
++ */
++extern const char *usb_ep_type_string(int ep_type);
++
+ /**
+  * usb_speed_string() - Returns human readable-name of the speed.
+  * @speed: The speed to return human-readable name for.  If it's not
+-- 
+2.20.1
 
