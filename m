@@ -2,132 +2,125 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BECAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D6AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2918720850
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553162022;
-	bh=Vt2c+8V/rp62lNuA24Q/fll7XGy7Xyaes4pvurW1C0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CLgNWKijGF2sCpslNgArGJ4S1yERVSB9y8lkNl+IXwk1yEmG1YJi+4mT0EnxzgK+J
-	 yN1PRKxMTnhwW4+/4q8uaMKj6YRiaqhCKllJH9cznXnFhzeZ2bnIQrixQzqFx72hqw
-	 oVR7arYlBrWi8ajrs1v8wimp664f695IZYvjI+6M=
+	by mail.kernel.org (Postfix) with ESMTP id 40F6820850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVuJNocC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbfCUJxl (ORCPT
+        id S1728289AbfCUJyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:53:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52496 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728049AbfCUJxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:53:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67D92B0BE;
-        Thu, 21 Mar 2019 09:53:38 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 10:53:37 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
-Message-ID: <20190321095337.GM8696@dhcp22.suse.cz>
-References: <SG2PR02MB3098E44824F5AA69BC04F935E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318130757.GG8924@dhcp22.suse.cz>
- <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318134242.GI8924@dhcp22.suse.cz>
- <SG2PR02MB30986F43403B92F31499E42AE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318142916.GK8924@dhcp22.suse.cz>
- <SG2PR02MB3098DCB820E3367B09DDA45AE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB30981381635A6BC3783D42CDE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
+        Thu, 21 Mar 2019 05:54:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44201 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728210AbfCUJyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 05:54:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w2so5793236wrt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:54:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PtA00BZnGIQ1W8ogRfOhskhN2WYgip1xDULBJM774nI=;
+        b=sVuJNocC8R0Oy50/uLP5LIkZbGBM704heNoDR56PXUXY+M+MZMtn5oTEnMs1vtdRQZ
+         1DGDpj4bDMfJ1O9QqyGyh+QV0ZR6OKF3FuvSh9dSabhPLJ+CkwKj/67WycpgB55HcMtc
+         +uE13NMzBYqEI+rf1eGDw43BT3KHZZQdXE+zAZMynIwbujH5gIA9pb/mhXWaB9asWLdQ
+         xexXQNL4sT8u7nuOKNPkwoF9ekouUIhqSHFVjzmeItIvBfQJWuOU9UIDmXsMxywXV4L0
+         Rpu3LzxUIaogdWpcOdBw+gGa1JvmwUdRWLH7CfCmgI29ifpUhXvRkbKltQCDgzlpnzr3
+         BSQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PtA00BZnGIQ1W8ogRfOhskhN2WYgip1xDULBJM774nI=;
+        b=dHNo5rdknhHP5UdXOHTX8rFSeV/eb0YUxTer2Z7JzYOVRVm50GLMy2DE43g98h3QoL
+         LHpMOCrFCoQ/27LHs0KByKcqEHxx/uEUk/nBo1d7RjP7uMzm1aZEuAeSgFSu7Qzuu7SP
+         wcnvJH4CsfUdElG/zBFopKo/35XVqwTqlcqkALE3jexQZFLGW5Qr9jmbDEzbG/Hpp+bq
+         9O5Cb+wAF539Jf0v/g/va4v8NQeL2AfprCdT88WeSNaOz9KdQcy1VhNb2awzXAZ2Ja1k
+         jgvFcA683dLE+WwdJk9ZAQePq386Tv059qWdN9jBoLDEtRRUk54AEIXxEdAyni8p4nTZ
+         fnjg==
+X-Gm-Message-State: APjAAAVe7O34OXEwTjeOXUw+OJUKYnIYtNfwb8tc3UdP8Bz+gaRUmmz+
+        KmU76raP6HWJsjUZM2We0ZOWq0PfVKw=
+X-Google-Smtp-Source: APXvYqxzuvbZ9EU7qrrL/922RRnwPNOJAB+FljOJUAohU3XSit9TaRi+aLP8KcrWkMTd/pdt3/yetg==
+X-Received: by 2002:a5d:5401:: with SMTP id g1mr1979697wrv.70.1553162057843;
+        Thu, 21 Mar 2019 02:54:17 -0700 (PDT)
+Received: from [192.168.0.41] (27.78.95.92.rev.sfr.net. [92.95.78.27])
+        by smtp.googlemail.com with ESMTPSA id h18sm2545971wrt.97.2019.03.21.02.54.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 02:54:17 -0700 (PDT)
+Subject: Re: [PATCH v12 2/4] PM / Domains: Add support for CPU devices to
+ genpd
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190227195836.24739-1-ulf.hansson@linaro.org>
+ <20190227195836.24739-3-ulf.hansson@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <3ceca6d2-c780-49e4-5c90-566a7e8433ce@linaro.org>
+Date:   Thu, 21 Mar 2019 10:54:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SG2PR02MB30981381635A6BC3783D42CDE8400@SG2PR02MB3098.apcprd02.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190227195836.24739-3-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can you please fix your email client? The broken quoting is just
-irritating.
-
-On Tue 19-03-19 11:45:03, Pankaj Suryawanshi wrote:
-[...]
-> I have tried for latency count for 385MB:
+On 27/02/2019 20:58, Ulf Hansson wrote:
+> To enable a device belonging to a CPU to be attached to a PM domain managed
+> by genpd, let's do a few changes to it, as to make it convenient to manage
+> the specifics around CPUs.
 > 
-> reclaim- reclaim_clean_pages_from_list()
-> migrate- migrate_pages()
-> migrateranges- isolate_migratepages_range()
-> overall - __alloc_contig_migrate_range()
+> To be able to quickly find out what CPUs that are attached to a genpd,
+> which typically becomes useful from a genpd governor as following changes
+> is about to show, let's add a cpumask to the struct generic_pm_domain. At
+> the point when a CPU device gets attached to a genpd, let's update the
+> genpd's cpumask. Moreover, let's also propagate changes to the cpumask
+> upwards in the topology to the master PM domains. In this way, the cpumask
+> for a genpd hierarchically reflects all CPUs attached to the topology below
+> it.
 > 
-> Note: output is in us
+> Finally, let's make this an opt-in feature, to avoid having to manage CPUs
+> and the cpumask for a genpd that doesn't need it. For that reason, let's
+> add a new genpd configuration bit, GENPD_FLAG_CPU_DOMAIN.
 > 
-> [ 1151.420923] LATENCY reclaim= 43 migrate=128 migrateranges=23
-> [ 1151.421209] LATENCY reclaim= 11 migrate=253 migrateranges=14
-> [ 1151.427856] LATENCY reclaim= 45 migrate=12 migrateranges=12
-> [ 1151.434485] LATENCY reclaim= 44 migrate=33 migrateranges=12
-> [ 1151.440975] LATENCY reclaim= 45 migrate=0 migrateranges=11
-> [ 1151.447513] LATENCY reclaim= 39 migrate=35 migrateranges=11
-> [ 1151.453919] LATENCY reclaim= 46 migrate=0 migrateranges=12
-> [ 1151.460474] LATENCY reclaim= 39 migrate=41 migrateranges=11
-> [ 1151.466947] LATENCY reclaim= 54 migrate=32 migrateranges=17
-> [ 1151.473464] LATENCY reclaim= 45 migrate=21 migrateranges=12
-> [ 1151.480016] LATENCY reclaim= 41 migrate=39 migrateranges=12
-> [ 1151.486551] LATENCY reclaim= 41 migrate=36 migrateranges=12
-> [ 1151.493199] LATENCY reclaim= 13 migrate=188 migrateranges=12
-> [ 1151.500034] LATENCY reclaim= 60 migrate=94 migrateranges=13
-> [ 1151.506686] LATENCY reclaim= 78 migrate=9 migrateranges=12
-> [ 1151.513313] LATENCY reclaim= 33 migrate=147 migrateranges=12
-> [ 1151.519839] LATENCY reclaim= 52 migrate=98 migrateranges=12
-> [ 1151.526556] LATENCY reclaim= 46 migrate=126 migrateranges=12
-> [ 1151.533254] LATENCY reclaim= 22 migrate=230 migrateranges=12
-> [ 1151.540145] LATENCY reclaim= 0 migrate=305 migrateranges=13
-> [ 1151.546997] LATENCY reclaim= 1 migrate=301 migrateranges=13
-> [ 1151.553686] LATENCY reclaim= 40 migrate=201 migrateranges=12
-> [ 1151.560395] LATENCY reclaim= 35 migrate=149 migrateranges=12
-> [ 1151.567076] LATENCY reclaim= 77 migrate=43 migrateranges=16
-> [ 1151.573836] LATENCY reclaim= 34 migrate=190 migrateranges=12
-> [ 1151.580510] LATENCY reclaim= 51 migrate=120 migrateranges=12
-> [ 1151.587240] LATENCY reclaim= 33 migrate=147 migrateranges=13
-> [ 1151.594036] LATENCY reclaim= 20 migrate=241 migrateranges=13
-> [ 1151.600749] LATENCY reclaim= 75 migrate=41 migrateranges=13
-> [ 1151.607402] LATENCY reclaim= 77 migrate=32 migrateranges=12
-> [ 1151.613956] LATENCY reclaim= 72 migrate=35 migrateranges=12
-> [ 1151.620642] LATENCY reclaim= 59 migrate=162 migrateranges=12
-> [ 1151.627181] LATENCY reclaim= 76 migrate=9 migrateranges=11
-> [ 1151.633795] LATENCY reclaim= 80 migrate=0 migrateranges=12
-> [ 1151.640278] LATENCY reclaim= 87 migrate=18 migrateranges=12
-> [ 1151.646758] LATENCY reclaim= 82 migrate=10 migrateranges=11
-> [ 1151.653307] LATENCY reclaim= 71 migrate=31 migrateranges=12
-> [ 1151.659911] LATENCY reclaim= 61 migrate=77 migrateranges=12
-> [ 1151.666514] LATENCY reclaim= 94 migrate=42 migrateranges=15
-> [ 1151.673089] LATENCY reclaim= 67 migrate=59 migrateranges=12
-> [ 1151.679655] LATENCY reclaim= 81 migrate=14 migrateranges=12
-> [ 1151.686253] LATENCY reclaim= 49 migrate=93 migrateranges=12
-> [ 1151.692815] LATENCY reclaim= 61 migrate=54 migrateranges=12
-> [ 1151.699438] LATENCY reclaim= 42 migrate=99 migrateranges=10
-> [ 1151.705881] OVERALL overall=285157
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-cumulative numbers are
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-reclaim:2222 migrate:3995 migrateranges:552 sum:6217
-
-So those code paths you were measuring were contributing to the overal
-latency only marginally (~2%).
- 
-> cma_alloc latency is = 297385 us
-
-As I've said earlier I would just use perf with the call graph support
-and look at the time distribution to see where the bottleneck is.
 -- 
-Michal Hocko
-SUSE Labs
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
