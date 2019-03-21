@@ -2,105 +2,150 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A05C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B656CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4426B2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KL/bUo4x"
+	by mail.kernel.org (Postfix) with ESMTP id 8C47B2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfCUNYv (ORCPT
+        id S1728404AbfCUNZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:24:51 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39251 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728231AbfCUNYv (ORCPT
+        Thu, 21 Mar 2019 09:25:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60106 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728157AbfCUNZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:24:51 -0400
-Received: by mail-lf1-f65.google.com with SMTP id m13so4579197lfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 06:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vVJB78a97q468PtC/UfYEkUnsmC+RQqZfVfZT6REWsU=;
-        b=KL/bUo4xyk2D2vqLcNy0Qi3m0chmqoLjW/f8R6A4idG0H8fyP9/X9xEcgKTucYUSqc
-         Hmtky9I+CYOSBt4i7jhIWGW5mJxNP/6Vo8rhPVI0roYmRA/Al14q1GVimBGVvRGpoefF
-         TV1t4jf57aeEUZCDdge3YAJCsDL8GWNUlnSqwWV8JyHvDPq3xuNQhn4Af8bpaBYl9Gii
-         TzROjeMjEFt3q17zivjmkylAzNvHaBJbbYbGSnebrV0OiiEcePwqjeDsT76yvDAwJzcW
-         Vl+zkEz58iIXNxBqb6NC8fsOX83cwGffS3ct/eEv0Qp9a9+7YGmsPrHVsd4mnI0XN+0V
-         B7jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vVJB78a97q468PtC/UfYEkUnsmC+RQqZfVfZT6REWsU=;
-        b=IffJiXAeYk2pa5rXp6VJd9I9+cDOTvbaKj5xhi/Qhl7AmIXuhV6Sqq1phUhsG+pkDb
-         PWC8meEwGJWwOdCLt1IAyROmUh+43JA+1mawIK8B/SsoeOlskKLtaliAAQRLliVmv1i2
-         n3MZSygFTkhGXK99914s81xDdfiJqSZ6PpaMbxJQJ0o7JtM8Uve6llXAuUqp9zEXSkiv
-         W6mbPeVbh9lWFlzqnEsRTH9wryFwBMTWy82WYgRcAI/N1+3rO3ZEbs/phyA4hXPKyaiy
-         Kp6v2I4KtMvAI+EsQ6PRzwFhyS8X/U471n6T5k7KMmNk5VpijC/3+v1OExA1luwbnguo
-         PpVQ==
-X-Gm-Message-State: APjAAAWWc8NobEabAUlXxbC1LMMMJVMYyknR3bbS37xXpT4q19t6yHHz
-        AizTCKUCzSXbDVeN9GJensrofA==
-X-Google-Smtp-Source: APXvYqyS4b49xep5ZC0x78z3Fd3D+FdD97/9DKappeKEBXES1DZvXshK11WirrdczCsE/DsH+YXjeA==
-X-Received: by 2002:a19:a40b:: with SMTP id q11mr2041154lfc.33.1553174689175;
-        Thu, 21 Mar 2019 06:24:49 -0700 (PDT)
-Received: from localhost (c-573670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.87])
-        by smtp.gmail.com with ESMTPSA id m18sm851796ljb.35.2019.03.21.06.24.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 06:24:48 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        matthias.bgg@gmail.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2] drivers: ufs: Add missing MODULE_* information
-Date:   Thu, 21 Mar 2019 14:24:44 +0100
-Message-Id: <20190321132444.28659-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Mar 2019 09:25:20 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2LDOYdM062566
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:25:18 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rc96yep4k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:25:18 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 21 Mar 2019 13:25:15 -0000
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 21 Mar 2019 13:25:11 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2LDPCWR25034776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 13:25:12 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F33AB2064;
+        Thu, 21 Mar 2019 13:25:12 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 815ABB205F;
+        Thu, 21 Mar 2019 13:25:12 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Mar 2019 13:25:12 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 056D016C1ED4; Thu, 21 Mar 2019 06:26:04 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 06:26:03 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
+        Mike Galbraith <efault@gmx.de>
+Subject: Re: [PATCH v3] rcu: Allow to eliminate softirq processing from
+ rcutree
+Reply-To: paulmck@linux.ibm.com
+References: <20190320160547.s5lbeahr2y4jlzwt@linutronix.de>
+ <20190320161500.GK4102@linux.ibm.com>
+ <20190320163532.mr32oi53iaueuizw@linutronix.de>
+ <20190320173001.GM4102@linux.ibm.com>
+ <20190320175952.yh6yfy64vaiurszw@linutronix.de>
+ <20190320181210.GO4102@linux.ibm.com>
+ <20190320181435.x3qyutwqllmq5zbk@linutronix.de>
+ <20190320211333.eq7pwxnte7la67ph@linutronix.de>
+ <20190320234601.GQ4102@linux.ibm.com>
+ <20190321082737.t5jhdyuartimamu2@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321082737.t5jhdyuartimamu2@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032113-0064-0000-0000-000003BE26F2
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010789; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01177557; UDB=6.00616015; IPR=6.00958253;
+ MB=3.00026091; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-21 13:25:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032113-0065-0000-0000-00003CCADC3E
+Message-Id: <20190321132603.GS4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903210096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building the ufs-mediatek module the following warning shows up:
+On Thu, Mar 21, 2019 at 09:27:37AM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-03-20 16:46:01 [-0700], Paul E. McKenney wrote:
+> > Thank you!  I reverted v2 and applied this one with the same sort of
+> > update.  Testing is going well thus far aside from my failing to add
+> > the required "=0" after the rcutree.use_softirq.  I will probably not
+> > be the only one who will run afoul of this, so I updated the commit log
+> > and the documentation accordingly, as shown below.
+> 
+> perfect, thank you.
+> 
+> > 							Thanx, Paul
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index f46b4af96ab9..b807204ffd83 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -629,7 +609,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+> >  		/* Need to defer quiescent state until everything is enabled. */
+> >  		if (irqs_were_disabled) {
+> >  			/* Enabling irqs does not reschedule, so... */
+> > -			raise_softirq_irqoff(RCU_SOFTIRQ);
+> > +			if (!use_softirq)
+> 
+> that exclamation mark needs to go :/
 
-WARNING: modpost: missing MODULE_LICENSE() in
-  drivers/scsi/ufs/ufs-mediatek.o
+That might explain some of the failures in TREE01, TREE02, TREE03, and
+TREE09.  TREE01 got a NULL pointer dereference, but in __do_softirq().
+So I suspect that this was related.  Ditto for TREE02, TREE03, and TREE09.
+These also all have CONFIG_PREEMPT=y, and are the only ones run by default
+that are set up this way.  (Well, so do SRCU-P, TASKS01, and TASKS03, but
+they are torturing other forms of RCU.)
 
-Rework to add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
+Anyway, I applied your fix above and will rerun.  The failures happened
+within a few seconds in all cases, so a short run should cover this.
 
-Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/scsi/ufs/ufs-mediatek.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Once I get good rcutorture runs, I will ask you to run a heavy-duty run.
+Once that passes, I will look at your changes in more detail.
 
-diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-index c3b78fc83d3f..5e3bda42ac3b 100644
---- a/drivers/scsi/ufs/ufs-mediatek.c
-+++ b/drivers/scsi/ufs/ufs-mediatek.c
-@@ -364,4 +364,9 @@ static struct platform_driver ufs_mtk_pltform = {
- 	},
- };
- 
-+MODULE_AUTHOR("Stanley Chu <stanley.chu@mediatek.com>");
-+MODULE_AUTHOR("Peter Wang <peter.wang@mediatek.com>");
-+MODULE_DESCRIPTION("MediaTek UFS Host Driver");
-+MODULE_LICENSE("GPL v2");
-+
- module_platform_driver(ufs_mtk_pltform);
--- 
-2.20.1
+							Thanx, Paul
+
+> > +				raise_softirq_irqoff(RCU_SOFTIRQ);
+> > +			else
+> > +				invoke_rcu_core();
+> >  		} else {
+> >  			/* Enabling BH or preempt does reschedule, so... */
+> >  			set_tsk_need_resched(current);
+> 
+> Sebastian
+> 
 
