@@ -2,463 +2,182 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A073C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A01AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7BA2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71DF2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fiJdTH6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfCUU34 (ORCPT
+        id S1729151AbfCUUaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:29:56 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:35054 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728817AbfCUU3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:29:54 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x2LKSR5Y018216;
-        Thu, 21 Mar 2019 22:28:27 +0200
-Date:   Thu, 21 Mar 2019 22:28:27 +0200 (EET)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Jacky Hu <hengqing.hu@gmail.com>
-cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v5] ipvs: allow tunneling with gue encapsulation
-In-Reply-To: <20190319052656.23933-1-hengqing.hu@gmail.com>
-Message-ID: <alpine.LFD.2.21.1903212225550.4187@ja.home.ssi.bg>
-References: <20190319052656.23933-1-hengqing.hu@gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 21 Mar 2019 16:30:06 -0400
+Received: from mail-eopbgr780057.outbound.protection.outlook.com ([40.107.78.57]:15520
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728775AbfCUUaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:30:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cxFJUOHmJQ4lLMm7kdCmgC4XtGwLrW1Byn/sos6h2bo=;
+ b=fiJdTH6b+17ZLde9n1jhVp/0EOYOJ6Ufe6Hosyg9V6RBDsQqSbr7VLXqRzpFtTOKA1iGIIDIVqQFHf3Nqewq9i3/FqwcjEBeWolWqw23y4OMzlGOk9fe4LhVSRHV30k9RuhrugiF0JeXv1aEROOSYoI0ztYNqF7o4hcrgFo5+Lw=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2799.namprd12.prod.outlook.com (52.135.107.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Thu, 21 Mar 2019 20:30:02 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
+ 20:30:02 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: RE: [PATCH v3 1/6] EDAC/amd64: Add Family 17h Model 30h PCI IDs
+Thread-Topic: [PATCH v3 1/6] EDAC/amd64: Add Family 17h Model 30h PCI IDs
+Thread-Index: AQHUz3tUM9ZrTnXDwUK+nakLJj6Q4qYWqkZw
+Date:   Thu, 21 Mar 2019 20:30:02 +0000
+Message-ID: <SN6PR12MB2639CDDA70C504DFEF5EE7B8F8420@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.84.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1d75c92e-1244-44f8-043a-08d6ae3bff11
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2799;
+x-ms-traffictypediagnostic: SN6PR12MB2799:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB2799F32AC50A4064122C440EF8420@SN6PR12MB2799.namprd12.prod.outlook.com>
+x-forefront-prvs: 0983EAD6B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(376002)(39860400002)(346002)(199004)(189003)(13464003)(110136005)(6436002)(478600001)(105586002)(2501003)(966005)(14454004)(106356001)(6306002)(256004)(6246003)(72206003)(14444005)(97736004)(9686003)(55016002)(53936002)(25786009)(33656002)(4326008)(54906003)(6506007)(86362001)(229853002)(8936002)(316002)(3846002)(26005)(476003)(66066001)(53546011)(81156014)(8676002)(7736002)(81166006)(2906002)(102836004)(305945005)(99286004)(74316002)(446003)(5660300002)(71200400001)(486006)(186003)(71190400001)(68736007)(7696005)(6116002)(52536014)(76176011)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2799;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nXBzXC4exvGu+djJAWX7HQ2cifhklSSgybd4X1BU47oUmPIMktCrPGVdSmOmVibKr6tpKN+6489ZGn2isgN4OvU/NJRZSVXz64UgOC5rB0VwX+pGhzz3Pb28HfzZCWaHVNtFfaxsdpqdQvd3t6ZRhz5OAA9gX/XiH9SAk7auGKMHJFTEgV1aJRD4HZtDgxBtlp3og5FKCCa6VBjsjxSJzYSrw6MKn6tsOYswmkTlvY29Hme8OSaQvmmVW6tn8Dto55j6vhEvkK7xFFzQRRcbAGr6wNoRYwaITHrRq+3YjuBrT1Ag5bCRgSZeRCe2sXSc1XUi+z5jycl0NuxA6MkbVOlQvOdlJnijkMn2kK+GRcPsVcrqa/sVS7bsM77K0pIxrvrCNRSekIs7aW5lt4vPGeu4BQ0AcnyZhwORvk4nNLM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d75c92e-1244-44f8-043a-08d6ae3bff11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 20:30:02.3581
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Boris,
 
-	Hello,
+Any comments on this set?
 
-On Tue, 19 Mar 2019, Jacky Hu wrote:
+Thanks,
+Yazen
 
-> ipip packets are blocked in some public cloud environments, this patch
-> allows gue encapsulation with the tunneling method, which would make
-> tunneling working in those environments.
-> 
-> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-
-	The patch looks good to me, thanks!
-
-Acked-by: Julian Anastasov <ja@ssi.bg>
-
-	I plan to add the needed ICMP-error support for the new tunnel 
-type in the following days, as a followup patch.
-
+> -----Original Message-----
+> From: linux-edac-owner@vger.kernel.org <linux-edac-owner@vger.kernel.org>=
+ On Behalf Of Ghannam, Yazen
+> Sent: Thursday, February 28, 2019 9:36 AM
+> To: linux-edac@vger.kernel.org
+> Cc: Ghannam, Yazen <Yazen.Ghannam@amd.com>; linux-kernel@vger.kernel.org;=
+ bp@alien8.de
+> Subject: [PATCH v3 1/6] EDAC/amd64: Add Family 17h Model 30h PCI IDs
+>=20
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+>=20
+> Add the new Family 17h Model 30h PCI IDs to the AMD64 EDAC module.
+>=20
+> This also fixes a probe failure that appeared when some other PCI IDs
+> for Family 17h Model 30h were added to the AMD NB code.
+>=20
+> Fixes: be3518a16ef2 (x86/amd_nb: Add PCI device IDs for family 17h, model=
+ 30h)
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 > ---
->  include/net/ip_vs.h             |   5 ++
->  include/uapi/linux/ip_vs.h      |  11 +++
->  net/netfilter/ipvs/ip_vs_ctl.c  |  43 ++++++++++-
->  net/netfilter/ipvs/ip_vs_xmit.c | 124 ++++++++++++++++++++++++++++++--
->  4 files changed, 178 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> index a0d2e0bb9a94..cdc7b621930d 100644
-> --- a/include/net/ip_vs.h
-> +++ b/include/net/ip_vs.h
-> @@ -603,6 +603,9 @@ struct ip_vs_dest_user_kern {
->  
->  	/* Address family of addr */
->  	u16			af;
-> +
-> +	u16			tun_type;	/* tunnel type */
-> +	__be16			tun_port;	/* tunnel port */
+> Link:
+> https://lkml.kernel.org/r/20190226172532.12924-1-Yazen.Ghannam@amd.com
+>=20
+> v2->v3:
+> * No change.
+>=20
+> v1->v2:
+> * Write out "Family" and "Model" in commit message.
+> * Sort model checks in increasing order.
+>=20
+>  drivers/edac/amd64_edac.c | 13 +++++++++++++
+>  drivers/edac/amd64_edac.h |  3 +++
+>  2 files changed, 16 insertions(+)
+>=20
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index 6ea98575a402..98e8da9d9f5b 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -2211,6 +2211,15 @@ static struct amd64_family_type family_types[] =3D=
+ {
+>  			.dbam_to_cs		=3D f17_base_addr_to_cs_size,
+>  		}
+>  	},
+> +	[F17_M30H_CPUS] =3D {
+> +		.ctl_name =3D "F17h_M30h",
+> +		.f0_id =3D PCI_DEVICE_ID_AMD_17H_M30H_DF_F0,
+> +		.f6_id =3D PCI_DEVICE_ID_AMD_17H_M30H_DF_F6,
+> +		.ops =3D {
+> +			.early_channel_count	=3D f17_early_channel_count,
+> +			.dbam_to_cs		=3D f17_base_addr_to_cs_size,
+> +		}
+> +	},
 >  };
->  
->  
-> @@ -663,6 +666,8 @@ struct ip_vs_dest {
->  	atomic_t		conn_flags;	/* flags to copy to conn */
->  	atomic_t		weight;		/* server weight */
->  	atomic_t		last_weight;	/* server latest weight */
-> +	__u16			tun_type;	/* tunnel type */
-> +	__be16			tun_port;	/* tunnel port */
->  
->  	refcount_t		refcnt;		/* reference counter */
->  	struct ip_vs_stats      stats;          /* statistics */
-> diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-> index 1c916b2f89dc..e34f436fc79d 100644
-> --- a/include/uapi/linux/ip_vs.h
-> +++ b/include/uapi/linux/ip_vs.h
-> @@ -124,6 +124,13 @@
->  
->  #define IP_VS_PEDATA_MAXLEN     255
->  
-> +/* Tunnel types */
-> +enum {
-> +	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
-> +	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
-> +	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
-> +};
-> +
+>=20
 >  /*
->   *	The struct ip_vs_service_user and struct ip_vs_dest_user are
->   *	used to set IPVS rules through setsockopt.
-> @@ -392,6 +399,10 @@ enum {
->  
->  	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
->  
-> +	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
-> +
-> +	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
-> +
->  	__IPVS_DEST_ATTR_MAX,
->  };
->  
-> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> index 432141f04af3..ddee6266b78b 100644
-> --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> @@ -830,6 +830,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
->  	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
->  	conn_flags |= IP_VS_CONN_F_INACTIVE;
->  
-> +	/* set the tunnel info */
-> +	dest->tun_type = udest->tun_type;
-> +	dest->tun_port = udest->tun_port;
-> +
->  	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
->  	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
->  		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
-> @@ -980,6 +984,17 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
->  		return -ERANGE;
->  	}
->  
-> +	switch (udest->tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		if (udest->tun_port == 0) {
-> +			pr_err("%s(): tunnel port is zero\n", __func__);
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
->  
->  	/* We use function that requires RCU lock */
-> @@ -1044,6 +1059,17 @@ ip_vs_edit_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
->  		return -ERANGE;
->  	}
->  
-> +	switch (udest->tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		if (udest->tun_port == 0) {
-> +			pr_err("%s(): tunnel port is zero\n", __func__);
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
->  
->  	/* We use function that requires RCU lock */
-> @@ -2310,6 +2336,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
->  	udest->u_threshold	= udest_compat->u_threshold;
->  	udest->l_threshold	= udest_compat->l_threshold;
->  	udest->af		= AF_INET;
-> +	udest->tun_type		= IP_VS_CONN_F_TUNNEL_TYPE_IPIP;
->  }
->  
->  static int
-> @@ -2869,6 +2896,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
->  	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
->  	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
->  	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
-> +	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
-> +	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
->  };
->  
->  static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
-> @@ -3172,6 +3201,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
->  			 IP_VS_CONN_F_FWD_MASK)) ||
->  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
->  			atomic_read(&dest->weight)) ||
-> +	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
-> +		       dest->tun_type) ||
-> +	    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
-> +			 dest->tun_port) ||
->  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
->  	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
->  	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
-> @@ -3294,12 +3327,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
->  	/* If a full entry was requested, check for the additional fields */
->  	if (full_entry) {
->  		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
-> -			      *nla_l_thresh;
-> +			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
->  
->  		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
->  		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
->  		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
->  		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
-> +		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
-> +		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
->  
->  		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
->  			return -EINVAL;
-> @@ -3309,6 +3344,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
->  		udest->weight = nla_get_u32(nla_weight);
->  		udest->u_threshold = nla_get_u32(nla_u_thresh);
->  		udest->l_threshold = nla_get_u32(nla_l_thresh);
-> +
-> +		if (nla_tun_type)
-> +			udest->tun_type = nla_get_u8(nla_tun_type);
-> +
-> +		if (nla_tun_port)
-> +			udest->tun_port = nla_get_be16(nla_tun_port);
->  	}
->  
->  	return 0;
-> diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-> index 473cce2a5231..730e108b9f36 100644
-> --- a/net/netfilter/ipvs/ip_vs_xmit.c
-> +++ b/net/netfilter/ipvs/ip_vs_xmit.c
-> @@ -32,6 +32,7 @@
->  #include <linux/slab.h>
->  #include <linux/tcp.h>                  /* for tcphdr */
->  #include <net/ip.h>
-> +#include <net/gue.h>
->  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
->  #include <net/udp.h>
->  #include <net/icmp.h>                   /* for icmp_send */
-> @@ -382,6 +383,15 @@ __ip_vs_get_out_rt(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
->  		mtu = dst_mtu(&rt->dst);
->  	} else {
->  		mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
-> +		if (!dest)
-> +			goto err_put;
-> +		switch (dest->tun_type) {
-> +		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
+> @@ -3203,6 +3212,10 @@ static struct amd64_family_type *per_family_init(s=
+truct amd64_pvt *pvt)
+>  			fam_type =3D &family_types[F17_M10H_CPUS];
+>  			pvt->ops =3D &family_types[F17_M10H_CPUS].ops;
+>  			break;
+> +		} else if (pvt->model >=3D 0x30 && pvt->model <=3D 0x3f) {
+> +			fam_type =3D &family_types[F17_M30H_CPUS];
+> +			pvt->ops =3D &family_types[F17_M30H_CPUS].ops;
 > +			break;
-> +		default:
-> +			break;
-> +		}
->  		if (mtu < 68) {
->  			IP_VS_DBG_RL("%s(): mtu less than 68\n", __func__);
->  			goto err_put;
-> @@ -533,6 +543,15 @@ __ip_vs_get_out_rt_v6(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
->  		mtu = dst_mtu(&rt->dst);
->  	else {
->  		mtu = dst_mtu(&rt->dst) - sizeof(struct ipv6hdr);
-> +		if (!dest)
-> +			goto err_put;
-> +		switch (dest->tun_type) {
-> +		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> +			break;
-> +		default:
-> +			break;
-> +		}
->  		if (mtu < IPV6_MIN_MTU) {
->  			IP_VS_DBG_RL("%s(): mtu less than %d\n", __func__,
->  				     IPV6_MIN_MTU);
-> @@ -989,6 +1008,41 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
->  	}
->  }
->  
-> +static int
-> +ipvs_gue_encap(struct net *net, struct sk_buff *skb,
-> +	       struct ip_vs_conn *cp, __u8 *next_protocol)
-> +{
-> +	__be16 dport;
-> +	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
-> +	struct udphdr  *udph;	/* Our new UDP header */
-> +	struct guehdr  *gueh;	/* Our new GUE header */
-> +
-> +	skb_push(skb, sizeof(struct guehdr));
-> +
-> +	gueh = (struct guehdr *)skb->data;
-> +
-> +	gueh->control = 0;
-> +	gueh->version = 0;
-> +	gueh->hlen = 0;
-> +	gueh->flags = 0;
-> +	gueh->proto_ctype = *next_protocol;
-> +
-> +	skb_push(skb, sizeof(struct udphdr));
-> +	skb_reset_transport_header(skb);
-> +
-> +	udph = udp_hdr(skb);
-> +
-> +	dport = cp->dest->tun_port;
-> +	udph->dest = dport;
-> +	udph->source = sport;
-> +	udph->len = htons(skb->len);
-> +	udph->check = 0;
-> +
-> +	*next_protocol = IPPROTO_UDP;
-> +
-> +	return 0;
-> +}
-> +
+>  		}
+>  		/* fall through */
+>  	case 0x18:
+> diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
+> index 4242f8e39c18..de8dbb0b42b5 100644
+> --- a/drivers/edac/amd64_edac.h
+> +++ b/drivers/edac/amd64_edac.h
+> @@ -117,6 +117,8 @@
+>  #define PCI_DEVICE_ID_AMD_17H_DF_F6	0x1466
+>  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F0 0x15e8
+>  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
+> +#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
+> +#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
+>=20
 >  /*
->   *   IP Tunneling transmitter
->   *
-> @@ -1025,6 +1079,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
->  	struct iphdr  *iph;			/* Our new IP header */
->  	unsigned int max_headroom;		/* The extra header space needed */
->  	int ret, local;
-> +	int tun_type, gso_type;
->  
->  	EnterFunction(10);
->  
-> @@ -1046,6 +1101,16 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
->  	 */
->  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
->  
-> +	tun_type = cp->dest->tun_type;
-> +
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
->  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
->  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> @@ -1054,11 +1119,30 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
->  	if (IS_ERR(skb))
->  		goto tx_error;
->  
-> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		gso_type = SKB_GSO_UDP_TUNNEL;
-> +		break;
-> +	default:
-> +		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-> +		break;
-> +	}
-> +
-> +	if (iptunnel_handle_offloads(skb, gso_type))
->  		goto tx_error;
->  
->  	skb->transport_header = skb->network_header;
->  
-> +	skb_set_inner_ipproto(skb, next_protocol);
-> +
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	skb_push(skb, sizeof(struct iphdr));
->  	skb_reset_network_header(skb);
->  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> @@ -1102,6 +1186,8 @@ int
->  ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
->  		     struct ip_vs_protocol *pp, struct ip_vs_iphdr *ipvsh)
->  {
-> +	struct netns_ipvs *ipvs = cp->ipvs;
-> +	struct net *net = ipvs->net;
->  	struct rt6_info *rt;		/* Route to the other host */
->  	struct in6_addr saddr;		/* Source for tunnel */
->  	struct net_device *tdev;	/* Device to other host */
-> @@ -1112,10 +1198,11 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
->  	struct ipv6hdr  *iph;		/* Our new IP header */
->  	unsigned int max_headroom;	/* The extra header space needed */
->  	int ret, local;
-> +	int tun_type, gso_type;
->  
->  	EnterFunction(10);
->  
-> -	local = __ip_vs_get_out_rt_v6(cp->ipvs, cp->af, skb, cp->dest,
-> +	local = __ip_vs_get_out_rt_v6(ipvs, cp->af, skb, cp->dest,
->  				      &cp->daddr.in6,
->  				      &saddr, ipvsh, 1,
->  				      IP_VS_RT_MODE_LOCAL |
-> @@ -1134,17 +1221,46 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
->  	 */
->  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
->  
-> +	tun_type = cp->dest->tun_type;
-> +
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
->  					 &next_protocol, &payload_len,
->  					 &dsfield, &ttl, NULL);
->  	if (IS_ERR(skb))
->  		goto tx_error;
->  
-> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		gso_type = SKB_GSO_UDP_TUNNEL;
-> +		break;
-> +	default:
-> +		gso_type = __tun_gso_type_mask(AF_INET6, cp->af);
-> +		break;
-> +	}
-> +
-> +	if (iptunnel_handle_offloads(skb, gso_type))
->  		goto tx_error;
->  
->  	skb->transport_header = skb->network_header;
->  
-> +	skb_set_inner_ipproto(skb, next_protocol);
-> +
-> +	switch (tun_type) {
-> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
->  	skb_push(skb, sizeof(struct ipv6hdr));
->  	skb_reset_network_header(skb);
->  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> @@ -1167,7 +1283,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
->  
->  	ret = ip_vs_tunnel_xmit_prepare(skb, cp);
->  	if (ret == NF_ACCEPT)
-> -		ip6_local_out(cp->ipvs->net, skb->sk, skb);
-> +		ip6_local_out(net, skb->sk, skb);
->  	else if (ret == NF_DROP)
->  		kfree_skb(skb);
->  
-> -- 
-> 2.21.0
+>   * Function 1 - Address Map
+> @@ -284,6 +286,7 @@ enum amd_families {
+>  	F16_M30H_CPUS,
+>  	F17_CPUS,
+>  	F17_M10H_CPUS,
+> +	F17_M30H_CPUS,
+>  	NUM_FAMILIES,
+>  };
+>=20
+> --
+> 2.17.1
 
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
