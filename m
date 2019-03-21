@@ -2,162 +2,407 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439B6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711CBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1443F218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="g1PYiMNF"
+	by mail.kernel.org (Postfix) with ESMTP id 2D7FB218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfCUOLm (ORCPT
+        id S1728270AbfCUOMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:11:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35310 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbfCUOLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:11:41 -0400
-Received: by mail-io1-f65.google.com with SMTP id x4so5327579ion.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 07:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1ADscw/yqxQuUf4MbLlwnwNF0LT5L7GDq1iDTgC4RvQ=;
-        b=g1PYiMNFnqbMB1gAf8NL9OfTqrjh3Qpf2/kYNlHDA2TrMhU2Pvufl/Gip1/9yNE0Lo
-         xVya9DuT6aWjBBiLMtGIjwOQZvY2+HZxIjf9xZbwAbsmHwSSEeg9/7VbjU9+qBpi5XoA
-         /wALKblC1c5IYTuMhd7eZqV5Pff6+MIzjAyQA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1ADscw/yqxQuUf4MbLlwnwNF0LT5L7GDq1iDTgC4RvQ=;
-        b=tc6IcuYqGzXudmLLom7j9wckstk4TAOnApu01FwzPzFYaHzqm9tb4epCqET9oYYe3S
-         k94w5r2PIUwVemVW+Es1nExAktoPiDUvsh2t33peb2AqUu5DuL6NBonoOofqMqK5v2+g
-         3vq8yGcaz2ojiffPwqohp8vA7LJoL1LBReHg9d1l1mXQeqiNHowe7p4naJUAUEFuEeNJ
-         o4BIYn4m08sRKR2LSj0Tu3ZzWfTyax5gyRBwKyKqso6Kt8LER+TEOv0fEaud/T639EDu
-         /0jcfEXpU5fpN0hTTIvKlemKC//HVXNPGrVcrNrHy//EpOiv28/8a/XhkcC5GEc/Rzc3
-         kB+Q==
-X-Gm-Message-State: APjAAAV5ubk0M2NXLdgB2nyvy+9B6bcxt3oGuarhYPYGn4tcySM6/Iio
-        LgAl09jsUuCAUyXkcUXsRMbziCsRELFOjTeJmh9I7A==
-X-Google-Smtp-Source: APXvYqzgjqYgaPyCy+tLoYG9qXmF+KjPFk2C8OigkBAYak5ZfVPgnhVypLipIHvf1ovQ2jOLD0HFrh6nbgW+OKDHwH0=
-X-Received: by 2002:a6b:d80a:: with SMTP id y10mr2708705iob.114.1553177500014;
- Thu, 21 Mar 2019 07:11:40 -0700 (PDT)
+        Thu, 21 Mar 2019 10:12:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38488 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfCUOMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:12:44 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 834FD8AE4F;
+        Thu, 21 Mar 2019 14:12:43 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0785260857;
+        Thu, 21 Mar 2019 14:12:41 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 10:12:40 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH RESEND 3/3] mm: Add write-protect and clean utilities
+ for address space ranges
+Message-ID: <20190321141239.GD2904@redhat.com>
+References: <20190321132140.114878-1-thellstrom@vmware.com>
+ <20190321132140.114878-4-thellstrom@vmware.com>
 MIME-Version: 1.0
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com> <20190311153847.oz6ruqmptaq2befn@flea>
- <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
- <20190319105307.omowzyhqu33e3pzy@flea> <7dab458e-7fad-2dbe-bbae-bd3cdf89dcb4@orpaltech.com>
-In-Reply-To: <7dab458e-7fad-2dbe-bbae-bd3cdf89dcb4@orpaltech.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 21 Mar 2019 19:41:28 +0530
-Message-ID: <CAMty3ZCEjVhTvjUgvnkR7SpeC8m10f0FpnvLWCEkMksbhfWR2Q@mail.gmail.com>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
-To:     Sergey Suloev <ssuloev@orpaltech.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula@amarulasolutions.com,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190321132140.114878-4-thellstrom@vmware.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 21 Mar 2019 14:12:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+On Thu, Mar 21, 2019 at 01:22:41PM +0000, Thomas Hellstrom wrote:
+> Add two utilities to a) write-protect and b) clean all ptes pointing into
+> a range of an address space
+> The utilities are intended to aid in tracking dirty pages (either
+> driver-allocated system memory or pci device memory).
+> The write-protect utility should be used in conjunction with
+> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
+> accesses. Typically one would want to use this on sparse accesses into
+> large memory regions. The clean utility should be used to utilize
+> hardware dirtying functionality and avoid the overhead of page-faults,
+> typically on large accesses into small memory regions.
 
-On Tue, Mar 19, 2019 at 5:47 PM Sergey Suloev <ssuloev@orpaltech.com> wrote:
->
-> Hi, guys,
->
-> On 3/19/19 1:53 PM, Maxime Ripard wrote:
->
-> On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
->
-> On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
->
-> pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> MIPI clock topology in Allwinner DSI controller.
->
-> TCON dotclock driver is computing the desired DCLK divider based on
-> panel pixel clock along with input DCLK min, max divider values from
-> tcon driver and that would eventually set the pll-mipi clock rate.
->
-> The current code allows the TCON clock divider to have a default 4
-> for min, max ranges that would fail to compute the desired pll-mipi
-> rate while supporting new panels.
->
-> So, add the computation logic 'format/lanes' to dclk min and max dividers
-> and instead of default 4. This computation logic align with Allwinner A64
-> BSP, hoping that would work even for A33.
->
-> Last time we discussed this, we found out that this wasn't the case,
-> even in the BSP.
->
-> This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-> register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
->
-> What compelling evidence have you found that makes you say otherwise?
->
-> divider 4 isn't worked, this I would mentioned before as well.
->
-> Maybe you mentionned it before, but it's nowhere to be found in your
-> commit log.
->
-> Tested this on 4 different panels, and below are the desired divider values
-> and pll-mipi clock rate with respect to pixel clock frequency.
->
-> - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with the output parent clock rate of 330MHz.
-> - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with parent clock rate of 180MHz.
-> - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
->   is 12 with the output parent clock rate of 330MHz.
-> - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
->   is 6 with the output parent clock rate of 882MHz.
->
-> BSP trying to use this format/lane to compute dsi divider that in-turn
-> using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
->
-> Feel free to reply to
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
->
-> And correct whatever is said there that isn't what is happening.
->
->
-> excuse me if my message is out of topic.
->
-> I just want let you know  that the code
->
-> tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-> tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
->
-> where SUN6I_DSI_TCON_DIV = 4  isn't working with my 2-lane panel: I am always getting the error:
->
->  [CRTC:38:crtc-0] vblank wait timed out
->
-> As soon as I set
->
-> tcon->dclk_min_div = tcon->dclk_max_div = bpp/lanes, i.e. 12
->
-> the error disappears.
 
-Yes, I did test the same in 2-lane panel. it worked with the logic.
-thanks for testing.
+Again this does not use mmu notifier and there is no scary comment to
+explain the very limited use case it should be use for ie mmap of a
+device file and only by the device driver.
+
+Using it ouside of this would break softdirty or trigger false COW or
+other scary thing.
+
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> ---
+>  include/linux/mm.h  |   9 +-
+>  mm/Makefile         |   2 +-
+>  mm/apply_as_range.c | 257 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 266 insertions(+), 2 deletions(-)
+>  create mode 100644 mm/apply_as_range.c
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b7dd4ddd6efb..62f24dd0bfa0 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2642,7 +2642,14 @@ struct pfn_range_apply {
+>  };
+>  extern int apply_to_pfn_range(struct pfn_range_apply *closure,
+>  			      unsigned long address, unsigned long size);
+> -
+> +unsigned long apply_as_wrprotect(struct address_space *mapping,
+> +				 pgoff_t first_index, pgoff_t nr);
+> +unsigned long apply_as_clean(struct address_space *mapping,
+> +			     pgoff_t first_index, pgoff_t nr,
+> +			     pgoff_t bitmap_pgoff,
+> +			     unsigned long *bitmap,
+> +			     pgoff_t *start,
+> +			     pgoff_t *end);
+>  #ifdef CONFIG_PAGE_POISONING
+>  extern bool page_poisoning_enabled(void);
+>  extern void kernel_poison_pages(struct page *page, int numpages, int enable);
+> diff --git a/mm/Makefile b/mm/Makefile
+> index d210cc9d6f80..a94b78f12692 100644
+> --- a/mm/Makefile
+> +++ b/mm/Makefile
+> @@ -39,7 +39,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+>  			   mm_init.o mmu_context.o percpu.o slab_common.o \
+>  			   compaction.o vmacache.o \
+>  			   interval_tree.o list_lru.o workingset.o \
+> -			   debug.o $(mmu-y)
+> +			   debug.o apply_as_range.o $(mmu-y)
+>  
+>  obj-y += init-mm.o
+>  obj-y += memblock.o
+> diff --git a/mm/apply_as_range.c b/mm/apply_as_range.c
+> new file mode 100644
+> index 000000000000..9f03e272ebd0
+> --- /dev/null
+> +++ b/mm/apply_as_range.c
+> @@ -0,0 +1,257 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/hugetlb.h>
+> +#include <linux/bitops.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/tlbflush.h>
+> +
+> +/**
+> + * struct apply_as - Closure structure for apply_as_range
+> + * @base: struct pfn_range_apply we derive from
+> + * @start: Address of first modified pte
+> + * @end: Address of last modified pte + 1
+> + * @total: Total number of modified ptes
+> + * @vma: Pointer to the struct vm_area_struct we're currently operating on
+> + * @flush_cache: Whether to call a cache flush before modifying a pte
+> + * @flush_tlb: Whether to flush the tlb after modifying a pte
+> + */
+> +struct apply_as {
+> +	struct pfn_range_apply base;
+> +	unsigned long start, end;
+> +	unsigned long total;
+> +	const struct vm_area_struct *vma;
+> +	u32 flush_cache : 1;
+> +	u32 flush_tlb : 1;
+> +};
+> +
+> +/**
+> + * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
+> + * @pte: Pointer to the pte
+> + * @token: Page table token, see apply_to_pfn_range()
+> + * @addr: The virtual page address
+> + * @closure: Pointer to a struct pfn_range_apply embedded in a
+> + * struct apply_as
+> + *
+> + * The function write-protects a pte and records the range in
+> + * virtual address space of touched ptes for efficient TLB flushes.
+> + *
+> + * Return: Always zero.
+> + */
+> +static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
+> +			      unsigned long addr,
+> +			      struct pfn_range_apply *closure)
+> +{
+> +	struct apply_as *aas = container_of(closure, typeof(*aas), base);
+> +
+> +	if (pte_write(*pte)) {
+> +		set_pte_at(closure->mm, addr, pte, pte_wrprotect(*pte));
+
+So there is no flushing here, even for x96 this is wrong. It
+should be something like:
+    ptep_clear_flush()
+    flush_cache_page() // if pte is pointing to a regular page
+    set_pte_at()
+    update_mmu_cache()
+
+
+> +		aas->total++;
+> +		if (addr < aas->start)
+> +			aas->start = addr;
+> +		if (addr + PAGE_SIZE > aas->end)
+> +			aas->end = addr + PAGE_SIZE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * struct apply_as_clean - Closure structure for apply_as_clean
+> + * @base: struct apply_as we derive from
+> + * @bitmap_pgoff: Address_space Page offset of the first bit in @bitmap
+> + * @bitmap: Bitmap with one bit for each page offset in the address_space range
+> + * covered.
+> + * @start: Address_space page offset of first modified pte
+> + * @end: Address_space page offset of last modified pte
+> + */
+> +struct apply_as_clean {
+> +	struct apply_as base;
+> +	pgoff_t bitmap_pgoff;
+> +	unsigned long *bitmap;
+> +	pgoff_t start, end;
+> +};
+> +
+> +/**
+> + * apply_pt_clean - Leaf pte callback to clean a pte
+> + * @pte: Pointer to the pte
+> + * @token: Page table token, see apply_to_pfn_range()
+> + * @addr: The virtual page address
+> + * @closure: Pointer to a struct pfn_range_apply embedded in a
+> + * struct apply_as_clean
+> + *
+> + * The function cleans a pte and records the range in
+> + * virtual address space of touched ptes for efficient TLB flushes.
+> + * It also records dirty ptes in a bitmap representing page offsets
+> + * in the address_space, as well as the first and last of the bits
+> + * touched.
+> + *
+> + * Return: Always zero.
+> + */
+> +static int apply_pt_clean(pte_t *pte, pgtable_t token,
+> +			  unsigned long addr,
+> +			  struct pfn_range_apply *closure)
+> +{
+> +	struct apply_as *aas = container_of(closure, typeof(*aas), base);
+> +	struct apply_as_clean *clean = container_of(aas, typeof(*clean), base);
+> +
+> +	if (pte_dirty(*pte)) {
+> +		pgoff_t pgoff = ((addr - aas->vma->vm_start) >> PAGE_SHIFT) +
+> +			aas->vma->vm_pgoff - clean->bitmap_pgoff;
+> +
+> +		set_pte_at(closure->mm, addr, pte, pte_mkclean(*pte));
+
+Clearing the dirty bit is racy, it should be done with write protect
+instead as the dirty bit can be set again just after you clear it.
+So i am not sure what is the usage pattern where you want to clear
+that bit without write protect.
+
+You also need proper page flushing with flush_cache_page()
+
+> +		aas->total++;
+> +		if (addr < aas->start)
+> +			aas->start = addr;
+> +		if (addr + PAGE_SIZE > aas->end)
+> +			aas->end = addr + PAGE_SIZE;
+> +
+> +		__set_bit(pgoff, clean->bitmap);
+> +		clean->start = min(clean->start, pgoff);
+> +		clean->end = max(clean->end, pgoff + 1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * apply_as_range - Apply a pte callback to all PTEs pointing into a range
+> + * of an address_space.
+> + * @mapping: Pointer to the struct address_space
+> + * @aas: Closure structure
+> + * @first_index: First page offset in the address_space
+> + * @nr: Number of incremental page offsets to cover
+> + *
+> + * Return: Number of ptes touched. Note that this number might be larger
+> + * than @nr if there are overlapping vmas
+> + */
+
+This comment need to be _scary_ it should only be use for device driver
+vma ie device driver mapping.
+
+> +static unsigned long apply_as_range(struct address_space *mapping,
+> +				    struct apply_as *aas,
+> +				    pgoff_t first_index, pgoff_t nr)
+> +{
+> +	struct vm_area_struct *vma;
+> +	pgoff_t vba, vea, cba, cea;
+> +	unsigned long start_addr, end_addr;
+> +
+> +	/* FIXME: Is a read lock sufficient here? */
+> +	down_write(&mapping->i_mmap_rwsem);
+
+read would be sufficient and you should use i_mmap_lock_read() not
+the down_write/read API.
+
+> +	vma_interval_tree_foreach(vma, &mapping->i_mmap, first_index,
+> +		first_index + nr - 1) {
+> +		aas->base.mm = vma->vm_mm;
+> +
+> +		/* Clip to the vma */
+> +		vba = vma->vm_pgoff;
+> +		vea = vba + vma_pages(vma);
+> +		cba = first_index;
+> +		cba = max(cba, vba);
+> +		cea = first_index + nr;
+> +		cea = min(cea, vea);
+> +
+> +		/* Translate to virtual address */
+> +		start_addr = ((cba - vba) << PAGE_SHIFT) + vma->vm_start;
+> +		end_addr = ((cea - vba) << PAGE_SHIFT) + vma->vm_start;
+> +
+> +		/*
+> +		 * TODO: Should caches be flushed individually on demand
+> +		 * in the leaf-pte callbacks instead? That is, how
+> +		 * costly are inter-core interrupts in an SMP system?
+> +		 */
+> +		if (aas->flush_cache)
+> +			flush_cache_range(vma, start_addr, end_addr);
+
+flush_cache_range() is a noop on most architecture what you really need
+is proper per page flushing see above.
+
+> +		aas->start = end_addr;
+> +		aas->end = start_addr;
+> +		aas->vma = vma;
+> +
+> +		/* Should not error since aas->base.alloc == 0 */
+> +		WARN_ON(apply_to_pfn_range(&aas->base, start_addr,
+> +					   end_addr - start_addr));
+> +		if (aas->flush_tlb && aas->end > aas->start)
+> +			flush_tlb_range(vma, aas->start, aas->end);
+> +	}
+> +	up_write(&mapping->i_mmap_rwsem);
+> +
+> +	return aas->total;
+> +}
+> +
+> +/**
+> + * apply_as_wrprotect - Write-protect all ptes in an address_space range
+> + * @mapping: The address_space we want to write protect
+> + * @first_index: The first page offset in the range
+> + * @nr: Number of incremental page offsets to cover
+> + *
+> + * Return: The number of ptes actually write-protected. Note that
+> + * already write-protected ptes are not counted.
+> + */
+
+It should be scary and limited to mapping of device file.
+
+
+> +unsigned long apply_as_wrprotect(struct address_space *mapping,
+> +				 pgoff_t first_index, pgoff_t nr)
+> +{
+> +	struct apply_as aas = {
+> +		.base = {
+> +			.alloc = 0,
+> +			.ptefn = apply_pt_wrprotect,
+> +		},
+> +		.total = 0,
+> +		.flush_cache = 1,
+> +		.flush_tlb = 1
+> +	};
+> +
+> +	return apply_as_range(mapping, &aas, first_index, nr);
+> +}
+> +EXPORT_SYMBOL(apply_as_wrprotect);
+> +
+> +/**
+> + * apply_as_clean - Clean all ptes in an address_space range
+> + * @mapping: The address_space we want to clean
+> + * @first_index: The first page offset in the range
+> + * @nr: Number of incremental page offsets to cover
+> + * @bitmap_pgoff: The page offset of the first bit in @bitmap
+> + * @bitmap: Pointer to a bitmap of at least @nr bits. The bitmap needs to
+> + * cover the whole range @first_index..@first_index + @nr.
+> + * @start: Pointer to page offset of the first set bit in @bitmap, or if
+> + * none set the value pointed to should be @bitmap_pgoff + @nr. The value
+> + * is modified as new bits are set by the function.
+> + * @end: Page offset of the last set bit in @bitmap + 1 or @bitmap_pgoff if
+> + * none set. The value is modified as new bets are set by the function.
+> + *
+> + * Note: When this function returns there is no guarantee that a CPU has
+> + * not already dirtied new ptes. However it will not clean any ptes not
+> + * reported in the bitmap.
+> + *
+> + * If a caller needs to make sure all dirty ptes are picked up and none
+> + * additional are added, it first needs to write-protect the address-space
+> + * range and make sure new writers are blocked in page_mkwrite() or
+> + * pfn_mkwrite(). And then after a TLB flush following the write-protection
+> + * pick upp all dirty bits.
+> + *
+> + * Return: The number of dirty ptes actually cleaned.
+> + */
+
+It should be scary and limited to mapping of device file.
+
+Cheers,
+Jérôme
