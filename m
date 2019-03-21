@@ -7,40 +7,45 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0A5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EF9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6337218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D37218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfCUL3N (ORCPT
+        id S1728200AbfCUL36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:29:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54173 "EHLO
+        Thu, 21 Mar 2019 07:29:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34825 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfCUL3K (ORCPT
+        with ESMTP id S1727844AbfCUL36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:29:10 -0400
+        Thu, 21 Mar 2019 07:29:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LBStJ6107108
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2LBTZT1107262
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 21 Mar 2019 04:28:55 -0700
+        Thu, 21 Mar 2019 04:29:35 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LBSt9V107100;
-        Thu, 21 Mar 2019 04:28:55 -0700
-Date:   Thu, 21 Mar 2019 04:28:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2LBTYlq107259;
+        Thu, 21 Mar 2019 04:29:34 -0700
+Date:   Thu, 21 Mar 2019 04:29:34 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Colin Ian King <tipbot@zytor.com>
-Message-ID: <tip-725e29db8cb9058976559bc3239c97ef7db40eea@git.kernel.org>
-Cc:     tglx@linutronix.de, colin.king@canonical.com, bp@alien8.de,
-        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
-Reply-To: bp@alien8.de, mingo@kernel.org, linux-kernel@vger.kernel.org,
-          hpa@zytor.com, colin.king@canonical.com, tglx@linutronix.de
-In-Reply-To: <20190314230838.18256-1-colin.king@canonical.com>
-References: <20190314230838.18256-1-colin.king@canonical.com>
+From:   tip-bot for Aditya Pakki <tipbot@zytor.com>
+Message-ID: <tip-2e84f116afca3719c9d0a1a78b47b48f75fd5724@git.kernel.org>
+Cc:     hpa@zytor.com, keescook@chromium.org, pakki001@umn.edu,
+        mingo@kernel.org, bp@alien8.de, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, roland@purestorage.com,
+        nstange@suse.de, joe@perches.com
+Reply-To: tglx@linutronix.de, pakki001@umn.edu, keescook@chromium.org,
+          hpa@zytor.com, mingo@kernel.org, bp@alien8.de, nstange@suse.de,
+          joe@perches.com, linux-kernel@vger.kernel.org,
+          roland@purestorage.com
+In-Reply-To: <20190319021958.17275-1-pakki001@umn.edu>
+References: <20190319021958.17275-1-pakki001@umn.edu>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/lib: Fix indentation issue, remove extra tab
-Git-Commit-ID: 725e29db8cb9058976559bc3239c97ef7db40eea
+Subject: [tip:x86/urgent] x86/hpet: Prevent potential NULL pointer
+ dereference
+Git-Commit-ID: 2e84f116afca3719c9d0a1a78b47b48f75fd5724
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -54,39 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  725e29db8cb9058976559bc3239c97ef7db40eea
-Gitweb:     https://git.kernel.org/tip/725e29db8cb9058976559bc3239c97ef7db40eea
-Author:     Colin Ian King <colin.king@canonical.com>
-AuthorDate: Thu, 14 Mar 2019 23:08:38 +0000
+Commit-ID:  2e84f116afca3719c9d0a1a78b47b48f75fd5724
+Gitweb:     https://git.kernel.org/tip/2e84f116afca3719c9d0a1a78b47b48f75fd5724
+Author:     Aditya Pakki <pakki001@umn.edu>
+AuthorDate: Mon, 18 Mar 2019 21:19:56 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 21 Mar 2019 12:24:38 +0100
 
-x86/lib: Fix indentation issue, remove extra tab
+x86/hpet: Prevent potential NULL pointer dereference
 
-The increment of buff is indented one level too deeply, clean
-this up by removing a tab.
+hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
+a check.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Add a check to prevent NULL pointer dereference.
+
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: kjlu@umn.edu
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190314230838.18256-1-colin.king@canonical.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Roland Dreier <roland@purestorage.com>
+Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
 
 ---
- arch/x86/lib/csum-partial_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/hpet.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
-index 9baca3e054be..e7925d668b68 100644
---- a/arch/x86/lib/csum-partial_64.c
-+++ b/arch/x86/lib/csum-partial_64.c
-@@ -94,7 +94,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
- 				    : "m" (*(unsigned long *)buff), 
- 				    "r" (zero),  "0" (result));
- 				--count; 
--					buff += 8;
-+				buff += 8;
- 			}
- 			result = add32_with_carry(result>>32,
- 						  result&0xffffffff); 
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index dfd3aca82c61..fb32925a2e62 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -905,6 +905,8 @@ int __init hpet_enable(void)
+ 		return 0;
+ 
+ 	hpet_set_mapping();
++	if (!hpet_virt_address)
++		return 0;
+ 
+ 	/*
+ 	 * Read the period and check for a sane value:
