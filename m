@@ -2,100 +2,111 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7607FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43001C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEB7218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A44221874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfCUP4h (ORCPT
+        id S1728451AbfCUP5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:56:37 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:51320 "EHLO ale.deltatee.com"
+        Thu, 21 Mar 2019 11:57:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39142 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfCUP4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:56:36 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h703H-00043G-7V; Thu, 21 Mar 2019 09:56:20 -0600
-To:     Knut Omang <knut.omang@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        keescook@google.com, mcgrof@kernel.org, shuah@kernel.org,
-        robh@kernel.org, kieran.bingham@ideasonboard.com,
-        frowand.list@gmail.com
-Cc:     gregkh@linuxfoundation.org, joel@jms.id.au, mpe@ellerman.id.au,
-        joe@perches.com, brakmo@fb.com, rostedt@goodmis.org,
-        Tim.Bird@sony.com, khilman@baylibre.com, julia.lawall@lip6.fr,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
-        linux-um@lists.infradead.org, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, dan.j.williams@intel.com,
-        linux-nvdimm@lists.01.org, devicetree@vger.kernel.org,
-        pmladek@suse.com, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, wfg@linux.intel.com
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com>
- <01b2a950f661e8ebd6acbc45c2f89c8f10063daf.camel@oracle.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ce355f5c-189c-816c-cde4-fb4e816d44e7@deltatee.com>
-Date:   Thu, 21 Mar 2019 09:56:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1725985AbfCUP5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:57:52 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A2E630842A9;
+        Thu, 21 Mar 2019 15:57:52 +0000 (UTC)
+Received: from localhost (ovpn-117-168.ams2.redhat.com [10.36.117.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 334C460BE5;
+        Thu, 21 Mar 2019 15:57:47 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 15:57:46 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Cornelia Huck <cohuck@redhat.com>, mst@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org
+Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
+Message-ID: <20190321155746.GE31434@stefanha-x1.localdomain>
+References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
+ <20190312183351.74764f4f.cohuck@redhat.com>
+ <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
+ <20190313103900.1ea7f996.cohuck@redhat.com>
+ <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
+ <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
+ <20190315134112.7d63348c.cohuck@redhat.com>
+ <1df52766-88fb-6b23-d160-b891c3017133@redhat.com>
+ <0fbdcfa6-cbd7-4f09-93b1-40898d5f77d1@oracle.com>
+ <f92a5ef9-04b9-d6fa-a7f8-c855a87cd0fb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <01b2a950f661e8ebd6acbc45c2f89c8f10063daf.camel@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: wfg@linux.intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Alexander.Levin@microsoft.com, pmladek@suse.com, devicetree@vger.kernel.org, linux-nvdimm@lists.01.org, dan.j.williams@intel.com, dri-devel@lists.freedesktop.org, daniel@ffwll.ch, linux-um@lists.infradead.org, richard@nod.at, jdike@addtoit.com, linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, julia.lawall@lip6.fr, khilman@baylibre.com, Tim.Bird@sony.com, rostedt@goodmis.org, brakmo@fb.com, joe@perches.com, mpe@ellerman.id.au, joel@jms.id.au, gregkh@linuxfoundation.org, frowand.list@gmail.com, kieran.bingham@ideasonboard.com, robh@kernel.org, shuah@kernel.org, mcgrof@kernel.org, keescook@google.com, brendanhiggins@google.com, knut.omang@oracle.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
+Content-Disposition: inline
+In-Reply-To: <f92a5ef9-04b9-d6fa-a7f8-c855a87cd0fb@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 21 Mar 2019 15:57:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--ryJZkp9/svQ58syV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019-03-20 11:23 p.m., Knut Omang wrote:
-> Testing drivers, hardware and firmware within production kernels was the use
-> case that inspired KTF (Kernel Test Framework). Currently KTF is available as a
-> standalone git repository. That's been the most efficient form for us so far, 
-> as we typically want tests to be developed once but deployed on many different
-> kernel versions simultaneously, as part of continuous integration.
+On Wed, Mar 20, 2019 at 08:53:33PM +0800, Jason Wang wrote:
+>=20
+> On 2019/3/19 =E4=B8=8A=E5=8D=8810:22, Dongli Zhang wrote:
+> > Hi Jason,
+> >=20
+> > On 3/18/19 3:47 PM, Jason Wang wrote:
+> > > On 2019/3/15 =E4=B8=8B=E5=8D=888:41, Cornelia Huck wrote:
+> > > > On Fri, 15 Mar 2019 12:50:11 +0800
+> > > > Jason Wang <jasowang@redhat.com> wrote:
+> > option 3:
+> > We should allow more vectors even the block layer would support at most
+> > nr_cpu_ids queues.
+> >=20
+> >=20
+> > I understand a new policy for queue-vector mapping is very helpful. I a=
+m just
+> > asking the question from block layer's point of view.
+> >=20
+> > Thank you very much!
+> >=20
+> > Dongli Zhang
+>=20
+>=20
+> Don't know much for block, cc Stefan for more idea.
 
-Interesting. It seems like it's really in direct competition with KUnit.
-I didn't really go into it in too much detail but these are my thoughts:
+Thanks for CCing me.  I don't have much input at this stage.
 
-From a developer perspective I think KTF not being in the kernel tree is
-a huge negative. I want minimal effort to include my tests in a patch
-series and minimal effort for other developers to be able to use them.
-Needing to submit these tests to another project or use another project
-to run them is too much friction.
+Stefan
 
-Also I think the goal of having tests that run on any kernel version is
-a pipe dream. You'd absolutely need a way to encode which kernel
-versions a test is expected to pass on because the tests might not make
-sense until a feature is finished in upstream. And this makes it even
-harder to develop these tests because, when we write them, we might not
-even know which kernel version the feature will be added to. Similarly,
-if a feature is removed or substantially changed, someone will have to
-do a patch to disable the test for subsequent kernel versions and create
-a new test for changed features. So, IMO, tests absolutely have to be
-part of the kernel tree so they can be changed with the respective
-features they test.
+--ryJZkp9/svQ58syV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kunit's ability to run without having to build and run the entire kernel
- is also a huge plus. (Assuming there's a way to get around the build
-dependency issues). Because of this, it can be very quick to run these
-tests which makes development a *lot* easier seeing you don't have to
-reboot a machine every time you want to test a fix.
+-----BEGIN PGP SIGNATURE-----
 
-Logan
+iQEcBAEBAgAGBQJck7R5AAoJEJykq7OBq3PISGcH+gL2UqKuOclQNeDq8We5P/mv
+norBWe7BE3V9Aj0u8b9s6rNXKi9XYRoKPMMC3jf8EZmefL95c4nsaCG8cNG0juj8
+uv50QGn0VoN9tXlVakv2+b99X2mXhFfok0Z68+jPYq1LMIRFaTVqZkutgiIXOBLV
+rG20zEUVSHvoY/n7TWXmJRn3O/PSYxoR312UR/vwFZWlQUwZJme4yYFpBBiuY7ur
+I8F2OmH0oVtb/qvJ9XF2zqI48Nwy5OWnhkTNRHSsudw7njAwJfXRNpk/GbOlHLYD
+FnQGST7MJrpiQCvCWkZADFGJ1wmlb0bFJ1R5qkME5+zxYq2VbQ9CiiklD8yBXBw=
+=9/HK
+-----END PGP SIGNATURE-----
+
+--ryJZkp9/svQ58syV--
