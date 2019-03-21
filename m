@@ -2,93 +2,120 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FF7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E12C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA84121841
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B2C21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbfCULVd (ORCPT
+        id S1727937AbfCULXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:21:33 -0400
-Received: from www62.your-server.de ([213.133.104.62]:60962 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCULVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:21:33 -0400
-Received: from [88.198.220.132] (helo=sslproxy03.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h6vlK-0002DL-Tp; Thu, 21 Mar 2019 12:21:31 +0100
-Received: from [178.197.248.24] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h6vlK-0005Ow-L2; Thu, 21 Mar 2019 12:21:30 +0100
-Subject: Re: [PATCH v2] bpf: do not restore dst_reg when cur_state is freed
-To:     Xu Yu <xuyu@linux.alibaba.com>, bpf@vger.kernel.org,
+        Thu, 21 Mar 2019 07:23:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54562 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727829AbfCULXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:23:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A55C0374;
+        Thu, 21 Mar 2019 04:23:18 -0700 (PDT)
+Received: from cam-smtp0.cambridge.arm.com (unknown [10.37.10.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 240A83F614;
+        Thu, 21 Mar 2019 04:23:14 -0700 (PDT)
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jianguo Chen <chenjianguo3@huawei.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Rob Herring <robh@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jason Cooper <jason@lakedaemon.net>,
         linux-kernel@vger.kernel.org
-References: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
- <ae7834dda12cb2a88dd8471132d6274a7d1ec5f0.1553161998.git.xuyu@linux.alibaba.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <cbcf0c58-b15f-c82d-1274-1a7d17d75799@iogearbox.net>
-Date:   Thu, 21 Mar 2019 12:21:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+Subject: [GIT PULL] irqchip updates for 5.1-rc2
+Date:   Thu, 21 Mar 2019 11:22:37 +0000
+Message-Id: <20190321112237.10325-1-marc.zyngier@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <ae7834dda12cb2a88dd8471132d6274a7d1ec5f0.1553161998.git.xuyu@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.2/25395/Thu Mar 21 08:52:58 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21/2019 11:00 AM, Xu Yu wrote:
-> Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
-> Call trace:
->   dump_stack+0xbf/0x12e
->   print_address_description+0x6a/0x280
->   kasan_report+0x237/0x360
->   sanitize_ptr_alu+0x85a/0x8d0
->   adjust_ptr_min_max_vals+0x8f2/0x1ca0
->   adjust_reg_min_max_vals+0x8ed/0x22e0
->   do_check+0x1ca6/0x5d00
->   bpf_check+0x9ca/0x2570
->   bpf_prog_load+0xc91/0x1030
->   __se_sys_bpf+0x61e/0x1f00
->   do_syscall_64+0xc8/0x550
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> Fault injection trace:
->   kfree+0xea/0x290
->   free_func_state+0x4a/0x60
->   free_verifier_state+0x61/0xe0
->   push_stack+0x216/0x2f0	          <- inject failslab
->   sanitize_ptr_alu+0x2b1/0x8d0
->   adjust_ptr_min_max_vals+0x8f2/0x1ca0
->   adjust_reg_min_max_vals+0x8ed/0x22e0
->   do_check+0x1ca6/0x5d00
->   bpf_check+0x9ca/0x2570
->   bpf_prog_load+0xc91/0x1030
->   __se_sys_bpf+0x61e/0x1f00
->   do_syscall_64+0xc8/0x550
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> When kzalloc() fails in push_stack(), free_verifier_state() will free
-> current verifier state. As push_stack() returns, dst_reg was restored
-> if ptr_is_dst_reg is false. However, as member of the cur_state, dst_reg
-> is also freed, and error occurs when dereferencing dst_reg.
-> 
-> Simply fix it by testing ret of push_stack() before retoring dst_reg.
-> 
-> Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
+Hi Thomas,
 
-Applied, thanks!
+Here's a few irqchip updates for 5.1-rc2. Nothing really stands out,
+this is the usual bunch of fixes, cleanups and DT binding updates.
+
+Please pull,
+
+	M.
+
+The following changes since commit 28528fca4908142bd1a3247956cba56c9c667d71:
+
+  irqchip/imx-irqsteer: Add multi output interrupts support (2019-02-22 09:23:46 +0000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-5.1-2
+
+for you to fetch changes up to fca269f201a8d9985c0a31fb60b15d4eb57cef80:
+
+  irqchip/mbigen: Don't clear eventid when freeing an MSI (2019-03-21 11:08:26 +0000)
+
+----------------------------------------------------------------
+irqchip updates for 5.1, take #2
+
+- irqsteer error handling fix
+- GICv3 range coalescing fix
+- stm32 coprocessor coexistence fixes
+- mbigen MSI teardown fix
+- non-DT secondary GIC infrastructure removed
+- various cleanups (brcmstb-l2, mmp)
+- new DT bindings (r8a774c0)
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      irqchip/imx-irqsteer: Fix of_property_read_u32() error handling
+
+Fabien Dessenne (2):
+      irqchip/stm32: Don't clear rising/falling config registers at init
+      irqchip/stm32: Don't set rising configuration registers at init
+
+Fabrizio Castro (1):
+      dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
+
+Jianguo Chen (1):
+      irqchip/mbigen: Don't clear eventid when freeing an MSI
+
+Marc Zyngier (1):
+      irqchip/gic: Drop support for secondary GIC in non-DT systems
+
+Rasmus Villemoes (1):
+      irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
+
+YueHaibing (2):
+      irqchip/brcmstb-l2: Make two init functions static
+      irqchip/mmp: Make mmp_irq_domain_ops static
+
+ .../bindings/interrupt-controller/renesas,irqc.txt |  1 +
+ arch/arm/mach-cns3xxx/core.c                       |  2 +-
+ drivers/irqchip/irq-brcmstb-l2.c                   |  4 +-
+ drivers/irqchip/irq-gic-v3-its.c                   |  2 +-
+ drivers/irqchip/irq-gic.c                          | 45 ++++++++--------------
+ drivers/irqchip/irq-imx-irqsteer.c                 |  8 +++-
+ drivers/irqchip/irq-mbigen.c                       |  3 ++
+ drivers/irqchip/irq-mmp.c                          |  2 +-
+ drivers/irqchip/irq-stm32-exti.c                   | 10 -----
+ include/linux/irqchip/arm-gic.h                    |  3 +-
+ 10 files changed, 32 insertions(+), 48 deletions(-)
