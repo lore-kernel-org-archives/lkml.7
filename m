@@ -2,358 +2,100 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6927C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A2BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DF02083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608932083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553175824;
+	bh=tPXTA3tExjHYvCl0U8yOGW77eTnvySzweHtIvbC5220=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ojCZv6aLqcw96WR1ZINlJcQ0iHvZXNmgO0TwZErfFL+aauGXtXRX2lBy+9aXCmI8i
+	 xtgDs+lmHqAWpp5snwQSizbJ4Mjr4sc1w4PiLKId/eGdNiQSaE21w0FWHjK0KeVIte
+	 SKwRnlJ5hXXgjWxIdHcjYYJVy6Q6VNE/CHnl/yoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbfCUNnk (ORCPT
+        id S1728615AbfCUNnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:43:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54378 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfCUNnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:43:39 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 363F781E1B;
-        Thu, 21 Mar 2019 13:43:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D01A660865;
-        Thu, 21 Mar 2019 13:43:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] vfs: Convert coda to fs_context
-From:   David Howells <dhowells@redhat.com>
-To:     jaharkes@cs.cmu.edu
-Cc:     coda@cs.cmu.edu, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 21 Mar 2019 09:43:43 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46058 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfCUNnl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:43:41 -0400
+Received: by mail-yw1-f66.google.com with SMTP id j128so4747138ywg.12;
+        Thu, 21 Mar 2019 06:43:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tPXTA3tExjHYvCl0U8yOGW77eTnvySzweHtIvbC5220=;
+        b=OyEWuiy1xHqsTxV0pslZuOu1930UBKZG875Hd6Qu1K/WllqMBmBnBdnkC9L2pZgUVh
+         irqScVS951ENbHK6FbV1pJGs247D5ir8mxQukgXhVAT8p21pex3WlVihF/WM1qHSc7jp
+         Jm3YPkh6CWKVWDq4aUM++i1LeU54Qdc036Hz6EVBq7DSshF3Tnr3lfKm3PpCiSSDeu3N
+         efVCnPP4a0Mg57jUfLsIfcmAAlb93Zbef2N3YpM9HCt3wwX5pqPzjzDtULoip4txLA1l
+         FRxZVmNeoa858zmeZOp6essQVrFZEF6j2sMUaI8IX/cj9gncyRQn3cSAPwc7nO7w+DvT
+         QzBg==
+X-Gm-Message-State: APjAAAX9XrlrbPfelrM24WGsZ7uEWlFmSHx6NQ9O7LQOvEM+k26qVf/V
+        b+PbtmM0EyJlNQuwV9E/HTyz06I+1Jk=
+X-Google-Smtp-Source: APXvYqw5PwOhd1NNd08+tnqkHFD93x8/dvdvJETQt4RzUQYDXMzJx9lmCJfqJW5NDLyJjwUYL9lIQA==
+X-Received: by 2002:a81:2748:: with SMTP id n69mr3162674ywn.70.1553175820774;
+        Thu, 21 Mar 2019 06:43:40 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v77sm3451008ywv.79.2019.03.21.06.43.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 06:43:39 -0700 (PDT)
+Received: by 42.do-not-panic.com (sSMTP sendmail emulation); Thu, 21 Mar 2019 13:43:35 +0000
 Date:   Thu, 21 Mar 2019 13:43:35 +0000
-Message-ID: <155317581590.13185.6486189707405250496.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add
+ vm.unprivileged_userfaultfd
+Message-ID: <20190321134335.GB1146@42.do-not-panic.com>
+References: <20190319030722.12441-1-peterx@redhat.com>
+ <20190319030722.12441-2-peterx@redhat.com>
+ <20190319110236.b6169d6b469a587a852c7e09@linux-foundation.org>
+ <20190319182822.GK2727@work-vm>
+ <20190320190112.GD23793@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 21 Mar 2019 13:43:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320190112.GD23793@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert coda to fs_context.  Note this is slightly tricky as coda currently
-only has a binary mount data interface.  This is handled through the
-parse_monolithic hook.
+On Wed, Mar 20, 2019 at 03:01:12PM -0400, Andrea Arcangeli wrote:
+> but
+> that would be better be achieved through SECCOMP and not globally.'.
 
-Also add a more conventional interface with a parameter named "fd" that
-takes an fd that refers to a coda psdev, thereby specifying the index to
-use.
+That begs the question why not use seccomp for this? What if everyone
+decided to add a knob for all syscalls to do the same? For the commit
+log, why is it OK then to justify a knob for this syscall?
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jan Harkes <jaharkes@cs.cmu.edu>
-cc: coda@cs.cmu.edu
----
-
- fs/coda/inode.c |  171 +++++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 116 insertions(+), 55 deletions(-)
-
-diff --git a/fs/coda/inode.c b/fs/coda/inode.c
-index 97424cf206c0..aaed68ba960b 100644
---- a/fs/coda/inode.c
-+++ b/fs/coda/inode.c
-@@ -2,9 +2,9 @@
- /*
-  * Super block/filesystem wide operations
-  *
-- * Copyright (C) 1996 Peter J. Braam <braam@maths.ox.ac.uk> and 
-- * Michael Callahan <callahan@maths.ox.ac.uk> 
-- * 
-+ * Copyright (C) 1996 Peter J. Braam <braam@maths.ox.ac.uk> and
-+ * Michael Callahan <callahan@maths.ox.ac.uk>
-+ *
-  * Rewritten for Linux 2.1.  Peter Braam <braam@cs.cmu.edu>
-  * Copyright (C) Carnegie Mellon University
-  */
-@@ -24,6 +24,8 @@
- #include <linux/pid_namespace.h>
- #include <linux/uaccess.h>
- #include <linux/fs.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/vmalloc.h>
- 
- #include <linux/coda.h>
-@@ -93,10 +95,10 @@ void coda_destroy_inodecache(void)
- 	kmem_cache_destroy(coda_inode_cachep);
- }
- 
--static int coda_remount(struct super_block *sb, int *flags, char *data)
-+static int coda_reconfigure(struct fs_context *fc)
- {
--	sync_filesystem(sb);
--	*flags |= SB_NOATIME;
-+	sync_filesystem(fc->root->d_sb);
-+	fc->sb_flags |= SB_NOATIME;
- 	return 0;
- }
- 
-@@ -108,78 +110,111 @@ static const struct super_operations coda_super_operations =
- 	.evict_inode	= coda_evict_inode,
- 	.put_super	= coda_put_super,
- 	.statfs		= coda_statfs,
--	.remount_fs	= coda_remount,
- };
- 
--static int get_device_index(struct coda_mount_data *data)
-+struct coda_fs_context {
-+	int	idx;
-+};
-+
-+enum {
-+	Opt_fd,
-+};
-+
-+static const struct fs_parameter_spec coda_param_specs[] = {
-+	fsparam_fd	("fd",				Opt_fd),
-+	{}
-+};
-+
-+static const struct fs_parameter_description coda_fs_parameters = {
-+	.name		= "coda",
-+	.specs		= coda_param_specs,
-+};
-+
-+static int coda_parse_fd(struct fs_context *fc, int fd)
- {
-+	struct coda_fs_context *ctx = fc->fs_private;
- 	struct fd f;
- 	struct inode *inode;
- 	int idx;
- 
--	if (data == NULL) {
--		pr_warn("%s: Bad mount data\n", __func__);
--		return -1;
--	}
--
--	if (data->version != CODA_MOUNT_VERSION) {
--		pr_warn("%s: Bad mount version\n", __func__);
--		return -1;
--	}
--
--	f = fdget(data->fd);
-+	f = fdget(fd);
- 	if (!f.file)
--		goto Ebadf;
-+		return -EBADF;
-+
- 	inode = file_inode(f.file);
- 	if (!S_ISCHR(inode->i_mode) || imajor(inode) != CODA_PSDEV_MAJOR) {
- 		fdput(f);
--		goto Ebadf;
-+		return invalf(fc, "code: Not coda psdev");
- 	}
- 
- 	idx = iminor(inode);
- 	fdput(f);
- 
--	if (idx < 0 || idx >= MAX_CODADEVS) {
--		pr_warn("%s: Bad minor number\n", __func__);
--		return -1;
-+	if (idx < 0 || idx >= MAX_CODADEVS)
-+		return invalf(fc, "coda: Bad minor number");
-+	ctx->idx = idx;
-+	return 0;
-+}
-+
-+static int coda_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct fs_parse_result result;
-+	int opt;
-+
-+	opt = fs_parse(fc, &coda_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case Opt_fd:
-+		return coda_parse_fd(fc, result.uint_32);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Parse coda's binary mount data form.  We ignore any errors and go with index
-+ * 0 if we get one for backward compatibility.
-+ */
-+static int coda_parse_monolithic(struct fs_context *fc, void *_data)
-+{
-+	struct coda_mount_data *data = _data;
-+
-+	if (!data) {
-+		invalf(fc, "coda: Bad mount data");
-+		return 0;
-+	}
-+	if (data->version != CODA_MOUNT_VERSION) {
-+		invalf(fc, "coda: Bad mount version");
-+		return 0;
- 	}
- 
--	return idx;
--Ebadf:
--	pr_warn("%s: Bad file\n", __func__);
--	return -1;
-+	coda_parse_fd(fc, data->fd);
-+	return 0;
- }
- 
--static int coda_fill_super(struct super_block *sb, void *data, int silent)
-+static int coda_fill_super(struct super_block *sb, struct fs_context *fc)
- {
-+	struct coda_fs_context *ctx = fc->fs_private;
- 	struct inode *root = NULL;
- 	struct venus_comm *vc;
- 	struct CodaFid fid;
- 	int error;
--	int idx;
- 
--	if (task_active_pid_ns(current) != &init_pid_ns)
--		return -EINVAL;
-+	infof(fc, "coda: device index: %i\n", ctx->idx);
- 
--	idx = get_device_index((struct coda_mount_data *) data);
--
--	/* Ignore errors in data, for backward compatibility */
--	if(idx == -1)
--		idx = 0;
--	
--	pr_info("%s: device index: %i\n", __func__,  idx);
--
--	vc = &coda_comms[idx];
-+	vc = &coda_comms[ctx->idx];
- 	mutex_lock(&vc->vc_mutex);
- 
- 	if (!vc->vc_inuse) {
--		pr_warn("%s: No pseudo device\n", __func__);
-+		errorf(fc, "coda: No pseudo device");
- 		error = -EINVAL;
- 		goto unlock_out;
- 	}
- 
- 	if (vc->vc_sb) {
--		pr_warn("%s: Device already mounted\n", __func__);
-+		errorf(fc, "coda: Device already mounted");
- 		error = -EBUSY;
- 		goto unlock_out;
- 	}
-@@ -207,7 +242,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
- 		goto error;
- 	}
- 	pr_info("%s: rootfid is %s\n", __func__, coda_f2s(&fid));
--	
-+
- 	/* make root inode */
-         root = coda_cnode_make(&fid, sb);
-         if (IS_ERR(root)) {
-@@ -215,7 +250,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
- 		pr_warn("Failure of coda_cnode_make for root: error %d\n",
- 			error);
- 		goto error;
--	} 
-+	}
- 
- 	pr_info("%s: rootinode is %ld dev %s\n",
- 		__func__, root->i_ino, root->i_sb->s_id);
-@@ -268,7 +303,7 @@ int coda_setattr(struct dentry *de, struct iattr *iattr)
- 	struct coda_vattr vattr;
- 	int error;
- 
--	memset(&vattr, 0, sizeof(vattr)); 
-+	memset(&vattr, 0, sizeof(vattr));
- 
- 	inode->i_ctime = current_time(inode);
- 	coda_iattr_to_vattr(iattr, &vattr);
-@@ -278,7 +313,7 @@ int coda_setattr(struct dentry *de, struct iattr *iattr)
- 	error = venus_setattr(inode->i_sb, coda_i2f(inode), &vattr);
- 
- 	if (!error) {
--	        coda_vattr_to_iattr(inode, &vattr); 
-+	        coda_vattr_to_iattr(inode, &vattr);
- 		coda_cache_clear_inode(inode);
- 	}
- 	return error;
-@@ -293,7 +328,7 @@ const struct inode_operations coda_file_inode_operations = {
- static int coda_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	int error;
--	
-+
- 	error = venus_statfs(dentry, buf);
- 
- 	if (error) {
-@@ -310,23 +345,49 @@ static int coda_statfs(struct dentry *dentry, struct kstatfs *buf)
- 	buf->f_bsize = 4096;
- 	buf->f_namelen = CODA_MAXNAMLEN;
- 
--	return 0; 
-+	return 0;
- }
- 
--/* init_coda: used by filesystems.c to register coda */
-+static int coda_get_tree(struct fs_context *fc)
-+{
-+	if (task_active_pid_ns(current) != &init_pid_ns)
-+		return -EINVAL;
-+
-+	return vfs_get_super(fc, vfs_get_independent_super, coda_fill_super);
-+}
-+
-+static void coda_free_fc(struct fs_context *fc)
-+{
-+	kfree(fc->fs_private);
-+}
- 
--static struct dentry *coda_mount(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data)
-+static const struct fs_context_operations coda_context_ops = {
-+	.free		= coda_free_fc,
-+	.parse_param	= coda_parse_param,
-+	.parse_monolithic = coda_parse_monolithic,
-+	.get_tree	= coda_get_tree,
-+	.reconfigure	= coda_reconfigure,
-+};
-+
-+static int coda_init_fs_context(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, data, coda_fill_super);
-+	struct coda_fs_context *ctx;
-+
-+	ctx = kzalloc(sizeof(struct coda_fs_context), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &coda_context_ops;
-+	return 0;
- }
- 
- struct file_system_type coda_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "coda",
--	.mount		= coda_mount,
-+	.init_fs_context = coda_init_fs_context,
-+	.parameters	= &coda_fs_parameters,
- 	.kill_sb	= kill_anon_super,
- 	.fs_flags	= FS_BINARY_MOUNTDATA,
- };
- MODULE_ALIAS_FS("coda");
--
-
+ Luis
