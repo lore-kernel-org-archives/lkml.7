@@ -2,119 +2,84 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0265EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFBDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D643D21902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FE921902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfCURqF (ORCPT
+        id S1728603AbfCURtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:46:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32911 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728766AbfCURp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:45:58 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 34F6F9CFE424EED2123A;
-        Thu, 21 Mar 2019 17:45:51 +0000 (GMT)
-Received: from [10.204.65.148] (10.204.65.148) by smtpsuk.huawei.com
- (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 21 Mar
- 2019 17:45:43 +0000
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware
- TPM
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        <keyrings@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190321135451.GD4603@linux.intel.com>
- <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
- <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com>
-Date:   Thu, 21 Mar 2019 18:45:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 21 Mar 2019 13:49:50 -0400
+Received: from smtp03.citrix.com ([162.221.156.55]:48841 "EHLO
+        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCURtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:49:49 -0400
+X-IronPort-AV: E=Sophos;i="5.60,253,1549929600"; 
+   d="scan'208";a="81274831"
+Subject: Re: [PATCH] xen/pv: Add PV specific legacy_pic struct to expose
+ legacy IRQs.
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>, <x86@kernel.org>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+References: <1553025739-92245-1-git-send-email-jennifer.herbert@citrix.com>
+ <2eb1fdec-6cc0-7f62-3d4f-adc5dba9971e@oracle.com>
+CC:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+From:   Jennifer Herbert <Jennifer.Herbert@citrix.com>
+Message-ID: <5C93CEB7.9030701@citrix.com>
+Date:   Thu, 21 Mar 2019 17:49:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Icedove/38.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
+In-Reply-To: <2eb1fdec-6cc0-7f62-3d4f-adc5dba9971e@oracle.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.204.65.148]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/2019 5:30 PM, Dan Williams wrote:
-> On Thu, Mar 21, 2019 at 7:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->>
->> On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
->>> On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
->>>> Rather than fail initialization of the trusted.ko module, arrange for
->>>> the module to load, but rely on trusted_instantiate() to fail
->>>> trusted-key operations.
->>>>
->>>> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
->>>> Cc: Roberto Sassu <roberto.sassu@huawei.com>
->>>> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>> Cc: James Bottomley <jejb@linux.ibm.com>
->>>> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>> Cc: Mimi Zohar <zohar@linux.ibm.com>
->>>> Cc: David Howells <dhowells@redhat.com>
->>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->>>
->>> It should check for chip in each function that uses TPM now that
->>> the code does not rely on default chip. Otherwise, the semantics
->>> are kind of inconsistent.
->>
->> If no other TPM function can be used before a successful key
->> instantiate, checking for a chip only in trusted_instantiate() seems
->> sufficient. Then, the same chip will be used by all TPM functions until
->> module unloading, since we incremented the reference count.
->>
->> I would suggest to move the tpm_default_chip() and init_digests() calls
->> to trusted_instantiate() to restore the old behavior of init_trusted().
->>
->> trusted_instantiate() should look like:
->> ---
->> if (!chip) {
->>          chip = tpm_default_chip();
->>          if (!chip)
->>                  return -ENODEV;
->> }
->>
->> if (!digests) {
->>          ret = init_digests();
->>          if (ret < 0)
->>                  return ret;
->> }
-> 
-> This patch already achieves that because tpm_find_get_ops() will fail
-> and cause tpm_is_tpm2() to return NULL.
 
-In addition, the changes I proposed would allow users to create trusted
-keys if a TPM is added later. CONFIG_TRUSTED_KEYS=y and
-CONFIG_TCG_TPM=m is a valid configuration.
 
-Jarkko, Dan's patch seems sufficient to fix the issue. He could include
-the changes I proposed in his patch. What is your opinion?
+On 19/03/19 23:06, Boris Ostrovsky wrote:
+> On 3/19/19 4:02 PM, Jennifer Herbert wrote:
+>> The ACPI tables doesn't always contain all IRQs for legacy devices
+>> such as RTC.  Since no PIC controller is visible for a PV linux guest,
+>> under Xen, legacy_pic currently defaults to the null_legacy_pic - with
+>> reports no legacy IRQs.  Since the commit "rtc: cmos: Do not assume
+>> irq 8 for rtc when there are no legacy irqs" by Hans de Goede
+>> (commit id: a1e23a42f1bdc00e32fc4869caef12e4e6272f26), the rtc now
+>> incorrectly decides it has no irq it can use, for some hardware.
+>>
+>> This patch rectifies the problem by providing a xen legacy_pic
+>> struct, which is much like the null_legacy_pic except that it
+>> reports NR_IRQS_LEGACY irqs.
+> I assume this is for dom0?
+>
+> Could there be the same problem with PVH dom0? (and if yes then this
+> should probably go into arch/x86/xen/enlighten.c).
+>
+> -boris
+>
 
-Thanks
+I am doing this to fix a problem with dom0.  DomU doesn't seem to have 
+an RTC, and so it is unaffected.
 
-Roberto
+I'm not familiar with PVH, but have now done some experiments.  The RTC 
+on PVH seems broken - but not quite in the same way as PV. More research 
+is needed, however simply doing the same trick I did with PV will not 
+fix the issue.
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+I'll look further into it.
+
+Cheer,
+
+-jenny
+
