@@ -2,226 +2,95 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE4C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9366FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404D7218FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66183218FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfCUNQF (ORCPT
+        id S1728427AbfCUNSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:16:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:37615 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbfCUNQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:16:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 06:16:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,252,1549958400"; 
-   d="scan'208";a="216203984"
-Received: from dilu-mobl2.ccr.corp.intel.com (HELO localhost) ([10.249.254.184])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 06:15:56 -0700
-Date:   Thu, 21 Mar 2019 15:15:54 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Dan Williams <dan.j.williams@gmail.com>, roberto.sassu@huawei.com
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, zohar@linux.ibm.com,
-        david.safford@ge.com, monty.wiseman@ge.com,
-        matthewgarrett@google.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        silviu.vlasceanu@huawei.com,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH v10, RESEND 5/6] KEYS: trusted: explicitly use tpm_chip
- structure from tpm_default_chip()
-Message-ID: <20190321131554.GB2267@linux.intel.com>
-References: <20190206162452.7749-1-roberto.sassu@huawei.com>
- <20190206162452.7749-6-roberto.sassu@huawei.com>
- <CAA9_cmf0j1EoyrGmbfPWCWPafgGfKWR6cyPpN8YEFZdemeg1kA@mail.gmail.com>
+        Thu, 21 Mar 2019 09:18:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:49181 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728361AbfCUNSi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:18:38 -0400
+X-UUID: 320bed537cb041b9a4815e42b5e19a1c-20190321
+X-UUID: 320bed537cb041b9a4815e42b5e19a1c-20190321
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 294252370; Thu, 21 Mar 2019 21:18:35 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 21:18:27 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 21:18:21 +0800
+Message-ID: <1553174301.30977.85.camel@mtkswgap22>
+Subject: Re: [PATCH] drivers: ufs: Add missing MODULE_* information
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Anders Roxell <anders.roxell@linaro.org>
+CC:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <matthias.bgg@gmail.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <peter.wang@mediatek.com>
+Date:   Thu, 21 Mar 2019 21:18:21 +0800
+In-Reply-To: <20190321125034.22697-1-anders.roxell@linaro.org>
+References: <20190321125034.22697-1-anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmf0j1EoyrGmbfPWCWPafgGfKWR6cyPpN8YEFZdemeg1kA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: 9FCBE2183300D0FFBBE0099CC5D466A4B14118D7099CE23D3360245637163CC12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 03:35:08PM -0700, Dan Williams wrote:
-> On Wed, Feb 6, 2019 at 10:30 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
-> >
-> > When crypto agility support will be added to the TPM driver, users of the
-> > driver have to retrieve the allocated banks from chip->allocated_banks and
-> > use this information to prepare the array of tpm_digest structures to be
-> > passed to tpm_pcr_extend().
-> >
-> > This patch retrieves a tpm_chip pointer from tpm_default_chip() so that the
-> > pointer can be used to prepare the array of tpm_digest structures.
-> >
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  security/keys/trusted.c | 38 ++++++++++++++++++++++++--------------
-> >  1 file changed, 24 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/security/keys/trusted.c b/security/keys/trusted.c
-> > index 4d98f4f87236..5b852263eae1 100644
-> > --- a/security/keys/trusted.c
-> > +++ b/security/keys/trusted.c
-> > @@ -34,6 +34,7 @@
-> >
-> >  static const char hmac_alg[] = "hmac(sha1)";
-> >  static const char hash_alg[] = "sha1";
-> > +static struct tpm_chip *chip;
-> >
-> >  struct sdesc {
-> >         struct shash_desc shash;
-> > @@ -362,7 +363,7 @@ int trusted_tpm_send(unsigned char *cmd, size_t buflen)
-> >         int rc;
-> >
-> >         dump_tpm_buf(cmd);
-> > -       rc = tpm_send(NULL, cmd, buflen);
-> > +       rc = tpm_send(chip, cmd, buflen);
-> >         dump_tpm_buf(cmd);
-> >         if (rc > 0)
-> >                 /* Can't return positive return codes values to keyctl */
-> > @@ -384,10 +385,10 @@ static int pcrlock(const int pcrnum)
-> >
-> >         if (!capable(CAP_SYS_ADMIN))
-> >                 return -EPERM;
-> > -       ret = tpm_get_random(NULL, hash, SHA1_DIGEST_SIZE);
-> > +       ret = tpm_get_random(chip, hash, SHA1_DIGEST_SIZE);
-> >         if (ret != SHA1_DIGEST_SIZE)
-> >                 return ret;
-> > -       return tpm_pcr_extend(NULL, pcrnum, hash) ? -EINVAL : 0;
-> > +       return tpm_pcr_extend(chip, pcrnum, hash) ? -EINVAL : 0;
-> >  }
-> >
-> >  /*
-> > @@ -400,7 +401,7 @@ static int osap(struct tpm_buf *tb, struct osapsess *s,
-> >         unsigned char ononce[TPM_NONCE_SIZE];
-> >         int ret;
-> >
-> > -       ret = tpm_get_random(NULL, ononce, TPM_NONCE_SIZE);
-> > +       ret = tpm_get_random(chip, ononce, TPM_NONCE_SIZE);
-> >         if (ret != TPM_NONCE_SIZE)
-> >                 return ret;
-> >
-> > @@ -496,7 +497,7 @@ static int tpm_seal(struct tpm_buf *tb, uint16_t keytype,
-> >         if (ret < 0)
-> >                 goto out;
-> >
-> > -       ret = tpm_get_random(NULL, td->nonceodd, TPM_NONCE_SIZE);
-> > +       ret = tpm_get_random(chip, td->nonceodd, TPM_NONCE_SIZE);
-> >         if (ret != TPM_NONCE_SIZE)
-> >                 goto out;
-> >         ordinal = htonl(TPM_ORD_SEAL);
-> > @@ -606,7 +607,7 @@ static int tpm_unseal(struct tpm_buf *tb,
-> >
-> >         ordinal = htonl(TPM_ORD_UNSEAL);
-> >         keyhndl = htonl(SRKHANDLE);
-> > -       ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
-> > +       ret = tpm_get_random(chip, nonceodd, TPM_NONCE_SIZE);
-> >         if (ret != TPM_NONCE_SIZE) {
-> >                 pr_info("trusted_key: tpm_get_random failed (%d)\n", ret);
-> >                 return ret;
-> > @@ -751,7 +752,7 @@ static int getoptions(char *c, struct trusted_key_payload *pay,
-> >         int i;
-> >         int tpm2;
-> >
-> > -       tpm2 = tpm_is_tpm2(NULL);
-> > +       tpm2 = tpm_is_tpm2(chip);
-> >         if (tpm2 < 0)
-> >                 return tpm2;
-> >
-> > @@ -920,7 +921,7 @@ static struct trusted_key_options *trusted_options_alloc(void)
-> >         struct trusted_key_options *options;
-> >         int tpm2;
-> >
-> > -       tpm2 = tpm_is_tpm2(NULL);
-> > +       tpm2 = tpm_is_tpm2(chip);
-> >         if (tpm2 < 0)
-> >                 return NULL;
-> >
-> > @@ -970,7 +971,7 @@ static int trusted_instantiate(struct key *key,
-> >         size_t key_len;
-> >         int tpm2;
-> >
-> > -       tpm2 = tpm_is_tpm2(NULL);
-> > +       tpm2 = tpm_is_tpm2(chip);
-> >         if (tpm2 < 0)
-> >                 return tpm2;
-> >
-> > @@ -1011,7 +1012,7 @@ static int trusted_instantiate(struct key *key,
-> >         switch (key_cmd) {
-> >         case Opt_load:
-> >                 if (tpm2)
-> > -                       ret = tpm_unseal_trusted(NULL, payload, options);
-> > +                       ret = tpm_unseal_trusted(chip, payload, options);
-> >                 else
-> >                         ret = key_unseal(payload, options);
-> >                 dump_payload(payload);
-> > @@ -1021,13 +1022,13 @@ static int trusted_instantiate(struct key *key,
-> >                 break;
-> >         case Opt_new:
-> >                 key_len = payload->key_len;
-> > -               ret = tpm_get_random(NULL, payload->key, key_len);
-> > +               ret = tpm_get_random(chip, payload->key, key_len);
-> >                 if (ret != key_len) {
-> >                         pr_info("trusted_key: key_create failed (%d)\n", ret);
-> >                         goto out;
-> >                 }
-> >                 if (tpm2)
-> > -                       ret = tpm_seal_trusted(NULL, payload, options);
-> > +                       ret = tpm_seal_trusted(chip, payload, options);
-> >                 else
-> >                         ret = key_seal(payload, options);
-> >                 if (ret < 0)
-> > @@ -1225,17 +1226,26 @@ static int __init init_trusted(void)
-> >  {
-> >         int ret;
-> >
-> > +       chip = tpm_default_chip();
-> > +       if (!chip)
-> > +               return -ENOENT;
+Hi Anders,
+
+On Thu, 2019-03-21 at 13:50 +0100, Anders Roxell wrote:
+> When building the ufs-mediatek module the following warning shows up:
 > 
-> This change causes a regression loading the encrypted_keys module on
-> systems that don't have a tpm.
+> WARNING: modpost: missing MODULE_LICENSE() in
+>   drivers/scsi/ufs/ufs-mediatek.o
 > 
-> Module init functions should not have hardware dependencies.
+> Rework to add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
 > 
-> The effect is that the libnvdimm module, which is an encrypted_keys
-> user, fails to load, but up until this change encrypted_keys did not
-> have a hard dependency on TPM presence.
+> Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index c3b78fc83d3f..ce4767784937 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -364,4 +364,9 @@ static struct platform_driver ufs_mtk_pltform = {
+>  	},
+>  };
+>  
+> +MODULE_AUTHOR("Stanley Chu <stanley.chu@mediatek.com>");
+> +MODULE_AUTHOR("Peter Wang <peter.wang@mediatek.com>");
+> +MODULE_DESCRIPTION("Mediatek UFS Driver");
 
-Sorry for the latency. I was in flu for couple of days.
+Thanks for sending this.
 
-I missed that addition in the review process albeit this patch set
-went numerous rounds. Apologies about ths. Also the return value is
-wrong. Should be -ENODEV but it doesn't matter because this needs to
-be removed anyway.
+Could you fix it as "MediaTek UFS Host Driver" ?
 
-Roberto, can you submit a fix ASAP that:
+> +MODULE_LICENSE("GPL v2");
+> +
+>  module_platform_driver(ufs_mtk_pltform);
 
-1. Allows the module to initialize even if the chip is not found.
-2. In the beginning of each function (before tpm_is_tpm2()) you
-   should check if chip is NULL and return -ENODEV if it is.
+Thanks,
+Stanley
 
-Add also these tags before your signed-off-by:
-
-Cc: stable@vger.kernel.org
-Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()")
-Reported-by: Dan Williams <dan.j.williams@gmail.com>
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-/Jarkko
