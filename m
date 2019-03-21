@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB5AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADD5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B40218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55DED218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1l+M6nzH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mxFCtm3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfCUB4K (ORCPT
+        id S1727705AbfCUB7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:56:10 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:51492 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfCUB4K (ORCPT
+        Wed, 20 Mar 2019 21:59:23 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:25766 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfCUB7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:56:10 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x2L1tomY004051
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:55:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x2L1tomY004051
+        Wed, 20 Mar 2019 21:59:22 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x2L1wvh1007736
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:58:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2L1wvh1007736
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553133351;
-        bh=TLTf72qf98aWCVTYXKRz7ngCJhdHuEIMf1UVrfwMmx4=;
+        s=dec2015msa; t=1553133538;
+        bh=q6xxiJaLA6RIJqo1ZxOt+K04UNxuMynzKCPZN8ep1fI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1l+M6nzHcuZ8bbYVWDNWUR+AakN63X9Xg5xUyTG9H/RjIOlh19Yylx6c18GTEbkJJ
-         7G+6aQnPxBkUHw1NSsxdAjWfqvUuJutCq3UdL4n/7s8CDc79bJHfqhpmVV9hbWbjd9
-         3Orr6OnYXq4Au4XLYOkNnjJya+mJdu2GUZVAa1b/7yl6OpwN1WFiBxno63Mp9H/3UV
-         6po10YUnLgH6+zZIWWYvCEfdTG5n02FaPLa2sFhRRdcjVdl3v5ojVm8GyKTt/rj25H
-         orMTJ1LC5aHPnIb8a+Z5coVcTq2Vt3Iv3kgHoNRZiXCgx4939pPEY2ejtfo1f43uMF
-         keebO2N5mePzQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id f15so21236vsk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:55:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAU8eioebqowhGwg6WKoAroy37Q4Dl9hZpbHZrpZGqOJJDPgnkp8
-        1aAoOw4RkyV5cAhnRuIUNjtJpn/NzXj6ifaWCUA=
-X-Google-Smtp-Source: APXvYqxIV+Zjq9BFynd806sMEMUxkUHr3m7aCljEswXWVnNAnFZu/c5FWjietRc32tD/CYPokXvNwc0r/7ZWeSCWvRk=
-X-Received: by 2002:a67:7a43:: with SMTP id v64mr525148vsc.54.1553133349647;
- Wed, 20 Mar 2019 18:55:49 -0700 (PDT)
+        b=mxFCtm3HnKFUlt5DPMLpHgQpgMloXNckJgPYtdli1Ch+GC2vzSo+K72WRUQGwqZsz
+         5qrLy8FkfjLGDWN5dnxzAMe1jz42PdprAiirxm9K3NSlyUPcAsA7gEgLg1XHDjaiXb
+         D1Lwt9KiUyI3WA1EHeIN4YVdnKT+0fpmm4OfhIpkKGQrLIIaGGXseY9GZqpaUWsnwc
+         7R0OeW7QkLyNOGLByPBjlTe563lM45hcgqgs3JvupJPnbfCREfYBq8bvqlOvJcfhTk
+         n8h6wefzv4AdfNbn2PbxWtXGUThHE2HPXSlaMG+lWf5ut2OtZh8o6tade6SuDPMzbO
+         4Qgtlo0CagGsQ==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id g127so2795440vsd.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:58:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAXWtYsDhaD8PpC/bUFOgoFJ5edmWPyLytHwWpLFGfEipps1M73S
+        JrlF/pJ6AVPDeFEEqgQwxr+r6oMJ1PoDLL+u1rQ=
+X-Google-Smtp-Source: APXvYqyTCLbkrpvOR5u8RdbVUPbbG1aDgG4qtAFKffyty9iNVJzVKGfhquehHMdMNjk14nc/3s2wOxyI7tgZboiI9TA=
+X-Received: by 2002:a67:7a43:: with SMTP id v64mr529590vsc.54.1553133536536;
+ Wed, 20 Mar 2019 18:58:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552310346-7629-1-git-send-email-info@metux.net> <1552310346-7629-35-git-send-email-info@metux.net>
-In-Reply-To: <1552310346-7629-35-git-send-email-info@metux.net>
+References: <1552310346-7629-1-git-send-email-info@metux.net> <1552310346-7629-80-git-send-email-info@metux.net>
+In-Reply-To: <1552310346-7629-80-git-send-email-info@metux.net>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 21 Mar 2019 10:55:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS225duNHmorxJzx9jsaN6HNiYj9di5sXwVyiE+RwPpug@mail.gmail.com>
-Message-ID: <CAK7LNAS225duNHmorxJzx9jsaN6HNiYj9di5sXwVyiE+RwPpug@mail.gmail.com>
-Subject: Re: [PATCH 034/114] arch: arm: Kconfig: pedantic formatting
+Date:   Thu, 21 Mar 2019 10:58:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASho5hboMEjnigfR+4gRKTL1EAs4r4_atfWEezbnXJiOw@mail.gmail.com>
+Message-ID: <CAK7LNASho5hboMEjnigfR+4gRKTL1EAs4r4_atfWEezbnXJiOw@mail.gmail.com>
+Subject: Re: [PATCH 079/114] drivers: char: Kconfig: pedantic formatting
 To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -60,7 +60,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 10:29 PM Enrico Weigelt, metux IT consult
+On Mon, Mar 11, 2019 at 10:23 PM Enrico Weigelt, metux IT consult
 <info@metux.net> wrote:
 >
 > Formatting of Kconfig files doesn't look so pretty, so let the
@@ -68,797 +68,317 @@ On Mon, Mar 11, 2019 at 10:29 PM Enrico Weigelt, metux IT consult
 >
 > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
->  arch/arm/Kconfig              | 24 +++++++++++-----------
-
+>  drivers/char/Kconfig           | 24 +++++-----
 
 
 While you are touching this file,
-why don't fix checkpatch.pl warning?
+why don't you fix checkpatch.pl warnings?
 
 
 WARNING: prefer 'help' over '---help---' for new help texts
-#1725: FILE: arch/arm/Kconfig:1725:
-+config SECCOMP
+#54: FILE: drivers/char/Kconfig:54:
++config TTY_PRINTK
+
+WARNING: prefer 'help' over '---help---' for new help texts
+#77: FILE: drivers/char/Kconfig:77:
++config PRINTER
+
+WARNING: prefer 'help' over '---help---' for new help texts
+#120: FILE: drivers/char/Kconfig:120:
++config PPDEV
+
+WARNING: prefer 'help' over '---help---' for new help texts
+#245: FILE: drivers/char/Kconfig:245:
++config NVRAM
+
+WARNING: prefer 'help' over '---help---' for new help texts
+#274: FILE: drivers/char/Kconfig:274:
++config RTC
+
+WARNING: prefer 'help' over '---help---' for new help texts
+#300: FILE: drivers/char/Kconfig:300:
++config JS_RTC
 
 
 
->  arch/arm/mach-aspeed/Kconfig  | 10 ++++-----
->  arch/arm/mach-ep93xx/Kconfig  |  8 ++++----
->  arch/arm/mach-hisi/Kconfig    | 14 ++++++-------
->  arch/arm/mach-ixp4xx/Kconfig  | 32 ++++++++++++++---------------
->  arch/arm/mach-mmp/Kconfig     |  2 +-
->  arch/arm/mach-omap1/Kconfig   | 36 ++++++++++++++++----------------
->  arch/arm/mach-omap2/Kconfig   | 12 +++++------
->  arch/arm/mach-prima2/Kconfig  |  6 +++---
->  arch/arm/mach-s3c24xx/Kconfig | 32 ++++++++++++++---------------
->  arch/arm/mach-s3c64xx/Kconfig | 16 +++++++--------
->  arch/arm/mach-sa1100/Kconfig  |  4 ++--
->  arch/arm/mach-vt8500/Kconfig  |  6 +++---
->  arch/arm/mach-w90x900/Kconfig |  6 +++---
->  arch/arm/mm/Kconfig           | 48 +++++++++++++++++++++----------------------
->  arch/arm/plat-samsung/Kconfig | 26 +++++++++++------------
->  16 files changed, 140 insertions(+), 142 deletions(-)
+>  drivers/char/agp/Kconfig       | 13 +++---
+>  drivers/char/hw_random/Kconfig | 24 +++++-----
+>  drivers/char/ipmi/Kconfig      | 99 +++++++++++++++++++++---------------------
+>  4 files changed, 80 insertions(+), 80 deletions(-)
 >
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 5085a1e..c89f683 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1115,14 +1115,14 @@ config ARM_ERRATA_764369
->           in the diagnostic control register of the SCU.
+> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+> index 72866a0..ab33583 100644
+> --- a/drivers/char/Kconfig
+> +++ b/drivers/char/Kconfig
+> @@ -35,18 +35,18 @@ config SGI_SNSC
+>           say Y.  Otherwise, say N.
 >
->  config ARM_ERRATA_775420
-> -       bool "ARM errata: A data cache maintenance operation which aborts, might lead to deadlock"
-> -       depends on CPU_V7
+>  config SGI_TIOCX
+> -       bool "SGI TIO CX driver support"
+> -       depends on (IA64_SGI_SN2 || IA64_GENERIC)
 > -       help
-> -        This option enables the workaround for the 775420 Cortex-A9 (r2p2,
-> -        r2p6,r2p8,r2p10,r3p0) erratum. In case a date cache maintenance
-> -        operation aborts with MMU exception, it might cause the processor
-> -        to deadlock. This workaround puts DSB before executing ISB if
-> -        an abort may occur on cache maintenance.
-> +       bool "ARM errata: A data cache maintenance operation which aborts, might lead to deadlock"
-> +       depends on CPU_V7
+> -         If you have an SGI Altix and you have fpga devices attached
+> -         to your TIO, say Y here, otherwise say N.
+> +       bool "SGI TIO CX driver support"
+> +       depends on (IA64_SGI_SN2 || IA64_GENERIC)
 > +       help
-> +         This option enables the workaround for the 775420 Cortex-A9 (r2p2,
-> +         r2p6,r2p8,r2p10,r3p0) erratum. In case a date cache maintenance
-> +         operation aborts with MMU exception, it might cause the processor
-> +         to deadlock. This workaround puts DSB before executing ISB if
-> +         an abort may occur on cache maintenance.
+> +         If you have an SGI Altix and you have fpga devices attached
+> +         to your TIO, say Y here, otherwise say N.
 >
->  config ARM_ERRATA_798181
->         bool "ARM errata: TLBI/DSB failure on Cortex-A15"
-> @@ -1650,12 +1650,12 @@ config HW_PERF_EVENTS
->         depends on ARM_PMU
+>  config SGI_MBCS
+> -       tristate "SGI FPGA Core Services driver support"
+> -       depends on SGI_TIOCX
+> -       help
+> -         If you have an SGI Altix with an attached SABrick
+> -         say Y or M here, otherwise say N.
+> +       tristate "SGI FPGA Core Services driver support"
+> +       depends on SGI_TIOCX
+> +       help
+> +         If you have an SGI Altix with an attached SABrick
+> +         say Y or M here, otherwise say N.
 >
->  config SYS_SUPPORTS_HUGETLBFS
-> -       def_bool y
-> -       depends on ARM_LPAE
-> +       def_bool y
-> +       depends on ARM_LPAE
+>  source "drivers/tty/serial/Kconfig"
+>  source "drivers/tty/serdev/Kconfig"
+> @@ -461,8 +461,8 @@ config RAW_DRIVER
+>           Once bound, I/O against /dev/raw/rawN uses efficient zero-copy I/O.
+>           See the raw(8) manpage for more details.
 >
->  config HAVE_ARCH_TRANSPARENT_HUGEPAGE
-> -       def_bool y
-> -       depends on ARM_LPAE
-> +       def_bool y
-> +       depends on ARM_LPAE
+> -          Applications should preferably open the device (eg /dev/hda1)
+> -          with the O_DIRECT flag.
+> +         Applications should preferably open the device (eg /dev/hda1)
+> +         with the O_DIRECT flag.
 >
->  config ARCH_WANT_GENERAL_HUGETLB
->         def_bool y
-> diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
-> index 2d5570e..f6eaf05 100644
-> --- a/arch/arm/mach-aspeed/Kconfig
-> +++ b/arch/arm/mach-aspeed/Kconfig
-> @@ -18,9 +18,9 @@ config MACH_ASPEED_G4
->         select CPU_ARM926T
->         select PINCTRL_ASPEED_G4
->         help
-> -        Say yes if you intend to run on an Aspeed ast2400 or similar
-> -        fourth generation BMCs, such as those used by OpenPower Power8
-> -        systems.
-> +         Say yes if you intend to run on an Aspeed ast2400 or similar
-> +         fourth generation BMCs, such as those used by OpenPower Power8
-> +         systems.
+>  config MAX_RAW_DEVS
+>         int "Maximum number of RAW devices to support (1-65536)"
+> diff --git a/drivers/char/agp/Kconfig b/drivers/char/agp/Kconfig
+> index 6231714..6da28d5 100644
+> --- a/drivers/char/agp/Kconfig
+> +++ b/drivers/char/agp/Kconfig
+> @@ -63,7 +63,7 @@ config AGP_AMD64
+>           This option gives you AGP support for the GLX component of
+>           X using the on-CPU northbridge of the AMD Athlon64/Opteron CPUs.
+>           You still need an external AGP bridge like the AMD 8151, VIA
+> -          K8T400M, SiS755. It may also support other AGP bridges when loaded
+> +         K8T400M, SiS755. It may also support other AGP bridges when loaded
+>           with agp_try_unsupported=1.
 >
->  config MACH_ASPEED_G5
->         bool "Aspeed SoC 5th Generation"
-> @@ -28,7 +28,7 @@ config MACH_ASPEED_G5
->         select CPU_V6
->         select PINCTRL_ASPEED_G5
->         help
-> -        Say yes if you intend to run on an Aspeed ast2500 or similar
-> -        fifth generation Aspeed BMCs.
-> +         Say yes if you intend to run on an Aspeed ast2500 or similar
-> +         fifth generation Aspeed BMCs.
+>  config AGP_INTEL
+> @@ -151,13 +151,12 @@ config AGP_EFFICEON
+>           series processors with integrated northbridges.
 >
->  endif
-> diff --git a/arch/arm/mach-ep93xx/Kconfig b/arch/arm/mach-ep93xx/Kconfig
-> index c095236..597ea24 100644
-> --- a/arch/arm/mach-ep93xx/Kconfig
-> +++ b/arch/arm/mach-ep93xx/Kconfig
-> @@ -125,10 +125,10 @@ config MACH_MICRO9S
->           Contec Micro9-Slim board.
->
->  config MACH_SIM_ONE
-> -        bool "Support Simplemachines Sim.One board"
+>  config AGP_SGI_TIOCA
+> -        tristate "SGI TIO chipset AGP support"
+> -        depends on AGP && (IA64_SGI_SN2 || IA64_GENERIC)
 > -        help
-> -          Say 'Y' here if you want your kernel to support the
-> -          Simplemachines Sim.One board.
-> +       bool "Support Simplemachines Sim.One board"
+> -          This option gives you AGP GART support for the SGI TIO chipset
+> -          for IA64 processors.
+> +       tristate "SGI TIO chipset AGP support"
+> +       depends on AGP && (IA64_SGI_SN2 || IA64_GENERIC)
 > +       help
-> +         Say 'Y' here if you want your kernel to support the
-> +         Simplemachines Sim.One board.
+> +         This option gives you AGP GART support for the SGI TIO chipset
+> +         for IA64 processors.
 >
->  config MACH_SNAPPER_CL15
->         bool "Support Bluewater Systems Snapper CL15 Module"
-> diff --git a/arch/arm/mach-hisi/Kconfig b/arch/arm/mach-hisi/Kconfig
-> index 65a048f..4850f8b 100644
-> --- a/arch/arm/mach-hisi/Kconfig
-> +++ b/arch/arm/mach-hisi/Kconfig
-> @@ -24,13 +24,13 @@ config ARCH_HI3xxx
->           Support for Hisilicon Hi36xx SoC family
->
->  config ARCH_HIP01
-> -       bool "Hisilicon HIP01 family"
-> -       depends on ARCH_MULTI_V7
-> -       select HAVE_ARM_SCU if SMP
-> -       select HAVE_ARM_TWD if SMP
-> -       select ARM_GLOBAL_TIMER
-> -       help
-> -         Support for Hisilicon HIP01 SoC family
-> +       bool "Hisilicon HIP01 family"
-> +       depends on ARCH_MULTI_V7
-> +       select HAVE_ARM_SCU if SMP
-> +       select HAVE_ARM_TWD if SMP
-> +       select ARM_GLOBAL_TIMER
-> +       help
-> +         Support for Hisilicon HIP01 SoC family
->
->  config ARCH_HIP04
->         bool "Hisilicon HiP04 Cortex A15 family"
-> diff --git a/arch/arm/mach-ixp4xx/Kconfig b/arch/arm/mach-ixp4xx/Kconfig
-> index fea00812..7b47a3c 100644
-> --- a/arch/arm/mach-ixp4xx/Kconfig
-> +++ b/arch/arm/mach-ixp4xx/Kconfig
-> @@ -22,9 +22,9 @@ config MACH_AVILA
->           see <file:Documentation/arm/IXP4xx>.
->
->  config MACH_LOFT
-> -    bool "Loft"
-> -    depends on MACH_AVILA
-> -    help
-> +       bool "Loft"
-> +       depends on MACH_AVILA
-> +       help
->           Say 'Y' here if you want your kernel to support the Giant
->           Shoulder Inc Loft board (a minor variation on the standard
->           Gateworks Avila Network Platform).
-> @@ -33,7 +33,7 @@ config ARCH_ADI_COYOTE
->         bool "Coyote"
->         select FORCE_PCI
->         help
-> -         Say 'Y' here if you want your kernel to support the ADI
-> +         Say 'Y' here if you want your kernel to support the ADI
->           Engineering Coyote Gateway Reference Platform. For more
->           information on this platform, see <file:Documentation/arm/IXP4xx>.
->
-> @@ -56,8 +56,8 @@ config MACH_WG302V2
->  config ARCH_IXDP425
->         bool "IXDP425"
->         help
-> -         Say 'Y' here if you want your kernel to support Intel's
-> -         IXDP425 Development Platform (Also known as Richfield).
-> +         Say 'Y' here if you want your kernel to support Intel's
-> +         IXDP425 Development Platform (Also known as Richfield).
->           For more information on this platform, see <file:Documentation/arm/IXP4xx>.
->
->  config MACH_IXDPG425
-> @@ -88,12 +88,12 @@ config MACH_KIXRP435
->           For more information on this platform, see <file:Documentation/arm/IXP4xx>.
->
->  #
-> -# IXCDP1100 is the exact same HW as IXDP425, but with a different machine
-> -# number from the bootloader due to marketing monkeys, so we just enable it
-> +# IXCDP1100 is the exact same HW as IXDP425, but with a different machine
-> +# number from the bootloader due to marketing monkeys, so we just enable it
->  # by default if IXDP425 is enabled.
->  #
->  config ARCH_IXCDP1100
-> -       bool
-> +       bool
->         depends on ARCH_IXDP425
->         default y
->
-> @@ -200,14 +200,14 @@ config IXP4XX_INDIRECT_PCI
->         bool "Use indirect PCI memory access"
->         depends on PCI
->         help
-> -          IXP4xx provides two methods of accessing PCI memory space:
-> +         IXP4xx provides two methods of accessing PCI memory space:
->
-> -          1) A direct mapped window from 0x48000000 to 0x4BFFFFFF (64MB).
-> -             To access PCI via this space, we simply ioremap() the BAR
-> -             into the kernel and we can use the standard read[bwl]/write[bwl]
-> -             macros. This is the preferred method due to speed but it
-> -             limits the system to just 64MB of PCI memory. This can be
-> -             problematic if using video cards and other memory-heavy devices.
-> +         1) A direct mapped window from 0x48000000 to 0x4BFFFFFF (64MB).
-> +            To access PCI via this space, we simply ioremap() the BAR
-> +            into the kernel and we can use the standard read[bwl]/write[bwl]
-> +            macros. This is the preferred method due to speed but it
-> +            limits the system to just 64MB of PCI memory. This can be
-> +            problematic if using video cards and other memory-heavy devices.
->
->           2) If > 64MB of memory space is required, the IXP4xx can be
->              configured to use indirect registers to access the whole PCI
-> diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
-> index 94500be..144036e 100644
-> --- a/arch/arm/mach-mmp/Kconfig
-> +++ b/arch/arm/mach-mmp/Kconfig
-> @@ -149,7 +149,7 @@ config CPU_MMP2
->           Select code specific to MMP2. MMP2 is ARMv7 compatible.
->
->  config USB_EHCI_MV_U2O
-> -        bool "EHCI support for PXA USB OTG controller"
-> +       bool "EHCI support for PXA USB OTG controller"
->         depends on USB_EHCI_MV
->         help
->           Enables support for OTG controller which can be switched to host mode.
-> diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
-> index c4694f2..2e7d733 100644
-> --- a/arch/arm/mach-omap1/Kconfig
-> +++ b/arch/arm/mach-omap1/Kconfig
-> @@ -55,7 +55,7 @@ config OMAP_MUX_WARNINGS
->         default y
->         help
->           Choose Y here to warn whenever driver initialization logic needs
-> -         to change the pin multiplexing setup.  When there are no warnings
-> +         to change the pin multiplexing setup. When there are no warnings
->           printed, it's safe to deselect OMAP_MUX for your product.
->
->  comment "OMAP Board Type"
-> @@ -65,20 +65,20 @@ config MACH_OMAP_INNOVATOR
->         bool "TI Innovator"
->         depends on ARCH_OMAP1 && (ARCH_OMAP15XX || ARCH_OMAP16XX)
->         help
-> -          TI OMAP 1510 or 1610 Innovator board support. Say Y here if you
-> -          have such a board.
-> +         TI OMAP 1510 or 1610 Innovator board support. Say Y here if you
-> +         have such a board.
->
->  config MACH_OMAP_H2
->         bool "TI H2 Support"
->         depends on ARCH_OMAP1 && ARCH_OMAP16XX
-> -       help
-> +       help
->           TI OMAP 1610/1611B H2 board support. Say Y here if you have such
->           a board.
->
->  config MACH_OMAP_H3
->         bool "TI H3 Support"
->         depends on ARCH_OMAP1 && ARCH_OMAP16XX
-> -       help
-> +       help
->           TI OMAP 1710 H3 board support. Say Y here if you have such
->           a board.
->
-> @@ -91,14 +91,14 @@ config MACH_HERALD
->  config MACH_OMAP_OSK
->         bool "TI OSK Support"
->         depends on ARCH_OMAP1 && ARCH_OMAP16XX
-> -       help
-> +       help
->           TI OMAP 5912 OSK (OMAP Starter Kit) board support. Say Y here
-> -          if you have such a board.
-> +         if you have such a board.
->
->  config OMAP_OSK_MISTRAL
->         bool "Mistral QVGA board Support"
->         depends on MACH_OMAP_OSK
-> -       help
-> +       help
->           The OSK supports an optional add-on board with a Quarter-VGA
->           touchscreen, PDA-ish buttons, a resume button, bicolor LED,
->           and camera connector.  Say Y here if you have this board.
-> @@ -106,14 +106,14 @@ config OMAP_OSK_MISTRAL
->  config MACH_OMAP_PERSEUS2
->         bool "TI Perseus2"
->         depends on ARCH_OMAP1 && ARCH_OMAP730
-> -       help
-> +       help
->           Support for TI OMAP 730 Perseus2 board. Say Y here if you have such
->           a board.
->
->  config MACH_OMAP_FSAMPLE
->         bool "TI F-Sample"
->         depends on ARCH_OMAP1 && ARCH_OMAP730
-> -       help
-> +       help
->           Support for TI OMAP 850 F-Sample board. Say Y here if you have such
->           a board.
->
-> @@ -130,10 +130,10 @@ config MACH_OMAP_PALMZ71
->         bool "Palm Zire71"
->         depends on ARCH_OMAP1 && ARCH_OMAP15XX
->         help
-> -        Support for the Palm Zire71 PDA. To boot the kernel,
-> -        you'll need a PalmOS compatible bootloader; check out
-> -        http://hackndev.com/palm/z71 for more information.
-> -        Say Y here if you have such a PDA, say N otherwise.
-> +         Support for the Palm Zire71 PDA. To boot the kernel,
-> +         you'll need a PalmOS compatible bootloader; check out
-> +         http://hackndev.com/palm/z71 for more information.
-> +         Say Y here if you have such a PDA, say N otherwise.
->
->  config MACH_OMAP_PALMTT
->         bool "Palm Tungsten|T"
-> @@ -179,10 +179,10 @@ config MACH_OMAP_GENERIC
->         bool "Generic OMAP board"
->         depends on ARCH_OMAP1 && (ARCH_OMAP15XX || ARCH_OMAP16XX)
->         help
-> -          Support for generic OMAP-1510, 1610 or 1710 board with
-> -          no FPGA. Can be used as template for porting Linux to
-> -          custom OMAP boards. Say Y here if you have a custom
-> -          board.
-> +         Support for generic OMAP-1510, 1610 or 1710 board with
-> +         no FPGA. Can be used as template for porting Linux to
-> +         custom OMAP boards. Say Y here if you have a custom
-> +         board.
->
->  endmenu
->
-> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-> index 5e33d1a..4db9516d 100644
-> --- a/arch/arm/mach-omap2/Kconfig
-> +++ b/arch/arm/mach-omap2/Kconfig
-> @@ -174,16 +174,16 @@ config SOC_TI81XX
->         default y
->
->  config OMAP_PACKAGE_CBC
-> -       bool
-> +       bool
->
->  config OMAP_PACKAGE_CBB
-> -       bool
-> +       bool
->
->  config OMAP_PACKAGE_CUS
-> -       bool
-> +       bool
->
->  config OMAP_PACKAGE_CBP
-> -       bool
-> +       bool
->
->  comment "OMAP Legacy Platform Data Board Type"
->         depends on ARCH_OMAP2PLUS
-> @@ -208,10 +208,10 @@ config MACH_OMAP3_PANDORA
->         select OMAP_PACKAGE_CBB
->
->  config MACH_NOKIA_N810
-> -       bool
-> +       bool
->
->  config MACH_NOKIA_N810_WIMAX
-> -       bool
-> +       bool
->
->  config MACH_NOKIA_N8X0
->         bool "Nokia N800/N810"
-> diff --git a/arch/arm/mach-prima2/Kconfig b/arch/arm/mach-prima2/Kconfig
-> index 7426211..458c02f 100644
-> --- a/arch/arm/mach-prima2/Kconfig
-> +++ b/arch/arm/mach-prima2/Kconfig
-> @@ -21,7 +21,7 @@ config ARCH_ATLAS6
->         default y
->         select SIRF_IRQ
->         help
-> -          Support for CSR SiRFSoC ARM Cortex A9 Platform
-> +         Support for CSR SiRFSoC ARM Cortex A9 Platform
->
->  config ARCH_ATLAS7
->         bool "CSR SiRFSoC ATLAS7 ARM Cortex A7 Platform"
-> @@ -31,7 +31,7 @@ config ARCH_ATLAS7
->         select HAVE_ARM_SCU if SMP
->         select HAVE_SMP
->         help
-> -          Support for CSR SiRFSoC ARM Cortex A7 Platform
-> +         Support for CSR SiRFSoC ARM Cortex A7 Platform
->
->  config ARCH_PRIMA2
->         bool "CSR SiRFSoC PRIMA2 ARM Cortex A9 Platform"
-> @@ -40,7 +40,7 @@ config ARCH_PRIMA2
->         select ZONE_DMA
->         select PRIMA2_TIMER
->         help
-> -          Support for CSR SiRFSoC ARM Cortex A9 Platform
-> +         Support for CSR SiRFSoC ARM Cortex A9 Platform
->
->  config SIRF_IRQ
->         bool
-> diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
-> index 686f0bb..bcc6ce4 100644
-> --- a/arch/arm/mach-s3c24xx/Kconfig
-> +++ b/arch/arm/mach-s3c24xx/Kconfig
-> @@ -17,8 +17,6 @@ config PLAT_S3C24XX
->         help
->           Base platform code for any Samsung S3C24XX device
->
+>  config INTEL_GTT
+>         tristate
+>         depends on X86 && PCI
 > -
-> -
->  menu "SAMSUNG S3C24XX SoCs Support"
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 25a7d8f..6265931 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -156,15 +156,15 @@ config HW_RANDOM_OMAP
+>         tristate "OMAP Random Number Generator support"
+>         depends on ARCH_OMAP16XX || ARCH_OMAP2PLUS || ARCH_MVEBU
+>         default HW_RANDOM
+> -       ---help---
+> -         This driver provides kernel-side support for the Random Number
+> +       ---help---
+> +         This driver provides kernel-side support for the Random Number
+>           Generator hardware found on OMAP16xx, OMAP2/3/4/5, AM33xx/AM43xx
+>           multimedia processors, and Marvell Armada 7k/8k SoCs.
 >
->  comment "S3C24XX SoCs"
-> @@ -138,11 +136,11 @@ config S3C2410_IOTIMING
->           and s3c2440/s3c2442 cpu frequency support.
+>           To compile this driver as a module, choose M here: the
+>           module will be called omap-rng.
 >
->  config S3C2410_CPUFREQ_UTILS
-> -       bool
-> -       depends on ARM_S3C24XX_CPUFREQ
-> -       help
-> -         Internal node to select timing code that is common to the s3c2410
-> -         and s3c2440/s3c244 cpu frequency support.
-> +       bool
-> +       depends on ARM_S3C24XX_CPUFREQ
-> +       help
-> +         Internal node to select timing code that is common to the s3c2410
-> +         and s3c2440/s3c244 cpu frequency support.
->
->  # cpu frequency support common to s3c2412, s3c2413 and s3c2442
->
-> @@ -280,7 +278,7 @@ config MACH_VR1000
->         help
->           Say Y here if you are using the Thorcom VR1000 board.
->
-> -endif  # CPU_S3C2410
-> +endif # CPU_S3C2410
->
->  config S3C2412_PM_SLEEP
->         bool
-> @@ -354,7 +352,7 @@ config MACH_VSTMS
->         help
->           Say Y here if you are using an VSTMS board
->
-> -endif  # CPU_S3C2412
-> +endif # CPU_S3C2412
->
->  if CPU_S3C2416
->
-> @@ -402,7 +400,7 @@ config MACH_S3C2416_DT
->           Note: This is under development and not all peripherals can be supported
->           with this machine file.
->
-> -endif  # CPU_S3C2416
-> +endif # CPU_S3C2416
->
->  if CPU_S3C2440 || CPU_S3C2442
->
-> @@ -528,7 +526,7 @@ config SMDK2440_CPU2440
->         default y if ARCH_S3C2440
->         select S3C2440_XTAL_16934400
->
-> -endif  # CPU_S3C2440
-> +endif # CPU_S3C2440
->
->  if CPU_S3C2442
->
-> @@ -548,7 +546,7 @@ config MACH_NEO1973_GTA02
->         select S3C24XX_PWM
->         select S3C_DEV_USB_HOST
->         help
-> -          Say Y here if you are using the Openmoko GTA02 / Freerunner GSM Phone
-> +         Say Y here if you are using the Openmoko GTA02 / Freerunner GSM Phone
->
->  config MACH_RX1950
->         bool "HP iPAQ rx1950"
-> @@ -560,9 +558,9 @@ config MACH_RX1950
->         select S3C24XX_PWM
->         select S3C_DEV_NAND
->         help
-> -          Say Y here if you're using HP iPAQ rx1950
-> +         Say Y here if you're using HP iPAQ rx1950
->
-> -endif  # CPU_S3C2442
-> +endif # CPU_S3C2442
->
->  if CPU_S3C2443 || CPU_S3C2416
->
-> @@ -571,7 +569,7 @@ config S3C2443_SETUP_SPI
->         help
->           Common setup code for SPI GPIO configurations
->
-> -endif  # CPU_S3C2443 || CPU_S3C2416
-> +endif # CPU_S3C2443 || CPU_S3C2416
->
->  if CPU_S3C2443
->
-> @@ -584,7 +582,7 @@ config MACH_SMDK2443
->         help
->           Say Y here if you are using an SMDK2443
->
-> -endif  # CPU_S3C2443
-> +endif # CPU_S3C2443
->
->  config PM_H1940
->         bool
-> @@ -593,4 +591,4 @@ config PM_H1940
->
->  endmenu        # SAMSUNG S3C24XX SoCs Support
->
-> -endif  # ARCH_S3C24XX
-> +endif # ARCH_S3C24XX
-> diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kconfig
-> index 5700822..f6b05277 100644
-> --- a/arch/arm/mach-s3c64xx/Kconfig
-> +++ b/arch/arm/mach-s3c64xx/Kconfig
-> @@ -100,7 +100,7 @@ config S3C64XX_SETUP_SDHCI_GPIO
->  config S3C64XX_SETUP_SPI
->         bool
->         help
-> -        Common setup code for SPI GPIO configurations
-> +         Common setup code for SPI GPIO configurations
->
->  config S3C64XX_SETUP_USB_PHY
->         bool
-> @@ -110,7 +110,7 @@ config S3C64XX_SETUP_USB_PHY
->  # S36400 Macchine support
->
->  config MACH_SMDK6400
-> -       bool "SMDK6400"
-> +       bool "SMDK6400"
->         depends on ATAGS
->         select CPU_S3C6400
->         select S3C64XX_SETUP_SDHCI
-> @@ -202,7 +202,7 @@ config SMDK6410_SD_CH0
->         bool "Use channel 0 only"
->         depends on MACH_SMDK6410
->         help
-> -          Select CON7 (channel 0) as the MMC/SD slot, as
-> +         Select CON7 (channel 0) as the MMC/SD slot, as
->           at least some SMDK6410 boards come with the
->           resistors fitted so that the card detects for
->           channels 0 and 1 are the same.
-> @@ -211,7 +211,7 @@ config SMDK6410_SD_CH1
->         bool "Use channel 1 only"
->         depends on MACH_SMDK6410
->         help
-> -          Select CON6 (channel 1) as the MMC/SD slot, as
-> +         Select CON6 (channel 1) as the MMC/SD slot, as
->           at least some SMDK6410 boards come with the
->           resistors fitted so that the card detects for
->           channels 0 and 1 are the same.
-> @@ -257,7 +257,7 @@ config MACH_NCP
->         select S3C_DEV_HSMMC1
->         select S3C_DEV_I2C1
->         help
-> -          Machine support for the Samsung NCP
-> +         Machine support for the Samsung NCP
->
->  config MACH_HMT
->         bool "Airgoo HMT"
-> @@ -289,21 +289,21 @@ config MACH_SMARTQ
->         select SAMSUNG_DEV_PWM
->         select SAMSUNG_DEV_TS
->         help
-> -           Shared machine support for SmartQ 5/7
-> +         Shared machine support for SmartQ 5/7
->
->  config MACH_SMARTQ5
->         bool "SmartQ 5"
->         depends on ATAGS
->         select MACH_SMARTQ
->         help
-> -           Machine support for the SmartQ 5
-> +         Machine support for the SmartQ 5
->
->  config MACH_SMARTQ7
->         bool "SmartQ 7"
->         depends on ATAGS
->         select MACH_SMARTQ
->         help
-> -           Machine support for the SmartQ 7
-> +         Machine support for the SmartQ 7
->
->  config MACH_WLF_CRAGG_6410
->         bool "Wolfson Cragganmore 6410"
-> diff --git a/arch/arm/mach-sa1100/Kconfig b/arch/arm/mach-sa1100/Kconfig
-> index ce41c67..b1c092c 100644
-> --- a/arch/arm/mach-sa1100/Kconfig
-> +++ b/arch/arm/mach-sa1100/Kconfig
-> @@ -91,8 +91,8 @@ config SA1100_JORNADA720
->         select SA1111
->         help
->           Say Y here if you want to build a kernel for the HP Jornada 720
-> -         handheld computer.  See
-> -         <http://h10025.www1.hp.com/ewfrf/wc/product?product=61677&cc=us&lc=en&dlc=en&product=61677#>
-> +         handheld computer.  See
-> +         <http://h10025.www1.hp.com/ewfrf/wc/product?product=61677&cc=us&lc=en&dlc=en&product=61677#>
->
->  config SA1100_JORNADA720_SSP
->         bool "HP Jornada 720 Extended SSP driver"
-> diff --git a/arch/arm/mach-vt8500/Kconfig b/arch/arm/mach-vt8500/Kconfig
-> index 8841199..6343961 100644
-> --- a/arch/arm/mach-vt8500/Kconfig
-> +++ b/arch/arm/mach-vt8500/Kconfig
-> @@ -10,9 +10,9 @@ config ARCH_VT8500
->
->  config ARCH_WM8505
->         bool "VIA/Wondermedia 85xx and WM8650"
-> -       depends on ARCH_MULTI_V5
-> -       select ARCH_VT8500
-> -       select CPU_ARM926T
-> +       depends on ARCH_MULTI_V5
-> +       select ARCH_VT8500
-> +       select CPU_ARM926T
->
->  config ARCH_WM8750
->         bool "WonderMedia WM8750"
-> diff --git a/arch/arm/mach-w90x900/Kconfig b/arch/arm/mach-w90x900/Kconfig
-> index b16ffc0..1fb3a3b 100644
-> --- a/arch/arm/mach-w90x900/Kconfig
-> +++ b/arch/arm/mach-w90x900/Kconfig
-> @@ -23,7 +23,7 @@ config MACH_W90P910EVB
->         default y
->         select CPU_W90P910
->         help
-> -          Say Y here if you are using the Nuvoton W90P910EVB
-> +         Say Y here if you are using the Nuvoton W90P910EVB
->
->  endmenu
->
-> @@ -33,7 +33,7 @@ config MACH_W90P950EVB
->         bool "Nuvoton NUC950 Evaluation Board"
->         select CPU_NUC950
->         help
-> -          Say Y here if you are using the Nuvoton NUC950EVB
-> +         Say Y here if you are using the Nuvoton NUC950EVB
->
->  endmenu
->
-> @@ -43,7 +43,7 @@ config MACH_W90N960EVB
->         bool "Nuvoton NUC960 Evaluation Board"
->         select CPU_NUC960
->         help
-> -          Say Y here if you are using the Nuvoton NUC960EVB
-> +         Say Y here if you are using the Nuvoton NUC960EVB
->
->  endmenu
->
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index b169e58..23e75a1 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -123,13 +123,13 @@ config CPU_ARM925T
->         select CPU_PABRT_LEGACY
->         select CPU_THUMB_CAPABLE
->         select CPU_TLB_V4WBI if MMU
-> -       help
-> -         The ARM925T is a mix between the ARM920T and ARM926T, but with
-> +       help
-> +         The ARM925T is a mix between the ARM920T and ARM926T, but with
->           different instruction and data caches. It is used in TI's OMAP
-> -         device family.
-> +         device family.
->
-> -         Say Y if you want support for the ARM925T processor.
-> -         Otherwise, say N.
-> +         Say Y if you want support for the ARM925T processor.
-> +         Otherwise, say N.
->
->  # ARM926T
->  config CPU_ARM926T
-> @@ -829,19 +829,19 @@ config HARDEN_BRANCH_PREDICTOR
->         depends on CPU_SPECTRE
->         default y
->         help
-> -          Speculation attacks against some high-performance processors rely
-> -          on being able to manipulate the branch predictor for a victim
-> -          context by executing aliasing branches in the attacker context.
-> -          Such attacks can be partially mitigated against by clearing
-> -          internal branch predictor state and limiting the prediction
-> -          logic in some situations.
-> +         Speculation attacks against some high-performance processors rely
-> +         on being able to manipulate the branch predictor for a victim
-> +         context by executing aliasing branches in the attacker context.
-> +         Such attacks can be partially mitigated against by clearing
-> +         internal branch predictor state and limiting the prediction
-> +         logic in some situations.
->
-> -          This config option will take CPU-specific actions to harden
-> -          the branch predictor against aliasing attacks and may rely on
-> -          specific instruction sequences or control bits being set by
-> -          the system firmware.
-> +         This config option will take CPU-specific actions to harden
-> +         the branch predictor against aliasing attacks and may rely on
-> +         specific instruction sequences or control bits being set by
-> +         the system firmware.
->
-> -          If unsure, say Y.
+> -         If unsure, say Y.
 > +         If unsure, say Y.
 >
->  config TLS_REG_EMUL
->         bool
-> @@ -983,14 +983,14 @@ if CACHE_L2X0
->  config PL310_ERRATA_588369
->         bool "PL310 errata: Clean & Invalidate maintenance operations do not invalidate clean lines"
->         help
-> -          The PL310 L2 cache controller implements three types of Clean &
-> -          Invalidate maintenance operations: by Physical Address
-> -          (offset 0x7F0), by Index/Way (0x7F8) and by Way (0x7FC).
-> -          They are architecturally defined to behave as the execution of a
-> -          clean operation followed immediately by an invalidate operation,
-> -          both performing to the same memory location. This functionality
-> -          is not correctly implemented in PL310 prior to r2p0 (fixed in r2p0)
-> -          as clean lines are not invalidated as a result of these operations.
-> +         The PL310 L2 cache controller implements three types of Clean &
-> +         Invalidate maintenance operations: by Physical Address
-> +         (offset 0x7F0), by Index/Way (0x7F8) and by Way (0x7FC).
-> +         They are architecturally defined to behave as the execution of a
-> +         clean operation followed immediately by an invalidate operation,
-> +         both performing to the same memory location. This functionality
-> +         is not correctly implemented in PL310 prior to r2p0 (fixed in r2p0)
-> +         as clean lines are not invalidated as a result of these operations.
+>  config HW_RANDOM_OMAP3_ROM
+>         tristate "OMAP3 ROM Random Number Generator support"
+> @@ -372,17 +372,17 @@ config HW_RANDOM_MESON
+>           If unsure, say Y.
 >
->  config PL310_ERRATA_727915
->         bool "PL310 errata: Background Clean & Invalidate by Way operation can cause data corruption"
-> diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-> index 53da57f..1946c3d 100644
-> --- a/arch/arm/plat-samsung/Kconfig
-> +++ b/arch/arm/plat-samsung/Kconfig
-> @@ -39,12 +39,12 @@ config SAMSUNG_ATAGS
->         def_bool n
->         depends on ATAGS
->         help
-> -          This option enables ATAGS based boot support code for
-> -          Samsung platforms, including static platform devices, legacy
-> -          clock, timer and interrupt initialization, etc.
-> +         This option enables ATAGS based boot support code for
-> +         Samsung platforms, including static platform devices, legacy
-> +         clock, timer and interrupt initialization, etc.
+>  config HW_RANDOM_CAVIUM
+> -       tristate "Cavium ThunderX Random Number Generator support"
+> -       depends on HW_RANDOM && PCI && (ARM64 || (COMPILE_TEST && 64BIT))
+> -       default HW_RANDOM
+> -       ---help---
+> -         This driver provides kernel-side support for the Random Number
+> -         Generator hardware found on Cavium SoCs.
+> +       tristate "Cavium ThunderX Random Number Generator support"
+> +       depends on HW_RANDOM && PCI && (ARM64 || (COMPILE_TEST && 64BIT))
+> +       default HW_RANDOM
+> +       ---help---
+> +         This driver provides kernel-side support for the Random Number
+> +         Generator hardware found on Cavium SoCs.
 >
-> -          Platforms that support only DT based boot need not to select
-> -          this option.
-> +         Platforms that support only DT based boot need not to select
-> +         this option.
+> -         To compile this driver as a module, choose M here: the
+> -         module will be called cavium_rng.
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called cavium_rng.
 >
->  if SAMSUNG_ATAGS
+> -         If unsure, say Y.
+> +         If unsure, say Y.
 >
-> @@ -98,7 +98,7 @@ config S3C_DEV_HSMMC3
->  config S3C_DEV_HWMON
->         bool
->         help
-> -           Compile in platform device definitions for HWMON
-> +         Compile in platform device definitions for HWMON
+>  config HW_RANDOM_MTK
+>         tristate "Mediatek Random Number Generator support"
+> diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
+> index 94719fc..b6219c3 100644
+> --- a/drivers/char/ipmi/Kconfig
+> +++ b/drivers/char/ipmi/Kconfig
+> @@ -1,40 +1,41 @@
+> +
+>  #
+>  # IPMI device configuration
+>  #
 >
->  config S3C_DEV_I2C1
->         bool
-> @@ -202,7 +202,7 @@ config S3C64XX_DEV_SPI2
->  config SAMSUNG_DEV_TS
->         bool
->         help
-> -           Common in platform device definitions for touchscreen device
-> +         Common in platform device definitions for touchscreen device
->
->  config SAMSUNG_DEV_KEYPAD
->         bool
-> @@ -247,13 +247,13 @@ config SAMSUNG_PM_DEBUG
->           for more information.
->
->  config S3C_PM_DEBUG_LED_SMDK
-> -       bool "SMDK LED suspend/resume debugging"
-> -       depends on PM && (MACH_SMDK6410)
+>  menuconfig IPMI_HANDLER
+> -       tristate 'IPMI top-level message handler'
+> -       depends on HAS_IOMEM
+> -       select IPMI_DMI_DECODE if DMI
 > -       help
-> -         Say Y here to enable the use of the SMDK LEDs on the baseboard
-> -        for debugging of the state of the suspend and resume process.
-> +       bool "SMDK LED suspend/resume debugging"
-> +       depends on PM && (MACH_SMDK6410)
+> -         This enables the central IPMI message handler, required for IPMI
+> -        to work.
+> +       tristate 'IPMI top-level message handler'
+> +       depends on HAS_IOMEM
+> +       select IPMI_DMI_DECODE if DMI
 > +       help
-> +         Say Y here to enable the use of the SMDK LEDs on the baseboard
-> +         for debugging of the state of the suspend and resume process.
+> +         This enables the central IPMI message handler, required for IPMI
+> +         to work.
 >
-> -        Note, this currently only works for S3C64XX based SMDK boards.
-> +         Note, this currently only works for S3C64XX based SMDK boards.
+> -         IPMI is a standard for managing sensors (temperature,
+> -         voltage, etc.) in a system.
+> +         IPMI is a standard for managing sensors (temperature,
+> +         voltage, etc.) in a system.
 >
->  config SAMSUNG_PM_CHECK
->         bool "S3C2410 PM Suspend Memory CRC"
+> -         See <file:Documentation/IPMI.txt> for more details on the driver.
+> +         See <file:Documentation/IPMI.txt> for more details on the driver.
+>
+> -        If unsure, say N.
+> +         If unsure, say N.
+>
+>  config IPMI_DMI_DECODE
+> -       select IPMI_PLAT_DATA
+> -       bool
+> +       select IPMI_PLAT_DATA
+> +       bool
+>
+>  config IPMI_PLAT_DATA
+> -       bool
+> +       bool
+>
+>  if IPMI_HANDLER
+>
+>  config IPMI_PANIC_EVENT
+> -       bool 'Generate a panic event to all BMCs on a panic'
+> -       help
+> -        When a panic occurs, this will cause the IPMI message handler to,
+> -        by default, generate an IPMI event describing the panic to each
+> -        interface registered with the message handler.  This is always
+> -        available, the module parameter for ipmi_msghandler named
+> -        panic_op can be set to "event" to chose this value, this config
+> -        simply causes the default value to be set to "event".
+> +       bool 'Generate a panic event to all BMCs on a panic'
+> +       help
+> +         When a panic occurs, this will cause the IPMI message handler to,
+> +         by default, generate an IPMI event describing the panic to each
+> +         interface registered with the message handler.  This is always
+> +         available, the module parameter for ipmi_msghandler named
+> +         panic_op can be set to "event" to chose this value, this config
+> +         simply causes the default value to be set to "event".
+>
+>  config IPMI_PANIC_STRING
+>         bool 'Generate OEM events containing the panic string'
+> @@ -53,43 +54,43 @@ config IPMI_PANIC_STRING
+>           causes the default value to be set to "string".
+>
+>  config IPMI_DEVICE_INTERFACE
+> -       tristate 'Device interface for IPMI'
+> -       help
+> -         This provides an IOCTL interface to the IPMI message handler so
+> -        userland processes may use IPMI.  It supports poll() and select().
+> +       tristate 'Device interface for IPMI'
+> +       help
+> +         This provides an IOCTL interface to the IPMI message handler so
+> +         userland processes may use IPMI.  It supports poll() and select().
+>
+>  config IPMI_SI
+> -       tristate 'IPMI System Interface handler'
+> -       select IPMI_PLAT_DATA
+> -       help
+> -         Provides a driver for System Interfaces (KCS, SMIC, BT).
+> -        Currently, only KCS and SMIC are supported.  If
+> -        you are using IPMI, you should probably say "y" here.
+> +       tristate 'IPMI System Interface handler'
+> +       select IPMI_PLAT_DATA
+> +       help
+> +         Provides a driver for System Interfaces (KCS, SMIC, BT).
+> +         Currently, only KCS and SMIC are supported.  If
+> +         you are using IPMI, you should probably say "y" here.
+>
+>  config IPMI_SSIF
+> -       tristate 'IPMI SMBus handler (SSIF)'
+> -       select I2C
+> -       help
+> -         Provides a driver for a SMBus interface to a BMC, meaning that you
+> -        have a driver that must be accessed over an I2C bus instead of a
+> -        standard interface.  This module requires I2C support.
+> +       tristate 'IPMI SMBus handler (SSIF)'
+> +       select I2C
+> +       help
+> +         Provides a driver for a SMBus interface to a BMC, meaning that you
+> +         have a driver that must be accessed over an I2C bus instead of a
+> +         standard interface.  This module requires I2C support.
+>
+>  config IPMI_POWERNV
+> -       depends on PPC_POWERNV
+> -       tristate 'POWERNV (OPAL firmware) IPMI interface'
+> -       help
+> -         Provides a driver for OPAL firmware-based IPMI interfaces.
+> +       depends on PPC_POWERNV
+> +       tristate 'POWERNV (OPAL firmware) IPMI interface'
+> +       help
+> +         Provides a driver for OPAL firmware-based IPMI interfaces.
+>
+>  config IPMI_WATCHDOG
+> -       tristate 'IPMI Watchdog Timer'
+> -       help
+> -         This enables the IPMI watchdog timer.
+> +       tristate 'IPMI Watchdog Timer'
+> +       help
+> +         This enables the IPMI watchdog timer.
+>
+>  config IPMI_POWEROFF
+> -       tristate 'IPMI Poweroff'
+> -       help
+> -         This enables a function to power off the system with IPMI if
+> -        the IPMI management controller is capable of this.
+> +       tristate 'IPMI Poweroff'
+> +       help
+> +         This enables a function to power off the system with IPMI if
+> +         the IPMI management controller is capable of this.
+>
+>  endif # IPMI_HANDLER
+>
+> @@ -125,7 +126,7 @@ config NPCM7XX_KCS_IPMI_BMC
+>
+>  config ASPEED_BT_IPMI_BMC
+>         depends on ARCH_ASPEED || COMPILE_TEST
+> -       depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
+> +       depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
+>         tristate "BT IPMI bmc driver"
+>         help
+>           Provides a driver for the BT (Block Transfer) IPMI interface
 > --
 > 1.9.1
 >
