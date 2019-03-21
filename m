@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C43C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF29C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB912192B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D4A2192C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553194338;
-	bh=rvfrMtSfQpqrenY5alNnsYomNikWdVIERqElQYYMVX8=;
+	s=default; t=1553194342;
+	bh=nxZSQNTP1HvAPb00FyQmvpnPz0n1+WALrVgWE+NDVbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hOhYbTlTHCb6E1L42z/yJF2+Sq1s/7BdbCN22R0PKwu0p1v2UnuQojGIxJ5NhWAKy
-	 u40oBfZKrcypLRl/e8RdqMzHQcRBBU9jkzdteuhz6+QSA38vloaFx9EshpRMMBpAdf
-	 8UQmq7lNKGq9D5Z5iMj7TRfbUOcuOdiIJbJGiTWA=
+	b=G2Lib5Dv97EIEVT7oBGdW+UkI/5PfU8rZXE589jUKuHCoiEYDJ2TzrG8x1Wwl37zU
+	 IkNgjGQwH3hAhuL77oFNFgkPhlB/aM401s1Bi07ZJhjA/4EhMYGYqKJQUWWG/0xtzj
+	 baviqwWnskwPz1Bl/mMq5bpzM0F/UXT4PFK2IkF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfCUSwR (ORCPT
+        id S1728885AbfCUSwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:52:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728835AbfCUSwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:52:16 -0400
+        id S1728835AbfCUSwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:52:20 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475DC21916;
-        Thu, 21 Mar 2019 18:52:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCDCC2192C;
+        Thu, 21 Mar 2019 18:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553194335;
-        bh=rvfrMtSfQpqrenY5alNnsYomNikWdVIERqElQYYMVX8=;
+        s=default; t=1553194338;
+        bh=nxZSQNTP1HvAPb00FyQmvpnPz0n1+WALrVgWE+NDVbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fU/dbaHAETYzpcbirO9L5VjK3/EOFhlVgErMIRmrLkLywEn8NX3tJWpypt0ApkX8r
-         Bz33Tj8WsqQ0CWm/Cy8W2nEOy7nr/gkVXEkjl4V3Uwbgx2NJhvNjcgZktKh/+GqikL
-         jkzNmI+NIQO/bgtyUCF1MR46Jyx6OA5yToGF1pTM=
+        b=QUbUFSlq49c9RFNzW84FJtQsdkwyjthrhPvyWgIW8N5ADzXuWnEPBCUBPBuS6w0CF
+         UbxphVHJ9MxcmTfeTxGet2EJZG6T4M5/rx/qxwS4rQaZADZgQ69s2jk2NC70bEI5eI
+         WijdRjjSL9Eb86sXh2+85J3KVrR3LJrVA2jyWqMc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 06/44] perf script: Support relative time
-Date:   Thu, 21 Mar 2019 15:51:04 -0300
-Message-Id: <20190321185142.11441-7-acme@kernel.org>
+Subject: [PATCH 07/44] perf stat: Fix --no-scale
+Date:   Thu, 21 Mar 2019 15:51:05 -0300
+Message-Id: <20190321185142.11441-8-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
@@ -61,128 +61,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-When comparing time stamps in 'perf script' traces it can be annoying to
-work with the full perf time stamps.
+The -c option to enable multiplex scaling has been useless for quite
+some time because scaling is default.
 
-Add a --reltime option that displays time stamps relative to the trace
-start to make it easier to read the traces.
+It's only useful as --no-scale to disable scaling. But the non scaling
+code path has bitrotted and doesn't print anything because perf output
+code relies on value run/ena information.
 
-Note: not currently supported for --time. Report an error in this
-case.
+Also even when we don't want to scale a value it's still useful to show
+its multiplex percentage.
+
+This patch:
+  - Fixes help and documentation to show --no-scale instead of -c
+  - Removes -c, only keeps the long option because -c doesn't support negatives.
+  - Enables running/enabled even with --no-scale
+  - And fixes some other problems in the no-scale output.
 
 Before:
 
-  % perf script
-      swapper 0 [000] 245402.891216:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000] 245402.891223:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000] 245402.891227:    5 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000] 245402.891231:   41 cycles:ppp: ffffffffa0068816 native_write_msr+0x6 ([kernel.kallsyms])
-      swapper 0 [000] 245402.891235:  355 cycles:ppp: ffffffffa000dd51 intel_bts_enable_local+0x21 ([kernel.kallsyms])
-      swapper 0 [000] 245402.891239: 3084 cycles:ppp: ffffffffa0a0150a end_repeat_nmi+0x48 ([kernel.kallsyms])
+  $ perf stat --no-scale -e cycles true
+
+   Performance counter stats for 'true':
+
+       <not counted>      cycles
+
+         0.000984154 seconds time elapsed
 
 After:
 
-  % perf script --reltime
+  $ ./perf stat --no-scale -e cycles true
 
-      swapper 0 [000]     0.000000:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000]     0.000006:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000]     0.000010:    5 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
-      swapper 0 [000]     0.000014:   41 cycles:ppp: ffffffffa0068816 native_write_msr+0x6 ([kernel.kallsyms])
-      swapper 0 [000]     0.000018:  355 cycles:ppp: ffffffffa000dd51 intel_bts_enable_local+0x21 ([kernel.kallsyms])
-      swapper 0 [000]     0.000022: 3084 cycles:ppp: ffffffffa0a0150a end_repeat_nmi+0x48 ([kernel.kallsyms])
+   Performance counter stats for 'true':
 
-Committer notes:
+             706,070      cycles
 
-Do not use 'time' as the name of a variable, as this breaks the build on
-older glibcs:
-
-  cc1: warnings being treated as errors
-  builtin-script.c: In function 'perf_sample__fprintf_start':
-  builtin-script.c:691: warning: declaration of 'time' shadows a global declaration
-  /usr/include/time.h:187: warning: shadowed declaration is here
+         0.001219821 seconds time elapsed
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 20190314225002.30108-8-andi@firstfloor.org
-Link: https://lkml.kernel.org/n/tip-bpahyi6pr9r399mvihu65fvc@git.kernel.org
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+LPU-Reference: 20190314225002.30108-9-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-xggjvwcdaj2aqy8ib3i4b1g6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  3 +++
- tools/perf/builtin-script.c              | 18 ++++++++++++++++--
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-stat.txt |  5 ++---
+ tools/perf/builtin-stat.c              |  3 ++-
+ tools/perf/util/evsel.c                |  3 +--
+ tools/perf/util/stat.c                 | 12 ++++--------
+ 4 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2e19fd7ffe35..9b0d04dd2a61 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -380,6 +380,9 @@ include::itrace.txt[]
- 	Set the maximum number of program blocks to print with brstackasm for
- 	each sample.
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 4bc2085e5197..39c05f89104e 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -72,9 +72,8 @@ report::
+ --all-cpus::
+         system-wide collection from all CPUs (default if no target is specified)
  
-+--reltime::
-+	Print time stamps relative to trace start.
-+
- --per-event-dump::
- 	Create per event files with a "perf.data.EVENT.dump" name instead of
-         printing to stdout, useful, for instance, for generating flamegraphs.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2f93d60c5a17..61cfd8f70989 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -53,6 +53,8 @@
+--c::
+---scale::
+-	scale/normalize counter values
++--no-scale::
++	Don't scale/normalize counter values
  
- static char const		*script_name;
- static char const		*generate_script_lang;
-+static bool			reltime;
-+static u64			initial_time;
- static bool			debug_mode;
- static u64			last_timestamp;
- static u64			nr_unordered;
-@@ -686,7 +688,13 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 	}
- 
- 	if (PRINT_FIELD(TIME)) {
--		nsecs = sample->time;
-+		u64 t = sample->time;
-+		if (reltime) {
-+			if (!initial_time)
-+				initial_time = sample->time;
-+			t = sample->time - initial_time;
-+		}
-+		nsecs = t;
- 		secs = nsecs / NSEC_PER_SEC;
- 		nsecs -= secs * NSEC_PER_SEC;
- 
-@@ -694,7 +702,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
- 		else {
- 			char sample_time[32];
--			timestamp__scnprintf_usec(sample->time, sample_time, sizeof(sample_time));
-+			timestamp__scnprintf_usec(t, sample_time, sizeof(sample_time));
- 			printed += fprintf(fp, "%12s: ", sample_time);
+ -d::
+ --detailed::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7b8f09b0b8bf..49ee3c2033ec 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -718,7 +718,8 @@ static struct option stat_options[] = {
+ 		    "system-wide collection from all CPUs"),
+ 	OPT_BOOLEAN('g', "group", &group,
+ 		    "put the counters into a counter group"),
+-	OPT_BOOLEAN('c', "scale", &stat_config.scale, "scale/normalize counters"),
++	OPT_BOOLEAN(0, "scale", &stat_config.scale,
++		    "Use --no-scale to disable counter scaling for multiplexing"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show counter open errors, etc)"),
+ 	OPT_INTEGER('r', "repeat", &stat_config.run_count,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3bbf73e979c0..53ec40cacd4b 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1344,8 +1344,7 @@ void perf_counts_values__scale(struct perf_counts_values *count,
+ 			scaled = 1;
+ 			count->val = (u64)((double) count->val * count->ena / count->run + 0.5);
  		}
- 	}
-@@ -3413,6 +3421,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Set the maximum stack depth when parsing the callchain, "
- 		     "anything beyond the specified depth will be ignored. "
- 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
-+	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
- 	OPT_BOOLEAN('I', "show-info", &show_full_info,
- 		    "display extended information from perf.data file"),
- 	OPT_BOOLEAN('\0', "show-kernel-path", &symbol_conf.show_kernel_path,
-@@ -3487,6 +3496,11 @@ int cmd_script(int argc, const char **argv)
- 		}
- 	}
- 
-+	if (script.time_str && reltime) {
-+		fprintf(stderr, "Don't combine --reltime with --time\n");
-+		return -1;
+-	} else
+-		count->ena = count->run = 0;
 +	}
-+
- 	if (itrace_synth_opts.callchain &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
+ 
+ 	if (pscaled)
+ 		*pscaled = scaled;
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 4d40515307b8..2856cc9d5a31 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -291,10 +291,8 @@ process_counter_values(struct perf_stat_config *config, struct perf_evsel *evsel
+ 		break;
+ 	case AGGR_GLOBAL:
+ 		aggr->val += count->val;
+-		if (config->scale) {
+-			aggr->ena += count->ena;
+-			aggr->run += count->run;
+-		}
++		aggr->ena += count->ena;
++		aggr->run += count->run;
+ 	case AGGR_UNSET:
+ 	default:
+ 		break;
+@@ -442,10 +440,8 @@ int create_perf_stat_counter(struct perf_evsel *evsel,
+ 	struct perf_event_attr *attr = &evsel->attr;
+ 	struct perf_evsel *leader = evsel->leader;
+ 
+-	if (config->scale) {
+-		attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+-				    PERF_FORMAT_TOTAL_TIME_RUNNING;
+-	}
++	attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
++			    PERF_FORMAT_TOTAL_TIME_RUNNING;
+ 
+ 	/*
+ 	 * The event is part of non trivial group, let's enable
 -- 
 2.20.1
 
