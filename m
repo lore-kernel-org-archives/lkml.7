@@ -2,103 +2,91 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95927C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA90BC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEC2218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BBF21916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553164525;
+	bh=5qn4OkBhUbT+gR/YDgcNISGjVjOJsRFP9j7x19LggUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yPppovZHjz801rz+KSSXL5T8bp20digbZJw1el9mGmHmuRUjRIFOOJPBt+fcPJmBg
+	 LvGOLFchaEARrKNnZmPsRIhBk+UalWn9EVoxzu3Ouik+Fh6xDIsQqncvZcxGIksEOF
+	 gi5SxAwlecXsamhpWgbtGrVm8sHbankvIvZ8covI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfCUKeA (ORCPT
+        id S1727929AbfCUKfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:34:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50492 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfCUKd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:33:59 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0F0353082E02;
-        Thu, 21 Mar 2019 10:33:59 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-199.pek2.redhat.com [10.72.12.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C38B019C57;
-        Thu, 21 Mar 2019 10:33:50 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-Subject: [PATCH 3/3 v9] x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-Date:   Thu, 21 Mar 2019 18:33:09 +0800
-Message-Id: <20190321103309.27883-4-lijiang@redhat.com>
-In-Reply-To: <20190321103309.27883-1-lijiang@redhat.com>
-References: <20190321103309.27883-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 21 Mar 2019 10:33:59 +0000 (UTC)
+        Thu, 21 Mar 2019 06:35:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59700 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727857AbfCUKfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:35:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B8482ADFF;
+        Thu, 21 Mar 2019 10:35:22 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 11:35:21 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     Baoquan He <bhe@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
+Message-ID: <20190321103521.GO8696@dhcp22.suse.cz>
+References: <20190320073540.12866-1-bhe@redhat.com>
+ <20190320111959.GV19508@bombadil.infradead.org>
+ <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
+ <20190320122243.GX19508@bombadil.infradead.org>
+ <20190320123658.GF13626@rapoport-lnx>
+ <20190320125843.GY19508@bombadil.infradead.org>
+ <20190321064029.GW18740@MiWiFi-R3L-srv>
+ <20190321092138.GY18740@MiWiFi-R3L-srv>
+ <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At present, when use the kexec_file_load syscall to load the kernel image
-and initramfs(for example: kexec -s -p xxx), kernel does not pass the e820
-reserved ranges to the second kernel, which might cause two problems:
+On Thu 21-03-19 04:24:35, William Kucharski wrote:
+> 
+> 
+> > On Mar 21, 2019, at 3:21 AM, Baoquan He <bhe@redhat.com> wrote:
+> 
+> It appears as is so often the case that the usage has far outpaced the
+> documentation and -EEXIST may be the proper code to return.
+> 
+> The correct answer here may be to modify the documentation to note the
+> additional semantic, though if the usage is solely within the kernel it
+> may be sufficient to explain its use in the header comment for the
+> routine (in this case sparse_add_one_section()).
 
-The first one is the MMCONFIG issue. The basic problem is that this device
-is in PCI segment 1 and the kernel PCI probing can not find it without all
-the e820 I/O reservations being present in the e820 table. And the kdump
-kernel does not have those reservations because the kexec command does not
-pass the I/O reservation via the "memmap=xxx" command line option. (This
-problem does not show up for other vendors, as SGI is apparently the
-actually fails for everyone, but devices in segment 0 are then found by
-some legacy lookup method.) The workaround for this is to pass the I/O
-reserved regions to the kdump kernel.
+Is this really worth? It is a well known problem that errno codes are
+far from sufficient to describe error codes we need. Yet we are stuck
+with them more or less. I really do not see any point changing this
+particular path, nor spend a lot of time whether one inappropriate
+code is any better than another one. The code works as intended AFAICS.
 
-MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
-have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
-only ECAM for config access, (b) you won't be albe to access devices on
-non-0 segments, (c) you won't be able to access extended config space(
-address 0x100-0xffff), which means none of the Extended Capabilities will
-be available(AER, ACS, ATS, etc). [Bjorn's comment]
+I would stick with all good rule of thumb. It works, do not touch it too
+much.
 
-The second issue is that the SME kdump kernel doesn't work without the
-e820 reserved ranges. When SME is active in kdump kernel, actually, those
-reserved regions are still decrypted, but because those reserved ranges are
-not present at all in kdump kernel e820 table, those reserved regions are
-considered as encrypted, it goes wrong.
-
-The e820 reserved range is useful in kdump kernel, so it is necessary to
-pass the e820 reserved ranges to kdump kernel.
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/crash.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 17ffc869cab8..1db2754df9e9 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -381,6 +381,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
-+	/* Add e820 reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	flags = IORESOURCE_MEM;
-+	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
-+			   memmap_entry_callback);
-+
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
+I am sorry to be snarky but hasn't this generated way much more email
+traffic than it really deserves? A simply and trivial clean up in the
+beginning that was it, right?
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
