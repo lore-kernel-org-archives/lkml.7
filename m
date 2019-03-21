@@ -2,30 +2,31 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE2BC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDE5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95EF218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AEB2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfCUUDF (ORCPT
+        id S1728865AbfCUUDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:03:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5168 "EHLO mga06.intel.com"
+        Thu, 21 Mar 2019 16:03:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5169 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbfCUUC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728843AbfCUUC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 16:02:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:02:58 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:02:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="309246245"
+   d="scan'208";a="309246248"
 Received: from unknown (HELO localhost.lm.intel.com) ([10.232.112.69])
   by orsmga005.jf.intel.com with ESMTP; 21 Mar 2019 13:02:58 -0700
 From:   Keith Busch <keith.busch@intel.com>
@@ -34,9 +35,9 @@ To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 Cc:     Dave Hansen <dave.hansen@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Keith Busch <keith.busch@intel.com>
-Subject: [PATCH 4/5] mm: Consider anonymous pages without swap
-Date:   Thu, 21 Mar 2019 14:01:56 -0600
-Message-Id: <20190321200157.29678-5-keith.busch@intel.com>
+Subject: [PATCH 5/5] mm/migrate: Add page movement trace event
+Date:   Thu, 21 Mar 2019 14:01:57 -0600
+Message-Id: <20190321200157.29678-6-keith.busch@intel.com>
 X-Mailer: git-send-email 2.13.6
 In-Reply-To: <20190321200157.29678-1-keith.busch@intel.com>
 References: <20190321200157.29678-1-keith.busch@intel.com>
@@ -45,94 +46,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Age and reclaim anonymous pages from nodes that have an online migration node even
-if swap is not enabled.
+Trace the source and destination node of a page migration to help debug
+memory usage.
 
 Signed-off-by: Keith Busch <keith.busch@intel.com>
 ---
- include/linux/swap.h | 20 ++++++++++++++++++++
- mm/vmscan.c          | 10 +++++-----
- 2 files changed, 25 insertions(+), 5 deletions(-)
+ include/trace/events/migrate.h | 26 ++++++++++++++++++++++++++
+ mm/migrate.c                   |  1 +
+ 2 files changed, 27 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 4bfb5c4ac108..91b405a3b44f 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -680,5 +680,25 @@ static inline bool mem_cgroup_swap_full(struct page *page)
- }
- #endif
+diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
+index d25de0cc8714..3d4b7131e547 100644
+--- a/include/trace/events/migrate.h
++++ b/include/trace/events/migrate.h
+@@ -6,6 +6,7 @@
+ #define _TRACE_MIGRATE_H
  
-+static inline bool reclaim_anon_pages(struct mem_cgroup *memcg,
-+				      int node_id)
-+{
-+	/* Always age anon pages when we have swap */
-+	if (memcg == NULL) {
-+		if (get_nr_swap_pages() > 0)
-+			return true;
-+	} else {
-+		if (mem_cgroup_get_nr_swap_pages(memcg) > 0)
-+			return true;
-+	}
+ #include <linux/tracepoint.h>
++#include <trace/events/mmflags.h>
+ 
+ #define MIGRATE_MODE						\
+ 	EM( MIGRATE_ASYNC,	"MIGRATE_ASYNC")		\
+@@ -71,6 +72,31 @@ TRACE_EVENT(mm_migrate_pages,
+ 		__print_symbolic(__entry->mode, MIGRATE_MODE),
+ 		__print_symbolic(__entry->reason, MIGRATE_REASON))
+ );
 +
-+	/* Also age anon pages if we can auto-migrate them */
-+	if (next_migration_node(node_id) >= 0)
-+		return true;
++TRACE_EVENT(mm_migrate_move_page,
 +
-+	/* No way to reclaim anon pages */
-+	return false;
-+}
++	TP_PROTO(struct page *from, struct page *to, int status),
 +
- #endif /* __KERNEL__*/
- #endif /* _LINUX_SWAP_H */
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 0a95804e946a..226c4c838947 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -327,7 +327,7 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
++	TP_ARGS(from, to, status),
++
++	TP_STRUCT__entry(
++		__field(struct page *, from)
++		__field(struct page *, to)
++		__field(int, status)
++	),
++
++	TP_fast_assign(
++		__entry->from = from;
++		__entry->to = to;
++		__entry->status = status;
++	),
++
++	TP_printk("node from=%d to=%d status=%d flags=%s refs=%d",
++		page_to_nid(__entry->from), page_to_nid(__entry->to),
++		__entry->status,
++		show_page_flags(__entry->from->flags & ((1UL << NR_PAGEFLAGS) - 1)),
++		page_ref_count(__entry->from))
++);
+ #endif /* _TRACE_MIGRATE_H */
  
- 	nr = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_FILE) +
- 		zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_FILE);
--	if (get_nr_swap_pages() > 0)
-+	if (reclaim_anon_pages(NULL, zone_to_nid(zone)))
- 		nr += zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
- 			zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_ANON);
- 
-@@ -2206,7 +2206,7 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
- 	 * If we don't have swap space, anonymous page deactivation
- 	 * is pointless.
- 	 */
--	if (!file && !total_swap_pages)
-+	if (!file && !reclaim_anon_pages(NULL, pgdat->node_id))
- 		return false;
- 
- 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
-@@ -2287,7 +2287,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
- 	enum lru_list lru;
- 
- 	/* If we have no swap space, do not bother scanning anon pages. */
--	if (!sc->may_swap || mem_cgroup_get_nr_swap_pages(memcg) <= 0) {
-+	if (!sc->may_swap || !reclaim_anon_pages(memcg, pgdat->node_id)) {
- 		scan_balance = SCAN_FILE;
- 		goto out;
+ /* This part must be outside protection */
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 83fad87361bf..d97433da12c0 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -997,6 +997,7 @@ static int move_to_new_page(struct page *newpage, struct page *page,
+ 			page->mapping = NULL;
  	}
-@@ -2650,7 +2650,7 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 	 */
- 	pages_for_compaction = compact_gap(sc->order);
- 	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
--	if (get_nr_swap_pages() > 0)
-+	if (!reclaim_anon_pages(NULL, pgdat->node_id))
- 		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
- 	if (sc->nr_reclaimed < pages_for_compaction &&
- 			inactive_lru_pages > pages_for_compaction)
-@@ -3347,7 +3347,7 @@ static void age_active_anon(struct pglist_data *pgdat,
- {
- 	struct mem_cgroup *memcg;
+ out:
++	trace_mm_migrate_move_page(page, newpage, rc);
+ 	return rc;
+ }
  
--	if (!total_swap_pages)
-+	if (!reclaim_anon_pages(NULL, pgdat->node_id))
- 		return;
- 
- 	memcg = mem_cgroup_iter(NULL, NULL, NULL);
 -- 
 2.14.4
 
