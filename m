@@ -2,110 +2,162 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37069C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC342C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BEE21902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6960721902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CQT8REzb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9TL621M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbfCUQ6P (ORCPT
+        id S1728439AbfCURCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:58:15 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39716 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCUQ6P (ORCPT
+        Thu, 21 Mar 2019 13:02:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44150 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfCURCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:58:15 -0400
-Received: by mail-vs1-f65.google.com with SMTP id g127so4093413vsd.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:58:15 -0700 (PDT)
+        Thu, 21 Mar 2019 13:02:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so4595533pgj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mvmfJ2GJzv+i0A+ojHx6zNfP9KkE7Bwa3nrNcMphWoQ=;
-        b=CQT8REzbB+rCSoinQ/XhOthEPi+bgJrX00PEqD/NPnHoaXrOVsZQ0n93lyzGVKilYH
-         55+TWbeCsML7FEHReiFH+VtXQ9ycbF1HZDEOrMo4CTeAiuZg1IG5qgQjk96bWDlPq+Mf
-         Fdv5bWhizfBU73bZMR33fReE6QDNyFSELnRfwf07gxoTIhCDSs10N/V9wRf/4vRf+1++
-         DGDBN56JT114tSBz0F9RpSjMLk9hq/Vr5xfXlvLXfP+FVIC1QdGKhiAT4JWgChTfdCbE
-         qjGrgP5Km6RVGBLW5zzvF23rFWO1BGk3aNltrl1i6QsusssUSwTVx11o8tj3sw4WUWCS
-         awug==
+        bh=8FvlX1Vi7LFnY+PSbgCPmyrwV7mTvsGmDb329diW3Iw=;
+        b=F9TL621Mlh4kA0pgnVP7WfKx6x9VFVvcyUsclgQhlbx2pf/oXGBSGzllTlSs8mFELc
+         QbGw8clMTXg8lcO04J9PQ42miLlsT9b9I+BuuqvX7FgAMOXlvIPLQ8Oyr2y+5NfYr1iw
+         WQcxbiDN3mX567wFXvkqI+fPzDsva1n7x5Swu8J6BTp4uo2eNtsOeMGo5AYLWELoglxF
+         WpsILtwv1xeB8VNjlKQABYgBrMtWl5Yk2m1YWhf+WWYGFLD2MOmwWeC1ll2sbdyATuE6
+         rOfe9gb89WY8pt2cOFH2ei4HHlKRenNiP5acxLDsGOTZ3Lo1pFGey7E4B5Xc5lXG1Jtq
+         irmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mvmfJ2GJzv+i0A+ojHx6zNfP9KkE7Bwa3nrNcMphWoQ=;
-        b=BbaYhF9Wuwy33k6L9qx5KVgjD4lvrBiMApMCVWwRXk94OZuZLJYekrTE1+H4U4zmyH
-         ejtHD3eAgxU2yptecxuC/ZU3sO9L+oqSmjYQvQtnkw3ofwAad6mABlY/cNIBSCngd0ag
-         4V3dQRgLglMyT8At9HR5YmWbbXKffEe5ckjyza39x6ZXNQ4/5KPP13urmJN4kcSsQEq6
-         hOF53XHEWaUllOP07Qz2vU3Cu1eOVrvTxrt7S1VUfVrUANHB/7lxzj27hOPcOJqtZbDN
-         3eKz5YAbLCjRXJAiwIW8cIzyc0JAAX+KQDWPaupaWfqlGuuGLJUX8m+P90aKb7vfafa+
-         7Q2A==
-X-Gm-Message-State: APjAAAWue8A6aIZmHmXC7civtgCe0HFmVnTqi+ijuwTgI7ftu3PdbXst
-        kcp8xIUeQQUkIOEnPqgLBB+7+QfGojaMUuvQVXuGnA==
-X-Google-Smtp-Source: APXvYqx+bwm42Zi68qUNXr6kE/gv75bBvbxKaAgXE+3DR7wX1ko2wXh0+VVu51np3tcHPZuQHGD7on7QckR16lnUhYg=
-X-Received: by 2002:a05:6102:157:: with SMTP id a23mr2789034vsr.34.1553187494609;
- Thu, 21 Mar 2019 09:58:14 -0700 (PDT)
+        bh=8FvlX1Vi7LFnY+PSbgCPmyrwV7mTvsGmDb329diW3Iw=;
+        b=jk9c2CDMPoxK4hWXfH/wQdW77Z5IO25ybrMpjZL1L3kbm6G5fJKs0yV4F9vw+MgH8r
+         3dQORwvEuXDSvrnedBaOtlsQvxBAV10YChwC176Pfnv1MzKjJGw00mRaPm/WI/nsRzGX
+         uLvV+x4/ZGqXHFfi60urYS5bWam0GTFuYjCYBR/3hejTBtU5IbXFCMzWdxhyyv8jS24F
+         u0lRITTaUePmwJjn9LAiEQSa37/nNC2YSV1vEp6pB5xsUaCLiO290/fwEUIhwqrJzu9c
+         dPdy1jjzQJWjguNwMjacnPIxh6Oq/2oE8I/JSpW7DIOxngNoJ5djbPXo3l6v78Tvnv8b
+         WXuQ==
+X-Gm-Message-State: APjAAAXy7+ODy7qvmobrKsdq9cYuWdeZUcg5ib7ssXNdhrUyE6yk5MCa
+        zp9x9XCZSJ6p1/zVeZLUDXx/5VAMNe5w8eWj274GCg==
+X-Google-Smtp-Source: APXvYqzpN6TDP6yHGP6IR5Pa0WXGNiHBBu89LV58BDSjVxC/GYjxJ4p+Dy7j0w5BydQkbLexcmSySRo/rjwcAMYPAgE=
+X-Received: by 2002:a63:f544:: with SMTP id e4mr4297929pgk.145.1553187768232;
+ Thu, 21 Mar 2019 10:02:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com> <1551976742-4358-2-git-send-email-ludovic.Barre@st.com>
-In-Reply-To: <1551976742-4358-2-git-send-email-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 21 Mar 2019 17:57:38 +0100
-Message-ID: <CAPDyKFq52dXPP+-peh82uCqTDFhmXvYWbTyncHDr_Oyo8Bd1VA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/6] mmc: mmci: add get_datactrl_cfg callback
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
+ <20190313211335.165605-1-ndesaulniers@google.com> <20190320191135.e49e976a8258c8ac0bb428c9@linux-foundation.org>
+In-Reply-To: <20190320191135.e49e976a8258c8ac0bb428c9@linux-foundation.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 21 Mar 2019 10:02:37 -0700
+Message-ID: <CAKwvOdn84HNEB3u4XO-V_+c=txmDd1061G_7K0zZVS4MfF--Lg@mail.gmail.com>
+Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     clang-built-linux@googlegroups.com,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 at 17:39, Ludovic Barre <ludovic.Barre@st.com> wrote:
+On Wed, Mar 20, 2019 at 7:11 PM Andrew Morton <akpm@linux-foundation.org> wrote:
 >
-> From: Ludovic Barre <ludovic.barre@st.com>
+> On Wed, 13 Mar 2019 14:13:31 -0700 Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
-> This patch adds get_datactrl_cfg callback in mmci_host_ops
-> to allow to get datactrl configuration specific at variant.
+> > A recent optimization in Clang (r355672) lowers comparisons of the
+> > return value of memcmp against zero to comparisons of the return value
+> > of bcmp against zero.  This helps some platforms that implement bcmp
+> > more efficiently than memcmp. glibc simply aliases bcmp to memcmp, but
+> > an optimized implementation is in the works.
+> >
+> > This results in linkage failures for all targets with Clang due to the
+> > undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
+> > to unbreak the build.  This routine can be further optimized in the
+> > future.
+> >
+> > Other ideas discussed:
+> > * A weak alias was discussed, but breaks for architectures that define
+> > their own implementations of memcmp since aliases to declarations are
+> > not permitted (only definitions).  Arch-specific memcmp implementations
+> > typically declare memcmp in C headers, but implement them in assembly.
+> > * -ffreestanding also is used sporadically throughout the kernel.
+> > * -fno-builtin-bcmp doesn't work when doing LTO.
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 6bde28c..a59049b 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -362,6 +362,7 @@ struct mmci_host_ops {
->                          bool next);
->         void (*unprep_data)(struct mmci_host *host, struct mmc_data *data,
->                             int err);
-> +       u32 (*get_datactrl_cfg)(struct mmci_host *host);
->         void (*get_next_data)(struct mmci_host *host, struct mmc_data *data);
->         int (*dma_setup)(struct mmci_host *host);
->         void (*dma_release)(struct mmci_host *host);
-> --
-> 2.7.4
->
+> I guess we should backport this into -stable so that older kernels can
+> be built with newer Clang.
 
-Perhaps squash this change with patch2, they seems to belong to each
-other as they are both the preparation that is needed for the
-following changes on top.
+Ah, you're right.  I always forget.  Is it too late to add
 
-Kind regards
-Uffe
+Cc: stable@vger.kernel.org
+
+to the patch in your tree?
+
+>
+> > ...
+> >
+> > --- a/lib/string.c
+> > +++ b/lib/string.c
+> > @@ -866,6 +866,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
+> >  EXPORT_SYMBOL(memcmp);
+> >  #endif
+> >
+> > +#ifndef __HAVE_ARCH_BCMP
+> > +/**
+> > + * bcmp - returns 0 if and only if the buffers have identical contents.
+> > + * @a: pointer to first buffer.
+> > + * @b: pointer to second buffer.
+> > + * @len: size of buffers.
+> > + *
+> > + * The sign or magnitude of a non-zero return value has no particular
+> > + * meaning, and architectures may implement their own more efficient bcmp(). So
+> > + * while this particular implementation is a simple (tail) call to memcmp, do
+> > + * not rely on anything but whether the return value is zero or non-zero.
+> > + */
+> > +#undef bcmp
+>
+> What is the undef for?
+
+Used the same convention as memcpy.  Looking at the rest of the
+translation unit, I see that there's a mix of functions that do or do
+not undef their symbol.  Rasmus pointed out that memcpy is implemented
+as a macro for x86 (arch/x86/include/asm/string_32.h).  But looking
+closer now, I suspect it's not needed (anyone declaring memcmp as a
+macro should be setting __HAVE_ARCH_MEMCMP).
+
+Shall I send you a cleanup removing the undefs for bcmp, memcmp,
+strcat, strcpy, and strcmp?  Of those, I only see memcmp being
+`#defined` in arch/m68k/include/asm/string.h, arch/x86/boot/string.h,
+and arch/x86/include/asm/string_32.h.
+
+Further, I can drop some of the __GNUC__ < 4 code in
+arch/x86/include/asm/string_32.h. (grepping for __GNUC__, looks like
+there's a fair amount of code that can be cleaned up).  We should
+probably check it since Clang lies about being GCC 4.2 compatible,
+which will surely break in horrific ways at some point.
+
+-- 
+Thanks,
+~Nick Desaulniers
