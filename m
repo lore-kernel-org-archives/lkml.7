@@ -2,267 +2,250 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A16C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B584C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6552521902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7D621902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lP0HiDNz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPlhlOyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfCUX5i (ORCPT
+        id S1727366AbfCUX6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:57:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:47465 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbfCUX5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:57:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QNy1679gz9sRx;
-        Fri, 22 Mar 2019 10:57:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553212652;
-        bh=RQ+mN7pnAkNu9MSRKcQTB1Qol8jKuDHKqLrrAq+nBTA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lP0HiDNz9bV8N6v/9xNdjQ3ZHF41iCblnBTbOrJb54A1cSlfdpk0tlAp7ITkDiCMm
-         NQOu74F7sQrvhDNYBGEKSsHEUuseBEfznIz+X8D9EpB/pHjm0GnAAVRiPwL+Dqbz+O
-         lgUPUBOImVXX8AfKcF3IFyDgD7XvabZR49RNbWzdXOShJRWXtbOo8KZz6l2jChZQks
-         eFsKIMVyuM+ZzRByss8Ed1Mvbsjlu4EA/cWBFpSOAtoStTe6f8Jvw7LV7TgnoVMUzL
-         gAKerdj7BGRnTZlpFKRGVAtD4B3ZRIndjvBjMuxdF8XQeZ+kx4pU47sGY+Z2GP5Wsb
-         eYi3s8ibXonAQ==
-Date:   Fri, 22 Mar 2019 10:57:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Colin Xu <colin.xu@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm-intel tree with the
- drm-intel-fixes tree
-Message-ID: <20190322105728.28622f5d@canb.auug.org.au>
+        Thu, 21 Mar 2019 19:58:30 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46791 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfCUX63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:58:29 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z17so606733qts.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 16:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yDJgdezwv9pb242vYRRmjQ+71NeLZ6x0P4nCuwhNF0Y=;
+        b=MPlhlOyyK7u4fqsteq1DAEZTAYrFd+a2qBWI/pK5peJhhF2+Uul6P2iYAgx2H97Jeg
+         N+N8zwJdJISkaib/XjXsjMcwD/Gukrdo3YtTkWGAMsXbgPeDnlpRpX+MdbtoUS2NwBKo
+         2dBmLsN12RBI8cqFobRCfWG9GwF4uId38gnan/UP024I/cerlCxP2yZ16+bZDkO5KXGA
+         KIME3MjKWo8rP1/Xvf5pO8LzPByR3aIgLn8EGZT8MohLa9HfR+K672xPem2gHboejnNB
+         Mlv/pMyC8QTwfVEdPz0jXRvDV+oq4eVMwzJvDeQyUF8R+NvGSBm4O4IuSQsXUrlGZ7G1
+         qamQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yDJgdezwv9pb242vYRRmjQ+71NeLZ6x0P4nCuwhNF0Y=;
+        b=j3ULEpDY0XFlJi4huLWBo6ig7uFJ14icFs3Tegh0G1807LmxS1c4SBcxKA8Uoa8Ke1
+         kQTUvu3+2TYJDfrS1gvQiCVCsOLxOdKobpQrAHqAJLON9L6dW9IuXhz1L5GEFKl6of0h
+         NIca3KLWEUpP0nwLXPuELs7gPPZDwcANWlESuX7QzNBYF4eVkXD8r89m878wVmaRmVON
+         TikEV5TpAWCIJSMr54wNWx3WDktUs2weLN1emkKruZq+UeA3hBfZzXox+2zspddtjJN/
+         Psx8p5wS0SHS7MNJ/eCk8Xq7LWGRSoa2EsB9XKDzP8J3vGmFSoEKcmPVxHRFm/oAi2b6
+         vZOQ==
+X-Gm-Message-State: APjAAAXHrOfSI14Cl4COUoob2qa7IkKernbHI4YChpXTjjMpDS0aTTxq
+        9XPMceqYQg8UUl5faHp2lZ99Zy8+I7JYryKXOtY=
+X-Google-Smtp-Source: APXvYqyg4mvl7a96NwP/BjBX/ejJizfb0+w4DB6UBlte5NkFd6Cn97Y9pIRsoiyE3EBPwp70t0jQVR6v1T0HOBVgfOA=
+X-Received: by 2002:ac8:2e99:: with SMTP id h25mr5780960qta.166.1553212708415;
+ Thu, 21 Mar 2019 16:58:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/U4_MEKTEYiePiQe4vD4SIp1"; protocol="application/pgp-signature"
+References: <20190321200157.29678-1-keith.busch@intel.com> <20190321200157.29678-4-keith.busch@intel.com>
+In-Reply-To: <20190321200157.29678-4-keith.busch@intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Thu, 21 Mar 2019 16:58:16 -0700
+Message-ID: <CAHbLzkqGGJ7dFiZkR-=yvGEF0AM4JbBe6pxGFbSe9tSnC7wgzQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] mm: Attempt to migrate page in lieu of discard
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/U4_MEKTEYiePiQe4vD4SIp1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 21, 2019 at 1:03 PM Keith Busch <keith.busch@intel.com> wrote:
+>
+> If a memory node has a preferred migration path to demote cold pages,
+> attempt to move those inactive pages to that migration node before
+> reclaiming. This will better utilize available memory, provide a faster
+> tier than swapping or discarding, and allow such pages to be reused
+> immediately without IO to retrieve the data.
+>
+> Some places we would like to see this used:
+>
+>  1. Persistent memory being as a slower, cheaper DRAM replacement
+>  2. Remote memory-only "expansion" NUMA nodes
+>  3. Resolving memory imbalances where one NUMA node is seeing more
+>     allocation activity than another.  This helps keep more recent
+>     allocations closer to the CPUs on the node doing the allocating.
+>
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
+> ---
+>  include/linux/migrate.h        |  6 ++++++
+>  include/trace/events/migrate.h |  3 ++-
+>  mm/debug.c                     |  1 +
+>  mm/migrate.c                   | 45 ++++++++++++++++++++++++++++++++++++++++++
+>  mm/vmscan.c                    | 15 ++++++++++++++
+>  5 files changed, 69 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+> index e13d9bf2f9a5..a004cb1b2dbb 100644
+> --- a/include/linux/migrate.h
+> +++ b/include/linux/migrate.h
+> @@ -25,6 +25,7 @@ enum migrate_reason {
+>         MR_MEMPOLICY_MBIND,
+>         MR_NUMA_MISPLACED,
+>         MR_CONTIG_RANGE,
+> +       MR_DEMOTION,
+>         MR_TYPES
+>  };
+>
+> @@ -79,6 +80,7 @@ extern int migrate_huge_page_move_mapping(struct address_space *mapping,
+>  extern int migrate_page_move_mapping(struct address_space *mapping,
+>                 struct page *newpage, struct page *page, enum migrate_mode mode,
+>                 int extra_count);
+> +extern bool migrate_demote_mapping(struct page *page);
+>  #else
+>
+>  static inline void putback_movable_pages(struct list_head *l) {}
+> @@ -105,6 +107,10 @@ static inline int migrate_huge_page_move_mapping(struct address_space *mapping,
+>         return -ENOSYS;
+>  }
+>
+> +static inline bool migrate_demote_mapping(struct page *page)
+> +{
+> +       return false;
+> +}
+>  #endif /* CONFIG_MIGRATION */
+>
+>  #ifdef CONFIG_COMPACTION
+> diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
+> index 705b33d1e395..d25de0cc8714 100644
+> --- a/include/trace/events/migrate.h
+> +++ b/include/trace/events/migrate.h
+> @@ -20,7 +20,8 @@
+>         EM( MR_SYSCALL,         "syscall_or_cpuset")            \
+>         EM( MR_MEMPOLICY_MBIND, "mempolicy_mbind")              \
+>         EM( MR_NUMA_MISPLACED,  "numa_misplaced")               \
+> -       EMe(MR_CONTIG_RANGE,    "contig_range")
+> +       EM(MR_CONTIG_RANGE,     "contig_range")                 \
+> +       EMe(MR_DEMOTION,        "demotion")
+>
+>  /*
+>   * First define the enums in the above macros to be exported to userspace
+> diff --git a/mm/debug.c b/mm/debug.c
+> index c0b31b6c3877..53d499f65199 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPES] = {
+>         "mempolicy_mbind",
+>         "numa_misplaced",
+>         "cma",
+> +       "demotion",
+>  };
+>
+>  const struct trace_print_flags pageflag_names[] = {
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 705b320d4b35..83fad87361bf 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1152,6 +1152,51 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+>         return rc;
+>  }
+>
+> +/**
+> + * migrate_demote_mapping() - Migrate this page and its mappings to its
+> + *                           demotion node.
+> + * @page: An isolated, non-compound page that should move to
+> + *       its current node's migration path.
+> + *
+> + * @returns: True if migrate demotion was successful, false otherwise
+> + */
+> +bool migrate_demote_mapping(struct page *page)
+> +{
+> +       int rc, next_nid = next_migration_node(page_to_nid(page));
+> +       struct page *newpage;
+> +
+> +       /*
+> +        * The flags are set to allocate only on the desired node in the
+> +        * migration path, and to fail fast if not immediately available. We
+> +        * are already in the memory reclaim path, we don't want heroic
+> +        * efforts to get a page.
+> +        */
+> +       gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
+> +                    __GFP_NOMEMALLOC | __GFP_THISNODE;
+> +
+> +       VM_BUG_ON_PAGE(PageCompound(page), page);
+> +       VM_BUG_ON_PAGE(PageLRU(page), page);
+> +
+> +       if (next_nid < 0)
+> +               return false;
+> +
+> +       newpage = alloc_pages_node(next_nid, mask, 0);
+> +       if (!newpage)
+> +               return false;
+> +
+> +       /*
+> +        * MIGRATE_ASYNC is the most light weight and never blocks.
+> +        */
+> +       rc = __unmap_and_move_locked(page, newpage, MIGRATE_ASYNC);
+> +       if (rc != MIGRATEPAGE_SUCCESS) {
+> +               __free_pages(newpage, 0);
+> +               return false;
+> +       }
+> +
+> +       set_page_owner_migrate_reason(newpage, MR_DEMOTION);
+> +       return true;
+> +}
+> +
+>  /*
+>   * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
+>   * around it.
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index a5ad0b35ab8e..0a95804e946a 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1261,6 +1261,21 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>                         ; /* try to reclaim the page below */
+>                 }
+>
+> +               if (!PageCompound(page)) {
+> +                       if (migrate_demote_mapping(page)) {
+> +                                unlock_page(page);
+> +                                if (likely(put_page_testzero(page)))
+> +                                        goto free_it;
+> +
+> +                                /*
+> +                                * Speculative reference will free this page,
+> +                                * so leave it off the LRU.
+> +                                */
+> +                                nr_reclaimed++;
+> +                                continue;
+> +                        }
+> +               }
 
-Hi all,
+It looks the reclaim path would fall through if the migration is
+failed. But, it looks, with patch #4, you may end up trying reclaim an
+anon page on swapless system if migration is failed?
 
-Today's linux-next merge of the drm-intel tree got a conflict in:
+And, actually I have the same question with Yan Zi. Why not just put
+the demote candidate into a separate list, then migrate all the
+candidates in bulk with migrate_pages()?
 
-  drivers/gpu/drm/i915/gvt/mmio_context.c
+Thanks,
+Yang
 
-between commit:
-
-  1e8b15a1988e ("drm/i915/gvt: Add in context mmio 0x20D8 to gen9 mmio list=
-")
-
-from the drm-intel-fixes tree and commit:
-
-  8a68d464366e ("drm/i915: Store the BIT(engine->id) as the engine's mask")
-
-from the drm-intel tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/gvt/mmio_context.c
-index 7902fb162d09,a00a807a1d55..000000000000
---- a/drivers/gpu/drm/i915/gvt/mmio_context.c
-+++ b/drivers/gpu/drm/i915/gvt/mmio_context.c
-@@@ -73,71 -73,70 +73,71 @@@ static struct engine_mmio gen8_engine_m
-  };
- =20
-  static struct engine_mmio gen9_engine_mmio_list[] __cacheline_aligned =3D=
- {
-- 	{RCS, GFX_MODE_GEN7, 0xffff, false}, /* 0x229c */
-- 	{RCS, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-- 	{RCS, HWSTAM, 0x0, false}, /* 0x2098 */
-- 	{RCS, INSTPM, 0xffff, true}, /* 0x20c0 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 0), 0, false}, /* 0x24d0 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 1), 0, false}, /* 0x24d4 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 2), 0, false}, /* 0x24d8 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 3), 0, false}, /* 0x24dc */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 4), 0, false}, /* 0x24e0 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 5), 0, false}, /* 0x24e4 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 6), 0, false}, /* 0x24e8 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 7), 0, false}, /* 0x24ec */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 8), 0, false}, /* 0x24f0 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 9), 0, false}, /* 0x24f4 */
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 10), 0, false}, /* 0x24f8 =
-*/
-- 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 11), 0, false}, /* 0x24fc =
-*/
-- 	{RCS, CACHE_MODE_1, 0xffff, true}, /* 0x7004 */
-- 	{RCS, GEN7_GT_MODE, 0xffff, true}, /* 0x7008 */
-- 	{RCS, CACHE_MODE_0_GEN7, 0xffff, true}, /* 0x7000 */
-- 	{RCS, GEN7_COMMON_SLICE_CHICKEN1, 0xffff, true}, /* 0x7010 */
-- 	{RCS, HDC_CHICKEN0, 0xffff, true}, /* 0x7300 */
-- 	{RCS, VF_GUARDBAND, 0xffff, true}, /* 0x83a4 */
--=20
-- 	{RCS, GEN8_PRIVATE_PAT_LO, 0, false}, /* 0x40e0 */
-- 	{RCS, GEN8_PRIVATE_PAT_HI, 0, false}, /* 0x40e4 */
-- 	{RCS, GEN8_CS_CHICKEN1, 0xffff, true}, /* 0x2580 */
-- 	{RCS, COMMON_SLICE_CHICKEN2, 0xffff, true}, /* 0x7014 */
-- 	{RCS, GEN9_CS_DEBUG_MODE1, 0xffff, false}, /* 0x20ec */
-- 	{RCS, GEN8_L3SQCREG4, 0, false}, /* 0xb118 */
-- 	{RCS, GEN7_HALF_SLICE_CHICKEN1, 0xffff, true}, /* 0xe100 */
-- 	{RCS, HALF_SLICE_CHICKEN2, 0xffff, true}, /* 0xe180 */
-- 	{RCS, HALF_SLICE_CHICKEN3, 0xffff, true}, /* 0xe184 */
-- 	{RCS, GEN9_HALF_SLICE_CHICKEN5, 0xffff, true}, /* 0xe188 */
-- 	{RCS, GEN9_HALF_SLICE_CHICKEN7, 0xffff, true}, /* 0xe194 */
-- 	{RCS, GEN8_ROW_CHICKEN, 0xffff, true}, /* 0xe4f0 */
-- 	{RCS, TRVATTL3PTRDW(0), 0, false}, /* 0x4de0 */
-- 	{RCS, TRVATTL3PTRDW(1), 0, false}, /* 0x4de4 */
-- 	{RCS, TRNULLDETCT, 0, false}, /* 0x4de8 */
-- 	{RCS, TRINVTILEDETCT, 0, false}, /* 0x4dec */
-- 	{RCS, TRVADR, 0, false}, /* 0x4df0 */
-- 	{RCS, TRTTE, 0, false}, /* 0x4df4 */
--=20
-- 	{BCS, RING_GFX_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2229c */
-- 	{BCS, RING_MI_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2209c */
-- 	{BCS, RING_INSTPM(BLT_RING_BASE), 0xffff, false}, /* 0x220c0 */
-- 	{BCS, RING_HWSTAM(BLT_RING_BASE), 0x0, false}, /* 0x22098 */
-- 	{BCS, RING_EXCC(BLT_RING_BASE), 0x0, false}, /* 0x22028 */
--=20
-- 	{VCS2, RING_EXCC(GEN8_BSD2_RING_BASE), 0xffff, false}, /* 0x1c028 */
--=20
-- 	{VECS, RING_EXCC(VEBOX_RING_BASE), 0xffff, false}, /* 0x1a028 */
--=20
-- 	{RCS, GEN8_HDC_CHICKEN1, 0xffff, true}, /* 0x7304 */
-- 	{RCS, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-- 	{RCS, GEN7_UCGCTL4, 0x0, false}, /* 0x940c */
-- 	{RCS, GAMT_CHKN_BIT_REG, 0x0, false}, /* 0x4ab8 */
--=20
-- 	{RCS, GEN9_GAMT_ECO_REG_RW_IA, 0x0, false}, /* 0x4ab0 */
-- 	{RCS, GEN9_CSFE_CHICKEN1_RCS, 0xffff, false}, /* 0x20d4 */
-- 	{RCS, _MMIO(0x20D8), 0xffff, true}, /* 0x20d8 */
--=20
-- 	{RCS, GEN8_GARBCNTL, 0x0, false}, /* 0xb004 */
-- 	{RCS, GEN7_FF_THREAD_MODE, 0x0, false}, /* 0x20a0 */
-- 	{RCS, FF_SLICE_CS_CHICKEN2, 0xffff, false}, /* 0x20e4 */
-- 	{RCS, INVALID_MMIO_REG, 0, false } /* Terminated */
-+ 	{RCS0, GFX_MODE_GEN7, 0xffff, false}, /* 0x229c */
-+ 	{RCS0, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-+ 	{RCS0, HWSTAM, 0x0, false}, /* 0x2098 */
-+ 	{RCS0, INSTPM, 0xffff, true}, /* 0x20c0 */
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 0), 0, false}, /* 0x24d0 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 1), 0, false}, /* 0x24d4 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 2), 0, false}, /* 0x24d8 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 3), 0, false}, /* 0x24dc =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 4), 0, false}, /* 0x24e0 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 5), 0, false}, /* 0x24e4 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 6), 0, false}, /* 0x24e8 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 7), 0, false}, /* 0x24ec =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 8), 0, false}, /* 0x24f0 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 9), 0, false}, /* 0x24f4 =
-*/
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 10), 0, false}, /* 0x24f8=
- */
-+ 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 11), 0, false}, /* 0x24fc=
- */
-+ 	{RCS0, CACHE_MODE_1, 0xffff, true}, /* 0x7004 */
-+ 	{RCS0, GEN7_GT_MODE, 0xffff, true}, /* 0x7008 */
-+ 	{RCS0, CACHE_MODE_0_GEN7, 0xffff, true}, /* 0x7000 */
-+ 	{RCS0, GEN7_COMMON_SLICE_CHICKEN1, 0xffff, true}, /* 0x7010 */
-+ 	{RCS0, HDC_CHICKEN0, 0xffff, true}, /* 0x7300 */
-+ 	{RCS0, VF_GUARDBAND, 0xffff, true}, /* 0x83a4 */
-+=20
-+ 	{RCS0, GEN8_PRIVATE_PAT_LO, 0, false}, /* 0x40e0 */
-+ 	{RCS0, GEN8_PRIVATE_PAT_HI, 0, false}, /* 0x40e4 */
-+ 	{RCS0, GEN8_CS_CHICKEN1, 0xffff, true}, /* 0x2580 */
-+ 	{RCS0, COMMON_SLICE_CHICKEN2, 0xffff, true}, /* 0x7014 */
-+ 	{RCS0, GEN9_CS_DEBUG_MODE1, 0xffff, false}, /* 0x20ec */
-+ 	{RCS0, GEN8_L3SQCREG4, 0, false}, /* 0xb118 */
-+ 	{RCS0, GEN7_HALF_SLICE_CHICKEN1, 0xffff, true}, /* 0xe100 */
-+ 	{RCS0, HALF_SLICE_CHICKEN2, 0xffff, true}, /* 0xe180 */
-+ 	{RCS0, HALF_SLICE_CHICKEN3, 0xffff, true}, /* 0xe184 */
-+ 	{RCS0, GEN9_HALF_SLICE_CHICKEN5, 0xffff, true}, /* 0xe188 */
-+ 	{RCS0, GEN9_HALF_SLICE_CHICKEN7, 0xffff, true}, /* 0xe194 */
-+ 	{RCS0, GEN8_ROW_CHICKEN, 0xffff, true}, /* 0xe4f0 */
-+ 	{RCS0, TRVATTL3PTRDW(0), 0, false}, /* 0x4de0 */
-+ 	{RCS0, TRVATTL3PTRDW(1), 0, false}, /* 0x4de4 */
-+ 	{RCS0, TRNULLDETCT, 0, false}, /* 0x4de8 */
-+ 	{RCS0, TRINVTILEDETCT, 0, false}, /* 0x4dec */
-+ 	{RCS0, TRVADR, 0, false}, /* 0x4df0 */
-+ 	{RCS0, TRTTE, 0, false}, /* 0x4df4 */
-+=20
-+ 	{BCS0, RING_GFX_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2229c */
-+ 	{BCS0, RING_MI_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2209c */
-+ 	{BCS0, RING_INSTPM(BLT_RING_BASE), 0xffff, false}, /* 0x220c0 */
-+ 	{BCS0, RING_HWSTAM(BLT_RING_BASE), 0x0, false}, /* 0x22098 */
-+ 	{BCS0, RING_EXCC(BLT_RING_BASE), 0x0, false}, /* 0x22028 */
-+=20
-+ 	{VCS1, RING_EXCC(GEN8_BSD2_RING_BASE), 0xffff, false}, /* 0x1c028 */
-+=20
-+ 	{VECS0, RING_EXCC(VEBOX_RING_BASE), 0xffff, false}, /* 0x1a028 */
-+=20
-+ 	{RCS0, GEN8_HDC_CHICKEN1, 0xffff, true}, /* 0x7304 */
-+ 	{RCS0, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-+ 	{RCS0, GEN7_UCGCTL4, 0x0, false}, /* 0x940c */
-+ 	{RCS0, GAMT_CHKN_BIT_REG, 0x0, false}, /* 0x4ab8 */
-+=20
-+ 	{RCS0, GEN9_GAMT_ECO_REG_RW_IA, 0x0, false}, /* 0x4ab0 */
-+ 	{RCS0, GEN9_CSFE_CHICKEN1_RCS, 0xffff, false}, /* 0x20d4 */
-++	{RCS0, _MMIO(0x20D8), 0xffff, true}, /* 0x20d8 */
-+=20
-+ 	{RCS0, GEN8_GARBCNTL, 0x0, false}, /* 0xb004 */
-+ 	{RCS0, GEN7_FF_THREAD_MODE, 0x0, false}, /* 0x20a0 */
-+ 	{RCS0, FF_SLICE_CS_CHICKEN2, 0xffff, false}, /* 0x20e4 */
-+ 	{RCS0, INVALID_MMIO_REG, 0, false } /* Terminated */
-  };
- =20
-  static struct {
-
---Sig_/U4_MEKTEYiePiQe4vD4SIp1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyUJOgACgkQAVBC80lX
-0GzcYgf+IuWJn0YSOpUQHJO0qsEZdiDjwVgnzoXMRlDDx+VJS5AxPNakgFM+KMyr
-VXLnyh765y/QjJ26W1rrf5Siias8CWZ3p6q51NQJ0U/ioXaTvErb5YU4gd3GLUeh
-FpqWDpiqZPsnvuDsEv8iYwhblY3tXuU/WuO8zv4jQdpJQOOKTVqaJJus7c2aJDdH
-OXVegY/ncEQU5agLsqAuW24HH7w5xFcWdRde5Njm3XUtYLHUmm3A0JEmrGjERPpn
-mmnGiA21rI3Wd7B+StDgC5zeWSpSthKEj10YeQkKSjR77k1+zzCd6ypq0e8bHRG7
-STTaFp+dBHnAK8CLUHzNMGDX+f9tTg==
-=hxDF
------END PGP SIGNATURE-----
-
---Sig_/U4_MEKTEYiePiQe4vD4SIp1--
+> +
+>                 /*
+>                  * Anonymous process memory has backing store?
+>                  * Try to allocate it some swap space here.
+> --
+> 2.14.4
+>
