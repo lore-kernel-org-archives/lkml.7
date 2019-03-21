@@ -2,66 +2,87 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34879C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032D421916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553193975;
-	bh=+gypyK+Akc38XRbcSydE0cicK10pRvotHQMxgGwqkTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cUYpuumOdZoOIqNFxaDqF5we4MirxSbkbPx6uv2mEzBZ6Z7sVu8Rzqy6bfjgIbfod
-	 enigTjbbFrgMa2aMFwH4NS+xxc/UfSN5gegRXJoQ36BGGbkbBvlZ50Lb83+s3HOM27
-	 qXcKZ98B9sPPsEBiToDHJtM6+ZhbEIV2GIrGu18o=
+	by mail.kernel.org (Postfix) with ESMTP id 3E3B0218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tgqylfob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfCUSqN (ORCPT
+        id S1728712AbfCUSrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:46:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42940 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:47:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:58265 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728131AbfCUSqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:46:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728498AbfCUSrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:47:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD26218D8;
-        Thu, 21 Mar 2019 18:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553193972;
-        bh=+gypyK+Akc38XRbcSydE0cicK10pRvotHQMxgGwqkTA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zbcXHlCG+8ovhLsMQgO+5VdPgakrihURqKTP2rAgvcTk+NPFUrmsPPYt+PHIduz/F
-         ZX5b2WVz9PdbyQIvNn+0l2bQTWddPqC6ESFMFAknnDW1PvkyVkod0B455W+2kwBzNi
-         bT+Ci4XGGrzDZRxw51UP3X7c1bX1CofoH3J6igXE=
-Date:   Thu, 21 Mar 2019 19:46:09 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     christian@lkamp.de, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: ralink-gdma: Prefer u32 over uint32_t
-Message-ID: <20190321184609.GB16785@kroah.com>
-References: <20190321183710.GA8472@bharath12345-Inspiron-5559>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QG4c1cx7z9sR9;
+        Fri, 22 Mar 2019 05:47:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553194064;
+        bh=ALoByY0mcq4FMY9PtPluS6HDYhbNnwWfu8buEwlWV2M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TgqylfobvzZ9si8xrtNL7XBuf8Hmssk1VZztcbEcGNPJ0sdQwpOHxp873cSB0232U
+         13yemyy+IYKEIcQWi6Zn3xUrdqOzCamEQYo/OYS0XAJwvmbIHcNMbw9yyguFgd9ZMK
+         S8zBe+PTktU2DjGo6+IFKkUc+1VZ6lxH0Phe85s3q525u8z/R0o/M7AjG7FfrzKCAV
+         wcufE8Z2jjo4NaVagxLOmiJkLFT4SCgGHal4qE5mvamdKeQTTDRtwS7EtUF0zj3qbV
+         ZtNKW5Rh+2FTxjmv3m2vylbPIM3axBon6vASWskS3xejsj3c2xFxUxYezUHzjVJygt
+         e0h72IY4zQhJA==
+Date:   Fri, 22 Mar 2019 05:47:06 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steve French <smfrench@gmail.com>,
+        CIFS <linux-cifs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the cifs tree
+Message-ID: <20190322054706.3927b16a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321183710.GA8472@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/o5aiCENrLJUII0zYC4p/xDS"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 12:07:10AM +0530, Bharath Vedartham wrote:
-> Change uint32_t to u32
+--Sig_/o5aiCENrLJUII0zYC4p/xDS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That says _what_ you did, but _why_ are you doing this?  That's the main
-content a changelog text should have in it.
+Hi all,
 
-thanks,
+Commit
 
-greg k-h
+  828a8dfb7069 ("cifs: update internal module version number")
+
+is missing a Signed-off-by from its author and committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/o5aiCENrLJUII0zYC4p/xDS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyT3CoACgkQAVBC80lX
+0GyPYwf9FdAdq2bNOT6VtQ6FON5QJyWbNUu4DN29xAkMMnUxjNEy5Yk4rR2rKBA+
+nV2BTOquTzWkXUifkMiZZmeXFIYWhIhhQhzmj3XDAeO0qFuUOVZfqGAQH+2wpoGu
+YunCrSuuf45RltGrSlnDwZdOxcYVOTCxhspsjNym/hU4R1g6699NWomOKjAvj/tF
+yvZEBcrOMaz/hKpOJ9+CSC+lfyrWTidCuvqpucEIyjdMOdMaqXjuyNTAoUeSNiZj
+jPgTELvbgIjbINY/4+6tKbqTybPoeATchNXWXXnLI8Yxnbx90NyZgI/qD5Nu9428
+qLbF8SSAcAPP/1YBpXe2TBE5JtE2xw==
+=Achl
+-----END PGP SIGNATURE-----
+
+--Sig_/o5aiCENrLJUII0zYC4p/xDS--
