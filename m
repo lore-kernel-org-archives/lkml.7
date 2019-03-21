@@ -2,162 +2,172 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C8BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCDF218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Jw0H8Q6n";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZmZw3MFQ"
+	by mail.kernel.org (Postfix) with ESMTP id 91E39218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfCUHjl (ORCPT
+        id S1727909AbfCUHmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:39:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58536 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCUHjl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:39:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 87A81608FC; Thu, 21 Mar 2019 07:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553153979;
-        bh=fDvqsOk8Rt/90b31egkgx5yxgXYeCId78ts4V1rUheY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Jw0H8Q6nbJgQ8ft08/ZzqMLZSitaYfa0nyAeYvLC4G/P1TS7ygKQX3TLfWh9ssuB9
-         V0cW3DfTLEb8StgyzOwwUHq0U+wyVGeoQ8rUA+bzaUwCqpZlcnX3kbFBMiaNgzALPR
-         SDX0RkW3ZhetZOZ3R8Ca1zHXp8Ez6Y6F52b1Q9LY=
-Received: from [10.79.163.157] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B45D6086B;
-        Thu, 21 Mar 2019 07:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553153978;
-        bh=fDvqsOk8Rt/90b31egkgx5yxgXYeCId78ts4V1rUheY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZmZw3MFQ7oan2orzohCBMWpTCxrKj8kTPkGIj0sDRJgSBu5sObXsLD1MK0LfShCYa
-         c+sgCsJabUiCGujGLO7KGCfHHDKbMR7MDN7oJnz95YMJHKDqzkcKCcep6OyKZ2NXlw
-         vYo1dYdD5IZSqU9Zf1MeDYgUFBPOp053rzwUHZyY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B45D6086B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] of: Drop redundant check in linker section OF match table
-To:     Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        devicetree@vger.kernel.org
-References: <1553078940-9907-1-git-send-email-mojha@codeaurora.org>
- <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <44f8ba04-8a50-fa81-8784-aaffc4f7c3cc@codeaurora.org>
-Date:   Thu, 21 Mar 2019 13:09:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 21 Mar 2019 03:42:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57014 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726253AbfCUHmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 03:42:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 22E5DAF6A;
+        Thu, 21 Mar 2019 07:42:05 +0000 (UTC)
+Subject: Re: [RFC 0/2] guarantee natural alignment for kmalloc()
+To:     Christopher Lameter <cl@linux.com>
+Cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org
+References: <20190319211108.15495-1-vbabka@suse.cz>
+ <01000169988d4e34-b4178f68-c390-472b-b62f-a57a4f459a76-000000@email.amazonses.com>
+ <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz>
+ <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4d2a55dc-b29f-1309-0a8e-83b057e186e6@suse.cz>
+Date:   Thu, 21 Mar 2019 08:42:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/21/2019 1:25 AM, Frank Rowand wrote:
-> On 3/20/19 3:49 AM, Mukesh Ojha wrote:
->> Existing check of `fn` against NULL inside OF match table
->> is redundant. Remove the check.
+On 3/20/19 7:20 PM, Christopher Lameter wrote:
+>>> Currently all kmalloc objects are aligned to KMALLOC_MIN_ALIGN. That will
+>>> no longer be the case and alignments will become inconsistent.
 >>
->> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>   include/linux/of.h | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
+>> KMALLOC_MIN_ALIGN is still the minimum, but in practice it's larger
+>> which is not a problem.
+> 
+> "In practice" refers to the current way that slab allocators arrange
+> objects within the page. They are free to do otherwise if new ideas come
+> up for object arrangements etc.
+> 
+> The slab allocators already may have to store data in addition to the user
+> accessible part (f.e. for RCU or ctor). The "natural alighnment" of a
+> power of 2 cache is no longer as you expect for these cases. Debugging is
+> not the only case where we extend the object.
+
+For plain kmalloc() caches, RCU and ctors don't apply, right.
+
+>> Also let me stress again that nothing really changes except for SLOB,
+>> and SLUB with debug options. The natural alignment for power-of-two
+>> sizes already happens as SLAB and SLUB both allocate objects starting on
+>> the page boundary. So people make assumptions based on that, and then
+>> break with SLOB, or SLUB with debug. This patch just prevents that
+>> breakage by guaranteeing those natural assumptions at all times.
+> 
+> As explained before there is nothing "natural" here. Doing so restricts
+> future features
+
+Well, future features will have to deal with the existing named caches
+created with specific alignment.
+
+> and creates a mess within the allocator of exceptions for
+> debuggin etc etc (see what happened to SLAB).
+
+SLAB could be fixed, just nobody cares enough I guess. If I want to
+debug wrong SL*B usage I'll use SLUB.
+
+> "Natural" is just a
+> simplistic thought of a user how he would arrange power of 2 objects.
+> These assumption should not be made but specified explicitly.
+
+Patch 1 does this explicitly for plain kmalloc(). It's unrealistic to
+add 'align' parameter to plain kmalloc() as that would have to create
+caches on-demand for 'new' values of align parameter.
+
+>>> I think its valuable that alignment requirements need to be explicitly
+>>> requested.
 >>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index e240992..b86c00a 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -1283,13 +1283,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
->>   	static const struct of_device_id __of_table_##name		\
->>   		__used __section(__##table##_of_table)			\
->>   		 = { .compatible = compat,				\
->> -		     .data = (fn == (fn_type)NULL) ? fn : fn  }
->> +		     .data = fn }
->>   #else
->>   #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
->>   	static const struct of_device_id __of_table_##name		\
->>   		__attribute__((unused))					\
->>   		 = { .compatible = compat,				\
->> -		     .data = (fn == (fn_type)NULL) ? fn : fn }
->> +		     .data = fn }
->>   #endif
->>   
->>   typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
->>
-> The check is not redundant and does serve a purpose.
->
-> The purpose is not very obvious on the surface, but it is checking that
-> the function fn() is of the proper type.
+>> That's still possible for named caches created by kmem_cache_create().
+> 
+> So lets leave it as it is now then.
 
-Frank,
+That however doesn't work well for the xfs/IO case where block sizes are
+not known in advance:
 
-Thanks for taking out time to explain the stuff, Yeah some miscellaneous 
-driver can do this type of mistake.
-
--Mukesh
-
-
-> An example of a compiler warning with a bad function type is created
-> by applying the following patch:
->
->     drivers/of/unittest.c:62:1: warning: comparison of distinct pointer types lacks a cast [enabled by default]
->
-> Note that you need to have CONFIG_UNITTEST enabled to compile unittest.c.
->
-> Line 62 is
->     OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
->
-> ---
->   drivers/of/unittest.c |   17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> Index: b/drivers/of/unittest.c
-> ===================================================================
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -45,6 +45,23 @@ static struct unittest_results {
->   	failed; \
->   })
->   
-> +struct of_device_id __unittest_of_table;
-> +
-> +static void __init unittest_setup_1_good(struct device_node *np)
-> +{
-> +}
-> +
-> +static void __init unittest_setup_2_bad(struct device_node *np_1,
-> +	struct device_node *np_2)
-> +{
-> +}
-> +
-> +OF_DECLARE_1(__unittest_of_table, unittest_setup_1_good, "unittest_compat",
-> +	unittest_setup_1_good);
-> +
-> +OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
-> +	unittest_setup_2_bad);
-> +
->   static void __init of_unittest_find_node_by_name(void)
->   {
->   	struct device_node *np;
+https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/T/#ec3a292c358d05a6b29cc4a9ce3ae6b2faf31a23f
