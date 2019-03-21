@@ -2,86 +2,104 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73D7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DAFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660FB20835
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2E32083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1Jn9i6E0"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LofPvRi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfCUAdu (ORCPT
+        id S1727768AbfCUAev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 20:33:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34554 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfCUAdu (ORCPT
+        Wed, 20 Mar 2019 20:34:51 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33753 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbfCUAev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 20:33:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2L0TG90138702;
-        Thu, 21 Mar 2019 00:33:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=HKgrBqbUgKzxTA4A92UBs5xKqD9cHL0+kseWjwVcktI=;
- b=1Jn9i6E0azQme1uziY2hqyZ1HQVPZUtDP30WAUCooH6JVPqTuCc2zP/hR7VtiHcfFcxN
- d8Ew6bN3rWCyfBBU4cgntYhH1G24gWn/1IdjVQgPjt1zj5GzB/ktxY6CYIR9Z7NRV1jK
- tZtesBVJQsk9895JcdVk/c5N3J+H3HwfURlmW+YOb+SDG9We0u64r8v/ObOpoQqNxYdm
- 3WZCUY7f4eeN9t+wioci74rns0i4COOnBDm17mTcWx3ulf763cTCzcjQKtBsLvplILlo
- vnfFO4AVnaDUUq/56o8hTVWrz05nkywALw8OGJ8WdY9daP+Bx9jwb2HY5eeKTFDb9gLc Ng== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2r8rjuwv0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 00:33:46 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2L0XkW8023726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 00:33:46 GMT
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2L0Xj2D023264;
-        Thu, 21 Mar 2019 00:33:45 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 Mar 2019 17:33:45 -0700
-To:     Colin King <colin.king@canonical.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: target: fix unsigned comparision with less than zero
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190320163709.28767-1-colin.king@canonical.com>
-Date:   Wed, 20 Mar 2019 20:33:42 -0400
-In-Reply-To: <20190320163709.28767-1-colin.king@canonical.com> (Colin King's
-        message of "Wed, 20 Mar 2019 16:37:09 +0000")
-Message-ID: <yq1sgvh5amx.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 20 Mar 2019 20:34:51 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k14so4885175qtb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 17:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WNxH5hn+1vJ5BZfNhhP2qaREL1mT+cXvzry7emknzXo=;
+        b=LofPvRi1FKvhO8MdnUpMoXtwNj2VpxJhzmLikJCTAC96n8I9zjrUK+YA9mxxKIhPMR
+         BrbNAAdLfHklU02+Odvf4TMRIqyt/4xQKRibsgsXeAp3ZVZl50OY2taDuf5Qb6Rebl4V
+         RXav2V7cSth/x3rk6TAFQq/yKzIdUdjDth9JQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WNxH5hn+1vJ5BZfNhhP2qaREL1mT+cXvzry7emknzXo=;
+        b=tjvlFmYtP0kwD1f/PFTDSTOg9MgbGBYZiP1Z6G0BSh/Z0MxG5z8FZHS/mimnd0TFJ/
+         9D2SssFOqDK7P8JVUs950TPmop/5lwRvRYk5EbE4C0pWt/5Wcxvenm5RnZJ4rG+D1Vsq
+         6MNaawK7hmz+OULZ5ZMp7vDwGQ58lBiZQVMRh1mX8QknrlYtJcLE0f/n09NDR1vEmuUX
+         pZFyGQ7loMxv2hkFVaPO/xfO/TQMnXOk3vpAsDVcfnZO/5PXC0BI13S9J9IVKyHbkua9
+         jm//YsjyzbmIOj6SNaKdmC+EBOjaFiNsPyYrZIgDT+kc5hTL1jHpWY1yXCq8nAeJC5z7
+         3tsA==
+X-Gm-Message-State: APjAAAWj6mQqZY4ErYKLc6621PL+dKcdiDG/VCcB81AOkeTjfkW3Vazw
+        N9BhikIN49P8C2AJvIhqHbq2s9GKOCU=
+X-Google-Smtp-Source: APXvYqw2IZEg0AtQ4SwPf0ZCsNZpyPpyXX7g4iPc87HH3TUictMPSPsYXXOMZzDmuY1YyqR053Z1SQ==
+X-Received: by 2002:a0c:e58f:: with SMTP id t15mr810027qvm.170.1553128489530;
+        Wed, 20 Mar 2019 17:34:49 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id u15sm2908475qth.54.2019.03.20.17.34.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 17:34:48 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2 0/4] RCU fixes for rcu_assign_pointer() usage
+Date:   Wed, 20 Mar 2019 20:34:22 -0400
+Message-Id: <20190321003426.160260-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=858 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903210002
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is just a resend with scheduler patches split from the driver fixes and
+Paul's Reviewed-by(s) added.
 
-Colin,
+These patches fix various sparse errors ccaused as a result of the recent check
+to add rcu_check_sparse() to rcu_assign_pointer().  The errors are due to
+missing annotations. The annotations added in the series can also help avoid
+future incorrect usages and bugs so it is a good idea to do in any case.
 
-> Currently an error return is being assigned to an unsigned size_t
-> varianle and then checked if the result is less than zero which will
-> always be false.  Fix this by making ret ssize_t rather than a size_t.
+RFC v1 -> Patch v2:
+Made changes based on Peter Zijlstra review.
 
-Applied to 5.2/scsi-queue, thanks!
+Joel Fernandes (Google) (4):
+sched/cpufreq: Annotate cpufreq_update_util_data pointer with __rcu
+sched_domain: Annotate RCU pointers properly
+rcuwait: Annotate task_struct with __rcu
+sched: Annotate perf_domain pointer with __rcu
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+include/linux/rcuwait.h        |  2 +-
+include/linux/sched/topology.h |  4 ++--
+kernel/sched/cpufreq.c         |  2 +-
+kernel/sched/sched.h           | 18 +++++++++---------
+kernel/sched/topology.c        | 10 +++++-----
+5 files changed, 18 insertions(+), 18 deletions(-)
+
+--
+2.21.0.225.g810b269d1ac-goog
+
