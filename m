@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68833C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D530C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE52218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7094218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfCUXGq (ORCPT
+        id S1727385AbfCUXGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:06:46 -0400
-Received: from foss.arm.com ([217.140.101.70]:35748 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbfCUXGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:06:13 -0400
+        Thu, 21 Mar 2019 19:06:10 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35702 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfCUXGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:06:08 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC03168F;
-        Thu, 21 Mar 2019 16:06:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 337F3EBD;
+        Thu, 21 Mar 2019 16:06:08 -0700 (PDT)
 Received: from beelzebub.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8D7353F614;
-        Thu, 21 Mar 2019 16:06:12 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7115E3F614;
+        Thu, 21 Mar 2019 16:06:07 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
@@ -34,10 +34,11 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
         linux-kernel@vger.kernel.org,
         Jeremy Linton <jeremy.linton@arm.com>,
         Andre Przywara <andre.przywara@arm.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v6 04/10] arm64: Advertise mitigation of Spectre-v2, or lack thereof
-Date:   Thu, 21 Mar 2019 18:05:51 -0500
-Message-Id: <20190321230557.45107-5-jeremy.linton@arm.com>
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH v6 01/10] arm64: Provide a command line to disable spectre_v2 mitigation
+Date:   Thu, 21 Mar 2019 18:05:48 -0500
+Message-Id: <20190321230557.45107-2-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321230557.45107-1-jeremy.linton@arm.com>
 References: <20190321230557.45107-1-jeremy.linton@arm.com>
@@ -48,210 +49,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+There are various reasons, including bencmarking, to disable spectrev2
+mitigation on a machine. Provide a command-line to do so.
 
-We currently have a list of CPUs affected by Spectre-v2, for which
-we check that the firmware implements ARCH_WORKAROUND_1. It turns
-out that not all firmwares do implement the required mitigation,
-and that we fail to let the user know about it.
-
-Instead, let's slightly revamp our checks, and rely on a whitelist
-of cores that are known to be non-vulnerable, and let the user know
-the status of the mitigation in the kernel log.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[This makes more sense in front of the sysfs patch]
-[Pick pieces of that patch into this and move it earlier]
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
 ---
- arch/arm64/kernel/cpu_errata.c | 107 +++++++++++++++++----------------
- 1 file changed, 55 insertions(+), 52 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
+ arch/arm64/kernel/cpu_errata.c                  | 13 +++++++++++++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..d153bb15c8c7 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2873,10 +2873,10 @@
+ 			check bypass). With this option data leaks are possible
+ 			in the system.
+ 
+-	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
+-			(indirect branch prediction) vulnerability. System may
+-			allow data leaks with this option, which is equivalent
+-			to spectre_v2=off.
++	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
++			the Spectre variant 2 (indirect branch prediction)
++			vulnerability. System may allow data leaks with this
++			option.
+ 
+ 	nospec_store_bypass_disable
+ 			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
 diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index cf623657cf3c..2b6e6d8e105b 100644
+index 9950bb0cbd52..d2b2c69d31bb 100644
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -131,9 +131,9 @@ static void __copy_hyp_vect_bpi(int slot, const char *hyp_vecs_start,
- 	__flush_icache_range((uintptr_t)dst, (uintptr_t)dst + SZ_2K);
+@@ -220,6 +220,14 @@ static void qcom_link_stack_sanitization(void)
+ 		     : "=&r" (tmp));
  }
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
--				      const char *hyp_vecs_start,
--				      const char *hyp_vecs_end)
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
-+				    const char *hyp_vecs_start,
-+				    const char *hyp_vecs_end)
- {
- 	static DEFINE_RAW_SPINLOCK(bp_lock);
- 	int cpu, slot = -1;
-@@ -177,23 +177,6 @@ static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
- }
- #endif	/* CONFIG_KVM_INDIRECT_VECTORS */
- 
--static void  install_bp_hardening_cb(const struct arm64_cpu_capabilities *entry,
--				     bp_hardening_cb_t fn,
--				     const char *hyp_vecs_start,
--				     const char *hyp_vecs_end)
--{
--	u64 pfr0;
--
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	pfr0 = read_cpuid(ID_AA64PFR0_EL1);
--	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_CSV2_SHIFT))
--		return;
--
--	__install_bp_hardening_cb(fn, hyp_vecs_start, hyp_vecs_end);
--}
--
- #include <uapi/linux/psci.h>
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
-@@ -228,31 +211,27 @@ static int __init parse_nospectre_v2(char *str)
- }
- early_param("nospectre_v2", parse_nospectre_v2);
- 
--static void
--enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
-+/*
-+ * -1: No workaround
-+ *  0: No workaround required
-+ *  1: Workaround installed
-+ */
-+static int detect_harden_bp_fw(void)
- {
- 	bp_hardening_cb_t cb;
- 	void *smccc_start, *smccc_end;
- 	struct arm_smccc_res res;
- 	u32 midr = read_cpuid_id();
- 
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	if (__nospectre_v2) {
--		pr_info_once("spectrev2 mitigation disabled by command line option\n");
--		return;
--	}
--
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
--		return;
-+		return -1;
- 
- 	switch (psci_ops.conduit) {
- 	case PSCI_CONDUIT_HVC:
- 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_hvc_arch_workaround_1;
- 		/* This is a guest, no need to patch KVM vectors */
- 		smccc_start = NULL;
-@@ -263,23 +242,23 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
- 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_smc_arch_workaround_1;
- 		smccc_start = __smccc_workaround_1_smc_start;
- 		smccc_end = __smccc_workaround_1_smc_end;
- 		break;
- 
- 	default:
--		return;
-+		return -1;
- 	}
- 
- 	if (((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR) ||
- 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
- 		cb = qcom_link_stack_sanitization;
- 
--	install_bp_hardening_cb(entry, cb, smccc_start, smccc_end);
-+	install_bp_hardening_cb(cb, smccc_start, smccc_end);
- 
--	return;
-+	return 1;
- }
- #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
- 
-@@ -521,24 +500,48 @@ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
- 	CAP_MIDR_RANGE_LIST(midr_list)
- 
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
--
- /*
-- * List of CPUs where we need to issue a psci call to
-- * harden the branch predictor.
-+ * List of CPUs that do not need any Spectre-v2 mitigation at all.
-  */
--static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
--	MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
--	MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
--	MIDR_ALL_VERSIONS(MIDR_NVIDIA_DENVER),
--	{},
-+static const struct midr_range spectre_v2_safe_list[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
-+	{ /* sentinel */ }
- };
- 
-+static bool __maybe_unused
-+check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
++static bool __nospectre_v2;
++static int __init parse_nospectre_v2(char *str)
 +{
-+	int need_wa;
++	__nospectre_v2 = true;
++	return 0;
++}
++early_param("nospectre_v2", parse_nospectre_v2);
 +
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+
-+	/* If the CPU has CSV2 set, we're safe */
-+	if (cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64PFR0_EL1),
-+						 ID_AA64PFR0_CSV2_SHIFT))
-+		return false;
-+
-+	/* Alternatively, we have a list of unaffected CPUs */
-+	if (is_midr_in_range_list(read_cpuid_id(), spectre_v2_safe_list))
-+		return false;
-+
-+	/* Fallback to firmware detection */
-+	need_wa = detect_harden_bp_fw();
-+	if (!need_wa)
-+		return false;
-+
-+	/* forced off */
+ static void
+ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+ {
+@@ -231,6 +239,11 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+ 	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
+ 		return;
+ 
 +	if (__nospectre_v2) {
 +		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-+		return false;
++		return;
 +	}
 +
-+	if (need_wa < 0)
-+		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
-+
-+	return (need_wa > 0);
-+}
- #endif
+ 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
+ 		return;
  
- #ifdef CONFIG_HARDEN_EL2_VECTORS
-@@ -717,8 +720,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	{
- 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
--		.cpu_enable = enable_smccc_arch_workaround_1,
--		ERRATA_MIDR_RANGE_LIST(arm64_bp_harden_smccc_cpus),
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = check_branch_predictor,
- 	},
- #endif
- #ifdef CONFIG_HARDEN_EL2_VECTORS
 -- 
 2.20.1
 
