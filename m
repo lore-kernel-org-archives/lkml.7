@@ -3,124 +3,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AAAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907B9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A6C20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6233620850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LTKS+zYT"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="Zbwd6lRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfCUJ5U (ORCPT
+        id S1728309AbfCUJ5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:57:20 -0400
-Received: from mail-eopbgr40045.outbound.protection.outlook.com ([40.107.4.45]:17445
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727892AbfCUJ5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:57:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NBn/iF7VTRRmezzSQS3bRMxDxff+zcX2a29L8DxtxMQ=;
- b=LTKS+zYTV83QwYKPPsnXm3LlANHQffIJWe9qQQnWQXsDEInw1Sx4gK1DNeKykbR3Bo3hM85d1NaIQxmI6kR36JldsoZ9/d3TRqsAwzgVHHWXg4Niibz9vA5hpmPbaqE4PzVYzNXLh1d+2Z+r5TmdW6h+J5U2Wt5mExr16cpdV9k=
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com (20.177.34.88) by
- AM6PR04MB5320.eurprd04.prod.outlook.com (20.177.36.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 21 Mar 2019 09:57:15 +0000
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::5841:afe:53fd:42bb]) by AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::5841:afe:53fd:42bb%6]) with mapi id 15.20.1709.015; Thu, 21 Mar 2019
- 09:57:14 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] spi: lpspi: fix dataloss when SS is inactivated between every
- words
-Thread-Topic: [PATCH] spi: lpspi: fix dataloss when SS is inactivated between
- every words
-Thread-Index: AQHU38x0W9tIzHKRmEaCu103SB08IA==
-Date:   Thu, 21 Mar 2019 09:57:12 +0000
-Message-ID: <20190321095720.14438-1-xiaoning.wang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SG2P274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::21)
- To AM6PR04MB5016.eurprd04.prod.outlook.com (2603:10a6:20b:9::24)
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaoning.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 288100d5-c318-4dfe-fcf4-08d6ade39632
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB5320;
-x-ms-traffictypediagnostic: AM6PR04MB5320:
-x-microsoft-antispam-prvs: <AM6PR04MB532031A5F1AFB6DAAEEDC8BEF3420@AM6PR04MB5320.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(366004)(376002)(39860400002)(199004)(189003)(106356001)(105586002)(386003)(14454004)(6506007)(52116002)(6436002)(6486002)(71190400001)(71200400001)(102836004)(2906002)(86362001)(14444005)(256004)(26005)(186003)(478600001)(3846002)(6116002)(1076003)(476003)(50226002)(53936002)(5660300002)(8676002)(1730700003)(6512007)(99286004)(486006)(305945005)(66066001)(7736002)(97736004)(316002)(4326008)(2616005)(2351001)(81166006)(2501003)(81156014)(25786009)(36756003)(6916009)(8936002)(68736007)(5640700003)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5320;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:3;MX:3;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GYCAaa6/CWP1X9uQh/33oPY+FTnxZCD0xw15zfYGdtqpQ95fK3eb2OYL0q1ucigEXthD07Hz1w8U7gMSqrotTM/SGrdqnClPdtC6wrz/HwHrDP9VaMpDfi/Fha4BzD+oIvtDOQJQy537vgUoNS//0L4gCqspBQYonMMNDl8h4d3FXGJw4eoiyXkmAONZAhWhXwmbisJz6vabtqPI55mpyUAgs1bhINNHedzhqz5wzNH/oBsiIvAH28vFrGogFeKw0O1IDEe6PbwG1zSe8s75Zi1gxnSLzMNI07ZNr1Pi5JqzEvqRydKcl7qN/MNkURRIlVfASPCw92QUfLqcIh1k5NIl7AdLPrChTJH868BkSt+r5YSnlPVADDijPc+aM042kUxr3sYeXCU4rs1/p5dYKDT5F9CRuLOMOkAX5EEl7UE=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Mar 2019 05:57:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45997 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbfCUJ5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 05:57:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e5so3873264otk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vHpSHzt5NHpVPS+Oump3k8LaMq2C3znc7HaOk8IZ0jU=;
+        b=Zbwd6lRwwOgLY40BiW5v1/GNCPVeznZQvbIpgXsvSa2suE1fJa0JJhgS49FwtFJqwF
+         pnn+93jdrvMeTw23XaB+uJE9mRMm6RWdgbMy1Bo0O9bawomDAI7aPngLl2epX6NtJ0QI
+         dy2RatDWDrKbmYiSRjrEJrlCB9r/MUlDiy2lE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vHpSHzt5NHpVPS+Oump3k8LaMq2C3znc7HaOk8IZ0jU=;
+        b=Nbufq9FROEkGnC/vw0u8QDb6G/nxtBg5yMFhH+d12JpTwWWcLqyPoQO947vhki3860
+         /b236UGTMAlfLULglBh2OqEyoZMu8TQYcw6Dm8Wac7WDr3EDaCcdaKi71r4wRGEA2fKp
+         1KAPEooyWVVQibiYg5vQd0Pj+tUtHr6nruEZCRMdeVf9Q/kyMX6hr0B4htdiTzJQdAQQ
+         6+yv9KutUU0eLz8li/m1Qw37NNuf4OPcKxfvGfALSxVl6umWXmwqYywAjVdUemdMv+am
+         HZY5vy40F8hE7W4jHbU9NqqdVnlFT0PaUw6q6h3beC8xMfSZrQRMKqvU9DNtTSzBwzR0
+         1uBA==
+X-Gm-Message-State: APjAAAW+inpUCYa2E4bfqW0DTUYA0jrSZ1WiFs0so1thw7W25s37KE8l
+        MtJC8VxOVTHeHVldR/Cb4b9cUpmHQzV00NhsYHLH7g==
+X-Google-Smtp-Source: APXvYqyzXuM6PasJZNuclivssrPk8OJ3KJmvms3AG4loHQT4XFVx82wCYEgcdA8rF/h+iNBmKpKpBw4GuPPzk3fGuYU=
+X-Received: by 2002:a9d:7f89:: with SMTP id t9mr1784851otp.169.1553162263800;
+ Thu, 21 Mar 2019 02:57:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 288100d5-c318-4dfe-fcf4-08d6ade39632
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 09:57:14.7066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5320
+References: <20190320173332.18105-1-alban@kinvolk.io> <20190320173332.18105-4-alban@kinvolk.io>
+ <20190320142346.3b552895@cakuba.netronome.com>
+In-Reply-To: <20190320142346.3b552895@cakuba.netronome.com>
+From:   Alban Crequy <alban@kinvolk.io>
+Date:   Thu, 21 Mar 2019 10:57:32 +0100
+Message-ID: <CADZs7q7+SATGjCCdiDBfGbTBJh11V6s=o4RAAKhaKvFjfo7O_Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 4/7] tools: bpftool: implement map exec command
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Alban Crequy <alban.crequy@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we don't use CONT to keep SS activated or use DMA mode without
-cs-gpio, SS will be inactivated between every words. The word here
-means the data sent once which length can be set as 1/2/4 bytes.
+On Wed, Mar 20, 2019 at 10:23 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Wed, 20 Mar 2019 18:33:29 +0100, Alban Crequy wrote:
+> > From: Alban Crequy <alban@kinvolk.io>
+> >
+> > The map exec commands allows to open an existing map and pass the file
+> > descriptor to a child process. This enables applications to use an
+> > existing BPF map even when they don't support bpffs.
+> >
+> > Example of usage:
+> >     # bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99
+> >     anon_inode:bpf-map
+>
+> Would you mind telling us a little more about the use for this feature?
+> It seems fairly limited.  If it's about probing objects (finding out if
+> they are a map or a program) perhaps we can add a command just for that?
 
-In the isr function, we read the FSR_RXCOUNT just behind the
-fsl_lpspi_read_rx_fifo. This causes the value of FSR_RXCOUNT cannot
-reflect whether there is still data not sent timely. So do this
-judgement by FSR_TXCOUNT.
+I needed to know the name of the map too. I was preparing a demo based
+on python bcc tools (opensnoop) but with added feature that requires
+using a pinned map, created and maintained externally. At the moment,
+the python API for bcc does not support pinning or using external
+maps. Ideally, this should be added in the python API (some discussion
+on https://github.com/iovisor/bcc/issues/2223) but meanwhile, I use a
+workaround by executing bpftool from the python code.
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
----
- drivers/spi/spi-fsl-lpspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Arguably, my use case is a temporary hack until we have better support
+in python bcc. But other tools implements similar commands to pass
+file descriptors between processes: "ip netns exec" and "tc exec bpf".
+So I think it could be useful for other scripting use cases.
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 4de8eb378752..0252cae0b35b 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -77,7 +77,7 @@
- #define CFGR1_PCSPOL	BIT(8)
- #define CFGR1_NOSTALL	BIT(3)
- #define CFGR1_MASTER	BIT(0)
--#define FSR_RXCOUNT	(BIT(16)|BIT(17)|BIT(18))
-+#define FSR_TXCOUNT	(0xFF)
- #define RSR_RXEMPTY	BIT(1)
- #define TCR_CPOL	BIT(31)
- #define TCR_CPHA	BIT(30)
-@@ -765,7 +765,7 @@ static irqreturn_t fsl_lpspi_isr(int irq, void *dev_id)
- 	}
-=20
- 	if (temp_SR & SR_MBF ||
--	    readl(fsl_lpspi->base + IMX7ULP_FSR) & FSR_RXCOUNT) {
-+	    readl(fsl_lpspi->base + IMX7ULP_FSR) & FSR_TXCOUNT) {
- 		writel(SR_FCF, fsl_lpspi->base + IMX7ULP_SR);
- 		fsl_lpspi_intctrl(fsl_lpspi, IER_FCIE);
- 		return IRQ_HANDLED;
---=20
-2.17.1
+In my demo, I used the two hacks:
+- if the pinned map fd is not given to the python script, re-execute
+itself with bpftool:
+os.execvp("bpftool", ["bpftool", "map", "exec", "pinned", pin_path,
+"fd", "90", "cmd", "--"] + sys.argv)
+- once we have the fd 90 (number specified above) of the pinned map in
+the python script, overwrite the empty fd created by bcc:
+os.dup2(90, 6)
+I call dup2() between the bpf map creation and the bpf program
+creation. To check which map fd to overwrite, I just call
+os.system("bpftool map show fd 6...").
 
+
+Thanks a lot for the reviews. I'll need some time to address it (maybe
+a week or 2).
+
+> (I guess bpftool -f isn't really the cleanest way of getting at that
+> info.)
+>
+> > Documentation and bash completion updated as well.
+> >
+> > Signed-off-by: Alban Crequy <alban@kinvolk.io>
