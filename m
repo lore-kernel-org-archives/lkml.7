@@ -2,90 +2,89 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A62C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0589CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FE7218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27C9218FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbfCUMmt (ORCPT
+        id S1728270AbfCUMnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:42:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:37919 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfCUMms (ORCPT
+        Thu, 21 Mar 2019 08:43:16 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34673 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbfCUMnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:42:48 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MdNoW-1gXcDB18xU-00ZOR0; Thu, 21 Mar 2019 13:42:41 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: export tracepoint symbols to modules
-Date:   Thu, 21 Mar 2019 13:42:25 +0100
-Message-Id: <20190321124240.901884-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Pd3t12x6dNGCoSiDpwb2zoqrttMlgcEFDesLvGE0x5eBuDxvKo5
- pa3tdrqN9r0LRzNe6P+oy5fdAbLOuw+zhnwsd2lOwYuqw9KfmnUvnZXbZpbky/158XZXTk+
- ZxZ5NWIIwm0gKN0iSlGz4WvkOZ7L8fDo/ztpDivccI++V81X96t/wFfw9dEuRZDxWsAn1N+
- 3E7dm4/2x1Jx/SikkpnlQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9b7YripScv0=:TEO795keyctp8mgUBkIt74
- h9wtxbJeyJV8X2SaurOfPFt+zYaQQUa4kihoyEmgXdOE/82y+mjSAueXjU7oChzpZZDUz3iRs
- ryj9a8EFhWDn44MKP1RgFJkX935jSHm0lx66ldQ4QFgTVc4EiZwekcdGcgbSMsd8xQXmjIBLg
- LvrBZm1DOuSLy5uSoqnsuyIaRIdQvhQl2ntnmyUnBoZ5cWDUKEAHTges1+gD/kTU2Dd898VoV
- ZKYhVbsqMga7m6ySrDwpkKeULssVC0y6oYtLritAvqdPn3XnVMQL+SLkYpp6o+7xhSdbHJyov
- GmGLVWuukkKOJOEFafIA7wmMbKDRFATon4IyYxGjX4JG6A8Zx1UsGk6X+CMPHH8MctPjbQ0zJ
- Ryc9tMYlaXXXTk4CpS0Vo9Pi/rGHD90NLqjVr/k3nj1eP3hO5hDhFh3xp7qgfW4dnc3mT3F2C
- QWcQPYHWIF/xyoEqGsQzRpu0x6hLA2RWWGQys8DG1bK52JipIcXsnETjgHaVNks2bkwGSiapA
- 3aoi19L/9anG3r4efCAdm9a5Wt4wxykndoTTZNwrs/3g072G8aUmHXksvqLYw0V0di5TTYPwS
- /4VlkokLbfaGvtNqbFLUwoud0rNnI5rwGLs2SL1TLR4OkLnRq90r9/R0rJE9V9SF4DdlP5+Ma
- afON4XZbBnLblDagSXg+pdKiNx98dnkMQzRagFvVMtjVM4f8qDypuq83K3yP2QhljZKzhBSD4
- /dOnnwqz0PrY7qYG1jv8Knv25zl6CD4ifluz/w==
+        Thu, 21 Mar 2019 08:43:15 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1h6x2O-0005BL-5C; Thu, 21 Mar 2019 13:43:12 +0100
+Message-ID: <1553172191.4806.38.camel@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
+ rgmii-id
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>, Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        DEVICETREE <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 21 Mar 2019 13:43:11 +0100
+In-Reply-To: <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
+References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
+         <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
+         <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+         <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
+         <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
+         <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newly added tracepoints in the spi-mxs driver cause a link
-error when the driver is a loadable module:
+Am Donnerstag, den 21.03.2019, 08:17 -0300 schrieb Fabio Estevam:
+> Hi Abel,
+> 
+> > On Thu, Mar 21, 2019 at 5:42 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+> 
+> > > It seems we have other boards that need to be fixed and we can not
+> > > have an old dtb with functional Ethernet with a new kernel.
+> > > 
+> > > Does anyone know if this issue is AR8031 specific?
+> > 
+> > I can confirm the same fix is works on imx6sx too.
+> 
+> imx6sx-sabresd also uses an AR8031 Ethernet PHY.
+> 
+> I also tested that changing the phy-mode to "rgmii-id" fixes Ethernet
+> on pico-imx7d with AR8035.
+> 
+> So yes, we currently have lots of broken dtb's in mainline and I am
+> wondering what is the proper fix here.
 
-ERROR: "__tracepoint_spi_transfer_stop" [drivers/spi/spi-mxs.ko] undefined!
-ERROR: "__tracepoint_spi_transfer_start" [drivers/spi/spi-mxs.ko] undefined!
+Fix the DT. It's unfortunate the a kernel and DT bug canceled each
+other out, but if the DT is clearly broken and fixing it in a backward
+compatible way is not really feasible, I would argue that we should
+treat a DT bug like any other bug.
 
-I'm not quite sure where to put the export statements, but
-directly after the inclusion of the header seems as good as
-any other place.
-
-Fixes: f3fdea3af405 ("spi: mxs: add tracing to custom .transfer_one_message callback")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/spi/spi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 93986f879b09..e5d38152888a 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -36,6 +36,8 @@
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/spi.h>
-+EXPORT_TRACEPOINT_SYMBOL(spi_transfer_start);
-+EXPORT_TRACEPOINT_SYMBOL(spi_transfer_stop);
- 
- #include "internals.h"
- 
--- 
-2.20.0
-
+Regards,
+Lucas
