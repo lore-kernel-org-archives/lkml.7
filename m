@@ -2,56 +2,318 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538A7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28618218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD590218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfCUWCC (ORCPT
+        id S1727632AbfCUWCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:02:02 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:50358 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfCUWCC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:02:02 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-115-194-nat.elisa-mobile.fi [85.76.115.194])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id CCB792006B;
-        Fri, 22 Mar 2019 00:01:59 +0200 (EET)
-Date:   Fri, 22 Mar 2019 00:01:59 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     George Hilliard <thirtythreeforty@gmail.com>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] mips: ralink: allow zboot
-Message-ID: <20190321220159.GC7872@darkstar.musicnaut.iki.fi>
-References: <20190321170334.15122-1-thirtythreeforty@gmail.com>
- <20190321170334.15122-2-thirtythreeforty@gmail.com>
+        Thu, 21 Mar 2019 18:02:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4473 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbfCUWCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:02:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:02:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
+   d="scan'208";a="309274993"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2019 15:02:15 -0700
+Date:   Thu, 21 Mar 2019 15:04:39 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/22] iommu: introduce device fault data
+Message-ID: <20190321150439.5aac2c01@jacob-builder>
+In-Reply-To: <20190317172232.1068-3-eric.auger@redhat.com>
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+        <20190317172232.1068-3-eric.auger@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321170334.15122-2-thirtythreeforty@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, 17 Mar 2019 18:22:12 +0100
+Eric Auger <eric.auger@redhat.com> wrote:
 
-On Thu, Mar 21, 2019 at 11:03:34AM -0600, George Hilliard wrote:
-> Architecturally, there's nothing preventing compressed images from
-> working.  Bootloaders built with support for the various compression
-> methods can decompress and run the kernel.  In practice, many
-> bootloaders do not support compressed images, but kernels for those
-> boards should just not be compressed.
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> 
+> Device faults detected by IOMMU can be reported outside the IOMMU
+> subsystem for further processing. This patch introduces
+> a generic device fault data structure.
+> 
+> The fault can be either an unrecoverable fault or a page request,
+> also referred to as a recoverable fault.
+> 
+> We only care about non internal faults that are likely to be reported
+> to an external subsystem.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> 
+> ---
+> v4 -> v5:
+> - simplified struct iommu_fault_event comment
+> - Moved IOMMU_FAULT_PERM outside of the struct
+> - Removed IOMMU_FAULT_PERM_INST
+> - s/IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT/
+>   IOMMU_FAULT_PAGE_REQUEST_PASID_VALID
+> 
+> v3 -> v4:
+> - use a union containing aither an unrecoverable fault or a page
+>   request message. Move the device private data in the page request
+>   structure. Reshuffle the fields and use flags.
+> - move fault perm attributes to the uapi
+> - remove a bunch of iommu_fault_reason enum values that were related
+>   to internal errors
+> ---
+>  include/linux/iommu.h      |  44 ++++++++++++++
+>  include/uapi/linux/iommu.h | 115
+> +++++++++++++++++++++++++++++++++++++ 2 files changed, 159
+> insertions(+) create mode 100644 include/uapi/linux/iommu.h
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index ffbbc7e39cee..c6f398f7e6e0 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> +#include <uapi/linux/iommu.h>
+>  
+>  #define IOMMU_READ	(1 << 0)
+>  #define IOMMU_WRITE	(1 << 1)
+> @@ -48,6 +49,7 @@ struct bus_type;
+>  struct device;
+>  struct iommu_domain;
+>  struct notifier_block;
+> +struct iommu_fault_event;
+>  
+>  /* iommu fault flags */
+>  #define IOMMU_FAULT_READ	0x0
+> @@ -55,6 +57,7 @@ struct notifier_block;
+>  
+>  typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
+>  			struct device *, unsigned long, int, void *);
+> +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *,
+> void *); 
+>  struct iommu_domain_geometry {
+>  	dma_addr_t aperture_start; /* First address that can be
+> mapped    */ @@ -247,6 +250,46 @@ struct iommu_device {
+>  	struct device *dev;
+>  };
+>  
+> +/**
+> + * struct iommu_fault_event - Generic fault event
+> + *
+> + * Can represent recoverable faults such as a page requests or
+> + * unrecoverable faults such as DMA or IRQ remapping faults.
+> + *
+> + * @fault: fault descriptor
+> + * @iommu_private: used by the IOMMU driver for storing
+> fault-specific
+> + *                 data. Users should not modify this field before
+> + *                 sending the fault response.
+> + */
+> +struct iommu_fault_event {
+> +	struct iommu_fault fault;
+> +	u64 iommu_private;
+> +};
+> +
+> +/**
+> + * struct iommu_fault_param - per-device IOMMU fault data
+> + * @dev_fault_handler: Callback function to handle IOMMU faults at
+> device level
+> + * @data: handler private data
+> + *
+> + */
+> +struct iommu_fault_param {
+> +	iommu_dev_fault_handler_t handler;
+> +	void *data;
+> +};
+> +
+> +/**
+> + * struct iommu_param - collection of per-device IOMMU data
+> + *
+> + * @fault_param: IOMMU detected device fault reporting data
+> + *
+> + * TODO: migrate other per device data pointers under
+> iommu_dev_data, e.g.
+> + *	struct iommu_group	*iommu_group;
+> + *	struct iommu_fwspec	*iommu_fwspec;
+> + */
+> +struct iommu_param {
+> +	struct iommu_fault_param *fault_param;
+> +};
+> +
+>  int  iommu_device_register(struct iommu_device *iommu);
+>  void iommu_device_unregister(struct iommu_device *iommu);
+>  int  iommu_device_sysfs_add(struct iommu_device *iommu,
+> @@ -422,6 +465,7 @@ struct iommu_ops {};
+>  struct iommu_group {};
+>  struct iommu_fwspec {};
+>  struct iommu_device {};
+> +struct iommu_fault_param {};
+>  
+>  static inline bool iommu_present(struct bus_type *bus)
+>  {
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> new file mode 100644
+> index 000000000000..edcc0dda7993
+> --- /dev/null
+> +++ b/include/uapi/linux/iommu.h
+> @@ -0,0 +1,115 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * IOMMU user API definitions
+> + */
+> +
+> +#ifndef _UAPI_IOMMU_H
+> +#define _UAPI_IOMMU_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
+> +#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
+> +#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* privileged */
+> +
+> +/*  Generic fault types, can be expanded IRQ remapping fault */
+> +enum iommu_fault_type {
+> +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
+> +	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
+> +};
+> +
+> +enum iommu_fault_reason {
+> +	IOMMU_FAULT_REASON_UNKNOWN = 0,
+> +
+> +	/* Could not access the PASID table (fetch caused external
+> abort) */
+> +	IOMMU_FAULT_REASON_PASID_FETCH,
+> +
+> +	/* pasid entry is invalid or has configuration errors */
+> +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
+> +
+> +	/*
+> +	 * PASID is out of range (e.g. exceeds the maximum PASID
+> +	 * supported by the IOMMU) or disabled.
+> +	 */
+> +	IOMMU_FAULT_REASON_PASID_INVALID,
+> +
+> +	/*
+> +	 * An external abort occurred fetching (or updating) a
+> translation
+> +	 * table descriptor
+> +	 */
+> +	IOMMU_FAULT_REASON_WALK_EABT,
+> +
+> +	/*
+> +	 * Could not access the page table entry (Bad address),
+> +	 * actual translation fault
+> +	 */
+> +	IOMMU_FAULT_REASON_PTE_FETCH,
+> +
+> +	/* Protection flag check failed */
+> +	IOMMU_FAULT_REASON_PERMISSION,
+> +
+> +	/* access flag check failed */
+> +	IOMMU_FAULT_REASON_ACCESS,
+> +
+> +	/* Output address of a translation stage caused Address Size
+> fault */
+> +	IOMMU_FAULT_REASON_OOR_ADDRESS,
+> +};
+> +
+For VT-d scalable mode, fault reason can be further split into first
+level faults and second level faults. But since we pin the second level
+today and guest owns the first level, we only need to inject faults of
+the FL to vIOMMU. So I think this is fine today, I think this enum can
+be extended w/o a new version of the structure.
 
-With zboot the decompressor is included in the image so no bootloader
-support is needed.
+> +/**
+> + * Unrecoverable fault data
+> + * @reason: reason of the fault
+> + * @addr: offending page address
+> + * @fetch_addr: address that caused a fetch abort, if any
+> + * @pasid: contains process address space ID, used in shared virtual
+> memory
+> + * @perm: Requested permission access using by the incoming
+> transaction
+> + * (IOMMU_FAULT_PERM_* values)
+> + */
+> +struct iommu_fault_unrecoverable {
+> +	__u32	reason; /* enum iommu_fault_reason */
+> +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
+> +#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
+> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
+> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
+> +	__u32	flags;
+> +	__u32	pasid;
+> +	__u32	perm;
+> +	__u64	addr;
+> +	__u64	fetch_addr;
+> +};
+> +
+> +/*
+> + * Page Request data (aka. recoverable fault data)
+> + * @flags : encodes whether the pasid is valid and whether this
+> + * is the last page in group
+> + * @pasid: pasid
+> + * @grpid: page request group index
+> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
+> + * @addr: page address
+> + */
+> +struct iommu_fault_page_request {
+> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
+> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+> +	__u32   flags;
+> +	__u32	pasid;
+> +	__u32	grpid;
+> +	__u32	perm;
+> +	__u64	addr;
+> +	__u64	private_data[2];
+> +};
+> +
+> +/**
+> + * struct iommu_fault - Generic fault data
+> + *
+> + * @type contains fault type
+> + */
+> +
+> +struct iommu_fault {
+> +	__u32	type;   /* enum iommu_fault_type */
+> +	__u32	reserved;
+> +	union {
+> +		struct iommu_fault_unrecoverable event;
+> +		struct iommu_fault_page_request prm;
+> +	};
+> +};
+> +#endif /* _UAPI_IOMMU_H */
 
-A.
+[Jacob Pan]
