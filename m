@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C649C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D9FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1298218D3
+	by mail.kernel.org (Postfix) with ESMTP id B415D20835
 	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="r/dFrEjg"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="G1okhweJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfCUBSa (ORCPT
+        id S1727683AbfCUBSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:18:30 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43051 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfCUBSa (ORCPT
+        Wed, 20 Mar 2019 21:18:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34750 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCUBSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:18:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id g7so3367456lfh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:18:28 -0700 (PDT)
+        Wed, 20 Mar 2019 21:18:00 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j89so3975785ljb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H6BNKYQmd7f/P74NYF9bzQbO7o28sToq2pxfXnFbI7o=;
-        b=r/dFrEjgwkOAIrMrl8OiF0hlNxi/hHEFAvciRTw8vyxCVAvnfe1Gle959fvwsz+wH9
-         5ej5HUvkkHtkPebIkkKmebpWvAio/hkDFFhdbGTmEljgBKa55GBjecT+J3Zz3P2+hcKv
-         gcI6cyPUZAxEtF01pErEfNu8rh8qnDlQT+ydOfcd+stuBNUm0ReBXMRRPoHNNeJ+IC13
-         cM1d9iB13OmsUQtnA6qWxHETtgBrBxSoQfBbPizgeGjF4uZRrkwvjRcus1uGPvonc7sp
-         PlRkJX451y17Uc7jTtlHNZil6OT//uWNyc5/i6MGr48SYZ0C0BKQk/V3qiTKQ1wh8cjO
-         6ifQ==
+        bh=L7QnHzTZmrLKVe8LTttzGCXr1M69dafHz/4F1PR1odM=;
+        b=G1okhweJQVAmoxRLJ7Qv4HGR3pbgwy6PZNkye21wNe6Seu8u+LB67mIQTKG2IVZycK
+         hSiltSsSgsfYgU03Q4ieYa5IfudDlguhcr+FXF+aSEfYcp/cFSAEqu0yTDeYU2CwVdr+
+         z8gj9GYcjSzq37SmDXlyT2QE2TLdXut93AJSyY7OCsnPDxDp8d7lFR810zVOdtYOdrSj
+         IpApFGJepJw2RzLo6iX1YPbyu+QmbAsJx4g53vc4qZNFqz18MLuhfEEtXMUAXSKaWvW9
+         lBkJGfHoJd4BMMOvaN4MynUqnVlgn+fvFn7bhVAaaAjqHw1B6x0Kfa3pUh4zPOGr8XHi
+         Q1yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H6BNKYQmd7f/P74NYF9bzQbO7o28sToq2pxfXnFbI7o=;
-        b=ZYAxtkQ3LhttiO/cRrSt6+dE+pC5ruhU1lUi26VnqziiMfAEpkq8BmChiJV7Jix8Mn
-         9TcVPGbpLQLUqkgnwQGWaC4D/0+xVrLTwMsMuBmcBxH+KWWoO6NzzMsGI0Y5jEk6dbbj
-         YVFUPYrmtiWVQVtsyu0Te28RnNWyEoDIGFS/ukaNfDfjasDc9Skfkj21DfUWH+3vRhWI
-         ErLa748ppO0cg+Y1VFh6UA0wwVVjAJWXYkwN22gMKWx8DDkooEvcT4nu/CMt+fpIuMGq
-         HBF/7fI8vnO19WQ0uHwGUsxA7vK4prTEbYPpg4m8ru0RGXrIqT9GZ88OzDF97WB8AJhx
-         xXpQ==
-X-Gm-Message-State: APjAAAWTG7dPY/QGS1XXDYLiyzcpbgja9NJa5fPldrAOccKdsc+AglIP
-        zhOWNhLJyAOotsjy9BsEeCS0YbRP0rDD0XXFopqA
-X-Google-Smtp-Source: APXvYqxVsSEb0srcbBW5N7R9NX7Rjhpe2qOYX4hSIwGnMaSyQpEa4kkvSQSs70U8kbaG/wXhK3Qf99OwjuThMrt8PXU=
-X-Received: by 2002:a19:ee11:: with SMTP id g17mr380473lfb.117.1553131108078;
- Wed, 20 Mar 2019 18:18:28 -0700 (PDT)
+        bh=L7QnHzTZmrLKVe8LTttzGCXr1M69dafHz/4F1PR1odM=;
+        b=oH8hyjbyh1/rxO/RIeLtPPv+guexhTiwHj4X4VqWCgR3uM9TVFZ6flB9lr+884tVK0
+         E9plmrXlw5RpDMHzKZuzEpw2ot/hx1eYhtX4lruO6jeV8lumkNeMIqoHRvZQo6Kvj/8n
+         IftVUBxbzkOaPOjmpaCZrVCpbGXIdOns1vBvAS2lW4fdvAR0hV8/I9s/qUwFaf71d81G
+         99UGJBQuCRp4D1uvlulqbv3DK1MIN8b8UYkkE5RWMH4fqleExskVi+scwjWEoDAOKmlC
+         RTNIY3I9I8Bv4JLUu2OM442nMXG1pwl81pJd1aWdiQjGOJt3vpoSorgQ0uwN8BBodNZp
+         At1Q==
+X-Gm-Message-State: APjAAAWV7Pj/RFIdTEpTOpOQUTaxQiw6vAB+leiQPkJalU17VniFG1Qf
+        +4mEYOz8l818jtjp81V0YTU8CjmGzpph+CMm4tic
+X-Google-Smtp-Source: APXvYqy9KHfvAtM6PDWxAbRRAf9gWvVRAVrDTaqC7eqp8en4BqbAX0tBUsjTqG2/v+TuUG3D8BQ2K0HKE+hM2j6h/cQ=
+X-Received: by 2002:a05:651c:d7:: with SMTP id 23mr489811ljr.5.1553131078513;
+ Wed, 20 Mar 2019 18:17:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190317232847.GC16301@altlinux.org>
-In-Reply-To: <20190317232847.GC16301@altlinux.org>
+References: <20190317232839.GB16301@altlinux.org>
+In-Reply-To: <20190317232839.GB16301@altlinux.org>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 20 Mar 2019 21:18:17 -0400
-Message-ID: <CAHC9VhTVqYLnaLkZqVcdtOsNqisZz6DaGsnPu13FjNfYco9Yxg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/13] arc: define syscall_get_arch()
+Date:   Wed, 20 Mar 2019 21:17:47 -0400
+Message-ID: <CAHC9VhSWrSsykMm+or6gpMYJQ7WuiNEEmmsCQnQ+KMyR=W8p+w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/13] Move EM_ARCOMPACT and EM_ARCV2 to uapi/linux/elf-em.h
 To:     "Dmitry V. Levin" <ldv@altlinux.org>
 Cc:     Vineet Gupta <vgupta@synopsys.com>,
         Elvira Khabirova <lineprinter@altlinux.org>,
@@ -75,11 +75,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Mar 17, 2019 at 7:28 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
 >
-> syscall_get_arch() is required to be implemented on all architectures
-> in addition to already implemented syscall_get_nr(),
-> syscall_get_arguments(), syscall_get_error(), and
-> syscall_get_return_value() functions in order to extend the generic
-> ptrace API with PTRACE_GET_SYSCALL_INFO request.
+> These should never have been defined in the arch tree to begin with, and
+> now uapi/linux/audit.h header is going to use EM_ARCOMPACT and EM_ARCV2
+> in order to define AUDIT_ARCH_ARCOMPACT and AUDIT_ARCH_ARCV2 which are
+> needed to implement syscall_get_arch() which in turn is required to
+> extend the generic ptrace API with PTRACE_GET_SYSCALL_INFO request.
 >
 > Acked-by: Vineet Gupta <vgupta@synopsys.com>
 > Acked-by: Paul Moore <paul@paul-moore.com>
@@ -96,9 +96,9 @@ On Sun, Mar 17, 2019 at 7:28 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
 > Notes:
 >     v2: unchanged
 >
->  arch/arc/include/asm/syscall.h | 11 +++++++++++
->  include/uapi/linux/audit.h     |  4 ++++
->  2 files changed, 15 insertions(+)
+>  arch/arc/include/asm/elf.h  | 6 +-----
+>  include/uapi/linux/elf-em.h | 2 ++
+>  2 files changed, 3 insertions(+), 5 deletions(-)
 
 Merged into audit/next, thanks everyone.
 
