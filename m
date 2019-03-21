@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D69C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2242C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9A92196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA9221915
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfCUCyw (ORCPT
+        id S1728000AbfCUCy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:54:52 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:6371 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726914AbfCUCyr (ORCPT
+        Wed, 20 Mar 2019 22:54:57 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:38413 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727916AbfCUCyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Mar 2019 22:54:47 -0400
-X-UUID: e29dfe75e5c5428db3a486d4b0a1d8dc-20190321
-X-UUID: e29dfe75e5c5428db3a486d4b0a1d8dc-20190321
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+X-UUID: 567c4bbb7a7c47cf82abbc3caa4a8809-20190321
+X-UUID: 567c4bbb7a7c47cf82abbc3caa4a8809-20190321
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1407362214; Thu, 21 Mar 2019 10:54:40 +0800
+        with ESMTP id 896507379; Thu, 21 Mar 2019 10:54:32 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 21 Mar 2019 10:54:38 +0800
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 10:54:31 +0800
 Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 21 Mar 2019 10:54:37 +0800
+ Transport; Thu, 21 Mar 2019 10:54:30 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
@@ -41,9 +41,9 @@ CC:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [RESEND PATCH 09/11] usb: mtu3: move vbus and mode debugfs interfaces into mtu3_debugfs.c
-Date:   Thu, 21 Mar 2019 10:53:47 +0800
-Message-ID: <1553136829-14712-10-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH 04/11] usb: mtu3: rebuild the code of getting vbus regulator
+Date:   Thu, 21 Mar 2019 10:53:42 +0800
+Message-ID: <1553136829-14712-5-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -55,324 +55,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to the separated debugfs files are added, move vbus and mode
-debugfs interfaces related with dual-role switch from mtu3_dr.c
-into mtu3_debugfs.c
+Remove local variable @vbus and use @dev instead of @pdev->dev
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_debug.h   |   2 +
- drivers/usb/mtu3/mtu3_debugfs.c | 101 ++++++++++++++++++++++++++++
- drivers/usb/mtu3/mtu3_dr.c      | 113 +-------------------------------
- drivers/usb/mtu3/mtu3_dr.h      |   4 ++
- 4 files changed, 110 insertions(+), 110 deletions(-)
+ drivers/usb/mtu3/mtu3_plat.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_debug.h b/drivers/usb/mtu3/mtu3_debug.h
-index 94d39b00403e..d97a48c73469 100644
---- a/drivers/usb/mtu3/mtu3_debug.h
-+++ b/drivers/usb/mtu3/mtu3_debug.h
-@@ -27,11 +27,13 @@ struct mtu3_file_map {
- 
- #if IS_ENABLED(CONFIG_DEBUG_FS)
- void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb);
-+void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb);
- void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb);
- void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb);
- 
- #else
- static inline void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb) {}
-+static inline void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb) {}
- static inline void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb) {}
- static inline void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb) {}
- 
-diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
-index 7cb1cad5a4b3..62c57ddc554e 100644
---- a/drivers/usb/mtu3/mtu3_debugfs.c
-+++ b/drivers/usb/mtu3/mtu3_debugfs.c
-@@ -10,6 +10,7 @@
- #include <linux/uaccess.h>
- 
- #include "mtu3.h"
-+#include "mtu3_dr.h"
- #include "mtu3_debug.h"
- 
- #define dump_register(nm)		\
-@@ -425,6 +426,106 @@ void ssusb_dev_debugfs_init(struct ssusb_mtk *ssusb)
- 			    mtu, &mtu3_ep_used_fops);
- }
- 
-+static int ssusb_mode_show(struct seq_file *sf, void *unused)
-+{
-+	struct ssusb_mtk *ssusb = sf->private;
-+
-+	seq_printf(sf, "current mode: %s(%s drd)\n(echo device/host)\n",
-+		   ssusb->is_host ? "host" : "device",
-+		   ssusb->otg_switch.manual_drd_enabled ? "manual" : "auto");
-+
-+	return 0;
-+}
-+
-+static int ssusb_mode_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, ssusb_mode_show, inode->i_private);
-+}
-+
-+static ssize_t ssusb_mode_write(struct file *file, const char __user *ubuf,
-+				size_t count, loff_t *ppos)
-+{
-+	struct seq_file *sf = file->private_data;
-+	struct ssusb_mtk *ssusb = sf->private;
-+	char buf[16];
-+
-+	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
-+	if (!strncmp(buf, "host", 4) && !ssusb->is_host) {
-+		ssusb_mode_manual_switch(ssusb, 1);
-+	} else if (!strncmp(buf, "device", 6) && ssusb->is_host) {
-+		ssusb_mode_manual_switch(ssusb, 0);
-+	} else {
-+		dev_err(ssusb->dev, "wrong or duplicated setting\n");
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static const struct file_operations ssusb_mode_fops = {
-+	.open = ssusb_mode_open,
-+	.write = ssusb_mode_write,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static int ssusb_vbus_show(struct seq_file *sf, void *unused)
-+{
-+	struct ssusb_mtk *ssusb = sf->private;
-+	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
-+
-+	seq_printf(sf, "vbus state: %s\n(echo on/off)\n",
-+		   regulator_is_enabled(otg_sx->vbus) ? "on" : "off");
-+
-+	return 0;
-+}
-+
-+static int ssusb_vbus_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, ssusb_vbus_show, inode->i_private);
-+}
-+
-+static ssize_t ssusb_vbus_write(struct file *file, const char __user *ubuf,
-+				size_t count, loff_t *ppos)
-+{
-+	struct seq_file *sf = file->private_data;
-+	struct ssusb_mtk *ssusb = sf->private;
-+	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
-+	char buf[16];
-+	bool enable;
-+
-+	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
-+	if (kstrtobool(buf, &enable)) {
-+		dev_err(ssusb->dev, "wrong setting\n");
-+		return -EINVAL;
-+	}
-+
-+	ssusb_set_vbus(otg_sx, enable);
-+
-+	return count;
-+}
-+
-+static const struct file_operations ssusb_vbus_fops = {
-+	.open = ssusb_vbus_open,
-+	.write = ssusb_vbus_write,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
-+{
-+	struct dentry *root = ssusb->dbgfs_root;
-+
-+	debugfs_create_file("mode", 0644, root, ssusb, &ssusb_mode_fops);
-+	debugfs_create_file("vbus", 0644, root, ssusb, &ssusb_vbus_fops);
-+}
-+
- void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
- {
- 	ssusb->dbgfs_root =
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index 3f86ae1e73e8..ff2956272e15 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -7,16 +7,9 @@
-  * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
-  */
- 
--#include <linux/debugfs.h>
--#include <linux/irq.h>
--#include <linux/kernel.h>
--#include <linux/of_device.h>
--#include <linux/pinctrl/consumer.h>
--#include <linux/seq_file.h>
--#include <linux/uaccess.h>
--
- #include "mtu3.h"
- #include "mtu3_dr.h"
-+#include "mtu3_debug.h"
- 
- #define USB2_PORT 2
- #define USB3_PORT 3
-@@ -270,7 +263,7 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
-  * This is useful in special cases, such as uses TYPE-A receptacle but also
-  * wants to support dual-role mode.
-  */
--static void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
-+void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
- {
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index 3a4a80f15957..a326b1d6006a 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -228,7 +228,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	struct device_node *node = pdev->dev.of_node;
  	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+ 	struct device *dev = &pdev->dev;
+-	struct regulator *vbus;
+ 	struct resource *res;
+ 	int i;
+ 	int ret;
+@@ -299,12 +298,11 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	of_property_read_u32(node, "mediatek,u3p-dis-msk",
+ 			     &ssusb->u3p_dis_msk);
  
-@@ -285,106 +278,6 @@ static void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
+-	vbus = devm_regulator_get(&pdev->dev, "vbus");
+-	if (IS_ERR(vbus)) {
++	otg_sx->vbus = devm_regulator_get(dev, "vbus");
++	if (IS_ERR(otg_sx->vbus)) {
+ 		dev_err(dev, "failed to get vbus\n");
+-		return PTR_ERR(vbus);
++		return PTR_ERR(otg_sx->vbus);
  	}
- }
+-	otg_sx->vbus = vbus;
  
--static int ssusb_mode_show(struct seq_file *sf, void *unused)
--{
--	struct ssusb_mtk *ssusb = sf->private;
--
--	seq_printf(sf, "current mode: %s(%s drd)\n(echo device/host)\n",
--		ssusb->is_host ? "host" : "device",
--		ssusb->otg_switch.manual_drd_enabled ? "manual" : "auto");
--
--	return 0;
--}
--
--static int ssusb_mode_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, ssusb_mode_show, inode->i_private);
--}
--
--static ssize_t ssusb_mode_write(struct file *file,
--	const char __user *ubuf, size_t count, loff_t *ppos)
--{
--	struct seq_file *sf = file->private_data;
--	struct ssusb_mtk *ssusb = sf->private;
--	char buf[16];
--
--	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
--	if (!strncmp(buf, "host", 4) && !ssusb->is_host) {
--		ssusb_mode_manual_switch(ssusb, 1);
--	} else if (!strncmp(buf, "device", 6) && ssusb->is_host) {
--		ssusb_mode_manual_switch(ssusb, 0);
--	} else {
--		dev_err(ssusb->dev, "wrong or duplicated setting\n");
--		return -EINVAL;
--	}
--
--	return count;
--}
--
--static const struct file_operations ssusb_mode_fops = {
--	.open = ssusb_mode_open,
--	.write = ssusb_mode_write,
--	.read = seq_read,
--	.llseek = seq_lseek,
--	.release = single_release,
--};
--
--static int ssusb_vbus_show(struct seq_file *sf, void *unused)
--{
--	struct ssusb_mtk *ssusb = sf->private;
--	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
--
--	seq_printf(sf, "vbus state: %s\n(echo on/off)\n",
--		regulator_is_enabled(otg_sx->vbus) ? "on" : "off");
--
--	return 0;
--}
--
--static int ssusb_vbus_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, ssusb_vbus_show, inode->i_private);
--}
--
--static ssize_t ssusb_vbus_write(struct file *file,
--	const char __user *ubuf, size_t count, loff_t *ppos)
--{
--	struct seq_file *sf = file->private_data;
--	struct ssusb_mtk *ssusb = sf->private;
--	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
--	char buf[16];
--	bool enable;
--
--	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
--	if (kstrtobool(buf, &enable)) {
--		dev_err(ssusb->dev, "wrong setting\n");
--		return -EINVAL;
--	}
--
--	ssusb_set_vbus(otg_sx, enable);
--
--	return count;
--}
--
--static const struct file_operations ssusb_vbus_fops = {
--	.open = ssusb_vbus_open,
--	.write = ssusb_vbus_write,
--	.read = seq_read,
--	.llseek = seq_lseek,
--	.release = single_release,
--};
--
--static void ssusb_debugfs_init(struct ssusb_mtk *ssusb)
--{
--	struct dentry *root = ssusb->dbgfs_root;
--
--	debugfs_create_file("mode", 0644, root, ssusb, &ssusb_mode_fops);
--	debugfs_create_file("vbus", 0644, root, ssusb, &ssusb_vbus_fops);
--}
--
- void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
- 			  enum mtu3_dr_force_mode mode)
- {
-@@ -417,7 +310,7 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- 	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
- 
- 	if (otg_sx->manual_drd_enabled)
--		ssusb_debugfs_init(ssusb);
-+		ssusb_dr_debugfs_init(ssusb);
- 	else
- 		ret = ssusb_extcon_register(otg_sx);
- 
-diff --git a/drivers/usb/mtu3/mtu3_dr.h b/drivers/usb/mtu3/mtu3_dr.h
-index 50702fdcde28..ba6fe357ce29 100644
---- a/drivers/usb/mtu3/mtu3_dr.h
-+++ b/drivers/usb/mtu3/mtu3_dr.h
-@@ -71,6 +71,7 @@ static inline void ssusb_gadget_exit(struct ssusb_mtk *ssusb)
- #if IS_ENABLED(CONFIG_USB_MTU3_DUAL_ROLE)
- int ssusb_otg_switch_init(struct ssusb_mtk *ssusb);
- void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb);
-+void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host);
- int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on);
- void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
- 			  enum mtu3_dr_force_mode mode);
-@@ -85,6 +86,9 @@ static inline int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- static inline void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
- {}
- 
-+static inline void
-+ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host) {}
-+
- static inline int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on)
- {
- 	return 0;
+ 	if (ssusb->dr_mode == USB_DR_MODE_HOST)
+ 		goto out;
 -- 
 2.20.1
 
