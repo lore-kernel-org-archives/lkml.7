@@ -5,42 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4A9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A2CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F09218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A10218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfCUINp (ORCPT
+        id S1727981AbfCUIOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:13:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:51970 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfCUINp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:13:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFB4080D;
-        Thu, 21 Mar 2019 01:13:44 -0700 (PDT)
-Received: from [10.162.42.102] (p8cg001049571a15.blr.arm.com [10.162.42.102])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D22803F71A;
-        Thu, 21 Mar 2019 01:13:42 -0700 (PDT)
-Subject: Re: [PATCH] mm/isolation: Remove redundant pfn_valid_within() in
- __first_valid_page()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mike.kravetz@oracle.com,
-        osalvador@suse.de, akpm@linux-foundation.org
-References: <1553141595-26907-1-git-send-email-anshuman.khandual@arm.com>
- <8AB57711-48C0-4D95-BC5F-26B266DC3AE8@nvidia.com>
- <cda4f247-4eea-decf-3f4a-3dc09364de27@arm.com>
- <20190321080702.GG8696@dhcp22.suse.cz>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <8a6b3968-a315-07ce-0491-2a5acdd49ab4@arm.com>
-Date:   Thu, 21 Mar 2019 13:43:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 21 Mar 2019 04:14:03 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:31116 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUIOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 04:14:03 -0400
+Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2L8E0QI099400;
+        Thu, 21 Mar 2019 17:14:00 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
+ Thu, 21 Mar 2019 17:14:00 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126094122116.bbtec.net [126.94.122.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2L8Dt6k099331
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 21 Mar 2019 17:14:00 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: ratelimit API: was: [RFC PATCH] printk: Introduce "store now but
+ print later" prefix.
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
+References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+ <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
+ <201903050123.x251N312025685@www262.sakura.ne.jp>
+ <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
+ <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
+ <20190320152516.3gbmaj5xoyxkivyt@pathway.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <0316a449-e7ef-7ca5-2569-f3f2ebebbde9@i-love.sakura.ne.jp>
+Date:   Thu, 21 Mar 2019 17:13:54 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190321080702.GG8696@dhcp22.suse.cz>
+In-Reply-To: <20190320152516.3gbmaj5xoyxkivyt@pathway.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,36 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 03/21/2019 01:37 PM, Michal Hocko wrote:
-> On Thu 21-03-19 11:03:18, Anshuman Khandual wrote:
->>
->>
->> On 03/21/2019 10:31 AM, Zi Yan wrote:
->>> On 20 Mar 2019, at 21:13, Anshuman Khandual wrote:
->>>
->>>> pfn_valid_within() calls pfn_valid() when CONFIG_HOLES_IN_ZONE making it
->>>> redundant for both definitions (w/wo CONFIG_MEMORY_HOTPLUG) of the helper
->>>> pfn_to_online_page() which either calls pfn_valid() or pfn_valid_within().
->>>> pfn_valid_within() being 1 when !CONFIG_HOLES_IN_ZONE is irrelevant either
->>>> way. This does not change functionality.
->>>>
->>>> Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
->>>
->>> I would not say this patch fixes the commit 2ce13640b3f4 from 2017,
->>> because the pfn_valid_within() in pfn_to_online_page() was introduced by
->>> a recent commit b13bc35193d9e last month. :)
->>
->> Right, will update the tag with this commit.
+On 2019/03/21 0:25, Petr Mladek wrote:
+>> This requires serialization among threads using "rs". I already
+>> proposed ratelimit_reset() for memcg's OOM problem at
+>> https://lkml.kernel.org/r/201810180246.w9I2koi3011358@www262.sakura.ne.jp
+>> but it was not accepted.
 > 
-> The patch is correct but I wouldn't bother to add Fixes tag at all. The
-> current code is obviously not incorrect. Do you see any actual
-
-Sure.
-
-> performance issue?
+> IMHO, the main problem was that the patch tried to work around
+> the ratelimit API weakness by a custom code.
+> 
+> I believe that using an improved/extended ratelimit API with
+> a sane semantic would be more acceptable.
 > 
 
-No. Just from code inspection. pfn_valid() is anyways expensive on arm64
-because of the memblock search so why to make it redundant as well.
+Michal, are you OK to use ratelimit_reset() in out_of_memory()
+if ratelimit_reset() is accepted?
+
+> 
+>>> It means that it makes sense to enable the related
+>>> ratelimited messages again because they would describe
+>>> another problem.
+>>
+>> ___ratelimit() could also check number of not-yet-flushed
+>> printk() records (e.g. log_next_seq - console_seq <= $some_threshold).
+> 
+> The number is almost useless without more information, for example,
+> how fast the consoles are, how many lines will get filtered
+> by a console_loglevel, if the console_sem owner is sleeping,
+> how many messages are being added by other CPUs.
+> 
+> I believe that we do not really need it. The ratelimit_reset()
+> user should know when the messages can get skipped because
+> they describe the same situation again and again.
+
+If printk() becomes asynchronous (either my "synchronous by default +
+console_writer kernel thread" or John's "asynchronous by default +
+printk kernel thread" is accepted), there will be little delay between
+___ratelimit() and ratelimit_reset() enough to make ratelimit_reset()
+unnecessary. Also, "number of not-yet-flushed printk() records" will
+become meaningful if printk() becomes asynchronous.
+
+But "how fast the consoles" depends on what consoles will be added/removed
+during messages are flushed, "how many lines will get filtered by a
+console_loglevel" depends on whether someone will change it during
+messages are flushed, "how many messages are being added by other CPUs
+during the console_sem owner is sleeping" (or "how many bytes which will
+need to be written to consoles") depends on stress at that moment. None of
+these example information will be reliable for making ___ratelimit() decision.
+
