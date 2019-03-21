@@ -6,508 +6,538 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AFEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7579C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480412075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8DE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfCUNk5 (ORCPT
+        id S1728566AbfCUNlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:40:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36354 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 09:41:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36432 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728465AbfCUNku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:40:50 -0400
+        id S1728465AbfCUNk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:40:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9EAA2AF9A;
-        Thu, 21 Mar 2019 13:40:48 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B01F4AFA7;
+        Thu, 21 Mar 2019 13:40:57 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 4A5EFE00BF; Thu, 21 Mar 2019 14:40:48 +0100 (CET)
-Message-Id: <3fadcd2f6d02306175b14fe7083e76db12403ea0.1553170807.git.mkubecek@suse.cz>
+        id 5BE4EE00BF; Thu, 21 Mar 2019 14:40:57 +0100 (CET)
+Message-Id: <084e52d43a6809a5ef2000c089a00540e8d54e72.1553170807.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
 References: <cover.1553170807.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v4 10/22] ethtool: generic handlers for GET requests
+Subject: [PATCH net-next v4 13/22] ethtool: provide driver/device information
+ in GET_INFO request
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
         John Linville <linville@tuxdriver.com>,
         linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 14:40:48 +0100 (CET)
+Date:   Thu, 21 Mar 2019 14:40:57 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some parts of processing GET type requests and related notifications are
-independent of a command. Provide universal functions so that only four
-callbacks need to be defined for each command type:
+Implement GET_INFO request to get basic driver and device information as
+provided by ETHTOOL_GDRVINFO ioct command. The information is read only so
+that the corresponding SET_INFO message is only used in kernel replies.
 
-  parse_request() - parse incoming message
-  prepare_data()  - retrieve data from driver or NIC
-  reply_size()    - estimate reply message size
-  fill_reply()    - compose reply message
-
-These callback are defined in an instance of struct get_request_ops.
+Move most of ethtool_get_drvinfo() int common.c so that the code can be
+shared by both ioctl and netlink interface.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- net/ethtool/netlink.c | 319 ++++++++++++++++++++++++++++++++++++++++++
- net/ethtool/netlink.h | 111 +++++++++++++++
- 2 files changed, 430 insertions(+)
+ Documentation/networking/ethtool-netlink.txt |  43 ++++-
+ include/uapi/linux/ethtool_netlink.h         |  30 ++++
+ net/ethtool/Makefile                         |   2 +-
+ net/ethtool/common.c                         |  52 ++++++
+ net/ethtool/common.h                         |   2 +
+ net/ethtool/info.c                           | 158 +++++++++++++++++++
+ net/ethtool/ioctl.c                          |  50 +-----
+ net/ethtool/netlink.c                        |   8 +
+ net/ethtool/netlink.h                        |   1 +
+ 9 files changed, 299 insertions(+), 47 deletions(-)
+ create mode 100644 net/ethtool/info.c
 
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 9ab23eaea029..18f300e42d21 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -149,6 +149,325 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
- 	return NULL;
- }
+diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+index 1508c16a236e..cffa508ca6c6 100644
+--- a/Documentation/networking/ethtool-netlink.txt
++++ b/Documentation/networking/ethtool-netlink.txt
+@@ -129,6 +129,8 @@ List of message types
+     ETHNL_CMD_EVENT			notification only
+     ETHNL_CMD_GET_STRSET
+     ETHNL_CMD_SET_STRSET		response only
++    ETHNL_CMD_GET_INFO
++    ETHNL_CMD_SET_INFO			response only
  
-+/* GET request helpers */
+ All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
+ to indicate the type.
+@@ -209,6 +211,45 @@ ETHA_STRSET_COUNTS tells kernel to only return string counts of the sets, not
+ the actual strings.
+ 
+ 
++GET_INFO
++--------
 +
-+const struct get_request_ops *get_requests[__ETHNL_CMD_CNT] = {
++GET_INFO requests information provided by ioctl commands ETHTOOL_GDRVINFO,
++ETHTOOL_GPERMADDR and ETHTOOL_GET_TS_INFO to provide basic device information.
++Common pattern is that all information is read only so that SET_INFO message
++exists but is only used by kernel for replies to GET_INFO requests. There is
++also no corresponding notification.
++
++Request contents:
++
++    ETHA_INFO_DEV		(nested)	device identification
++    ETHA_INFO_INFOMASK		(u32)		info mask
++    ETHA_INFO_COMPACT		(flag)		request compact bitsets
++
++Info mask bits meaning:
++
++    ETH_INFO_IM_DRVINFO			driver info (GDRVINFO)
++    ETH_INFO_IM_PERMADDR		permanent HW address (GPERMADDR)
++    ETH_INFO_IM_TSINFO			timestamping info (GET_TS_INFO)
++
++Kernel response contents:
++
++    ETHA_INFO_DEV		(nested)	device identification
++    ETHA_INFO_DRVINFO		(nested)	driver information
++        ETHA_DRVINFO_DRIVER		(string)	driver name
++        ETHA_DRVINFO_FWVERSION		(string)	firmware version
++        ETHA_DRVINFO_BUSINFO		(string)	device bus address
++        ETHA_DRVINFO_EROM_VER		(string)	expansion ROM version
++
++The meaning of DRVINFO attributes follows the corresponding fields of
++ETHTOOL_GDRVINFO response. Second part with various counts and sizes is
++omitted as these are not really needed (and if they are, they can be easily
++found by different means). Driver version is also omitted as it is rather
++misleading in most cases.
++
++GET_INFO requests allow dumps.
++
++
+ Request translation
+ -------------------
+ 
+@@ -220,7 +261,7 @@ ioctl command			netlink command
+ ---------------------------------------------------------------------
+ ETHTOOL_GSET			n/a
+ ETHTOOL_SSET			n/a
+-ETHTOOL_GDRVINFO		n/a
++ETHTOOL_GDRVINFO		ETHNL_CMD_GET_INFO
+ ETHTOOL_GREGS			n/a
+ ETHTOOL_GWOL			n/a
+ ETHTOOL_SWOL			n/a
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index 66aeb436b822..386d4273ac44 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -16,6 +16,8 @@ enum {
+ 	ETHNL_CMD_EVENT,		/* only for notifications */
+ 	ETHNL_CMD_GET_STRSET,
+ 	ETHNL_CMD_SET_STRSET,		/* only for reply */
++	ETHNL_CMD_GET_INFO,
++	ETHNL_CMD_SET_INFO,		/* only for reply */
+ 
+ 	__ETHNL_CMD_CNT,
+ 	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
+@@ -141,6 +143,34 @@ enum {
+ 	ETHA_STRSET_MAX = (__ETHA_STRSET_CNT - 1)
+ };
+ 
++/* GET_INFO / SET_INFO */
++
++enum {
++	ETHA_INFO_UNSPEC,
++	ETHA_INFO_DEV,				/* nest - ETHA_DEV_* */
++	ETHA_INFO_INFOMASK,			/* u32 */
++	ETHA_INFO_COMPACT,			/* flag */
++	ETHA_INFO_DRVINFO,			/* nest - ETHA_DRVINFO_* */
++
++	__ETHA_INFO_CNT,
++	ETHA_INFO_MAX = (__ETHA_INFO_CNT - 1)
 +};
 +
-+/**
-+ * ethnl_alloc_get_data() - Allocate and initialize data for a GET request
-+ * @ops: instance of struct get_request_ops describing size and layout
-+ *
-+ * This initializes only the first part (req_info), second part (reply_data)
-+ * is initialized before filling the reply data into it (which is done for
-+ * each iteration in dump requests).
-+ *
-+ * Return: pointer to allocated and initialized data, NULL on error
-+ */
-+static struct common_req_info *
-+ethnl_alloc_get_data(const struct get_request_ops *ops)
++#define ETH_INFO_IM_DRVINFO			(1U << 0)
++
++#define ETH_INFO_IM_ALL (ETH_INFO_IM_DRVINFO)
++
++enum {
++	ETHA_DRVINFO_UNSPEC,
++	ETHA_DRVINFO_DRIVER,			/* string */
++	ETHA_DRVINFO_FWVERSION,			/* string */
++	ETHA_DRVINFO_BUSINFO,			/* string */
++	ETHA_DRVINFO_EROM_VER,			/* string */
++
++	__ETHA_DRVINFO_CNT,
++	ETHA_DRVINFO_MAX = (__ETHA_DRVINFO_CNT - 1)
++};
++
+ /* generic netlink info */
+ #define ETHTOOL_GENL_NAME "ethtool"
+ #define ETHTOOL_GENL_VERSION 1
+diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+index 11ceb00821b3..96d41dc45d4f 100644
+--- a/net/ethtool/Makefile
++++ b/net/ethtool/Makefile
+@@ -4,4 +4,4 @@ obj-y				+= ioctl.o common.o
+ 
+ obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+ 
+-ethtool_nl-y	:= netlink.o bitset.o strset.o
++ethtool_nl-y	:= netlink.o bitset.o strset.o info.o
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 73f721a1c557..8da992129321 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+ 
++#include <linux/rtnetlink.h>
++#include <net/devlink.h>
+ #include "common.h"
+ 
+ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
+@@ -81,3 +83,53 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
+ 	[ETHTOOL_ID_UNSPEC]     = "Unspec",
+ 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
+ };
++
++int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
 +{
-+	struct common_req_info *req_info;
++	const struct ethtool_ops *ops = dev->ethtool_ops;
 +
-+	req_info = kmalloc(ops->data_size, GFP_KERNEL);
-+	if (!req_info)
-+		return NULL;
-+
-+	memset(req_info, '\0', ops->repdata_offset);
-+	req_info->reply_data =
-+		(struct common_reply_data *)((char *)req_info +
-+					     ops->repdata_offset);
-+
-+	return req_info;
-+}
-+
-+/**
-+ * ethnl_free_get_data() - free GET request data
-+ * @ops: instance of struct get_request_ops describing the layout
-+ * @req_info: pointer to embedded struct common_req_info (at offset 0)
-+ *
-+ * Calls ->cleanup() handler if defined and frees the data block.
-+ */
-+static void ethnl_free_get_data(const struct get_request_ops *ops,
-+				struct common_req_info *req_info)
-+{
-+	if (ops->cleanup)
-+		ops->cleanup(req_info);
-+	kfree(req_info);
-+}
-+
-+/**
-+ * ethnl_init_reply_data() - Initialize reply data for GET request
-+ * @req_info: pointer to embedded struct common_req_info
-+ * @ops:      instance of struct get_request_ops describing the layout
-+ * @dev:      network device to initialize the reply for
-+ *
-+ * Fills the reply data part with zeros and sets the dev member. Must be called
-+ * before calling the ->fill_reply() callback (for each iteration when handling
-+ * dump requests).
-+ */
-+static void ethnl_init_reply_data(const struct common_req_info *req_info,
-+				  const struct get_request_ops *ops,
-+				  struct net_device *dev)
-+{
-+	memset(req_info->reply_data, '\0',
-+	       ops->data_size - ops->repdata_offset);
-+	req_info->reply_data->dev = dev;
-+}
-+
-+/* generic ->doit() handler for GET type requests */
-+int ethnl_get_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	const u8 cmd = info->genlhdr->cmd;
-+	struct common_req_info *req_info;
-+	const struct get_request_ops *ops;
-+	struct sk_buff *rskb;
-+	void *reply_payload;
-+	int reply_len;
-+	int ret;
-+
-+	ops = get_requests[cmd];
-+	if (WARN_ONCE(!ops, "cmd %u has no get_request_ops\n", cmd))
++	memset(info, 0, sizeof(*info));
++	info->cmd = ETHTOOL_GDRVINFO;
++	if (ops->get_drvinfo) {
++		ops->get_drvinfo(dev, info);
++	} else if (dev->dev.parent && dev->dev.parent->driver) {
++		strlcpy(info->bus_info, dev_name(dev->dev.parent),
++			sizeof(info->bus_info));
++		strlcpy(info->driver, dev->dev.parent->driver->name,
++			sizeof(info->driver));
++	} else {
 +		return -EOPNOTSUPP;
-+	req_info = ethnl_alloc_get_data(ops);
-+	if (!req_info)
-+		return -ENOMEM;
-+	ret = ops->parse_request(req_info, skb, info, info->nlhdr);
-+	if (!ops->allow_nodev_do && !req_info->dev) {
-+		ETHNL_SET_ERRMSG(info, "device not specified in do request");
-+		ret = -EINVAL;
 +	}
-+	if (ret < 0)
-+		goto err_dev;
-+	ethnl_init_reply_data(req_info, ops, req_info->dev);
 +
-+	rtnl_lock();
-+	ret = ops->prepare_data(req_info, info);
-+	if (ret < 0)
-+		goto err_rtnl;
-+	reply_len = ops->reply_size(req_info);
-+	if (ret < 0)
-+		goto err_rtnl;
-+	ret = -ENOMEM;
-+	rskb = ethnl_reply_init(reply_len, req_info->dev, ops->reply_cmd,
-+				ops->dev_attrtype, info, &reply_payload);
-+	if (!rskb)
-+		goto err_rtnl;
-+	ret = ops->fill_reply(rskb, req_info);
-+	if (ret < 0)
-+		goto err;
-+	rtnl_unlock();
++	/* this method of obtaining string set info is deprecated;
++	 * Use ETHTOOL_GSSET_INFO instead.
++	 */
++	if (ops->get_sset_count) {
++		int rc;
 +
-+	genlmsg_end(rskb, reply_payload);
-+	if (req_info->dev)
-+		dev_put(req_info->dev);
-+	ethnl_free_get_data(ops, req_info);
-+	return genlmsg_reply(rskb, info);
++		rc = ops->get_sset_count(dev, ETH_SS_TEST);
++		if (rc >= 0)
++			info->testinfo_len = rc;
++		rc = ops->get_sset_count(dev, ETH_SS_STATS);
++		if (rc >= 0)
++			info->n_stats = rc;
++		rc = ops->get_sset_count(dev, ETH_SS_PRIV_FLAGS);
++		if (rc >= 0)
++			info->n_priv_flags = rc;
++	}
++	if (ops->get_regs_len) {
++		int ret = ops->get_regs_len(dev);
 +
-+err:
-+	WARN_ONCE(ret == -EMSGSIZE,
-+		  "calculated message payload length (%d) not sufficient\n",
-+		  reply_len);
-+	nlmsg_free(rskb);
-+	ethnl_free_get_data(ops, req_info);
-+err_rtnl:
-+	rtnl_unlock();
-+err_dev:
-+	if (req_info->dev)
-+		dev_put(req_info->dev);
-+	return ret;
++		if (ret > 0)
++			info->regdump_len = ret;
++	}
++
++	if (ops->get_eeprom_len)
++		info->eedump_len = ops->get_eeprom_len(dev);
++
++	if (!info->fw_version[0])
++		devlink_compat_running_version(dev, info->fw_version,
++					       sizeof(info->fw_version));
++
++	return 0;
 +}
+diff --git a/net/ethtool/common.h b/net/ethtool/common.h
+index 41b2efc1e4e1..e87e58b3a274 100644
+--- a/net/ethtool/common.h
++++ b/net/ethtool/common.h
+@@ -3,6 +3,7 @@
+ #ifndef _ETHTOOL_COMMON_H
+ #define _ETHTOOL_COMMON_H
+ 
++#include <linux/netdevice.h>
+ #include <linux/ethtool.h>
+ 
+ extern const char
+@@ -14,4 +15,5 @@ tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN];
+ extern const char
+ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
+ 
++int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info);
+ #endif /* _ETHTOOL_COMMON_H */
+diff --git a/net/ethtool/info.c b/net/ethtool/info.c
+new file mode 100644
+index 000000000000..cc42993bb05b
+--- /dev/null
++++ b/net/ethtool/info.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
 +
-+static int ethnl_get_dump_one(struct sk_buff *skb,
-+			      struct net_device *dev,
-+			      const struct get_request_ops *ops,
-+			      struct common_req_info *req_info)
++#include "netlink.h"
++#include "common.h"
++#include "bitset.h"
++
++struct info_data {
++	struct common_req_info		reqinfo_base;
++
++	/* everything below here will be reset for each device in dumps */
++	struct common_reply_data	repdata_base;
++	struct ethtool_drvinfo		drvinfo;
++};
++
++static const struct nla_policy get_info_policy[ETHA_INFO_MAX + 1] = {
++	[ETHA_INFO_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_INFO_DEV]			= { .type = NLA_NESTED },
++	[ETHA_INFO_INFOMASK]		= { .type = NLA_U32 },
++	[ETHA_INFO_COMPACT]		= { .type = NLA_FLAG },
++	[ETHA_INFO_DRVINFO]		= { .type = NLA_REJECT },
++};
++
++/* parse_request() handler */
++static int parse_info(struct common_req_info *req_info, struct sk_buff *skb,
++		      struct genl_info *info, const struct nlmsghdr *nlhdr)
 +{
++	struct nlattr *tb[ETHA_INFO_MAX + 1];
 +	int ret;
 +
-+	ethnl_init_reply_data(req_info, ops, dev);
-+	rtnl_lock();
-+	ret = ops->prepare_data(req_info, NULL);
++	ret = ethnlmsg_parse(nlhdr, tb, ETHA_INFO_MAX, get_info_policy, info);
 +	if (ret < 0)
 +		return ret;
-+	ret = ethnl_fill_dev(skb, dev, ops->dev_attrtype);
-+	if (ret < 0)
-+		return ret;
-+	ret = ops->fill_reply(skb, req_info);
-+	rtnl_unlock();
 +
-+	req_info->reply_data->dev = NULL;
-+	return ret;
-+}
-+
-+/* generic ->dumpit() handler for GET requests; device iteration copied from
-+ * rtnl_dump_ifinfo()
-+ * cb->args[0]: pointer to struct get_request_ops
-+ * cb->args[1]: pointer to request data
-+ * cb->args[2]: iteration position - hashbucket
-+ * cb->args[3]: iteration position - ifindex
-+ */
-+int ethnl_get_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
-+{
-+	struct net *net = sock_net(skb->sk);
-+	struct common_req_info *req_info;
-+	const struct get_request_ops *ops;
-+	int h, s_h, idx = 0, s_idx;
-+	struct hlist_head *head;
-+	struct net_device *dev;
-+	int ret = 0;
-+	void *ehdr;
-+
-+	ops = (const struct get_request_ops *)cb->args[0];
-+	req_info = (struct common_req_info *)cb->args[1];
-+	s_h = cb->args[2];
-+	s_idx = cb->args[3];
-+
-+	for (h = s_h; h < NETDEV_HASHENTRIES; h++, s_idx = 0) {
-+		idx = 0;
-+		head = &net->dev_index_head[h];
-+		hlist_for_each_entry(dev, head, index_hlist) {
-+			if (idx < s_idx)
-+				goto cont;
-+			ehdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
-+					   cb->nlh->nlmsg_seq,
-+					   &ethtool_genl_family, 0,
-+					   ops->reply_cmd);
-+			ret = ethnl_get_dump_one(skb, dev, ops, req_info);
-+			if (ret < 0) {
-+				genlmsg_cancel(skb, ehdr);
-+				if (ret == -EOPNOTSUPP)
-+					goto cont;
-+				if (likely(skb->len))
-+					goto out;
-+				goto out_err;
-+			}
-+			genlmsg_end(skb, ehdr);
-+cont:
-+			idx++;
++	if (tb[ETHA_INFO_DEV]) {
++		req_info->dev = ethnl_dev_get(info, tb[ETHA_INFO_DEV]);
++		if (IS_ERR(req_info->dev)) {
++			ret = PTR_ERR(req_info->dev);
++			req_info->dev = NULL;
++			return ret;
 +		}
 +	}
-+out:
-+	ret = skb->len;
-+out_err:
-+	cb->args[2] = h;
-+	cb->args[3] = idx;
-+	cb->seq = net->dev_base_seq;
-+	nl_dump_check_consistent(cb, nlmsg_hdr(skb));
++	if (tb[ETHA_INFO_INFOMASK])
++		req_info->req_mask = nla_get_u32(tb[ETHA_INFO_INFOMASK]);
++	if (tb[ETHA_INFO_COMPACT])
++		req_info->compact = true;
++	if (req_info->req_mask == 0)
++		req_info->req_mask = ETH_INFO_IM_ALL;
 +
++	return 0;
++}
++
++/* prepare_data() handler */
++static int prepare_info(struct common_req_info *req_info,
++			struct genl_info *info)
++{
++	struct info_data *data =
++		container_of(req_info, struct info_data, reqinfo_base);
++	struct net_device *dev = data->repdata_base.dev;
++	u32 req_mask = req_info->req_mask & ETH_INFO_IM_ALL;
++	int ret;
++
++	ret = ethnl_before_ops(dev);
++	if (ret < 0)
++		return ret;
++	if (req_mask & ETH_INFO_IM_DRVINFO) {
++		ret = __ethtool_get_drvinfo(dev, &data->drvinfo);
++		if (ret < 0)
++			req_mask &= ~ETH_INFO_IM_DRVINFO;
++	}
++	ethnl_after_ops(dev);
++
++	data->repdata_base.info_mask = req_mask;
++	if (req_info->req_mask & ~req_mask)
++		warn_partial_info(info);
++	return 0;
++}
++
++static int drvinfo_size(const struct ethtool_drvinfo *drvinfo)
++{
++	int len = 0;
++
++	len += ethnl_str_ifne_size(drvinfo->driver);
++	len += ethnl_str_ifne_size(drvinfo->fw_version);
++	len += ethnl_str_ifne_size(drvinfo->bus_info);
++	len += ethnl_str_ifne_size(drvinfo->erom_version);
++
++	return nla_total_size(len);
++}
++
++/* reply_size() handler */
++static int info_size(const struct common_req_info *req_info)
++{
++	const struct info_data *data =
++		container_of(req_info, struct info_data, reqinfo_base);
++	u32 info_mask = data->repdata_base.info_mask;
++	int len = 0;
++
++	len += dev_ident_size();
++	if (info_mask & ETH_INFO_IM_DRVINFO)
++		len += drvinfo_size(&data->drvinfo);
++
++	return len;
++}
++
++static int fill_drvinfo(struct sk_buff *skb,
++			const struct ethtool_drvinfo *drvinfo)
++{
++	struct nlattr *nest = ethnl_nest_start(skb, ETHA_INFO_DRVINFO);
++	int ret;
++
++	if (!nest)
++		return -EMSGSIZE;
++	ret = -EMSGSIZE;
++	if (ethnl_put_str_ifne(skb, ETHA_DRVINFO_DRIVER, drvinfo->driver) ||
++	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_FWVERSION,
++			       drvinfo->fw_version) ||
++	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_BUSINFO, drvinfo->bus_info) ||
++	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_EROM_VER,
++			       drvinfo->erom_version))
++		goto err;
++
++	nla_nest_end(skb, nest);
++	return 0;
++err:
++	nla_nest_cancel(skb, nest);
 +	return ret;
 +}
 +
-+/* generic ->start() handler for GET requests */
-+static int ethnl_get_start(struct netlink_callback *cb)
++/* fill_reply() handler */
++static int fill_info(struct sk_buff *skb,
++		     const struct common_req_info *req_info)
 +{
-+	struct common_req_info *req_info;
-+	const struct get_request_ops *ops;
-+	struct genlmsghdr *ghdr;
++	const struct info_data *data =
++		container_of(req_info, struct info_data, reqinfo_base);
++	u32 info_mask = data->repdata_base.info_mask;
 +	int ret;
 +
-+	ghdr = nlmsg_data(cb->nlh);
-+	ops = get_requests[ghdr->cmd];
-+	if (WARN_ONCE(!ops, "cmd %u has no get_request_ops\n", ghdr->cmd))
-+		return -EOPNOTSUPP;
-+	req_info = ethnl_alloc_get_data(ops);
-+	if (!req_info)
-+		return -ENOMEM;
-+
-+	ret = ops->parse_request(req_info, cb->skb, NULL, cb->nlh);
-+	if (req_info->dev) {
-+		/* We ignore device specification in dump requests but as the
-+		 * same parser as for non-dump (doit) requests is used, it
-+		 * would take reference to the device if it finds one
-+		 */
-+		dev_put(req_info->dev);
-+		req_info->dev = NULL;
++	if (info_mask & ETH_INFO_IM_DRVINFO) {
++		ret = fill_drvinfo(skb, &data->drvinfo);
++		if (ret < 0)
++			return ret;
 +	}
-+	if (ret < 0)
-+		return ret;
-+
-+	cb->args[0] = (long)ops;
-+	cb->args[1] = (long)req_info;
-+	cb->args[2] = 0;
-+	cb->args[3] = 0;
 +
 +	return 0;
 +}
 +
-+/* generic ->done() handler for GET requests */
-+static int ethnl_get_done(struct netlink_callback *cb)
-+{
-+	ethnl_free_get_data((const struct get_request_ops *)cb->args[0],
-+			    (struct common_req_info *)cb->args[1]);
++const struct get_request_ops info_request_ops = {
++	.request_cmd		= ETHNL_CMD_GET_INFO,
++	.reply_cmd		= ETHNL_CMD_SET_INFO,
++	.dev_attrtype		= ETHA_INFO_DEV,
++	.data_size		= sizeof(struct info_data),
++	.repdata_offset		= offsetof(struct info_data, repdata_base),
 +
-+	return 0;
-+}
-+
-+/* generic notification handler */
-+static void ethnl_std_notify(struct net_device *dev,
-+			     struct netlink_ext_ack *extack, unsigned int cmd,
-+			     u32 req_mask, const void *data)
-+{
-+	struct common_req_info *req_info;
-+	const struct get_request_ops *ops;
-+	struct sk_buff *skb;
-+	void *reply_payload;
-+	int reply_len;
-+	int ret;
-+
-+	ops = get_requests[cmd - 1];
-+	if (WARN_ONCE(!ops, "cmd %u has no get_request_ops\n", cmd - 1))
-+		return;
-+	/* when ethnl_std_notify() is used as notify handler, command id of
-+	 * corresponding GET request must be one less than cmd argument passed
-+	 * to ethnl_std_notify()
-+	 */
-+	if (WARN_ONCE(ops->reply_cmd != cmd,
-+		      "reply_cmd for %u is %u, expected %u\n", cmd - 1,
-+		      ops->reply_cmd, cmd))
-+		return;
-+
-+	req_info = ethnl_alloc_get_data(ops);
-+	if (!req_info)
-+		return;
-+	req_info->dev = dev;
-+	req_info->req_mask = req_mask;
-+	req_info->compact = true;
-+
-+	ethnl_init_reply_data(req_info, ops, dev);
-+	ret = ops->prepare_data(req_info, NULL);
-+	if (ret < 0)
-+		goto err_data;
-+	reply_len = ops->reply_size(req_info);
-+	if (reply_len < 0)
-+		goto err_data;
-+	skb = genlmsg_new(reply_len, GFP_KERNEL);
-+	if (!skb)
-+		goto err_data;
-+	reply_payload = genlmsg_put(skb, 0, ++ethnl_bcast_seq,
-+				    &ethtool_genl_family, 0, ops->reply_cmd);
-+	if (!reply_payload)
-+		goto err_skb;
-+
-+	ret = ethnl_fill_dev(skb, dev, ops->dev_attrtype);
-+	if (ret < 0)
-+		goto err_skb;
-+	ret = ops->fill_reply(skb, req_info);
-+	if (ret < 0)
-+		goto err_skb;
-+	ethnl_free_get_data(ops, req_info);
-+	genlmsg_end(skb, reply_payload);
-+
-+	genlmsg_multicast(&ethtool_genl_family, skb, 0, ETHNL_MCGRP_MONITOR,
-+			  GFP_KERNEL);
-+	return;
-+
-+err_skb:
-+	nlmsg_free(skb);
-+err_data:
-+	ethnl_free_get_data(ops, req_info);
-+}
-+
- /* notifications */
++	.parse_request		= parse_info,
++	.prepare_data		= prepare_info,
++	.reply_size		= info_size,
++	.fill_reply		= fill_info,
++};
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 04d747056070..844a4f4b1552 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -685,54 +685,14 @@ static noinline_for_stack int ethtool_get_drvinfo(struct net_device *dev,
+ 						  void __user *useraddr)
+ {
+ 	struct ethtool_drvinfo info;
+-	const struct ethtool_ops *ops = dev->ethtool_ops;
+-
+-	memset(&info, 0, sizeof(info));
+-	info.cmd = ETHTOOL_GDRVINFO;
+-	if (ops->get_drvinfo) {
+-		ops->get_drvinfo(dev, &info);
+-	} else if (dev->dev.parent && dev->dev.parent->driver) {
+-		strlcpy(info.bus_info, dev_name(dev->dev.parent),
+-			sizeof(info.bus_info));
+-		strlcpy(info.driver, dev->dev.parent->driver->name,
+-			sizeof(info.driver));
+-	} else {
+-		return -EOPNOTSUPP;
+-	}
+-
+-	/*
+-	 * this method of obtaining string set info is deprecated;
+-	 * Use ETHTOOL_GSSET_INFO instead.
+-	 */
+-	if (ops->get_sset_count) {
+-		int rc;
+-
+-		rc = ops->get_sset_count(dev, ETH_SS_TEST);
+-		if (rc >= 0)
+-			info.testinfo_len = rc;
+-		rc = ops->get_sset_count(dev, ETH_SS_STATS);
+-		if (rc >= 0)
+-			info.n_stats = rc;
+-		rc = ops->get_sset_count(dev, ETH_SS_PRIV_FLAGS);
+-		if (rc >= 0)
+-			info.n_priv_flags = rc;
+-	}
+-	if (ops->get_regs_len) {
+-		int ret = ops->get_regs_len(dev);
+-
+-		if (ret > 0)
+-			info.regdump_len = ret;
+-	}
+-
+-	if (ops->get_eeprom_len)
+-		info.eedump_len = ops->get_eeprom_len(dev);
+-
+-	if (!info.fw_version[0])
+-		devlink_compat_running_version(dev, info.fw_version,
+-					       sizeof(info.fw_version));
++	int rc;
  
- typedef void (*ethnl_notify_handler_t)(struct net_device *dev,
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 5f2299548915..625f912144b1 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -164,4 +164,115 @@ static inline unsigned int dev_ident_size(void)
- 			      nla_total_size(IFNAMSIZ));
++	rc = __ethtool_get_drvinfo(dev, &info);
++	if (rc < 0)
++		return rc;
+ 	if (copy_to_user(useraddr, &info, sizeof(info)))
+ 		return -EFAULT;
++
+ 	return 0;
  }
  
-+/* GET request handling */
-+
-+struct common_reply_data;
-+
-+/* The structure holding data for unified processing a GET request consists of
-+ * two parts: request info and reply data. Request info starts at offset 0 with
-+ * embedded struct common_req_info, is usually filled by ->parse_request() and
-+ * is common for all reply messages to one request. Reply data start with
-+ * embedded struct common_reply_data and contain data specific to a reply
-+ * message (usually one per device for dump requests); this part is filled by
-+ * ->prepare_data()
-+ */
-+
-+/**
-+ * struct common_req_info - base type of request information for GET requests
-+ * @reply_data: pointer to reply data within the same block
-+ * @dev:        network device the request is for (may be null)
-+ * @req_mask:   request mask, bitmap of requested information
-+ * @compact:    true if compact format of bitsets in reply is requested
-+ *
-+ * This is a common base, additional members may follow after this structure.
-+ */
-+struct common_req_info {
-+	struct common_reply_data	*reply_data;
-+	struct net_device		*dev;
-+	u32				req_mask;
-+	bool				compact;
-+};
-+
-+/**
-+ * struct common_reply_data - base type of reply data for GET requests
-+ * @dev:       device for current reply message; in single shot requests it is
-+ *             equal to &common_req_info.dev; in dumps it's different for each
-+ *             reply message
-+ * @info_mask: bitmap of information actually provided in reply; it is a subset
-+ *             of &common_req_info.req_mask with cleared bits corresponding to
-+ *             information which cannot be provided
-+ *
-+ * This structure is usually followed by additional members filled by
-+ * ->prepare_data() and used by ->cleanup().
-+ */
-+struct common_reply_data {
-+	struct net_device		*dev;
-+	u32				info_mask;
-+};
-+
-+static inline int ethnl_before_ops(struct net_device *dev)
-+{
-+	if (dev && dev->ethtool_ops->begin)
-+		return dev->ethtool_ops->begin(dev);
-+	else
-+		return 0;
-+}
-+
-+static inline void ethnl_after_ops(struct net_device *dev)
-+{
-+	if (dev && dev->ethtool_ops->complete)
-+		dev->ethtool_ops->complete(dev);
-+}
-+
-+/**
-+ * struct get_request_ops - unified handling of GET requests
-+ * @request_cmd:    command id for request (GET)
-+ * @reply_cmd:      command id for reply (SET)
-+ * @dev_attr:       attribute type for device specification
-+ * @data_size:      total length of data structure
-+ * @repdata_offset: offset of "reply data" part (struct common_reply_data)
-+ * @allow_nodev_do: do not fail if device is not specified for non-dump request
-+ * @parse_request:
-+ *	parse request message and fill request info; request info is zero
-+ *	initialized on entry except reply_data pointer (which is initialized)
-+ * @prepare_data:
-+ *	retrieve data needed to compose a reply message; reply data are zero
-+ *	initialized on entry except for @dev
-+ * @reply_size:
-+ *	return size of reply message payload without device specification;
-+ *	returned size may be bigger than actual reply size but it must suffice
-+ *	to hold the reply
-+ * @fill_reply:
-+ *	fill reply message payload using the data prepared by @prepare_data()
-+ * @cleanup
-+ *	(optional) called when data are no longer needed; use e.g. to free
-+ *	any additional data structures allocated in prepare_data() which are
-+ *	not part of the main structure
-+ *
-+ * Description of variable parts of GET request handling when using the unified
-+ * infrastructure. When used, a pointer to an instance of this structure is to
-+ * be added to &get_requests array, generic handlers ethnl_get_doit(),
-+ * ethnl_get_dumpit(), ethnl_get_start() and ethnl_get_done() used in
-+ * @ethnl_genl_ops and (optionally) ethnl_std_notify() as notification handler
-+ * in &ethnl_notify_handlers.
-+ */
-+struct get_request_ops {
-+	u8			request_cmd;
-+	u8			reply_cmd;
-+	u16			dev_attrtype;
-+	unsigned int		data_size;
-+	unsigned int		repdata_offset;
-+	bool			allow_nodev_do;
-+
-+	int (*parse_request)(struct common_req_info *req_info,
-+			     struct sk_buff *skb, struct genl_info *info,
-+			     const struct nlmsghdr *nlhdr);
-+	int (*prepare_data)(struct common_req_info *req_info,
-+			    struct genl_info *info);
-+	int (*reply_size)(const struct common_req_info *req_info);
-+	int (*fill_reply)(struct sk_buff *skb,
-+			  const struct common_req_info *req_info);
-+	void (*cleanup)(struct common_req_info *req_info);
-+};
-+
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 3559f5c7040f..ab30f77eda25 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -153,6 +153,7 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+ 
+ const struct get_request_ops *get_requests[__ETHNL_CMD_CNT] = {
+ 	[ETHNL_CMD_GET_STRSET]		= &strset_request_ops,
++	[ETHNL_CMD_GET_INFO]		= &info_request_ops,
+ };
+ 
+ /**
+@@ -564,6 +565,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.dumpit	= ethnl_get_dumpit,
+ 		.done	= ethnl_get_done,
+ 	},
++	{
++		.cmd	= ETHNL_CMD_GET_INFO,
++		.doit	= ethnl_get_doit,
++		.start	= ethnl_get_start,
++		.dumpit	= ethnl_get_dumpit,
++		.done	= ethnl_get_done,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 32d85bb5c49a..48980ae9e963 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -278,5 +278,6 @@ struct get_request_ops {
+ /* request handlers */
+ 
+ extern const struct get_request_ops strset_request_ops;
++extern const struct get_request_ops info_request_ops;
+ 
  #endif /* _NET_ETHTOOL_NETLINK_H */
 -- 
 2.21.0
