@@ -2,98 +2,146 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBBDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C02CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B045A20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0767E20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RM4oJsPf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="DzI0Q/f9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfCUPvA (ORCPT
+        id S1728316AbfCUPxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:51:00 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41012 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfCUPu7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:50:59 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 10so4947692lfr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 08:50:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H3wXLHVzDXPFkBZMI0BuFAmdtmlad1VCrH/M8cy5MXk=;
-        b=RM4oJsPfY8JVYAUVzfBFIKEMPBxV6lpmzzNaKvt6DTdcQDw5ea8nkXaaaN9wN8ttUD
-         OzZzvSvARN1SFt97evqiR2zOTkaqVTIWj0D6vcVv6S5fnNg4ThiW4O2tas01BKPxn9fD
-         BTE2God/3t0g/t08to34bf0pP1CeeRMaJUunaPq3f6Iy89Opy2HsSqznEojo3jBuI3Pr
-         RNIVrUKNcgPLfWHdoYKr0kDHQBYCbGvvgHLBxDMwQv41YwzOHgOFDMFpdK8xYaZPi7w3
-         UvyHLGiNgQymnJaRfX885meObdMFyOid3EeEWnrtG9n8ocSiWM81dZoD5jKHE1/d071r
-         kSUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H3wXLHVzDXPFkBZMI0BuFAmdtmlad1VCrH/M8cy5MXk=;
-        b=Y6eg/7Lr5ZSapuvXT9fxXGz4tnjFXJ5CybKpT77wN1MzS4kFNt474Jfxom2wWPE85y
-         CkGCfbpWsqf90UaXDRmryFTD2mippnDT0k0cnF/wAS9GJkuBB7sqc2T6vzKy8zIyyJXe
-         8cbtjiuDCGmObQYS9IgemnCjaAwj+HAgVlVKH5K+jke/luRwmTdRDVJKXLIK1BOrEDEd
-         SoSoZUxz5uiajpYxBvCj7L6CIN5+jLq1EfH6b3OvkSRjSZKhO6qrQ9f6c7c9bI/cLtE9
-         B/1C4iJBCxK/rjRDDSopAe7WrID8w4FhCIB0/Dj2M2rk64C++SAOT0l7dG66z0UUvc7V
-         Rlmg==
-X-Gm-Message-State: APjAAAW/fgmOJ/tyFH08uljOulm/aJuTR86vHnfLfV8AU8MeKJW3HHXA
-        q7Ky38SNi55MJVK2FIjfuGbWKQ==
-X-Google-Smtp-Source: APXvYqyYbEbt9+AtrcSCrfv94hDg8xArgkLMl6VsifQ+pulf+zGZfwiYII5P4MBbP+MkUwl8wGzgRA==
-X-Received: by 2002:a19:7114:: with SMTP id m20mr2427066lfc.63.1553183457474;
-        Thu, 21 Mar 2019 08:50:57 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id t81sm1016925lff.21.2019.03.21.08.50.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 21 Mar 2019 08:50:56 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     rjw@rjwysocki.net
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH] MAINTAINERS: Add mailing list for the interconnect API
-Date:   Thu, 21 Mar 2019 17:50:50 +0200
-Message-Id: <20190321155050.25847-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 21 Mar 2019 11:53:50 -0400
+Received: from vern.gendns.com ([98.142.107.122]:44596 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727823AbfCUPxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:53:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PgWrMWU0RRiBsGu0cX9gUDcVNQcbF1DUiXQ85bYPYC0=; b=DzI0Q/f9PzoKDV7kbNHYadeBbS
+        holMHrinyvqtsaPM1mOwqbpoTC5AZawbvZ1JYU+UDH6oCEo0oCwe2Tp1z9ViVG61CtR8F2Hy3idXS
+        XE9bjz0E6bBWymJKF7R4IFIZZVwHGwcEfdeseBH/5S9sk6hkWjeXYxPU0Rp8fxZaU104zpkR0Pgb5
+        8KRJdvCMljdzOaEFKbDaJbjPWaTnnarr5DT/iPtuuzsWTIak9JPd/3aZg+QVAtqyOe/entXajN9Cv
+        Lg5GaMNRjzTASD8E3Cwvtkvp7f/5AOtLY6sEAvaFXT/sMixEPqbcPIN+vZsE82fSZjAn1mmLXYyIj
+        /J3nZPCg==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:33636 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <david@lechnology.com>)
+        id 1h6zzS-0000lH-UP; Thu, 21 Mar 2019 11:52:23 -0400
+Subject: Re: [PATCH 3/4] ARM: dts: da850-evm: enable cpufreq
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Adam Ford <adam.ford@logicpd.com>
+References: <20190321141010.19612-1-brgl@bgdev.pl>
+ <20190321141010.19612-4-brgl@bgdev.pl>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <06c6fe16-eb33-960c-909a-635e70c3b976@lechnology.com>
+Date:   Thu, 21 Mar 2019 10:53:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190321141010.19612-4-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a mailing list for patch reviews and discussions related to tuning
-the on-chip interconnects. For now i am not expecting a lot of traffic,
-so let's use the linux-pm@ list.
+On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Enable cpufreq-dt support for da850-evm. The cvdd regulator is fixed
+> at 1.2V on this board so disable the lower operating points and enable
+> the 375MHz opp.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
 
-Hi Rafael,
-Please ack the patch if you don't mind this.
-Thanks!
+The board-da850-evm.c file seems to indicate that this regulator is
+variable and comes from the tps65070. This regulator seems to be missing
+from the device tree though, even though it has device tree bindings.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Cc: Adam Ford
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b548..186439e7f846 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8046,6 +8046,7 @@ F:	drivers/gpio/gpio-intel-mid.c
- 
- INTERCONNECT API
- M:	Georgi Djakov <georgi.djakov@linaro.org>
-+L:	linux-pm@vger.kernel.org
- S:	Maintained
- F:	Documentation/interconnect/
- F:	Documentation/devicetree/bindings/interconnect/
+
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++++
+>   1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index f04bc3e15332..f63867692da4 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -151,6 +151,15 @@
+>   			system-clock-frequency = <24576000>;
+>   		};
+>   	};
+> +
+> +	cvdd: regulator0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "cvdd";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+>   };
+>   
+>   &ecap2 {
+> @@ -191,6 +200,27 @@
+>   	};
+>   };
+>   
+> +&cpu {
+> +	cpu-supply = <&cvdd>;
+> +};
+> +
+> +/*
+> + * DA850-EVM has a fixed CVDD of 1.2V - we cannot go below 300MHz or
+> + * above 375MHz.
+> + */
+> +
+> +&opp_100 {
+> +	status = "disabled";
+> +};
+> +
+> +&opp_200 {
+> +	status = "disabled";
+> +};
+> +
+> +&opp_375 {
+> +	status = "okay";
+> +};
+> +
+>   &sata {
+>   	status = "okay";
+>   };
+> 
+
