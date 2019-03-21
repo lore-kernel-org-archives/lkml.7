@@ -2,125 +2,99 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46E2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA79C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A879F218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jv1rNva0"
+	by mail.kernel.org (Postfix) with ESMTP id EDF1E218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfCUKAp (ORCPT
+        id S1728350AbfCUKAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:00:45 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39232 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbfCUKAk (ORCPT
+        Thu, 21 Mar 2019 06:00:48 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:41844 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728325AbfCUKAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:00:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LA0Omj006882;
-        Thu, 21 Mar 2019 05:00:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553162424;
-        bh=S0Rk5/1Z0zRlMch9nII8wu6ist2jo/kfY+1bHZOv1OM=;
-        h=From:To:CC:Subject:Date;
-        b=jv1rNva0ashr7xk3/pzyiPJY9ub6+HmI+lrRM1si7LjeMzvu6xShIyAvNx5n8rg+y
-         u8ns9j1qUeZoPAUPD9tjqdOo8T3XsHH+kGHsh+W56lEfPsfDWZCbBKqS+PabBjjJTr
-         6NpxHZR9GImHRstVp3Nr2oCaWzDM8idXidPYjUJo=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LA0OMT068964
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 05:00:24 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 05:00:23 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 05:00:23 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LA0KO6014903;
-        Thu, 21 Mar 2019 05:00:20 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 0/8] PCI: DWC/Keystone: MSI configuration cleanup
-Date:   Thu, 21 Mar 2019 15:29:19 +0530
-Message-ID: <20190321095927.7058-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 Mar 2019 06:00:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=xuyu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TNGmqso_1553162437;
+Received: from localhost(mailfrom:xuyu@linux.alibaba.com fp:SMTPD_---0TNGmqso_1553162437)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 21 Mar 2019 18:00:43 +0800
+From:   Xu Yu <xuyu@linux.alibaba.com>
+To:     daniel@iogearbox.net, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] bpf: do not restore dst_reg when cur_state is freed
+Date:   Thu, 21 Mar 2019 18:00:35 +0800
+Message-Id: <ae7834dda12cb2a88dd8471132d6274a7d1ec5f0.1553161998.git.xuyu@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
+References: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series tries to address the comments discussed in [1] w.r.t
-removing Keystone specific callbacks defined in dw_pcie_host_ops.
+Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
+Call trace:
+  dump_stack+0xbf/0x12e
+  print_address_description+0x6a/0x280
+  kasan_report+0x237/0x360
+  sanitize_ptr_alu+0x85a/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Fault injection trace:
+  kfree+0xea/0x290
+  free_func_state+0x4a/0x60
+  free_verifier_state+0x61/0xe0
+  push_stack+0x216/0x2f0	          <- inject failslab
+  sanitize_ptr_alu+0x2b1/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This series also tries to cleanup the Keystone interrupt handling
-part.
+When kzalloc() fails in push_stack(), free_verifier_state() will free
+current verifier state. As push_stack() returns, dst_reg was restored
+if ptr_is_dst_reg is false. However, as member of the cur_state, dst_reg
+is also freed, and error occurs when dereferencing dst_reg.
 
-Changes from v4:
-*) Removed legacy interrupt cleanup patch which uses hierarchy IRQ
-   domain since TI platform uses edge interrupt for legacy interrupt.
-   This will be deferred till I get more details from HW team.
+Simply fix it by testing ret of push_stack() before retoring dst_reg.
 
-Changes from v3:
-*) Uses hierarchy IRQ domain for legacy interrupts since there is 1:1
-   mapping between legacy interrupt and GIC IRQ.
-   (MSI still depends on the order of IRQs populated in dt).
+Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
+---
+ kernel/bpf/verifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes from v2:
-*) Removed patch that modifies ks_pcie_legacy_irq_handler() to check the
-   IRQ_STATUS of INTA/B/C/D. Lorenzo's comment to create a matrix
-   LinuxIRQ x INTx will be added in AM654x PCIe support series
-*) ks_pcie_legacy_irq_handler() is made to use hwirq to get IRQ offset
-   instead of virq.
-*) default msi_irq_chip is assigned in dw_pcie_host_init() once keystone
-   assigns its msi_irq_chip
-*) Fixed other minor comments from Lorenzo and Bjorn
-
-Changes from v1:
-*) Removed "PCI: keystone: Use "dummy_irq_chip" instead of new irqchip
-for legacy interrupt handling" from the patch series. It should be
-handled differently.
-
-*) Added Gustavo's ACKed by and fixed a commit message.
-
-[1] -> https://patchwork.kernel.org/patch/10681587/
-
-Kishon Vijay Abraham I (8):
-  PCI: keystone: Cleanup interrupt related macros
-  PCI: keystone: Add separate functions for configuring MSI and legacy
-    interrupt
-  PCI: keystone: Use hwirq to get the MSI IRQ number offset
-  PCI: keystone: Cleanup ks_pcie_msi_irq_handler
-  PCI: dwc: Add support to use non default msi_irq_chip
-  PCI: keystone: Use Keystone specific msi_irq_chip
-  PCI: dwc: Remove Keystone specific dw_pcie_host_ops
-  PCI: dwc: Do not write to MSI control registers if the platform
-    doesn't use it
-
- drivers/pci/controller/dwc/pci-keystone.c     | 365 ++++++++++--------
- .../pci/controller/dwc/pcie-designware-host.c |  78 ++--
- drivers/pci/controller/dwc/pcie-designware.h  |   6 +-
- 3 files changed, 233 insertions(+), 216 deletions(-)
-
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index ce166a0..cb1b874 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -3368,7 +3368,7 @@ static int sanitize_ptr_alu(struct bpf_verifier_env *env,
+ 		*dst_reg = *ptr_reg;
+ 	}
+ 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
+-	if (!ptr_is_dst_reg)
++	if (!ptr_is_dst_reg && ret)
+ 		*dst_reg = tmp;
+ 	return !ret ? -EFAULT : 0;
+ }
 -- 
-2.17.1
+1.8.3.1
 
