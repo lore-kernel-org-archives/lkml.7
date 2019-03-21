@@ -2,144 +2,178 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFC9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E57C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53CD218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B62A218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="saVgs75x"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wQdB5/Dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfCUUQN (ORCPT
+        id S1728833AbfCUUQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:16:13 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38647 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfCUUQN (ORCPT
+        Thu, 21 Mar 2019 16:16:47 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35074 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728138AbfCUUQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:16:13 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g1so12911642qki.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=TZutz0HSRXq5ErCpqJa4uDbIJRNEZqu0EunDY52N++0=;
-        b=saVgs75xs/p55sqZXVUuu7J1pH8F37lUPJYRLpSnRXLoZZGh8O5tzqyTyXFxsmRads
-         FG+qTs3P3DN9iyeUbqazqfZ5LXmB7aftSgnvaaFuUYUc9ay1IFMLpLu3fh9BklqWDn53
-         TPs4RSsAqLHZVIjHDg+9rm8pqlMgUqGMEjrYmKcq3HC7dZpMCGi2UpEuDbDWZP+evWhC
-         qF+5xFYYNT/JvEkoxRzX/bVfSF/UeT2fbN1ISSrWnysWrTf6csI7jXUuShSuzB6A9zNI
-         1ZFECREmgiKoH63GVh+MULr++Z8IR8BpNVMq58cwutBAR7cQW8MczH3l8a47Wk4YVAF8
-         e5GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=TZutz0HSRXq5ErCpqJa4uDbIJRNEZqu0EunDY52N++0=;
-        b=gpNmlegyAIL8TnlzjZUk46iYeaO2qLhAAQ0R7IejjAChotZHCWQggLpQ9Rlr0yyPd0
-         GlZ9LH0r+WZzBnQCx+j7NWdNF7RiJexBJxSeW4GVJWAJUnf5lSViYc249jXFTjCdoYMs
-         +3AQBcx4xI1gtMxtDUUBQ1q+iGqMFEpsG3oM0vE4yShaZ7waIZpG46vy0QntZDcuT3Ek
-         zubfI8131CYqfsIYyWwqIsBhw+/0Yq7+heiyQswNH5ZqLnCN5u1hkTIIccXgRQcr1x/m
-         NohmIoocT2VRwXj9cZO1f9a8wOJ3GSXZ0eX/Ypr4zL9IlQV7ki/9zcgvv2om23DdVb7B
-         Ehqw==
-X-Gm-Message-State: APjAAAVivAGCcvKq+UACLWIwFn9RNpc+HRKSSBO1QgYiRAHxO9Xru2iS
-        /m77Aw6wWwQ/dEWPLlLiWplq2g==
-X-Google-Smtp-Source: APXvYqxNgQLRmNooPKdGfhRPS1xKJgkrNlx3cfXBwvnwnl0YivKpPfKmleIr/zJrl6b0wwPptfVbCg==
-X-Received: by 2002:a37:aa8c:: with SMTP id t134mr4283678qke.93.1553199371893;
-        Thu, 21 Mar 2019 13:16:11 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s5sm3415511qkf.87.2019.03.21.13.16.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 13:16:11 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 13:16:06 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Alban Crequy <alban@kinvolk.io>
-Cc:     Alban Crequy <alban.crequy@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Iago =?UTF-8?B?TMOzcGV6?= Galeiras <iago@kinvolk.io>
-Subject: Re: [PATCH bpf-next v1 4/7] tools: bpftool: implement map exec
- command
-Message-ID: <20190321131606.2acb3bb6@cakuba.netronome.com>
-In-Reply-To: <CADZs7q7+SATGjCCdiDBfGbTBJh11V6s=o4RAAKhaKvFjfo7O_Q@mail.gmail.com>
-References: <20190320173332.18105-1-alban@kinvolk.io>
-        <20190320173332.18105-4-alban@kinvolk.io>
-        <20190320142346.3b552895@cakuba.netronome.com>
-        <CADZs7q7+SATGjCCdiDBfGbTBJh11V6s=o4RAAKhaKvFjfo7O_Q@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 21 Mar 2019 16:16:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2LKE1iW101072;
+        Thu, 21 Mar 2019 20:15:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2018-07-02;
+ bh=PowfQm24qXGgiOSTDFxL7Y7HhjHCgJLN5H2hI3h1Us0=;
+ b=wQdB5/DdM5aiTrT60apIVq+9RAjVNIOYss9LZ71xGQc4SBgPdc7KLOIrwBo7ACYDjybh
+ kiZatw+yZF5RPAjxD7YJ2fu/fMCh7cl0qS0hI2bIH3BZpn5/DwQcxz4zhpczz5SMRE50
+ weAk2Brju5vVy40Tc5AYeRZA2IoINhkw78azuCFhI6nTN5uKh5CP7hBOYtOZrBWBPSE0
+ lp4onFxHsvaGo6wYTLidHa08NRia1RhkX3RxOIT7fC8/EBzqSFeNUbIwjXUAyFFDf97h
+ 5gL4BuQFVK1grli2p146QeTr/5dtBZlTfhR60KcbkldHAeFR1e1LVZqz7ukiTo/SNzJY Wg== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2120.oracle.com with ESMTP id 2r8ssrtgud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 20:15:05 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2LKF3Od015267
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 20:15:03 GMT
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2LKErMB027612;
+        Thu, 21 Mar 2019 20:14:53 GMT
+Received: from ovo (/213.188.19.88)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Mar 2019 13:14:53 -0700
+Message-ID: <356e2b5f8d18b7789a38d0e6e3fe7a48784ba56b.camel@oracle.com>
+Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com,
+        Alan Maguire <alan.maguire@oracle.com>
+Date:   Thu, 21 Mar 2019 21:14:40 +0100
+In-Reply-To: <961494a3-d08c-2720-c59d-7d7008edb288@deltatee.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+         <6d9b3b21-1179-3a45-7545-30aa15306cb4@deltatee.com>
+         <01b2a950f661e8ebd6acbc45c2f89c8f10063daf.camel@oracle.com>
+         <ce355f5c-189c-816c-cde4-fb4e816d44e7@deltatee.com>
+         <CAFd5g45LKU+SZAFzn3RNCoxhzum0NAr9t+UJ80SJDMc_FeKgBQ@mail.gmail.com>
+         <73b62e929f631038a9d8d21d261aa22ac3c18949.camel@oracle.com>
+         <961494a3-d08c-2720-c59d-7d7008edb288@deltatee.com>
+Organization: Oracle Inc
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9202 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903210142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 10:57:32 +0100, Alban Crequy wrote:
-> On Wed, Mar 20, 2019 at 10:23 PM Jakub Kicinski
-> <jakub.kicinski@netronome.com> wrote:
-> >
-> > On Wed, 20 Mar 2019 18:33:29 +0100, Alban Crequy wrote:  
-> > > From: Alban Crequy <alban@kinvolk.io>
-> > >
-> > > The map exec commands allows to open an existing map and pass the file
-> > > descriptor to a child process. This enables applications to use an
-> > > existing BPF map even when they don't support bpffs.
-> > >
-> > > Example of usage:
-> > >     # bpftool map exec pinned /sys/fs/bpf/foo fd 99 cmd -- readlink /proc/self/fd/99
-> > >     anon_inode:bpf-map  
-> >
-> > Would you mind telling us a little more about the use for this feature?
-> > It seems fairly limited.  If it's about probing objects (finding out if
-> > they are a map or a program) perhaps we can add a command just for that?  
+On Thu, 2019-03-21 at 13:29 -0600, Logan Gunthorpe wrote:
 > 
-> I needed to know the name of the map too. I was preparing a demo based
-> on python bcc tools (opensnoop) but with added feature that requires
-> using a pinned map, created and maintained externally. At the moment,
-> the python API for bcc does not support pinning or using external
-> maps. Ideally, this should be added in the python API (some discussion
-> on https://github.com/iovisor/bcc/issues/2223) but meanwhile, I use a
-> workaround by executing bpftool from the python code.
+> On 2019-03-21 1:13 p.m., Knut Omang wrote:
+> > > Nevertheless, I don't really see KTF as a real unit testing framework
+> > > for a number of different reasons; you pointed out some below, but I
+> > > think the main one being that it requires booting a real kernel on
+> > > actual hardware; 
+> > 
+> > That depends on what you want to test. If you need hardware (or simulated or
+> > emulated hardware) for the test, of course you would need to have that
+> > hardware,
+> > but if, lets say, you just wanted to run tests like the skbuff example tests
+> > (see link above) you wouldn't need anything more than what you need to run
+> > KUnit
+> > tests.
 > 
-> Arguably, my use case is a temporary hack until we have better support
-> in python bcc. But other tools implements similar commands to pass
-> file descriptors between processes: "ip netns exec" and "tc exec bpf".
-> So I think it could be useful for other scripting use cases.
+> I'm starting to get the same impression: KTF isn't unit testing. When we
+> are saying "unit tests" we are specifying exactly what we want to test:
+> small sections of code in isolation. So by definition you should not
+> need hardware for this.
 
-The thing is the receiver of the FD has to be bpf-aware, because there
-isn't really much one can do with that file descriptor, in which case
-it's kind of strange that the receiver doesn't know how to open a
-pinned object..
+In my world hardware is just that: a piece of code. It can be in many forms, but
+it is still code to be tested, and code that can be changed (but sometimes at a
+slightly higher cost than a recompile ;-)
 
-> In my demo, I used the two hacks:
-> - if the pinned map fd is not given to the python script, re-execute
-> itself with bpftool:
-> os.execvp("bpftool", ["bpftool", "map", "exec", "pinned", pin_path,
-> "fd", "90", "cmd", "--"] + sys.argv)
-> - once we have the fd 90 (number specified above) of the pinned map in
-> the python script, overwrite the empty fd created by bcc:
-> os.dup2(90, 6)
-> I call dup2() between the bpf map creation and the bpf program
-> creation. To check which map fd to overwrite, I just call
-> os.system("bpftool map show fd 6...").
+But that's not the point here: KTF can be used for your narrower definition of
+unit tests, and it can be used for small, precise tests, for particular bugs for
+instance, that you would not characterize as a unit test, still it serves the
+same purpose, and I believe in a pragmatic approach to this. We want to maximize
+the value of our time. I believe there's a sweet point wrt return on investment
+on the scale from purist unit testing to just writing code and test with
+existing applications. We're targeting that ;-)
 
-I see, thanks for the explanation.  That does indeed seems like a hack.
-
-> Thanks a lot for the reviews. I'll need some time to address it (maybe
-> a week or 2).
+> > I have fulfilled that dream, so I know it is possible (Inifinband driver,
+> > kernels from 2.6.39 to 4.8.x or so..) I know a lot of projects would benefit
+> > from support for such workflows, but that's not really the point here - we
+> > want
+> > to achieve both goals!
 > 
-> > (I guess bpftool -f isn't really the cleanest way of getting at that
-> > info.)
-> >  
-> > > Documentation and bash completion updated as well.
-> > >
-> > > Signed-off-by: Alban Crequy <alban@kinvolk.io>  
+> This is what makes me think we are not talking about testing the same
+> things. We are not talking about end to end testing of entire drivers
+> but smaller sections of code.
+
+No! I am talking about testing units within a driver, or within any kernel
+component. I am sure you agree that what constitutes a unit depend on what 
+level of abstraction you are looking at.
+
+>  A unit test is far more granular and
+> despite an infinband driver existing for 2.6.39 through 4.8, the
+> internal implementation could be drastically different. But unit tests
+> would be testing internal details which could be very different version
+> to version and has to evolve with the implementation.
+
+> > If your target component under test can be built as a kernel module, or set
+> > of
+> > modules, with KTF your workflow would not involve booting at all (unless you
+> > happened to crash the system with one of your tests, that is :) )
+> > You would just unload your module under test and the test module, recompile
+> > the
+> > two and insmod again. My work current work cycle on this is just a few
+> > seconds.
+> 
+> Yes, I'm sure we've all done that many a time but it's really beside the
+> point. Kunit offers a much nicer method for running a lot of unit tests
+> on existing code.
+
+Again, use cases and examples are the key here,..
+
+Knut
+
 
