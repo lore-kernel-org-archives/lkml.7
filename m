@@ -2,189 +2,159 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB38C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7F218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F17218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J5vcZXWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfCUCPj (ORCPT
+        id S1727829AbfCUCQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfCUCPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:15:38 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89188218D3;
-        Thu, 21 Mar 2019 02:15:36 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 22:15:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
- error_entry
-Message-ID: <20190320221534.165ab87b@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 20 Mar 2019 22:16:21 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55753 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfCUCQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:16:20 -0400
+Received: by mail-it1-f194.google.com with SMTP id z126so2114352itd.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2GEtIscopF9TJ/61Pptrydo8k5Yuaic+jv+1XcIshqg=;
+        b=J5vcZXWmGrzS4udQxzOdLyPMxyRjOjH7t8HnBYmnYCvDvDNwQTenP5Dre4Ti+vUajN
+         W/tG9Iesn4TE4Of9yS8cfskAjqUEuC+wr1R27RgZyrmPO8bjYJWP4pkeRkwhHQc9Xqor
+         zjb1lU9I9gwtT1PovemHN1YYu9NQRQsH7P+2U/IiEjfgqAqrmKtqSYyHAPtvWhP2Mj+4
+         Lu3DO4vMHIIVaZnYivNPpCV9dE9ESz8U4dpiiadinKXM2iOJ+n2xpleYprjEWoCjPuzy
+         WDiefNO7m6FPul7iZzuzpyiqhMDKteY7N496ii0MyvU3cKzcjmiRfsClD8obyuM48Dlm
+         Vefg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2GEtIscopF9TJ/61Pptrydo8k5Yuaic+jv+1XcIshqg=;
+        b=g0NahezSz/iFuNCCftO5YL1wka8uNqs0c96x82/n3bRmxJX0LxemkrIFYD4HccsdRA
+         LpFX7fgzyo8INhBrgL9aCzIGg9wD5fMJA24UYNygtzBniwsk4amSXecU91OGsfdPtHx2
+         d81jJpT4EIAHPIuva5gGvx5hbMnXosjIHE8pIHmpZEJfBdV9jkzpnQa42eHincIc7hEj
+         8qSb0emaeBJwrbStf3epJYHMdvZO2lefuSdtV96+fUiTn1L3pJxpDQhx472JzVmowMUt
+         VVtFWI6klohVy4WE8it47Qds0KQmcqP1wOMDGomAkvlcPrOypfMBlJ6Wil7DhSZoBs66
+         J7Bg==
+X-Gm-Message-State: APjAAAV8vuOmqr6TC+uN0V2vJIt36tvjxg+WjsifkqmpKmdBxGb8iLtI
+        xWg4N3W1Dm7FXfHDqcgEqonK2UTVn4VjBdjbMIUN4g==
+X-Google-Smtp-Source: APXvYqwPw6CoRmrvVLgt57ePisGLXLFvZu0oZI4yJIoRnN8+ErLYE/UyUG4MaX3acADLAb7D6zsFwiMdYZCJcK6kDXg=
+X-Received: by 2002:a05:660c:3cf:: with SMTP id c15mr995985itl.52.1553134579324;
+ Wed, 20 Mar 2019 19:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Wed, 20 Mar 2019 20:16:08 -0600
+Message-ID: <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Robert Moore <robert.moore@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devel@acpica.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Evan Green <evgreen@google.com>,
+        Duncan Laurie <dlaurie@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
+> >
+> > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
+> > clearing ACPI IRQs during suspend/resume") was added to stop clearing
+> > of event status bits unconditionally on suspend and resume paths. This
+> > was done because of an issue
+> > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
+> > lid status stays closed even on resume (which happens because event
+> > status bits are cleared unconditionally on resume). Though this change
+> > fixed the issue on suspend path, it introduced regressions on several
+> > resume paths.
+> >
+> > First regression was reported and fixed on S5 path by the following
+> > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
+> > entering S5"). Next regression was reported and fixed on all legacy
+> > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
+> > events when entering sleep states"). However, regression still exists
+> > on S0ix sleep path since it does not follow the legacy sleep path.
+>
+> What exactly is failing?
 
-He Zhe reported a crash by enabling trace events and selecting
-"userstacktrace" which will read the stack of userspace for every trace
-event recorded. Zhe narrowed it down to:
+Here is the failure scenario:
 
- c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
+1. Consider the case of trackpad which acts as a wake source.
+2. Since the pad is configured for SCI, GPE_STS gets set for that pad
+during normal interrupts as well (i.e. during probe at boot or when
+using the trackpad)
+3. Now, when the platform decides to enter S0ix, it enables the wake
+on trackpad by enabling appropriate GPE_EN bit.
+4. So, at this point, we are in a situation where GPE_EN as well as
+GPE_STS are set.
+5. Now, if the platform enters S0ix, having GPE_STS set will result in
+unwanted wakes because of stale events.
 
-With the problem config, I was able to also reproduce the error. I
-narrowed it down to just having to do the following:
+This is similar to what was fixed on the legacy sleep path:
+https://lkml.org/lkml/2018/8/12/42. However, as S0ix does not follow
+the legacy sleep path, clearing of GPE status does not happen. Thus,
+it is causing failures to go into S0ix on our platforms because of the
+stale wake events as described above.
 
- # cd /sys/kernel/tracing
- # echo 1 > options/userstacktrace
- # echo 1 > events/preemptirq/irq_disable/enable
+>
+> > In case of S0ix, events are enabled as part of device suspend path. If
+> > status bits for the events are set when they are enabled, it could
+> > result in premature wake from S0ix. This change ensures that status is
+> > cleared for any event that is being enabled so that any stale events
+> > are cleared out.
+> >
+> > Signed-off-by: Furquan Shaikh <furquan@google.com>
+> > ---
+> >  drivers/acpi/acpica/evgpe.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+> > index 62d3aa74277b4..61455ab42fc87 100644
+> > --- a/drivers/acpi/acpica/evgpe.c
+> > +++ b/drivers/acpi/acpica/evgpe.c
+> > @@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct acpi_gpe_event_info *gpe_event_info)
+> >
+> >         ACPI_FUNCTION_TRACE(ev_enable_gpe);
+> >
+> > -       /* Enable the requested GPE */
+> > +       /* Clear the GPE (of stale events) */
+> > +       status = acpi_hw_clear_gpe(gpe_event_info);
+> > +       if (ACPI_FAILURE(status))
+> > +               return_ACPI_STATUS(status);
+>
+> Well, this may cause events to be missed.
 
-And sure enough, I triggered a crash. Well, it was systemd crashing
-with a bad memory access??
+Won't those be stale events? i.e. any event that has occurred before
+GPE is enabled should be ignored.
 
- systemd-journal[537]: segfault at ed8cb8 ip 00007f7fffc9fef5 sp 00007ffc4062cb10 error 7
-
-And it would crash similarly each time I tried it, but always at a
-different place. After spending the day on this, I finally figured it
-out. The bug is happening in entry_64.S right after error_entry.
-There's two TRACE_IRQS_OFF in that code path, which if I comment out,
-the bug goes away. Then it dawned on me that the crash always happens
-when systemd does a normal page fault. We had this bug before, and it
-was with the exception trace points.
-
-The issue is that a tracepoint can fault (reading vmalloc or whatever).
-And doing a userspace stack trace most definitely will fault. But if we
-are coming from a legitimate page fault, the address of that fault (in
-the CR2 register) will be lost if we fault before we get to the page
-fault handler. That's exactly what is happening.
-
-To solve this, a TRACE_IRQS_OFF_CR2 (and ON for consistency) was added
-that saves the CR2 register. A new trace_hardirqs_off_thunk_cr2 is
-created that stores the cr2 register, calls the
-trace_hardirqs_off_caller, then on return restores the cr2 register if
-it changed, before returning.
-
-On my tests this fixes the issue. I just want to know if this is a
-legitimate fix or if someone can come up with a better fix?
-
-Note: this also saves the exception context just like the
-do_page_fault() function does.
-
-Note2: This only gets enabled when lockdep or irq tracing is enabled,
-which is not recommended for production environments.
-
-Link: http://lkml.kernel.org/r/897cf5cf-fc24-8a64-cb28-847f2d2e63d2@windriver.com
-
-Fixes: c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 7bc105f47d21..7edffec328e2 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -292,6 +292,32 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
- 
- 	syscall_return_slowpath(regs);
- }
-+
-+extern void trace_hardirqs_on_caller(unsigned long caller_addr);
-+__visible void trace_hardirqs_on_caller_cr2(unsigned long caller_addr)
-+{
-+	unsigned long address = read_cr2(); /* Get the faulting address */
-+	enum ctx_state prev_state;
-+
-+	prev_state = exception_enter();
-+	trace_hardirqs_on_caller(caller_addr);
-+	if (address != read_cr2())
-+		write_cr2(address);
-+	exception_exit(prev_state);
-+}
-+
-+extern void trace_hardirqs_off_caller(unsigned long caller_addr);
-+__visible void trace_hardirqs_off_caller_cr2(unsigned long caller_addr)
-+{
-+	unsigned long address = read_cr2(); /* Get the faulting address */
-+	enum ctx_state prev_state;
-+
-+	prev_state = exception_enter();
-+	trace_hardirqs_off_caller(caller_addr);
-+	if (address != read_cr2())
-+		write_cr2(address);
-+	exception_exit(prev_state);
-+}
- #endif
- 
- #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 1f0efdb7b629..73ddf24fed3e 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1248,12 +1248,12 @@ ENTRY(error_entry)
- 	 * we fix gsbase, and we should do it before enter_from_user_mode
- 	 * (which can take locks).
- 	 */
--	TRACE_IRQS_OFF
-+	TRACE_IRQS_OFF_CR2
- 	CALL_enter_from_user_mode
- 	ret
- 
- .Lerror_entry_done:
--	TRACE_IRQS_OFF
-+	TRACE_IRQS_OFF_CR2
- 	ret
- 
- 	/*
-diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-index be36bf4e0957..1300b53b98cb 100644
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -41,6 +41,8 @@
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
- 	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
-+	THUNK trace_hardirqs_on_thunk_cr2,trace_hardirqs_on_caller_cr2,1
-+	THUNK trace_hardirqs_off_thunk_cr2,trace_hardirqs_off_caller_cr2,1
- #endif
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
-index 058e40fed167..dd511742ca2e 100644
---- a/arch/x86/include/asm/irqflags.h
-+++ b/arch/x86/include/asm/irqflags.h
-@@ -172,9 +172,13 @@ static inline int arch_irqs_disabled(void)
- #ifdef CONFIG_TRACE_IRQFLAGS
- #  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
- #  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
-+#  define TRACE_IRQS_ON_CR2	call trace_hardirqs_on_thunk_cr2;
-+#  define TRACE_IRQS_OFF_CR2	call trace_hardirqs_off_thunk_cr2;
- #else
- #  define TRACE_IRQS_ON
- #  define TRACE_IRQS_OFF
-+#  define TRACE_IRQS_ON_CR2
-+#  define TRACE_IRQS_OFF_CR2
- #endif
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- #  ifdef CONFIG_X86_64
+>
+> >
+> > +       /* Enable the requested GPE */
+> >         status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+> >         return_ACPI_STATUS(status);
+> >  }
+> > --
+> > 2.21.0.225.g810b269d1ac-goog
+> >
