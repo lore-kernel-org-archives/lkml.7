@@ -2,86 +2,79 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B51C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C83C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1AD20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3B620830
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfCUPMZ (ORCPT
+        id S1728487AbfCUPM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:12:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44602 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727857AbfCUPMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:12:24 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CAEFBCD6B454FC9748A3;
-        Thu, 21 Mar 2019 23:12:18 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
- 23:12:11 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <leitao@debian.org>, <nayna@linux.ibm.com>, <pfsmorigo@gmail.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <mpe@ellerman.id.au>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-crypto@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] crypto: vmx - Make p8_init and p8_exit static
-Date:   Thu, 21 Mar 2019 23:11:48 +0800
-Message-ID: <20190321151148.19128-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 21 Mar 2019 11:12:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37360 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfCUPM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:12:56 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 982FF307B96A;
+        Thu, 21 Mar 2019 15:12:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4E2B19C57;
+        Thu, 21 Mar 2019 15:12:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <3463221.D14WHduXq3@blindfold>
+References: <3463221.D14WHduXq3@blindfold> <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-block@vger.kernel.org, squashfs-devel@lists.sourceforge.net,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/6] Convert mount_single-using filesystems to fs_context
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5778.1553181171.1@warthog.procyon.org.uk>
+Date:   Thu, 21 Mar 2019 15:12:52 +0000
+Message-ID: <5779.1553181172@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 21 Mar 2019 15:12:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Richard Weinberger <richard@nod.at> wrote:
 
-Fix sparse warnings:
+> [    6.004504] RIP: 0010:reconfigure_super+0x17/0x1e0
 
-drivers/crypto/vmx/vmx.c:44:12: warning:
- symbol 'p8_init' was not declared. Should it be static?
-drivers/crypto/vmx/vmx.c:70:13: warning:
- symbol 'p8_exit' was not declared. Should it be static?
+Can you load the kernel into gdb and do:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/crypto/vmx/vmx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	i li *reconfigure_super+0x17
 
-diff --git a/drivers/crypto/vmx/vmx.c b/drivers/crypto/vmx/vmx.c
-index 31a98dc..a9f5198 100644
---- a/drivers/crypto/vmx/vmx.c
-+++ b/drivers/crypto/vmx/vmx.c
-@@ -41,7 +41,7 @@ static struct crypto_alg *algs[] = {
- 	NULL,
- };
- 
--int __init p8_init(void)
-+static int __init p8_init(void)
- {
- 	int ret = 0;
- 	struct crypto_alg **alg_it;
-@@ -67,7 +67,7 @@ int __init p8_init(void)
- 	return ret;
- }
- 
--void __exit p8_exit(void)
-+static void __exit p8_exit(void)
- {
- 	struct crypto_alg **alg_it;
- 
--- 
-2.7.0
+and disassemble the first 32 bytes of that function for me?
+
+> Do I miss some other fix?
+
+Don't think so - I hadn't noticed that it had oopsed since the crash was lost
+in the log and it seemed to have booted otherwise normally.
+
+Note that I don't know if a lot of the filesystems I've converted work because
+I don't have a way to test all of them.
 
 
+David
