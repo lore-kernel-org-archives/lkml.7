@@ -2,232 +2,167 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9C9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B32C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2216321917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586C92183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553187077;
+	bh=2zcBnXiZ6UzeGcp/Md8xMsXcIux6XVwCvjn+7VuOKMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iKCHYzmrYiY9AKJoRtw4JR6z/VKkMexHn3TjzC1YShBVx4Pfdn1hDZd5uMyV8S55M
+	 KKGtS1AKvKPWzS7qoHn2ucuvDgdzU5osJSLNVrcY2KLTdy+QQa0mqmumaylWPKJrqF
+	 7uwb0lpJmKG61uc8HCrHgVHf4OdiG21oUmHbTPMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfCUQsk (ORCPT
+        id S1728557AbfCUQvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:48:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52981 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727829AbfCUQsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:48:09 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2LGkq56008001;
-        Thu, 21 Mar 2019 17:47:39 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2r8rwkek1n-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 21 Mar 2019 17:47:39 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 65F6C3D;
-        Thu, 21 Mar 2019 16:47:38 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 466C95671;
-        Thu, 21 Mar 2019 16:47:38 +0000 (GMT)
-Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Mar 2019 17:47:37
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-Subject: [PATCH v2 3/8] iio: adc: stm32-dfsdm: move dma enable from start_conv() to start_dma()
-Date:   Thu, 21 Mar 2019 17:47:24 +0100
-Message-ID: <1553186849-6261-4-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553186849-6261-1-git-send-email-fabrice.gasnier@st.com>
-References: <1553186849-6261-1-git-send-email-fabrice.gasnier@st.com>
+        Thu, 21 Mar 2019 12:51:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45860 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727823AbfCUQvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:51:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B4C8DAFAE;
+        Thu, 21 Mar 2019 16:51:13 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 17:51:12 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     mgorman@techsingularity.net, vbabka@suse.cz,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: mempolicy: remove MPOL_MF_LAZY
+Message-ID: <20190321165112.GU8696@dhcp22.suse.cz>
+References: <1553041659-46787-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190321145745.GS8696@dhcp22.suse.cz>
+ <75059b39-dbc4-3649-3e6b-7bdf282e3f53@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75059b39-dbc4-3649-3e6b-7bdf282e3f53@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move DMA enable (e.g. set RDMAEN bit) away from start_conv() that is used
-for both buffer and single conversions. Thus, single conv rely on
-interrupt, not dma.
-Note: take care to prepare all DMA stuff and set RDMAEN before starting
-filter (can be set only when DFEN=0).
+On Thu 21-03-19 09:21:39, Yang Shi wrote:
+> 
+> 
+> On 3/21/19 7:57 AM, Michal Hocko wrote:
+> > On Wed 20-03-19 08:27:39, Yang Shi wrote:
+> > > MPOL_MF_LAZY was added by commit b24f53a0bea3 ("mm: mempolicy: Add
+> > > MPOL_MF_LAZY"), then it was disabled by commit a720094ded8c ("mm:
+> > > mempolicy: Hide MPOL_NOOP and MPOL_MF_LAZY from userspace for now")
+> > > right away in 2012.  So, it is never ever exported to userspace.
+> > > 
+> > > And, it looks nobody is interested in revisiting it since it was
+> > > disabled 7 years ago.  So, it sounds pointless to still keep it around.
+> > The above changelog owes us a lot of explanation about why this is
+> > safe and backward compatible. I am also not sure you can change
+> > MPOL_MF_INTERNAL because somebody still might use the flag from
+> > userspace and we want to guarantee it will have the exact same semantic.
+> 
+> Since MPOL_MF_LAZY is never exported to userspace (Mel helped to confirm
+> this in the other thread), so I'm supposed it should be safe and backward
+> compatible to userspace.
 
-This is precursor patch to ease support of triggered buffer mode.
+You didn't get my point. The flag is exported to the userspace and
+nothing in the syscall entry path checks and masks it. So we really have
+to preserve the semantic of the flag bit for ever.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/adc/stm32-dfsdm-adc.c | 77 +++++++++++++++++++--------------------
- 1 file changed, 38 insertions(+), 39 deletions(-)
+> I'm also not sure if anyone use MPOL_MF_INTERNAL or not and how they use it
+> in their applications, but how about keeping it unchanged?
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 8690672..818627f 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -429,12 +429,10 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
- }
- 
- static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
--				  const struct iio_chan_spec *chan,
--				  bool dma)
-+				  const struct iio_chan_spec *chan)
- {
- 	struct regmap *regmap = adc->dfsdm->regmap;
- 	int ret;
--	unsigned int dma_en = 0;
- 
- 	ret = stm32_dfsdm_start_channel(adc->dfsdm, chan->channel);
- 	if (ret < 0)
-@@ -444,25 +442,12 @@ static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
- 	if (ret < 0)
- 		goto stop_channels;
- 
--	if (dma) {
--		/* Enable DMA transfer*/
--		dma_en =  DFSDM_CR1_RDMAEN(1);
--	}
--	/* Enable DMA transfer*/
--	ret = regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--				 DFSDM_CR1_RDMAEN_MASK, dma_en);
--	if (ret < 0)
--		goto filter_unconfigure;
--
- 	ret = stm32_dfsdm_start_filter(adc->dfsdm, adc->fl_id);
- 	if (ret < 0)
--		goto stop_dma;
-+		goto filter_unconfigure;
- 
- 	return 0;
- 
--stop_dma:
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_RDMAEN_MASK, 0);
- filter_unconfigure:
- 	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
- 			   DFSDM_CR1_CFG_MASK, 0);
-@@ -479,10 +464,6 @@ static void stm32_dfsdm_stop_conv(struct stm32_dfsdm_adc *adc,
- 
- 	stm32_dfsdm_stop_filter(adc->dfsdm, adc->fl_id);
- 
--	/* Clean conversion options */
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_RDMAEN_MASK, 0);
--
- 	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
- 			   DFSDM_CR1_CFG_MASK, 0);
- 
-@@ -599,15 +580,36 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
- 
- 	cookie = dmaengine_submit(desc);
- 	ret = dma_submit_error(cookie);
--	if (ret) {
--		dmaengine_terminate_all(adc->dma_chan);
--		return ret;
--	}
-+	if (ret)
-+		goto err_stop_dma;
- 
- 	/* Issue pending DMA requests */
- 	dma_async_issue_pending(adc->dma_chan);
- 
-+	/* Enable DMA transfer*/
-+	ret = regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
-+				 DFSDM_CR1_RDMAEN_MASK, DFSDM_CR1_RDMAEN_MASK);
-+	if (ret < 0)
-+		goto err_stop_dma;
-+
- 	return 0;
-+
-+err_stop_dma:
-+	dmaengine_terminate_all(adc->dma_chan);
-+
-+	return ret;
-+}
-+
-+static void stm32_dfsdm_adc_dma_stop(struct iio_dev *indio_dev)
-+{
-+	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+
-+	if (!adc->dma_chan)
-+		return;
-+
-+	regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
-+			   DFSDM_CR1_RDMAEN_MASK, 0);
-+	dmaengine_terminate_all(adc->dma_chan);
- }
- 
- static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
-@@ -623,24 +625,22 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = stm32_dfsdm_start_conv(adc, chan, true);
-+	ret = stm32_dfsdm_adc_dma_start(indio_dev);
- 	if (ret) {
--		dev_err(&indio_dev->dev, "Can't start conversion\n");
-+		dev_err(&indio_dev->dev, "Can't start DMA\n");
- 		goto stop_dfsdm;
- 	}
- 
--	if (adc->dma_chan) {
--		ret = stm32_dfsdm_adc_dma_start(indio_dev);
--		if (ret) {
--			dev_err(&indio_dev->dev, "Can't start DMA\n");
--			goto err_stop_conv;
--		}
-+	ret = stm32_dfsdm_start_conv(adc, chan);
-+	if (ret) {
-+		dev_err(&indio_dev->dev, "Can't start conversion\n");
-+		goto err_stop_dma;
- 	}
- 
- 	return 0;
- 
--err_stop_conv:
--	stm32_dfsdm_stop_conv(adc, chan);
-+err_stop_dma:
-+	stm32_dfsdm_adc_dma_stop(indio_dev);
- stop_dfsdm:
- 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
- 
-@@ -652,11 +652,10 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
- 	const struct iio_chan_spec *chan = &indio_dev->channels[0];
- 
--	if (adc->dma_chan)
--		dmaengine_terminate_all(adc->dma_chan);
--
- 	stm32_dfsdm_stop_conv(adc, chan);
- 
-+	stm32_dfsdm_adc_dma_stop(indio_dev);
-+
- 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
- 
- 	return 0;
-@@ -736,7 +735,7 @@ static int stm32_dfsdm_single_conv(struct iio_dev *indio_dev,
- 	if (ret < 0)
- 		goto stop_dfsdm;
- 
--	ret = stm32_dfsdm_start_conv(adc, chan, false);
-+	ret = stm32_dfsdm_start_conv(adc, chan);
- 	if (ret < 0) {
- 		regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR2(adc->fl_id),
- 				   DFSDM_CR2_REOCIE_MASK, DFSDM_CR2_REOCIE(0));
+You really have to. Because it is an offset of other MPLO flags for
+internal usage.
+
+That being said. Considering that we really have to preserve
+MPOL_MF_LAZY value (we cannot even rename it because it is in uapi
+headers and we do not want to break compilation). What is the point of
+this change? Why is it an improvement? Yes, nobody is probably using
+this because this is not respected in anything but the preferred mem
+policy. At least that is the case from my quick glance. I might be still
+wrong as it is quite easy to overlook all the consequences. So the risk
+is non trivial while the benefit is not really clear to me. If you see
+one, _document_ it. "Mel said it is not in use" is not a justification,
+with all due respect.
+
+> Thanks,
+> Yang
+> 
+> > 
+> > > Cc: Mel Gorman <mgorman@techsingularity.net>
+> > > Cc: Michal Hocko <mhocko@suse.com>
+> > > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> > > ---
+> > > Hi folks,
+> > > I'm not sure if you still would like to revisit it later. And, I may be
+> > > not the first one to try to remvoe it. IMHO, it sounds pointless to still
+> > > keep it around if nobody is interested in it.
+> > > 
+> > >   include/uapi/linux/mempolicy.h |  3 +--
+> > >   mm/mempolicy.c                 | 13 -------------
+> > >   2 files changed, 1 insertion(+), 15 deletions(-)
+> > > 
+> > > diff --git a/include/uapi/linux/mempolicy.h b/include/uapi/linux/mempolicy.h
+> > > index 3354774..eb52a7a 100644
+> > > --- a/include/uapi/linux/mempolicy.h
+> > > +++ b/include/uapi/linux/mempolicy.h
+> > > @@ -45,8 +45,7 @@ enum {
+> > >   #define MPOL_MF_MOVE	 (1<<1)	/* Move pages owned by this process to conform
+> > >   				   to policy */
+> > >   #define MPOL_MF_MOVE_ALL (1<<2)	/* Move every page to conform to policy */
+> > > -#define MPOL_MF_LAZY	 (1<<3)	/* Modifies '_MOVE:  lazy migrate on fault */
+> > > -#define MPOL_MF_INTERNAL (1<<4)	/* Internal flags start here */
+> > > +#define MPOL_MF_INTERNAL (1<<3)	/* Internal flags start here */
+> > >   #define MPOL_MF_VALID	(MPOL_MF_STRICT   | 	\
+> > >   			 MPOL_MF_MOVE     | 	\
+> > > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > > index af171cc..67886f4 100644
+> > > --- a/mm/mempolicy.c
+> > > +++ b/mm/mempolicy.c
+> > > @@ -593,15 +593,6 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+> > >   	qp->prev = vma;
+> > > -	if (flags & MPOL_MF_LAZY) {
+> > > -		/* Similar to task_numa_work, skip inaccessible VMAs */
+> > > -		if (!is_vm_hugetlb_page(vma) &&
+> > > -			(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE)) &&
+> > > -			!(vma->vm_flags & VM_MIXEDMAP))
+> > > -			change_prot_numa(vma, start, endvma);
+> > > -		return 1;
+> > > -	}
+> > > -
+> > >   	/* queue pages from current vma */
+> > >   	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
+> > >   		return 0;
+> > > @@ -1181,9 +1172,6 @@ static long do_mbind(unsigned long start, unsigned long len,
+> > >   	if (IS_ERR(new))
+> > >   		return PTR_ERR(new);
+> > > -	if (flags & MPOL_MF_LAZY)
+> > > -		new->flags |= MPOL_F_MOF;
+> > > -
+> > >   	/*
+> > >   	 * If we are using the default policy then operation
+> > >   	 * on discontinuous address spaces is okay after all
+> > > @@ -1226,7 +1214,6 @@ static long do_mbind(unsigned long start, unsigned long len,
+> > >   		int nr_failed = 0;
+> > >   		if (!list_empty(&pagelist)) {
+> > > -			WARN_ON_ONCE(flags & MPOL_MF_LAZY);
+> > >   			nr_failed = migrate_pages(&pagelist, new_page, NULL,
+> > >   				start, MIGRATE_SYNC, MR_MEMPOLICY_MBIND);
+> > >   			if (nr_failed)
+> > > -- 
+> > > 1.8.3.1
+> > > 
+
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
