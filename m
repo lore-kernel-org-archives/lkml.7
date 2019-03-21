@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D255C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A656C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1835218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180C6218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553180869;
-	bh=mS16fVJ/nehW4xcpn3UwSENIDMDR0+sYeeHnTyBQ3Pc=;
+	s=default; t=1553180872;
+	bh=855L7iXbG7cqz8s7/PVDHAWycO43ay8vVm4686AiwIU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=um3aDRHhW7A78UZ7svO33qAwg38wj22NesFh2RGGzSqwtkHGesurmj+or/wGxNQw3
-	 WP/PgSXtgykGzrh4wqUVSoZYQBOOi6DBdD1FgFsJTNDomg/K1LmH35GIbYo/jKZzLo
-	 b/UAZTNhhu/219X70SapAYPWksbBZ173PBL8s9sI=
+	b=cfQ/c85p2JHlAja1hsQp9GUXCODBWiujPpnPxb08UTKAQEIFZWGXOkCwGUpKMvvxr
+	 1YUxu+3lKeAnYYGvZtnzmM7YIlPiJdfZbzJ7XNOTYWF3ia5knRg6UNwgVkmbBGr7SP
+	 qoCQCs+xB319SujYYT8k313uP6Lu6DH18qcaQw1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfCUPHr (ORCPT
+        id S1728556AbfCUPHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:07:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48520 "EHLO
+        Thu, 21 Mar 2019 11:07:50 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48550 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbfCUPHn (ORCPT
+        with ESMTP id S1725985AbfCUPHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 11:07:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,34 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ibOJY8C3En9zuMvunG0fjuaB8DvNrqc9sbjoShd2I9g=; b=OVyid4obSYi1
-        7jqJnHO6rKPBNTEgb0T4c1jvSbO+P8y/+Nf1K+ly5PNcMgVpLacwtJJZf4bCyPE4RSUi8oL+F/G88
-        W+aVKXEBTLdAQYD+LSn48Rvi5E95cGMJuuZhfQPYW+3VWAIAtf8nkccn+rf5ZMmePVYm/5Lf0seCr
-        VzDm4=;
+        List-Archive; bh=H86ZFK9LwYRjOWNnLDlGKG7LvYQJuJBamLkg2OflFkw=; b=QCfZVPASGRa+
+        loI5zo37oR/h3y0WAgtrt+XaX9KVyVviT6e4lmlxt2AdRlX+PEaD4gr0wcPeAg+5nbF5Pu3Pg724Q
+        LR3jEKY91uPEA36DykL1VZge1djxrAh3W4PcdIzX8Mg0Vc6H/ZYuGhZYUM+Au6rGkhc6/17RzEmYh
+        L6M3c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6zI9-0005dt-5Y; Thu, 21 Mar 2019 15:07:37 +0000
+        id 1h6zHe-0005cR-6c; Thu, 21 Mar 2019 15:07:06 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 910B511288EC; Thu, 21 Mar 2019 15:07:36 +0000 (GMT)
+        id B71D111288EC; Thu, 21 Mar 2019 15:07:05 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Applied "spi: export tracepoint symbols to modules" to the spi tree
-In-Reply-To:  <20190321124240.901884-1-arnd@arndb.de>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Support Opensource <support.opensource@diasemi.com>,
+        Akshu Agrawal <Akshu.Agrawal@amd.com>,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: AMD: Update DA7219 DAI clock name to align with codec updates" to the asoc tree
+In-Reply-To:  <3159a9ec4f79fe25219e04bafc29a842b650521c.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190321150736.910B511288EC@debutante.sirena.org.uk>
-Date:   Thu, 21 Mar 2019 15:07:36 +0000 (GMT)
+Message-Id: <20190321150705.B71D111288EC@debutante.sirena.org.uk>
+Date:   Thu, 21 Mar 2019 15:07:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +69,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: export tracepoint symbols to modules
+   ASoC: AMD: Update DA7219 DAI clock name to align with codec updates
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,41 +94,36 @@ to this mail.
 Thanks,
 Mark
 
-From ca1438dcb34c7fcad63b6ce14ea63a870b92a69b Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 21 Mar 2019 13:42:25 +0100
-Subject: [PATCH] spi: export tracepoint symbols to modules
+From 883149027a989dc121ad277785a4b4a901b7fd31 Mon Sep 17 00:00:00 2001
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Date: Tue, 19 Mar 2019 17:49:32 +0000
+Subject: [PATCH] ASoC: AMD: Update DA7219 DAI clock name to align with codec
+ updates
 
-The newly added tracepoints in the spi-mxs driver cause a link
-error when the driver is a loadable module:
+As the DAI clocks for DA7219 have now been split into BCLK and WCLK,
+the clock lookup name needs to be udpated here to select BCLK to
+achieve the same functionality as before with regards to DAI clock
+gating.
 
-ERROR: "__tracepoint_spi_transfer_stop" [drivers/spi/spi-mxs.ko] undefined!
-ERROR: "__tracepoint_spi_transfer_start" [drivers/spi/spi-mxs.ko] undefined!
-
-I'm not quite sure where to put the export statements, but
-directly after the inclusion of the header seems as good as
-any other place.
-
-Fixes: f3fdea3af405 ("spi: mxs: add tracing to custom .transfer_one_message callback")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/amd/acp-da7219-max98357a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 2be394d3bc59..bd2a424672df 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -36,6 +36,8 @@
+diff --git a/sound/soc/amd/acp-da7219-max98357a.c b/sound/soc/amd/acp-da7219-max98357a.c
+index a5daad973ce5..f37a588ba345 100644
+--- a/sound/soc/amd/acp-da7219-max98357a.c
++++ b/sound/soc/amd/acp-da7219-max98357a.c
+@@ -72,7 +72,7 @@ static int cz_da7219_init(struct snd_soc_pcm_runtime *rtd)
+ 		return ret;
+ 	}
  
- #define CREATE_TRACE_POINTS
- #include <trace/events/spi.h>
-+EXPORT_TRACEPOINT_SYMBOL(spi_transfer_start);
-+EXPORT_TRACEPOINT_SYMBOL(spi_transfer_stop);
+-	da7219_dai_clk = clk_get(component->dev, "da7219-dai-clks");
++	da7219_dai_clk = clk_get(component->dev, "da7219-dai-bclk");
  
- #include "internals.h"
- 
+ 	ret = snd_soc_card_jack_new(card, "Headset Jack",
+ 				SND_JACK_HEADSET | SND_JACK_LINEOUT |
 -- 
 2.20.1
 
