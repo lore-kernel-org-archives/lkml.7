@@ -2,222 +2,146 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE76C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAE2218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155EE218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfCUC2X (ORCPT
+        id S1727753AbfCUCbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:28:23 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:34688 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727551AbfCUC2W (ORCPT
+        Wed, 20 Mar 2019 22:31:36 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:44254 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCUCbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:28:22 -0400
-X-UUID: 08d051d1e18d4348801a2494801de780-20190321
-X-UUID: 08d051d1e18d4348801a2494801de780-20190321
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2050181406; Thu, 21 Mar 2019 10:28:13 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 21 Mar 2019 10:28:12 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 21 Mar 2019 10:28:10 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Felipe Balbi <balbi@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Johan Hovold <johan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Matteo Croce <mcroce@redhat.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [v3 PATCH] usb: introduce usb_ep_type_string() function
-Date:   Thu, 21 Mar 2019 10:27:56 +0800
-Message-ID: <dfa55cfc48369945983d7cb9f97d09daf2670927.1553134542.git.chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Wed, 20 Mar 2019 22:31:36 -0400
+Received: from shawn.lin?rock-chips.com (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 4C5B0529F8;
+        Thu, 21 Mar 2019 10:31:31 +0800 (CST)
+X-263anti-spam: KSV:0;
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-KSVirus-check: 0
+X-ABS-CHECKED: 4
+Received: from [172.16.12.37] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24298T139622564935424S1553135489017648_;
+        Thu, 21 Mar 2019 10:31:30 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <058340b6a43ccd0c8b5130e4dda53420>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: wxt@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Cc:     shawn.lin@rock-chips.com, wxt@rock-chips.com
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/2=5d_mmc=3a_dw=5fmmc-rockchip=3a_fix_tra?=
+ =?UTF-8?B?bnNmZXIgaGFuZ3Mgb24gcmszMTg444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGlu?=
+ =?UTF-8?B?dXgtbW1jLW93bmVyQHZnZXIua2VybmVsLm9yZ+S7o+WPkeOAkQ==?=
+To:     Alexander Kochetkov <al.kochet@gmail.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1553104085-32312-1-git-send-email-al.kochet@gmail.com>
+ <1553104085-32312-3-git-send-email-al.kochet@gmail.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <8293b346-15a0-a70d-1bfd-c9b2251c729c@rock-chips.com>
+Date:   Thu, 21 Mar 2019 10:31:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <1553104085-32312-3-git-send-email-al.kochet@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some places, the code prints a human-readable USB endpoint
-transfer type (e.g. "bulk"). This involves a switch statement
-sometimes wrapped around in ({ ... }) block leading to code
-repetition.
-To make this scenario easier, here introduces usb_ep_type_string()
-function, which returns a human-readable name of provided
-endpoint type.
-It also changes a few places switch was used to use this
-new function.
++ Caesar Wang
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2 changes:
-    1. keep type string consistent with type_show() used in endpoint.c
-v3 changes:
-    1. abandon changes that will break user/kernel apis
----
- drivers/usb/common/common.c              | 16 ++++++++++++++++
- drivers/usb/core/hcd.c                   | 17 ++---------------
- drivers/usb/gadget/udc/aspeed-vhub/epn.c |  6 +-----
- drivers/usb/gadget/udc/dummy_hcd.c       | 16 +---------------
- include/linux/usb/ch9.h                  |  8 ++++++++
- 5 files changed, 28 insertions(+), 35 deletions(-)
+On 2019/3/21 1:48, Alexander Kochetkov wrote:
+> I've found that sometimes dw_mmc in my rk3188 based board stop transfer
+> any data with error:
+> 
+> kernel: dwmmc_rockchip 1021c000.dwmmc: Unexpected command timeout, state 3
+> 
+> Further digging into problem showed that sometimes one of EDMA-based
+> transfers hangs and abort with HTO error. I've made test, that 100%
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 48277bbc15e4..2174dd9ec176 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -16,6 +16,22 @@
- #include <linux/usb/otg.h>
- #include <linux/of_platform.h>
- 
-+static const char *const ep_type_names[] = {
-+	[USB_ENDPOINT_XFER_CONTROL] = "ctrl",
-+	[USB_ENDPOINT_XFER_ISOC] = "isoc",
-+	[USB_ENDPOINT_XFER_BULK] = "bulk",
-+	[USB_ENDPOINT_XFER_INT] = "intr",
-+};
-+
-+const char *usb_ep_type_string(int ep_type)
-+{
-+	if (ep_type < 0 || ep_type >= ARRAY_SIZE(ep_type_names))
-+		return "unknown";
-+
-+	return ep_type_names[ep_type];
-+}
-+EXPORT_SYMBOL_GPL(usb_ep_type_string);
-+
- const char *usb_otg_state_string(enum usb_otg_state state)
- {
- 	static const char *const names[] = {
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 3189181bb628..0ccf2efeb40b 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -1878,23 +1878,10 @@ void usb_hcd_flush_endpoint(struct usb_device *udev,
- 		/* kick hcd */
- 		unlink1(hcd, urb, -ESHUTDOWN);
- 		dev_dbg (hcd->self.controller,
--			"shutdown urb %pK ep%d%s%s\n",
-+			"shutdown urb %pK ep%d%s-%s\n",
- 			urb, usb_endpoint_num(&ep->desc),
- 			is_in ? "in" : "out",
--			({	char *s;
--
--				 switch (usb_endpoint_type(&ep->desc)) {
--				 case USB_ENDPOINT_XFER_CONTROL:
--					s = ""; break;
--				 case USB_ENDPOINT_XFER_BULK:
--					s = "-bulk"; break;
--				 case USB_ENDPOINT_XFER_INT:
--					s = "-intr"; break;
--				 default:
--					s = "-iso"; break;
--				};
--				s;
--			}));
-+			usb_ep_type_string(usb_endpoint_type(&ep->desc)));
- 		usb_put_urb (urb);
- 
- 		/* list contents may have changed */
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/epn.c b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-index 83340f4fdc6e..35941dc125f9 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-@@ -593,10 +593,6 @@ static int ast_vhub_epn_disable(struct usb_ep* u_ep)
- static int ast_vhub_epn_enable(struct usb_ep* u_ep,
- 			       const struct usb_endpoint_descriptor *desc)
- {
--	static const char *ep_type_string[] __maybe_unused = { "ctrl",
--							       "isoc",
--							       "bulk",
--							       "intr" };
- 	struct ast_vhub_ep *ep = to_ast_ep(u_ep);
- 	struct ast_vhub_dev *dev;
- 	struct ast_vhub *vhub;
-@@ -646,7 +642,7 @@ static int ast_vhub_epn_enable(struct usb_ep* u_ep,
- 	ep->epn.wedged = false;
- 
- 	EPDBG(ep, "Enabling [%s] %s num %d maxpacket=%d\n",
--	      ep->epn.is_in ? "in" : "out", ep_type_string[type],
-+	      ep->epn.is_in ? "in" : "out", usb_ep_type_string(type),
- 	      usb_endpoint_num(desc), maxpacket);
- 
- 	/* Can we use DMA descriptor mode ? */
-diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-index baf72f95f0f1..40c6a484e232 100644
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -617,21 +617,7 @@ static int dummy_enable(struct usb_ep *_ep,
- 		_ep->name,
- 		desc->bEndpointAddress & 0x0f,
- 		(desc->bEndpointAddress & USB_DIR_IN) ? "in" : "out",
--		({ char *val;
--		 switch (usb_endpoint_type(desc)) {
--		 case USB_ENDPOINT_XFER_BULK:
--			 val = "bulk";
--			 break;
--		 case USB_ENDPOINT_XFER_ISOC:
--			 val = "iso";
--			 break;
--		 case USB_ENDPOINT_XFER_INT:
--			 val = "intr";
--			 break;
--		 default:
--			 val = "ctrl";
--			 break;
--		 } val; }),
-+		usb_ep_type_string(usb_endpoint_type(desc)),
- 		max, ep->stream_en ? "enabled" : "disabled");
- 
- 	/* at this point real hardware should be NAKing transfers
-diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
-index 523aa088f6ab..da82606be605 100644
---- a/include/linux/usb/ch9.h
-+++ b/include/linux/usb/ch9.h
-@@ -36,6 +36,14 @@
- #include <linux/device.h>
- #include <uapi/linux/usb/ch9.h>
- 
-+/**
-+ * usb_ep_type_string() - Returns human readable-name of the endpoint type.
-+ * @ep_type: The endpoint type to return human-readable name for.  If it's not
-+ *   any of the types: USB_ENDPOINT_XFER_{CONTROL, ISOC, BULK, INT},
-+ *   usually got by usb_endpoint_type(), the string 'unknown' will be returned.
-+ */
-+extern const char *usb_ep_type_string(int ep_type);
-+
- /**
-  * usb_speed_string() - Returns human readable-name of the speed.
-  * @speed: The speed to return human-readable name for.  If it's not
--- 
-2.20.1
+I'm not sure what 100% means, but Caesar fired QA test for RK3036 with
+EDMA-based dwmmc in vendor 4.4 kernel, and seems not big deal. The
+vendor 4.4 kernel didn't patch anything else wrt EDMA code, but we did
+enhance PL330 code and fix some bug there, so you may have a try.
+
+> reproduce the error. I found, that setting max_segs parameter to 1 fix
+> the problem.
+> 
+> I guess the problem is hardware related and relates to DMA controller
+> implementation for rk3188. Probably it can relates to missed FLUSHP,
+> see commit 271e1b86e691 ("dmaengine: pl330: add quirk for broken no
+> flushp"). It is possible that pl330 and dw_mmc become out of sync then
+> pl330 driver switch from one scatterlist to another. If we limit
+> scatterlist size to 1, we can avoid switching scatterlists and avoid
+> hardware problem. Setting max_segs to 1 tells mmc core to use maximum
+> one scatterlist for one transfer.
+> 
+> I guess that all other rk3xxx chips that lacks FLUSHP also affected by
+> the problem. So I made fix for all rk3xxx chips from rk2928 to rk3188.
+
+Hard to find these acient platforms to test, expecially some was EOL....
+
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> ---
+>   drivers/mmc/host/dw_mmc-rockchip.c |   19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+> index 8c86a80..2eed922 100644
+> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+> @@ -292,6 +292,24 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
+>   	return 0;
+>   }
+>   
+> +static void dw_mci_rk2928_init_slot(struct dw_mci *host)
+> +{
+> +	struct mmc_host *mmc = host->slot->mmc;
+> +
+> +	if (host->use_dma == TRANS_MODE_EDMAC) {
+> +		/*
+> +		 * Using max_segs > 1 leads to rare EDMA transfer hangs
+> +		 * resulting in HTO errors.
+> +		 */
+> +		mmc->max_segs = 1;
+> +		mmc->max_blk_size = 65535;
+> +		mmc->max_blk_count = 64 * 512;
+> +		mmc->max_req_size =
+> +				mmc->max_blk_size * mmc->max_blk_count;
+> +		mmc->max_seg_size = mmc->max_req_size;
+> +	}
+> +}
+> +
+>   static int dw_mci_rockchip_init(struct dw_mci *host)
+>   {
+>   	/* It is slot 8 on Rockchip SoCs */
+> @@ -314,6 +332,7 @@ static int dw_mci_rockchip_init(struct dw_mci *host)
+>   
+>   static const struct dw_mci_drv_data rk2928_drv_data = {
+>   	.init			= dw_mci_rockchip_init,
+> +	.init_slot		= dw_mci_rk2928_init_slot,
+>   };
+>   
+>   static const struct dw_mci_drv_data rk3288_drv_data = {
+> 
+
 
