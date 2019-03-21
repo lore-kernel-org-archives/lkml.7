@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBD0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2358C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC0B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F70F21873
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553158145;
-	bh=kKsOYcI2T6VAiFUjbXkORPJNFR29l8ahg+ZcFe9Kg10=;
+	s=default; t=1553158146;
+	bh=9lo5abKzrujA1fpYwQ1eEUvJPcIJ2p4DKf5MnAZl4ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfwkUB2jvZhaDCS0ka06yzC3PkiCk0E7oek/2KKxfMZVOMWl1qcTNItfKtOHlh7tN
-	 HX/J2j0trk51m/gfbn67ySGcWuBHJGqLR+9UcINpcJzDxlABzx5psAqMS+TSor+I2x
-	 vyHunrpqARtMbY6jwm1/yqGzcA12n+IAvHSZ23tg=
+	b=BzZhfVq1H7f8oTS6R6L5QAKq2hcxx5LYoE0hRiM/KfnRq40kzEq/WOpuP4GX9rCcp
+	 zGCcvXdWjitoUVJpkdziL+KkGDQlmG8WQKGjQ6hePKXEnSaCspwqnwdUeEclgfmmPK
+	 hba63Okn0BhXJH0Ip0dwg1aKdvqXfxJTGi2eSjVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbfCUItD (ORCPT
+        id S1728117AbfCUItF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:49:03 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41414 "EHLO
+        Thu, 21 Mar 2019 04:49:05 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41416 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728041AbfCUItD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728054AbfCUItD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 04:49:03 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id 298D95FB44; Thu, 21 Mar 2019 16:48:59 +0800 (CST)
+        id 356885FDBD; Thu, 21 Mar 2019 16:48:59 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -36,11 +36,10 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Hans de Goede <hdegoede@redhat.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/9] dt-bindings: power: supply: axp20x_usb_power: add axp813 compatible
-Date:   Thu, 21 Mar 2019 16:48:42 +0800
-Message-Id: <20190321084850.20769-2-wens@kernel.org>
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 3/9] power: supply: axp20x_usb_power: allow disabling input current limiting
+Date:   Thu, 21 Mar 2019 16:48:44 +0800
+Message-Id: <20190321084850.20769-4-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321084850.20769-1-wens@kernel.org>
 References: <20190321084850.20769-1-wens@kernel.org>
@@ -53,32 +52,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-This adds the "x-powers,axp813-usb-power-supply" to the list of
-compatibles for AXP20X VBUS power supply driver.
+The AXP PMICs allow the user to disable current limiting on the VBUS
+input. While read-out of this setting was already supported by the
+driver, it did not allow the user to configure the PMIC to disable
+current limiting.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Add support for this.
+
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
 ---
-Changes since v2:
+ drivers/power/supply/axp20x_usb_power.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  - Collected Rob's Reviewed-by
----
- .../devicetree/bindings/power/supply/axp20x_usb_power.txt        | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-index ba8d35f66cbe..b2d4968fde7d 100644
---- a/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-+++ b/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-@@ -4,6 +4,7 @@ Required Properties:
- -compatible: One of: "x-powers,axp202-usb-power-supply"
-                      "x-powers,axp221-usb-power-supply"
-                      "x-powers,axp223-usb-power-supply"
-+		     "x-powers,axp813-usb-power-supply"
- 
- The AXP223 PMIC shares most of its behaviour with the AXP221 but has slight
- variations such as the former being able to set the VBUS power supply max
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index cd9b90d79839..e2f353906bb1 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -230,6 +230,11 @@ static int axp20x_usb_power_set_current_max(struct axp20x_usb_power *power,
+ 		return regmap_update_bits(power->regmap,
+ 					  AXP20X_VBUS_IPSOUT_MGMT,
+ 					  AXP20X_VBUS_CLIMIT_MASK, val);
++	case -1:
++		return regmap_update_bits(power->regmap,
++					  AXP20X_VBUS_IPSOUT_MGMT,
++					  AXP20X_VBUS_CLIMIT_MASK,
++					  AXP20X_VBUS_CLIMIT_NONE);
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
