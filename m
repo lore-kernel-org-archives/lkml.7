@@ -2,144 +2,102 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF89FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8BEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB0E2190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D199221900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hjOy6GC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfCURT2 (ORCPT
+        id S1728687AbfCURUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:19:28 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60424 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfCURT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:19:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C606374;
-        Thu, 21 Mar 2019 10:19:27 -0700 (PDT)
-Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 853EB3F614;
-        Thu, 21 Mar 2019 10:19:25 -0700 (PDT)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>, Qian Cai <cai@lca.pw>
-Subject: [PATCH] kmemleak: powerpc: skip scanning holes in the .bss section
-Date:   Thu, 21 Mar 2019 17:19:17 +0000
-Message-Id: <20190321171917.62049-1-catalin.marinas@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Mar 2019 13:20:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40016 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfCURUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:20:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u9so4635229pgo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rKdLEwDmDwggC4Pma1A8YJs0L4iqB8H/SQFNLYqGBRg=;
+        b=hjOy6GC3EjWFP6FN+ECYxEfMQvdTvpbjQ9/If5pNvPyNeMQNICOMyxNtC6oUy4d191
+         kZ8bJeLA2dniYI9awuuybeIyjZ/XOiAtHyTZis4+pPGle8CdwY82yehF+iMwHekMC/rz
+         FfXExcYbIHKfadIulXwh1QepN2x2/j3wJWNa5kBdYvOq6SMXpYxukJjqAOXifgJU4s6q
+         WvOBrt5/9u4rFfIcXUPpJyHgxwtsfX/rX/RRckZcRyq49ZSK8w5Hja3uNRXSTLEoFB/r
+         QCcBJP2DWN6gBD3Y9synDezYin9OW9hkGTCqYxcQdf9Jp6XIvYlD2Icippws3mY8xCE3
+         th+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rKdLEwDmDwggC4Pma1A8YJs0L4iqB8H/SQFNLYqGBRg=;
+        b=HgW731cxlaKys+jruVBo7fnbwxxuDi7MJReD05K7+cOuRVQ123I4y3aSROvF/knMHP
+         vXMrZRHpUg+IyDk9EV5jJcQZcyUcN6b252WrJlkNy4bKn6GA6/dhLnLJsaHO8UuKnu80
+         Y+vFfVh+dKqJ1wA+CbLIk6XvSrNjNZ2DtCIE8igQV/lbevDdoBfxFhOqBfXsg3a3tkrQ
+         ZJZ/UlMrjgklFuz7CPP6yzEZmqUTU+GnaVlLfS275wDMaKQiIfP+4eIzVopdp0YpqgE9
+         xthJGxZ1SfKTlsYZVDC2Q9Cpd9ibX3AkkhgZjYclgc+fGaP8q6uKyH0YjTZcrUelEStI
+         M80g==
+X-Gm-Message-State: APjAAAVHfAs9BqWcHZNNly9fcACClQk6glfyY3uJVOeS7ELzP8nAus8O
+        F8vX2/4epB38L7hzNN47iFHNCEXblx/dVQ52YclG2Q==
+X-Google-Smtp-Source: APXvYqyNl+QD7r11AZXYqW9wLSMJ1ExHhPzxXxAKk+l5slPpm6kirbsm8zLb8cv9Cw4fHxYUWGbbTgDGCq/DcZSLKM0=
+X-Received: by 2002:a17:902:8e82:: with SMTP id bg2mr4697126plb.217.1553188831072;
+ Thu, 21 Mar 2019 10:20:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
+ <20190313211335.165605-1-ndesaulniers@google.com> <20190320191135.e49e976a8258c8ac0bb428c9@linux-foundation.org>
+ <CAKwvOdn84HNEB3u4XO-V_+c=txmDd1061G_7K0zZVS4MfF--Lg@mail.gmail.com>
+In-Reply-To: <CAKwvOdn84HNEB3u4XO-V_+c=txmDd1061G_7K0zZVS4MfF--Lg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 21 Mar 2019 10:20:18 -0700
+Message-ID: <CAKwvOd=pJQ=SNJPSJjKZN+MY1P1gBjzT1V84T0rxV8ue9gC3xw@mail.gmail.com>
+Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     clang-built-linux@googlegroups.com,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
-kvm_tmp[] into the .bss section and then free the rest of unused spaces
-back to the page allocator.
+On Thu, Mar 21, 2019 at 10:02 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Wed, Mar 20, 2019 at 7:11 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > I guess we should backport this into -stable so that older kernels can
+> > be built with newer Clang.
+>
+> Ah, you're right.  I always forget.  Is it too late to add
+>
+> Cc: stable@vger.kernel.org
+>
+> to the patch in your tree?
 
-kernel_init
-  kvm_guest_init
-    kvm_free_tmp
-      free_reserved_area
-        free_unref_page
-          free_unref_page_prepare
-
-With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel. As the
-result, kmemleak scan will trigger a panic when it scans the .bss
-section with unmapped pages.
-
-This patch creates dedicated kmemleak objects for the .data, .bss and
-potentially .data..ro_after_init sections to allow partial freeing via
-the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
-
-Posting as a proper patch following the inlined one here:
-
-http://lkml.kernel.org/r/20190320181656.GB38229@arrakis.emea.arm.com
-
-Changes from the above:
-
-- Added comment to the powerpc kmemleak_free_part() call
-
-- Only register the .data..ro_after_init in kmemleak if not contained
-  within the .data sections (which seems to be the case for lots of
-  architectures)
-
-I preserved part of Qian's original commit message but changed the
-author since I rewrote the patch.
-
- arch/powerpc/kernel/kvm.c |  7 +++++++
- mm/kmemleak.c             | 16 +++++++++++-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index 683b5b3805bd..cd381e2291df 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -22,6 +22,7 @@
- #include <linux/kvm_host.h>
- #include <linux/init.h>
- #include <linux/export.h>
-+#include <linux/kmemleak.h>
- #include <linux/kvm_para.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
- 
- static __init void kvm_free_tmp(void)
- {
-+	/*
-+	 * Inform kmemleak about the hole in the .bss section since the
-+	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
-+	 */
-+	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
-+			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
- }
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 707fa5579f66..6c318f5ac234 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1529,11 +1529,6 @@ static void kmemleak_scan(void)
- 	}
- 	rcu_read_unlock();
- 
--	/* data/bss scanning */
--	scan_large_block(_sdata, _edata);
--	scan_large_block(__bss_start, __bss_stop);
--	scan_large_block(__start_ro_after_init, __end_ro_after_init);
--
- #ifdef CONFIG_SMP
- 	/* per-cpu sections scanning */
- 	for_each_possible_cpu(i)
-@@ -2071,6 +2066,17 @@ void __init kmemleak_init(void)
- 	}
- 	local_irq_restore(flags);
- 
-+	/* register the data/bss sections */
-+	create_object((unsigned long)_sdata, _edata - _sdata,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	/* only register .data..ro_after_init if not within .data */
-+	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
-+		create_object((unsigned long)__start_ro_after_init,
-+			      __end_ro_after_init - __start_ro_after_init,
-+			      KMEMLEAK_GREY, GFP_ATOMIC);
-+
- 	/*
- 	 * This is the point where tracking allocations is safe. Automatic
- 	 * scanning is started during the late initcall. Add the early logged
+Just noticed now. Thank you for adding it!
+-- 
+Thanks,
+~Nick Desaulniers
