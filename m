@@ -2,100 +2,93 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE2DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FF7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E5A21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WzV3YhX7"
+	by mail.kernel.org (Postfix) with ESMTP id DA84121841
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfCULTr (ORCPT
+        id S1727986AbfCULVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:19:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40932 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCULTr (ORCPT
+        Thu, 21 Mar 2019 07:21:33 -0400
+Received: from www62.your-server.de ([213.133.104.62]:60962 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCULVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:19:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2LB4PG2011912;
-        Thu, 21 Mar 2019 11:19:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=+CJEDJDV8tQlaLOEq1gYhqwy9hEc1BIFmium5TeXdTU=;
- b=WzV3YhX7GTERYIllfGWH0lMhUu7JlfzZ2vIPq9XtmOf2nZCzAElC7c0C4fiGw5wiqhaK
- mUYCycxVnvbM3PygFseVblhmnDSFTb9gydljjwLqUvSGWzEvs4SdD2Vc3ynF8+2BlG+L
- WwJ6xdGL72PBJsoSYKb+DwNHBX2SFtYEf1zsx9migKCRf5A7MlUJ6kMH89nNraGhL8ja
- yC0JLNrmM92JsnLjb5mQFJIqyCBXDCqHSDjXSqizGIIW5EI8HlR5xcA3OPufohxKKQWo
- 2m6dhOs3rwoEYX7bc5l+7ybTg7/UvGgdGg92onAB3a3/X89Gz0amBXEUCerEB+LNQZpT BQ== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2r8rjuyvam-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 11:19:28 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2LBJNFG003439
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 11:19:23 GMT
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2LBJLEd007773;
-        Thu, 21 Mar 2019 11:19:21 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Mar 2019 04:19:21 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20190321103521.GO8696@dhcp22.suse.cz>
-Date:   Thu, 21 Mar 2019 05:19:19 -0600
-Cc:     Baoquan He <bhe@redhat.com>, Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
-        linux-mm@kvack.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <EAFD8223-BEED-4985-8CD4-D3410A5898A6@oracle.com>
-References: <20190320073540.12866-1-bhe@redhat.com>
- <20190320111959.GV19508@bombadil.infradead.org>
- <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
- <20190320122243.GX19508@bombadil.infradead.org>
- <20190320123658.GF13626@rapoport-lnx>
- <20190320125843.GY19508@bombadil.infradead.org>
- <20190321064029.GW18740@MiWiFi-R3L-srv>
- <20190321092138.GY18740@MiWiFi-R3L-srv>
- <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
- <20190321103521.GO8696@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=764 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903210082
+        Thu, 21 Mar 2019 07:21:33 -0400
+Received: from [88.198.220.132] (helo=sslproxy03.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h6vlK-0002DL-Tp; Thu, 21 Mar 2019 12:21:31 +0100
+Received: from [178.197.248.24] (helo=linux.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h6vlK-0005Ow-L2; Thu, 21 Mar 2019 12:21:30 +0100
+Subject: Re: [PATCH v2] bpf: do not restore dst_reg when cur_state is freed
+To:     Xu Yu <xuyu@linux.alibaba.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
+ <ae7834dda12cb2a88dd8471132d6274a7d1ec5f0.1553161998.git.xuyu@linux.alibaba.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <cbcf0c58-b15f-c82d-1274-1a7d17d75799@iogearbox.net>
+Date:   Thu, 21 Mar 2019 12:21:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
+MIME-Version: 1.0
+In-Reply-To: <ae7834dda12cb2a88dd8471132d6274a7d1ec5f0.1553161998.git.xuyu@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.2/25395/Thu Mar 21 08:52:58 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Mar 21, 2019, at 4:35 AM, Michal Hocko <mhocko@kernel.org> wrote:
+On 03/21/2019 11:00 AM, Xu Yu wrote:
+> Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
+> Call trace:
+>   dump_stack+0xbf/0x12e
+>   print_address_description+0x6a/0x280
+>   kasan_report+0x237/0x360
+>   sanitize_ptr_alu+0x85a/0x8d0
+>   adjust_ptr_min_max_vals+0x8f2/0x1ca0
+>   adjust_reg_min_max_vals+0x8ed/0x22e0
+>   do_check+0x1ca6/0x5d00
+>   bpf_check+0x9ca/0x2570
+>   bpf_prog_load+0xc91/0x1030
+>   __se_sys_bpf+0x61e/0x1f00
+>   do_syscall_64+0xc8/0x550
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Fault injection trace:
+>   kfree+0xea/0x290
+>   free_func_state+0x4a/0x60
+>   free_verifier_state+0x61/0xe0
+>   push_stack+0x216/0x2f0	          <- inject failslab
+>   sanitize_ptr_alu+0x2b1/0x8d0
+>   adjust_ptr_min_max_vals+0x8f2/0x1ca0
+>   adjust_reg_min_max_vals+0x8ed/0x22e0
+>   do_check+0x1ca6/0x5d00
+>   bpf_check+0x9ca/0x2570
+>   bpf_prog_load+0xc91/0x1030
+>   __se_sys_bpf+0x61e/0x1f00
+>   do_syscall_64+0xc8/0x550
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > 
-> I am sorry to be snarky but hasn't this generated way much more email
-> traffic than it really deserves? A simply and trivial clean up in the
-> beginning that was it, right?
+> When kzalloc() fails in push_stack(), free_verifier_state() will free
+> current verifier state. As push_stack() returns, dst_reg was restored
+> if ptr_is_dst_reg is false. However, as member of the cur_state, dst_reg
+> is also freed, and error occurs when dereferencing dst_reg.
+> 
+> Simply fix it by testing ret of push_stack() before retoring dst_reg.
+> 
+> Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
 
-That's rather the point; that it did generate a fair amount of email
-traffic indicates it's worthy of at least a passing mention in a
-comment somewhere.
+Applied, thanks!
