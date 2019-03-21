@@ -2,138 +2,214 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC54C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15475218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6C921916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfCUWjI convert rfc822-to-8bit (ORCPT
+        id S1726969AbfCUWnE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:39:08 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6129 "EHLO mga04.intel.com"
+        Thu, 21 Mar 2019 18:43:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38116 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfCUWjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:39:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:39:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="157192301"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2019 15:39:07 -0700
-Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 21 Mar 2019 15:39:06 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.204]) by
- ORSMSX156.amr.corp.intel.com ([169.254.8.82]) with mapi id 14.03.0415.000;
- Thu, 21 Mar 2019 15:39:06 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH] fm10k: Fix a potential NULL pointer
- dereference
-Thread-Topic: [Intel-wired-lan] [PATCH] fm10k: Fix a potential NULL pointer
- dereference
-Thread-Index: AQHU3/Rkq442pz8lMUyKMEkK+mFVAqYWrcWQ
-Date:   Thu, 21 Mar 2019 22:39:06 +0000
-Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D376AEC@ORSMSX104.amr.corp.intel.com>
-References: <20190321144223.14392-1-yuehaibing@huawei.com>
-In-Reply-To: <20190321144223.14392-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDFjNTNjZmUtY2M2MC00YzE0LWJiMzctMmY4NjdkNjU3OTMxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRkJ5M3dQdGd1UkpLdFNuWGpZRTNqcVJIclB1Vit0OFdSWWZGaktuYkcwTVFVSjJGSVwvMXpIcmpwYVIydWN3NlcifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725953AbfCUWnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:43:04 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D39683082A51;
+        Thu, 21 Mar 2019 22:43:03 +0000 (UTC)
+Received: from x1.home (ovpn-116-218.phx2.redhat.com [10.3.116.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B18E60857;
+        Thu, 21 Mar 2019 22:43:00 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 16:43:00 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com
+Subject: Re: [PATCH v6 08/22] vfio: VFIO_IOMMU_CACHE_INVALIDATE
+Message-ID: <20190321164300.12dc2dcb@x1.home>
+In-Reply-To: <20190317172232.1068-9-eric.auger@redhat.com>
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+        <20190317172232.1068-9-eric.auger@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 21 Mar 2019 22:43:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of Yue Haibing
-> Sent: Thursday, March 21, 2019 7:42 AM
-> To: davem@davemloft.net; Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>
-> Cc: netdev@vger.kernel.org; YueHaibing <yuehaibing@huawei.com>; intel-
-> wired-lan@lists.osuosl.org; linux-kernel@vger.kernel.org
-> Subject: [Intel-wired-lan] [PATCH] fm10k: Fix a potential NULL pointer
-> dereference
+On Sun, 17 Mar 2019 18:22:18 +0100
+Eric Auger <eric.auger@redhat.com> wrote:
+
+> From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
 > 
-> From: YueHaibing <yuehaibing@huawei.com>
+> When the guest "owns" the stage 1 translation structures,  the host
+> IOMMU driver has no knowledge of caching structure updates unless
+> the guest invalidation requests are trapped and passed down to the
+> host.
 > 
-> Syzkaller report this:
+> This patch adds the VFIO_IOMMU_CACHE_INVALIDATE ioctl with aims
+> at propagating guest stage1 IOMMU cache invalidations to the host.
 > 
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-
-> 1ubuntu1 04/01/2014
-> RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
-> Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3
-> 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00
-> 49 81 7d 00 e0 de 03 a6 41 bc 00 00
-> RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
-> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-> R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
-> R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
-> FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000)
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
-> __mutex_lock_common kernel/locking/mutex.c:925 [inline]
->  __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
->  drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
->  destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
-> __do_sys_delete_module kernel/module.c:1018 [inline]
-> __se_sys_delete_module kernel/module.c:961 [inline]
->  __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6
-> 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7
-> c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000000b0
-> RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
-> RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
-> R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 > 
-> If alloc_workqueue fails, it should return -ENOMEM, otherwise may trigger
-> this NULL pointer dereference while unloading drivers.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/net/ethernet/intel/fm10k/fm10k_main.c | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+> v2 -> v3:
+> - introduce vfio_iommu_for_each_dev back in this patch
+> 
+> v1 -> v2:
+> - s/TLB/CACHE
+> - remove vfio_iommu_task usage
+> - commit message rewording
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 47 +++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       | 13 +++++++++
+>  2 files changed, 60 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 222e9199edbf..12a40b9db6aa 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -113,6 +113,26 @@ struct vfio_regions {
+>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
+>  					(!list_empty(&iommu->domain_list))
+>  
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+static struct foo {
+	struct iommu_domain *domain;
+	void *data;
+};
 
+> +/* iommu->lock must be held */
+> +static int
+> +vfio_iommu_for_each_dev(struct vfio_iommu *iommu, void *data,
+> +			int (*fn)(struct device *, void *))
+> +{
+> +	struct vfio_domain *d;
+> +	struct vfio_group *g;
+> +	int ret = 0;
+
+	struct foo bar = { .data = data };
+
+> +
+> +	list_for_each_entry(d, &iommu->domain_list, next) {
+
+		bar.domain = d->domain;
+
+> +		list_for_each_entry(g, &d->group_list, next) {
+> +			ret = iommu_group_for_each_dev(g->iommu_group,
+> +						       data, fn);
+
+							s/data/&bar/
+
+> +			if (ret)
+> +				break;
+> +		}
+> +	}
+> +	return ret;
+> +}
+> +
+>  static int put_pfn(unsigned long pfn, int prot);
+>  
+>  /*
+> @@ -1681,6 +1701,15 @@ vfio_attach_pasid_table(struct vfio_iommu *iommu,
+>  	return ret;
+>  }
+>  
+> +static int vfio_cache_inv_fn(struct device *dev, void *data)
+> +{
+
+struct foo *bar = data;
+
+> +	struct vfio_iommu_type1_cache_invalidate *ustruct =
+> +		(struct vfio_iommu_type1_cache_invalidate *)data;
+
+... = bar->data;
+
+> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
+
+... = bar->domain;
+
+¯\_(ツ)_/¯ seems more efficient that doing a lookup.
+
+> +
+> +	return iommu_cache_invalidate(d, dev, &ustruct->info);
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
+>  {
+> @@ -1767,6 +1796,24 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  	} else if (cmd == VFIO_IOMMU_DETACH_PASID_TABLE) {
+>  		vfio_detach_pasid_table(iommu);
+>  		return 0;
+> +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
+> +		struct vfio_iommu_type1_cache_invalidate ustruct;
+> +		int ret;
+> +
+> +		minsz = offsetofend(struct vfio_iommu_type1_cache_invalidate,
+> +				    info);
+> +
+> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (ustruct.argsz < minsz || ustruct.flags)
+> +			return -EINVAL;
+> +
+> +		mutex_lock(&iommu->lock);
+> +		ret = vfio_iommu_for_each_dev(iommu, &ustruct,
+> +					      vfio_cache_inv_fn);
+
+Guess what has a version field that never gets checked ;)
+
+Thanks,
+Alex
+
+> +		mutex_unlock(&iommu->lock);
+> +		return ret;
+>  	}
+>  
+>  	return -ENOTTY;
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 329d378565d9..29f0ef2d805d 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -776,6 +776,19 @@ struct vfio_iommu_type1_attach_pasid_table {
+>  #define VFIO_IOMMU_ATTACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 22)
+>  #define VFIO_IOMMU_DETACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 23)
+>  
+> +/**
+> + * VFIO_IOMMU_CACHE_INVALIDATE - _IOWR(VFIO_TYPE, VFIO_BASE + 24,
+> + *			struct vfio_iommu_type1_cache_invalidate)
+> + *
+> + * Propagate guest IOMMU cache invalidation to the host.
+> + */
+> +struct vfio_iommu_type1_cache_invalidate {
+> +	__u32   argsz;
+> +	__u32   flags;
+> +	struct iommu_cache_invalidate_info info;
+> +};
+> +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
+> +
+>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+>  
+>  /*
 
