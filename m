@@ -3,138 +3,475 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12193C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1DAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E292075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0182083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfCUNly (ORCPT
+        id S1728735AbfCUNmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:41:54 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27103 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfCUNlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:41:52 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2LDanrX004257;
-        Thu, 21 Mar 2019 14:41:17 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qg4wqs8-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 21 Mar 2019 14:41:17 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C70B33A;
-        Thu, 21 Mar 2019 13:41:14 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A0EAC508A;
-        Thu, 21 Mar 2019 13:41:14 +0000 (GMT)
-Received: from [10.48.0.167] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Mar
- 2019 14:41:13 +0100
-Subject: Re: [PATCH 1/8] iio: adc: stm32-dfsdm: make spi_master_freq more
- accurate
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-References: <1551862524-25098-1-git-send-email-fabrice.gasnier@st.com>
- <1551862524-25098-2-git-send-email-fabrice.gasnier@st.com>
- <20190310100932.71fd1af1@archlinux>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <62742e3f-3860-3020-33a0-dafc9ae66dd1@st.com>
-Date:   Thu, 21 Mar 2019 14:41:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190310100932.71fd1af1@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_06:,,
- signatures=0
+        Thu, 21 Mar 2019 09:42:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36544 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728579AbfCUNlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:41:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CA332AFAC;
+        Thu, 21 Mar 2019 13:41:09 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 74336E00BF; Thu, 21 Mar 2019 14:41:09 +0100 (CET)
+Message-Id: <f0256f8f102d8c4430b18a762aa7a012834780f7.1553170807.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
+References: <cover.1553170807.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v4 17/22] ethtool: set link settings and link modes
+ with SET_SETTINGS request
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 Mar 2019 14:41:09 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/19 11:09 AM, Jonathan Cameron wrote:
-> On Wed, 6 Mar 2019 09:55:17 +0100
-> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> 
->> When SPI clock isn't accurate, 'spi_master_freq' is filled in with
->> expected frequency. Use computed value instead:
->> - e.g. source clock / (CKOUTDIV + 1)
->> Also, current divider may be set to value that makes CKOUT to exceed
->> spi-max-frequency. Rather use lower value (e.g. round up divider when
->> ckout isn't accurate).
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  drivers/iio/adc/stm32-dfsdm-core.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
->> index bf089f5..65b7556 100644
->> --- a/drivers/iio/adc/stm32-dfsdm-core.c
->> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
->> @@ -243,13 +243,18 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
->>  		return 0;
->>  	}
->>  
->> -	priv->spi_clk_out_div = div_u64_rem(clk_freq, spi_freq, &rem) - 1;
->> +	priv->spi_clk_out_div = div_u64_rem(clk_freq, spi_freq, &rem);
->> +
->> +	/* round up divider when clkout isn't accurate (e.g. !rem) */
->> +	if (priv->spi_clk_out_div && !rem)
->> +		priv->spi_clk_out_div--;
->> +
-> This comment perhaps needs adjusting because at the moment it looks
-> like it decrements when it is accurate.   With the old code in place
-> in the patch it's obvious that's because you actually want one less.
-> 
-> Might even be worth the dance of
-> 
-> /* round up if not precise */
-> if (priv->spi_clk_out_div && rem)
-> 	priv->spi_clk_out_div++;
-> 
-> /* subtract one because....  */
-> priv->spi_clk_out_div--;
+Implement SET_SETTINGS netlink request allowing to set link settings and
+advertised link modes as an alternative to ETHTOOL_SLINKSETTINGS ioctl
+command.
 
-Hi Jonathan,
+ETHA_SETTINGS_LINK_MODES attribute is used to set (or modify) advertised
+link modes and related settings (autonegotiation, speed and duplex) and
+ETHA_SETTINGS_LINK_INFO to set other link settings.
 
-I'll rework this patch in v2, make it easier to understand & read.
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ Documentation/networking/ethtool-netlink.txt |  34 ++-
+ net/ethtool/netlink.c                        |   5 +
+ net/ethtool/netlink.h                        |   2 +
+ net/ethtool/settings.c                       | 305 +++++++++++++++++++
+ 4 files changed, 343 insertions(+), 3 deletions(-)
 
-In a few words: the clock output is divider = ckoutdiv + 1.
-ckoutdiv range can be from 1-255 to provide divider of 2-256.
-So I'll introduce this divider as a variable, and use it to setup
-spi_clk_out_div.
-This should address all your remarks here.
+diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+index d723b3537c46..e79ae9fe01be 100644
+--- a/Documentation/networking/ethtool-netlink.txt
++++ b/Documentation/networking/ethtool-netlink.txt
+@@ -132,7 +132,7 @@ List of message types
+     ETHNL_CMD_GET_INFO
+     ETHNL_CMD_SET_INFO			response only
+     ETHNL_CMD_GET_SETTINGS
+-    ETHNL_CMD_SET_SETTINGS		response only (for now)
++    ETHNL_CMD_SET_SETTINGS
+ 
+ All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
+ to indicate the type.
+@@ -304,6 +304,34 @@ to them are broadcasted as notifications on change of these settings using
+ netlink or ioctl ethtool interface.
+ 
+ 
++SET_SETTINGS
++------------
++
++SET_SETTINGS request allows setting some of the data reported by GET_SETTINGS.
++Request flags, info_mask and index are ignored. These attributes are allowed
++to be passed with SET_SETTINGS request:
++
++    ETHA_SETTINGS_DEV		(nested)	device identification
++    ETHA_SETTINGS_LINK_INFO	(nested)	link settings
++        ETHA_LINKINFO_PORT		(u8)		physical port
++        ETHA_LINKINFO_PHYADDR		(u8)		MDIO address of phy
++        ETHA_LINKINFO_TP_MDIX_CTRL	(u8)		MDI(-X) control
++    ETHA_SETTINGS_LINK_MODES	(nested)	link modes
++        ETHA_LINKMODES_AUTONEG		(u8)		autonegotiation
++        ETHA_LINKMODES_OURS		(bitset)	advertised link modes
++        ETHA_LINKMODES_SPEED		(u32)		link speed (Mb/s)
++        ETHA_LINKMODES_DUPLEX		(u8)		duplex mode
++
++ETHA_LINKMODES_OURS bit set allows setting advertised link modes. If
++autonegotiation is on (either set now or kept from before), advertised modes
++are not changed (no ETHA_LINKMODES_OURS attribute) and at least one of speed
++and duplex is specified, kernel adjusts advertised modes to all supported
++modes matching speed, duplex or both (whatever is specified). This
++autoselection is done on ethtool side with ioctl interface, netlink interface
++is supposed to allow requesting changes without knowing what exactly kernel
++supports.
++
++
+ Request translation
+ -------------------
+ 
+@@ -314,7 +342,7 @@ have their netlink replacement yet.
+ ioctl command			netlink command
+ ---------------------------------------------------------------------
+ ETHTOOL_GSET			ETHNL_CMD_GET_SETTINGS
+-ETHTOOL_SSET			n/a
++ETHTOOL_SSET			ETHNL_CMD_SET_SETTINGS
+ ETHTOOL_GDRVINFO		ETHNL_CMD_GET_INFO
+ ETHTOOL_GREGS			n/a
+ ETHTOOL_GWOL			n/a
+@@ -388,7 +416,7 @@ ETHTOOL_STUNABLE		n/a
+ ETHTOOL_GPHYSTATS		n/a
+ ETHTOOL_PERQUEUE		n/a
+ ETHTOOL_GLINKSETTINGS		ETHNL_CMD_GET_SETTINGS
+-ETHTOOL_SLINKSETTINGS		n/a
++ETHTOOL_SLINKSETTINGS		ETHNL_CMD_SET_SETTINGS
+ ETHTOOL_PHY_GTUNABLE		n/a
+ ETHTOOL_PHY_STUNABLE		n/a
+ ETHTOOL_GFECPARAM		n/a
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 859d44550390..8f47149784a6 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -659,6 +659,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.dumpit	= ethnl_get_dumpit,
+ 		.done	= ethnl_get_done,
+ 	},
++	{
++		.cmd	= ETHNL_CMD_SET_SETTINGS,
++		.flags	= GENL_UNS_ADMIN_PERM,
++		.doit	= ethnl_set_settings,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index fd7a362d79fa..853cd5b23415 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -291,4 +291,6 @@ extern const struct get_request_ops strset_request_ops;
+ extern const struct get_request_ops info_request_ops;
+ extern const struct get_request_ops settings_request_ops;
+ 
++int ethnl_set_settings(struct sk_buff *skb, struct genl_info *info);
++
+ #endif /* _NET_ETHTOOL_NETLINK_H */
+diff --git a/net/ethtool/settings.c b/net/ethtool/settings.c
+index 5d0c44a58883..2e0f425029ef 100644
+--- a/net/ethtool/settings.c
++++ b/net/ethtool/settings.c
+@@ -14,6 +14,97 @@ struct settings_data {
+ 	bool				lpm_empty;
+ };
+ 
++struct link_mode_info {
++	int				speed;
++	u8				duplex;
++};
++
++#define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex) \
++	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = { \
++		.speed	= SPEED_ ## _speed, \
++		.duplex	= __DUPLEX_ ## _duplex \
++	}
++#define __DUPLEX_Half DUPLEX_HALF
++#define __DUPLEX_Full DUPLEX_FULL
++#define __DEFINE_SPECIAL_MODE_PARAMS(_mode) \
++	[ETHTOOL_LINK_MODE_ ## _mode ## _BIT] = { \
++		.speed	= SPEED_UNKNOWN, \
++		.duplex	= DUPLEX_UNKNOWN, \
++	}
++
++static const struct link_mode_info link_mode_params[] = {
++	__DEFINE_LINK_MODE_PARAMS(10, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(10, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(100, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(100, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(1000, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(1000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Autoneg),
++	__DEFINE_SPECIAL_MODE_PARAMS(TP),
++	__DEFINE_SPECIAL_MODE_PARAMS(AUI),
++	__DEFINE_SPECIAL_MODE_PARAMS(MII),
++	__DEFINE_SPECIAL_MODE_PARAMS(FIBRE),
++	__DEFINE_SPECIAL_MODE_PARAMS(BNC),
++	__DEFINE_LINK_MODE_PARAMS(10000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Pause),
++	__DEFINE_SPECIAL_MODE_PARAMS(Asym_Pause),
++	__DEFINE_LINK_MODE_PARAMS(2500, X, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Backplane),
++	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full),
++	[ETHTOOL_LINK_MODE_10000baseR_FEC_BIT] = {
++		.speed	= SPEED_10000,
++		.duplex = DUPLEX_FULL,
++	},
++	__DEFINE_LINK_MODE_PARAMS(20000, MLD2, Full),
++	__DEFINE_LINK_MODE_PARAMS(20000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, LR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, LR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, KR, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, CR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, LR4_ER4, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, SR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(1000, X, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, LR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, LRM, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, ER, Full),
++	__DEFINE_LINK_MODE_PARAMS(2500, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(5000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_NONE),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_RS),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_BASER),
++	__DEFINE_LINK_MODE_PARAMS(50000, KR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, LR_ER_FR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, DR, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, SR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, CR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, LR2_ER2_FR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, DR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, LR4_ER4_FR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, DR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, CR4, Full),
++};
++
+ static const struct nla_policy get_settings_policy[ETHA_SETTINGS_MAX + 1] = {
+ 	[ETHA_SETTINGS_UNSPEC]		= { .type = NLA_REJECT },
+ 	[ETHA_SETTINGS_DEV]		= { .type = NLA_NESTED },
+@@ -275,3 +366,217 @@ const struct get_request_ops settings_request_ops = {
+ 	.reply_size		= settings_size,
+ 	.fill_reply		= fill_settings,
+ };
++
++/* SET_SETTINGS */
++
++static const struct nla_policy set_linkinfo_policy[ETHA_LINKINFO_MAX + 1] = {
++	[ETHA_LINKINFO_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_LINKINFO_PORT]		= { .type = NLA_U8 },
++	[ETHA_LINKINFO_PHYADDR]		= { .type = NLA_U8 },
++	[ETHA_LINKINFO_TP_MDIX]		= { .type = NLA_REJECT },
++	[ETHA_LINKINFO_TP_MDIX_CTRL]	= { .type = NLA_U8 },
++	[ETHA_LINKINFO_TRANSCEIVER]	= { .type = NLA_REJECT },
++};
++
++static const struct nla_policy set_linkmodes_policy[ETHA_LINKMODES_MAX + 1] = {
++	[ETHA_LINKMODES_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_LINKMODES_AUTONEG]	= { .type = NLA_U8 },
++	[ETHA_LINKMODES_OURS]		= { .type = NLA_NESTED },
++	[ETHA_LINKMODES_PEER]		= { .type = NLA_REJECT },
++	[ETHA_LINKMODES_SPEED]		= { .type = NLA_U32 },
++	[ETHA_LINKMODES_DUPLEX]		= { .type = NLA_U8 },
++};
++
++static const struct nla_policy set_settings_policy[ETHA_SETTINGS_MAX + 1] = {
++	[ETHA_SETTINGS_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHA_SETTINGS_DEV]		= { .type = NLA_NESTED },
++	[ETHA_SETTINGS_INFOMASK]	= { .type = NLA_REJECT },
++	[ETHA_SETTINGS_COMPACT]		= { .type = NLA_FLAG },
++	[ETHA_SETTINGS_LINK_INFO]	= { .type = NLA_NESTED },
++	[ETHA_SETTINGS_LINK_MODES]	= { .type = NLA_NESTED },
++};
++
++static int ethnl_set_link_ksettings(struct genl_info *info,
++				    struct net_device *dev,
++				    struct ethtool_link_ksettings *ksettings)
++{
++	int ret = dev->ethtool_ops->set_link_ksettings(dev, ksettings);
++
++	if (ret < 0)
++		ETHNL_SET_ERRMSG(info, "link settings update failed");
++	return ret;
++}
++
++/* Set advertised link modes to all supported modes matching requested speed
++ * and duplex values. Called when autonegotiation is on, speed or duplex is
++ * requested but no link mode change. This is done in userspace with ioctl()
++ * interface, move it into kernel for netlink.
++ * Returns true if advertised modes bitmap was modified.
++ */
++static bool auto_link_modes(struct ethtool_link_ksettings *ksettings,
++			    bool req_speed, bool req_duplex)
++{
++	unsigned long *advertising = ksettings->link_modes.advertising;
++	unsigned long *supported = ksettings->link_modes.supported;
++	DECLARE_BITMAP(old_adv, __ETHTOOL_LINK_MODE_MASK_NBITS);
++	unsigned int i;
++
++	bitmap_copy(old_adv, advertising, __ETHTOOL_LINK_MODE_MASK_NBITS);
++
++	for (i = 0; i < __ETHTOOL_LINK_MODE_MASK_NBITS; i++) {
++		const struct link_mode_info *info = &link_mode_params[i];
++
++		if (info->speed == SPEED_UNKNOWN)
++			continue;
++		if (test_bit(i, supported) &&
++		    (!req_speed || info->speed == ksettings->base.speed) &&
++		    (!req_duplex || info->duplex == ksettings->base.duplex))
++			set_bit(i, advertising);
++		else
++			clear_bit(i, advertising);
++	}
++
++	return !bitmap_equal(old_adv, advertising,
++			     __ETHTOOL_LINK_MODE_MASK_NBITS);
++}
++
++static int update_linkinfo(struct genl_info *info, struct nlattr *nest,
++			   struct ethtool_link_settings *lsettings)
++{
++	struct nlattr *tb[ETHA_LINKINFO_MAX + 1];
++	int ret;
++
++	if (!nest)
++		return 0;
++	ret = nla_parse_nested_strict(tb, ETHA_LINKINFO_MAX, nest,
++				      set_linkinfo_policy, info->extack);
++	if (ret < 0)
++		return ret;
++
++	ret = 0;
++	if (ethnl_update_u8(&lsettings->port, tb[ETHA_LINKINFO_PORT]))
++		ret = 1;
++	if (ethnl_update_u8(&lsettings->phy_address, tb[ETHA_LINKINFO_PHYADDR]))
++		ret = 1;
++	if (ethnl_update_u8(&lsettings->eth_tp_mdix_ctrl,
++			    tb[ETHA_LINKINFO_TP_MDIX_CTRL]))
++		ret = 1;
++
++	return ret;
++}
++
++static int update_link_modes(struct genl_info *info, const struct nlattr *nest,
++			     struct ethtool_link_ksettings *ksettings)
++{
++	struct ethtool_link_settings *lsettings = &ksettings->base;
++	struct nlattr *tb[ETHA_LINKMODES_MAX + 1];
++	bool req_speed, req_duplex;
++	bool mod = false;
++	int ret;
++
++	if (!nest)
++		return 0;
++	ret = nla_parse_nested_strict(tb, ETHA_LINKMODES_MAX, nest,
++				      set_linkmodes_policy, info->extack);
++	if (ret < 0)
++		return ret;
++	req_speed = tb[ETHA_LINKMODES_SPEED];
++	req_duplex = tb[ETHA_LINKMODES_DUPLEX];
++
++	if (ethnl_update_u8(&lsettings->autoneg, tb[ETHA_LINKMODES_AUTONEG]))
++		mod = true;
++	if (ethnl_update_bitset(ksettings->link_modes.advertising, NULL,
++				__ETHTOOL_LINK_MODE_MASK_NBITS,
++				tb[ETHA_LINKMODES_OURS],
++				&ret, link_mode_names, false, info))
++		mod = true;
++	if (ret < 0)
++		return ret;
++	if (ethnl_update_u32(&lsettings->speed, tb[ETHA_LINKMODES_SPEED]))
++		mod = true;
++	if (ethnl_update_u8(&lsettings->duplex, tb[ETHA_LINKMODES_DUPLEX]))
++		mod = true;
++
++	if (!tb[ETHA_LINKMODES_OURS] && lsettings->autoneg &&
++	    (req_speed || req_duplex) &&
++	    auto_link_modes(ksettings, req_speed, req_duplex))
++		mod = true;
++
++	return mod;
++}
++
++/* Update device settings using ->set_link_ksettings() callback */
++static int ethnl_update_ksettings(struct genl_info *info, struct nlattr **tb,
++				  struct net_device *dev, u32 *req_mask)
++{
++	struct ethtool_link_ksettings ksettings = {};
++	struct ethtool_link_settings *lsettings;
++	u32 mod_mask = 0;
++	int ret;
++
++	ret = ethnl_get_link_ksettings(info, dev, &ksettings);
++	if (ret < 0)
++		return ret;
++	lsettings = &ksettings.base;
++
++	ret = update_linkinfo(info, tb[ETHA_SETTINGS_LINK_INFO], lsettings);
++	if (ret < 0)
++		return ret;
++	if (ret)
++		mod_mask |= ETH_SETTINGS_IM_LINKINFO;
++
++	ret = update_link_modes(info, tb[ETHA_SETTINGS_LINK_MODES], &ksettings);
++	if (ret < 0)
++		return ret;
++	if (ret)
++		mod_mask |= ETH_SETTINGS_IM_LINKMODES;
++
++	if (mod_mask) {
++		ret = ethnl_set_link_ksettings(info, dev, &ksettings);
++		if (ret < 0)
++			return ret;
++		*req_mask |= mod_mask;
++	}
++
++	return 0;
++}
++
++int ethnl_set_settings(struct sk_buff *skb, struct genl_info *info)
++{
++	struct nlattr *tb[ETHA_SETTINGS_MAX + 1];
++	struct net_device *dev;
++	u32 req_mask = 0;
++	int ret;
++
++	ret = ethnlmsg_parse(info->nlhdr, tb, ETHA_SETTINGS_MAX,
++			     set_settings_policy, info);
++	if (ret < 0)
++		return ret;
++	dev = ethnl_dev_get(info, tb[ETHA_SETTINGS_DEV]);
++	if (IS_ERR(dev))
++		return PTR_ERR(dev);
++
++	rtnl_lock();
++	ret = ethnl_before_ops(dev);
++	if (ret < 0)
++		goto out_rtnl;
++	if (tb[ETHA_SETTINGS_LINK_INFO] || tb[ETHA_SETTINGS_LINK_MODES]) {
++		ret = -EOPNOTSUPP;
++		if (!dev->ethtool_ops->get_link_ksettings)
++			goto out_ops;
++		ret = ethnl_update_ksettings(info, tb, dev, &req_mask);
++		if (ret < 0)
++			goto out_ops;
++	}
++	ret = 0;
++
++out_ops:
++	if (req_mask)
++		ethtool_notify(dev, NULL, ETHNL_CMD_SET_SETTINGS, req_mask,
++			       NULL);
++	ethnl_after_ops(dev);
++out_rtnl:
++	rtnl_unlock();
++	dev_put(dev);
++	return ret;
++}
+-- 
+2.21.0
 
-Thanks for reviewing,
-Best Regards,
-Fabrice
-> 
->>  	if (!priv->spi_clk_out_div) {
->>  		/* spi_clk_out_div == 0 means ckout is OFF */
->>  		dev_err(&pdev->dev, "spi-max-frequency not achievable\n");
->>  		return -EINVAL;
->>  	}
->> -	priv->dfsdm.spi_master_freq = spi_freq;
->> +	priv->dfsdm.spi_master_freq = clk_freq / (priv->spi_clk_out_div + 1);
-> And we increment it again here? That needs an explanation as well.
->>  
->>  	if (rem) {
->>  		dev_warn(&pdev->dev, "SPI clock not accurate\n");
-> 
