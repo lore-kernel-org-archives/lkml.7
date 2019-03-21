@@ -2,194 +2,64 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E936C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33397C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A49218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:20:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PYlkvF8j"
+	by mail.kernel.org (Postfix) with ESMTP id 06E40218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfCUUUJ (ORCPT
+        id S1728817AbfCUUVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:20:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41472 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728670AbfCUUUI (ORCPT
+        Thu, 21 Mar 2019 16:21:34 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52724 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbfCUUVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:20:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d25so5010961pfn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qcMYcR3yFN0QONzXnGiY4kl3TCzNnyKaWHKDD4RqjpE=;
-        b=PYlkvF8j4FnA2lq3bYW3edA3pqzuFZU8QR20HY7GbE8aao+HDpaThF6MeSsPHr7vpz
-         3OPQM0nGIkicYG3BZd4Dc/EfL0SjAwOipXuHTOX2hALoxKPt8d5nu0sFSIxBPijOKyAf
-         qyCR+IcB22V77WlAkG5+aN/4AKCdZJER3XK/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qcMYcR3yFN0QONzXnGiY4kl3TCzNnyKaWHKDD4RqjpE=;
-        b=qRBonrIVqYT/0M4cI0V1gLC5KxqDAhct7KdjaW1t3sSEf3/vx4kH+Yq+FVdvKZ/wu+
-         Tm4FF60T6El6aLcx/8MF6NSK1NQ7jT3oYsBFc2pKAQUgj/DkUKRyCow25fIBlDQJEYb+
-         YorvMrbuVCWm1ccBcl/sKu/XwGOK8lfEyf7Td57hUBF93wP7CFsyNwQQQm7laAA/MrRF
-         d/zOAMjeRzq90/gdm2fAsi0rVNnwWUk1LYywGZEFUVE0XXSGaCHMP9fQWWZ1C2HrCeag
-         Vm423xBFWrHCJIpmGmDWZsyTAXRZIsE3Dt4fqB6R8AfzKMNtwXmBNdAO7PZw836cAQo7
-         l43g==
-X-Gm-Message-State: APjAAAVXbjgx0s6OFEgbUrUDKK41xcVCUFZw/8SWiM4CLwP3t7Aq+qao
-        8gBMTlBbqU/NjvO3vI+5dZaepA==
-X-Google-Smtp-Source: APXvYqzywrWVhwVbf2rF0upBRui/l9at63AH63pk55vq3yUJ5GgP1FRmIS3QB9tMWOnTtoqUho/glw==
-X-Received: by 2002:a17:902:b60c:: with SMTP id b12mr5371408pls.261.1553199607361;
-        Thu, 21 Mar 2019 13:20:07 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id a7sm7252905pff.54.2019.03.21.13.20.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 13:20:06 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     mka@chromium.org, ryandcase@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Add vdd_logic to rk3288-veyron
-Date:   Thu, 21 Mar 2019 13:19:44 -0700
-Message-Id: <20190321201944.34684-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 21 Mar 2019 16:21:34 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 78355133E9775;
+        Thu, 21 Mar 2019 13:21:33 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 13:21:32 -0700 (PDT)
+Message-Id: <20190321.132132.401829742507656571.davem@davemloft.net>
+To:     dmurphy@ti.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: phy: Add DP83825I to the DP83822 driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190320123655.6289-1-dmurphy@ti.com>
+References: <20190320123655.6289-1-dmurphy@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 21 Mar 2019 13:21:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vdd_logic rail controls the voltage supplied to misc logic on
-rk3288, including the voltage supplied to the memory controller.  The
-vcc logic is implemented by a PWM regulator.
+From: Dan Murphy <dmurphy@ti.com>
+Date: Wed, 20 Mar 2019 07:36:55 -0500
 
-Right now there are no consumers of vdd_logic on veyron but if anyone
-ever wants to try to add DDR Freq they'd need it.
+> Add the DP83825I ethernet PHY to the DP83822 driver.
+> These devices share the same WoL register bits and addresses.
+> 
+> The phy_driver init was made into a macro as there may be future
+> devices appended to this driver that will share the register space.
+> 
+> http://www.ti.com/lit/gpn/dp83825i
+> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - Updated id and mask to new ID_MATCH macro, removed extra line - https://lore.kernel.org/patchwork/patch/1052329/
 
-Note that in the downstream Chrome OS kernel the PWM regulator has
-a voltage table with these points:
-  1350000 0%
-  1300000 10%
-  1250000 20%
-  1200000 31%
-  1150000 41%
-  1125000 46%
-  1100000 52%
-  1050000 62%
-  1000000 72%
-   950000 83%
-
-The DDR Freq driver in the downstream kernel only uses some of those
-points, namely:
-  DDR3:  1200000, 1150000, 1100000, 1050000
-  LPDDR:          1150000, 1100000, 1050000
-
-When adapting the downstream kernel to upstream I have opted to switch
-to using the "continuous" mode of the PWM regulator driver.  This was
-the only way I could get the upstream driver to achieve _exactly_ the
-same voltages as the downstream driver could.  Specifically note that
-the old driver in downstream Chrome OS 3.14 _didn't_ have the
-DIV_ROUND_CLOSEST_ULL() in the Rockchip PLL driver.  That means if I
-use the same (downstream) table I might end up with a duty cycle
-that's 1 larger than was used downstream, leading to a slightly
-different voltage.  Due to the way the rounding worked I couldn't even
-just adjust the "percent" by 1 for a given voltage level--certain duty
-cycles just aren't achievable with the upstream math for voltage
-tables.
-
-Using continuous mode you can achieve the exact same duty cycle by
-simply adjusting the voltage you use by a tad bit.  The voltages that
-are equivalent to the ones used in the downstream kernel's table are:
-  1350000, 1304472, 1255691, 1200407, 1154878,
-  1128862, 1099593, 1050813, 1005285, 950000
-
-Note that the top/bottom voltage is exactly the same just due to the
-way that continuous mode is calculated and the fact that I used those
-as anchors.  I didn't make any attempt to do the resistor math (as was
-done on rk3399-gru).
-
-If anyone ever gets DDRFreq working on veyron upstream they should
-thus adjust the voltage specified in the DDRFreq operating points
-slightly (as per the above) to obtain the existing/tested values.  AKA
-you'd use:
-  DDR3:  1200407, 1154878, 1099593, 1050813
-  LPDDR:          1154878, 1099593, 1050813
-
-A few other notes:
-- The "period" here (1994) is different than the "period" downstream
-  (2000) for similar reasons: there's a DIV_ROUND_CLOSEST_ULL() that
-  wasn't downstream.  With 1994 upstream comes up with the same value
-  (0x94) to program into the hardware that downstream put there.  As
-  far as I can tell 0x94 actually means 1993.27.
-- The duty cycle unit of 0x94 was picked by just matching the period
-  which nicely allows us to insert 0x7b as that value to program into
-  the hardware for 950mV.  The 0x7b was found by observing what the
-  downstream kernel calculated (not that the system can actually run
-  with vdd_log at 950 mV).
-- The downstream kernel can also be seen to program a different value
-  into the CTRL field.  Upstream achieves 0x0b and downstream 0x1b.
-  This is because the upstream commit bc834d7b07b4 ("pwm: rockchip:
-  Move the configuration of polarity") fixed a bug by adding "ctrl &=
-  ~PWM_POLARITY_MASK".  Downstream accidentally left bit 4 set.
-  Luckily this bit doesn't matter--it's only used when the PWM goes
-  inactive (AKA if it's in oneshot mode or is disabled) and we don't
-  do that for the PWM regulator.
-
-I measured the voltage of vdd_log while adjusting it and found that
-with the upstream kernel voltage difference between requested and
-actual was 9.2 mV at 950 mV and 13.4 mV at 1350 mV with in-between
-voltages consistently showing ~1% error.  This error is likely
-expected as voltage can be seen to sag a bit when more load is put on
-the rail.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- arch/arm/boot/dts/rk3288-veyron.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 0bc2409f6903..5181d9435fda 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -95,6 +95,23 @@
- 		regulator-boot-on;
- 		vin-supply = <&vcc_5v>;
- 	};
-+
-+	vdd_logic: vdd-logic {
-+		compatible = "pwm-regulator";
-+		regulator-name = "vdd_logic";
-+
-+		pwms = <&pwm1 0 1994 0>;
-+		pwm-supply = <&vcc33_sys>;
-+
-+		pwm-dutycycle-range = <0x7b 0>;
-+		pwm-dutycycle-unit = <0x94>;
-+
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <950000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-ramp-delay = <4000>;
-+	};
- };
- 
- &cpu0 {
--- 
-2.21.0.225.g810b269d1ac-goog
-
+Applied, thanks.
