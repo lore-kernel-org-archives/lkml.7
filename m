@@ -2,91 +2,100 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FE9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C3B218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F35218D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="MBb34mTw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GdjYGLlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbfCUKUd (ORCPT
+        id S1727984AbfCUKY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:20:33 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:34200 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfCUKUb (ORCPT
+        Thu, 21 Mar 2019 06:24:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33874 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727881AbfCUKY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:20:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id A045D27E04A8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id JvcpK5qT283i for <linux-kernel@vger.kernel.org>;
-        Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 55E9D27E04A9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 55E9D27E04A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1553163629;
-        bh=1PKu7m2ySLQ6dGkcX7EbvNjxXkfSKrK9SlKSQgok6M4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=MBb34mTwT2NGzK6vc7iv7PQTN1hM1aULAib/vHmZLyZ5fOVwLZ30ThU5I48DIl8pK
-         wH0FPLA4XMeFaxJVQalip4T837bdUEZWHcjTw5HK3fuQCZdQ9++7CkFY6nvV9MlWZs
-         es8emSMH4aUMg+izb3poozb3bcvZnXxFO3dXP6WI=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id wuGVQ2zbxVS7 for <linux-kernel@vger.kernel.org>;
-        Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 3624D27E04A8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-Date:   Thu, 21 Mar 2019 11:20:29 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     linux-kernel@vger.kernel.org
-Message-ID: <1741404498.4767335.1553163629182.JavaMail.zimbra@kalray.eu>
-Subject: [PATCH] dma: select GENERIC_ALLOCATOR for DMA_REMAP
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Thu, 21 Mar 2019 06:24:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2LANrov181609;
+        Thu, 21 Mar 2019 10:24:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=v0TkPBWgrLmRX0kAD4/pUy041dM3Z5H22OqMdbWAwiQ=;
+ b=GdjYGLltvDLGMZHSRme1wNhT4CI31vSNtgLgbKBD+Mlik4G/oKKhIoa2TgAWu3d9hMeT
+ ymdyuokeX1t24yqCTrbFsJ9F56yMQWGgAL4xEH3Cuw/Q35s/A7bzEHarazvIOMh8PRg1
+ c7kbR8h6JnnvC1wiJa5w7+499U6o3XatZmfRBUY/LZrf9B99wXwdRAnUW1FZB7Q6p0BW
+ OtxQpf9Lt2pjwMDAoZ4U9bLhbsFRHyQRYvYt+gGg3vPoesQKn1mSfOs5o6I4akyqFPcg
+ XTPogUTpurVUqn9+sx9dsoCYL1G49mPBQc6jg+Dij+omfmqF86EMCrbYr2ubGq3lwcg4 Rw== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2r8ssrqgb3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 10:24:39 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2LAOcMu024317
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 10:24:39 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2LAObFu013098;
+        Thu, 21 Mar 2019 10:24:37 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Mar 2019 03:24:36 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190321092138.GY18740@MiWiFi-R3L-srv>
+Date:   Thu, 21 Mar 2019 04:24:35 -0600
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>, mhocko@suse.com,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - GC71 (Linux)/8.8.11_GA_3787)
-Thread-Index: NGPCvDoj7yFWRpAnvrjujfr+mHAQTQ==
-Thread-Topic: select GENERIC_ALLOCATOR for DMA_REMAP
+Message-Id: <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
+References: <20190320073540.12866-1-bhe@redhat.com>
+ <20190320111959.GV19508@bombadil.infradead.org>
+ <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
+ <20190320122243.GX19508@bombadil.infradead.org>
+ <20190320123658.GF13626@rapoport-lnx>
+ <20190320125843.GY19508@bombadil.infradead.org>
+ <20190321064029.GW18740@MiWiFi-R3L-srv>
+ <20190321092138.GY18740@MiWiFi-R3L-srv>
+To:     Baoquan He <bhe@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.8)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=760 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903210077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DMA_REMAP is enabled, code in remap.c needs generic allocator.
-It currently worked since few architectures uses it (arm64, csky) and
-they both select GENERIC_ALLOCATOR.
 
-Signed-off-by: Clement Leger <clement.leger@kalray.eu>
----
- kernel/dma/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index a06ba3013b3b..6a43c4ae77f9 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -58,6 +58,7 @@ config SWIOTLB
- config DMA_REMAP
- 	depends on MMU
- 	bool
-+	select GENERIC_ALLOCATOR
- 
- config DMA_DIRECT_REMAP
- 	bool
--- 
-2.15.0.276.g89ea799
+> On Mar 21, 2019, at 3:21 AM, Baoquan He <bhe@redhat.com> wrote:
+
+It appears as is so often the case that the usage has far outpaced the
+documentation and -EEXIST may be the proper code to return.
+
+The correct answer here may be to modify the documentation to note the
+additional semantic, though if the usage is solely within the kernel it
+may be sufficient to explain its use in the header comment for the
+routine (in this case sparse_add_one_section()).
+
 
