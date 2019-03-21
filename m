@@ -2,101 +2,162 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262A0C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88F0218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCDF218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gUIbidyM"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Jw0H8Q6n";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZmZw3MFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfCUHVB (ORCPT
+        id S1727891AbfCUHjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:21:01 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:34024 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbfCUHU7 (ORCPT
+        Thu, 21 Mar 2019 03:39:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58536 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUHjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:20:59 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2L7FR8A056292;
-        Thu, 21 Mar 2019 07:20:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=c7i1Zr1Oeu2KbKqDknFFU5AYuWj4p3NzsbodfbSJpe4=;
- b=gUIbidyMSkQhuhdAXX+QRoCiZNupyMe8qwqWYdEVOHDAinAaUy5Rirsr2z3gX2Mm+PEk
- G2LGWiEXlB32ENKqy0e1xizHVcPcCtqtaV+nOnKgAXpsQHgH8d/s/KVqkVYfqVFWIM9v
- J08bG6Fb/Qp2PL6hAjvF3aiBAxqV990AQzH1GYnpkqrMqTYYaoY3gvCe1GLbpt/POGNQ
- X22k7+UYun46dMN8OqrXNw2yI2Jnn6LI7K2mkr0nNPhxgpfhnozELYLwexU7Ho3+xJVP
- UU9yZzd1ZvmI8UUkAw91gTzavSyOOIi+RGMts1fRNhfQ/VZ5fCRBz/9udGyKkhVAfuYv kg== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by aserp2130.oracle.com with ESMTP id 2r8pney0uy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 07:20:54 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2L7Kpdl005196
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Mar 2019 07:20:53 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2L7KpKL016296;
-        Thu, 21 Mar 2019 07:20:51 GMT
-Received: from kadam (/197.157.0.22)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Mar 2019 00:20:50 -0700
-Date:   Thu, 21 Mar 2019 10:20:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtlwifi: Fix potential NULL pointer
- dereference of kzalloc
-Message-ID: <20190321072039.GI2202@kadam>
-References: <20190319201509.16252-1-pakki001@umn.edu>
+        Thu, 21 Mar 2019 03:39:41 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 87A81608FC; Thu, 21 Mar 2019 07:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553153979;
+        bh=fDvqsOk8Rt/90b31egkgx5yxgXYeCId78ts4V1rUheY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Jw0H8Q6nbJgQ8ft08/ZzqMLZSitaYfa0nyAeYvLC4G/P1TS7ygKQX3TLfWh9ssuB9
+         V0cW3DfTLEb8StgyzOwwUHq0U+wyVGeoQ8rUA+bzaUwCqpZlcnX3kbFBMiaNgzALPR
+         SDX0RkW3ZhetZOZ3R8Ca1zHXp8Ez6Y6F52b1Q9LY=
+Received: from [10.79.163.157] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B45D6086B;
+        Thu, 21 Mar 2019 07:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553153978;
+        bh=fDvqsOk8Rt/90b31egkgx5yxgXYeCId78ts4V1rUheY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZmZw3MFQ7oan2orzohCBMWpTCxrKj8kTPkGIj0sDRJgSBu5sObXsLD1MK0LfShCYa
+         c+sgCsJabUiCGujGLO7KGCfHHDKbMR7MDN7oJnz95YMJHKDqzkcKCcep6OyKZ2NXlw
+         vYo1dYdD5IZSqU9Zf1MeDYgUFBPOp053rzwUHZyY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B45D6086B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] of: Drop redundant check in linker section OF match table
+To:     Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        devicetree@vger.kernel.org
+References: <1553078940-9907-1-git-send-email-mojha@codeaurora.org>
+ <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <44f8ba04-8a50-fa81-8784-aaffc4f7c3cc@codeaurora.org>
+Date:   Thu, 21 Mar 2019 13:09:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319201509.16252-1-pakki001@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9201 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903210053
+In-Reply-To: <67db2d00-26d0-f9e3-f4dd-0f48633142a9@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 03:15:08PM -0500, Aditya Pakki wrote:
-> phydm.internal is allocated using kzalloc which is used multiple
-> times without a check for NULL pointer. This patch avoids such a
-> scenario.
-> 
-> --
-> v1: Patch collision with different things, fix as per Greg
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
+On 3/21/2019 1:25 AM, Frank Rowand wrote:
+> On 3/20/19 3:49 AM, Mukesh Ojha wrote:
+>> Existing check of `fn` against NULL inside OF match table
+>> is redundant. Remove the check.
+>>
+>> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   include/linux/of.h | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index e240992..b86c00a 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -1283,13 +1283,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
+>>   	static const struct of_device_id __of_table_##name		\
+>>   		__used __section(__##table##_of_table)			\
+>>   		 = { .compatible = compat,				\
+>> -		     .data = (fn == (fn_type)NULL) ? fn : fn  }
+>> +		     .data = fn }
+>>   #else
+>>   #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
+>>   	static const struct of_device_id __of_table_##name		\
+>>   		__attribute__((unused))					\
+>>   		 = { .compatible = compat,				\
+>> -		     .data = (fn == (fn_type)NULL) ? fn : fn }
+>> +		     .data = fn }
+>>   #endif
+>>   
+>>   typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
+>>
+> The check is not redundant and does serve a purpose.
+>
+> The purpose is not very obvious on the surface, but it is checking that
+> the function fn() is of the proper type.
+
+Frank,
+
+Thanks for taking out time to explain the stuff, Yeah some miscellaneous 
+driver can do this type of mistake.
+
+-Mukesh
+
+
+> An example of a compiler warning with a bad function type is created
+> by applying the following patch:
+>
+>     drivers/of/unittest.c:62:1: warning: comparison of distinct pointer types lacks a cast [enabled by default]
+>
+> Note that you need to have CONFIG_UNITTEST enabled to compile unittest.c.
+>
+> Line 62 is
+>     OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
+>
 > ---
-
-Gar...  Sorry, no, that's not quite right.  It should be:
-
-blah blah blah...
-
-Signed-off-by: you
----
-V1: Patch collision with different things, fix as per Greg
-
-Try applying your patch with `cat raw_email.txt | git am` and you'll see
-the problem with the commit message.
-
-regards,
-dan carpenter
-
+>   drivers/of/unittest.c |   17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
+>
+> Index: b/drivers/of/unittest.c
+> ===================================================================
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -45,6 +45,23 @@ static struct unittest_results {
+>   	failed; \
+>   })
+>   
+> +struct of_device_id __unittest_of_table;
+> +
+> +static void __init unittest_setup_1_good(struct device_node *np)
+> +{
+> +}
+> +
+> +static void __init unittest_setup_2_bad(struct device_node *np_1,
+> +	struct device_node *np_2)
+> +{
+> +}
+> +
+> +OF_DECLARE_1(__unittest_of_table, unittest_setup_1_good, "unittest_compat",
+> +	unittest_setup_1_good);
+> +
+> +OF_DECLARE_1(__unittest_of_table, unittest_setup_2_bad, "unittest_compat",
+> +	unittest_setup_2_bad);
+> +
+>   static void __init of_unittest_find_node_by_name(void)
+>   {
+>   	struct device_node *np;
