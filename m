@@ -2,142 +2,474 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91590C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94187C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576132175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="CEYq/BiM"
+	by mail.kernel.org (Postfix) with ESMTP id 4D303218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbfCUQEX (ORCPT
+        id S1728547AbfCUQE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:04:23 -0400
-Received: from mail-eopbgr720105.outbound.protection.outlook.com ([40.107.72.105]:29792
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726787AbfCUQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:04:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sVtOvZrLhc/44Lqm+acrKGn6qO2C4bSCpKf+DWrjdHY=;
- b=CEYq/BiMqVHSu6/+4aooSlD/m/T4VGGALoRir48R5uiz16jffZiuhDnVQuQ34LilvgVEJWvXYOinoW9LfhxkUWB7C4vxsz+2nyoFFZAlzvju26AY1+UufZs+HSXoXN79ECneF2qHNKwN9bBkPmletJnlTLGDDyZXS0f+d6rTmXk=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB0981.namprd21.prod.outlook.com (52.132.133.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.5; Thu, 21 Mar 2019 16:04:20 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::7c40:f836:e5fc:efd0]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::7c40:f836:e5fc:efd0%6]) with mapi id 15.20.1750.010; Thu, 21 Mar 2019
- 16:04:20 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kimbrownkd <kimbrownkd@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-CC:     Long Li <longli@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
- ring_buffer_info mutex
-Thread-Topic: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
- ring_buffer_info mutex
-Thread-Index: AQHU2qFBQTqhNU8HdkG1Jcl3Z4D/rqYLugGAgANYDACABelzgIAAgPUAgADLjxA=
-Date:   Thu, 21 Mar 2019 16:04:20 +0000
-Message-ID: <DM5PR2101MB091851BC7C55093D388514D9D7420@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <cover.1550806305.git.kimbrownkd@gmail.com>
- <cover.1552592620.git.kimbrownkd@gmail.com>
- <262046fa9e89d5f483ecd5972d86f4f9608dbcc3.1552592620.git.kimbrownkd@gmail.com>
- <20190314154533.17c8a362@shemminger-XPS-13-9360>
- <20190317014927.GA60356@ubu-Virtual-Machine>
- <20190320130619.07e49c97@shemminger-XPS-13-9360>
- <20190321034752.GA6828@ubu-Virtual-Machine>
-In-Reply-To: <20190321034752.GA6828@ubu-Virtual-Machine>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-21T16:04:16.0559398Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=36ddc760-fa83-457e-8fe0-76462c6b758b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [2001:4898:80e8:a:9848:bfa6:ccac:fec]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bcc7f27b-3001-4469-22a0-08d6ae16e0d2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB0981;
-x-ms-traffictypediagnostic: DM5PR2101MB0981:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR2101MB09812D7887FC676AA96E5CE1D7420@DM5PR2101MB0981.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(39860400002)(136003)(376002)(189003)(199004)(53936002)(8676002)(52536014)(11346002)(25786009)(446003)(97736004)(5660300002)(476003)(46003)(486006)(8936002)(22452003)(6436002)(9686003)(229853002)(8990500004)(33656002)(54906003)(81156014)(93886005)(305945005)(55016002)(106356001)(316002)(105586002)(110136005)(10090500001)(99286004)(71190400001)(6506007)(7736002)(14454004)(478600001)(81166006)(71200400001)(68736007)(10290500003)(4326008)(86612001)(256004)(14444005)(76176011)(6246003)(102836004)(186003)(86362001)(6116002)(74316002)(7696005)(6346003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0981;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2/sYLAHblvOGoSuGFy04fm0yceM/80tZcpWt1Agz11A8VeFYDIrSYEgCs/Sj1NlbHAr5qwE6JIoH/E+iasgj1ORfu8ZzMG/a9BgfTZRBkj3fii/uJT41CETalKRqGj3p9u8AReqKyAVWiLnYUPzwvjtZwylDKu0PM2xmOND1tuIAQHYm28TKd6wEaVFbQ/8SFo0hsPhKVOG9CNgYCoofowJDlWUZH0rplKSEZcVWzzSOzlxBPHwWw2dUbJkUuQdFIAAGI7CGE69jSMiX83kFfYJpI/sOmZ6EEQDlGHHaQzAB9GzcLjMbSuQdZqPbYT5u8l1Ge/xRBDkRQyTfBC27frsTKbFg27I/dk9ryLkye6j0BStA1IPc41rZHQrb5FiOikcNrVDETyHF7tvgsM5XDE3fIRTcufQvio6ZnzmoI4o=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Mar 2019 12:04:28 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52021 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbfCUQEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:04:25 -0400
+Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A0AEC20000B;
+        Thu, 21 Mar 2019 16:04:19 +0000 (UTC)
+Message-ID: <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
+Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
+Date:   Thu, 21 Mar 2019 17:04:19 +0100
+In-Reply-To: <20190320183914.GV3888@intel.com>
+References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
+         <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+         <d8f4a31e35b1702230ced4a0cb43c10d1c7e60c8.camel@ndufresne.ca>
+         <20190320142739.GK3888@intel.com>
+         <a13f7fdeaf1a5e97f21a6048da765705b59d64c2.camel@ndufresne.ca>
+         <20190320160939.GR3888@intel.com>
+         <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
+         <20190320164133.GT3888@intel.com>
+         <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
+         <20190320183914.GV3888@intel.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcc7f27b-3001-4469-22a0-08d6ae16e0d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 16:04:20.2346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0981
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kimberly Brown <kimbrownkd@gmail.com>  Sent: Wednesday, March 20, 201=
-9 8:48 PM
-> > > > Adding more locks will solve the problem but it seems like overkill=
-.
-> > > > Why not either use a reference count or an RCU style access for the
-> > > > ring buffer?
-> > >
-> > > I agree that a reference count or RCU could also solve this problem.
-> > > Using mutex locks seemed like the most straightforward solution, but
-> > > I'll certainly switch to a different approach if it's better!
-> > >
-> > > Are you concerned about the extra memory required for the mutex locks=
-,
-> > > read performance, or something else?
-> >
-> > Locks in control path are ok, but my concern is performance of the
-> > data path which puts packets in/out of rings. To keep reasonable perfor=
-mance,
-> > no additional locking should be added in those paths.
-> >
-> > So if data path is using RCU, can/should the control operations also
-> > use it?
->=20
-> The data path doesn't use RCU to protect the ring buffers.
+Hi,
 
-My $.02:  The mutex is obtained only in the sysfs path and the "delete
-ringbuffers" path, neither of which is performance or concurrency sensitive=
-.=20
-There's no change to any path that reads or writes data from/to the ring
-buffers.  It seems like the mutex is the most straightforward solution to
-preventing sysfs from accessing the ring buffer info while the memory is
-being freed as part of "delete ringbuffers".
+Le mercredi 20 mars 2019 à 20:39 +0200, Ville Syrjälä a écrit :
+> On Wed, Mar 20, 2019 at 02:27:59PM -0400, Nicolas Dufresne wrote:
+> > Le mercredi 20 mars 2019 à 18:41 +0200, Ville Syrjälä a écrit :
+> > > On Wed, Mar 20, 2019 at 12:30:25PM -0400, Nicolas Dufresne wrote:
+> > > > Le mercredi 20 mars 2019 à 18:09 +0200, Ville Syrjälä a écrit :
+> > > > > On Wed, Mar 20, 2019 at 11:51:58AM -0400, Nicolas Dufresne wrote:
+> > > > > > Le mercredi 20 mars 2019 à 16:27 +0200, Ville Syrjälä a écrit :
+> > > > > > > On Tue, Mar 19, 2019 at 07:29:18PM -0400, Nicolas Dufresne wrote:
+> > > > > > > > Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
+> > > > > > > > > V4L2 uses different fourcc's than DRM, and has a different set of formats.
+> > > > > > > > > For now, let's add the v4l2 fourcc's for the already existing formats.
+> > > > > > > > > 
+> > > > > > > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > > > > > > ---
+> > > > > > > > >  include/linux/image-formats.h |  9 +++++-
+> > > > > > > > >  lib/image-formats.c           | 67 ++++++++++++++++++++++++++++++++++++-
+> > > > > > > > >  2 files changed, 76 insertions(+)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
+> > > > > > > > > index 53fd73a71b3d..fbc3a4501ebd 100644
+> > > > > > > > > --- a/include/linux/image-formats.h
+> > > > > > > > > +++ b/include/linux/image-formats.h
+> > > > > > > > > @@ -26,6 +26,13 @@ struct image_format_info {
+> > > > > > > > >  	};
+> > > > > > > > >  
+> > > > > > > > >  	/**
+> > > > > > > > > +	 * @v4l2_fmt:
+> > > > > > > > > +	 *
+> > > > > > > > > +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
+> > > > > > > > > +	 */
+> > > > > > > > > +	u32 v4l2_fmt;
+> > > > > > > > > +
+> > > > > > > > > +	/**
+> > > > > > > > >  	 * @depth:
+> > > > > > > > >  	 *
+> > > > > > > > >  	 * Color depth (number of bits per pixel excluding padding bits),
+> > > > > > > > > @@ -222,6 +229,8 @@ image_format_info_is_yuv_sampling_444(const struct image_format_info *info)
+> > > > > > > > >  
+> > > > > > > > >  const struct image_format_info *__image_format_drm_lookup(u32 drm);
+> > > > > > > > >  const struct image_format_info *image_format_drm_lookup(u32 drm);
+> > > > > > > > > +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
+> > > > > > > > > +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
+> > > > > > > > >  unsigned int image_format_plane_cpp(const struct image_format_info *format,
+> > > > > > > > >  				    int plane);
+> > > > > > > > >  unsigned int image_format_plane_width(int width,
+> > > > > > > > > diff --git a/lib/image-formats.c b/lib/image-formats.c
+> > > > > > > > > index 9b9a73220c5d..39f1d38ae861 100644
+> > > > > > > > > --- a/lib/image-formats.c
+> > > > > > > > > +++ b/lib/image-formats.c
+> > > > > > > > > @@ -8,6 +8,7 @@
+> > > > > > > > >  static const struct image_format_info formats[] = {
+> > > > > > > > >  	{
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_C8,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
+> > > > > > > > >  		.depth = 8,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 1, 0, 0 },
+> > > > > > > > > @@ -15,6 +16,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB332,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
+> > > > > > > > >  		.depth = 8,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 1, 0, 0 },
+> > > > > > > > > @@ -29,6 +31,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB4444,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB444,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -57,6 +60,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_ARGB4444,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_ARGB444,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -89,6 +93,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.has_alpha = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB1555,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB555,
+> > > > > > > > >  		.depth = 15,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -117,6 +122,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_ARGB1555,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_ARGB555,
+> > > > > > > > >  		.depth = 15,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -149,6 +155,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.has_alpha = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB565,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB565,
+> > > > > > > > >  		.depth = 16,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -163,6 +170,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB888,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
+> > > > > > > > >  		.depth = 24,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 3, 0, 0 },
+> > > > > > > > > @@ -170,6 +178,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_BGR888,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
+> > > > > > > > >  		.depth = 24,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 3, 0, 0 },
+> > > > > > > > > @@ -177,6 +186,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.vsub = 1,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB8888,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB32,
+> > > > > > > > 
+> > > > > > > > All RGB mapping should be surrounded by ifdef, because many (not all)
+> > > > > > > > DRM formats represent the order of component when placed in a CPU
+> > > > > > > > register, unlike V4L2 which uses memory order. I've pick this one
+> > > > > > > 
+> > > > > > > DRM formats are explicitly defined as little endian.
+> > > > > > 
+> > > > > > Yes, that means the same thing. The mapping has nothing to do with the
+> > > > > > buffer bytes order, unlike V4L2 (and most streaming stack) do.
+> > > > > 
+> > > > > It has everything to do with byte order. Little endian means the least
+> > > > > significant byte is stored in the first byte in memory.
+> > > > > 
+> > > > > Based on https://www.kernel.org/doc/html/v4.15/media/uapi/v4l/pixfmt-packed-rgb.html
+> > > > > drm XRGB888 is actually v4l XBGR32, not XRGB32 as claimed by this patch.
+> > > > 
+> > > > That's basically what I said, as it's define for Little Endian rather
+> > > > then buffer order, you have to make the mapping conditional. It
+> > > > basically mean that in memory, the DRM format physically differ
+> > > > depending on CPU endian.
+> > > 
+> > > No. It is always little endian no matter what the CPU is.
+> > 
+> > I'm sorry, this is in your ABI, we don't add layers of ifdef in
+> > userspace code just for the fun of it. If you redefine this now you are
+> > breaking userspace. I agree there is very little to no Big Endian on
+> > DRM side anymore, but what historically was mapped per CPU cannot be
+> > changed by you now.
+> 
+> It was always little endian.
 
-Michael
+I'm not sure what it's worth, but there is a "pixel format guide"
+project that is all about matching formats from one API to another: 
+https://afrantzis.com/pixel-format-guide/ (and it has an associated
+tool too).
+
+On the page about DRM, it seems that they got the word that DRM formats
+are the native pixel order in little-endian systems:
+https://afrantzis.com/pixel-format-guide/drm.html
+
+Perhaps some drivers have been abusing the format definitions, leading
+to the inconsistencies that Nicolas could witness?
+
+Cheers,
+
+Paul
+
+> > > > Last time we have run this on PPC / Big
+> > > > Endian, the mapping was XRGB/XRGB, we checked that up multiple time
+> > > > with the DRM maintainers and was told this is exactly what it's suppose
+> > > > to do, hence this endian dependant mapping all over the place. If you
+> > > > make up that this isn't right, you are breaking userspace, and people
+> > > > don't like that.
+> > > 
+> > > Someone recently added those DRM_FORMAT_HOST variants to allow
+> > > the legacy addfb1 to create pick the format based on host
+> > > endianness. I thought that was the only conclusion from the
+> > > little vs. big endian drm fourcc wars.
+> > > 
+> > > > So the mapping should be:
+> > > > Little: DRM XRGB / V4L2 XBGR
+> > > > Big:    DRM XRGB / V4L2 XRGB
+> > > > 
+> > > > > > > > randomly, but this one on most system, little endian, will match
+> > > > > > > > V4L2_PIX_FMT_XBGR32. This type of complex mapping can be found in
+> > > > > > > > multiple places, notably in GStreamer:
+> > > > > > > > 
+> > > > > > > > https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/blob/master/sys/kms/gstkmsutils.c#L45
+> > > > > > > > 
+> > > > > > > > >  		.depth = 24,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 4, 0, 0 },
+> > > > > > > > > @@ -281,6 +291,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.has_alpha = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_ARGB8888,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_ARGB32,
+> > > > > > > > >  		.depth = 32,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 4, 0, 0 },
+> > > > > > > > > @@ -361,6 +372,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.has_alpha = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YUV410,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YUV410,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -369,6 +381,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YVU410,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YVU410,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -393,6 +406,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YUV420,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YUV420M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -401,6 +415,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YVU420,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YVU420M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -409,6 +424,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YUV422,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YUV422M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -417,6 +433,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YVU422,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YVU422M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -425,6 +442,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YUV444,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YUV444M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -433,6 +451,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YVU444,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YVU444M,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 3,
+> > > > > > > > >  		.cpp = { 1, 1, 1 },
+> > > > > > > > > @@ -441,6 +460,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV12,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV12,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -449,6 +469,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV21,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV21,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -457,6 +478,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV16,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV16,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -465,6 +487,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV61,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV61,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -473,6 +496,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV24,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV24,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -481,6 +505,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_NV42,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_NV42,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 2,
+> > > > > > > > >  		.cpp = { 1, 2, 0 },
+> > > > > > > > > @@ -489,6 +514,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YUYV,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YUYV,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -497,6 +523,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_YVYU,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_YVYU,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -505,6 +532,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_UYVY,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_UYVY,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -513,6 +541,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > >  		.is_yuv = true,
+> > > > > > > > >  	}, {
+> > > > > > > > >  		.drm_fmt = DRM_FORMAT_VYUY,
+> > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_VYUY,
+> > > > > > > > >  		.depth = 0,
+> > > > > > > > >  		.num_planes = 1,
+> > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > @@ -632,6 +661,44 @@ const struct image_format_info *image_format_drm_lookup(u32 drm)
+> > > > > > > > >  EXPORT_SYMBOL(image_format_drm_lookup);
+> > > > > > > > >  
+> > > > > > > > >  /**
+> > > > > > > > > + * __image_format_v4l2_lookup - query information for a given format
+> > > > > > > > > + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+> > > > > > > > > + *
+> > > > > > > > > + * The caller should only pass a supported pixel format to this function.
+> > > > > > > > > + *
+> > > > > > > > > + * Returns:
+> > > > > > > > > + * The instance of struct image_format_info that describes the pixel format, or
+> > > > > > > > > + * NULL if the format is unsupported.
+> > > > > > > > > + */
+> > > > > > > > > +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2)
+> > > > > > > > > +{
+> > > > > > > > > +	return __image_format_lookup(v4l2_fmt, v4l2);
+> > > > > > > > > +}
+> > > > > > > > > +EXPORT_SYMBOL(__image_format_v4l2_lookup);
+> > > > > > > > > +
+> > > > > > > > > +/**
+> > > > > > > > > + * image_format_v4l2_lookup - query information for a given format
+> > > > > > > > > + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+> > > > > > > > > + *
+> > > > > > > > > + * The caller should only pass a supported pixel format to this function.
+> > > > > > > > > + * Unsupported pixel formats will generate a warning in the kernel log.
+> > > > > > > > > + *
+> > > > > > > > > + * Returns:
+> > > > > > > > > + * The instance of struct image_format_info that describes the pixel format, or
+> > > > > > > > > + * NULL if the format is unsupported.
+> > > > > > > > > + */
+> > > > > > > > > +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2)
+> > > > > > > > > +{
+> > > > > > > > > +	const struct image_format_info *format;
+> > > > > > > > > +
+> > > > > > > > > +	format = __image_format_v4l2_lookup(v4l2);
+> > > > > > > > > +
+> > > > > > > > > +	WARN_ON(!format);
+> > > > > > > > > +	return format;
+> > > > > > > > > +}
+> > > > > > > > > +EXPORT_SYMBOL(image_format_v4l2_lookup);
+> > > > > > > > > +
+> > > > > > > > > +/**
+> > > > > > > > >   * image_format_plane_cpp - determine the bytes per pixel value
+> > > > > > > > >   * @format: pointer to the image_format
+> > > > > > > > >   * @plane: plane index
+> > > > > > > > 
+> > > > > > > > _______________________________________________
+> > > > > > > > dri-devel mailing list
+> > > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
