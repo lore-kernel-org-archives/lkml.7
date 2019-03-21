@@ -2,134 +2,278 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E44C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C065C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1C320850
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3BE20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WW1FwlFd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BQMLsnhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfCUJtj (ORCPT
+        id S1728231AbfCUJv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:49:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40026 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfCUJti (ORCPT
+        Thu, 21 Mar 2019 05:51:27 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50688 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfCUJv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:49:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u10so1969022wmj.5;
-        Thu, 21 Mar 2019 02:49:37 -0700 (PDT)
+        Thu, 21 Mar 2019 05:51:27 -0400
+Received: by mail-it1-f195.google.com with SMTP id m137so3364044ita.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8MR0uk8pASKV8lQAfJTqZUgDpc9OwlmwmE8dwWlnCgw=;
-        b=WW1FwlFdEGnesXSfKzucS9Oz9YkDmR3RjfI5IP/NKFaryxicahpStfptneQWpZXgLz
-         ikJghjoa8OOcucSTWvFp0+0sR7enMWtG/4I4BkyReKqLDVPAXEOAfb/N0E8vraL5a7sO
-         7yBZ/TVRPvpMFI674GvhIFJ10/uOiDzTi9Z4u2Z3bBFObIPA3a5Jeif3XHLVtr12pEaO
-         jIFD4a5jwxEuYowzDG2Lsk2DEULNjRtZztdg9xqmJwuY81CYa6SSAEGNvwwaJ68Xf++C
-         MckcWvsDll/9P6F7RY4hpFwo63Joo2uQkAVrJrGuFEtHBniGaCO+2mfuKeFF+FwPxohs
-         CqKQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gC9noxwyiDgo0hNa32FuRJXnn+mnlOSMRPfC6ra1fco=;
+        b=BQMLsnhuchrJcG3TP9qHUYoawaKSzROL3jw91Viy49hHi8CDKUyUCEmf/8ts9yPvOF
+         LCDH9J2ea4KtcXFoGzonKsS40Ciqe2xNlL7ZH1s1V+H0ZjI9Y024hzHX/OOx/VeYKn9b
+         TMq4lMAtLOcfy/AtdhIG4KGv4FWWzoileU4250Yvct0YMhjvziYYX7D2JPw/th8NzirF
+         aF07/bp+x2J7IPnTfJAlEY2VD6pfsaipnseXym1MbbGemty1x0yKoXZriPOKrhrCHDa7
+         r2H6mJ6O5jWNM817lRkB4AaL8gA/MXPw/WVK0cBPNUtlzALwoy9FEmfzutWaWupeAI4d
+         3TiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8MR0uk8pASKV8lQAfJTqZUgDpc9OwlmwmE8dwWlnCgw=;
-        b=TzYFp9eNr7/N3/pVq3P7n8/QzbbiAJ8Vjta8v2HR47wkSDC8RjHRKLrFCPrRnaPdK3
-         FDltBj7ic/3jTdn6oy1qQ4Z1P9TWAcUyXWdaoLPSLknwuE43MClMkGXlbFvdWTuVpqNY
-         kFdlCwCIcUQBTpP15jBLHRB5ul9LjvfvzTxJpntdM/XZFSRCQ7dQVUx6zcEb7uiWSZD/
-         euInofmSbBtv9Xg+Cr8gu0p6PgHO+xXfpypPUWtdPRZzt1wxvEd94/yTNxrGnpbGgent
-         IZMDtJorLbaAU+7OByItdkclFIthlHHHnysTtu9HWUaM6Fymr1n2nepSqrr5zJePK6Cv
-         6jXg==
-X-Gm-Message-State: APjAAAWL8HKw3m06LtYV96DU0BP5PStVVeMs44ivTpjoRbmmNw6w7xHT
-        e98Ol3OszcBzUEH1kjBfYJI6qHEUdws=
-X-Google-Smtp-Source: APXvYqz40wjjfQ1HpNjqZnoWrVqX2snEprU5sSm394pYanEdu3T397uf5JMNcsJ+LLRwjJL2GVl9OA==
-X-Received: by 2002:a1c:3845:: with SMTP id f66mr1893095wma.41.1553161776455;
-        Thu, 21 Mar 2019 02:49:36 -0700 (PDT)
-Received: from laptop.criteois.lan ([91.199.242.236])
-        by smtp.gmail.com with ESMTPSA id e12sm5900656wrt.94.2019.03.21.02.49.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 02:49:34 -0700 (PDT)
-From:   Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        esc.storagedev@microsemi.com (open list:MICROSEMI SMART ARRAY SMARTPQI
-        DRIVER (smartpqi)),
-        linux-scsi@vger.kernel.org (open list:MICROSEMI SMART ARRAY SMARTPQI
-        DRIVER (smartpqi)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] scsi: smartpqi: Reporting unhandled SCSI errors
-Date:   Thu, 21 Mar 2019 10:49:27 +0100
-Message-Id: <20190321094928.4198-1-e.velu@criteo.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gC9noxwyiDgo0hNa32FuRJXnn+mnlOSMRPfC6ra1fco=;
+        b=t09GuHi+6DVPINA6X+uq1tWCBlWjLE9reeKbvWpYCoQYi0yDhWqcC4iSOmDoC98Vnr
+         MpaLayaQBCSub6BNP2yyJRE7g2jVu36Lw6YL57ZABxiYezocqhjMT2NUjoyXgwGHLOQp
+         zK4+ELU/yqlG0LKMaitFQPbjF4iqt6p9u3PtC/Lc0OT3p5rqGmui/2RLJqSi/jzp8nWT
+         Kss1WvD58yXFmwQBIc8J6TsAyj8H3B9cDVhiejfOildecEvaBTr4X08Xd5biiSkIBwoE
+         SUGXDb/qXwjOjtah63pm1LaTHL1RiAEjTUHZFSYdDv8E31sQDLjiDHE2ykxvEi481kdI
+         R7ug==
+X-Gm-Message-State: APjAAAUgN9ocNaaeYSyfC7uSpDrrgslBuMVZ5BOobEpAcIOQqoYkTNkM
+        PjEOhLo7mFnwHMyLqapyL/b0Zu4dFw4K8zEBqJuubw==
+X-Google-Smtp-Source: APXvYqxpr9S6+viZsfXbo5iIaNuflJsg/vhYktB9sBCnvZbYuDzPqhpqSmN/EhgF5yKSLFfdZj8rSRbPqkkf/NGERMg=
+X-Received: by 2002:a02:84ab:: with SMTP id f40mr1850108jai.72.1553161885434;
+ Thu, 21 Mar 2019 02:51:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
+ <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
+ <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
+ <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
+ <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com> <CACT4Y+axojyHxk5K34YuLUyj+NJ05+FC3n8ozseHC91B1qn5ZQ@mail.gmail.com>
+ <CACT4Y+aGyPpkrwvzZQUHXgipWo26T2U4OW0CxoJpp6yK+MgX=Q@mail.gmail.com>
+In-Reply-To: <CACT4Y+aGyPpkrwvzZQUHXgipWo26T2U4OW0CxoJpp6yK+MgX=Q@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 21 Mar 2019 10:51:14 +0100
+Message-ID: <CACT4Y+Z4yLPRRfRa4GhTDOQkuOsQccAOcBMoD4sgMmYj69ggrg@mail.gmail.com>
+Subject: Re: kernel panic: corrupted stack end in wb_workfn
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Josef Bacik <jbacik@fb.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vladislav Yasevich <vyasevich@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Xin Long <lucien.xin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a HARDWARE_ERROR is triggered for asc=0x3e, the actual code is only considering the case where ascq=0x1.
+On Thu, Mar 21, 2019 at 10:45 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Mar 20, 2019 at 2:57 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Wed, Mar 20, 2019 at 2:33 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+> > >
+> > >
+> > >
+> > > On 3/20/19 1:38 PM, Dmitry Vyukov wrote:
+> > > > On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
+> > > > <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> > > >>
+> > > >> On 2019/03/20 18:59, Dmitry Vyukov wrote:
+> > > >>>> From bisection log:
+> > > >>>>
+> > > >>>>         testing release v4.17
+> > > >>>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+> > > >>>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
+> > > >>>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
+> > > >>>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
+> > > >>>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
+> > > >>>>         testing release v4.16
+> > > >>>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
+> > > >>>>         run #0: OK
+> > > >>>>         run #1: OK
+> > > >>>>         run #2: OK
+> > > >>>>         run #3: OK
+> > > >>>>         run #4: OK
+> > > >>>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
+> > > >>>>         run #6: OK
+> > > >>>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
+> > > >>>>         run #8: OK
+> > > >>>>         run #9: OK
+> > > >>>>         testing release v4.15
+> > > >>>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
+> > > >>>>         all runs: OK
+> > > >>>>         # git bisect start v4.16 v4.15
+> > > >>>>
+> > > >>>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
+> > > >>>
+> > > >>> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
+> > > >>> looks like the right range, no?
+> > > >>
+> > > >> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
+> > > >> "Stack corruption" can't manifest as "Out of memory and no killable processes".
+> > > >>
+> > > >> "kernel panic: Out of memory and no killable processes..." is completely
+> > > >> unrelated to "kernel panic: corrupted stack end in wb_workfn".
+> > > >
+> > > >
+> > > > Do you think this predicate is possible to code?
+> > >
+> > > Something like bellow probably would work better than current behavior.
+> > >
+> > > For starters, is_duplicates() might just compare 'crash' title with 'target_crash' title and its duplicates titles.
+> >
+> > Lots of bugs (half?) manifest differently. On top of this, titles
+> > change as we go back in history. On top of this, if we see a different
+> > bug, it does not mean that the original bug is also not there.
+> > This will sure solve some subset of cases better then the current
+> > logic. But I feel that that subset is smaller then what the current
+> > logic solves.
+>
+> Counter-examples come up in basically every other bisection.
+> For example:
+>
+> bisecting cause commit starting from ccda4af0f4b92f7b4c308d3acc262f4a7e3affad
+> building syzkaller on 5f5f6d14e80b8bd6b42db961118e902387716bcb
+> testing commit ccda4af0f4b92f7b4c308d3acc262f4a7e3affad with gcc (GCC) 8.1.0
+> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
+> testing release v4.19
+> testing commit 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d with gcc (GCC) 8.1.0
+> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
+> testing release v4.18
+> testing commit 94710cac0ef4ee177a63b5227664b38c95bbf703 with gcc (GCC) 8.1.0
+> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
+> testing release v4.17
+> testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
+> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
 
-Following the http://www.t10.org/lists/asc-num.htm#ASC_3E specification, other values may occur like a timeout (ascq=0x2).
 
-This patch is about printing an error message when a non-handled message is received.
-This could help diagnose a possible miss-behavior of the controller and/or a missing implementation in the Linux Kernel.
+And to make things even more interesting, this later changes to "BUG:
+unable to handle kernel NULL pointer dereference in vb2_vmalloc_put":
 
-This patch keeps the exact same error handling but prints a message if an ascq != 1 income.
+testing release v4.12
+testing commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c with gcc (GCC) 8.1.0
+all runs: crashed: general protection fault in refcount_sub_and_test
+testing release v4.11
+testing commit a351e9b9fc24e982ec2f0e76379a49826036da12 with gcc (GCC) 7.3.0
+all runs: crashed: BUG: unable to handle kernel NULL pointer
+dereference in vb2_vmalloc_put
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- drivers/scsi/smartpqi/smartpqi_init.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+And since the original bug is in vb2 subsystem
+(https://syzkaller.appspot.com/bug?id=17535f4bf5b322437f7c639b59161ce343fc55a9),
+it's actually not clear even for me, if we should treat it as the same
+bug or not. May be different manifestation of the same root cause, or
+a different bug around.
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 75ec43aa8df3..baf16c138800 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -2762,16 +2762,25 @@ static void pqi_process_raid_io_error(struct pqi_io_request *io_request)
- 			scsi_normalize_sense(error_info->data,
- 				sense_data_length, &sshdr) &&
- 				sshdr.sense_key == HARDWARE_ERROR &&
--				sshdr.asc == 0x3e &&
--				sshdr.ascq == 0x1) {
-+				sshdr.asc == 0x3e) {
- 			struct pqi_ctrl_info *ctrl_info = shost_to_hba(scmd->device->host);
- 			struct pqi_scsi_dev *device = scmd->device->hostdata;
- 
--			if (printk_ratelimit())
--				scmd_printk(KERN_ERR, scmd, "received 'logical unit failure' from controller for scsi %d:%d:%d:%d\n",
--					ctrl_info->scsi_host->host_no, device->bus, device->target, device->lun);
--			pqi_take_device_offline(scmd->device, "RAID");
--			host_byte = DID_NO_CONNECT;
-+			switch (sshdr.ascq) {
-+			case 0x1: /*LOGICAL UNIT FAILURE */
-+				if (printk_ratelimit())
-+					scmd_printk(KERN_ERR, scmd, "received 'logical unit failure' from controller for scsi %d:%d:%d:%d\n",
-+						ctrl_info->scsi_host->host_no, device->bus, device->target, device->lun);
-+				pqi_take_device_offline(scmd->device, "RAID");
-+				host_byte = DID_NO_CONNECT;
-+				break;
-+
-+			default: /* See http://www.t10.org/lists/asc-num.htm#ASC_3E */
-+				if (printk_ratelimit())
-+					scmd_printk(KERN_ERR, scmd, "received unhandled error %d from controller for scsi %d:%d:%d:%d\n",
-+						sshdr.ascq, ctrl_info->scsi_host->host_no, device->bus, device->target, device->lun);
-+				break;
-+			}
- 		}
- 
- 		if (sense_data_length > SCSI_SENSE_BUFFERSIZE)
--- 
-2.20.1
 
+
+
+
+> That's a different crash title, unless somebody explicitly code this case.
+>
+> Or, what crash is this?
+>
+> testing commit 52358cb5a310990ea5069f986bdab3620e01181f with gcc (GCC) 8.1.0
+> run #1: crashed: general protection fault in cpuacct_charge
+> run #2: crashed: WARNING: suspicious RCU usage in corrupted
+> run #3: crashed: general protection fault in cpuacct_charge
+> run #4: crashed: BUG: unable to handle kernel paging request in ipt_do_table
+> run #5: crashed: KASAN: stack-out-of-bounds Read in cpuacct_charge
+> run #6: crashed: WARNING: suspicious RCU usage
+> run #7: crashed: no output from test machine
+> run #8: crashed: no output from test machine
+>
+>
+> Or, that "INFO: trying to register non-static key in can_notifier"
+> does not do any testing, but is "WARNING in dma_buf_vunmap" still
+> there or not?
+>
+> testing commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c with gcc (GCC) 8.1.0
+> all runs: crashed: WARNING in dma_buf_vunmap
+> testing release v4.11
+> testing commit a351e9b9fc24e982ec2f0e76379a49826036da12 with gcc (GCC) 7.3.0
+> all runs: OK
+> # git bisect start v4.12 v4.11
+> Bisecting: 7831 revisions left to test after this (roughly 13 steps)
+> [2bd80401743568ced7d303b008ae5298ce77e695] Merge tag 'gpio-v4.12-1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
+> testing commit 2bd80401743568ced7d303b008ae5298ce77e695 with gcc (GCC) 7.3.0
+> all runs: crashed: INFO: trying to register non-static key in can_notifier
+> # git bisect bad 2bd80401743568ced7d303b008ae5298ce77e695
+> Bisecting: 3853 revisions left to test after this (roughly 12 steps)
+> [8d65b08debc7e62b2c6032d7fe7389d895b92cbc] Merge
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
+> testing commit 8d65b08debc7e62b2c6032d7fe7389d895b92cbc with gcc (GCC) 7.3.0
+> all runs: crashed: INFO: trying to register non-static key in can_notifier
+> # git bisect bad 8d65b08debc7e62b2c6032d7fe7389d895b92cbc
+> Bisecting: 2022 revisions left to test after this (roughly 11 steps)
+> [cec381919818a9a0cb85600b3c82404bdd38cf36] Merge tag
+> 'mac80211-next-for-davem-2017-04-28' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next
+> testing commit cec381919818a9a0cb85600b3c82404bdd38cf36 with gcc (GCC) 5.5.0
+> all runs: crashed: INFO: trying to register non-static key in can_notifier
+>
+>
+>
+>
+>
+>
+> > > syzbot has some knowledge about duplicates with different crash titles when people use "syz dup" command.
+> >
+> > This is very limited set of info. And in the end I think we've seen
+> > all bug types being duped on all other bugs types pair-wise, and at
+> > the same time we've seen all bug types being not dups to all other bug
+> > types. So I don't see where this gets us.
+> > And again as we go back in history all these titles change.
+> >
+> > > Also it might be worth to experiment with using neural networks to identify duplicates.
+> > >
+> > >
+> > > target_crash = 'kernel panic: corrupted stack end in wb_workfn'
+> > > test commit:
+> > >         bad = false;
+> > >         skip = true;
+> > >         foreach run:
+> > >                 run_started, crashed, crash := run_repro();
+> > >
+> > >                 //kernel built, booted, reproducer launched successfully
+> > >                 if (run_started)
+> > >                         skip = false;
+> > >                 if (crashed && is_duplicates(crash, target_crash))
+> > >                         bad = true;
+> > >
+> > >         if (skip)
+> > >                 git bisect skip;
+> > >         else if (bad)
+> > >                 git bisect bad;
+> > >         else
+> > >                 git bisect good;
