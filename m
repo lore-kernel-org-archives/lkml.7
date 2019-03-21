@@ -2,115 +2,129 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C0EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D107C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A3F218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C89218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfCUCf6 (ORCPT
+        id S1727805AbfCUChx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:35:58 -0400
-Received: from smtpbg65.qq.com ([103.7.28.233]:22649 "EHLO smtpbg65.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727507AbfCUCf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:35:58 -0400
-X-QQ-mid: bizesmtp13t1553135732t8j2wzla
-Received: from ubuntu.gz.cvte.cn (unknown [183.63.127.82])
-        by esmtp4.qq.com (ESMTP) with 
-        id ; Thu, 21 Mar 2019 10:35:26 +0800 (CST)
-X-QQ-SSF: 01400000002000N0YM40000A0000000
-X-QQ-FEAT: QX/rXDl9P1s+MhQv4S+EFjcI0R4m0l7vL1bvE1UQlbFvEs6gJeJGuXtcYEd6I
-        pUjiWRTr20+M/QMM6lmcDX+TFF7AT3YBvvYdCl72tS9JnsCbAaz/kGEwtvXZ3sO3dxi2uSU
-        8f/1EHnTF8YIJLI1VpWW1Clw7AUvA+UxG+qxzQzHRuprEhn6bCsKDgBoudry+ycNMBb7jwo
-        0nB3X5BNWGsW3EILh03VDLKlDKQBr6Lf73Dkg007Nsed8lgJThOhLRkFKWqh8jYKU3maznb
-        eG8LEoxGhjdpj7XnCCdCnxA6s=
-X-QQ-GoodBg: 2
-From:   zhuchangchun <zhuchangchun@cvte.com>
-To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hendychu@aliyun.com,
-        zhuchangchun <zhuchangchun@cvte.com>
-Subject: [PATCH] pinctrl: intel: Implements gpio free function
-Date:   Thu, 21 Mar 2019 10:35:24 +0800
-Message-Id: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
-X-Mailer: git-send-email 2.7.4
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cvte.com:qybgforeign:qybgforeign4
-X-QQ-Bgrelay: 1
+        Wed, 20 Mar 2019 22:37:53 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:55235 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfCUChx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:37:53 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x2L2bY2m005675, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x2L2bY2m005675
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
+        Thu, 21 Mar 2019 10:37:34 +0800
+Received: from RTITMBSVM07.realtek.com.tw ([fe80::a512:a803:bf1e:b23]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0415.000; Thu, 21 Mar
+ 2019 10:37:34 +0800
+From:   Kailang <kailang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Linux Upstreaming Team" <linux@endlessm.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
+Thread-Topic: [PATCH v2] ALSA: hda/realtek: Enable headset MIC of Acer AIO
+ with ALC286
+Thread-Index: AQHU2xT5GLKSBcCdlU6PGXwrf063F6YMBwGAgAdx0ICAAe70AA==
+Date:   Thu, 21 Mar 2019 02:37:33 +0000
+Message-ID: <6FAB7C47BCF00940BB0999A99BE3547A18DBA856@RTITMBSVM07.realtek.com.tw>
+References: <20190315095108.9195-1-jian-hong@endlessm.com>
+ <s5himwkpehk.wl-tiwai@suse.de>
+ <CAPpJ_ec7oWi+ymtHXVwBMWS7=WtGmtPX6GNd+VOKX9xFzGZEVA@mail.gmail.com>
+In-Reply-To: <CAPpJ_ec7oWi+ymtHXVwBMWS7=WtGmtPX6GNd+VOKX9xFzGZEVA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.105.152]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we use the gpio to control some peripheral devices,and try to
-export the gpio first,then unexport the gpio, we test the signal with
-oscilloscope,and find the signal can't meet the requirements,because
-after we unexported the gpio,the gpio's register(tx and rx)value can't
-be recovered,and this will infruence the device work flow.
-
-We check the gpio's unexport code work flow, then find the gpio's free
-hook function has not been implemented, After we add pinmux_ops' free
-function to set exported gpio to recover its original value,the problem
-is fixed.
-
-Signed-off-by: zhuchangchun <zhuchangchun@cvte.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 3b18181..002b9d3 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -480,6 +480,33 @@ static int intel_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+static int intel_gpio_free(struct pinctrl_dev *pctldev, unsigned int pin)
-+{
-+	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	void __iomem *padcfg0;
-+	unsigned long flags;
-+	u32 value;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	if (!intel_pad_usable(pctrl, pin)) {
-+		spin_unlock_irqrestore(&pctrl->lock, flags);
-+		return -EBUSY;
-+	}
-+	padcfg0 = intel_get_padcfg(pctrl, pin, PADCFG0);
-+
-+	/* Put the pad into GPIO mode */
-+	value = readl(padcfg0) & ~PADCFG0_PMODE_MASK;
-+	/* enable TX buffer and disable RX (this will be input) */
-+	value |= PADCFG0_GPIORXDIS;
-+	value &= ~PADCFG0_GPIOTXDIS;
-+	writel(value, padcfg0);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
- static const struct pinmux_ops intel_pinmux_ops = {
- 	.get_functions_count = intel_get_functions_count,
- 	.get_function_name = intel_get_function_name,
-@@ -487,6 +514,7 @@ static const struct pinmux_ops intel_pinmux_ops = {
- 	.set_mux = intel_pinmux_set_mux,
- 	.gpio_request_enable = intel_gpio_request_enable,
- 	.gpio_set_direction = intel_gpio_set_direction,
-+	.free = intel_gpio_free,
- };
- 
- static int intel_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
--- 
-2.7.4
-
-
-
+WWVzLCB5b3UgY291bGQgdXNlIFJldmlld2VkLWJ5Lg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
+LS0tLQ0KRnJvbTogSmlhbi1Ib25nIFBhbiA8amlhbi1ob25nQGVuZGxlc3NtLmNvbT4gDQpTZW50
+OiBXZWRuZXNkYXksIE1hcmNoIDIwLCAyMDE5IDE6MDYgUE0NClRvOiBUYWthc2hpIEl3YWkgPHRp
+d2FpQHN1c2UuZGU+DQpDYzogS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT47IGFsc2EtZGV2
+ZWxAYWxzYS1wcm9qZWN0Lm9yZzsgTGludXggVXBzdHJlYW1pbmcgVGVhbSA8bGludXhAZW5kbGVz
+c20uY29tPjsgTGludXggS2VybmVsIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KU3Vi
+amVjdDogUmU6IFtQQVRDSCB2Ml0gQUxTQTogaGRhL3JlYWx0ZWs6IEVuYWJsZSBoZWFkc2V0IE1J
+QyBvZiBBY2VyIEFJTyB3aXRoIEFMQzI4Ng0KDQpUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+
+IOaWvCAyMDE55bm0M+aciDE15pelIOmAseS6lCDkuIvljYg3OjI05a+r6YGT77yaDQo+DQo+IE9u
+IEZyaSwgMTUgTWFyIDIwMTkgMTA6NTE6MDkgKzAxMDAsDQo+IEppYW4tSG9uZyBQYW4gd3JvdGU6
+DQo+ID4NCj4gPiBTb21lIEFjZXIgQUlPIGRlc2t0b3BzIGxpa2UgVmVyaXRvbiBaNjg2MEcsIFo0
+ODYwRyBhbmQgWjQ2NjBHIGNhbm5vdCANCj4gPiByZWNvcmQgc291bmQgZnJvbSBoZWFkc2V0IE1J
+Qy4gIFRoaXMgcGF0Y2ggYWRkcyB0aGUgDQo+ID4gQUxDMjg2X0ZJWFVQX0FDRVJfQUlPX0hFQURT
+RVRfTUlDIHF1aXJrIHRvIGZpeCB0aGlzIGlzc3VlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+Smlhbi1Ib25nIFBhbiA8amlhbi1ob25nQGVuZGxlc3NtLmNvbT4NCj4gPiAtLS0NCj4gPiB2Mjog
+QWNjb3JkaW5nIHRvIFJlYWx0ZWsncyBzdWdnZXN0aW9uLCBjaGFuZ2UgdGhlIENPRUYgMHg0ZiBm
+cm9tIDB4ZDQyOSB0bw0KPiA+ICAgICAweDUwMjkuICBUaGFua3MgdG8gUmVhbHRlayENCj4NCj4g
+SXQnZCBiZSBuaWNlciBpZiB3ZSBnZXQgZWl0aGVyIEFja2VkLWJ5IG9yIFJldmlld2VkLWJ5IHRh
+ZyBmcm9tIA0KPiBSZWFsdGVrLiAgS2FpbGFuZz8NCg0KSGkgS2FpbGFuZywNCg0KTWF5IHdlIGhh
+dmUgeW91ciBBY2tlZC1ieSBvciBSZXZpZXdlZC1ieSB0YWcgZm9yIHRoaXMgcGF0Y2g/DQpTaWdu
+ZWQtb2ZmIHdpbGwgYWxzbyBiZSBncmVhdCENCg0KVGhhbmsgeW91DQpKaWFuLUhvbmcgUGFuDQoN
+Cj4gdGhhbmtzLA0KPg0KPiBUYWthc2hpDQo+DQo+ID4NCj4gPiAgc291bmQvcGNpL2hkYS9wYXRj
+aF9yZWFsdGVrLmMgfCAxNyArKysrKysrKysrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MTQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9z
+b3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYyANCj4gPiBiL3NvdW5kL3BjaS9oZGEvcGF0Y2hf
+cmVhbHRlay5jIGluZGV4IDM4NDcxOWQ1YzQ0ZS4uMTkxODMwZDRmYTQwIA0KPiA+IDEwMDY0NA0K
+PiA+IC0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jDQo+ID4gKysrIGIvc291bmQv
+cGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMNCj4gPiBAQCAtNTY4Nyw2ICs1Njg3LDcgQEAgZW51bSB7
+DQo+ID4gICAgICAgQUxDMjI1X0ZJWFVQX0RFTExfV1lTRV9BSU9fTUlDX05PX1BSRVNFTkNFLA0K
+PiA+ICAgICAgIEFMQzIyNV9GSVhVUF9XWVNFX0FVVE9fTVVURSwNCj4gPiAgICAgICBBTEMyMjVf
+RklYVVBfV1lTRV9ESVNBQkxFX01JQ19WUkVGLA0KPiA+ICsgICAgIEFMQzI4Nl9GSVhVUF9BQ0VS
+X0FJT19IRUFEU0VUX01JQywNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0
+IGhkYV9maXh1cCBhbGMyNjlfZml4dXBzW10gPSB7IEBAIC02Njg1LDYgDQo+ID4gKzY2ODYsMTYg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBoZGFfZml4dXAgYWxjMjY5X2ZpeHVwc1tdID0gew0KPiA+
+ICAgICAgICAgICAgICAgLmNoYWluZWQgPSB0cnVlLA0KPiA+ICAgICAgICAgICAgICAgLmNoYWlu
+X2lkID0gQUxDMjY5X0ZJWFVQX0hFQURTRVRfTU9ERV9OT19IUF9NSUMNCj4gPiAgICAgICB9LA0K
+PiA+ICsgICAgIFtBTEMyODZfRklYVVBfQUNFUl9BSU9fSEVBRFNFVF9NSUNdID0gew0KPiA+ICsg
+ICAgICAgICAgICAgLnR5cGUgPSBIREFfRklYVVBfVkVSQlMsDQo+ID4gKyAgICAgICAgICAgICAu
+di52ZXJicyA9IChjb25zdCBzdHJ1Y3QgaGRhX3ZlcmJbXSkgew0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICB7IDB4MjAsIEFDX1ZFUkJfU0VUX0NPRUZfSU5ERVgsIDB4NGYgfSwNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgeyAweDIwLCBBQ19WRVJCX1NFVF9QUk9DX0NPRUYsIDB4NTAyOSB9
+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICB7IH0NCj4gPiArICAgICAgICAgICAgIH0sDQo+
+ID4gKyAgICAgICAgICAgICAuY2hhaW5lZCA9IHRydWUsDQo+ID4gKyAgICAgICAgICAgICAuY2hh
+aW5faWQgPSBBTEMyODZfRklYVVBfQUNFUl9BSU9fTUlDX05PX1BSRVNFTkNFDQo+ID4gKyAgICAg
+fSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9wY2lfcXVpcmsg
+YWxjMjY5X2ZpeHVwX3RibFtdID0geyBAQCAtNjcwMSw5IA0KPiA+ICs2NzEyLDkgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBzbmRfcGNpX3F1aXJrIGFsYzI2OV9maXh1cF90YmxbXSA9IHsNCj4gPiAg
+ICAgICBTTkRfUENJX1FVSVJLKDB4MTAyNSwgMHgwNzliLCAiQWNlciBBc3BpcmUgVjUtNTczRyIs
+IEFMQzI4Ml9GSVhVUF9BU1BJUkVfVjVfUElOUyksDQo+ID4gICAgICAgU05EX1BDSV9RVUlSSygw
+eDEwMjUsIDB4MTAyYiwgIkFjZXIgQXNwaXJlIEMyNC04NjAiLCBBTEMyODZfRklYVVBfQUNFUl9B
+SU9fTUlDX05PX1BSRVNFTkNFKSwNCj4gPiAgICAgICBTTkRfUENJX1FVSVJLKDB4MTAyNSwgMHgx
+MDZkLCAiQWNlciBDbG91ZGJvb2sgMTQiLCBBTEMyODNfRklYVVBfQ0hST01FX0JPT0spLA0KPiA+
+IC0gICAgIFNORF9QQ0lfUVVJUksoMHgxMDI1LCAweDEyOGYsICJBY2VyIFZlcml0b24gWjY4NjBH
+IiwgQUxDMjg2X0ZJWFVQX0FDRVJfQUlPX01JQ19OT19QUkVTRU5DRSksDQo+ID4gLSAgICAgU05E
+X1BDSV9RVUlSSygweDEwMjUsIDB4MTI5MCwgIkFjZXIgVmVyaXRvbiBaNDg2MEciLCBBTEMyODZf
+RklYVVBfQUNFUl9BSU9fTUlDX05PX1BSRVNFTkNFKSwNCj4gPiAtICAgICBTTkRfUENJX1FVSVJL
+KDB4MTAyNSwgMHgxMjkxLCAiQWNlciBWZXJpdG9uIFo0NjYwRyIsIEFMQzI4Nl9GSVhVUF9BQ0VS
+X0FJT19NSUNfTk9fUFJFU0VOQ0UpLA0KPiA+ICsgICAgIFNORF9QQ0lfUVVJUksoMHgxMDI1LCAw
+eDEyOGYsICJBY2VyIFZlcml0b24gWjY4NjBHIiwgQUxDMjg2X0ZJWFVQX0FDRVJfQUlPX0hFQURT
+RVRfTUlDKSwNCj4gPiArICAgICBTTkRfUENJX1FVSVJLKDB4MTAyNSwgMHgxMjkwLCAiQWNlciBW
+ZXJpdG9uIFo0ODYwRyIsIEFMQzI4Nl9GSVhVUF9BQ0VSX0FJT19IRUFEU0VUX01JQyksDQo+ID4g
+KyAgICAgU05EX1BDSV9RVUlSSygweDEwMjUsIDB4MTI5MSwgIkFjZXIgVmVyaXRvbiBaNDY2MEci
+LCANCj4gPiArIEFMQzI4Nl9GSVhVUF9BQ0VSX0FJT19IRUFEU0VUX01JQyksDQo+ID4gICAgICAg
+U05EX1BDSV9RVUlSSygweDEwMjUsIDB4MTMzMCwgIkFjZXIgVHJhdmVsTWF0ZSBYNTE0LTUxVCIs
+IEFMQzI1NV9GSVhVUF9BQ0VSX0hFQURTRVRfTUlDKSwNCj4gPiAgICAgICBTTkRfUENJX1FVSVJL
+KDB4MTAyOCwgMHgwNDcwLCAiRGVsbCBNMTAxeiIsIEFMQzI2OV9GSVhVUF9ERUxMX00xMDFaKSwN
+Cj4gPiAgICAgICBTTkRfUENJX1FVSVJLKDB4MTAyOCwgMHgwNTRiLCAiRGVsbCBYUFMgb25lIDI3
+MTAiLCANCj4gPiBBTEMyNzVfRklYVVBfREVMTF9YUFMpLA0KPiA+IC0tDQo+ID4gMi4yMC4xDQo+
+ID4NCj4gPg0KDQotLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBw
+cmludGluZyB0aGlzIGUtbWFpbC4NCg==
