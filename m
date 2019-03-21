@@ -2,144 +2,131 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4793C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65CCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7205F2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701882183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Do8pBrGP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H13JTAYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfCUUfM (ORCPT
+        id S1728925AbfCUUfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:35:12 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33694 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfCUUfL (ORCPT
+        Thu, 21 Mar 2019 16:35:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59458 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbfCUUfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:35:11 -0400
-Received: by mail-qk1-f194.google.com with SMTP id k189so11924111qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=12wuSmb3sDVRuzc14WZtLjG7a8not1Iygm4PfdajXZY=;
-        b=Do8pBrGPqum9dFCimbACAndt8FBCZJm5rjfvql6NB3CUO+NBR3F9RUeZMAt1GwZv9n
-         KU4hVisgtUk4pFL9kjPlMIlK6FA6//DWdmp3hpmjHbUEAS5yUInjVI9j882nwDDWxFee
-         x7hdY8B/UUE+jpkjnew3PHg0sltfbNY1k94s0tkJVX7iu2QiXOWrjdILMP/oruRVbnfN
-         vMbN529/oBKtasF6igwhl8FhupKGJPosCveNNLZKDzqU5m+eHIBbecxHmnBIkkopwWmX
-         nnnIXDgdjS1ZG7n5YcRDWujJ/mu1WAvvQ5rcr4pBym8ytu7VaptF65JCAJ6xIVWj3O/D
-         8kfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=12wuSmb3sDVRuzc14WZtLjG7a8not1Iygm4PfdajXZY=;
-        b=pXzxcQ2gjvqIXHZ+muVNvjYCNVyHSot5ITxarMJYvrhFWQHPVfb57k12yg5FpJja3y
-         Zeyx8hCqJI5LL7fkYgQpPTVK2o4RKeTXV8/L44sOo2in5Wf355kPFjCHxI1vz/3H9oMO
-         QAs08LeIuRkJ3SogFEnraTEI3yTS0ZF/M4iteQJVpRl9PhmtjqKSl720DEATN5f284je
-         GPtqDxE6GO/wB/QGxwQ7VFczGGDvEYP3OG+xi+yDv651eieB/CuEjjna3WhXeWrTZrnr
-         CVrwT2CfRjpRKRRa+vh7LDX08Wg4Cvretqb3sUs54cP6PnTFN5kc6Plr06Vw1LEa2U2K
-         27aw==
-X-Gm-Message-State: APjAAAXeNUEZIrYLTia8wxiZZwOiuiyFXmMI5eUYnqU6wErU3w2BWNk/
-        zyT4eiKfqc1Dz2+DRU1RYeaeOQ==
-X-Google-Smtp-Source: APXvYqwiQetv81Z6R4/hA08Z+rBrQOeTpFmGkuO93ARIV+P5vLxr21g5Vui70dfgtACtIMAOSztYtQ==
-X-Received: by 2002:a05:620a:132b:: with SMTP id p11mr4598519qkj.279.1553200510507;
-        Thu, 21 Mar 2019 13:35:10 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id v4sm1534386qkl.47.2019.03.21.13.35.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 13:35:10 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 13:35:05 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 01/22] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
-Message-ID: <20190321133505.7e186289@cakuba.netronome.com>
-In-Reply-To: <c46e29b557e54652cce569e3348ed0385eac1469.1553170807.git.mkubecek@suse.cz>
-References: <cover.1553170807.git.mkubecek@suse.cz>
-        <c46e29b557e54652cce569e3348ed0385eac1469.1553170807.git.mkubecek@suse.cz>
-Organization: Netronome Systems, Ltd.
+        Thu, 21 Mar 2019 16:35:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LKZBoM111007;
+        Thu, 21 Mar 2019 15:35:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553200511;
+        bh=8EB4pwzpi/5uZX2UpyrhROnNLUB21aYbj943IX6vshI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=H13JTAYlmier44kew1KAhuOdm1P79/REqTDhMA8hVQHGpXOv3fVdG/B5UQT95Zo+k
+         jNlCYtH7fWqJX7f3SEFUtP8wzjDpDSy/bAN9s4VjzJ3pkLJ7DRzvSkZWyGWC91MTs0
+         wyN9o/QFhafLRNVgC+zceiSPazX2I2ABQcXueMkc=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LKZBlH092809
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Mar 2019 15:35:11 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
+ Mar 2019 15:35:11 -0500
+Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Thu, 21 Mar 2019 15:35:11 -0500
+Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LKZAF3029073;
+        Thu, 21 Mar 2019 15:35:10 -0500
+Subject: Re: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
+To:     Brian Starkey <Brian.Starkey@arm.com>,
+        John Stultz <john.stultz@linaro.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-3-git-send-email-john.stultz@linaro.org>
+ <20190319142604.f6puq3ugxrcxsrjs@DESKTOP-E1NTVVP.localdomain>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <9be37cc0-6eae-9bae-d8ee-89a91d7a4d89@ti.com>
+Date:   Thu, 21 Mar 2019 15:35:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190319142604.f6puq3ugxrcxsrjs@DESKTOP-E1NTVVP.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 14:40:21 +0100 (CET), Michal Kubecek wrote:
-> Permanent hardware address of a network device was traditionally provided
-> via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
-> ethtool netlink interface, rtnetlink is much more suitable for it so let's
-> add it to the RTM_NEWLINK message.
+On 3/19/19 9:26 AM, Brian Starkey wrote:
+> Hi John,
 > 
-> As permanent address is not modifiable, reject userspace requests
-> containing IFLA_PERM_ADDRESS attribute.
+> On Tue, Mar 05, 2019 at 12:54:30PM -0800, John Stultz wrote:
 > 
-> Note: we already provide permanent hardware address for bond slaves;
-> unfortunately we cannot drop that attribute for backward compatibility
-> reasons.
+> ...
 > 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> ---
->  include/uapi/linux/if_link.h | 1 +
->  net/core/rtnetlink.c         | 4 ++++
->  2 files changed, 5 insertions(+)
+>> +
+>> +void dma_heap_buffer_destroy(struct dma_heap_buffer *heap_buffer)
+>> +{
+>> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+>> +
+>> +	if (buffer->kmap_cnt > 0) {
+>> +		pr_warn_once("%s: buffer still mapped in the kernel\n",
+>> +			     __func__);
 > 
-> diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> index 5b225ff63b48..351ef746b8b0 100644
-> --- a/include/uapi/linux/if_link.h
-> +++ b/include/uapi/linux/if_link.h
-> @@ -167,6 +167,7 @@ enum {
->  	IFLA_NEW_IFINDEX,
->  	IFLA_MIN_MTU,
->  	IFLA_MAX_MTU,
-> +	IFLA_PERM_ADDRESS,
->  	__IFLA_MAX
->  };
->  
-> diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> index a51cab95ba64..a72e8f4d777b 100644
-> --- a/net/core/rtnetlink.c
-> +++ b/net/core/rtnetlink.c
-> @@ -1026,6 +1026,7 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
->  	       + nla_total_size(4)  /* IFLA_CARRIER_DOWN_COUNT */
->  	       + nla_total_size(4)  /* IFLA_MIN_MTU */
->  	       + nla_total_size(4)  /* IFLA_MAX_MTU */
-> +	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
->  	       + 0;
->  }
->  
-> @@ -1683,6 +1684,8 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
->  	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
->  		goto nla_put_failure;
->  
-> +	if (nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
+> Could be worth something louder like a full WARN.
+> 
+>> +		vunmap(buffer->vaddr);
+>> +	}
+>> +
+>> +	buffer->free(buffer);
+>> +}
+>> +
+> 
+> ...
+> 
+>> +
+>> +static void *dma_heap_dma_buf_kmap(struct dma_buf *dmabuf,
+>> +					unsigned long offset)
+>> +{
+>> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+>> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+>> +
+>> +	return buffer->vaddr + offset * PAGE_SIZE;
+> 
+> I think it'd be good to check for NULL vaddr and return NULL in that
+> case. Less chance of an invalid pointer being accidentally used then.
+> 
 
-Should we check the perm_addr is non-zero, i.e. it has been filled in
-by the driver?
+Why do we assume vaddr is set at all here? I'm guessing we expected
+dma_heap_map_kernel to have been called, that is not going to always be
+the case. kmap should perform it's own single page kmap here and not
+rely on the clunky full buffer vmap (which is probably broken on 32bit
+systems here when the buffers are large).
 
-> +		goto nla_put_failure;
->  
->  	rcu_read_lock();
->  	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
-> @@ -1742,6 +1745,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
->  	[IFLA_CARRIER_DOWN_COUNT] = { .type = NLA_U32 },
->  	[IFLA_MIN_MTU]		= { .type = NLA_U32 },
->  	[IFLA_MAX_MTU]		= { .type = NLA_U32 },
-> +	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
->  };
->  
->  static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
+Andrew
 
+> Thanks,
+> -Brian
+> 
