@@ -2,267 +2,309 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577D4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54666218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9A9218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iv06r2c5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zm77rfKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfCUO3d (ORCPT
+        id S1728501AbfCUO3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:29:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43202 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbfCUO3O (ORCPT
+        Thu, 21 Mar 2019 10:29:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37944 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbfCUO3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:29:14 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LET44Z098197;
-        Thu, 21 Mar 2019 09:29:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553178544;
-        bh=e96MrENnQ5ufJW+BM0+s+6fRlxBxT80/ub6fLJwQmjE=;
-        h=From:To:CC:Subject:Date;
-        b=iv06r2c5I0SqhaGz9WTnqgeuQcD9BnLuKRFAvMXQuFoOFDU3dMUk2+T2yhsWwQts0
-         zV+59eWmKkNUnUC7F5X+dPIbjZ3DDSYvSkMgduwi6KAh/jFriEEophPXvx9nuyU2Xf
-         EpE1SyiorZNyRO0wQwicq8UkJSq5GjTAYjw2J09E=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LET41l008322
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 09:29:04 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 09:29:04 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 09:29:03 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LET3vN004965;
-        Thu, 21 Mar 2019 09:29:03 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <tony@atomide.com>, <lee.jones@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
-Date:   Thu, 21 Mar 2019 09:28:35 -0500
-Message-ID: <20190321142838.22985-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.12.2
+        Thu, 21 Mar 2019 10:29:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v1so4314551pgi.5;
+        Thu, 21 Mar 2019 07:29:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zvijzFXMFiSKhny3I5dyB2iSqe3m5+FVEnNqQ1i4se4=;
+        b=Zm77rfKD+QZLUfO/ZaAjVnTttIzr7Og5Pl6mfrQBakqpeUf5zY1sdGpMSD39yIMjpg
+         aLYUEPm2CK+1cK5O3BDU0UYNxM9FupN83FJ6JMSOM5EGw6gyV1P0ZYN7x47uhNpb8mVj
+         gvTXKJ7vXT4CGDa7jsa/DBuwFIa5Lgx/VXh0X5OFo7NAqOgTJtCvtJpUhwwGZNzfsZ7F
+         PhVgUitbplCrbIM7YsopN9NLJV7fcLeW2gJqUzAj5UbDO50PHQ+TSF87jEdlxp9N5/Ze
+         H0822KJhNqn2MTgBBjGTWNe6BNmGWGPvTCGih74l0PGeIzzijkvP6KLG8Nb+Wf2PDirw
+         z30w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zvijzFXMFiSKhny3I5dyB2iSqe3m5+FVEnNqQ1i4se4=;
+        b=YQ/VThwXQuDF1+BxLutazO7Mh/MxT9cIyZolq4wSx4si5dCprz9BucBIfauPTBMlLU
+         N4BHhDZ+fd/kiRfhLXUGGMqxWLqisgfLp+qRELK5/VYNgKmnkzjDKcyCVlEig9CrRO2P
+         IOGvR8K2QIcFH960sNQ8103rw2gtK3EZTbKYnjXTCH0Fx3q+O1b1L54mz77QM0mpEK75
+         97VYqbccruuPE4WEWjWcMK/MHHXqTY+7zc4rnLOuH7qPgj/9GlJwapR3/agzQCHpUgVi
+         hCYntW8Ek9LC8/860WTst9jIu6J6r29AcxPXf0ZB9SRaECC5mzydtkEoMor8MI/iMP98
+         q0+A==
+X-Gm-Message-State: APjAAAU8RPHI4Zcs1MVR89LAk88v2cxHwy8Cj10tx6wKfCWo/pRlsWrp
+        Tbsvg5/uDh/IwA3gM9NAMIWBiLrs1qS99Q==
+X-Google-Smtp-Source: APXvYqxkBP93LqBEoYkgfnyCrwe4B1QC82OcDGc/6Zr2tWvlluAsK7IP2ELTx3uvdxhYhHu5SWjhog==
+X-Received: by 2002:a62:448d:: with SMTP id m13mr3720155pfi.182.1553178564334;
+        Thu, 21 Mar 2019 07:29:24 -0700 (PDT)
+Received: from GuoGuo-OMEN.lan ([107.151.139.128])
+        by smtp.gmail.com with ESMTPSA id p5sm2809086pga.40.2019.03.21.07.29.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 07:29:23 -0700 (PDT)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <hackpascal@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH resend] MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices
+Date:   Thu, 21 Mar 2019 22:28:13 +0800
+Message-Id: <20190321142813.19925-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the lm3532 device tree documentation.
-Remove lm3532 device tree reference from the ti_lmu devicetree
-documentation.
+For a long time the mt7621 uses a fixed cpu clock which causes a problem
+if the cpu frequency is not 880MHz.
 
-With the addition of the dedicated lm3532 documentation the device
-can be removed from the ti_lmu.txt.
+This patch fixes the cpu clock calculation and adds the cpu/bus clkdev
+which will be used in dts.
 
-The reason for this is that the lm3532 dt documentation now defines
-the ability to control LED output strings against different control
-banks or groups multiple strings to be controlled by a single control
-bank.
+Signed-off-by: Weijie Gao <hackpascal@gmail.com>
 
-Another addition was for ALS lighting control and configuration.  The
-LM3532 has a feature that can take in the ALS reading from 2 separate
-ALS devices and adjust the brightness on the strings that are configured
-to support this feature.
+Ported from OpenWrt:
+c7ca224299 ramips: fix cpu clock of mt7621 and add dt clk devices
 
-Finally the device specific properties were moved to the parent node as these
-properties are not control bank configurable.  These include the runtime ramp
-and the ALS configuration.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 ---
 
-v5 - Moved ramping range to below property definition, updated keyboard label -
-https://lore.kernel.org/patchwork/patch/1050412/
+Resend due to incorrect patch subject.
 
-v4 - Appended "ti," to TI specific properties, add enable gpio documentation,
-removed an example, moved ramp to optional parent properties - https://lore.kernel.org/patchwork/patch/1050122/
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1049026/
-v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
-added ranges for variable properties, I did not change the label - https://lore.kernel.org/patchwork/patch/1048805/
+ arch/mips/include/asm/mach-ralink/mt7621.h |  20 ++++
+ arch/mips/ralink/mt7621.c                  | 102 ++++++++++++++-------
+ arch/mips/ralink/timer-gic.c               |   4 +-
+ 3 files changed, 93 insertions(+), 33 deletions(-)
 
- .../devicetree/bindings/leds/leds-lm3532.txt  | 101 ++++++++++++++++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ----
- 2 files changed, 101 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-new file mode 100644
-index 000000000000..5bd0c025850f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-@@ -0,0 +1,101 @@
-+* Texas Instruments - lm3532 White LED driver with ambient light sensing
-+capability.
+diff --git a/arch/mips/include/asm/mach-ralink/mt7621.h b/arch/mips/include/asm/mach-ralink/mt7621.h
+index a672e06fa5fd..b8a8834164c8 100644
+--- a/arch/mips/include/asm/mach-ralink/mt7621.h
++++ b/arch/mips/include/asm/mach-ralink/mt7621.h
+@@ -19,6 +19,10 @@
+ #define SYSC_REG_CHIP_REV		0x0c
+ #define SYSC_REG_SYSTEM_CONFIG0		0x10
+ #define SYSC_REG_SYSTEM_CONFIG1		0x14
++#define SYSC_REG_CLKCFG0		0x2c
++#define SYSC_REG_CUR_CLK_STS		0x44
 +
-+The LM3532 provides the 3 high-voltage, low-side current sinks. The device is
-+programmable over an I2C-compatible interface and has independent
-+current control for all three channels. The adaptive current regulation
-+method allows for different LED currents in each current sink thus allowing
-+for a wide variety of backlight and keypad applications.
++#define MEMC_REG_CPU_PLL		0x648
+ 
+ #define CHIP_REV_PKG_MASK		0x1
+ #define CHIP_REV_PKG_SHIFT		16
+@@ -26,6 +30,22 @@
+ #define CHIP_REV_VER_SHIFT		8
+ #define CHIP_REV_ECO_MASK		0xf
+ 
++#define XTAL_MODE_SEL_MASK		0x7
++#define XTAL_MODE_SEL_SHIFT		6
 +
-+The main features of the LM3532 include dual ambient light sensor inputs
-+each with 32 internal voltage setting resistors, 8-bit logarithmic and linear
-+brightness control, dual external PWM brightness control inputs, and up to
-+1000:1 dimming ratio with programmable fade in and fade out settings.
++#define CPU_CLK_SEL_MASK		0x3
++#define CPU_CLK_SEL_SHIFT		30
 +
-+Required properties:
-+	- compatible : "ti,lm3532"
-+	- reg : I2C slave address
-+	- #address-cells : 1
-+	- #size-cells : 0
++#define CUR_CPU_FDIV_MASK		0x1f
++#define CUR_CPU_FDIV_SHIFT		8
++#define CUR_CPU_FFRAC_MASK		0x1f
++#define CUR_CPU_FFRAC_SHIFT		0
 +
-+Optional properties:
-+	- enable-gpios : gpio pin to enable (active high)/disable the device.
-+	- ramp-up-us - The Run time ramp rates/step are from one current
-+		       set-point to another after the device has reached its
-+		       initial target set point from turn-on
-+	- ramp-down-us - The Run time ramp rates/step are from one current
-+			 set-point to another after the device has reached its
-+			 initial target set point from turn-on
-+	Range for ramp settings: 8us - 65536us
++#define CPU_PLL_PREDIV_MASK		0x3
++#define CPU_PLL_PREDIV_SHIFT		12
++#define CPU_PLL_FBDIV_MASK		0x7f
++#define CPU_PLL_FBDIV_SHIFT		4
 +
-+Optional properties if ALS mode is used:
-+	- ti,als-vmin - Minimum ALS voltage defined in Volts
-+	- ti,als-vmax - Maximum ALS voltage defined in Volts
-+	Per the data sheet the max ALS voltage is 2V and the min is 0V
-+
-+	- ti,als1-imp-sel - ALS1 impedance resistor selection in Ohms
-+	- ti,als2-imp-sel - ALS2 impedance resistor selection in Ohms
-+	Range for impedance select: 37000 Ohms - 1190 Ohms
-+	Values above 37kohms will be set to the "High Impedance" setting
-+
-+	- ti,als-avrg-time-us - Determines the length of time the device needs to
-+			  average the two ALS inputs.  This is only used if
-+			  the input mode is LM3532_ALS_INPUT_AVRG.
-+			     Range: 17920us - 2293760us
-+	- ti,als-input-mode - Determines how the device uses the attached ALS
-+			   devices.
-+			   0x00 - ALS1 and ALS2 input average
-+			   0x01 - ALS1 Input
-+			   0x02 - ALS2 Input
-+			   0x03 - Max of ALS1 and ALS2
-+
-+Required child properties:
-+	- reg : Indicates control bank the LED string is controlled by
-+	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
-+	- ti,led-mode : Defines if the LED strings are manually controlled or
-+			if the LED strings are controlled by the ALS.
-+			0x00 - LED strings are I2C controlled via full scale
-+			       brightness control register
-+			0x01 - LED strings are ALS controlled
-+
-+Optional LED child properties:
-+	- label : see Documentation/devicetree/bindings/leds/common.txt
-+	- linux,default-trigger :
-+	   see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+led-controller@38 {
-+	compatible = "ti,lm3532";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x38>;
-+
-+	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	ramp-up-us = <1024>;
-+	ramp-down-us = <65536>;
-+
-+	ti,als-vmin = <0>;
-+	ti,als-vmax = <2000>;
-+	ti,als1-imp-sel = <4110>;
-+	ti,als2-imp-sel = <2180>;
-+	ti,als-avrg-time-us = <17920>;
-+	ti,als-input-mode = <0x00>;
-+
-+	lcd_backlight: led@0 {
-+		reg = <0>;
-+		led-sources = <2>;
-+		ti,led-mode = <1>;
-+		label = "backlight";
-+		linux,default-trigger = "backlight";
-+	};
-+
-+	led@1 {
-+		reg = <1>;
-+		led-sources = <1>;
-+		ti,led-mode = <0>;
-+		label = "platform::kbd_backlight";
-+	};
+ #define MT7621_DRAM_BASE                0x0
+ #define MT7621_DDR2_SIZE_MIN		32
+ #define MT7621_DDR2_SIZE_MAX		256
+diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
+index d2718de60b9b..0b2845a4a036 100644
+--- a/arch/mips/ralink/mt7621.c
++++ b/arch/mips/ralink/mt7621.c
+@@ -9,22 +9,22 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
++#include <dt-bindings/clock/mt7621-clk.h>
+ 
+ #include <asm/mipsregs.h>
+ #include <asm/smp-ops.h>
+ #include <asm/mips-cps.h>
+ #include <asm/mach-ralink/ralink_regs.h>
+ #include <asm/mach-ralink/mt7621.h>
++#include <asm/time.h>
+ 
+ #include <pinmux.h>
+ 
+ #include "common.h"
+ 
+-#define SYSC_REG_SYSCFG		0x10
+-#define SYSC_REG_CPLL_CLKCFG0	0x2c
+-#define SYSC_REG_CUR_CLK_STS	0x44
+-#define CPU_CLK_SEL		(BIT(30) | BIT(31))
+-
+ #define MT7621_GPIO_MODE_UART1		1
+ #define MT7621_GPIO_MODE_I2C		2
+ #define MT7621_GPIO_MODE_UART3_MASK	0x3
+@@ -110,49 +110,90 @@ static struct rt2880_pmx_group mt7621_pinmux_data[] = {
+ 	{ 0 }
+ };
+ 
++static struct clk *clks[MT7621_CLK_MAX];
++static struct clk_onecell_data clk_data = {
++	.clks = clks,
++	.clk_num = ARRAY_SIZE(clks),
 +};
 +
-+For more product information please see the links below:
-+http://www.ti.com/product/LM3532
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index c885cf89b8ce..980394d701a7 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -4,7 +4,6 @@ TI LMU driver supports lighting devices below.
+ phys_addr_t mips_cpc_default_phys_base(void)
+ {
+ 	panic("Cannot detect cpc address");
+ }
  
-    Name                  Child nodes
-   ------      ---------------------------------
--  LM3532       Backlight
-   LM3631       Backlight and regulator
-   LM3632       Backlight and regulator
-   LM3633       Backlight, LED and fault monitor
-@@ -13,7 +12,6 @@ TI LMU driver supports lighting devices below.
++static struct clk *__init mt7621_add_sys_clkdev(
++	const char *id, unsigned long rate)
++{
++	struct clk *clk;
++	int err;
++
++	clk = clk_register_fixed_rate(NULL, id, NULL, 0, rate);
++	if (IS_ERR(clk))
++		panic("failed to allocate %s clock structure", id);
++
++	err = clk_register_clkdev(clk, id, NULL);
++	if (err)
++		panic("unable to register %s clock device", id);
++
++	return clk;
++}
++
+ void __init ralink_clk_init(void)
+ {
+-	int cpu_fdiv = 0;
+-	int cpu_ffrac = 0;
+-	int fbdiv = 0;
+-	u32 clk_sts, syscfg;
+-	u8 clk_sel = 0, xtal_mode;
+-	u32 cpu_clk;
++	u32 syscfg, xtal_sel, clkcfg, clk_sel, curclk, ffiv, ffrac;
++	u32 pll, prediv, fbdiv;
++	u32 xtal_clk, cpu_clk, bus_clk;
++
++	const static u32 prediv_tbl[] = {0, 1, 2, 2};
++
++	syscfg = rt_sysc_r32(SYSC_REG_SYSTEM_CONFIG0);
++	xtal_sel = (syscfg >> XTAL_MODE_SEL_SHIFT) & XTAL_MODE_SEL_MASK;
  
- Required properties:
-   - compatible: Should be one of:
--                "ti,lm3532"
-                 "ti,lm3631"
-                 "ti,lm3632"
-                 "ti,lm3633"
-@@ -23,7 +21,6 @@ Required properties:
-          0x11 for LM3632
-          0x29 for LM3631
-          0x36 for LM3633, LM3697
--         0x38 for LM3532
-          0x63 for LM3695
+-	if ((rt_sysc_r32(SYSC_REG_CPLL_CLKCFG0) & CPU_CLK_SEL) != 0)
+-		clk_sel = 1;
++	clkcfg = rt_sysc_r32(SYSC_REG_CLKCFG0);
++	clk_sel = (clkcfg >> CPU_CLK_SEL_SHIFT) & CPU_CLK_SEL_MASK;
++
++	curclk = rt_sysc_r32(SYSC_REG_CUR_CLK_STS);
++	ffiv = (curclk >> CUR_CPU_FDIV_SHIFT) & CUR_CPU_FDIV_MASK;
++	ffrac = (curclk >> CUR_CPU_FFRAC_SHIFT) & CUR_CPU_FFRAC_MASK;
++
++	if (xtal_sel <= 2)
++		xtal_clk = 20 * 1000 * 1000;
++	else if (xtal_sel <= 5)
++		xtal_clk = 40 * 1000 * 1000;
++	else
++		xtal_clk = 25 * 1000 * 1000;
  
- Optional property:
-@@ -47,23 +44,6 @@ Optional nodes:
- [2] ../leds/leds-lm3633.txt
- [3] ../regulator/lm363x-regulator.txt
+ 	switch (clk_sel) {
+ 	case 0:
+-		clk_sts = rt_sysc_r32(SYSC_REG_CUR_CLK_STS);
+-		cpu_fdiv = ((clk_sts >> 8) & 0x1F);
+-		cpu_ffrac = (clk_sts & 0x1F);
+-		cpu_clk = (500 * cpu_ffrac / cpu_fdiv) * 1000 * 1000;
++		cpu_clk = 500 * 1000 * 1000;
+ 		break;
+-
+ 	case 1:
+-		fbdiv = ((rt_sysc_r32(0x648) >> 4) & 0x7F) + 1;
+-		syscfg = rt_sysc_r32(SYSC_REG_SYSCFG);
+-		xtal_mode = (syscfg >> 6) & 0x7;
+-		if (xtal_mode >= 6) {
+-			/* 25Mhz Xtal */
+-			cpu_clk = 25 * fbdiv * 1000 * 1000;
+-		} else if (xtal_mode >= 3) {
+-			/* 40Mhz Xtal */
+-			cpu_clk = 40 * fbdiv * 1000 * 1000;
+-		} else {
+-			/* 20Mhz Xtal */
+-			cpu_clk = 20 * fbdiv * 1000 * 1000;
+-		}
++		pll = rt_memc_r32(MEMC_REG_CPU_PLL);
++		fbdiv = (pll >> CPU_PLL_FBDIV_SHIFT) & CPU_PLL_FBDIV_MASK;
++		prediv = (pll >> CPU_PLL_PREDIV_SHIFT) & CPU_PLL_PREDIV_MASK;
++		cpu_clk = ((fbdiv + 1) * xtal_clk) >> prediv_tbl[prediv];
+ 		break;
++	default:
++		cpu_clk = xtal_clk;
+ 	}
++
++	cpu_clk = cpu_clk / ffiv * ffrac;
++	bus_clk = cpu_clk / 4;
++
++	clks[MT7621_CLK_CPU] = mt7621_add_sys_clkdev("cpu", cpu_clk);
++	clks[MT7621_CLK_BUS] = mt7621_add_sys_clkdev("bus", bus_clk);
++
++	pr_info("CPU Clock: %dMHz\n", cpu_clk / 1000000);
++	mips_hpt_frequency = cpu_clk / 2;
+ }
  
--lm3532@38 {
--	compatible = "ti,lm3532";
--	reg = <0x38>;
++static void __init mt7621_clocks_init_dt(struct device_node *np)
++{
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++}
++
++CLK_OF_DECLARE(mt7621_clk, "mediatek,mt7621-pll", mt7621_clocks_init_dt);
++
+ void __init ralink_of_remap(void)
+ {
+ 	rt_sysc_membase = plat_of_remap_node("mtk,mt7621-sysc");
+diff --git a/arch/mips/ralink/timer-gic.c b/arch/mips/ralink/timer-gic.c
+index b5f07d21fcf2..4fed842ae8eb 100644
+--- a/arch/mips/ralink/timer-gic.c
++++ b/arch/mips/ralink/timer-gic.c
+@@ -11,14 +11,14 @@
+ 
+ #include <linux/of.h>
+ #include <linux/clk-provider.h>
+-#include <linux/clocksource.h>
++#include <asm/time.h>
+ 
+ #include "common.h"
+ 
+ void __init plat_time_init(void)
+ {
+ 	ralink_of_remap();
 -
--	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
--
--	backlight {
--		compatible = "ti,lm3532-backlight";
--
--		lcd {
--			led-sources = <0 1 2>;
--			ramp-up-msec = <30>;
--			ramp-down-msec = <0>;
--		};
--	};
--};
--
- lm3631@29 {
- 	compatible = "ti,lm3631";
- 	reg = <0x29>;
++	ralink_clk_init();
+ 	of_clk_init(NULL);
+ 	timer_probe();
+ }
 -- 
-2.21.0.5.gaeb582a983
+2.21.0
 
