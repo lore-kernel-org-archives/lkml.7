@@ -2,85 +2,137 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A447C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687E5C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F32218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36043218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553197545;
+	bh=uhnH0vJdVj3wEVkCT5S3rq0gNoL6zmPao8NKuhDBBQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MAp8GDbkS9fg68ynN1AOUK7J4B2Uh5zwCbPULH9eON1GiloB1mQi9NrmOfZE1gE7t
+	 SpEnLPZHKLI+HT88KB1SwnrkAOhLi4adMK9EGJ+yJ/U7H9Eef8hWfNJg2fWq18RJtP
+	 lezXvnIamXnT2OvB/XnzFf/mcDyqND5OQGg+TsLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfCUTm5 (ORCPT
+        id S1728541AbfCUTpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 15:42:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45450 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 15:45:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46198 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727909AbfCUTm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 15:42:57 -0400
+        id S1727909AbfCUTpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 15:45:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C3554AF46;
-        Thu, 21 Mar 2019 19:42:55 +0000 (UTC)
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, nelson.dsouza@intel.com
-References: <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net>
- <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net>
- <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
- <20190320222220.GA2490@worktop.programming.kicks-ass.net>
- <20190321123849.GN6521@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
- <20190321171047.GR5996@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211815300.1784@nanos.tec.linutronix.de>
- <20190321182011.GT5996@hirez.programming.kicks-ass.net>
-From:   Tony Jones <tonyj@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tonyj@suse.com; prefer-encrypt=mutual; keydata=
- mQGiBEkQmbwRBACDch7wo/RzlNt2HA8jLICsO2w8yOkJ7UTzHYNn3Q83Ro0qev2KokfE3EDw
- il+vam9CDR7jIDmswHqaMe0/O+UnZtO5PlDgylZcrwNwbBzHfm/KGejbi1RBGAoETrvcfwGi
- w83bR/aDnoRXY5Ho1uphQ05/065EMpbJOOBdn9qQ4wCgv2Q6C/QeYDGsxJPRO+20nLu5K00D
- /Rde4OTZ5biM+vb6ObTmgPNeiMrTwGpMokN7audIl7njwvD+lYrlgQjmDzcaPFz29rYWwT7g
- 6t6hcFgjpU1he/v3qxeQlTJoi2+u5Mqj42z//49h6DqNjT859Z/6h5IwKBo/EZC17iBIlS2G
- VXAstNiZASGiaIlONozWJ/GSjUaRA/9wZTV1nXF/+xX+qmc7SvTg1w6jWyjxVumQLoq2SeA4
- 1Sy5X2IATkAGCCjbeoQGnFdbOnHRSJdlTazObgwreqGPlPnIROpr9QESkfxsaCkDiZfpl0xk
- 6X069QMZBEwGAWILHYXL9UqlOjniZaU2BkVA11JEdBhyQorC8T/ji1edc7QbVG9ueSBKb25l
- cyA8dG9ueWpAc3VzZS5jb20+iGMEExECACMFAlZxtcMCGwMHCwkIBwMCAQYVCAIJCgsEFgID
- AQIeAQIXgAAKCRCxWFshH+JKF0LzAJ4nV13dNEuh00Txem/YNg5CCgop3QCeJPkAXh12H/1a
- pLADSewpCEOjH9+5Ag0ESRCZvBAIAM6/WXd7+wddDg7VXO18WzHt1uqNRXQpS/WSIC7+tc4V
- nLWnygzLvzFEr8ZmBatNKXnA/0n1/KMQKwNNvrENhPv2W+CezQFiAMQn5su1RNMAwa2R/4QW
- qSMfy4FamH2fUcPmuBV65ZNcvKEAsIb4/pFq5u1e6JUdGjzstTRRjVMkxUjI/qW5sYjTl3Qs
- VVEHt1BNZPcgPpiC48mkWp8JIgiwozb0Ty/PENNewXYVQVmZs/KocFzf0a4wnAx7D1+TtHr+
- vDC8rrIeZn7pLrwqs1tWN0JfosH8BMOZTZkBnaFfXLIOyT+7Gg4nEhTtinGbzG7wzKrTxYqX
- ReVFqH2Smd8AAwUH/2+XFTcm+YvECNBuwTxgTZ+FZUF+Z+uk7DwZ60TTotzIU01RAQqfLPo6
- lIyY1xI4wPjuISJu0KnbKM7q8OxpXENANOnSMzv9UVIJWWTKAtCS+N2UJift/shay41oBh+n
- r+gDm2Cx+2bo4AAeZ9B8tmSAoc7Ciymx6bRbQb6QygfLqXavhrp7GOKDd8Bmuu4fbB6g748q
- euAs4J/Bubhi8Md3/3nWxAis+ZD1EswoRJN7Liu+NkhD9Nb+K2uVl/PB5/NTYxgckDM/WnCS
- 3QuxXy8172zWtCoLw2kpZWH7CSKBgs93ilTrk1lzomhCCrsvN9/t5q9j7pSwsiysrABHXSqI
- SQQYEQIACQUCSRCZvAIbDAAKCRCxWFshH+JKF4YEAJ9RBgEy2T0udwLfbfqd0vAZDSPckQCf
- QNDpi5Yr/q8BHrGBpRnhjWih0yc=
-Message-ID: <fa2d8695-f87c-b141-a19b-2ed4b80df987@suse.com>
-Date:   Thu, 21 Mar 2019 12:42:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        by mx1.suse.de (Postfix) with ESMTP id 0AC07AF46;
+        Thu, 21 Mar 2019 19:45:41 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 20:45:39 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     mgorman@techsingularity.net, vbabka@suse.cz,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: mempolicy: remove MPOL_MF_LAZY
+Message-ID: <20190321194539.GY8696@dhcp22.suse.cz>
+References: <1553041659-46787-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190321145745.GS8696@dhcp22.suse.cz>
+ <75059b39-dbc4-3649-3e6b-7bdf282e3f53@linux.alibaba.com>
+ <20190321165112.GU8696@dhcp22.suse.cz>
+ <60ef6b4a-4f24-567f-af2f-50d97a2672d6@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20190321182011.GT5996@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <60ef6b4a-4f24-567f-af2f-50d97a2672d6@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/19 11:20 AM, Peter Zijlstra wrote:
+On Thu 21-03-19 10:25:08, Yang Shi wrote:
+> 
+> 
+> On 3/21/19 9:51 AM, Michal Hocko wrote:
+> > On Thu 21-03-19 09:21:39, Yang Shi wrote:
+> > > 
+> > > On 3/21/19 7:57 AM, Michal Hocko wrote:
+> > > > On Wed 20-03-19 08:27:39, Yang Shi wrote:
+> > > > > MPOL_MF_LAZY was added by commit b24f53a0bea3 ("mm: mempolicy: Add
+> > > > > MPOL_MF_LAZY"), then it was disabled by commit a720094ded8c ("mm:
+> > > > > mempolicy: Hide MPOL_NOOP and MPOL_MF_LAZY from userspace for now")
+> > > > > right away in 2012.  So, it is never ever exported to userspace.
+> > > > > 
+> > > > > And, it looks nobody is interested in revisiting it since it was
+> > > > > disabled 7 years ago.  So, it sounds pointless to still keep it around.
+> > > > The above changelog owes us a lot of explanation about why this is
+> > > > safe and backward compatible. I am also not sure you can change
+> > > > MPOL_MF_INTERNAL because somebody still might use the flag from
+> > > > userspace and we want to guarantee it will have the exact same semantic.
+> > > Since MPOL_MF_LAZY is never exported to userspace (Mel helped to confirm
+> > > this in the other thread), so I'm supposed it should be safe and backward
+> > > compatible to userspace.
+> > You didn't get my point. The flag is exported to the userspace and
+> > nothing in the syscall entry path checks and masks it. So we really have
+> > to preserve the semantic of the flag bit for ever.
+> 
+> Thanks, I see you point. Yes, it is exported to userspace in some sense
+> since it is in uapi header. But, it is never documented and MPOL_MF_VALID
+> excludes it. mbind() does check and mask it. It would return -EINVAL if
+> MPOL_MF_LAZY or any other undefined/invalid flag is set. See the below code
+> snippet from do_mbind():
+> 
+> ...
+> #define MPOL_MF_VALID    (MPOL_MF_STRICT   |     \
+>              MPOL_MF_MOVE     |     \
+>              MPOL_MF_MOVE_ALL)
+> 
+> if (flags & ~(unsigned long)MPOL_MF_VALID)
+>         return -EINVAL;
+> 
+> So, I don't think any application would really use the flag for mbind()
+> unless it is aimed to test the -EINVAL. If just test program, it should be
+> not considered as a regression.
 
-> Might be best to have someone test this.. someone with ucode and a
-> machine etc.. :-)
+I have overlook that MPOL_MF_VALID doesn't include MPOL_MF_LAZY. Anyway,
+my argument still holds that the bit has to be reserved for ever because
+it used to be valid at some point of time and not returning EINVAL could
+imply you are running on the kernel which supports the flag.
+ 
+> > > I'm also not sure if anyone use MPOL_MF_INTERNAL or not and how they use it
+> > > in their applications, but how about keeping it unchanged?
+> > You really have to. Because it is an offset of other MPLO flags for
+> > internal usage.
+> > 
+> > That being said. Considering that we really have to preserve
+> > MPOL_MF_LAZY value (we cannot even rename it because it is in uapi
+> > headers and we do not want to break compilation). What is the point of
+> > this change? Why is it an improvement? Yes, nobody is probably using
+> > this because this is not respected in anything but the preferred mem
+> > policy. At least that is the case from my quick glance. I might be still
+> > wrong as it is quite easy to overlook all the consequences. So the risk
+> > is non trivial while the benefit is not really clear to me. If you see
+> > one, _document_ it. "Mel said it is not in use" is not a justification,
+> > with all due respect.
+> 
+> As I elaborated above, mbind() syscall does check it and treat it as an
+> invalid flag. MPOL_PREFERRED doesn't use it either, but just use MPOL_F_MOF
+> directly.
 
-If your own company can't oblige you here Peter :-) I'm sure I can make some time to test it.
+As Mel already pointed out. This doesn't really sound like a sound
+argument. Say we would remove those few lines of code and preserve the
+flag for future reservation of the flag bit. I would bet my head that it
+will not be long before somebody just goes and clean it up and remove
+because the flag is unused. So you would have to put a note explaining
+why this has to be preserved. Maybe the current code is better to
+document that. It would be much more sound to remove the code if it was
+causing a measurable overhead or a maintenance burden. Is any of that
+the case?
+
+-- 
+Michal Hocko
+SUSE Labs
