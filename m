@@ -2,107 +2,160 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA79C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0116CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B04D21917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KxGr1hoO"
+	by mail.kernel.org (Postfix) with ESMTP id C1231218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:14:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfCUVO2 (ORCPT
+        id S1727234AbfCUVOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:14:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35199 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfCUVO1 (ORCPT
+        Thu, 21 Mar 2019 17:14:53 -0400
+Received: from avasout02.plus.net ([212.159.14.17]:43420 "EHLO
+        avasout02.plus.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfCUVOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:14:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t21so4362659pfe.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:14:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JHaZSzBG+K+5icNtlx+uJjLDPuwvOKd7SsMj3Ny9WSU=;
-        b=KxGr1hoOzPXwyS3bHprjr4+lQTVW/U13zB4XwjjBzy/9QUSTBXEP2XmKySuaKP0C2Q
-         B35XeTHSK/BNpoli3+lCqecPOReuuzauLug/UItMXlWe90iaTV3JlV0vK9CTLiQSZjdq
-         Bgqe5tJO4ZdhTLd4NqAvUqqBh5ogcOb2qD6+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JHaZSzBG+K+5icNtlx+uJjLDPuwvOKd7SsMj3Ny9WSU=;
-        b=Edrf8qGXkJLhkD+2069u7kspGk3bomSPVzUuxJlPQ0tGLEi26G5hY58G7rDtVV3mF5
-         0UpmahCoANvNKp7oP5hnkBHqNIqz1IlqVp/zTthprMo/JO4JwDFOvNFbTbrKt7+W/VxQ
-         SkJvJlOHZs61sIlVs124Ah/eukMBYINKNSNVwUMEKk/GsCOnM+by+A7CDD6aNXJm3ZTn
-         YjHX5xXgbXeH0guxIEfavIbnF0mxieVpCVJDaCulPMbyV2MGYQ9Wdqj83CUW8EfBykIw
-         EGHheJ57TbCWPRmx9mLJJuksyGzeoCmGysWbxMyfxu3kRxxW6eZzzx4fFlQZJPopGVHT
-         Tabg==
-X-Gm-Message-State: APjAAAVpl/7QuVTzCVeWPTVuoZE1TaS7UnvzyHJW9chfQ+TBd0Wdn5DO
-        lgEgCL+8ARWDOOkEMYVzZfubHQ==
-X-Google-Smtp-Source: APXvYqxwmQmNpNyqvh11DspxIWHGtMyQJXafR4PBGig9+ThxdbtHD4Ikky74kKihOaU/CjssEP9pTg==
-X-Received: by 2002:a17:902:1121:: with SMTP id d30mr5810986pla.104.1553202866973;
-        Thu, 21 Mar 2019 14:14:26 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id x23sm6575926pgf.10.2019.03.21.14.14.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 14:14:26 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 14:14:26 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, ryandcase@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] ARM: dts: rockchip: Remove #address/#size-cells from
- rk3288-veyron gpio-keys
-Message-ID: <20190321211426.GT112750@google.com>
-References: <20190320201402.114309-1-dianders@chromium.org>
- <20190320201402.114309-4-dianders@chromium.org>
+        Thu, 21 Mar 2019 17:14:52 -0400
+Received: from deneb ([80.229.24.9])
+        by smtp with ESMTP
+        id 751Wh0gq72SW5751XhKXdr; Thu, 21 Mar 2019 21:14:51 +0000
+X-CM-Score: 0.00
+X-CNFS-Analysis: v=2.3 cv=NtavjPVJ c=1 sm=1 tr=0
+ a=E/9URZZQ5L3bK/voZ0g0HQ==:117 a=E/9URZZQ5L3bK/voZ0g0HQ==:17
+ a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NTGMnVQrEZIA:10
+ a=pGLkceISAAAA:8 a=-An2I_7KAAAA:8 a=CCpqsmhAAAAA:8 a=VwQbUJbxAAAA:8
+ a=Dj15SF_IVgmvfMQSUbwA:9 a=CjuIK1q_8ugA:10 a=Sq34B_EcNBM9_nrAYB9S:22
+ a=ul9cdbp4aOFLsgKbc677:22 a=AjGcO6oz07-iQ99wixmX:22
+Received: from mac by deneb with local (Exim 4.89)
+        (envelope-from <mac@mcrowe.com>)
+        id 1h751W-0003m7-2n; Thu, 21 Mar 2019 21:14:50 +0000
+Date:   Thu, 21 Mar 2019 21:14:50 +0000
+From:   Mike Crowe <mac@mcrowe.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kay Sievers <kay@vrfy.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: kmsg: lseek errors confuse glibc's dprintf
+Message-ID: <20190321211450.v5kmh35ql2fv2cfj@mcrowe.com>
+References: <20150115173132.GA7486@mcrowe.com>
+ <20190321104726.3c570c41e5757611a13c23ca@gmail.com>
+ <CAK8P3a1gkG6U3zCytY2Ax-DQvExXqG8Z6eGde4W6D7JLa=YwGg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190320201402.114309-4-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK8P3a1gkG6U3zCytY2Ax-DQvExXqG8Z6eGde4W6D7JLa=YwGg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-CMAE-Envelope: MS4wfCkQnjk+EAGqgnuSaV3zLbviblrZDcS/ZOav2a5euEJxdih5SQ3blQqVf1Ty5kgfzP3L0Yr8W3P3fwxcqvo6IPmNMXnXVwVLfW7lC04qS35aGPYYBvmB
+ yOkzBTSFdkuVODzDN7aq/uoMcy+ppLnJjDReNl7Tn0L51to1fiLK65T4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 01:14:02PM -0700, Douglas Anderson wrote:
-> They are pointless.  As dtc points out:
->   Warning (avoid_unnecessary_addr_size):
->   /gpio-keys:
->   unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+On Thursday 21 March 2019 at 11:33:33 +0100, Arnd Bergmann wrote:
+> On Thu, Mar 21, 2019 at 10:47 AM Alexander Sverdlin
+> <alexander.sverdlin@gmail.com> wrote:
+> >
+> > Hello Mike and all,
+> >
+> > On Thu, 15 Jan 2015 17:31:32 +0000
+> > Mike Crowe <mac@mcrowe.com> wrote:
+> >
+> > > glibc's dprintf implementation does not work correctly with /dev/kmsg file
+> > > descriptors because glibc treats receiving EBADF and EINVAL from lseek when
+> > > trying to determine the current file position as errors. See
+> > > https://sourceware.org/bugzilla/show_bug.cgi?id=17830
+> >
+> > we need to conclude on this issue. This is a real bug which is ignored
+> > for 4 years now. Mike, would you like to re-send a formal patch?
+> > I can do it as well, preserving a link to your original patch/report.
+> > In case you'd like to post it yourself, I can be a tester and/or
+> > provide a reproducer.
 > 
-> Let's remove them.
+> The patch needs to be rebased because of the changed file
+> location. I would also suggest adding a "Cc: stable@kernel.org"
+> tag so it will get backported into stable kernels.
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> > > >>From what I can tell prior to Kay Sievers printk record commit
+> > > e11fea92e13fb91c50bacca799a6131c81929986, calling lseek(fd, 0, SEEK_CUR)
+> > > with such a file descriptor would not return an error.
+> > >
+> > > Prior to Kay's change, Arnd Bergmann's commit
+> > > 6038f373a3dc1f1c26496e60b6c40b164716f07e seemed to go to some lengths to
+> > > preserve the successful return code rather than returning (the perhaps more
+> > > logical) -ESPIPE.
+> > >
+> > > glibc is happy with either a successful return or -ESPIPE.
+> > >
+> > > For maximum compatibility it seems that success should be returned but
+> > > given Kay's new seek interface perhaps this isn't helpful.
+> > >
+> > > This patch ensures that such a seek succeeds:
+> > >
+> > > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > > index 02d6b6d..b3ff6f0 100644
+> > > --- a/kernel/printk/printk.c
+> > > +++ b/kernel/printk/printk.c
+> > > @@ -693,7 +693,7 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> > >       loff_t ret = 0;
+> > >
+> > >       if (!user)
+> > > -             return -EBADF;
+> > > +             return (whence == SEEK_CUR) ? 0 : -EBADF;
+> > >       if (offset)
+> > >               return -ESPIPE;
+> > >
+> > > @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> > >               user->idx = log_next_idx;
+> > >               user->seq = log_next_seq;
+> > >               break;
+> > > +     case SEEK_CUR:
+> > > +             /* For compatibility with userspace requesting the
+> > > +              * current file position. */
+> > > +             ret = 0;
+> > > +             break;
+> > >       default:
+> > >               ret = -EINVAL;
+> > >       }
+> > >
+> > > (although it could be argued that the !user case should return -ESPIPE
+> > > rather than EBADF since the file descriptor _is_ valid.)
 > 
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 0bc2409f6903..192dbc089ade 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -25,8 +25,6 @@
->  
->  	gpio_keys: gpio-keys {
->  		compatible = "gpio-keys";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
->  
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&pwr_key_l>;
+> I don't think the !user case can ever be hit, I would just leave that
+> to return -BADF and not touch it.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+I originally wrote the patch for linux-3.8(!) and back then a write-only
+kmsg instance had no private data. It looks like this changed with
+750afe7babd117daabebf4855da18e4418ea845e in v4.8, so user should now always
+be valid.
+
+> > > @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> > >               user->idx = log_next_idx;
+> > >               user->seq = log_next_seq;
+> > >               break;
+> > > +     case SEEK_CUR:
+> > > +             /* For compatibility with userspace expecting SEEK_CUR
+> > > +              * to not yield EINVAL. */
+> > > +             ret = -ESPIPE;
+> > > +             break;
+> > >       default:
+> > >               ret = -EINVAL;
+> > >       }
+> > >
+> > > Either makes dprintf work, but is either the right solution?
+> 
+> I'd vote for -ESPIPE, for consistency with the offset!=0 case, but
+> etiher one is fine with me here.
+
+It seems that this is the version we've successfully been running in our
+kernel since then, so that's good.
+
+Thanks.
+
+Mike.
