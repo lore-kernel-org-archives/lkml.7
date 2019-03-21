@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE277C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DEFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC31218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A2E218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553180851;
-	bh=ioNYyv1eY5IG0c0SVnHPkaMTiSqmaG8ex4utjJO0m0U=;
+	s=default; t=1553180855;
+	bh=4I64GT/E/P9+GIBLyCSf6+qaOUxN2nDzQP4otzUBy0c=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=a/5QuFuIpRHahw+9hY53SGItlZCxwtNwlcrViYNE+BQZbn9YeC7BjEYyT5kl0BGTU
-	 7LK0EUcOzGkRYpwYEb5J1Njo3jcOrTOevcXhzYWxNfnaULyt4m11UtAZiJg/V+UcO5
-	 RyfM/c9LnlQJnxkj6eHGu7xGMnmM8gvPe3Zq1MtY=
+	b=gwuGZon+81dIRSDJvSiWRD7iugZoVN4hjWqVxBf8Y1fx3D0OrG8t9pXhw27/tvYEB
+	 C2Eq4uEZROXCkjq7P7vqO38S1w9n+z7zrFSDvgZof90PMXSOFdWnqqFdGTiKODbgAr
+	 f2X0BDF7eQLAxgYFz5C9FQ6nbqzaSZrpBdryzapk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfCUPH3 (ORCPT
+        id S1728496AbfCUPHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:07:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48062 "EHLO
+        Thu, 21 Mar 2019 11:07:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48184 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfCUPH1 (ORCPT
+        with ESMTP id S1728470AbfCUPHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:07:27 -0400
+        Thu, 21 Mar 2019 11:07:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Qki20OJR+3zDqpq0x4Ah1tUxx6kMg81+X8n+ksX95Zg=; b=gIOiJKp5Fn6M
-        sbbtWIc91SgauSh8e5ltRj7WknSuFQmr+Ds+Q6vt4mHy4+1qVVmZQwzI+QUarbfWKxMiABfcT9b6m
-        MXIGcF8J5QLpSmvqvVaKAIf1Wf727GZCHVnqk8944G3ONwdo9WIyW1iXaHtVCnegptx/MTpjd8j6H
-        8wIN8=;
+        List-Archive; bh=5jLw+JbFqeiEDOAn4Vh8glY6dmp9kLQe8VKACAq9t2E=; b=TBFLQf0LDcD6
+        UyJxODR/u6GYVzADKmi/2ZPIxGvUZQK1Xe97bslQW2Z0aEZ4gJhzROWAhSFvXxyCWDq2szt/e2WMI
+        S9PSkUfe7DgJ3EXJ9YjWecv6A9YyZK+QZQaUia/UwJdOYT7hcTClnboMHF0p8siN8y4KCW1PQ1beW
+        cb58I=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h6zHw-0005dR-Oc; Thu, 21 Mar 2019 15:07:24 +0000
+        id 1h6zI0-0005dY-BW; Thu, 21 Mar 2019 15:07:28 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 4EC0F11288EC; Thu, 21 Mar 2019 15:07:24 +0000 (GMT)
+        id AD76611288F0; Thu, 21 Mar 2019 15:07:27 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
+To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: add regulator_get_linear_step() stub helper" to the regulator tree
+Subject: Applied "regulator: tps65132: Constify tps65132_regulator_ops and tps_regs_desc" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190321150724.4EC0F11288EC@debutante.sirena.org.uk>
-Date:   Thu, 21 Mar 2019 15:07:24 +0000 (GMT)
+Message-Id: <20190321150727.AD76611288F0@debutante.sirena.org.uk>
+Date:   Thu, 21 Mar 2019 15:07:27 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,7 +58,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: add regulator_get_linear_step() stub helper
+   regulator: tps65132: Constify tps65132_regulator_ops and tps_regs_desc
 
 has been applied to the regulator tree at
 
@@ -83,48 +83,43 @@ to this mail.
 Thanks,
 Mark
 
-From 7287275b4301e230be9e4569431c7dacb67ebc13 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 4 Mar 2019 20:38:29 +0100
-Subject: [PATCH] regulator: add regulator_get_linear_step() stub helper
+From 4e105e3b4bc6a1825aefc56f11951e1496a5bb3c Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 21 Mar 2019 20:00:38 +0800
+Subject: [PATCH] regulator: tps65132: Constify tps65132_regulator_ops and
+ tps_regs_desc
 
-The regulator header has empty inline functions for most interfaces,
-but not regulator_get_linear_step(), which has just grown a user
-that does not depend on regulators otherwise:
+The tps65132_regulator_ops and tps_regs_desc never need to be modified,
+make them const so compiler can put them to .rodata.
 
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c: In function 'get_alignment_from_regulator':
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c:555:19: error: implicit declaration of function 'regulator_get_linear_step'; did you mean 'regulator_get_drvdata'? [-Werror=implicit-function-declaration]
-  align->step_uv = regulator_get_linear_step(reg);
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~
-                   regulator_get_drvdata
-cc1: all warnings being treated as errors
-scripts/Makefile.build:278: recipe for target 'drivers/clk/tegra/clk-tegra124-dfll-fcpu.o' failed
-
-Add the missing stub along the others.
-
-Fixes: b3cf8d069505 ("clk: tegra: dfll: CVB calculation alignment with the regulator")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/linux/regulator/consumer.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/regulator/tps65132-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index f3f76051e8b0..aaf3cee70439 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -478,6 +478,11 @@ static inline int regulator_is_supported_voltage(struct regulator *regulator,
- 	return 0;
+diff --git a/drivers/regulator/tps65132-regulator.c b/drivers/regulator/tps65132-regulator.c
+index 1f627e161b99..6e22f5ebba2e 100644
+--- a/drivers/regulator/tps65132-regulator.c
++++ b/drivers/regulator/tps65132-regulator.c
+@@ -117,7 +117,7 @@ static int tps65132_regulator_is_enabled(struct regulator_dev *rdev)
+ 	return 1;
  }
  
-+static inline unsigned int regulator_get_linear_step(struct regulator *regulator)
-+{
-+	return 0;
-+}
-+
- static inline int regulator_set_current_limit(struct regulator *regulator,
- 					     int min_uA, int max_uA)
- {
+-static struct regulator_ops tps65132_regulator_ops = {
++static const struct regulator_ops tps65132_regulator_ops = {
+ 	.enable = tps65132_regulator_enable,
+ 	.disable = tps65132_regulator_disable,
+ 	.is_enabled = tps65132_regulator_is_enabled,
+@@ -193,7 +193,7 @@ static int tps65132_of_parse_cb(struct device_node *np,
+ 		.owner = THIS_MODULE,			\
+ 	}
+ 
+-static struct regulator_desc tps_regs_desc[TPS65132_MAX_REGULATORS] = {
++static const struct regulator_desc tps_regs_desc[TPS65132_MAX_REGULATORS] = {
+ 	TPS65132_REGULATOR_DESC(VPOS, outp),
+ 	TPS65132_REGULATOR_DESC(VNEG, outn),
+ };
 -- 
 2.20.1
 
