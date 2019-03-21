@@ -2,211 +2,229 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ABFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9059B218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4DC218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="kiWvuxQ8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsscLUai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfCUAMV (ORCPT
+        id S1727718AbfCUAO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 20:12:21 -0400
-Received: from mail-eopbgr1310125.outbound.protection.outlook.com ([40.107.131.125]:3069
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726914AbfCUAMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 20:12:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x6EG0lUmr1oiMHIBfGPkHRzEQjuDAMo82R2BXfOtZWk=;
- b=kiWvuxQ8OxP0TIj4OceIy16NfCD+UD/S3vrJtlHTS//WPyyVOVCkjznKw0b9FN4S6MwcNIe7kHOMugUnKE7mSEspobyhpSQjeNJWQKhTGAnhzI0jAcEb0I4p8c1b4VzbbaPKcLWLtWdDKWqCQJG58b89cxRr1AxQxYt2jjPS8Ms=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0172.APCP153.PROD.OUTLOOK.COM (10.170.189.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.4; Thu, 21 Mar 2019 00:12:03 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::8073:4441:ad0d:75c0]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::8073:4441:ad0d:75c0%7]) with mapi id 15.20.1750.002; Thu, 21 Mar 2019
- 00:12:03 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
-Thread-Topic: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
-Thread-Index: AQHU32UqILToz6O5hEmdqVYxs1ZuS6YVHckA
-Date:   Thu, 21 Mar 2019 00:12:03 +0000
-Message-ID: <PU1P153MB0169E9AA13EB51DF5CFC1CE4BF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20190304213357.16652-1-decui@microsoft.com>
- <20190304213357.16652-2-decui@microsoft.com>
- <DM5PR2101MB0918F6A089C461EEA4457998D7410@DM5PR2101MB0918.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR2101MB0918F6A089C461EEA4457998D7410@DM5PR2101MB0918.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-20T21:37:46.2345424Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e434203d-b77d-43fb-8540-83db36fb089c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [2601:600:a280:1760:b139:a24a:e67f:7afd]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ef3379ef-fc23-48ba-95a4-08d6ad91d8cf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0172;
-x-ms-traffictypediagnostic: PU1P153MB0172:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB017229384E903324E792736ABF420@PU1P153MB0172.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(376002)(396003)(346002)(199004)(189003)(6346003)(7736002)(10290500003)(33656002)(7696005)(25786009)(68736007)(55016002)(9686003)(8936002)(4326008)(6246003)(8676002)(6436002)(46003)(22452003)(54906003)(105586002)(305945005)(110136005)(316002)(476003)(1511001)(2906002)(99286004)(486006)(6636002)(229853002)(8990500004)(81156014)(106356001)(256004)(10090500001)(11346002)(6506007)(5660300002)(478600001)(446003)(86362001)(186003)(2201001)(86612001)(71200400001)(71190400001)(53936002)(6116002)(7416002)(52536014)(14454004)(102836004)(81166006)(97736004)(2501003)(14444005)(74316002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0172;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7bQWt+2AKlnwQ5t4tpadfa5knPbVRa6BFqd94bFRvKyc2gk4UB47ZxybcK2lNYV6DJ1Sp5JlD+lJi0ELPXnF3Cs5CJ/fLEacoHkn76Uj8IdS5EmX+mXo/2CvgKjxvT4bjCuW+8pK7nkg8sKKm3uK7YzGs37TTdMyvJxKkzEXh/8SrsU+TazCvq2nL3t7BQMgEcmaQz8OZj4tpktOrdboaLTj6E9mbtfaYXp1fAfkajq8v1wDf1GPMBHBbe5tPGsvlqHhaqq+lb/tOqaIvyQhPLOpXwc/BzqFWI85kpXJcglQWjAwgkB3Yup3DEve/xDlDImmhAnE8KwpI6ijo/7/WgmKSksVbysvUzOItsiLeCSDeg52oucJl+pHwqriHYW8axi/ASmjk8C4MB9+PGZDQRMoRheCfGY4VB5m9qs7qVA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef3379ef-fc23-48ba-95a4-08d6ad91d8cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 00:12:03.4112
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0172
+        Wed, 20 Mar 2019 20:14:57 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37944 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfCUAO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 20:14:57 -0400
+Received: by mail-ed1-f65.google.com with SMTP id q14so3568060edr.5;
+        Wed, 20 Mar 2019 17:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Mt43KCQtSq+Z0hTpKWdP/GlYFqR1KKeRasY/ohVUwWQ=;
+        b=BsscLUaiouFE8pG1hTBCU5am0SgQhN2ivGtqNZL1Zz44BXq/wQcJV8zlSE3ovT5yvX
+         MlQekwvd9BVx75/s5TW3yE4O76irbPkFDPOD6I8a59WTRKvWWU2CiVZh3g+CU4IRDci9
+         5OF1pHMxEL0eraxrR3uaWWnJ1zk16f53YeZcFBz/24JuyDWBRvN8Qlx453wk/31kRWrx
+         Wtjjr0o328g7rIQ5pH2nnkQW3XobBmutWjh7oyohI9SYR9P+d4E7mfiCeoDVDkpK0MKY
+         cGSTlUdU60DN2bIu+bgW3jeCM4hlN6x4NU/hU66RvoMJG87d2BKI0vb3CQwrNbX3uSLr
+         rWJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Mt43KCQtSq+Z0hTpKWdP/GlYFqR1KKeRasY/ohVUwWQ=;
+        b=eEcq1OBPR8tQRAce0JzXnGMqYRaXCTcwwN2FQ5cqUUNOlhls3CSbU8h267/givZs2E
+         +F6cNQpfXXTufAkV/KLL1rgVN8UU2Xbu1ODzUtZ92mgn2Ql2FOIdbcUyVjbA88eqI+Ba
+         J9Hz3Wapdp+ZJGShhpYhFPH4mjbt/47URjGAC4K3dwvnctAfZZC7z4HPvFioRm9p92A9
+         F8cCpmufLXi/nTFpw3O03GdbNctI/7VbyyMnFMssLaZdpIzNz5i+kPNxmknNC90CoE0o
+         9Ee64DUoLRA2Cu8BH/TvCztp1OVmvzNOYL2l4DcHYQeDyjFH1E9Uk7y0Na4fksEQeRIy
+         Cqgg==
+X-Gm-Message-State: APjAAAXGu5Ws8pOJWOh1Ir0SDxgdRZE3Vo3mhhQg75qLNiprk1gML+X4
+        YYf+1G43Gambwz7wURlzxRo=
+X-Google-Smtp-Source: APXvYqyZdJKVigVHV+GYKcMElneANHrzCJADLZQAW3/1i1AmmBoCwYGK59wKBrACRf3TY45j57pqTA==
+X-Received: by 2002:a50:926e:: with SMTP id j43mr492698eda.60.1553127294417;
+        Wed, 20 Mar 2019 17:14:54 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id j34sm1107660edb.30.2019.03.20.17.14.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2019 17:14:53 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] Enable rk3066 VOP and HDMI for MK808
+Date:   Thu, 21 Mar 2019 01:14:35 +0100
+Message-Id: <20190321001440.31057-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Wednesday, March 20, 2019 2:38 PM
->=20
-> From: Dexuan Cui <decui@microsoft.com>
-> >
-> > After a device is just created in new_pcichild_device(), hpdev->refs is=
- set
-> > to 2 (i.e. the initial value of 1 plus the get_pcichild()).
-> >
-> > When we hot remove the device from the host, in Linux VM we first call
-> > hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() an=
-d
-> > then schedules a work of hv_eject_device_work(), so hpdev->refs becomes=
- 3
-> > (let's ignore the paired get/put_pcichild() in other places). But in
-> > hv_eject_device_work(), currently we only call put_pcichild() twice,
-> > meaning the 'hpdev' struct can't be freed in put_pcichild(). This patch
-> > adds one put_pcichild() to fix the memory leak.
-> >
-> > BTW, the device can also be removed when we run "rmmod pci-hyperv". On
-> this
-> > path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present())=
-,
-> > hpdev->refs is 2, and we do correctly call put_pcichild() twice in
-> > pci_devices_present_work().
->=20
-> Exiting new_pcichild_device() with hpdev->refs set to 2 seems OK to me.
-> There is the reference in the hbus->children list, and there is the refer=
-ence that
-> is returned to the caller. =20
-So IMO the "normal" reference count should be 2. :-) IMO only when a hv_pci=
-_dev
-device is about to be destroyed, its reference count can drop to less than =
-2,=20
-i.e. first temporarily drop to 1 (meaning the hv_pci_dev device is removed =
-from
-hbus->children), and then drop to zero (meaning kfree(hpdev) is called).
+For testing only.
 
-> But what is strange is that pci_devices_present_work()
-> overwrites the reference returned in local variable hpdev without doing a
-> put_pcichild().
-I suppose you mean:
+Version: V5
 
-        /* First, mark all existing children as reported missing. */
-        spin_lock_irqsave(&hbus->device_list_lock, flags);
-        list_for_each_entry(hpdev, &hbus->children, list_entry) {
-                hpdev->reported_missing =3D true;
-        }
-        spin_unlock_irqrestore(&hbus->device_list_lock, flags)
+Title: Enable rk3066 VOP and HDMI for MK808.
 
-This is not strange to me, because, in pci_devices_present_work(), at first=
- we
-don't know which devices are about to disappear, so we pre-mark all devices=
- to
-be potentially missing like that; if a device is still on the bus, we'll ma=
-rk its
-hpdev->reported_missing to false later; only after we know exactly which
-devices are missing, we should call put_pcichild() against them. All these
-seem natural to me.
+This patch serie only works in combination with a MK808 TV stick and
+a rk3066 processor. Other boxes and tablets with a rk3066
+need extra software for power management and lcd's.
 
-> It seems like the "normal" reference count should be 1 when the
-> child device is not being manipulated, not 2.
-What does "not being manipulated" mean?
+What does it do:
 
-> The fix would be to add a call to
-> put_pcichild() when the return value from new_pcichild_device() is
-> overwritten.
-In pci_devices_present_work(), we NEVER "overwrite" the "hpdev" returned
-from new_pcichild_device(): the "reported_missing" field of the new hpdev
-is implicitly initialized to false in new_pcichild_device().
+With these kernel patches a MK808 can show 2 penguins and a console
+on a DVI-D monitor in combination with a framebuffer.
 
-> Then remove the call to put_pcichild() in pci_device_present_work() when
-> missing
-> children are moved to the local list. The children have been moved from o=
-ne
-> list
-> to another, so there's no need to decrement the reference count.  Then wh=
-en
-> everything in the local list is deleted, the reference is correctly decre=
-mented,
-> presumably freeing the memory.
->=20
-> With this approach, the code in hv_eject_device_work() is correct.  There=
-'s
-> one call to put_pcichild() to reflect removing the child device from the =
-hbus->
-> children list, and one call to put_pcichild() to pair with the get_pcichi=
-ld() in
-> hv_pci_eject_device().
-Please refer to my replies above. IMO we should fix
-hv_eject_device_work() rather than pci_devices_present_work().
+Not tested:
 
-Thanks
--- Dexuan
-=20
-> Your patch works, but to me it leaves the ref count in an unnatural state
-> most of the time.
->=20
-> Michael
+HDMI TV
+HDCP
+DRM
+Xorg
+Display managers
+Android
+etc.
+
+Problems:
+
+DRM functions keep changing every rc.
+With v5.0-rc8 the monitor doesn't blank on poweroff, it freezes
+due to a patch revert some time ago.
+
+  drm/rockchip: shutdown drm subsystem on shutdown
+    https://patchwork.kernel.org/patch/10556151/
+  drm/rockchip: Allow driver to be shutdown on reboot/kexec
+    https://patchwork.kernel.org/patch/10556135/
+  [for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"
+    https://patchwork.kernel.org/patch/10714725/
+
+To get the rk3066 hdmi driver accepted DVI-D support is removed.
+(Fixed screen size support for DVI-D with extra patch.)
+
+HDMI sound not included.
+etc.
+
+///////////////////////////////////////////
+Changes V5:
+
+rockchip,rk3066-hdmi.txt
+  add Reviewed-by tag
+
+rk3066_hdmi.c
+  change order in unbind function
+  add goto err_disable_i2c to rk3066_hdmi_bind function
+  change dev_foobar calls to their DRM_* equivalents
+  remove rk3066_hdmi_i2c_irq function
+  use define constants in rk3066_hdmi_encoder_enable function
+  add comment to rk3066_hdmi_config_phy function
+  small text style changes
+  remove DVI-D support
+  (add DVI-D support with extra patch)
+
+rk3066_hdmi.h
+  add define constants
+
+///////////////////////////////////////////
+Changes V4:
+
+rockchip,rk3066-hdmi.txt
+  change document name
+
+rk3066_hdmi.c
+  add more info in commit message
+  replace deprecated drmP.h include
+  small text style changes
+  explain vic variable
+  remove enc_in_format
+  change lock name
+  change regmap name
+  change cmp name
+  replace hdmi->dev by dev
+  use sentinel
+  use HDMI_VIDEO_VSYNC_OFFSET_SHIFT define
+  remove unused module macros
+  change driver name for dmesg
+
+///////////////////////////////////////////
+Changes V3:
+
+updated to v5.0-rc8
+removed patches that are already added to linux-next
+
+rk3066_hdmi.c
+  removed gpl text
+  small style changes
+  removed unused includes
+  add include for:
+    drm_helper_hpd_irq_event
+    drm_helper_probe_single_connector_modes
+  update drm_hdmi_avi_infoframe_from_display_mode function call
+
+rk3066_hdmi.h
+  removed gpl text
+
+rk3066a.dtsi
+  add extra port for hdmi connector node
+
+rk3066a-mk808.dts
+  add hdmi connector node
+  connect hdmi_out with hdmi_con_in
+
+rk3066-hdmi.txt
+  add extra port for hdmi connector node
+
+///////////////////////////////////////////
+
+# How to make rkfs.cpio
+
+find . | cpio -o --format=newc > ../rkfs.cpio
+
+# How to compile/flash
+
+make menuconfig  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+make -j4  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+
+cp ./arch/arm/boot/zImage ../zImage-dtb
+cat ./arch/arm/boot/dts/rk3066a-mk808.dtb >> ../zImage-dtb
+../tools/rkcrc -k ../zImage-dtb ../mk808.img
+sudo ../tools/rkflashtool w 0x4000 0x8000 < ../mk808.img
+sudo ../tools/rkflashtool b
+
+///////////////////////////////////////////
+
+Johan Jonker (3):
+  ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
+  dt-bindings: display: rockchip: add document for rk3066 hdmi
+  drm: rockchip: add fixed screen size DVI-D support for rk3066 hdmi
+
+Zheng Yang (2):
+  drm: rockchip: introduce rk3066 hdmi
+  ARM: dts: rockchip: add rk3066 hdmi nodes
+
+ .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 ++
+ arch/arm/boot/dts/rk3066a-mk808.dts                |  29 +
+ arch/arm/boot/dts/rk3066a.dtsi                     |  52 ++
+ drivers/gpu/drm/rockchip/Kconfig                   |   8 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c             | 889 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rk3066_hdmi.h             | 229 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ 9 files changed, 1283 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.c
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.h
+
+-- 
+2.11.0
 
