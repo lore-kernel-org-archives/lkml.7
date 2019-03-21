@@ -2,203 +2,135 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809F1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE59C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4330721900
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="lKcgAYoU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="enUTaN3H"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7D42190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553211899;
+	bh=UpHbhHN1Zc5BHGT03KaWWWF0W9L5k2v3o9D99kG+1Dc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Wl+yvliRLnjQT9ZuVv7yZFUpQI7Cuk3JD+RjQZMjJs0nNk1fwX1YOhCLvqCqtiXvH
+	 SafyJqQlekNPpQ2vjLCSSq2hhdkzCGBBA2pWIHrnP3zUnKkAoUJXE3kDdBcvGedYs8
+	 ZVl/+Oa0vcfaE85JuhsULQL+HFu5jEwK6/IUTfz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfCUXl6 (ORCPT
+        id S1727142AbfCUXo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:41:58 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:34945 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725999AbfCUXl6 (ORCPT
+        Thu, 21 Mar 2019 19:44:56 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:33312 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfCUXo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:41:58 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0F8B022336;
-        Thu, 21 Mar 2019 19:41:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 21 Mar 2019 19:41:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=isd8Fz4FKjgCWUwIYS11ZkJgQAF
-        kSWWP2WcYJgr79cA=; b=lKcgAYoUaQB2Z1ZiycHGL3FfhQB4g+I9DM1QFBVnTnR
-        amA9bMhFI8frUVPFDyiE+FrLE7U6h2aZYwzkzu+ASpCG1uYje57ZUBGAN8TdQMN4
-        6GAAimN9Ikixwyv9iBgsO7aweX/ikn0h6q7zJkUX1l5bg40EFrnkrCg1axRlp8NK
-        ZDCv8MUhgXJaCejLgPw1exToZXUZHyuUlLrsP4K2p41V0Gd9LGOoWvb/qjxutTdo
-        zX2yO4NBdxd81vjZX/Rr0P1zetpoLq1AdHFXXicLTUvrqct6Zq3iG425GBo9Q/Bn
-        rrSqgMCYNRZsceyQYcWDwW+P1zSa/9YLlLgCemlxz/A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=isd8Fz
-        4FKjgCWUwIYS11ZkJgQAFkSWWP2WcYJgr79cA=; b=enUTaN3HpzFFdxYdcHQpsl
-        vhAfIXCqwEN3b2dsUvNBc+ZI8TMQ7WdnC5L2++y21bSNLgPb3VQ+Bgk9kSH9DecQ
-        iJYl7Ey0vNoiSGkZp4ZjNW9wqazo86cGw5uo3G+PKH63avVkxGmL9RWzkrRfzXUT
-        xNgIZX9B+8QhAv78/FbCUlBgl6MPUzeJ2rAZut1BSxUVLonulClEjwxMgQxaESQm
-        ABR45ttR/D82rNY3wnu22qFSWD0cShndizO1sWc90AF59GExY09/HyEAb4srfvpT
-        tHvGIj//nD5fCDmumrb0DggIaw18kQW2HdCIVoSztBKdmKVO3eEG9+FTdpxL1PLQ
-        ==
-X-ME-Sender: <xms:QyGUXB2qSijk4jvskDh2AiolJb-unCqQzYB2gVDNn7MRwJSHs9NQ6A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjedtgdduvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeimdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredtofer
-    vdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtohgsih
-    hnrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvgedrudej
-    uddrfedurdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtg
-    gtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:QyGUXJWYtrBuaPZY1C6qE9o0x9gac4AU6xWEVFHF8RMBe4DXx6LqPA>
-    <xmx:QyGUXKXZ-Ky7oRKuUuFgyh5ilmNtJZLjwOE5plje9dudc4SmsHY8BQ>
-    <xmx:QyGUXFD6C0agntPFEeM5GmOPn_L21l3Bi6oWhTWGd_8dcv1GckmxoQ>
-    <xmx:RCGUXGLtMHn-b6D2wED3Nh7rZwQOxgr4g6p8UGqOnKWl5woDl5z-JQ>
-Received: from localhost (124-171-31-151.dyn.iinet.net.au [124.171.31.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BA871E49DC;
-        Thu, 21 Mar 2019 19:41:54 -0400 (EDT)
-Date:   Fri, 22 Mar 2019 10:41:25 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3] docs: Clarify the usage and sign-off requirements for
- Co-developed-by
-Message-ID: <20190321234125.GB17705@eros.localdomain>
-References: <20190321200103.9333-1-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321200103.9333-1-sean.j.christopherson@intel.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 21 Mar 2019 19:44:56 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 529FCE7A;
+        Thu, 21 Mar 2019 23:44:54 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 16:44:53 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Greg Thelen <gthelen@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] writeback: sum memcg dirty counters as needed
+Message-Id: <20190321164453.46143c8bf2dd8bfd0f91d71c@linux-foundation.org>
+In-Reply-To: <20190307165632.35810-1-gthelen@google.com>
+References: <20190307165632.35810-1-gthelen@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+On Thu,  7 Mar 2019 08:56:32 -0800 Greg Thelen <gthelen@google.com> wrote:
 
-Thanks for working on this, I have been struggling to correctly use (and
-get the co-author to SOB) the Co-developed-by tag :)
+> Since commit a983b5ebee57 ("mm: memcontrol: fix excessive complexity in
+> memory.stat reporting") memcg dirty and writeback counters are managed
+> as:
+> 1) per-memcg per-cpu values in range of [-32..32]
+> 2) per-memcg atomic counter
+> When a per-cpu counter cannot fit in [-32..32] it's flushed to the
+> atomic.  Stat readers only check the atomic.
+> Thus readers such as balance_dirty_pages() may see a nontrivial error
+> margin: 32 pages per cpu.
+> Assuming 100 cpus:
+>    4k x86 page_size:  13 MiB error per memcg
+>   64k ppc page_size: 200 MiB error per memcg
+> Considering that dirty+writeback are used together for some decisions
+> the errors double.
+> 
+> This inaccuracy can lead to undeserved oom kills.  One nasty case is
+> when all per-cpu counters hold positive values offsetting an atomic
+> negative value (i.e. per_cpu[*]=32, atomic=n_cpu*-32).
+> balance_dirty_pages() only consults the atomic and does not consider
+> throttling the next n_cpu*32 dirty pages.  If the file_lru is in the
+> 13..200 MiB range then there's absolutely no dirty throttling, which
+> burdens vmscan with only dirty+writeback pages thus resorting to oom
+> kill.
+> 
+> It could be argued that tiny containers are not supported, but it's more
+> subtle.  It's the amount the space available for file lru that matters.
+> If a container has memory.max-200MiB of non reclaimable memory, then it
+> will also suffer such oom kills on a 100 cpu machine.
+> 
+> ...
+> 
+> Make balance_dirty_pages() and wb_over_bg_thresh() work harder to
+> collect exact per memcg counters when a memcg is close to the
+> throttling/writeback threshold.  This avoids the aforementioned oom
+> kills.
+> 
+> This does not affect the overhead of memory.stat, which still reads the
+> single atomic counter.
+> 
+> Why not use percpu_counter?  memcg already handles cpus going offline,
+> so no need for that overhead from percpu_counter.  And the
+> percpu_counter spinlocks are more heavyweight than is required.
+> 
+> It probably also makes sense to include exact dirty and writeback
+> counters in memcg oom reports.  But that is saved for later.
 
-On Thu, Mar 21, 2019 at 01:01:03PM -0700, Sean Christopherson wrote:
-> The documentation for Co-developed-by is a bit light on details, e.g. it
-> doesn't explicitly state that:
-> 
->   - Multiple Co-developed-by tags are perfectly acceptable
->   - Co-developed-by and Signed-off-by must be paired together
->   - SOB ordering should still follow standard sign-off procedure
-> 
-> Lack of explicit direciton has resulted in developers taking a variety
-> of approaches, often lacking any intent whatsoever, e.g. scattering SOBs
-> willy-nilly, collecting them all at the end or the beginning, etc...
-> 
-> Tweak the wording to make it clear that multiple co-authors are allowed,
-> and document the expectation that standard sign-off procedures are to
-> be followed.  Provide examples to (hopefully) eliminate any ambiguity.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Niklas Cassel <niklas.cassel@linaro.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
-> 
-> v1: https://lkml.kernel.org/r/20190320151140.32432-1-sean.j.christopherson@intel.com
-> v2: https://lkml.kernel.org/r/20190321184316.8525-1-sean.j.christopherson@intel.com
->     Rewrite the blurb to state standard sign-off procedure should be
->     followed as opposed to dictating the original author's SOB be last.
-> v3: Update a similar blurb in Documentation/process/5.Posting.rst
-> 
->  Documentation/process/5.Posting.rst          |  8 +++----
->  Documentation/process/submitting-patches.rst | 24 +++++++++++++++++---
->  2 files changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
-> index 4213e580f273..c8cac58f0f93 100644
-> --- a/Documentation/process/5.Posting.rst
-> +++ b/Documentation/process/5.Posting.rst
-> @@ -216,10 +216,10 @@ The tags in common use are:
->     which can be found in :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
->     Code without a proper signoff cannot be merged into the mainline.
+Nice changelog, thanks.
+
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+
+Did you consider cc:stable for this?  We may as well - the stablebots
+backport everything which might look slightly like a fix anyway :(
+
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -573,6 +573,22 @@ static inline unsigned long memcg_page_state(struct mem_cgroup *memcg,
+>  	return x;
+>  }
 >  
-> - - Co-developed-by: states that the patch was also created by another developer
-> -   along with the original author.  This is useful at times when multiple
-> -   people work on a single patch.  Note, this person also needs to have a
-> -   Signed-off-by: line in the patch as well.
-> + - Co-developed-by: states that the patch was co-created by other developer(s)
-> +   along with the original author.  Every Co-developed-by: must be accompanied
-> +   by a Signed-off-by: of the co-author.  Details and examples can be found in
-> +   :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`.
->  
->   - Acked-by: indicates an agreement by another developer (often a
->     maintainer of the relevant code) that the patch is appropriate for
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-> index be7d1829c3af..a7a9da68a384 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -545,10 +545,28 @@ person it names - but it should indicate that this person was copied on the
->  patch.  This tag documents that potentially interested parties
->  have been included in the discussion.
->  
-> -A Co-developed-by: states that the patch was also created by another developer
-> +A Co-developed-by: states that the patch was co-created by other developer(s)
->  along with the original author.  This is useful at times when multiple people
-> -work on a single patch.  Note, this person also needs to have a Signed-off-by:
-> -line in the patch as well.
-> +work on a single patch.  Every Co-developed-by: must be immediately followed by
-> +a Signed-off-by: of the co-author.  Standard sign-off procedure applies, i.e.
-> +the ordering of Co-developed-by:/Signed-off-by: pairs should reflect the
-> +chronological history of the patch insofar as possible.  Notably, the last
-> +Signed-off-by: must always be that of the developer submitting the patch,
-> +regardless of whether they are the original author or a co-author.
+> +/* idx can be of type enum memcg_stat_item or node_stat_item */
+> +static inline unsigned long
+> +memcg_exact_page_state(struct mem_cgroup *memcg, int idx)
+> +{
+> +	long x = atomic_long_read(&memcg->stat[idx]);
+> +#ifdef CONFIG_SMP
+> +	int cpu;
 > +
-> +Example of a patch with multiple co-authors, submitted by the original author::
-> +
-> +	Co-developed-by: First Co-Author <first@coauthor.example.org>
-> +	Signed-off-by: First Co-Author <first@coauthor.example.org>
-> +	Co-developed-by: Second Co-Author <second@coauthor.example.org>
-> +	Signed-off-by: Second Co-Author <second@coauthor.example.org>
-> +	Signed-off-by: Original Author <original@author.example.org>
-> +
-> +Example of a patch submitted by a co-author::
-> +
-> +	Signed-off-by: Original Author <original@author.example.org>
-> +	Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
-> +	Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
+> +	for_each_online_cpu(cpu)
+> +		x += per_cpu_ptr(memcg->stat_cpu, cpu)->count[idx];
+> +	if (x < 0)
+> +		x = 0;
+> +#endif
+> +	return x;
+> +}
 
-As someone who has read the docs then tried with difficulty to use this
-tag I think we should drop the term 'original' from describing any author.
+This looks awfully heavyweight for an inline function.  Why not make it
+a regular function and avoid the bloat and i-cache consumption?
 
-The reason is that the two versions above do not explicitly show who is
-the 'original' author.  This means the docs contain noise that makes the
-tag harder to use.  All the tag shows is that one person is submitting a
-patch (the last SOB and sender of the patch) AND someone else worked on
-it (and agrees that they did).
-
-FWIW we are trying to give attribution, right?  We don't need to
-explicitly state who wrote what so I do not believe that 'original' is a
-useful thing to be.  Linus 'originally' wrote Linux but that does not
-say squat about the state of the code right now :)
-
-thanks,
-Tobin.
+Also, did you instead consider making this spill the percpu counters
+into memcg->stat[idx]?  That might be more useful for potential future
+callers.  It would become a little more expensive though.
