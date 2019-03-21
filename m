@@ -2,106 +2,127 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5E1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B190FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC84F21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A362190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553189932;
+	bh=C7iD2l6U3+bXbfetdCeQyXVq9YDemrRkixz6M6zrTSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uXugPjD5cvRkm3LQTjDWxMQ7UvzCYbvyrGOUdydLHA84pY3MdXZGoYM4Nz5mg+ngE
+	 07On6QOrzFExXiVku1sPcgC5ROLIMimpwoVBcItQVB86A307gHh94PcUZuoAxuo6xE
+	 +wMMYsdDqPPu/f7xYYF4kTmGG/NYjB8V0sFkIB/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfCURiX (ORCPT
+        id S1728640AbfCURiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:38:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60616 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbfCURiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:38:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45215374;
-        Thu, 21 Mar 2019 10:38:22 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59B143F614;
-        Thu, 21 Mar 2019 10:38:21 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 17:38:18 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 updates for 5.1-rc2
-Message-ID: <20190321173817.GA62913@arrakis.emea.arm.com>
+        Thu, 21 Mar 2019 13:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727987AbfCURiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:38:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81E321874;
+        Thu, 21 Mar 2019 17:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553189930;
+        bh=C7iD2l6U3+bXbfetdCeQyXVq9YDemrRkixz6M6zrTSY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yj8wP2EBwSOFOs4dM6tjyxMsacqwQFEKIBlvQZphyMCX43+xNphXkRlnoiSn+crCA
+         lWuqoFqJcIA1BoKpPEAh2skfMpt4i1XNUTjwCGG1D01+SG5jkHxTxWKgZoEqJuR9D3
+         7+nXGt84hP80TaxP+7ohAHlKI8guLdgR3FjXwGjU=
+Date:   Thu, 21 Mar 2019 18:38:47 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH] tty: fix NULL pointer issue when tty_port ops is not set
+Message-ID: <20190321173847.GA7032@kroah.com>
+References: <1553183006-12820-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553183006-12820-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Mar 21, 2019 at 04:43:26PM +0100, Fabien Dessenne wrote:
+> Unlike 'client_ops' which is initialized to 'default_client_ops', the
+> port operations 'ops' may be left to NULL.
+> Check the 'ops' value before checking the 'ops->x' value.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  drivers/tty/tty_port.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+> index 044c3cb..a9e12b3 100644
+> --- a/drivers/tty/tty_port.c
+> +++ b/drivers/tty/tty_port.c
+> @@ -325,7 +325,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
+>  		if (tty && C_HUPCL(tty))
+>  			tty_port_lower_dtr_rts(port);
+>  
+> -		if (port->ops->shutdown)
+> +		if (port->ops && port->ops->shutdown)
+>  			port->ops->shutdown(port);
+>  	}
+>  out:
+> @@ -398,7 +398,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
+>   */
+>  int tty_port_carrier_raised(struct tty_port *port)
+>  {
+> -	if (port->ops->carrier_raised == NULL)
+> +	if (!port->ops || !port->ops->carrier_raised)
+>  		return 1;
+>  	return port->ops->carrier_raised(port);
+>  }
+> @@ -414,7 +414,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
+>   */
+>  void tty_port_raise_dtr_rts(struct tty_port *port)
+>  {
+> -	if (port->ops->dtr_rts)
+> +	if (port->ops && port->ops->dtr_rts)
+>  		port->ops->dtr_rts(port, 1);
+>  }
+>  EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+> @@ -429,7 +429,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+>   */
+>  void tty_port_lower_dtr_rts(struct tty_port *port)
+>  {
+> -	if (port->ops->dtr_rts)
+> +	if (port->ops && port->ops->dtr_rts)
+>  		port->ops->dtr_rts(port, 0);
+>  }
+>  EXPORT_SYMBOL(tty_port_lower_dtr_rts);
+> @@ -684,7 +684,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
+>  
+>  	if (!tty_port_initialized(port)) {
+>  		clear_bit(TTY_IO_ERROR, &tty->flags);
+> -		if (port->ops->activate) {
+> +		if (port->ops && port->ops->activate) {
+>  			int retval = port->ops->activate(port, tty);
+>  			if (retval) {
+>  				mutex_unlock(&port->mutex);
+> -- 
+> 2.7.4
+> 
 
-Please pull the arm64 changes below. It's mostly fixes apart from the
-kprobe blacklist checking which was deferred because of conflicting with
-a fix merged after I pinned the arm64 for-next/core branch (f2b3d8566d81
-"arm64: kprobe: Always blacklist the KVM world-switch code").
+Can you hit this today with any in-kernel drivers?  Or is this only for
+your new code you are adding?
 
-Thanks.
+thanks,
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to e5a5af7718610c819c4d368bb62655ee43a38011:
-
-  arm64: remove obsolete selection of MULTI_IRQ_HANDLER (2019-03-20 17:34:16 +0000)
-
-----------------------------------------------------------------
-- Update the kprobe blacklist checking for arm64. This was supposed to
-  be queued during the merging window but, due to conflicts, it was
-  deferred post -rc1
-
-- Extend the Fujitsu erratum 010001 workaround to A64FX v1r0
-
-- Whitelist HiSilicon Taishan v110 CPUs as not susceptible to Meltdown
-
-- Export save_stack_trace_regs()
-
-- Remove obsolete selection of MULTI_IRQ_HANDLER
-
-----------------------------------------------------------------
-Hanjun Guo (2):
-      arm64: Add MIDR encoding for HiSilicon Taishan CPUs
-      arm64: kpti: Whitelist HiSilicon Taishan v110 CPUs
-
-Mark Rutland (1):
-      arm64: apply workaround on A64FX v1r0
-
-Masami Hiramatsu (4):
-      arm64: kprobes: Move extable address check into arch_prepare_kprobe()
-      arm64: kprobes: Remove unneeded RODATA check
-      arm64: kprobes: Move exception_text check in blacklist
-      arm64: kprobes: Use arch_populate_kprobe_blacklist()
-
-Matthias Kaehlcke (1):
-      arm64: remove obsolete selection of MULTI_IRQ_HANDLER
-
-William Cohen (1):
-      arm64/stacktrace: Export save_stack_trace_regs()
-
- arch/arm64/Kconfig                 |  1 -
- arch/arm64/include/asm/cputype.h   |  6 +++-
- arch/arm64/kernel/cpufeature.c     |  1 +
- arch/arm64/kernel/probes/kprobes.c | 56 +++++++++++++++++++++-----------------
- arch/arm64/kernel/stacktrace.c     |  1 +
- 5 files changed, 38 insertions(+), 27 deletions(-)
-
--- 
-Catalin
+greg k-h
