@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EF1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB22BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3385F21916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C19621916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kr1Bi0yt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UndNXci+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728498AbfCURSU (ORCPT
+        id S1728781AbfCURSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:18:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42705 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbfCURSS (ORCPT
+        Thu, 21 Mar 2019 13:18:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45556 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728767AbfCURSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:18:18 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r15so4705445pfn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
+        Thu, 21 Mar 2019 13:18:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y3so4622997pgk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5VTcVo1Chs4XGa35tec1xGg2FL/05IcVUKqdSKt+U9Q=;
-        b=Kr1Bi0ytzlIExrHApFqy1i2jPUQf5/OokIJmBfy88t6HmBn28AzgN6842rJUZ2wmQx
-         LCQ0JbLwZpGjnZIYqJaa2e5V2i/f+jtne9UBW62i8YsOzXXWUy91ZxTlU4Em4XNQ2krG
-         Z3n2muBhDqKmlKuIu8zh5BF2z13WJk+9N3Zek=
+        bh=/Bo6Ts3kPT4RmjlVO3KjUyTjhP8WkrwI/aNrar/qliw=;
+        b=UndNXci+1z/Eg7Aq+ZV0SQHvpe+4Jhdi7/ROwPgizumfm4yMF33jHRwWBZmema9QlX
+         9sr0tOcPYnJWR42rGspd2OFFHvryg7x2ifOIRvecOH/B53DqA1nTQNfUEhdzSqpStSXB
+         gGe9QJR3GOl3I/1ee8z/v72+lCdq/Af1L3oQQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5VTcVo1Chs4XGa35tec1xGg2FL/05IcVUKqdSKt+U9Q=;
-        b=CHWrIpibWyLcv1nry1lQ2mjqT4p8jS9xB4tuFuGvdUvPwROKzoUez4MZkz+AJfUtER
-         D5SE5AmURJt9PQKG4OuyNes/2JosUDi4Ddljdb6nQBfuLiqLrqfnHt9WAqTtHfoXCt8T
-         GED7zaWXrnVxPgUijCXDe1xXNmfcxFqhgEABs77kNoe2F2+XZJiLOiD7gFwUT+ntha7N
-         sUFjvNgOe/ET3bB29dkUYNTQ6b2OBQ+Cv8/Tof7+XQeaHwCs+pwPAH+h5Zr7u58flI9j
-         T2RapFE8eldDCM++uGHrO3TOa4xmzO6GA732BcmFSLytrnD6NY31NEyFxP2GKSsMViGl
-         Tn6Q==
-X-Gm-Message-State: APjAAAVQIziLOtXg31n9mzDvWIM79BLvo1r0XJZYzGiI0OAyi1f98YlD
-        dqvXRGHek5DPpQrv30ifIKEbzQ==
-X-Google-Smtp-Source: APXvYqwVkUQOfEPbsJoytpmNSpCN+m2u6x55lnqBlfVlHlhBkUsE+bGCQubPjDMcBfyYPanRj2vq8A==
-X-Received: by 2002:a62:a219:: with SMTP id m25mr4396024pff.197.1553188697650;
-        Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
+        bh=/Bo6Ts3kPT4RmjlVO3KjUyTjhP8WkrwI/aNrar/qliw=;
+        b=Wl1mKJOHkmktilTg0aRMBXh44Ogs/GOZmhDGNaxwVNS3qkkBuFXMXFABI3QuoipiLg
+         6Z79kKM06zi9jR+FnH/ZCGdi8aFgA6q5yTXSyWtnF+H08plsdbv92Ku7CnHdcuocwKCW
+         RZA9T3xQ4HWopQlJng9XdL12SDp+yh3k8Jlxp1lpQ0dWC7KkqeXh4jvtKKqdcdVOeL07
+         nZrmQM/o1P7AMZ/Lou47oCT3MUnX7KTwI7LqEfRX5lxw52bYdW97cG9Jhll/RaloGNqy
+         T8i6CXPD1Mj4jpiCgb6arueR2Iqvutp87JJNfeEqitryM3YUmyfKmvUTGvROWJHfhtfC
+         xBow==
+X-Gm-Message-State: APjAAAXcghis0r/m/AQRiOxZs5Qmsdm58jW9wkOLtv1q5PsrPIm8g3Ov
+        RGuCs9sdstw8XWv7X8yVWDL1Zg==
+X-Google-Smtp-Source: APXvYqxXR8o25+joEz8dWnEvGQtXoSvqHBfBQrELC7mD18i66AQbkc7ukB5DWxdVHkw2m6ZrP3zj7A==
+X-Received: by 2002:a17:902:d894:: with SMTP id b20mr4696828plz.318.1553188699978;
+        Thu, 21 Mar 2019 10:18:19 -0700 (PDT)
 Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id z6sm20953866pgo.31.2019.03.21.10.18.16
+        by smtp.gmail.com with ESMTPSA id z6sm20953866pgo.31.2019.03.21.10.18.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
+        Thu, 21 Mar 2019 10:18:19 -0700 (PDT)
 From:   Evan Green <evgreen@chromium.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
@@ -63,14 +63,11 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         Asutosh Das <asutoshd@codeaurora.org>,
         Evan Green <evgreen@chromium.org>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v5 2/8] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
-Date:   Thu, 21 Mar 2019 10:17:54 -0700
-Message-Id: <20190321171800.104681-3-evgreen@chromium.org>
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v5 3/8] dt-bindings: phy: qcom-ufs: Add resets property
+Date:   Thu, 21 Mar 2019 10:17:55 -0700
+Message-Id: <20190321171800.104681-4-evgreen@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321171800.104681-1-evgreen@chromium.org>
 References: <20190321171800.104681-1-evgreen@chromium.org>
@@ -81,22 +78,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a required reset to the SDM845 UFS phy to express the PHY reset
-bit inside the UFS controller register space. Before this change, this
-reset was not expressed in the DT, and the driver utilized two different
-callbacks (phy_init and phy_poweron) to implement a two-phase
-initialization procedure that involved deasserting this reset between
-init and poweron. This abused the two callbacks and diluted their
-purpose.
-
-That scheme does not work as regulators cannot be turned off in
-phy_poweroff because they were turned on in init, rather than poweron.
-The net result is that regulators are left on in suspend that shouldn't
-be.
-
-This new scheme gives the UFS reset to the PHY, so that it can fully
-initialize itself in a single callback. We can then turn regulators on
-during poweron and off during poweroff.
+Add a resets property to the PHY that represents the PHY reset
+register in the UFS controller itself. This better describes the
+complete specification of the PHY, and allows the PHY to perform
+its initialization in a single function, rather than relying on
+back-channel sequencing of initialization through the PHY framework.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
@@ -106,35 +92,37 @@ Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Changes in v5: None
 Changes in v4: None
 Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- Added resets to example (Stephen).
 
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d181fc3cc18..4a78ba8b85bc 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -59,7 +59,8 @@ Required properties:
- 	   one for each entry in reset-names.
-  - reset-names: "phy" for reset of phy block,
- 		"common" for phy common block reset,
--		"cfg" for phy's ahb cfg block reset.
-+		"cfg" for phy's ahb cfg block reset,
-+		"ufsphy" for the PHY reset in the UFS controller.
+diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+index 21d9a93db2e9..fd59f93e9556 100644
+--- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
++++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+@@ -29,6 +29,7 @@ Optional properties:
+ - vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
+ - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
+ - vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
++- resets : specifies the PHY reset in the UFS controller
  
- 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
- 			"phy", "common".
-@@ -74,7 +75,8 @@ Required properties:
- 			"phy", "common".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
- 			"phy", "common".
--		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
-+		For "qcom,sdm845-qmp-ufs-phy": must contain:
-+			"ufsphy".
+ Example:
  
-  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+@@ -51,9 +52,11 @@ Example:
+ 			<&clock_gcc clk_ufs_phy_ldo>,
+ 			<&clock_gcc clk_gcc_ufs_tx_cfg_clk>,
+ 			<&clock_gcc clk_gcc_ufs_rx_cfg_clk>;
++		resets = <&ufshc 0>;
+ 	};
+ 
+-	ufshc@fc598000 {
++	ufshc: ufshc@fc598000 {
++		#reset-cells = <1>;
+ 		...
+ 		phys = <&ufsphy1>;
+ 		phy-names = "ufsphy";
 -- 
 2.20.1
 
