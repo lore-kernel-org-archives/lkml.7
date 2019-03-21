@@ -2,42 +2,47 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB05C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0706C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78F0218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43A1218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfCUKxD (ORCPT
+        id S1727929AbfCUKzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:53:03 -0400
-Received: from skyboo.net ([94.40.87.198]:33896 "EHLO skyboo.net"
+        Thu, 21 Mar 2019 06:55:20 -0400
+Received: from skyboo.net ([94.40.87.198]:34918 "EHLO skyboo.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfCUKxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:53:03 -0400
-Received: from manio by skyboo.net with local (Exim 4.91)
+        id S1727823AbfCUKzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:55:20 -0400
+Received: from [10.1.0.1] (helo=nemesis.skyboo.net)
+        by skyboo.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.91)
         (envelope-from <manio@skyboo.net>)
-        id 1h6vJj-0005C0-Ma; Thu, 21 Mar 2019 11:53:00 +0100
+        id 1h6vLs-0005Ze-MM; Thu, 21 Mar 2019 11:55:18 +0100
+Date:   Thu, 21 Mar 2019 11:55:11 +0100
 From:   Mariusz Bialonczyk <manio@skyboo.net>
-To:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Cc:     Mariusz Bialonczyk <manio@skyboo.net>
-Date:   Thu, 21 Mar 2019 11:52:55 +0100
-Message-Id: <20190321105255.19126-1-manio@skyboo.net>
-X-Mailer: git-send-email 2.19.0.rc1
-In-Reply-To: <20190318092737.8170-1-manio@skyboo.net>
+To:     Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <greg@kroah.com>
+Message-Id: <20190321115511.29f8f6f25a2b9b96c2dd77aa@skyboo.net>
+In-Reply-To: <DF2ABF87-116D-4287-8A18-89C2C59124AF@gmail.com>
 References: <20190318092737.8170-1-manio@skyboo.net>
-MIME-Version: 1.0
+        <20190318092737.8170-2-manio@skyboo.net>
+        <DF2ABF87-116D-4287-8A18-89C2C59124AF@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, zbr@ioremap.net, greg@kroah.com, jeff.dagenais@gmail.com, manio@skyboo.net
+X-SA-Exim-Connect-IP: 10.1.0.1
+X-SA-Exim-Rcpt-To: jeff.dagenais@gmail.com, linux-kernel@vger.kernel.org, zbr@ioremap.net, greg@kroah.com
 X-SA-Exim-Mail-From: manio@skyboo.net
-Subject: [PATCH v2] w1: fix the resume command API
+Subject: Re: [PATCH 1/2] w1: ds2408: add a missing reset when retrying in
+ output_write()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on skyboo.net)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,45 +50,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
+On Tue, 19 Mar 2019 10:21:32 -0400
+Jean-Francois Dagenais <jeff.dagenais@gmail.com> wrote:
 
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
+> May I suggest a cleaned up version my original klunky code with your fix in it
+> (Note: this is untested, it compiles on arm64, that's all):
+Thank you Jean!
+I just tested your version - and it is working as expected :)
 
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
+> I can do a proper patch submission if you guys provide positive response on this
+> early RFC. Or better yet, you can take it and own it yourself as your v2
+> Mariusz. ;)
+No, it's your code, please just submit v2 as yours (I've already sent simplified
+version of the patch 1/2 as you suggested).
 
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+Just drop the following and all will be fine :)
+Reported-by: Mariusz Bialonczyk <manio@skyboo.net>
 
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
----
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index 0364d3329c52..3516ce6718d9 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -432,8 +432,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
- 
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
+Thanks!
+regards,
 -- 
-2.19.0.rc1
-
+Mariusz Białończyk | xmpp/e-mail: manio@skyboo.net
+https://skyboo.net | https://github.com/manio
