@@ -2,81 +2,97 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A419C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64BF218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2875218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o2bvrNzy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bovNm4LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfCUUHJ (ORCPT
+        id S1728778AbfCUUKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:07:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37656 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbfCUUHJ (ORCPT
+        Thu, 21 Mar 2019 16:10:02 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57504 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728138AbfCUUKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:07:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3o8rNNR79KjbvJW9ZxtTG+6dKrElMem/IZjqCz79qTA=; b=o2bvrNzy2fHPR5oH5bGdlW3Ra
-        DXqtFsHmLFthb4J/kYFs1ndtxMTJlHPeMGZNY5OLMwnyltbDU5iuE7hYfHIkQa6ov4x/kdF520Mek
-        c52mrahXr/y/4prwUWOeKqnIE45LDuxpp/BrypWpJ0Df7OJ+zps1LB+eNDL0lts182UZqJKp23+ze
-        KdMUkqIIXqKwKGkdoepAkpjQ7i5/XR3yysS7zwqvFuGM3XbD5o/qNNiHX8BL3vRaAKrc0G3u555qu
-        RrZnh7wnnKc8TXkoqC3FhUMoPvhG0iwYQr2wHeSqvJ5RxKFtbY/xsEOUHVknD+pgA76/QWTyt6akR
-        iEkRYv7tg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h73xu-0004yF-DD; Thu, 21 Mar 2019 20:07:02 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6900A984EEA; Thu, 21 Mar 2019 21:07:00 +0100 (CET)
-Date:   Thu, 21 Mar 2019 21:07:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "DSouza, Nelson" <nelson.dsouza@intel.com>
-Cc:     Tony Jones <tonyj@suse.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-Message-ID: <20190321200700.GD2490@worktop.programming.kicks-ass.net>
-References: <20190319182041.GO5996@hirez.programming.kicks-ass.net>
- <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
- <20190320222220.GA2490@worktop.programming.kicks-ass.net>
- <20190321123849.GN6521@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
- <20190321171047.GR5996@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211815300.1784@nanos.tec.linutronix.de>
- <20190321182011.GT5996@hirez.programming.kicks-ass.net>
- <fa2d8695-f87c-b141-a19b-2ed4b80df987@suse.com>
- <BC9B17E68BB84346BEE0B491BDB7D8AE28A6A745@ORSMSX101.amr.corp.intel.com>
+        Thu, 21 Mar 2019 16:10:01 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LK9whl115181;
+        Thu, 21 Mar 2019 15:09:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553198998;
+        bh=bGm2UFvEMCKtpSVGsH2t6/DZCLjJQ2n4kBrmj3u3r50=;
+        h=From:To:CC:Subject:Date;
+        b=bovNm4LXMp5tPqMPTEg9sKLhRYxUXwFQsm3F3wYCnNMQEVjJJlw7LM1lQyaegT/7L
+         c0VXnqn4jkUdxguMHxymwiJBdjrIhhUaNWA17mPHM3UHmqAHG2rjIO+Sbp1wK2PusY
+         dm8Sp/tOAbqXyPYCbMIhJX0oweYm0DIGGQy6j240=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LK9wO9062010
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Mar 2019 15:09:58 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
+ Mar 2019 15:09:57 -0500
+Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Thu, 21 Mar 2019 15:09:57 -0500
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LK9vPB026329;
+        Thu, 21 Mar 2019 15:09:57 -0500
+Received: from localhost ([10.250.67.168])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2LK9uU17896;
+        Thu, 21 Mar 2019 15:09:57 -0500 (CDT)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH 1/2] dma-buf: Remove leftover [un]map_atomic comments
+Date:   Thu, 21 Mar 2019 15:09:56 -0500
+Message-ID: <20190321200957.16938-1-afd@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BC9B17E68BB84346BEE0B491BDB7D8AE28A6A745@ORSMSX101.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 07:47:50PM +0000, DSouza, Nelson wrote:
-> Is the request to check whether the msr gets reset to default upon reboot of the machine ?
+The map_atomic/unmap_atomic callbacks have been removed, remove
+the related comments.
 
-basically:
+Fixes: f664a5269542 ("dma-buf: remove kmap_atomic interface")
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ include/linux/dma-buf.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
- - apply patch
- - start workload with 4 counter (on all CPUs), such that tfa-msr=1
- - try the following:
-   o cpu hotplug
-   o kexec
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 58725f890b5b..e4a8dab2bc54 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -39,11 +39,6 @@ struct dma_buf_attachment;
+ 
+ /**
+  * struct dma_buf_ops - operations possible on struct dma_buf
+- * @map_atomic: [optional] maps a page from the buffer into kernel address
+- *		space, users may not block until the subsequent unmap call.
+- *		This callback must not sleep.
+- * @unmap_atomic: [optional] unmaps a atomically mapped page from the buffer.
+- *		  This Callback must not sleep.
+  * @map: [optional] maps a page from the buffer into kernel address space.
+  * @unmap: [optional] unmaps a page from the buffer.
+  * @vmap: [optional] creates a virtual mapping for the buffer into kernel
+-- 
+2.21.0
 
-to see if the new WARN will trigger -- it should not.
