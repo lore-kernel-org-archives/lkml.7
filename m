@@ -2,278 +2,143 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C065C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816D5C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3BE20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BQMLsnhu"
+	by mail.kernel.org (Postfix) with ESMTP id 5850A218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfCUJv1 (ORCPT
+        id S1728261AbfCUJvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:51:27 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:50688 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfCUJv1 (ORCPT
+        Thu, 21 Mar 2019 05:51:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34200 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727953AbfCUJvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:51:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id m137so3364044ita.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gC9noxwyiDgo0hNa32FuRJXnn+mnlOSMRPfC6ra1fco=;
-        b=BQMLsnhuchrJcG3TP9qHUYoawaKSzROL3jw91Viy49hHi8CDKUyUCEmf/8ts9yPvOF
-         LCDH9J2ea4KtcXFoGzonKsS40Ciqe2xNlL7ZH1s1V+H0ZjI9Y024hzHX/OOx/VeYKn9b
-         TMq4lMAtLOcfy/AtdhIG4KGv4FWWzoileU4250Yvct0YMhjvziYYX7D2JPw/th8NzirF
-         aF07/bp+x2J7IPnTfJAlEY2VD6pfsaipnseXym1MbbGemty1x0yKoXZriPOKrhrCHDa7
-         r2H6mJ6O5jWNM817lRkB4AaL8gA/MXPw/WVK0cBPNUtlzALwoy9FEmfzutWaWupeAI4d
-         3TiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gC9noxwyiDgo0hNa32FuRJXnn+mnlOSMRPfC6ra1fco=;
-        b=t09GuHi+6DVPINA6X+uq1tWCBlWjLE9reeKbvWpYCoQYi0yDhWqcC4iSOmDoC98Vnr
-         MpaLayaQBCSub6BNP2yyJRE7g2jVu36Lw6YL57ZABxiYezocqhjMT2NUjoyXgwGHLOQp
-         zK4+ELU/yqlG0LKMaitFQPbjF4iqt6p9u3PtC/Lc0OT3p5rqGmui/2RLJqSi/jzp8nWT
-         Kss1WvD58yXFmwQBIc8J6TsAyj8H3B9cDVhiejfOildecEvaBTr4X08Xd5biiSkIBwoE
-         SUGXDb/qXwjOjtah63pm1LaTHL1RiAEjTUHZFSYdDv8E31sQDLjiDHE2ykxvEi481kdI
-         R7ug==
-X-Gm-Message-State: APjAAAUgN9ocNaaeYSyfC7uSpDrrgslBuMVZ5BOobEpAcIOQqoYkTNkM
-        PjEOhLo7mFnwHMyLqapyL/b0Zu4dFw4K8zEBqJuubw==
-X-Google-Smtp-Source: APXvYqxpr9S6+viZsfXbo5iIaNuflJsg/vhYktB9sBCnvZbYuDzPqhpqSmN/EhgF5yKSLFfdZj8rSRbPqkkf/NGERMg=
-X-Received: by 2002:a02:84ab:: with SMTP id f40mr1850108jai.72.1553161885434;
- Thu, 21 Mar 2019 02:51:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
- <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
- <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
- <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
- <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com> <CACT4Y+axojyHxk5K34YuLUyj+NJ05+FC3n8ozseHC91B1qn5ZQ@mail.gmail.com>
- <CACT4Y+aGyPpkrwvzZQUHXgipWo26T2U4OW0CxoJpp6yK+MgX=Q@mail.gmail.com>
-In-Reply-To: <CACT4Y+aGyPpkrwvzZQUHXgipWo26T2U4OW0CxoJpp6yK+MgX=Q@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 21 Mar 2019 10:51:14 +0100
-Message-ID: <CACT4Y+Z4yLPRRfRa4GhTDOQkuOsQccAOcBMoD4sgMmYj69ggrg@mail.gmail.com>
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Josef Bacik <jbacik@fb.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Xin Long <lucien.xin@gmail.com>
+        Thu, 21 Mar 2019 05:51:41 -0400
+X-UUID: 670c2d35a1ee42d19183b93a2f264abc-20190321
+X-UUID: 670c2d35a1ee42d19183b93a2f264abc-20190321
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1356170633; Thu, 21 Mar 2019 17:51:27 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 17:51:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 17:51:26 +0800
+Message-ID: <1553161886.13384.7.camel@mtksdaap41>
+Subject: Re: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <srv_heupstream@mediatek.com>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 21 Mar 2019 17:51:26 +0800
+In-Reply-To: <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 10:45 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Mar 20, 2019 at 2:57 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Wed, Mar 20, 2019 at 2:33 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
-> > >
-> > >
-> > >
-> > > On 3/20/19 1:38 PM, Dmitry Vyukov wrote:
-> > > > On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
-> > > > <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> > > >>
-> > > >> On 2019/03/20 18:59, Dmitry Vyukov wrote:
-> > > >>>> From bisection log:
-> > > >>>>
-> > > >>>>         testing release v4.17
-> > > >>>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-> > > >>>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
-> > > >>>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
-> > > >>>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
-> > > >>>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
-> > > >>>>         testing release v4.16
-> > > >>>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
-> > > >>>>         run #0: OK
-> > > >>>>         run #1: OK
-> > > >>>>         run #2: OK
-> > > >>>>         run #3: OK
-> > > >>>>         run #4: OK
-> > > >>>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
-> > > >>>>         run #6: OK
-> > > >>>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
-> > > >>>>         run #8: OK
-> > > >>>>         run #9: OK
-> > > >>>>         testing release v4.15
-> > > >>>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
-> > > >>>>         all runs: OK
-> > > >>>>         # git bisect start v4.16 v4.15
-> > > >>>>
-> > > >>>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
-> > > >>>
-> > > >>> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
-> > > >>> looks like the right range, no?
-> > > >>
-> > > >> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
-> > > >> "Stack corruption" can't manifest as "Out of memory and no killable processes".
-> > > >>
-> > > >> "kernel panic: Out of memory and no killable processes..." is completely
-> > > >> unrelated to "kernel panic: corrupted stack end in wb_workfn".
-> > > >
-> > > >
-> > > > Do you think this predicate is possible to code?
-> > >
-> > > Something like bellow probably would work better than current behavior.
-> > >
-> > > For starters, is_duplicates() might just compare 'crash' title with 'target_crash' title and its duplicates titles.
-> >
-> > Lots of bugs (half?) manifest differently. On top of this, titles
-> > change as we go back in history. On top of this, if we see a different
-> > bug, it does not mean that the original bug is also not there.
-> > This will sure solve some subset of cases better then the current
-> > logic. But I feel that that subset is smaller then what the current
-> > logic solves.
->
-> Counter-examples come up in basically every other bisection.
-> For example:
->
-> bisecting cause commit starting from ccda4af0f4b92f7b4c308d3acc262f4a7e3affad
-> building syzkaller on 5f5f6d14e80b8bd6b42db961118e902387716bcb
-> testing commit ccda4af0f4b92f7b4c308d3acc262f4a7e3affad with gcc (GCC) 8.1.0
-> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
-> testing release v4.19
-> testing commit 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d with gcc (GCC) 8.1.0
-> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
-> testing release v4.18
-> testing commit 94710cac0ef4ee177a63b5227664b38c95bbf703 with gcc (GCC) 8.1.0
-> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
-> testing release v4.17
-> testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-> all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
+
+Hi,
 
 
-And to make things even more interesting, this later changes to "BUG:
-unable to handle kernel NULL pointer dereference in vb2_vmalloc_put":
-
-testing release v4.12
-testing commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c with gcc (GCC) 8.1.0
-all runs: crashed: general protection fault in refcount_sub_and_test
-testing release v4.11
-testing commit a351e9b9fc24e982ec2f0e76379a49826036da12 with gcc (GCC) 7.3.0
-all runs: crashed: BUG: unable to handle kernel NULL pointer
-dereference in vb2_vmalloc_put
-
-And since the original bug is in vb2 subsystem
-(https://syzkaller.appspot.com/bug?id=17535f4bf5b322437f7c639b59161ce343fc55a9),
-it's actually not clear even for me, if we should treat it as the same
-bug or not. May be different manifestation of the same root cause, or
-a different bug around.
+Should use 'rtc: mt6397: ' as prefix for this patch.
 
 
+On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
+> RTC_WRTGR address offset to RTC driver.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index f85f1fc..c8a0090 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -27,7 +27,7 @@
+>  #define RTC_BBPU		0x0000
+>  #define RTC_BBPU_CBUSY		BIT(6)
+>  
+> -#define RTC_WRTGR		0x003c
+> +#define RTC_WRTGR_DEFAULT	0x003c
+>  
+>  #define RTC_IRQ_STA		0x0002
+>  #define RTC_IRQ_STA_AL		BIT(0)
+> @@ -78,6 +78,7 @@ struct mt6397_rtc {
+>  	struct regmap		*regmap;
+>  	int			irq;
+>  	u32			addr_base;
+> +	u32			wrtgr_offset;
+>  };
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+> @@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  	int ret;
+>  	u32 data;
+>  
+> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret = regmap_write(rtc->regmap,
+> +			   rtc->addr_base + rtc->wrtgr_offset, 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (res) {
+> +		rtc->wrtgr_offset = res->start;
+> +		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
+> +	} else {
+> +		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
+> +		dev_err(&pdev->dev, "Failed to get register offset\n");
+> +	}
+> +
+
+Since this will be passed by MFD, do we still need to keep the DEFAULT?
+Any case this platform_get_resource will failed?
+
+It's too bad HW changed this offset, but I'm not sure about passing this
+information from MFD. We have 1 register that have different offset now,
+and might have others for future chips, adding each one by
+IORESOURCE_IRQ doesn't looks like a good solution. Keeping this
+information in RTC driver only also looks better.
 
 
+Joe.C
 
-> That's a different crash title, unless somebody explicitly code this case.
->
-> Or, what crash is this?
->
-> testing commit 52358cb5a310990ea5069f986bdab3620e01181f with gcc (GCC) 8.1.0
-> run #1: crashed: general protection fault in cpuacct_charge
-> run #2: crashed: WARNING: suspicious RCU usage in corrupted
-> run #3: crashed: general protection fault in cpuacct_charge
-> run #4: crashed: BUG: unable to handle kernel paging request in ipt_do_table
-> run #5: crashed: KASAN: stack-out-of-bounds Read in cpuacct_charge
-> run #6: crashed: WARNING: suspicious RCU usage
-> run #7: crashed: no output from test machine
-> run #8: crashed: no output from test machine
->
->
-> Or, that "INFO: trying to register non-static key in can_notifier"
-> does not do any testing, but is "WARNING in dma_buf_vunmap" still
-> there or not?
->
-> testing commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c with gcc (GCC) 8.1.0
-> all runs: crashed: WARNING in dma_buf_vunmap
-> testing release v4.11
-> testing commit a351e9b9fc24e982ec2f0e76379a49826036da12 with gcc (GCC) 7.3.0
-> all runs: OK
-> # git bisect start v4.12 v4.11
-> Bisecting: 7831 revisions left to test after this (roughly 13 steps)
-> [2bd80401743568ced7d303b008ae5298ce77e695] Merge tag 'gpio-v4.12-1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
-> testing commit 2bd80401743568ced7d303b008ae5298ce77e695 with gcc (GCC) 7.3.0
-> all runs: crashed: INFO: trying to register non-static key in can_notifier
-> # git bisect bad 2bd80401743568ced7d303b008ae5298ce77e695
-> Bisecting: 3853 revisions left to test after this (roughly 12 steps)
-> [8d65b08debc7e62b2c6032d7fe7389d895b92cbc] Merge
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-> testing commit 8d65b08debc7e62b2c6032d7fe7389d895b92cbc with gcc (GCC) 7.3.0
-> all runs: crashed: INFO: trying to register non-static key in can_notifier
-> # git bisect bad 8d65b08debc7e62b2c6032d7fe7389d895b92cbc
-> Bisecting: 2022 revisions left to test after this (roughly 11 steps)
-> [cec381919818a9a0cb85600b3c82404bdd38cf36] Merge tag
-> 'mac80211-next-for-davem-2017-04-28' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next
-> testing commit cec381919818a9a0cb85600b3c82404bdd38cf36 with gcc (GCC) 5.5.0
-> all runs: crashed: INFO: trying to register non-static key in can_notifier
->
->
->
->
->
->
-> > > syzbot has some knowledge about duplicates with different crash titles when people use "syz dup" command.
-> >
-> > This is very limited set of info. And in the end I think we've seen
-> > all bug types being duped on all other bugs types pair-wise, and at
-> > the same time we've seen all bug types being not dups to all other bug
-> > types. So I don't see where this gets us.
-> > And again as we go back in history all these titles change.
-> >
-> > > Also it might be worth to experiment with using neural networks to identify duplicates.
-> > >
-> > >
-> > > target_crash = 'kernel panic: corrupted stack end in wb_workfn'
-> > > test commit:
-> > >         bad = false;
-> > >         skip = true;
-> > >         foreach run:
-> > >                 run_started, crashed, crash := run_repro();
-> > >
-> > >                 //kernel built, booted, reproducer launched successfully
-> > >                 if (run_started)
-> > >                         skip = false;
-> > >                 if (crashed && is_duplicates(crash, target_crash))
-> > >                         bad = true;
-> > >
-> > >         if (skip)
-> > >                 git bisect skip;
-> > >         else if (bad)
-> > >                 git bisect bad;
-> > >         else
-> > >                 git bisect good;
+
