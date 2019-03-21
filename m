@@ -3,66 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115E1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4A9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0AD21873
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F09218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfCUIJc convert rfc822-to-8bit (ORCPT
+        id S1727952AbfCUINp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:09:32 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:57944 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCUIJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:09:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id F1F7A609185A;
-        Thu, 21 Mar 2019 09:09:29 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wdwSuQEe9G0W; Thu, 21 Mar 2019 09:09:29 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id ABBB3609187E;
-        Thu, 21 Mar 2019 09:09:29 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id WWftNVS9VFek; Thu, 21 Mar 2019 09:09:29 +0100 (CET)
-Received: from blindfold.localnet (213-47-184-186.cable.dynamic.surfer.at [213.47.184.186])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id 4B114609185A;
-        Thu, 21 Mar 2019 09:09:29 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, dedekind1@gmail.com,
-        adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH -next] ubifs: remove unused function __ubifs_shash_final
-Date:   Thu, 21 Mar 2019 09:09:28 +0100
-Message-ID: <24657306.kQxLvZqZK3@blindfold>
-In-Reply-To: <289f9994-0980-081e-f913-5729b16d16f4@codeaurora.org>
-References: <20190320140955.11576-1-yuehaibing@huawei.com> <2691086.gDEv9kBeKS@blindfold> <289f9994-0980-081e-f913-5729b16d16f4@codeaurora.org>
+        Thu, 21 Mar 2019 04:13:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:51970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727881AbfCUINp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 04:13:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFB4080D;
+        Thu, 21 Mar 2019 01:13:44 -0700 (PDT)
+Received: from [10.162.42.102] (p8cg001049571a15.blr.arm.com [10.162.42.102])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D22803F71A;
+        Thu, 21 Mar 2019 01:13:42 -0700 (PDT)
+Subject: Re: [PATCH] mm/isolation: Remove redundant pfn_valid_within() in
+ __first_valid_page()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mike.kravetz@oracle.com,
+        osalvador@suse.de, akpm@linux-foundation.org
+References: <1553141595-26907-1-git-send-email-anshuman.khandual@arm.com>
+ <8AB57711-48C0-4D95-BC5F-26B266DC3AE8@nvidia.com>
+ <cda4f247-4eea-decf-3f4a-3dc09364de27@arm.com>
+ <20190321080702.GG8696@dhcp22.suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <8a6b3968-a315-07ce-0491-2a5acdd49ab4@arm.com>
+Date:   Thu, 21 Mar 2019 13:43:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190321080702.GG8696@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 21. März 2019, 08:54:55 CET schrieb Mukesh Ojha:
-> >> Acked-by: Mukesh Ojha <mojha@codeaurora.org>
-> > I guess you mean Reviewed-by?
+
+
+On 03/21/2019 01:37 PM, Michal Hocko wrote:
+> On Thu 21-03-19 11:03:18, Anshuman Khandual wrote:
+>>
+>>
+>> On 03/21/2019 10:31 AM, Zi Yan wrote:
+>>> On 20 Mar 2019, at 21:13, Anshuman Khandual wrote:
+>>>
+>>>> pfn_valid_within() calls pfn_valid() when CONFIG_HOLES_IN_ZONE making it
+>>>> redundant for both definitions (w/wo CONFIG_MEMORY_HOTPLUG) of the helper
+>>>> pfn_to_online_page() which either calls pfn_valid() or pfn_valid_within().
+>>>> pfn_valid_within() being 1 when !CONFIG_HOLES_IN_ZONE is irrelevant either
+>>>> way. This does not change functionality.
+>>>>
+>>>> Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
+>>>
+>>> I would not say this patch fixes the commit 2ce13640b3f4 from 2017,
+>>> because the pfn_valid_within() in pfn_to_online_page() was introduced by
+>>> a recent commit b13bc35193d9e last month. :)
+>>
+>> Right, will update the tag with this commit.
 > 
-> As i am unsure about future scope of this func. i.e why Acked.
+> The patch is correct but I wouldn't bother to add Fixes tag at all. The
+> current code is obviously not incorrect. Do you see any actual
 
-Acked-by is usually something I expect from the code author
-or the person that owns the code.
+Sure.
 
-Thanks,
-//richard
+> performance issue?
+> 
 
-
+No. Just from code inspection. pfn_valid() is anyways expensive on arm64
+because of the memblock search so why to make it redundant as well.
