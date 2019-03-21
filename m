@@ -2,91 +2,185 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79044C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53737C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFE221902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553195646;
-	bh=sVkLHg1pEO55aBJJS11l3KKaWK2rcQgqa02HwPhjGvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AHFP/B/uPuNSKSlcg1NFyATlGCYH0I4HGJhQWkFgclHcLxUDqZh/mCgNGS8pXq9o7
-	 rcgtciTbGVwJgEiGIDHn22VFwrYJDXAWZZURCdBz7jnkLbtbvhtlvCB4JwNvM+fc83
-	 gnBwjbLDTWrjO7XJhbbBG/SNLzaOXHNiciz+UYPg=
+	by mail.kernel.org (Postfix) with ESMTP id 1B430218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="qitNWf19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfCUTOE (ORCPT
+        id S1728577AbfCUTOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 15:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfCUTOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 15:14:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D522175B;
-        Thu, 21 Mar 2019 19:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553195643;
-        bh=sVkLHg1pEO55aBJJS11l3KKaWK2rcQgqa02HwPhjGvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tjkfh3hRQPA2Hz8WE81BHtgzYGKgVnfnHZVveURdEfs3Ee+bk0ADRscnucbw9/0wW
-         ShGgX1bnsYCdSCcgdUTL3LeHB0BoRQ0n0olzGGggAc22ZqlOB3GSH5AalC2+thHoAy
-         f8SRm4G5nORKz9IEC0dbyY8/3coZquMf+51NRRtw=
-Date:   Thu, 21 Mar 2019 20:14:00 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v2] docs: Clarify the usage and sign-off requirements for
- Co-developed-by
-Message-ID: <20190321191400.GA6408@kroah.com>
-References: <20190321184316.8525-1-sean.j.christopherson@intel.com>
+        Thu, 21 Mar 2019 15:14:11 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39474 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbfCUTOL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 15:14:11 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t28so7909165qte.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 12:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=Aigz3u/0IYmN9fWYlHNTFuzwhsqPqGG63AbvSDJCD9w=;
+        b=qitNWf19ikwk1BNCYaO3FzglNJWIN+1Tlh1st8ha3F6X00gfw7mpGydeccjzv7Y/I3
+         ABt/ugLI9ATzbxEac8+6cMoF7pwAQxC+Xcqn293l79UDw4/gR8R3fKwe08ST2QqRbIgk
+         wysNB6qrfMHg6GbNg/lBwAgRLp5hTAl+CJXAsII3Si8cVGSAmX2lxSo80vL6L1ze73Vr
+         0q6+bX4qr+F1JVCsZo0BVYtderSdhQ0POPvLNSKVsKo85wACWQJk1Suo6bWfp9EW97jN
+         hWK8i2eJ1cO8UcgeYRF4pjVKbG5ZzbrtJoFGtU4eqBBGldnrxedAj/dp3MIoNwRPCSl9
+         tAaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=Aigz3u/0IYmN9fWYlHNTFuzwhsqPqGG63AbvSDJCD9w=;
+        b=X4E2acUdNbbQsnLvOq5M518ifZKww4ZmGjVJBqjEspY3VYKT5mto5FQ/tVj2PhQFBz
+         rxN+ksYlnpy1CsEc49NGWvCnfgHTQt/Mbdd2s3noCtlu6j45/tFIQ92W4x75dpu0cC6I
+         NAEL4KtEpLRHzjALA/AYVhK0A6/Zv7b4co6Z6c4bsSJdX89L49qTFtVANGWpoM2HzlPL
+         beGtb/YNFHKxOttrqbAhl1rxslKTd8Yxy/4Ae7CkcttVNaMRKWZc3ud8Xq1mN90ECVF+
+         /7MCyD0kn/WE5tr2hh2pCX4hG+sg1Ra3EwBT2ocGBeavJPoAFb25PlPytmVjSxgrfcc6
+         HMOg==
+X-Gm-Message-State: APjAAAUQ5o1UoQXMHi2kd+chkwTY169x5J6nBh9doi2/wIKQ9y551aPJ
+        mbheb59AVb0NHv+G0X5kzRnbtQ==
+X-Google-Smtp-Source: APXvYqxEfzsyAqka+ObZVM7ImwAMdWzci5z61uULRY9I6lmeoAJ96qT3whgyjUFHow33iMLKt4uUqw==
+X-Received: by 2002:ac8:2b28:: with SMTP id 37mr4386394qtu.69.1553195649912;
+        Thu, 21 Mar 2019 12:14:09 -0700 (PDT)
+Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
+        by smtp.gmail.com with ESMTPSA id l123sm2880100qkf.90.2019.03.21.12.14.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 12:14:09 -0700 (PDT)
+Message-ID: <ac5329d77f83af2804c240ebe479ec323b60aec3.camel@ndufresne.ca>
+Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
+Date:   Thu, 21 Mar 2019 15:14:06 -0400
+In-Reply-To: <20190321163532.GG3888@intel.com>
+References: <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+         <d8f4a31e35b1702230ced4a0cb43c10d1c7e60c8.camel@ndufresne.ca>
+         <20190320142739.GK3888@intel.com>
+         <a13f7fdeaf1a5e97f21a6048da765705b59d64c2.camel@ndufresne.ca>
+         <20190320160939.GR3888@intel.com>
+         <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
+         <20190320164133.GT3888@intel.com>
+         <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
+         <20190320183914.GV3888@intel.com>
+         <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
+         <20190321163532.GG3888@intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-YEa96ySSibK4Yq8yRLAj"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321184316.8525-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:43:16AM -0700, Sean Christopherson wrote:
-> The documentation for Co-developed-by is a bit light on details, e.g. it
-> doesn't explicitly state that:
-> 
->   - Multiple Co-developed-by tags are perfectly acceptable
->   - Co-developed-by and Signed-off-by must be paired together
->   - SOB ordering should still follow standard sign-off procedure
-> 
-> Lack of explicit direciton has resulted in developers taking a variety
-> of approaches, often lacking any intent whatsoever, e.g. scattering SOBs
-> willy-nilly, collecting them all at the end or the beginning, etc...
-> 
-> Tweak the wording to make it clear that multiple co-authors are allowed,
-> and document the expectation that standard sign-off procedures are to
-> be followed.  Provide examples to (hopefully) eliminate any ambiguity.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Niklas Cassel <niklas.cassel@linaro.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+--=-YEa96ySSibK4Yq8yRLAj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le jeudi 21 mars 2019 =C3=A0 18:35 +0200, Ville Syrj=C3=A4l=C3=A4 a =C3=A9c=
+rit :
+> > I'm not sure what it's worth, but there is a "pixel format guide"
+> > project that is all about matching formats from one API to another:=20
+> > https://afrantzis.com/pixel-format-guide/ (and it has an associated
+> > tool too).
+> >=20
+> > On the page about DRM, it seems that they got the word that DRM formats
+> > are the native pixel order in little-endian systems:
+> > https://afrantzis.com/pixel-format-guide/drm.html
+>=20
+> Looks consistent with the official word in drm_fourcc.h.
+>=20
+> $ python3 -m pfg find-compatible V4L2_PIX_FMT_XBGR32 drm
+> Format: V4L2_PIX_FMT_XBGR32
+> Is compatible on all systems with:
+>         DRM_FORMAT_XRGB8888
+> Is compatible on little-endian systems with:
+> Is compatible on big-endian systems with:
+>=20
+> $ python3 -m pfg find-compatible DRM_FORMAT_XRGB8888 v4l2
+> Format: DRM_FORMAT_XRGB8888
+> Is compatible on all systems with:
+>         V4L2_PIX_FMT_XBGR32
+> Is compatible on little-endian systems with:
+> Is compatible on big-endian systems with:
+>=20
+> Even works both ways :)
+>=20
+> > Perhaps some drivers have been abusing the format definitions, leading
+> > to the inconsistencies that Nicolas could witness?
+>=20
+> That is quite possible, perhaps even likely. No one really
+> seems interested in making sure big endian systems actually
+> work properly. I believe the usual approach is to hack
+> around semi-rnadomly until the correct colors accidentally
+> appear on the screen.
+
+We did not hack around randomly. The code in GStreamer is exactly what
+the DRM and Wayland dev told us to do (they provided the initial
+patches to make it work). These are initially patches from Intel for
+what it's worth (see the wlvideoformat.c header [0]). Even though I
+just notice that in this file, it seems that we ended up with a
+different mapping order for WL and DRM format in 24bit RGB (no
+padding), clearly is a bug. That being said, there is no logical
+meaning for little endian 24bit RGB, you can't load a pixel on CPU in a
+single op. Just saying since I would not know which one of the two
+mapping here is right. I would probably have to go testing what DRM
+drivers do, which may not mean anything. I would also ask and get
+contradictory answers.
+
+I have never myself tested these on big endian drivers though, as you
+say, nobody seems to care about graphics on those anymore. So the easy
+statement is to say they are little endian, like you just did, and
+ignore the legacy, but there is some catch. YUV formats has been added
+without applying this rules. So V4L2 YUYV match YUYV in DRM format name
+instead of little endian UYVY. (at least 4 tested drivers implements it
+this way). Same for NV12, for which little endian CPU representation
+would swap the UV paid on a 16bit word.
+
+To me, all the YUV stuff is the right way, because this is what the
+rest of the world is doing, it's not ambiguous.
+
+[0] https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/blob/master/ex=
+t/wayland/wlvideoformat.c#L86
+
+
+
+Nicolas
+
+--=-YEa96ySSibK4Yq8yRLAj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXJPifwAKCRBxUwItrAao
+HFlVAJ9FstJlPcaUbG2TYcchrUB8SP5jzgCaAxYrAUOaaMlup2o4lx/q2zRNIZI=
+=iSpb
+-----END PGP SIGNATURE-----
+
+--=-YEa96ySSibK4Yq8yRLAj--
+
