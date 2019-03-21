@@ -2,42 +2,42 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A77C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC5521917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0500721917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727596AbfCUWBg (ORCPT
+        id S1727581AbfCUWBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:01:36 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20537 "EHLO mga02.intel.com"
+        Thu, 21 Mar 2019 18:01:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53197 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfCUWAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:00:24 -0400
+        id S1727173AbfCUWAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:00:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:24 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="157183552"
+   d="scan'208";a="216357242"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
+  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0C77A300AB8; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
+        id 58BB130214C; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
 Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>, arnd@arndb.de,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc 9
-Date:   Thu, 21 Mar 2019 14:59:53 -0700
-Message-Id: <20190321220009.29334-2-andi@firstfloor.org>
+        Andi Kleen <ak@linux.intel.com>, mhiramat@kernel.org
+Subject: [PATCH 11/17] x86/kprobes: Make trampoline_handler global and visible
+Date:   Thu, 21 Mar 2019 15:00:03 -0700
+Message-Id: <20190321220009.29334-12-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321220009.29334-1-andi@firstfloor.org>
 References: <20190321220009.29334-1-andi@firstfloor.org>
@@ -50,41 +50,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-This warning is very noisy in a default build with gcc 9.
-Move it into W=2 only.
+This function is referenced from assembler, so in LTO
+it needs to be global and visible to not be optimized away.
 
-Cc: arnd@arndb.de
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: mhiramat@kernel.org
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- Makefile                   | 1 +
- scripts/Makefile.extrawarn | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/kernel/kprobes/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 71c2c482e2a2..78efbb172991 100644
---- a/Makefile
-+++ b/Makefile
-@@ -676,6 +676,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
- KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
- KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
- KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
-+KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
- 
- ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 768306add591..ed974a0f4a47 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -43,6 +43,7 @@ warning-2 += $(call cc-option, -Wmissing-field-initializers)
- warning-2 += $(call cc-option, -Wsign-compare)
- warning-2 += $(call cc-option, -Wmaybe-uninitialized)
- warning-2 += $(call cc-option, -Wunused-macros)
-+warning-2 += $(call cc-option, -Waddress-of-packed-member)
- 
- warning-3 := -Wbad-function-cast
- warning-3 += -Wcast-qual
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 31ab91c9c4e9..1309a4eb3119 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -752,7 +752,7 @@ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+ /*
+  * Called from kretprobe_trampoline
+  */
+-static __used void *trampoline_handler(struct pt_regs *regs)
++__used __visible void *trampoline_handler(struct pt_regs *regs)
+ {
+ 	struct kretprobe_instance *ri = NULL;
+ 	struct hlist_head *head, empty_rp;
 -- 
 2.20.1
 
