@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423A6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF910C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7A4218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA92B218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfCUOUL (ORCPT
+        id S1728380AbfCUOUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:20:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56884 "EHLO
+        Thu, 21 Mar 2019 10:20:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56914 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfCUOUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:20:10 -0400
+        id S1727823AbfCUOUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:20:13 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBFCBEBD;
-        Thu, 21 Mar 2019 07:20:09 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44B84165C;
+        Thu, 21 Mar 2019 07:20:13 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A4E93F575;
-        Thu, 21 Mar 2019 07:20:06 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 079C73F575;
+        Thu, 21 Mar 2019 07:20:09 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -42,12 +42,10 @@ Cc:     Steven Price <steven.price@arm.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH v5 01/19] arc: mm: Add p?d_large() definitions
-Date:   Thu, 21 Mar 2019 14:19:35 +0000
-Message-Id: <20190321141953.31960-2-steven.price@arm.com>
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH v5 02/19] arm64: mm: Add p?d_large() definitions
+Date:   Thu, 21 Mar 2019 14:19:36 +0000
+Message-Id: <20190321141953.31960-3-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321141953.31960-1-steven.price@arm.com>
 References: <20190321141953.31960-1-steven.price@arm.com>
@@ -63,28 +61,36 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information will be provided by the
 p?d_large() functions/macros.
 
-For arc, we only have two levels, so only pmd_large() is needed.
+For arm64, we already have p?d_sect() macros which we can reuse for
+p?d_large().
 
-CC: Vineet Gupta <vgupta@synopsys.com>
-CC: linux-snps-arc@lists.infradead.org
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
 ---
- arch/arc/include/asm/pgtable.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
-index cf4be70d5892..0edd27bc7018 100644
---- a/arch/arc/include/asm/pgtable.h
-+++ b/arch/arc/include/asm/pgtable.h
-@@ -277,6 +277,7 @@ static inline void pmd_set(pmd_t *pmdp, pte_t *ptep)
- #define pmd_none(x)			(!pmd_val(x))
- #define	pmd_bad(x)			((pmd_val(x) & ~PAGE_MASK))
- #define pmd_present(x)			(pmd_val(x))
-+#define pmd_large(x)			(pmd_val(pmd) & _PAGE_HW_SZ)
- #define pmd_clear(xp)			do { pmd_val(*(xp)) = 0; } while (0)
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index de70c1eabf33..6eef345dbaf4 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -428,6 +428,7 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ 				 PMD_TYPE_TABLE)
+ #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
+ 				 PMD_TYPE_SECT)
++#define pmd_large(pmd)		pmd_sect(pmd)
  
- #define pte_page(pte)		pfn_to_page(pte_pfn(pte))
+ #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
+ #define pud_sect(pud)		(0)
+@@ -511,6 +512,7 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ #define pud_none(pud)		(!pud_val(pud))
+ #define pud_bad(pud)		(!(pud_val(pud) & PUD_TABLE_BIT))
+ #define pud_present(pud)	pte_present(pud_pte(pud))
++#define pud_large(pud)		pud_sect(pud)
+ #define pud_valid(pud)		pte_valid(pud_pte(pud))
+ 
+ static inline void set_pud(pud_t *pudp, pud_t pud)
 -- 
 2.20.1
 
