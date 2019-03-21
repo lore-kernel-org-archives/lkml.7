@@ -2,307 +2,139 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF6DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232ECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63523218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E947820850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMjqDn2B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiwA6Bc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfCUJvq (ORCPT
+        id S1728283AbfCUJw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:51:46 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45205 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbfCUJvn (ORCPT
+        Thu, 21 Mar 2019 05:52:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43436 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfCUJw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:51:43 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so4670046iom.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:51:42 -0700 (PDT)
+        Thu, 21 Mar 2019 05:52:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d17so5810487wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eUouHM+KOzgu9x6GLUYMwHfulJ24u/hBanQZG1OJ/u0=;
-        b=QMjqDn2BGsrOp2rvpDtV/2fVPr824cIRhYNSZ58zl4WwdRXQ1wxAdDGlAvU749++D2
-         zPyOp4A9paxquaLbMagVj/HkL/JwgCMC2USOXCzWkhAYFB2HOpGSsyvKWXyRnq1PaNpL
-         /WuU6ugc+x+AwEBFzTKq4o2qXI2EydsTYQKtIqudIFSkH3FayWglx3Se6/YpOQxj6dF1
-         bURwHjZu8dZQ0BL9Bpcp62bUGof2ZFnw8R4EQ06qDp2ZZds2xcnNRv+nerQWc01f/CXo
-         21e/n4cLlcXSK52WZJCJY40c/9zcQeyEOsXMUnhEv+nj3GzXy/hrByUJ9XsUAk2X/w8u
-         YA6Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zeiuNd0X/hU2OqiAp0r4ROe1Degv8ihSLidUCb4EjRM=;
+        b=RiwA6Bc8fGiQfcDZ05c137mRUFztOKJu2oKg/ppmmtwsufO1eMvAHRQuFh307BUyai
+         vFEgnOAeb+dKiuHkzKjH1/ndkfXyTdgUOmRqbR/ucmLlnbQXP0Nm6/28DhqTM9YdBrei
+         vbgW39OeCdicQfH0j/+bj5wRYnkSHNOJELYZ0Kw21pBaSyQP/fPt0gl5ArsZic65l4Sw
+         6cZj+AAkjvwpKZkd4wKB/Yz7aSseX2BKlLw58/FXU/iKAxUesCP+i6bSFyZs8S7/FgxE
+         2+D7Gg3VYAgScybg/GC0b4NdP9TR8qrVNdk+eaBEKy9zraW9VyKNWWwFsKj021uE9hbT
+         f1UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eUouHM+KOzgu9x6GLUYMwHfulJ24u/hBanQZG1OJ/u0=;
-        b=E+nzK1ZdgrMXx6m3kti3trIdRCmPxfbNtNLIU5Pwv+D6ubhAowi+BrzbS0yzKmRGQz
-         az1AUkv7ygYtvmaDZN22DSWPFbTFJc4agATUR0Rdonch33zlCSmOICKyX7xj0KqCOBtq
-         xl655YM78I4M4AFpjfkLXVJQQ6ECqY3cDqEGZ+qTy/iUUPB4X2ecD/n0jIr7U3+advof
-         da6v8RqBRpfWnJb+AmxUeoGpHjxpOr//zvD4Olysw1c+S4cZJ7cr4kUJhO8kwDZfPdmS
-         yHAWJM05cNaGQaanX5VnJoFPGyYGQqFOxo50zWoviQniQysIQi9xIIqTT+qFVpOi/h4b
-         o/+w==
-X-Gm-Message-State: APjAAAWLx1WggLTTSfmL+7WVJwXr0UdMtAUDHkho4e0rWKlsE/w0PUiP
-        HcTl767sRx1nabL2rRQMmXmSagayg/YZC7OgPRkxgA==
-X-Google-Smtp-Source: APXvYqwZ9XoMzNS7eb16Yte8lbhoQ2KWJucZBol5g9Y7aU2ygLSXZDsnzOWPrsjhErlkWT33KV+MvTfLBumomQli65U=
-X-Received: by 2002:a5d:8b41:: with SMTP id c1mr1969543iot.173.1553161901480;
- Thu, 21 Mar 2019 02:51:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320130502.16667-1-rrichter@marvell.com> <20190320131607.vgst3r7ynha55ikw@rric.localdomain>
- <20190320152240.2eun63wqkbqmuqkg@rric.localdomain> <CAKv+Gu8HKUQPr7TaUm7EwdVFasUitAPBJFotpG43nNAKMBvxdA@mail.gmail.com>
- <20190321093920.beng2d3tbfvydbud@rric.localdomain>
-In-Reply-To: <20190321093920.beng2d3tbfvydbud@rric.localdomain>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 21 Mar 2019 10:51:34 +0100
-Message-ID: <CAKv+Gu899a5FpMqOzF5EVgsHRk37_PBxW8kVicgc8ST3=R_VUA@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: Unify dmi setup code over architectures
- arm/arm64, io64 and x86
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zeiuNd0X/hU2OqiAp0r4ROe1Degv8ihSLidUCb4EjRM=;
+        b=FK8g7AlYsV8R7vWxmllmf3m6An/qCWM/cgGRvBdlNz2eUvo/Gpr/kIyeNNfLyhREEC
+         6uvJ/gw/oHmyG75yRzs391K1XKHcGHQRvrKnPWf82ahU96Oy1xlfuWsYuICSV24NSwOi
+         3r98Qy7+S/uzj7LwmuXh78M8zynzjEFDrdS8V8ETZW97Czs8Y5JuoEyxLV32j9Re5CQt
+         DeCnJ5m3cSmfuBpiiDup9rumTeQBNGLPnpC1SgqWKkjfLWRyzE52Ed9g9sEh1FuVFKu/
+         QMnugrblqcw2ccVYZYeufOhdBdhMVR9L1ctiiZvZNLCYwjJugb1fp9Gurh9UDHDZF25n
+         A+OQ==
+X-Gm-Message-State: APjAAAXVtVfAQuQRl76OAlXrqS4dviv7gr0QEp03UuzQOsg8sInNEQgq
+        RIB3Uuf23e8aKDXlyIFzoAuv0KaDUXo=
+X-Google-Smtp-Source: APXvYqzUSI7StPWwTk2mXXlhuoZyGLznUv2/nZqVNVRfJy1WpcI6pvtrshX/kKV3/WazBxjEwVx4aA==
+X-Received: by 2002:a5d:62c4:: with SMTP id o4mr1823861wrv.282.1553161976849;
+        Thu, 21 Mar 2019 02:52:56 -0700 (PDT)
+Received: from [192.168.0.41] (27.78.95.92.rev.sfr.net. [92.95.78.27])
+        by smtp.googlemail.com with ESMTPSA id l12sm5825826wrt.31.2019.03.21.02.52.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 02:52:55 -0700 (PDT)
+Subject: Re: [PATCH v12 1/4] PM / Domains: Add a generic data pointer to the
+ genpd_power_state struct
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Marcin Benka <mbenka@marvell.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190227195836.24739-1-ulf.hansson@linaro.org>
+ <20190227195836.24739-2-ulf.hansson@linaro.org>
+ <11aa2536-9f9c-059d-a4d6-3f683be7caeb@linaro.org>
+ <CAPDyKFoz8d2DTKTtBPn7+1wf_gGsANwU12++Wkb_KKndqGwWZQ@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <a750f654-3bc0-f102-245f-fbc8abb08298@linaro.org>
+Date:   Thu, 21 Mar 2019 10:52:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <CAPDyKFoz8d2DTKTtBPn7+1wf_gGsANwU12++Wkb_KKndqGwWZQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 at 10:39, Robert Richter <rrichter@marvell.com> wrote:
->
-> On 20.03.19 23:02:09, Ard Biesheuvel wrote:
-> > On Wed, 20 Mar 2019 at 16:23, Robert Richter <rrichter@marvell.com> wrote:
-> > >
-> > > On 20.03.19 14:16:07, Robert Richter wrote:
-> > > > On 20.03.19 13:05:37, Robert Richter wrote:
-> > > > > @@ -167,6 +167,7 @@ static int __init arm_dmi_init(void)
-> > > > >      * itself, depends on dmi_scan_machine() having been called already.
-> > > > >      */
-> > > > >     dmi_scan_machine();
-> > > > > +   dmi_memdev_walk();
-> > > > >     if (dmi_available)
-> > > > >             dmi_set_dump_stack_arch_desc();
-> > > > >     return 0;
-> > > >
-> > > > After
-> > > >
-> > > >  [PATCH] efi/arm: Show SMBIOS bank/device location in cper and
-> > > >   ghes error logs
-> > > >
-> > > > wents in for arm/arm64, we can unify the code. See patch below.
-> > >
-> > > V2 with the fix in arm_dmi_init() below.
-> > >
-> > > -Robert
-> > >
-> > >
-> > > -- >8 --
-> > > From: Robert Richter <rrichter@marvell.com>
-> > > Subject: [PATCH v2] efi: Unify dmi setup code over architectures arm/arm64,
-> > >  io64 and x86
-> > >
-> > > All architectures (arm/arm64, io64 and x86) do the same here, so unify
-> > > the code.
-> > >
-> > > Note: We do not need to call dump_stack_set_arch_desc() in case of
-> > > !dmi_available. Both strings, dmi_ids_string and dump_stack_arch_
-> > > desc_str are initialized zero and thus nothing would change.
-> > >
-> >
-> > I don't understand the last sentence - we do not need to call
-> > dump_stack_set_arch_desc() when !dmi_available, but we do so anyway,
-> > right? Doesn't that wipe the arch description we set based on the DT
-> > machine name?
->
-> No, in dmi_setup() we exit early when !dmi_available. So for arm/arm64
-> nothing changed. But for x86 and ia64 we no longer call dump_stack_
-> set_arch_desc() in this case. This is ok since both strings,
-> dmi_ids_string and dump_stack_arch_desc_str, are initialized zero and
-> copying one to the other does not change anything.
->
+On 21/03/2019 10:36, Ulf Hansson wrote:
+> On Thu, 21 Mar 2019 at 08:47, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 
-Ah, of course. Apologies for not reading more carefully.
+[ ... ]
 
-I'll take this patch via the EFI tree.
+>>>       cancel_work_sync(&genpd->power_off_work);
+>>> -     kfree(genpd->free);
+>>> +     if (genpd->free_states)
+>>
+>> Is this test necessary as the free_states function is initialized with
+>> the genpd_set_default_power_state() in any case?
+> 
+> That's the case when the genpd provider did not allocate states, so
+> then we know genpd deals with this properly for us.
+> 
+> In the other case, when genpd provider has allocates states, then we
+> need to check that the provider has assigned the ->free_states()
+> callback before we invokes it, as there is no guarantees that it had.
+> 
+> I was initially tempted to do this check already at pm_genpd_init(),
+> as it would allow us to check for the error condition and return an
+> error code if it's not been assigned. However, that requires me to
+> change all providers that currently "allocates" their states, so that
+> isn't really a smooth way forward. Perhaps, we should simply print a
+> message to the log about this condition in pm_genpd_init(), as to
+> start with!? I can add a patch on top doing that.
 
-It seems to me though that the previous patch makes the memdev_walk()
-call unconditional for ARM, and this change subsequently makes it
-dependent on dmi_available. Should we fix that?
+Yes, that would make sense to track those providers which do not
+initialize the free field.
 
-> >
-> > > Signed-off-by: Robert Richter <rrichter@marvell.com>
-> > > ---
-> > >  arch/ia64/kernel/setup.c           |  4 +---
-> > >  arch/x86/kernel/setup.c            |  6 ++----
-> > >  drivers/firmware/dmi_scan.c        | 28 +++++++++++++++-------------
-> > >  drivers/firmware/efi/arm-runtime.c |  7 ++-----
-> > >  include/linux/dmi.h                |  8 ++------
-> > >  5 files changed, 22 insertions(+), 31 deletions(-)
-> > >
-> > > diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
-> > > index 583a3746d70b..c9cfa760cd57 100644
-> > > --- a/arch/ia64/kernel/setup.c
-> > > +++ b/arch/ia64/kernel/setup.c
-> > > @@ -1058,9 +1058,7 @@ check_bugs (void)
-> > >
-> > >  static int __init run_dmi_scan(void)
-> > >  {
-> > > -       dmi_scan_machine();
-> > > -       dmi_memdev_walk();
-> > > -       dmi_set_dump_stack_arch_desc();
-> > > +       dmi_setup();
-> > >         return 0;
-> > >  }
-> > >  core_initcall(run_dmi_scan);
-> > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > > index 3d872a527cd9..3773905cd2c1 100644
-> > > --- a/arch/x86/kernel/setup.c
-> > > +++ b/arch/x86/kernel/setup.c
-> > > @@ -1005,13 +1005,11 @@ void __init setup_arch(char **cmdline_p)
-> > >         if (efi_enabled(EFI_BOOT))
-> > >                 efi_init();
-> > >
-> > > -       dmi_scan_machine();
-> > > -       dmi_memdev_walk();
-> > > -       dmi_set_dump_stack_arch_desc();
-> > > +       dmi_setup();
-> > >
-> > >         /*
-> > >          * VMware detection requires dmi to be available, so this
-> > > -        * needs to be done after dmi_scan_machine(), for the boot CPU.
-> > > +        * needs to be done after dmi_setup(), for the boot CPU.
-> > >          */
-> > >         init_hypervisor_platform();
-> > >
-> > > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> > > index 099d83e4e910..fae2d5c43314 100644
-> > > --- a/drivers/firmware/dmi_scan.c
-> > > +++ b/drivers/firmware/dmi_scan.c
-> > > @@ -416,11 +416,8 @@ static void __init save_mem_devices(const struct dmi_header *dm, void *v)
-> > >         nr++;
-> > >  }
-> > >
-> > > -void __init dmi_memdev_walk(void)
-> > > +static void __init dmi_memdev_walk(void)
-> > >  {
-> > > -       if (!dmi_available)
-> > > -               return;
-> > > -
-> > >         if (dmi_walk_early(count_mem_devices) == 0 && dmi_memdev_nr) {
-> > >                 dmi_memdev = dmi_alloc(sizeof(*dmi_memdev) * dmi_memdev_nr);
-> > >                 if (dmi_memdev)
-> > > @@ -614,7 +611,7 @@ static int __init dmi_smbios3_present(const u8 *buf)
-> > >         return 1;
-> > >  }
-> > >
-> > > -void __init dmi_scan_machine(void)
-> > > +static void __init dmi_scan_machine(void)
-> > >  {
-> > >         char __iomem *p, *q;
-> > >         char buf[32];
-> > > @@ -769,15 +766,20 @@ static int __init dmi_init(void)
-> > >  subsys_initcall(dmi_init);
-> > >
-> > >  /**
-> > > - * dmi_set_dump_stack_arch_desc - set arch description for dump_stack()
-> > > + *     dmi_setup - scan and setup DMI system information
-> > >   *
-> > > - * Invoke dump_stack_set_arch_desc() with DMI system information so that
-> > > - * DMI identifiers are printed out on task dumps.  Arch boot code should
-> > > - * call this function after dmi_scan_machine() if it wants to print out DMI
-> > > - * identifiers on task dumps.
-> > > + *     Scan the DMI system information. This setups DMI identifiers
-> > > + *     (dmi_system_id) for printing it out on task dumps and prepares
-> > > + *     DIMM entry information (dmi_memdev_info) from the SMBIOS table
-> > > + *     for using this when reporting memory errors.
-> > >   */
-> > > -void __init dmi_set_dump_stack_arch_desc(void)
-> > > +void __init dmi_setup(void)
-> > >  {
-> > > +       dmi_scan_machine();
-> > > +       if (!dmi_available)
-> > > +               return;
-> > > +
-> > > +       dmi_memdev_walk();
-> > >         dump_stack_set_arch_desc("%s", dmi_ids_string);
-> > >  }
-> > >
-> > > @@ -841,7 +843,7 @@ static bool dmi_is_end_of_table(const struct dmi_system_id *dmi)
-> > >   *     returns non zero or we hit the end. Callback function is called for
-> > >   *     each successful match. Returns the number of matches.
-> > >   *
-> > > - *     dmi_scan_machine must be called before this function is called.
-> > > + *     dmi_setup must be called before this function is called.
-> > >   */
-> > >  int dmi_check_system(const struct dmi_system_id *list)
-> > >  {
-> > > @@ -871,7 +873,7 @@ EXPORT_SYMBOL(dmi_check_system);
-> > >   *     Walk the blacklist table until the first match is found.  Return the
-> > >   *     pointer to the matching entry or NULL if there's no match.
-> > >   *
-> > > - *     dmi_scan_machine must be called before this function is called.
-> > > + *     dmi_setup must be called before this function is called.
-> > >   */
-> > >  const struct dmi_system_id *dmi_first_match(const struct dmi_system_id *list)
-> > >  {
-> > > diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-> > > index 4a0dfe4ab829..e2ac5fa5531b 100644
-> > > --- a/drivers/firmware/efi/arm-runtime.c
-> > > +++ b/drivers/firmware/efi/arm-runtime.c
-> > > @@ -162,14 +162,11 @@ void efi_virtmap_unload(void)
-> > >  static int __init arm_dmi_init(void)
-> > >  {
-> > >         /*
-> > > -        * On arm64/ARM, DMI depends on UEFI, and dmi_scan_machine() needs to
-> > > +        * On arm64/ARM, DMI depends on UEFI, and dmi_setup() needs to
-> > >          * be called early because dmi_id_init(), which is an arch_initcall
-> > >          * itself, depends on dmi_scan_machine() having been called already.
-> > >          */
-> > > -       dmi_scan_machine();
-> > > -       dmi_memdev_walk();
-> > > -       if (dmi_available)
-> > > -               dmi_set_dump_stack_arch_desc();
-> > > +       dmi_setup();
-> > >         return 0;
-> > >  }
-> > >  core_initcall(arm_dmi_init);
-> > > diff --git a/include/linux/dmi.h b/include/linux/dmi.h
-> > > index c46fdb36700b..8de8c4f15163 100644
-> > > --- a/include/linux/dmi.h
-> > > +++ b/include/linux/dmi.h
-> > > @@ -102,9 +102,7 @@ const struct dmi_system_id *dmi_first_match(const struct dmi_system_id *list);
-> > >  extern const char * dmi_get_system_info(int field);
-> > >  extern const struct dmi_device * dmi_find_device(int type, const char *name,
-> > >         const struct dmi_device *from);
-> > > -extern void dmi_scan_machine(void);
-> > > -extern void dmi_memdev_walk(void);
-> > > -extern void dmi_set_dump_stack_arch_desc(void);
-> > > +extern void dmi_setup(void);
-> > >  extern bool dmi_get_date(int field, int *yearp, int *monthp, int *dayp);
-> > >  extern int dmi_get_bios_year(void);
-> > >  extern int dmi_name_in_vendors(const char *str);
-> > > @@ -122,9 +120,7 @@ static inline int dmi_check_system(const struct dmi_system_id *list) { return 0;
-> > >  static inline const char * dmi_get_system_info(int field) { return NULL; }
-> > >  static inline const struct dmi_device * dmi_find_device(int type, const char *name,
-> > >         const struct dmi_device *from) { return NULL; }
-> > > -static inline void dmi_scan_machine(void) { return; }
-> > > -static inline void dmi_memdev_walk(void) { }
-> > > -static inline void dmi_set_dump_stack_arch_desc(void) { }
-> > > +static inline void dmi_setup(void) { }
-> > >  static inline bool dmi_get_date(int field, int *yearp, int *monthp, int *dayp)
-> > >  {
-> > >         if (yearp)
-> > > --
-> > > 2.20.1
-> > >
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
