@@ -2,102 +2,116 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D141C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CCAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38176218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A97F218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553170960;
-	bh=iR8uM0bklS/kN9O9IuOgETxuL9ER8Fq7QxErIk0RqDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a2quux+TH9KjJYJrmQWkkK6Cy5fiTMhRXu4Zj0aZh+WuTDArE3w8YJeo0O1ySU2Wl
-	 i5NA7gbAZzHqkrK1k0v1yAoWlFpilFoPyfMRHX4Xo7F2LFyvENpPWU9QcFfMquq8cV
-	 uVKQIeichM5cPoZJteOxDaUxf958VsC72rACmLXA=
+	s=default; t=1553171032;
+	bh=9X5MSwnllC6bIGJdyhDnLpBMdGsHTivJLSlqw7NZG3k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Zii17iYowqECux8xWBLoBNv7jbRTKVj62STtShcw/yAEh4sROMvFJBn0fcGxAuz0w
+	 Dq+mELahhreYZPacNytOJYWNKXICEDxnhLTF4yI4TB2Xv6NvbI+zQqlXlolU2qKhVA
+	 sxYAVXJhE4Iq1PAQQ+Do9CqU6qpIsvt2KyGGqJx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfCUMWi (ORCPT
+        id S1728157AbfCUMXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:22:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53564 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbfCUMWi (ORCPT
+        Thu, 21 Mar 2019 08:23:50 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52776 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUMXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:22:38 -0400
+        Thu, 21 Mar 2019 08:23:50 -0400
+X-Greylist: delayed 370 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Mar 2019 08:23:50 EDT
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BYkMOLwaE2uMLszqlEA8ToGzTayU62GiiQjixYsvHnQ=; b=c5VXFbQ7F0eaYENcRJ8+AM7SZ
-        sItj+hWa76VW8b+Ezj+mNL0nh1/JTfB3ApXR8k6Hs3b3mWaP6oMYmWinnqhXl3mUhz1LnGOCKonqv
-        sXIO5hb/zPfiZq+eXNm6THcLU31PIiYpuxmgA8IZOBEeNPEhfBruljHLt3taAFoTvTTBk=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h6whq-0004tH-Dz; Thu, 21 Mar 2019 12:21:58 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id C2CFC11288EC; Thu, 21 Mar 2019 12:21:52 +0000 (GMT)
-Date:   Thu, 21 Mar 2019 12:21:52 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Akshu Agrawal <Akshu.Agrawal@amd.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Re: [PATCH 1/3] ASoC: da7219: Update DAI clock binding info to cover
- WCLK/BCLK
-Message-ID: <20190321122152.GA5684@sirena.org.uk>
-References: <cover.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
- <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HUt2yYzlg2cWXTuxjYAtIUMoN501Y0PRGNgz60VX7Do=; b=OD+zufmIi7PksHuygirQjBwDjM
+        pw1OMBmIv2kwFkHgc2uD7tY4Tq40e2FgTNWF++aPutsI548V4W1mmDUhWgucz/qAL5b/1ofp3SgSS
+        ZGtwkuCRzsEwfA7l8G3VvGgM7WU/DhdJDNJ47O2B5kLYgolKzEdRXPlHxjFrYXZQ1kmSwE8jjPpf+
+        KD/qC/+7bN7zVtd3aBAvmxafRi325tXjJcGol3oI6vv4Sjw5B+NoxviKm/E7m/vATmD1HveyovDlX
+        qfg81wpXjlayI42CWGlouBgdXIyn8hnkJNysKNCgPZQfMnH4aHVSwHlRKSVtfEPxjz11J8oI3Vmk0
+        +hVMpH3w==;
+Received: from [179.95.24.146] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6wdb-0002XX-S2; Thu, 21 Mar 2019 12:17:36 +0000
+Date:   Thu, 21 Mar 2019 09:17:31 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 1/7] Input: document meanings of KEY_SCREEN and KEY_ZOOM
+Message-ID: <20190321091731.7b34fc63@coco.lan>
+In-Reply-To: <20190118233037.87318-1-dmitry.torokhov@gmail.com>
+References: <20190118233037.87318-1-dmitry.torokhov@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <a2e2ae888b3c2fbcaab3e4791ce98f877e3d38ff.1553017237.git.Adam.Thomson.Opensource@diasemi.com>
-X-Cookie: Hackers of the world, unite!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, 18 Jan 2019 15:30:31 -0800
+Dmitry Torokhov <dmitry.torokhov@gmail.com> escreveu:
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> It is hard to say what KEY_SCREEN and KEY_ZOOM mean, but historically DVB
+> folks have used them to indicate switch to full screen mode. Later, they
+> converged on using KEY_ZOOM to switch into full screen mode and KEY)SCREEN
+> to control aspect ratio (see Documentation/media/uapi/rc/rc-tables.rst).
+> 
+> Let's commit to these uses, and define:
+> 
+> - KEY_FULL_SCREEN (and make KEY_ZOOM its alias)
+> - KEY_ASPECT_RATIO (and make KEY_SCREEN its alias)
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Tue, Mar 19, 2019 at 05:49:30PM +0000, Adam Thomson wrote:
+Feel free to apply via your tree.
 
-> -- #clock-cells :  Should be set to '<0>', only one clock source provided;
-> -- clock-output-names : Name given for DAI clocks output;
-> +- #clock-cells :  Should be set to '<1>', two clock sources provided;
-> +- clock-output-names : Names given for DAI clock outputs (WCLK & BCLK);
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-This might need some handling later on as it's a binding change, however
-I can't see any current users so hopefully nobody will notice.
+> ---
+> 
+> Please let me know how we want merge this. Some of patches can be applied
+> independently and I tried marking them as such, but some require new key
+> names from input.h
+> 
+>  include/uapi/linux/input-event-codes.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index ae366b87426a..bc5054e51bef 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -439,10 +439,12 @@
+>  #define KEY_TITLE		0x171
+>  #define KEY_SUBTITLE		0x172
+>  #define KEY_ANGLE		0x173
+> -#define KEY_ZOOM		0x174
+> +#define KEY_FULL_SCREEN		0x174	/* AC View Toggle */
+> +#define KEY_ZOOM		KEY_FULL_SCREEN
+>  #define KEY_MODE		0x175
+>  #define KEY_KEYBOARD		0x176
+> -#define KEY_SCREEN		0x177
+> +#define KEY_ASPECT_RATIO	0x177	/* HUTRR37: Aspect */
+> +#define KEY_SCREEN		KEY_ASPECT_RATIO
+>  #define KEY_PC			0x178	/* Media Select Computer */
+>  #define KEY_TV			0x179	/* Media Select TV */
+>  #define KEY_TV2			0x17a	/* Media Select Cable */
 
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyTgeAACgkQJNaLcl1U
-h9B0qAf+PFsG2TAKEIRT9VDw6jBv1x9NUTOiIOByLkIgFdaUQ9F+Ve0TdGxHQncO
-5h7ubsO0hb7whjsTNTK7LjCQS5Ibz9b8Upilqtr3Mg9uHi/gJCpKwve7T0mzMeVZ
-wHWk26x5BdInzZOKHn8V2lu8kBKAiapJ0/CUp2r7qOTPhsfQM/bNU+JaVf0JjTQv
-D57JjwlCblHOvi5PN35jzz/f7d78C4cj573MDtV5YNVTjSmRZ0hneNpU4AsTQHhA
-K/DNAGbPN7juXURKxQWTFFo7UTlRwBrpiV4e5KgpkKo/8i/i0Ue2IcOESDQodGVG
-UlcKlS76bSdREljWeVz4MBqK9/BylA==
-=UT0f
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
+Thanks,
+Mauro
