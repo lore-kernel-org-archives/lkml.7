@@ -2,98 +2,124 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87B6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF5FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE80F218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473B22183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfCUUfy convert rfc822-to-8bit (ORCPT
+        id S1728930AbfCUUgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:35:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbfCUUfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:35:53 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86802183E;
-        Thu, 21 Mar 2019 20:35:51 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 16:35:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Beulich <jbeulich@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        He Zhe <zhe.he@windriver.com>
-Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
- error_entry
-Message-ID: <20190321163550.21b29194@gandalf.local.home>
-In-Reply-To: <b6d80345-4153-13d4-a63d-4760764d7c98@citrix.com>
-References: <20190320221534.165ab87b@oasis.local.home>
-        <20190321083317.GL6058@hirez.programming.kicks-ass.net>
-        <20190321090241.GL6521@hirez.programming.kicks-ass.net>
-        <20190321104517.GM6521@hirez.programming.kicks-ass.net>
-        <20190321093242.4a948198@gandalf.local.home>
-        <20190321172203.GS5996@hirez.programming.kicks-ass.net>
-        <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
-        <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
-        <CALCETrVaCZKjXj9ZqtvQgLk2DqXwNCh7b5DHvSnNAORsqJXCcQ@mail.gmail.com>
-        <CAHk-=wjEHqY1+DxJ-_oNWTuTNQwMPtJKJh_HE=e1F60V+TwUfQ@mail.gmail.com>
-        <20190321183713.GX5996@hirez.programming.kicks-ass.net>
-        <CALCETrW-Jn=nWOgYUdMhoS_Z6vYNmfYzt6P54FBOaWzp4kPvQQ@mail.gmail.com>
-        <b6d80345-4153-13d4-a63d-4760764d7c98@citrix.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 Mar 2019 16:36:06 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:35419 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbfCUUgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:36:06 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id EE3D28049F; Thu, 21 Mar 2019 21:35:54 +0100 (CET)
+Date:   Thu, 21 Mar 2019 21:36:02 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Smarter Kconfig help
+Message-ID: <20190321203602.GA971@amd>
+References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+ <1551865552.9298.24.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <1551865552.9298.24.camel@pengutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 20:00:19 +0000
-Andrew Cooper <andrew.cooper3@citrix.com> wrote:
 
-> I'm afraid that I've not got the original context of this thread, but
-> I'm going to guess that something is resulting in a #PF before %cr2
-> before it gets saved on the #PF path, and using a PVOP causes things to
-> explode?
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually it had nothing to do with PVOPs. It was tracing that caused
-it. We added tracepoints to irqs off and on (with a config enabled),
-and there's an option to allow taking user stack traces at any
-tracepoint. The tracing of irqs off happened at the start of the page
-fault entry, and by tracing the userspace stack (which can also fault)
-we corrupted the cr2 for the original page fault.
+On Wed 2019-03-06 10:45:52, Lucas Stach wrote:
+> Hi Russell,
+>=20
+> Am Dienstag, den 05.03.2019, 17:31 +0000 schrieb Russell King - ARM Linux=
+ admin:
+> > Guys,
+> >=20
+> > We need to be smarter when writing Kconfig help.=A0=A0I'm just going
+> > through updating my build trees with the results of 5.0 development,
+> > and a number of the help texts are next to useless.=A0=A0For example,
+> >=20
+> > PVPANIC - is this something that should be enabled for a host or
+> > guest kernel?=A0=A0Answer: you have to read the driver code to find out.
+> >=20
+> > IMX_IRQSTEER - which i.MX SoCs does this apply to?=A0=A0The help text
+> > just says:
+> >=20
+> > =A0 "Support for the i.MX IRQSTEER interrupt multiplexer/remapper."
+> >=20
+> > which doesn't say which SoCs this should be enabled for - it turns
+> > out that grepping for the driver's DT compatible string, none of
+> > the 32-bit ARM cores have support for this, yet we still default
+> > it to enabled there.=A0=A0It seems the help text should at the very
+> > least tell the user that this is not applicable to i.MX SoCs with
+> > 32-bit ARM cores.
+> >=20
+> > I'm sure there's many other instances of this... I suspect that
+> > it's caused by review concentrating mostly on the technical aspects
+> > of the code and the Kconfig help text just gets forgotten about.
+> >=20
+> > Can we at least improve these two options please?
+>=20
+> While I totally agree that the irqsteer driver should only default Y on
+> 64bit i.MX SoCs, I'm not really sure what to do about the Kconfig help
+> text.
+>=20
+> Enumerating SoCs in the Kconfig of a IP block driver is always prone to
+> get outdated. Just as the first example I've been able to come up with,
+> the MMC_SDHCI_ESDHC_IMX help text says: "This selects the Freescale
+> eSDHC/uSDHC controller support=A0found on i.MX25, i.MX35 i.MX5x and
+> i.MX6x.", while the same IP block is to be found on i.MX7 and various
+> i.MX8.
 
-The work now is to store that cr2 early on, but that requires doing it
-in assembly, and that's where PVOPs makes the solution hard.
+"This selects the Freescale eSDHC/uSDHC controller support found on
+i.MX25, i.MX35 i.MX5x, i.MX6x and later SoCs.".
 
--- Steve
+Really, there are way too many silicon blocks, and you can't expect
+Kconfig user to know them all...
 
+Best regards,
 
-> 
-> If it helps in the short term, Xen will trap and emulate a mov from cr2
-> instruction correctly.  Performance will surely suck, but it might be an
-> option if we need to rethink how this information is made available to
-> guests.
-> 
-> Thanks,
-> 
-> ~Andrew
+									Pavel
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyT9bIACgkQMOfwapXb+vJe8ACdHZn1blrVrLLs72fgejcEkPGC
+WT0AmQHg8kMD84pL9Jwdjz1Jk13hncw/
+=8tyr
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
