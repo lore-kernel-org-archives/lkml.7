@@ -2,109 +2,171 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6BEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA34BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C22218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635B7218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iWEPTvkY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="15rL+MHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfCULpx (ORCPT
+        id S1728184AbfCULqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:45:53 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33166 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbfCULpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:45:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nXwxvZcGtcjuDQ8IJpMKqrLzV5vePZUyKAJAsBh9ArU=; b=iWEPTvkYko0ZkPy+wN5Me9qK/4
-        duBtldgq54stHiIN1NAK+qlr8IonmsGla2W5RmYbBNUjbVAU6+RMkeNxFIoYng57pDIID6lnxWXEJ
-        zPmEjNGy6vzIVLNl2cWJI8HKeyud7doUAmx+jczUuBcsQx0CFNMLNxcGWLXbqF4E1NGU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h6w8m-0003We-21; Thu, 21 Mar 2019 12:45:44 +0100
-Date:   Thu, 21 Mar 2019 12:45:44 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        DEVICETREE <devicetree@vger.kernel.org>,
-        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
- rgmii-id
-Message-ID: <20190321114544.GG2900@lunn.ch>
-References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
- <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
- <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
- <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
+        Thu, 21 Mar 2019 07:46:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60898 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfCULqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:46:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5y9Xi+y7zNWDmZd9L39f36TRBNen5lzKFND7iNlUNEw=; b=15rL+MHEG10GM8uPxNazw34dw
+        lqYHhs+8eZOAH/KjXIasateEyR4YkVBDmmFOEbAxXagXfFzhmpWO/aWZiCnlv2OQFNkT8Riy3NuJy
+        C7n/voZqLYogihkNcYRanFLg2GBYO6LdWVjvllJst/KQ4385DRS8uW5d6pjvtQsThS+2MZJjns4fQ
+        7RfQozhFbJhDdJIhTidLOznyoO/Tg55xTCNVZ+SAOGLvWtZfuTk338ZiP0m15LCuNZuMMvqxhPaVY
+        jmpyAPeNnyUDp22RztRlYuHuaULQVwfAwRPXdHng/nm1hPuSiFlAK7YLt6mNQrA1id6heZRtpGL3R
+        teM+K75jw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6w8f-0001op-PY; Thu, 21 Mar 2019 11:45:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2D81A285D1C05; Thu, 21 Mar 2019 12:45:35 +0100 (CET)
+Date:   Thu, 21 Mar 2019 12:45:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH V3] cpufreq: Call transition notifier only once for each
+ policy
+Message-ID: <20190321114535.GM6058@hirez.programming.kicks-ass.net>
+References: <1eb27e3bbcbb2c67e6eadc0893c9b41e5d76894b.1553057341.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1eb27e3bbcbb2c67e6eadc0893c9b41e5d76894b.1553057341.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 08:17:01AM -0300, Fabio Estevam wrote:
-> Hi Abel,
-> 
-> On Thu, Mar 21, 2019 at 5:42 AM Abel Vesa <abel.vesa@nxp.com> wrote:
-> 
-> > > It seems we have other boards that need to be fixed and we can not
-> > > have an old dtb with functional Ethernet with a new kernel.
-> > >
-> > > Does anyone know if this issue is AR8031 specific?
-> >
-> > I can confirm the same fix is works on imx6sx too.
-> 
-> imx6sx-sabresd also uses an AR8031 Ethernet PHY.
-> 
-> I also tested that changing the phy-mode to "rgmii-id" fixes Ethernet
-> on pico-imx7d with AR8035.
-> 
-> So yes, we currently have lots of broken dtb's in mainline and I am
-> wondering what is the proper fix here.
-> 
-> Does anyone know what was the kernel commit that introduced such regressions?
+On Wed, Mar 20, 2019 at 10:22:23AM +0530, Viresh Kumar wrote:
+> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> index 3fae23834069..b2fe665878f7 100644
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -958,10 +958,15 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+>  	struct cpufreq_freqs *freq = data;
+>  	unsigned long *lpj;
+>  
+> +	if (WARN_ON_ONCE(cpumask_weight(freq->policy->related_cpus) != 1)) {
+> +		mark_tsc_unstable("cpufreq changes: related CPUs affected");
 
-Hi Fabio
+I suspect this is a big fat nop, but it won't hurt.
 
-The problem here is, all the DTs were broken since day 0. However,
-because the PHY driver was also broken, nobody noticed and it
-worked. Now that the PHY driver has been fixed, all the bugs in the
-DTs now become an issue.
+> +		return 0;
+> +	}
+> +
+>  	lpj = &boot_cpu_data.loops_per_jiffy;
+>  #ifdef CONFIG_SMP
+>  	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> -		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+> +		lpj = &cpu_data(freq->policy->cpu).loops_per_jiffy;
+>  #endif
+>  
+>  	if (!ref_freq) {
+> @@ -977,7 +982,7 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+>  		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+>  			mark_tsc_unstable("cpufreq changes");
+>  
+> -		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
+> +		set_cyc2ns_scale(tsc_khz, freq->policy->cpu, rdtsc());
+>  	}
+>  
+>  	return 0;
 
-There is also a need to fix the PHY driver, because there is at least
-one board which needs it fixed in order to work.
+Just wondering, since we say x86 cpufreq handlers will only have a
+single CPU here,
 
-When we discussed fixing the PHY driver, we had no idea how many
-boards would break. So we said, lets try it, and fix up whatever
-breaks. We can however discuss this again. We can declare both the PHY
-driver and the DTs terminally broken, and add a vendor proprietary
-property for the phy-mode, which takes preference over the standard
-phy-mode if present, and that does the correct thing.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 65e4559eef2f..1ac8c710cccc 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6649,10 +6649,8 @@ static void kvm_hyperv_tsc_notifier(void)
+>  }
+>  #endif
+>  
+> -static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> -				     void *data)
+> +static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
+>  {
+> -	struct cpufreq_freqs *freq = data;
+>  	struct kvm *kvm;
+>  	struct kvm_vcpu *vcpu;
+>  	int i, send_ipi = 0;
+> @@ -6696,17 +6694,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+>  	 *
+>  	 */
+>  
+> -	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
+> -		return 0;
+> -	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
+> -		return 0;
+> -
+> -	smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
+> +	smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+>  
+>  	spin_lock(&kvm_lock);
+>  	list_for_each_entry(kvm, &vm_list, vm_list) {
+>  		kvm_for_each_vcpu(i, vcpu, kvm) {
+> -			if (vcpu->cpu != freq->cpu)
+> +			if (vcpu->cpu != cpu)
+>  				continue;
+>  			kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+>  			if (vcpu->cpu != smp_processor_id())
+> @@ -6728,8 +6721,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+>  		 * guest context is entered kvmclock will be updated,
+>  		 * so the guest will not see stale values.
+>  		 */
+> -		smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
+> +		smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+>  	}
+> +}
+> +
+> +static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> +				     void *data)
+> +{
+> +	struct cpufreq_freqs *freq = data;
+> +	int cpu;
+> +
+> +	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
+> +		return 0;
+> +	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
+> +		return 0;
+> +
+> +	for_each_cpu(cpu, freq->policy->cpus)
+> +		__kvmclock_cpufreq_notifier(freq, cpu);
+> +
+>  	return 0;
+>  }
+>  
 
-    Andrew
-
+Then why to we pretend otherwise here?
