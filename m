@@ -2,228 +2,164 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783C2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D72C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CB7218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB33218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iz0CBCWU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MetRX0Fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfCUCI5 (ORCPT
+        id S1727827AbfCUCJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:08:57 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41310 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfCUCI4 (ORCPT
+        Wed, 20 Mar 2019 22:09:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47055 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCUCJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:08:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a25so3706954edc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:08:55 -0700 (PDT)
+        Wed, 20 Mar 2019 22:09:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c18so4055910otl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kfdNK38M7Ugu20XRA4rvd71ysDrirHqoExPYIh8X+dU=;
-        b=Iz0CBCWUqnKyBCPnk9jG8gp2RHR/WFfkagiPZq+FHi9WI7FBed/2J3dG9SO7wJtMfO
-         v0VEWASvhRXPOCMj3iXk5jfLBBhfxdL4dSiK/uHslBtoLA8NwfYIQB834e1a09ICV5fi
-         qMTnMUgd1A1bnnGzyjryDFOnS49jBsUTBMBk+KFt479DUW1k0/ArlqKKTQDdeP4zqIeE
-         EE+QCd3nAIHILF62+SYynmV5p9cDFbx7vssUkcSXC5lq+dMk/IOvyzq750JYoJPzF0cn
-         OFShC71+9FcfY4r41mpn2N5vvofSNL6SrDCTyzGI/64H2agtg5pJwfkbdw8+wL/Pnq33
-         PhRw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RXXjFgQ4kSh1haj12ilofiyo5dCddf6sQWZJ/oZ18SM=;
+        b=MetRX0FbgGojxiV9ezSD90LNzLmToGT689mQfL9tp+t/yhpHC/VSzkZlL6FKX0zAsm
+         oomBN5mYw0/YgEZp2owjkX5wLklEVvvI6RbtrwuzTNQNb9iQ7x4KvJH0Qxd41g+tdgJg
+         A7Y7E7Yc8H4sJL5rC4UZ53XTHY+IfslYqhP0IoTPby884gDrkOlsWaKeexn+65gzdnQW
+         HGTviFS8n6xsu14gMGozDNONan/fz8mm1740GRylfgB9zvzIUWa0lWD6WuJMe0E3HtVi
+         eHmvEhKdnIqibuLD3bbFyqrLfUs4sAm78njn+o43UTmNQ848yNZUcLaDA30NzAB0PQhu
+         UTeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kfdNK38M7Ugu20XRA4rvd71ysDrirHqoExPYIh8X+dU=;
-        b=JU22rbtVgh+L7e36VXv4feMKl99czeY/TN1NaqXNIbONYrsXWxcR4vL4DRkBprmrnY
-         LC4dA9YNL139+enczJL+MF+7TrXjq3Z5QuyFT7iUzgoI4DTqMjxLZqu5DrhVfx7IkyeK
-         AjIai/65blXseTR+efgd4yLnXApMI92rCZiFg5gbOA37BsttazVoIodwa4wqQFDVC3T9
-         nQ/gav823+FREF8BHb8B2ccLCfqtzlttpqWFAXFj+dt6o5m8ef0Y4SVDkJA3nBKcdc4q
-         VJOALd8qq/YwOtsUZWVWFfevXLkuJ14QVy/sHq8l+AudlLms3IPJctMlKwGz7Z9EbIb7
-         trhQ==
-X-Gm-Message-State: APjAAAVfMoDJMock0sbX2+qStVIRvskrI5hpSLEd/jafgA3CBW8lDrgp
-        jl5yc9bJdgD59r76JCsKkt365z1VlTDT2zQq27nB6g==
-X-Google-Smtp-Source: APXvYqyTWz7vsFkSWeqmmAc/3CkigeFsStgT2GUVzZTu0gvgVhSAV4grA05HzmwhSMJupLXsTiO3LduA2is4dmu8lB0=
-X-Received: by 2002:a17:906:52c8:: with SMTP id w8mr695910ejn.189.1553134134243;
- Wed, 20 Mar 2019 19:08:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RXXjFgQ4kSh1haj12ilofiyo5dCddf6sQWZJ/oZ18SM=;
+        b=f4rlIDYfBwBcRyuAiylx76+adj63lUt8LUAIdbnSlu1/qidwWVoS/BtWeC1XQ43jjE
+         IvSgh+cVdTkUut3/hDhGHITpy542cPlAImg6E8zo8+LKIYc1JSigMPmxOXxr+ANj6aQw
+         Z/O4DimYpZekjgc83alozCPW0NlldY1JPgdbjVhtJBYapHAbzZbWxutxwMconInsfoOX
+         k7yzHwpfkwUgSxeL0J9FTLQAsUP7kSJL+Mo0rYi2+vpU7b9VE2kWutNMFalTeB4eZCfm
+         ga93F6Oqa774VtFn9WVpBh3gh/H2ydItjwKr48drDUsSey8J+3aUjlMfsZE2uTRp9kVc
+         Jsmw==
+X-Gm-Message-State: APjAAAVBd85EoJifZdGDj1TOJ+XZre8kZrXkkAQISekhHEgv8c0Je8Ab
+        Rr4drQ9pvTiK8lkYLmlePt+3zA==
+X-Google-Smtp-Source: APXvYqzK1u4fDsj7xhNYltQ622yVydefHuO+AjF2PeEID/NAoXV9LdMr2La/0fbBF1Bv8bN5oyT9BA==
+X-Received: by 2002:a9d:4d89:: with SMTP id u9mr912146otk.71.1553134169475;
+        Wed, 20 Mar 2019 19:09:29 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id j131sm1482373oia.37.2019.03.20.19.09.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 19:09:28 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 10:09:22 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     shiwanglai@hisilicon.com, mathieu.poirier@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com,
+        alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com
+Subject: Re: [PATCH v2 2/3] coresight: funnel: Support static funnel
+Message-ID: <20190321020922.GA5571@leoy-ThinkPad-X240s>
+References: <1553085490-42870-1-git-send-email-shiwanglai@hisilicon.com>
+ <1553085490-42870-3-git-send-email-shiwanglai@hisilicon.com>
+ <ecfa879e-9fd9-0815-d2da-bb9870d6ae59@arm.com>
 MIME-Version: 1.0
-References: <20190128072948.45788-1-linfish@google.com> <20190315084021.3572-1-linfish@google.com>
- <ef29126b-c118-f91f-3b23-c5103bad232a@xs4all.nl>
-In-Reply-To: <ef29126b-c118-f91f-3b23-c5103bad232a@xs4all.nl>
-From:   Fish Lin <linfish@google.com>
-Date:   Thu, 21 Mar 2019 10:08:43 +0800
-Message-ID: <CAHpF3dfdB_3rvhrAkV42Zt=8-0yif0Pa=n_ZmyqpNXpJGcH3_A@mail.gmail.com>
-Subject: Re: [PATCH v4] Add following V4L2 QP parameters for H.264: *
- V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP * V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP
- * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Smitha T Murthy <smitha.t@samsung.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecfa879e-9fd9-0815-d2da-bb9870d6ae59@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Got it, thanks!
+Hi Suzuki,
 
-Fish
-
-Hans Verkuil <hverkuil-cisco@xs4all.nl> =E6=96=BC 2019=E5=B9=B43=E6=9C=8820=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:00=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> This subject line is insanely long :-)
->
-> Please use a short subject line for v5 (i.e. "Add V4L2 QP parameters for =
-H.264")
-> and mention the actual parameters you are adding in the commit log.
->
-> Some more comments below:
->
-> On 3/15/19 9:40 AM, Fish Lin wrote:
-> > These controls will limit QP range for intra and inter frame,
-> > provide more manual control to improve video encode quality.
-> >
-> > Signed-off-by: Fish Lin <linfish@google.com>
+On Wed, Mar 20, 2019 at 01:52:58PM +0000, Suzuki K Poulose wrote:
+> 
+> 
+> On 20/03/2019 12:38, Wanglai Shi wrote:
+> > From: Leo Yan <leo.yan@linaro.org>
+> > 
+> > Since CoreSight hardware topology can use a 'hidden' funnel in the
+> > trace data path, this kind funnel doesn't have register for accessing
+> > and is used by default from hardware design perspective.  Below is an
+> > example for related hardware topology:
+> > 
+> >    +------+  +------+
+> >    | cpu0 |->| ETM  |-\
+> >    +------+  +------+  \-> +--------+  +-----+
+> >     ......                 | Funnel |->| ETF |-\    Hidden funnel
+> >    +------+  +------+  /-> +--------+  +-----+  \        |
+> >    | cpu3 |->| ETM  |-/                          \       V
+> >    +------+  +------+                             \-> +--------+
+> >                                                       | Funnel |-> ...
+> >    +------+  +------+                             /-> +--------+
+> >    | cpu4 |->| ETM  |-\                          /
+> >    +------+  +------+  \-> +--------+  +-----+  /
+> >     ......                 | Funnel |->| ETF |-/
+> >    +------+  +------+  /-> +--------+  +-----+
+> >    | cpu7 |->| ETM  |-/
+> >    +------+  +------+
+> > 
+> > The CoreSight funnel driver only supports dynamic funnel with
+> > registration register resource, thus it cannot support for the static
+> > funnel case and it's impossible to create trace data path for this case.
+> > 
+> > This patch is to extend CoreSight funnel driver to support both for
+> > static funnel and dynamic funnel.  For the dynamic funnel it reuses the
+> > code existed in the driver, for static funnel the driver will support
+> > device probe if without providing register resource and the driver skips
+> > registers accessing when detect the register base is NULL.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > > ---
-> > Changelog since v3:
-> > - Put document in ext-ctrls-codec.rst instead of extended-controls.rst
-> >   (which was previous version).
-> >
-> > Changelog since v2:
-> > - Add interaction with V4L2_CID_MPEG_VIDEO_H264_MIN/MAX_QP
-> >   description in the document.
-> >
-> > Changelog since v1:
-> > - Add description in document.
-> >
-> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 24 +++++++++++++++++++
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  4 ++++
-> >  include/uapi/linux/v4l2-controls.h            |  6 +++++
-> >  3 files changed, 34 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documen=
-tation/media/uapi/v4l/ext-ctrls-codec.rst
-> > index c97fb7923be5..de60b2e788eb 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > @@ -1048,6 +1048,30 @@ enum v4l2_mpeg_video_h264_entropy_mode -
-> >      Quantization parameter for an B frame for H264. Valid range: from =
-0
-> >      to 51.
-> >
-> > +``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP (integer)``
-> > +    Minimum quantization parameter for H264 I frame, to limit I frame
->
-> H264 -> the H264
-> frame, to -> frame to
->
-> Same below.
->
-> > +    quality in a range. Valid range: from 0 to 51. If
->
-> in -> to
->
-> (you limit a value *to* a range, not 'in a range')
->
-> Same below.
->
-> Regards,
->
->         Hans
->
-> > +    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization para=
-meter
-> > +    should be chosen to meet both requirements.
+> 
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+Will add the tag in next version, and very appreciate you shared me
+offline the replicator code for reference!
+
+> > -static const struct amba_id funnel_ids[] = {
+> > +static int static_funnel_probe(struct platform_device *pdev)
+> > +{
+> > +	int ret;
 > > +
-> > +``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP (integer)``
-> > +    Maximum quantization parameter for H264 I frame, to limit I frame
-> > +    quality in a range. Valid range: from 0 to 51. If
-> > +    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization para=
-meter
-> > +    should be chosen to meet both requirements.
+> > +	pm_runtime_get_noresume(&pdev->dev);
+> > +	pm_runtime_set_active(&pdev->dev);
+> > +	pm_runtime_enable(&pdev->dev);
 > > +
-> > +``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP (integer)``
-> > +    Minimum quantization parameter for H264 P frame, to limit P frame
-> > +    quality in a range. Valid range: from 0 to 51. If
-> > +    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization para=
-meter
-> > +    should be chosen to meet both requirements.
+> > +	/* Static funnel do not have programming base */
+> > +	ret = funnel_probe(&pdev->dev, NULL);
 > > +
-> > +``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP (integer)``
-> > +    Maximum quantization parameter for H264 P frame, to limit P frame
-> > +    quality in a range. Valid range: from 0 to 51. If
-> > +    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization para=
-meter
-> > +    should be chosen to meet both requirements.
+> > +	if (ret) {
+> > +		pm_runtime_put_noidle(&pdev->dev);
+> > +		pm_runtime_disable(&pdev->dev);
+> > +	}
 > > +
-> >  ``V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (integer)``
-> >      Quantization parameter for an I frame for MPEG4. Valid range: from=
- 1
-> >      to 31.
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-=
-core/v4l2-ctrls.c
-> > index b79d3bbd8350..115fb8debe23 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -828,6 +828,10 @@ const char *v4l2_ctrl_get_name(u32 id)
-> >       case V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION:
-> >                                                               return "H=
-264 Constrained Intra Pred";
-> >       case V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET:   return "H=
-264 Chroma QP Index Offset";
-> > +     case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP:           return "H=
-264 I-Frame Minimum QP Value";
-> > +     case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP:           return "H=
-264 I-Frame Maximum QP Value";
-> > +     case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP:           return "H=
-264 P-Frame Minimum QP Value";
-> > +     case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP:           return "H=
-264 P-Frame Maximum QP Value";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "M=
-PEG4 I-Frame QP Value";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP:              return "M=
-PEG4 P-Frame QP Value";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP:              return "M=
-PEG4 B-Frame QP Value";
-> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4=
-l2-controls.h
-> > index 06479f2fb3ae..4421baa84177 100644
-> > --- a/include/uapi/linux/v4l2-controls.h
-> > +++ b/include/uapi/linux/v4l2-controls.h
-> > @@ -535,6 +535,12 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
- {
-> >  #define V4L2_CID_MPEG_VIDEO_H264_HIERARCHICAL_CODING_LAYER_QP        (=
-V4L2_CID_MPEG_BASE+382)
-> >  #define V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION        (=
-V4L2_CID_MPEG_BASE+383)
-> >  #define V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET              (=
-V4L2_CID_MPEG_BASE+384)
+> > +	return ret;
+> > +}
 > > +
-> > +#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP      (V4L2_CID_MPEG_BA=
-SE+390)
-> > +#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP      (V4L2_CID_MPEG_BA=
-SE+391)
-> > +#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP      (V4L2_CID_MPEG_BA=
-SE+392)
-> > +#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP      (V4L2_CID_MPEG_BA=
-SE+393)
-> > +
-> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (V4L2_CID_MPEG_BASE+400)
-> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP (V4L2_CID_MPEG_BASE+401)
-> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP (V4L2_CID_MPEG_BASE+402)
-> >
->
+> > +static const struct of_device_id static_funnel_match[] = {
+> > +	{.compatible = "arm,coresight-funnel"},
+> 
+> There is a potential issue with re-using the "compatible" string
+> already reserved for the normal programmable funnel. We may handle
+> a programmable funnel as non-programmable one, which is not good.
+> 
+> Do we need to use "arm,coresight-static-funnel" ?
+
+This suggestion makes sense, will do this.
+
+> Otherwise, looks good to me.
+
+Thanks for reviewing.
+
+Thanks,
+Leo Yan
