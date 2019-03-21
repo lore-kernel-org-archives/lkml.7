@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1847C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF59C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2092190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477C32190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfCUU73 (ORCPT
+        id S1727298AbfCUU7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:59:29 -0400
+        Thu, 21 Mar 2019 16:59:32 -0400
 Received: from mga18.intel.com ([134.134.136.126]:34980 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbfCUU70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:59:26 -0400
+        id S1727246AbfCUU7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:59:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:26 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="154548123"
+   d="scan'208";a="154548130"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:26 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:28 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 09/23] perf/x86/intel/rapl: Add Icelake support
-Date:   Thu, 21 Mar 2019 13:56:49 -0700
-Message-Id: <20190321205703.4256-10-kan.liang@linux.intel.com>
+Subject: [PATCH V2 12/23] perf/core: Support a REMOVE transaction
+Date:   Thu, 21 Mar 2019 13:56:52 -0700
+Message-Id: <20190321205703.4256-13-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190321205703.4256-1-kan.liang@linux.intel.com>
 References: <20190321205703.4256-1-kan.liang@linux.intel.com>
@@ -45,31 +45,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Icelake support the same RAPL counters as Skylake.
+The TopDown events can be collected per thread/process on Icelake. To
+use TopDown through RDPMC in applications, the metrics and slots MSR
+values have to be saved/restored during context switching.
+It is useful to have a remove transaction when the counter is
+unscheduled, so that the values can be saved correctly.
+Add a remove transaction to the perf core.
 
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
-No changes since V1.
+Changes since V1:
+- Add more explanation in change log
 
- arch/x86/events/intel/rapl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/events/core.c     | 3 +--
+ include/linux/perf_event.h | 1 +
+ kernel/events/core.c       | 5 +++++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 94dc564146ca..37ebf6fc5415 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -775,6 +775,8 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 9378c6b2128f..9c14b4b3e457 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1912,8 +1912,7 @@ static inline void x86_pmu_read(struct perf_event *event)
+  * Set the flag to make pmu::enable() not perform the
+  * schedulability test, it will be performed at commit time
+  *
+- * We only support PERF_PMU_TXN_ADD transactions. Save the
+- * transaction flags but otherwise ignore non-PERF_PMU_TXN_ADD
++ * Save the transaction flags and ignore non-PERF_PMU_TXN_ADD
+  * transactions.
+  */
+ static void x86_pmu_start_txn(struct pmu *pmu, unsigned int txn_flags)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e47ef764f613..fb258c171b2c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -233,6 +233,7 @@ struct perf_event;
+  */
+ #define PERF_PMU_TXN_ADD  0x1		/* txn to add/schedule event on PMU */
+ #define PERF_PMU_TXN_READ 0x2		/* txn to read event group from PMU */
++#define PERF_PMU_TXN_REMOVE 0x4		/* txn to remove event on PMU */
  
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
+ /**
+  * pmu::capabilities flags
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1032a16bd186..dea8cfe2a891 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2032,6 +2032,7 @@ group_sched_out(struct perf_event *group_event,
+ 		struct perf_cpu_context *cpuctx,
+ 		struct perf_event_context *ctx)
+ {
++	struct pmu *pmu = ctx->pmu;
+ 	struct perf_event *event;
+ 
+ 	if (group_event->state != PERF_EVENT_STATE_ACTIVE)
+@@ -2039,6 +2040,8 @@ group_sched_out(struct perf_event *group_event,
+ 
+ 	perf_pmu_disable(ctx->pmu);
+ 
++	pmu->start_txn(pmu, PERF_PMU_TXN_REMOVE);
 +
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
- 	{},
- };
+ 	event_sched_out(group_event, cpuctx, ctx);
  
+ 	/*
+@@ -2051,6 +2054,8 @@ group_sched_out(struct perf_event *group_event,
+ 
+ 	if (group_event->attr.exclusive)
+ 		cpuctx->exclusive = 0;
++
++	pmu->commit_txn(pmu);
+ }
+ 
+ #define DETACH_GROUP	0x01UL
 -- 
 2.17.1
 
