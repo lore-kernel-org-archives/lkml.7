@@ -2,116 +2,194 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA56C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E936C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477BE218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A49218FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BOoXzi1T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PYlkvF8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfCUURr (ORCPT
+        id S1728795AbfCUUUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:17:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46959 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfCUURq (ORCPT
+        Thu, 21 Mar 2019 16:20:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41472 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbfCUUUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:17:46 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c18so6556291otl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:17:46 -0700 (PDT)
+        Thu, 21 Mar 2019 16:20:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d25so5010961pfn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=/wxyUvtToomdZ+5Q9o+FQ/M8e4o6ylXXt1G7gXDkthY=;
-        b=BOoXzi1TLXiHBJG+1HwL+ID2AnLv3oZT6PlJ1aORSU6oRHSSgjPMihc1eXyKPMdyD/
-         AqFJYySnhXSr/0KJyrtQDtju9Fr248wnuBcTNenyPVOZ0PHV8QNzp2jvcn1CbBa6l+An
-         GMsEqyRqcPt8vX6qgUAu9wZb5RYF6Ezu+PIvFDfPlByy+bkmb4Blb0cd9dqhuxowHTZn
-         MTjTD4Bg8pQ9Q9xgazplzVmi36XlNjsp/avPctiTShRqAN8PfMdK3maZbLpXpzZCOXP9
-         hrNEmNbrANp5WxgBJCzg9g832X4/sb7Ijvgq0pfVeoOJ2/arzBW23a2dvX/XrfcOvwke
-         sHqw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qcMYcR3yFN0QONzXnGiY4kl3TCzNnyKaWHKDD4RqjpE=;
+        b=PYlkvF8j4FnA2lq3bYW3edA3pqzuFZU8QR20HY7GbE8aao+HDpaThF6MeSsPHr7vpz
+         3OPQM0nGIkicYG3BZd4Dc/EfL0SjAwOipXuHTOX2hALoxKPt8d5nu0sFSIxBPijOKyAf
+         qyCR+IcB22V77WlAkG5+aN/4AKCdZJER3XK/E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=/wxyUvtToomdZ+5Q9o+FQ/M8e4o6ylXXt1G7gXDkthY=;
-        b=uRLGd58GnGMUMKbJ3z6uIC0LlayX6idpGn/6d+6VYoGpEkNoYn8sVumjyGY1PU/dYy
-         MJVa/nm8lm2GkkIQ73EuWPUG4jJH1oyKO/13jqVn+K6su92erwVuMOana9tmldZOwhNz
-         4PC3ZC+4IeC3KxbemvLcTEzn8jDYDhABMwW+wXFX+FcsDQ7aRwUWfkIZdKvgsatLZdzC
-         ENw0djumGOLwq74obIIROZGWWJDtB3Y3MsWVMMYPYUHC2M0HvcbOajRBrb8Zs7+QafXy
-         M0QjEwfTyjJQZANzW+lEm8DWSYtz1yTbJYy6XIVsoyXGwwnaNHG4U4mFIQYlzkOjkVWn
-         LAQA==
-X-Gm-Message-State: APjAAAXPA5MDmn6VKSI29+xJLwQRkf2vkPww8WdNUSoWjzskocdR6Qdr
-        +4tZ7WcbTWDzRDG84TYVpj3zPL77RVApsV3O2HQ=
-X-Google-Smtp-Source: APXvYqwUYsousOMTeeL8c+A2HnTXT2l2mWYx2JCiWrVy/yAmVWlPJppOWrh94pnxO/J9vbn6442DXbT8N9OeaM9xXRs=
-X-Received: by 2002:a9d:5614:: with SMTP id e20mr3932876oti.348.1553199465574;
- Thu, 21 Mar 2019 13:17:45 -0700 (PDT)
-MIME-Version: 1.0
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 21 Mar 2019 21:17:34 +0100
-Message-ID: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
-Subject: 32-bit Amlogic (ARM) SoC: kernel BUG in kfree()
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qcMYcR3yFN0QONzXnGiY4kl3TCzNnyKaWHKDD4RqjpE=;
+        b=qRBonrIVqYT/0M4cI0V1gLC5KxqDAhct7KdjaW1t3sSEf3/vx4kH+Yq+FVdvKZ/wu+
+         Tm4FF60T6El6aLcx/8MF6NSK1NQ7jT3oYsBFc2pKAQUgj/DkUKRyCow25fIBlDQJEYb+
+         YorvMrbuVCWm1ccBcl/sKu/XwGOK8lfEyf7Td57hUBF93wP7CFsyNwQQQm7laAA/MrRF
+         d/zOAMjeRzq90/gdm2fAsi0rVNnwWUk1LYywGZEFUVE0XXSGaCHMP9fQWWZ1C2HrCeag
+         Vm423xBFWrHCJIpmGmDWZsyTAXRZIsE3Dt4fqB6R8AfzKMNtwXmBNdAO7PZw836cAQo7
+         l43g==
+X-Gm-Message-State: APjAAAVXbjgx0s6OFEgbUrUDKK41xcVCUFZw/8SWiM4CLwP3t7Aq+qao
+        8gBMTlBbqU/NjvO3vI+5dZaepA==
+X-Google-Smtp-Source: APXvYqzywrWVhwVbf2rF0upBRui/l9at63AH63pk55vq3yUJ5GgP1FRmIS3QB9tMWOnTtoqUho/glw==
+X-Received: by 2002:a17:902:b60c:: with SMTP id b12mr5371408pls.261.1553199607361;
+        Thu, 21 Mar 2019 13:20:07 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id a7sm7252905pff.54.2019.03.21.13.20.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 13:20:06 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     mka@chromium.org, ryandcase@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Cc:     akpm@linux-foundation.org, mhocko@suse.com, willy@infradead.org,
-        rppt@linux.ibm.com, linux-amlogic@lists.infradead.org,
-        liang.yang@amlogic.com, linux@armlinux.org.uk,
-        linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] ARM: dts: rockchip: Add vdd_logic to rk3288-veyron
+Date:   Thu, 21 Mar 2019 13:19:44 -0700
+Message-Id: <20190321201944.34684-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The vdd_logic rail controls the voltage supplied to misc logic on
+rk3288, including the voltage supplied to the memory controller.  The
+vcc logic is implemented by a PWM regulator.
 
-I am experiencing the following crash:
-  ------------[ cut here ]------------
-  kernel BUG at mm/slub.c:3950!
-  Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
-  Modules linked in:
-  CPU: 1 PID: 1 Comm: swapper/0 Not tainted
-5.1.0-rc1-00080-g37b8cb064293-dirty #4252
-  Hardware name: Amlogic Meson platform
-  PC is at kfree+0x250/0x274
-  LR is at meson_nfc_exec_op+0x3b0/0x408
-  ...
-my goal is to add support for the 32-bit Amlogic Meson SoCs (ARM
-Cortex-A5 / Cortex-A9 cores) in the meson-nand driver.
+Right now there are no consumers of vdd_logic on veyron but if anyone
+ever wants to try to add DDR Freq they'd need it.
 
-I have traced this crash to the kfree() in meson_nfc_read_buf().
-my observation is as follows:
-- meson_nfc_read_buf() is called 7 times without any crash, the
-kzalloc() call returns 0xe9e6c600 (virtual address) / 0x29e6c600
-(physical address)
-- the eight time meson_nfc_read_buf() is called kzalloc() call returns
-0xee39a38b (virtual address) / 0x2e39a38b (physical address) and the
-final kfree() crashes
-- changing the size in the kzalloc() call from PER_INFO_BYTE (= 8) to
-PAGE_SIZE works around that crash
-- disabling the meson-nand driver makes my board boot just fine
-- Liang has tested the unmodified code on a 64-bit Amlogic SoC (ARM
-Cortex-A53 cores) and he doesn't see the crash there
+Note that in the downstream Chrome OS kernel the PWM regulator has
+a voltage table with these points:
+  1350000 0%
+  1300000 10%
+  1250000 20%
+  1200000 31%
+  1150000 41%
+  1125000 46%
+  1100000 52%
+  1050000 62%
+  1000000 72%
+   950000 83%
 
-in case the selected SLAB allocator is relevant:
-  CONFIG_SLUB=y
+The DDR Freq driver in the downstream kernel only uses some of those
+points, namely:
+  DDR3:  1200000, 1150000, 1100000, 1050000
+  LPDDR:          1150000, 1100000, 1050000
 
-the following printk statement is used to print the addresses returned
-by the kzalloc() call in meson_nfc_read_buf():
-  printk("%s 0x%px 0x%08x\n", __func__, info, virt_to_phys(info));
+When adapting the downstream kernel to upstream I have opted to switch
+to using the "continuous" mode of the PWM regulator driver.  This was
+the only way I could get the upstream driver to achieve _exactly_ the
+same voltages as the downstream driver could.  Specifically note that
+the old driver in downstream Chrome OS 3.14 _didn't_ have the
+DIV_ROUND_CLOSEST_ULL() in the Rockchip PLL driver.  That means if I
+use the same (downstream) table I might end up with a duty cycle
+that's 1 larger than was used downstream, leading to a slightly
+different voltage.  Due to the way the rounding worked I couldn't even
+just adjust the "percent" by 1 for a given voltage level--certain duty
+cycles just aren't achievable with the upstream math for voltage
+tables.
 
-my questions are:
-- why does kzalloc() return an unaligned address 0xee39a38b (virtual
-address) / 0x2e39a38b (physical address)?
-- how can further analyze this issue?
-- (I don't know where to start analyzing: in mm/, arch/arm/mm, the
-meson-nand driver seems to work fine on the 64-bit SoCs but that
-doesn't fully rule it out, ...)
+Using continuous mode you can achieve the exact same duty cycle by
+simply adjusting the voltage you use by a tad bit.  The voltages that
+are equivalent to the ones used in the downstream kernel's table are:
+  1350000, 1304472, 1255691, 1200407, 1154878,
+  1128862, 1099593, 1050813, 1005285, 950000
 
+Note that the top/bottom voltage is exactly the same just due to the
+way that continuous mode is calculated and the fact that I used those
+as anchors.  I didn't make any attempt to do the resistor math (as was
+done on rk3399-gru).
 
-Regards
-Martin
+If anyone ever gets DDRFreq working on veyron upstream they should
+thus adjust the voltage specified in the DDRFreq operating points
+slightly (as per the above) to obtain the existing/tested values.  AKA
+you'd use:
+  DDR3:  1200407, 1154878, 1099593, 1050813
+  LPDDR:          1154878, 1099593, 1050813
+
+A few other notes:
+- The "period" here (1994) is different than the "period" downstream
+  (2000) for similar reasons: there's a DIV_ROUND_CLOSEST_ULL() that
+  wasn't downstream.  With 1994 upstream comes up with the same value
+  (0x94) to program into the hardware that downstream put there.  As
+  far as I can tell 0x94 actually means 1993.27.
+- The duty cycle unit of 0x94 was picked by just matching the period
+  which nicely allows us to insert 0x7b as that value to program into
+  the hardware for 950mV.  The 0x7b was found by observing what the
+  downstream kernel calculated (not that the system can actually run
+  with vdd_log at 950 mV).
+- The downstream kernel can also be seen to program a different value
+  into the CTRL field.  Upstream achieves 0x0b and downstream 0x1b.
+  This is because the upstream commit bc834d7b07b4 ("pwm: rockchip:
+  Move the configuration of polarity") fixed a bug by adding "ctrl &=
+  ~PWM_POLARITY_MASK".  Downstream accidentally left bit 4 set.
+  Luckily this bit doesn't matter--it's only used when the PWM goes
+  inactive (AKA if it's in oneshot mode or is disabled) and we don't
+  do that for the PWM regulator.
+
+I measured the voltage of vdd_log while adjusting it and found that
+with the upstream kernel voltage difference between requested and
+actual was 9.2 mV at 950 mV and 13.4 mV at 1350 mV with in-between
+voltages consistently showing ~1% error.  This error is likely
+expected as voltage can be seen to sag a bit when more load is put on
+the rail.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 0bc2409f6903..5181d9435fda 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -95,6 +95,23 @@
+ 		regulator-boot-on;
+ 		vin-supply = <&vcc_5v>;
+ 	};
++
++	vdd_logic: vdd-logic {
++		compatible = "pwm-regulator";
++		regulator-name = "vdd_logic";
++
++		pwms = <&pwm1 0 1994 0>;
++		pwm-supply = <&vcc33_sys>;
++
++		pwm-dutycycle-range = <0x7b 0>;
++		pwm-dutycycle-unit = <0x94>;
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <950000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-ramp-delay = <4000>;
++	};
+ };
+ 
+ &cpu0 {
+-- 
+2.21.0.225.g810b269d1ac-goog
+
