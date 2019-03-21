@@ -2,173 +2,119 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC38C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8200AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4CF21873
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553158202;
-	bh=XSWuPKYhVJNxxnEnw2+AYoZ1WS6KpMkjKCizRx2xRMI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YL4FvOYzCBlwZzRj+PRCL8df+eMkDKWr6hWc0YnhZubCIHRB9tmn68BstR9Bm6VJY
-	 RPq9IjwxgRLi3O3PVQSAGd5T0CBJOkbzUF5in2DaUVYsTgTMOhZhsPD6UEUcrnP9bV
-	 2IzGenN1IPUXEVIl+ZsWIJ0Tpj8k9Q81i7ZJMXxc=
+	by mail.kernel.org (Postfix) with ESMTP id 57ECA21873
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfCUIuB (ORCPT
+        id S1728261AbfCUIuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:50:01 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41388 "EHLO
-        wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbfCUItD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:49:03 -0400
-Received: by wens.csie.org (Postfix, from userid 1000)
-        id 237075FCE3; Thu, 21 Mar 2019 16:48:59 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 0/9] ARM: sun8i: a83t: Enable USB OTG
-Date:   Thu, 21 Mar 2019 16:48:41 +0800
-Message-Id: <20190321084850.20769-1-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Mar 2019 04:50:08 -0400
+Received: from www62.your-server.de ([213.133.104.62]:59758 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfCUIuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 04:50:06 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h6tOm-00028l-OZ; Thu, 21 Mar 2019 09:50:04 +0100
+Received: from [178.197.248.24] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h6tOm-000Rdr-Hu; Thu, 21 Mar 2019 09:50:04 +0100
+Subject: Re: [PATCH] bpf: do not restore dst_reg when cur_state is freed
+To:     Xu Yu <xuyu@linux.alibaba.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <fe7367c5-b172-709f-1ba2-61136a74081e@iogearbox.net>
+Date:   Thu, 21 Mar 2019 09:50:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
+In-Reply-To: <eec7905a71d207f7612e9d86e1bf59c43efc65a4.1553156792.git.xuyu@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.2/25394/Wed Mar 20 08:52:02 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On 03/21/2019 09:31 AM, Xu Yu wrote:
+> Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
+> Call trace:
+>   dump_stack+0xbf/0x12e
+>   print_address_description+0x6a/0x280
+>   kasan_report+0x237/0x360
+>   sanitize_ptr_alu+0x85a/0x8d0
+>   adjust_ptr_min_max_vals+0x8f2/0x1ca0
+>   adjust_reg_min_max_vals+0x8ed/0x22e0
+>   do_check+0x1ca6/0x5d00
+>   bpf_check+0x9ca/0x2570
+>   bpf_prog_load+0xc91/0x1030
+>   __se_sys_bpf+0x61e/0x1f00
+>   do_syscall_64+0xc8/0x550
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Fault injection trace:
+>   kfree+0xea/0x290
+>   free_func_state+0x4a/0x60
+>   free_verifier_state+0x61/0xe0
+>   push_stack+0x216/0x2f0	          <- inject failslab
+>   sanitize_ptr_alu+0x2b1/0x8d0
+>   adjust_ptr_min_max_vals+0x8f2/0x1ca0
+>   adjust_reg_min_max_vals+0x8ed/0x22e0
+>   do_check+0x1ca6/0x5d00
+>   bpf_check+0x9ca/0x2570
+>   bpf_prog_load+0xc91/0x1030
+>   __se_sys_bpf+0x61e/0x1f00
+>   do_syscall_64+0xc8/0x550
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> When kzalloc() fails in push_stack(), free_verifier_state() will free
+> current verifier state. As push_stack() returns, dst_reg was restored
+> if ptr_is_dst_reg is false. However, as member of the cur_state, dst_reg
+> is also freed, and error occurs when dereferencing dst_reg.
+> 
+> Simply fix it by checking whether cur_state is NULL before retoring
+> dst_reg.
+> 
+> Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
+> ---
+>  kernel/bpf/verifier.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index ce166a0..018ce4f 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -3368,7 +3368,7 @@ static int sanitize_ptr_alu(struct bpf_verifier_env *env,
+>  		*dst_reg = *ptr_reg;
+>  	}
+>  	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
+> -	if (!ptr_is_dst_reg)
+> +	if (!ptr_is_dst_reg && env->cur_state)
+>  		*dst_reg = tmp;
 
-Hi everyone,
+Good catch, test should be more obvious rewritten as:
 
-This is v3 of my A83T USB power supply / OTG series. Changes since v2:
+  if (!ptr_is_dst_reg && ret)
 
-  - Added Rob's ack for dt bindings patch
-  - Rebased onto v5.1-rc1
+Could you resubmit with that?
 
-Changes since v1:
+>  	return !ret ? -EFAULT : 0;
+>  }
+> 
 
-  - Added Lee's ack for mfd patch
-  - Make axp803_usb_power_supply_resources[] const
-
-This series has since been tested. Both host mode and gadget mode work
-well. However this SoC seems to have a glitch in hardware. After host
-mode is used by plugging in a host mode cable, the hardware will not
-revert back to gadget mode if a standard USB cable is plugged in. Host
-mode continues to work however. This will likely have to be addressed
-with some workaround in either the musb driver or our USB PHY driver.
-
-The patches have no cross-tree dependencies, so each part can go through
-their respective trees (power-supply / mfd / arm-soc).
-
-I also have some follow-up patches to enable the USB power supply on
-AXP803 / A64. It's the boiler-plate mfd cell and device node addition.
-
-Original cover letter follows:
-
-This series enables USB OTG on the A83T boards. The AXP813/AXP818 PMICs
-used with the A83T have the same behavior as the AXP221 and AXP223,
-where if the N_VBUSEN pin is driven high, the VBUS sensing interrupts
-stop working. In the past Hans made a polling workaround in the USB PHY
-driver. In this series polling is added to the power supply driver.
-
-The power supply driver work was started by Quentin, and shared with me
-when I expressed interest in getting USB OTG to work some time ago.
-Neither of us got around to finishing it, until now that is.
-
-Patch 1 adds a new compatible string for the AXP813 VBUS power supply
-part.
-
-Patch 2 is a bit of cleanup work for the driver.
-
-Patch 3 allows disabling VBUS input current limiting on the AXP20x /
-AXP22x PMICs. While not strictly related to this series, I found it
-easier to just send everything together. This patch depends on the
-previous one.
-
-Patch 4 adds the VBUS status polling feature. This is enabled on AXP221
-and all later PMICs.
-
-Patch 5 factors out code to read out the configured input current limit
-for the AXP20x and AXP22x PMICs. As the AXP813 uses different values,
-factoring out the code based on model will make the main function more
-readable.
-
-Patch 6 adds support for the AXP813 VBUS power supply. checkpatch.pl
-reports a few warnings for this patch:
-
-    WARNING: Possible switch case/default not preceded by break or
-    fallthrough comment
-    #100: FILE: drivers/power/supply/axp20x_usb_power.c:306:
-    +       case 1500000:
-
-    WARNING: Possible switch case/default not preceded by break or
-    fallthrough comment
-    #101: FILE: drivers/power/supply/axp20x_usb_power.c:307:
-    +       case 2000000:
-
-    WARNING: Possible switch case/default not preceded by break or
-    fallthrough comment
-    #102: FILE: drivers/power/supply/axp20x_usb_power.c:308:
-    +       case 2500000:
-
-However they seem to be a false positive. The preceding line of the
-reported lines is a return statement, which is definitely not a
-fallthrough.
-
-Patch 7 adds an mfd cell for the newly supported VBUS power supply.
-
-Patch 8 adds a device node for the VBUS power supply to the common
-axp81x dtsi file.
-
-Patch 9 enables USB OTG on the Cubietruck Plus and Bananapi M3.
-
-Please have a look, and also test it on boards you have, and don't
-limit it to just the A83T ones. As mentioned above, the polling feature
-affects all boards that have an AXP221 or newer PMIC.
-
-I haven't removed the polling workaround from the USB PHY driver yet.
-That would be the next step after this series is merged, and preferrably
-a release has passed.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (5):
-  dt-bindings: power: supply: axp20x_usb_power: add axp813 compatible
-  power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
-  power: supply: axp20x_usb_power: allow disabling input current
-    limiting
-  power: supply: axp20x_usb_power: use polling to detect vbus status
-    change
-  ARM: dts: sun8i: a83t: Enable USB OTG controller on some boards
-
-Quentin Schulz (4):
-  power: supply: axp20x_usb_power: add function to get max current
-  power: supply: axp20x_usb_power: add support for AXP813
-  mfd: axp20x: add USB power supply mfd cell to AXP813
-  ARM: dtsi: axp81x: add USB power supply node
-
- .../power/supply/axp20x_usb_power.txt         |   1 +
- arch/arm/boot/dts/axp81x.dtsi                 |   4 +
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  12 ++
- .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  12 ++
- drivers/mfd/axp20x.c                          |  11 ++
- drivers/power/supply/axp20x_usb_power.c       | 184 +++++++++++++++---
- 6 files changed, 197 insertions(+), 27 deletions(-)
-
--- 
-2.20.1
-
+Thanks,
+Daniel
