@@ -2,170 +2,104 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE082C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C50FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B172D218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A65B218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfCUGiS (ORCPT
+        id S1727829AbfCUGkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 02:38:18 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:11591 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726371AbfCUGiR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 02:38:17 -0400
-X-IronPort-AV: E=Sophos;i="5.60,251,1549900800"; 
-   d="scan'208";a="57284357"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 21 Mar 2019 14:38:15 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 1B8904CD5A09;
-        Thu, 21 Mar 2019 14:37:45 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 21 Mar 2019 14:38:24 +0800
-Date:   Thu, 21 Mar 2019 14:37:40 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-CC:     <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190321063740.GG1590@localhost.localdomain>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+        Thu, 21 Mar 2019 02:40:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43344 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727661AbfCUGkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 02:40:39 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C03C20269;
+        Thu, 21 Mar 2019 06:40:39 +0000 (UTC)
+Received: from localhost (ovpn-12-72.pek2.redhat.com [10.72.12.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2CBDA600C1;
+        Thu, 21 Mar 2019 06:40:31 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 14:40:29 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        pasha.tatashin@oracle.com, mhocko@suse.com,
+        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
+Message-ID: <20190321064029.GW18740@MiWiFi-R3L-srv>
+References: <20190320073540.12866-1-bhe@redhat.com>
+ <20190320111959.GV19508@bombadil.infradead.org>
+ <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
+ <20190320122243.GX19508@bombadil.infradead.org>
+ <20190320123658.GF13626@rapoport-lnx>
+ <20190320125843.GY19508@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: 1B8904CD5A09.AAEE8
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+In-Reply-To: <20190320125843.GY19508@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 21 Mar 2019 06:40:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:19:31PM +0800, Pingfan Liu wrote:
+Hi all,
 
-I tested it in Qemu test with 12G memory, and set crashkernel=6G@6G.
-Without this PATCH, it successed to reserve memory just 4 times(total
-10 times).
-With this PATCH, it successed to reserve memory 15 times(total 15
-times).
+On 03/20/19 at 05:58am, Matthew Wilcox wrote:
+> On Wed, Mar 20, 2019 at 02:36:58PM +0200, Mike Rapoport wrote:
+> > There are more than a thousand -EEXIST in the kernel, I really doubt all of
+> > them mean "File exists" ;-)
+> 
+> And yet that's what the user will see if it's ever printed with perror()
+> or similar.  We're pretty bad at choosing errnos; look how abused
+> ENOSPC is:
 
-So I think if you post new version, you can add:
+When I tried to change -EEXIST to -EBUSY, seems the returned value will
+return back over the whole path. And -EEXIST is checked explicitly
+several times during the path. 
 
-Tested-by: Chao Fan <fanc.fnst@cn.fujitsu.com>
+acpi_memory_enable_device -> __add_pages .. -> __add_section -> sparse_add_one_section
 
-Thanks,
-Chao Fan
+Only look into hotplug path triggered by ACPI event, there are also
+device memory and ballon memory paths I haven't checked carefully
+because not familiar with them.
 
->crashkernel=x@y option may fail to reserve the required memory region if
->KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
->skip the required region.
->
->Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Ingo Molnar <mingo@redhat.com>
->Cc: Borislav Petkov <bp@alien8.de>
->Cc: "H. Peter Anvin" <hpa@zytor.com>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Will Deacon <will.deacon@arm.com>
->Cc: Nicolas Pitre <nico@linaro.org>
->Cc: Pingfan Liu <kernelfans@gmail.com>
->Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
->Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->Cc: linux-kernel@vger.kernel.org
->---
->v1 -> v2: fix some trival format
->
-> arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
-> 1 file changed, 24 insertions(+), 2 deletions(-)
->
->diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
->index 9ed9709..e185318 100644
->--- a/arch/x86/boot/compressed/kaslr.c
->+++ b/arch/x86/boot/compressed/kaslr.c
->@@ -109,6 +109,7 @@ enum mem_avoid_index {
-> 	MEM_AVOID_BOOTPARAMS,
-> 	MEM_AVOID_MEMMAP_BEGIN,
-> 	MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
->+	MEM_AVOID_CRASHKERNEL,
-> 	MEM_AVOID_MAX,
-> };
-> 
->@@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
-> 	}
-> }
-> 
->+/* parse crashkernel=x@y option */
->+static void mem_avoid_crashkernel_simple(char *option)
->+{
->+	unsigned long long crash_size, crash_base;
->+	char *cur = option;
->+
->+	crash_size = memparse(option, &cur);
->+	if (option == cur)
->+		return;
->+
->+	if (*cur == '@') {
->+		option = cur + 1;
->+		crash_base = memparse(option, &cur);
->+		if (option == cur)
->+			return;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
->+	}
->+}
-> 
-> static void handle_mem_options(void)
-> {
->@@ -250,7 +270,7 @@ static void handle_mem_options(void)
-> 	u64 mem_size;
-> 
-> 	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
->-		!strstr(args, "hugepages"))
->+		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
-> 		return;
-> 
-> 	tmp_cmdline = malloc(len + 1);
->@@ -286,6 +306,8 @@ static void handle_mem_options(void)
-> 				goto out;
-> 
-> 			mem_limit = mem_size;
->+		} else if (strstr(param, "crashkernel")) {
->+			mem_avoid_crashkernel_simple(val);
-> 		}
-> 	}
-> 
->@@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
-> 
-> 	/* We don't need to set a mapping for setup_data. */
-> 
->-	/* Mark the memmap regions we need to avoid */
->+	/* Mark the regions we need to avoid */
-> 	handle_mem_options();
-> 
-> #ifdef CONFIG_X86_VERBOSE_BOOTUP
->-- 
->2.7.4
->
->
->
+So from the checking, I tend to agree with Oscar and Mike. There have
+been so many places to use '-EEXIST' to indicate that stuffs checked have
+been existing. We can't deny it's inconsistent with term explanation
+text. While the defense is that -EEXIST is more precise to indicate a
+static instance has been present when we want to create it, but -EBUSY
+is a little blizarre. I would rather see -EBUSY is used on a device.
+When want to stop it or destroy it, need check if it's busy or not.
 
+#define EBUSY           16      /* Device or resource busy */
+#define EEXIST          17      /* File exists */
 
+Obviously saying resource busy or not, it violates semanics in any
+language. So many people use EEXIST instead, isn't it the obsolete
+text's fault?
+
+Personal opinion.
+
+Thanks
+Baoquan
+> 
+> $ errno ENOSPC
+> ENOSPC 28 No space left on device
+> 
+> net/sunrpc/auth_gss/gss_rpc_xdr.c:              return -ENOSPC;
+> 
+> ... that's an authentication failure, not "I've run out of disc space".
