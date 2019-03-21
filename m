@@ -2,82 +2,102 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45803C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4072D218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF33218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfCUQSq (ORCPT
+        id S1728357AbfCUQTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:18:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34664 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfCUQSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:18:46 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EAE77307D973;
-        Thu, 21 Mar 2019 16:18:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.32])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8D92E60BF2;
-        Thu, 21 Mar 2019 16:18:43 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 21 Mar 2019 17:18:44 +0100 (CET)
-Date:   Thu, 21 Mar 2019 17:18:41 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     syzbot <syzbot+eab6e18f95a9fe69005e@syzkaller.appspotmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org,
-        ravi.bangoria@linux.ibm.com, rostedt@goodmis.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in delayed_uprobe_remove
-Message-ID: <20190321161841.GA12297@redhat.com>
-References: <000000000000ec1b3805799d0a56@google.com>
- <000000000000737c07058498aea1@google.com>
+        Thu, 21 Mar 2019 12:19:43 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38689 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfCUQTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:19:43 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h70Ps-0000Uj-0a; Thu, 21 Mar 2019 17:19:40 +0100
+Date:   Thu, 21 Mar 2019 17:19:39 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Prasad Sodagudi <psodagud@codeaurora.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] genirq: call cancel_work_sync from
+ irq_set_affinity_notifier
+In-Reply-To: <1553119211-29761-1-git-send-email-psodagud@codeaurora.org>
+Message-ID: <alpine.DEB.2.21.1903211651030.1784@nanos.tec.linutronix.de>
+References: <1553119211-29761-1-git-send-email-psodagud@codeaurora.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000737c07058498aea1@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 21 Mar 2019 16:18:46 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iiuc,
+Prasad,
 
-#syz fix: Uprobes: Fix kernel oops with delayed_uprobe_remove()
+On Wed, 20 Mar 2019, Prasad Sodagudi wrote:
 
-On 03/21, syzbot wrote:
->
-> syzbot has bisected this bug to:
-> 
-> commit a6ca88b241d5e929e6e60b12ad8cd288f0ffa256
-> Author: Song Liu <songliubraving@fb.com>
-> Date:   Tue Oct 2 05:36:36 2018 +0000
-> 
->     trace_uprobe: support reference counter in fd-based uprobe
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c86993200000
-> start commit:   a6ca88b2 trace_uprobe: support reference counter in fd-bas..
-> git tree:       linux-next
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11c86993200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16c86993200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2a22859d870756c1
-> dashboard link: https://syzkaller.appspot.com/bug?extid=eab6e18f95a9fe69005e
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137174f5400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1278485d400000
-> 
-> Reported-by: syzbot+eab6e18f95a9fe69005e@syzkaller.appspotmail.com
-> Fixes: a6ca88b241d5 ("trace_uprobe: support reference counter in fd-based
-> uprobe")
+> Subject: [PATCH] genirq: call cancel_work_sync from irq_set_affinity_notifier
 
+Please do not decribe WHAT the code change is. Give a consice explanation
+WHY this change is done. The above is like '[PATCH] foo: Increment bar by 5'.
+
+  [PATCH] genirq: Prevent UAF and work list corruption
+
+> When ever notification of IRQ affinity changes, call
+> cancel_work_sync from irq_set_affinity_notifier to cancel
+> all pending works to avoid work list corruption.
+
+Again, you describe first WHAT you are doing instead of telling WHY.
+
+  When irq_set_affinity_notifier() replaces the notifier, then the
+  reference count on the old notifier is dropped which causes it to be
+  freed. But nothing ensures that the old notifier is not longer queued in
+  the work list. If it is queued this results in a use after free and
+  possibly in work list corruption.
+
+  Ensure that the work is canceled before the reference is dropped.
+
+See?
+
+This gives precise context first and then describes the cure.
+
+Also it is completely irrelevant whether this is achieved by calling
+cancel_work_sync() or by something else. What matters is that it's
+canceled. Changelogs describe context and concepts not implementation
+details. The implementation details are in the patch itself.
+
+> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> ---
+>  kernel/irq/manage.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index 9ec34a2..da8b2ee 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -356,6 +356,9 @@ static void irq_affinity_notify(struct work_struct *work)
+>  	desc->affinity_notify = notify;
+>  	raw_spin_unlock_irqrestore(&desc->lock, flags);
+>  
+> +	if (!notify && old_notify)
+> +		cancel_work_sync(&old_notify->work);
+
+That '!notify' doesn't make any sense.
+
+Thanks,
+
+	tglx
