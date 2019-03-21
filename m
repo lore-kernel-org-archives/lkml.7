@@ -2,85 +2,122 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CCAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A368C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21699218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5467F218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfCUKLz (ORCPT
+        id S1725985AbfCUKLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:11:55 -0400
-Received: from skyboo.net ([94.40.87.198]:44500 "EHLO skyboo.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbfCUKLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 06:11:54 -0400
-Received: from [10.1.0.1] (helo=nemesis.skyboo.net)
-        by skyboo.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.91)
-        (envelope-from <manio@skyboo.net>)
-        id 1h6ufo-0006iu-D4; Thu, 21 Mar 2019 11:11:48 +0100
-Date:   Thu, 21 Mar 2019 11:11:43 +0100
-From:   Mariusz Bialonczyk <manio@skyboo.net>
-To:     Evgeniy Polyakov <zbr@ioremap.net>
-Cc:     Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
+Received: from mx2.suse.de ([195.135.220.15]:55332 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727986AbfCUKLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:11:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E01CB0BA;
+        Thu, 21 Mar 2019 10:11:52 +0000 (UTC)
+Message-ID: <1553163110.5084.11.camel@suse.de>
+Subject: Re: [PATCH v2] efi: Unify dmi setup code over architectures
+ arm/arm64, io64 and x86
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Robert Richter <rrichter@marvell.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Marcin Benka <mbenka@marvell.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <greg@kroah.com>
-Message-Id: <20190321111143.c54afe794f1de222a0cd020a@skyboo.net>
-In-Reply-To: <9351961553005269@iva4-406defa25fee.qloud-c.yandex.net>
-References: <20190318092737.8170-1-manio@skyboo.net>
-        <20190318092737.8170-3-manio@skyboo.net>
-        <6836A9A3-AF86-4E2F-9215-647CB36E22DA@gmail.com>
-        <9351961553005269@iva4-406defa25fee.qloud-c.yandex.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
+Date:   Thu, 21 Mar 2019 11:11:50 +0100
+In-Reply-To: <CAKv+Gu899a5FpMqOzF5EVgsHRk37_PBxW8kVicgc8ST3=R_VUA@mail.gmail.com>
+References: <20190320130502.16667-1-rrichter@marvell.com>
+         <20190320131607.vgst3r7ynha55ikw@rric.localdomain>
+         <20190320152240.2eun63wqkbqmuqkg@rric.localdomain>
+         <CAKv+Gu8HKUQPr7TaUm7EwdVFasUitAPBJFotpG43nNAKMBvxdA@mail.gmail.com>
+         <20190321093920.beng2d3tbfvydbud@rric.localdomain>
+         <CAKv+Gu899a5FpMqOzF5EVgsHRk37_PBxW8kVicgc8ST3=R_VUA@mail.gmail.com>
+Organization: Suse Linux
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 10.1.0.1
-X-SA-Exim-Rcpt-To: zbr@ioremap.net, jeff.dagenais@gmail.com, linux-kernel@vger.kernel.org, greg@kroah.com
-X-SA-Exim-Mail-From: manio@skyboo.net
-Subject: Re: [PATCH 2/2] w1: fix the resume command API
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on skyboo.net)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evgeniy,
+On Thu, 2019-03-21 at 10:51 +0100, Ard Biesheuvel wrote:
+> On Thu, 21 Mar 2019 at 10:39, Robert Richter <rrichter@marvell.com> wrote:
+> > 
+> > On 20.03.19 23:02:09, Ard Biesheuvel wrote:
+> > > On Wed, 20 Mar 2019 at 16:23, Robert Richter <rrichter@marvell.com> wrote:
+> > > > 
+> > > > On 20.03.19 14:16:07, Robert Richter wrote:
+> > > > > On 20.03.19 13:05:37, Robert Richter wrote:
+> > > > > > @@ -167,6 +167,7 @@ static int __init arm_dmi_init(void)
+> > > > > >      * itself, depends on dmi_scan_machine() having been called already.
+> > > > > >      */
+> > > > > >     dmi_scan_machine();
+> > > > > > +   dmi_memdev_walk();
+> > > > > >     if (dmi_available)
+> > > > > >             dmi_set_dump_stack_arch_desc();
+> > > > > >     return 0;
+> > > > > 
+> > > > > After
+> > > > > 
+> > > > >  [PATCH] efi/arm: Show SMBIOS bank/device location in cper and
+> > > > >   ghes error logs
+> > > > > 
+> > > > > wents in for arm/arm64, we can unify the code. See patch below.
+> > > > 
+> > > > V2 with the fix in arm_dmi_init() below.
+> > > > 
+> > > > -Robert
+> > > > 
+> > > > 
+> > > > -- >8 --
+> > > > From: Robert Richter <rrichter@marvell.com>
+> > > > Subject: [PATCH v2] efi: Unify dmi setup code over architectures arm/arm64,
+> > > >  io64 and x86
+> > > > 
+> > > > All architectures (arm/arm64, io64 and x86) do the same here, so unify
+> > > > the code.
+> > > > 
+> > > > Note: We do not need to call dump_stack_set_arch_desc() in case of
+> > > > !dmi_available. Both strings, dmi_ids_string and dump_stack_arch_
+> > > > desc_str are initialized zero and thus nothing would change.
+> > > > 
+> > > 
+> > > I don't understand the last sentence - we do not need to call
+> > > dump_stack_set_arch_desc() when !dmi_available, but we do so anyway,
+> > > right? Doesn't that wipe the arch description we set based on the DT
+> > > machine name?
+> > 
+> > No, in dmi_setup() we exit early when !dmi_available. So for arm/arm64
+> > nothing changed. But for x86 and ia64 we no longer call dump_stack_
+> > set_arch_desc() in this case. This is ok since both strings,
+> > dmi_ids_string and dump_stack_arch_desc_str, are initialized zero and
+> > copying one to the other does not change anything.
+> > 
+> 
+> Ah, of course. Apologies for not reading more carefully.
+> 
+> I'll take this patch via the EFI tree.
 
-On Tue, 19 Mar 2019 17:21:09 +0300
-Evgeniy Polyakov <zbr@ioremap.net> wrote:
+I like the idea. If this is not going through my tree then:
 
-> Looks like this may break the search logic, can you check that with this patch applied
-> some other single slave device will correctly 'tell' its id and it can be addressed via match rom (like, basically, just reading temperature or something like that)?
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-Yes, I have tested it in a mixed environment (regarding single slave/multidrop):
-
-/sys/devices/w1_bus_master5 # ll
-total 0
-drwxr-xr-x    9 root     0                0 Mar 21 10:53 .
-drwxr-xr-x   17 root     0                0 Mar  2 16:49 ..
-drwxr-xr-x    4 root     0                0 Mar 21 10:55 28-00000921ff5e
-drwxr-xr-x    3 root     0                0 Mar 21 11:04 29-0000001246a4
-drwxr-xr-x    3 root     0                0 Mar 21 11:04 29-0000001246b1
-drwxr-xr-x    3 root     0                0 Mar 21 11:04 29-0000001246b9
-drwxr-xr-x    3 root     0                0 Mar 21 10:54 29-0000001246bc
-drwxr-xr-x    3 root     0                0 Mar 21 10:53 3a-0000000f354f
-
-/sys/devices/w1_bus_master6 # ll
-total 0
-drwxr-xr-x    4 root     0                0 Mar 21 10:54 .
-drwxr-xr-x   17 root     0                0 Mar  2 16:49 ..
-drwxr-xr-x    3 root     0                0 Mar 21 11:07 29-0000001246a9
-
-No problem with searching and using other slaves on the bus.
-
-regards,
 -- 
-Mariusz Białończyk | xmpp/e-mail: manio@skyboo.net
-https://skyboo.net | https://github.com/manio
+Jean Delvare
+SUSE L3 Support
