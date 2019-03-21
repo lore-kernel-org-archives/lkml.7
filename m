@@ -2,57 +2,57 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2FCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6615218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED16121916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553194491;
-	bh=hquvzVfAQ9nusv7xNWA4lQd4VSOdCHXbeVXWkbiZdGw=;
+	s=default; t=1553194496;
+	bh=lYQ/n+Y4xHMgqy5KFfFhkHGsSUQC2fiJ3KQ/lK4k1yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpJDi3z4Q89SQIysS8x4Nh09OLp1ccPOTrlAi1Yvs2kryMxDKEZ2r3UU6sAYbvIq3
-	 68hXOIhZxqqucykoVkGFKGaYPzYdlVOweC4lT8q0sfg+5QbcUATiphNsz7BCyiJDUf
-	 DY+qOro32X3QwU7QZLc6AZeaob0JPBT78LeTVCUY=
+	b=zgY+wt7Tk465xCNa1mRi4lVsmyPnyeXy8Fl7VINAlgToo3Ut7uzGFInLrXBgmFCJ5
+	 sI4797hBPfsIWlaHnzjiidW2EAYTFX17N0xxjYkEgD+KN98mHLVLhFNieMdJQXj7WU
+	 xuZOygciLE+cmGQPO0j0svGy7C1CXN8N2zIqjY0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfCUSyu (ORCPT
+        id S1729172AbfCUSyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:54:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbfCUSys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:54:48 -0400
+        id S1728956AbfCUSyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:54:52 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F298021873;
-        Thu, 21 Mar 2019 18:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926FE205F4;
+        Thu, 21 Mar 2019 18:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553194487;
-        bh=hquvzVfAQ9nusv7xNWA4lQd4VSOdCHXbeVXWkbiZdGw=;
+        s=default; t=1553194491;
+        bh=lYQ/n+Y4xHMgqy5KFfFhkHGsSUQC2fiJ3KQ/lK4k1yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kR+suMcqnf5noV3/Z7OpWwYAZS4E2YFmAE92MSYyOaJKIWWVwquwVXokAyKctvWcu
-         aur4rJZmTcTd0cfJ2ilA/b6vrRBTd7cM3kq3LNhEfJOI9arm9tATj+92tCyQTmXO2G
-         Nu642YnKfKJqLzfCdyacrhnEEGhZf/8k0hGX0RYY=
+        b=iKVXIJYxBgUDZbhEyONxF1nCc6EsnFHWzLmika/b5eXVTo+Ep+0mTXtjQEcjV63+G
+         pnhlbpMUBmD1M6QJyGNinYQwDF0c6BT9/XRTcL/Mz14KTMhNObS78AkZt/bR0yuEcC
+         v20KdjmIwhYdIBjtNH96g4TROa+/SU06dkHJMbtc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Song Liu <songliubraving@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Peter Zijlstra <peterz@infradead.org>,
-        Stanislav Fomichev <sdf@google.com>, kernel-team@fb.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 33/44] perf bpf: Save BTF in a rbtree in perf_env
-Date:   Thu, 21 Mar 2019 15:51:31 -0300
-Message-Id: <20190321185142.11441-34-acme@kernel.org>
+        Stanislav Fomichev <sdf@google.com>, kernel-team@fb.com
+Subject: [PATCH 34/44] perf bpf: Save BTF information as headers to perf.data
+Date:   Thu, 21 Mar 2019 15:51:32 -0300
+Message-Id: <20190321185142.11441-35-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
@@ -65,152 +65,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Song Liu <songliubraving@fb.com>
 
-BTF contains information necessary to annotate BPF programs. This patch
-saves BTF for BPF programs loaded in the system.
+This patch enables 'perf record' to save BTF information as headers to
+perf.data.
+
+A new header type HEADER_BPF_BTF is introduced for this data.
+
+Committer testing:
+
+As root, being on the kernel sources top level directory, run:
+
+    # perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c -e *msg
+
+Just to compile and load a BPF program that attaches to the
+raw_syscalls:sys_{enter,exit} tracepoints to trace the syscalls ending
+in "msg" (recvmsg, sendmsg, recvmmsg, sendmmsg, etc).
+
+Make sure you have a recent enough clang, say version 9, to get the
+BTF ELF sections needed for this testing:
+
+  # clang --version | head -1
+  clang version 9.0.0 (https://git.llvm.org/git/clang.git/ 7906282d3afec5dfdc2b27943fd6c0309086c507) (https://git.llvm.org/git/llvm.git/ a1b5de1ff8ae8bc79dc8e86e1f82565229bd0500)
+  # readelf -SW tools/perf/examples/bpf/augmented_raw_syscalls.o | grep BTF
+    [22] .BTF              PROGBITS        0000000000000000 000ede 000b0e 00      0   0  1
+    [23] .BTF.ext          PROGBITS        0000000000000000 0019ec 0002a0 00      0   0  1
+    [24] .rel.BTF.ext      REL             0000000000000000 002fa8 000270 10     30  23  8
+
+Then do a systemwide perf record session for a few seconds:
+
+  # perf record -a sleep 2s
+
+Then look at:
+
+  # perf report --header-only | grep b[pt]f
+  # event : name = cycles:ppp, , id = { 1116204, 1116205, 1116206, 1116207, 1116208, 1116209, 1116210, 1116211 }, size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, read_format = ID, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
+  # bpf_prog_info of id 13
+  # bpf_prog_info of id 14
+  # bpf_prog_info of id 15
+  # bpf_prog_info of id 16
+  # bpf_prog_info of id 17
+  # bpf_prog_info of id 18
+  # bpf_prog_info of id 21
+  # bpf_prog_info of id 22
+  # bpf_prog_info of id 51
+  # bpf_prog_info of id 52
+  # btf info of id 8
+  #
+
+We need to show more info about these BPF and BTF entries , but that can
+be done later.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
 Cc: kernel-team@fb.com
-Link: http://lkml.kernel.org/r/20190312053051.2690567-9-songliubraving@fb.com
+Link: http://lkml.kernel.org/r/20190312053051.2690567-10-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.c | 23 +++++++++++++
- tools/perf/util/bpf-event.h |  7 ++++
- tools/perf/util/env.c       | 67 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/env.h       |  5 +++
- 4 files changed, 102 insertions(+)
+ tools/perf/util/header.c | 101 ++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h |   1 +
+ 2 files changed, 101 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 37ee4e2a728a..a4fc52b4ffae 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -34,6 +34,28 @@ int machine__process_bpf_event(struct machine *machine __maybe_unused,
- 	return 0;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e6a81af516f6..01dda2f65d36 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -928,6 +928,39 @@ static int write_bpf_prog_info(struct feat_fd *ff __maybe_unused,
  }
+ #endif // HAVE_LIBBPF_SUPPORT
  
-+static int perf_env__fetch_btf(struct perf_env *env,
-+			       u32 btf_id,
-+			       struct btf *btf)
++static int write_bpf_btf(struct feat_fd *ff,
++			 struct perf_evlist *evlist __maybe_unused)
 +{
-+	struct btf_node *node;
-+	u32 data_size;
-+	const void *data;
-+
-+	data = btf__get_raw_data(btf, &data_size);
-+
-+	node = malloc(data_size + sizeof(struct btf_node));
-+	if (!node)
-+		return -1;
-+
-+	node->id = btf_id;
-+	node->data_size = data_size;
-+	memcpy(node->data, data, data_size);
-+
-+	perf_env__insert_btf(env, node);
-+	return 0;
-+}
-+
- /*
-  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
-  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-@@ -113,6 +135,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 			goto out;
- 		}
- 		has_btf = true;
-+		perf_env__fetch_btf(env, info->btf_id, btf);
- 	}
- 
- 	/* Synthesize PERF_RECORD_KSYMBOL */
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index fad932f7404f..b9ec394dc7c7 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -16,6 +16,13 @@ struct bpf_prog_info_node {
- 	struct rb_node			rb_node;
- };
- 
-+struct btf_node {
-+	struct rb_node	rb_node;
-+	u32		id;
-+	u32		data_size;
-+	char		data[];
-+};
-+
- #ifdef HAVE_LIBBPF_SUPPORT
- int machine__process_bpf_event(struct machine *machine, union perf_event *event,
- 			       struct perf_sample *sample);
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 98cd36f0e317..c6351b557bb0 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -64,6 +64,58 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 	return node;
- }
- 
-+void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-+{
-+	struct rb_node *parent = NULL;
-+	__u32 btf_id = btf_node->id;
-+	struct btf_node *node;
-+	struct rb_node **p;
-+
-+	down_write(&env->bpf_progs.lock);
-+	p = &env->bpf_progs.btfs.rb_node;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		node = rb_entry(parent, struct btf_node, rb_node);
-+		if (btf_id < node->id) {
-+			p = &(*p)->rb_left;
-+		} else if (btf_id > node->id) {
-+			p = &(*p)->rb_right;
-+		} else {
-+			pr_debug("duplicated btf %u\n", btf_id);
-+			goto out;
-+		}
-+	}
-+
-+	rb_link_node(&btf_node->rb_node, parent, p);
-+	rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
-+	env->bpf_progs.btfs_cnt++;
-+out:
-+	up_write(&env->bpf_progs.lock);
-+}
-+
-+struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-+{
-+	struct btf_node *node = NULL;
-+	struct rb_node *n;
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++	int ret;
 +
 +	down_read(&env->bpf_progs.lock);
-+	n = env->bpf_progs.btfs.rb_node;
 +
-+	while (n) {
-+		node = rb_entry(n, struct btf_node, rb_node);
-+		if (btf_id < node->id)
-+			n = n->rb_left;
-+		else if (btf_id > node->id)
-+			n = n->rb_right;
-+		else
-+			break;
++	ret = do_write(ff, &env->bpf_progs.btfs_cnt,
++		       sizeof(env->bpf_progs.btfs_cnt));
++
++	if (ret < 0)
++		goto out;
++
++	root = &env->bpf_progs.btfs;
++	next = rb_first(root);
++	while (next) {
++		struct btf_node *node;
++
++		node = rb_entry(next, struct btf_node, rb_node);
++		next = rb_next(&node->rb_node);
++		ret = do_write(ff, &node->id,
++			       sizeof(u32) * 2 + node->data_size);
++		if (ret < 0)
++			goto out;
 +	}
-+
++out:
 +	up_read(&env->bpf_progs.lock);
-+	return node;
++	return ret;
 +}
 +
- /* purge data in bpf_progs.infos tree */
- static void perf_env__purge_bpf(struct perf_env *env)
+ static int cpu_cache_level__sort(const void *a, const void *b)
  {
-@@ -86,6 +138,20 @@ static void perf_env__purge_bpf(struct perf_env *env)
+ 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
+@@ -1442,6 +1475,28 @@ static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
+ 	up_read(&env->bpf_progs.lock);
+ }
  
- 	env->bpf_progs.infos_cnt = 0;
- 
++static void print_bpf_btf(struct feat_fd *ff, FILE *fp)
++{
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++
++	down_read(&env->bpf_progs.lock);
++
 +	root = &env->bpf_progs.btfs;
 +	next = rb_first(root);
 +
@@ -219,48 +194,87 @@ index 98cd36f0e317..c6351b557bb0 100644
 +
 +		node = rb_entry(next, struct btf_node, rb_node);
 +		next = rb_next(&node->rb_node);
-+		rb_erase(&node->rb_node, root);
-+		free(node);
++		fprintf(fp, "# btf info of id %u\n", node->id);
 +	}
 +
-+	env->bpf_progs.btfs_cnt = 0;
++	up_read(&env->bpf_progs.lock);
++}
 +
- 	up_write(&env->bpf_progs.lock);
- }
- 
-@@ -123,6 +189,7 @@ void perf_env__exit(struct perf_env *env)
- void perf_env__init(struct perf_env *env)
+ static void free_event_desc(struct perf_evsel *events)
  {
- 	env->bpf_progs.infos = RB_ROOT;
-+	env->bpf_progs.btfs = RB_ROOT;
- 	init_rwsem(&env->bpf_progs.lock);
+ 	struct perf_evsel *evsel;
+@@ -2564,6 +2619,49 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
  }
+ #endif // HAVE_LIBBPF_SUPPORT
  
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 24b11c564ba4..4f8e2b485c01 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -75,10 +75,13 @@ struct perf_env {
- 		struct rw_semaphore	lock;
- 		struct rb_root		infos;
- 		u32			infos_cnt;
-+		struct rb_root		btfs;
-+		u32			btfs_cnt;
- 	} bpf_progs;
++static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
++{
++	struct perf_env *env = &ff->ph->env;
++	u32 count, i;
++
++	if (ff->ph->needs_swap) {
++		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
++		return 0;
++	}
++
++	if (do_read_u32(ff, &count))
++		return -1;
++
++	down_write(&env->bpf_progs.lock);
++
++	for (i = 0; i < count; ++i) {
++		struct btf_node *node;
++		u32 id, data_size;
++
++		if (do_read_u32(ff, &id))
++			return -1;
++		if (do_read_u32(ff, &data_size))
++			return -1;
++
++		node = malloc(sizeof(struct btf_node) + data_size);
++		if (!node)
++			return -1;
++
++		node->id = id;
++		node->data_size = data_size;
++
++		if (__do_read(ff, node->data, data_size)) {
++			free(node);
++			return -1;
++		}
++
++		perf_env__insert_btf(env, node);
++	}
++
++	up_write(&env->bpf_progs.lock);
++	return 0;
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2625,7 +2723,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+ 	FEAT_OPR(CLOCKID,	clockid,	false),
+ 	FEAT_OPN(DIR_FORMAT,	dir_format,	false),
+-	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false)
++	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false),
++	FEAT_OPR(BPF_BTF,       bpf_btf,        false),
  };
  
- struct bpf_prog_info_node;
-+struct btf_node;
- 
- extern struct perf_env perf_env;
- 
-@@ -99,4 +102,6 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 							__u32 prog_id);
-+void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-+struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
- #endif /* __PERF_ENV_H */
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 1dc85f0f895d..386da49e1bfa 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -41,6 +41,7 @@ enum {
+ 	HEADER_CLOCKID,
+ 	HEADER_DIR_FORMAT,
+ 	HEADER_BPF_PROG_INFO,
++	HEADER_BPF_BTF,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
 -- 
 2.20.1
 
