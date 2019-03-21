@@ -2,73 +2,125 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CF0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC39C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2138218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DCE218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfCUOFC (ORCPT
+        id S1728172AbfCUOFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:05:02 -0400
-Received: from mga18.intel.com ([134.134.136.126]:9519 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfCUOFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:05:01 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 07:05:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
-   d="scan'208";a="329355323"
-Received: from dilu-mobl2.ccr.corp.intel.com (HELO localhost) ([10.249.254.184])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Mar 2019 07:04:57 -0700
-Date:   Thu, 21 Mar 2019 16:04:56 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tadeusz Struk <tadeusz.struk@intel.com>
-Cc:     Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>,
-        James.Bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm: fix an invalid condition in tpm_common_poll
-Message-ID: <20190321140456.GG4603@linux.intel.com>
-References: <155302749437.13955.651380639754310898.stgit@tstruk-mobl1.jf.intel.com>
- <CAPWNY8UmDAKeF+SNMKDxki=-=s+UPx9WXQvSoFqWmUCsNvv=1g@mail.gmail.com>
- <8f90121a-490c-6a44-1765-d232fcc93ce0@intel.com>
+        Thu, 21 Mar 2019 10:05:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60350 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727809AbfCUOFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:05:46 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2LE4dZk062865
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:05:45 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rcb81jm15-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:05:44 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 21 Mar 2019 14:05:38 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 21 Mar 2019 14:05:36 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2LE5ctl35979490
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Mar 2019 14:05:38 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1038AE053;
+        Thu, 21 Mar 2019 14:05:38 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6F79AE058;
+        Thu, 21 Mar 2019 14:05:37 +0000 (GMT)
+Received: from [9.145.41.62] (unknown [9.145.41.62])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Mar 2019 14:05:37 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, borntraeger@de.ibm.com,
+        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
+ <20190315112032.13b259c2.cohuck@redhat.com>
+ <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+ <20190315182839.4f7c0a73@oc2783563651>
+ <0351d631-b756-dd22-0848-6f30747dc5e2@linux.ibm.com>
+ <20190319155421.0f0e51c2@oc2783563651>
+ <9c114f56-70bd-cc9e-3751-f62494407246@linux.ibm.com>
+Date:   Thu, 21 Mar 2019 15:05:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <9c114f56-70bd-cc9e-3751-f62494407246@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f90121a-490c-6a44-1765-d232fcc93ce0@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19032114-0012-0000-0000-000003058CF0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032114-0013-0000-0000-0000213CA4D4
+Message-Id: <268c46f2-4c30-adfd-25a4-29330aa89b35@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=921 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903210100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 12:18:42PM -0700, Tadeusz Struk wrote:
-> On 3/20/19 11:51 AM, Mantas Mikulėnas wrote:
-> > Thanks, this patch seems to work, and I apologize for not responding
-> > to test the patches earlier.
-> 
-> Thanks for testing.
-> 
-> > 
-> > Any chance it'll be submitted for stable 5.0.x as well?
-> 
-> Yes, it's a regression. I included the "Fixes" tag so
-> it should be applied to all affected versions.
-> In this case it's 5.0 only.
-> Thanks,
-> -- 
-> Tadeusz
+On 19/03/2019 18:07, Pierre Morel wrote:
+> On 19/03/2019 15:54, Halil Pasic wrote:
+>> On Tue, 19 Mar 2019 11:01:44 +0100
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> On 15/03/2019 18:28, Halil Pasic wrote:
+>>
 
-Add a tested-by for the next version.
+...snip...
 
-/Jarkko
+>>
+>>> We should also do it right for TAPQ with t bit set. I remember
+>>> Christian already warned about this but we did not implement it.
+>>>
+>>
+>> Yes, I have some blurry memories of something similar myself. I wonder
+>> if there was a reason, or did we just forget to address this issue.
+> 
+> 
+> I will integrate it in the next iteration too, even it is not IRQ, the 
+> PQAP hook patch can be more general.
+
+After all, I will not do this, I remember the reason why we did not do 
+it once: simply it is not intercepted until we enable it.
+
+So we will handle it when we enable the TAPQ-t interception
+
+Regards,
+Pierre
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
