@@ -2,116 +2,119 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A5BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A54021874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95AE218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfCUP6k (ORCPT
+        id S1728507AbfCUP72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:58:40 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:51585 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUP6k (ORCPT
+        Thu, 21 Mar 2019 11:59:28 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:43423 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUP72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:58:40 -0400
-Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2973D20000F;
-        Thu, 21 Mar 2019 15:58:35 +0000 (UTC)
-Message-ID: <a027f99e59c90b2b3a87c4b18a263cfee4cc5795.camel@bootlin.com>
-Subject: Re: [PATCH v2 2/2] drm/vc4: Allocated/liberate the binner BO at
- firstopen/lastclose
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Thu, 21 Mar 2019 16:58:35 +0100
-In-Reply-To: <87wokth498.fsf@anholt.net>
-References: <20190320154809.14823-1-paul.kocialkowski@bootlin.com>
-         <20190320154809.14823-3-paul.kocialkowski@bootlin.com>
-         <87wokth498.fsf@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Thu, 21 Mar 2019 11:59:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id 6A78D18613;
+        Thu, 21 Mar 2019 16:59:25 +0100 (CET)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id nV0K6f8iwt5J; Thu, 21 Mar 2019 16:59:24 +0100 (CET)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+        by bastet.se.axis.com (Postfix) with ESMTPS id EBC2C18407;
+        Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBB761A098;
+        Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D08901A097;
+        Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+        by boulder02.se.axis.com (Postfix) with ESMTP;
+        Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Received: from lnxjespern3.se.axis.com (lnxjespern3.se.axis.com [10.88.4.8])
+        by thoth.se.axis.com (Postfix) with ESMTP id C36D91C49;
+        Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Received: by lnxjespern3.se.axis.com (Postfix, from userid 363)
+        id BEC70800E1; Thu, 21 Mar 2019 16:59:23 +0100 (CET)
+Date:   Thu, 21 Mar 2019 16:59:23 +0100
+From:   Jesper Nilsson <jesper.nilsson@axis.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     jespern@axis.com, larper@axis.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@axis.com
+Subject: Re: [PATCH -next] pinctrl: artpec6: Make two functions static
+Message-ID: <20190321155923.z4jbelggbqp2vjio@axis.com>
+References: <20190321150909.3576-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321150909.3576-1-yuehaibing@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le mercredi 20 mars 2019 à 09:58 -0700, Eric Anholt a écrit :
-> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+On Thu, Mar 21, 2019 at 11:09:09PM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> > The binner BO is a pre-requisite to GPU operations, so we must ensure
-> > that it is always allocated when the GPU is in use. Currently, we are
-> > allocating it at probe time and liberating/allocating it during runtime
-> > pm cycles.
-> > 
-> > First, since the binner buffer is only required for GPU rendering, it's
-> > a waste to allocate it when the driver probes since internal users of
-> > the driver (such as fbcon) won't try to use the GPU.
-> > 
-> > Move the allocation/liberation to the firstopen/lastclose instead to
-> > only allocate it when userspace has opened the device and adapt the IRQ
-> > handler to return early when no binner BO was allocated yet.
-> > 
-> > Second, because the buffer is allocated from the same pool as other GPU
-> > buffers, we might run into a situation where we are out of memory at
-> > runtime resume. This causes the binner BO allocation to fail and results
-> > in all subsequent operations to fail, resulting in a major hang in
-> > userspace.
-> > 
-> > As a result, keep the buffer alive during runtime pm.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> > diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-> > index 4cd2ccfe15f4..efaba2b02f6c 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_irq.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_irq.c
-> > @@ -64,6 +64,9 @@ vc4_overflow_mem_work(struct work_struct *work)
-> >  	struct vc4_exec_info *exec;
-> >  	unsigned long irqflags;
-> >  
-> > +	if (!bo)
-> > +		return;
-> > +
-> >  	bin_bo_slot = vc4_v3d_get_bin_slot(vc4);
-> >  	if (bin_bo_slot < 0) {
-> >  		DRM_ERROR("Couldn't allocate binner overflow mem\n");
+> Fix sparse warnings:
 > 
-> Hmm.  We take the OOM IRQ on poweron, have no bin BO since nobody's
-> opened yet, and leave it.  Do we ever get the OOM IRQ again after that?
-> Seems like vc4_allocate_bin_bo() might need to kick something so that we
-> can fill an OOM request.
+> drivers/pinctrl/pinctrl-artpec6.c:691:5: warning:
+>  symbol 'artpec6_pmx_enable' was not declared. Should it be static?
+> drivers/pinctrl/pinctrl-artpec6.c:705:6: warning:
+>  symbol 'artpec6_pmx_disable' was not declared. Should it be static?
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I just had a look and it seems that we do get the OOM interrupt again
-after the bin BO is allocated. Actually, I can see it kicking from time
-to time when using X with glamor.
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-From what I understood, this looks fairly legitimate. Should we be
-worried about this?
+> ---
+>  drivers/pinctrl/pinctrl-artpec6.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+> index d89dc43..e836850 100644
+> --- a/drivers/pinctrl/pinctrl-artpec6.c
+> +++ b/drivers/pinctrl/pinctrl-artpec6.c
+> @@ -688,8 +688,9 @@ static void artpec6_pmx_select_func(struct pinctrl_dev *pctldev,
+>  	}
+>  }
+>  
+> -int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
+> -		       unsigned int group)
+> +static int artpec6_pmx_enable(struct pinctrl_dev *pctldev,
+> +			      unsigned int function,
+> +			      unsigned int group)
+>  {
+>  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+>  
+> @@ -702,8 +703,9 @@ int artpec6_pmx_enable(struct pinctrl_dev *pctldev, unsigned int function,
+>  	return 0;
+>  }
+>  
+> -void artpec6_pmx_disable(struct pinctrl_dev *pctldev, unsigned int function,
+> -			 unsigned int group)
+> +static void artpec6_pmx_disable(struct pinctrl_dev *pctldev,
+> +				unsigned int function,
+> +				unsigned int group)
+>  {
+>  	struct artpec6_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+>  
+> -- 
+> 2.7.0
 
-Cheers,
-
-Paul
-
+/^JN - Jesper Nilsson
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+               Jesper Nilsson -- jesper.nilsson@axis.com
