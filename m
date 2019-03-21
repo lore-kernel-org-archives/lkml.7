@@ -3,187 +3,251 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E959BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A08C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E082082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27FD2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfCUNks (ORCPT
+        id S1728512AbfCUNkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:40:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36294 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 09:40:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36336 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728465AbfCUNko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:40:44 -0400
+        id S1728478AbfCUNkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:40:47 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8F4FAAF99;
-        Thu, 21 Mar 2019 13:40:42 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 97330AFA5;
+        Thu, 21 Mar 2019 13:40:45 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 3D3E5E00BF; Thu, 21 Mar 2019 14:40:42 +0100 (CET)
-Message-Id: <e744f45639a611020fa2da9d5b3956beba8c6e50.1553170807.git.mkubecek@suse.cz>
+        id 43C59E00BF; Thu, 21 Mar 2019 14:40:45 +0100 (CET)
+Message-Id: <cd00c3f9acf10f3ad648e4530f1376f0c6085239.1553170807.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
 References: <cover.1553170807.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v4 08/22] ethtool: support for netlink notifications
+Subject: [PATCH net-next v4 09/22] ethtool: implement EVENT notifications
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
         John Linville <linville@tuxdriver.com>,
         linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 14:40:42 +0100 (CET)
+Date:   Thu, 21 Mar 2019 14:40:45 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add infrastructure for ethtool netlink notifications. There is only one
-multicast group "monitor" which is used to notify userspace about changes.
-Notifications are supposed to be broadcasted on every configuration change,
-whether it is done using the netlink interface or legacy ioctl one.
+Three types of netlink notifications are introduced:
 
-To trigger an ethtool notification, both ethtool netlink and external code
-use ethtool_notify() helper. This helper requires RTNL to be held and may
-sleep.
+  - ETHA_EVENT_NEWDEV to notify about newly registered network devices
+  - ETHA_EVENT_DELDEV to notify about unregistered network devices
+  - ETHA_EVENT_RENAMEDEV to notify about renamed network device
+
+The notifications are triggered by NETDEV_REGISTER, NETDEV_UNREGISTER and
+NETDEV_CHANGENAME notifiers.
+
+These notifications are intended for applications and daemons monitoring
+ethtool events to allow updating the list of existing devices without
+having to open another socket for rtnetlink.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- include/linux/ethtool_netlink.h      |  5 +++++
- include/linux/netdevice.h            | 12 +++++++++++
- include/uapi/linux/ethtool_netlink.h |  2 ++
- net/ethtool/netlink.c                | 32 ++++++++++++++++++++++++++++
- net/ethtool/netlink.h                |  2 ++
- 5 files changed, 53 insertions(+)
+ Documentation/networking/ethtool-netlink.txt | 27 ++++++++
+ include/uapi/linux/ethtool_netlink.h         | 37 +++++++++++
+ net/ethtool/netlink.c                        | 65 ++++++++++++++++++++
+ 3 files changed, 129 insertions(+)
 
-diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
-index 0412adb4f42f..2a15e64a16f3 100644
---- a/include/linux/ethtool_netlink.h
-+++ b/include/linux/ethtool_netlink.h
-@@ -5,5 +5,10 @@
+diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+index e97218d820c0..5e5d785fe215 100644
+--- a/Documentation/networking/ethtool-netlink.txt
++++ b/Documentation/networking/ethtool-netlink.txt
+@@ -126,6 +126,8 @@ which the request applies.
+ List of message types
+ ---------------------
  
- #include <uapi/linux/ethtool_netlink.h>
- #include <linux/ethtool.h>
-+#include <linux/netdevice.h>
++    ETHNL_CMD_EVENT			notification only
 +
-+enum ethtool_multicast_groups {
-+	ETHNL_MCGRP_MONITOR,
-+};
+ All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
+ to indicate the type.
  
- #endif /* _LINUX_ETHTOOL_NETLINK_H_ */
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 823762291ebf..83bff4f497e5 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4353,6 +4353,18 @@ struct netdev_notifier_bonding_info {
- void netdev_bonding_info_change(struct net_device *dev,
- 				struct netdev_bonding_info *bonding_info);
+@@ -137,9 +139,34 @@ messages marked as "response only" in the table above. "Get" messages with
+ NLM_F_DUMP flags and no device identification dump the information for all
+ devices supporting the request.
  
-+#if IS_ENABLED(CONFIG_ETHTOOL_NETLINK)
-+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
-+		    unsigned int cmd, u32 req_mask, const void *data);
-+#else
-+static inline void ethtool_notify(struct net_device *dev,
-+				  struct netlink_ext_ack *extack,
-+				  unsigned int cmd, u32 req_mask,
-+				  const void *data)
-+{
-+}
-+#endif
++Type ETHNL_CMD_EVENT is special, these messages are never used in userspace
++requests or kernel replies. They are only sent by kernel to sockets listening
++to "monitor" multicast group to inform userspace about certain events.
 +
- static inline
- struct sk_buff *skb_gso_segment(struct sk_buff *skb, netdev_features_t features)
- {
+ Later sections describe the format and semantics of these request messages.
+ 
+ 
++EVENT
++-----
++
++EVENT messages are only used in kernel multicast notifications. Atributes
++correspond to specific event types, the same type can appear multiple times.
++
++    ETHA_EVENT_NEWDEV		(nested)	new device was registered
++       ETHA_NEWDEV_DEV			(nested)	new device
++    ETHA_EVENT_DELDEV		(nested)	device was unregistered
++       ETHA_DELDEV_DEV			(nested)	removed device
++    ETHA_EVENT_RENAMEDEV	(nested)	device was renamed
++       ETHA_RENAMEDEV_DEV		(nested)	renamed device
++
++For ETHA_EVENT_RENAMEDEV, the name ETHA_RENAME_DEV/ETHA_DEV_NAME is the new
++name after the rename.
++
++Userspace application must expect multiple events to be present in one message
++and also multiple events of the same type (e.g. two or more newly registered
++devices).
++
++
+ Request translation
+ -------------------
+ 
 diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index de18e076ed69..91e4d117957b 100644
+index 91e4d117957b..988519bc6e37 100644
 --- a/include/uapi/linux/ethtool_netlink.h
 +++ b/include/uapi/linux/ethtool_netlink.h
-@@ -65,4 +65,6 @@ enum {
- #define ETHTOOL_GENL_NAME "ethtool"
- #define ETHTOOL_GENL_VERSION 1
+@@ -13,6 +13,7 @@
  
-+#define ETHTOOL_MCGRP_MONITOR_NAME "monitor"
-+
- #endif /* _UAPI_LINUX_ETHTOOL_NETLINK_H_ */
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index de50aa59f477..0a77de4f339a 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -4,6 +4,8 @@
- #include <linux/ethtool_netlink.h>
- #include "netlink.h"
+ enum {
+ 	ETHNL_CMD_NOOP,
++	ETHNL_CMD_EVENT,		/* only for notifications */
  
-+u32 ethnl_bcast_seq;
-+
- static const struct nla_policy dev_policy[ETHA_DEV_MAX + 1] = {
- 	[ETHA_DEV_UNSPEC]	= { .type = NLA_REJECT },
- 	[ETHA_DEV_INDEX]	= { .type = NLA_U32 },
-@@ -147,11 +149,39 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
- 	return NULL;
- }
+ 	__ETHNL_CMD_CNT,
+ 	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
+@@ -61,6 +62,42 @@ enum {
+ 	ETHA_BITSET_MAX = (__ETHA_BITSET_CNT - 1)
+ };
  
-+/* notifications */
++/* events */
 +
-+typedef void (*ethnl_notify_handler_t)(struct net_device *dev,
-+				       struct netlink_ext_ack *extack,
-+				       unsigned int cmd, u32 req_mask,
-+				       const void *data);
++enum {
++	ETHA_NEWDEV_UNSPEC,
++	ETHA_NEWDEV_DEV,			/* nest - ETHA_DEV_* */
 +
-+ethnl_notify_handler_t ethnl_notify_handlers[] = {
++	__ETHA_NEWDEV_CNT,
++	ETHA_NEWDEV_MAX = (__ETHA_NEWDEV_CNT - 1)
 +};
 +
-+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
-+		    unsigned int cmd, u32 req_mask, const void *data)
-+{
-+	ASSERT_RTNL();
++enum {
++	ETHA_DELDEV_UNSPEC,
++	ETHA_DELDEV_DEV,			/* nest - ETHA_DEV_* */
 +
-+	if (likely(cmd < ARRAY_SIZE(ethnl_notify_handlers) &&
-+		   ethnl_notify_handlers[cmd]))
-+		ethnl_notify_handlers[cmd](dev, extack, cmd, req_mask, data);
-+	else
-+		WARN_ONCE(1, "notification %u not implemented (dev=%s, req_mask=0x%x)\n",
-+			  cmd, netdev_name(dev), req_mask);
++	__ETHA_DELDEV_CNT,
++	ETHA_DELDEV_MAX = (__ETHA_DELDEV_CNT - 1)
++};
++
++enum {
++	ETHA_RENAMEDEV_UNSPEC,
++	ETHA_RENAMEDEV_DEV,			/* nest - ETHA_DEV_* */
++
++	__ETHA_RENAMEDEV_CNT,
++	ETHA_RENAMEDEV_MAX = (__ETHA_RENAMEDEV_CNT - 1)
++};
++
++enum {
++	ETHA_EVENT_UNSPEC,
++	ETHA_EVENT_NEWDEV,			/* nest - ETHA_NEWDEV_* */
++	ETHA_EVENT_DELDEV,			/* nest - ETHA_DELDEV_* */
++	ETHA_EVENT_RENAMEDEV,			/* nest - ETHA_RENAMEDEV_* */
++
++	__ETHA_EVENT_CNT,
++	ETHA_EVENT_MAX = (__ETHA_EVENT_CNT - 1)
++};
++
+ /* generic netlink info */
+ #define ETHTOOL_GENL_NAME "ethtool"
+ #define ETHTOOL_GENL_VERSION 1
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 0a77de4f339a..9ab23eaea029 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -173,6 +173,67 @@ void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
+ }
+ EXPORT_SYMBOL(ethtool_notify);
+ 
++/* size of NEWDEV/DELDEV notification */
++static inline unsigned int dev_notify_size(void)
++{
++	return nla_total_size(dev_ident_size());
 +}
-+EXPORT_SYMBOL(ethtool_notify);
++
++static void ethnl_notify_devlist(struct netdev_notifier_info *info,
++				 u16 ev_type, u16 dev_attr)
++{
++	struct net_device *dev = netdev_notifier_info_to_dev(info);
++	struct sk_buff *skb;
++	struct nlattr *nest;
++	void *ehdr;
++	int ret;
++
++	skb = genlmsg_new(dev_notify_size(), GFP_KERNEL);
++	if (!skb)
++		return;
++	ehdr = genlmsg_put(skb, 0, ++ethnl_bcast_seq, &ethtool_genl_family, 0,
++			   ETHNL_CMD_EVENT);
++	if (!ehdr)
++		goto out_skb;
++	nest = ethnl_nest_start(skb, ev_type);
++	if (!nest)
++		goto out_skb;
++	ret = ethnl_fill_dev(skb, dev, dev_attr);
++	if (ret < 0)
++		goto out_skb;
++	nla_nest_end(skb, nest);
++	genlmsg_end(skb, ehdr);
++
++	genlmsg_multicast(&ethtool_genl_family, skb, 0, ETHNL_MCGRP_MONITOR,
++			  GFP_KERNEL);
++	return;
++out_skb:
++	nlmsg_free(skb);
++}
++
++static int ethnl_netdev_event(struct notifier_block *this, unsigned long event,
++			      void *ptr)
++{
++	switch (event) {
++	case NETDEV_REGISTER:
++		ethnl_notify_devlist(ptr, ETHA_EVENT_NEWDEV, ETHA_NEWDEV_DEV);
++		break;
++	case NETDEV_UNREGISTER:
++		ethnl_notify_devlist(ptr, ETHA_EVENT_DELDEV, ETHA_DELDEV_DEV);
++		break;
++	case NETDEV_CHANGENAME:
++		ethnl_notify_devlist(ptr, ETHA_EVENT_RENAMEDEV,
++				     ETHA_RENAMEDEV_DEV);
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block ethnl_netdev_notifier = {
++	.notifier_call = ethnl_netdev_event,
++};
 +
  /* genetlink setup */
  
  static const struct genl_ops ethtool_genl_ops[] = {
- };
+@@ -204,6 +265,10 @@ static int __init ethnl_init(void)
+ 	if (ret < 0)
+ 		panic("ethtool: could not register genetlink family\n");
  
-+static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-+	[ETHNL_MCGRP_MONITOR] = { .name = ETHTOOL_MCGRP_MONITOR_NAME },
-+};
++	ret = register_netdevice_notifier(&ethnl_netdev_notifier);
++	if (ret < 0)
++		panic("ethtool: could not register netdev notifier\n");
 +
- struct genl_family ethtool_genl_family = {
- 	.hdrsize	= 0,
- 	.name		= ETHTOOL_GENL_NAME,
-@@ -160,6 +190,8 @@ struct genl_family ethtool_genl_family = {
- 	.parallel_ops	= true,
- 	.ops		= ethtool_genl_ops,
- 	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
-+	.mcgrps		= ethtool_nl_mcgrps,
-+	.n_mcgrps	= ARRAY_SIZE(ethtool_nl_mcgrps),
- };
+ 	return 0;
+ }
  
- /* module setup */
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index b8a6cd3dc3e3..5f2299548915 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -11,6 +11,8 @@
- #define ETHNL_SET_ERRMSG(info, msg) \
- 	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
- 
-+extern u32 ethnl_bcast_seq;
-+
- extern struct genl_family ethtool_genl_family;
- 
- struct net_device *ethnl_dev_get(struct genl_info *info, struct nlattr *nest);
 -- 
 2.21.0
 
