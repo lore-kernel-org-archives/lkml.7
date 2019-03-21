@@ -2,141 +2,270 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ABBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66AE218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pfC5KEvw"
+	by mail.kernel.org (Postfix) with ESMTP id C890521916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfCUQfQ (ORCPT
+        id S1728562AbfCUQfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:35:16 -0400
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:57351
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727138AbfCUQfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t/u+B3qK3TpZpPTtp+BQx98tjD++umDObuXYeMfVUlw=;
- b=pfC5KEvw/9jM2pP4Ey5B0aXMyuf1M361at4yGV6LEDO0zONOBZAaMtOendaYNcOViHVlToqw8p3cU5DgGtxVPA4vAVjKq4eG4U17XKTwf4vuVLVWh/UxeZLNVHetNtYFbqk8mGZIkZD0AMpjOhRTUNQnlGdV9+IZ5sajKJbudpY=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB5714.eurprd04.prod.outlook.com (20.178.119.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.15; Thu, 21 Mar 2019 16:35:11 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::9579:32ab:898e:6769]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::9579:32ab:898e:6769%2]) with mapi id 15.20.1709.017; Thu, 21 Mar 2019
- 16:35:11 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clk: imx6q: Do not reparent unregistered
- IMX6QDL_CLK_PERIPH2
-Thread-Topic: [PATCH] clk: imx6q: Do not reparent unregistered
- IMX6QDL_CLK_PERIPH2
-Thread-Index: AQHU30AlQ7uX5WNrk0iZ5CsAK+rIh6YWSZqA
-Date:   Thu, 21 Mar 2019 16:35:11 +0000
-Message-ID: <20190321163511.qa267pvzgt3n57rn@fsr-ub1664-175>
-References: <1553101958-13457-1-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1553101958-13457-1-git-send-email-abel.vesa@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfcba330-ac4e-43aa-7c9c-08d6ae1b3067
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5714;
-x-ms-traffictypediagnostic: AM0PR04MB5714:
-x-microsoft-antispam-prvs: <AM0PR04MB5714FBB364980BBBAE4EA95BF6420@AM0PR04MB5714.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(346002)(366004)(136003)(376002)(39860400002)(199004)(189003)(44832011)(6486002)(81166006)(68736007)(305945005)(7736002)(8676002)(81156014)(229853002)(6636002)(6246003)(106356001)(105586002)(53936002)(186003)(6436002)(6116002)(8936002)(6512007)(9686003)(76176011)(66066001)(3846002)(110136005)(54906003)(102836004)(316002)(4326008)(14454004)(25786009)(97736004)(2906002)(478600001)(6506007)(26005)(53546011)(1076003)(11346002)(5660300002)(71200400001)(71190400001)(476003)(256004)(33716001)(86362001)(99286004)(486006)(446003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5714;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lfUPkyZEncQ+GFEY47bMPNLvFhRL7iF29ClYXXh+gn867rrqF5/tupzSb1EmOLWEUbn0qQdIS9kEJbbHh1YtYClU1vhCM9zngVjPpNCs8GQg32yo2uMXKWgqwdR+nEuavbnEPocXbdZ4hv545ROXpSTERZ+ZiIFgGDU5cmXdG/LumC/jLL18M0xIN0RKjax+EOWMJ/P7g4rxGKMgOUr4lsP74m1TB6cVPcrRSFwN8gH3u3GYCT4KiwMZzh816StVk6K7EmmH1xdfn4/6UpoDg2rUYIlqxVu1L5x3dWCw8oRgqN2UJ1hmRTEutmMw0Wuo/Qwy9T+5aExD/Mpb2nv2V42HoR6j0pKiO+zx0w9fTq5+CAy3pW453xKDe6K9kz5pLS2oPyaykcWPv0eqKbEDnlQKbATQwFU5wLDtPbqHLD8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F2FA7AD599F89E4399E0C608A2269174@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Mar 2019 12:35:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44150 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727198AbfCUQfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:35:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 09:35:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
+   d="scan'208";a="133559378"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga008.fm.intel.com with SMTP; 21 Mar 2019 09:35:33 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 21 Mar 2019 18:35:32 +0200
+Date:   Thu, 21 Mar 2019 18:35:32 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
+Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
+Message-ID: <20190321163532.GG3888@intel.com>
+References: <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+ <d8f4a31e35b1702230ced4a0cb43c10d1c7e60c8.camel@ndufresne.ca>
+ <20190320142739.GK3888@intel.com>
+ <a13f7fdeaf1a5e97f21a6048da765705b59d64c2.camel@ndufresne.ca>
+ <20190320160939.GR3888@intel.com>
+ <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
+ <20190320164133.GT3888@intel.com>
+ <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
+ <20190320183914.GV3888@intel.com>
+ <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfcba330-ac4e-43aa-7c9c-08d6ae1b3067
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 16:35:11.7761
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5714
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-03-20 17:12:49, Abel Vesa wrote:
-> The clock is registered later then these two re-parentings
->=20
+On Thu, Mar 21, 2019 at 05:04:19PM +0100, Paul Kocialkowski wrote:
+> Hi,
+> 
+> Le mercredi 20 mars 2019 à 20:39 +0200, Ville Syrjälä a écrit :
+> > On Wed, Mar 20, 2019 at 02:27:59PM -0400, Nicolas Dufresne wrote:
+> > > Le mercredi 20 mars 2019 à 18:41 +0200, Ville Syrjälä a écrit :
+> > > > On Wed, Mar 20, 2019 at 12:30:25PM -0400, Nicolas Dufresne wrote:
+> > > > > Le mercredi 20 mars 2019 à 18:09 +0200, Ville Syrjälä a écrit :
+> > > > > > On Wed, Mar 20, 2019 at 11:51:58AM -0400, Nicolas Dufresne wrote:
+> > > > > > > Le mercredi 20 mars 2019 à 16:27 +0200, Ville Syrjälä a écrit :
+> > > > > > > > On Tue, Mar 19, 2019 at 07:29:18PM -0400, Nicolas Dufresne wrote:
+> > > > > > > > > Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
+> > > > > > > > > > V4L2 uses different fourcc's than DRM, and has a different set of formats.
+> > > > > > > > > > For now, let's add the v4l2 fourcc's for the already existing formats.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  include/linux/image-formats.h |  9 +++++-
+> > > > > > > > > >  lib/image-formats.c           | 67 ++++++++++++++++++++++++++++++++++++-
+> > > > > > > > > >  2 files changed, 76 insertions(+)
+> > > > > > > > > > 
+> > > > > > > > > > diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
+> > > > > > > > > > index 53fd73a71b3d..fbc3a4501ebd 100644
+> > > > > > > > > > --- a/include/linux/image-formats.h
+> > > > > > > > > > +++ b/include/linux/image-formats.h
+> > > > > > > > > > @@ -26,6 +26,13 @@ struct image_format_info {
+> > > > > > > > > >  	};
+> > > > > > > > > >  
+> > > > > > > > > >  	/**
+> > > > > > > > > > +	 * @v4l2_fmt:
+> > > > > > > > > > +	 *
+> > > > > > > > > > +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
+> > > > > > > > > > +	 */
+> > > > > > > > > > +	u32 v4l2_fmt;
+> > > > > > > > > > +
+> > > > > > > > > > +	/**
+> > > > > > > > > >  	 * @depth:
+> > > > > > > > > >  	 *
+> > > > > > > > > >  	 * Color depth (number of bits per pixel excluding padding bits),
+> > > > > > > > > > @@ -222,6 +229,8 @@ image_format_info_is_yuv_sampling_444(const struct image_format_info *info)
+> > > > > > > > > >  
+> > > > > > > > > >  const struct image_format_info *__image_format_drm_lookup(u32 drm);
+> > > > > > > > > >  const struct image_format_info *image_format_drm_lookup(u32 drm);
+> > > > > > > > > > +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
+> > > > > > > > > > +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
+> > > > > > > > > >  unsigned int image_format_plane_cpp(const struct image_format_info *format,
+> > > > > > > > > >  				    int plane);
+> > > > > > > > > >  unsigned int image_format_plane_width(int width,
+> > > > > > > > > > diff --git a/lib/image-formats.c b/lib/image-formats.c
+> > > > > > > > > > index 9b9a73220c5d..39f1d38ae861 100644
+> > > > > > > > > > --- a/lib/image-formats.c
+> > > > > > > > > > +++ b/lib/image-formats.c
+> > > > > > > > > > @@ -8,6 +8,7 @@
+> > > > > > > > > >  static const struct image_format_info formats[] = {
+> > > > > > > > > >  	{
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_C8,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
+> > > > > > > > > >  		.depth = 8,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 1, 0, 0 },
+> > > > > > > > > > @@ -15,6 +16,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB332,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
+> > > > > > > > > >  		.depth = 8,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 1, 0, 0 },
+> > > > > > > > > > @@ -29,6 +31,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB4444,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB444,
+> > > > > > > > > >  		.depth = 0,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > > @@ -57,6 +60,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_ARGB4444,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_ARGB444,
+> > > > > > > > > >  		.depth = 0,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > > @@ -89,6 +93,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.has_alpha = true,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB1555,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB555,
+> > > > > > > > > >  		.depth = 15,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > > @@ -117,6 +122,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_ARGB1555,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_ARGB555,
+> > > > > > > > > >  		.depth = 15,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > > @@ -149,6 +155,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.has_alpha = true,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB565,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB565,
+> > > > > > > > > >  		.depth = 16,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 2, 0, 0 },
+> > > > > > > > > > @@ -163,6 +170,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_RGB888,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
+> > > > > > > > > >  		.depth = 24,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 3, 0, 0 },
+> > > > > > > > > > @@ -170,6 +178,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_BGR888,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
+> > > > > > > > > >  		.depth = 24,
+> > > > > > > > > >  		.num_planes = 1,
+> > > > > > > > > >  		.cpp = { 3, 0, 0 },
+> > > > > > > > > > @@ -177,6 +186,7 @@ static const struct image_format_info formats[] = {
+> > > > > > > > > >  		.vsub = 1,
+> > > > > > > > > >  	}, {
+> > > > > > > > > >  		.drm_fmt = DRM_FORMAT_XRGB8888,
+> > > > > > > > > > +		.v4l2_fmt = V4L2_PIX_FMT_XRGB32,
+> > > > > > > > > 
+> > > > > > > > > All RGB mapping should be surrounded by ifdef, because many (not all)
+> > > > > > > > > DRM formats represent the order of component when placed in a CPU
+> > > > > > > > > register, unlike V4L2 which uses memory order. I've pick this one
+> > > > > > > > 
+> > > > > > > > DRM formats are explicitly defined as little endian.
+> > > > > > > 
+> > > > > > > Yes, that means the same thing. The mapping has nothing to do with the
+> > > > > > > buffer bytes order, unlike V4L2 (and most streaming stack) do.
+> > > > > > 
+> > > > > > It has everything to do with byte order. Little endian means the least
+> > > > > > significant byte is stored in the first byte in memory.
+> > > > > > 
+> > > > > > Based on https://www.kernel.org/doc/html/v4.15/media/uapi/v4l/pixfmt-packed-rgb.html
+> > > > > > drm XRGB888 is actually v4l XBGR32, not XRGB32 as claimed by this patch.
+> > > > > 
+> > > > > That's basically what I said, as it's define for Little Endian rather
+> > > > > then buffer order, you have to make the mapping conditional. It
+> > > > > basically mean that in memory, the DRM format physically differ
+> > > > > depending on CPU endian.
+> > > > 
+> > > > No. It is always little endian no matter what the CPU is.
+> > > 
+> > > I'm sorry, this is in your ABI, we don't add layers of ifdef in
+> > > userspace code just for the fun of it. If you redefine this now you are
+> > > breaking userspace. I agree there is very little to no Big Endian on
+> > > DRM side anymore, but what historically was mapped per CPU cannot be
+> > > changed by you now.
+> > 
+> > It was always little endian.
+> 
+> I'm not sure what it's worth, but there is a "pixel format guide"
+> project that is all about matching formats from one API to another: 
+> https://afrantzis.com/pixel-format-guide/ (and it has an associated
+> tool too).
+> 
+> On the page about DRM, it seems that they got the word that DRM formats
+> are the native pixel order in little-endian systems:
+> https://afrantzis.com/pixel-format-guide/drm.html
 
-Ignore this patch. I'll send a patchset which has another fix for
-another case like this one (plus the fix for the typo).
+Looks consistent with the official word in drm_fourcc.h.
 
-The patchset is actually switching all the imx6 and imx7 clocks
-to clk_hw based API, but will include all the necessary fixes
-for that to work.
+$ python3 -m pfg find-compatible V4L2_PIX_FMT_XBGR32 drm
+Format: V4L2_PIX_FMT_XBGR32
+Is compatible on all systems with:
+        DRM_FORMAT_XRGB8888
+Is compatible on little-endian systems with:
+Is compatible on big-endian systems with:
 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx6q.c | 8 --------
->  1 file changed, 8 deletions(-)
->=20
-> diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-> index 708e7c5..c7b671e 100644
-> --- a/drivers/clk/imx/clk-imx6q.c
-> +++ b/drivers/clk/imx/clk-imx6q.c
-> @@ -291,12 +291,6 @@ static void mmdc_ch1_disable(void __iomem *ccm_base)
->  	clk_set_parent(clk[IMX6QDL_CLK_PERIPH2_CLK2_SEL],
->  		       clk[IMX6QDL_CLK_PLL3_USB_OTG]);
-> =20
-> -	/*
-> -	 * Handshake with mmdc_ch1 module must be masked when changing
-> -	 * periph2_clk_sel.
-> -	 */
-> -	clk_set_parent(clk[IMX6QDL_CLK_PERIPH2], clk[IMX6QDL_CLK_PERIPH2_CLK2])=
-;
-> -
->  	/* Disable pll3_sw_clk by selecting the bypass clock source */
->  	reg =3D readl_relaxed(ccm_base + CCM_CCSR);
->  	reg |=3D CCSR_PLL3_SW_CLK_SEL;
-> @@ -311,8 +305,6 @@ static void mmdc_ch1_reenable(void __iomem *ccm_base)
->  	reg =3D readl_relaxed(ccm_base + CCM_CCSR);
->  	reg &=3D ~CCSR_PLL3_SW_CLK_SEL;
->  	writel_relaxed(reg, ccm_base + CCM_CCSR);
-> -
-> -	clk_set_parent(clk[IMX6QDL_CLK_PERIPH2], clk[IMX6QDL_CLK_PERIPH2_PRE]);
->  }
-> =20
->  /*
-> --=20
-> 2.7.4
-> =
+$ python3 -m pfg find-compatible DRM_FORMAT_XRGB8888 v4l2
+Format: DRM_FORMAT_XRGB8888
+Is compatible on all systems with:
+        V4L2_PIX_FMT_XBGR32
+Is compatible on little-endian systems with:
+Is compatible on big-endian systems with:
+
+Even works both ways :)
+
+> 
+> Perhaps some drivers have been abusing the format definitions, leading
+> to the inconsistencies that Nicolas could witness?
+
+That is quite possible, perhaps even likely. No one really
+seems interested in making sure big endian systems actually
+work properly. I believe the usual approach is to hack
+around semi-rnadomly until the correct colors accidentally
+appear on the screen.
+
+-- 
+Ville Syrjälä
+Intel
