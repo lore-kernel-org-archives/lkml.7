@@ -2,96 +2,85 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A447C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58993218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F32218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfCUTmY (ORCPT
+        id S1728651AbfCUTm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 15:42:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59078 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfCUTmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 15:42:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C7D0308338F;
-        Thu, 21 Mar 2019 19:42:24 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2404819C59;
-        Thu, 21 Mar 2019 19:42:23 +0000 (UTC)
-From:   jglisse@redhat.com
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] gpu/nouveau: empty chunk do not have a buffer object associated with them.
-Date:   Thu, 21 Mar 2019 15:42:18 -0400
-Message-Id: <20190321194218.2716-1-jglisse@redhat.com>
+        Thu, 21 Mar 2019 15:42:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45450 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727909AbfCUTm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 15:42:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C3554AF46;
+        Thu, 21 Mar 2019 19:42:55 +0000 (UTC)
+Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, nelson.dsouza@intel.com
+References: <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
+ <20190319110549.GC5996@hirez.programming.kicks-ass.net>
+ <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
+ <20190319182041.GO5996@hirez.programming.kicks-ass.net>
+ <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
+ <20190320222220.GA2490@worktop.programming.kicks-ass.net>
+ <20190321123849.GN6521@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
+ <20190321171047.GR5996@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1903211815300.1784@nanos.tec.linutronix.de>
+ <20190321182011.GT5996@hirez.programming.kicks-ass.net>
+From:   Tony Jones <tonyj@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tonyj@suse.com; prefer-encrypt=mutual; keydata=
+ mQGiBEkQmbwRBACDch7wo/RzlNt2HA8jLICsO2w8yOkJ7UTzHYNn3Q83Ro0qev2KokfE3EDw
+ il+vam9CDR7jIDmswHqaMe0/O+UnZtO5PlDgylZcrwNwbBzHfm/KGejbi1RBGAoETrvcfwGi
+ w83bR/aDnoRXY5Ho1uphQ05/065EMpbJOOBdn9qQ4wCgv2Q6C/QeYDGsxJPRO+20nLu5K00D
+ /Rde4OTZ5biM+vb6ObTmgPNeiMrTwGpMokN7audIl7njwvD+lYrlgQjmDzcaPFz29rYWwT7g
+ 6t6hcFgjpU1he/v3qxeQlTJoi2+u5Mqj42z//49h6DqNjT859Z/6h5IwKBo/EZC17iBIlS2G
+ VXAstNiZASGiaIlONozWJ/GSjUaRA/9wZTV1nXF/+xX+qmc7SvTg1w6jWyjxVumQLoq2SeA4
+ 1Sy5X2IATkAGCCjbeoQGnFdbOnHRSJdlTazObgwreqGPlPnIROpr9QESkfxsaCkDiZfpl0xk
+ 6X069QMZBEwGAWILHYXL9UqlOjniZaU2BkVA11JEdBhyQorC8T/ji1edc7QbVG9ueSBKb25l
+ cyA8dG9ueWpAc3VzZS5jb20+iGMEExECACMFAlZxtcMCGwMHCwkIBwMCAQYVCAIJCgsEFgID
+ AQIeAQIXgAAKCRCxWFshH+JKF0LzAJ4nV13dNEuh00Txem/YNg5CCgop3QCeJPkAXh12H/1a
+ pLADSewpCEOjH9+5Ag0ESRCZvBAIAM6/WXd7+wddDg7VXO18WzHt1uqNRXQpS/WSIC7+tc4V
+ nLWnygzLvzFEr8ZmBatNKXnA/0n1/KMQKwNNvrENhPv2W+CezQFiAMQn5su1RNMAwa2R/4QW
+ qSMfy4FamH2fUcPmuBV65ZNcvKEAsIb4/pFq5u1e6JUdGjzstTRRjVMkxUjI/qW5sYjTl3Qs
+ VVEHt1BNZPcgPpiC48mkWp8JIgiwozb0Ty/PENNewXYVQVmZs/KocFzf0a4wnAx7D1+TtHr+
+ vDC8rrIeZn7pLrwqs1tWN0JfosH8BMOZTZkBnaFfXLIOyT+7Gg4nEhTtinGbzG7wzKrTxYqX
+ ReVFqH2Smd8AAwUH/2+XFTcm+YvECNBuwTxgTZ+FZUF+Z+uk7DwZ60TTotzIU01RAQqfLPo6
+ lIyY1xI4wPjuISJu0KnbKM7q8OxpXENANOnSMzv9UVIJWWTKAtCS+N2UJift/shay41oBh+n
+ r+gDm2Cx+2bo4AAeZ9B8tmSAoc7Ciymx6bRbQb6QygfLqXavhrp7GOKDd8Bmuu4fbB6g748q
+ euAs4J/Bubhi8Md3/3nWxAis+ZD1EswoRJN7Liu+NkhD9Nb+K2uVl/PB5/NTYxgckDM/WnCS
+ 3QuxXy8172zWtCoLw2kpZWH7CSKBgs93ilTrk1lzomhCCrsvN9/t5q9j7pSwsiysrABHXSqI
+ SQQYEQIACQUCSRCZvAIbDAAKCRCxWFshH+JKF4YEAJ9RBgEy2T0udwLfbfqd0vAZDSPckQCf
+ QNDpi5Yr/q8BHrGBpRnhjWih0yc=
+Message-ID: <fa2d8695-f87c-b141-a19b-2ed4b80df987@suse.com>
+Date:   Thu, 21 Mar 2019 12:42:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 21 Mar 2019 19:42:24 +0000 (UTC)
+In-Reply-To: <20190321182011.GT5996@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+On 3/21/19 11:20 AM, Peter Zijlstra wrote:
 
-Empty chunk do not have a bo associated with them so no need to pin/unpin
-on suspend/resume.
+> Might be best to have someone test this.. someone with ucode and a
+> machine etc.. :-)
 
-This fix suspend/resume on 5.1rc1 when NOUVEAU_SVM is enabled.
-
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Reviewed-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Tested-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
----
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index aa9fec80492d..a510dbe9a9cb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -456,11 +456,6 @@ nouveau_dmem_resume(struct nouveau_drm *drm)
- 		/* FIXME handle pin failure */
- 		WARN_ON(ret);
- 	}
--	list_for_each_entry (chunk, &drm->dmem->chunk_empty, list) {
--		ret = nouveau_bo_pin(chunk->bo, TTM_PL_FLAG_VRAM, false);
--		/* FIXME handle pin failure */
--		WARN_ON(ret);
--	}
- 	mutex_unlock(&drm->dmem->mutex);
- }
- 
-@@ -479,9 +474,6 @@ nouveau_dmem_suspend(struct nouveau_drm *drm)
- 	list_for_each_entry (chunk, &drm->dmem->chunk_full, list) {
- 		nouveau_bo_unpin(chunk->bo);
- 	}
--	list_for_each_entry (chunk, &drm->dmem->chunk_empty, list) {
--		nouveau_bo_unpin(chunk->bo);
--	}
- 	mutex_unlock(&drm->dmem->mutex);
- }
- 
--- 
-2.17.1
-
+If your own company can't oblige you here Peter :-) I'm sure I can make some time to test it.
