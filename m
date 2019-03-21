@@ -3,168 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ACBC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DC7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8585E218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5DD21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CvHMCAHb"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="N6+xUhNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbfCUVUz (ORCPT
+        id S1726589AbfCUVU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:20:55 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:1638 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfCUVUz (ORCPT
+        Thu, 21 Mar 2019 17:20:57 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46435 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfCUVUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 17:20:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9400330001>; Thu, 21 Mar 2019 14:20:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 21 Mar 2019 14:20:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 21 Mar 2019 14:20:52 -0700
-Received: from [10.2.161.82] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Mar
- 2019 21:20:52 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Keith Busch <keith.busch@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nvdimm@lists.01.org>, Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Nellans <dnellans@nvidia.com>
-Subject: Re: [PATCH 0/5] Page demotion for memory reclaim
-Date:   Thu, 21 Mar 2019 14:20:51 -0700
-X-Mailer: MailMate (1.12.4r5614)
-Message-ID: <5B5EFBC2-2979-4B9F-A43A-1A14F16ACCE1@nvidia.com>
-In-Reply-To: <20190321200157.29678-1-keith.busch@intel.com>
-References: <20190321200157.29678-1-keith.busch@intel.com>
+Received: by mail-qk1-f195.google.com with SMTP id s81so4498710qke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OoPTjNoQH9P11AzxV7hz4O05Uw6lZyZ5WaH3L3lcp7M=;
+        b=N6+xUhNsZV8o/bZUVTzWyjFPLjwKh9+4ra4G64HIh6y86G5EHbnCLKoRzQ860dt1L9
+         jtOJV2j+W5y+Ffl3VS6Cj0YrBBqMBsKM9yb7hSXkLWeNP+YxQEH1N2t3UadmKM9EXM1D
+         QNm/0w6a49VY/b/CRLvkF4yRnBGlFHUaK/+a8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OoPTjNoQH9P11AzxV7hz4O05Uw6lZyZ5WaH3L3lcp7M=;
+        b=je3eFKw7nnU0w9StLWDjLVbrLDMaAgbVIG3Fc/ZRquGjv/H1F5Y2FoprCVbd7PlngW
+         86Kjyvwdy2fC0Vj12cM5cLai8TmffY0eYY/jWz+m+7XOa/KCQv3HgTDawWJSD3My7w9P
+         pjhvLxNL2Sat3Jd1DIhtada0p7DacFTnDNJ8taBtySXr5e8V+NQ0n87W+HGhezLx+Ygw
+         BsxLzel1PkuK8bGpXxo1uViVlkoU6UaiVG8URcbEdLKZFyHxvOiVpFXxVdK8jwKMEhdM
+         FEhjG/EH6LC1mcHdSwJ8usxKt4bA2DHTdGN2TmP9Hp1k2pscgpQyuzSD3T8Xl8iIuiuN
+         yo1g==
+X-Gm-Message-State: APjAAAW1UE1TlK89TWmHlJP9JmGQxBAsr33YmKgyUeu/L54e8YoVHLCB
+        /0lWWz8JagqjaBx/IEFWeIHDrw==
+X-Google-Smtp-Source: APXvYqxzmoAU6I9Uob/gpeBsBt5EXvRdm37Mb7aOm2vn3MiGb82tpSryxMvtqn74ETBuoLbgyNMNyQ==
+X-Received: by 2002:a37:6748:: with SMTP id b69mr4766483qkc.79.1553203254239;
+        Thu, 21 Mar 2019 14:20:54 -0700 (PDT)
+Received: from [192.168.1.240] (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id n70sm312138qkn.5.2019.03.21.14.20.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 21 Mar 2019 14:20:53 -0700 (PDT)
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
+        torvalds@linux-foundation.org
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Vineeth Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>
+Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
+Date:   Thu, 21 Mar 2019 17:20:17 -0400
+Message-Id: <1553203217-11444-1-git-send-email-jdesfossez@digitalocean.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <15f3f7e6-5dce-6bbf-30af-7cffbd7bb0c3@oracle.com>
+References: <15f3f7e6-5dce-6bbf-30af-7cffbd7bb0c3@oracle.com>
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_64525BCB-86AC-4202-8D74-2FF72494C4AB_=";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553203251; bh=P6nweyKjbPNRrHuFN0rcQFMXBtF9NIHBGG9PP2cx3gU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=CvHMCAHb62LnWhXYaTKpIzZ/8/u5hF9yqCeAjmJyfMMVl7GIJFMWQFiBM6fNonSzy
-         x0EZcfLfo9VxMuTzYfXd//0+SQKpUHOPNN5y4VnGtpMkG+VIxCLfUpsSnFgo2WS43W
-         NIG+SX1L/NPoMoKZKMybvacOhDPrC6VmTMnyDYeaFG7/Svs4gvnbPTksyuLJdyvOti
-         l/UPviM7V/RLqaPtk0vN58Ck2XWrtqNmqIBCl/3A9U/oEG2OprSTnOn5Y4UlXakkqq
-         1HrfxlQaUWJknjTmA67/CYma9htlCXfc/H/Lp1ggGJavdjx3ko/Wq7/IpPHR3SISF+
-         ISTSP1ebZpdIA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_64525BCB-86AC-4202-8D74-2FF72494C4AB_=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 21 Mar 2019, at 13:01, Keith Busch wrote:
-
-> The kernel has recently added support for using persistent memory as
-> normal RAM:
+On Tue, Mar 19, 2019 at 10:31 PM Subhra Mazumdar <subhra.mazumdar@oracle.com>
+wrote:
+> On 3/18/19 8:41 AM, Julien Desfossez wrote:
+> > The case where we try to acquire the lock on 2 runqueues belonging to 2
+> > different cores requires the rq_lockp wrapper as well otherwise we
+> > frequently deadlock in there.
+> >
+> > This fixes the crash reported in
+> > 1552577311-8218-1-git-send-email-jdesfossez@digitalocean.com
+> >
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index 76fee56..71bb71f 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -2078,7 +2078,7 @@ static inline void double_rq_lock(struct rq *rq1,
+> struct rq *rq2)
+> >               raw_spin_lock(rq_lockp(rq1));
+> >               __acquire(rq2->lock);   /* Fake it out ;) */
+> >       } else {
+> > -             if (rq1 < rq2) {
+> > +             if (rq_lockp(rq1) < rq_lockp(rq2)) {
+> >                       raw_spin_lock(rq_lockp(rq1));
+> >                       raw_spin_lock_nested(rq_lockp(rq2),
+> SINGLE_DEPTH_NESTING);
+> >               } else {
+> With this fix and my previous NULL pointer fix my stress tests are
+> surviving. I
+> re-ran my 2 DB instance setup on 44 core 2 socket system by putting each DB
+> instance in separate core scheduling group. The numbers look much worse
+> now.
 >
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
-mmit/?id=3Dc221c0b0308fd01d9fb33a16f64d2fd95f8830a4
->
-> The persistent memory is hot added to nodes separate from other memory
-> types, which makes it convenient to make node based memory policies.
->
-> When persistent memory provides a larger and cheaper address space, but=
+> users  baseline  %stdev  %idle  core_sched  %stdev %idle
+> 16     1         0.3     66     -73.4%      136.8 82
+> 24     1         1.6     54     -95.8%      133.2 81
+> 32     1         1.5     42     -97.5%      124.3 89
 
-> with slower access characteristics than system RAM, we'd like the kerne=
-l
-> to make use of these memory-only nodes as a migration tier for pages
-> that would normally be discared during memory reclaim. This is faster
-> than doing IO for swap or page cache, and makes better utilization of
-> available physical address space.
->
-> The feature is not enabled by default. The user must opt-in to kernel
-> managed page migration by defining the demotion path. In the future,
-> we may want to have the kernel automatically create this based on
-> heterogeneous memory attributes and CPU locality.
->
+We are also seeing a performance degradation of about 83% on the throughput
+of 2 MySQL VMs under a stress test (12 vcpus, 32GB of RAM). The server has 2
+NUMA nodes, each with 18 cores (so a total of 72 hardware threads). Each
+MySQL VM is pinned to a different NUMA node. The clients for the stress
+tests are running on a separate physical machine, each client runs 48 query
+threads. Only the MySQL VMs use core scheduling (all vcpus and emulator
+threads). Overall the server is 90% idle when the 2 VMs use core scheduling,
+and 75% when they don’t.
 
-Cc more people here.
+The rate of preemption vs normal “switch out” is about 1% with and without
+core scheduling enabled, but the overall rate of sched_switch is 5 times
+higher without core scheduling which suggests some heavy contention in the
+scheduling path.
 
-Thank you for the patchset. This is definitely useful when we have larger=
- PMEM
-backing existing DRAM. I have several questions:
+On further investigation, we could see that the contention is mostly in the
+way rq locks are taken. With this patchset, we lock the whole core if
+cpu.tag is set for at least one cgroup. Due to this, __schedule() is more or
+less serialized for the core and that attributes to the performance loss
+that we are seeing. We also saw that newidle_balance() takes considerably
+long time in load_balance() due to the rq spinlock contention. Do you think
+it would help if the core-wide locking was only performed when absolutely
+needed ?
 
-1. The name of =E2=80=9Cpage demotion=E2=80=9D seems confusing to me, sin=
-ce I thought it was about large pages
-demote to small pages as opposite to promoting small pages to THPs. Am I =
-the only
-one here?
+In terms of isolation, we measured the time a thread spends co-scheduled
+with either a thread from the same group, the idle thread or a thread from
+another group. This is what we see for 60 seconds of a specific busy VM
+pinned to a whole NUMA node (all its threads):
 
-2. For the demotion path, a common case would be from high-performance me=
-mory, like HBM
-or Multi-Channel DRAM, to DRAM, then to PMEM, and finally to disks, right=
-? More general
-case for demotion path would be derived from the memory performance descr=
-iption from HMAT[1],
-right? Do you have any algorithm to form such a path from HMAT?
+no core scheduling:
+- local neighbors (19.989 % of process runtime)
+- idle neighbors (47.197 % of process runtime)
+- foreign neighbors (22.811 % of process runtime)
 
-3. Do you have a plan for promoting pages from lower-level memory to high=
-er-level memory,
-like from PMEM to DRAM? Will this one-way demotion make all pages sink to=
- PMEM and disk?
+core scheduling enabled:
+- local neighbors (6.763 % of process runtime)
+- idle neighbors (93.064 % of process runtime)
+- foreign neighbors (0.236 % of process runtime)
 
-4. In your patch 3, you created a new method migrate_demote_mapping() to =
-migrate pages to
-other memory node, is there any problem of reusing existing migrate_pages=
-() interface?
+As a separate test, we tried to pin all the vcpu threads to a set of cores
+(6 cores for 12 vcpus):
+no core scheduling:
+- local neighbors (88.299 % of process runtime)
+- idle neighbors (9.334 % of process runtime)
+- foreign neighbors (0.197 % of process runtime)
 
-5. In addition, you only migrate base pages, is there any performance con=
-cern on migrating THPs?
-Is it too costly to migrate THPs?
+core scheduling enabled:
+- local neighbors (84.570 % of process runtime)
+- idle neighbors (15.195 % of process runtime)
+- foreign neighbors (0.257 % of process runtime)
 
-Thanks.
+Thanks,
 
-
-[1] https://lwn.net/Articles/724562/
-
---
-Best Regards,
-Yan Zi
-
---=_MailMate_64525BCB-86AC-4202-8D74-2FF72494C4AB_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAlyUADMPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKSFgQALRovEKyG0/MfQCHU7h0VuN+Y1Ed/08d75x8
-EToYq9az+/ecbuxikO5CcMDAa7Llw6BpMkeRaldPARrXIPj3tXeJeHgwLFO6C1Wg
-CC4oSM2XsZYoZ1JDwXeTDKIcO1OWCnANPHh3IbjdfcOKF8Z465sxaC70U9OCbzEb
-K/Tky+mUMBqokj40A7cTq72FLcOTcrXpyXMJqoWrl188E4bTiQs87FzSaN2wIKNr
-XP4MJCJR5cWcS0B1rLKfBTP/gZCWmOO6vCO9uxi/IH4QddfC8u8zZsIqzDQ3hc45
-37iYKoWMxSpqeynoz0elvjFYQB5QaXEsmzKXrpDbuiHyaaB25QPl0KbbVTllQJdH
-7DNe/zE2gS5MQl16r3DkHDssAZPu48vTgQNlVciDmzeEB4KURuZf/ItrGGXGfdDN
-3xScDxR4+fAJ3GzDRyG9M/CwsxbCgHl3fA60/ohO/Yyg0q1E42DWyMTammRikR7z
-4xI+r/jBXQMoiDrZ8DpU44QzRyWQugCJV2sX7BqtHpSxiMwlY7VR6g9PNn5bfHi9
-9hlI0k3xlEhLvF8voePfAY4iKhSpT5tNkNiwCJwikGByT+IJEAZW3+ESAYmv5U69
-dEZBjMSUbPS2uEVTEByjWw40FbuLWUh+7U3wloXwvKpfqQJby1RBl5gEKKIi8xBu
-PZ6qi/3K
-=WKXP
------END PGP SIGNATURE-----
-
---=_MailMate_64525BCB-86AC-4202-8D74-2FF72494C4AB_=--
+Julien
