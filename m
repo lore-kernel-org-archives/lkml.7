@@ -2,157 +2,190 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E16C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01DBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33874218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41AB21915
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FYCBqP0L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MMBchcBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfCUKox (ORCPT
+        id S1727946AbfCUKpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:44:53 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62098 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfCUKox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:44:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Q3MQ2VhFz9v0B9;
-        Thu, 21 Mar 2019 11:44:50 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=FYCBqP0L; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id UFp8DTmSY0Eo; Thu, 21 Mar 2019 11:44:50 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Q3MQ1HXxz9v0B8;
-        Thu, 21 Mar 2019 11:44:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553165090; bh=Y9Ov8db/ljtunrDKUeOWc5fnMlooRcwtz5OQoCy3TAs=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=FYCBqP0L0/7xVQPbPLAaEuxAs2ahT5M5PDJTO7Z9REumRSiqb0uQivzyG9AaO7L9g
-         ksYmICSLVnGXmzIZ7xpObNfuNwQ0d/Vek1XEYOZ0GQVc/Sth3Emm+apBaRrJxJQ/s3
-         u+KmkIjbdGcSdtoQblypE391hzKomlQ791XCNAVI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53F348B967;
-        Thu, 21 Mar 2019 11:44:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Jm4tTw9yprZi; Thu, 21 Mar 2019 11:44:51 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B97978B955;
-        Thu, 21 Mar 2019 11:44:50 +0100 (CET)
-Subject: Re: [PATCH v1 00/27] Reduce ifdef mess in hugetlbpage.c and slice.c
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        aneesh.kumar@linux.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1553076180.git.christophe.leroy@c-s.fr>
-Message-ID: <21bea4c3-8fc6-57a1-6628-bd597d5d371c@c-s.fr>
-Date:   Thu, 21 Mar 2019 11:44:50 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 21 Mar 2019 06:45:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfCUKpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:45:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vvcZGFxkcxBKT7DIR2f3M9/QIK7k0YfNJ8fLrzaqX+k=; b=MMBchcBLhIFX3P/7Pv84VHgE4
+        ZXWp2Nk+tChXBQW0NaVGHBQ390wf8FiWsfofiUJ7ivU1/ZLyvKiZ6y4P1TV8o7rH6otAMvf0iBRXS
+        2GjnZ5JbqiJCpbm+gT7OxHJ/phbvI/MwVvkKkFFdO7eYkIuMO7pcDUdmE7ho0WwZvn7sYQH0crdl2
+        d6D33UGySP/9bIckGhqfcOMgKFHqI53cC5NzLYyj2fU8RJ1dzi97Y4BLO5ZRa6EQ7GuMsETrywvGj
+        HSthV+hXNlQtLEqHIZNBkdJvAp5WFCNL5IsUyocy+aCJLBDvSPkdd7EcriObb8VTRdp+oxDAwUK2o
+        SiKOkEI7A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h6vCJ-00009E-Q1; Thu, 21 Mar 2019 10:45:20 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1961F285855B8; Thu, 21 Mar 2019 11:45:17 +0100 (CET)
+Date:   Thu, 21 Mar 2019 11:45:17 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
+ error_entry
+Message-ID: <20190321104517.GM6521@hirez.programming.kicks-ass.net>
+References: <20190320221534.165ab87b@oasis.local.home>
+ <20190321083317.GL6058@hirez.programming.kicks-ass.net>
+ <20190321090241.GL6521@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <cover.1553076180.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321090241.GL6521@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series went through a successfull build test on kisskb:
+On Thu, Mar 21, 2019 at 10:02:41AM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 21, 2019 at 09:33:17AM +0100, Peter Zijlstra wrote:
+> 
+> I'm thinking this problem wasn't new.
+> 
+> > idtentry page_fault             do_page_fault           has_error_code=1
+> >   call error_entry
+> >     TRACE_IRQS_OFF
+> >       call trace_hardirqs_off*
+> >         <tracer stuff>
+> > 	  <fault> # modifies CR2
+> 
+>       CALL_enter_from_user_mode
+>         __context_tracking_exit()
+> 	  trace_user_exit(0)
+> 	    #PF
+> 
+> >   call do_page_fault
+> >     address = read_cr2(); /* whoopsie */
+> 
+> And that also isn't fixed by your patch.
+> 
+> I'm trying to make idtentry put cr2 in rdx, such that do_page_fault()
+> takes address as a 3rd argument, but I'm still fighting that context
+> tracking nonsense.
+> 
 
-http://kisskb.ellerman.id.au/kisskb/branch/chleroy/head/f9dc3b2203af4356e9eac2d901126a0dfc5b51f6/
+Something a little like so; completely untested and obviously needs
+32bit changes too.
 
-Christophe
+---
+ arch/x86/entry/entry_64.S | 28 ++++++++++++++++------------
+ arch/x86/mm/fault.c       |  3 +--
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-Le 20/03/2019 à 11:06, Christophe Leroy a écrit :
-> The main purpose of this series is to reduce the amount of #ifdefs in
-> hugetlbpage.c and slice.c
-> 
-> At the same time, it does some cleanup by reducing the number of BUG_ON()
-> and dropping unused functions.
-> 
-> It also removes 64k pages related code in nohash/64 as 64k pages are
-> can only by selected on book3s/64
-> 
-> Christophe Leroy (27):
->    powerpc/mm: Don't BUG() in hugepd_page()
->    powerpc/mm: don't BUG in add_huge_page_size()
->    powerpc/mm: don't BUG() in slice_mask_for_size()
->    powerpc/book3e: drop mmu_get_tsize()
->    powerpc/mm: drop slice_set_user_psize()
->    powerpc/64: only book3s/64 supports CONFIG_PPC_64K_PAGES
->    powerpc/book3e: hugetlbpage is only for CONFIG_PPC_FSL_BOOK3E
->    powerpc/mm: move __find_linux_pte() out of hugetlbpage.c
->    powerpc/mm: make hugetlbpage.c depend on CONFIG_HUGETLB_PAGE
->    powerpc/mm: make gup_hugepte() static
->    powerpc/mm: split asm/hugetlb.h into dedicated subarch files
->    powerpc/mm: add a helper to populate hugepd
->    powerpc/mm: define get_slice_psize() all the time
->    powerpc/mm: no slice for nohash/64
->    powerpc/mm: cleanup ifdef mess in add_huge_page_size()
->    powerpc/mm: move hugetlb_disabled into asm/hugetlb.h
->    powerpc/mm: cleanup HPAGE_SHIFT setup
->    powerpc/mm: cleanup remaining ifdef mess in hugetlbpage.c
->    powerpc/mm: drop slice DEBUG
->    powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
->    powerpc/mm: hand a context_t over to slice_mask_for_size() instead of
->      mm_struct
->    powerpc/mm: move slice_mask_for_size() into mmu.h
->    powerpc/mm: remove a couple of #ifdef CONFIG_PPC_64K_PAGES in
->      mm/slice.c
->    powerpc: define subarch SLB_ADDR_LIMIT_DEFAULT
->    powerpc/mm: flatten function __find_linux_pte()
->    powerpc/mm: flatten function __find_linux_pte() step 2
->    powerpc/mm: flatten function __find_linux_pte() step 3
-> 
->   arch/powerpc/Kconfig                             |   3 +-
->   arch/powerpc/include/asm/book3s/64/hugetlb.h     |  73 +++++++
->   arch/powerpc/include/asm/book3s/64/mmu.h         |  22 +-
->   arch/powerpc/include/asm/book3s/64/slice.h       |   7 +-
->   arch/powerpc/include/asm/hugetlb.h               |  87 +-------
->   arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  45 +++++
->   arch/powerpc/include/asm/nohash/32/mmu-8xx.h     |  18 ++
->   arch/powerpc/include/asm/nohash/32/slice.h       |   2 +
->   arch/powerpc/include/asm/nohash/64/pgalloc.h     |   3 -
->   arch/powerpc/include/asm/nohash/64/pgtable.h     |   4 -
->   arch/powerpc/include/asm/nohash/64/slice.h       |  12 --
->   arch/powerpc/include/asm/nohash/hugetlb-book3e.h |  45 +++++
->   arch/powerpc/include/asm/nohash/pte-book3e.h     |   5 -
->   arch/powerpc/include/asm/page.h                  |  12 +-
->   arch/powerpc/include/asm/pgtable-be-types.h      |   7 +-
->   arch/powerpc/include/asm/pgtable-types.h         |   7 +-
->   arch/powerpc/include/asm/pgtable.h               |   3 -
->   arch/powerpc/include/asm/slice.h                 |   8 +-
->   arch/powerpc/include/asm/task_size_64.h          |   2 +-
->   arch/powerpc/kernel/fadump.c                     |   1 +
->   arch/powerpc/kernel/setup-common.c               |   8 +-
->   arch/powerpc/mm/Makefile                         |   4 +-
->   arch/powerpc/mm/hash_utils_64.c                  |   1 +
->   arch/powerpc/mm/hugetlbpage-book3e.c             |  52 ++---
->   arch/powerpc/mm/hugetlbpage-hash64.c             |  16 ++
->   arch/powerpc/mm/hugetlbpage.c                    | 245 ++++-------------------
->   arch/powerpc/mm/pgtable.c                        | 114 +++++++++++
->   arch/powerpc/mm/slice.c                          | 132 ++----------
->   arch/powerpc/mm/tlb_low_64e.S                    |  31 ---
->   arch/powerpc/mm/tlb_nohash.c                     |  13 --
->   arch/powerpc/platforms/Kconfig.cputype           |   4 +
->   31 files changed, 438 insertions(+), 548 deletions(-)
->   create mode 100644 arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
->   delete mode 100644 arch/powerpc/include/asm/nohash/64/slice.h
->   create mode 100644 arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-> 
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 1f0efdb7b629..776dbe7ba72e 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -879,7 +879,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
+  * @paranoid == 2 is special: the stub will never switch stacks.  This is for
+  * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
+  */
+-.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1
++.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 read_cr2=0
+ ENTRY(\sym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+ 
+@@ -901,18 +901,28 @@ ENTRY(\sym)
+ 
+ 	.if \paranoid
+ 	call	paranoid_entry
++	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
+ 	.else
+ 	call	error_entry
++	/* returned flag: ebx=1: CALL_enter_from_user_mode, ebx=0: don't need it */
+ 	.endif
+ 	UNWIND_HINT_REGS
+-	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
+ 
+-	.if \paranoid
++	.if \read_cr2
++	mov	%cr2, %rdx			/* XXX paravirt crap */
++	.endif
++
+ 	.if \shift_ist != -1
+ 	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
+ 	.else
+ 	TRACE_IRQS_OFF
+ 	.endif
++
++	.if \paranoid == 0
++	testl	%ebx, %ebx
++	jz	.Lno_context_tracking_\@
++	CALL_enter_from_user_mode
++.Lno_context_tracking_\@:
+ 	.endif
+ 
+ 	movq	%rsp, %rdi			/* pt_regs pointer */
+@@ -1140,7 +1150,7 @@ idtentry xenint3		do_int3			has_error_code=0
+ #endif
+ 
+ idtentry general_protection	do_general_protection	has_error_code=1
+-idtentry page_fault		do_page_fault		has_error_code=1
++idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
+ 
+ #ifdef CONFIG_KVM_GUEST
+ idtentry async_page_fault	do_async_page_fault	has_error_code=1
+@@ -1243,17 +1253,11 @@ ENTRY(error_entry)
+ 	ENCODE_FRAME_POINTER
+ 	pushq	%r12
+ 
+-	/*
+-	 * We need to tell lockdep that IRQs are off.  We can't do this until
+-	 * we fix gsbase, and we should do it before enter_from_user_mode
+-	 * (which can take locks).
+-	 */
+-	TRACE_IRQS_OFF
+-	CALL_enter_from_user_mode
++	mov	$1, %ebx			/* CALL_enter_from_user_mode */
+ 	ret
+ 
+ .Lerror_entry_done:
+-	TRACE_IRQS_OFF
++	xorl	%ebx, %ebx
+ 	ret
+ 
+ 	/*
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 667f1da36208..aac7a74869a2 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1560,9 +1560,8 @@ trace_page_fault_entries(unsigned long address, struct pt_regs *regs,
+  * exception_{enter,exit}() contains all sorts of tracepoints.
+  */
+ dotraplinkage void notrace
+-do_page_fault(struct pt_regs *regs, unsigned long error_code)
++do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
+ {
+-	unsigned long address = read_cr2(); /* Get the faulting address */
+ 	enum ctx_state prev_state;
+ 
+ 	prev_state = exception_enter();
