@@ -6,105 +6,97 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E4DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282AFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EDF218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEE7218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfCULrx (ORCPT
+        id S1728237AbfCULsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:47:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42728 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 07:48:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50728 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfCULrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:47:53 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1727829AbfCULsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:48:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 87ED330B9329;
-        Thu, 21 Mar 2019 11:47:52 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E4EE83092678;
+        Thu, 21 Mar 2019 11:48:00 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31B9F19C7F;
-        Thu, 21 Mar 2019 11:47:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CE36608A5;
+        Thu, 21 Mar 2019 11:47:59 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 2/8] vfs: Convert debugfs to fs_context
+Subject: [RFC PATCH 3/8] vfs: Convert tracefs to fs_context
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com
-Date:   Thu, 21 Mar 2019 11:47:50 +0000
-Message-ID: <155316887041.29437.11410904901332160798.stgit@warthog.procyon.org.uk>
+Date:   Thu, 21 Mar 2019 11:47:57 +0000
+Message-ID: <155316887777.29437.11898477863408246585.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155316885201.29437.3428987891437242750.stgit@warthog.procyon.org.uk>
 References: <155316885201.29437.3428987891437242750.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 21 Mar 2019 11:47:52 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 21 Mar 2019 11:48:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steven Rostedt <rostedt@goodmis.org>
 cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: "Rafael J. Wysocki" <rafael@kernel.org>
 ---
 
- fs/debugfs/inode.c |  186 ++++++++++++++++++++++++----------------------------
- 1 file changed, 85 insertions(+), 101 deletions(-)
+ fs/tracefs/inode.c |  180 ++++++++++++++++++++++++----------------------------
+ 1 file changed, 83 insertions(+), 97 deletions(-)
 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index 95b5e78c22b1..951939bf25ce 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -12,6 +12,8 @@
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 7098c49f3693..7ba64f38931f 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -16,12 +16,13 @@
  #include <linux/module.h>
  #include <linux/fs.h>
  #include <linux/mount.h>
 +#include <linux/fs_context.h>
 +#include <linux/fs_parser.h>
- #include <linux/pagemap.h>
- #include <linux/init.h>
  #include <linux/kobject.h>
-@@ -20,7 +22,6 @@
+ #include <linux/namei.h>
+ #include <linux/tracefs.h>
  #include <linux/fsnotify.h>
- #include <linux/string.h>
  #include <linux/seq_file.h>
 -#include <linux/parser.h>
  #include <linux/magic.h>
  #include <linux/slab.h>
  
-@@ -43,73 +44,62 @@ static struct inode *debugfs_get_inode(struct super_block *sb)
+@@ -138,73 +139,62 @@ static struct inode *tracefs_get_inode(struct super_block *sb)
  	return inode;
  }
  
--struct debugfs_mount_opts {
--	kuid_t uid;
--	kgid_t gid;
--	umode_t mode;
--};
--
+-struct tracefs_mount_opts {
++struct tracefs_fs_info {
+ 	kuid_t uid;
+ 	kgid_t gid;
+ 	umode_t mode;
+ };
+ 
  enum {
 -	Opt_uid,
  	Opt_gid,
  	Opt_mode,
 -	Opt_err
 +	Opt_uid,
-+};
-+
-+static const struct fs_parameter_spec debugfs_param_specs[] = {
-+	fsparam_u32	("gid",				Opt_gid),
-+	fsparam_u32oct	("mode",			Opt_mode),
-+	fsparam_u32	("uid",				Opt_uid),
-+	{}
  };
  
 -static const match_table_t tokens = {
@@ -112,31 +104,33 @@ index 95b5e78c22b1..951939bf25ce 100644
 -	{Opt_gid, "gid=%u"},
 -	{Opt_mode, "mode=%o"},
 -	{Opt_err, NULL}
-+static const struct fs_parameter_description debugfs_fs_parameters = {
-+	.name		= "debugfs",
-+	.specs		= debugfs_param_specs,
++static const struct fs_parameter_spec tracefs_param_specs[] = {
++	fsparam_u32	("gid",				Opt_gid),
++	fsparam_u32oct	("mode",			Opt_mode),
++	fsparam_u32	("uid",				Opt_uid),
++	{}
  };
  
- struct debugfs_fs_info {
--	struct debugfs_mount_opts mount_opts;
-+	kuid_t uid;
-+	kgid_t gid;
-+	umode_t mode;
+-struct tracefs_fs_info {
+-	struct tracefs_mount_opts mount_opts;
++static const struct fs_parameter_description tracefs_fs_parameters = {
++	.name		= "tracefs",
++	.specs		= tracefs_param_specs,
  };
  
--static int debugfs_parse_options(char *data, struct debugfs_mount_opts *opts)
-+static int debugfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+-static int tracefs_parse_options(char *data, struct tracefs_mount_opts *opts)
++static int tracefs_parse_param(struct fs_context *fc, struct fs_parameter *param)
  {
 -	substring_t args[MAX_OPT_ARGS];
 -	int option;
 -	int token;
-+	struct debugfs_fs_info *opts = fc->s_fs_info;
++	struct tracefs_fs_info *opts = fc->s_fs_info;
 +	struct fs_parse_result result;
  	kuid_t uid;
  	kgid_t gid;
 -	char *p;
 -
--	opts->mode = DEBUGFS_DEFAULT_MODE;
+-	opts->mode = TRACEFS_DEFAULT_MODE;
 -
 -	while ((p = strsep(&data, ",")) != NULL) {
 -		if (!*p)
@@ -167,7 +161,7 @@ index 95b5e78c22b1..951939bf25ce 100644
 -			break;
 +	int opt;
 +
-+	opt = fs_parse(fc, &debugfs_fs_parameters, param, &result);
++	opt = fs_parse(fc, &tracefs_fs_parameters, param, &result);
 +	if (opt < 0)
 +		return opt;
 +
@@ -189,17 +183,17 @@ index 95b5e78c22b1..951939bf25ce 100644
 +		break;
  		/*
  		 * We might like to report bad mount options here;
- 		 * but traditionally debugfs has ignored all mount options
+ 		 * but traditionally tracefs has ignored all mount options
  		 */
 -		}
  	}
  
  	return 0;
-@@ -119,46 +109,36 @@ static int debugfs_apply_options(struct super_block *sb)
+@@ -214,100 +204,96 @@ static int tracefs_apply_options(struct super_block *sb)
  {
- 	struct debugfs_fs_info *fsi = sb->s_fs_info;
- 	struct inode *inode = d_inode(sb->s_root);
--	struct debugfs_mount_opts *opts = &fsi->mount_opts;
+ 	struct tracefs_fs_info *fsi = sb->s_fs_info;
+ 	struct inode *inode = sb->s_root->d_inode;
+-	struct tracefs_mount_opts *opts = &fsi->mount_opts;
  
  	inode->i_mode &= ~S_IALLUGO;
 -	inode->i_mode |= opts->mode;
@@ -213,29 +207,29 @@ index 95b5e78c22b1..951939bf25ce 100644
  	return 0;
  }
  
--static int debugfs_remount(struct super_block *sb, int *flags, char *data)
-+static int debugfs_reconfigure(struct fs_context *fc)
+-static int tracefs_remount(struct super_block *sb, int *flags, char *data)
++static int tracefs_reconfigure(struct fs_context *fc)
  {
 -	int err;
--	struct debugfs_fs_info *fsi = sb->s_fs_info;
+-	struct tracefs_fs_info *fsi = sb->s_fs_info;
 +	struct super_block *sb = fc->root->d_sb;
  
  	sync_filesystem(sb);
--	err = debugfs_parse_options(data, &fsi->mount_opts);
+-	err = tracefs_parse_options(data, &fsi->mount_opts);
 -	if (err)
 -		goto fail;
 -
--	debugfs_apply_options(sb);
+-	tracefs_apply_options(sb);
 -
 -fail:
 -	return err;
-+	return debugfs_apply_options(sb);
++	return tracefs_apply_options(sb);
  }
  
- static int debugfs_show_options(struct seq_file *m, struct dentry *root)
+ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
  {
- 	struct debugfs_fs_info *fsi = root->d_sb->s_fs_info;
--	struct debugfs_mount_opts *opts = &fsi->mount_opts;
+ 	struct tracefs_fs_info *fsi = root->d_sb->s_fs_info;
+-	struct tracefs_mount_opts *opts = &fsi->mount_opts;
  
 -	if (!uid_eq(opts->uid, GLOBAL_ROOT_UID))
 +	if (!uid_eq(fsi->uid, GLOBAL_ROOT_UID))
@@ -246,109 +240,100 @@ index 95b5e78c22b1..951939bf25ce 100644
 +	if (!gid_eq(fsi->gid, GLOBAL_ROOT_GID))
  		seq_printf(m, ",gid=%u",
 -			   from_kgid_munged(&init_user_ns, opts->gid));
--	if (opts->mode != DEBUGFS_DEFAULT_MODE)
+-	if (opts->mode != TRACEFS_DEFAULT_MODE)
 -		seq_printf(m, ",mode=%o", opts->mode);
 +			   from_kgid_munged(&init_user_ns, fsi->gid));
-+	if (fsi->mode != DEBUGFS_DEFAULT_MODE)
++	if (fsi->mode != TRACEFS_DEFAULT_MODE)
 +		seq_printf(m, ",mode=%o", fsi->mode);
  
  	return 0;
  }
-@@ -173,7 +153,6 @@ static void debugfs_evict_inode(struct inode *inode)
  
- static const struct super_operations debugfs_super_operations = {
+ static const struct super_operations tracefs_super_operations = {
  	.statfs		= simple_statfs,
--	.remount_fs	= debugfs_remount,
- 	.show_options	= debugfs_show_options,
- 	.evict_inode	= debugfs_evict_inode,
- };
-@@ -199,51 +178,57 @@ static const struct dentry_operations debugfs_dops = {
- 	.d_automount = debugfs_automount,
+-	.remount_fs	= tracefs_remount,
+ 	.show_options	= tracefs_show_options,
  };
  
--static int debug_fill_super(struct super_block *sb, void *data, int silent)
-+static int debugfs_fill_super(struct super_block *sb, struct fs_context *fc)
+-static int trace_fill_super(struct super_block *sb, void *data, int silent)
++static int tracefs_fill_super(struct super_block *sb, struct fs_context *fc)
  {
- 	static const struct tree_descr debug_files[] = {{""}};
--	struct debugfs_fs_info *fsi;
+ 	static const struct tree_descr trace_files[] = {{""}};
+-	struct tracefs_fs_info *fsi;
  	int err;
  
--	fsi = kzalloc(sizeof(struct debugfs_fs_info), GFP_KERNEL);
+-	fsi = kzalloc(sizeof(struct tracefs_fs_info), GFP_KERNEL);
 -	sb->s_fs_info = fsi;
 -	if (!fsi) {
 -		err = -ENOMEM;
 -		goto fail;
 -	}
 -
--	err = debugfs_parse_options(data, &fsi->mount_opts);
-+	err = simple_fill_super(sb, DEBUGFS_MAGIC, debug_files);
+-	err = tracefs_parse_options(data, &fsi->mount_opts);
++	err = simple_fill_super(sb, TRACEFS_MAGIC, trace_files);
  	if (err)
 -		goto fail;
 -
--	err  =  simple_fill_super(sb, DEBUGFS_MAGIC, debug_files);
+-	err  =  simple_fill_super(sb, TRACEFS_MAGIC, trace_files);
 -	if (err)
 -		goto fail;
 +		return err;
  
- 	sb->s_op = &debugfs_super_operations;
- 	sb->s_d_op = &debugfs_dops;
- 
--	debugfs_apply_options(sb);
-+	return debugfs_apply_options(sb);
+ 	sb->s_op = &tracefs_super_operations;
++	return tracefs_apply_options(sb);
 +}
  
+-	tracefs_apply_options(sb);
+-
 -	return 0;
-+static int debugfs_get_tree(struct fs_context *fc)
++static int tracefs_get_tree(struct fs_context *fc)
 +{
 +	return vfs_get_super(fc, vfs_get_single_reconf_super,
-+			     debugfs_fill_super);
++			     tracefs_fill_super);
 +}
  
 -fail:
 -	kfree(fsi);
 -	sb->s_fs_info = NULL;
 -	return err;
-+static void debugfs_free_fc(struct fs_context *fc)
++static void tracefs_free_fc(struct fs_context *fc)
 +{
 +	kfree(fc->s_fs_info);
  }
  
--static struct dentry *debug_mount(struct file_system_type *fs_type,
+-static struct dentry *trace_mount(struct file_system_type *fs_type,
 -			int flags, const char *dev_name,
 -			void *data)
-+static const struct fs_context_operations debugfs_context_ops = {
-+	.free		= debugfs_free_fc,
-+	.parse_param	= debugfs_parse_param,
-+	.get_tree	= debugfs_get_tree,
-+	.reconfigure	= debugfs_reconfigure,
++static const struct fs_context_operations tracefs_context_ops = {
++	.free		= tracefs_free_fc,
++	.parse_param	= tracefs_parse_param,
++	.get_tree	= tracefs_get_tree,
++	.reconfigure	= tracefs_reconfigure,
 +};
 +
-+static int debugfs_init_fs_context(struct fs_context *fc)
++static int tracefs_init_fs_context(struct fs_context *fc)
  {
--	return mount_single(fs_type, flags, data, debug_fill_super);
-+	struct debugfs_fs_info *fsi;
+-	return mount_single(fs_type, flags, data, trace_fill_super);
++	struct tracefs_fs_info *fsi;
 +
-+	fsi = kzalloc(sizeof(struct debugfs_fs_info), GFP_KERNEL);
++	fsi = kzalloc(sizeof(struct tracefs_fs_info), GFP_KERNEL);
 +	if (!fsi)
 +		return -ENOMEM;
 +
++	fsi->mode = TRACEFS_DEFAULT_MODE;
++
 +	fc->s_fs_info = fsi;
-+	fc->ops = &debugfs_context_ops;
++	fc->ops = &tracefs_context_ops;
 +	return 0;
  }
  
- static struct file_system_type debug_fs_type = {
+ static struct file_system_type trace_fs_type = {
  	.owner =	THIS_MODULE,
- 	.name =		"debugfs",
--	.mount =	debug_mount,
-+	.init_fs_context = debugfs_init_fs_context,
-+	.parameters	= &debugfs_fs_parameters,
+ 	.name =		"tracefs",
+-	.mount =	trace_mount,
++	.init_fs_context = tracefs_init_fs_context,
++	.parameters	= &tracefs_fs_parameters,
  	.kill_sb =	kill_litter_super,
  };
- MODULE_ALIAS_FS("debugfs");
-@@ -862,4 +847,3 @@ static int __init debugfs_init(void)
- 	return retval;
- }
- core_initcall(debugfs_init);
--
+ MODULE_ALIAS_FS("tracefs");
 
