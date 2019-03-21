@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8B2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32165C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45931218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004DA2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="oR0ZYNiH"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="vobkcxAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfCUBUC (ORCPT
+        id S1727814AbfCUBUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:20:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36651 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfCUBUC (ORCPT
+        Wed, 20 Mar 2019 21:20:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44673 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbfCUBUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:20:02 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d18so3395428lfn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:20:01 -0700 (PDT)
+        Wed, 20 Mar 2019 21:20:24 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n18so3895869ljg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 18:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RvBwdTcEw1R5zX8xVZtB1Te0FHgHwkHqhIHaa6yTtKo=;
-        b=oR0ZYNiHYYSmZwTkUCioNpDX6I8AjLk+QXdNl1Ozv82+/8REq7h9nf9vgkf1E2v5aP
-         SA76FY5IyxajClhEF99T1EFnyP7LMwBC3vhJfM9xgZ+eBKk52bSEwsmWpcnIwEnshld2
-         pVJ1IemWN8HMXOgwJRLoZJQ1fo+gyLZQJJcr2S7eYmPNqe/3AVEEVExlpUDbghpDODIS
-         x+6P/vQ18k9Q12xjLKv+GRZFaVZBwD27ItU/yVBBlMYGoNGvCNil5+ez3vZbWjgqDbpa
-         14x3bwPLR2ACGOgr9MvV2aMlTurIkVsP+PgQH3eQXqQbhljmtN/Ey2I71pPNQEcqO07r
-         XqzQ==
+        bh=SYD+kPpAMrhPDLYsTiKw9ucgLLiZcAnOMGuJPLCs3og=;
+        b=vobkcxAPBL/oCV44uZDOZ5435EeEydo+k33Yufpl8ulveWOLED/i4kENjIMROqT2zY
+         3ZAmJBc+MPf/+Ti8YK/vXuUV7a5YN3rYfRoydNckS5iPrHKs/u2ZE6540R1LKAJAUNfS
+         ZcyG0IOS0as52Wuta4jmEf+DOQ9zT5zUmnzXWURS1+fwbsO9AlNh42mAb2BY4tC4NNJN
+         cdQes5loJKmnAh6LYgyWpQ2RRZU9dCwf6MvQ1X04/Tr2J4R1bSVV1eJpdmgtSxKlQyxr
+         Nq3MXlUhPQGl/i9bilnXGKqRYKol0PdcACkBDhSQtgneFU5SGImAPU1fn4TSj0zBIXsF
+         OT+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RvBwdTcEw1R5zX8xVZtB1Te0FHgHwkHqhIHaa6yTtKo=;
-        b=KbGDtvCa1WHzFUzCWTYJ+e0+TuHV1DJ9a0BKM5sd4TuwUBNX8bKfcPO0WccC71L9DK
-         p5bscKv7z3IWCGuzCZw9btBhL6tPjnoLdg9oNWkPzAVUQVAY1ywYYZLdZaJsA+BCUpIj
-         x92SW8rrgtCXr2hY0Jki4TblEOQUKLeqlkIJfaeIV4/31moLvoVyHrIxeGpUPrFZaKOx
-         0SzmayRPpbcjf8r0YUYzhzGWK5HEljM6Izj3hzs+tcuqfaaXgF2hjpWG868SFm73ED2+
-         OHUMWoTl3lsLrdIzgpdXmSaRJ37mgKDbkY2zdUMJcc3ws2aUDtAX+xX6uey0hDwzUQPa
-         OH5w==
-X-Gm-Message-State: APjAAAXqJERu4QUqv4zB2s08K98vjnOEu/QL3UKeiouNW+ETngMRYM3A
-        rSldu8x09hQmC9ZZzSJADWyuItn9C/PLEApnkYSv
-X-Google-Smtp-Source: APXvYqzUZ05wmhFOLhGfFHMyf6PZGJyI4RGRNrE5z4mlzF3w+267oal5GIb3YHK4prgH2Gr0Hj7VFAMinuelgW2t6xc=
-X-Received: by 2002:a19:7613:: with SMTP id c19mr372155lff.105.1553131200075;
- Wed, 20 Mar 2019 18:20:00 -0700 (PDT)
+        bh=SYD+kPpAMrhPDLYsTiKw9ucgLLiZcAnOMGuJPLCs3og=;
+        b=UAKkwWxoEARa6OOVXxOIHZ3f/G3hdYCjIefCO9skWqiukGpS+hp82IhmVTEynKMXcU
+         SihoaxQxWF9w5TLgAHHm6WwgX0fCgEiEqypmWL8bkcSzPjJiCzARNUmjvsfotM4JCdsQ
+         KbXXcIQNOcAJhoaDRY5JmVbtjTauDet8GIV0vSc+yPtTgQBJB2TX0BOmns7aYLOrhPQP
+         OIFF0aBPGhLhzL4vNPqcjZF3xKUYm3YTPMStnrApdu6G/hVHuJB/T28EPJk6oLLdwW7h
+         VhF2bAyYg3NRSibCeOztxqoapT/XmlY1Y8Q8ZL0Az7hHr6W8/wnKpiwcU2IcKstWVl4u
+         RpCg==
+X-Gm-Message-State: APjAAAWSYaNYAHEZ1QHjS0BxtEmOwvAGAjfX0p4NmaHzFZh99+gNeoRI
+        hT7VlOkvaPI7hYSodQ/C3LC6b9bnkuvAkVQjSSTw
+X-Google-Smtp-Source: APXvYqwSKZKGgvBenD8QkjCgEluxB8x3HLieE3npA0UcyZ2jd0PwOe0w4q8Cbf78g2QBuaciwVPjbrrADZqXlR8i5F0=
+X-Received: by 2002:a2e:91d2:: with SMTP id u18mr376796ljg.161.1553131222092;
+ Wed, 20 Mar 2019 18:20:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190317232932.GG16301@altlinux.org>
-In-Reply-To: <20190317232932.GG16301@altlinux.org>
+References: <20190317232938.GH16301@altlinux.org>
+In-Reply-To: <20190317232938.GH16301@altlinux.org>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 20 Mar 2019 21:19:49 -0400
-Message-ID: <CAHC9VhStCeH=fmgt8TAG+MeW_OWsLC75LrZeh2pUcmnWSWCBgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/13] hexagon: define syscall_get_arch()
+Date:   Wed, 20 Mar 2019 21:20:10 -0400
+Message-ID: <CAHC9VhTbPbGT2ZyPF=q8SEoOqpbT0Fj6QhVL1CX88fE4Cvd8CQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/13] m68k: define syscall_get_arch()
 To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
         Eugene Syromyatnikov <esyr@redhat.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Andy Lutomirski <luto@kernel.org>,
-        linux-hexagon@vger.kernel.org, linux-audit@redhat.com,
+        linux-m68k@lists.linux-m68k.org, linux-audit@redhat.com,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,13 +80,13 @@ On Sun, Mar 17, 2019 at 7:29 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
 > syscall_get_return_value() functions in order to extend the generic
 > ptrace API with PTRACE_GET_SYSCALL_INFO request.
 >
+> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > Acked-by: Paul Moore <paul@paul-moore.com>
 > Cc: Elvira Khabirova <lineprinter@altlinux.org>
 > Cc: Eugene Syromyatnikov <esyr@redhat.com>
-> Cc: Richard Kuo <rkuo@codeaurora.org>
 > Cc: Oleg Nesterov <oleg@redhat.com>
 > Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: linux-hexagon@vger.kernel.org
+> Cc: linux-m68k@lists.linux-m68k.org
 > Cc: linux-audit@redhat.com
 > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 > ---
@@ -94,9 +94,9 @@ On Sun, Mar 17, 2019 at 7:29 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
 > Notes:
 >     v2: unchanged
 >
->  arch/hexagon/include/asm/syscall.h | 8 ++++++++
->  include/uapi/linux/audit.h         | 1 +
->  2 files changed, 9 insertions(+)
+>  arch/m68k/include/asm/syscall.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 arch/m68k/include/asm/syscall.h
 
 Merged into audit/next, thanks everyone.
 
