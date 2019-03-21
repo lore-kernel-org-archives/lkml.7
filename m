@@ -2,106 +2,118 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F3EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1773F218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LJBelv/N"
+	by mail.kernel.org (Postfix) with ESMTP id 6AE54218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfCUCYF (ORCPT
+        id S1727830AbfCUCYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:24:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49340 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfCUCYE (ORCPT
+        Wed, 20 Mar 2019 22:24:45 -0400
+Received: from clyde.resnet.cms.waikato.ac.nz ([130.217.221.53]:33476 "EHLO
+        clyde.resnet.cms.waikato.ac.nz" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726983AbfCUCYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:24:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VeDSfNZVcKF/dmMd18yaoimKM6Z0qfa8XNDM5mZkkgM=; b=LJBelv/NWrJP+46sNa0Z0Cxvm
-        Wfe6QsPQy3cLQeSqK18OOxmRL4ocKWa1kpssRKzWLWThOItpi0fQsmjWau7ObsaO14iFhD8LvPVDV
-        3TNYfRczHJ52/nnWnMukdEvMXIEtu4gnUhE27YHTjnUzWgAbc3g91Np08MiV5f3DdJJg/7auDFG1u
-        ut2WxSoDVNcb5g0jaANLgtFLRISck2fV34uP/kQae4h9lG4sjmEHpKQjLiJHWC3ujqf+9kYzJUvjH
-        9uz5Uc+Y+3flPehLFAbvQnp4y0pAZQ6VCBal9pnL7jRGOgoLmT5RO/s8XVy+6rJZykRd5DvwXNAE+
-        SLUxRCAkg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h6nN5-0005Us-Vg; Thu, 21 Mar 2019 02:23:55 +0000
-Date:   Wed, 20 Mar 2019 19:23:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christopher Lameter <cl@linux.com>, linux-mm@kvack.org,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [RFC 0/2] guarantee natural alignment for kmalloc()
-Message-ID: <20190321022355.GA19508@bombadil.infradead.org>
-References: <20190319211108.15495-1-vbabka@suse.cz>
- <01000169988d4e34-b4178f68-c390-472b-b62f-a57a4f459a76-000000@email.amazonses.com>
- <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz>
- <20190320185347.GZ19508@bombadil.infradead.org>
- <b5290e04-6f29-c237-78a7-511821183efe@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5290e04-6f29-c237-78a7-511821183efe@suse.cz>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+        Wed, 20 Mar 2019 22:24:44 -0400
+X-Greylist: delayed 2080 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Mar 2019 22:24:44 EDT
+Received: from tom by clyde.resnet.cms.waikato.ac.nz with local (Exim 4.89)
+        (envelope-from <tom@clyde.resnet.cms.waikato.ac.nz>)
+        id 1h6mqH-0003Wa-1E; Thu, 21 Mar 2019 14:50:01 +1300
+From:   Tom Levy <tomlevy93@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Jiri Kosina <trivial@kernel.org>,
+        Tom Levy <tomlevy93@gmail.com>
+Subject: [PATCH] lz4: fix spelling and copy-paste errors in documentation
+Date:   Thu, 21 Mar 2019 14:44:52 +1300
+Message-Id: <20190321014452.13297-1-tomlevy93@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 10:48:03PM +0100, Vlastimil Babka wrote:
-> On 3/20/2019 7:53 PM, Matthew Wilcox wrote:
-> > On Wed, Mar 20, 2019 at 09:48:47AM +0100, Vlastimil Babka wrote:
-> >> Natural alignment to size is rather well defined, no? Would anyone ever
-> >> assume a larger one, for what reason?
-> >> It's now where some make assumptions (even unknowingly) for natural
-> >> There are two 'odd' sizes 96 and 192, which will keep cacheline size
-> >> alignment, would anyone really expect more than 64 bytes?
-> > 
-> > Presumably 96 will keep being aligned to 32 bytes, as aligning 96 to 64
-> > just results in 128-byte allocations.
-> 
-> Well, looks like that's what happens. This is with SLAB, but the alignment
-> calculations should be common: 
-> 
-> slabinfo - version: 2.1
-> # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
-> kmalloc-96          2611   4896    128   32    1 : tunables  120   60    8 : slabdata    153    153      0
-> kmalloc-128         4798   5536    128   32    1 : tunables  120   60    8 : slabdata    173    173      0
+Fix a few spelling and grammar errors, and two places where fast/safe
+in the documentation did not match the function.
 
-Hmm.  On my laptop, I see:
+Signed-off-by: Tom Levy <tomlevy93@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ include/linux/lz4.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-kmalloc-96         28050  35364     96   42    1 : tunables    0    0    0 : slabdata    842    842      0
-
-That'd take me from 842 * 4k pages to 1105 4k pages -- an extra megabyte of
-memory.
-
-This is running Debian's 4.19 kernel:
-
-# CONFIG_SLAB is not set
-CONFIG_SLUB=y
-# CONFIG_SLOB is not set
-CONFIG_SLAB_MERGE_DEFAULT=y
-CONFIG_SLAB_FREELIST_RANDOM=y
-CONFIG_SLAB_FREELIST_HARDENED=y
-CONFIG_SLUB_CPU_PARTIAL=y
-
+diff --git a/include/linux/lz4.h b/include/linux/lz4.h
+index 394e3d9213b8..b16e15b9587a 100644
+--- a/include/linux/lz4.h
++++ b/include/linux/lz4.h
+@@ -278,7 +278,7 @@ int LZ4_decompress_fast(const char *source, char *dest, int originalSize);
+  * @compressedSize: is the precise full size of the compressed block
+  * @maxDecompressedSize: is the size of 'dest' buffer
+  *
+- * Decompresses data fom 'source' into 'dest'.
++ * Decompresses data from 'source' into 'dest'.
+  * If the source stream is detected malformed, the function will
+  * stop decoding and return a negative result.
+  * This function is protected against buffer overflow exploits,
+@@ -522,7 +522,7 @@ int LZ4_setStreamDecode(LZ4_streamDecode_t *LZ4_streamDecode,
+ 	const char *dictionary, int dictSize);
+ 
+ /**
+- * LZ4_decompress_fast_continue() - Decompress blocks in streaming mode
++ * LZ4_decompress_safe_continue() - Decompress blocks in streaming mode
+  * @LZ4_streamDecode: the 'LZ4_streamDecode_t' structure
+  * @source: source address of the compressed data
+  * @dest: output buffer address of the uncompressed data
+@@ -530,7 +530,7 @@ int LZ4_setStreamDecode(LZ4_streamDecode_t *LZ4_streamDecode,
+  * @compressedSize: is the precise full size of the compressed block
+  * @maxDecompressedSize: is the size of 'dest' buffer
+  *
+- * These decoding function allows decompression of multiple blocks
++ * This decoding function allows decompression of multiple blocks
+  * in "streaming" mode.
+  * Previously decoded blocks *must* remain available at the memory position
+  * where they were decoded (up to 64 KB)
+@@ -569,7 +569,7 @@ int LZ4_decompress_safe_continue(LZ4_streamDecode_t *LZ4_streamDecode,
+  *	which must be already allocated with 'originalSize' bytes
+  * @originalSize: is the original and therefore uncompressed size
+  *
+- * These decoding function allows decompression of multiple blocks
++ * This decoding function allows decompression of multiple blocks
+  * in "streaming" mode.
+  * Previously decoded blocks *must* remain available at the memory position
+  * where they were decoded (up to 64 KB)
+@@ -610,10 +610,10 @@ int LZ4_decompress_fast_continue(LZ4_streamDecode_t *LZ4_streamDecode,
+  * @dictStart: pointer to the start of the dictionary in memory
+  * @dictSize: size of dictionary
+  *
+- * These decoding function works the same as
++ * This decoding function works the same as
+  * a combination of LZ4_setStreamDecode() followed by
+  * LZ4_decompress_safe_continue()
+- * It is stand-alone, and don'tn eed a LZ4_streamDecode_t structure.
++ * It is stand-alone, and doesn't need an LZ4_streamDecode_t structure.
+  *
+  * Return: number of bytes decompressed into destination buffer
+  *	(necessarily <= maxDecompressedSize)
+@@ -633,10 +633,10 @@ int LZ4_decompress_safe_usingDict(const char *source, char *dest,
+  * @dictStart: pointer to the start of the dictionary in memory
+  * @dictSize: size of dictionary
+  *
+- * These decoding function works the same as
++ * This decoding function works the same as
+  * a combination of LZ4_setStreamDecode() followed by
+- * LZ4_decompress_safe_continue()
+- * It is stand-alone, and don'tn eed a LZ4_streamDecode_t structure.
++ * LZ4_decompress_fast_continue()
++ * It is stand-alone, and doesn't need an LZ4_streamDecode_t structure.
+  *
+  * Return: number of bytes decompressed into destination buffer
+  *	(necessarily <= maxDecompressedSize)
+-- 
+2.11.0
 
