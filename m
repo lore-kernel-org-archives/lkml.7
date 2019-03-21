@@ -2,137 +2,119 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9165C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912B1218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC412218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eBQVpTL2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwB0sJL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbfCUUKC (ORCPT
+        id S1728811AbfCUULP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:10:02 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57506 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbfCUUKB (ORCPT
+        Thu, 21 Mar 2019 16:11:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33547 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728138AbfCUULO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:10:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LK9wxg115200;
-        Thu, 21 Mar 2019 15:09:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553198998;
-        bh=lZ9YUXczeYXra49/riDoG0QBNS5c2/EbEIAbt8EChQs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eBQVpTL2fXqbTM+NluGlN5q6blBC1bY3JGPLE0TKIYXaJCPClPrW2rLYBDGnPi7z5
-         WSvMP1vYeb/7GT3vm7c6gpQkz9U8hypfc78dvyxSR2EfAa9ZikoChUcACXQuBlB/Yi
-         MHij6fv2MZrCXAkPPlHsOPiWjTbMrGwf7fkJWhuw=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LK9w9g034132
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 15:09:58 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 15:09:58 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 15:09:58 -0500
-Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LK9wH2017575;
-        Thu, 21 Mar 2019 15:09:58 -0500
-Received: from localhost ([10.250.67.168])
-        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2LK9vU17906;
-        Thu, 21 Mar 2019 15:09:57 -0500 (CDT)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH 2/2] dma-buf: Update [un]map documentation to match the other functions
-Date:   Thu, 21 Mar 2019 15:09:57 -0500
-Message-ID: <20190321200957.16938-2-afd@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190321200957.16938-1-afd@ti.com>
-References: <20190321200957.16938-1-afd@ti.com>
+        Thu, 21 Mar 2019 16:11:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q1so8101379wrp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9P5W3/unLbHiwQeefxsCF7KUs13ROq2ZhWkA041EwJE=;
+        b=jwB0sJL7xU271oin4iKuHvx+pUnTN27Tx2/TiWyOnC0sdez0Wb4+426dnFtOd3gQ8B
+         O90cFHLJrgLpLfI84K+bBjyMLJcYPu7a1TklbxiMfV13ezkTMXdbiKnHFyTHofix4wO6
+         +MNz5SAoGBlynr/h0U1F7wXIIuT0VKYo8xn/8VmmAMvS9UeOsL0KqRow9Pb6+vYQu+AO
+         ay/neaYZ10/m+G8YSlSQrDMOVAhvQ3PF5/GaQ7xeHLEUlytYYXMMllkknxmq8osuju6C
+         Bq8wNqSWY07+1iRFbIks8e52eOnyb5LTAjLj1i1Gzj4wPg0spF4yJo5xGnMFG3n4+mRm
+         7Z1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9P5W3/unLbHiwQeefxsCF7KUs13ROq2ZhWkA041EwJE=;
+        b=aJj884kTCPiXy4BuC2sn7ZQgnBCtSxLPX1FNfrvLt1go0Ev6KA1jqQXS8a2Ls9VwME
+         CSPcaEX9yAnQsk6IemJQjia9eEuRyk8RtZqh3TlFD4hiw+TXaeiX4HBLPT4XDpTpsj3M
+         enYGiao2MA9aeLJXhBEcXn48CcW0vtKt7IrOR1KyvIwcaPkJ/66bwAoH8utW3zMpTIdT
+         WTraLtkvgQIpJWNWWbWlm6EDpJ9uYz2l1X1G1FzaSPDQiz+3z9E9e7sEkTzFMacNbOT3
+         e5MHX5BrwFvkAU841wBMvX9r14ByDYtsTv/zIIQBBAV/6W3gHD3QRDdKsLgFTTQjJqKD
+         +2AQ==
+X-Gm-Message-State: APjAAAXh+b2rfHt4i99N+B7pG/+YJugwoHra9pQ5o8dMRP6F3OXPCBYS
+        ll7x/STO8DrmResu0vEgkG8OgEhDhIo92wruEnf9mg==
+X-Google-Smtp-Source: APXvYqyjtKoXpLSwnHSk3DwU9/rg3ROx381WtdtGw8E9GX5aQ4rKtnfGeqRJLbjjLF5JU26nMA9dgZsEKfnoOKU/mxs=
+X-Received: by 2002:a5d:6682:: with SMTP id l2mr3696549wru.33.1553199072988;
+ Thu, 21 Mar 2019 13:11:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-3-git-send-email-john.stultz@linaro.org> <20190319142604.f6puq3ugxrcxsrjs@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20190319142604.f6puq3ugxrcxsrjs@DESKTOP-E1NTVVP.localdomain>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 21 Mar 2019 13:11:02 -0700
+Message-ID: <CALAqxLU-qi6qQ=diMjN=XHfVcofhgQMj-kONRKkySODtnMqsWw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Other function have inline documentation, a couple still have
-theirs at the top of the structure, update the docs and move
-them inline.
+On Tue, Mar 19, 2019 at 7:26 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+>
+> Hi John,
+>
+> On Tue, Mar 05, 2019 at 12:54:30PM -0800, John Stultz wrote:
+>
+> ...
+>
+> > +
+> > +void dma_heap_buffer_destroy(struct dma_heap_buffer *heap_buffer)
+> > +{
+> > +     struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> > +
+> > +     if (buffer->kmap_cnt > 0) {
+> > +             pr_warn_once("%s: buffer still mapped in the kernel\n",
+> > +                          __func__);
+>
+> Could be worth something louder like a full WARN.
+>
+> > +             vunmap(buffer->vaddr);
+> > +     }
+> > +
+> > +     buffer->free(buffer);
+> > +}
+> > +
+>
+> ...
+>
+> > +
+> > +static void *dma_heap_dma_buf_kmap(struct dma_buf *dmabuf,
+> > +                                     unsigned long offset)
+> > +{
+> > +     struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> > +     struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> > +
+> > +     return buffer->vaddr + offset * PAGE_SIZE;
+>
+> I think it'd be good to check for NULL vaddr and return NULL in that
+> case. Less chance of an invalid pointer being accidentally used then.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- include/linux/dma-buf.h | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index e4a8dab2bc54..a0bd071466fc 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -39,8 +39,6 @@ struct dma_buf_attachment;
- 
- /**
-  * struct dma_buf_ops - operations possible on struct dma_buf
-- * @map: [optional] maps a page from the buffer into kernel address space.
-- * @unmap: [optional] unmaps a page from the buffer.
-  * @vmap: [optional] creates a virtual mapping for the buffer into kernel
-  *	  address space. Same restrictions as for vmap and friends apply.
-  * @vunmap: [optional] unmaps a vmap from the buffer
-@@ -200,8 +198,6 @@ struct dma_buf_ops {
- 	 * to be restarted.
- 	 */
- 	int (*end_cpu_access)(struct dma_buf *, enum dma_data_direction);
--	void *(*map)(struct dma_buf *, unsigned long);
--	void (*unmap)(struct dma_buf *, unsigned long, void *);
- 
- 	/**
- 	 * @mmap:
-@@ -240,6 +236,31 @@ struct dma_buf_ops {
- 	 */
- 	int (*mmap)(struct dma_buf *, struct vm_area_struct *vma);
- 
-+	/**
-+	 * @map:
-+	 *
-+	 * Maps a page from the buffer into kernel address space. The page is
-+	 * specified by offset into the buffer in PAGE_SIZE units.
-+	 *
-+	 * This callback is optional.
-+	 *
-+	 * Returns:
-+	 *
-+	 * Virtual address pointer where requested page can be accessed. NULL
-+	 * on error or when this function is unimplemented by the exporter.
-+	 */
-+	void *(*map)(struct dma_buf *, unsigned long);
-+
-+	/**
-+	 * @unmap:
-+	 *
-+	 * Unmaps a page from the buffer. Page offset and address pointer should
-+	 * be the same as the one passed to and returned by matching call to map.
-+	 *
-+	 * This callback is optional.
-+	 */
-+	void (*unmap)(struct dma_buf *, unsigned long, void *);
-+
- 	void *(*vmap)(struct dma_buf *);
- 	void (*vunmap)(struct dma_buf *, void *vaddr);
- };
--- 
-2.21.0
-
+Thanks so much for the feedback! I've added these two suggestions in!
+-john
