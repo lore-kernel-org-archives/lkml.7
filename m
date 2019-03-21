@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8851EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C4FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4D9218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7F2218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="N2i+yD8E"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="k1vNqxvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfCUUZY (ORCPT
+        id S1728900AbfCUUZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:25:24 -0400
-Received: from mail-eopbgr810054.outbound.protection.outlook.com ([40.107.81.54]:65072
+        Thu, 21 Mar 2019 16:25:27 -0400
+Received: from mail-eopbgr810088.outbound.protection.outlook.com ([40.107.81.88]:29732
         "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728093AbfCUUZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:25:22 -0400
+        id S1728093AbfCUUZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:25:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KBU+YSjoU90q3fdK4a2NhtGI1CCkFLixDmvkL2951/8=;
- b=N2i+yD8EUOu59uBwDPyrd7dl8WB2RHHTaBSNe9k1t5W+Iao2Ka+xFq6QSo9WPZXgGqdBkUkZUUyFqPuOYqBkrYorqVTP3FI/RMdjFnyVMI1UE1d9YT8drnaxUeMt+2CDtJ4ANvjOw94KKIXaOqIXU1A4MtQoxwgWZ+TEwCjITq8=
+ bh=w4obxn2514Mi/5yHKK0FLcKNgFi5ElX3slNbaQ5MQEc=;
+ b=k1vNqxvrg5B+37xBNdkSBprosi64xbjvmB69f84ekFLx7mDX+IopDrqJAkeBymQs4130OlYROY54enJaeQ4dyJ4NxntxdDClzHe599XtckXEM5meGp98Vzu9omTjwWODUU5J49p4vtoiL8Sja50aveh22bmdihNewzsB8bZK5X8=
 Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2816.namprd12.prod.outlook.com (52.135.107.153) with Microsoft SMTP
+ SN6PR12MB2685.namprd12.prod.outlook.com (52.135.103.26) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.1730.16; Thu, 21 Mar 2019 20:25:18 +0000
 Received: from SN6PR12MB2639.namprd12.prod.outlook.com
@@ -45,15 +45,12 @@ CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
         "x86@kernel.org" <x86@kernel.org>,
         "rafal@milecki.pl" <rafal@milecki.pl>,
         "clemej@gmail.com" <clemej@gmail.com>
-Subject: [PATCH v2 2/2] x86/MCE/AMD: Don't report L1 BTB MCA errors on some
- Family 17h models
-Thread-Topic: [PATCH v2 2/2] x86/MCE/AMD: Don't report L1 BTB MCA errors on
- some Family 17h models
-Thread-Index: AQHU4CQzOwE6EEZAWEC91l7umX/fDg==
-Date:   Thu, 21 Mar 2019 20:25:18 +0000
-Message-ID: <20190321202505.5553-2-Yazen.Ghannam@amd.com>
-References: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
-In-Reply-To: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
+Subject: [PATCH v2 1/2] x86/MCE: Add function to allow filtering of MCA errors
+Thread-Topic: [PATCH v2 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Thread-Index: AQHU4CQyTsE/SKvH9kGTin5rcQxftA==
+Date:   Thu, 21 Mar 2019 20:25:17 +0000
+Message-ID: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,29 +64,29 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [165.204.78.1]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4b58612-d31a-4d30-6d8a-08d6ae3b55ac
+x-ms-office365-filtering-correlation-id: 4af0cc7f-2f27-4934-5dc0-08d6ae3b554e
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2816;
-x-ms-traffictypediagnostic: SN6PR12MB2816:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2685;
+x-ms-traffictypediagnostic: SN6PR12MB2685:
 x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR12MB281691100C0B8EBCE1827FAAF8420@SN6PR12MB2816.namprd12.prod.outlook.com>
+x-microsoft-antispam-prvs: <SN6PR12MB2685C36BD269A619628C0DABF8420@SN6PR12MB2685.namprd12.prod.outlook.com>
 x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(366004)(39860400002)(346002)(189003)(199004)(386003)(26005)(6506007)(102836004)(446003)(50226002)(97736004)(7736002)(186003)(53936002)(72206003)(476003)(486006)(305945005)(2616005)(11346002)(6512007)(478600001)(8936002)(2501003)(5660300002)(66066001)(54906003)(52116002)(316002)(99286004)(76176011)(5640700003)(4326008)(1076003)(71190400001)(2351001)(71200400001)(6116002)(86362001)(3846002)(106356001)(105586002)(14444005)(6486002)(256004)(25786009)(68736007)(6436002)(2906002)(8676002)(6916009)(14454004)(6306002)(81156014)(966005)(81166006)(36756003)(170073001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2816;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(66066001)(71190400001)(966005)(36756003)(71200400001)(316002)(81156014)(81166006)(72206003)(14454004)(8676002)(2906002)(6486002)(50226002)(53936002)(6512007)(6116002)(478600001)(105586002)(106356001)(6436002)(8936002)(5640700003)(3846002)(54906003)(2351001)(14444005)(305945005)(102836004)(6506007)(386003)(476003)(1076003)(486006)(2501003)(26005)(186003)(97736004)(86362001)(6306002)(25786009)(99286004)(52116002)(256004)(6916009)(2616005)(5660300002)(4326008)(68736007)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2685;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tIyK3hXtLWD1uanWBQydUFk3JQt0w58reI+VenHCwd7IqY+ho2CPVhY3+Tyxi7WxkQ1gqnXQI5LuD4YSJ/pAE8SFCUdGGRRsylKmyjcndFDcfdm0PyZ3RZfKfdaeUtkW1DuBxrqXyvhBpBtWPuQuD9U1gwzehULriYaeuCNtTD7M+yJLTBYT8z9jbbcT70jlnaIvQJpyV3FMuaMvfhY4raEjnmpJhsnn/4gtNXrJAsR217pGbNtU3kD+bIBuvVVVmUip/CIS3iT1og6m8KL1OMgD9n9iQRHXqP6KarOgN+IzDDsBcPPH1wjheUdAS2j2D5Til0vQDz4dW92HvQb0USjXJSd2KVsqltm5vtrHLjFUrgLGFnZJbPOUzf001oVtZjO/kPrqJWMHePhr9C2VVUMt9MFL3hPEzPXp7+SXgiE=
+x-microsoft-antispam-message-info: oGdg8PzeJPXBYJbB1Tm701ztR07fnn39TIe68rQN81ZSOsp39+xUEixwPCiB02be2MZ3gVoXi3J32CfEQhVFTidNrju1/ZiJ+0rsX3yFRjaevMZDvfr8DtP+lM0oi89QrmkMDBH/CQ4n3KdKpdFCZcugTpezXkhWzhV8QL9D5kYY25MF/XpC6/OTqyksUtfjhHmWVK5+ETgtikDfAK/qbQklIjZY/SNgtwRDf91Sa7j9JVbsfenV7hsn+10HCoJAsin+RsK5zPaaCNOB5uPgZphEHt2AQxNPVzIt7b2DW/h0hDhQ5r6eckGDPRQnsn0cD4lysejOAaCMrFQm84R3hyKeUMnCpVcXSQNLjOZZhXf/raw7dyRafrPYX7ogNKZOg7Yjr0CYbpqciTpt7pjiDyUkXFsktLdM2py1XIYs+wU=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4b58612-d31a-4d30-6d8a-08d6ae3b55ac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 20:25:18.5762
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4af0cc7f-2f27-4934-5dc0-08d6ae3b554e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 20:25:17.9928
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2816
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -97,136 +94,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-AMD Family 17h Models 10h-2Fh may report a high number of L1 BTB MCA
-errors under certain conditions. The errors are benign and can safely be
-ignored. However, the high error rate may cause the MCA threshold
-counter to overflow causing a high rate of thresholding interrupts. In
-addition, users may see the errors reported through the AMD MCE decoder
-module, even with the interrupt disabled, due to MCA polling.
+Some systems may report spurious MCA errors. In general, spurious MCA
+errors may be disabled by clearing a particular bit in MCA_CTL. However,
+clearing a bit in MCA_CTL may not be recommended for some errors, so the
+only option is to ignore them.
 
-This error is reported through the Instruction Fetch bank.
+An MCA error is printed and handled after it has been added to the MCE
+event pool. So an MCA error can be ignored by not adding it to the pool.
 
-Clear the "Counter Present" bit in the Instruction Fetch bank's
-MCA_MISC0 register. This will prevent enabling MCA thresholding on this
-bank which will prevent the high interrupt rate due to this error.
+Create a function pointer to filter MCA errors and use this when adding
+an error to the MCE event pool.
 
-Define a function to filter these errors from the MCE event pool.
-Install this function during AMD vendor init. The MCA banks are enabled
-after vendor init, so the filter function will be installed before the
-spurious errors will be reported.
+Install a default function that does not filter any errors.
 
-Cc: <stable@vger.kernel.org> # 4.14.x: c95b323dcd35: x86/MCE/AMD: Turn off =
-MC4_MISC thresholding on all family 0x15 models
-Cc: <stable@vger.kernel.org> # 4.14.x: 30aa3d26edb0: x86/MCE/AMD: Carve out=
- the MC4_MISC thresholding quirk
 Cc: <stable@vger.kernel.org> # 4.14.x
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
 Link:
-https://lkml.kernel.org/r/20190307212552.8865-2-Yazen.Ghannam@amd.com
+https://lkml.kernel.org/r/20190307212552.8865-1-Yazen.Ghannam@amd.com
 
 v1->v2:
-* Filter out the error earlier in MCE code rather than later in EDAC.
+* This is a new patch replacing V1 Patch 1 which is no longer needed.
 
- arch/x86/kernel/cpu/mce/amd.c | 57 ++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/mce.h        | 3 +++
+ arch/x86/kernel/cpu/mce/core.c    | 6 ++++++
+ arch/x86/kernel/cpu/mce/genpool.c | 3 +++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index e64de5149e50..2db85f65b41e 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -563,22 +563,55 @@ prepare_threshold_block(unsigned int bank, unsigned i=
-nt block, u32 addr,
- 	return offset;
- }
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 22d05e3835f0..0b0b797a959c 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -253,6 +253,9 @@ extern void mce_disable_bank(int bank);
+ extern void (*machine_check_vector)(struct pt_regs *, long error_code);
+ void do_machine_check(struct pt_regs *, long);
 =20
-+bool filter_mce_rv(struct mce *m)
-+{
-+	enum smca_bank_types bank_type =3D smca_get_bank_type(m->bank);
-+	u8 xec =3D (m->status >> 16) & 0x3F;
-+
-+	/*
-+	 * Spurious errors of this type may be reported.
-+	 * See Family 17h Models 10h-2Fh Erratum #1114.
-+	 */
-+	if (bank_type =3D=3D SMCA_IF && xec =3D=3D 10)
-+		return true;
-+
-+	return false;
-+}
-+
-+static void filter_mce_check(struct cpuinfo_x86 *c)
-+{
-+	if (c->x86 =3D=3D 0x17 && (c->x86_model >=3D 0x10 && c->x86_model <=3D 0x=
-2F))
-+		filter_mce =3D filter_mce_rv;
-+}
++/* Filter MCEs from the decoder chain. */
++extern bool (*filter_mce)(struct mce *m);
 +
  /*
-- * Turn off MC4_MISC thresholding banks on all family 0x15 models since
-- * they're not supported there.
-+ * Turn off thresholding banks for the following conditions:
-+ * - MC4_MISC thresholding is not support on Family 0x15.
-+ * - Prevent possible spurious interrupts from the IF bank on Family 0x17
-+ *   Models 0x10-0x2F due to Erratum #1114.
+  * Threshold handler
   */
--void disable_err_thresholding(struct cpuinfo_x86 *c)
-+void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.=
+c
+index b7fb541a4873..effb40581f08 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1771,6 +1771,12 @@ static void __mcheck_cpu_init_timer(void)
+ 	mce_start_timer(t);
+ }
+=20
++/*
++ * Don't filter MCEs by default. Install a system-specific function, if ne=
+eded.
++ */
++static bool default_filter_mce(struct mce *m) { return false; }
++bool (*filter_mce)(struct mce *) =3D default_filter_mce;
++
+ /* Handle unconfigured int18 (should never happen) */
+ static void unexpected_machine_check(struct pt_regs *regs, long error_code=
+)
  {
--	int i;
-+	int i, num_msrs;
- 	u64 hwcr;
- 	bool need_toggle;
--	u32 msrs[] =3D {
--		0x00000413, /* MC4_MISC0 */
--		0xc0000408, /* MC4_MISC1 */
--	};
-+	u32 msrs[NR_BLOCKS];
+diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/ge=
+npool.c
+index 3395549c51d3..64d1d5a00f39 100644
+--- a/arch/x86/kernel/cpu/mce/genpool.c
++++ b/arch/x86/kernel/cpu/mce/genpool.c
+@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
+ {
+ 	struct mce_evt_llist *node;
 =20
--	if (c->x86 !=3D 0x15)
-+	if (c->x86 =3D=3D 0x15 && bank =3D=3D 4) {
-+		msrs[0] =3D 0x00000413; /* MC4_MISC0 */
-+		msrs[1] =3D 0xc0000408; /* MC4_MISC1 */
-+		num_msrs =3D 2;
-+	} else if (c->x86 =3D=3D 0x17 &&
-+		   (c->x86_model >=3D 0x10 && c->x86_model <=3D 0x2F)) {
++	if (filter_mce(mce))
++		return -EINVAL;
 +
-+		if (smca_get_bank_type(bank) !=3D SMCA_IF)
-+			return;
-+
-+		msrs[0] =3D MSR_AMD64_SMCA_MCx_MISC(bank);
-+		num_msrs =3D 1;
-+	} else {
- 		return;
-+	}
+ 	if (!mce_evt_pool)
+ 		return -EINVAL;
 =20
- 	rdmsrl(MSR_K7_HWCR, hwcr);
-=20
-@@ -589,7 +622,7 @@ void disable_err_thresholding(struct cpuinfo_x86 *c)
- 		wrmsrl(MSR_K7_HWCR, hwcr | BIT(18));
-=20
- 	/* Clear CntP bit safely */
--	for (i =3D 0; i < ARRAY_SIZE(msrs); i++)
-+	for (i =3D 0; i < num_msrs; i++)
- 		msr_clear_bit(msrs[i], 62);
-=20
- 	/* restore old settings */
-@@ -604,12 +637,14 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 	unsigned int bank, block, cpu =3D smp_processor_id();
- 	int offset =3D -1;
-=20
--	disable_err_thresholding(c);
-+	filter_mce_check(c);
-=20
- 	for (bank =3D 0; bank < mca_cfg.banks; ++bank) {
- 		if (mce_flags.smca)
- 			smca_configure(bank, cpu);
-=20
-+		disable_err_thresholding(c, bank);
-+
- 		for (block =3D 0; block < NR_BLOCKS; ++block) {
- 			address =3D get_block_address(address, low, high, bank, block);
- 			if (!address)
 --=20
 2.17.1
 
