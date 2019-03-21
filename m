@@ -6,90 +6,97 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1D4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AE2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2607F20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E36920830
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfCUOl3 (ORCPT
+        id S1728420AbfCUOli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:41:29 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:33742 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfCUOl3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:41:29 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 21 Mar 2019 07:41:22 -0700
-Received: from pa-dbc1104.eng.vmware.com (pa-dbc1104.eng.vmware.com [10.162.210.4])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 2E33E40FA9;
-        Thu, 21 Mar 2019 07:41:28 -0700 (PDT)
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     <gregkh@linuxfoundation.org>, <pv-drivers@vmware.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: [PATCH] VMCI/VSOCK: Add maintainers for VMCI, AF_VSOCK and VMCI transport
-Date:   Thu, 21 Mar 2019 07:41:28 -0700
-Message-ID: <1553179288-40893-1-git-send-email-jhansen@vmware.com>
-X-Mailer: git-send-email 2.6.2
+        Thu, 21 Mar 2019 10:41:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1450 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfCUOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:41:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 07:41:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
+   d="scan'208";a="157064212"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2019 07:41:23 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: intel_soc_pmic_bxtwc: Add device for the I2C master
+Date:   Thu, 21 Mar 2019 17:41:22 +0300
+Message-Id: <20190321144122.88484-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: jhansen@vmware.com does not
- designate permitted sender hosts)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the maintainers file to include maintainers for the VMware
-vmci driver, af_vsock, and the vsock vmci transport.
+Intel WhiskeyCove PMIC has also I2C master interface that is
+designed to be used for controlling a discrete battery
+charger IC.
 
-Signed-off-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- MAINTAINERS | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/mfd/intel_soc_pmic_bxtwc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf7..b9714fc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16630,6 +16630,14 @@ S:	Maintained
- F:	drivers/scsi/vmw_pvscsi.c
- F:	drivers/scsi/vmw_pvscsi.h
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 03fe33882441..52885e2c0d85 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -84,6 +84,7 @@ enum bxtwc_irqs_adc {
  
-+VMWARE VMCI DRIVER
-+M:	Jorgen Hansen <jhansen@vmware.com>
-+M:	Vishnu Dasa <vdasa@vmware.com>
-+M:	"VMware, Inc." <pv-drivers@vmware.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/misc/vmw_vmci/
-+
- VMWARE VMMOUSE SUBDRIVER
- M:	"VMware Graphics" <linux-graphics-maintainer@vmware.com>
- M:	"VMware, Inc." <pv-drivers@vmware.com>
-@@ -16638,6 +16646,18 @@ S:	Maintained
- F:	drivers/input/mouse/vmmouse.c
- F:	drivers/input/mouse/vmmouse.h
+ enum bxtwc_irqs_chgr {
+ 	BXTWC_USBC_IRQ = 0,
++	BXTWC_I2C_IRQ,
+ 	BXTWC_CHGR0_IRQ,
+ 	BXTWC_CHGR1_IRQ,
+ };
+@@ -121,7 +122,8 @@ static const struct regmap_irq bxtwc_regmap_irqs_adc[] = {
  
-+VMWARE VSOCK DRIVER (AF_VSOCK) AND VMCI TRANSPORT
-+M:	Jorgen Hansen <jhansen@vmware.com>
-+M:	Vishnu Dasa <vdasa@vmware.com>
-+M:	"VMware, Inc." <pv-drivers@vmware.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	net/vmw_vsock/af_vsock.c
-+F:	net/vmw_vsock/vmci_transport*
-+F:	net/vmw_vsock/vsock_addr.c
-+F:	include/linux/vm_sockets.h
-+F:	include/uapi/linux/vm_sockets.h
+ static const struct regmap_irq bxtwc_regmap_irqs_chgr[] = {
+ 	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, 0x20),
+-	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x1f),
++	REGMAP_IRQ_REG(BXTWC_I2C_IRQ, 0, 0x0f),
++	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x10),
+ 	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 1, 0x1f),
+ };
+ 
+@@ -208,6 +210,10 @@ static struct resource usbc_resources[] = {
+ 	DEFINE_RES_IRQ(BXTWC_USBC_IRQ),
+ };
+ 
++static struct resource i2c_resources[] = {
++	DEFINE_RES_IRQ(BXTWC_I2C_IRQ),
++};
 +
- VMWARE VMXNET3 ETHERNET DRIVER
- M:	Ronak Doshi <doshir@vmware.com>
- M:	"VMware, Inc." <pv-drivers@vmware.com>
+ static struct resource charger_resources[] = {
+ 	DEFINE_RES_IRQ_NAMED(BXTWC_CHGR0_IRQ, "CHARGER"),
+ 	DEFINE_RES_IRQ_NAMED(BXTWC_CHGR1_IRQ, "CHARGER1"),
+@@ -241,6 +247,11 @@ static struct mfd_cell bxt_wc_dev[] = {
+ 		.num_resources = ARRAY_SIZE(usbc_resources),
+ 		.resources = usbc_resources,
+ 	},
++	{
++		.name = "bxt_wcove_i2c",
++		.num_resources = ARRAY_SIZE(i2c_resources),
++		.resources = i2c_resources,
++	},
+ 	{
+ 		.name = "bxt_wcove_ext_charger",
+ 		.num_resources = ARRAY_SIZE(charger_resources),
 -- 
-2.6.2
+2.20.1
 
