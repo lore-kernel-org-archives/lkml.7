@@ -2,117 +2,81 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A43C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD344C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F46E218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AFUpvsI1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KUVY6vcx"
+	by mail.kernel.org (Postfix) with ESMTP id A789A218D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553162600;
+	bh=SEMZUVcX7pLFfkgD2J31gTYN7FPuMe2NRmoDrlaQqW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xak7MH1tLHO09W+OytMnfWKPOk+DOY+qg1v1ZRRYVdlzfqlJkLLqI8v2AAaTTYnnJ
+	 hqTMSADhXur/wZs0gj+oXcf46mu8E2aiWiSzXFQ5RWGzxxsRMk7qk/3g9ld6Hi3DJI
+	 4WC22NHjLaquF6icUF3inOeJ+WI6KT5Hd3M9M+4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfCUKCz (ORCPT
+        id S1728383AbfCUKDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:02:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49390 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfCUKCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:02:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9D25061340; Thu, 21 Mar 2019 10:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553162573;
-        bh=rX7DF4oh7NXEJSuZVEdUG2Y/o23SCQFXYK+f7URV7AY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=AFUpvsI1IB89QRXqng/uMv+DtJGYYSqd/BEcycapUsIlatw0q7vc/37u/FNFtKE4/
-         RJGLYRsbdsdp8Jxlj9vCONhJLH4SYuk+v5r9468/C8L7EMhEGOdFp1SsHvoiNhFcJh
-         UzNj95/G5auWq88si0fKm1q7HNtbNT/vGSjIO7s4=
-Received: from x230.qca.qualcomm.com (unknown [195.39.71.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A9E161194;
-        Thu, 21 Mar 2019 10:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553162572;
-        bh=rX7DF4oh7NXEJSuZVEdUG2Y/o23SCQFXYK+f7URV7AY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=KUVY6vcx37GIjUETvE5ll8B1rG2tX3azrfl/69wGMN6f8lfb7du3SH8Pj7XbA17X1
-         w1iWWGjRH1HmaRmy8u0F6yM8o8VfMHrQlwGKvIiG7Ght7IgzY4iESuepEp6E9c1ZLg
-         PKJQHgKmeKo6UfGGzxiZU+OsQ30UM6Tb2ztmbHbg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A9E161194
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Tim Schumacher <timschumi@gmx.de>
-Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
-References: <20190318190557.21599-1-timschumi@gmx.de>
-Date:   Thu, 21 Mar 2019 12:02:47 +0200
-In-Reply-To: <20190318190557.21599-1-timschumi@gmx.de> (Tim Schumacher's
-        message of "Mon, 18 Mar 2019 20:05:57 +0100")
-Message-ID: <87va0cpmt4.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 21 Mar 2019 06:03:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54304 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728214AbfCUKDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:03:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AB793B049;
+        Thu, 21 Mar 2019 10:03:17 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 11:03:16 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mike.kravetz@oracle.com,
+        zi.yan@cs.rutgers.edu, akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/isolation: Remove redundant pfn_valid_within() in
+ __first_valid_page()
+Message-ID: <20190321100316.GN8696@dhcp22.suse.cz>
+References: <1553141595-26907-1-git-send-email-anshuman.khandual@arm.com>
+ <20190321094237.onu3kar2ez7xv5wj@d104.suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321094237.onu3kar2ez7xv5wj@d104.suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tim Schumacher <timschumi@gmx.de> writes:
+On Thu 21-03-19 10:42:40, Oscar Salvador wrote:
+> On Thu, Mar 21, 2019 at 09:43:15AM +0530, Anshuman Khandual wrote:
+> > pfn_valid_within() calls pfn_valid() when CONFIG_HOLES_IN_ZONE making it
+> > redundant for both definitions (w/wo CONFIG_MEMORY_HOTPLUG) of the helper
+> > pfn_to_online_page() which either calls pfn_valid() or pfn_valid_within().
+> > pfn_valid_within() being 1 when !CONFIG_HOLES_IN_ZONE is irrelevant either
+> > way. This does not change functionality.
+> > 
+> > Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> About the "Fixes:" tag issue, I agree with Michal that the code is not
+> really broken, but perhaps "suboptimal" depending on how much can affect
+> performance on those systems where pfn_valid_within() is more complicated than
+> simple returning true.
+> 
+> I see that on arm64, that calls memblock_is_map_memory()->memblock_search(),
+> to trigger a search for the region containing the address, so I guess it
+> is an expensive operation.
+> 
+> Depending on how much time we can shave, it might be worth to have the tag
+> Fixes, but the removal of the code is fine anyway, so:
 
-> Right now, if an error is encountered during the SREV register
-> read (i.e. an EIO in ath9k_regread()), that error code gets
-> passed all the way to __ath9k_hw_init(), where it is visible
-> during the "Chip rev not supported" message.
->
->     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
->     ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath9k_htc: Failed to initialize the device
->
-> Check for -EIO explicitly in ath9k_hw_read_revisions() and return
-> a boolean based on the success of the operation. Check for that in
-> __ath9k_hw_init() and abort with a more debugging-friendly message
-> if reading the revisions wasn't successful.
->
->     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
->     ath: phy2: Failed to read SREV register
->     ath: phy2: Could not read hardware revision
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath9k_htc: Failed to initialize the device
->
-> This helps when debugging by directly showing the first point of
-> failure and it could prevent possible errors if a 0x0f.3 revision
-> is ever supported.
->
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-
-[...]
-
-> -	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
-> +	srev = REG_READ(ah, AR_SREV);
-> +
-> +	if (srev == -EIO) {
-> +		ath_err(ath9k_hw_common(ah),
-> +			"Failed to read SREV register");
-> +		return false;
-> +	}
-
-I really don't like how the error handling is implemented in REG_READ().
-If the register has value 0xfffffffb (= -EIO ==-5) won't this interpret
-that as an error?
+Yeah, seeing a noticesable slowdown (actual numbers) would warrant a
+backport to 5.0.
 
 -- 
-Kalle Valo
+Michal Hocko
+SUSE Labs
