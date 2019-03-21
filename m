@@ -2,249 +2,98 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C913FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27143C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91883218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC48A218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:50:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J8/ZCUP7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mpWkjbK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfCUOst (ORCPT
+        id S1728271AbfCUOur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:48:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40173 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfCUOst (ORCPT
+        Thu, 21 Mar 2019 10:50:47 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44808 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728088AbfCUOur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:48:49 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1h6yzk-0002zw-DW; Thu, 21 Mar 2019 15:48:36 +0100
-Message-ID: <1553179714.4806.39.camel@pengutronix.de>
-Subject: Re: [PATCH v4] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thu, 21 Mar 2019 10:50:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4B56D6087F; Thu, 21 Mar 2019 14:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553179846;
+        bh=yowy9rN/QCpAdY30SxzxUpQ5gl5ONtmBlVm1TDftSGI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=J8/ZCUP7xKAJ064sKYnt97X7vkzPU0wzgOqbFtS3b5gO3aghRB6v+PpmR8WvE6rQs
+         jGLAD6dxWUn3hFC68NnVN2KaDsfQZuQ19wmigbnsYsKeU/fo38IzO5YgtfNB7X6gVX
+         SHCNZ60BuJYIYvxVTMQM868w95bjm6VjzFwFwUXs=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 373926141B;
+        Thu, 21 Mar 2019 14:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553179845;
+        bh=yowy9rN/QCpAdY30SxzxUpQ5gl5ONtmBlVm1TDftSGI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mpWkjbK62ivjxAmJe8byst9xb3lPiuBVN/9KG4fmHYN+7Cln40INe+p3MPN98HHZ+
+         kLmwAKrQPVOeYZoMb3nj6Q5vnl1Qh3NKkE7Vmpwq8Cw4J7D0oUqHr2R+5+YCKWNYBu
+         9grUaGB5k8OFzq0UMMBD0IlUfrWWyb8yWj5oJdK8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 373926141B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v1] clk: Probe defer clk_get() on orphans
+To:     Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com
+Cc:     bjorn.andersson@linaro.org, georgi.djakov@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 15:48:34 +0100
-In-Reply-To: <20190321125252.4498-1-angus@akkea.ca>
-References: <20190311213124.29325-1-angus@akkea.ca>
-         <20190321125252.4498-1-angus@akkea.ca>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1549911467-2465-1-git-send-email-jhugo@codeaurora.org>
+ <873279a6-0755-2094-ec99-d9e5f6c963dd@codeaurora.org>
+ <155191438574.20095.6161802248500300707@swboyd.mtv.corp.google.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <29112c43-790e-e7e4-9e4b-9eda8f5bdb78@codeaurora.org>
+Date:   Thu, 21 Mar 2019 08:50:43 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <155191438574.20095.6161802248500300707@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 21.03.2019, 05:52 -0700 schrieb Angus Ainslie (Purism):
-> Add the imx8mq TMU (Thermal management unit) nodes for CPU,
-> GPU, and VPU.
+On 3/6/2019 4:19 PM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-03-06 13:48:13)
+>> Ping?
+>>
+>> Stephen, I know as this depends on your clock parent handling series
+>> (happens to apply just fine to v2), its not going to be accepted until
+>> that gets sorted out, but do you have any thoughts on if this seems like
+>> an appropriate thing to do, or if you'd like to see a different solution?
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> Please don't ping during the merge window. I'll probably look at this
+> patch next week.
+> 
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Sorry about pinging during the merge window.  At the time, I just 
+realized the patch has been on list for several weeks with no response, 
+but hadn't connected the dots that it happened to be the merge window at 
+that particular moment.
 
-> ---
-> 
-> Changes since v3:
-> 
-> Moved the annotation.
-> 
-> Changes since v2:
-> 
-> Updated alert and critical temps for commercial parts.
-> Fixed node names.
-> 
-> Changes since v1:
-> 
-> Removed references to multi sensor patch.
-> 
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
->  1 file changed, 118 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index b39c6c75c043..81d5ce1b1ec1 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/power/imx8mq-power.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  #include "imx8mq-pinfunc.h"
->  
->  / {
-> @@ -89,6 +90,7 @@
-> >  			reg = <0x0>;
-> >  			enable-method = "psci";
-> >  			next-level-cache = <&A53_L2>;
-> > +			#cooling-cells = <2>;
-> >  		};
->  
-> > >  		A53_1: cpu@1 {
-> @@ -97,6 +99,7 @@
-> >  			reg = <0x1>;
-> >  			enable-method = "psci";
-> >  			next-level-cache = <&A53_L2>;
-> > +			#cooling-cells = <2>;
-> >  		};
->  
-> > >  		A53_2: cpu@2 {
-> @@ -105,6 +108,7 @@
-> >  			reg = <0x2>;
-> >  			enable-method = "psci";
-> >  			next-level-cache = <&A53_L2>;
-> > +			#cooling-cells = <2>;
-> >  		};
->  
-> > >  		A53_3: cpu@3 {
-> @@ -113,6 +117,7 @@
-> >  			reg = <0x3>;
-> >  			enable-method = "psci";
-> >  			next-level-cache = <&A53_L2>;
-> > +			#cooling-cells = <2>;
-> >  		};
->  
-> >  		A53_L2: l2-cache0 {
-> @@ -210,6 +215,119 @@
-> >  				#interrupt-cells = <2>;
-> >  			};
->  
-> > > +			tmu: tmu@30260000 {
-> > +				compatible = "fsl,imx8mq-tmu";
-> > +				reg = <0x30260000 0x10000>;
-> > +				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> > +				little-endian;
-> > +				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-> > +				fsl,tmu-calibration = <0x00000000 0x00000023
-> > +						       0x00000001 0x00000029
-> > +						       0x00000002 0x0000002f
-> > +						       0x00000003 0x00000035
-> > +						       0x00000004 0x0000003d
-> > +						       0x00000005 0x00000043
-> > +						       0x00000006 0x0000004b
-> > +						       0x00000007 0x00000051
-> > +						       0x00000008 0x00000057
-> > +						       0x00000009 0x0000005f
-> > +						       0x0000000a 0x00000067
-> > +						       0x0000000b 0x0000006f
-> +
-> > +						       0x00010000 0x0000001b
-> > +						       0x00010001 0x00000023
-> > +						       0x00010002 0x0000002b
-> > +						       0x00010003 0x00000033
-> > +						       0x00010004 0x0000003b
-> > +						       0x00010005 0x00000043
-> > +						       0x00010006 0x0000004b
-> > +						       0x00010007 0x00000055
-> > +						       0x00010008 0x0000005d
-> > +						       0x00010009 0x00000067
-> > +						       0x0001000a 0x00000070
-> +
-> > +						       0x00020000 0x00000017
-> > +						       0x00020001 0x00000023
-> > +						       0x00020002 0x0000002d
-> > +						       0x00020003 0x00000037
-> > +						       0x00020004 0x00000041
-> > +						       0x00020005 0x0000004b
-> > +						       0x00020006 0x00000057
-> > +						       0x00020007 0x00000063
-> > +						       0x00020008 0x0000006f
-> +
-> > +						       0x00030000 0x00000015
-> > +						       0x00030001 0x00000021
-> > +						       0x00030002 0x0000002d
-> > +						       0x00030003 0x00000039
-> > +						       0x00030004 0x00000045
-> > +						       0x00030005 0x00000053
-> > +						       0x00030006 0x0000005f
-> > +						       0x00030007 0x00000071>;
-> > +				#thermal-sensor-cells =  <1>;
-> > +			};
-> +
-> > +			thermal-zones {
-> > +				cpu-thermal {
-> > +					polling-delay-passive = <250>;
-> > +					polling-delay = <2000>;
-> > +					thermal-sensors = <&tmu 0>;
-> +
-> > +					trips {
-> > +						cpu_alert: cpu-alert {
-> > +							temperature = <80000>;
-> > +							hysteresis = <2000>;
-> > +							type = "passive";
-> > +						};
-> +
-> > +						cpu-crit {
-> > +							temperature = <90000>;
-> > +							hysteresis = <2000>;
-> > +							type = "critical";
-> > +						};
-> > +					};
-> +
-> > +					cooling-maps {
-> > +						map0 {
-> > +							trip = <&cpu_alert>;
-> > +							cooling-device =
-> > +								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +						};
-> > +					};
-> > +				};
-> +
-> > +				gpu-thermal {
-> > +					polling-delay-passive = <250>;
-> > +					polling-delay = <2000>;
-> > +					thermal-sensors = <&tmu 1>;
-> +
-> > +					trips {
-> > +						gpu-crit {
-> > +							temperature = <90000>;
-> > +							hysteresis = <2000>;
-> > +							type = "critical";
-> > +						};
-> > +					};
-> > +				};
-> +
-> > +				vpu-thermal {
-> > +					polling-delay-passive = <250>;
-> > +					polling-delay = <2000>;
-> > +					thermal-sensors = <&tmu 2>;
-> +
-> > +					trips {
-> > +						vpu-crit {
-> > +							temperature = <90000>;
-> > +							hysteresis = <2000>;
-> > +							type = "critical";
-> > +						};
-> > +					};
-> > +				};
-> > +			};
-> +
-> > >  			wdog1: watchdog@30280000 {
-> >  				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
-> >  				reg = <0x30280000 0x10000>;
+Any update on when you think you might get around to having a look at this?
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
