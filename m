@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E72C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F97C10F0D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB58C21B1A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BE52192B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfCUVpl (ORCPT
+        id S1727262AbfCUVpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:45:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38920 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 17:45:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35277 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbfCUVpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:45:40 -0400
+        id S1725962AbfCUVpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 17:45:38 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 280328124A;
-        Thu, 21 Mar 2019 21:45:39 +0000 (UTC)
-Received: from llong.com (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C00B25C57E;
+        by mx1.redhat.com (Postfix) with ESMTPS id A087330821EC;
         Thu, 21 Mar 2019 21:45:37 +0000 (UTC)
+Received: from llong.com (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06E364B3;
+        Thu, 21 Mar 2019 21:45:35 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Christoph Lameter <cl@linux.com>,
@@ -40,262 +40,132 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release memory
-Date:   Thu, 21 Mar 2019 17:45:10 -0400
-Message-Id: <20190321214512.11524-3-longman@redhat.com>
+Subject: [PATCH 1/4] mm: Implement kmem objects freeing queue
+Date:   Thu, 21 Mar 2019 17:45:09 -0400
+Message-Id: <20190321214512.11524-2-longman@redhat.com>
 In-Reply-To: <20190321214512.11524-1-longman@redhat.com>
 References: <20190321214512.11524-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 21 Mar 2019 21:45:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 21 Mar 2019 21:45:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found that if a process had many pending signals (e.g. millions),
-the act of exiting that process might cause its parent to have a hard
-lockup especially on a debug kernel with features like KASAN enabled.
-It was because the flush_sigqueue() was called in release_task() with
-tasklist_lock held and irq disabled.
+When releasing kernel data structures, freeing up the memory
+occupied by those objects is usually the last step. To avoid races,
+the release operation is commonly done with a lock held. However, the
+freeing operations do not need to be under lock, but are in many cases.
 
-  [ 3133.105601] NMI watchdog: Watchdog detected hard LOCKUP on cpu 37
-    :
-  [ 3133.105709] CPU: 37 PID: 11200 Comm: bash Kdump: loaded Not tainted 4.18.0-80.el8.x86_64+debug #1
-    :
-  [ 3133.105750]  slab_free_freelist_hook+0xa0/0x120
-  [ 3133.105758]  kmem_cache_free+0x9d/0x310
-  [ 3133.105762]  flush_sigqueue+0x12b/0x1d0
-  [ 3133.105766]  release_task.part.14+0xaf7/0x1520
-  [ 3133.105784]  wait_consider_task+0x28da/0x3350
-  [ 3133.105804]  do_wait+0x3eb/0x8c0
-  [ 3133.105819]  kernel_wait4+0xe4/0x1b0
-  [ 3133.105834]  __do_sys_wait4+0xe0/0xf0
-  [ 3133.105864]  do_syscall_64+0xa5/0x4a0
-  [ 3133.105868]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+In some complex cases where the locks protect many different memory
+objects, that can be a problem especially if some memory debugging
+features like KASAN are enabled. In those cases, freeing memory objects
+under lock can greatly lengthen the lock hold time. This can even lead
+to soft/hard lockups in some extreme cases.
 
-[ All the "?" stack trace entries were removed from above. ]
+To make it easer to defer freeing memory objects until after unlock,
+a kernel memory freeing queue mechanism is now added. It is modelled
+after the wake_q mechanism for waking up tasks without holding a lock.
 
-To avoid this dire condition and reduce lock hold time of tasklist_lock,
-flush_sigqueue() is modified to pass in a freeing queue pointer so that
-the actual freeing of memory objects can be deferred until after the
-tasklist_lock is released and irq re-enabled.
+Now kmem_free_q_add() can be called to add memory objects into a freeing
+queue. Later on, kmem_free_up_q() can be called to free all the memory
+objects in the freeing queue after releasing the lock.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- include/linux/signal.h   |  4 +++-
- kernel/exit.c            | 12 ++++++++----
- kernel/signal.c          | 27 ++++++++++++++++-----------
- security/selinux/hooks.c |  8 ++++++--
- 4 files changed, 33 insertions(+), 18 deletions(-)
+ include/linux/slab.h | 28 ++++++++++++++++++++++++++++
+ mm/slab_common.c     | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 69 insertions(+)
 
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index 9702016734b1..a9562e502122 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -5,6 +5,7 @@
- #include <linux/bug.h>
- #include <linux/signal_types.h>
- #include <linux/string.h>
-+#include <linux/slab.h>
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 11b45f7ae405..6116fcecbd8f 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -762,4 +762,32 @@ int slab_dead_cpu(unsigned int cpu);
+ #define slab_dead_cpu		NULL
+ #endif
  
- struct task_struct;
- 
-@@ -254,7 +255,8 @@ static inline void init_sigpending(struct sigpending *sig)
- 	INIT_LIST_HEAD(&sig->list);
- }
- 
--extern void flush_sigqueue(struct sigpending *queue);
-+extern void flush_sigqueue(struct sigpending *queue,
-+			   struct kmem_free_q_head *head);
- 
- /* Test if 'sig' is valid signal. Use this instead of testing _NSIG directly */
- static inline int valid_signal(unsigned long sig)
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2166c2d92ddc..ee707a63edfd 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -88,7 +88,8 @@ static void __unhash_process(struct task_struct *p, bool group_dead)
- /*
-  * This function expects the tasklist_lock write-locked.
-  */
--static void __exit_signal(struct task_struct *tsk)
-+static void __exit_signal(struct task_struct *tsk,
-+			  struct kmem_free_q_head *free_q)
- {
- 	struct signal_struct *sig = tsk->signal;
- 	bool group_dead = thread_group_leader(tsk);
-@@ -160,14 +161,14 @@ static void __exit_signal(struct task_struct *tsk)
- 	 * Do this under ->siglock, we can race with another thread
- 	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
- 	 */
--	flush_sigqueue(&tsk->pending);
-+	flush_sigqueue(&tsk->pending, free_q);
- 	tsk->sighand = NULL;
- 	spin_unlock(&sighand->siglock);
- 
- 	__cleanup_sighand(sighand);
- 	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
- 	if (group_dead) {
--		flush_sigqueue(&sig->shared_pending);
-+		flush_sigqueue(&sig->shared_pending, free_q);
- 		tty_kref_put(tty);
- 	}
- }
-@@ -186,6 +187,8 @@ void release_task(struct task_struct *p)
- {
- 	struct task_struct *leader;
- 	int zap_leader;
-+	DEFINE_KMEM_FREE_Q(free_q);
++/*
++ * Freeing queue node for freeing kmem_cache slab objects later.
++ * The node is put at the beginning of the memory object and so the object
++ * size cannot be smaller than sizeof(kmem_free_q_node).
++ */
++struct kmem_free_q_node {
++	struct kmem_free_q_node *next;
++	struct kmem_cache *cachep;	/* NULL if alloc'ed by kmalloc */
++};
 +
- repeat:
- 	/* don't need to get the RCU readlock here - the process is dead and
- 	 * can't be modifying its own credentials. But shut RCU-lockdep up */
-@@ -197,7 +200,7 @@ void release_task(struct task_struct *p)
- 
- 	write_lock_irq(&tasklist_lock);
- 	ptrace_release_task(p);
--	__exit_signal(p);
-+	__exit_signal(p, &free_q);
- 
- 	/*
- 	 * If we are the last non-leader member of the thread
-@@ -219,6 +222,7 @@ void release_task(struct task_struct *p)
- 	}
- 
- 	write_unlock_irq(&tasklist_lock);
-+	kmem_free_up_q(&free_q);
- 	cgroup_release(p);
- 	release_thread(p);
- 	call_rcu(&p->rcu, delayed_put_task_struct);
-diff --git a/kernel/signal.c b/kernel/signal.c
-index b7953934aa99..04fb202c16bd 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -435,16 +435,19 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
- 	return q;
- }
- 
--static void __sigqueue_free(struct sigqueue *q)
-+static void __sigqueue_free(struct sigqueue *q, struct kmem_free_q_head *free_q)
- {
- 	if (q->flags & SIGQUEUE_PREALLOC)
- 		return;
- 	atomic_dec(&q->user->sigpending);
- 	free_uid(q->user);
--	kmem_cache_free(sigqueue_cachep, q);
-+	if (free_q)
-+		kmem_free_q_add(free_q, sigqueue_cachep, q);
-+	else
-+		kmem_cache_free(sigqueue_cachep, q);
- }
- 
--void flush_sigqueue(struct sigpending *queue)
-+void flush_sigqueue(struct sigpending *queue, struct kmem_free_q_head *free_q)
- {
- 	struct sigqueue *q;
- 
-@@ -452,7 +455,7 @@ void flush_sigqueue(struct sigpending *queue)
- 	while (!list_empty(&queue->list)) {
- 		q = list_entry(queue->list.next, struct sigqueue , list);
- 		list_del_init(&q->list);
--		__sigqueue_free(q);
-+		__sigqueue_free(q, free_q);
- 	}
- }
- 
-@@ -462,12 +465,14 @@ void flush_sigqueue(struct sigpending *queue)
- void flush_signals(struct task_struct *t)
- {
- 	unsigned long flags;
-+	DEFINE_KMEM_FREE_Q(free_q);
- 
- 	spin_lock_irqsave(&t->sighand->siglock, flags);
- 	clear_tsk_thread_flag(t, TIF_SIGPENDING);
--	flush_sigqueue(&t->pending);
--	flush_sigqueue(&t->signal->shared_pending);
-+	flush_sigqueue(&t->pending, &free_q);
-+	flush_sigqueue(&t->signal->shared_pending, &free_q);
- 	spin_unlock_irqrestore(&t->sighand->siglock, flags);
-+	kmem_free_up_q(&free_q);
- }
- EXPORT_SYMBOL(flush_signals);
- 
-@@ -488,7 +493,7 @@ static void __flush_itimer_signals(struct sigpending *pending)
- 		} else {
- 			sigdelset(&signal, sig);
- 			list_del_init(&q->list);
--			__sigqueue_free(q);
-+			__sigqueue_free(q, NULL);
- 		}
- 	}
- 
-@@ -580,7 +585,7 @@ static void collect_signal(int sig, struct sigpending *list, kernel_siginfo_t *i
- 			(info->si_code == SI_TIMER) &&
- 			(info->si_sys_private);
- 
--		__sigqueue_free(first);
-+		__sigqueue_free(first, NULL);
- 	} else {
- 		/*
- 		 * Ok, it wasn't in the queue.  This must be
-@@ -728,7 +733,7 @@ static int dequeue_synchronous_signal(kernel_siginfo_t *info)
- still_pending:
- 	list_del_init(&sync->list);
- 	copy_siginfo(info, &sync->info);
--	__sigqueue_free(sync);
-+	__sigqueue_free(sync, NULL);
- 	return info->si_signo;
- }
- 
-@@ -776,7 +781,7 @@ static void flush_sigqueue_mask(sigset_t *mask, struct sigpending *s)
- 	list_for_each_entry_safe(q, n, &s->list, list) {
- 		if (sigismember(mask, q->info.si_signo)) {
- 			list_del_init(&q->list);
--			__sigqueue_free(q);
-+			__sigqueue_free(q, NULL);
- 		}
- 	}
- }
-@@ -1749,7 +1754,7 @@ void sigqueue_free(struct sigqueue *q)
- 	spin_unlock_irqrestore(lock, flags);
- 
- 	if (q)
--		__sigqueue_free(q);
-+		__sigqueue_free(q, NULL);
- }
- 
- int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 1d0b37af2444..8ca571a0b2ac 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2548,6 +2548,8 @@ static void selinux_bprm_committed_creds(struct linux_binprm *bprm)
- 	rc = avc_has_perm(&selinux_state,
- 			  osid, sid, SECCLASS_PROCESS, PROCESS__SIGINH, NULL);
- 	if (rc) {
-+		DEFINE_KMEM_FREE_Q(free_q);
++struct kmem_free_q_head {
++	struct kmem_free_q_node *first;
++	struct kmem_free_q_node **lastp;
++};
 +
- 		if (IS_ENABLED(CONFIG_POSIX_TIMERS)) {
- 			memset(&itimer, 0, sizeof itimer);
- 			for (i = 0; i < 3; i++)
-@@ -2555,13 +2557,15 @@ static void selinux_bprm_committed_creds(struct linux_binprm *bprm)
- 		}
- 		spin_lock_irq(&current->sighand->siglock);
- 		if (!fatal_signal_pending(current)) {
--			flush_sigqueue(&current->pending);
--			flush_sigqueue(&current->signal->shared_pending);
-+			flush_sigqueue(&current->pending, &free_q);
-+			flush_sigqueue(&current->signal->shared_pending,
-+				       &free_q);
- 			flush_signal_handlers(current, 1);
- 			sigemptyset(&current->blocked);
- 			recalc_sigpending();
- 		}
- 		spin_unlock_irq(&current->sighand->siglock);
-+		kmem_free_up_q(&free_q);
- 	}
++#define DEFINE_KMEM_FREE_Q(name)	\
++	struct kmem_free_q_head name = { NULL, &name.first }
++
++static inline void kmem_free_q_init(struct kmem_free_q_head *head)
++{
++	head->first = NULL;
++	head->lastp = &head->first;
++}
++
++extern void kmem_free_q_add(struct kmem_free_q_head *head,
++			    struct kmem_cache *cachep, void *object);
++extern void kmem_free_up_q(struct kmem_free_q_head *head);
++
+ #endif	/* _LINUX_SLAB_H */
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 03eeb8b7b4b1..dba20b4208f1 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1597,6 +1597,47 @@ void kzfree(const void *p)
+ }
+ EXPORT_SYMBOL(kzfree);
  
- 	/* Wake up the parent if it is waiting so that it can recheck
++/**
++ * kmem_free_q_add - add a kmem object to a freeing queue
++ * @head: freeing queue head
++ * @cachep: kmem_cache pointer (NULL for kmalloc'ed objects)
++ * @object: kmem object to be freed put into the queue
++ *
++ * Put a kmem object into the freeing queue to be freed later.
++ */
++void kmem_free_q_add(struct kmem_free_q_head *head, struct kmem_cache *cachep,
++		     void *object)
++{
++	struct kmem_free_q_node *node = object;
++
++	WARN_ON_ONCE(cachep && cachep->object_size < sizeof(*node));
++	node->next = NULL;
++	node->cachep = cachep;
++	*(head->lastp) = node;
++	head->lastp = &node->next;
++}
++EXPORT_SYMBOL_GPL(kmem_free_q_add);
++
++/**
++ * kmem_free_up_q - free all the objects in the freeing queue
++ * @head: freeing queue head
++ *
++ * Free all the objects in the freeing queue.
++ */
++void kmem_free_up_q(struct kmem_free_q_head *head)
++{
++	struct kmem_free_q_node *node, *next;
++
++	for (node = head->first; node; node = next) {
++		next = node->next;
++		if (node->cachep)
++			kmem_cache_free(node->cachep, node);
++		else
++			kfree(node);
++	}
++}
++EXPORT_SYMBOL_GPL(kmem_free_up_q);
++
+ /* Tracepoints definitions. */
+ EXPORT_TRACEPOINT_SYMBOL(kmalloc);
+ EXPORT_TRACEPOINT_SYMBOL(kmem_cache_alloc);
 -- 
 2.18.1
 
