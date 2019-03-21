@@ -2,113 +2,82 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC596C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8CD218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8NiOKE1"
+	by mail.kernel.org (Postfix) with ESMTP id 4072D218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfCUQO2 (ORCPT
+        id S1728078AbfCUQSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:14:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33285 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfCUQO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:14:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so7305336wrp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yFJGkG2qAlqPkLagE8bY7qsbVsNEEIpaqQcVCEE7FJU=;
-        b=a8NiOKE1Iv7bOyOvNQuERrRLrkPc7oqseMcN/j1YEbBnEF9ExOr5H22hR+LO6Cjzqb
-         +VqAum+u/SCnHzxOSyDDkhBxSxzN7xhdfjj9/CbfTYmS5Ef3EURWyXoYmMxC5n/SXzUY
-         OSxI701Lir4RbDFdzcwd0FpTETnClNmGc4sBqSfC4yZs/GXqAzcRJ6wOp7eySf3dcMXu
-         pzEY1yuGo2itcGdYbUuvdEnevqQuZ5yydcj3EASmad8W1ePvP24suQJM8bKanToJOrc5
-         cJXJOTQ7Oc3wwIrAG9+qGeSwuVfbX2tM6XUDrpsYHvXQjda/1lm4JcpxMqb6MiAQ01Tu
-         23VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yFJGkG2qAlqPkLagE8bY7qsbVsNEEIpaqQcVCEE7FJU=;
-        b=SvqEOc3dScJXwrfnrYAu6uNdEQMcRSGsLfERx0zRuWTZyJdQPm9dmaiy8Xh5JcJLqv
-         Zoz6NYsz/k/XOxoEt9Vo3AdDCyhMlyYUWHX66RivXXeGGMTrB3ly6hr6CduhLjagsHBY
-         SJzYEHrY/5ivaFcgJ/o8JFSDIgLePOKVBtbV1STDYOuO0IrDCHxtbAy0sJVmGJwF4LZe
-         Bk9ENqaXKNUIssYSmCVDjSq0nY8RN4Q0ltxy0nW/FLrwHXmjaxryoKFOhXhKDrFSwIsd
-         Wrm3W5auJuC2AOwXs3fLb3qoaN1QNHa1wYeYTx80WsMFLKdeOb7Oe9GrUJu7H4rrXvLu
-         UMSA==
-X-Gm-Message-State: APjAAAUSPp1tm+ZEw3t0flr94aP3IP1zs3Glx09UJ7/FOBknbJajn+UJ
-        k27O7v3FYVBYpwQ7xx62MKkXhA==
-X-Google-Smtp-Source: APXvYqzBJ7rMmk9uAgdRKuO1mopJiClA277eaCNVOkkXymkr9ObnaF7J4li7fYhBrr6tmxLGydRgjA==
-X-Received: by 2002:a5d:4e51:: with SMTP id r17mr3114077wrt.249.1553184865526;
-        Thu, 21 Mar 2019 09:14:25 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z14sm7959165wrv.78.2019.03.21.09.14.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 09:14:24 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-kernel@vger.kernel.org, patches@linaro.org
-Subject: [PATCH] perf arm64: Use local headers for target compiler
-Date:   Thu, 21 Mar 2019 16:13:53 +0000
-Message-Id: <20190321161353.16198-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Mar 2019 12:18:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfCUQSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:18:46 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EAE77307D973;
+        Thu, 21 Mar 2019 16:18:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.32])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8D92E60BF2;
+        Thu, 21 Mar 2019 16:18:43 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 21 Mar 2019 17:18:44 +0100 (CET)
+Date:   Thu, 21 Mar 2019 17:18:41 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     syzbot <syzbot+eab6e18f95a9fe69005e@syzkaller.appspotmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org,
+        ravi.bangoria@linux.ibm.com, rostedt@goodmis.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in delayed_uprobe_remove
+Message-ID: <20190321161841.GA12297@redhat.com>
+References: <000000000000ec1b3805799d0a56@google.com>
+ <000000000000737c07058498aea1@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000737c07058498aea1@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 21 Mar 2019 16:18:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the set of available syscalls is generated from the
-target compilers default <asm-generic/unistd.h>
-(i.e. /usr/include/asm-generic/unistd.h on a self-hosted system).
-The numeric values are then generated by the host compiler using
-tools/include/uapi/asm/unistd.h .
+iiuc,
 
-This leads to some nasty version skew problems (including failed perf
-builds if you are running a bleeding edge distro and want to build an
-older version of perf for testing).
+#syz fix: Uprobes: Fix kernel oops with delayed_uprobe_remove()
 
-Let's make the target compiler use the local headers too.
-
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index c88fd32563eb..1aca6a839e4f 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -56,7 +56,7 @@ create_table()
- 	echo "};"
- }
-
--$gcc -E -dM -x c  $input	       \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -nu	       \
-+$gcc -I $incpath/include/uapi -E -dM -x c  $input \
-+	|sed -ne 's/^#define __NR_//p'		  \
-+	|sort -t' ' -k2 -nu			  \
- 	|create_table
---
-2.20.1
+On 03/21, syzbot wrote:
+>
+> syzbot has bisected this bug to:
+> 
+> commit a6ca88b241d5e929e6e60b12ad8cd288f0ffa256
+> Author: Song Liu <songliubraving@fb.com>
+> Date:   Tue Oct 2 05:36:36 2018 +0000
+> 
+>     trace_uprobe: support reference counter in fd-based uprobe
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c86993200000
+> start commit:   a6ca88b2 trace_uprobe: support reference counter in fd-bas..
+> git tree:       linux-next
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11c86993200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16c86993200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2a22859d870756c1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=eab6e18f95a9fe69005e
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137174f5400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1278485d400000
+> 
+> Reported-by: syzbot+eab6e18f95a9fe69005e@syzkaller.appspotmail.com
+> Fixes: a6ca88b241d5 ("trace_uprobe: support reference counter in fd-based
+> uprobe")
 
