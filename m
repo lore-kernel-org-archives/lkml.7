@@ -2,136 +2,148 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38605C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6412C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEF2218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801AF218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfCUKdu (ORCPT
+        id S1728153AbfCUKdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:33:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfCUKdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:33:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CFC5B85541;
-        Thu, 21 Mar 2019 10:33:49 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-199.pek2.redhat.com [10.72.12.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF47819C57;
-        Thu, 21 Mar 2019 10:33:38 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-Subject: [PATCH 2/3 v9] resource: add the new I/O resource descriptor 'IORES_DESC_RESERVED'
-Date:   Thu, 21 Mar 2019 18:33:08 +0800
-Message-Id: <20190321103309.27883-3-lijiang@redhat.com>
-In-Reply-To: <20190321103309.27883-1-lijiang@redhat.com>
-References: <20190321103309.27883-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 21 Mar 2019 10:33:49 +0000 (UTC)
+        Thu, 21 Mar 2019 06:33:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40405 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbfCUKdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:33:52 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x12so5962413qts.7
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 03:33:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EGt7wnb0MYHpXiWNM7es/Xx++DTZIMYOZKJImn5VExg=;
+        b=ZvOzThkhsUsc41vWhQ2aUsNThNVXxkTmeIsoGca4v0tc8AzVKKaXdMJdaceKYQsH5d
+         YAG9n1Zh3h5qr0E2rwD/zJFywsMQj1FEBspFb4BgkC/LYHH7szO3k1qZLX2L6/QdYDo7
+         ivB0u2bVo9yZeVU3i5Fgt68MJ1cZ7jjL8r1J7KcN+hoS1Fao8oifbRyUG1cZmU9GpqcI
+         g3ZLeIkmJH1cVqyaBD9Q8o8gTgkmE94LzdOsbKn66db+HjZRwKq/L71Q66ZRe3nfUztc
+         zwTwj/ceSBorKNloKOMDmnBBmpmPLDZJtDbuxGzJaTpUCBJLInxzV8dGO5LakDCBMFTq
+         Rl4g==
+X-Gm-Message-State: APjAAAUoRGDFsCOaqCd/fgze0OjECu5cfoCnD4CSyBjCBCnnQxl9QCfZ
+        R1QMWHCTuAn31apONNVNsGQywcHJrFPj7V4nCEM=
+X-Google-Smtp-Source: APXvYqxaZELz5PXyx8dKV50pEDVnuZ0CMsED6QrAws9OZGX2nSnnbVr+QZhUMHGL7//mFljxuwLGF/+U3lRk1hX/Ay0=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr2357112qve.149.1553164431110;
+ Thu, 21 Mar 2019 03:33:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20150115173132.GA7486@mcrowe.com> <20190321104726.3c570c41e5757611a13c23ca@gmail.com>
+In-Reply-To: <20190321104726.3c570c41e5757611a13c23ca@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 Mar 2019 11:33:33 +0100
+Message-ID: <CAK8P3a1gkG6U3zCytY2Ax-DQvExXqG8Z6eGde4W6D7JLa=YwGg@mail.gmail.com>
+Subject: Re: kmsg: lseek errors confuse glibc's dprintf
+To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc:     Mike Crowe <mac@mcrowe.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kay Sievers <kay@vrfy.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing kexec_file_load, the first kernel needs to pass the e820
-reserved ranges to the second kernel. But kernel can not exactly
-match the e820 reserved ranges when walking through the iomem resources
-with the descriptor 'IORES_DESC_NONE', because several e820 types(
-e.g. E820_TYPE_RESERVED_KERN/E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820
-_TYPE_RESERVED) are converted to the descriptor 'IORES_DESC_NONE'. It
-may pass these four types to the kdump kernel, that is not desired result.
+On Thu, Mar 21, 2019 at 10:47 AM Alexander Sverdlin
+<alexander.sverdlin@gmail.com> wrote:
+>
+> Hello Mike and all,
+>
+> On Thu, 15 Jan 2015 17:31:32 +0000
+> Mike Crowe <mac@mcrowe.com> wrote:
+>
+> > glibc's dprintf implementation does not work correctly with /dev/kmsg file
+> > descriptors because glibc treats receiving EBADF and EINVAL from lseek when
+> > trying to determine the current file position as errors. See
+> > https://sourceware.org/bugzilla/show_bug.cgi?id=17830
+>
+> we need to conclude on this issue. This is a real bug which is ignored
+> for 4 years now. Mike, would you like to re-send a formal patch?
+> I can do it as well, preserving a link to your original patch/report.
+> In case you'd like to post it yourself, I can be a tester and/or
+> provide a reproducer.
 
-So, this patch adds a new I/O resource descriptor 'IORES_DESC_RESERVED'
-for the iomem resources search interfaces. It is helpful to exactly
-match the reserved resource ranges when walking through iomem resources.
+The patch needs to be rebased because of the changed file
+location. I would also suggest adding a "Cc: stable@kernel.org"
+tag so it will get backported into stable kernels.
 
-In addition, since the new descriptor 'IORES_DESC_RESERVED' is introduced,
-these code originally related to the descriptor 'IORES_DESC_NONE' need to
-be updated. Otherwise, it will be easily confused and also cause some
-errors. Because the 'E820_TYPE_RESERVED' type is converted to the new
-descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE', it has been
-changed.
+> > >>From what I can tell prior to Kay Sievers printk record commit
+> > e11fea92e13fb91c50bacca799a6131c81929986, calling lseek(fd, 0, SEEK_CUR)
+> > with such a file descriptor would not return an error.
+> >
+> > Prior to Kay's change, Arnd Bergmann's commit
+> > 6038f373a3dc1f1c26496e60b6c40b164716f07e seemed to go to some lengths to
+> > preserve the successful return code rather than returning (the perhaps more
+> > logical) -ESPIPE.
+> >
+> > glibc is happy with either a successful return or -ESPIPE.
+> >
+> > For maximum compatibility it seems that success should be returned but
+> > given Kay's new seek interface perhaps this isn't helpful.
+> >
+> > This patch ensures that such a seek succeeds:
+> >
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index 02d6b6d..b3ff6f0 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -693,7 +693,7 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> >       loff_t ret = 0;
+> >
+> >       if (!user)
+> > -             return -EBADF;
+> > +             return (whence == SEEK_CUR) ? 0 : -EBADF;
+> >       if (offset)
+> >               return -ESPIPE;
+> >
+> > @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> >               user->idx = log_next_idx;
+> >               user->seq = log_next_seq;
+> >               break;
+> > +     case SEEK_CUR:
+> > +             /* For compatibility with userspace requesting the
+> > +              * current file position. */
+> > +             ret = 0;
+> > +             break;
+> >       default:
+> >               ret = -EINVAL;
+> >       }
+> >
+> > (although it could be argued that the !user case should return -ESPIPE
+> > rather than EBADF since the file descriptor _is_ valid.)
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/e820.c | 2 +-
- include/linux/ioport.h | 1 +
- kernel/resource.c      | 6 +++---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+I don't think the !user case can ever be hit, I would just leave that
+to return -BADF and not touch it.
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 2879e234e193..16fcde196243 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
- 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
- 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
- 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-+	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
- 	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
- 	case E820_TYPE_RAM:		/* Fall-through: */
- 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
--	case E820_TYPE_RESERVED:	/* Fall-through: */
- 	default:			return IORES_DESC_NONE;
- 	}
- }
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..6ed59de48bd5 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -133,6 +133,7 @@ enum {
- 	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
- 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
- 	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
-+	IORES_DESC_RESERVED			= 8,
- };
- 
- /* helpers to define resources */
-diff --git a/kernel/resource.c b/kernel/resource.c
-index e81b17b53fa5..ee7348761858 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -990,7 +990,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
- 	res->start = start;
- 	res->end = end;
- 	res->flags = type | IORESOURCE_BUSY;
--	res->desc = IORES_DESC_NONE;
-+	res->desc = IORES_DESC_RESERVED;
- 
- 	while (1) {
- 
-@@ -1025,7 +1025,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
- 				next_res->start = conflict->end + 1;
- 				next_res->end = end;
- 				next_res->flags = type | IORESOURCE_BUSY;
--				next_res->desc = IORES_DESC_NONE;
-+				next_res->desc = IORES_DESC_RESERVED;
- 			}
- 		} else {
- 			res->start = conflict->end + 1;
-@@ -1488,7 +1488,7 @@ static int __init reserve_setup(char *str)
- 			res->start = io_start;
- 			res->end = io_start + io_num - 1;
- 			res->flags |= IORESOURCE_BUSY;
--			res->desc = IORES_DESC_NONE;
-+			res->desc = IORES_DESC_RESERVED;
- 			res->child = NULL;
- 			if (request_resource(parent, res) == 0)
- 				reserved = x+1;
--- 
-2.17.1
+> > @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+> >               user->idx = log_next_idx;
+> >               user->seq = log_next_seq;
+> >               break;
+> > +     case SEEK_CUR:
+> > +             /* For compatibility with userspace expecting SEEK_CUR
+> > +              * to not yield EINVAL. */
+> > +             ret = -ESPIPE;
+> > +             break;
+> >       default:
+> >               ret = -EINVAL;
+> >       }
+> >
+> > Either makes dprintf work, but is either the right solution?
 
+I'd vote for -ESPIPE, for consistency with the offset!=0 case, but
+etiher one is fine with me here.
+
+       Arnd
