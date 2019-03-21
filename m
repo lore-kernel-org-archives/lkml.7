@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA548C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB100C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9263218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EB2218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HQrpCn3U"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Xrbvs5sO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfCUOA2 (ORCPT
+        id S1728468AbfCUOAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:00:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34195 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728168AbfCUOA1 (ORCPT
+        Thu, 21 Mar 2019 10:00:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37319 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728168AbfCUOAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:00:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v12so4278860pgq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 07:00:27 -0700 (PDT)
+        Thu, 21 Mar 2019 10:00:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q206so4265422pgq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 07:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=027hMzfKYQEQdfMu8qZkppGAvGQRPJuwDJK4s8kel0A=;
-        b=HQrpCn3UrwnzowF+4LyPfiO40tX7VWFT05bQmpD5hJ3HVNKfhwjfBryesqDNt7hY3v
-         MSEh+5dXRMXZcKNfZEKdNtki+yUQyUMGzruteGV8+N5Mn+vdhkdBIE6bAit+hpQVgOpa
-         CXSa8CUnerBjx+XWusyWfD8bilXKr2idnikkw=
+        bh=EGGHspTL1AIJtuP770nUWGJPVBGGHW+ZSIayJnPakGk=;
+        b=Xrbvs5sOFt541ehl5sjgoVnsee+LKE/rChnIbNU4vxoQgm88hDUSxQ0c2GYSztL62C
+         QsXLcctYp8kohCy6h0jD9/mjSvrjS4X42zj5oz00EVBNjtEhsgr7/yw95udigGlTMgt3
+         C5x8Ne6pyjJAq2ztvbxgseN8j/jc9TXX5PYiQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=027hMzfKYQEQdfMu8qZkppGAvGQRPJuwDJK4s8kel0A=;
-        b=hQZcHIPbEgjCnkfg8kPahFKn6T8wZYmcybsiOe9m/t8rwxJVwW9CeUoS2gHNdd1Jfk
-         XeJUXYR+p1EySbe8yz8Enh2EtBIfr1vrU3qhn7SteBRBIjX2j9V/8lISp1eY+hbh7ZuE
-         qD6HpU0lkT4E4/NlGPkIySNQPhQ6Nl2x9ZNbJemz10ysz/i9N3YBA1ErHKrPqKEGp/ay
-         +IzlMtW1CDK13EVokZS6bQWO6z1zGEccsVURzxPLZ1jQiR3cn5NGv7H9GHX27f5PelOf
-         ze1o2flRu2tFALporV0BgxYtSD+ly/wt9/yK28Hqxa6KeDbMkRXhmfLWgGwvVV7/4TgI
-         eSKg==
-X-Gm-Message-State: APjAAAU6WfhLlgWpRPra3wGqZcoFJv/8RtFYyFr0vKccHupxCeLz0hzG
-        f350K9wIFbJX/UttJU0RwRZHlQ==
-X-Google-Smtp-Source: APXvYqwRefcyhunLuH0FJ74yh5WPdBS3rYU0zw08zoDkm/w58d3u9fXtcQlKPjyNy/vORVxcDYqW+g==
-X-Received: by 2002:a65:60c1:: with SMTP id r1mr3435155pgv.137.1553176826663;
-        Thu, 21 Mar 2019 07:00:26 -0700 (PDT)
+        bh=EGGHspTL1AIJtuP770nUWGJPVBGGHW+ZSIayJnPakGk=;
+        b=byOJ0lmluWIaBvwG5dw6WF6YeHtEQfz7B+q7RNrA4xCVEEtOkQF43UUb2DbIbyTsVn
+         yjldbHfa6TlYq22dfTjS6oFTRgUiMI9u+8dk0meuXVGdgPYs7d2QoHwTaAntOnRvdjQL
+         UWLwfghIXWptaiyXM0ArY8GoPbmcHS/zvj/Ec16LYA/UqNsyD1sxKkq8+p6RGPNmjVLS
+         mgyimIF4VsCgZ05vO2xqTQGTU0vR0I4uxWgFWKQF/85kKYl/8lXs6gzArNN+l6NbX4Xv
+         XZvhXqHj7JB4aw0Z6eol+rfWgIDSsMlN1TxWjzO1WeYufUAZ0iSSAUviI06r8Z4x0OJL
+         mP9A==
+X-Gm-Message-State: APjAAAUYQsfN9yEPcA1hqsS/gpPwRpjeuMQCaqzrwqb/7Ra39Y8udFm7
+        89564UfWv0cLPYtw4/UNwqu6eA==
+X-Google-Smtp-Source: APXvYqxBVT1T+cSaycOpg3OqXINzHfC0gYNsgEc8Bm78ofSJQ1xeUC+JCutXxRG9KlhrsAIHFWeBbg==
+X-Received: by 2002:a17:902:9341:: with SMTP id g1mr3757998plp.80.1553176831542;
+        Thu, 21 Mar 2019 07:00:31 -0700 (PDT)
 Received: from localhost.localdomain ([49.206.202.234])
-        by smtp.gmail.com with ESMTPSA id i126sm7985158pfc.101.2019.03.21.07.00.21
+        by smtp.gmail.com with ESMTPSA id i126sm7985158pfc.101.2019.03.21.07.00.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 07:00:25 -0700 (PDT)
+        Thu, 21 Mar 2019 07:00:30 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         Ryan Pannell <ryan@osukl.com>, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
         devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 2/4] dt-bindings: Add vendor prefix for microtech
-Date:   Thu, 21 Mar 2019 19:29:53 +0530
-Message-Id: <20190321135955.25661-3-jagan@amarulasolutions.com>
+Subject: [PATCH v2 3/4] dt-bindings: display: Add Novatek NT35596 panel documentation
+Date:   Thu, 21 Mar 2019 19:29:54 +0530
+Message-Id: <20190321135955.25661-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190321135955.25661-1-jagan@amarulasolutions.com>
 References: <20190321135955.25661-1-jagan@amarulasolutions.com>
@@ -77,27 +77,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vendor prefix for microtech, known as
-Microtech Technology Company Limited. a known producer for
-Liquid Crytal Display modules and Touch Panels.
+Novatek NT35596 is a single-chip IC solution for small or medium-sized
+LTPS TFT LCD panels. NT35596 provides  several system interfaces like
+MIPI/SPI/I2C.
+
+Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
+has inbuilt NT35596 IC chip.
+
+NT35596 support several regulators on the chip, among those only 4 regulators
+like VCI, VDDI/DVDD, AVDD, AVEE are used during power-on sequence.
+
+Out of four regulators MTF050FHDI-03 panel do support 3-regulator based
+power-on sequence, so this patch documented these 3 needful regulators
+and rest can be add while supporting new panels on the similar chip IC.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../display/panel/novatek,nt35596.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index caa7dbae750b..9e0b83e61414 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -249,6 +249,7 @@ micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
- microcrystal	Micro Crystal AG
- micron	Micron Technology Inc.
-+microtech	Microtech Technology Company Limited
- mikroe		MikroElektronika d.o.o.
- minix	MINIX Technology Ltd.
- miramems	MiraMEMS Sensing Technology Co., Ltd.
+diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt b/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+new file mode 100644
+index 000000000000..d336cd41e177
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+@@ -0,0 +1,32 @@
++Novatek NT35596 based LCD panels
++
++Novatek NT35596 is a single-chip IC solution for small or medium-sized
++LTPS TFT LCD panels. NT35596 provides  several system interfaces like
++MIPI/SPI/I2C.
++
++Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
++has inbuilt NT35596 IC chip.
++
++Required properties:
++- compatible: must be "novatek,nt35596" and one of
++  * "microtech,mtf050fhdi-03"
++- reset-gpios: a GPIO phandle for the reset pin
++
++Required properties for microtech,mtf050fhdi-03:
++- reg: DSI virtual channel used by that screen
++- dvdd-supply: I/O system regulator
++- avdd-supply: analog regulator for MIPI circuit
++- avee-supply: analog regulator for MIPI circuit
++
++Optional properties:
++- backlight: phandle for the backlight control.
++
++panel@0 {
++	compatible = "microtech,mtf050fhdi-03", "novatek,nt35596";
++	reg = <0>;
++	dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
++	avdd-supply = <&reg_dc1sw>;	/* AVDD_5V0 */
++	avee-supply = <&reg_dc1sw>;	/* AVEE_5V */
++	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++	backlight = <&backlight>;
++};
 -- 
 2.18.0.321.gffc6fa0e3
 
