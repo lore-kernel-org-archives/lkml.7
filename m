@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E47CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A19C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9DC218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F37218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 06:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asZujfjX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b69Cfj+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfCUGBI (ORCPT
+        id S1727805AbfCUGBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 02:01:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44466 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727660AbfCUGBH (ORCPT
+        Thu, 21 Mar 2019 02:01:40 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38986 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfCUGBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 02:01:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id u12so4283379iop.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 23:01:06 -0700 (PDT)
+        Thu, 21 Mar 2019 02:01:39 -0400
+Received: by mail-it1-f195.google.com with SMTP id 139so2551287ita.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 23:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FPtR+Mv0BsS4tjWXTg1n9CAjOobeYmYcaxR4lx6FSgA=;
-        b=asZujfjXjIN3F1ki9QLI73gdqziMe/LG3PWt/jZ5dlPX7lMsCfhPo0qseY+izmEe5d
-         1cKPnbxlZmc71xyLz7kch+6rsqPVHQSqMd1hYunERP52IDg/kGtDZVPbzlB9dfZM4ijk
-         dI3XpW5VDOb0XpTJLrkABfHNkj4T1ww+aFSN3h4MePGi5jnlb3WiUuWBDLyHcpudxakg
-         GnfYX3Soj8E1GO/J/Cl82Lvvo72Jso4KhPepQl0BvhWUAkbB8WKrNL00WIY2wMTlFfUe
-         NznG1Y9orS2pfTqLCR6Ip5wEP4MSTCs6GmNiDzB9IqdKD0wKKYsHeekg67IYKhbTN7Q6
-         hdGg==
+        bh=M8yka95Zs5/G/4g4CsGYvZobKgmLiicU7E8QxndI42w=;
+        b=b69Cfj+zye3jMkzvOw2QTHKFgF7sLq3hJcpUxmzyHpoqzWqvyRzJhBiJkrMyyEY0rJ
+         TBSaYRJ6S8JpSxVvnkKHvhhF4/+yIIDPpMk9c/xLxcLqN3A69pJwEEr9p3OqHgg0ZFxV
+         6sPEutOBAIoe5yrCgPikUDA2hUnX76xB+mygIBIuH/CR8pnCDh5M1oE/nDnrEetcw0za
+         Qu4/mXEZxVhF9UeI8JEgPjhc1IlGlza/5VsRV10YuxbwgByi3sovmYtaXZYEO8F4l19W
+         8iQapgGONXjhKpT/kdeBA8pIHG6dA2DUHrzN7Zg7XE8akpkqdl0JML2xOFhliwbGx/JY
+         R/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FPtR+Mv0BsS4tjWXTg1n9CAjOobeYmYcaxR4lx6FSgA=;
-        b=Vq4Jctwu3uflzEtnAK2wNtixSDWHcKaPcbCFhAUsM7FVRHEzrQC/blgq2BIMuqnBhL
-         uS8bF3vk6VT1KR0cTeTL+shSsYXblulULRfShzbUD+2tAHVy+r0Dsm0TBCPMcEbscYFs
-         /tBNREcTpnpmcjbCIyw3G47YF089B+csWp+ftIPrdHaHVfuTFKfmmxMjKFtzqkP/wP7N
-         bqseT6b/AYXyamsIG8YtAlIfXQ8H4UD09M2+h5mOWSnIRY25PMEIa0LYNRwIYMtqoiCk
-         qS0faoo0FDGQGrksfK309sFA/J2H8h1NW1a0qIQSToNVO8ctLDUCRasEjhBsVO+iIzao
-         sqhA==
-X-Gm-Message-State: APjAAAUelv6srIJQyOW/vjPJmY0XvK0ojdUml62S4JOJyxKFuzYkPISy
-        yfFeiRkh7IZx/nO5jz9F3urrfZFGzUPnndzY6nEEgg==
-X-Google-Smtp-Source: APXvYqwh3wzpKkdRJVvdfy0J9d8lyG/oA3+p9VkabiV/oQk+sgAEEXIklU3EV4EHhD4Eldm2Hk7sQX8C5fKNW6DTCOc=
-X-Received: by 2002:a6b:3709:: with SMTP id e9mr1249753ioa.282.1553148065675;
- Wed, 20 Mar 2019 23:01:05 -0700 (PDT)
+        bh=M8yka95Zs5/G/4g4CsGYvZobKgmLiicU7E8QxndI42w=;
+        b=gPIm+cy1ZyzpAYK66jKg+b/M64rSXhEPx8g71WqR8B5lVRDcGKzRFFxjvHVtVTPEuA
+         w+aZA7VJA+WYf7gYXCiaF7yyw88JxWw2N86FhQSJdjrwEFr3rdHYmhw36YK7TCjUeXSy
+         +eYFOG3WEk1CZSPmDWnOlSfk+/ADiNcrUCuwWh/ZHbuCT75zsHq7XGwFyyYOkQzLEBvB
+         V7rvPWipVfm+Q2HaBUec/WN2YK1rEuWPcQyayOew0yoogpHf+U6qEPk8BDaxFRw5hYjX
+         s8uBkne/KcUIc72EjmgLfPQHwME3a5Y7JBmg/Lv1a1/5ar43VBqUHVJnlKia858YWIFQ
+         /FYg==
+X-Gm-Message-State: APjAAAUQI4McveRfp9A+zNgqLAbCm8M36pxS+BVxpJWAPJyQbsyaVPah
+        W6WldYxplZnBZnIWCmiJ4JkA2XBU6PON7sqIOXMyyA==
+X-Google-Smtp-Source: APXvYqwi6kxOMIapZftylCPHZQuhGlSTbOsaU32OoCSeDkYeVZw+KEORSpzEZWMM+yroBaMHPH4EewaUU7P/KbyMElw=
+X-Received: by 2002:a24:9a86:: with SMTP id l128mr1549248ite.12.1553148098459;
+ Wed, 20 Mar 2019 23:01:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000005b7456057a9abc57@google.com> <000000000000c6a7d005848cd56d@google.com>
-In-Reply-To: <000000000000c6a7d005848cd56d@google.com>
+References: <000000000000fd464c057a679adb@google.com> <000000000000b93e5a05849268b9@google.com>
+In-Reply-To: <000000000000b93e5a05849268b9@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 21 Mar 2019 07:00:54 +0100
-Message-ID: <CACT4Y+aE4Pi85OH-vDzNkSVxo6Qw3vgN94KGtF7PTWUcHwMAeA@mail.gmail.com>
-Subject: Re: kernel BUG at mm/slab.c:LINE! (3)
-To:     syzbot <syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com>
+Date:   Thu, 21 Mar 2019 07:01:26 +0100
+Message-ID: <CACT4Y+b6qd7SOkcTrbDUo4bid6qJdJRVUHUONkErNEixj=1g8g@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in update_blocked_averages
+To:     syzbot <syzbot+0dbf864d3b52555e8265@syzkaller.appspotmail.com>
 Cc:     David Miller <davem@davemloft.net>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -74,8 +74,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 9:55 PM syzbot
-<syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com> wrote:
+On Thu, Mar 21, 2019 at 4:34 AM syzbot
+<syzbot+0dbf864d3b52555e8265@syzkaller.appspotmail.com> wrote:
 >
 > syzbot has bisected this bug to:
 >
@@ -85,17 +85,17 @@ On Wed, Mar 20, 2019 at 9:55 PM syzbot
 >
 >      fou, fou6: ICMP error handlers for FoU and GUE
 >
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161b63cf200000
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11e33c17200000
 > start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
 > git tree:       net-next
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=151b63cf200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=111b63cf200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4a0a89f12ca9b0f5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2182db487a523d86bf34
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148d46d5400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c6a225400000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=13e33c17200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15e33c17200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcbea7daf3ea3e3e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0dbf864d3b52555e8265
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137ae6d5400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15dbd77b400000
 >
-> Reported-by: syzbot+2182db487a523d86bf34@syzkaller.appspotmail.com
+> Reported-by: syzbot+0dbf864d3b52555e8265@syzkaller.appspotmail.com
 > Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
 
 That commit caused lots of crashes that look completely differently.
