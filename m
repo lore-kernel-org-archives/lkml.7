@@ -2,160 +2,109 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BB4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F55C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A9B21915
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5366218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfCULsl (ORCPT
+        id S1728168AbfCULu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:48:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43106 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 07:50:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40228 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfCULsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:48:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726551AbfCULu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:50:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2D3AC308125E;
-        Thu, 21 Mar 2019 11:48:40 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C60A63082AF0;
+        Thu, 21 Mar 2019 11:50:27 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 279FA60857;
-        Thu, 21 Mar 2019 11:48:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 8/8] vfs: Kill off mount_single()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 261B760BF2;
+        Thu, 21 Mar 2019 11:50:24 +0000 (UTC)
+Subject: [RFC PATCH 0/6] Convert mount_single-using filesystems to fs_context
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-block@vger.kernel.org, squashfs-devel@lists.sourceforge.net,
+        Richard Weinberger <richard@nod.at>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com
-Date:   Thu, 21 Mar 2019 11:48:36 +0000
-Message-ID: <155316891636.29437.377556597687370007.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155316885201.29437.3428987891437242750.stgit@warthog.procyon.org.uk>
-References: <155316885201.29437.3428987891437242750.stgit@warthog.procyon.org.uk>
+Date:   Thu, 21 Mar 2019 11:50:24 +0000
+Message-ID: <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 21 Mar 2019 11:48:40 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 21 Mar 2019 11:50:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kill mount_single() off as nothing now uses it.  It has been replaced by
-vfs_get_super() keyed with vfs_get_single_super or
-vfs_get_single_reconf_super.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Hi Al,
+
+Here's a set of patches that convert romfs, cramfs, jffs2 and squashfs to
+use the new fs_context struct and replace mount_mtd().  They have
+prerequisite commits (such as replacing mount_bdev()) that can be found in
+the branch detailed below.
+
+ (1) Provide a replacement for mount_mtd() that takes an fs_context to
+     specify the parameters.
+
+     I also put an mtd device pointer into the fs_context struct for use in
+     the sget_fc() test and set functions plus a destructor because
+     put_fs_context() can't reach into the mtd module.
+
+ (2) Convert romfs.
+
+ (3) Convert cramfs.
+
+ (4) Convert jffs2.
+
+ (5) Get rid of the now-obsolete mount_mtd() function.
+
+ (6) Convert squashfs.
+
+These can be found in the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=mount-api-viro
+
+Thanks,
+David
 ---
+David Howells (6):
+      mtd: Provide fs_context-aware mount_mtd() replacement
+      romfs: Convert to fs_context
+      cramfs: Convert to fs_context
+      jffs2: Convert to fs_context
+      mtd: Kill off mount_mtd()
+      squashfs: Convert to fs_context
 
- Documentation/filesystems/vfs.txt |    4 +--
- fs/super.c                        |   55 -------------------------------------
- include/linux/fs.h                |    3 --
- 3 files changed, 2 insertions(+), 60 deletions(-)
 
-diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 761c6fd24a53..6ef83fdfffdc 100644
---- a/Documentation/filesystems/vfs.txt
-+++ b/Documentation/filesystems/vfs.txt
-@@ -181,8 +181,8 @@ and provides a fill_super() callback instead. The generic variants are:
- 
-   mount_nodev: mount a filesystem that is not backed by a device
- 
--  mount_single: mount a filesystem which shares the instance between
--  	all mounts
-+  vfs_get_super: mount a filesystem with one of a number of superblock
-+		 sharing options.
- 
- A fill_super() callback implementation has the following arguments:
- 
-diff --git a/fs/super.c b/fs/super.c
-index fa1d697b73bb..39963e597118 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1449,61 +1449,6 @@ struct dentry *mount_nodev(struct file_system_type *fs_type,
- }
- EXPORT_SYMBOL(mount_nodev);
- 
--static int reconfigure_single(struct super_block *s,
--			      int flags, void *data)
--{
--	struct fs_context *fc;
--	int ret;
--
--	/* The caller really need to be passing fc down into mount_single(),
--	 * then a chunk of this can be removed.  [Bollocks -- AV]
--	 * Better yet, reconfiguration shouldn't happen, but rather the second
--	 * mount should be rejected if the parameters are not compatible.
--	 */
--	fc = fs_context_for_reconfigure(s->s_root, flags, MS_RMT_MASK);
--	if (IS_ERR(fc))
--		return PTR_ERR(fc);
--
--	ret = parse_monolithic_mount_data(fc, data);
--	if (ret < 0)
--		goto out;
--
--	ret = reconfigure_super(fc);
--out:
--	put_fs_context(fc);
--	return ret;
--}
--
--static int compare_single(struct super_block *s, void *p)
--{
--	return 1;
--}
--
--struct dentry *mount_single(struct file_system_type *fs_type,
--	int flags, void *data,
--	int (*fill_super)(struct super_block *, void *, int))
--{
--	struct super_block *s;
--	int error;
--
--	s = sget(fs_type, compare_single, set_anon_super, flags, NULL);
--	if (IS_ERR(s))
--		return ERR_CAST(s);
--	if (!s->s_root) {
--		error = fill_super(s, data, flags & SB_SILENT ? 1 : 0);
--		if (!error)
--			s->s_flags |= SB_ACTIVE;
--	} else {
--		error = reconfigure_single(s, flags, data);
--	}
--	if (unlikely(error)) {
--		deactivate_locked_super(s);
--		return ERR_PTR(error);
--	}
--	return dget(s->s_root);
--}
--EXPORT_SYMBOL(mount_single);
--
- /**
-  * vfs_get_tree - Get the mountable root
-  * @fc: The superblock configuration context.
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 646f4ccaeee9..5ca14600dcf6 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2206,9 +2206,6 @@ static inline struct dentry *mount_bdev(struct file_system_type *fs_type,
- 	return ERR_PTR(-ENODEV);
- }
- #endif
--extern struct dentry *mount_single(struct file_system_type *fs_type,
--	int flags, void *data,
--	int (*fill_super)(struct super_block *, void *, int));
- extern struct dentry *mount_nodev(struct file_system_type *fs_type,
- 	int flags, void *data,
- 	int (*fill_super)(struct super_block *, void *, int));
+ drivers/mtd/mtdcore.h      |    1 
+ drivers/mtd/mtdsuper.c     |  181 ++++++++++++++++++++++----------------------
+ fs/cramfs/inode.c          |   69 +++++++++--------
+ fs/fs_context.c            |    2 
+ fs/jffs2/fs.c              |   21 +++--
+ fs/jffs2/os-linux.h        |    4 -
+ fs/jffs2/super.c           |  172 ++++++++++++++++++++----------------------
+ fs/romfs/super.c           |   46 +++++++----
+ fs/squashfs/super.c        |  100 +++++++++++++-----------
+ include/linux/fs_context.h |    2 
+ include/linux/mtd/super.h  |    6 +
+ 11 files changed, 316 insertions(+), 288 deletions(-)
 
