@@ -2,104 +2,177 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6490C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83175C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51CF218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D722218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="0e9Q3XwD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HjAID45K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfCUJSH (ORCPT
+        id S1727984AbfCUJTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:18:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46121 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfCUJSH (ORCPT
+        Thu, 21 Mar 2019 05:19:13 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:23062 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfCUJTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:18:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a22so3770079pgg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8KK8JggM7xn5JWcpuPWrvCWmTaSRv+CFWNL+Dk1/1HM=;
-        b=0e9Q3XwDsrAWLmJmCtbWFI7BaF2QmLZ4lax5IHh+3kpaC3OAShEsErPUPnjkzWo/lw
-         I1gz3ucnX6FJExSkOZA0ma2K9jhyw/UfISM/vZ/JdsiNIOkhf0hyOnGyfJ6HxoUorD+Z
-         f31obG9bpLbqTPuKuT6KwEaCOmMavMikTVtsn8mD2HYxH0mDPR9o36JCV5gnRvAJ1ngo
-         9Akc2eLlffWg9I6Tq2pY5N3tw3B9ird/RyzLfTDMPRNL2m1PAym9pRPp3XfSkCzL/a08
-         Z4wxXsacZySZ6wAqLEggdIzH0KDYdF0Ta/S5/dGAddfetLkODbZP+a3bxA9+f8uIFc0i
-         ucKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8KK8JggM7xn5JWcpuPWrvCWmTaSRv+CFWNL+Dk1/1HM=;
-        b=sNxdboMGqESQ/m9asKuW1Upfw1P4icdVwsVo6x0FLW7kQIij7FdWpmExeLAZQnqj3V
-         4ZPL5lIjKG6o54KGtloDsMwYdaMIERsajJQgf88BdQgCZCDpuCNBqUwMJHoJ6XplYWiN
-         fP/xP5Te+YIGKh6hEtwxzi0K1eu89nD5LvuS13nTgy/P94pQEe5HtZsKoJSHp1G3yH+O
-         GUhZB3xFAr8uTecKEWKROgCJyxCt42xrK9VVIVEek0/s7nL136XRUYVXswjq0+49KWOh
-         p1FSAFGVgFVC98iAsdnJO0uJ4L9EFdV1Z/yBqydgIWmVdYYcgXBvR2glQz5b2UU2d+p6
-         uv+w==
-X-Gm-Message-State: APjAAAVV8O/lR3qsTi/7dnr60g9qgAS+mNZqVz5Y2PqunBOXwg6KSM4B
-        1VZP+IwOxOrWjkep1jMHjy/9YpE5MN4=
-X-Google-Smtp-Source: APXvYqwRKc1jshgFRP10SE+TbtnGKrTDDlLKbtnvamaggGXSe5lu5ctSS1qm2EhMf8vqDc6KONjjPw==
-X-Received: by 2002:a17:902:8643:: with SMTP id y3mr2451371plt.195.1553159886043;
-        Thu, 21 Mar 2019 02:18:06 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id v2sm6261850pfg.118.2019.03.21.02.18.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 02:18:05 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Takashi Iwai <tiwai@suse.com>
-Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Chris Chiu <chiu@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] ALSA: hda/realtek - Add support for Acer Aspire E5-523G/ES1-432 headset mic
-Date:   Thu, 21 Mar 2019 17:17:31 +0800
-Message-Id: <20190321091730.18638-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Mar 2019 05:19:12 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190321091909epoutp01ef5620069f48395a7999e5dc38853990~N7r68RlXJ1428314283epoutp01T
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:19:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190321091909epoutp01ef5620069f48395a7999e5dc38853990~N7r68RlXJ1428314283epoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1553159949;
+        bh=OSeVXsGl8uqUwnJlurlaqqUfPTZb5Xw3+nP9bodBnvA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=HjAID45K65aP3qC4SCfzNIlOlTrvrWih4e2dzOl+A1Po5spCZVT/CJ0+5ME9K+mK/
+         fIOsc9s0/4pUhmtwp6jq00Kv8RMHxcH955FGq1Kzkm2KWwWaDSAlblu4X/5D0Wk0Lf
+         tgPJUN6F5vuqncDlLBnYsU9/A/avQyl/ixy0JwBs=
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.157]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190321091906epcas1p117dc596be7f1d950d7d689a3def51176~N7r3tj8XR1867718677epcas1p17;
+        Thu, 21 Mar 2019 09:19:06 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.A5.04257.907539C5; Thu, 21 Mar 2019 18:19:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190321091905epcas1p1d7544346c6428b1c04d43ec377843338~N7r3Q0Ctj0618006180epcas1p1O;
+        Thu, 21 Mar 2019 09:19:05 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190321091905epsmtrp26eb04ac0593a92a1a36249ee0558c459~N7r3P9lqG0626206262epsmtrp2W;
+        Thu, 21 Mar 2019 09:19:05 +0000 (GMT)
+X-AuditID: b6c32a38-5e3ff700000010a1-28-5c9357097c8d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        49.46.03662.907539C5; Thu, 21 Mar 2019 18:19:05 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190321091905epsmtip1c7f764dcd315e7fc3a158c76ef4d4995~N7r3FjtbB3219532195epsmtip1I;
+        Thu, 21 Mar 2019 09:19:05 +0000 (GMT)
+Subject: Re: [PATCH] PM / devfreq: exynos-bus: Suspend all devices on system
+ shutdown
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lukasz Luba <l.luba@partner.samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <c2b39c36-a2f4-282e-1145-c61cfa18c6ce@samsung.com>
+Date:   Thu, 21 Mar 2019 18:19:20 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190321090110.26506-1-m.szyprowski@samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRTn292ud6vZ1yw9SeW6UqBg7aqra6RFSg0qEyR6sFgXvam4V7tT
+        ekBZ0ZNeJpWux4ySygxNdJlpli2i/miG2cMHSVlZhpJaSe9d7yL/+53f9zvnd875DkVoKshw
+        Ksfq5B1WzkyTKrnnXpQuRrm6yKh7/S2BvV5cqWB9vqogtr1gKttaf4Zkhw57EVvsuy1jP3hH
+        EHvN2xXEduy8TC5SGto7dxiqyw+Qhrv9DTLDkZpyZBiqnp6mWJe7IJvnMnmHlrdm2DJzrFmJ
+        9LJ0U7JJP1fHxDAJ7Dxaa+UsfCKdsjwtZkmO2d8Orc3nzHl+Ko0TBHpO0gKHLc/Ja7NtgjOR
+        5u2ZZnuCfbbAWYQ8a9bsDJtlPqPTxer9wg252Y+a98jtdcGbn9WWEgXo7biDSEkBjof3HR3y
+        g0hFaXAdgl+7fAopGETwsbBRJgVfEZw/ekL2L+X33YsBVSOCnzurgsQHDR5A4HFPF3EIXg1t
+        nr5R0SR8BMHVMu9oQOBuBO7OltFSJI6Gpt4XpIgn4BnQNvIGiViNk2BwpMLPU5Qcz4SKLyqR
+        nozXwMDbW3JJMhEelvTIRYnSL398KUKkCRwG7T1umYQjYHftaUJq+g8JRwc1Ek6B6u/vFBIO
+        gY8PaoIkHA5D/Y2khLfBlYdeUmwZ8H4ENU0tgYQ4aCorkom+BI6Cyvo5klcw9H85pBBpwGrY
+        vzdgFQmt3V2BvU2BC/sOBMobwFPSJTuGZrjGDOMaM4FrzASu/2alSF6OQnm7YMniBcYeP/az
+        q9HopUazdajh8fJmhClEj1cbYo8bNQouX9hiaUZAEfQkdXxikVGjzuS2bOUdNpMjz8wLzUjv
+        X3UhET45w+a/e6vTxOhj4+Li2Hhmrp5h6DB15aJkowZncU4+l+ftvONfnoxShhegwnTrlPV9
+        neejklV36nuX+nper+xN6UvlFzuKcoo/tQyHnnNtLz152LRqRUTIq2looFZ7yLwprLbr5tDa
+        yJfu58Z7g1Vln3e0HnvS0Dvrg+oZO/wj9NTGkGGB2NtmdxITxl9J6U6t2ZjE5F9Wfm9ceMHj
+        u+/u+XO284Tt2rSvwTdSn9JyIZtjogmHwP0FsCoJvL8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnC5n+OQYgw3npC02zljPanH+/AZ2
+        i1sNMhaXd81hs/jce4TRYsb5fUwWL4/8YLRYe+Quu8XtxhVsDpwet+7Ue2xa1cnmcfDdHiaP
+        vi2rGD0+b5ILYI3isklJzcksSy3St0vgyjh1qJWlYAdfxbWtC5gbGJ9ydzFyckgImEj8O7iE
+        tYuRi0NIYDejxOv7rUwQCUmJaRePMncxcgDZwhKHDxdD1LxllFi86g87SI2wQLjE1W2vwZpF
+        BPoYJV5+XcME4jALPGKUeHHgDBNEy0RGiUf794C1sAloSex/cYMNxOYXUJS4+uMxI4jNK2An
+        8enHGjaQdSwCqhJrvnKBhEUFIiTuXnzBAlEiKHFy5hMWkBJOoPJzy+VBwswC6hJ/5l1ihrDF
+        JW49mc8EYctLNG+dzTyBUXgWku5ZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi
+        0rx0veT83E2M4PjS0trBeOJE/CFGAQ5GJR7ebtNJMUKsiWXFlbmHGCU4mJVEeE1sJ8cI8aYk
+        VlalFuXHF5XmpBYfYpTmYFES55XPPxYpJJCeWJKanZpakFoEk2Xi4JRqYGw7NUuaSUUyKqBf
+        dIHqzf0nQ3h1HLLi5zX59+V+KpWY4O+weXWK1Ns3zR6rzZIq5uV/8A1ITiyXEr/JF/Rqna32
+        y2vTHQN4Xj3Rf2Up8P1nurLXhnl7JlbsXps19/MkRv/1gRIxmQH7Zqn8/fBo7QGfucm7fRfW
+        2p5K6Fgz73USW3nOvyZzcyWW4oxEQy3mouJEAPJWbyurAgAA
+X-CMS-MailID: 20190321091905epcas1p1d7544346c6428b1c04d43ec377843338
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190321090120eucas1p1d5122777e84f4e3c965946a8c5aead8b
+References: <CGME20190321090120eucas1p1d5122777e84f4e3c965946a8c5aead8b@eucas1p1.samsung.com>
+        <20190321090110.26506-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+Hi Marek,
 
-The Acer laptop Aspire E5-523G and ES1-432 with ALC255 can't detect
-the headset microphone until ALC255_FIXUP_ACER_MIC_NO_PRESENCE quirk
-applied.
+On 19. 3. 21. 오후 6:01, Marek Szyprowski wrote:
+> Force all Exynos buses to safe operation points before doing the system
+> reboot operation. There are board on which some aggressive power saving
+> operation points are behind the capabilities of the bootloader to properly
+> reset the hardware and boot the board. This way one can avoid board crash
+> early after reboot.
+> 
+> This fixes reboot issue on OdroidU3 board both with eMMC and SD boot.
+> 
+> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> This is an alternative to https://patchwork.kernel.org/patch/10781433/
+> limited only to Exynos-bus driver.
+> ---
+>  drivers/devfreq/exynos-bus.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index c25658b26598..486cc5b422f1 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -514,6 +514,13 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static void exynos_bus_shutdown(struct platform_device *pdev)
+> +{
+> +	struct exynos_bus *bus = dev_get_drvdata(&pdev->dev);
+> +
+> +	devfreq_suspend_device(bus->devfreq);
+> +}
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  static int exynos_bus_resume(struct device *dev)
+>  {
+> @@ -556,6 +563,7 @@ MODULE_DEVICE_TABLE(of, exynos_bus_of_match);
+>  
+>  static struct platform_driver exynos_bus_platdrv = {
+>  	.probe		= exynos_bus_probe,
+> +	.shutdown	= exynos_bus_shutdown,
+>  	.driver = {
+>  		.name	= "exynos-bus",
+>  		.pm	= &exynos_bus_pm,
+> 
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+Actually, I already agreed the previous patch.
+Also, it looks good to me.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 191830d4fa40..89a96442eb07 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6712,6 +6712,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
- 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
-+	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+
 -- 
-2.20.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
