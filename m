@@ -2,120 +2,141 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF73C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368A6218FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZeZRuV7"
+	by mail.kernel.org (Postfix) with ESMTP id C3F4E218FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfCUNVT (ORCPT
+        id S1728330AbfCUNVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:21:19 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34513 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbfCUNVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:21:18 -0400
-Received: by mail-yw1-f67.google.com with SMTP id x129so4747207ywc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 06:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oQN6mlVj7UJi/bSQxMfedD+miKa9mZhfp1WbZyWESb4=;
-        b=CZeZRuV7AxKatfRdNx8WBo4p7RCe1M6+56wI7xC6GUPJpFBnhv+n2RYcTTd6T594Ue
-         yePbRcTz5ecey+zTHFHt3SGgfVZKNdKOuVfR3zQoDlp0emnfs+/xDIyuz20uxOcrRT4B
-         KPuFmPMth3DQUREu8ackDHXobUtRH4oSEumWoY5ZZZsz7Wv4Nya6lx70YH8pzXrMWIxB
-         Gdcck4+K2aaFpPlyqXxjrX/EPe5bszaSqAwrgjqWrcOsL+OS95TpASTVlHZo37TtWMR8
-         KnPPXekLNq3HZQz7ecALdC6DkdsJg58nJSj3oQqj3J5YBhfEz7k+8hwYGkiPCQFkYkjS
-         KDvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oQN6mlVj7UJi/bSQxMfedD+miKa9mZhfp1WbZyWESb4=;
-        b=RRNEqq055+KwLATbGBEhEimRJUuCcLOgKWPa74hddHiBYxx3dtkPAwCVWVQqLCrzeN
-         mH+Pho5ZlhGUJpSmusULJPWwu2Cu9ohKraAZLzc3ZOKi0o9TFII2DublQlkMC8ZVqLEw
-         lWCteey+rmhu7jAyQ/aD4yu0pWNKiE+lb491/5YJJvKzdoLMsYMAqNIzlpZilqfaJBUV
-         cSFsbXPEET640HE4m7ayg219E2QCMelPW+Zfr6uk7wmPAyAdNu7CpWjiMg4FGsisOQHQ
-         z4b81pBs90HTTZ3yvQgEg7JIuUl4oeMOIljcJGjmFPU3C3FsqpgU88dWTVkRHaj+jSXX
-         eA0Q==
-X-Gm-Message-State: APjAAAV0goHlNeebLy92hdLk2Pz2WZh3XRhynRa10yYE9yQsrKT0zPuN
-        FYpMLwc01BkYy9vnEon8G/qChZ1eaSvNRTZt6Vd5+Q==
-X-Google-Smtp-Source: APXvYqz4VuRUbx+cdkSWQSyxCGMOylhFpn/R315ynT10ij6KRnYrrCiQaIvkeyeg7s2AXKNb0nKq4EONbHCCpfm6GAk=
-X-Received: by 2002:a25:102:: with SMTP id 2mr2903960ybb.256.1553174477722;
- Thu, 21 Mar 2019 06:21:17 -0700 (PDT)
+        Thu, 21 Mar 2019 09:21:52 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5169 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728049AbfCUNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:21:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 516952E2750DC0DBCDD2;
+        Thu, 21 Mar 2019 21:21:49 +0800 (CST)
+Received: from [127.0.0.1] (10.74.177.192) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
+ 21:21:41 +0800
+Subject: Re: [PATCH] mbigen: don't clear eventid when free_irq
+To:     Marc Zyngier <marc.zyngier@arm.com>
+References: <D08D06C366851D40A251D08BEEAA0F9A04367BD6@dggeml529-mbx.china.huawei.com>
+ <20190321091135.5574b496@why.wild-wind.fr.eu.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Liyou (leeyou, RTOS)" <leeyou.li@huawei.com>,
+        "Joey Yan(Bo)" <joey.yanbo@huawei.com>,
+        "Xiaowei (C)" <xiaowei774@huawei.com>,
+        "zhanghan (Q)" <zhanghan23@huawei.com>,
+        Yangyingliang <yangyingliang@huawei.com>,
+        yaohongbo <yaohongbo@huawei.com>, Linuxarm <linuxarm@huawei.com>
+From:   Chen Jianguo <chenjianguo3@huawei.com>
+Message-ID: <e433c506-33ad-28ce-89f8-27d6897387d2@huawei.com>
+Date:   Thu, 21 Mar 2019 21:21:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20190321125034.22697-1-anders.roxell@linaro.org> <1553174301.30977.85.camel@mtkswgap22>
-In-Reply-To: <1553174301.30977.85.camel@mtkswgap22>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Thu, 21 Mar 2019 14:21:06 +0100
-Message-ID: <CADYN=9LX9opLm9_zJ-NMkRqTW4H=waQCkq-te5CGkLgri3fgog@mail.gmail.com>
-Subject: Re: [PATCH] drivers: ufs: Add missing MODULE_* information
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-scsi@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190321091135.5574b496@why.wild-wind.fr.eu.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.177.192]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 at 14:18, Stanley Chu <stanley.chu@mediatek.com> wrote:
->
-> Hi Anders,
->
-> On Thu, 2019-03-21 at 13:50 +0100, Anders Roxell wrote:
-> > When building the ufs-mediatek module the following warning shows up:
-> >
-> > WARNING: modpost: missing MODULE_LICENSE() in
-> >   drivers/scsi/ufs/ufs-mediatek.o
-> >
-> > Rework to add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
-> >
-> > Fixes: ddd90623ce26 ("scsi: ufs-mediatek: Add UFS support for Mediatek SoC chips")
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > ---
-> >  drivers/scsi/ufs/ufs-mediatek.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-> > index c3b78fc83d3f..ce4767784937 100644
-> > --- a/drivers/scsi/ufs/ufs-mediatek.c
-> > +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> > @@ -364,4 +364,9 @@ static struct platform_driver ufs_mtk_pltform = {
-> >       },
-> >  };
-> >
-> > +MODULE_AUTHOR("Stanley Chu <stanley.chu@mediatek.com>");
-> > +MODULE_AUTHOR("Peter Wang <peter.wang@mediatek.com>");
-> > +MODULE_DESCRIPTION("Mediatek UFS Driver");
->
-> Thanks for sending this.
->
-> Could you fix it as "MediaTek UFS Host Driver" ?
 
-Yes, I'll update it and sending out a v2 shortly.
-
-Cheers,
-Anders
-
+Hi Marc
+On 2019/3/21 17:11, Marc Zyngier wrote:
+> On Sat, 16 Mar 2019 11:15:03 +0000
+> chenjianguo <chenjianguo3@huawei.com> wrote:
 >
-> > +MODULE_LICENSE("GPL v2");
-> > +
-> >  module_platform_driver(ufs_mtk_pltform);
+>> From: Jianguo Chen <chenjianguo3@huawei.com>
+>>
+>> mbigen_write_msg clears eventid bits of a mbigen register
+>> when free a interrupt, because msi_domain_deactivate memset
+>> struct msg to zero. Then multiple mbigen pins with zero eventid
+>> will report the same interrupt number.
+>>
+>> The eventid clear call trace:
+>>                 free_irq
+>>                 __free_irq
+>>                 irq_shutdown
+>>                 irq_domain_deactivate_irq
+>>                 __irq_domain_deactivate_irq
+>>                 __irq_domain_deactivate_irq
+>>                 msi_domain_deactivate
+>>                 platform_msi_write_msg
+>>                 mbigen_write_msg
+>>
+>> Signed-off-by: Jianguo Chen <chenjianguo3@huawei.com>
+>> ---
+>>   drivers/irqchip/irq-mbigen.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+>> index 567b29c..fad7291 100644
+>> --- a/drivers/irqchip/irq-mbigen.c
+>> +++ b/drivers/irqchip/irq-mbigen.c
+>> @@ -161,6 +161,9 @@ static void mbigen_write_msg(struct msi_desc *desc,
+>> struct msi_msg *msg)
+>>         void __iomem *base = d->chip_data;
+>>         u32 val;
+>>
+>> +       if (!msg->address_lo && !msg->address_hi)
+>> +               return;
+>> +
+>>         base += get_mbigen_vec_reg(d->hwirq);
+>>         val = readl_relaxed(base);
+>>
+>
+> For whatever reason, I couldn't apply this patch (even when fishing a
+> copy of this email from the archives). It seems to be corrupted is
+> various ways, so I had to write the patch from scratch, which is not the
+> most reliable way to work. Good thing this was something trivial, I
+> wouldn't do it for something more complicated.
+>
+> In the future, please make sure to use 'git send-email' to send your
+> patches, as it is known to work correctly.
 >
 > Thanks,
-> Stanley
 >
+> 	M.
+>
+
+  Mbigen vector register and pin structure shows as below:
+
+	event id       0      1     2          127
+    vector register    reg0  reg1  reg2       reg127
+			|     |     |           |
+	  MBIGEN	pin0  pin1  pin2  ...  pin127
+         		|-----|-----|-----|-----|
+			|     |     |     |     |
+       device interrupt num0 num1  num2       num127
+
+Suppose a device driver requested irq num0 and num1 at the beginning, 
+and for some reason it freed irq num1, mbigen_write_msg will write reg1 
+with event id 0. Then the pin1 probably mistakenly report interrupt num0 
+to device driver if there is a signal on the pin.
+
+
+	event id       0      0     2          127
+    vector register    reg0  reg1  reg2       reg127
+			|     |     |           |
+	  MBIGEN	pin0  pin1  pin2  ...  pin127
+         		|-----|-----|-----|-----|
+			|     |     |     |     |
+	device interrup num0 num1  num2       num127		
+
+Thanks,
+	Jianguo Chen
+
