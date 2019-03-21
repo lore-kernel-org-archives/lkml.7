@@ -4,85 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93877C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B51C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B45621874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1AD20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfCUPMD (ORCPT
+        id S1728465AbfCUPMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:12:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56032 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 11:12:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44602 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727857AbfCUPMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:12:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 68874AEE6;
-        Thu, 21 Mar 2019 15:12:01 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 6A0161E0CE4; Thu, 21 Mar 2019 16:12:00 +0100 (CET)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-fsdevel@vger.kernel.org>
-Cc:     Orion Poplawski <orion@nwra.com>,
-        Vivek Trivedi <t.vivek@samsung.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        <linux-api@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH] fanotify: Make wait for permission events interruptible
-Date:   Thu, 21 Mar 2019 16:11:42 +0100
-Message-Id: <20190321151142.17104-1-jack@suse.cz>
-X-Mailer: git-send-email 2.16.4
+        id S1727857AbfCUPMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:12:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CAEFBCD6B454FC9748A3;
+        Thu, 21 Mar 2019 23:12:18 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Thu, 21 Mar 2019
+ 23:12:11 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <leitao@debian.org>, <nayna@linux.ibm.com>, <pfsmorigo@gmail.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <mpe@ellerman.id.au>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-crypto@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: vmx - Make p8_init and p8_exit static
+Date:   Thu, 21 Mar 2019 23:11:48 +0800
+Message-ID: <20190321151148.19128-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch waiting for response to fanotify permission events interruptible.
-This allows e.g. the system to be suspended while there are some
-fanotify permission events pending (which is reportedly pretty common
-when for example AV solution is in use). However just making the wait
-interruptible can result in e.g. open(2) returning -EINTR where
-previously such error code never happened in practice. To avoid
-confusion of userspace due to this error code, return -ERESTARTNOINTR
-instead.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fix sparse warnings:
+
+drivers/crypto/vmx/vmx.c:44:12: warning:
+ symbol 'p8_init' was not declared. Should it be static?
+drivers/crypto/vmx/vmx.c:70:13: warning:
+ symbol 'p8_exit' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/notify/fanotify/fanotify.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/crypto/vmx/vmx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Orion, can you give this patch some testing with your usecase? Also if anybody
-sees any issue with returning -ERESTARTNOINTR I have missed, please speak up.
-
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 6b9c27548997..eb790853844b 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -92,10 +92,17 @@ static int fanotify_get_response(struct fsnotify_group *group,
+diff --git a/drivers/crypto/vmx/vmx.c b/drivers/crypto/vmx/vmx.c
+index 31a98dc..a9f5198 100644
+--- a/drivers/crypto/vmx/vmx.c
++++ b/drivers/crypto/vmx/vmx.c
+@@ -41,7 +41,7 @@ static struct crypto_alg *algs[] = {
+ 	NULL,
+ };
  
- 	pr_debug("%s: group=%p event=%p\n", __func__, group, event);
+-int __init p8_init(void)
++static int __init p8_init(void)
+ {
+ 	int ret = 0;
+ 	struct crypto_alg **alg_it;
+@@ -67,7 +67,7 @@ int __init p8_init(void)
+ 	return ret;
+ }
  
--	ret = wait_event_killable(group->fanotify_data.access_waitq,
--				  event->state == FAN_EVENT_ANSWERED);
-+	ret = wait_event_interruptible(group->fanotify_data.access_waitq,
-+				       event->state == FAN_EVENT_ANSWERED);
- 	/* Signal pending? */
- 	if (ret < 0) {
-+		/*
-+		 * Force restarting a syscall so that this is mostly invisible
-+		 * for userspace which is not prepared for handling EINTR e.g.
-+		 * from open(2).
-+		 */
-+		if (ret == -ERESTARTSYS)
-+			ret = -ERESTARTNOINTR;
- 		spin_lock(&group->notification_lock);
- 		/* Event reported to userspace and no answer yet? */
- 		if (event->state == FAN_EVENT_REPORTED) {
+-void __exit p8_exit(void)
++static void __exit p8_exit(void)
+ {
+ 	struct crypto_alg **alg_it;
+ 
 -- 
-2.16.4
+2.7.0
+
 
