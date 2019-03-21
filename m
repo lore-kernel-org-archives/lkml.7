@@ -2,118 +2,267 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DFDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DF9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8CC218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64C2218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:56:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="SexjxEYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfCUP4E (ORCPT
+        id S1728535AbfCUP4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:56:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46957 "EHLO mga04.intel.com"
+        Thu, 21 Mar 2019 11:56:31 -0400
+Received: from vern.gendns.com ([98.142.107.122]:45270 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfCUP4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:56:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 08:56:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,253,1549958400"; 
-   d="scan'208";a="124672687"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga007.jf.intel.com with ESMTP; 21 Mar 2019 08:56:02 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h702z-00062I-Ie; Thu, 21 Mar 2019 17:56:01 +0200
-Date:   Thu, 21 Mar 2019 17:56:01 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: intel_soc_pmic_bxtwc: Add device for the I2C master
-Message-ID: <20190321155601.GP9224@smile.fi.intel.com>
-References: <20190321144122.88484-1-heikki.krogerus@linux.intel.com>
+        id S1725985AbfCUP4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:56:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EXjGFrZqIbl/ueZ09OAHu8stNQswpltDmvpgiYd8PYU=; b=SexjxEYMwX0LgHB/GdhcYjCdcf
+        16fp+NV6azTZiWcI4kBmc4YnDoaaQzrGgfRVKWG7INXLL32YhJ8WFZuFxPTV9+0gRzgptJnjpzdEF
+        oJz6O4hERx/kLabFAKxx+GASw1bSl8G62TZUj+ab3jd+lkdN8EFujVyn0LDuJVN41ajfdsfb6NbB9
+        BuEaemaH6JVtA3+hxZpTgc1aPS4T7kzqGZbqBJoMDrMSu04ux4egiyF78d0Woi8WUfiTpvLQrMhEv
+        Z2i8oOtU+h6eqIT4ltZ/fH/vSrcxVG4PZsgRoLMYqcvb54KKV4oirgzrynB8UTmGzHUD3pa43mSm+
+        IZL5hXLA==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:38792 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <david@lechnology.com>)
+        id 1h7023-0001OK-QK; Thu, 21 Mar 2019 11:55:03 -0400
+Subject: Re: [PATCH 2/4] ARM: dts: da850: add cpu node and operating points to
+ DT
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190321141010.19612-1-brgl@bgdev.pl>
+ <20190321141010.19612-3-brgl@bgdev.pl>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <a5874799-b7a5-e33b-436a-e215c9afd38a@lechnology.com>
+Date:   Thu, 21 Mar 2019 10:56:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321144122.88484-1-heikki.krogerus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190321141010.19612-3-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 05:41:22PM +0300, Heikki Krogerus wrote:
-> Intel WhiskeyCove PMIC has also I2C master interface that is
-> designed to be used for controlling a discrete battery
-> charger IC.
+On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
+> From: David Lechner <david@lechnology.com>
 > 
+> This adds a cpu node and operating points to the common da850.dtsi file.
+> 
+> Additionally, a regulator is added to the LEGO EV3 board along with
+> some board-specific CPU configuration.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Should mention the LCDK board here as well since it is included in this
+patch.
 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> Regulators need to be hooked up on other boards to get them working.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/mfd/intel_soc_pmic_bxtwc.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>   arch/arm/boot/dts/da850-lcdk.dts     | 31 +++++++++++++++
+>   arch/arm/boot/dts/da850-lego-ev3.dts | 30 +++++++++++++++
+>   arch/arm/boot/dts/da850.dtsi         | 56 ++++++++++++++++++++++++++++
+>   3 files changed, 117 insertions(+)
 > 
-> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> index 03fe33882441..52885e2c0d85 100644
-> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> @@ -84,6 +84,7 @@ enum bxtwc_irqs_adc {
->  
->  enum bxtwc_irqs_chgr {
->  	BXTWC_USBC_IRQ = 0,
-> +	BXTWC_I2C_IRQ,
->  	BXTWC_CHGR0_IRQ,
->  	BXTWC_CHGR1_IRQ,
->  };
-> @@ -121,7 +122,8 @@ static const struct regmap_irq bxtwc_regmap_irqs_adc[] = {
->  
->  static const struct regmap_irq bxtwc_regmap_irqs_chgr[] = {
->  	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, 0x20),
-> -	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x1f),
-> +	REGMAP_IRQ_REG(BXTWC_I2C_IRQ, 0, 0x0f),
-> +	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x10),
->  	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 1, 0x1f),
->  };
->  
-> @@ -208,6 +210,10 @@ static struct resource usbc_resources[] = {
->  	DEFINE_RES_IRQ(BXTWC_USBC_IRQ),
->  };
->  
-> +static struct resource i2c_resources[] = {
-> +	DEFINE_RES_IRQ(BXTWC_I2C_IRQ),
+> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+> index 26f453dc8370..f29ed9010812 100644
+> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> @@ -155,12 +155,43 @@
+>   			};
+>   		};
+>   	};
+> +
+> +	cvdd: regulator0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "cvdd";
+> +		regulator-min-microvolt = <1300000>;
+> +		regulator-max-microvolt = <1300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+>   };
+>   
+>   &ref_clk {
+>   	clock-frequency = <24000000>;
+>   };
+>   
+> +&cpu {
+> +	cpu-supply = <&cvdd>;
 > +};
 > +
->  static struct resource charger_resources[] = {
->  	DEFINE_RES_IRQ_NAMED(BXTWC_CHGR0_IRQ, "CHARGER"),
->  	DEFINE_RES_IRQ_NAMED(BXTWC_CHGR1_IRQ, "CHARGER1"),
-> @@ -241,6 +247,11 @@ static struct mfd_cell bxt_wc_dev[] = {
->  		.num_resources = ARRAY_SIZE(usbc_resources),
->  		.resources = usbc_resources,
->  	},
-> +	{
-> +		.name = "bxt_wcove_i2c",
-> +		.num_resources = ARRAY_SIZE(i2c_resources),
-> +		.resources = i2c_resources,
-> +	},
->  	{
->  		.name = "bxt_wcove_ext_charger",
->  		.num_resources = ARRAY_SIZE(charger_resources),
-> -- 
-> 2.20.1
+> +/* LCDK has a fixed CVDD of 1.3V, so only op points >= 300MHz are valid */
+> +
+> +&opp_100 {
+> +	status = "disabled";
+> +};
+> +
+> +&opp_200 {
+> +	status = "disabled";
+> +};
+> +
+> +&opp_375 {
+> +	status = "okay";
+> +};
+> +
+> +&opp_456 {
+> +	status = "okay";
+> +};
+> +
+>   &pmx_core {
+>   	status = "okay";
+>   
+> diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+> index 66fcadf0ba91..553717f84483 100644
+> --- a/arch/arm/boot/dts/da850-lego-ev3.dts
+> +++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+> @@ -125,6 +125,15 @@
+>   		amp-supply = <&amp>;
+>   	};
+>   
+> +	cvdd: regulator0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "cvdd";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+>   	/*
+>   	 * This is a 5V current limiting regulator that is shared by USB,
+>   	 * the sensor (input) ports, the motor (output) ports and the A/DC.
+> @@ -204,6 +213,27 @@
+>   	clock-frequency = <24000000>;
+>   };
+>   
+> +&cpu {
+> +	cpu-supply = <&cvdd>;
+> +};
+> +
+> +/* since we have a fixed regulator, we can't run at these points */
+> +&opp_100 {
+> +	status = "disabled";
+> +};
+> +
+> +&opp_200 {
+> +	status = "disabled";
+> +};
+> +
+> +/*
+> + * The SoC is actually the 456MHz version, but because of the fixed regulator
+> + * This is the fastest we can go.
+> + */
+> +&opp_375 {
+> +	status = "okay";
+> +};
+> +
+>   &pmx_core {
+>   	status = "okay";
+>   
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 559659b399d0..ee61d1253b58 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -20,6 +20,62 @@
+>   		reg = <0xc0000000 0x0>;
+>   	};
+>   
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu: cpu@0 {
+> +			compatible = "arm,arm926ej-s";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			clocks = <&psc0 14>;
+> +			operating-points-v2 = <&opp_table>;
+> +		};
+> +	};
+> +
+> +	opp_table: opp-table {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp_100: opp100-100000000 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +			opp-microvolt = <1000000 950000 1050000>;
+> +		};
+> +
+> +		opp_200: opp110-200000000 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <1100000 1050000 1160000>;
+> +		};
+> +
+> +		opp_300: opp120-300000000 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +			opp-microvolt = <1200000 1140000 1320000>;
+> +		};
+> +
+> +		/*
+> +		 * Original silicon was 300MHz max, so higher frequencies
+> +		 * need to be enabled on a per-board basis if the chip is
+> +		 * capable.
+> +		 */
+> +
+> +		opp_375: opp120-375000000 {
+> +			status = "disabled";
+> +			opp-hz = /bits/ 64 <375000000>;
+> +			opp-microvolt = <1200000 1140000 1320000>;
+> +		};
+> +
+> +		opp_415: opp130-415000000 {
+> +			status = "disabled";
+> +			opp-hz = /bits/ 64 <415000000>;
+> +			opp-microvolt = <1300000 1250000 1350000>;
+> +		};
+
+I just made this point (415MHz) up for experimenting with undervolting
+before going all the way to 456MHz at 1.2V. I'm not sure if it is
+actually useful to anyone else.
+
+> +
+> +		opp_456: opp130-456000000 {
+> +			status = "disabled";
+> +			opp-hz = /bits/ 64 <456000000>;
+> +			opp-microvolt = <1300000 1250000 1350000>;
+> +		};
+> +	};
+> +
+>   	arm {
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
