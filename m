@@ -2,88 +2,104 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DBAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0CBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D4821874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4598521874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553192355;
+	bh=qrn9WlnahAiB++hZpQegMOCEejvUTf+ltmPBNYEB17k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bnntUJXvalffoBhZk7PzhxR7NbKmE76MfFGAfffGvsy5b8uI6TzG1ZvhFdSpSkep4
+	 kkGZkbeg9I3GQuqxJeBJ1kdA6GIlsHrI9ZV89Ob0CjU3HAfRWuevtc0T9xsnmUcN1n
+	 iF6VwweWmrLzEZaLu9XoBtsmFBwhS4JWSLfVtDTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfCUSTC convert rfc822-to-8bit (ORCPT
+        id S1728657AbfCUSTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:19:02 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40295 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfCUSTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:19:01 -0400
-Received: from [IPv6:2607:fb90:3258:198e:38c6:f38f:7326:f16d] ([IPv6:2607:fb90:3258:198e:38c6:f38f:7326:f16d])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2LII9Nu235972
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 21 Mar 2019 11:18:10 -0700
-Date:   Thu, 21 Mar 2019 11:18:05 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aac45ef8-0196-b1c4-67ce-26dd0da6d641@redhat.com>
-References: <20190318153840.906404905@infradead.org> <20190318155139.963285969@infradead.org> <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com> <20190318173657.GV6058@hirez.programming.kicks-ass.net> <20190318175135.GE6521@hirez.programming.kicks-ass.net> <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com> <aac45ef8-0196-b1c4-67ce-26dd0da6d641@redhat.com>
+        Thu, 21 Mar 2019 14:19:14 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46584 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbfCUSTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:19:13 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r25so1706953lfn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ZotGGbR6yKUxolSVIlwFT+5L+D2RvzwYtgbxe+84DY=;
+        b=AOPzLDXyE7w8u7Cy2G0FYuMj890Yl8kIy7jBQtaiayt5QYtmXv8Ul0U7TGDFFhP9Ex
+         AmtYVorXJ6m428x7t8q9PwwtdTTw6jlTfodumBLqZO0KrM2pdkYnd+faxDarSYc9GJcO
+         LO0YTdbE5SaLXpOEUptqD20r02uEYraaovBs8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ZotGGbR6yKUxolSVIlwFT+5L+D2RvzwYtgbxe+84DY=;
+        b=SMrWkd/drAl95oRaCnge5IO8D5/2eXtWKh3a0+f0LrtzDusjeZbZi60c0trVN0i48v
+         2eYo27F2qbAry0NPMA42+C4hntBnTIO2pK6PSo8jpTtFsQVkKpoECNO7Pir32LPIbbfw
+         TeeSwskAV6qG1/XUwq3nDkgIIQQ+tGIs+qA07dZy0aUebAcHiawVSEFTpp0dJN/QnhWa
+         5jofjRBnWHckKITqQje9zGMhaVTq+pomYg7Lkkw6UIF+OqjG1W7Q9otaoc7U2xZY9xwc
+         IpnCR/UU6ae+8zkuR7TVJOvdRYrGVFLAYyNSOFgIcAXFDKRWPs170CawYcbE0tnlVEpW
+         9UDQ==
+X-Gm-Message-State: APjAAAWw/Hvou4jEcmgDrEHt3QskewYuy9FJpO9NQha/WdrQ2SSkY4Hb
+        80G/b2lg4AKWPsDawVJ7EuApvXJzqSc=
+X-Google-Smtp-Source: APXvYqzTNXD9Qh46eM0T45FBkZH9WfC7h0CtCfhIu9Xy2yTlHVU8fDS3OcdSb5Mq2TV6dCIUQpjSBg==
+X-Received: by 2002:ac2:514a:: with SMTP id q10mr2757788lfd.17.1553192350610;
+        Thu, 21 Mar 2019 11:19:10 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id u18sm1096653lfd.15.2019.03.21.11.19.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 11:19:09 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id a6so5301110lfl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:19:09 -0700 (PDT)
+X-Received: by 2002:ac2:4424:: with SMTP id w4mr2768854lfl.148.1553192349132;
+ Thu, 21 Mar 2019 11:19:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH 01/25] x86: Make SMAP 64-bit only
-To:     Denys Vlasenko <dvlasenk@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-From:   hpa@zytor.com
-Message-ID: <33D32634-51DC-426D-BE4A-F78B862760D5@zytor.com>
+References: <20190320221534.165ab87b@oasis.local.home> <20190321083317.GL6058@hirez.programming.kicks-ass.net>
+ <20190321090241.GL6521@hirez.programming.kicks-ass.net> <20190321104517.GM6521@hirez.programming.kicks-ass.net>
+ <20190321093242.4a948198@gandalf.local.home> <20190321172203.GS5996@hirez.programming.kicks-ass.net>
+ <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
+In-Reply-To: <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 21 Mar 2019 11:18:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+Message-ID: <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on error_entry
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 21, 2019 10:25:05 AM PDT, Denys Vlasenko <dvlasenk@redhat.com> wrote:
->On 3/18/19 7:10 PM, Linus Torvalds wrote:
->> On Mon, Mar 18, 2019 at 10:51 AM Peter Zijlstra
-><peterz@infradead.org> wrote:
->>>
->>> How about I do a patch that schedules EFLAGS for both 32bit and
->64bit,
->>> mark this for backporting to infinity.
->>>
->>> And then at the end, after the objtool-ac bits land, I do a patch
->>> removing the EFLAGS scheduling for x86_64.
->> 
->> Sounds sane to me.
->> 
->> And we can make it AC-conditional if it's actually shown to be
->visible
->> from a performance standpoint.
->> 
->> But iirc pushf/popf isn't really that expensive - in fact I think
->it's
->> pretty cheap when system flags don't change.
+On Thu, Mar 21, 2019 at 11:05 AM Andy Lutomirski <luto@amacapital.net> wrote:
 >
->I did not see evidence of this. In my testing,
->POPF is always ~20 cycles, even if popped flags are identical to
->current
->state of flags.
+> In the long run, I think the right solution is to rewrite even more of
+> this mess in C.  We really ought to be able to put the IRQ flag
+> tracing and the context tracking into C code.
 
-I think you will find that if you change system flags it is much slower.
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Tangentially about this long run thing - can we start discussing just
+dropping PV mode entirely in the long run? Or even not-so-long run?
+
+What are the pressing advantages of paravirt these days? Because I can
+point to a lot of pressing _disadvantages_, and not all of them are
+about more complex code as shown by this patch...
+
+             Linus
