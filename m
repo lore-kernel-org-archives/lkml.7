@@ -2,72 +2,106 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ECFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BFDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC226218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F6F218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 10:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfCUKQM (ORCPT
+        id S1728009AbfCUKUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 06:16:12 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37697 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUKQL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 06:16:11 -0400
-X-Originating-IP: 182.72.246.220
-Received: from localhost (unknown [182.72.246.220])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 68AEB1BF206;
-        Thu, 21 Mar 2019 10:16:08 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/2] rtc: da9063: switch to rtc_time64_to_tm/rtc_tm_to_time64
-Date:   Thu, 21 Mar 2019 11:15:57 +0100
-Message-Id: <20190321101557.26857-2-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190321101557.26857-1-alexandre.belloni@bootlin.com>
-References: <20190321101557.26857-1-alexandre.belloni@bootlin.com>
+        Thu, 21 Mar 2019 06:20:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57246 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727874AbfCUKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 06:20:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 593ADAE88;
+        Thu, 21 Mar 2019 10:20:12 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH v3 0/2] fix quota subdir mounts
+Date:   Thu, 21 Mar 2019 10:20:08 +0000
+Message-Id: <20190321102010.26958-1-lhenriques@suse.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the 64bit versions of rtc_tm time conversion now that the range is
-enforced by the core.
+Hi,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-da9063.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+As recently reported in the ceph-users mailing-list[1], the kernel client
+behaves differently from the fuse client regarding mounting subdirs where
+quotas are in effect.  I've also created a bug to track this issue[2].
 
-diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
-index b7052156e851..1b792bcea3c7 100644
---- a/drivers/rtc/rtc-da9063.c
-+++ b/drivers/rtc/rtc-da9063.c
-@@ -239,8 +239,8 @@ static int da9063_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 
- 	da9063_data_to_tm(data, tm, rtc);
- 
--	rtc_tm_to_time(tm, &tm_secs);
--	rtc_tm_to_time(&rtc->alarm_time, &al_secs);
-+	tm_secs = rtc_tm_to_time64(tm);
-+	al_secs = rtc_tm_to_time64(&rtc->alarm_time);
- 
- 	/* handle the rtc synchronisation delay */
- 	if (rtc->rtc_sync == true && al_secs - tm_secs == 1)
--- 
-2.20.1
+The following patches are a possible way of fixing this issue.  The
+performance impact should be close to zero if the mount is done in the
+CephFS root inode.  When we're mounting subdirs, we may have extra
+queries to the MDSs, depending on how many extra realms we'll need to
+loop through.
+
+Changes since v2:
+
+- Replaced inodes list in mdsc by an rbtree.  This is because we need to
+  able to keep track errors in lookupino so that we don't keep sending the
+  same useless request for inodes that have failed.  This also resulted in
+  reworking the locking in lookup_quotarealm_inode, so that 2 threads can
+  lookup the same inode at the same time
+
+- No need to set realm->inode in lookup_quotarealm_inode() as the
+  lookupino has set it already.
+
+Changes since v1:
+
+- Loop to free mdsc->quotarealms_inodes_list list was moved further down
+  where it's not possible to race with insertions.  This way there's no need
+  to hold the spinlock anymore.
+
+- Clarified comments regarding the get_quota_realm function 'retry'
+  parameter, both in the function itself and in function
+  ceph_quota_is_same_realm, where that param is set to 'false'
+
+- Distinguish between 'realm->inode is NULL' and igrab failures, both in
+  get_quota_realm and check_quota_exceeded
+
+Changes since RFC:
+
+The 1st patch hasn't been changed since the initial RFC.  The 2nd patch
+has been refactored to include the following changes:
+
+- Zheng Yan's suggestions, i.e, move inode references from the realms to
+  ceph_mds_client instance
+
+- It now also handles other cases where an MDS lookup may need to be
+  performed:
+  * statfs when there are quotas
+  * renames, to forbid cross-quota renames
+
+[1] http://lists.ceph.com/pipermail/ceph-users-ceph.com/2019-February/033357.html
+[2] https://tracker.ceph.com/issues/38482
+
+Cheers,
+--
+Luís
+
+Luis Henriques (2):
+  ceph: factor out ceph_lookup_inode()
+  ceph: quota: fix quota subdir mounts
+
+ fs/ceph/export.c     |  14 +++-
+ fs/ceph/mds_client.c |  19 ++++++
+ fs/ceph/mds_client.h |  18 +++++
+ fs/ceph/quota.c      | 158 ++++++++++++++++++++++++++++++++++++++++---
+ fs/ceph/super.h      |   1 +
+ 5 files changed, 199 insertions(+), 11 deletions(-)
 
