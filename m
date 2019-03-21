@@ -2,60 +2,135 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB6DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1450F218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD46218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCUU6Y (ORCPT
+        id S1727012AbfCUU7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:58:24 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53224 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfCUU6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:58:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 60CAD133E9775;
-        Thu, 21 Mar 2019 13:58:22 -0700 (PDT)
-Date:   Thu, 21 Mar 2019 13:58:22 -0700 (PDT)
-Message-Id: <20190321.135822.1822446805173888702.davem@davemloft.net>
-To:     herbert@gondor.apana.org.au
-Cc:     joshhunt00@gmail.com, jelsasser@appneta.com, tgraf@suug.ch,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH] rhashtable: Still do rehash when we get EEXIST
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190321014615.lepugrlvdff6smkn@gondor.apana.org.au>
-References: <CAKA=qzY4Pzee9BVzRCciW32toeHSz7t0q9LuvQXKLG2fX9fBbg@mail.gmail.com>
-        <20190321013952.3quw6bsqptyngzo5@gondor.apana.org.au>
-        <20190321014615.lepugrlvdff6smkn@gondor.apana.org.au>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 21 Mar 2019 13:58:22 -0700 (PDT)
+        Thu, 21 Mar 2019 16:59:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:34963 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbfCUU7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:59:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
+   d="scan'208";a="154548064"
+Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:14 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 00/23] perf: Add Icelake support
+Date:   Thu, 21 Mar 2019 13:56:40 -0700
+Message-Id: <20190321205703.4256-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Date: Thu, 21 Mar 2019 09:46:15 +0800
+From: Kan Liang <kan.liang@linux.intel.com>
 
-> On Thu, Mar 21, 2019 at 09:39:52AM +0800, Herbert Xu wrote:
->>
->> Dave, could you please apply this? Thanks!
-> 
-> I forgot to include the tested-by so here it is for patchwork:
-> 
-> Tested-by: Josh Elsasser <jelsasser@appneta.com>
+The patch series intends to add Icelake support for Linux perf.
 
-Thanks for providing this.
+PATCH 1-18: Kernel patches to support Icelake.
+ - 1-5: Support adaptive PEBS feature
+ - 6-7: Enable core support with some new features, e.g. 8 generic
+   counters, new event constraints, a new fixed counter.
+ - 8-11: Enable cstate, rapl, msr and uncore support on Icelake
+ - 12-18: Support hardware Metrics counters and SLOT fixed counter for
+   Topdown events.
+ - 19: Support CPUID 10.ECX to disable fixed counters
+
+PATCH 20-23: Perf tool patches to support XMM, Topdown and event list.
+
+Andi Kleen (12):
+  perf/x86/intel: Extract memory code PEBS parser for reuse
+  perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
+  perf/x86: Support constraint ranges
+  perf/core: Support a REMOVE transaction
+  perf/x86/intel: Basic support for metrics counters
+  perf/x86/intel: Support overflows on SLOTS
+  perf/x86/intel: Set correct weight for topdown subevent counters
+  perf/x86/intel: Export new top down events for Icelake
+  perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
+  perf, tools: Add support for recording and printing XMM registers
+  perf, tools, stat: Support new per thread TopDown metrics
+  perf, tools: Add documentation for topdown metrics
+
+Kan Liang (11):
+  perf/x86: Support outputting XMM registers
+  perf/x86/intel/ds: Extract code of event update in short period
+  perf/x86/intel: Support adaptive PEBSv4
+  perf/x86/intel: Add Icelake support
+  perf/x86/intel/cstate: Add Icelake support
+  perf/x86/intel/rapl: Add Icelake support
+  perf/x86/msr: Add Icelake support
+  perf/x86/intel/uncore: Add Intel Icelake uncore support
+  perf/x86/intel: Support hardware TopDown metrics
+  perf/x86/intel: Disable sampling read slots and topdown
+  perf vendor events intel: Add JSON files for Icelake
+
+ arch/x86/events/core.c                        |  81 +-
+ arch/x86/events/intel/core.c                  | 422 ++++++++-
+ arch/x86/events/intel/cstate.c                |   2 +
+ arch/x86/events/intel/ds.c                    | 495 ++++++++--
+ arch/x86/events/intel/lbr.c                   |  35 +-
+ arch/x86/events/intel/rapl.c                  |   2 +
+ arch/x86/events/intel/uncore.c                |   6 +
+ arch/x86/events/intel/uncore.h                |   1 +
+ arch/x86/events/intel/uncore_snb.c            |  91 ++
+ arch/x86/events/msr.c                         |   1 +
+ arch/x86/events/perf_event.h                  |  94 +-
+ arch/x86/include/asm/intel_ds.h               |   2 +-
+ arch/x86/include/asm/msr-index.h              |   4 +
+ arch/x86/include/asm/perf_event.h             |  79 +-
+ arch/x86/include/uapi/asm/perf_regs.h         |  26 +-
+ arch/x86/kernel/perf_regs.c                   |  18 +-
+ include/linux/perf_event.h                    |   7 +
+ kernel/events/core.c                          |   5 +
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  26 +-
+ tools/perf/Documentation/perf-stat.txt        |   9 +-
+ tools/perf/Documentation/topdown.txt          | 223 +++++
+ tools/perf/arch/x86/include/perf_regs.h       |  29 +-
+ tools/perf/arch/x86/util/perf_regs.c          |  16 +
+ tools/perf/builtin-stat.c                     |  24 +
+ .../pmu-events/arch/x86/icelake/cache.json    | 552 +++++++++++
+ .../arch/x86/icelake/floating-point.json      |  90 ++
+ .../pmu-events/arch/x86/icelake/frontend.json | 424 +++++++++
+ .../pmu-events/arch/x86/icelake/memory.json   | 410 ++++++++
+ .../pmu-events/arch/x86/icelake/other.json    | 133 +++
+ .../pmu-events/arch/x86/icelake/pipeline.json | 892 ++++++++++++++++++
+ .../arch/x86/icelake/virtual-memory.json      | 236 +++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+ tools/perf/util/perf_regs.h                   |   1 +
+ tools/perf/util/stat-shadow.c                 |  89 ++
+ tools/perf/util/stat.c                        |   4 +
+ tools/perf/util/stat.h                        |   8 +
+ 36 files changed, 4421 insertions(+), 117 deletions(-)
+ create mode 100644 tools/perf/Documentation/topdown.txt
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json
+
+-- 
+2.17.1
+
