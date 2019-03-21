@@ -2,173 +2,89 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB5FC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D36AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEC5218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="O8Sexf3a"
+	by mail.kernel.org (Postfix) with ESMTP id 2A128218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553138078;
+	bh=Gey+SnUTAuLKOvwiD+J3mBVX4CeINpCaIUQaZBPU0X4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=r6h2eCeyqVZnaOLMV5SP9T+0sFd7iHbj8xKG/aWc/Oz/XKZMRk9CSjXyJCpVOJfZS
+	 IyZ3+CLVcjsdCVyJejhhdlVv213niM7gYnWcL8YeDTJVPSF+7cqzrD/97m+g/3FozE
+	 HX1tCbOCeIKR7MWJzZbILHR6QEh/QuWLKQb4lqyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfCUDMr (ORCPT
+        id S1727874AbfCUDOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 23:12:47 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38359 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfCUDMr (ORCPT
+        Wed, 20 Mar 2019 23:14:36 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:37274 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCUDOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 23:12:47 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w137so3611000oiw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 20:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hNRCxCN0CPAwwEtkaOPrHmrtVKrkPJRIrqfUj9WvgyM=;
-        b=O8Sexf3atM7lpmy9ftmXKY6Rq98VWw6kJJHp0jYrLWOxjKwD7nE0qEKAHLQw6tCuKX
-         CM3Nvb9Wm0GwBB9S3f2lVuH2umS5O6KixZnJsQyPudc/BqA0kVTOWcwRgBy1XKC0eBiR
-         7gsbJROskxVR1QLdM0WLyxbmhIJNcahTso9WIpLFOAEnIk9FmrLxfXAUzdcWujrcRaks
-         NApVOGxVkBqnNBpIXs+AdbmuKY/PCohhzkgNnFYt893m1QMRVT0cf+FGjN/q9omQ7D0c
-         lRSZuUG8JgbCDVde+5KpKNZ/v/wMiSE5W4hsCzH/hGCaCBNP6w/5MQyi1tNi/IJipRVH
-         ysDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hNRCxCN0CPAwwEtkaOPrHmrtVKrkPJRIrqfUj9WvgyM=;
-        b=A/VpLRizBjnadArjHDNMGIrrSx2eZEQrUFNbXrfet1yYBJRu7jXvjks9UsyKNIYW5b
-         EGun4OmMGkjdpMRNhg9I/qjSWilAkjEZ686fFR3k+0lvaXRutg7kYGQD7FtPDGE1TU6d
-         xInEc3TJH2UihGMLcFH3dzIrcjYa22B6o5Dsbzmx9glnzKpJ+3sWLoeU5mBsgvvCfaia
-         Rq85HiomwfhQJtl6U3/4efvd23L36FBSNd7UrAYKkYEY3sLs4q/4+cLrB+WGScRTz16m
-         urNpHCIGjAZvzsLxQ6ywwBENzOd5r0qTGtbbe0l2IwlTyKbvL8HLLipuZvIqtKfOUzut
-         vedA==
-X-Gm-Message-State: APjAAAWr0I3tZ0ymt2/ifhS05MJGDHTE1AkLvMH7ovEc3JhjYsSTwJYZ
-        yqoSwz3YAoFVGHEBbGYumfBEgcJw/1ffIXCDE4Wy1Q==
-X-Google-Smtp-Source: APXvYqylwiscCu6ZjtkuX8ZDMdHYFpCCnDQq/QDcOH9L7ss0xpeIBR+ZWTttEz8AazBy4cqY+C3YbuRNm+DG7x8rkms=
-X-Received: by 2002:aca:ed88:: with SMTP id l130mr798985oih.70.1553137965862;
- Wed, 20 Mar 2019 20:12:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
- <20190228083522.8189-2-aneesh.kumar@linux.ibm.com> <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
- <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
- <87k1hc8iqa.fsf@linux.ibm.com> <CAPcyv4ir4irASBQrZD_a6kMkEUt=XPUCuKajF75O7wDCgeG=7Q@mail.gmail.com>
- <871s3aqfup.fsf@linux.ibm.com> <CAPcyv4i0SahDP=_ZQV3RG_b5pMkjn-9Cjy7OpY2sm1PxLdO8jA@mail.gmail.com>
- <87bm267ywc.fsf@linux.ibm.com> <878sxa7ys5.fsf@linux.ibm.com>
- <CAPcyv4iuAPg3HWh5e8-Ud3oCrvp5AoFmjOzf4bbA+VLgR7NLFg@mail.gmail.com>
- <CAPcyv4hMzVuOYzy2tTq-my8Z1y+X6Ug-fyObpKTxVU44p5rBZw@mail.gmail.com> <CAOSf1CEZoLw5QqEMTKwiZ+d_qPLp_D9pJZUtnQWMXWpAXOQ2YA@mail.gmail.com>
-In-Reply-To: <CAOSf1CEZoLw5QqEMTKwiZ+d_qPLp_D9pJZUtnQWMXWpAXOQ2YA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Mar 2019 20:12:34 -0700
-Message-ID: <CAPcyv4hiAE9Y3Jeudr=Ys=eu2gei088xGyTCJGOoz04iUExUfw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-To:     Oliver <oohall@gmail.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Wed, 20 Mar 2019 23:14:36 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 0983B1869;
+        Thu, 21 Mar 2019 03:14:34 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 20:14:33 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Daniel Walker <danielwa@cisco.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>, xe-linux-external@cisco.com,
+        linuxppc-dev@lists.ozlabs.org, Daniel Walker <dwalker@fifo99.com>,
+        Maksym Kokhan <maksym.kokhan@globallogic.com>,
+        linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH 1/4] add generic builtin command line
+Message-Id: <20190320201433.6c5c4782f4432d280c0e8361@linux-foundation.org>
+In-Reply-To: <20190320232328.3bijcxek2yg43a25@zorba>
+References: <20190319232448.45964-2-danielwa@cisco.com>
+        <20190320155319.2cd3c0f73ef3cdefb65d5d1e@linux-foundation.org>
+        <20190320232328.3bijcxek2yg43a25@zorba>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 8:09 PM Oliver <oohall@gmail.com> wrote:
->
-> On Thu, Mar 21, 2019 at 7:57 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Wed, Mar 20, 2019 at 8:34 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Wed, Mar 20, 2019 at 1:09 AM Aneesh Kumar K.V
-> > > <aneesh.kumar@linux.ibm.com> wrote:
-> > > >
-> > > > Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com> writes:
-> > > >
-> > > > > Dan Williams <dan.j.williams@intel.com> writes:
-> > > > >
-> > > > >>
-> > > > >>> Now what will be page size used for mapping vmemmap?
-> > > > >>
-> > > > >> That's up to the architecture's vmemmap_populate() implementation.
-> > > > >>
-> > > > >>> Architectures
-> > > > >>> possibly will use PMD_SIZE mapping if supported for vmemmap. Now a
-> > > > >>> device-dax with struct page in the device will have pfn reserve area aligned
-> > > > >>> to PAGE_SIZE with the above example? We can't map that using
-> > > > >>> PMD_SIZE page size?
-> > > > >>
-> > > > >> IIUC, that's a different alignment. Currently that's handled by
-> > > > >> padding the reservation area up to a section (128MB on x86) boundary,
-> > > > >> but I'm working on patches to allow sub-section sized ranges to be
-> > > > >> mapped.
-> > > > >
-> > > > > I am missing something w.r.t code. The below code align that using nd_pfn->align
-> > > > >
-> > > > >       if (nd_pfn->mode == PFN_MODE_PMEM) {
-> > > > >               unsigned long memmap_size;
-> > > > >
-> > > > >               /*
-> > > > >                * vmemmap_populate_hugepages() allocates the memmap array in
-> > > > >                * HPAGE_SIZE chunks.
-> > > > >                */
-> > > > >               memmap_size = ALIGN(64 * npfns, HPAGE_SIZE);
-> > > > >               offset = ALIGN(start + SZ_8K + memmap_size + dax_label_reserve,
-> > > > >                               nd_pfn->align) - start;
-> > > > >       }
-> > > > >
-> > > > > IIUC that is finding the offset where to put vmemmap start. And that has
-> > > > > to be aligned to the page size with which we may end up mapping vmemmap
-> > > > > area right?
-> > >
-> > > Right, that's the physical offset of where the vmemmap ends, and the
-> > > memory to be mapped begins.
-> > >
-> > > > > Yes we find the npfns by aligning up using PAGES_PER_SECTION. But that
-> > > > > is to compute howmany pfns we should map for this pfn dev right?
-> > > > >
-> > > >
-> > > > Also i guess those 4K assumptions there is wrong?
-> > >
-> > > Yes, I think to support non-4K-PAGE_SIZE systems the 'pfn' metadata
-> > > needs to be revved and the PAGE_SIZE needs to be recorded in the
-> > > info-block.
-> >
-> > How often does a system change page-size. Is it fixed or do
-> > environment change it from one boot to the next? I'm thinking through
-> > the behavior of what do when the recorded PAGE_SIZE in the info-block
-> > does not match the current system page size. The simplest option is to
-> > just fail the device and require it to be reconfigured. Is that
-> > acceptable?
->
-> The kernel page size is set at build time and as far as I know every
-> distro configures their ppc64(le) kernel for 64K. I've used 4K kernels
-> a few times in the past to debug PAGE_SIZE dependent problems, but I'd
-> be surprised if anyone is using 4K in production.
+On Wed, 20 Mar 2019 16:23:28 -0700 Daniel Walker <danielwa@cisco.com> wrote:
 
-Ah, ok.
+> On Wed, Mar 20, 2019 at 03:53:19PM -0700, Andrew Morton wrote:
+> > On Tue, 19 Mar 2019 16:24:45 -0700 Daniel Walker <danielwa@cisco.com> wrote:
+> > 
+> > > This code allows architectures to use a generic builtin command line.
+> > 
+> > I wasn't cc'ed on [2/4].  No mailing lists were cc'ed on [0/4] but it
+> > didn't say anything useful anyway ;)
+> > 
+> > I'll queue them up for testing and shall await feedback from the
+> > powerpc developers.
+> > 
+> 
+> You weren't CC'd , but it was To: you,
+> 
+>  35 From: Daniel Walker <danielwa@cisco.com>
+>  36 To: Andrew Morton <akpm@linux-foundation.org>,
+>  37         Christophe Leroy <christophe.leroy@c-s.fr>,
+>  38         Michael Ellerman <mpe@ellerman.id.au>,
+>  39         Rob Herring <robh+dt@kernel.org>, xe-linux-external@cisco.com,
+>  40         linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>
+>  41 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+>  42 Subject: [PATCH 2/4] drivers: of: generic command line support
 
-> Anyway, my view is that using 4K here isn't really a problem since
-> it's just the accounting unit of the pfn superblock format. The kernel
-> reading form it should understand that and scale it to whatever
-> accounting unit it wants to use internally. Currently we don't so that
-> should probably be fixed, but that doesn't seem to cause any real
-> issues. As far as I can tell the only user of npfns in
-> __nvdimm_setup_pfn() whih prints the "number of pfns truncated"
-> message.
->
-> Am I missing something?
+hm.
 
-No, I don't think so. The only time it would break is if a system with
-64K page size laid down an info-block with not enough reserved
-capacity when the page-size is 4K (npfns too small). However, that
-sounds like an exceptional case which is why no problems have been
-reported to date.
+> Thanks for picking it up.
+
+The patches (or some version of them) are already in linux-next,
+which messes me up.  I'll disable them for now.
+
