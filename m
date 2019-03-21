@@ -2,105 +2,132 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8905C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3DBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE9218FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0A521920
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfCUO0i (ORCPT
+        id S1728138AbfCUO22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:26:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32910 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfCUO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:26:38 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 446A7630D7746368FDA5;
-        Thu, 21 Mar 2019 14:26:36 +0000 (GMT)
-Received: from [10.204.65.148] (10.204.65.148) by smtpsuk.huawei.com
- (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 21 Mar
- 2019 14:26:34 +0000
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware
- TPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        <keyrings@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-kernel@vger.kernel.org>
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190321135451.GD4603@linux.intel.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
-Date:   Thu, 21 Mar 2019 15:26:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 21 Mar 2019 10:28:28 -0400
+Received: from hosting.pavoucek.net ([46.28.107.168]:42648 "EHLO
+        hosting.pavoucek.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfCUO22 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:28:28 -0400
+Received: from tomas-nb (nat8.vcit.vutbr.net [185.62.108.74])
+        (Authenticated sender: tomas@novotny.cz)
+        by hosting.pavoucek.net (Postfix) with ESMTPSA id AADA2102F5F;
+        Thu, 21 Mar 2019 15:28:23 +0100 (CET)
+Date:   Thu, 21 Mar 2019 15:28:23 +0100
+From:   Tomas Novotny <tomas@novotny.cz>
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] iio: light: vcnl4000 use word writes instead of
+  byte writes
+Message-ID: <20190321152823.41991dae@tomas-nb>
+In-Reply-To: <16a2d3e86f296fac2f56fb47e1f1afac@www.akkea.ca>
+References: <20190317154802.15174-1-angus@akkea.ca>
+        <20190317154802.15174-2-angus@akkea.ca>
+        <20190320155322.3fd9f080@tomas.local.tbs-biometrics.cz>
+        <16a2d3e86f296fac2f56fb47e1f1afac@www.akkea.ca>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190321135451.GD4603@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.204.65.148]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
-> On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
->> Rather than fail initialization of the trusted.ko module, arrange for
->> the module to load, but rely on trusted_instantiate() to fail
->> trusted-key operations.
->>
->> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
->> Cc: Roberto Sassu <roberto.sassu@huawei.com>
->> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> Cc: James Bottomley <jejb@linux.ibm.com>
->> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> Cc: Mimi Zohar <zohar@linux.ibm.com>
->> Cc: David Howells <dhowells@redhat.com>
->> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi Angus,
+
+On Wed, 20 Mar 2019 13:21:58 -0700
+Angus Ainslie <angus@akkea.ca> wrote:
+
+> Hi Tomas,
 > 
-> It should check for chip in each function that uses TPM now that
-> the code does not rely on default chip. Otherwise, the semantics
-> are kind of inconsistent.
-
-If no other TPM function can be used before a successful key
-instantiate, checking for a chip only in trusted_instantiate() seems
-sufficient. Then, the same chip will be used by all TPM functions until
-module unloading, since we incremented the reference count.
-
-I would suggest to move the tpm_default_chip() and init_digests() calls
-to trusted_instantiate() to restore the old behavior of init_trusted().
-
-trusted_instantiate() should look like:
----
-if (!chip) {
-	chip = tpm_default_chip();
-	if (!chip)
-		return -ENODEV;
-}
-
-if (!digests) {
-	ret = init_digests();
-	if (ret < 0)
-		return ret;
-}
----
-
-Roberto
-
-
-> /Jarkko
+> On 2019-03-20 07:53, Tomas Novotny wrote:
+> > Hi Angus,
+> > 
+> > On Sun, 17 Mar 2019 08:47:58 -0700
+> > "Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+> >   
+> >> The VCNL4200 datasheet says that word read and writes should be used
+> >> to access the registers.
+> >> 
+> >> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> >> ---
+> >>  drivers/iio/light/vcnl4000.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/drivers/iio/light/vcnl4000.c 
+> >> b/drivers/iio/light/vcnl4000.c
+> >> index 04fd0d4b6f19..5295330b65e2 100644
+> >> --- a/drivers/iio/light/vcnl4000.c
+> >> +++ b/drivers/iio/light/vcnl4000.c
+> >> @@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data 
+> >> *data)
+> >>  	data->rev = (ret >> 8) & 0xf;
+> >> 
+> >>  	/* Set defaults and enable both channels */
+> >> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 
+> >> 0x00);
+> >> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 
+> >> 0x00);  
+> > 
+> > minor note: the 0x00 looks like a byte. 0 or 0x0000 would be slightly 
+> > better?
+> > The same below.
+> >   
+> >>  	if (ret < 0)
+> >>  		return ret;
+> >> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 
+> >> 0x00);
+> >> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 
+> >> 0x00);  
+> > 
+> > The VCNL4200_PS_CONF1 definition is a bit misleading with word write. 
+> > Because
+> > PS_CONF1 is only a low byte of command code 0x03. The high byte of 0x03 
+> > is
+> > PS_CONF2. I would rename it.
+> >   
 > 
+> As far as a base address for the register that is correct based on the 
+> names in the datasheet. I suppose I could add something like:
+> 
+> #define VCNL4200_PS_CONF  VCNL4200_PS_CONF1
+>
+> and change the reference here if you think that would be more clear.
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+to be honest, I don't know the best practice. As there is also PS_CONF3, I
+was thinking about PS_CONF1_2, but thinking again, your current name is good
+enough maybe.
+
+Tomas
+
+> >>  	if (ret < 0)
+> >>  		return ret;  
+> > 
+> > Anyway, the main point is that I've tested this patch on VCNL4200 and 
+> > it
+> > works, so:
+> > Tested-by: Tomas Novotny <tomas@novotny.cz>
+> > 
+> > T.  
+> 
+> Thanks for testing it
+> Angus
+> 
