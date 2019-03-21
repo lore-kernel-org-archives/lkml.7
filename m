@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EF9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EF1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D754D21900
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3385F21916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AcCv+oJI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kr1Bi0yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfCURSQ (ORCPT
+        id S1728498AbfCURSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:18:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42983 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbfCURSP (ORCPT
+        Thu, 21 Mar 2019 13:18:20 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42705 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728602AbfCURSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:18:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p6so4631732pgh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:18:14 -0700 (PDT)
+        Thu, 21 Mar 2019 13:18:18 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r15so4705445pfn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o+6vk1Y2CFYMkd90yT6sdZwK6wtMV3xm69BtCbUlzG0=;
-        b=AcCv+oJIKvG54X4XIiKChRRBCd64AapLB03O1VpSotZHO9pkVYNgVtpiqQj2758g9m
-         /bbeXL+FYzwfrqgV56tZjw8rHbWq6/la1mXbKA6fgDz0A2HkIG5ZN+nNlvUEHbXVo4xn
-         7AnHRKXYM+VFZqQ6SCItRG5ArIKdREVkGNUoc=
+        bh=5VTcVo1Chs4XGa35tec1xGg2FL/05IcVUKqdSKt+U9Q=;
+        b=Kr1Bi0ytzlIExrHApFqy1i2jPUQf5/OokIJmBfy88t6HmBn28AzgN6842rJUZ2wmQx
+         LCQ0JbLwZpGjnZIYqJaa2e5V2i/f+jtne9UBW62i8YsOzXXWUy91ZxTlU4Em4XNQ2krG
+         Z3n2muBhDqKmlKuIu8zh5BF2z13WJk+9N3Zek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o+6vk1Y2CFYMkd90yT6sdZwK6wtMV3xm69BtCbUlzG0=;
-        b=tFx6oB4TEfl6HNuP0mkV476S0nKmdgnH/roWe9sb2eFHlh12Vd+dtRyfWFbDnvVAr6
-         9vO/NiC2nYxP0zSZe9vaWgmdcb9EdK8eR9WX9fA09spdjrs6b/JJo3K1pa9u9F30tgAc
-         4oeoEdWc47aDWPpCMG6VwCQHJyvVXSfaCUx+2Acttf6znYFNB6VU84ASt1n18uI8J0dX
-         +Ib56Ry07gyxajwDCIx5qnl9oprfKOD0Jow50LmQbRK74A39OXbk/flSXgg0gltBeouD
-         u/0eocybeyQITCUcv0RifhvqBqVougUqiN2hokQWHCgwFcKwN4f6lpoubIWf8EobENHR
-         q9sw==
-X-Gm-Message-State: APjAAAVk4akMCvfACBNbsGWLeoxZm2SLWsje1qSjfXXR9tDshMpse9hX
-        25xsSK7fy+QRNT2oojH+63MUrg==
-X-Google-Smtp-Source: APXvYqwZ7A3/SO3Qyiz1HQnNKa9WPyj7Ebk6Ogmp2TQl43qx6oz1cGdoAJ6LzNGvQPj7G7ny3uHZ5A==
-X-Received: by 2002:a17:902:8692:: with SMTP id g18mr4519908plo.149.1553188694579;
-        Thu, 21 Mar 2019 10:18:14 -0700 (PDT)
+        bh=5VTcVo1Chs4XGa35tec1xGg2FL/05IcVUKqdSKt+U9Q=;
+        b=CHWrIpibWyLcv1nry1lQ2mjqT4p8jS9xB4tuFuGvdUvPwROKzoUez4MZkz+AJfUtER
+         D5SE5AmURJt9PQKG4OuyNes/2JosUDi4Ddljdb6nQBfuLiqLrqfnHt9WAqTtHfoXCt8T
+         GED7zaWXrnVxPgUijCXDe1xXNmfcxFqhgEABs77kNoe2F2+XZJiLOiD7gFwUT+ntha7N
+         sUFjvNgOe/ET3bB29dkUYNTQ6b2OBQ+Cv8/Tof7+XQeaHwCs+pwPAH+h5Zr7u58flI9j
+         T2RapFE8eldDCM++uGHrO3TOa4xmzO6GA732BcmFSLytrnD6NY31NEyFxP2GKSsMViGl
+         Tn6Q==
+X-Gm-Message-State: APjAAAVQIziLOtXg31n9mzDvWIM79BLvo1r0XJZYzGiI0OAyi1f98YlD
+        dqvXRGHek5DPpQrv30ifIKEbzQ==
+X-Google-Smtp-Source: APXvYqwVkUQOfEPbsJoytpmNSpCN+m2u6x55lnqBlfVlHlhBkUsE+bGCQubPjDMcBfyYPanRj2vq8A==
+X-Received: by 2002:a62:a219:: with SMTP id m25mr4396024pff.197.1553188697650;
+        Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
 Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id z6sm20953866pgo.31.2019.03.21.10.18.13
+        by smtp.gmail.com with ESMTPSA id z6sm20953866pgo.31.2019.03.21.10.18.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 21 Mar 2019 10:18:13 -0700 (PDT)
+        Thu, 21 Mar 2019 10:18:17 -0700 (PDT)
 From:   Evan Green <evgreen@chromium.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
@@ -63,14 +63,14 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         Asutosh Das <asutoshd@codeaurora.org>,
         Evan Green <evgreen@chromium.org>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v5 1/8] dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
-Date:   Thu, 21 Mar 2019 10:17:53 -0700
-Message-Id: <20190321171800.104681-2-evgreen@chromium.org>
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v5 2/8] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+Date:   Thu, 21 Mar 2019 10:17:54 -0700
+Message-Id: <20190321171800.104681-3-evgreen@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321171800.104681-1-evgreen@chromium.org>
 References: <20190321171800.104681-1-evgreen@chromium.org>
@@ -81,13 +81,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable Qualcomm UFS controllers to expose the PHY reset via a reset
-controller.
+Add a required reset to the SDM845 UFS phy to express the PHY reset
+bit inside the UFS controller register space. Before this change, this
+reset was not expressed in the DT, and the driver utilized two different
+callbacks (phy_init and phy_poweron) to implement a two-phase
+initialization procedure that involved deasserting this reset between
+init and poweron. This abused the two callbacks and diluted their
+purpose.
+
+That scheme does not work as regulators cannot be turned off in
+phy_poweroff because they were turned on in init, rather than poweron.
+The net result is that regulators are left on in suspend that shouldn't
+be.
+
+This new scheme gives the UFS reset to the PHY, so that it can fully
+initialize itself in a single callback. We can then turn regulators on
+during poweron and off during poweroff.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
 ---
 
 Changes in v5: None
@@ -95,28 +108,33 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 5111e9130bc3..f647c09bc62a 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -50,6 +50,8 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- #reset-cells		: Must be <1> for Qualcomm UFS controllers that expose
-+			  PHY reset from the UFS controller.
- - resets            : reset node register
- - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 5d181fc3cc18..4a78ba8b85bc 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -59,7 +59,8 @@ Required properties:
+ 	   one for each entry in reset-names.
+  - reset-names: "phy" for reset of phy block,
+ 		"common" for phy common block reset,
+-		"cfg" for phy's ahb cfg block reset.
++		"cfg" for phy's ahb cfg block reset,
++		"ufsphy" for the PHY reset in the UFS controller.
  
-@@ -79,4 +81,5 @@ Example:
- 		reset-names = "rst";
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		#reset-cells = <1>;
- 	};
+ 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
+ 			"phy", "common".
+@@ -74,7 +75,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+ 			"phy", "common".
+-		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
++		For "qcom,sdm845-qmp-ufs-phy": must contain:
++			"ufsphy".
+ 
+  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 -- 
 2.20.1
 
