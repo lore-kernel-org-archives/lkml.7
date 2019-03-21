@@ -2,190 +2,105 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E461C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4573C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB31C218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:23:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ri9YpE7M"
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2A218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfCUUXH (ORCPT
+        id S1728838AbfCUUYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:23:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38719 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfCUUXH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:23:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so83890wmf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 13:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:reply-to:mime-version
-         :content-transfer-encoding;
-        bh=w7lxoTd4kVgM2zOdMAkdgeIpfs/YgHMQ3SvnK05tK7E=;
-        b=ri9YpE7Mda7HLxRsJl7yOhgIE4ztk0wIdPMecQGObQQdCj4BZE2g4g5embtjjHeICg
-         gQ0tW95TF7CH9O7IN5xPqYS4ZlDTOB39lCWF2U23KUECiEX2GLE9qleS50IZnVWc2Vaq
-         h63Z3L+DlqbnA/OK38Vbk8YAI5GDl/0bDMD5p/UCNUQl3VQxeB46hdjM1eTa46dErPAw
-         lrvZkhNHvvUkM0SJgp1SXZmndAM/6GYk1zEi5mlAIAwQ6JT1VG7ErU3SgvoQR9gQOIgB
-         0cp+4dvnzpzZCgYztY4oaEcFEXZPYy9a7L8psvK1o0kzSfm4cZLB9L+RPxzuJPD4HqDp
-         HJlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=w7lxoTd4kVgM2zOdMAkdgeIpfs/YgHMQ3SvnK05tK7E=;
-        b=hyHqqBT07NtSh72+p0YeCYH/qdkyd1HaYCDWNWwc74b52T14UIrXjcP1JQDfTfOCb/
-         IauR8wIYPlsuNDY33gmIdAl3VtjKVGI6uFH/h9rz+MianpjtUIlzkvJILZvRoISoLZ+B
-         1UVufH7m7cN42TfFc86i3L+KcmdX5EatY6D7H+3ECgXZMsr9dCF7iQhxbBRnMuLVTdZ+
-         cmClz+L5Ttfq6ukGvdpLTtreeYJujEAefi9Z4cEfMk/74LvVu9WvgmgN491aHfh8FQdK
-         HSv48/epNiUqDoPmdzTzNN4Zhz97vMDZakxyaxGdiIzyD21yF0z8MDkqHxzaUEV8Ylpl
-         kqAg==
-X-Gm-Message-State: APjAAAXc+X5uWsTpGPrmmhAelhP4MK/3qYztTHU9mcWgzCTFQoWOXeSJ
-        DcBE4Y5T7sg3Zx1NtKVkRWh2ndbtz54=
-X-Google-Smtp-Source: APXvYqxgHWd5aoksSGpHUncdjX0VrYZfQSB5JW/UrghNmWTIBreJBY+Bp1bWJyL6fupeknwUe9Jr2g==
-X-Received: by 2002:a1c:21c1:: with SMTP id h184mr704128wmh.128.1553199784181;
-        Thu, 21 Mar 2019 13:23:04 -0700 (PDT)
-Received: from p200300EEEE2F.fritz.box (p200300C987214D00743638A947E91BBA.dip0.t-ipconnect.de. [2003:c9:8721:4d00:7436:38a9:47e9:1bba])
-        by smtp.gmail.com with ESMTPSA id a10sm10170803wrs.19.2019.03.21.13.23.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 13:23:03 -0700 (PDT)
-From:   Emanuel Bennici <benniciemanuel78@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        NeilBrown <neil@brown.name>,
-        Mamta Shukla <mamtashukla555@gmail.com>
-Subject: [PATCH] staging: mt7621-pci: Add spaces to Macros in pci-mt7621.c
-Date:   Thu, 21 Mar 2019 21:22:56 +0100
-Message-Id: <20190321202301.806-1-benniciemanuel78@gmail.com>
-X-Mailer: git-send-email 2.19.1
-Reply-To: benniciemanuel78@gmail.com
+        Thu, 21 Mar 2019 16:24:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44200 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728460AbfCUUYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:24:49 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 84F6E5945D;
+        Thu, 21 Mar 2019 20:24:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA45E60BE2;
+        Thu, 21 Mar 2019 20:24:47 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 16:24:46 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "jrdr.linux@gmail.com" <jrdr.linux@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "ying.huang@intel.com" <ying.huang@intel.com>,
+        "riel@surriel.com" <riel@surriel.com>
+Subject: Re: [RFC PATCH RESEND 2/3] mm: Add an apply_to_pfn_range interface
+Message-ID: <20190321202445.GA15074@redhat.com>
+References: <20190321132140.114878-1-thellstrom@vmware.com>
+ <20190321132140.114878-3-thellstrom@vmware.com>
+ <20190321135202.GC2904@redhat.com>
+ <c9d05087a0fb9002145aa2f7c58552615a694e9e.camel@vmware.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c9d05087a0fb9002145aa2f7c58552615a694e9e.camel@vmware.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 21 Mar 2019 20:24:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apply Kernel Coding Style to pci-mt7621.c by adding Tabs
+On Thu, Mar 21, 2019 at 07:59:35PM +0000, Thomas Hellstrom wrote:
+> On Thu, 2019-03-21 at 09:52 -0400, Jerome Glisse wrote:
+> > On Thu, Mar 21, 2019 at 01:22:35PM +0000, Thomas Hellstrom wrote:
+> > > This is basically apply_to_page_range with added functionality:
+> > > Allocating missing parts of the page table becomes optional, which
+> > > means that the function can be guaranteed not to error if
+> > > allocation
+> > > is disabled. Also passing of the closure struct and callback
+> > > function
+> > > becomes different and more in line with how things are done
+> > > elsewhere.
+> > > 
+> > > Finally we keep apply_to_page_range as a wrapper around
+> > > apply_to_pfn_range
+> > 
+> > The apply_to_page_range() is dangerous API it does not follow other
+> > mm patterns like mmu notifier. It is suppose to be use in arch code
+> > or vmalloc or similar thing but not in regular driver code. I see
+> > it has crept out of this and is being use by few device driver. I am
+> > not sure we should encourage that.
+> 
+> I can certainly remove the EXPORT of the new apply_to_pfn_range() which
+> will make sure its use stays within the mm code. I don't expect any
+> additional usage except for the two address-space utilities.
+> 
+> I'm looking for examples to see how it could be more in line with the
+> rest of the mm code. The main difference from the pattern in, for
+> example, page_mkclean() seems to be that it's lacking the
+> mmu_notifier_invalidate_start() and mmu_notifier_invalidate_end()?
+> Perhaps the intention is to have the pte leaf functions notify on pte
+> updates? How does this relate to arch_enter_lazy_mmu() which is called
+> outside of the page table locks? The documentation appears a bit
+> scarce...
 
-Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
----
- drivers/staging/mt7621-pci/pci-mt7621.c | 70 ++++++++++++-------------
- 1 file changed, 35 insertions(+), 35 deletions(-)
+Best is to use something like walk_page_range() and have proper mmu
+notifier in the callback. The apply_to_page_range() is broken for
+huge page (THP) and other things like that. Thought you should not
+have THP within mmap of a device file (at least i do not thing any
+driver does that).
 
-diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
-index 379ae780c691..c5d9b7204aef 100644
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -34,16 +34,16 @@
- #include "../../pci/pci.h"
- 
- /* sysctl */
--#define MT7621_CHIP_REV_ID		0x0c
--#define CHIP_REV_MT7621_E2		0x0101
-+#define MT7621_CHIP_REV_ID			0x0c
-+#define CHIP_REV_MT7621_E2			0x0101
- 
- /* MediaTek specific configuration registers */
--#define PCIE_FTS_NUM			0x70c
--#define PCIE_FTS_NUM_MASK		GENMASK(15, 8)
--#define PCIE_FTS_NUM_L0(x)		((x) & 0xff << 8)
-+#define PCIE_FTS_NUM				0x70c
-+#define PCIE_FTS_NUM_MASK			GENMASK(15, 8)
-+#define PCIE_FTS_NUM_L0(x)			((x) & 0xff << 8)
- 
- /* rt_sysc_membase relative registers */
--#define RALINK_PCIE_CLK_GEN		0x7c
-+#define RALINK_PCIE_CLK_GEN			0x7c
- #define RALINK_PCIE_CLK_GEN1		0x80
- 
- /* Host-PCI bridge registers */
-@@ -51,44 +51,44 @@
- #define RALINK_PCI_PCIMSK_ADDR		0x000C
- #define RALINK_PCI_CONFIG_ADDR		0x0020
- #define RALINK_PCI_CONFIG_DATA		0x0024
--#define RALINK_PCI_MEMBASE		0x0028
--#define RALINK_PCI_IOBASE		0x002C
-+#define RALINK_PCI_MEMBASE			0x0028
-+#define RALINK_PCI_IOBASE			0x002C
- 
- /* PCICFG virtual bridges */
--#define MT7621_BR0_MASK			GENMASK(19, 16)
--#define MT7621_BR1_MASK			GENMASK(23, 20)
--#define MT7621_BR2_MASK			GENMASK(27, 24)
--#define MT7621_BR_ALL_MASK		GENMASK(27, 16)
--#define MT7621_BR0_SHIFT		16
--#define MT7621_BR1_SHIFT		20
--#define MT7621_BR2_SHIFT		24
-+#define MT7621_BR0_MASK				GENMASK(19, 16)
-+#define MT7621_BR1_MASK				GENMASK(23, 20)
-+#define MT7621_BR2_MASK				GENMASK(27, 24)
-+#define MT7621_BR_ALL_MASK			GENMASK(27, 16)
-+#define MT7621_BR0_SHIFT			16
-+#define MT7621_BR1_SHIFT			20
-+#define MT7621_BR2_SHIFT			24
- 
- /* PCIe RC control registers */
--#define MT7621_PCIE_OFFSET		0x2000
--#define MT7621_NEXT_PORT		0x1000
-+#define MT7621_PCIE_OFFSET			0x2000
-+#define MT7621_NEXT_PORT			0x1000
- 
- #define RALINK_PCI_BAR0SETUP_ADDR	0x0010
- #define RALINK_PCI_IMBASEBAR0_ADDR	0x0018
--#define RALINK_PCI_ID			0x0030
--#define RALINK_PCI_CLASS		0x0034
--#define RALINK_PCI_SUBID		0x0038
--#define RALINK_PCI_STATUS		0x0050
-+#define RALINK_PCI_ID				0x0030
-+#define RALINK_PCI_CLASS			0x0034
-+#define RALINK_PCI_SUBID			0x0038
-+#define RALINK_PCI_STATUS			0x0050
- 
- /* Some definition values */
--#define PCIE_REVISION_ID		BIT(0)
--#define PCIE_CLASS_CODE			(0x60400 << 8)
--#define PCIE_BAR_MAP_MAX		GENMASK(30, 16)
--#define PCIE_BAR_ENABLE			BIT(0)
--#define PCIE_PORT_INT_EN(x)		BIT(20 + (x))
--#define PCIE_PORT_CLK_EN(x)		BIT(24 + (x))
--#define PCIE_PORT_PERST(x)		BIT(1 + (x))
--#define PCIE_PORT_LINKUP		BIT(0)
--
--#define PCIE_CLK_GEN_EN			BIT(31)
--#define PCIE_CLK_GEN_DIS		0
--#define PCIE_CLK_GEN1_DIS		GENMASK(30, 24)
--#define PCIE_CLK_GEN1_EN		(BIT(27) | BIT(25))
--#define MEMORY_BASE			0x0
-+#define PCIE_REVISION_ID			BIT(0)
-+#define PCIE_CLASS_CODE				(0x60400 << 8)
-+#define PCIE_BAR_MAP_MAX			GENMASK(30, 16)
-+#define PCIE_BAR_ENABLE				BIT(0)
-+#define PCIE_PORT_INT_EN(x)			BIT(20 + (x))
-+#define PCIE_PORT_CLK_EN(x)			BIT(24 + (x))
-+#define PCIE_PORT_PERST(x)			BIT(1 + (x))
-+#define PCIE_PORT_LINKUP			BIT(0)
-+
-+#define PCIE_CLK_GEN_EN				BIT(31)
-+#define PCIE_CLK_GEN_DIS			0
-+#define PCIE_CLK_GEN1_DIS			GENMASK(30, 24)
-+#define PCIE_CLK_GEN1_EN			(BIT(27) | BIT(25))
-+#define MEMORY_BASE					0x0
- 
- /**
-  * struct mt7621_pcie_port - PCIe port information
--- 
-2.19.1
-
+Cheers,
+Jérôme
