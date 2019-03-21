@@ -2,104 +2,92 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442ECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7862DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F6B218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493A7218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GVVrpzln"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="xPwFki6M";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nO5AQkCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfCUPkO (ORCPT
+        id S1728391AbfCUPlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:40:14 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32887 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfCUPkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:40:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id b6so5631487iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 08:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/rP30qae+c6bSHaVrK4mLSxBRk9fRh6YZC+PfgjPC5g=;
-        b=GVVrpzlnU6BYkaW65uvgqSj9iMnpZAT6H8v+qSXufg/BU9Y1L5HML4fbLu0UWXKPQP
-         KyNQYs1HUtVNpDIxlE8mqd1UDUXwAlEavXfb0IXvY76urnvV/9NQETOhv5N3qawwIO0I
-         rEPuj8yK5D3JBksHVzF3GhXBbSQwXSJZTDma3BmEvlWsbzIY4/ffJJThKw7dk04Pz+b1
-         iDLkr3WW8xsOAImMOxyuyZOBmmCGyJWO5HCrXS0iSLC7X79kYEnhvQ4QwJv5HHOiYkBO
-         GyfErthmB60U9o908jFRZQo9bSd69r0QmE9XxlRJYssqQgSAyB1e2AxJvs0I7QEdhnjo
-         XQuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/rP30qae+c6bSHaVrK4mLSxBRk9fRh6YZC+PfgjPC5g=;
-        b=YayxP0IYEhk0RndC2a3gKromQlSeyrwSvngWtMXQFU/TPMwVS7Zd0kcogLcaajnkL7
-         dzsW34zW/XuGWGuTDUwYUpBNpP0XuV4zxxNWDtuH7ljydpfzlXX2ojBQBCMm1Tysdvts
-         nmugyZH8R73TrdK+JPLujczw9LvkO+4d6aUXva4rTOscd+vVlL6dHjwDDvYIJu6b6iYS
-         5K7WRYk3QB5XEPipVrjgSVn3IXN7so77682pcgAXJZps6idHl83WpzQSi/TxTpsTRIxm
-         yhS0++QYCoLHHT8X9dW+IjpSt3QR8wYxdN6l5VQqmhe0FPV+0KJx8ZmAqekP3P9Zuzi6
-         gWGA==
-X-Gm-Message-State: APjAAAUB8JHHFMTvgmIapZWSGVrkYKx+IAM4DFh8q7xce+3buUoCR9hb
-        Fm0YPuR3/4D1oheaa/Nw/ToUzPVtTn/K8JHSIaILsQ==
-X-Google-Smtp-Source: APXvYqzj6+enPVpSxbq5Hk/KnHml7LM5ecBMOV0Jp4UyYuMW8OyOPDbQu46EbRb4NllXvVDc1Kojwh0X+3ynssUUA0Y=
-X-Received: by 2002:a6b:6e0f:: with SMTP id d15mr3412120ioh.111.1553182813502;
- Thu, 21 Mar 2019 08:40:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190321141010.19612-1-brgl@bgdev.pl> <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
-In-Reply-To: <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 21 Mar 2019 16:40:02 +0100
-Message-ID: <CAMRc=MespSLpsknVrMwYVorv0NxAsSL+U9R049Fw_Wqe1_gqkw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] ARM: da850: enable cpufreq in DT mode
-To:     David Lechner <david@lechnology.com>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Thu, 21 Mar 2019 11:41:01 -0400
+Received: from node.akkea.ca ([192.155.83.177]:39150 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727823AbfCUPlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:41:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 3217F4E204E;
+        Thu, 21 Mar 2019 15:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553182860; bh=A0WYymUcpfrTzb2KhE89sS5xYgZxM6rtkkmUMs5t42o=;
+        h=From:To:Cc:Subject:Date;
+        b=xPwFki6MLaiqBcdWFIgov71UHz+N+wCCo48wTPMBecjuqvQXycPv7UjQCKbrfMtHI
+         LnRPq6ip2BZOTn21GxehYu6BHWd+OgHg9Hwo6GXBzV+NT1Le0r0ZLuA9Pi3ydUS5TN
+         Wynvjag0pVYNh+PZj9GoO8TkzFE8acgHZw3BbXow=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lR2V1V9S5B7j; Thu, 21 Mar 2019 15:40:59 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 2E7914E204B;
+        Thu, 21 Mar 2019 15:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553182859; bh=A0WYymUcpfrTzb2KhE89sS5xYgZxM6rtkkmUMs5t42o=;
+        h=From:To:Cc:Subject:Date;
+        b=nO5AQkCjpGZI4VYFdtzQshSeqyKeANh0Q77E7JVwbv3MdHPkUqGJ4JqLZDQ2Zb3Ww
+         ppvf87y/2Bbb+6rQ0Rbu1En1ZlgSkp5wT+A4bn7BkIQUbcqMcQtcfppxBfbR63vkUd
+         ufnU/+v0keW6+MObX1AxuAf967ffwoXm0rlpheGw=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     jic23@kernel.org
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] Add a VCNL4040 light and proximity driver
+Date:   Thu, 21 Mar 2019 08:40:42 -0700
+Message-Id: <20190321154047.23236-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 21 mar 2019 o 16:29 David Lechner <david@lechnology.com> napisa=C5=82=
-(a):
->
-> On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This series adds cpufreq-dt operating points for da850 boards supported
-> > with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
-> > includes a fix for the da850-evm boardfile which checks an unset variab=
-le
-> > to determine the highest available frequency for cpufreq.
->
->
-> I can't find any old threads about this, but I recall that there was a
-> problem with the USB OHCI controller breaking when switching frequencies.
-> It didn't happen all of the time, but often enough that it made using
-> cpufreq unusable for me. Is this still a problem?
->
+Extend the Vishay VCNL4000/4010/4020/4200 driver to work with the VCNL4040
+chip.
 
-Yes, it's still a problem, but it's bug-compatible with the legacy BSP
-from TI (project arago). I've spent some time trying to figure out the
-culprit at the time you were working on the clock driver, but
-eventually gave up. I think it's some kind of a HW issue. The
-controller would simple die after a couple transitions.
+Changes since V2:
+    Added Tested-by tag.
+    Changed 0x00 to 0 for clarity.
 
-Bart
+Changes since V1:
+    Separated byte vs word bug fix.
+    Separated device tree hooks.
+    Separated devicetree binding patches.
 
-> Also, a big-picture question. On boards with fixed regulators, what is
-> the benefit of enabling frequency scaling? The power savings aspect
-> seems negligible (< 1% in my tests) since the voltage cannot be changed.
+Angus Ainslie (Purism) (5):
+  iio: light: vcnl4000 use word writes instead of byte writes
+  iio: light: vcnl4000 add devicetree hooks
+  dt-bindings: iio: light: add vcnl4000 devicetree bindings
+  iio: light: vcnl4000 add support for the VCNL4040 proximity and light
+    sensor
+  dt-bindings: iio: light: add vcnl4040 devicetree bindings
+
+ .../bindings/iio/light/vcnl4000.txt           | 24 ++++++
+ drivers/iio/light/vcnl4000.c                  | 77 ++++++++++++++++---
+ 2 files changed, 91 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+
+-- 
+2.17.1
+
