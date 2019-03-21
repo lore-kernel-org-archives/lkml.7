@@ -2,188 +2,64 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADB0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970C12190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C318F2190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfCUU7j (ORCPT
+        id S1727434AbfCUU7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 21 Mar 2019 16:59:42 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39520 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfCUU7j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 16:59:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34985 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfCUU7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:59:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="154548159"
-Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:35 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 19/23] perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
-Date:   Thu, 21 Mar 2019 13:56:59 -0700
-Message-Id: <20190321205703.4256-20-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190321205703.4256-1-kan.liang@linux.intel.com>
-References: <20190321205703.4256-1-kan.liang@linux.intel.com>
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h74ml-0005nK-Py; Thu, 21 Mar 2019 21:59:36 +0100
+Date:   Thu, 21 Mar 2019 21:59:35 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/2] workqueue: Use normal rcu
+Message-ID: <20190321205935.7ndo5k5zumc77h37@linutronix.de>
+References: <20190313165548.19713-1-bigeasy@linutronix.de>
+ <20190313165548.19713-2-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190313165548.19713-2-bigeasy@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On 2019-03-13 17:55:47 [+0100], To linux-kernel@vger.kernel.org wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> There is no need for sched_rcu. The undocumented reason why sched_rcu
+> is used is to avoid a few explicit rcu_read_lock()/unlock() pairs by
+> the fact that sched_rcu reader side critical sections are also protected
+> by preempt or irq disabled regions.
+> 
+> Replace rcu_read_lock_sched with rcu_read_lock and acquire the RCU lock
+> where it is not yet explicit acquired. Replace local_irq_disable() with
+> rcu_read_lock(). Update asserts.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [bigeasy: mangle changelog a little]
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Icelake supports a new CPUID 10.ECX cpu leaf to indicate some fixed
-counters are not supported.  This extends the previous count to a bitmap
-which allows to disable even lower counters.
+A gentle ping.
 
-It's a nop on Icelake (all fixed counters are supported), but let's
-implement it here.  This adds the necessary checks. In theory it could
-be used today by a Hypervisor.
-
-For disabled counters disable any constraint events. I reuse the
-existing intel_ctrl variable to remember which counters are disabled.
-All code that reads all counters is fixed to check this extra bitmask.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-No changes since V1.
-
- arch/x86/events/core.c       |  8 +++++++-
- arch/x86/events/intel/core.c | 22 +++++++++++++++-------
- arch/x86/events/perf_event.h |  6 ++++++
- 3 files changed, 28 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b9bee53e53d8..12d7d591843e 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -225,6 +225,8 @@ static bool check_hw_exists(void)
- 		if (ret)
- 			goto msr_fail;
- 		for (i = 0; i < x86_pmu.num_counters_fixed; i++) {
-+			if (fixed_counter_disabled(i))
-+				continue;
- 			if (val & (0x03 << i*4)) {
- 				bios_fail = 1;
- 				val_fail = val;
-@@ -1372,6 +1374,8 @@ void perf_event_print_debug(void)
- 			cpu, idx, prev_left);
- 	}
- 	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
-+		if (fixed_counter_disabled(idx))
-+			continue;
- 		rdmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, pmc_count);
- 
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
-@@ -1887,7 +1891,9 @@ static int __init init_hw_perf_events(void)
- 	pr_info("... generic registers:      %d\n",     x86_pmu.num_counters);
- 	pr_info("... value mask:             %016Lx\n", x86_pmu.cntval_mask);
- 	pr_info("... max period:             %016Lx\n", x86_pmu.max_period);
--	pr_info("... fixed-purpose events:   %d\n",     x86_pmu.num_counters_fixed);
-+	pr_info("... fixed-purpose events:   %lu\n",
-+			hweight64((((1ULL << x86_pmu.num_counters_fixed) - 1)
-+					<< INTEL_PMC_IDX_FIXED) & x86_pmu.intel_ctrl));
- 	pr_info("... event mask:             %016Lx\n", x86_pmu.intel_ctrl);
- 
- 	/*
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ef6045544628..a4b7711ef0ee 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2311,8 +2311,11 @@ static void intel_pmu_reset(void)
- 		wrmsrl_safe(x86_pmu_config_addr(idx), 0ull);
- 		wrmsrl_safe(x86_pmu_event_addr(idx),  0ull);
- 	}
--	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++)
-+	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
-+		if (fixed_counter_disabled(idx))
-+			continue;
- 		wrmsrl_safe(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, 0ull);
-+	}
- 
- 	if (ds)
- 		ds->bts_index = ds->bts_buffer_base;
-@@ -4551,7 +4554,7 @@ __init int intel_pmu_init(void)
- 	union cpuid10_eax eax;
- 	union cpuid10_ebx ebx;
- 	struct event_constraint *c;
--	unsigned int unused;
-+	unsigned int fixed_mask;
- 	struct extra_reg *er;
- 	int version, i;
- 	char *name;
-@@ -4572,9 +4575,11 @@ __init int intel_pmu_init(void)
- 	 * Check whether the Architectural PerfMon supports
- 	 * Branch Misses Retired hw_event or not.
- 	 */
--	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
-+	cpuid(10, &eax.full, &ebx.full, &fixed_mask, &edx.full);
- 	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT)
- 		return -ENODEV;
-+	if (!fixed_mask)
-+		fixed_mask = -1;
- 
- 	version = eax.split.version_id;
- 	if (version < 2)
-@@ -5104,7 +5109,8 @@ __init int intel_pmu_init(void)
- 	}
- 
- 	x86_pmu.intel_ctrl |=
--		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-+		(((1LL << x86_pmu.num_counters_fixed)-1) & (u64)fixed_mask)
-+			<< INTEL_PMC_IDX_FIXED;
- 
- 	if (x86_pmu.event_constraints) {
- 		/*
-@@ -5121,9 +5127,11 @@ __init int intel_pmu_init(void)
- 				c->weight = hweight64(c->idxmsk64);
- 				continue;
- 			}
--			if (c->cmask == FIXED_EVENT_FLAGS
--			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES) {
--				c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+			if (c->cmask == FIXED_EVENT_FLAGS)  {
-+				if (c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES)
-+					c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+				/* Disabled fixed counters which are not in CPUID */
-+				c->idxmsk64 &= x86_pmu.intel_ctrl;
- 			}
- 			c->idxmsk64 &=
- 				~(~0ULL << (INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed));
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index bd0dbbc2adeb..c1e1b5407449 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -926,6 +926,12 @@ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr,
- ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
- 			  char *page);
- 
-+static inline bool fixed_counter_disabled(int i)
-+{
-+	return x86_pmu.intel_ctrl &&
-+		((1ULL << (i + INTEL_PMC_IDX_FIXED)) & x86_pmu.intel_ctrl);
-+}
-+
- #ifdef CONFIG_CPU_SUP_AMD
- 
- int amd_pmu_init(void);
--- 
-2.17.1
-
+Sebastian
