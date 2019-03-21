@@ -2,228 +2,116 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED2EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4AF21902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B5A21902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfCVAFV (ORCPT
+        id S1727418AbfCVAFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:05:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727283AbfCVAFU (ORCPT
+        Thu, 21 Mar 2019 20:05:49 -0400
+Received: from smtprelay04.ispgateway.de ([80.67.29.8]:35908 "EHLO
+        smtprelay04.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbfCVAFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:05:20 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M048XM178091
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 20:05:19 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rcgyu9afd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 20:05:18 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 22 Mar 2019 00:05:20 -0000
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 00:05:16 -0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2M05DE226673326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 00:05:13 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 622F9AC05E;
-        Fri, 22 Mar 2019 00:05:13 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6380AC060;
-        Fri, 22 Mar 2019 00:05:10 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.181.81])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 22 Mar 2019 00:05:10 +0000 (GMT)
-References: <87zhrj8kcp.fsf@morokweng.localdomain> <87womn8inf.fsf@morokweng.localdomain> <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-In-reply-to: <20190320171027-mutt-send-email-mst@kernel.org>
-Date:   Thu, 21 Mar 2019 21:05:04 -0300
+        Thu, 21 Mar 2019 20:05:48 -0400
+X-Greylist: delayed 4865 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Mar 2019 20:05:47 EDT
+Received: from [95.33.77.149] (helo=localhost)
+        by smtprelay04.ispgateway.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <git@jochen.sprickerhof.de>)
+        id 1h74DR-0006Sy-Ua; Thu, 21 Mar 2019 21:23:06 +0100
+Date:   Thu, 21 Mar 2019 21:23:03 +0100
+From:   Jochen Sprickerhof <git@jochen.sprickerhof.de>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] usb: dwc3: Softdep for GBit Ethernet on Odroid XU4
+Message-ID: <20190321202303.GA1399@vis>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19032200-0052-0000-0000-0000039F6B57
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010791; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01177770; UDB=6.00616144; IPR=6.00958466;
- MB=3.00026100; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-22 00:05:19
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032200-0053-0000-0000-0000603C39AF
-Message-Id: <87tvfvbwpb.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903210165
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Df-Sender: NTc3MDAz
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Michael S. Tsirkin <mst@redhat.com> writes:
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
->> >> Another way of looking at this issue which also explains our reluctance
->> >> is that the only difference between a secure guest and a regular guest
->> >> (at least regarding virtio) is that the former uses swiotlb while the
->> >> latter doens't.
->> >
->> > But swiotlb is just one implementation. It's a guest internal thing. The
->> > issue is that memory isn't host accessible.
->>
->> >From what I understand of the ACCESS_PLATFORM definition, the host will
->> only ever try to access memory addresses that are supplied to it by the
->> guest, so all of the secure guest memory that the host cares about is
->> accessible:
->>
->>     If this feature bit is set to 0, then the device has same access to
->>     memory addresses supplied to it as the driver has. In particular,
->>     the device will always use physical addresses matching addresses
->>     used by the driver (typically meaning physical addresses used by the
->>     CPU) and not translated further, and can access any address supplied
->>     to it by the driver. When clear, this overrides any
->>     platform-specific description of whether device access is limited or
->>     translated in any way, e.g. whether an IOMMU may be present.
->>
->> All of the above is true for POWER guests, whether they are secure
->> guests or not.
->>
->> Or are you saying that a virtio device may want to access memory
->> addresses that weren't supplied to it by the driver?
->
-> Your logic would apply to IOMMUs as well.  For your mode, there are
-> specific encrypted memory regions that driver has access to but device
-> does not. that seems to violate the constraint.
+This adds a soft dependency to the dwc3 module to load it after
+xhci-plat as proposed in:
 
-Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
-the device can ignore the IOMMU for all practical purposes I would
-indeed say that the logic would apply to IOMMUs as well. :-)
+https://marc.info/?l=3Dlinux-usb&m=3D155230272022603&w=3D2
 
-I guess I'm still struggling with the purpose of signalling to the
-driver that the host may not have access to memory addresses that it
-will never try to access.
+Old behaviour:
 
->> >> And from the device's point of view they're
->> >> indistinguishable. It can't tell one guest that is using swiotlb from
->> >> one that isn't. And that implies that secure guest vs regular guest
->> >> isn't a virtio interface issue, it's "guest internal affairs". So
->> >> there's no reason to reflect that in the feature flags.
->> >
->> > So don't. The way not to reflect that in the feature flags is
->> > to set ACCESS_PLATFORM.  Then you say *I don't care let platform device*.
->> >
->> >
->> > Without ACCESS_PLATFORM
->> > virtio has a very specific opinion about the security of the
->> > device, and that opinion is that device is part of the guest
->> > supervisor security domain.
->>
->> Sorry for being a bit dense, but not sure what "the device is part of
->> the guest supervisor security domain" means. In powerpc-speak,
->> "supervisor" is the operating system so perhaps that explains my
->> confusion. Are you saying that without ACCESS_PLATFORM, the guest
->> considers the host to be part of the guest operating system's security
->> domain?
->
-> I think so. The spec says "device has same access as driver".
+$ lsusb -t
+/:  Bus 06.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 5000M
+/:  Bus 05.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 480M
+   |__ Port 1: Dev 2, If 0, Class=3DVendor Specific Class, Driver=3Dr8152, =
+480M
 
-Ok, makes sense.
+New behaviour:
 
->> If so, does that have any other implication besides "the host
->> can access any address supplied to it by the driver"? If that is the
->> case, perhaps the definition of ACCESS_PLATFORM needs to be amended to
->> include that information because it's not part of the current
->> definition.
->>
->> >> > But the name "sev_active" makes me scared because at least AMD guys who
->> >> > were doing the sensible thing and setting ACCESS_PLATFORM
->> >>
->> >> My understanding is, AMD guest-platform knows in advance that their
->> >> guest will run in secure mode and hence sets the flag at the time of VM
->> >> instantiation. Unfortunately we dont have that luxury on our platforms.
->> >
->> > Well you do have that luxury. It looks like that there are existing
->> > guests that already acknowledge ACCESS_PLATFORM and you are not happy
->> > with how that path is slow. So you are trying to optimize for
->> > them by clearing ACCESS_PLATFORM and then you have lost ability
->> > to invoke DMA API.
->> >
->> > For example if there was another flag just like ACCESS_PLATFORM
->> > just not yet used by anyone, you would be all fine using that right?
->>
->> Yes, a new flag sounds like a great idea. What about the definition
->> below?
->>
->> VIRTIO_F_ACCESS_PLATFORM_NO_IOMMU This feature has the same meaning as
->>     VIRTIO_F_ACCESS_PLATFORM both when set and when not set, with the
->>     exception that the IOMMU is explicitly defined to be off or bypassed
->>     when accessing memory addresses supplied to the device by the
->>     driver. This flag should be set by the guest if offered, but to
->>     allow for backward-compatibility device implementations allow for it
->>     to be left unset by the guest. It is an error to set both this flag
->>     and VIRTIO_F_ACCESS_PLATFORM.
->
-> It looks kind of narrow but it's an option.
+$ lsusb -t
+/:  Bus 06.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 5000M
+   |__ Port 1: Dev 2, If 0, Class=3DVendor Specific Class, Driver=3Dr8152, =
+5000M
 
-Great!
+Tested on Debian unstable using Linux 4.19.29.
 
-> I wonder how we'll define what's an iommu though.
+Note, this needs a hard reset when coming from an unpatched kernel.
 
-Hm, it didn't occur to me it could be an issue. I'll try.
+Signed-off-by: Jochen Sprickerhof <git@jochen.sprickerhof.de>
+---
+ drivers/usb/dwc3/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Another idea is maybe something like virtio-iommu?
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 103807587dc6..9017e4ed9d99 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1746,3 +1746,4 @@ MODULE_ALIAS("platform:dwc3");
+ MODULE_AUTHOR("Felipe Balbi <balbi@ti.com>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("DesignWare USB3 DRD Controller Driver");
++MODULE_SOFTDEP("pre: xhci_plat_hcd");
+--=20
+2.11.0
 
-You mean, have legacy guests use virtio-iommu to request an IOMMU
-bypass? If so, it's an interesting idea for new guests but it doesn't
-help with guests that are out today in the field, which don't have A
-virtio-iommu driver.
 
->> > Is there any justification to doing that beyond someone putting
->> > out slow code in the past?
->>
->> The definition of the ACCESS_PLATFORM flag is generic and captures the
->> notion of memory access restrictions for the device. Unfortunately, on
->> powerpc pSeries guests it also implies that the IOMMU is turned on
->
-> IIUC that's really because on pSeries IOMMU is *always* turned on.
-> Platform has no way to say what you want it to say
-> which is bypass the iommu for the specific device.
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yes, that's correct. pSeries guests running on KVM are in a gray area
-where theoretically they use an IOMMU but in practice KVM ignores it.
-It's unfortunate but it's the reality on the ground today. :-/
+-----BEGIN PGP SIGNATURE-----
 
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+iQIzBAABCgAdFiEEc7KZy9TurdzAF+h6W//cwljmlDMFAlyT8qQACgkQW//cwljm
+lDM4sw/+PEfruRK0G/l82TiAYEWuL/Cq9U6r99sWkfvz9eSVZXFsK72/DvgvwoID
+7WbSDRVMSq6pNe8yWW62T28DTPiNMFjU6rBMsiTWUI1LDMArdc0cadY5EgufTE4K
+08eEGrHqxLo8uWhD+qrD847354flPE8f1DsuyB2Un6jODYiu9uQPISfwqekxq5Qm
+s9rVnzjWZyYEH28vWNf5ycHav5fopfeeQwpsysjfv00ZGh6912PuE0R9HKuLz3n4
+wmBO88X8soLVoC+wlGorCLzFS1HkrXHuvqvuLA2DD9F36PnMugmckp8K9hEd6oD+
+aq/4dj9o8nBnmWVvD8sYCN8oiLcLkHqybWZ9NPcRelPTHItIg2vW3jACzCFbQbf3
+3Hn1oqCSvSWLwFj19NJvJbXH6GN9CW320LIqb2OUgFQmN767vmB5Gblb8rYIcDze
+PNxn1cqcT1UYtjukb+fCE3BsrLpjND3nvOYF1TmiPk0XspN/H5BwIElbKSrX6sXq
+cJ8mEZkU0FCYFxC3Q5lDFcL1xGE39sEq6ZBXrpk2XVplRl3E7o3NOSCdG0T5JVc1
+3aKLX5BWRzPps9hMBPtmjot7v68TB3xaMIEiuAE+GL3mKAiCKgJwmEFLGZ+ciTZt
+84JoLiR1jpIOfTX80NdliYLMthAmuuT3xJgr7dG3Tjl/xUJFNCw=
+=wug8
+-----END PGP SIGNATURE-----
 
+--8t9RHnE3ZwKMSgU+--
