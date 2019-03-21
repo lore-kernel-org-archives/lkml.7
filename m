@@ -2,212 +2,103 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67297C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09FAC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39113218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4E121900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbfCUROW (ORCPT
+        id S1728716AbfCURO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:14:22 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:29973 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727921AbfCUROV (ORCPT
+        Thu, 21 Mar 2019 13:14:57 -0400
+Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:42377 "EHLO
+        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727987AbfCURO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:14:21 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id E565B228DF
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 12:14:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 71GlhoN4xdnCe71GlhgBQZ; Thu, 21 Mar 2019 12:14:19 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.120.220] (port=49588 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h71Gl-002rzF-Hs; Thu, 21 Mar 2019 12:14:19 -0500
-Subject: Re: [PATCH] mmc: usdhi6rol0: mark expected switch fall-throughs
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190320200010.GA14527@embeddedor>
- <CAPDyKFq7Qcp+WZazg2CiB_nBV7Bsmns2aD-Na_k72Kk9sf9X2g@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <a69a2138-0515-82f7-ab32-21d62c248829@embeddedor.com>
-Date:   Thu, 21 Mar 2019 12:14:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 21 Mar 2019 13:14:57 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id B8FF71C2B3B
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 17:14:54 +0000 (GMT)
+Received: (qmail 30480 invoked from network); 21 Mar 2019 17:14:54 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 21 Mar 2019 17:14:54 -0000
+Date:   Thu, 21 Mar 2019 17:14:53 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mikhail.v.gavrilov@gmail.com, vbabka@suse.cz,
+        pasha.tatashin@soleen.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/compaction: abort search if isolation fails
+Message-ID: <20190321171453.GE3189@techsingularity.net>
+References: <20190320192648.52499-1-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFq7Qcp+WZazg2CiB_nBV7Bsmns2aD-Na_k72Kk9sf9X2g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.120.220
-X-Source-L: No
-X-Exim-ID: 1h71Gl-002rzF-Hs
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.120.220]:49588
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190320192648.52499-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 20, 2019 at 03:26:48PM -0400, Qian Cai wrote:
+> Running LTP oom01 in a tight loop or memory stress testing put the
+> system in a low-memory situation could triggers random memory
+> corruption like page flag corruption below due to in
+> fast_isolate_freepages(), if isolation fails, next_search_order() does
+> not abort the search immediately could lead to improper accesses.
+> 
+> UBSAN: Undefined behaviour in ./include/linux/mm.h:1195:50
+> index 7 is out of range for type 'zone [5]'
+> Call Trace:
+>  dump_stack+0x62/0x9a
+>  ubsan_epilogue+0xd/0x7f
+>  __ubsan_handle_out_of_bounds+0x14d/0x192
+>  __isolate_free_page+0x52c/0x600
+>  compaction_alloc+0x886/0x25f0
+>  unmap_and_move+0x37/0x1e70
+>  migrate_pages+0x2ca/0xb20
+>  compact_zone+0x19cb/0x3620
+>  kcompactd_do_work+0x2df/0x680
+>  kcompactd+0x1d8/0x6c0
+>  kthread+0x32c/0x3f0
+>  ret_from_fork+0x35/0x40
+> ------------[ cut here ]------------
+> kernel BUG at mm/page_alloc.c:3124!
+> invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+> RIP: 0010:__isolate_free_page+0x464/0x600
+> RSP: 0000:ffff888b9e1af848 EFLAGS: 00010007
+> RAX: 0000000030000000 RBX: ffff888c39fcf0f8 RCX: 0000000000000000
+> RDX: 1ffff111873f9e25 RSI: 0000000000000004 RDI: ffffed1173c35ef6
+> RBP: ffff888b9e1af898 R08: fffffbfff4fc2461 R09: fffffbfff4fc2460
+> R10: fffffbfff4fc2460 R11: ffffffffa7e12303 R12: 0000000000000008
+> R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000007
+> FS:  0000000000000000(0000) GS:ffff888ba8e80000(0000)
+> knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fc7abc00000 CR3: 0000000752416004 CR4: 00000000001606a0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  compaction_alloc+0x886/0x25f0
+>  unmap_and_move+0x37/0x1e70
+>  migrate_pages+0x2ca/0xb20
+>  compact_zone+0x19cb/0x3620
+>  kcompactd_do_work+0x2df/0x680
+>  kcompactd+0x1d8/0x6c0
+>  kthread+0x32c/0x3f0
+>  ret_from_fork+0x35/0x40
+> 
+> Fixes: dbe2d4e4f12e ("mm, compaction: round-robin the order while searching the free lists for a target")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-On 3/21/19 5:46 AM, Ulf Hansson wrote:
-> On Wed, 20 Mar 2019 at 21:02, Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warnings:
->>
->> In file included from drivers/mmc/host/usdhi6rol0.c:9:
->> drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_timeout_work’:
->> ./include/linux/device.h:1483:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>   _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
->>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/mmc/host/usdhi6rol0.c:1689:3: note: in expansion of macro ‘dev_err’
->>    dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
->>    ^~~~~~~
->> drivers/mmc/host/usdhi6rol0.c:1691:2: note: here
->>   case USDHI6_WAIT_FOR_CMD:
->>   ^~~~
->> drivers/mmc/host/usdhi6rol0.c:1711:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    usdhi6_sg_unmap(host, true);
->>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/mmc/host/usdhi6rol0.c:1716:2: note: here
->>   case USDHI6_WAIT_FOR_DATA_END:
->>   ^~~~
->> drivers/mmc/host/usdhi6rol0.c: In function ‘usdhi6_stop_cmd’:
->> drivers/mmc/host/usdhi6rol0.c:1338:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (mrq->stop->opcode == MMC_STOP_TRANSMISSION) {
->>       ^
->> drivers/mmc/host/usdhi6rol0.c:1343:2: note: here
->>   default:
->>   ^~~~~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/mmc/host/usdhi6rol0.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
->> index cd8b1b9d4d8a..b9712ac96be5 100644
->> --- a/drivers/mmc/host/usdhi6rol0.c
->> +++ b/drivers/mmc/host/usdhi6rol0.c
->> @@ -1339,7 +1339,7 @@ static int usdhi6_stop_cmd(struct usdhi6_host *host)
->>                         host->wait = USDHI6_WAIT_FOR_STOP;
->>                         return 0;
->>                 }
->> -               /* Unsupported STOP command */
->> +               /* fall through - Unsupported STOP command */
->>         default:
->>                 dev_err(mmc_dev(host->mmc),
->>                         "unsupported stop CMD%d for CMD%d\n",
->> @@ -1688,6 +1688,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
->>         default:
->>                 dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
->>                 /* mrq can be NULL in this actually impossible case */
->> +               /* fall through */
-> 
-> Please make this one comment.
-> 
->>         case USDHI6_WAIT_FOR_CMD:
->>                 usdhi6_error_code(host);
->>                 if (mrq)
->> @@ -1713,6 +1714,7 @@ static void usdhi6_timeout_work(struct work_struct *work)
->>                  * If USDHI6_WAIT_FOR_DATA_END times out, we have already unmapped
->>                  * the page
->>                  */
->> +               /* fall through */
-> 
-> Ditto.
-> 
-
-OK.  The reason why I didn't do that is because the line would exceed the 80 characters
-in both cases. But I'll respin if you are OK with that.
-
-Thanks
---
-Gustavo
-
->>         case USDHI6_WAIT_FOR_DATA_END:
->>                 usdhi6_error_code(host);
->>                 data->error = -ETIMEDOUT;
->> --
->> 2.21.0
->>
-> 
-> Kind regards
-> Uffe
-> 
+-- 
+Mel Gorman
+SUSE Labs
