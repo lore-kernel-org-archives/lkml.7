@@ -2,157 +2,139 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F41C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8BFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C16218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553136269;
-	bh=WZs8qVXwRHAAqs9TdPfjj9VRDNhqr9mY87VN79g4CKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HaLaTVfugsio/7ZCzqHhdLT5Epnz75r8xsredlMVDq9N5SUFKVKfBBxEi5cxFHAYv
-	 8FV4DdPr727yK4xeiogy4SxQYiwLCP4cJ5KiuSFybLZfSHkkMqp7bAEWF/HdQ9icpc
-	 /KNIkShkcTjWpcLQCe5gM7+9y0RFwImy0fUOgNOE=
+	by mail.kernel.org (Postfix) with ESMTP id 70F52218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfCUCo2 (ORCPT
+        id S1727854AbfCUCye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726914AbfCUCo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:44:28 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44BEA206B7;
-        Thu, 21 Mar 2019 02:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553136266;
-        bh=WZs8qVXwRHAAqs9TdPfjj9VRDNhqr9mY87VN79g4CKg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U65BVbMO3s6JHlt8uUHeA8rMekfyD4xUgHbEZM1//c+nBce5/lgPhJ26fEpsKidZL
-         k743GJPYHCqaFs9Vq9vig4kNkIOSe3e5b03LtgOq+xqOsYDP1UXjaQCQXIu/EDKEbv
-         0K9KCvljgGKXow4XTuJjoSOA1SGp2AG5mlEEdoP4=
-Date:   Thu, 21 Mar 2019 10:44:01 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
-Subject: Re: [PATCH v3] arm64: dts: ls1088a: add one more thermal zone node
-Message-ID: <20190321024359.GA12513@dragon>
-References: <20190304075050.33432-1-andy.tang@nxp.com>
+        Wed, 20 Mar 2019 22:54:34 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:30103 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727437AbfCUCyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:54:33 -0400
+X-UUID: 964f2baec037482f8849c33b54c42eab-20190321
+X-UUID: 964f2baec037482f8849c33b54c42eab-20190321
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2145769780; Thu, 21 Mar 2019 10:54:29 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Mar 2019 10:54:27 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Mar 2019 10:54:27 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [RESEND PATCH 01/11] usb: mtu3: check return value of devm_extcon_register_notifier()
+Date:   Thu, 21 Mar 2019 10:53:39 +0800
+Message-ID: <1553136829-14712-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1553136829-14712-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304075050.33432-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 03:50:50PM +0800, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-> sensor is used to monitor the temperature of core and SoC platform is for
-> platform. The current dts only support the first sensor.
-> This patch adds the second sensor node to dts to enable it.
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
-> v3:
-> 	- use more descriptive name for each zone
-> v2:
-> 	- Add more information about sensors to description
-> PS: In order to keep consistency to the first thermal-zone node, there will
-> be "WARNING: line over 80 characters" warnings.
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
->  1 files changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 661137f..54f973b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->  	};
->  
->  	thermal-zones {
-> -		cpu_thermal: cpu-thermal {
-> +		core_cluster_thermal {
+Check the return value of devm_extcon_register_notifier() and
+add error handling.
 
-We prefer to use hyphen instead of underscore in node name.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_dr.c   | 13 +++++++++----
+ drivers/usb/mtu3/mtu3_plat.c |  8 +++++++-
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-Shawn
+diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
+index ac60e9c8564e..61694c40e101 100644
+--- a/drivers/usb/mtu3/mtu3_dr.c
++++ b/drivers/usb/mtu3/mtu3_dr.c
+@@ -238,14 +238,18 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
+ 	otg_sx->vbus_nb.notifier_call = ssusb_vbus_notifier;
+ 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB,
+ 					&otg_sx->vbus_nb);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		dev_err(ssusb->dev, "failed to register notifier for USB\n");
++		return ret;
++	}
+ 
+ 	otg_sx->id_nb.notifier_call = ssusb_id_notifier;
+ 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB_HOST,
+ 					&otg_sx->id_nb);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		dev_err(ssusb->dev, "failed to register notifier for USB-HOST\n");
++		return ret;
++	}
+ 
+ 	dev_dbg(ssusb->dev, "EXTCON_USB: %d, EXTCON_USB_HOST: %d\n",
+ 		extcon_get_state(edev, EXTCON_USB),
+@@ -415,6 +419,7 @@ void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
+ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
+ {
+ 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
++	int ret = 0;
+ 
+ 	INIT_WORK(&otg_sx->id_work, ssusb_id_work);
+ 	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
+@@ -422,9 +427,9 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
+ 	if (otg_sx->manual_drd_enabled)
+ 		ssusb_debugfs_init(ssusb);
+ 	else
+-		ssusb_extcon_register(otg_sx);
++		ret = ssusb_extcon_register(otg_sx);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index e086630e41a9..dee31d5eefe1 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -401,7 +401,11 @@ static int mtu3_probe(struct platform_device *pdev)
+ 			goto gadget_exit;
+ 		}
+ 
+-		ssusb_otg_switch_init(ssusb);
++		ret = ssusb_otg_switch_init(ssusb);
++		if (ret) {
++			dev_err(dev, "failed to initialize switch\n");
++			goto host_exit;
++		}
+ 		break;
+ 	default:
+ 		dev_err(dev, "unsupported mode: %d\n", ssusb->dr_mode);
+@@ -411,6 +415,8 @@ static int mtu3_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++host_exit:
++	ssusb_host_exit(ssusb);
+ gadget_exit:
+ 	ssusb_gadget_exit(ssusb);
+ comm_exit:
+-- 
+2.20.1
 
->  			polling-delay-passive = <1000>;
->  			polling-delay = <5000>;
->  			thermal-sensors = <&tmu 0>;
->  
->  			trips {
-> -				cpu_alert: cpu-alert {
-> +				core_cluster_alert: core_cluster-alert {
->  					temperature = <85000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit: cpu-crit {
-> +				core_cluster_crit: core_cluster-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -150,7 +150,42 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert>;
-> +					trip = <&core_cluster_alert>;
-> +					cooling-device =
-> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		platform-thermal {
-> +			polling-delay-passive = <1000>;
-> +			polling-delay = <5000>;
-> +			thermal-sensors = <&tmu 1>;
-> +
-> +			trips {
-> +				platform_alert: platform-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				platform_crit: platform-crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&platform_alert>;
->  					cooling-device =
->  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -- 
-> 1.7.1
-> 
