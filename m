@@ -2,102 +2,118 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C85C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57279C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E472190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2HLm9tt"
+	by mail.kernel.org (Postfix) with ESMTP id 2EC06218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbfCURDp (ORCPT
+        id S1728507AbfCURFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:03:45 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:50525 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbfCURDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:03:43 -0400
-Received: by mail-it1-f195.google.com with SMTP id m137so5435652ita.0;
-        Thu, 21 Mar 2019 10:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9bmNiIiYSXpSlnRBJipd8bRpL/IMsEPjbQrVWRlU9SA=;
-        b=h2HLm9ttoJzyWmFCPllwKVOFnmaKmLYsADm7Re/c7mDSJX6cJAkYIq8Brpxp8lzOVJ
-         ueSygsrYrHr6bLG66E+RCS+W55QVpSc+Nqxg/Ts8e1iGuXCTtrw+jT9I6IBHofwYWtbR
-         vZozciCYArpSZt+nXmVzKnXHPEDacJd0djR7rMD9eCoJGgh0323QFkjwDRcvFRaJFdkd
-         SfvbL8c4g41REHm02adqPWfvcOHa7nCr038UhslI/G8h39UGDvx5m3A9jNf6eby5wrza
-         DiXIPE/j3N1jS5EeabiIwRdca5ObRMJnQBl8g3EPGIjILpAi6IrMF4cbumLQdiFFCNG/
-         2Znw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9bmNiIiYSXpSlnRBJipd8bRpL/IMsEPjbQrVWRlU9SA=;
-        b=c4EXRtdv58oc7qjbkX1/+t9eu5q1fDuCLk9GnR3TSn+BVpLdSkuJ6wQm1bamT+fuJI
-         c5CXQjPkmhJyQNkPbic0AWfoItdJD3d3FU3B/E7LI5Lu0hvAeTPLJ2mKumjm00X8LyXn
-         qrH0ezMoFYsE3mj8tgTqRWhqh9ByIMbkzWLFBHkeO0hgYSL9R/fK1NWZfYXt4vlrZtoG
-         cWA436uYkaHfvImFnYtSIpnTz8VbVQySoPlcr0oGy9OkmRK1qJFX1sgyTRTjVQCabTMQ
-         althpBKLCDV9Ydcaiu4MWYPxrRpjrDcZJYThJRgucFtuoNq1SlhRzYJK8aoftqyypINa
-         WH4Q==
-X-Gm-Message-State: APjAAAW/kF5rWL8ze6nrNiZ9OeGZGtyocKO6xA/2SPFnaHR7FTiyyFpy
-        SddlSOngU0GeFhtGtT849SM=
-X-Google-Smtp-Source: APXvYqwC0i60GO2oaG0501xzeRAEuJFw0K1CqY9l1jq8o4oEypffAnsOoqHfkqiu1tU9DU/PpF4q0w==
-X-Received: by 2002:a24:6948:: with SMTP id e69mr411341itc.140.1553187822124;
-        Thu, 21 Mar 2019 10:03:42 -0700 (PDT)
-Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id t23sm2577951ioj.19.2019.03.21.10.03.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 10:03:41 -0700 (PDT)
-From:   George Hilliard <thirtythreeforty@gmail.com>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        George Hilliard <thirtythreeforty@gmail.com>
-Subject: [RESEND PATCH] mips: ralink: allow zboot
-Date:   Thu, 21 Mar 2019 11:03:34 -0600
-Message-Id: <20190321170334.15122-2-thirtythreeforty@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190321170334.15122-1-thirtythreeforty@gmail.com>
-References: <20190321170334.15122-1-thirtythreeforty@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 21 Mar 2019 13:05:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46196 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfCURFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:05:04 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D827C307D840;
+        Thu, 21 Mar 2019 17:05:03 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22A521018A30;
+        Thu, 21 Mar 2019 17:04:50 +0000 (UTC)
+Message-ID: <8698ad583b1cfe86afc3d5440be630fc3e8e0680.camel@redhat.com>
+Subject: Re:
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Felipe Franciosi <felipe@nutanix.com>,
+        Keith Busch <kbusch@kernel.org>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>, Fam Zheng <fam@euphon.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Harris, James R" <james.r.harris@intel.com>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Thanos Makatos <thanos.makatos@nutanix.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Amnon Ilan <ailan@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Date:   Thu, 21 Mar 2019 19:04:50 +0200
+In-Reply-To: <E217011E-C273-442D-AF99-84D3CD63FE77@nutanix.com>
+References: <20190319144116.400-1-mlevitsk@redhat.com>
+         <488768D7-1396-4DD1-A648-C86E5CF7DB2F@nutanix.com>
+         <42f444d22363bc747f4ad75e9f0c27b40a810631.camel@redhat.com>
+         <20190321161239.GH31434@stefanha-x1.localdomain>
+         <20190321162140.GA29342@localhost.localdomain>
+         <E217011E-C273-442D-AF99-84D3CD63FE77@nutanix.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 21 Mar 2019 17:05:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Architecturally, there's nothing preventing compressed images from
-working.  Bootloaders built with support for the various compression
-methods can decompress and run the kernel.  In practice, many
-bootloaders do not support compressed images, but kernels for those
-boards should just not be compressed.
+On Thu, 2019-03-21 at 16:41 +0000, Felipe Franciosi wrote:
+> > On Mar 21, 2019, at 4:21 PM, Keith Busch <kbusch@kernel.org> wrote:
+> > 
+> > On Thu, Mar 21, 2019 at 04:12:39PM +0000, Stefan Hajnoczi wrote:
+> > > mdev-nvme seems like a duplication of SPDK.  The performance is not
+> > > better and the features are more limited, so why focus on this approach?
+> > > 
+> > > One argument might be that the kernel NVMe subsystem wants to offer this
+> > > functionality and loading the kernel module is more convenient than
+> > > managing SPDK to some users.
+> > > 
+> > > Thoughts?
+> > 
+> > Doesn't SPDK bind a controller to a single process? mdev binds to
+> > namespaces (or their partitions), so you could have many mdev's assigned
+> > to many VMs accessing a single controller.
+> 
+> Yes, it binds to a single process which can drive the datapath of multiple
+> virtual controllers for multiple VMs (similar to what you described for mdev).
+> You can therefore efficiently poll multiple VM submission queues (and multiple
+> device completion queues) from a single physical CPU.
+> 
+> The same could be done in the kernel, but the code gets complicated as you add
+> more functionality to it. As this is a direct interface with an untrusted
+> front-end (the guest), it's also arguably safer to do in userspace.
+> 
+> Worth noting: you can eventually have a single physical core polling all sorts
+> of virtual devices (eg. virtual storage or network controllers) very
+> efficiently. And this is quite configurable, too. In the interest of fairness,
+> performance or efficiency, you can choose to dynamically add or remove queues
+> to the poll thread or spawn more threads and redistribute the work.
+> 
+> F.
 
-Tested on an MT7688 with U-Boot doing LZMA decompression of uImage.
+Note though that SPDK doesn't support sharing the device between host and the
+guests, it takes over the nvme device, thus it makes the kernel nvme driver
+unbind from it.
 
-Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
----
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+My driver creates a polling thread per guest, but its trivial to add option to
+use the same polling thread for many guests if there need for that.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4a5f5b0ee9a9..b286fbbd9699 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -619,6 +619,7 @@ config RALINK
- 	select SYS_SUPPORTS_32BIT_KERNEL
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select SYS_SUPPORTS_MIPS16
-+	select SYS_SUPPORTS_ZBOOT
- 	select SYS_HAS_EARLY_PRINTK
- 	select CLKDEV_LOOKUP
- 	select ARCH_HAS_RESET_CONTROLLER
--- 
-2.21.0
+Best regards,
+	Maxim Levitsky
+
 
