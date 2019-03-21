@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBABC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC01DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815EC2190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24F12190A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfCUU0y (ORCPT
+        id S1729060AbfCUU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:26:54 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39336 "EHLO
+        Thu, 21 Mar 2019 16:27:00 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39422 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbfCUU0s (ORCPT
+        with ESMTP id S1729015AbfCUU07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:26:48 -0400
+        Thu, 21 Mar 2019 16:26:59 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1h74Gu-00057y-9j; Thu, 21 Mar 2019 21:26:40 +0100
+        id 1h74H8-00057y-0D; Thu, 21 Mar 2019 21:26:54 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 05/24] x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
-Date:   Thu, 21 Mar 2019 21:26:13 +0100
-Message-Id: <20190321202632.16810-6-bigeasy@linutronix.de>
+Subject: [PATCH 22/24] x86/fpu: Merge the two code paths in __fpu__restore_sig()
+Date:   Thu, 21 Mar 2019 21:26:30 +0100
+Message-Id: <20190321202632.16810-23-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321202632.16810-1-bigeasy@linutronix.de>
 References: <20190321202632.16810-1-bigeasy@linutronix.de>
@@ -46,92 +46,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With lazy-FPU support the (now named variable) ->initialized was set to true if
-the CPU's FPU registers were holding the a valid state of the FPU registers for
-the active process. If it was set to false then the FPU state was saved in
-fpu->state and the FPU was deactivated.
-With lazy-FPU gone, ->initialized is always true for user threads and kernel
-threads never this function so ->initialized is always true in
-copy_fpstate_to_sigframe().
-The using_compacted_format() check is also a leftover from the lazy-FPU time.
-In the `->initialized == false' case copy_to_user() would copy the compacted
-buffer while userland would expect the non-compacted format instead. So in
-order to save the FPU state in the non-compacted form it issues the xsave
-opcode to save the *current* FPU state.
-The FPU is not enabled so the attempt raises the FPU trap, the trap restores
-the FPU content and re-enables the FPU and the xsave opcode is invoked again and
-succeeds. *This* does not longer work since commit
+The ia32_fxstate case (32bit with fxsr) and the other (64bit, 32bit
+without fxsr) restore both from kernel memory and sanitize the content.
+The !ia32_fxstate version restores missing xstates from "init state"
+while the ia32_fxstate doesn't and skips it.
 
-  bef8b6da9522 ("x86/fpu: Handle #NM without FPU emulation as an error")
-
-Remove check for ->initialized because it is always true and remove the
-false condition. Update the comment to reflect that the "state is always live".
+Merge the two code paths and keep the !ia32_fxstate version. Copy only
+the user_i387_ia32_struct data structure in the ia32_fxstate.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/kernel/fpu/signal.c | 35 ++++++++---------------------------
- 1 file changed, 8 insertions(+), 27 deletions(-)
+ arch/x86/kernel/fpu/signal.c | 146 ++++++++++++++---------------------
+ 1 file changed, 57 insertions(+), 89 deletions(-)
 
 diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index a874931edf6a9..de83d0ed9e14e 100644
+index 052a16c96218f..5f8ce0285f641 100644
 --- a/arch/x86/kernel/fpu/signal.c
 +++ b/arch/x86/kernel/fpu/signal.c
-@@ -144,9 +144,8 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
-  *	buf == buf_fx for 64-bit frames and 32-bit fsave frame.
-  *	buf != buf_fx for 32-bit frames with fxstate.
-  *
-- * If the fpu, extended register state is live, save the state directly
-- * to the user frame pointed by the aligned pointer 'buf_fx'. Otherwise,
-- * copy the thread's fpu state to the user frame starting at 'buf_fx'.
-+ * Save the state directly to the user frame pointed by the aligned pointer
-+ * 'buf_fx'.
-  *
-  * If this is a 32-bit frame with fxstate, put a fsave header before
-  * the aligned state at 'buf_fx'.
-@@ -157,7 +156,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
- int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+@@ -223,12 +223,17 @@ sanitize_restored_xstate(union fpregs_state *state,
+ 
+ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
  {
- 	struct fpu *fpu = &current->thread.fpu;
--	struct xregs_state *xsave = &fpu->state.xsave;
- 	struct task_struct *tsk = current;
++	struct user_i387_ia32_struct *envp = NULL;
  	int ia32_fxstate = (buf != buf_fx);
+ 	struct task_struct *tsk = current;
+ 	struct fpu *fpu = &tsk->thread.fpu;
+ 	int state_size = fpu_kernel_xstate_size;
++	struct user_i387_ia32_struct env;
++	union fpregs_state *state;
+ 	u64 xfeatures = 0;
+ 	int fx_only = 0;
++	int ret = 0;
++	void *tmp;
  
-@@ -172,29 +170,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- 			sizeof(struct user_i387_ia32_struct), NULL,
- 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
+ 	ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
+ 			 IS_ENABLED(CONFIG_IA32_EMULATION));
+@@ -263,105 +268,68 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		}
+ 	}
  
--	if (fpu->initialized || using_compacted_format()) {
--		/* Save the live register state to the user directly. */
--		if (copy_fpregs_to_sigframe(buf_fx))
--			return -1;
--		/* Update the thread's fxstate to save the fsave header. */
--		if (ia32_fxstate)
--			copy_fxregs_to_kernel(fpu);
--	} else {
+-	if (ia32_fxstate) {
 -		/*
--		 * It is a *bug* if kernel uses compacted-format for xsave
--		 * area and we copy it out directly to a signal frame. It
--		 * should have been handled above by saving the registers
--		 * directly.
+-		 * For 32-bit frames with fxstate, copy the user state to the
+-		 * thread's fpu state, reconstruct fxstate from the fsave
+-		 * header. Validate and sanitize the copied state.
 -		 */
--		if (boot_cpu_has(X86_FEATURE_XSAVES)) {
--			WARN_ONCE(1, "x86/fpu: saving compacted-format xsave area to a signal frame!\n");
--			return -1;
+-		struct user_i387_ia32_struct env;
+-		union fpregs_state *state;
+-		int err = 0;
+-		void *tmp;
++	tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
++	if (!tmp)
++		return -ENOMEM;
++	state = PTR_ALIGN(tmp, 64);
+ 
+-		tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
+-		if (!tmp)
+-			return -ENOMEM;
+-		state = PTR_ALIGN(tmp, 64);
++	if ((unsigned long)buf_fx % 64)
++		fx_only = 1;
++
++	/*
++	 * For 32-bit frames with fxstate, copy the fxstate so it can be
++	 * reconstructed later.
++	 */
++	if (ia32_fxstate) {
++		ret = __copy_from_user(&env, buf, sizeof(env));
++		if (ret)
++			goto err_out;
++		envp = &env;
++	}
++	if (use_xsave() && !fx_only) {
++		u64 init_bv = xfeatures_mask & ~xfeatures;
+ 
+ 		if (using_compacted_format()) {
+-			err = copy_user_to_xstate(&state->xsave, buf_fx);
++			ret = copy_user_to_xstate(&state->xsave, buf_fx);
+ 		} else {
+-			err = __copy_from_user(&state->xsave, buf_fx, state_size);
++			ret = __copy_from_user(&state->xsave, buf_fx, state_size);
+ 
+-			if (!err && state_size > offsetof(struct xregs_state, header))
+-				err = validate_xstate_header(&state->xsave.header);
++			if (!ret && state_size > offsetof(struct xregs_state, header))
++				ret = validate_xstate_header(&state->xsave.header);
++		}
++		if (ret)
++			goto err_out;
++
++		sanitize_restored_xstate(state, envp, xfeatures, fx_only);
++
++		if (unlikely(init_bv))
++			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
++		ret = copy_users_to_xregs(&state->xsave, xfeatures);
++
++	} else if (use_fxsr()) {
++		ret = __copy_from_user(&state->fxsave, buf_fx, state_size);
++		if (ret)
++			goto err_out;
++
++		sanitize_restored_xstate(state, envp, xfeatures, fx_only);
++		if (use_xsave()) {
++			u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
++			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+ 		}
+ 
+-		if (err || __copy_from_user(&env, buf, sizeof(env))) {
+-			err = -1;
+-		} else {
+-			sanitize_restored_xstate(state, &env, xfeatures, fx_only);
+-			copy_kernel_to_fpregs(state);
 -		}
 -
--		fpstate_sanitize_xstate(fpu);
--		if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-		kfree(tmp);
+-		return err;
++		ret = copy_users_to_fxregs(&state->fxsave);
+ 	} else {
+-		union fpregs_state *state;
+-		void *tmp;
+-		int ret;
+-
+-		tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
+-		if (!tmp)
+-			return -ENOMEM;
+-		state = PTR_ALIGN(tmp, 64);
+-
+-		/*
+-		 * For 64-bit frames and 32-bit fsave frames, restore the user
+-		 * state to the registers directly (with exceptions handled).
+-		 */
+-		if ((unsigned long)buf_fx % 64)
+-			fx_only = 1;
+-
+-		if (use_xsave() && !fx_only) {
+-			u64 init_bv = xfeatures_mask & ~xfeatures;
+-
+-			if (using_compacted_format()) {
+-				ret = copy_user_to_xstate(&state->xsave, buf_fx);
+-			} else {
+-				ret = __copy_from_user(&state->xsave, buf_fx, state_size);
+-
+-				if (!ret && state_size > offsetof(struct xregs_state, header))
+-					ret = validate_xstate_header(&state->xsave.header);
+-			}
+-			if (ret)
+-				goto err_out;
+-			sanitize_restored_xstate(state, NULL, xfeatures,
+-						 fx_only);
+-
+-			if (unlikely(init_bv))
+-				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			ret = copy_users_to_xregs(&state->xsave, xfeatures);
+-
+-		} else if (use_fxsr()) {
+-			ret = __copy_from_user(&state->fxsave, buf_fx, state_size);
+-			if (ret)
+-				goto err_out;
+-
+-			if (use_xsave()) {
+-				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
+-				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			}
+-			state->fxsave.mxcsr &= mxcsr_feature_mask;
+-
+-			ret = copy_users_to_fxregs(&state->fxsave);
+-		} else {
+-			ret = __copy_from_user(&state->fsave, buf_fx, state_size);
+-			if (ret)
+-				goto err_out;
+-			ret = copy_users_to_fregs(buf_fx);
+-		}
+-
+-err_out:
+-		kfree(tmp);
+-		if (ret) {
+-			fpu__clear(fpu);
 -			return -1;
--	}
-+	/* Save the live register state to the user directly. */
-+	if (copy_fpregs_to_sigframe(buf_fx))
-+		return -1;
-+	/* Update the thread's fxstate to save the fsave header. */
-+	if (ia32_fxstate)
-+		copy_fxregs_to_kernel(fpu);
+-		}
++		ret = __copy_from_user(&state->fsave, buf_fx, state_size);
++		if (ret)
++			goto err_out;
++		ret = copy_users_to_fregs(buf_fx);
+ 	}
  
- 	/* Save the fsave header for the 32-bit frames. */
- 	if ((ia32_fxstate || !use_fxsr()) && save_fsave_header(tsk, buf))
+-	return 0;
++err_out:
++	kfree(tmp);
++	if (ret)
++		fpu__clear(fpu);
++	return ret;
+ }
+ 
+ static inline int xstate_sigframe_size(void)
 -- 
 2.20.1
 
