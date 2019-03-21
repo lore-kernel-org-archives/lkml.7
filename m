@@ -2,111 +2,116 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43001C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A44221874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A54021874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfCUP5x (ORCPT
+        id S1728465AbfCUP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:57:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39142 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfCUP5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:57:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A2E630842A9;
-        Thu, 21 Mar 2019 15:57:52 +0000 (UTC)
-Received: from localhost (ovpn-117-168.ams2.redhat.com [10.36.117.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 334C460BE5;
-        Thu, 21 Mar 2019 15:57:47 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 15:57:46 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Cornelia Huck <cohuck@redhat.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
+        Thu, 21 Mar 2019 11:58:40 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:51585 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfCUP6k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 11:58:40 -0400
+Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2973D20000F;
+        Thu, 21 Mar 2019 15:58:35 +0000 (UTC)
+Message-ID: <a027f99e59c90b2b3a87c4b18a263cfee4cc5795.camel@bootlin.com>
+Subject: Re: [PATCH v2 2/2] drm/vc4: Allocated/liberate the binner BO at
+ firstopen/lastclose
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-Message-ID: <20190321155746.GE31434@stefanha-x1.localdomain>
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
- <20190312183351.74764f4f.cohuck@redhat.com>
- <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
- <20190313103900.1ea7f996.cohuck@redhat.com>
- <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
- <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
- <20190315134112.7d63348c.cohuck@redhat.com>
- <1df52766-88fb-6b23-d160-b891c3017133@redhat.com>
- <0fbdcfa6-cbd7-4f09-93b1-40898d5f77d1@oracle.com>
- <f92a5ef9-04b9-d6fa-a7f8-c855a87cd0fb@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Eben Upton <eben@raspberrypi.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Thu, 21 Mar 2019 16:58:35 +0100
+In-Reply-To: <87wokth498.fsf@anholt.net>
+References: <20190320154809.14823-1-paul.kocialkowski@bootlin.com>
+         <20190320154809.14823-3-paul.kocialkowski@bootlin.com>
+         <87wokth498.fsf@anholt.net>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
-Content-Disposition: inline
-In-Reply-To: <f92a5ef9-04b9-d6fa-a7f8-c855a87cd0fb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 21 Mar 2019 15:57:52 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---ryJZkp9/svQ58syV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Le mercredi 20 mars 2019 à 09:58 -0700, Eric Anholt a écrit :
+> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+> 
+> > The binner BO is a pre-requisite to GPU operations, so we must ensure
+> > that it is always allocated when the GPU is in use. Currently, we are
+> > allocating it at probe time and liberating/allocating it during runtime
+> > pm cycles.
+> > 
+> > First, since the binner buffer is only required for GPU rendering, it's
+> > a waste to allocate it when the driver probes since internal users of
+> > the driver (such as fbcon) won't try to use the GPU.
+> > 
+> > Move the allocation/liberation to the firstopen/lastclose instead to
+> > only allocate it when userspace has opened the device and adapt the IRQ
+> > handler to return early when no binner BO was allocated yet.
+> > 
+> > Second, because the buffer is allocated from the same pool as other GPU
+> > buffers, we might run into a situation where we are out of memory at
+> > runtime resume. This causes the binner BO allocation to fail and results
+> > in all subsequent operations to fail, resulting in a major hang in
+> > userspace.
+> > 
+> > As a result, keep the buffer alive during runtime pm.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> > diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
+> > index 4cd2ccfe15f4..efaba2b02f6c 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_irq.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_irq.c
+> > @@ -64,6 +64,9 @@ vc4_overflow_mem_work(struct work_struct *work)
+> >  	struct vc4_exec_info *exec;
+> >  	unsigned long irqflags;
+> >  
+> > +	if (!bo)
+> > +		return;
+> > +
+> >  	bin_bo_slot = vc4_v3d_get_bin_slot(vc4);
+> >  	if (bin_bo_slot < 0) {
+> >  		DRM_ERROR("Couldn't allocate binner overflow mem\n");
+> 
+> Hmm.  We take the OOM IRQ on poweron, have no bin BO since nobody's
+> opened yet, and leave it.  Do we ever get the OOM IRQ again after that?
+> Seems like vc4_allocate_bin_bo() might need to kick something so that we
+> can fill an OOM request.
 
-On Wed, Mar 20, 2019 at 08:53:33PM +0800, Jason Wang wrote:
->=20
-> On 2019/3/19 =E4=B8=8A=E5=8D=8810:22, Dongli Zhang wrote:
-> > Hi Jason,
-> >=20
-> > On 3/18/19 3:47 PM, Jason Wang wrote:
-> > > On 2019/3/15 =E4=B8=8B=E5=8D=888:41, Cornelia Huck wrote:
-> > > > On Fri, 15 Mar 2019 12:50:11 +0800
-> > > > Jason Wang <jasowang@redhat.com> wrote:
-> > option 3:
-> > We should allow more vectors even the block layer would support at most
-> > nr_cpu_ids queues.
-> >=20
-> >=20
-> > I understand a new policy for queue-vector mapping is very helpful. I a=
-m just
-> > asking the question from block layer's point of view.
-> >=20
-> > Thank you very much!
-> >=20
-> > Dongli Zhang
->=20
->=20
-> Don't know much for block, cc Stefan for more idea.
+I just had a look and it seems that we do get the OOM interrupt again
+after the bin BO is allocated. Actually, I can see it kicking from time
+to time when using X with glamor.
 
-Thanks for CCing me.  I don't have much input at this stage.
+From what I understood, this looks fairly legitimate. Should we be
+worried about this?
 
-Stefan
+Cheers,
 
---ryJZkp9/svQ58syV
-Content-Type: application/pgp-signature; name="signature.asc"
+Paul
 
------BEGIN PGP SIGNATURE-----
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-iQEcBAEBAgAGBQJck7R5AAoJEJykq7OBq3PISGcH+gL2UqKuOclQNeDq8We5P/mv
-norBWe7BE3V9Aj0u8b9s6rNXKi9XYRoKPMMC3jf8EZmefL95c4nsaCG8cNG0juj8
-uv50QGn0VoN9tXlVakv2+b99X2mXhFfok0Z68+jPYq1LMIRFaTVqZkutgiIXOBLV
-rG20zEUVSHvoY/n7TWXmJRn3O/PSYxoR312UR/vwFZWlQUwZJme4yYFpBBiuY7ur
-I8F2OmH0oVtb/qvJ9XF2zqI48Nwy5OWnhkTNRHSsudw7njAwJfXRNpk/GbOlHLYD
-FnQGST7MJrpiQCvCWkZADFGJ1wmlb0bFJ1R5qkME5+zxYq2VbQ9CiiklD8yBXBw=
-=9/HK
------END PGP SIGNATURE-----
-
---ryJZkp9/svQ58syV--
