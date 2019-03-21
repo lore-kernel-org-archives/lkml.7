@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F46EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96C5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6344C2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED3721925
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfCUU2p (ORCPT
+        id S1729201AbfCUU2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:28:45 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39380 "EHLO
+        Thu, 21 Mar 2019 16:28:55 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39367 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728947AbfCUU0x (ORCPT
+        with ESMTP id S1728670AbfCUU0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:26:53 -0400
+        Thu, 21 Mar 2019 16:26:52 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1h74H1-00057y-Qf; Thu, 21 Mar 2019 21:26:48 +0100
+        id 1h74Gs-00057y-QB; Thu, 21 Mar 2019 21:26:38 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 16/24] x86/entry: Add TIF_NEED_FPU_LOAD
-Date:   Thu, 21 Mar 2019 21:26:24 +0100
-Message-Id: <20190321202632.16810-17-bigeasy@linutronix.de>
+Subject: [PATCH 02/24] x86/fpu: Remove fpu__restore()
+Date:   Thu, 21 Mar 2019 21:26:10 +0100
+Message-Id: <20190321202632.16810-3-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321202632.16810-1-bigeasy@linutronix.de>
 References: <20190321202632.16810-1-bigeasy@linutronix.de>
@@ -46,62 +46,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TIF_NEED_FPU_LOAD. This is reserved for loading the FPU registers
-before returning to userland. This flag must not be set for systems
-without a FPU.
-If this flag is cleared, the CPU's FPU register hold the current content
-of current()'s FPU register. The in-memory copy (union fpregs_state) is
-not valid.
-If this flag is set, then all of CPU's FPU register may hold a random
-value (except for PKRU) and it is required to load the content of the
-FPU register on return to userland.
-
-It is introduced now, so we can add code handling it now before adding
-the main feature.
+There are no users of fpu__restore() so it is time to remove it.
+The comment regarding fpu__restore() and TS bit is stale since commit
+  b3b0870ef3ffe ("i387: do not preload FPU state at task switch time")
+and has no meaning since.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 6 ++++++
- arch/x86/include/asm/thread_info.h  | 2 ++
- 2 files changed, 8 insertions(+)
+ Documentation/preempt-locking.txt   |  1 -
+ arch/x86/include/asm/fpu/internal.h |  1 -
+ arch/x86/kernel/fpu/core.c          | 24 ------------------------
+ arch/x86/kernel/process_32.c        |  4 +---
+ arch/x86/kernel/process_64.c        |  4 +---
+ 5 files changed, 2 insertions(+), 32 deletions(-)
 
+diff --git a/Documentation/preempt-locking.txt b/Documentation/preempt-locking.txt
+index 509f5a422d571..dce336134e54a 100644
+--- a/Documentation/preempt-locking.txt
++++ b/Documentation/preempt-locking.txt
+@@ -52,7 +52,6 @@ preemption must be disabled around such regions.
+ 
+ Note, some FPU functions are already explicitly preempt safe.  For example,
+ kernel_fpu_begin and kernel_fpu_end will disable and enable preemption.
+-However, fpu__restore() must be called with preemption disabled.
+ 
+ 
+ RULE #3: Lock acquire and release must be performed by same task
 diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 82ff84a4c4ab7..b12874b7cf0cf 100644
+index fb04a3ded7ddb..75a1d5f712ee7 100644
 --- a/arch/x86/include/asm/fpu/internal.h
 +++ b/arch/x86/include/asm/fpu/internal.h
-@@ -507,6 +507,12 @@ static inline void __fpregs_load_activate(struct fpu *fpu, int cpu)
-  *
-  * The FPU context is only stored/restore for user task and ->mm is used to
-  * distinguish between kernel and user threads.
-+ *
-+ * If TIF_NEED_FPU_LOAD is cleared then the CPU's FPU registers are saved in
-+ * the current thread's FPU registers state.
-+ * If TIF_NEED_FPU_LOAD is set then CPU's FPU registers may not hold current()'s
-+ * FPU registers. It is required to load the registers before returning to
-+ * userland or using the content otherwise.
-  */
- static inline void
- switch_fpu_prepare(struct fpu *old_fpu, int cpu)
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index e0eccbcb8447d..f9453536f9bbc 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -88,6 +88,7 @@ struct thread_info {
- #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
- #define TIF_UPROBE		12	/* breakpointed or singlestepping */
- #define TIF_PATCH_PENDING	13	/* pending live patching update */
-+#define TIF_NEED_FPU_LOAD	14	/* load FPU on return to userspace */
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
-@@ -117,6 +118,7 @@ struct thread_info {
- #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
-+#define _TIF_NEED_FPU_LOAD	(1 << TIF_NEED_FPU_LOAD)
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
+@@ -28,7 +28,6 @@ extern void fpu__initialize(struct fpu *fpu);
+ extern void fpu__prepare_read(struct fpu *fpu);
+ extern void fpu__prepare_write(struct fpu *fpu);
+ extern void fpu__save(struct fpu *fpu);
+-extern void fpu__restore(struct fpu *fpu);
+ extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
+ extern void fpu__drop(struct fpu *fpu);
+ extern int  fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu);
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 2e5003fef51a9..1d3ae7988f7f2 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -303,30 +303,6 @@ void fpu__prepare_write(struct fpu *fpu)
+ 	}
+ }
+ 
+-/*
+- * 'fpu__restore()' is called to copy FPU registers from
+- * the FPU fpstate to the live hw registers and to activate
+- * access to the hardware registers, so that FPU instructions
+- * can be used afterwards.
+- *
+- * Must be called with kernel preemption disabled (for example
+- * with local interrupts disabled, as it is in the case of
+- * do_device_not_available()).
+- */
+-void fpu__restore(struct fpu *fpu)
+-{
+-	fpu__initialize(fpu);
+-
+-	/* Avoid __kernel_fpu_begin() right after fpregs_activate() */
+-	kernel_fpu_disable();
+-	trace_x86_fpu_before_restore(fpu);
+-	fpregs_activate(fpu);
+-	copy_kernel_to_fpregs(&fpu->state);
+-	trace_x86_fpu_after_restore(fpu);
+-	kernel_fpu_enable();
+-}
+-EXPORT_SYMBOL_GPL(fpu__restore);
+-
+ /*
+  * Drops current FPU state: deactivates the fpregs and
+  * the fpstate. NOTE: it still leaves previous contents
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index e471d8e6f0b24..7888a41a03cdb 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -267,9 +267,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	/*
+ 	 * Leave lazy mode, flushing any hypercalls made here.
+ 	 * This must be done before restoring TLS segments so
+-	 * the GDT and LDT are properly updated, and must be
+-	 * done before fpu__restore(), so the TS bit is up
+-	 * to date.
++	 * the GDT and LDT are properly updated.
+ 	 */
+ 	arch_end_context_switch(next_p);
+ 
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 6a62f4af9fcf7..e1983b3a16c43 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -538,9 +538,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	/*
+ 	 * Leave lazy mode, flushing any hypercalls made here.  This
+ 	 * must be done after loading TLS entries in the GDT but before
+-	 * loading segments that might reference them, and and it must
+-	 * be done before fpu__restore(), so the TS bit is up to
+-	 * date.
++	 * loading segments that might reference them.
+ 	 */
+ 	arch_end_context_switch(next_p);
+ 
 -- 
 2.20.1
 
