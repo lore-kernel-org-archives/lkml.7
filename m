@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A7AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A318CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317FC2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB6D2192C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfCUU1G (ORCPT
+        id S1729107AbfCUU1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:27:06 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39459 "EHLO
+        Thu, 21 Mar 2019 16:27:10 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39474 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbfCUU1E (ORCPT
+        with ESMTP id S1729090AbfCUU1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:27:04 -0400
+        Thu, 21 Mar 2019 16:27:07 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1h74H1-00057y-1P; Thu, 21 Mar 2019 21:26:47 +0100
+        id 1h74H9-00057y-Np; Thu, 21 Mar 2019 21:26:56 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 15/24] x86/fpu: Eager switch PKRU state
-Date:   Thu, 21 Mar 2019 21:26:23 +0100
-Message-Id: <20190321202632.16810-16-bigeasy@linutronix.de>
+Subject: [PATCH 24/24] x86/pkeys: add PKRU value to init_fpstate
+Date:   Thu, 21 Mar 2019 21:26:32 +0100
+Message-Id: <20190321202632.16810-25-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321202632.16810-1-bigeasy@linutronix.de>
 References: <20190321202632.16810-1-bigeasy@linutronix.de>
@@ -46,122 +46,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rik van Riel <riel@surriel.com>
+The task's initiall PKRU value is set part for fpu__clear()/
+copy_init_pkru_to_fpregs(). It is not part of init_fpstate.xsave and
+instead it is set explictly.
+If the user removes the PKRU state from XSAVE in the signal handler then
+__fpu__restore_sig() will restore the missing bits from `init_fpstate'
+and initialize the PKRU value to 0.
 
-While most of a task's FPU state is only needed in user space, the
-protection keys need to be in place immediately after a context switch.
+Add the `init_pkru_value' to `init_fpstate' so it is set to the init
+value in such a case.
 
-The reason is that any access to userspace memory while running in
-kernel mode also need to abide by the memory permissions specified in
-the protection keys.
+In theory we could drop copy_init_pkru_to_fpregs() because restoring the
+PKRU at return-to-userland should be enough.
 
-The "eager switch" is a preparation for loading the FPU state on return
-to userland. Instead of decoupling PKRU state from xstate I update PKRU
-within xstate on write operations by the kernel.
-
-The read/write_pkru() is moved to another header file so it can easily
-accessed from pgtable.h and fpu/internal.h.
-
-For user tasks we should always get the PKRU from the xsave area and it
-should not change anything because the PKRU value was loaded as part of
-FPU restore.
-For kernel threads we now will have the default "init_pkru_value"
-written. Before this commit the kernel thread would end up with a
-random value which it inherited from the previous user task.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
-[bigeasy: save pkru to xstate, no cache, don't use __raw_xsave_addr()]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 24 ++++++++++++++++++++++--
- arch/x86/include/asm/fpu/xstate.h   |  1 +
- arch/x86/include/asm/pgtable.h      |  6 ++++++
- arch/x86/mm/pkeys.c                 |  1 -
- 4 files changed, 29 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/common.c | 5 +++++
+ arch/x86/mm/pkeys.c          | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 237ff8dc8559b..82ff84a4c4ab7 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -14,6 +14,7 @@
- #include <linux/compat.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-+#include <linux/mm.h>
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index cb28e98a0659a..352fa19e63110 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -372,6 +372,8 @@ static bool pku_disabled;
  
- #include <asm/user.h>
- #include <asm/fpu/api.h>
-@@ -531,8 +532,27 @@ switch_fpu_prepare(struct fpu *old_fpu, int cpu)
-  */
- static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
+ static __always_inline void setup_pku(struct cpuinfo_x86 *c)
  {
--	if (static_cpu_has(X86_FEATURE_FPU))
--		__fpregs_load_activate(new_fpu, cpu);
 +	struct pkru_state *pk;
-+	u32 pkru_val = init_pkru_value;
 +
-+	if (!static_cpu_has(X86_FEATURE_FPU))
-+		return;
-+
-+	__fpregs_load_activate(new_fpu, cpu);
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
-+		return;
-+
-+	/*
-+	 * PKRU state is switched eagerly because it needs to be valid before we
-+	 * return to userland e.g. for a copy_to_user() operation.
-+	 */
-+	if (current->mm) {
-+		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
-+		if (pk)
-+			pkru_val = pk->pkru;
-+	}
-+	__write_pkru(pkru_val);
- }
+ 	/* check the boot processor, plus compile options for PKU: */
+ 	if (!cpu_feature_enabled(X86_FEATURE_PKU))
+ 		return;
+@@ -382,6 +384,9 @@ static __always_inline void setup_pku(struct cpuinfo_x86 *c)
+ 		return;
  
- /*
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index fbe41f808e5d8..4e18a837223ff 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -5,6 +5,7 @@
- #include <linux/types.h>
- #include <asm/processor.h>
- #include <linux/uaccess.h>
-+#include <asm/user.h>
- 
- /* Bit 63 of XCR0 is reserved for future expansion */
- #define XFEATURE_MASK_EXTEND	(~(XFEATURE_MASK_FPSSE | (1ULL << 63)))
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 64333e5222cd9..1df90feeea5c6 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1355,6 +1355,12 @@ static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
- #define PKRU_WD_BIT 0x2
- #define PKRU_BITS_PER_PKEY 2
- 
-+#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+extern u32 init_pkru_value;
-+#else
-+#define init_pkru_value	0
-+#endif
-+
- static inline bool __pkru_allows_read(u32 pkru, u16 pkey)
- {
- 	int pkru_pkey_bits = pkey * PKRU_BITS_PER_PKEY;
+ 	cr4_set_bits(X86_CR4_PKE);
++	pk = get_xsave_addr(&init_fpstate.xsave, XFEATURE_PKRU);
++	if (pk)
++		pk->pkru = init_pkru_value;
+ 	/*
+ 	 * Seting X86_CR4_PKE will cause the X86_FEATURE_OSPKE
+ 	 * cpuid bit to be set.  We need to ensure that we
 diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 50f65fc1b9a3f..2ecbf4155f98f 100644
+index 2ecbf4155f98f..1dcfc91c8f0c3 100644
 --- a/arch/x86/mm/pkeys.c
 +++ b/arch/x86/mm/pkeys.c
-@@ -126,7 +126,6 @@ int __arch_override_mprotect_pkey(struct vm_area_struct *vma, int prot, int pkey
-  * in the process's lifetime will not accidentally get access
-  * to data which is pkey-protected later on.
-  */
--static
- u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
- 		      PKRU_AD_KEY( 4) | PKRU_AD_KEY( 5) | PKRU_AD_KEY( 6) |
- 		      PKRU_AD_KEY( 7) | PKRU_AD_KEY( 8) | PKRU_AD_KEY( 9) |
+@@ -18,6 +18,7 @@
+ 
+ #include <asm/cpufeature.h>             /* boot_cpu_has, ...            */
+ #include <asm/mmu_context.h>            /* vma_pkey()                   */
++#include <asm/fpu/internal.h>		/* init_fpstate			*/
+ 
+ int __execute_only_pkey(struct mm_struct *mm)
+ {
+@@ -161,6 +162,7 @@ static ssize_t init_pkru_read_file(struct file *file, char __user *user_buf,
+ static ssize_t init_pkru_write_file(struct file *file,
+ 		 const char __user *user_buf, size_t count, loff_t *ppos)
+ {
++	struct pkru_state *pk;
+ 	char buf[32];
+ 	ssize_t len;
+ 	u32 new_init_pkru;
+@@ -183,6 +185,10 @@ static ssize_t init_pkru_write_file(struct file *file,
+ 		return -EINVAL;
+ 
+ 	WRITE_ONCE(init_pkru_value, new_init_pkru);
++	pk = get_xsave_addr(&init_fpstate.xsave, XFEATURE_PKRU);
++	if (!pk)
++		return -EINVAL;
++	pk->pkru = new_init_pkru;
+ 	return count;
+ }
+ 
 -- 
 2.20.1
 
