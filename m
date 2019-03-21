@@ -3,105 +3,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE35C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB264C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4955A2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935642075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfCUNkZ (ORCPT
+        id S1728327AbfCUNk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:40:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36106 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 09:40:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36134 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfCUNkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:40:23 -0400
+        id S1728299AbfCUNkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:40:25 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5E46EAF5B;
-        Thu, 21 Mar 2019 13:40:21 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 63186AF67;
+        Thu, 21 Mar 2019 13:40:24 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 0E550E00BF; Thu, 21 Mar 2019 14:40:21 +0100 (CET)
-Message-Id: <c46e29b557e54652cce569e3348ed0385eac1469.1553170807.git.mkubecek@suse.cz>
+        id 14E0DE00BF; Thu, 21 Mar 2019 14:40:24 +0100 (CET)
+Message-Id: <2f5584ba0a74bb84e96a3ae1cc3a92ee7a6f79c1.1553170807.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1553170807.git.mkubecek@suse.cz>
 References: <cover.1553170807.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v4 01/22] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
+Subject: [PATCH net-next v4 02/22] netlink: introduce nla_put_bitfield32()
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
         John Linville <linville@tuxdriver.com>,
         linux-kernel@vger.kernel.org
-Date:   Thu, 21 Mar 2019 14:40:21 +0100 (CET)
+Date:   Thu, 21 Mar 2019 14:40:24 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Permanent hardware address of a network device was traditionally provided
-via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
-ethtool netlink interface, rtnetlink is much more suitable for it so let's
-add it to the RTM_NEWLINK message.
-
-As permanent address is not modifiable, reject userspace requests
-containing IFLA_PERM_ADDRESS attribute.
-
-Note: we already provide permanent hardware address for bond slaves;
-unfortunately we cannot drop that attribute for backward compatibility
-reasons.
+Similar to other data types, this helper puts NLA_BITFIELD32 attribute into
+a netlink message. It takes separate value and selector arguments, if there
+is a struct nla_bitfield32 already, one can use nla_put().
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- include/uapi/linux/if_link.h | 1 +
- net/core/rtnetlink.c         | 4 ++++
- 2 files changed, 5 insertions(+)
+ include/net/netlink.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index 5b225ff63b48..351ef746b8b0 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -167,6 +167,7 @@ enum {
- 	IFLA_NEW_IFINDEX,
- 	IFLA_MIN_MTU,
- 	IFLA_MAX_MTU,
-+	IFLA_PERM_ADDRESS,
- 	__IFLA_MAX
- };
- 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index a51cab95ba64..a72e8f4d777b 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -1026,6 +1026,7 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
- 	       + nla_total_size(4)  /* IFLA_CARRIER_DOWN_COUNT */
- 	       + nla_total_size(4)  /* IFLA_MIN_MTU */
- 	       + nla_total_size(4)  /* IFLA_MAX_MTU */
-+	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
- 	       + 0;
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index 23f27b0b3cef..bc0497076bec 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -1211,6 +1211,21 @@ static inline int nla_put_in6_addr(struct sk_buff *skb, int attrtype,
+ 	return nla_put(skb, attrtype, sizeof(*addr), addr);
  }
  
-@@ -1683,6 +1684,8 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
- 	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
- 		goto nla_put_failure;
- 
-+	if (nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
-+		goto nla_put_failure;
- 
- 	rcu_read_lock();
- 	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
-@@ -1742,6 +1745,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
- 	[IFLA_CARRIER_DOWN_COUNT] = { .type = NLA_U32 },
- 	[IFLA_MIN_MTU]		= { .type = NLA_U32 },
- 	[IFLA_MAX_MTU]		= { .type = NLA_U32 },
-+	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
- };
- 
- static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
++/**
++ * nla_put_bitfield32 - Add a bitfield32 value/selector attribute to
++ * a socket buffer
++ * @skb: socket buffer to add attribute to
++ * @value: 32-bit value bitmap
++ * @selector: 32-bit selector bitmap
++ */
++static inline int nla_put_bitfield32(struct sk_buff *skb, int attrtype,
++				     u32 value, u32 selector)
++{
++	struct nla_bitfield32 tmp = { .value = value, .selector = selector };
++
++	return nla_put(skb, attrtype, sizeof(tmp), &tmp);
++}
++
+ /**
+  * nla_get_u32 - return payload of u32 attribute
+  * @nla: u32 netlink attribute
 -- 
 2.21.0
 
