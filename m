@@ -2,207 +2,257 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CBEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7004C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3282190A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366D21902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="toFWAxWp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8a+xO3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfCURpk (ORCPT
+        id S1728783AbfCURps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:45:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38666 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfCURpj (ORCPT
+        Thu, 21 Mar 2019 13:45:48 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43504 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbfCURpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:45:39 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2LHj3Wo058169;
-        Thu, 21 Mar 2019 12:45:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553190303;
-        bh=l0To2RoHdy/93psR9yDkH4oZEU+/Y/g7HtDgZov8eoc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=toFWAxWpW3FZaRwD4cjYo5t+LjUU2uin8MJUFIVdzYg/kyWMFD+f4DN10Y3OrLd05
-         XdwmX7QjHqQjMaONBSoTcrfORg8JOhfXdoQBh8LeMPWQ+vxmVovKQuF+Iodh2uoqzg
-         Tgb/5fmG6IdkAMYP7SqpxFoKLMxjqjpVYokkUDbg=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2LHj2ZQ016325
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Mar 2019 12:45:03 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 21
- Mar 2019 12:45:01 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Thu, 21 Mar 2019 12:45:02 -0500
-Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2LHiq2V018392;
-        Thu, 21 Mar 2019 12:44:57 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mtd@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <tudor.ambarus@microchip.com>, <nsekhar@ti.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling status register
-Date:   Thu, 21 Mar 2019 23:15:44 +0530
-Message-ID: <20190321174548.9288-2-vigneshr@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190321174548.9288-1-vigneshr@ti.com>
-References: <20190321174548.9288-1-vigneshr@ti.com>
+        Thu, 21 Mar 2019 13:45:47 -0400
+Received: by mail-vs1-f66.google.com with SMTP id i207so4180905vsd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qJx+OIBUkVP+SLtplseC4HgR9Q7mKpE8/JEN82TI2ZU=;
+        b=f8a+xO3PWgFSZZPHsU+zBYbmFPfsq4IH5+gP9W5wvnOZ3coRf1XR0c71k6GTT7L4Vr
+         oVPtCbmUmqPXrRPUgdLUlUzz1D5zJ/NXmd7cRaPCgtUrtkBOirDQ6Q3JEwVbFDtfVaqV
+         ex1sCxDbwWobhJtdcPwgTjOwlOyxS2jafoZ7U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qJx+OIBUkVP+SLtplseC4HgR9Q7mKpE8/JEN82TI2ZU=;
+        b=fu87oD/7X7xhm27fZBV+iCuQkoP0y+wxRE6/qJTEWI3C1fnehr3iMij4C9j0k3TKj/
+         8D07WhUfcMwwJDxZaaacBjCA+R1G2srEOYuRpx62IKZx0EFdmBfGo46Wq+1YDzkLHKff
+         K/hIWExgA7P2dT2B2RiRVKbj+Z8fddazNpPmKTd8tcQmQW0jy1E5GAaXdJqFEH7NXQpU
+         JmtBdzI0VWb5N4r6UtJ7Z1EDRYzJ+9D2tcW+R3AvASeh50Brb/d6aTCsg09mqy7EYtYP
+         nXLhcf5VBLJAe5+s4afFvYx9pxkb37LrsCcPGELp2tsxfO7mKXKVK5Jpc9cHzBz2IFAr
+         od/A==
+X-Gm-Message-State: APjAAAXClBpln6DXMQt1EkKWosgEC/PsS3cSFyBD35X/9hcmjmUf/F1K
+        yuIWXLrIWDoU3JKlPRtf0w1rWwe58/b/eA==
+X-Google-Smtp-Source: APXvYqxT1gDu/5PgrSqENk6QO5OkDYU/MxAA+P47umGJWIHG9xxOMspejR+zJXZAgfUje9l2LQj4HA==
+X-Received: by 2002:a67:7ec9:: with SMTP id z192mr2731690vsc.236.1553190345235;
+        Thu, 21 Mar 2019 10:45:45 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id h8sm1013347vsf.25.2019.03.21.10.45.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 10:45:44 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id j184so4171225vsd.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:45:44 -0700 (PDT)
+X-Received: by 2002:a67:89c9:: with SMTP id l192mr2826038vsd.188.1553190343675;
+ Thu, 21 Mar 2019 10:45:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
+In-Reply-To: <20190320185719.GB180195@gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 21 Mar 2019 10:45:31 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+Message-ID: <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
-can be use as is. But these devices do not support DQ polling method of
-determining chip ready/good status. These flashes provide Status
-Register whose bits can be polled to know status of flash operation.
+On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
+> > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
+> > > When running the sha1-asm crypto selftest on arm with
+> > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
+> > >
+> > >     usercopy: Kernel memory overwrite attempt detected to spans
+> > > multiple pages (offset 0, size 42)!
+> > >     ------------[ cut here ]------------
+> > >     kernel BUG at mm/usercopy.c:102!
+> > >     Internal error: Oops - BUG: 0 [#1] SMP ARM
+> > >     Modules linked in:
+> > >     CPU: 0 PID: 35 Comm: cryptomgr_test Not tainted
+> > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+> > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+> > >     PC is at usercopy_abort+0x68/0x90
+> > >     LR is at usercopy_abort+0x68/0x90
+> > >     pc : [<c030fd60>]    lr : [<c030fd60>]    psr: 60000013
+> > >     sp : ea54bc60  ip : 00000010  fp : cccccccd
+> > >     r10: 00000000  r9 : c0e0ce04  r8 : ea54d009
+> > >     r7 : ea54d00a  r6 : 00000000  r5 : 0000002a  r4 : c09d1120
+> > >     r3 : dd6cd422  r2 : dd6cd422  r1 : 2abb4000  r0 : 0000005f
+> > >     Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+> > >     Control: 30c5387d  Table: 40003000  DAC: fffffffd
+> > >     Process cryptomgr_test (pid: 35, stack limit = 0x(ptrval))
+> > >     Stack: (0xea54bc60 to 0xea54c000)
+> > >     bc60: c09d1120 c09d1120 c09d1120 00000000 0000002a 0000002a
+> > > 00000000 c0310060
+> > >     bc80: 0000002a 00000000 000001c0 00000000 00000000 c0eb11e8
+> > > ea54cfe0 ea538c00
+> > >     bca0: 00000000 ea54cfe0 ebef73e0 0000002a ea538c20 ea54bd84
+> > > 0000003a c0427a30
+> > >     bcc0: ea54bdbc 00000000 00000000 c081cf70 eb074280 c081cf70
+> > > 0000002a c081cf80
+> > >     bce0: 0000000e c07da138 ea54bd0c 00000000 c084061c c04248e8
+> > > c0e0a408 eb074240
+> > >     bd00: eb074200 c04253c8 eb074280 ea550000 00000012 dd6cd422
+> > > ebef7480 eb074200
+> > >     bd20: ea54bd84 c081cf64 ea537200 00000002 00000000 00000014
+> > > c084061c c0428c38
+> > >     bd40: ea54bd84 ea54bdbc c081cd34 00000000 c0e4e4b4 ea538c40
+> > > 00000002 eabe4e80
+> > >     bd60: ea538c00 00000400 ea4f7a00 ea4f7a60 eb074240 00000060
+> > > 00000006 c09d544c
+> > >     bd80: 00000038 00000003 00000000 00000038 ea54bd7c 00000001
+> > > eb074200 00000000
+> > >     bda0: 00000000 dead4ead ffffffff ffffffff ea54bdb0 ea54bdb0
+> > > 00000000 c081cf70
+> > >     bdc0: c081ce68 c081ce78 ea4f7480 eb000780 00000dc0 eb000780
+> > > c0e4ee80 443e9884
+> > >     bde0: 6ed23b1c a14aaeba e52951f9 f17046e5 fefefefe fefefefe
+> > > fefefefe fefefefe
+> > >     be00: eb000780 c04292c4 c0e0a638 60000013 60000013 c0305298
+> > > ea4f7a00 c03062bc
+> > >     be20: eb000780 00000cc0 ea4f7a00 dd6cd422 00000cc0 ea538c00
+> > > 00000002 eabe4e40
+> > >     be40: ea537200 00000007 00000000 ea4f7a00 eb074200 c0429314
+> > > eb074200 ea538c00
+> > >     be60: ea4f7a00 0000000a eabe4e80 c084061c c08405fc 00000006
+> > > c04dace8 00000006
+> > >     be80: 00000000 c084065c ea537200 0000000e 00000400 eb04de08
+> > > ea4f71a8 c0429420
+> > >     bea0: 00000400 ea537200 0000000e ea537200 0000000e c0429374
+> > > 00000400 ffffffff
+> > >     bec0: 000000a2 c042a414 00000103 c0e0a408 00000000 c0e0a438
+> > > c0e5a2a0 c0e5a2a0
+> > >     bee0: 00000001 00000001 00000017 ffffe000 00000000 60000013
+> > > c0e5a2a0 c0269470
+> > >     bf00: c09c9ed0 ea54bf5c 00000103 00000000 00000000 c0e0a408
+> > > ea537280 0000000e
+> > >     bf20: 00000400 c0426500 00000000 eb04de08 ea4f71a8 c02694f4
+> > > c09c9ed0 ea54bf5c
+> > >     bf40: ea54bf28 c02699d0 ea54bf5c dd6cd422 ea537200 dd6cd422
+> > > c09c9ed0 ea537200
+> > >     bf60: ea4af1c0 ea54a000 ea537200 c0426500 00000000 eb04de08
+> > > ea4f71a8 c0426524
+> > >     bf80: ea4f7180 c023dcec ea54a000 ea4af1c0 c023dbb4 00000000
+> > > 00000000 00000000
+> > >     bfa0: 00000000 00000000 00000000 c02010d8 00000000 00000000
+> > > 00000000 00000000
+> > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > 00000000 00000000
+> > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > 00000000 00000000
+> > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
+> > > (__check_object_size+0x2d8/0x448)
+> > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
+> > > (build_test_sglist+0x268/0x2d8)
+> > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+> > > (test_hash_vec_cfg+0x110/0x694)
+> > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+> > > (__alg_test_hash+0x158/0x1b8)
+> > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+> > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+> > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+> > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+> > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+> > >     Exception stack(0xea54bfb0 to 0xea54bff8)
+> > >     bfa0:                                     00000000 00000000
+> > > 00000000 00000000
+> > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > 00000000 00000000
+> > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > >     Code: e58de000 e98d0012 e1a0100c ebfd6712 (e7f001f2)
+> > >     ---[ end trace 190b3cf48e720f78 ]---
+> > >     BUG: sleeping function called from invalid context at
+> > > include/linux/percpu-rwsem.h:34
+> > >     in_atomic(): 0, irqs_disabled(): 128, pid: 35, name: cryptomgr_test
+> > >     CPU: 0 PID: 35 Comm: cryptomgr_test Tainted: G      D
+> > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+> > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+> > >     [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
+> > >     [<c020ae58>] (show_stack) from [<c07c3624>] (dump_stack+0x7c/0x9c)
+> > >     [<c07c3624>] (dump_stack) from [<c0242e14>] (___might_sleep+0xf4/0x158)
+> > >     [<c0242e14>] (___might_sleep) from [<c0230210>] (exit_signals+0x2c/0x258)
+> > >     [<c0230210>] (exit_signals) from [<c0223d6c>] (do_exit+0x114/0xa20)
+> > >     [<c0223d6c>] (do_exit) from [<c020b160>] (die+0x304/0x344)
+> > >     [<c020b160>] (die) from [<c020b388>] (do_undefinstr+0x80/0x190)
+> > >     [<c020b388>] (do_undefinstr) from [<c0201b24>] (__und_svc_finish+0x0/0x3c)
+> > >     Exception stack(0xea54bc10 to 0xea54bc58)
+> > >     bc00:                                     0000005f 2abb4000
+> > > dd6cd422 dd6cd422
+> > >     bc20: c09d1120 0000002a 00000000 ea54d00a ea54d009 c0e0ce04
+> > > 00000000 cccccccd
+> > >     bc40: 00000010 ea54bc60 c030fd60 c030fd60 60000013 ffffffff
+> > >     [<c0201b24>] (__und_svc_finish) from [<c030fd60>] (usercopy_abort+0x68/0x90)
+> > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
+> > > (__check_object_size+0x2d8/0x448)
+> > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
+> > > (build_test_sglist+0x268/0x2d8)
+> > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+> > > (test_hash_vec_cfg+0x110/0x694)
+> > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+> > > (__alg_test_hash+0x158/0x1b8)
+> > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+> > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+> > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+> > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+> > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+> > >     Exception stack(0xea54bfb0 to 0xea54bff8)
+> > >     bfa0:                                     00000000 00000000
+> > > 00000000 00000000
+> > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > 00000000 00000000
+> > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > >
+> >
+> > Well, this must happen with the new (in 5.1) crypto self-tests implementation
+> > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
+> > understand why hardened usercopy considers it a bug though, as there's no buffer
+> > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
+> > buffer that was allocated with __get_free_pages():
+> >
+> >       __get_free_pages(GFP_KERNEL, 1)
+> >
+> > ... where 1 means an order-1 allocation.
+> >
+> > If it copies to offset=4064 len=42, for example, then hardened usercopy
+> > considers it a bug even though the buffer is 8192 bytes long.  Why?
+> >
+> > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
+> > with ITER_KVEC.
+> >
+> > - Eric
+>
+> Kees, any thoughts on why hardened usercopy rejects copies spanning a page
+> boundary when they seem to be fine?
 
-Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-Extended Query version 1.5. Bit 0 of "Software Features supported" field
-of CFI Primary Vendor-Specific Extended Query table indicates
-presence/absence of status register and Bit 1 indicates whether or not
-DQ polling is supported. Using these bits, its possible to determine
-whether flash supports DQ polling or need to use Status Register.
+This is due to missing the compound page marking, if I remember
+correctly. However, I tend to leave the pagespan test disabled: it
+really isn't ready for production use -- there are a lot of missing
+annotations still.
 
-Add support for polling status register to know device ready/status of
-erase/write operations when DQ polling is not supported.
-
-[1] https://www.cypress.com/file/213346/download
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/mtd/chips/cfi_cmdset_0002.c | 50 +++++++++++++++++++++++++++++
- include/linux/mtd/cfi.h             |  5 +++
- 2 files changed, 55 insertions(+)
-
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index 72428b6bfc47..29987d8e6c6e 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -49,6 +49,14 @@
- #define SST49LF008A		0x005a
- #define AT49BV6416		0x00d6
- 
-+/*
-+ * Bits of Status Register definition for flash devices that don't
-+ * support DQ polling (Eg.: Hyperflash)
-+ */
-+#define CFI_SR_DRB		BIT(7)
-+#define CFI_SR_ESB		BIT(5)
-+#define CFI_SR_PSB		BIT(4)
-+
- static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
- static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
- static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-@@ -97,6 +105,18 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
- 	.module		= THIS_MODULE
- };
- 
-+/*
-+ * Use status register to poll for Erase/write completion when DQ is not
-+ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-+ * CFI Primary Vendor-Specific Extended Query table 1.5
-+ */
-+static int cfi_use_status_reg(struct cfi_private *cfi)
-+{
-+	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
-+
-+	return (extp->MinorVersion >= '5') &&
-+		(extp->SoftwareFeatures & 0x11) == 1;
-+}
- 
- /* #define DEBUG_CFI_FEATURES */
- 
-@@ -744,8 +764,21 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
-  */
- static int __xipram chip_ready(struct map_info *map, unsigned long addr)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word d, t;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		d = map_read(map, addr);
-+
-+		return d.x[0] & CFI_SR_DRB;
-+	}
-+
- 	d = map_read(map, addr);
- 	t = map_read(map, addr);
- 
-@@ -769,8 +802,25 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
-  */
- static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word oldd, curd;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit and Erase/Program status bit to know if
-+		 * operation succeeded.
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		curd = map_read(map, addr);
-+
-+		if (curd.x[0] & CFI_SR_DRB)
-+			return !(curd.x[0] & (CFI_SR_PSB | CFI_SR_ESB));
-+
-+		return 0;
-+	}
-+
- 	oldd = map_read(map, addr);
- 	curd = map_read(map, addr);
- 
-diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-index cbf77168658c..92ac82ac2329 100644
---- a/include/linux/mtd/cfi.h
-+++ b/include/linux/mtd/cfi.h
-@@ -233,6 +233,11 @@ struct cfi_pri_amdstd {
- 	uint8_t  VppMin;
- 	uint8_t  VppMax;
- 	uint8_t  TopBottom;
-+	/* Below field are added from version 1.5 */
-+	uint8_t  ProgramSuspend;
-+	uint8_t  UnlockBypass;
-+	uint8_t  SecureSiliconSector;
-+	uint8_t  SoftwareFeatures;
- } __packed;
- 
- /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
 -- 
-2.21.0
-
+Kees Cook
