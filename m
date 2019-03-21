@@ -2,41 +2,42 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DA0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA14E218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BEA218FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfCUVAn (ORCPT
+        id S1727558AbfCUVAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:00:43 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34981 "EHLO mga18.intel.com"
+        Thu, 21 Mar 2019 17:00:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:34980 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbfCUU7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:59:30 -0400
+        id S1727231AbfCUU72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:59:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:29 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:59:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="154548135"
+   d="scan'208";a="154548127"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:29 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 13:59:28 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 13/23] perf/x86/intel: Basic support for metrics counters
-Date:   Thu, 21 Mar 2019 13:56:53 -0700
-Message-Id: <20190321205703.4256-14-kan.liang@linux.intel.com>
+Subject: [PATCH V2 11/23] perf/x86/intel/uncore: Add Intel Icelake uncore support
+Date:   Thu, 21 Mar 2019 13:56:51 -0700
+Message-Id: <20190321205703.4256-12-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190321205703.4256-1-kan.liang@linux.intel.com>
 References: <20190321205703.4256-1-kan.liang@linux.intel.com>
@@ -45,243 +46,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Metrics counters (hardware counters containing multiple metrics)
-are modelled as separate registers for each sub-event, with an
-extra reg being used for coordinating access to the underlying
-register in the scheduler.
+Add Intel Icelake uncore support,
+ - The init code is based on Skylake
+ - Add new pci id for IMC
+ - New MSR address for CBOX
+ - Get CBOX# from CNL_UNC_CBO_CONFIG MSR directly
+ - Create a new PMU for fixed clocktick counter
 
-This patch adds the basic infrastructure to separate the scheduler
-register indexes from the actual hardware register indexes. In
-most cases the MSR address is already used correctly, but for
-code using indexes we need a separate reg_idx field in the event
-to indicate the correct underlying register.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V1.
 
- arch/x86/events/core.c            | 18 ++++++++++++++++--
- arch/x86/events/intel/core.c      | 29 ++++++++++++++++++++---------
- arch/x86/events/perf_event.h      | 15 +++++++++++++++
- arch/x86/include/asm/msr-index.h  |  1 +
- arch/x86/include/asm/perf_event.h | 30 ++++++++++++++++++++++++++++++
- include/linux/perf_event.h        |  1 +
- 6 files changed, 83 insertions(+), 11 deletions(-)
+ arch/x86/events/intel/uncore.c     |  6 ++
+ arch/x86/events/intel/uncore.h     |  1 +
+ arch/x86/events/intel/uncore_snb.c | 91 ++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 9c14b4b3e457..d24f8d009529 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1006,16 +1006,30 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 	struct hw_perf_event *hwc = &event->hw;
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 9fe64c01a2e5..fc40a1473058 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1367,6 +1367,11 @@ static const struct intel_uncore_init_fun skx_uncore_init __initconst = {
+ 	.pci_init = skx_uncore_pci_init,
+ };
  
- 	hwc->idx = cpuc->assign[i];
-+	hwc->reg_idx = hwc->idx;
- 	hwc->last_cpu = smp_processor_id();
- 	hwc->last_tag = ++cpuc->tags[i];
- 
-+	/*
-+	 * Metrics counters use different indexes in the scheduler
-+	 * versus the hardware.
-+	 *
-+	 * Map metrics to fixed counter 3 (which is the base count),
-+	 * but the update event callback reads the extra metric register
-+	 * and converts to the right metric.
-+	 */
-+	if (is_metric_idx(hwc->idx))
-+		hwc->reg_idx = INTEL_PMC_IDX_FIXED_SLOTS;
++static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
++	.cpu_init = icl_uncore_cpu_init,
++	.pci_init = skl_uncore_pci_init,
++};
 +
- 	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
- 		hwc->config_base = 0;
- 		hwc->event_base	= 0;
- 	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
- 		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
--		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
--		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-+		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-+			(hwc->reg_idx - INTEL_PMC_IDX_FIXED);
-+		hwc->event_base_rdpmc = (hwc->reg_idx - INTEL_PMC_IDX_FIXED)
-+			| 1<<30;
- 	} else {
- 		hwc->config_base = x86_pmu_config_addr(hwc->idx);
- 		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ef95d73ef4f0..5c8f0df137bc 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2090,7 +2090,7 @@ static inline void intel_pmu_ack_status(u64 ack)
+ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EP,	  nhm_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM,	  nhm_uncore_init),
+@@ -1393,6 +1398,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
+ 	{},
+ };
  
- static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
- {
--	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	int idx = hwc->reg_idx - INTEL_PMC_IDX_FIXED;
- 	u64 ctrl_val, mask;
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 853a49a8ccf6..79eb2e21e4f0 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -512,6 +512,7 @@ int skl_uncore_pci_init(void);
+ void snb_uncore_cpu_init(void);
+ void nhm_uncore_cpu_init(void);
+ void skl_uncore_cpu_init(void);
++void icl_uncore_cpu_init(void);
+ int snb_pci2phy_map_init(int devid);
  
- 	mask = 0xfULL << (idx * 4);
-@@ -2116,9 +2116,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
- 		return;
- 	}
+ /* uncore_snbep.c */
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 13493f43b247..f8431819b3e1 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -34,6 +34,8 @@
+ #define PCI_DEVICE_ID_INTEL_CFL_4S_S_IMC	0x3e33
+ #define PCI_DEVICE_ID_INTEL_CFL_6S_S_IMC	0x3eca
+ #define PCI_DEVICE_ID_INTEL_CFL_8S_S_IMC	0x3e32
++#define PCI_DEVICE_ID_INTEL_ICL_U_IMC		0x8a02
++#define PCI_DEVICE_ID_INTEL_ICL_U2_IMC		0x8a12
  
--	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
-+	__clear_bit(hwc->idx, cpuc->enabled_events);
+ /* SNB event control */
+ #define SNB_UNC_CTL_EV_SEL_MASK			0x000000ff
+@@ -93,6 +95,12 @@
+ #define SKL_UNC_PERF_GLOBAL_CTL			0xe01
+ #define SKL_UNC_GLOBAL_CTL_CORE_ALL		((1 << 5) - 1)
+ 
++/* ICL Cbo register */
++#define ICL_UNC_CBO_CONFIG			0x396
++#define ICL_UNC_NUM_CBO_MASK			0xf
++#define ICL_UNC_CBO_0_PER_CTR0			0x702
++#define ICL_UNC_CBO_MSR_OFFSET			0x8
 +
-+	/*
-+	 * When any other slots sharing event is still enabled,
-+	 * cancel the disabling.
-+	 */
-+	if (is_any_slots_idx(hwc->idx) &&
-+	    (*(u64 *)&cpuc->enabled_events & INTEL_PMC_MSK_ANY_SLOTS))
-+		return;
+ DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
+ DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
+ DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
+@@ -280,6 +288,70 @@ void skl_uncore_cpu_init(void)
+ 	snb_uncore_arb.ops = &skl_uncore_msr_ops;
+ }
+ 
++static struct intel_uncore_type icl_uncore_cbox = {
++	.name		= "cbox",
++	.num_counters   = 4,
++	.perf_ctr_bits	= 44,
++	.perf_ctr	= ICL_UNC_CBO_0_PER_CTR0,
++	.event_ctl	= SNB_UNC_CBO_0_PERFEVTSEL0,
++	.event_mask	= SNB_UNC_RAW_EVENT_MASK,
++	.msr_offset	= ICL_UNC_CBO_MSR_OFFSET,
++	.ops		= &skl_uncore_msr_ops,
++	.format_group	= &snb_uncore_format_group,
++};
 +
-+	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->reg_idx);
-+	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->reg_idx);
-+	cpuc->intel_cp_status &= ~(1ull << hwc->reg_idx);
- 
- 	if (unlikely(event->attr.precise_ip))
- 		intel_pmu_pebs_disable(event);
-@@ -2150,7 +2160,7 @@ static void intel_pmu_read_event(struct perf_event *event)
- static void intel_pmu_enable_fixed(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	int idx = hwc->reg_idx - INTEL_PMC_IDX_FIXED;
- 	u64 ctrl_val, mask, bits = 0;
- 
- 	/*
-@@ -2194,18 +2204,19 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 	}
- 
- 	if (event->attr.exclude_host)
--		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
-+		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->reg_idx);
- 	if (event->attr.exclude_guest)
--		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
-+		cpuc->intel_ctrl_host_mask |= (1ull << hwc->reg_idx);
- 
- 	if (unlikely(event_is_checkpointed(event)))
--		cpuc->intel_cp_status |= (1ull << hwc->idx);
-+		cpuc->intel_cp_status |= (1ull << hwc->reg_idx);
- 
- 	if (unlikely(event->attr.precise_ip))
- 		intel_pmu_pebs_enable(event);
- 
- 	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
--		intel_pmu_enable_fixed(event);
-+		if (!__test_and_set_bit(hwc->idx, cpuc->enabled_events))
-+			intel_pmu_enable_fixed(event);
- 		return;
- 	}
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 58774373f410..75a75400aae7 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -185,6 +185,7 @@ struct cpu_hw_events {
- 	unsigned long		active_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
- 	unsigned long		running[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
- 	int			enabled;
-+	unsigned long		enabled_events[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
- 
- 	int			n_events; /* the # of events in the below arrays */
- 	int			n_added;  /* the # last events in the below arrays;
-@@ -344,6 +345,20 @@ struct cpu_hw_events {
- #define FIXED_EVENT_CONSTRAINT(c, n)	\
- 	EVENT_CONSTRAINT(c, (1ULL << (32+n)), FIXED_EVENT_FLAGS)
- 
-+/*
-+ * Special metric counters do not actually exist, but get remapped
-+ * to a combination of FxCtr3 + MSR_PERF_METRICS
-+ *
-+ * This allocates them to a dummy offset for the scheduler.
-+ * This does not allow sharing of multiple users of the same
-+ * metric without multiplexing, even though the hardware supports that
-+ * in principle.
-+ */
++static struct uncore_event_desc icl_uncore_events[] = {
++	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff"),
++	{ /* end: all zeroes */ },
++};
 +
-+#define METRIC_EVENT_CONSTRAINT(c, n)					\
-+	EVENT_CONSTRAINT(c, (1ULL << (INTEL_PMC_IDX_FIXED_METRIC_BASE+n)), \
-+			 FIXED_EVENT_FLAGS)
++static struct attribute *icl_uncore_clock_formats_attr[] = {
++	&format_attr_event.attr,
++	NULL,
++};
 +
- /*
-  * Constraint on the Event code + UMask
-  */
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 1378518cf63f..4310477d6808 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -777,6 +777,7 @@
- #define MSR_CORE_PERF_FIXED_CTR0	0x00000309
- #define MSR_CORE_PERF_FIXED_CTR1	0x0000030a
- #define MSR_CORE_PERF_FIXED_CTR2	0x0000030b
-+#define MSR_CORE_PERF_FIXED_CTR3	0x0000030c
- #define MSR_CORE_PERF_FIXED_CTR_CTRL	0x0000038d
- #define MSR_CORE_PERF_GLOBAL_STATUS	0x0000038e
- #define MSR_CORE_PERF_GLOBAL_CTRL	0x0000038f
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index dcb8bac6fddb..4a59d35a8e1d 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -166,6 +166,10 @@ struct x86_pmu_capability {
- #define INTEL_PMC_IDX_FIXED_REF_CYCLES	(INTEL_PMC_IDX_FIXED + 2)
- #define INTEL_PMC_MSK_FIXED_REF_CYCLES	(1ULL << INTEL_PMC_IDX_FIXED_REF_CYCLES)
- 
-+#define MSR_ARCH_PERFMON_FIXED_CTR3	0x30c
-+#define INTEL_PMC_IDX_FIXED_SLOTS	(INTEL_PMC_IDX_FIXED + 3)
-+#define INTEL_PMC_MSK_FIXED_SLOTS	(1ULL << INTEL_PMC_IDX_FIXED_SLOTS)
++static struct attribute_group icl_uncore_clock_format_group = {
++	.name = "format",
++	.attrs = icl_uncore_clock_formats_attr,
++};
 +
- /*
-  * We model BTS tracing as another fixed-mode PMC.
-  *
-@@ -175,6 +179,32 @@ struct x86_pmu_capability {
-  */
- #define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
- 
-+/*
-+ * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
-+ * and another for the whole slots counter
-+ *
-+ * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
-+ * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
-+ * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
-+ * have the same configuration.
-+ */
-+#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 17)
-+#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
-+#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
-+#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
-+#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
-+#define INTEL_PMC_MSK_ANY_SLOTS			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
-+						 INTEL_PMC_MSK_FIXED_SLOTS)
-+static inline bool is_metric_idx(int idx)
++static struct intel_uncore_type icl_uncore_clockbox = {
++	.name		= "clock",
++	.num_counters	= 1,
++	.num_boxes	= 1,
++	.fixed_ctr_bits	= 48,
++	.fixed_ctr	= SNB_UNC_FIXED_CTR,
++	.fixed_ctl	= SNB_UNC_FIXED_CTR_CTRL,
++	.single_fixed	= 1,
++	.event_mask	= SNB_UNC_CTL_EV_SEL_MASK,
++	.format_group	= &icl_uncore_clock_format_group,
++	.ops		= &skl_uncore_msr_ops,
++	.event_descs	= icl_uncore_events,
++};
++
++static struct intel_uncore_type *icl_msr_uncores[] = {
++	&icl_uncore_cbox,
++	&snb_uncore_arb,
++	&icl_uncore_clockbox,
++	NULL,
++};
++
++static int icl_get_cbox_num(void)
 +{
-+	return idx >= INTEL_PMC_IDX_FIXED_METRIC_BASE && idx <= INTEL_PMC_IDX_TD_BE_BOUND;
++	u64 num_boxes;
++
++	rdmsrl(ICL_UNC_CBO_CONFIG, num_boxes);
++
++	return num_boxes & ICL_UNC_NUM_CBO_MASK;
 +}
 +
-+static inline bool is_any_slots_idx(int idx)
++void icl_uncore_cpu_init(void)
 +{
-+	return is_metric_idx(idx) || idx == INTEL_PMC_IDX_FIXED_SLOTS;
++	uncore_msr_uncores = icl_msr_uncores;
++	icl_uncore_cbox.num_boxes = icl_get_cbox_num();
++	snb_uncore_arb.ops = &skl_uncore_msr_ops;
 +}
 +
- #define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
- #define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
- #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index fb258c171b2c..c0cbd714f10e 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -127,6 +127,7 @@ struct hw_perf_event {
- 			unsigned long	event_base;
- 			int		event_base_rdpmc;
- 			int		idx;
-+			int		reg_idx;
- 			int		last_cpu;
- 			int		flags;
+ enum {
+ 	SNB_PCI_UNCORE_IMC,
+ };
+@@ -668,6 +740,18 @@ static const struct pci_device_id skl_uncore_pci_ids[] = {
+ 	{ /* end: all zeroes */ },
+ };
+ 
++static const struct pci_device_id icl_uncore_pci_ids[] = {
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U2_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* end: all zeroes */ },
++};
++
+ static struct pci_driver snb_uncore_pci_driver = {
+ 	.name		= "snb_uncore",
+ 	.id_table	= snb_uncore_pci_ids,
+@@ -693,6 +777,11 @@ static struct pci_driver skl_uncore_pci_driver = {
+ 	.id_table	= skl_uncore_pci_ids,
+ };
+ 
++static struct pci_driver icl_uncore_pci_driver = {
++	.name		= "icl_uncore",
++	.id_table	= icl_uncore_pci_ids,
++};
++
+ struct imc_uncore_pci_dev {
+ 	__u32 pci_id;
+ 	struct pci_driver *driver;
+@@ -732,6 +821,8 @@ static const struct imc_uncore_pci_dev desktop_imc_pci_ids[] = {
+ 	IMC_DEV(CFL_4S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 4 Cores Server */
+ 	IMC_DEV(CFL_6S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 6 Cores Server */
+ 	IMC_DEV(CFL_8S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 8 Cores Server */
++	IMC_DEV(ICL_U_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
++	IMC_DEV(ICL_U2_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
+ 	{  /* end marker */ }
+ };
  
 -- 
 2.17.1
