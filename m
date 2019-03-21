@@ -2,153 +2,108 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4063C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E36C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1A321917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA562183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="b59OvXVR"
+	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="VZvUY+FB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfCUTvW (ORCPT
+        id S1728566AbfCUTyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 15:51:22 -0400
-Received: from mail-eopbgr810053.outbound.protection.outlook.com ([40.107.81.53]:33952
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727997AbfCUTvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 15:51:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BGSiu13dUp7oajgpUiOR4JIxbz3D4JX/iGNMIe/jGhA=;
- b=b59OvXVRtasUjSqq/cEckVy+hwd+K/cwR++vPFmO3f5UqvjlHEVmCOzZdxEJ4r0UnMLCxcOGTnrnq2+c9kIy/Fdej33pAlXI/2h35f0cyWV6jlBNkdjAqVLM00Bj93KdDryslFiOCD63lU6X5FZN7VfGCV8G1SWb5f4EtNfnZv0=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6143.namprd05.prod.outlook.com (20.178.244.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.10; Thu, 21 Mar 2019 19:51:17 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad%6]) with mapi id 15.20.1750.010; Thu, 21 Mar 2019
- 19:51:17 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "jglisse@redhat.com" <jglisse@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jrdr.linux@gmail.com" <jrdr.linux@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "riel@surriel.com" <riel@surriel.com>
-Subject: Re: [RFC PATCH RESEND 0/3] mm modifications / helpers for emulated
- GPU coherent memory
-Thread-Topic: [RFC PATCH RESEND 0/3] mm modifications / helpers for emulated
- GPU coherent memory
-Thread-Index: AQHU3+ke+3ZNutXb50uqrjfFd5pvK6YWGQgAgABmCIA=
-Date:   Thu, 21 Mar 2019 19:51:16 +0000
-Message-ID: <428b30355f4df864235428eaa24e207b8ba6c1ea.camel@vmware.com>
-References: <20190321132140.114878-1-thellstrom@vmware.com>
-         <20190321134603.GB2904@redhat.com>
-In-Reply-To: <20190321134603.GB2904@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [155.4.205.56]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8a8754cd-8b66-40a1-b175-08d6ae369500
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MN2PR05MB6143;
-x-ms-traffictypediagnostic: MN2PR05MB6143:
-x-microsoft-antispam-prvs: <MN2PR05MB6143837BC153C406DBF7CF46A1420@MN2PR05MB6143.namprd05.prod.outlook.com>
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(376002)(396003)(199004)(189003)(2906002)(6916009)(6116002)(3846002)(53936002)(305945005)(71200400001)(71190400001)(68736007)(7736002)(486006)(6436002)(6486002)(6246003)(229853002)(446003)(11346002)(476003)(105586002)(4326008)(2616005)(6512007)(5660300002)(76176011)(5640700003)(6506007)(256004)(6346003)(14444005)(102836004)(97736004)(26005)(186003)(66066001)(316002)(2501003)(54906003)(118296001)(99286004)(81166006)(66574012)(81156014)(1730700003)(2351001)(8936002)(106356001)(8676002)(7416002)(86362001)(36756003)(25786009)(478600001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6143;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mZHUJ4vzaZMnBRJoCDjkg4MkWrFgME6qcSK0rfsdsQ07gX99Zi9sngaLZsOuWms3WEVRR99xKUlpFK6aFeXP04BEGCu8n+omni7G101w12Q5eLpVf6w8XQe7oVGjM1etJd8RvVIwuHEs2AVcwRac5bagp3oL4HJFNLZrcN/iHIdn5P3yABmnASU/Hg8NqZEIxwQi7w0O9xDdfIDo1sI2cJtO/g9liRKOq0pKDn9ZGhtclwlZbowOYOtfcE1ZuJEPstPrgGQlgdqMWRhlsKkHqeZ21qOuYDYaBypB74FI8zKgPx3yfM6rgMsIX8Stglz4XOWh0hktv+aJmiHrlGzicMc44veuiFX744FuVWZscBfFuTkCcY7VvKG0IKfm+lc4pSU1pb9MSJgOAmfLqmAcGXG+uZ1SpgEh93EJhpdoDtg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C07325463B6F4E4E80E1572C9EDADB2A@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 21 Mar 2019 15:54:00 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55821 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727997AbfCUTyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 15:54:00 -0400
+Received: by mail-it1-f194.google.com with SMTP id z126so138460itd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 12:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHmgyQRTSr/2HAXftSSrPXR4GZxQAU7Xv8gC9oYm7W4=;
+        b=VZvUY+FBXp1BHAnN8dOQarLWEpxFx3eTAQDAqjS/VOW5XSsdJXTdx7yYDGMXoY4yPG
+         HXomjV5WmOtkDS+XFEYeGXZLos4xjCK3sZP7/LKEiTqLlyoQdRGLjKco6/cqJBtI6tA2
+         ryXejFBaMS4qODWyrX5ADEJd363cmEco4VxH4hBL7toC6SeYY0dDuy0PNuqkb5U5f3UM
+         1nwnyYEmaL35gTgYp339L8BSoailIYDRUtIk9t1HzpoU7qdKDyyzTPZOQFKSx/Tj5c2L
+         xtnlDN1ggr6riojdnEVUZoyzNP5jgcbg877jpRxTCNMs3ajb/gKaqkCSR+RR1qt41gEG
+         4nsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHmgyQRTSr/2HAXftSSrPXR4GZxQAU7Xv8gC9oYm7W4=;
+        b=imoSD3Es2oO/ye90WoSvKuU2qpwqMIiSAlb5k2JFVNeS6J2UoHu1dMBWIEvkF8QX2M
+         O4mrWgsKfO5tuW+kq2LiH+kB0A4nmLWmdukqjLJwztp58xqoF+HsCRRunyMG+2v+BHWy
+         JYiCrMYQ/q0H7H8WOURzAbCPCDmc7muevsCCdxQwYgUe7OwGcni8B4yDbKoRouccC0tS
+         5u4UF+WiAuedVZx6NQtr6Laq7Q3webf9ahRQ4Jpwh0B1jNCt93teqS/xoKqEbq7opR61
+         yYT3lx/SX5Vb39g2MocPGJEfIn3YH8t3AUSWk1NNmmd38f7+opC5hQnDZ5EXvlmBWkS+
+         +QpA==
+X-Gm-Message-State: APjAAAWYppsFFIEXP7lA5keAG1UVWuqgLXbt1AqGavteBYqsJsc08W0v
+        nefiuaArjqBtKgFpHbl/ehsgQyyinK+Sslds9YlT0M/8YW8=
+X-Google-Smtp-Source: APXvYqw15hj+tynXs0MKmFflXr37df9UvTjSOP/PjyHHNeGLU4ifdwGw85OhRM6mXEFhultZ9vG8GL/Z5oqB6HwpHfE=
+X-Received: by 2002:a02:1b54:: with SMTP id l81mr4126508jad.87.1553198039276;
+ Thu, 21 Mar 2019 12:53:59 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a8754cd-8b66-40a1-b175-08d6ae369500
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 19:51:17.0391
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6143
+References: <20190321075818.24f9703a@canb.auug.org.au> <8a8ce003-c151-d04b-3ac9-8823a6c8ff7b@deltatee.com>
+In-Reply-To: <8a8ce003-c151-d04b-3ac9-8823a6c8ff7b@deltatee.com>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Thu, 21 Mar 2019 15:53:47 -0400
+Message-ID: <CAPoiz9x9aWMzV3K-UhBz52AXdVpDbCQnLTeM7=nt5tAFL2RPBQ@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the ntb tree
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        NTB Mailing List <linux-ntb@googlegroups.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIErDqXLDtG1lLA0KDQpUaGFua3MgZm9yIGNvbW1lbnRpbmcuIEkgaGF2ZSBhIGNvdXBsZSBv
-ZiBxdWVzdGlvbnMgLyBjbGFyaWZpY2F0aW9ucw0KYmVsb3cuDQoNCk9uIFRodSwgMjAxOS0wMy0y
-MSBhdCAwOTo0NiAtMDQwMCwgSmVyb21lIEdsaXNzZSB3cm90ZToNCj4gT24gVGh1LCBNYXIgMjEs
-IDIwMTkgYXQgMDE6MjI6MjJQTSArMDAwMCwgVGhvbWFzIEhlbGxzdHJvbSB3cm90ZToNCj4gPiBS
-ZXNlbmRpbmcgc2luY2UgbGFzdCBzZXJpZXMgd2FzIHNlbnQgdGhyb3VnaCBhIG1pcy1jb25maWd1
-cmVkIFNNVFANCj4gPiBzZXJ2ZXIuDQo+ID4gDQo+ID4gSGksDQo+ID4gVGhpcyBpcyBhbiBlYXJs
-eSBSRkMgdG8gbWFrZSBzdXJlIEkgZG9uJ3QgZ28gdG9vIGZhciBpbiB0aGUgd3JvbmcNCj4gPiBk
-aXJlY3Rpb24uDQo+ID4gDQo+ID4gTm9uLWNvaGVyZW50IEdQVXMgdGhhdCBjYW4ndCBkaXJlY3Rs
-eSBzZWUgY29udGVudHMgaW4gQ1BVLXZpc2libGUNCj4gPiBtZW1vcnksDQo+ID4gbGlrZSBWTVdh
-cmUncyBTVkdBIGRldmljZSwgcnVuIGludG8gdHJvdWJsZSB3aGVuIHRyeWluZyB0bw0KPiA+IGlt
-cGxlbWVudA0KPiA+IGNvaGVyZW50IG1lbW9yeSByZXF1aXJlbWVudHMgb2YgbW9kZXJuIGdyYXBo
-aWNzIEFQSXMuIEV4YW1wbGVzIGFyZQ0KPiA+IFZ1bGthbiBhbmQgT3BlbkdMIDQuNCdzIEFSQl9i
-dWZmZXJfc3RvcmFnZS4NCj4gPiANCj4gPiBUbyByZW1lZHksIHdlIG5lZWQgdG8gZW11bGF0ZSBj
-b2hlcmVudCBtZW1vcnkuIFR5cGljYWxseSB3aGVuIGl0J3MNCj4gPiBkZXRlY3RlZA0KPiA+IHRo
-YXQgYSBidWZmZXIgb2JqZWN0IGlzIGFib3V0IHRvIGJlIGFjY2Vzc2VkIGJ5IHRoZSBHUFUsIHdl
-IG5lZWQgdG8NCj4gPiBnYXRoZXIgdGhlIHJhbmdlcyB0aGF0IGhhdmUgYmVlbiBkaXJ0aWVkIGJ5
-IHRoZSBDUFUgc2luY2UgdGhlIGxhc3QNCj4gPiBvcGVyYXRpb24sDQo+ID4gYXBwbHkgYW4gb3Bl
-cmF0aW9uIHRvIG1ha2UgdGhlIGNvbnRlbnQgdmlzaWJsZSB0byB0aGUgR1BVIGFuZCBjbGVhcg0K
-PiA+IHRoZQ0KPiA+IHRoZSBkaXJ0eSB0cmFja2luZy4NCj4gPiANCj4gPiBEZXBlbmRpbmcgb24g
-dGhlIHNpemUgb2YgdGhlIGJ1ZmZlciBvYmplY3QgYW5kIHRoZSBhY2Nlc3MgcGF0dGVybg0KPiA+
-IHRoZXJlIGFyZQ0KPiA+IHR3byBtYWpvciBwb3NzaWJpbGl0aWVzOg0KPiA+IA0KPiA+IDEpIFVz
-ZSBwYWdlX21rd3JpdGUoKSBhbmQgcGZuX21rd3JpdGUoKS4gKEdQVSBidWZmZXIgb2JqZWN0cyBh
-cmUNCj4gPiBiYWNrZWQNCj4gPiBlaXRoZXIgYnkgUENJIGRldmljZSBtZW1vcnkgb3IgYnkgZHJp
-dmVyLWFsbG9jZWQgcGFnZXMpLg0KPiA+IFRoZSBkaXJ0eS10cmFja2luZyBuZWVkcyB0byBiZSBy
-ZXNldCBieSB3cml0ZS1wcm90ZWN0aW5nIHRoZQ0KPiA+IGFmZmVjdGVkIHB0ZXMNCj4gPiBhbmQg
-Zmx1c2ggdGxiLiBUaGlzIGhhcyBhIGNvbXBsZXhpdHkgb2YgTyhudW1fZGlydHlfcGFnZXMpLCBi
-dXQgdGhlDQo+ID4gd3JpdGUgcGFnZS1mYXVsdCBpcyBvZiBjb3Vyc2UgY29zdGx5Lg0KPiA+IA0K
-PiA+IDIpIFVzZSBoYXJkd2FyZSBkaXJ0eS1mbGFncyBpbiB0aGUgcHRlcy4gVGhlIGRpcnR5LXRy
-YWNraW5nIG5lZWRzDQo+ID4gdG8gYmUgcmVzZXQNCj4gPiBieSBjbGVhcmluZyB0aGUgZGlydHkg
-Yml0cyBhbmQgZmx1c2ggdGxiLiBUaGlzIGhhcyBhIGNvbXBsZXhpdHkgb2YNCj4gPiBPKG51bV9i
-dWZmZXJfb2JqZWN0X3BhZ2VzKSBhbmQgZGlydHkgYml0cyBuZWVkIHRvIGJlIHNjYW5uZWQgaW4N
-Cj4gPiBmdWxsIGJlZm9yZQ0KPiA+IGVhY2ggZ3B1LWFjY2Vzcy4NCj4gPiANCj4gPiBTbyBpbiBw
-cmFjdGljZSB0aGUgdHdvIG1ldGhvZHMgbmVlZCB0byBiZSBpbnRlcmxlYXZlZCBmb3IgYmVzdA0K
-PiA+IHBlcmZvcm1hbmNlLg0KPiA+IA0KPiA+IFNvIHRvIGZhY2lsaXRhdGUgdGhpcywgSSBwcm9w
-b3NlIHR3byBuZXcgaGVscGVycywNCj4gPiBhcHBseV9hc193cnByb3RlY3QoKSBhbmQNCj4gPiBh
-cHBseV9hc19jbGVhbigpICgiYXMiIHN0YW5kcyBmb3IgYWRkcmVzcy1zcGFjZSkgYm90aCBpbnNw
-aXJlZCBieQ0KPiA+IHVubWFwX21hcHBpbmdfcmFuZ2UoKS4gVXNlcnMgb2YgdGhlc2UgaGVscGVy
-cyBhcmUgaW4gdGhlIG1ha2luZywNCj4gPiBidXQgbmVlZHMNCj4gPiBzb21lIGNsZWFuaW5nLXVw
-Lg0KPiANCj4gVG8gYmUgY2xlYXIgdGhpcyBzaG91bGQgX29ubHkgYmUgdXNlXyBmb3IgbW1hcCBv
-ZiBkZXZpY2UgZmlsZSA/IElmIHNvDQo+IHRoZSBBUEkgc2hvdWxkIHRyeSB0byBlbmZvcmNlIHRo
-YXQgYXMgbXVjaCBhcyBwb3NzaWJsZSBmb3IgaW5zdGFuY2UNCj4gYnkNCj4gbWFuZGF0aW5nIHRo
-ZSBmaWxlIGFzIGFyZ3VtZW50IHNvIHRoYXQgdGhlIGZ1bmN0aW9uIGNhbiBjaGVjayBpdCBpcw0K
-PiBvbmx5IHVzZSBpbiB0aGF0IGNhc2UuIEFsc28gYmlnIHNjYXJ5IGNvbW1lbnQgdG8gbWFrZSBz
-dXJlIG5vIG9uZQ0KPiBqdXN0DQo+IHN0YXJ0IHVzaW5nIHRob3NlIG91dHNpZGUgdGhpcyB2ZXJ5
-IGxpbWl0ZWQgZnJhbWUuDQoNCkZpbmUgd2l0aCBtZS4gUGVyaGFwcyB3ZSBjb3VsZCBCVUcoKSAv
-IFdBUk4oKSBvbiBjZXJ0YWluIFZNQSBmbGFncyANCmluc3RlYWQgb2YgbWFuZGF0aW5nIHRoZSBm
-aWxlIGFzIGFyZ3VtZW50LiBUaGF0IGNhbiBtYWtlIHN1cmUgd2UNCmRvbid0IGFjY2lkZW50bHkg
-aGl0IHBhZ2VzIHdlIHNob3VsZG4ndCBoaXQuDQoNCj4gDQo+ID4gVGhlcmUncyBhbHNvIGEgY2hh
-bmdlIHRvIHhfbWt3cml0ZSgpIHRvIGFsbG93IGRyb3BwaW5nIHRoZSBtbWFwX3NlbQ0KPiA+IHdo
-aWxlDQo+ID4gd2FpdGluZy4NCj4gDQo+IFRoaXMgd2lsbCBtb3N0IGxpa2VseSBjb25mbGljdCB3
-aXRoIHVzZXJmYXVsdGZkIHdyaXRlIHByb3RlY3Rpb24uIA0KDQpBcmUgeW91IHJlZmVycmluZyB0
-byB0aGUgeF9ta3dyaXRlKCkgdXNhZ2UgaXRzZWxmIG9yIHRoZSBtbWFwX3NlbQ0KZHJvcHBpbmcg
-ZmFjaWxpdGF0aW9uPw0KDQo+IE1heWJlDQo+IGJ1aWxkaW5nIHlvdXIgdGhpbmcgb24gdG9wIG9m
-IHRoYXQgd291bGQgYmUgYmV0dGVyLg0KPiANCj4gDQouLi4NCj4gDQo+IEkgd2lsbCB0YWtlIGEg
-Y3Vyc29yeSBsb29rIGF0IHRoZSBwYXRjaGVzLg0KPiANCg0KU29tZSBtb3JlIHF1ZXN0aW9ucyAv
-IGNsYXJpZmljYXRpb25zIG9uIHRob3NlIGFzIHdlbGwuDQoNCg0KPiBDaGVlcnMsDQo+IErDqXLD
-tG1lDQo=
+On Wed, Mar 20, 2019 at 5:00 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+>
+>
+> On 2019-03-20 2:58 p.m., Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > In commit
+> >
+> >   f4d0dd1064b8 ("NTB: ntb_transport: Ensure qp->tx_mw_dma_addr is initaliazed")
+> >
+> > Fixes tag
+> >
+> >   Fixes: c27ccb899219 ("NTB: ntb_transport: Ensure the destination buffer is mapped for TX DMA")
+> >
+> > has these problem(s):
+> >
+> >   - Target SHA1 does not exist
+> >
+> > Did you mean:
+> >
+> >   c59666bb32b9 ("NTB: ntb_transport: Ensure the destination buffer is mapped for TX DMA")
+>
+> My fault. I sent the fix patch with the fixes tag before the original
+> patch was merged upstream expecting them to be squashed. c59666bb32b9 is
+> the correct hash in upstream now.
+
+I've corrected the patch in my git branches and repushed.
+
+Is there an existing set of tools/scripts I should run to prevent
+things like this from happening?
+
+Thanks,
+Jon
+
+>
+> Logan
+>
