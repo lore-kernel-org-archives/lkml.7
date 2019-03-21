@@ -1,122 +1,89 @@
 Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F1BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB5FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17E721873
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4CA218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfCUIEH (ORCPT
+        id S1727971AbfCUIE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:04:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35241 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfCUIEG (ORCPT
+        Thu, 21 Mar 2019 04:04:29 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57867 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbfCUIE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:04:06 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h39so5668852qte.2;
-        Thu, 21 Mar 2019 01:04:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B5aSoB8DpBn5FH75X4aNsiML3d74yNl4DxW1A3KfLQs=;
-        b=KxFaXqM9At8HScoXbf5reE63gnM4Nklt/rdEcMjjtEhfifBT2xQMtdc0HkSJRwI+lW
-         0EUvH3/qvEkQ+5WXSuXT1iuemA/EHX12djmFht5K2cfuOfNvCSwlXvMRvuanp+e2VBgT
-         yCamnIqdHDbNu4gf9so/1L70B/gJrCbE9Yd8mKmP6iBg+RrGMPQ/HJ2p2yX79kDP0zb3
-         lxQPGimEB6gjzUh7ParoxLEFLDdoAlkgJdwHQTktIzOdVVEGLYjTnM+NF41qqyqs09Kw
-         Ztz0POwFK4EssJqEPc0wZ/maaAWvuzuXEvWlsUPZ2j9uJqsfwI5sypyYI6tG5RwKsoGo
-         F5Ng==
-X-Gm-Message-State: APjAAAXybAJikFrfRGBOn0rVUsCMUnnUSp37U9mjoKRSmqsndpoJ1MC+
-        tXAJyzoOFBzFOdojfI1XqdfQuo8JG6a4ha8r8bA=
-X-Google-Smtp-Source: APXvYqwM9aVu2KtnPm4+zSpXvR/9QE4g7cIhCCmcHFS7/nHor3tj3WP1z/jFTdVqklQFuobFTDJhvPa0aTnYidrQ3aA=
-X-Received: by 2002:a0c:9487:: with SMTP id j7mr1920428qvj.180.1553155445400;
- Thu, 21 Mar 2019 01:04:05 -0700 (PDT)
+        Thu, 21 Mar 2019 04:04:28 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2L830w8001715;
+        Thu, 21 Mar 2019 09:04:22 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2r8rwkbxe2-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 21 Mar 2019 09:04:22 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 08E5831;
+        Thu, 21 Mar 2019 08:04:20 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C7957248E;
+        Thu, 21 Mar 2019 08:04:20 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 21 Mar
+ 2019 09:04:20 +0100
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Thu, 21 Mar 2019 09:04:19
+ +0100
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] drm/panel: otm8009a: add delay at the end of initialization
+Date:   Thu, 21 Mar 2019 09:04:05 +0100
+Message-ID: <1553155445-13407-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 Mar 2019 09:03:48 +0100
-Message-ID: <CAK8P3a2yH+6idKS-n=t+JkQRyUK0nU_2qiJaQktQP9p_3y_86w@mail.gmail.com>
-Subject: Re: [RESEND PATCHv4 0/6] Add SOCFPGA System Manager
-To:     thor.thayer@linux.intel.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Olof Johansson <olof@lixom.net>,
-        David Miller <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Networking <netdev@vger.kernel.org>, soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 11:15 PM <thor.thayer@linux.intel.com> wrote:
->
-> From: Thor Thayer <thor.thayer@linux.intel.com>
->
-> Add MFD driver for SOCFPGA System Manager to handle
-> System Manager calls differently for ARM32 vs ARM64.
-> The SOCFPGA System Manager includes registers from several
-> SOC peripherals.
->
-> On ARM32, syscon handles this aggregated register grouping.
-> Implement System Manager calls as regmap_mmio similar to syscon
-> for ARM32 SOCFPGA systems.
->
-> The ARM64 System Manager can only be accessed from priority
-> level EL3 so this new MFD driver handles the calls to EL3.
+At the end of initialization, a delay is required by the panel.
+Without this delay, the panel could received a frame early &
+generate a crash of panel (black screen).
 
-(adding arm@kernel.org)
-As discussed with Lee, let's keep the series together and merge it
-through the mfd tree.
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/panel/panel-orisetech-otm8009a.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-For all six patches:
+diff --git a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
+index 87fa316..58ccf64 100644
+--- a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
++++ b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
+@@ -248,6 +248,9 @@ static int otm8009a_init_sequence(struct otm8009a *ctx)
+ 	/* Send Command GRAM memory write (no parameters) */
+ 	dcs_write_seq(ctx, MIPI_DCS_WRITE_MEMORY_START);
+ 
++	/* Wait a short while to let the panel be ready before the 1st frame */
++	mdelay(10);
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-
-
-> Thor Thayer (6):
->   mfd: altera-sysmgr: Add SOCFPGA System Manager
->   Documentation: dt: socfpga: Add S10 System Manager binding
->   ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
->   arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
->   net: stmmac: socfpga: Use shared System Manager driver
->   arm64: dts: stratix10: New System Manager compatible
->
->  .../bindings/arm/altera/socfpga-system.txt         |  12 ++
->  MAINTAINERS                                        |   6 +
->  arch/arm/configs/socfpga_defconfig                 |   1 +
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
->  arch/arm64/configs/defconfig                       |   1 +
->  drivers/mfd/Kconfig                                |  10 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
->  .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
->  include/linux/mfd/altera-sysmgr.h                  |  29 +++
->  10 files changed, 275 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/mfd/altera-sysmgr.c
->  create mode 100644 include/linux/mfd/altera-sysmgr.h
->
-> --
-> 2.7.4
->
