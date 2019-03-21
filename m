@@ -2,77 +2,99 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A36C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6FAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3BB218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A399F2075D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfCUDeC (ORCPT
+        id S1727809AbfCUDhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 23:34:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54731 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbfCUDeB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 23:34:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id c17so2841631iom.21
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 20:34:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=mTOvCXkdsi5TD05/HnWWDtFxRFA+wTXdCySkbn4fgVE=;
-        b=cmICPsCy/gS9sUSC4XjE/5J+a5rucqg9zS470ML1MvFInj19EtT1I4WmX2UIimRRiT
-         N3rLQn7F49oJ+9TKxj9IZRJkGU6qL3hlgur/AqbUpoPDns9C6b4ojhPAWSS9kJGaHXCY
-         0+gnvOL8+1u3GXrB/WSAYWoEz1ICItDisJifMf7d9a3Pe4Bc+AACdzs6YB3+ihNNIQc1
-         8bNHZ6kFBe/AzimeMeIfCkwW43bChsVuReyiOwowloUUL7KiSm7yWEb3WRFa+LfnkfGx
-         Ywjx/Vrapkl1OnReieKq2aWnRmeDtcQhAoT0c5YAtB6JUjVl9cDrb1zZYZomzxJb3Ds2
-         JuOg==
-X-Gm-Message-State: APjAAAVdXRWN+xLA3f+WxY6lcuYqW0P03cqwibce3tq+dNgP76xVDrJE
-        BVNx4euh+SirMpuFtO25o4TJ06hUcwGewzo00oSjvfoBxvhQ
-X-Google-Smtp-Source: APXvYqyJ1OeEfrbbP472DGBNSp6TPz2cY7sxlzHrOiwQFC68q2ULtpuaYlc2iuX46eS7exuPiuDphTZfduQaoGJB5PjKkZjCSJ0B
-MIME-Version: 1.0
-X-Received: by 2002:a24:9796:: with SMTP id k144mr585535ite.0.1553139240613;
- Wed, 20 Mar 2019 20:34:00 -0700 (PDT)
-Date:   Wed, 20 Mar 2019 20:34:00 -0700
-In-Reply-To: <000000000000fd464c057a679adb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b93e5a05849268b9@google.com>
-Subject: Re: KASAN: use-after-free Read in update_blocked_averages
-From:   syzbot <syzbot+0dbf864d3b52555e8265@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dvyukov@google.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        sbrivio@redhat.com, sd@queasysnail.net,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 20 Mar 2019 23:37:10 -0400
+Received: from mx3-rdu2.redhat.com ([66.187.233.73]:55432 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726914AbfCUDhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 23:37:10 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA581406E82E;
+        Thu, 21 Mar 2019 03:37:08 +0000 (UTC)
+Received: from localhost (unknown [10.64.242.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AA6517468;
+        Thu, 21 Mar 2019 03:37:06 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 12:37:06 +0900 (JST)
+Message-Id: <20190321.123706.289086486788904430.yamato@redhat.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, keescook@chromium.org
+Subject: Re: [PATCH RESEND] eventfd: prepare id to userspace via fdinfo
+From:   Masatake YAMATO <yamato@redhat.com>
+In-Reply-To: <20190320120525.3ed8d21648ea8a573bbd4acf@linux-foundation.org>
+References: <20190320092929.14628-1-yamato@redhat.com>
+        <20190320120525.3ed8d21648ea8a573bbd4acf@linux-foundation.org>
+Organization: Red Hat Japan, Inc.
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.11.55.7]); Thu, 21 Mar 2019 03:37:08 +0000 (UTC)
+X-Greylist: inspected by milter-greylist-4.5.16 (mx1.redhat.com [10.11.55.7]); Thu, 21 Mar 2019 03:37:08 +0000 (UTC) for IP:'10.11.54.5' DOMAIN:'int-mx05.intmail.prod.int.rdu2.redhat.com' HELO:'smtp.corp.redhat.com' FROM:'yamato@redhat.com' RCPT:''
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Thank you for the comment.
 
-commit b8a51b38e4d4dec3e379d52c0fe1a66827f7cf1e
-Author: Stefano Brivio <sbrivio@redhat.com>
-Date:   Thu Nov 8 11:19:23 2018 +0000
+On Wed, 20 Mar 2019 12:05:25 -0700, Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Wed, 20 Mar 2019 18:29:29 +0900 Masatake YAMATO <yamato@redhat.com> wrote:
+> 
+>> Finding endpoints of an IPC channel is one of essential task to
+>> understand how a user program works. Procfs and netlink socket provide
+>> enough hints to find endpoints for IPC channels like pipes, unix
+>> sockets, and pseudo terminals. However, there is no simple way to find
+>> endpoints for an eventfd file from userland. An inode number doesn't
+>> hint. Unlike pipe, all eventfd files share the same inode object.
+>> 
+>> To provide the way to find endpoints of an eventfd file, this patch
+>> adds "eventfd-id" field to /proc/PID/fdinfo of eventfd as identifier.
+>> Address for eventfd context is used as id.
+>> 
+>> A tool like lsof can utilize the information to print endpoints.
+>> 
+>> ...
+>>
+>> --- a/fs/eventfd.c
+>> +++ b/fs/eventfd.c
+>> @@ -297,6 +297,7 @@ static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
+>>  	seq_printf(m, "eventfd-count: %16llx\n",
+>>  		   (unsigned long long)ctx->count);
+>>  	spin_unlock_irq(&ctx->wqh.lock);
+>> +	seq_printf(m, "eventfd-id: %p\n", ctx);
+>>  }
+>>  #endif
+> 
+> Is it a good idea to use a bare kernel address for this?  How does this
+> interact with printk pointer randomization and hashing?
+> 
 
-     fou, fou6: ICMP error handlers for FoU and GUE
+My understanding is that an address printed with %p for a bare kernel
+address is stable after ptr_key in vsprintf.c is filled, and ptr_key
+is filled enough early stage. so, for my usecase, resolving IPC endpoints,
+printing a bare kernel address with %p may be enough. Am I missing something?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11e33c17200000
-start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13e33c17200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e33c17200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcbea7daf3ea3e3e
-dashboard link: https://syzkaller.appspot.com/bug?extid=0dbf864d3b52555e8265
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137ae6d5400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15dbd77b400000
+For the same purpose, I submitted a ida based patch a year ago.
+(https://patchwork.kernel.org/patch/10413589/)
+I quote it here for getting comments:
 
-Reported-by: syzbot+0dbf864d3b52555e8265@syzkaller.appspotmail.com
-Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
+This one doesn't use any bare kernel addresses. I implemented new one (%p version)
+bacause is is much shorter.
+
+Do you think ida based one is better than %p based one?
+
+Masatake YAMATO
