@@ -2,102 +2,87 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B937CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A61C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8891F21916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB07221916
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfCUWgJ (ORCPT
+        id S1727151AbfCUWiQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:36:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22607 "EHLO mga05.intel.com"
+        Thu, 21 Mar 2019 18:38:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6111 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfCUWgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:36:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726068AbfCUWiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:38:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:36:08 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:38:15 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="154574896"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2019 15:36:08 -0700
-Date:   Thu, 21 Mar 2019 16:37:08 -0600
-From:   Keith Busch <keith.busch@intel.com>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Nellans <dnellans@nvidia.com>
-Subject: Re: [PATCH 0/5] Page demotion for memory reclaim
-Message-ID: <20190321223706.GA29817@localhost.localdomain>
-References: <20190321200157.29678-1-keith.busch@intel.com>
- <5B5EFBC2-2979-4B9F-A43A-1A14F16ACCE1@nvidia.com>
+   d="scan'208";a="136327246"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Mar 2019 15:38:15 -0700
+Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 21 Mar 2019 15:38:15 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.204]) by
+ ORSMSX151.amr.corp.intel.com ([169.254.7.9]) with mapi id 14.03.0415.000;
+ Thu, 21 Mar 2019 15:38:14 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH] net: ixgbevf: fix a missing check of
+ ixgbevf_write_msg_read_ack
+Thread-Topic: [Intel-wired-lan] [PATCH] net: ixgbevf: fix a missing check of
+ ixgbevf_write_msg_read_ack
+Thread-Index: AQHU1iitvtbEgh4LLEq/VBiw56ZVHaYWwSBw
+Date:   Thu, 21 Mar 2019 22:38:13 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D376ADC@ORSMSX104.amr.corp.intel.com>
+References: <20190309033123.30001-1-kjlu@umn.edu>
+In-Reply-To: <20190309033123.30001-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjJlYWU2N2UtOGZmZi00YmJlLWE3N2YtN2IzMzhiZDE1MWViIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiU1dLTFpcL2p4eXRGMG91T29mUElLZ3VvQWJyb1ZDNGNyYUdab2NtaTFZeGxRbE9IN0RObzJmbTEyK1JZU0NYVmEifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5B5EFBC2-2979-4B9F-A43A-1A14F16ACCE1@nvidia.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 02:20:51PM -0700, Zi Yan wrote:
-> 1. The name of “page demotion” seems confusing to me, since I thought it was about large pages
-> demote to small pages as opposite to promoting small pages to THPs. Am I the only
-> one here?
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Kangjie Lu
+> Sent: Friday, March 8, 2019 7:31 PM
+> To: kjlu@umn.edu
+> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; intel-wired-
+> lan@lists.osuosl.org; pakki001@umn.edu; David S. Miller
+> <davem@davemloft.net>
+> Subject: [Intel-wired-lan] [PATCH] net: ixgbevf: fix a missing check of
+> ixgbevf_write_msg_read_ack
+> 
+> If ixgbevf_write_msg_read_ack fails, return its error code upstream
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/net/ethernet/intel/ixgbevf/vf.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-If you have a THP, we'll skip the page migration and fall through to
-split_huge_page_to_list(), then the smaller pages can be considered,
-migrated and reclaimed individually. Not that we couldn't try to migrate
-a THP directly. It was just simpler implementation for this first attempt.
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-> 2. For the demotion path, a common case would be from high-performance memory, like HBM
-> or Multi-Channel DRAM, to DRAM, then to PMEM, and finally to disks, right? More general
-> case for demotion path would be derived from the memory performance description from HMAT[1],
-> right? Do you have any algorithm to form such a path from HMAT?
 
-Yes, I have a PoC for the kernel setting up a demotion path based on
-HMAT properties here:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kbusch/linux.git/commit/?h=mm-migrate&id=4d007659e1dd1b0dad49514348be4441fbe7cadb
-
-The above is just from an experimental branch.
-
-> 3. Do you have a plan for promoting pages from lower-level memory to higher-level memory,
-> like from PMEM to DRAM? Will this one-way demotion make all pages sink to PMEM and disk?
-
-Promoting previously demoted pages would require the application do
-something to make that happen if you turn demotion on with this series.
-Kernel auto-promotion is still being investigated, and it's a little
-trickier than reclaim.
-
-If it sinks to disk, though, the next access behavior is the same as
-before, without this series.
-
-> 4. In your patch 3, you created a new method migrate_demote_mapping() to migrate pages to
-> other memory node, is there any problem of reusing existing migrate_pages() interface?
-
-Yes, we may not want to migrate everything in the shrink_page_list()
-pages. We might want to keep a page, so we have to do those checks first. At
-the point we know we want to attempt migration, the page is already
-locked and not in a list, so it is just easier to directly invoke the
-new __unmap_and_move_locked() that migrate_pages() eventually also calls.
- 
-> 5. In addition, you only migrate base pages, is there any performance concern on migrating THPs?
-> Is it too costly to migrate THPs?
-
-It was just easier to consider single pages first, so we let a THP split
-if possible. I'm not sure of the cost in migrating THPs directly.
