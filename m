@@ -2,412 +2,177 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54B3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2518C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61113218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797F5218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RjzMB1v7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfCULvA (ORCPT
+        id S1728287AbfCULvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:51:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52056 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbfCULu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:50:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3A6F8309266D;
-        Thu, 21 Mar 2019 11:50:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C5CA31001DC1;
-        Thu, 21 Mar 2019 11:50:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 4/6] jffs2: Convert to fs_context
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com
-Date:   Thu, 21 Mar 2019 11:50:56 +0000
-Message-ID: <155316905597.29884.3278277521315532086.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
-References: <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 21 Mar 2019 07:51:54 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52761 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbfCULvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:51:53 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190321115152euoutp02500b1d8a04009ff35372870f5adf7cf7~N9xQPhVML1119011190euoutp02y
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:51:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190321115152euoutp02500b1d8a04009ff35372870f5adf7cf7~N9xQPhVML1119011190euoutp02y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1553169112;
+        bh=2yWmiZORcYmuq6keKZja5kydfB6yG+gI2O3tmnryF8I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=RjzMB1v7ffibQebKuTlxHJfrXAb2Qb++TAgo2dZutmSo17DaCt2gLHSrLAUUF2N1I
+         VtMVjQgIgTc3/LeAfquqLZLhTO4w2C4oW3PMwimOCF9pjnZSNn8MxBo49ftNqDfspR
+         LeqlcHqf9/yDXywRWMu3DG+M3uIgTxKLHbJsHAXs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190321115151eucas1p28667abb880a94a6a635961f7e78d5952~N9xPveXJ51512815128eucas1p2E;
+        Thu, 21 Mar 2019 11:51:51 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F2.7E.04294.7DA739C5; Thu, 21
+        Mar 2019 11:51:51 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190321115150eucas1p128f5eb471751834acef4a2d080ebc706~N9xPE8pqV1803618036eucas1p1W;
+        Thu, 21 Mar 2019 11:51:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190321115150eusmtrp27ab4ac4c4714f4a093015d423009bc5b~N9xO6QwWK2849628496eusmtrp2H;
+        Thu, 21 Mar 2019 11:51:50 +0000 (GMT)
+X-AuditID: cbfec7f4-835ff700000010c6-28-5c937ad7daac
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BB.DE.04128.6DA739C5; Thu, 21
+        Mar 2019 11:51:50 +0000 (GMT)
+Received: from [106.120.50.74] (unknown [106.120.50.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190321115149eusmtip21ab572789c77d58c6ef008fbf8a9cc02~N9xOP7_kV2421824218eusmtip2M;
+        Thu, 21 Mar 2019 11:51:49 +0000 (GMT)
+Subject: Re: [PATCH v2 3/4] media: s5p-cec: fix possible object reference
+ leak
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     mchehab@kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        "Hans Verkuil (hansverk)" <hansverk@cisco.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Wen Yang <yellowriver2010@hotmail.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <376c5ed6-7c2d-62a1-9ed0-48a329965d06@samsung.com>
+Date:   Thu, 21 Mar 2019 12:51:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1550015279-42723-1-git-send-email-wen.yang99@zte.com.cn>
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 21 Mar 2019 11:50:58 +0000 (UTC)
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRmVeSWpSXmKPExsWy7djPc7rXqybHGCxaKmSx5OcuJosPE2cy
+        WlzeNYfNomfDVlaLGef3MVks2/SHyaLv9Stmi3OvfrJZLHjezmJxf9FyNgcujym/N7J6PO45
+        w+axaVUnm8fnTXIea/b9YAlgjeKySUnNySxLLdK3S+DKuLT1MmvBUcGKOx9nMTYw7uDrYuTk
+        kBAwkTh0bjdzFyMXh5DACkaJzd/mMEI4Xxgllix8CZX5zCjRvfIkC0zL9pZOFojEckaJlcfa
+        WSGct4wSL/qmsoFUCQsESFyft48RxBYRUJE4u3QnE0gRs8BKJon/i1+ygiTYBAwlut52gTXw
+        CthJ3F81hQnEZhFQlWidfQOsWVQgRuLN8ZeMEDWCEidnPgE7g1PATeLmnZdgvcwC8hLb385h
+        hrDFJW49mQ+2TELgHLvEqsk/2CHudpFYceoeM4QtLPHq+BaouIzE/50wDc2MEg/PrWWHcHoY
+        JS43zWCEqLKWOHz8ItDZHEArNCXW79KHCDtKTN91GiwsIcAnceOtIMQRfBKTtk1nhgjzSnS0
+        CUFUq0nMOr4Obu3BC5eYJzAqzULy2iwk78xC8s4shL0LGFlWMYqnlhbnpqcWG+WllusVJ+YW
+        l+al6yXn525iBKap0/+Of9nBuOtP0iFGAQ5GJR7eCIdJMUKsiWXFlbmHGCU4mJVEeHdFT44R
+        4k1JrKxKLcqPLyrNSS0+xCjNwaIkzlvN8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwGgtdrbQRVYi
+        a8/LpNPP5Ce+3nbqWka/7RXn0F47X7llv1W9L028uvq+z7kDS28L9KQc/VKoG3XmsPEK/ijx
+        w48/N+R6+nO85bVseLz+ZHv6n2k3WljyKwL1NJdtDfBj391gJH9AlrNXsNXi1d0v8+PkQybp
+        bD34ZnXhdL7+lghn8z9LtNwC85VYijMSDbWYi4oTARDmF7JPAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xe7rXqibHGOz4L2mx5OcuJosPE2cy
+        WlzeNYfNomfDVlaLGef3MVks2/SHyaLv9Stmi3OvfrJZLHjezmJxf9FyNgcujym/N7J6PO45
+        w+axaVUnm8fnTXIea/b9YAlgjdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV
+        0rezSUnNySxLLdK3S9DLuLT1MmvBUcGKOx9nMTYw7uDrYuTkkBAwkdje0snSxcjFISSwlFGi
+        5cg7VoiEjMTJaQ1QtrDEn2tdbBBFrxkl/qxoZO5i5OAQFvCTmDzbAqRGREBF4uzSnUwgNcwC
+        K5kkji2YxgTRMJNR4ujBaWwgVWwChhJdb7vAbF4BO4n7q6YwgdgsAqoSrbNvMILYogIxEv9u
+        72WFqBGUODnzCQuIzSngJnHzzkuwXmYBM4l5mx8yQ9jyEtvfzoGyxSVuPZnPNIFRaBaS9llI
+        WmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwKjcduznlh2MXe+CDzEKcDAq
+        8fAuMJkUI8SaWFZcmXuIUYKDWUmEd1f05Bgh3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgcm
+        jLySeENTQ3MLS0NzY3NjMwslcd7zBpVRQgLpiSWp2ampBalFMH1MHJxSDYy7lryWK5lbe0V0
+        T8nvCwcqmL9/Wea3e+ajzTGvZ1VLTDrvN28bc/Pebne9mv0pKpOLLXe2tIiv7mmYzj2h59LS
+        A6pzvDNttgvLsD3VPHe9uOhB94HmkhbPHX596yr/nz30aZLIu00VVU9fXhbda9X0YFpTR9/+
+        pwdEjJoubA4stdpfOX9RnNU6JZbijERDLeai4kQA389KseACAAA=
+X-CMS-MailID: 20190321115150eucas1p128f5eb471751834acef4a2d080ebc706
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190212234951epcas3p3c5dff046aab328e983ecdcecb916148c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190212234951epcas3p3c5dff046aab328e983ecdcecb916148c
+References: <CGME20190212234951epcas3p3c5dff046aab328e983ecdcecb916148c@epcas3p3.samsung.com>
+        <1550015279-42723-1-git-send-email-wen.yang99@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: David Woodhouse <dwmw2@infradead.org>
-cc: linux-mtd@lists.infradead.org
----
+Hi
 
- fs/jffs2/fs.c       |   21 +++---
- fs/jffs2/os-linux.h |    4 +
- fs/jffs2/super.c    |  172 +++++++++++++++++++++++++--------------------------
- 3 files changed, 96 insertions(+), 101 deletions(-)
+On 2019-02-13 00:47, Wen Yang wrote:
+> The call to of_parse_phandle() returns a node pointer with refcount
+> incremented thus it must be explicitly decremented here after the last
+> usage.
+> The of_find_device_by_node() takes a reference to the underlying device
+> structure, we also should release that reference.
+> This patch fixes those two issues.
+>
+> Hans Verkuil says:
+> The cec driver should never take a reference of the hdmi device.
+> It never accesses the HDMI device, it only needs the HDMI device pointer as
+> a key in the notifier list.
+> The real problem is that several CEC drivers take a reference of the HDMI
+> device and never release it. So those drivers need to be fixed.
+>
+> Fixes: a93d429b51fb ("[media] s5p-cec: add cec-notifier support, move out of staging")
+> Suggested-by: Hans Verkuil (hansverk) <hansverk@cisco.com>
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Hans Verkuil (hansverk) <hansverk@cisco.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Wen Yang <yellowriver2010@hotmail.com>
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
 
-diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
-index eab04eca95a3..d79734bd7650 100644
---- a/fs/jffs2/fs.c
-+++ b/fs/jffs2/fs.c
-@@ -17,6 +17,7 @@
- #include <linux/sched.h>
- #include <linux/cred.h>
- #include <linux/fs.h>
-+#include <linux/fs_context.h>
- #include <linux/list.h>
- #include <linux/mtd/mtd.h>
- #include <linux/pagemap.h>
-@@ -184,7 +185,7 @@ int jffs2_do_setattr (struct inode *inode, struct iattr *iattr)
- 	if (ivalid & ATTR_SIZE && inode->i_size > iattr->ia_size) {
- 		truncate_setsize(inode, iattr->ia_size);
- 		inode->i_blocks = (inode->i_size + 511) >> 9;
--	}	
-+	}
- 
- 	return 0;
- }
-@@ -390,7 +391,7 @@ void jffs2_dirty_inode(struct inode *inode, int flags)
- 	jffs2_do_setattr(inode, &iattr);
- }
- 
--int jffs2_do_remount_fs(struct super_block *sb, int *flags, char *data)
-+int jffs2_do_remount_fs(struct super_block *sb, struct fs_context *fc)
- {
- 	struct jffs2_sb_info *c = JFFS2_SB_INFO(sb);
- 
-@@ -408,10 +409,10 @@ int jffs2_do_remount_fs(struct super_block *sb, int *flags, char *data)
- 		mutex_unlock(&c->alloc_sem);
- 	}
- 
--	if (!(*flags & SB_RDONLY))
-+	if (!(fc->sb_flags & SB_RDONLY))
- 		jffs2_start_garbage_collect_thread(c);
- 
--	*flags |= SB_NOATIME;
-+	fc->sb_flags |= SB_NOATIME;
- 	return 0;
- }
- 
-@@ -508,7 +509,7 @@ static int calculate_inocache_hashsize(uint32_t flash_size)
- 	return hashsize;
- }
- 
--int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
-+int jffs2_do_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct jffs2_sb_info *c;
- 	struct inode *root_i;
-@@ -523,11 +524,11 @@ int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
- 
- #ifndef CONFIG_JFFS2_FS_WRITEBUFFER
- 	if (c->mtd->type == MTD_NANDFLASH) {
--		pr_err("Cannot operate on NAND flash unless jffs2 NAND support is compiled in\n");
-+		errorf(fc, "Cannot operate on NAND flash unless jffs2 NAND support is compiled in");
- 		return -EINVAL;
- 	}
- 	if (c->mtd->type == MTD_DATAFLASH) {
--		pr_err("Cannot operate on DataFlash unless jffs2 DataFlash support is compiled in\n");
-+		errorf(fc, "Cannot operate on DataFlash unless jffs2 DataFlash support is compiled in");
- 		return -EINVAL;
- 	}
- #endif
-@@ -541,12 +542,12 @@ int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
- 	 */
- 	if ((c->sector_size * blocks) != c->flash_size) {
- 		c->flash_size = c->sector_size * blocks;
--		pr_info("Flash size not aligned to erasesize, reducing to %dKiB\n",
--			c->flash_size / 1024);
-+		infof(fc, "Flash size not aligned to erasesize, reducing to %dKiB",
-+		      c->flash_size / 1024);
- 	}
- 
- 	if (c->flash_size < 5*c->sector_size) {
--		pr_err("Too few erase blocks (%d)\n",
-+		errorf(fc, "Too few erase blocks (%d)",
- 		       c->flash_size / c->sector_size);
- 		return -EINVAL;
- 	}
-diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
-index a2dbbb3f4c74..ac23ae5cdb54 100644
---- a/fs/jffs2/os-linux.h
-+++ b/fs/jffs2/os-linux.h
-@@ -172,8 +172,8 @@ void jffs2_dirty_inode(struct inode *inode, int flags);
- struct inode *jffs2_new_inode (struct inode *dir_i, umode_t mode,
- 			       struct jffs2_raw_inode *ri);
- int jffs2_statfs (struct dentry *, struct kstatfs *);
--int jffs2_do_remount_fs(struct super_block *, int *, char *);
--int jffs2_do_fill_super(struct super_block *sb, void *data, int silent);
-+int jffs2_do_remount_fs(struct super_block *sb, struct fs_context *fc);
-+int jffs2_do_fill_super(struct super_block *sb, struct fs_context *fc);
- void jffs2_gc_release_inode(struct jffs2_sb_info *c,
- 			    struct jffs2_inode_info *f);
- struct jffs2_inode_info *jffs2_gc_fetch_inode(struct jffs2_sb_info *c,
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index bb6ae387469f..69dcc4e0b243 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -19,7 +19,8 @@
- #include <linux/fs.h>
- #include <linux/err.h>
- #include <linux/mount.h>
--#include <linux/parser.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/jffs2.h>
- #include <linux/pagemap.h>
- #include <linux/mtd/super.h>
-@@ -160,96 +161,77 @@ static const struct export_operations jffs2_export_ops = {
- /*
-  * JFFS2 mount options.
-  *
-+ * Opt_source: The source device
-  * Opt_override_compr: override default compressor
-  * Opt_rp_size: size of reserved pool in KiB
-- * Opt_err: just end of array marker
-  */
- enum {
-+	Opt_source,
- 	Opt_override_compr,
- 	Opt_rp_size,
--	Opt_err,
- };
- 
--static const match_table_t tokens = {
--	{Opt_override_compr, "compr=%s"},
--	{Opt_rp_size, "rp_size=%u"},
--	{Opt_err, NULL},
-+static const struct fs_parameter_spec jffs2_param_specs[] = {
-+	fsparam_string	("source",	Opt_source),
-+	fsparam_enum	("compr",	Opt_override_compr),
-+	fsparam_u32	("rp_size",	Opt_rp_size),
-+	{}
- };
- 
--static int jffs2_parse_options(struct jffs2_sb_info *c, char *data)
--{
--	substring_t args[MAX_OPT_ARGS];
--	char *p, *name;
--	unsigned int opt;
--
--	if (!data)
--		return 0;
--
--	while ((p = strsep(&data, ","))) {
--		int token;
--
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		switch (token) {
--		case Opt_override_compr:
--			name = match_strdup(&args[0]);
--
--			if (!name)
--				return -ENOMEM;
--			if (!strcmp(name, "none"))
--				c->mount_opts.compr = JFFS2_COMPR_MODE_NONE;
-+static const struct fs_parameter_enum jffs2_param_enums[] = {
-+	{ Opt_override_compr,	"none",	JFFS2_COMPR_MODE_NONE },
- #ifdef CONFIG_JFFS2_LZO
--			else if (!strcmp(name, "lzo"))
--				c->mount_opts.compr = JFFS2_COMPR_MODE_FORCELZO;
-+	{ Opt_override_compr,	"lzo",	JFFS2_COMPR_MODE_FORCELZO },
- #endif
- #ifdef CONFIG_JFFS2_ZLIB
--			else if (!strcmp(name, "zlib"))
--				c->mount_opts.compr =
--						JFFS2_COMPR_MODE_FORCEZLIB;
-+	{ Opt_override_compr,	"zlib",	JFFS2_COMPR_MODE_FORCEZLIB },
- #endif
--			else {
--				pr_err("Error: unknown compressor \"%s\"\n",
--				       name);
--				kfree(name);
--				return -EINVAL;
--			}
--			kfree(name);
--			c->mount_opts.override_compr = true;
--			break;
--		case Opt_rp_size:
--			if (match_int(&args[0], &opt))
--				return -EINVAL;
--			opt *= 1024;
--			if (opt > c->mtd->size) {
--				pr_warn("Too large reserve pool specified, max "
--					"is %llu KB\n", c->mtd->size / 1024);
--				return -EINVAL;
--			}
--			c->mount_opts.rp_size = opt;
--			break;
--		default:
--			pr_err("Error: unrecognized mount option '%s' or missing value\n",
--			       p);
--			return -EINVAL;
--		}
-+	{}
-+};
-+
-+const struct fs_parameter_description jffs2_fs_parameters = {
-+	.name		= "jffs2",
-+	.specs		= jffs2_param_specs,
-+	.enums		= jffs2_param_enums,
-+};
-+
-+static int jffs2_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct fs_parse_result result;
-+	struct jffs2_sb_info *c = fc->s_fs_info;
-+	int opt;
-+
-+	opt = fs_parse(fc, &jffs2_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case Opt_override_compr:
-+		c->mount_opts.compr = result.uint_32;
-+		c->mount_opts.override_compr = true;
-+		break;
-+	case Opt_rp_size:
-+		if (result.uint_32 > UINT_MAX / 1024)
-+			return invalf(fc, "jffs2: rp_size unrepresentable");
-+		opt = result.uint_32 * 1024;
-+		if (opt > c->mtd->size)
-+			return invalf(fc, "jffs2: Too large reserve pool specified, max is %llu KB",
-+				      c->mtd->size / 1024);
-+		c->mount_opts.rp_size = opt;
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 
- 	return 0;
- }
- 
--static int jffs2_remount_fs(struct super_block *sb, int *flags, char *data)
-+static int jffs2_reconfigure(struct fs_context *fc)
- {
--	struct jffs2_sb_info *c = JFFS2_SB_INFO(sb);
--	int err;
-+	struct super_block *sb = fc->root->d_sb;
- 
- 	sync_filesystem(sb);
--	err = jffs2_parse_options(c, data);
--	if (err)
--		return -EINVAL;
--
--	return jffs2_do_remount_fs(sb, flags, data);
-+	return jffs2_do_remount_fs(sb, fc);
- }
- 
- static const struct super_operations jffs2_super_operations =
-@@ -258,7 +240,6 @@ static const struct super_operations jffs2_super_operations =
- 	.destroy_inode =jffs2_destroy_inode,
- 	.put_super =	jffs2_put_super,
- 	.statfs =	jffs2_statfs,
--	.remount_fs =	jffs2_remount_fs,
- 	.evict_inode =	jffs2_evict_inode,
- 	.dirty_inode =	jffs2_dirty_inode,
- 	.show_options =	jffs2_show_options,
-@@ -268,26 +249,16 @@ static const struct super_operations jffs2_super_operations =
- /*
-  * fill in the superblock
-  */
--static int jffs2_fill_super(struct super_block *sb, void *data, int silent)
-+static int jffs2_fill_super(struct super_block *sb, struct fs_context *fc)
- {
--	struct jffs2_sb_info *c;
--	int ret;
-+	struct jffs2_sb_info *c = sb->s_fs_info;
- 
- 	jffs2_dbg(1, "jffs2_get_sb_mtd():"
- 		  " New superblock for device %d (\"%s\")\n",
- 		  sb->s_mtd->index, sb->s_mtd->name);
- 
--	c = kzalloc(sizeof(*c), GFP_KERNEL);
--	if (!c)
--		return -ENOMEM;
--
- 	c->mtd = sb->s_mtd;
- 	c->os_priv = sb;
--	sb->s_fs_info = c;
--
--	ret = jffs2_parse_options(c, data);
--	if (ret)
--		return -EINVAL;
- 
- 	/* Initialize JFFS2 superblock locks, the further initialization will
- 	 * be done later */
-@@ -305,15 +276,37 @@ static int jffs2_fill_super(struct super_block *sb, void *data, int silent)
- #ifdef CONFIG_JFFS2_FS_POSIX_ACL
- 	sb->s_flags |= SB_POSIXACL;
- #endif
--	ret = jffs2_do_fill_super(sb, data, silent);
--	return ret;
-+	return jffs2_do_fill_super(sb, fc);
- }
- 
--static struct dentry *jffs2_mount(struct file_system_type *fs_type,
--			int flags, const char *dev_name,
--			void *data)
-+static int jffs2_get_tree(struct fs_context *fc)
- {
--	return mount_mtd(fs_type, flags, dev_name, data, jffs2_fill_super);
-+	return vfs_get_mtd_super(fc, jffs2_fill_super);
-+}
-+
-+static void jffs2_free_fc(struct fs_context *fc)
-+{
-+	kfree(fc->s_fs_info);
-+}
-+
-+static const struct fs_context_operations jffs2_context_ops = {
-+	.free		= jffs2_free_fc,
-+	.parse_param	= jffs2_parse_param,
-+	.get_tree	= jffs2_get_tree,
-+	.reconfigure	= jffs2_reconfigure,
-+};
-+
-+static int jffs2_init_fs_context(struct fs_context *fc)
-+{
-+	struct jffs2_sb_info *ctx;
-+
-+	ctx = kzalloc(sizeof(struct jffs2_sb_info), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	fc->s_fs_info = ctx;
-+	fc->ops = &jffs2_context_ops;
-+	return 0;
- }
- 
- static void jffs2_put_super (struct super_block *sb)
-@@ -350,7 +343,8 @@ static void jffs2_kill_sb(struct super_block *sb)
- static struct file_system_type jffs2_fs_type = {
- 	.owner =	THIS_MODULE,
- 	.name =		"jffs2",
--	.mount =	jffs2_mount,
-+	.init_fs_context = jffs2_init_fs_context,
-+	.parameters =	&jffs2_fs_parameters,
- 	.kill_sb =	jffs2_kill_sb,
- };
- MODULE_ALIAS_FS("jffs2");
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> ---
+> v2->v1:
+> - move of_node_put() to just after the 'hdmi_dev = of_find_device_by_node(np)'.
+> - put_device() can be done before the cec = devm_kzalloc line.
+>
+>   drivers/media/platform/s5p-cec/s5p_cec.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/media/platform/s5p-cec/s5p_cec.c b/drivers/media/platform/s5p-cec/s5p_cec.c
+> index 8837e26..1f5c355 100644
+> --- a/drivers/media/platform/s5p-cec/s5p_cec.c
+> +++ b/drivers/media/platform/s5p-cec/s5p_cec.c
+> @@ -192,9 +192,11 @@ static int s5p_cec_probe(struct platform_device *pdev)
+>   		return -ENODEV;
+>   	}
+>   	hdmi_dev = of_find_device_by_node(np);
+> +	of_node_put(np);
+>   	if (hdmi_dev == NULL)
+>   		return -EPROBE_DEFER;
+>   
+> +	put_device(&hdmi_dev->dev);
+>   	cec = devm_kzalloc(&pdev->dev, sizeof(*cec), GFP_KERNEL);
+>   	if (!cec)
+>   		return -ENOMEM;
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
