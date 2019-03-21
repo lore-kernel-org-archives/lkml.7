@@ -2,59 +2,44 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320BCC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3546218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553134299;
-	bh=AonDmoYZelCcWAw5ScpI+F4N74eg11aCaqjATNFvi+o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ljjZaZZ4R/zgAOgzEbrqcB3zArhPEnefyvtvvnFS1UD+jzK6vQrZfrMBBNm05kb71
-	 U+aDjBTBzp+mq89WKnpBEbML6dljTshc1Wv1dd4C8OlUungD96JGNnCHOEQxWKp8q9
-	 LfyOdhpXQUM2My66HMfG6CNWvURWwc+R7o5k+aKM=
+	by mail.kernel.org (Postfix) with ESMTP id 74E7F218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfCUCLi (ORCPT
+        id S1727760AbfCUCPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:11:38 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:33930 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbfCUCLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:11:37 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 1ACC29BA;
-        Thu, 21 Mar 2019 02:11:36 +0000 (UTC)
-Date:   Wed, 20 Mar 2019 19:11:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
-Message-Id: <20190320191135.e49e976a8258c8ac0bb428c9@linux-foundation.org>
-In-Reply-To: <20190313211335.165605-1-ndesaulniers@google.com>
-References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
-        <20190313211335.165605-1-ndesaulniers@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Wed, 20 Mar 2019 22:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbfCUCPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 22:15:38 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89188218D3;
+        Thu, 21 Mar 2019 02:15:36 +0000 (UTC)
+Date:   Wed, 20 Mar 2019 22:15:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
+ error_entry
+Message-ID: <20190320221534.165ab87b@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,63 +47,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 14:13:31 -0700 Nick Desaulniers <ndesaulniers@google.com> wrote:
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-> A recent optimization in Clang (r355672) lowers comparisons of the
-> return value of memcmp against zero to comparisons of the return value
-> of bcmp against zero.  This helps some platforms that implement bcmp
-> more efficiently than memcmp. glibc simply aliases bcmp to memcmp, but
-> an optimized implementation is in the works.
-> 
-> This results in linkage failures for all targets with Clang due to the
-> undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-> to unbreak the build.  This routine can be further optimized in the
-> future.
-> 
-> Other ideas discussed:
-> * A weak alias was discussed, but breaks for architectures that define
-> their own implementations of memcmp since aliases to declarations are
-> not permitted (only definitions).  Arch-specific memcmp implementations
-> typically declare memcmp in C headers, but implement them in assembly.
-> * -ffreestanding also is used sporadically throughout the kernel.
-> * -fno-builtin-bcmp doesn't work when doing LTO.
+He Zhe reported a crash by enabling trace events and selecting
+"userstacktrace" which will read the stack of userspace for every trace
+event recorded. Zhe narrowed it down to:
 
-I guess we should backport this into -stable so that older kernels can
-be built with newer Clang.
+ c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
 
-> ...
->
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -866,6 +866,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
->  EXPORT_SYMBOL(memcmp);
->  #endif
->  
-> +#ifndef __HAVE_ARCH_BCMP
-> +/**
-> + * bcmp - returns 0 if and only if the buffers have identical contents.
-> + * @a: pointer to first buffer.
-> + * @b: pointer to second buffer.
-> + * @len: size of buffers.
-> + *
-> + * The sign or magnitude of a non-zero return value has no particular
-> + * meaning, and architectures may implement their own more efficient bcmp(). So
-> + * while this particular implementation is a simple (tail) call to memcmp, do
-> + * not rely on anything but whether the return value is zero or non-zero.
-> + */
-> +#undef bcmp
+With the problem config, I was able to also reproduce the error. I
+narrowed it down to just having to do the following:
 
-What is the undef for?
+ # cd /sys/kernel/tracing
+ # echo 1 > options/userstacktrace
+ # echo 1 > events/preemptirq/irq_disable/enable
 
-> +int bcmp(const void *a, const void *b, size_t len)
-> +{
-> +	return memcmp(a, b, len);
-> +}
-> +EXPORT_SYMBOL(bcmp);
-> +#endif
-> +
->  #ifndef __HAVE_ARCH_MEMSCAN
->  /**
->   * memscan - Find a character in an area of memory.
-> -- 
-> 2.21.0.360.g471c308f928-goog
+And sure enough, I triggered a crash. Well, it was systemd crashing
+with a bad memory access??
+
+ systemd-journal[537]: segfault at ed8cb8 ip 00007f7fffc9fef5 sp 00007ffc4062cb10 error 7
+
+And it would crash similarly each time I tried it, but always at a
+different place. After spending the day on this, I finally figured it
+out. The bug is happening in entry_64.S right after error_entry.
+There's two TRACE_IRQS_OFF in that code path, which if I comment out,
+the bug goes away. Then it dawned on me that the crash always happens
+when systemd does a normal page fault. We had this bug before, and it
+was with the exception trace points.
+
+The issue is that a tracepoint can fault (reading vmalloc or whatever).
+And doing a userspace stack trace most definitely will fault. But if we
+are coming from a legitimate page fault, the address of that fault (in
+the CR2 register) will be lost if we fault before we get to the page
+fault handler. That's exactly what is happening.
+
+To solve this, a TRACE_IRQS_OFF_CR2 (and ON for consistency) was added
+that saves the CR2 register. A new trace_hardirqs_off_thunk_cr2 is
+created that stores the cr2 register, calls the
+trace_hardirqs_off_caller, then on return restores the cr2 register if
+it changed, before returning.
+
+On my tests this fixes the issue. I just want to know if this is a
+legitimate fix or if someone can come up with a better fix?
+
+Note: this also saves the exception context just like the
+do_page_fault() function does.
+
+Note2: This only gets enabled when lockdep or irq tracing is enabled,
+which is not recommended for production environments.
+
+Link: http://lkml.kernel.org/r/897cf5cf-fc24-8a64-cb28-847f2d2e63d2@windriver.com
+
+Fixes: c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 7bc105f47d21..7edffec328e2 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -292,6 +292,32 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+ 
+ 	syscall_return_slowpath(regs);
+ }
++
++extern void trace_hardirqs_on_caller(unsigned long caller_addr);
++__visible void trace_hardirqs_on_caller_cr2(unsigned long caller_addr)
++{
++	unsigned long address = read_cr2(); /* Get the faulting address */
++	enum ctx_state prev_state;
++
++	prev_state = exception_enter();
++	trace_hardirqs_on_caller(caller_addr);
++	if (address != read_cr2())
++		write_cr2(address);
++	exception_exit(prev_state);
++}
++
++extern void trace_hardirqs_off_caller(unsigned long caller_addr);
++__visible void trace_hardirqs_off_caller_cr2(unsigned long caller_addr)
++{
++	unsigned long address = read_cr2(); /* Get the faulting address */
++	enum ctx_state prev_state;
++
++	prev_state = exception_enter();
++	trace_hardirqs_off_caller(caller_addr);
++	if (address != read_cr2())
++		write_cr2(address);
++	exception_exit(prev_state);
++}
+ #endif
+ 
+ #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 1f0efdb7b629..73ddf24fed3e 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1248,12 +1248,12 @@ ENTRY(error_entry)
+ 	 * we fix gsbase, and we should do it before enter_from_user_mode
+ 	 * (which can take locks).
+ 	 */
+-	TRACE_IRQS_OFF
++	TRACE_IRQS_OFF_CR2
+ 	CALL_enter_from_user_mode
+ 	ret
+ 
+ .Lerror_entry_done:
+-	TRACE_IRQS_OFF
++	TRACE_IRQS_OFF_CR2
+ 	ret
+ 
+ 	/*
+diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
+index be36bf4e0957..1300b53b98cb 100644
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -41,6 +41,8 @@
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ 	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+ 	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
++	THUNK trace_hardirqs_on_thunk_cr2,trace_hardirqs_on_caller_cr2,1
++	THUNK trace_hardirqs_off_thunk_cr2,trace_hardirqs_off_caller_cr2,1
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+index 058e40fed167..dd511742ca2e 100644
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -172,9 +172,13 @@ static inline int arch_irqs_disabled(void)
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ #  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
+ #  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
++#  define TRACE_IRQS_ON_CR2	call trace_hardirqs_on_thunk_cr2;
++#  define TRACE_IRQS_OFF_CR2	call trace_hardirqs_off_thunk_cr2;
+ #else
+ #  define TRACE_IRQS_ON
+ #  define TRACE_IRQS_OFF
++#  define TRACE_IRQS_ON_CR2
++#  define TRACE_IRQS_OFF_CR2
+ #endif
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ #  ifdef CONFIG_X86_64
