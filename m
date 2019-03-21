@@ -2,91 +2,228 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783C2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8953218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CB7218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 02:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fspeLboB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IuAAXE1/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iz0CBCWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfCUCH5 (ORCPT
+        id S1727794AbfCUCI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 22:07:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57304 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfCUCH5 (ORCPT
+        Wed, 20 Mar 2019 22:08:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41310 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbfCUCI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 22:07:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 94336609CD; Thu, 21 Mar 2019 02:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553134076;
-        bh=CIyV9GkM+pGMGDsQ75GXvsFmmEVC/LMlMKD9BslShRY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fspeLboBfhYXVfpof/NVs/Z/gW3/7fEpvvFIDLkio84J/r/V4MYSC2v7xmFq4TZWs
-         dkKqRg/QXU76Gs7tSOla6/gWmGD/O9lRGuIVinAKhyzbciAA9lH8P6eMhUrH8Cs0zy
-         BmGzkHdHQz38TDK+3VsBCKu9Mz4L9QjUlAYrnDWc=
-Received: from psodagud-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: psodagud@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA84F60159;
-        Thu, 21 Mar 2019 02:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553134074;
-        bh=CIyV9GkM+pGMGDsQ75GXvsFmmEVC/LMlMKD9BslShRY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IuAAXE1/o4iFStJWbYp0CfjonnFauUisAl4SWw91rctYcfGSmP39QtDThShodFOAs
-         kOqTyYeSD6PqRBXejLsgidJvh4jymIuzk7uebP0euyMzIBXVXrCzn4bQWkWbYGKWwf
-         S39fIQAaF3V5E0bIeWzS9u8C6s+C/bfEZiKfWw9U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA84F60159
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=psodagud@codeaurora.org
-From:   Prasad Sodagudi <psodagud@codeaurora.org>
-To:     will.deacon@arm.com, mingo@redhat.com, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, psodagud@codeaurora.org
-Subject: [PATCH] perf: Change PMCR write to read-modify-write
-Date:   Wed, 20 Mar 2019 19:07:46 -0700
-Message-Id: <1553134066-20272-1-git-send-email-psodagud@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 20 Mar 2019 22:08:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a25so3706954edc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2019 19:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kfdNK38M7Ugu20XRA4rvd71ysDrirHqoExPYIh8X+dU=;
+        b=Iz0CBCWUqnKyBCPnk9jG8gp2RHR/WFfkagiPZq+FHi9WI7FBed/2J3dG9SO7wJtMfO
+         v0VEWASvhRXPOCMj3iXk5jfLBBhfxdL4dSiK/uHslBtoLA8NwfYIQB834e1a09ICV5fi
+         qMTnMUgd1A1bnnGzyjryDFOnS49jBsUTBMBk+KFt479DUW1k0/ArlqKKTQDdeP4zqIeE
+         EE+QCd3nAIHILF62+SYynmV5p9cDFbx7vssUkcSXC5lq+dMk/IOvyzq750JYoJPzF0cn
+         OFShC71+9FcfY4r41mpn2N5vvofSNL6SrDCTyzGI/64H2agtg5pJwfkbdw8+wL/Pnq33
+         PhRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kfdNK38M7Ugu20XRA4rvd71ysDrirHqoExPYIh8X+dU=;
+        b=JU22rbtVgh+L7e36VXv4feMKl99czeY/TN1NaqXNIbONYrsXWxcR4vL4DRkBprmrnY
+         LC4dA9YNL139+enczJL+MF+7TrXjq3Z5QuyFT7iUzgoI4DTqMjxLZqu5DrhVfx7IkyeK
+         AjIai/65blXseTR+efgd4yLnXApMI92rCZiFg5gbOA37BsttazVoIodwa4wqQFDVC3T9
+         nQ/gav823+FREF8BHb8B2ccLCfqtzlttpqWFAXFj+dt6o5m8ef0Y4SVDkJA3nBKcdc4q
+         VJOALd8qq/YwOtsUZWVWFfevXLkuJ14QVy/sHq8l+AudlLms3IPJctMlKwGz7Z9EbIb7
+         trhQ==
+X-Gm-Message-State: APjAAAVfMoDJMock0sbX2+qStVIRvskrI5hpSLEd/jafgA3CBW8lDrgp
+        jl5yc9bJdgD59r76JCsKkt365z1VlTDT2zQq27nB6g==
+X-Google-Smtp-Source: APXvYqyTWz7vsFkSWeqmmAc/3CkigeFsStgT2GUVzZTu0gvgVhSAV4grA05HzmwhSMJupLXsTiO3LduA2is4dmu8lB0=
+X-Received: by 2002:a17:906:52c8:: with SMTP id w8mr695910ejn.189.1553134134243;
+ Wed, 20 Mar 2019 19:08:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190128072948.45788-1-linfish@google.com> <20190315084021.3572-1-linfish@google.com>
+ <ef29126b-c118-f91f-3b23-c5103bad232a@xs4all.nl>
+In-Reply-To: <ef29126b-c118-f91f-3b23-c5103bad232a@xs4all.nl>
+From:   Fish Lin <linfish@google.com>
+Date:   Thu, 21 Mar 2019 10:08:43 +0800
+Message-ID: <CAHpF3dfdB_3rvhrAkV42Zt=8-0yif0Pa=n_ZmyqpNXpJGcH3_A@mail.gmail.com>
+Subject: Re: [PATCH v4] Add following V4L2 QP parameters for H.264: *
+ V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP * V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP
+ * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Keiichi Watanabe <keiichiw@chromium.org>,
+        Smitha T Murthy <smitha.t@samsung.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preserves the bitfields of PMCR_EL0(AArch64) during PMU reset.
-Reset routine should write a 1 to PMCR.C and PMCR.P fields only
-to reset the counters. Other fields should not be changed
-as they could be set before PMU initialization and their
-value must be preserved even after reset.
+Got it, thanks!
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
----
- arch/arm64/kernel/perf_event.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Fish
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 4addb38..0c1afdd 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -868,8 +868,8 @@ static void armv8pmu_reset(void *info)
- 	 * Initialize & Reset PMNC. Request overflow interrupt for
- 	 * 64 bit cycle counter but cheat in armv8pmu_write_counter().
- 	 */
--	armv8pmu_pmcr_write(ARMV8_PMU_PMCR_P | ARMV8_PMU_PMCR_C |
--			    ARMV8_PMU_PMCR_LC);
-+	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_P |
-+			ARMV8_PMU_PMCR_C | ARMV8_PMU_PMCR_LC);
- }
- 
- static int __armv8_pmuv3_map_event(struct perf_event *event,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
+Hans Verkuil <hverkuil-cisco@xs4all.nl> =E6=96=BC 2019=E5=B9=B43=E6=9C=8820=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:00=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> This subject line is insanely long :-)
+>
+> Please use a short subject line for v5 (i.e. "Add V4L2 QP parameters for =
+H.264")
+> and mention the actual parameters you are adding in the commit log.
+>
+> Some more comments below:
+>
+> On 3/15/19 9:40 AM, Fish Lin wrote:
+> > These controls will limit QP range for intra and inter frame,
+> > provide more manual control to improve video encode quality.
+> >
+> > Signed-off-by: Fish Lin <linfish@google.com>
+> > ---
+> > Changelog since v3:
+> > - Put document in ext-ctrls-codec.rst instead of extended-controls.rst
+> >   (which was previous version).
+> >
+> > Changelog since v2:
+> > - Add interaction with V4L2_CID_MPEG_VIDEO_H264_MIN/MAX_QP
+> >   description in the document.
+> >
+> > Changelog since v1:
+> > - Add description in document.
+> >
+> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 24 +++++++++++++++++++
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  4 ++++
+> >  include/uapi/linux/v4l2-controls.h            |  6 +++++
+> >  3 files changed, 34 insertions(+)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documen=
+tation/media/uapi/v4l/ext-ctrls-codec.rst
+> > index c97fb7923be5..de60b2e788eb 100644
+> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > @@ -1048,6 +1048,30 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+> >      Quantization parameter for an B frame for H264. Valid range: from =
+0
+> >      to 51.
+> >
+> > +``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP (integer)``
+> > +    Minimum quantization parameter for H264 I frame, to limit I frame
+>
+> H264 -> the H264
+> frame, to -> frame to
+>
+> Same below.
+>
+> > +    quality in a range. Valid range: from 0 to 51. If
+>
+> in -> to
+>
+> (you limit a value *to* a range, not 'in a range')
+>
+> Same below.
+>
+> Regards,
+>
+>         Hans
+>
+> > +    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization para=
+meter
+> > +    should be chosen to meet both requirements.
+> > +
+> > +``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP (integer)``
+> > +    Maximum quantization parameter for H264 I frame, to limit I frame
+> > +    quality in a range. Valid range: from 0 to 51. If
+> > +    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization para=
+meter
+> > +    should be chosen to meet both requirements.
+> > +
+> > +``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP (integer)``
+> > +    Minimum quantization parameter for H264 P frame, to limit P frame
+> > +    quality in a range. Valid range: from 0 to 51. If
+> > +    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization para=
+meter
+> > +    should be chosen to meet both requirements.
+> > +
+> > +``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP (integer)``
+> > +    Maximum quantization parameter for H264 P frame, to limit P frame
+> > +    quality in a range. Valid range: from 0 to 51. If
+> > +    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization para=
+meter
+> > +    should be chosen to meet both requirements.
+> > +
+> >  ``V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (integer)``
+> >      Quantization parameter for an I frame for MPEG4. Valid range: from=
+ 1
+> >      to 31.
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-=
+core/v4l2-ctrls.c
+> > index b79d3bbd8350..115fb8debe23 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -828,6 +828,10 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >       case V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION:
+> >                                                               return "H=
+264 Constrained Intra Pred";
+> >       case V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET:   return "H=
+264 Chroma QP Index Offset";
+> > +     case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP:           return "H=
+264 I-Frame Minimum QP Value";
+> > +     case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP:           return "H=
+264 I-Frame Maximum QP Value";
+> > +     case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP:           return "H=
+264 P-Frame Minimum QP Value";
+> > +     case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP:           return "H=
+264 P-Frame Maximum QP Value";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "M=
+PEG4 I-Frame QP Value";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP:              return "M=
+PEG4 P-Frame QP Value";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP:              return "M=
+PEG4 B-Frame QP Value";
+> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4=
+l2-controls.h
+> > index 06479f2fb3ae..4421baa84177 100644
+> > --- a/include/uapi/linux/v4l2-controls.h
+> > +++ b/include/uapi/linux/v4l2-controls.h
+> > @@ -535,6 +535,12 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
+ {
+> >  #define V4L2_CID_MPEG_VIDEO_H264_HIERARCHICAL_CODING_LAYER_QP        (=
+V4L2_CID_MPEG_BASE+382)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION        (=
+V4L2_CID_MPEG_BASE+383)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET              (=
+V4L2_CID_MPEG_BASE+384)
+> > +
+> > +#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP      (V4L2_CID_MPEG_BA=
+SE+390)
+> > +#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP      (V4L2_CID_MPEG_BA=
+SE+391)
+> > +#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP      (V4L2_CID_MPEG_BA=
+SE+392)
+> > +#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP      (V4L2_CID_MPEG_BA=
+SE+393)
+> > +
+> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (V4L2_CID_MPEG_BASE+400)
+> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP (V4L2_CID_MPEG_BASE+401)
+> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP (V4L2_CID_MPEG_BASE+402)
+> >
+>
