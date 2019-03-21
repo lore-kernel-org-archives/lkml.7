@@ -2,260 +2,286 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC06C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FC02183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e/ayiVzj"
+	by mail.kernel.org (Postfix) with ESMTP id 9E26C2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfCUU2i (ORCPT
+        id S1728961AbfCUU0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:28:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:60363 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbfCUU2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:28:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QJJw3B5Bz9sRH;
-        Fri, 22 Mar 2019 07:28:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553200112;
-        bh=VrbZYNqI4t58SScirXpoUroseC0rszAkmOrpW0qnnUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e/ayiVzjWNlQmXwhd6WMq+WlfFDKD01GrjxCHeH92eHapN1n3YHHM9uuiGL7bDlE6
-         kwF2RJEeyy8nL0wCRTDT79MA4jmdmILzo3P6TWm+h6btFWTub0zMUy75MvcHHVaiQw
-         gW4mjsc5sUpqztgMhHysJ4ss9Me11wzOVQaEYLsIutjqcd5lc2X5Wof6+Bi2SetUIj
-         FtXRezgf90YVCbCiYbn6SrLJadx3ivo5eo76qBHyC3fjQF4Tn0ffoD20QBAumWeRCl
-         Di2Omg53a8Awji8EHKDy3zaxUOfdEaY2WG1LMt7RA1e1eoZzcX6EoFS/rGK4RCZWcH
-         U1v0kl74ixK3A==
-Date:   Fri, 22 Mar 2019 07:28:29 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        NTB Mailing List <linux-ntb@googlegroups.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the ntb tree
-Message-ID: <20190322072829.77e6c245@canb.auug.org.au>
-In-Reply-To: <CAPoiz9x9aWMzV3K-UhBz52AXdVpDbCQnLTeM7=nt5tAFL2RPBQ@mail.gmail.com>
-References: <20190321075818.24f9703a@canb.auug.org.au>
-        <8a8ce003-c151-d04b-3ac9-8823a6c8ff7b@deltatee.com>
-        <CAPoiz9x9aWMzV3K-UhBz52AXdVpDbCQnLTeM7=nt5tAFL2RPBQ@mail.gmail.com>
+        Thu, 21 Mar 2019 16:26:53 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39331 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfCUU0s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:26:48 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h74Gx-00057y-NX; Thu, 21 Mar 2019 21:26:43 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 11/24] x86/fpu: Make get_xsave_field_ptr() and get_xsave_addr() use feature number instead of mask
+Date:   Thu, 21 Mar 2019 21:26:19 +0100
+Message-Id: <20190321202632.16810-12-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190321202632.16810-1-bigeasy@linutronix.de>
+References: <20190321202632.16810-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ghYdUvM5giR_j_g3CS0OrNd"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ghYdUvM5giR_j_g3CS0OrNd
-Content-Type: multipart/mixed; boundary="MP_/x5Pea2VCK=0_yTlO6wLnJ9y"
+After changing the argument of __raw_xsave_addr() from a mask to number
+Dave suggested to check if it makes sense to do the same for
+get_xsave_addr(). As it turns out it does. Only get_xsave_addr() needs
+the mask to check if the requested feature is part of what is
+support/saved and then uses the number again. The shift operation is
+cheaper compared to "find last bit set". Also, the feature number uses
+less opcode space compared to the mask :)
 
---MP_/x5Pea2VCK=0_yTlO6wLnJ9y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Make get_xsave_addr() argument a xfeature number instead of mask and fix
+up its callers.
+As part of this use xfeature_nr and xfeature_mask consistently.
+This results in changes to the kvm code as:
+	feature -> xfeature_mask
+	index -> xfeature_nr
 
-Hi Jon,
+Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/include/asm/fpu/xstate.h |  4 ++--
+ arch/x86/kernel/fpu/xstate.c      | 22 ++++++++++------------
+ arch/x86/kernel/traps.c           |  2 +-
+ arch/x86/kvm/x86.c                | 28 ++++++++++++++--------------
+ arch/x86/mm/mpx.c                 |  6 +++---
+ 5 files changed, 30 insertions(+), 32 deletions(-)
 
-On Thu, 21 Mar 2019 15:53:47 -0400 Jon Mason <jdmason@kudzu.us> wrote:
->
-> Is there an existing set of tools/scripts I should run to prevent
-> things like this from happening?
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 48581988d78c7..fbe41f808e5d8 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -46,8 +46,8 @@ extern void __init update_regset_xstate_info(unsigned int size,
+ 					     u64 xstate_mask);
+ 
+ void fpu__xstate_clear_all_cpu_caps(void);
+-void *get_xsave_addr(struct xregs_state *xsave, int xstate);
+-const void *get_xsave_field_ptr(int xstate_field);
++void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
++const void *get_xsave_field_ptr(int xfeature_nr);
+ int using_compacted_format(void);
+ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
+ int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 4f7f3c5d0d0cf..9c459fd1d38e6 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -830,15 +830,14 @@ static void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+  *
+  * Inputs:
+  *	xstate: the thread's storage area for all FPU data
+- *	xstate_feature: state which is defined in xsave.h (e.g.
+- *	XFEATURE_MASK_FP, XFEATURE_MASK_SSE, etc...)
++ *	xfeature_nr: state which is defined in xsave.h (e.g. XFEATURE_FP,
++ *	XFEATURE_SSE, etc...)
+  * Output:
+  *	address of the state in the xsave area, or NULL if the
+  *	field is not present in the xsave buffer.
+  */
+-void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
++void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+ {
+-	int xfeature_nr;
+ 	/*
+ 	 * Do we even *have* xsave state?
+ 	 */
+@@ -850,11 +849,11 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ 	 * have not enabled.  Remember that pcntxt_mask is
+ 	 * what we write to the XCR0 register.
+ 	 */
+-	WARN_ONCE(!(xfeatures_mask & xstate_feature),
++	WARN_ONCE(!(xfeatures_mask & BIT_ULL(xfeature_nr)),
+ 		  "get of unsupported state");
+ 	/*
+ 	 * This assumes the last 'xsave*' instruction to
+-	 * have requested that 'xstate_feature' be saved.
++	 * have requested that 'xfeature_nr' be saved.
+ 	 * If it did not, we might be seeing and old value
+ 	 * of the field in the buffer.
+ 	 *
+@@ -863,10 +862,9 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ 	 * or because the "init optimization" caused it
+ 	 * to not be saved.
+ 	 */
+-	if (!(xsave->header.xfeatures & xstate_feature))
++	if (!(xsave->header.xfeatures & BIT_ULL(xfeature_nr)))
+ 		return NULL;
+ 
+-	xfeature_nr = fls64(xstate_feature) - 1;
+ 	return __raw_xsave_addr(xsave, xfeature_nr);
+ }
+ EXPORT_SYMBOL_GPL(get_xsave_addr);
+@@ -882,13 +880,13 @@ EXPORT_SYMBOL_GPL(get_xsave_addr);
+  * Note that this only works on the current task.
+  *
+  * Inputs:
+- *	@xsave_state: state which is defined in xsave.h (e.g. XFEATURE_MASK_FP,
+- *	XFEATURE_MASK_SSE, etc...)
++ *	@xfeature_nr: state which is defined in xsave.h (e.g. XFEATURE_FP,
++ *	XFEATURE_SSE, etc...)
+  * Output:
+  *	address of the state in the xsave area or NULL if the state
+  *	is not present or is in its 'init state'.
+  */
+-const void *get_xsave_field_ptr(int xsave_state)
++const void *get_xsave_field_ptr(int xfeature_nr)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+ 
+@@ -898,7 +896,7 @@ const void *get_xsave_field_ptr(int xsave_state)
+ 	 */
+ 	fpu__save(fpu);
+ 
+-	return get_xsave_addr(&fpu->state.xsave, xsave_state);
++	return get_xsave_addr(&fpu->state.xsave, xfeature_nr);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index d26f9e9c3d830..8b6d03e55d2f7 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -456,7 +456,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ 	 * which is all zeros which indicates MPX was not
+ 	 * responsible for the exception.
+ 	 */
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		goto exit_trap;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 65e4559eef2fc..aa5fe360df50b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3662,15 +3662,15 @@ static void fill_xsave(u8 *dest, struct kvm_vcpu *vcpu)
+ 	 */
+ 	valid = xstate_bv & ~XFEATURE_MASK_FPSSE;
+ 	while (valid) {
+-		u64 feature = valid & -valid;
+-		int index = fls64(feature) - 1;
+-		void *src = get_xsave_addr(xsave, feature);
++		u64 xfeature_mask = valid & -valid;
++		int xfeature_nr = fls64(xfeature_mask) - 1;
++		void *src = get_xsave_addr(xsave, xfeature_nr);
+ 
+ 		if (src) {
+ 			u32 size, offset, ecx, edx;
+-			cpuid_count(XSTATE_CPUID, index,
++			cpuid_count(XSTATE_CPUID, xfeature_nr,
+ 				    &size, &offset, &ecx, &edx);
+-			if (feature == XFEATURE_MASK_PKRU)
++			if (xfeature_nr == XFEATURE_PKRU)
+ 				memcpy(dest + offset, &vcpu->arch.pkru,
+ 				       sizeof(vcpu->arch.pkru));
+ 			else
+@@ -3678,7 +3678,7 @@ static void fill_xsave(u8 *dest, struct kvm_vcpu *vcpu)
+ 
+ 		}
+ 
+-		valid -= feature;
++		valid -= xfeature_mask;
+ 	}
+ }
+ 
+@@ -3705,22 +3705,22 @@ static void load_xsave(struct kvm_vcpu *vcpu, u8 *src)
+ 	 */
+ 	valid = xstate_bv & ~XFEATURE_MASK_FPSSE;
+ 	while (valid) {
+-		u64 feature = valid & -valid;
+-		int index = fls64(feature) - 1;
+-		void *dest = get_xsave_addr(xsave, feature);
++		u64 xfeature_mask = valid & -valid;
++		int xfeature_nr = fls64(xfeature_mask) - 1;
++		void *dest = get_xsave_addr(xsave, xfeature_nr);
+ 
+ 		if (dest) {
+ 			u32 size, offset, ecx, edx;
+-			cpuid_count(XSTATE_CPUID, index,
++			cpuid_count(XSTATE_CPUID, xfeature_nr,
+ 				    &size, &offset, &ecx, &edx);
+-			if (feature == XFEATURE_MASK_PKRU)
++			if (xfeature_nr == XFEATURE_PKRU)
+ 				memcpy(&vcpu->arch.pkru, src + offset,
+ 				       sizeof(vcpu->arch.pkru));
+ 			else
+ 				memcpy(dest, src + offset, size);
+ 		}
+ 
+-		valid -= feature;
++		valid -= xfeature_mask;
+ 	}
+ }
+ 
+@@ -8821,11 +8821,11 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 		if (init_event)
+ 			kvm_put_guest_fpu(vcpu);
+ 		mpx_state_buffer = get_xsave_addr(&vcpu->arch.guest_fpu->state.xsave,
+-					XFEATURE_MASK_BNDREGS);
++					XFEATURE_BNDREGS);
+ 		if (mpx_state_buffer)
+ 			memset(mpx_state_buffer, 0, sizeof(struct mpx_bndreg_state));
+ 		mpx_state_buffer = get_xsave_addr(&vcpu->arch.guest_fpu->state.xsave,
+-					XFEATURE_MASK_BNDCSR);
++					XFEATURE_BNDCSR);
+ 		if (mpx_state_buffer)
+ 			memset(mpx_state_buffer, 0, sizeof(struct mpx_bndcsr));
+ 		if (init_event)
+diff --git a/arch/x86/mm/mpx.c b/arch/x86/mm/mpx.c
+index c805db6236b47..59726aaf46713 100644
+--- a/arch/x86/mm/mpx.c
++++ b/arch/x86/mm/mpx.c
+@@ -142,7 +142,7 @@ int mpx_fault_info(struct mpx_fault_info *info, struct pt_regs *regs)
+ 		goto err_out;
+ 	}
+ 	/* get bndregs field from current task's xsave area */
+-	bndregs = get_xsave_field_ptr(XFEATURE_MASK_BNDREGS);
++	bndregs = get_xsave_field_ptr(XFEATURE_BNDREGS);
+ 	if (!bndregs) {
+ 		err = -EINVAL;
+ 		goto err_out;
+@@ -190,7 +190,7 @@ static __user void *mpx_get_bounds_dir(void)
+ 	 * The bounds directory pointer is stored in a register
+ 	 * only accessible if we first do an xsave.
+ 	 */
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		return MPX_INVALID_BOUNDS_DIR;
+ 
+@@ -376,7 +376,7 @@ static int do_mpx_bt_fault(void)
+ 	const struct mpx_bndcsr *bndcsr;
+ 	struct mm_struct *mm = current->mm;
+ 
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		return -EINVAL;
+ 	/*
+-- 
+2.20.1
 
-I have attached the script I run over all new commits submitted for
-linux-next.
-
---=20
-Cheers,
-Stephen Rothwell
-
---MP_/x5Pea2VCK=0_yTlO6wLnJ9y
-Content-Type: application/x-shellscript
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename=check_fixes
-
-#!/bin/bash
-
-if [ "$#" -lt 1 ]; then
-        printf 'Usage: %s <commit range>\n', "$0" 1>&2
-        exit 1
-fi
-
-commits=3D$(git rev-list --no-merges -i --grep=3D'^[[:space:]]*Fixes:' "$@")
-if [ -z "$commits" ]; then
-        exit 0
-fi
-
-# This should be a git tree that contains *only* Linus' tree
-Linus_tree=3D"${HOME}/kernels/linus.git"
-
-split_re=3D'^([Cc][Oo][Mm][Mm][Ii][Tt])?[[:space:]]*([[:xdigit:]]{5,})([[:s=
-pace:]]*)(.*)$'
-nl=3D$'\n'
-tab=3D$'\t'
-
-# Strip the leading and training spaces from a string
-strip_spaces()
-{
-	[[ "$1" =3D~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
-	echo "${BASH_REMATCH[1]}"
-}
-
-for c in $commits; do
-
-	commit_log=3D$(git log -1 --format=3D'%h ("%s")' "$c")
-	commit_msg=3D"In commit
-
-  $commit_log
-
-"
-
-	fixes_lines=3D$(git log -1 --format=3D'%B' "$c" |
-			grep -i '^[[:space:]]*Fixes:')
-
-	while read -r fline; do
-		[[ "$fline" =3D~ ^[[:space:]]*[Ff][Ii][Xx][Ee][Ss]:[[:space:]]*(.*)$ ]]
-		f=3D"${BASH_REMATCH[1]}"
-		fixes_msg=3D"Fixes tag
-
-  $fline
-
-has these problem(s):
-
-"
-		sha=3D
-		subject=3D
-		msg=3D
-		if [[ "$f" =3D~ $split_re ]]; then
-			first=3D"${BASH_REMATCH[1]}"
-			sha=3D"${BASH_REMATCH[2]}"
-			spaces=3D"${BASH_REMATCH[3]}"
-			subject=3D"${BASH_REMATCH[4]}"
-			if [ "$first" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - leading word '$first' unexpected"
-			fi
-			if [ -z "$subject" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - missing subject"
-			elif [ -z "$spaces" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - missing space between the SHA1 and the su=
-bject"
-			fi
-		else
-			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'No SHA1 recognised'
-			commit_msg=3D''
-			continue
-		fi
-		if ! git rev-parse -q --verify "$sha" >/dev/null; then
-			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'Target SHA1 does not e=
-xist'
-			commit_msg=3D''
-			continue
-		fi
-
-		if [ "${#sha}" -lt 12 ]; then
-			msg=3D"${msg:+${msg}${nl}}  - SHA1 should be at least 12 digits long${nl=
-}    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11$=
-{nl}    or later) just making sure it is not set (or set to \"auto\")."
-		fi
-		# reduce the subject to the part between () if there
-		if [[ "$subject" =3D~ ^\((.*)\) ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ ^\((.*) ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing parent=
-heses"
-		fi
-
-		# strip matching quotes at the start and end of the subject
-		# the unicode characters in the classes are
-		# U+201C LEFT DOUBLE QUOTATION MARK
-		# U+201D RIGHT DOUBLE QUOTATION MARK
-		# U+2018 LEFT SINGLE QUOTATION MARK
-		# U+2019 RIGHT SINGLE QUOTATION MARK
-		re1=3D$'^[\"\u201C](.*)[\"\u201D]$'
-		re2=3D$'^[\'\u2018](.*)[\'\u2019]$'
-		re3=3D$'^[\"\'\u201C\u2018](.*)$'
-		if [[ "$subject" =3D~ $re1 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ $re2 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ $re3 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing quotes"
-		fi
-
-		subject=3D$(strip_spaces "$subject")
-
-		target_subject=3D$(git log -1 --format=3D'%s' "$sha")
-		target_subject=3D$(strip_spaces "$target_subject")
-
-		# match with ellipses
-		case "$subject" in
-		*...)	subject=3D"${subject%...}"
-			target_subject=3D"${target_subject:0:${#subject}}"
-			;;
-		...*)	subject=3D"${subject#...}"
-			target_subject=3D"${target_subject: -${#subject}}"
-			;;
-		*\ ...\ *)
-			s1=3D"${subject% ... *}"
-			s2=3D"${subject#* ... }"
-			subject=3D"$s1 $s2"
-			t1=3D"${target_subject:0:${#s1}}"
-			t2=3D"${target_subject: -${#s2}}"
-			target_subject=3D"$t1 $t2"
-			;;
-		esac
-		subject=3D$(strip_spaces "$subject")
-		target_subject=3D$(strip_spaces "$target_subject")
-
-		if [ "$subject" !=3D "${target_subject:0:${#subject}}" ]; then
-			msg=3D"${msg:+${msg}${nl}}  - Subject does not match target commit subje=
-ct${nl}    Just use${nl}${tab}git log -1 --format=3D'Fixes: %h ("%s")'"
-		fi
-		lsha=3D$(cd "$Linus_tree" && git rev-parse -q --verify "$sha")
-		if [ -z "$lsha" ]; then
-			count=3D$(git rev-list --count "$sha".."$c")
-			if [ "$count" -eq 0 ]; then
-				msg=3D"${msg:+${msg}${nl}}  - Target is not an ancestor of this commit"
-			fi
-		fi
-		if [ "$msg" ]; then
-			printf '%s%s%s\n' "$commit_msg" "$fixes_msg" "$msg"
-			commit_msg=3D''
-		fi
-	done <<< "$fixes_lines"
-done
-
-exit 0
-
---MP_/x5Pea2VCK=0_yTlO6wLnJ9y--
-
---Sig_/ghYdUvM5giR_j_g3CS0OrNd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyT8+0ACgkQAVBC80lX
-0Gz2KggAjqrkZuyBoxz5mq3ijvSIlESkb2hM03ANq8vDm/4eM7bVT1F1hA3A8Qx7
-losGn96TGldzgK9AcsND9XF0sIQPB9R5HdKTxDwCr8nCEb/ZuFXs7ztTmXPpWZns
-zqmJAE7kTw37+4uhih4sapHkVueV1nhtAz5aEqFC9tD6bCUjnd2SewL3ojAhPvDk
-5i8P+JmMCtG/wEhU9N8HrdiJqExN4ZGJsfiaAEkoZdR/JE43tgI0o9i9FrAS6lxy
-KzM2RKCRXUrBMagnZ4p/Y5E9N6JYHO7+YJ1LEwAudSpc+jmnMBvMOpZ64LMTJ+lS
-oTE3ZTl+DRrg66QDgiETsBPWfjZffQ==
-=8yGD
------END PGP SIGNATURE-----
-
---Sig_/ghYdUvM5giR_j_g3CS0OrNd--
