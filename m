@@ -2,335 +2,162 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B65C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5234E21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0ACA218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 13:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfCUNwG (ORCPT
+        id S1728221AbfCUNye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 09:52:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45088 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 09:54:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56348 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfCUNwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 09:52:06 -0400
+        id S1725985AbfCUNye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 09:54:34 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A80E588AA3;
-        Thu, 21 Mar 2019 13:52:05 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 116B919C7F;
-        Thu, 21 Mar 2019 13:52:03 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 09:52:02 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH RESEND 2/3] mm: Add an apply_to_pfn_range interface
-Message-ID: <20190321135202.GC2904@redhat.com>
-References: <20190321132140.114878-1-thellstrom@vmware.com>
- <20190321132140.114878-3-thellstrom@vmware.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id AD7913082E0F;
+        Thu, 21 Mar 2019 13:54:33 +0000 (UTC)
+Received: from [10.36.116.167] (ovpn-116-167.ams2.redhat.com [10.36.116.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6CD619C59;
+        Thu, 21 Mar 2019 13:54:27 +0000 (UTC)
+Subject: Re: [PATCH v6 05/22] iommu: Introduce cache_invalidate API
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     yi.l.liu@linux.intel.com, kevin.tian@intel.com,
+        vincent.stehle@arm.com, alex.williamson@redhat.com,
+        ashok.raj@intel.com, kvm@vger.kernel.org, peter.maydell@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, marc.zyngier@arm.com,
+        iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger.pro@gmail.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-6-eric.auger@redhat.com>
+ <20190320093727.45a86866@jacob-builder>
+ <7ae1df77-18d0-0993-8dab-6af3a4474b42@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ad4d18ec-0040-901f-8d37-0fccb3cfd0d5@redhat.com>
+Date:   Thu, 21 Mar 2019 14:54:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <7ae1df77-18d0-0993-8dab-6af3a4474b42@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190321132140.114878-3-thellstrom@vmware.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 21 Mar 2019 13:52:05 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 21 Mar 2019 13:54:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 01:22:35PM +0000, Thomas Hellstrom wrote:
-> This is basically apply_to_page_range with added functionality:
-> Allocating missing parts of the page table becomes optional, which
-> means that the function can be guaranteed not to error if allocation
-> is disabled. Also passing of the closure struct and callback function
-> becomes different and more in line with how things are done elsewhere.
-> 
-> Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
+Hi Jacob, Jean-Philippe,
 
-The apply_to_page_range() is dangerous API it does not follow other
-mm patterns like mmu notifier. It is suppose to be use in arch code
-or vmalloc or similar thing but not in regular driver code. I see
-it has crept out of this and is being use by few device driver. I am
-not sure we should encourage that.
+On 3/20/19 5:50 PM, Jean-Philippe Brucker wrote:
+> On 20/03/2019 16:37, Jacob Pan wrote:
+> [...]
+>>> +struct iommu_inv_addr_info {
+>>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>>> +	__u32	flags;
+>>> +	__u32	archid;
+>>> +	__u64	pasid;
+>>> +	__u64	addr;
+>>> +	__u64	granule_size;
+>>> +	__u64	nb_granules;
+>>> +};
+>>> +
+>>> +/**
+>>> + * First level/stage invalidation information
+>>> + * @cache: bitfield that allows to select which caches to invalidate
+>>> + * @granularity: defines the lowest granularity used for the
+>>> invalidation:
+>>> + *     domain > pasid > addr
+>>> + *
+>>> + * Not all the combinations of cache/granularity make sense:
+>>> + *
+>>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>>> + * granularity	|		|		|
+>>> cache	|
+>>> + * -------------+---------------+---------------+---------------+
+>>> + * DOMAIN	|	N/A	|       Y	|
+>>> Y	|
+>>> + * PASID	|	Y	|       Y	|
+>>> Y	|
+>>> + * ADDR		|       Y	|       Y	|
+>>> N/A	|
+>>> + */
+>>> +struct iommu_cache_invalidate_info {
+>>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>>> +	__u32	version;
+>>> +/* IOMMU paging structure cache */
+>>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>>> cache */
+>> Just a clarification, this used to be an enum. You do intend to issue a
+>> single invalidation request on multiple cache types? Perhaps for
+>> virtio-IOMMU? I only see a single cache type in your patch #14. For VT-d
+>> we plan to issue one cache type at a time for now. So this format works
+>> for us.
+> 
+> Yes for virtio-iommu I'd like as little overhead as possible, which
+> means a single invalidation message to hit both IOTLB and ATC at once,
+> and the ability to specify multiple pages with @nb_granules.
+The original request/explanation from Jean-Philippe can be found here:
+https://lkml.org/lkml/2019/1/28/1497
 
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> ---
->  include/linux/mm.h |  10 ++++
->  mm/memory.c        | 121 +++++++++++++++++++++++++++++++++------------
->  2 files changed, 99 insertions(+), 32 deletions(-)
+>> However, if multiple cache types are issued in a single invalidation.
+>> They must share a single granularity, not all combinations are valid.
+>> e.g. dev IOTLB does not support domain granularity. Just a reminder,
+>> not an issue. Driver could filter out invalid combinations.
+Sure I will add a comment about this restriction.
 > 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 80bb6408fe73..b7dd4ddd6efb 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2632,6 +2632,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
->  extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
->  			       unsigned long size, pte_fn_t fn, void *data);
->  
-> +struct pfn_range_apply;
-> +typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
-> +			 struct pfn_range_apply *closure);
-> +struct pfn_range_apply {
-> +	struct mm_struct *mm;
-> +	pter_fn_t ptefn;
-> +	unsigned int alloc;
-> +};
-> +extern int apply_to_pfn_range(struct pfn_range_apply *closure,
-> +			      unsigned long address, unsigned long size);
->  
->  #ifdef CONFIG_PAGE_POISONING
->  extern bool page_poisoning_enabled(void);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index dcd80313cf10..0feb7191c2d2 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1938,18 +1938,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
->  }
->  EXPORT_SYMBOL(vm_iomap_memory);
->  
-> -static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pte_t *pte;
->  	int err;
->  	pgtable_t token;
->  	spinlock_t *uninitialized_var(ptl);
->  
-> -	pte = (mm == &init_mm) ?
-> +	pte = (closure->mm == &init_mm) ?
->  		pte_alloc_kernel(pmd, addr) :
-> -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
-> +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
->  	if (!pte)
->  		return -ENOMEM;
->  
-> @@ -1960,86 +1959,103 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
->  	token = pmd_pgtable(*pmd);
->  
->  	do {
-> -		err = fn(pte++, token, addr, data);
-> +		err = closure->ptefn(pte++, token, addr, closure);
->  		if (err)
->  			break;
->  	} while (addr += PAGE_SIZE, addr != end);
->  
->  	arch_leave_lazy_mmu_mode();
->  
-> -	if (mm != &init_mm)
-> +	if (closure->mm != &init_mm)
->  		pte_unmap_unlock(pte-1, ptl);
->  	return err;
->  }
->  
-> -static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pmd_t *pmd;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
->  	BUG_ON(pud_huge(*pud));
->  
-> -	pmd = pmd_alloc(mm, pud, addr);
-> +	pmd = pmd_alloc(closure->mm, pud, addr);
->  	if (!pmd)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = pmd_addr_end(addr, end);
-> -		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
-> +		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
-> +			continue;
-> +		err = apply_to_pte_range(closure, pmd, addr, next);
->  		if (err)
->  			break;
->  	} while (pmd++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pud_t *pud;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
-> -	pud = pud_alloc(mm, p4d, addr);
-> +	pud = pud_alloc(closure->mm, p4d, addr);
->  	if (!pud)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = pud_addr_end(addr, end);
-> -		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
-> +		if (!closure->alloc && pud_none_or_clear_bad(pud))
-> +			continue;
-> +		err = apply_to_pmd_range(closure, pud, addr, next);
->  		if (err)
->  			break;
->  	} while (pud++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	p4d_t *p4d;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
-> -	p4d = p4d_alloc(mm, pgd, addr);
-> +	p4d = p4d_alloc(closure->mm, pgd, addr);
->  	if (!p4d)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = p4d_addr_end(addr, end);
-> -		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
-> +		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
-> +			continue;
-> +		err = apply_to_pud_range(closure, p4d, addr, next);
->  		if (err)
->  			break;
->  	} while (p4d++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -/*
-> - * Scan a region of virtual memory, filling in page tables as necessary
-> - * and calling a provided function on each leaf page table.
-> +/**
-> + * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
-> + * function on each leaf page table entry
-> + * @closure: Details about how to scan and what function to apply
-> + * @addr: Start virtual address
-> + * @size: Size of the region
-> + *
-> + * If @closure->alloc is set to 1, the function will fill in the page table
-> + * as necessary. Otherwise it will skip non-present parts.
-> + *
-> + * Returns: Zero on success. If the provided function returns a non-zero status,
-> + * the page table walk will terminate and that status will be returned.
-> + * If @closure->alloc is set to 1, then this function may also return memory
-> + * allocation errors arising from allocating page table memory.
->   */
-> -int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
-> -			unsigned long size, pte_fn_t fn, void *data)
-> +int apply_to_pfn_range(struct pfn_range_apply *closure,
-> +		       unsigned long addr, unsigned long size)
->  {
->  	pgd_t *pgd;
->  	unsigned long next;
-> @@ -2049,16 +2065,57 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
->  	if (WARN_ON(addr >= end))
->  		return -EINVAL;
->  
-> -	pgd = pgd_offset(mm, addr);
-> +	pgd = pgd_offset(closure->mm, addr);
->  	do {
->  		next = pgd_addr_end(addr, end);
-> -		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
-> +		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
-> +			continue;
-> +		err = apply_to_p4d_range(closure, pgd, addr, next);
->  		if (err)
->  			break;
->  	} while (pgd++, addr = next, addr != end);
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(apply_to_pfn_range);
-> +
-> +struct page_range_apply {
-> +	struct pfn_range_apply pter;
-> +	pte_fn_t fn;
-> +	void *data;
-> +};
-> +
-> +/*
-> + * Callback wrapper to enable use of apply_to_pfn_range for
-> + * the apply_to_page_range interface
-> + */
-> +static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
-> +				       unsigned long addr,
-> +				       struct pfn_range_apply *pter)
-> +{
-> +	struct page_range_apply *pra =
-> +		container_of(pter, typeof(*pra), pter);
-> +
-> +	return pra->fn(pte, token, addr, pra->data);
-> +}
-> +
-> +/*
-> + * Scan a region of virtual memory, filling in page tables as necessary
-> + * and calling a provided function on each leaf page table.
-> + */
-> +int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
-> +			unsigned long size, pte_fn_t fn, void *data)
-> +{
-> +	struct page_range_apply pra = {
-> +		.pter = {.mm = mm,
-> +			 .alloc = 1,
-> +			 .ptefn = apply_to_page_range_wrapper },
-> +		.fn = fn,
-> +		.data = data
-> +	};
-> +
-> +	return apply_to_pfn_range(&pra.pter, addr, size);
-> +}
->  EXPORT_SYMBOL_GPL(apply_to_page_range);
->  
->  /*
-> -- 
-> 2.19.0.rc1
+> Agreed. Even the core could filter out invalid combinations based on the
+> table above: IOTLB and domain granularity are N/A.
+I don't get this sentence. What about vtd IOTLB domain-selective
+invalidation:
+"
+â€¢ IOTLB entries caching mappings associated with the specified domain-id
+are invalidated.
+â€¢ Paging-structure-cache entries caching mappings associated with the
+specified domain-id are invalidated.
+"
+
+Thanks
+
+Eric
+
+> 
+> Thanks,
+> Jean
+> 
+>>
+>>> +	__u8	cache;
+>>> +	__u8	granularity;
+>>> +	__u8	padding[2];
+>>> +	union {
+>>> +		__u64	pasid;
+>>> +		struct iommu_inv_addr_info addr_info;
+>>> +	};
+>>> +};
+>>> +
+>>> +
+>>>  #endif /* _UAPI_IOMMU_H */
+>>
+>> [Jacob Pan]
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
 > 
