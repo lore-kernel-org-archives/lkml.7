@@ -2,124 +2,88 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D529CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A9C21916
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:24:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c081sn6g"
+	by mail.kernel.org (Postfix) with ESMTP id B1BAF21900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfCURYG (ORCPT
+        id S1728708AbfCURZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:24:06 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42769 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCURYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:24:06 -0400
-Received: by mail-ua1-f67.google.com with SMTP id s26so2173683uao.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=edN8mbSonelSs10wXRgLVOdRWztUgDj+E0oQokPbibM=;
-        b=c081sn6gsAvnO7YePYKSBIDLybYfsf6sNMLCEDrNV/O/RBpOzyRikJQQ8TvexemEEm
-         sSqN+2lgibHPPPstwFmxmOHoYAb3hqxRKuYGXcxYRfWrZdZSd06aUmLVQiO49RWoKn1C
-         92/e9/BywS51WdYc6Esd6TtU6FjgqhIaw2nt945V3I31x9p4Fxf8Nr9ft/XoOLcZNcKC
-         4hY3fyyuUY9nNSMn32au9BfjK2JmWWd7hDnd7GVgWwAbjrlr9c3Ep5IE3LJzHLauL5LP
-         y/ILLYW5mTLT21TAnZQ76dSEMj1JS8k9LF8JMaWlQjdZjukrC6dz6jzE8jwYTpVk3ZeN
-         MSuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=edN8mbSonelSs10wXRgLVOdRWztUgDj+E0oQokPbibM=;
-        b=PqvFVGqMatLaewds0ZxIaeWmHPNzSMq7tcICre1K/m9KJSTbK2mO7l6tpqx5zZZv1S
-         ySrdqJDznOkHAcCfKVlBsJwaCC45Vy0UiZd5C2zW6x23ii7qATnRdbGAYdAvHmpo86Nk
-         N6nrmFN5ud3aIIyv3ddyh18YS14YPDuPYsqbBAZLDicP4siGWZaYxpRnWNYboWHTtj/H
-         MeymWYUfXJIgO2bKL6ZgcoKABkPcX/eycvBXEFy73J5p89kKyuncLFBAv6Xg+R3KhbuW
-         8OUOWOgu5EgTLXbLLffQnvwcjUzJSE+JZWW7jtZcZQ2r58PaMSEaIHKrQjLZHRTgOMd3
-         jMEQ==
-X-Gm-Message-State: APjAAAWQPiGjj49FsRR7YCtjNbZxdRWfjHwyTFYEHxWm2Dff/VqDuXTY
-        D1dc+/gzXv8buAEEeDbo0Sx5r0w+wfg+kgNHbcKcuA==
-X-Google-Smtp-Source: APXvYqwlsXtf2usG8DJIdz89HmrkSMZxfDxQtm5EHq+TYkZEH0SsgK+DVo9qJirTp2/yOBJFo/bzk57VTaEHWeKPnS8=
-X-Received: by 2002:ab0:6193:: with SMTP id h19mr2473143uan.47.1553189043420;
- Thu, 21 Mar 2019 10:24:03 -0700 (PDT)
+        Thu, 21 Mar 2019 13:25:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33692 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727829AbfCURZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:25:12 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D41EF309E975;
+        Thu, 21 Mar 2019 17:25:11 +0000 (UTC)
+Received: from [10.43.17.111] (unknown [10.43.17.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B26085D9C5;
+        Thu, 21 Mar 2019 17:25:06 +0000 (UTC)
+Subject: Re: [PATCH 01/25] x86: Make SMAP 64-bit only
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190318153840.906404905@infradead.org>
+ <20190318155139.963285969@infradead.org>
+ <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com>
+ <20190318173657.GV6058@hirez.programming.kicks-ass.net>
+ <20190318175135.GE6521@hirez.programming.kicks-ass.net>
+ <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com>
+From:   Denys Vlasenko <dvlasenk@redhat.com>
+Message-ID: <aac45ef8-0196-b1c4-67ce-26dd0da6d641@redhat.com>
+Date:   Thu, 21 Mar 2019 18:25:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190314130113.919278615@infradead.org> <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net> <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net> <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
- <20190320222220.GA2490@worktop.programming.kicks-ass.net> <20190321123849.GN6521@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Thu, 21 Mar 2019 10:23:50 -0700
-Message-ID: <CABPqkBSZbAbU5h=t2f=oMre080ezSq78LaNQO5xEdRV1nczuew@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 21 Mar 2019 17:25:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 9:45 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 21 Mar 2019, Peter Zijlstra wrote:
-> > Subject: perf/x86/intel: Initialize TFA MSR
-> >
-> > Stephane reported that we don't initialize the TFA MSR, which could lead
-> > to trouble if the RESET value is not 0 or on kexec.
->
-> That sentence doesn't parse.
->
->   Stephane reported that the TFA MSR is not initialized by the kernel, but
->   the TFA bit could set by firmware or as a leftover from a kexec, which
->   makes the state inconsistent.
->
-Correct. This is what I meant.
-The issue is what does the kernel guarantee when it boots?
+On 3/18/19 7:10 PM, Linus Torvalds wrote:
+> On Mon, Mar 18, 2019 at 10:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>> How about I do a patch that schedules EFLAGS for both 32bit and 64bit,
+>> mark this for backporting to infinity.
+>>
+>> And then at the end, after the objtool-ac bits land, I do a patch
+>> removing the EFLAGS scheduling for x86_64.
+> 
+> Sounds sane to me.
+> 
+> And we can make it AC-conditional if it's actually shown to be visible
+> from a performance standpoint.
+> 
+> But iirc pushf/popf isn't really that expensive - in fact I think it's
+> pretty cheap when system flags don't change.
 
-I see:
-static bool allow_tsx_force_abort = true;
-
-Therefore you must ensure the MSR is set to reflect that state on boot.
-So you have to force it to that value to be in sync which is what your
-new patch is doing.
-
-> > Reported-by: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/x86/events/intel/core.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> > index 8baa441d8000..2d3caf2d1384 100644
-> > --- a/arch/x86/events/intel/core.c
-> > +++ b/arch/x86/events/intel/core.c
-> > @@ -3575,6 +3575,12 @@ static void intel_pmu_cpu_starting(int cpu)
-> >
-> >       cpuc->lbr_sel = NULL;
-> >
-> > +     if (x86_pmu.flags & PMU_FL_TFA) {
-> > +             WARN_ON_ONCE(cpuc->tfa_shadow);
->
-> Hmm. I wouldn't warn here as this is a legit state for kexec/kdump and I
-> don't think we can figure out whether this comes directly from the
-> firmware.
->
-> Thanks,
->
->         tglx
+I did not see evidence of this. In my testing,
+POPF is always ~20 cycles, even if popped flags are identical to current
+state of flags.
