@@ -2,215 +2,793 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF21C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D60C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C041721900
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NaBXqyUx"
+	by mail.kernel.org (Postfix) with ESMTP id 6CFF421900
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 17:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfCURNi (ORCPT
+        id S1728703AbfCURNl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 13:13:38 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44663 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfCURNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 13:13:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id u12so5863358iop.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 10:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OydQ3I+eSUcbumeta8J04huPgRBJ+5IOsbO/9ZBLyjo=;
-        b=NaBXqyUxvnvgI9YDpQxLCTrBg/w0oUtCTUZMlXh+3DPZBPekmkIPw/ryl+lkd5ppqf
-         BIuSh2tHS7RiI2dX1TfcfpgI1K0qKtN5Isjbl4UAAvpnGY8lnOvoXAXBeUN8CO1iyFnf
-         91WXGqQygyB48Z48U3aurIICwO8tKwSTFmkDazkKZh/2eK9tZrLYOZslvykG2TGBxcM2
-         FdEqslBQqfs8p0Jlc2U9wtsK6C27+fXeBcTHUewFRful9hkIiA4tBNRJcc5yfYl8YPEx
-         6QkUd/qPtAozUp7GzupgvutkP2loXcbv700OXap72sEiftOe3NH4O6ziwosM+bz2+8a+
-         NPwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OydQ3I+eSUcbumeta8J04huPgRBJ+5IOsbO/9ZBLyjo=;
-        b=SqcWl0COIjlm/oDRY+SVnh8ptOwNCMDslF3xzH7DzlePVP5Mwj6j3dV8VtFfvdrdYF
-         HZWz+82yH/oLAxkbQZk9o8re4khJXgEHtOR0HcR2gzUF3PCVH+Ih6YqmpIGA+U4wWDhJ
-         1o8ZRi9P+/OKyTzIUIWuWjnGOZRK7WF9dmr+JF2QkuDa8FGgKUMXSwbsdTm6u5UloXYJ
-         q8d3xL0SvJMbhOviBhhlj0nx4bAigFyJDEideWXdzNMX53MASJPLBqytL0+r4loN7+B4
-         /ieCUB2jf7kU9gmATNBctdbhudwReLoKaWEQ0chm+E6fWEABDzflOPWOf+N76tmeB/gK
-         gjRQ==
-X-Gm-Message-State: APjAAAXvR1/qLxeMDE+8utQN/oq76WE2x5Qw8TdJtjDAUAVQzVNeZh4b
-        eCIYla+Bdjw50SEzDOEbIBYLe59lS6egH4HFCF/dGA==
-X-Google-Smtp-Source: APXvYqyTfixgP6aHBwz6RG9WrgEZ/N39EEfGi4dxeR/6yWut+Hlv+UzCJDd7/dyeZT9CmuqMArXxfATWfnVcv4/fJhQ=
-X-Received: by 2002:a5d:88d3:: with SMTP id i19mr3566103iol.187.1553188416010;
- Thu, 21 Mar 2019 10:13:36 -0700 (PDT)
+        Thu, 21 Mar 2019 13:13:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728643AbfCURNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 13:13:40 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7A4622DD22;
+        Thu, 21 Mar 2019 17:13:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE2F05D9C5;
+        Thu, 21 Mar 2019 17:13:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190321115925.0ea8e964@gandalf.local.home>
+References: <20190321115925.0ea8e964@gandalf.local.home> <20190321085836.3579c2b4@gandalf.local.home> <155316885201.29437.3428987891437242750.stgit@warthog.procyon.org.uk> <155316887777.29437.11898477863408246585.stgit@warthog.procyon.org.uk> <19901.1553183340@warthog.procyon.org.uk>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/8] vfs: Convert tracefs to fs_context
 MIME-Version: 1.0
-References: <20190321141010.19612-1-brgl@bgdev.pl> <20190321141010.19612-4-brgl@bgdev.pl>
- <06c6fe16-eb33-960c-909a-635e70c3b976@lechnology.com> <CAMpxmJWDn9-W6wGTyZdAHJJnp8vHysNHNcL+qqKMRss664MhrQ@mail.gmail.com>
- <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
-In-Reply-To: <CAMpxmJUT7Rc5noOAKZsoaN--hu14wQTujnH_6v8TWiO=KufNhg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 21 Mar 2019 18:13:25 +0100
-Message-ID: <CAMRc=MfFqYJnfgA=Ku-mpYv_NQz2BhsBvXtwpKufScob+YT_Og@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: da850-evm: enable cpufreq
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27463.1553188417.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 21 Mar 2019 17:13:37 +0000
+Message-ID: <27464.1553188417@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 21 Mar 2019 17:13:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 21 mar 2019 o 17:44 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> czw., 21 mar 2019 o 17:36 Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> napisa=C5=82(a):
-> >
-> > czw., 21 mar 2019 o 16:53 David Lechner <david@lechnology.com> napisa=
-=C5=82(a):
-> > >
-> > > On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > Enable cpufreq-dt support for da850-evm. The cvdd regulator is fixe=
-d
-> > > > at 1.2V on this board so disable the lower operating points and ena=
-ble
-> > > > the 375MHz opp.
-> > >
-> > >
-> > > The board-da850-evm.c file seems to indicate that this regulator is
-> > > variable and comes from the tps65070. This regulator seems to be miss=
-ing
-> > > from the device tree though, even though it has device tree bindings.
-> > >
-> >
-> > Oh snap, you're right. I glanced over the 1.2V comment and thought
-> > it's the same as other boards, but actually it specifies: .min_uV =3D
-> > 950000, .max_uV =3D 1350000, so all the operating points should work on
-> > that one.
-> >
->
-> It seems this pmic is defined here[1] and a skeleton included here[2]
-> and then the regulator constraints follow.
->
-> Bart
->
-> [1] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
-0-evm.dts#L224
-> [2] https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/da85=
-0-evm.dts#L326
->
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Ok I retested and the patch will look like this:
+> > See Documentation/filesystems/mount_api.txt
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.=
-dts
-index f04bc3e15332..a0a1b3dccf37 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -191,6 +191,18 @@
-         };
- };
+Here's the revised document for you to look over.
 
-+&cpu {
-+        cpu-supply =3D <&vdcdc3_reg>;
-+};
-+
-+&opp_375 {
-+        status =3D "okay";
-+};
-+
-+&opp_456 {
-+        status =3D "okay";
-+};
-+
- &sata {
-         status =3D "okay";
- };
+David
+---
+			     ====================
+			     FILESYSTEM MOUNT API
+			     ====================
 
-I'll resend the whole series tomorrow to not spam Sekhar's mailbox anymore.
+CONTENTS
 
-Bartosz
+ (1) Overview.
 
-> > Bart
-> >
-> > > Cc: Adam Ford
-> > >
-> > >
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > ---
-> > > >   arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++=
-++
-> > > >   1 file changed, 30 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da=
-850-evm.dts
-> > > > index f04bc3e15332..f63867692da4 100644
-> > > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > > @@ -151,6 +151,15 @@
-> > > >                       system-clock-frequency =3D <24576000>;
-> > > >               };
-> > > >       };
-> > > > +
-> > > > +     cvdd: regulator0 {
-> > > > +             compatible =3D "regulator-fixed";
-> > > > +             regulator-name =3D "cvdd";
-> > > > +             regulator-min-microvolt =3D <1200000>;
-> > > > +             regulator-max-microvolt =3D <1200000>;
-> > > > +             regulator-always-on;
-> > > > +             regulator-boot-on;
-> > > > +     };
-> > > >   };
-> > > >
-> > > >   &ecap2 {
-> > > > @@ -191,6 +200,27 @@
-> > > >       };
-> > > >   };
-> > > >
-> > > > +&cpu {
-> > > > +     cpu-supply =3D <&cvdd>;
-> > > > +};
-> > > > +
-> > > > +/*
-> > > > + * DA850-EVM has a fixed CVDD of 1.2V - we cannot go below 300MHz =
-or
-> > > > + * above 375MHz.
-> > > > + */
-> > > > +
-> > > > +&opp_100 {
-> > > > +     status =3D "disabled";
-> > > > +};
-> > > > +
-> > > > +&opp_200 {
-> > > > +     status =3D "disabled";
-> > > > +};
-> > > > +
-> > > > +&opp_375 {
-> > > > +     status =3D "okay";
-> > > > +};
-> > > > +
-> > > >   &sata {
-> > > >       status =3D "okay";
-> > > >   };
-> > > >
-> > >
+ (2) The filesystem context.
+
+ (3) The filesystem context operations.
+
+ (4) Filesystem context security.
+
+ (5) VFS filesystem context API.
+
+ (6) Superblock creation helpers.
+
+ (7) Parameter description.
+
+ (8) Parameter helper functions.
+
+
+========
+OVERVIEW
+========
+
+The creation of new mounts is now to be done in a multistep process:
+
+ (1) Create a filesystem context.
+
+ (2) Parse the parameters and attach them to the context.  Parameters are
+     expected to be passed individually from userspace, though legacy binary
+     parameters can also be handled.
+
+ (3) Validate and pre-process the context.
+
+ (4) Get or create a superblock and mountable root.
+
+ (5) Perform the mount.
+
+ (6) Return an error message attached to the context.
+
+ (7) Destroy the context.
+
+To support this, the file_system_type struct gains two new fields:
+
+	int (*init_fs_context)(struct fs_context *fc);
+	const struct fs_parameter_description *parameters;
+
+The first is invoked to set up the filesystem-specific parts of a filesystem
+context, including the additional space, and the second points to the
+parameter description for validation at registration time and querying by a
+future system call.
+
+Note that security initialisation is done *after* the filesystem is called so
+that the namespaces may be adjusted first.
+
+
+======================
+THE FILESYSTEM CONTEXT
+======================
+
+The creation and reconfiguration of a superblock is governed by a filesystem
+context.  This is represented by the fs_context structure:
+
+	struct fs_context {
+		const struct fs_context_operations *ops;
+		struct file_system_type *fs_type;
+		void			*fs_private;
+		struct dentry		*root;
+		struct user_namespace	*user_ns;
+		struct net		*net_ns;
+		const struct cred	*cred;
+		char			*source;
+		char			*subtype;
+		void			*security;
+		void			*s_fs_info;
+		unsigned int		sb_flags;
+		unsigned int		sb_flags_mask;
+		unsigned int		s_iflags;
+		unsigned int		lsm_flags;
+		enum fs_context_purpose	purpose:8;
+		...
+	};
+
+The fs_context fields are as follows:
+
+ (*) const struct fs_context_operations *ops
+
+     These are operations that can be done on a filesystem context (see
+     below).  This must be set by the ->init_fs_context() file_system_type
+     operation.
+
+ (*) struct file_system_type *fs_type
+
+     A pointer to the file_system_type of the filesystem that is being
+     constructed or reconfigured.  This retains a reference on the type owner.
+
+ (*) void *fs_private
+
+     A pointer to the file system's private data.  This is where the filesystem
+     will need to store any options it parses.
+
+ (*) struct dentry *root
+
+     A pointer to the root of the mountable tree (and indirectly, the
+     superblock thereof).  This is filled in by the ->get_tree() op.  If this
+     is set, an active reference on root->d_sb must also be held.
+
+ (*) struct user_namespace *user_ns
+ (*) struct net *net_ns
+
+     There are a subset of the namespaces in use by the invoking process.  They
+     retain references on each namespace.  The subscribed namespaces may be
+     replaced by the filesystem to reflect other sources, such as the parent
+     mount superblock on an automount.
+
+ (*) const struct cred *cred
+
+     The mounter's credentials.  This retains a reference on the credentials.
+
+ (*) char *source
+
+     This specifies the source.  It may be a block device (e.g. /dev/sda1) or
+     something more exotic, such as the "host:/path" that NFS desires.
+
+ (*) char *subtype
+
+     This is a string to be added to the type displayed in /proc/mounts to
+     qualify it (used by FUSE).  This is available for the filesystem to set if
+     desired.
+
+ (*) void *security
+
+     A place for the LSMs to hang their security data for the superblock.  The
+     relevant security operations are described below.
+
+ (*) void *s_fs_info
+
+     The proposed s_fs_info for a new superblock, set in the superblock by
+     sget_fc().  This can be used to distinguish superblocks.
+
+ (*) unsigned int sb_flags
+ (*) unsigned int sb_flags_mask
+
+     Which bits SB_* flags are to be set/cleared in super_block::s_flags.
+
+ (*) unsigned int s_iflags
+
+     These will be bitwise-OR'd with s->s_iflags when a superblock is created.
+
+ (*) enum fs_context_purpose
+
+     This indicates the purpose for which the context is intended.  The
+     available values are:
+
+	FS_CONTEXT_FOR_MOUNT,		-- New superblock for explicit mount
+	FS_CONTEXT_FOR_SUBMOUNT		-- New automatic submount of extant mount
+	FS_CONTEXT_FOR_RECONFIGURE	-- Change an existing mount
+
+The mount context is created by calling vfs_new_fs_context() or
+vfs_dup_fs_context() and is destroyed with put_fs_context().  Note that the
+structure is not refcounted.
+
+VFS, security and filesystem mount options are set individually with
+vfs_parse_mount_option().  Options provided by the old mount(2) system call as
+a page of data can be parsed with generic_parse_monolithic().
+
+When mounting, the filesystem is allowed to take data from any of the pointers
+and attach it to the superblock (or whatever), provided it clears the pointer
+in the mount context.
+
+The filesystem is also allowed to allocate resources and pin them with the
+mount context.  For instance, NFS might pin the appropriate protocol version
+module.
+
+
+=================================
+THE FILESYSTEM CONTEXT OPERATIONS
+=================================
+
+The filesystem context points to a table of operations:
+
+	struct fs_context_operations {
+		void (*free)(struct fs_context *fc);
+		int (*dup)(struct fs_context *fc, struct fs_context *src_fc);
+		int (*parse_param)(struct fs_context *fc,
+				   struct struct fs_parameter *param);
+		int (*parse_monolithic)(struct fs_context *fc, void *data);
+		int (*get_tree)(struct fs_context *fc);
+		int (*reconfigure)(struct fs_context *fc);
+	};
+
+These operations are invoked by the various stages of the mount procedure to
+manage the filesystem context.  They are as follows:
+
+ (*) void (*free)(struct fs_context *fc);
+
+     Called to clean up the filesystem-specific part of the filesystem context
+     when the context is destroyed.  It should be aware that parts of the
+     context may have been removed and NULL'd out by ->get_tree().
+
+ (*) int (*dup)(struct fs_context *fc, struct fs_context *src_fc);
+
+     Called when a filesystem context has been duplicated to duplicate the
+     filesystem-private data.  An error may be returned to indicate failure to
+     do this.
+
+     [!] Note that even if this fails, put_fs_context() will be called
+	 immediately thereafter, so ->dup() *must* make the
+	 filesystem-private data safe for ->free().
+
+ (*) int (*parse_param)(struct fs_context *fc,
+			struct struct fs_parameter *param);
+
+     Called when a parameter is being added to the filesystem context.  param
+     points to the key name and maybe a value object.  VFS-specific options
+     will have been weeded out and fc->sb_flags updated in the context.
+     Security options will also have been weeded out and fc->security updated.
+
+     The parameter can be parsed with fs_parse() and fs_lookup_param().  Note
+     that the source(s) are presented as parameters named "source".
+
+     If successful, 0 should be returned or a negative error code otherwise.
+
+ (*) int (*parse_monolithic)(struct fs_context *fc, void *data);
+
+     Called when the mount(2) system call is invoked to pass the entire data
+     page in one go.  If this is expected to be just a list of "key[=val]"
+     items separated by commas, then this may be set to NULL.
+
+     The return value is as for ->parse_param().
+
+     If the filesystem (e.g. NFS) needs to examine the data first and then
+     finds it's the standard key-val list then it may pass it off to
+     generic_parse_monolithic().
+
+ (*) int (*get_tree)(struct fs_context *fc);
+
+     Called to get or create the mountable root and superblock, using the
+     information stored in the filesystem context (reconfiguration goes via a
+     different vector).  It may detach any resources it desires from the
+     filesystem context and transfer them to the superblock it creates.
+
+     On success it should set fc->root to the mountable root and return 0.  In
+     the case of an error, it should return a negative error code.
+
+     The phase on a userspace-driven context will be set to only allow this to
+     be called once on any particular context.
+
+ (*) int (*reconfigure)(struct fs_context *fc);
+
+     Called to effect reconfiguration of a superblock using information stored
+     in the filesystem context.  It may detach any resources it desires from
+     the filesystem context and transfer them to the superblock.  The
+     superblock can be found from fc->root->d_sb.
+
+     On success it should return 0.  In the case of an error, it should return
+     a negative error code.
+
+     [NOTE] reconfigure is intended as a replacement for remount_fs.
+
+
+===========================
+FILESYSTEM CONTEXT SECURITY
+===========================
+
+The filesystem context contains a security pointer that the LSMs can use for
+building up a security context for the superblock to be mounted.  There are a
+number of operations used by the new mount code for this purpose:
+
+ (*) int security_fs_context_alloc(struct fs_context *fc,
+				   struct dentry *reference);
+
+     Called to initialise fc->security (which is preset to NULL) and allocate
+     any resources needed.  It should return 0 on success or a negative error
+     code on failure.
+
+     reference will be non-NULL if the context is being created for superblock
+     reconfiguration (FS_CONTEXT_FOR_RECONFIGURE) in which case it indicates
+     the root dentry of the superblock to be reconfigured.  It will also be
+     non-NULL in the case of a submount (FS_CONTEXT_FOR_SUBMOUNT) in which case
+     it indicates the automount point.
+
+ (*) int security_fs_context_dup(struct fs_context *fc,
+				 struct fs_context *src_fc);
+
+     Called to initialise fc->security (which is preset to NULL) and allocate
+     any resources needed.  The original filesystem context is pointed to by
+     src_fc and may be used for reference.  It should return 0 on success or a
+     negative error code on failure.
+
+ (*) void security_fs_context_free(struct fs_context *fc);
+
+     Called to clean up anything attached to fc->security.  Note that the
+     contents may have been transferred to a superblock and the pointer cleared
+     during get_tree.
+
+ (*) int security_fs_context_parse_param(struct fs_context *fc,
+					 struct fs_parameter *param);
+
+     Called for each mount parameter, including the source.  The arguments are
+     as for the ->parse_param() method.  It should return 0 to indicate that
+     the parameter should be passed on to the filesystem, 1 to indicate that
+     the parameter should be discarded or an error to indicate that the
+     parameter should be rejected.
+
+     The value pointed to by param may be modified (if a string) or stolen
+     (provided the value pointer is NULL'd out).  If it is stolen, 1 must be
+     returned to prevent it being passed to the filesystem.
+
+ (*) int security_fs_context_validate(struct fs_context *fc);
+
+     Called after all the options have been parsed to validate the collection
+     as a whole and to do any necessary allocation so that
+     security_sb_get_tree() and security_sb_reconfigure() are less likely to
+     fail.  It should return 0 or a negative error code.
+
+     In the case of reconfiguration, the target superblock will be accessible
+     via fc->root.
+
+ (*) int security_sb_get_tree(struct fs_context *fc);
+
+     Called during the mount procedure to verify that the specified superblock
+     is allowed to be mounted and to transfer the security data there.  It
+     should return 0 or a negative error code.
+
+ (*) void security_sb_reconfigure(struct fs_context *fc);
+
+     Called to apply any reconfiguration to an LSM's context.  It must not
+     fail.  Error checking and resource allocation must be done in advance by
+     the parameter parsing and validation hooks.
+
+ (*) int security_sb_mountpoint(struct fs_context *fc, struct path *mountpoint,
+				unsigned int mnt_flags);
+
+     Called during the mount procedure to verify that the root dentry attached
+     to the context is permitted to be attached to the specified mountpoint.
+     It should return 0 on success or a negative error code on failure.
+
+
+==========================
+VFS FILESYSTEM CONTEXT API
+==========================
+
+There are four operations for creating a filesystem context and one for
+destroying a context:
+
+ (*) struct fs_context *fs_context_for_mount(
+		struct file_system_type *fs_type,
+		unsigned int sb_flags);
+
+     Allocate a filesystem context for the purpose of setting up a new mount,
+     whether that be with a new superblock or sharing an existing one.  This
+     sets the superblock flags, initialises the security and calls
+     fs_type->init_fs_context() to initialise the filesystem private data.
+
+     fs_type specifies the filesystem type that will manage the context and
+     sb_flags presets the superblock flags stored therein.
+
+ (*) struct fs_context *fs_context_for_reconfigure(
+		struct dentry *dentry,
+		unsigned int sb_flags,
+		unsigned int sb_flags_mask);
+
+     Allocate a filesystem context for the purpose of reconfiguring an
+     existing superblock.  dentry provides a reference to the superblock to be
+     configured.  sb_flags and sb_flags_mask indicate which superblock flags
+     need changing and to what.
+
+ (*) struct fs_context *fs_context_for_submount(
+		struct file_system_type *fs_type,
+		struct dentry *reference);
+
+     Allocate a filesystem context for the purpose of creating a new mount for
+     an automount point or other derived superblock.  fs_type specifies the
+     filesystem type that will manage the context and the reference dentry
+     supplies the parameters.  Namespaces are propagated from the reference
+     dentry's superblock also.
+
+     Note that it's not a requirement that the reference dentry be of the same
+     filesystem type as fs_type.
+
+ (*) struct fs_context *vfs_dup_fs_context(struct fs_context *src_fc);
+
+     Duplicate a filesystem context, copying any options noted and duplicating
+     or additionally referencing any resources held therein.  This is available
+     for use where a filesystem has to get a mount within a mount, such as NFS4
+     does by internally mounting the root of the target server and then doing a
+     private pathwalk to the target directory.
+
+     The purpose in the new context is inherited from the old one.
+
+ (*) void put_fs_context(struct fs_context *fc);
+
+     Destroy a filesystem context, releasing any resources it holds.  This
+     calls the ->free() operation.  This is intended to be called by anyone who
+     created a filesystem context.
+
+     [!] filesystem contexts are not refcounted, so this causes unconditional
+	 destruction.
+
+In all the above operations, apart from the put op, the return is a mount
+context pointer or a negative error code.
+
+For the remaining operations, if an error occurs, a negative error code will be
+returned.
+
+ (*) int vfs_parse_fs_param(struct fs_context *fc,
+			    struct fs_parameter *param);
+
+     Supply a single mount parameter to the filesystem context.  This include
+     the specification of the source/device which is specified as the "source"
+     parameter (which may be specified multiple times if the filesystem
+     supports that).
+
+     param specifies the parameter key name and the value.  The parameter is
+     first checked to see if it corresponds to a standard mount flag (in which
+     case it is used to set an SB_xxx flag and consumed) or a security option
+     (in which case the LSM consumes it) before it is passed on to the
+     filesystem.
+
+     The parameter value is typed and can be one of:
+
+	fs_value_is_flag,		Parameter not given a value.
+	fs_value_is_string,		Value is a string
+	fs_value_is_blob,		Value is a binary blob
+	fs_value_is_filename,		Value is a filename* + dirfd
+	fs_value_is_filename_empty,	Value is a filename* + dirfd + AT_EMPTY_PATH
+	fs_value_is_file,		Value is an open file (file*)
+
+     If there is a value, that value is stored in a union in the struct in one
+     of param->{string,blob,name,file}.  Note that the function may steal and
+     clear the pointer, but then becomes responsible for disposing of the
+     object.
+
+ (*) int vfs_parse_fs_string(struct fs_context *fc, const char *key,
+			     const char *value, size_t v_size);
+
+     A wrapper around vfs_parse_fs_param() that copies the value string it is
+     passed.
+
+ (*) int generic_parse_monolithic(struct fs_context *fc, void *data);
+
+     Parse a sys_mount() data page, assuming the form to be a text list
+     consisting of key[=val] options separated by commas.  Each item in the
+     list is passed to vfs_mount_option().  This is the default when the
+     ->parse_monolithic() method is NULL.
+
+ (*) int vfs_get_tree(struct fs_context *fc);
+
+     Get or create the mountable root and superblock, using the parameters in
+     the filesystem context to select/configure the superblock.  This invokes
+     the ->get_tree() method.
+
+ (*) struct vfsmount *vfs_create_mount(struct fs_context *fc);
+
+     Create a mount given the parameters in the specified filesystem context.
+     Note that this does not attach the mount to anything.
+
+
+===========================
+SUPERBLOCK CREATION HELPERS
+===========================
+
+A number of VFS helpers are available for use by filesystems for the creation
+or looking up of superblocks.
+
+ (*) struct super_block *
+     sget_fc(struct fs_context *fc,
+	     int (*test)(struct super_block *sb, struct fs_context *fc),
+	     int (*set)(struct super_block *sb, struct fs_context *fc));
+
+     This is the core routine.  If test is non-NULL, it searches for an
+     existing superblock matching the criteria held in the fs_context, using
+     the test function to match them.  If no match is found, a new superblock
+     is created and the set function is called to set it up.
+
+     Prior to the set function being called, fc->s_fs_info will be transferred
+     to sb->s_fs_info - and fc->s_fs_info will be cleared if set returns
+     success (ie. 0).
+
+The following helpers all wrap sget_fc():
+
+ (*) int vfs_get_super(struct fs_context *fc,
+		       enum vfs_get_super_keying keying,
+		       int (*fill_super)(struct super_block *sb,
+					 struct fs_context *fc))
+
+     This creates/looks up a deviceless superblock.  The keying indicates how
+     many superblocks of this type may exist and in what manner they may be
+     shared:
+
+	(1) vfs_get_single_super
+
+	    Only one such superblock may exist in the system.  Any further
+	    attempt to get a new superblock gets this one (and any parameter
+	    differences are ignored).
+
+	(2) vfs_get_keyed_super
+
+	    Multiple superblocks of this type may exist and they're keyed on
+	    their s_fs_info pointer (for example this may refer to a
+	    namespace).
+
+	(3) vfs_get_independent_super
+
+	    Multiple independent superblocks of this type may exist.  This
+	    function never matches an existing one and always creates a new
+	    one.
+
+
+=====================
+PARAMETER DESCRIPTION
+=====================
+
+Parameters are described using structures defined in linux/fs_parser.h.
+There's a core description struct that links everything together:
+
+	struct fs_parameter_description {
+		const char	name[16];
+		const struct fs_parameter_spec *specs;
+		const struct fs_parameter_enum *enums;
+	};
+
+For example:
+
+	enum {
+		Opt_autocell,
+		Opt_bar,
+		Opt_dyn,
+		Opt_foo,
+		Opt_source,
+	};
+
+	static const struct fs_parameter_description afs_fs_parameters = {
+		.name		= "kAFS",
+		.specs		= afs_param_specs,
+		.enums		= afs_param_enums,
+	};
+
+The members are as follows:
+
+ (1) const char name[16];
+
+     The name to be used in error messages generated by the parse helper
+     functions.
+
+ (2) const struct fs_parameter_specification *specs;
+
+     Table of parameter specifications, terminated with a null entry, where the
+     entries are of type:
+
+	struct fs_parameter_spec {
+		const char		*name;
+		u8			opt;
+		enum fs_parameter_type	type:8;
+		unsigned short		flags;
+	};
+
+     The 'name' field is a string to match exactly to the parameter key (no
+     wildcards, patterns and no case-independence) and 'opt' is the value that
+     will be returned by the fs_parser() function in the case of a successful
+     match.
+
+     The 'type' field indicates the desired value type and must be one of:
+
+	TYPE NAME		EXPECTED VALUE		RESULT IN
+	=======================	=======================	=====================
+	fs_param_is_flag	No value		n/a
+	fs_param_is_bool	Boolean value		result->boolean
+	fs_param_is_u32		32-bit unsigned int	result->uint_32
+	fs_param_is_u32_octal	32-bit octal int	result->uint_32
+	fs_param_is_u32_hex	32-bit hex int		result->uint_32
+	fs_param_is_s32		32-bit signed int	result->int_32
+	fs_param_is_u64		64-bit unsigned int	result->uint_64
+	fs_param_is_enum	Enum value name 	result->uint_32
+	fs_param_is_string	Arbitrary string	param->string
+	fs_param_is_blob	Binary blob		param->blob
+	fs_param_is_blockdev	Blockdev path		* Needs lookup
+	fs_param_is_path	Path			* Needs lookup
+	fs_param_is_fd		File descriptor		result->int_32
+
+     Note that if the value is of fs_param_is_bool type, fs_parse() will try
+     to match any string value against "0", "1", "no", "yes", "false", "true".
+
+     Each parameter can also be qualified with 'flags':
+
+     	fs_param_v_optional	The value is optional
+	fs_param_neg_with_no	result->negated set if key is prefixed with "no"
+	fs_param_neg_with_empty	result->negated set if value is ""
+	fs_param_deprecated	The parameter is deprecated.
+
+     These are wrapped with a number of convenience wrappers:
+
+	MACRO			SPECIFIES
+	=======================	===============================================
+	fsparam_flag()		fs_param_is_flag
+	fsparam_flag_no()	fs_param_is_flag, fs_param_neg_with_no
+	fsparam_bool()		fs_param_is_bool
+	fsparam_u32()		fs_param_is_u32
+	fsparam_u32oct()	fs_param_is_u32_octal
+	fsparam_u32hex()	fs_param_is_u32_hex
+	fsparam_s32()		fs_param_is_s32
+	fsparam_u64()		fs_param_is_u64
+	fsparam_enum()		fs_param_is_enum
+	fsparam_string()	fs_param_is_string
+	fsparam_blob()		fs_param_is_blob
+	fsparam_bdev()		fs_param_is_blockdev
+	fsparam_path()		fs_param_is_path
+	fsparam_fd()		fs_param_is_fd
+
+     all of which take two arguments, name string and option number - for
+     example:
+
+	static const struct fs_parameter_spec afs_param_specs[] = {
+		fsparam_flag	("autocell",	Opt_autocell),
+		fsparam_flag	("dyn",		Opt_dyn),
+		fsparam_string	("source",	Opt_source),
+		fsparam_flag_no	("foo",		Opt_foo),
+		{}
+	};
+
+     An addition macro, __fsparam() is provided that takes an additional pair
+     of arguments to specify the type and the flags for anything that doesn't
+     match one of the above macros.
+
+ (6) const struct fs_parameter_enum *enums;
+
+     Table of enum value names to integer mappings, terminated with a null
+     entry.  This is of type:
+
+	struct fs_parameter_enum {
+		u8		opt;
+		char		name[14];
+		u8		value;
+	};
+
+     Where the array is an unsorted list of { parameter ID, name }-keyed
+     elements that indicate the value to map to, e.g.:
+
+	static const struct fs_parameter_enum afs_param_enums[] = {
+		{ Opt_bar,   "x",      1},
+		{ Opt_bar,   "y",      23},
+		{ Opt_bar,   "z",      42},
+	};
+
+     If a parameter of type fs_param_is_enum is encountered, fs_parse() will
+     try to look the value up in the enum table and the result will be stored
+     in the parse result.
+
+The parser should be pointed to by the parser pointer in the file_system_type
+struct as this will provide validation on registration (if
+CONFIG_VALIDATE_FS_PARSER=y) and will allow the description to be queried from
+userspace using the fsinfo() syscall.
+
+
+==========================
+PARAMETER HELPER FUNCTIONS
+==========================
+
+A number of helper functions are provided to help a filesystem or an LSM
+process the parameters it is given.
+
+ (*) int lookup_constant(const struct constant_table tbl[],
+			 const char *name, int not_found);
+
+     Look up a constant by name in a table of name -> integer mappings.  The
+     table is an array of elements of the following type:
+
+	struct constant_table {
+		const char	*name;
+		int		value;
+	};
+
+     If a match is found, the corresponding value is returned.  If a match
+     isn't found, the not_found value is returned instead.
+
+ (*) bool validate_constant_table(const struct constant_table *tbl,
+				  size_t tbl_size,
+				  int low, int high, int special);
+
+     Validate a constant table.  Checks that all the elements are appropriately
+     ordered, that there are no duplicates and that the values are between low
+     and high inclusive, though provision is made for one allowable special
+     value outside of that range.  If no special value is required, special
+     should just be set to lie inside the low-to-high range.
+
+     If all is good, true is returned.  If the table is invalid, errors are
+     logged to dmesg and false is returned.
+
+ (*) bool fs_validate_description(const struct fs_parameter_description *desc);
+
+     This performs some validation checks on a parameter description.  It
+     returns true if the description is good and false if it is not.  It will
+     log errors to dmesg if validation fails.
+
+ (*) int fs_parse(struct fs_context *fc,
+		  const struct fs_parameter_description *desc,
+		  struct fs_parameter *param,
+		  struct fs_parse_result *result);
+
+     This is the main interpreter of parameters.  It uses the parameter
+     description to look up a parameter by key name and to convert that to an
+     option number (which it returns).
+
+     If successful, and if the parameter type indicates the result is a
+     boolean, integer or enum type, the value is converted by this function and
+     the result stored in result->{boolean,int_32,uint_32,uint_64}.
+
+     If a match isn't initially made, the key is prefixed with "no" and no
+     value is present then an attempt will be made to look up the key with the
+     prefix removed.  If this matches a parameter for which the type has flag
+     fs_param_neg_with_no set, then a match will be made and result->negated
+     will be set to true.
+
+     If the parameter isn't matched, -ENOPARAM will be returned; if the
+     parameter is matched, but the value is erroneous, -EINVAL will be
+     returned; otherwise the parameter's option number will be returned.
+
+ (*) int fs_lookup_param(struct fs_context *fc,
+			 struct fs_parameter *value,
+			 bool want_bdev,
+			 struct path *_path);
+
+     This takes a parameter that carries a string or filename type and attempts
+     to do a path lookup on it.  If the parameter expects a blockdev, a check
+     is made that the inode actually represents one.
+
+     Returns 0 if successful and *_path will be set; returns a negative error
+     code if not.
