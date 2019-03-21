@@ -2,119 +2,106 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C88C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2642C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E83218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BD5218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553140628;
+	bh=rbC2rOdT+f1vuiTnn4H48uqnaLttNCEQzv52Lkrxrkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1O8WKGksjvdbiXpB+qKNE4RfKPoAa9o38mIZm45Gt6NXCazgoBiyc6LI9xCzlAwQc
+	 hxBn16/OCAjiT6I0dXn6i3+/02JqtPW9VqLd3oulKpfmBKzKdCfGEhCt8sxmGKkj+E
+	 ulxLs4nereZoo4Q190QIVN86nXXm7uK4voIvjrrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfCUDyb (ORCPT
+        id S1727906AbfCUD5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 23:54:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60810 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727575AbfCUDya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 23:54:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BC2CEAC43;
-        Thu, 21 Mar 2019 03:54:29 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Jiri Kosina <trivial@kernel.org>
-Date:   Thu, 21 Mar 2019 14:54:22 +1100
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH trivial] list/hashtable: minor documentation corrections.
-Message-ID: <87o9647uhd.fsf@notabene.neil.brown.name>
+        Wed, 20 Mar 2019 23:57:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727511AbfCUD5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 23:57:07 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E4C218B0;
+        Thu, 21 Mar 2019 03:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553140626;
+        bh=rbC2rOdT+f1vuiTnn4H48uqnaLttNCEQzv52Lkrxrkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gzvq9/XruHwnUja0s05ds/NagNQ8vA8zd9sxsdWJwKNfDSVfmhDPOuiIWARzOEJ1a
+         sZ98HDrAgBrenuX12T1RNmBERMW3Lq4ifVDFwzOOtDaXHM14PNYPtaN2XqrnUWMMiL
+         OkJBiA1+OGpkmUgUMm6D0RrFDXq9G2xtOzVk0z9k=
+Date:   Wed, 20 Mar 2019 23:57:05 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Kimberly Brown <kimbrownkd@gmail.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] Drivers: hv: vmbus: Expose monitor data only when
+ monitor pages are used
+Message-ID: <20190321035705.GE25262@sasha-vm>
+References: <20190308224611.GA3047@ubu-Virtual-Machine>
+ <20190319040401.GA3050@ubu-Virtual-Machine>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190319040401.GA3050@ubu-Virtual-Machine>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 19, 2019 at 12:04:01AM -0400, Kimberly Brown wrote:
+>There are two methods for signaling the host: the monitor page mechanism
+>and hypercalls. The monitor page mechanism is used by performance
+>critical channels (storage, networking, etc.) because it provides
+>improved throughput. However, latency is increased. Monitor pages are
+>allocated to these channels.
+>
+>Monitor pages are not allocated to channels that do not use the monitor
+>page mechanism. Therefore, these channels do not have a valid monitor id
+>or valid monitor page data. In these cases, some of the "_show"
+>functions return incorrect data. They return an invalid monitor id and
+>data that is beyond the bounds of the hv_monitor_page array fields.
+>
+>The "channel->offermsg.monitor_allocated" value can be used to determine
+>whether monitor pages have been allocated to a channel.
+>
+>Add "is_visible()" callback functions for the device-level and
+>channel-level attribute groups. These functions will hide the monitor
+>sysfs files when the monitor mechanism is not used.
+>
+>Remove ".default_attributes" from "vmbus_chan_attrs" and create a
+>channel-level attribute group. These changes allow the new
+>"is_visible()" callback function to be applied to the channel-level
+>attributes.
+>
+>Call "sysfs_create_group()" in "vmbus_add_channel_kobj()" to create the
+>channel's sysfs files. Add a new function,
+>“vmbus_remove_channel_attr_group()”, and call it in "free_channel()" to
+>remove the channel's sysfs files when the channel is closed.
+>
+>Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
 
+I've queued it up for hyperv-fixes, thanks Kimberly.
 
-hash_for_each_safe() and hash_for_each_possible_safe()
-need to be passed a temp 'struct hlist_node' pointer, but
-do not say that in the documentation - they just say
-a 'struct'.
+Should this go in stable as well?
 
-Also the documentation for hlist_for_each_entry_safe()
-describes @n as "another" hlist_node, but in reality it is
-the only one.
-
-Signed-off-by: NeilBrown <neilb@suse.com>
-=2D--
- include/linux/hashtable.h | 4 ++--
- include/linux/list.h      | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/hashtable.h b/include/linux/hashtable.h
-index 417d2c4bc60d..78b6ea5fa8ba 100644
-=2D-- a/include/linux/hashtable.h
-+++ b/include/linux/hashtable.h
-@@ -145,7 +145,7 @@ static inline void hash_del_rcu(struct hlist_node *node)
-  * hash entry
-  * @name: hashtable to iterate
-  * @bkt: integer to use as bucket loop cursor
-=2D * @tmp: a &struct used for temporary storage
-+ * @tmp: a &struct hlist_node used for temporary storage
-  * @obj: the type * to use as a loop cursor for each entry
-  * @member: the name of the hlist_node within the struct
-  */
-@@ -197,7 +197,7 @@ static inline void hash_del_rcu(struct hlist_node *node)
-  * same bucket safe against removals
-  * @name: hashtable to iterate
-  * @obj: the type * to use as a loop cursor for each entry
-=2D * @tmp: a &struct used for temporary storage
-+ * @tmp: a &struct hlist_node used for temporary storage
-  * @member: the name of the hlist_node within the struct
-  * @key: the key of the objects to iterate over
-  */
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 79626b5ab36c..894da1962f89 100644
-=2D-- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -842,7 +842,7 @@ static inline void hlist_move_list(struct hlist_head *o=
-ld,
- /**
-  * hlist_for_each_entry_safe - iterate over list of given type safe agains=
-t removal of list entry
-  * @pos:	the type * to use as a loop cursor.
-=2D * @n:		another &struct hlist_node to use as temporary storage
-+ * @n:		a &struct hlist_node to use as temporary storage
-  * @head:	the head for your list.
-  * @member:	the name of the hlist_node within the struct.
-  */
-=2D-=20
-2.14.0.rc0.dirty
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyTCu4ACgkQOeye3VZi
-gbmeFRAAn5whEALD1hO62treSICxHMR6XVPJOIZ3q/z9NUOCQC9ZhljWnaX0sQ/G
-7qcyI+bxCIGypXFKKULOhSBeseOiX7J/LpPe50XjN7UVl1L2VzUN6zCxtb3+XGJ6
-3MXeyz7jSvNIsYu4Mul+9m8LcelotLWVMOdQ+xODPvTTDPr3EY5vR5mFvzItNA0H
-B51pDPws6oTH+otQJF33ZwHS1kfVnnT2mHGM5pYpuWhkLdqghwZZu0cztLF0fRJ0
-vhdZt8aGKdN3Dem0GDQOub2rfTAZsrbYhegxDKhleRrVNxztlZRacn25Xv2bHcGN
-8G5GRGFJz//0UJMAwPXnULGMPTl4IIO1S7zrRE17hyPX24q3QGvnMHql59eJQze8
-CyPahWReBoUF05OqlALG7C31IE4FaQUk+Eq37VfMeiAHT5ohL/qGfprOUEKLawFr
-SrvOygzUan9edJGvjG5cSzOZLNPVso15OsOh6nYLzjE10qWw8HVAqY5p0Q84kagE
-aJvGPPZzso+gIhjBFfug2dFzJwIMdEyPTQy1x0xEDFBlcruJAwUbJy5GKuwaQUzR
-ZUaoflV/6lcdiQIfWD2HyacRpnpTXxx8hPXp6u9A25HBBYkOlya0Su4z/cpdT55v
-3VR9XKg8JXIE+TtfuhQ2ymdrHwTGcLXE/x3HgIiwRCX0Tbs2OEM=
-=rQJj
------END PGP SIGNATURE-----
---=-=-=--
+--
+Thanks,
+Sasha
