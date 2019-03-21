@@ -2,211 +2,106 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FBAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0EA2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EB62175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A4bnvovi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfCUUDP (ORCPT
+        id S1728895AbfCUUDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:03:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5166 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbfCUUC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 16:02:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 13:02:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="309246241"
-Received: from unknown (HELO localhost.lm.intel.com) ([10.232.112.69])
-  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2019 13:02:57 -0700
-From:   Keith Busch <keith.busch@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: [PATCH 3/5] mm: Attempt to migrate page in lieu of discard
-Date:   Thu, 21 Mar 2019 14:01:55 -0600
-Message-Id: <20190321200157.29678-4-keith.busch@intel.com>
-X-Mailer: git-send-email 2.13.6
-In-Reply-To: <20190321200157.29678-1-keith.busch@intel.com>
-References: <20190321200157.29678-1-keith.busch@intel.com>
+        Thu, 21 Mar 2019 16:03:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37580 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbfCUUDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 16:03:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZuyNJW63FOZZdlgNflD/pLNem1v9Mv2DBiEoGNT6+Os=; b=A4bnvoviflFThNF2g7rPoFbk/
+        nIIYvP5azNc5SjdKXuvy8tfxEXF3WctFUB9kyhzMdUUzN6zUaHRZtucz93DvmKXiQCZ87wsw31Tpb
+        Jnvi/O6hmeW3Sl9JTHkVOPPxewmJycgp6KNkwV1tE7uLnbH4roo6TcwsReQMV0s8Jy3YxbOZLijp3
+        hHjXRYjdFjQls0dPejvOFfk4r6TbKwj8HWlsLxAi9IA+B++/E80CrPCrCbLU24HmDUoyGI5x5lvmc
+        RIsACBMO3HeE5SEfCD08T/+/N1+0KSYZLV/d1dIs82vWCQqh7ZhFaYaPdORYIUmUBfZrWkZXo7gze
+        gD7m11K6A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h73uI-0002xC-LJ; Thu, 21 Mar 2019 20:03:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D3857984EEA; Thu, 21 Mar 2019 21:03:16 +0100 (CET)
+Date:   Thu, 21 Mar 2019 21:03:16 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
+ error_entry
+Message-ID: <20190321200316.GC2490@worktop.programming.kicks-ass.net>
+References: <20190321090241.GL6521@hirez.programming.kicks-ass.net>
+ <20190321104517.GM6521@hirez.programming.kicks-ass.net>
+ <20190321093242.4a948198@gandalf.local.home>
+ <20190321172203.GS5996@hirez.programming.kicks-ass.net>
+ <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
+ <20190321141020.641e313f@gandalf.local.home>
+ <20190321182830.GV5996@hirez.programming.kicks-ass.net>
+ <20190321145551.4c80c3a7@gandalf.local.home>
+ <20190321193152.GB2490@worktop.programming.kicks-ass.net>
+ <20190321155006.5288345f@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321155006.5288345f@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a memory node has a preferred migration path to demote cold pages,
-attempt to move those inactive pages to that migration node before
-reclaiming. This will better utilize available memory, provide a faster
-tier than swapping or discarding, and allow such pages to be reused
-immediately without IO to retrieve the data.
+On Thu, Mar 21, 2019 at 03:50:06PM -0400, Steven Rostedt wrote:
+> On Thu, 21 Mar 2019 20:31:52 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > 
+> > > No I didn't. Some users only care about performance, but find memory
+> > > cheap.  
+> > 
+> > Because cache-misses are free?
+> 
+> If I ever did implement this, I would try to get all the data out of
+> line as much as possible, where only a nop would be inserted:
 
-Some places we would like to see this used:
+Doesn't make sense; you say data, but then talk code and i$.
 
- 1. Persistent memory being as a slower, cheaper DRAM replacement
- 2. Remote memory-only "expansion" NUMA nodes
- 3. Resolving memory imbalances where one NUMA node is seeing more
-    allocation activity than another.  This helps keep more recent
-    allocations closer to the CPUs on the node doing the allocating.
+Not the point, spinlock_t is 4 bytes, but growns into a monster with
+lockdep on. There are plenty locations where the spinlock and the data
+it protects fit together into a single cacheline, no longer so with
+lockdep on.
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
----
- include/linux/migrate.h        |  6 ++++++
- include/trace/events/migrate.h |  3 ++-
- mm/debug.c                     |  1 +
- mm/migrate.c                   | 45 ++++++++++++++++++++++++++++++++++++++++++
- mm/vmscan.c                    | 15 ++++++++++++++
- 5 files changed, 69 insertions(+), 1 deletion(-)
+Another example is split pte locks, without lockdep they are in struct
+page, with lockdep, they're a separate allocation, adding pointer
+chases.
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index e13d9bf2f9a5..a004cb1b2dbb 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -25,6 +25,7 @@ enum migrate_reason {
- 	MR_MEMPOLICY_MBIND,
- 	MR_NUMA_MISPLACED,
- 	MR_CONTIG_RANGE,
-+	MR_DEMOTION,
- 	MR_TYPES
- };
- 
-@@ -79,6 +80,7 @@ extern int migrate_huge_page_move_mapping(struct address_space *mapping,
- extern int migrate_page_move_mapping(struct address_space *mapping,
- 		struct page *newpage, struct page *page, enum migrate_mode mode,
- 		int extra_count);
-+extern bool migrate_demote_mapping(struct page *page);
- #else
- 
- static inline void putback_movable_pages(struct list_head *l) {}
-@@ -105,6 +107,10 @@ static inline int migrate_huge_page_move_mapping(struct address_space *mapping,
- 	return -ENOSYS;
- }
- 
-+static inline bool migrate_demote_mapping(struct page *page)
-+{
-+	return false;
-+}
- #endif /* CONFIG_MIGRATION */
- 
- #ifdef CONFIG_COMPACTION
-diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index 705b33d1e395..d25de0cc8714 100644
---- a/include/trace/events/migrate.h
-+++ b/include/trace/events/migrate.h
-@@ -20,7 +20,8 @@
- 	EM( MR_SYSCALL,		"syscall_or_cpuset")		\
- 	EM( MR_MEMPOLICY_MBIND,	"mempolicy_mbind")		\
- 	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
--	EMe(MR_CONTIG_RANGE,	"contig_range")
-+	EM(MR_CONTIG_RANGE,	"contig_range")			\
-+	EMe(MR_DEMOTION,	"demotion")
- 
- /*
-  * First define the enums in the above macros to be exported to userspace
-diff --git a/mm/debug.c b/mm/debug.c
-index c0b31b6c3877..53d499f65199 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPES] = {
- 	"mempolicy_mbind",
- 	"numa_misplaced",
- 	"cma",
-+	"demotion",
- };
- 
- const struct trace_print_flags pageflag_names[] = {
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 705b320d4b35..83fad87361bf 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1152,6 +1152,51 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
- 	return rc;
- }
- 
-+/**
-+ * migrate_demote_mapping() - Migrate this page and its mappings to its
-+ * 			      demotion node.
-+ * @page: An isolated, non-compound page that should move to
-+ * 	  its current node's migration path.
-+ *
-+ * @returns: True if migrate demotion was successful, false otherwise
-+ */
-+bool migrate_demote_mapping(struct page *page)
-+{
-+	int rc, next_nid = next_migration_node(page_to_nid(page));
-+	struct page *newpage;
-+
-+	/*
-+	 * The flags are set to allocate only on the desired node in the
-+	 * migration path, and to fail fast if not immediately available. We
-+	 * are already in the memory reclaim path, we don't want heroic
-+	 * efforts to get a page.
-+	 */
-+	gfp_t mask = GFP_NOWAIT	| __GFP_NOWARN | __GFP_NORETRY |
-+		     __GFP_NOMEMALLOC | __GFP_THISNODE;
-+
-+	VM_BUG_ON_PAGE(PageCompound(page), page);
-+	VM_BUG_ON_PAGE(PageLRU(page), page);
-+
-+	if (next_nid < 0)
-+		return false;
-+
-+	newpage = alloc_pages_node(next_nid, mask, 0);
-+	if (!newpage)
-+		return false;
-+
-+	/*
-+	 * MIGRATE_ASYNC is the most light weight and never blocks.
-+	 */
-+	rc = __unmap_and_move_locked(page, newpage, MIGRATE_ASYNC);
-+	if (rc != MIGRATEPAGE_SUCCESS) {
-+		__free_pages(newpage, 0);
-+		return false;
-+	}
-+
-+	set_page_owner_migrate_reason(newpage, MR_DEMOTION);
-+	return true;
-+}
-+
- /*
-  * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
-  * around it.
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index a5ad0b35ab8e..0a95804e946a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1261,6 +1261,21 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			; /* try to reclaim the page below */
- 		}
- 
-+		if (!PageCompound(page)) {
-+			if (migrate_demote_mapping(page)) {
-+                                unlock_page(page);
-+                                if (likely(put_page_testzero(page)))
-+                                        goto free_it;
-+
-+                                /*
-+				 * Speculative reference will free this page,
-+				 * so leave it off the LRU.
-+				 */
-+                                nr_reclaimed++;
-+                                continue;
-+                        }
-+		}
-+
- 		/*
- 		 * Anonymous process memory has backing store?
- 		 * Try to allocate it some swap space here.
--- 
-2.14.4
+Also; I do not, and have never done so, understood the desire to have
+this unified kernel. Building another kernel just isn't a problem, esp.
+not if you're doing kernel development to begin with.
 
+Making debug code complicated, such that you need to spend more time
+debugging the debug code, just doens't make sense to me either.
