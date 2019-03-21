@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F316C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD35C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B0E218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21409218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 07:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLZq8L8B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yfe0aSmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfCUH6P (ORCPT
+        id S1728101AbfCUH6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 03:58:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45826 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbfCUH6N (ORCPT
+        Thu, 21 Mar 2019 03:58:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36717 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbfCUH6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 03:58:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y3so3657536pgk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:58:12 -0700 (PDT)
+        Thu, 21 Mar 2019 03:58:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p10so3797689pff.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 00:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dfCfOEPJnXrjKZNyGXOlfp7qK4c6wG8AdxQp4q9noKA=;
-        b=WLZq8L8BdoGlwZbLh0l+o0poOxozL0k/PA7aeuqn9qQhY82y8pbLx4Z60FMPfvOEfs
-         r6r67PuYKJUqQlU108D7JJ60uN8fx3vEHplSldfdRKNgKYpsLP6569s2h0GNeSGmEIMZ
-         tJME8aFhKIZJNLxKsV5OjLIFtHQ34Oy+a6/xdmQpG0yLzKM8trMx85XPUABTGvJUWSCQ
-         sdpFEnYjZbE0dZhbPd/+f5WzX+0dBYYaU3yzCtb7R+ml24EFavmNQiB/Pf2XDPUXXOnW
-         /0k3bOgYqA8R/zMSm8msxA7fYyCFeqE4Ox1pDbTAVVdKrQzMm7dvOM5FU2CY2iSO5Ea6
-         XK9g==
+        bh=rrxP6v+2lHMkCgAoQ19mxfczpqRbnf20CLXAc3lvVaA=;
+        b=Yfe0aSmNuUQCCIOJcuTUO7ldovYy7X85yJQDCU/UQm7f+bzIef2d+Iuxx6el1kmABO
+         v92fEfOskbiNPQmZZiTnG3ZNWrWEIm8hLcwHaLAR4OEzuQeeNkfKt85sr+7CGgCTrbSB
+         t62xg6BBsQsmgfiivAbmOacF7P6xrPF7/92LUahGBggpcdXN+VC7kE4hXPS4Cp6TDNJA
+         upPPcj6IXFd4lfTDgDU1wkms07/WqYtACvqGDQBBgPLhHHdwFRA1lrx3/D81CuDroVDk
+         Wc281eIDZck6Y20bigYLOIcQhCmJViXDVnKj6OqnuS10AoiZxAg/YHh5zU4BPUthOeMD
+         CiWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dfCfOEPJnXrjKZNyGXOlfp7qK4c6wG8AdxQp4q9noKA=;
-        b=RbE/DOVId8pMKCU/k+HoUwl3+/C3WHNH2D7kQnE3Lt6iKzrCMp4Q4qE16zMZV8AzFN
-         vqAXqjqnipd+Suxcvc2jDCtmcUZzEX2c6e2voyUrJG28slWh8lVcVcgh445jyPVoP2Cb
-         QReZkwZYBZhBA7zR2tKfJD2hskKjc8DohURSJyZdztUws4V+Nq+9SODbpjM+bzMYZ48b
-         2P3YTziniDu8KuVod2y50cro6MMiVP/OmK3I7sTosk87osPE3wqNcXbgSrxiwsNZ+mLH
-         izUE1D5UrKB9K7xGJq4UR4fLFPYDp3Lrjdq9g9bdKSggl48j6JNUtSosCppwpt+nl2hF
-         fhfg==
-X-Gm-Message-State: APjAAAVfJMbW7ZKANGdWieCpHnPIhS1qE2KBzx9A18EZ9lSgkGVEX/Bo
-        H50kmyTGKeo9D684QYOixvM=
-X-Google-Smtp-Source: APXvYqyHQ3r164fXgiwh0PcPJ5fSOkLUNTtZLqKLE1sUpJvAVA5CunZ4kRUtNiyTbkbJ4oArWRjIng==
-X-Received: by 2002:a62:4649:: with SMTP id t70mr2125697pfa.100.1553155092538;
-        Thu, 21 Mar 2019 00:58:12 -0700 (PDT)
+        bh=rrxP6v+2lHMkCgAoQ19mxfczpqRbnf20CLXAc3lvVaA=;
+        b=gcfdsnC1XFzDrOaZmF9lJP8hxyaJxCoNeSPlbro5dnZxMZdm46FYETQJ60dlRFKvEy
+         a7g6faDZ78HVXBJqXqD3AoSml1cTHEBj8Y2ZYyOBpCgL1n+obG0gMS1A1qcARoxoOD0b
+         CDY8feQWJ2p39ep2b+HXiDSBv+fz4BCLpNbwJkOjAWvF7KAersqIJhPKATXfganuFKkE
+         8cEA0Q7NJllkxy5aC0n8CvtvnU9Xhpcp9QXOzwBQQ+j/Ki8kl7hMmycaAQ3QWCg4gHOv
+         ykFv8lYQ5LwpXDtXVFREA5NjFwq5+lVY9kZmKiaQfq1iFlEyFMAKFieNCOKqOdYXEKqb
+         NM9A==
+X-Gm-Message-State: APjAAAXMXtFEh0ohmqO0o2PjX2WXJSvuG/zecnqcu9tP3Z6PgeJ4jwD3
+        hSLPhyY69tCHnLaF9T/pWYI=
+X-Google-Smtp-Source: APXvYqyVEbZOOY7vYJKutyCH0jQr/JIfi31jum1lfKkZqj2mYD3lS0/3kQvWA6wuUKqoME6h6geIHA==
+X-Received: by 2002:a62:ae13:: with SMTP id q19mr2028836pff.152.1553155095423;
+        Thu, 21 Mar 2019 00:58:15 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.58.09
+        by smtp.gmail.com with ESMTPSA id e184sm6467148pfc.143.2019.03.21.00.58.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 00:58:12 -0700 (PDT)
+        Thu, 21 Mar 2019 00:58:15 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com,
         linux-kernel@vger.kernel.org, joe@perches.com,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 13/18] locking/lockdep: Change type of the element field in circular_queue
-Date:   Thu, 21 Mar 2019 15:57:20 +0800
-Message-Id: <20190321075725.14054-14-duyuyang@gmail.com>
+Subject: [PATCH v3 14/18] locking/lockdep: Change the return type of __cq_dequeue()
+Date:   Thu, 21 Mar 2019 15:57:21 +0800
+Message-Id: <20190321075725.14054-15-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 In-Reply-To: <20190321075725.14054-1-duyuyang@gmail.com>
 References: <20190321075725.14054-1-duyuyang@gmail.com>
@@ -71,86 +71,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The element field is an array in struct circular_queue to keep track of locks
-in the search. Making it the same type as the locks avoids type cast. Also
-fix a typo and elaborate the comment above struct circular_queue.
-
-No functional change.
+With the change, we can slightly adjust the code to iterate the queue in BFS
+search, which simplifies the code. No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- kernel/locking/lockdep.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ kernel/locking/lockdep.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index f46695a..8167d69 100644
+index 8167d69..ad16793 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1272,13 +1272,16 @@ static int add_lock_to_list(struct lock_class *this,
- #define CQ_MASK				(MAX_CIRCULAR_QUEUE_SIZE-1)
- 
- /*
-- * The circular_queue and helpers is used to implement the
-- * breadth-first search(BFS)algorithem, by which we can build
-- * the shortest path from the next lock to be acquired to the
-- * previous held lock if there is a circular between them.
-+ * The circular_queue and helpers are used to implement the graph
-+ * breadth-first search (BFS) algorithm, by which we can determine whether
-+ * there is a path from the next lock to be acquired to a previous held
-+ * lock, which indicates that adding the <prev> -> <next> lock dependency
-+ * produces a circle in the lock dependency graph. Breadth-first search
-+ * instead of depth-first search is used for finding the shortest circular
-+ * path.
-  */
- struct circular_queue {
--	unsigned long element[MAX_CIRCULAR_QUEUE_SIZE];
-+	struct lock_list *element[MAX_CIRCULAR_QUEUE_SIZE];
- 	unsigned int  front, rear;
- };
- 
-@@ -1304,7 +1307,7 @@ static inline int __cq_full(struct circular_queue *cq)
- 	return ((cq->rear + 1) & CQ_MASK) == cq->front;
- }
- 
--static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
-+static inline int __cq_enqueue(struct circular_queue *cq, struct lock_list *elem)
- {
- 	if (__cq_full(cq))
- 		return -1;
-@@ -1314,7 +1317,7 @@ static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
+@@ -1317,14 +1317,21 @@ static inline int __cq_enqueue(struct circular_queue *cq, struct lock_list *elem
  	return 0;
  }
  
--static inline int __cq_dequeue(struct circular_queue *cq, unsigned long *elem)
-+static inline int __cq_dequeue(struct circular_queue *cq, struct lock_list **elem)
+-static inline int __cq_dequeue(struct circular_queue *cq, struct lock_list **elem)
++/*
++ * Dequeue an element from the circular_queue, return the lock if the queue
++ * is not empty, or NULL if otherwise
++ */
++static inline struct lock_list * __cq_dequeue(struct circular_queue *cq)
  {
++	struct lock_list * lock;
++
  	if (__cq_empty(cq))
- 		return -1;
-@@ -1392,12 +1395,12 @@ static int __bfs(struct lock_list *source_entry,
- 		goto exit;
+-		return -1;
++		return NULL;
  
+-	*elem = cq->element[cq->front];
++	lock = cq->element[cq->front];
+ 	cq->front = (cq->front + 1) & CQ_MASK;
+-	return 0;
++
++	return lock;
+ }
+ 
+ static inline unsigned int  __cq_get_elem_count(struct circular_queue *cq)
+@@ -1376,6 +1383,7 @@ static int __bfs(struct lock_list *source_entry,
+ 		 int forward)
+ {
+ 	struct lock_list *entry;
++	struct lock_list *lock;
+ 	struct list_head *head;
+ 	struct circular_queue *cq = &lock_cq;
+ 	int ret = 1;
+@@ -1397,10 +1405,7 @@ static int __bfs(struct lock_list *source_entry,
  	__cq_init(cq);
--	__cq_enqueue(cq, (unsigned long)source_entry);
-+	__cq_enqueue(cq, source_entry);
+ 	__cq_enqueue(cq, source_entry);
  
- 	while (!__cq_empty(cq)) {
- 		struct lock_list *lock;
- 
--		__cq_dequeue(cq, (unsigned long *)&lock);
-+		__cq_dequeue(cq, &lock);
+-	while (!__cq_empty(cq)) {
+-		struct lock_list *lock;
+-
+-		__cq_dequeue(cq, &lock);
++	while ((lock = __cq_dequeue(cq))) {
  
  		if (!lock->class) {
  			ret = -2;
-@@ -1421,7 +1424,7 @@ static int __bfs(struct lock_list *source_entry,
- 					goto exit;
- 				}
- 
--				if (__cq_enqueue(cq, (unsigned long)entry)) {
-+				if (__cq_enqueue(cq, entry)) {
- 					ret = -1;
- 					goto exit;
- 				}
 -- 
 1.8.3.1
 
