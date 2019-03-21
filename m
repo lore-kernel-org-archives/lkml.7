@@ -2,94 +2,154 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3D2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5425CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841C2218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5A3218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfCUOTU (ORCPT
+        id S1728285AbfCUOUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:19:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:5194 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 10:20:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:56852 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728013AbfCUOTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:19:19 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 571403082E23;
-        Thu, 21 Mar 2019 14:19:19 +0000 (UTC)
-Received: from localhost (ovpn-12-72.pek2.redhat.com [10.72.12.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0F4819C57;
-        Thu, 21 Mar 2019 14:19:18 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 22:19:15 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        rppt@linux.vnet.ibm.com, richard.weiyang@gmail.com,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/sparse: Clean up the obsolete code comment
-Message-ID: <20190321141915.GZ18740@MiWiFi-R3L-srv>
-References: <20190320111959.GV19508@bombadil.infradead.org>
- <20190320122011.stuoqugpjdt3d7cd@d104.suse.de>
- <20190320122243.GX19508@bombadil.infradead.org>
- <20190320123658.GF13626@rapoport-lnx>
- <20190320125843.GY19508@bombadil.infradead.org>
- <20190321064029.GW18740@MiWiFi-R3L-srv>
- <20190321092138.GY18740@MiWiFi-R3L-srv>
- <3FFF0A5F-AD27-4F31-8ECF-3B72135CF560@oracle.com>
- <20190321103521.GO8696@dhcp22.suse.cz>
- <EAFD8223-BEED-4985-8CD4-D3410A5898A6@oracle.com>
+        id S1727823AbfCUOUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:20:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF47180D;
+        Thu, 21 Mar 2019 07:20:05 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B345B3F575;
+        Thu, 21 Mar 2019 07:20:02 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH v5 00/19] Convert x86 & arm64 to use generic page walk
+Date:   Thu, 21 Mar 2019 14:19:34 +0000
+Message-Id: <20190321141953.31960-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EAFD8223-BEED-4985-8CD4-D3410A5898A6@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 21 Mar 2019 14:19:19 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21/19 at 05:19am, William Kucharski wrote:
-> 
-> 
-> > On Mar 21, 2019, at 4:35 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > 
-> > I am sorry to be snarky but hasn't this generated way much more email
-> > traffic than it really deserves? A simply and trivial clean up in the
-> > beginning that was it, right?
+Most architectures current have a debugfs file for dumping the kernel
+page tables. Currently each architecture has to implement custom
+functions for walking the page tables because the generic
+walk_page_range() function is unable to walk the page tables used by the
+kernel.
 
-Yeah, I'd like to do like this. Will arrange patch and post a new
-version. Sorry about the mail bomb to CCed people.
+This series extends the capabilities of walk_page_range() so that it can
+deal with the page tables of the kernel (which have no VMAs and can
+contain larger huge pages than exist for user space). x86 and arm64 are
+then converted to make use of walk_page_range() removing the custom page
+table walkers.
 
-Yet I also would like to hear any suggestion from people who intend to
-improve. Discussions make me know more the status of errno than before.
+To enable a generic page table walker to walk the unusual mappings of
+the kernel we need to implement a set of functions which let us know
+when the walker has reached the leaf entry. Since arm, powerpc, s390,
+sparc and x86 all have p?d_large macros lets standardise on that and
+implement those that are missing.
 
-Thank you all for sharing.
+Potentially future changes could unify the implementations of the
+debugfs walkers further, moving the common functionality into common
+code. This would require a common way of handling the effective
+permissions (currently implemented only for x86) along with a per-arch
+way of formatting the page table information for debugfs. One
+immediate benefit would be getting the KASAN speed up optimisation in
+arm64 (and other arches) which is currently only implemented for x86.
 
-> 
-> That's rather the point; that it did generate a fair amount of email
-> traffic indicates it's worthy of at least a passing mention in a
-> comment somewhere.
+Changes since v4:
+ * Correctly force result to a boolean in p?d_large for powerpc.
+ * Added Acked-bys
+ * Rebased onto v5.1-rc1
 
-We header files to put errno. Only changing in kernel may cause
-difference between it and userspace. I will list each returned value in
-code comment and tell what they are meaning in this function, that could
-be helpful. Thanks.
+Changes since v3:
+ * Restored the generic macros, only implement p?d_large() for
+   architectures that have support for large pages. This also means
+   adding dummy #defines for architectures that define p?d_large as
+   static inline to avoid picking up the generic macro.
+ * Drop the 'depth' argument from pte_hole
+ * Because we no longer have the depth for holes, we also drop support
+   in x86 for showing missing pages in debugfs. See discussion below:
+   https://lore.kernel.org/lkml/26df02dd-c54e-ea91-bdd1-0a4aad3a30ac@arm.com/
+ * mips: only define p?d_large when _PAGE_HUGE is defined.
 
-usr/include/asm-generic/errno-base.h 
-include/uapi/asm-generic/errno-base.h
+Changes since v2:
+ * Rather than attemping to provide generic macros, actually implement
+   p?d_large() for each architecture.
+
+Changes since v1:
+ * Added p4d_large() macro
+ * Comments to explain p?d_large() macro semantics
+ * Expanded comment for pte_hole() callback to explain mapping between
+   depth and P?D
+ * Handle folded page tables at all levels, so depth from pte_hole()
+   ignores folding at any level (see real_depth() function in
+   mm/pagewalk.c)
+
+Steven Price (19):
+  arc: mm: Add p?d_large() definitions
+  arm64: mm: Add p?d_large() definitions
+  mips: mm: Add p?d_large() definitions
+  powerpc: mm: Add p?d_large() definitions
+  riscv: mm: Add p?d_large() definitions
+  s390: mm: Add p?d_large() definitions
+  sparc: mm: Add p?d_large() definitions
+  x86: mm: Add p?d_large() definitions
+  mm: Add generic p?d_large() macros
+  mm: pagewalk: Add p4d_entry() and pgd_entry()
+  mm: pagewalk: Allow walking without vma
+  mm: pagewalk: Add test_p?d callbacks
+  arm64: mm: Convert mm/dump.c to use walk_page_range()
+  x86: mm: Don't display pages which aren't present in debugfs
+  x86: mm: Point to struct seq_file from struct pg_state
+  x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_core() to take an mm_struct
+  x86: mm: Convert dump_pagetables to use walk_page_range
+
+ arch/arc/include/asm/pgtable.h               |   1 +
+ arch/arm64/include/asm/pgtable.h             |   2 +
+ arch/arm64/mm/dump.c                         | 117 +++----
+ arch/mips/include/asm/pgtable-64.h           |   8 +
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  30 +-
+ arch/powerpc/kvm/book3s_64_mmu_radix.c       |  12 +-
+ arch/riscv/include/asm/pgtable-64.h          |   7 +
+ arch/riscv/include/asm/pgtable.h             |   7 +
+ arch/s390/include/asm/pgtable.h              |   2 +
+ arch/sparc/include/asm/pgtable_64.h          |   2 +
+ arch/x86/include/asm/pgtable.h               |  10 +-
+ arch/x86/mm/debug_pagetables.c               |   8 +-
+ arch/x86/mm/dump_pagetables.c                | 347 ++++++++++---------
+ arch/x86/platform/efi/efi_32.c               |   2 +-
+ arch/x86/platform/efi/efi_64.c               |   4 +-
+ include/asm-generic/pgtable.h                |  19 +
+ include/linux/mm.h                           |  20 +-
+ mm/pagewalk.c                                |  76 +++-
+ 18 files changed, 404 insertions(+), 270 deletions(-)
+
+-- 
+2.20.1
 
