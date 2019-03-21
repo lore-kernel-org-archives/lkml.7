@@ -2,253 +2,175 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CC2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AACBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8493218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B1F20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 09:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tqDdFbdu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBEvRgE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfCUJp7 (ORCPT
+        id S1728245AbfCUJra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 05:45:59 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:36594 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbfCUJp7 (ORCPT
+        Thu, 21 Mar 2019 05:47:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36959 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728022AbfCUJra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 05:45:59 -0400
-Received: by mail-it1-f195.google.com with SMTP id h9so3218197itl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:45:57 -0700 (PDT)
+        Thu, 21 Mar 2019 05:47:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v14so1966036wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 02:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NE9gEP8H9Kxuof1sLyo7NCmaVwDyqvvJ4c7J4qYBo1M=;
-        b=tqDdFbduPVxACV7klGwElCXLOFKv6aVeY/E+AkUrZwa6gxyE2cW0PFQZpGA7fUnC1P
-         I7QnWNkyfYRKEXgWJ2OegfTeT35Naaa8atOUjKs2+Fq6Y1+IKI+pZsp6Jq2Gp2usgmc+
-         ImHMOhqLZiY9NmL+q0pfbzO2v9jRYSeYb3vmiFVqgkSRKCwgM1Wb1ROUc/BhlduwI8jj
-         y7vyyI7ZScIz2efASuLfo9GYZGZGwy1dvFSsEsXXh6+OfUxK++QZO1ttU60icDMZW07X
-         PPzbWqLzYn56eU34fsn29Aj9sPZGEKjiRVUqoEbl28EuoPr3jNImveoLaaO2Qg1lWRRf
-         DlEA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+Od3i4kr9yLr0+eztuTG35y6WrNaSDWhqSnaiU53xeo=;
+        b=eBEvRgE6RfDfdNqQEg0seNqaC8iQlVDgdiiBeDykV+1nClL9+AVIi6sS5UxlRgttp8
+         MuznJAqLS7AmqEtdhm+GOFQXMFTE8PAy4fmzOg/Moz5oR81dFPUBaHch2RDoS5rX/JSt
+         qnRrN1bRxtu6u5hTlCk4cfp8qp8cSAeNiNvenTje5uR6dJEoH/uCLrVnmSXTprpJS1xR
+         ktMXWiVqp9d3T7FLVpFUnlvTQBlqWl5v3FykzkBjS74T8oyNHIB8mxIU2bEClvZtODh1
+         AQhR/FXNwpXiwR9UFT6Hm5SdeRdeKPP3klHvsBSc9/pzoBlUzXtt1EGK8DqBV+t6TTnm
+         JIbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NE9gEP8H9Kxuof1sLyo7NCmaVwDyqvvJ4c7J4qYBo1M=;
-        b=SIfQLS+jTtaM5X/cuQBrr1/QEpYaTkGbJiFhJICgBUuqr59oiUfBJhZ5J5Lv4AQeVV
-         dTe/XkVqbowYx57iQQai12Ve5A91stExQTWPFkwXSNL4PI41zZKN3hGidhR9JV8Kbgdk
-         MPiMwjwG7it2XPF0a80l77282bc2uQPoTTWkfjY2WrQ/jKjARkBY5k7ej7EQhnBNV5IK
-         Wg7nBUyX8kJPHoTgNao9nwHD8h952OwGVspiAGqZtCCtS5Gj4EpddunxzVaPC15qg0be
-         4T0TxjnOG7C38O9mtNYFcKvykrQ6v5m+i/Ez1IfyttzDubD2e6fLIG0/odWmgHmmdwHB
-         bKpw==
-X-Gm-Message-State: APjAAAVPZa5ZzAauUacvc3p0uAieH8Z72PPWmiCcXHDbqDG1p1Mv+1ew
-        c0kC4HSN7X1cDGQyj8dyG6V+i/epxqGGs9Lm02+iIw==
-X-Google-Smtp-Source: APXvYqxRp8XFI1X6j1zALIP8P45L5OWnjsGaArsGnlwe/X6cwwVWWeq4SfepgAObxYql+mS+V6nizykIPcMGezRg5Tk=
-X-Received: by 2002:a24:3b01:: with SMTP id c1mr1750423ita.144.1553161556990;
- Thu, 21 Mar 2019 02:45:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000db3d130584506672@google.com> <d9e4e36d-1e7a-caaf-f96e-b05592405b5f@virtuozzo.com>
- <CACT4Y+Zj=35t2djhKoq+e1SH3Zu3389Pns7xX6MiMWZ=PFpShA@mail.gmail.com>
- <426293c3-bf63-88ad-06fb-83927ab0d7c0@I-love.SAKURA.ne.jp>
- <CACT4Y+Zh8eA50egLquE4LPffTCmF+30QR0pKTpuz_FpzsXVmZg@mail.gmail.com>
- <315c8ff3-fd03-f2ca-c546-ca7dc5c14669@virtuozzo.com> <CACT4Y+axojyHxk5K34YuLUyj+NJ05+FC3n8ozseHC91B1qn5ZQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+axojyHxk5K34YuLUyj+NJ05+FC3n8ozseHC91B1qn5ZQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 21 Mar 2019 10:45:45 +0100
-Message-ID: <CACT4Y+aGyPpkrwvzZQUHXgipWo26T2U4OW0CxoJpp6yK+MgX=Q@mail.gmail.com>
-Subject: Re: kernel panic: corrupted stack end in wb_workfn
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+ec1b7575afef85a0e5ca@syzkaller.appspotmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+Od3i4kr9yLr0+eztuTG35y6WrNaSDWhqSnaiU53xeo=;
+        b=Q8nPbsaf6ZM1E+r9GK6jMyGFWNaIdm2SCRy7rD9PNf10USs7PwonOOomDFEgSKlkpp
+         F5bz0/FKX3H+6Utci0qJY2FJIsQFlrR3b03Tqu7d46MIG9Fx2bI7ebkrxGfqDtw6IVyD
+         uQLMr8Ck6zXEvTMOx/cn2MnmFQevx4SipXEHcwXA2TVx+KJRqNANgD1h6GJ1sEE04t2n
+         M3P7da5brHunSyDajrikhQFwWfvn2XQXg2NckQjclKC1/hzMlVGwemQzwWCErUKPTWLt
+         NIdl6pIxWX9n2rv/QzTjl6fYrG7JaRtuBgoVod1MusGlTiT8pPsTg29bnn8JGgUxamIq
+         u5pg==
+X-Gm-Message-State: APjAAAVmP4JxLAUQpFRyaYr2Lq2TZSd7gFn1KnubUOY5gHfNP3hZtp/z
+        qgK1hIEJzAusJvheAETR0zM=
+X-Google-Smtp-Source: APXvYqycQRaBo9B4DLw3Iot0P8g1KSU0WwIt47ZgrNWJwfItaGH0dq/UdRTQpc1eCCLHdcGrcOKUpw==
+X-Received: by 2002:a1c:2c4:: with SMTP id 187mr1760468wmc.77.1553161648604;
+        Thu, 21 Mar 2019 02:47:28 -0700 (PDT)
+Received: from giga-mm ([62.68.28.142])
+        by smtp.gmail.com with ESMTPSA id n13sm6205009wrw.67.2019.03.21.02.47.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 21 Mar 2019 02:47:27 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 10:47:26 +0100
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     Mike Crowe <mac@mcrowe.com>
+Cc:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Josef Bacik <jbacik@fb.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Vladislav Yasevich <vyasevich@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Xin Long <lucien.xin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>, Kay Sievers <kay@vrfy.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: kmsg: lseek errors confuse glibc's dprintf
+Message-Id: <20190321104726.3c570c41e5757611a13c23ca@gmail.com>
+In-Reply-To: <20150115173132.GA7486@mcrowe.com>
+References: <20150115173132.GA7486@mcrowe.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 2:57 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Mar 20, 2019 at 2:33 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
-> >
-> >
-> >
-> > On 3/20/19 1:38 PM, Dmitry Vyukov wrote:
-> > > On Wed, Mar 20, 2019 at 11:24 AM Tetsuo Handa
-> > > <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> > >>
-> > >> On 2019/03/20 18:59, Dmitry Vyukov wrote:
-> > >>>> From bisection log:
-> > >>>>
-> > >>>>         testing release v4.17
-> > >>>>         testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-> > >>>>         run #0: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #1: crashed: kernel panic: corrupted stack end in worker_thread
-> > >>>>         run #2: crashed: kernel panic: Out of memory and no killable processes...
-> > >>>>         run #3: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #4: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #5: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #6: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #7: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         run #8: crashed: kernel panic: Out of memory and no killable processes...
-> > >>>>         run #9: crashed: kernel panic: corrupted stack end in wb_workfn
-> > >>>>         testing release v4.16
-> > >>>>         testing commit 0adb32858b0bddf4ada5f364a84ed60b196dbcda with gcc (GCC) 8.1.0
-> > >>>>         run #0: OK
-> > >>>>         run #1: OK
-> > >>>>         run #2: OK
-> > >>>>         run #3: OK
-> > >>>>         run #4: OK
-> > >>>>         run #5: crashed: kernel panic: Out of memory and no killable processes...
-> > >>>>         run #6: OK
-> > >>>>         run #7: crashed: kernel panic: Out of memory and no killable processes...
-> > >>>>         run #8: OK
-> > >>>>         run #9: OK
-> > >>>>         testing release v4.15
-> > >>>>         testing commit d8a5b80568a9cb66810e75b182018e9edb68e8ff with gcc (GCC) 8.1.0
-> > >>>>         all runs: OK
-> > >>>>         # git bisect start v4.16 v4.15
-> > >>>>
-> > >>>> Why bisect started between 4.16 4.15 instead of 4.17 4.16?
-> > >>>
-> > >>> Because 4.16 was still crashing and 4.15 was not crashing. 4.15..4.16
-> > >>> looks like the right range, no?
-> > >>
-> > >> No, syzbot should bisect between 4.16 and 4.17 regarding this bug, for
-> > >> "Stack corruption" can't manifest as "Out of memory and no killable processes".
-> > >>
-> > >> "kernel panic: Out of memory and no killable processes..." is completely
-> > >> unrelated to "kernel panic: corrupted stack end in wb_workfn".
-> > >
-> > >
-> > > Do you think this predicate is possible to code?
-> >
-> > Something like bellow probably would work better than current behavior.
-> >
-> > For starters, is_duplicates() might just compare 'crash' title with 'target_crash' title and its duplicates titles.
->
-> Lots of bugs (half?) manifest differently. On top of this, titles
-> change as we go back in history. On top of this, if we see a different
-> bug, it does not mean that the original bug is also not there.
-> This will sure solve some subset of cases better then the current
-> logic. But I feel that that subset is smaller then what the current
-> logic solves.
+Hello Mike and all,
 
-Counter-examples come up in basically every other bisection.
-For example:
+On Thu, 15 Jan 2015 17:31:32 +0000
+Mike Crowe <mac@mcrowe.com> wrote:
 
-bisecting cause commit starting from ccda4af0f4b92f7b4c308d3acc262f4a7e3affad
-building syzkaller on 5f5f6d14e80b8bd6b42db961118e902387716bcb
-testing commit ccda4af0f4b92f7b4c308d3acc262f4a7e3affad with gcc (GCC) 8.1.0
-all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
-testing release v4.19
-testing commit 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d with gcc (GCC) 8.1.0
-all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test_checked
-testing release v4.18
-testing commit 94710cac0ef4ee177a63b5227664b38c95bbf703 with gcc (GCC) 8.1.0
-all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
-testing release v4.17
-testing commit 29dcea88779c856c7dc92040a0c01233263101d4 with gcc (GCC) 8.1.0
-all runs: crashed: KASAN: null-ptr-deref Read in refcount_sub_and_test
+> glibc's dprintf implementation does not work correctly with /dev/kmsg file
+> descriptors because glibc treats receiving EBADF and EINVAL from lseek when
+> trying to determine the current file position as errors. See
+> https://sourceware.org/bugzilla/show_bug.cgi?id=17830
 
-That's a different crash title, unless somebody explicitly code this case.
+we need to conclude on this issue. This is a real bug which is ignored
+for 4 years now. Mike, would you like to re-send a formal patch?
+I can do it as well, preserving a link to your original patch/report.
+In case you'd like to post it yourself, I can be a tester and/or
+provide a reproducer.
 
-Or, what crash is this?
-
-testing commit 52358cb5a310990ea5069f986bdab3620e01181f with gcc (GCC) 8.1.0
-run #1: crashed: general protection fault in cpuacct_charge
-run #2: crashed: WARNING: suspicious RCU usage in corrupted
-run #3: crashed: general protection fault in cpuacct_charge
-run #4: crashed: BUG: unable to handle kernel paging request in ipt_do_table
-run #5: crashed: KASAN: stack-out-of-bounds Read in cpuacct_charge
-run #6: crashed: WARNING: suspicious RCU usage
-run #7: crashed: no output from test machine
-run #8: crashed: no output from test machine
+> >>From what I can tell prior to Kay Sievers printk record commit
+> e11fea92e13fb91c50bacca799a6131c81929986, calling lseek(fd, 0, SEEK_CUR)
+> with such a file descriptor would not return an error.
+> 
+> Prior to Kay's change, Arnd Bergmann's commit
+> 6038f373a3dc1f1c26496e60b6c40b164716f07e seemed to go to some lengths to
+> preserve the successful return code rather than returning (the perhaps more
+> logical) -ESPIPE.
+> 
+> glibc is happy with either a successful return or -ESPIPE.
+> 
+> For maximum compatibility it seems that success should be returned but
+> given Kay's new seek interface perhaps this isn't helpful.
+> 
+> This patch ensures that such a seek succeeds:
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 02d6b6d..b3ff6f0 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -693,7 +693,7 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+>  	loff_t ret = 0;
+>  
+>  	if (!user)
+> -		return -EBADF;
+> +		return (whence == SEEK_CUR) ? 0 : -EBADF;
+>  	if (offset)
+>  		return -ESPIPE;
+>  
+> @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+>  		user->idx = log_next_idx;
+>  		user->seq = log_next_seq;
+>  		break;
+> +	case SEEK_CUR:
+> +		/* For compatibility with userspace requesting the
+> +		 * current file position. */
+> +		ret = 0;
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+> 
+> (although it could be argued that the !user case should return -ESPIPE
+> rather than EBADF since the file descriptor _is_ valid.)
+> 
+> and this patch causes a failure that glibc is prepared to accept:
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 02d6b6d..f6b0c93 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -693,7 +693,7 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+>  	loff_t ret = 0;
+>  
+>  	if (!user)
+> -		return -EBADF;
+> +		return -ESPIPE;
+>  	if (offset)
+>  		return -ESPIPE;
+>  
+> @@ -718,6 +718,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+>  		user->idx = log_next_idx;
+>  		user->seq = log_next_seq;
+>  		break;
+> +	case SEEK_CUR:
+> +		/* For compatibility with userspace expecting SEEK_CUR
+> +		 * to not yield EINVAL. */
+> +		ret = -ESPIPE;
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+> 
+> Either makes dprintf work, but is either the right solution?
+> 
+> Thanks.
+> 
+> Mike.
 
 
-Or, that "INFO: trying to register non-static key in can_notifier"
-does not do any testing, but is "WARNING in dma_buf_vunmap" still
-there or not?
-
-testing commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c with gcc (GCC) 8.1.0
-all runs: crashed: WARNING in dma_buf_vunmap
-testing release v4.11
-testing commit a351e9b9fc24e982ec2f0e76379a49826036da12 with gcc (GCC) 7.3.0
-all runs: OK
-# git bisect start v4.12 v4.11
-Bisecting: 7831 revisions left to test after this (roughly 13 steps)
-[2bd80401743568ced7d303b008ae5298ce77e695] Merge tag 'gpio-v4.12-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
-testing commit 2bd80401743568ced7d303b008ae5298ce77e695 with gcc (GCC) 7.3.0
-all runs: crashed: INFO: trying to register non-static key in can_notifier
-# git bisect bad 2bd80401743568ced7d303b008ae5298ce77e695
-Bisecting: 3853 revisions left to test after this (roughly 12 steps)
-[8d65b08debc7e62b2c6032d7fe7389d895b92cbc] Merge
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-testing commit 8d65b08debc7e62b2c6032d7fe7389d895b92cbc with gcc (GCC) 7.3.0
-all runs: crashed: INFO: trying to register non-static key in can_notifier
-# git bisect bad 8d65b08debc7e62b2c6032d7fe7389d895b92cbc
-Bisecting: 2022 revisions left to test after this (roughly 11 steps)
-[cec381919818a9a0cb85600b3c82404bdd38cf36] Merge tag
-'mac80211-next-for-davem-2017-04-28' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next
-testing commit cec381919818a9a0cb85600b3c82404bdd38cf36 with gcc (GCC) 5.5.0
-all runs: crashed: INFO: trying to register non-static key in can_notifier
-
-
-
-
-
-
-> > syzbot has some knowledge about duplicates with different crash titles when people use "syz dup" command.
->
-> This is very limited set of info. And in the end I think we've seen
-> all bug types being duped on all other bugs types pair-wise, and at
-> the same time we've seen all bug types being not dups to all other bug
-> types. So I don't see where this gets us.
-> And again as we go back in history all these titles change.
->
-> > Also it might be worth to experiment with using neural networks to identify duplicates.
-> >
-> >
-> > target_crash = 'kernel panic: corrupted stack end in wb_workfn'
-> > test commit:
-> >         bad = false;
-> >         skip = true;
-> >         foreach run:
-> >                 run_started, crashed, crash := run_repro();
-> >
-> >                 //kernel built, booted, reproducer launched successfully
-> >                 if (run_started)
-> >                         skip = false;
-> >                 if (crashed && is_duplicates(crash, target_crash))
-> >                         bad = true;
-> >
-> >         if (skip)
-> >                 git bisect skip;
-> >         else if (bad)
-> >                 git bisect bad;
-> >         else
-> >                 git bisect good;
+-- 
+Alexander Sverdlin.
