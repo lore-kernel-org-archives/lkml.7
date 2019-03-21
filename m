@@ -2,144 +2,119 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74976C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37536C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45377218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086602183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sykq9NtP"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="FGcvKTgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfCUOAP (ORCPT
+        id S1728404AbfCUOAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:00:15 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46102 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfCUOAP (ORCPT
+        Thu, 21 Mar 2019 10:00:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39632 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfCUOAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:00:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o1so6695730wrs.13;
-        Thu, 21 Mar 2019 07:00:14 -0700 (PDT)
+        Thu, 21 Mar 2019 10:00:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so4357497pfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 07:00:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=77rmCIk4/Z5BGaWdafBUOTQSfdknlM3klzpVKA754Zg=;
-        b=Sykq9NtPaYz0fzI1NBbgSIKkK16iz+zb7QJ8PDxRAnNWpRoHihyX7ZKcWk+Xf22I7g
-         TdX+MBMwhvGAxcrR6FInojPqRkPo0Kl5lagD6PrM1SRsWIkErhV6nBRBPOIdRFmB+psq
-         vo7FBVr9rvuU0WE97IUmCrhb4AZde+qxfxEcct/xrBLqzeeNUNJEFa2pZY04d3AiatJH
-         rEvYYyRao2v8d8unsK2QfH8DH/1enjHpQAST+19bCJ1Ce9lyHsCmcYy2YLZ6f+bzXeQU
-         +5GllugukOYmGOWJj0qXLW6ZD5c5tgJyuS9Yf9LD2tE3ZKBvsAptwwN4+Fq1TSiA4Usb
-         v3Kg==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GYwTgmlWSVYWvxP/h7yMFr7idR5LGv6A4BU5Fkgg4q0=;
+        b=FGcvKTgl6NB2UtnMF9kQzr0BiQLKgvxBEUshDKOfS4i4ssA1TTayyj+4JD8iqNYThq
+         oSRuuh6tw9ZjChLgSVpJPEL5bLESpc/V6bjWUCXuoOOWQpHZOlk6u4jES5Yziu4iofwP
+         y3eyDMkRNrmUyf6uiocrVBRHPRODFXB5vzNpo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=77rmCIk4/Z5BGaWdafBUOTQSfdknlM3klzpVKA754Zg=;
-        b=D1wx3EaAHON0YdGMiEhxQWA0qXRSyc8pAFAVlk1RJQmp5V1uUcBOVxNav53F+qnUzP
-         8gVr6adGxwwmcH+VPKaIpSBAhTRF0ALzJdGATpHKff4HQHH+Sl2YY5NfYyyAWhMCQD1L
-         jqap8VquWxD6KcIy9/k9cLBASd7LZilSTpCeUUrK7fvNf3qEpNct9W4r8mgDl//SQkVa
-         o4PiAEMbwwM6/hzSO3CoKR4MHhuV51VI74axhyUzHYvNkPJfObPnkJygYXVoGmzEOV9W
-         1N9PvrNT2RNa7v+BK/R0mm6lHGnREIswlbMj0OvX6TI98jkBUQIFuTcBHD6X6OaSsfvs
-         4W0A==
-X-Gm-Message-State: APjAAAUf9gzrMXx/sbLbrMO6HTXHyqaf7SMwmbN9G/e5Z0DEd16DU799
-        vlgzDLIT8hSvB1T+6brmqAQlGL1GuZNQKAOcjMo=
-X-Google-Smtp-Source: APXvYqxl8dUpIAXm9yAo49AhNIVctnBtiT7RBKIMck23fCQJp8hSLvO4qfrdjXOumffQ4SsIzMGjEWewY5kPZ1mPhXk=
-X-Received: by 2002:adf:eb46:: with SMTP id u6mr2700599wrn.288.1553176813416;
- Thu, 21 Mar 2019 07:00:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320125939.74347-1-yuehaibing@huawei.com>
-In-Reply-To: <20190320125939.74347-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 21 Mar 2019 10:00:02 -0400
-Message-ID: <CADnq5_OS8SkHxFp41u_BwQRMZAr+3KHACRndSn+bROnMPQE9JA@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/ttm: remove set but not used variable 'rdev'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GYwTgmlWSVYWvxP/h7yMFr7idR5LGv6A4BU5Fkgg4q0=;
+        b=naaNJII/qq+oicj9ekNXUUJplxFpFB0bUGzmhUMXyEBbX6Z9TimEyLARYkOQGs8weP
+         CadNSf7n5RXKkJ41bAa2Ft7L0B3McDUyDNJbRPAo7O0813YDHvCR8QCwh8urGrl0Mvba
+         zUiboP9KeI4ng/7tRW4ISzWcPO9FvstVFBBuYJBYkoZSiUCoCnBwtVpO9qw4IAYxnvwo
+         E9JjhlTWVA8FKvyFMfujP1qD9OQHey/soZ6zR/l6XAHntsLeUODg06BKx7dZqzD932DO
+         Q5fAA8WgAsF5hy35+sjGeFNOJKt6WfBSH626/rHeOtSqaAE8VUsJBZk55vIg0SYG3Vba
+         +S0w==
+X-Gm-Message-State: APjAAAUSV77Q3R1rsD4KJqps7cPqBLU48CFZe3NOhWmYfJM0se8po0P7
+        nDCwVaKkRE8ssr9ka/5Nv9YAxA==
+X-Google-Smtp-Source: APXvYqyjFIp7Xi8pOR7tFDkI9n1bs5q6JelbKXfA4DE8HfZvWcN0kT+1jNHmBfLsTJlUT8o0T4pFkg==
+X-Received: by 2002:a17:902:20eb:: with SMTP id v40mr3749970plg.20.1553176815414;
+        Thu, 21 Mar 2019 07:00:15 -0700 (PDT)
+Received: from localhost.localdomain ([49.206.202.234])
+        by smtp.gmail.com with ESMTPSA id i126sm7985158pfc.101.2019.03.21.07.00.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 07:00:13 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        kernel-janitors@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        Ryan Pannell <ryan@osukl.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 0/4] drm/panel: Add Novatek NT35596 panel
+Date:   Thu, 21 Mar 2019 19:29:51 +0530
+Message-Id: <20190321135955.25661-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 9:25 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/gpu/drm/radeon/radeon_ttm.c: In function 'radeon_move_vram_ram':
-> drivers/gpu/drm/radeon/radeon_ttm.c:254:24: warning:
->  variable 'rdev' set but not used [-Wunused-but-set-variable]
->
-> drivers/gpu/drm/radeon/radeon_ttm.c: In function 'radeon_move_ram_vram':
-> drivers/gpu/drm/radeon/radeon_ttm.c:301:24: warning:
->  variable 'rdev' set but not used [-Wunused-but-set-variable]
->
-> It's not used since a987fcaa805f ("ttm: Make parts of a struct ttm_bo_device
-> global.")
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+This is v2 series for Novatek NT35596 panel driver. here is previous
+series set[2]
 
+Since there is no proper programming guide for NT35596 IC, the driver 
+init sequence is referenced from [1] but analyzed based on datasheet.
 
-Applied.  thanks!
+NT35596 support several regulators on the chip, among those ony 4
+regulators like VCI, VDDI/DVDD, AVDD, AVEE are used during power-on
+sequence. Right now driver added code for 3-regulator based power-on
+sequence since MTF050FHDI-03 panel support. This power-on sequence may
+be moved to panel_desc in future, if there is any new panel would come
+up with other type of sequence.
 
-Alex
+Changes for v2:
+- control enable/disable calls using enable, prepare flags
+- comment on delays
+- move 120ms delay on power-on since it is part of power-on sequence
+- fix driver name as novatek-nt35596
 
-> ---
->  drivers/gpu/drm/radeon/radeon_ttm.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
-> index 557bdd7a2fc8..5d42f8d8e68d 100644
-> --- a/drivers/gpu/drm/radeon/radeon_ttm.c
-> +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
-> @@ -251,14 +251,12 @@ static int radeon_move_vram_ram(struct ttm_buffer_object *bo,
->                                 struct ttm_mem_reg *new_mem)
->  {
->         struct ttm_operation_ctx ctx = { interruptible, no_wait_gpu };
-> -       struct radeon_device *rdev;
->         struct ttm_mem_reg *old_mem = &bo->mem;
->         struct ttm_mem_reg tmp_mem;
->         struct ttm_place placements;
->         struct ttm_placement placement;
->         int r;
->
-> -       rdev = radeon_get_rdev(bo->bdev);
->         tmp_mem = *new_mem;
->         tmp_mem.mm_node = NULL;
->         placement.num_placement = 1;
-> @@ -298,14 +296,12 @@ static int radeon_move_ram_vram(struct ttm_buffer_object *bo,
->                                 struct ttm_mem_reg *new_mem)
->  {
->         struct ttm_operation_ctx ctx = { interruptible, no_wait_gpu };
-> -       struct radeon_device *rdev;
->         struct ttm_mem_reg *old_mem = &bo->mem;
->         struct ttm_mem_reg tmp_mem;
->         struct ttm_placement placement;
->         struct ttm_place placements;
->         int r;
->
-> -       rdev = radeon_get_rdev(bo->bdev);
->         tmp_mem = *new_mem;
->         tmp_mem.mm_node = NULL;
->         placement.num_placement = 1;
->
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+[2] https://patchwork.freedesktop.org/series/57490/#rev1
+[1] https://android.googlesource.com/kernel/msm/+/android-msm-shamu-3.10-lollipop-mr1/arch/arm/boot/dts/qcom/dsi-panel-nt35596-1080p-video.dtsi
+
+Any inputs?
+Jagan.
+
+Jagan Teki (4):
+  dt-bindings: Add vendor prefix for novatek
+  dt-bindings: Add vendor prefix for microtech
+  dt-bindings: display: Add Novatek NT35596 panel documentation
+  drm/panel: Add Novatek NT35596 panel driver
+
+ .../display/panel/novatek,nt35596.txt         |  32 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/panel/Kconfig                 |  13 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-novatek-nt35596.c | 895 ++++++++++++++++++
+ 6 files changed, 949 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt35596.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-novatek-nt35596.c
+
+-- 
+2.18.0.321.gffc6fa0e3
+
