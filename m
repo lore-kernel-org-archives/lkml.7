@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D5E218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322682075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553158152;
-	bh=idCTb+9bg0hFRPB43A06EpFX/kPCGn4E2aabiNtrJsg=;
+	s=default; t=1553158157;
+	bh=asHhf97KSDRJRJFDggNFWple/eiLgg3HUxDLzyWEBQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7s6YcTNbWN73h6oW2s3AhyZFwbmPygLK3IstnQ7OWGq1Z1Y6eZyL7+qVb/61w4AC
-	 Kn/n0BjyTgcPyoTgeOaRO+aDUY2rLOGQHnHZYjhFaOsbHX5od+NIXyNuHUuLWFf9/n
-	 gF1dnPk2Sxw1Meu6DSe0tvnUeoqpYl+CpocjY5ug=
+	b=FendhudJqm9op13S4ncF97Ba53fbXPhk/McQIR2Xdt6zu+47oLyQ0hZBcPLc8+sza
+	 6EMQi7GcgGbfZnNVMUY8jufsE6NBEak/XM5YDr52jawbLH0ngdYeK6TDWspahh3h4o
+	 u+/5k/LcNiMWxcPaV2xOVoyAqNZuhB+hjzJ0di5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfCUItL (ORCPT
+        id S1728163AbfCUItO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:49:11 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41502 "EHLO
+        Thu, 21 Mar 2019 04:49:14 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41508 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbfCUItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:49:05 -0400
+        id S1728111AbfCUItG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 04:49:06 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id 54F71600B6; Thu, 21 Mar 2019 16:48:59 +0800 (CST)
+        id 646D9600FD; Thu, 21 Mar 2019 16:48:59 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sebastian Reichel <sre@kernel.org>
-Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 7/9] mfd: axp20x: add USB power supply mfd cell to AXP813
-Date:   Thu, 21 Mar 2019 16:48:48 +0800
-Message-Id: <20190321084850.20769-8-wens@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 9/9] ARM: dts: sun8i: a83t: Enable USB OTG controller on some boards
+Date:   Thu, 21 Mar 2019 16:48:50 +0800
+Message-Id: <20190321084850.20769-10-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321084850.20769-1-wens@kernel.org>
 References: <20190321084850.20769-1-wens@kernel.org>
@@ -51,54 +50,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-supports this variant, we can add an mfd cell for it to use it.
+The Bananapi M3 and Cubietruck Plus both have USB OTG ports wired to the
+SoC and PMIC in the same way, with the N_VBUSEN pin on the PMIC
+controlling VBUS output, the PMIC's VBUS input for sensing VBUS, and
+PH11 on the SoC for sensing the ID pin.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-[wens@csie.org: add commit message]
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Enable OTG on both boards.
+
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
 ---
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts     | 12 ++++++++++++
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
 
-Changes since v1:
-  - Made axp803_usb_power_supply_resources[] constant
-  - Added Lee's acked-by
----
- drivers/mfd/axp20x.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 3c97f2c0fdfe..902f9f27e748 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
- 	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 838be7b3715f..9d34eabba121 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -389,7 +389,19 @@
+ 	};
  };
  
-+/* AXP803 and AXP813/AXP818 share the same interrupts */
-+static const struct resource axp803_usb_power_supply_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-+	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
 +};
 +
- static const struct resource axp22x_pek_resources[] = {
- 	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
- 	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
-@@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] = {
- 		.of_compatible	= "x-powers,axp813-ac-power-supply",
- 		.num_resources	= ARRAY_SIZE(axp20x_ac_power_supply_resources),
- 		.resources	= axp20x_ac_power_supply_resources,
-+	}, {
-+		.name		= "axp20x-usb-power-supply",
-+		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
-+		.resources	= axp803_usb_power_supply_resources,
-+		.of_compatible	= "x-powers,axp813-usb-power-supply",
- 	},
++&usb_power_supply {
++	status = "okay";
++};
++
+ &usbphy {
++	usb0_id_det-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_drivevbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index fcbec3d7ccd7..ea299d3d84d0 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -420,7 +420,19 @@
+ 	};
  };
  
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usb_power_supply {
++	status = "okay";
++};
++
+ &usbphy {
++	usb0_id_det-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_drivevbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
+ 	status = "okay";
 -- 
 2.20.1
 
