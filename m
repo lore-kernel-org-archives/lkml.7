@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B67721B25
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801FC218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfCUWA1 (ORCPT
+        id S1727389AbfCUWAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:00:27 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53197 "EHLO mga06.intel.com"
+        Thu, 21 Mar 2019 18:00:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53201 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbfCUWAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:00:25 -0400
+        id S1727247AbfCUWA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:00:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="216357247"
+   d="scan'208";a="127513569"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
+  by orsmga008.jf.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7FD4F30214C; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
+        id 50E0F30214C; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
 Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>, jgross@suse.com,
-        boris.ostrovsky@oracle.com
-Subject: [PATCH 16/17] x86/xen: Mark xen_vcpu_stolen as __visible
-Date:   Thu, 21 Mar 2019 15:00:08 -0700
-Message-Id: <20190321220009.29334-17-andi@firstfloor.org>
+        Andi Kleen <ak@linux.intel.com>, hugues.fruchet@st.com,
+        mchehab@s-opensource.com
+Subject: [PATCH 10/17] delta: Fix buffer overrun in delta_ipc_open
+Date:   Thu, 21 Mar 2019 15:00:02 -0700
+Message-Id: <20190321220009.29334-11-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321220009.29334-1-andi@firstfloor.org>
 References: <20190321220009.29334-1-andi@firstfloor.org>
@@ -50,29 +50,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-This function is referenced from assembler, so needs to be marked
-__visible for LTO.
+delta_ipc_open is always called with a single constant string
+as name, but it uses a longer memcpy to copy the string to
+a different structure. The memcpy would read outside the bounds
+of the string, potentially accessing unmapped memory.
 
-Cc: jgross@suse.com
-Cc: boris.ostrovsky@oracle.com
+Just use strcpy instead after clearing the area.
+
+This fixes a build error with LTO, which can detect this.
+
+Cc: hugues.fruchet@st.com
+Cc: mchehab@s-opensource.com
+Fixes: 91c83f395fbe [media] st-delta: rpmsg ipc support
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- drivers/xen/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/sti/delta/delta-ipc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/time.c b/drivers/xen/time.c
-index 0968859c29d0..04b59dab30f5 100644
---- a/drivers/xen/time.c
-+++ b/drivers/xen/time.c
-@@ -144,7 +144,7 @@ void xen_get_runstate_snapshot(struct vcpu_runstate_info *res)
- }
+diff --git a/drivers/media/platform/sti/delta/delta-ipc.c b/drivers/media/platform/sti/delta/delta-ipc.c
+index a4603d573c34..bd1bbbeedec3 100644
+--- a/drivers/media/platform/sti/delta/delta-ipc.c
++++ b/drivers/media/platform/sti/delta/delta-ipc.c
+@@ -175,8 +175,8 @@ int delta_ipc_open(struct delta_ctx *pctx, const char *name,
+ 	msg.ipc_buf_size = ipc_buf_size;
+ 	msg.ipc_buf_paddr = ctx->ipc_buf->paddr;
  
- /* return true when a vcpu could run but has no real cpu to run on */
--bool xen_vcpu_stolen(int vcpu)
-+__visible bool xen_vcpu_stolen(int vcpu)
- {
- 	return per_cpu(xen_runstate, vcpu).state == RUNSTATE_runnable;
- }
+-	memcpy(msg.name, name, sizeof(msg.name));
+-	msg.name[sizeof(msg.name) - 1] = 0;
++	memset(msg.name, 0, sizeof(msg.name));
++	strcpy(msg.name, name);
+ 
+ 	msg.param_size = param->size;
+ 	memcpy(ctx->ipc_buf->vaddr, param->data, msg.param_size);
 -- 
 2.20.1
 
