@@ -2,102 +2,114 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E52C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3426EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADB4218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuX4F0h+"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDA921917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 16:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfCUQgZ (ORCPT
+        id S1728621AbfCUQgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 12:36:25 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:45038 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfCUQgZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 12:36:25 -0400
-Received: by mail-vs1-f67.google.com with SMTP id j184so4033251vsd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kdcQTlIAINGPVpPkA6d3wrWVhVTfoib9Yhk+JeGxrB4=;
-        b=iuX4F0h+7qHBvHmEtwtWnWuuVjqJ6L3uyzNWcanZIHrie0GU5HEpnrcrLDgcDhRp9V
-         uKez1XkoJ9YJrrY0pbbCbNY27YdntuK7OLaiuWn/acYbjtksiLYQ3hcQ3tR9I/aEHOpO
-         ctWoQV0umPUr9+XC57B07nXotO9JJrbMJoYJU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kdcQTlIAINGPVpPkA6d3wrWVhVTfoib9Yhk+JeGxrB4=;
-        b=J08Yo69cv4aA59h4+N4st/waX9xQiiGAoq2fzMYgCSE+rrqKwMvwV77Jvx5f8YsqNI
-         R9MUVeRmeLBa01bzUGtSMIKjN2wahZvh67dIJZqholT/5p9kpnqw8CDXOQbOZRaI9Koe
-         sTpRplILpVaH1DCww/Hje9BO3Iz3BGNqWYD+MSPLJibgpxrHMBxdrmxBSWxou0u44rE3
-         NmTCsomzo2PJaoSio5xGCJj4MmAfe75wxvOx/Zit1FNXjSS7+UrEDWMPiW4oKSZdZOXO
-         aqXXuTqpc0qz3iBUKPbyHBAiylT6zPYRcmJartB+jeAFTXa8QibRvt8tT7CoGDtI+tAk
-         x+Pg==
-X-Gm-Message-State: APjAAAUH3kY5FPiXqfLUZFXuaRc+U6rg0aFezNzn3EFCKYM1mxNC3mhR
-        A+S5RU6DLGJWTIEhqZKephANMvkab5K1ew==
-X-Google-Smtp-Source: APXvYqyl7zlG8qI3XO/1SkujsUW22rxJdcNbQuT8B8t/c3/nZ3/HIkRAz+JEBUL9Vzv8etRCK5TH9A==
-X-Received: by 2002:a67:f694:: with SMTP id n20mr2621048vso.9.1553186183040;
-        Thu, 21 Mar 2019 09:36:23 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id t207sm259979vsc.19.2019.03.21.09.36.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 09:36:22 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id z6so4063501vsc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 09:36:21 -0700 (PDT)
-X-Received: by 2002:a67:fa94:: with SMTP id f20mr2623709vsq.172.1553186181626;
- Thu, 21 Mar 2019 09:36:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <ba89a02a-5550-689f-6609-1e8c025f5b91@infradead.org>
-In-Reply-To: <ba89a02a-5550-689f-6609-1e8c025f5b91@infradead.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 21 Mar 2019 09:36:09 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+9e9GX1qoAw9S0r2yU-1kpqpMF7qKGyNXpBo3AVck5Ag@mail.gmail.com>
-Message-ID: <CAGXu5j+9e9GX1qoAw9S0r2yU-1kpqpMF7qKGyNXpBo3AVck5Ag@mail.gmail.com>
-Subject: Re: what happened to SECURITY_DAC?
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 Mar 2019 12:36:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:59346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728528AbfCUQgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 12:36:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD5D2374;
+        Thu, 21 Mar 2019 09:36:40 -0700 (PDT)
+Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB88D3F614;
+        Thu, 21 Mar 2019 09:36:38 -0700 (PDT)
+From:   Julien Grall <julien.grall@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     christoffer.dall@arm.com, james.morse@arm.com,
+        marc.zyngier@arm.com, julien.thierry@arm.com,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, Julien Grall <julien.grall@arm.com>
+Subject: [PATCH RFC 00/14] kvm/arm: Align the VMID allocation with the arm64 ASID one
+Date:   Thu, 21 Mar 2019 16:36:09 +0000
+Message-Id: <20190321163623.20219-1-julien.grall@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 5:39 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> wow.  Commit 70b62c25665f636c9f6c700b26af7df296b0887e
-> from last Sept. 14, 2018, total commit description says:
->
->     LoadPin: Initialize as ordered LSM
->
->     This converts LoadPin from being a direct "minor" LSM into an ordered LSM.
->
-> Nowhere does it say anything like "this also deletes any notions of
-> DEFAULT_SECURITY and DAC."
+This patch series is moving out the ASID allocator in a separate file in order
+to re-use it for the VMID. The benefits are:
+    - CPUs are not forced to exit a roll-over.
+    - Context invalidation is now per-CPU rather than
+      broadcasted.
 
-This was a mistaken merge of chunks from a larger series that Casey
-and I were working on. It should have been split out.
+There are no performance regression on the fastpath for ASID allocation.
+Actually on the hackbench measurement (300 hackbench) it was .7% faster.
 
-> Was this deletion a (sekrit) security issue that was not being highlighted on purpose?
+The measurement was made on a Seattle based SoC (8 CPUs), with the
+number of VMID limited to 4-bit. The test involves running concurrently 40
+guests with 2 vCPUs. Each guest will then execute hackbench 5 times
+before exiting.
 
-No, just an error while refactoring to in creating CONFIG_LSM.
+The performance difference between the current algo and the new one are:
+    - 2.5% less exit from the guest
+    - 22.4% more flush, although they are now local rather than
+    broadcasted
+    - 0.11% faster (just for the record)
 
-> and what do you recommend for simple DAC-like security?
+The ASID allocator rework to make it generic has been divided in multiple
+patches to make the review easier.
 
-See CONFIG_LSM. There are some related issues getting discussed here, too:
-https://lore.kernel.org/linux-security-module/f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp/
+A branch with the patch based on 5.1-rc1 can be found:
 
+http://xenbits.xen.org/gitweb/?p=people/julieng/linux-arm.git;a=shortlog;h=refs/heads/vmid-rework/rfc
+
+Cheers,
+
+Julien Grall (14):
+  arm64/mm: Introduce asid_info structure and move
+    asid_generation/asid_map to it
+  arm64/mm: Move active_asids and reserved_asids to asid_info
+  arm64/mm: Move bits to asid_info
+  arm64/mm: Move the variable lock and tlb_flush_pending to asid_info
+  arm64/mm: Remove dependency on MM in new_context
+  arm64/mm: Store the number of asid allocated per context
+  arm64/mm: Introduce NUM_ASIDS
+  arm64/mm: Split asid_inits in 2 parts
+  arm64/mm: Split the function check_and_switch_context in 3 parts
+  arm64/mm: Introduce a callback to flush the local context
+  arm64: Move the ASID allocator code in a separate file
+  arm64/lib: asid: Allow user to update the context under the lock
+  arm/kvm: Introduce a new VMID allocator
+  kvm/arm: Align the VMID allocation with the arm64 ASID one
+
+ arch/arm/include/asm/kvm_asid.h   |  81 +++++++++++++++
+ arch/arm/include/asm/kvm_asm.h    |   2 +-
+ arch/arm/include/asm/kvm_host.h   |   5 +-
+ arch/arm/include/asm/kvm_hyp.h    |   1 +
+ arch/arm/kvm/Makefile             |   1 +
+ arch/arm/kvm/asid.c               | 191 +++++++++++++++++++++++++++++++++++
+ arch/arm/kvm/hyp/tlb.c            |   8 +-
+ arch/arm64/include/asm/asid.h     |  81 +++++++++++++++
+ arch/arm64/include/asm/kvm_asid.h |   8 ++
+ arch/arm64/include/asm/kvm_asm.h  |   2 +-
+ arch/arm64/include/asm/kvm_host.h |   5 +-
+ arch/arm64/kvm/hyp/tlb.c          |  10 +-
+ arch/arm64/lib/Makefile           |   2 +
+ arch/arm64/lib/asid.c             | 191 +++++++++++++++++++++++++++++++++++
+ arch/arm64/mm/context.c           | 205 ++++++--------------------------------
+ virt/kvm/arm/arm.c                | 112 +++++++--------------
+ 16 files changed, 638 insertions(+), 267 deletions(-)
+ create mode 100644 arch/arm/include/asm/kvm_asid.h
+ create mode 100644 arch/arm/kvm/asid.c
+ create mode 100644 arch/arm64/include/asm/asid.h
+ create mode 100644 arch/arm64/include/asm/kvm_asid.h
+ create mode 100644 arch/arm64/lib/asid.c
 
 -- 
-Kees Cook
+2.11.0
+
