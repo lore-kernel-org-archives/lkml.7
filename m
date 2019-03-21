@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662D1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F2FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328FA21915
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF47218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfCUMY5 (ORCPT
+        id S1728221AbfCUMZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:24:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49490 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 08:25:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49522 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727823AbfCUMY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:24:57 -0400
+        id S1728111AbfCUMZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 08:25:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 48DECAC44;
-        Thu, 21 Mar 2019 12:24:56 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 13:24:55 +0100
-Message-ID: <s5hd0mkct48.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 7B963AC8B;
+        Thu, 21 Mar 2019 12:25:06 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 13:25:06 +0100
+Message-ID: <s5hbm24ct3x.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     " Gustavo A. R. Silva " <gustavo@embeddedor.com>
 Cc:     "Jaroslav Kysela" <perex@perex.cz>, <alsa-devel@alsa-project.org>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: rawmidi: Fix potential Spectre v1 vulnerability
-In-Reply-To: <20190320211524.GA20363@embeddedor>
-References: <20190320211524.GA20363@embeddedor>
+Subject: Re: [PATCH] ALSA: seq: oss: Fix Spectre v1 vulnerability
+In-Reply-To: <20190320234201.GA24574@embeddedor>
+References: <20190320234201.GA24574@embeddedor>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -42,18 +42,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019 22:15:24 +0100,
+On Thu, 21 Mar 2019 00:42:01 +0100,
  Gustavo A. R. Silva  wrote:
 > 
-> info->stream is indirectly controlled by user-space, hence leading to
+> dev is indirectly controlled by user-space, hence leading to
 > a potential exploitation of the Spectre variant 1 vulnerability.
 > 
 > This issue was detected with the help of Smatch:
 > 
-> sound/core/rawmidi.c:604 __snd_rawmidi_info_select() warn: potential spectre issue 'rmidi->streams' [r] (local cap)
+> sound/core/seq/oss/seq_oss_synth.c:626 snd_seq_oss_synth_make_info() warn: potential spectre issue 'dp->synths' [w] (local cap)
 > 
-> Fix this by sanitizing info->stream before using it to index
-> rmidi->streams.
+> Fix this by sanitizing dev before using it to index dp->synths.
 > 
 > Notice that given that speculation windows are large, the policy is
 > to kill the speculation on the first load and not worry if it can be
