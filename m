@@ -2,504 +2,198 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B37C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E9C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC7821901
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6B5218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 14:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfCUObd (ORCPT
+        id S1728316AbfCUOcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 10:31:33 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52145 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726787AbfCUObc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 10:31:32 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from junhan@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 21 Mar 2019 16:31:27 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x2LEVPDQ016027;
-        Thu, 21 Mar 2019 10:31:25 -0400
-Received: (from junhan@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x2LEVPIu021136;
-        Thu, 21 Mar 2019 10:31:25 -0400
-From:   Junhan Zhou <Junhan@mellanox.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Junhan Zhou <Junhan@mellanox.com>, Liming Sun <lsun@mellanox.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] EDAC, mellanox: Add ECC support for BlueField DDR4
-Date:   Thu, 21 Mar 2019 10:31:07 -0400
-Message-Id: <1553178667-21073-1-git-send-email-Junhan@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
-References: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
+        Thu, 21 Mar 2019 10:32:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53956 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728093AbfCUOcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 10:32:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D3878308793F;
+        Thu, 21 Mar 2019 14:32:52 +0000 (UTC)
+Received: from [10.36.116.167] (ovpn-116-167.ams2.redhat.com [10.36.116.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF84C60464;
+        Thu, 21 Mar 2019 14:32:46 +0000 (UTC)
+Subject: Re: [PATCH v6 05/22] iommu: Introduce cache_invalidate API
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     yi.l.liu@linux.intel.com, kevin.tian@intel.com,
+        vincent.stehle@arm.com, ashok.raj@intel.com, kvm@vger.kernel.org,
+        peter.maydell@linaro.org, marc.zyngier@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, christoffer.dall@arm.com,
+        alex.williamson@redhat.com, robin.murphy@arm.com,
+        kvmarm@lists.cs.columbia.edu, eric.auger.pro@gmail.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-6-eric.auger@redhat.com>
+ <20190320093727.45a86866@jacob-builder>
+ <7ae1df77-18d0-0993-8dab-6af3a4474b42@arm.com>
+ <ad4d18ec-0040-901f-8d37-0fccb3cfd0d5@redhat.com>
+ <109c3520-dd26-3c0b-35d1-48b169fea982@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <41173658-dde0-6e58-90ed-65cff2b1dd1c@redhat.com>
+Date:   Thu, 21 Mar 2019 15:32:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <109c3520-dd26-3c0b-35d1-48b169fea982@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 21 Mar 2019 14:32:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ECC support for Mellanox BlueField SoC DDR controller.
-This requires SMC to the running Arm Trusted Firmware to report
-what is the current memory configuration.
+Hi jean, Jacob,
 
-Signed-off-by: Junhan Zhou <Junhan@mellanox.com>
----
- MAINTAINERS                   |   5 +
- drivers/edac/Kconfig          |   7 +
- drivers/edac/Makefile         |   1 +
- drivers/edac/bluefield_edac.c | 396 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 409 insertions(+)
- create mode 100644 drivers/edac/bluefield_edac.c
+On 3/21/19 3:13 PM, Jean-Philippe Brucker wrote:
+> On 21/03/2019 13:54, Auger Eric wrote:
+>> Hi Jacob, Jean-Philippe,
+>>
+>> On 3/20/19 5:50 PM, Jean-Philippe Brucker wrote:
+>>> On 20/03/2019 16:37, Jacob Pan wrote:
+>>> [...]
+>>>>> +struct iommu_inv_addr_info {
+>>>>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>>>>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>>>>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>>>>> +	__u32	flags;
+>>>>> +	__u32	archid;
+>>>>> +	__u64	pasid;
+>>>>> +	__u64	addr;
+>>>>> +	__u64	granule_size;
+>>>>> +	__u64	nb_granules;
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * First level/stage invalidation information
+>>>>> + * @cache: bitfield that allows to select which caches to invalidate
+>>>>> + * @granularity: defines the lowest granularity used for the
+>>>>> invalidation:
+>>>>> + *     domain > pasid > addr
+>>>>> + *
+>>>>> + * Not all the combinations of cache/granularity make sense:
+>>>>> + *
+>>>>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>>>>> + * granularity	|		|		|
+>>>>> cache	|
+>>>>> + * -------------+---------------+---------------+---------------+
+>>>>> + * DOMAIN	|	N/A	|       Y	|
+>>>>> Y	|
+>>>>> + * PASID	|	Y	|       Y	|
+>>>>> Y	|
+>>>>> + * ADDR		|       Y	|       Y	|
+>>>>> N/A	|
+>>>>> + */
+>>>>> +struct iommu_cache_invalidate_info {
+>>>>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>>>>> +	__u32	version;
+>>>>> +/* IOMMU paging structure cache */
+>>>>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>>>>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>>>>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>>>>> cache */
+>>>> Just a clarification, this used to be an enum. You do intend to issue a
+>>>> single invalidation request on multiple cache types? Perhaps for
+>>>> virtio-IOMMU? I only see a single cache type in your patch #14. For VT-d
+>>>> we plan to issue one cache type at a time for now. So this format works
+>>>> for us.
+>>>
+>>> Yes for virtio-iommu I'd like as little overhead as possible, which
+>>> means a single invalidation message to hit both IOTLB and ATC at once,
+>>> and the ability to specify multiple pages with @nb_granules.
+>> The original request/explanation from Jean-Philippe can be found here:
+>> https://lkml.org/lkml/2019/1/28/1497
+>>
+>>>
+>>>> However, if multiple cache types are issued in a single invalidation.
+>>>> They must share a single granularity, not all combinations are valid.
+>>>> e.g. dev IOTLB does not support domain granularity. Just a reminder,
+>>>> not an issue. Driver could filter out invalid combinations.
+>> Sure I will add a comment about this restriction.
+>>>
+>>> Agreed. Even the core could filter out invalid combinations based on the
+>>> table above: IOTLB and domain granularity are N/A.
+>> I don't get this sentence. What about vtd IOTLB domain-selective
+>> invalidation:
+> 
+> My mistake: I meant dev-IOTLB and domain granularity are N/A
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf7..394d6c9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5539,6 +5539,11 @@ S:	Supported
- F:	drivers/edac/aspeed_edac.c
- F:	Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
- 
-+EDAC-BLUEFIELD
-+M:	Junhan Zhou <Junhan@mellanox.com>
-+S:	Supported
-+F:	drivers/edac/bluefield_edac.c
-+
- EDAC-CALXEDA
- M:	Robert Richter <rric@kernel.org>
- L:	linux-edac@vger.kernel.org
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 47eb4d1..404d853 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -504,4 +504,11 @@ config EDAC_ASPEED
- 	  First, ECC must be configured in the bootloader. Then, this driver
- 	  will expose error counters via the EDAC kernel framework.
- 
-+config EDAC_BLUEFIELD
-+	tristate "Mellanox BlueField Memory ECC"
-+	depends on ARM64 && ((MELLANOX_PLATFORM && ACPI) || COMPILE_TEST)
-+	help
-+	  Support for error detection and correction on the
-+	  Mellanox BlueField SoCs.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 89ad4a84..0294a67 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -84,3 +84,4 @@ obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
- obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
- obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
- obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
-+obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
-diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
-new file mode 100644
-index 0000000..88f51f7
---- /dev/null
-+++ b/drivers/edac/bluefield_edac.c
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Bluefield-specific EDAC driver.
-+ *
-+ * Copyright (c) 2019 Mellanox Technologies.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/arm-smccc.h>
-+#include <linux/edac.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "edac_module.h"
-+
-+#define DRIVER_NAME		"bluefield-edac"
-+
-+/*
-+ * Mellanox BlueField EMI (External Memory Interface) register definitions.
-+ * Registers which have individual bitfields have a union defining the
-+ * bitfields following the address define.
-+ */
-+
-+#define MLXBF_EMI_DRAM_ECC_COUNT 0x340
-+
-+union mlxbf_emi_dram_ecc_count {
-+	struct {
-+		u32 single_error_count : 16;
-+		u32 double_error_count : 16;
-+	};
-+
-+	u32 word;
-+};
-+
-+#define MLXBF_EMI_DRAM_ECC_ERROR 0x348
-+
-+union mlxbf_emi_dram_ecc_error {
-+	struct {
-+		u32 dram_ecc_single : 1;
-+		u32 __reserved_0    : 15;
-+		u32 dram_ecc_double : 1;
-+		u32 __reserved_1    : 15;
-+	};
-+
-+	u32 word;
-+};
-+
-+#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT 0x354
-+
-+union mlxbf_emi_dram_ecc_latch_select {
-+	struct {
-+		u32 dram_ecc_first : 1;
-+		u32 __reserved_0   : 15;
-+		u32 edge_sel       : 4;
-+		u32 __reserved_1   : 4;
-+		u32 start          : 1;
-+		u32 __reserved_2   : 7;
-+	};
-+
-+	u32 word;
-+};
-+
-+#define MLXBF_EMI_DRAM_ERR_ADDR_0 0x358
-+
-+#define MLXBF_EMI_DRAM_ERR_ADDR_1 0x37c
-+
-+#define MLXBF_EMI_DRAM_SYNDROM 0x35c
-+
-+union mlxbf_emi_dram_syndrom {
-+	struct {
-+		u32 derr         : 1;
-+		u32 serr         : 1;
-+		u32 __reserved_0 : 14;
-+		/* ECC syndrome (error bit according to the Hamming code). */
-+		u32 syndrom      : 10;
-+		u32 __reserved_1 : 6;
-+	};
-+
-+	u32 word;
-+};
-+
-+#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0 0x364
-+
-+union mlxbf_emi_dram_additional_info_0 {
-+	struct {
-+		u32 err_bank     : 4;
-+		u32 err_lrank    : 2;
-+		u32 __reserved_0 : 2;
-+		u32 err_prank    : 2;
-+		u32 __reserved_1 : 6;
-+		u32 err_edge     : 8;
-+		u32 __reserved_2 : 8;
-+	};
-+
-+	u32 word;
-+};
-+
-+#define MLXBF_EDAC_DIMM_PER_MC		2
-+#define MLXBF_EDAC_ERROR_GRAIN		8
-+
-+/*
-+ * Request MLNX_SIP_GET_DIMM_INFO
-+ *
-+ * Retrieve information about DIMM on a certain slot.
-+ *
-+ * Call register usage:
-+ * a0: MLNX_SIP_GET_DIMM_INFO
-+ * a1: (Memory controller index) << 16 | (Dimm index in memory controller)
-+ * a2-7: not used.
-+ *
-+ * Return status:
-+ * a0: dimm_info_smc union defined below describing the DIMM.
-+ * a1-3: not used.
-+ */
-+#define MLNX_SIP_GET_DIMM_INFO		0x82000008
-+
-+/* Format for the SMC response about the memory information */
-+union dimm_info_smc {
-+	struct {
-+		unsigned long size_GB : 16;
-+		unsigned long is_rdimm : 1;
-+		unsigned long is_lrdimm : 1;
-+		unsigned long is_nvdimm : 1;
-+		unsigned long __reserved0 : 2;
-+		unsigned long ranks : 3;
-+		unsigned long package_X : 8;	/* Bits per memory package */
-+		unsigned long __reserved1 : 32;
-+	};
-+	unsigned long val;
-+};
-+
-+struct bluefield_edac_priv {
-+	int dimm_ranks[MLXBF_EDAC_DIMM_PER_MC];
-+	void __iomem *emi_base;
-+};
-+
-+static unsigned long smc_call1(unsigned long smc_op, unsigned long smc_arg)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(smc_op, smc_arg, 0, 0, 0, 0, 0, 0, &res);
-+
-+	return res.a0;
-+}
-+
-+/*
-+ * Gather the ECC information from the External Memory Interface registers
-+ * and report it to the edac handler.
-+ */
-+static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
-+					int error_cnt,
-+					int is_single_ecc)
-+{
-+	struct bluefield_edac_priv *priv = mci->pvt_info;
-+	union mlxbf_emi_dram_additional_info_0 edai0;
-+	union mlxbf_emi_dram_ecc_latch_select edels;
-+	union mlxbf_emi_dram_syndrom eds;
-+	enum hw_event_mc_err_type ecc_type;
-+	unsigned long ecc_dimm_addr;
-+	int ecc_dimm;
-+	u32 edea0;
-+	u32 edea1;
-+
-+	ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
-+				   HW_EVENT_ERR_UNCORRECTED;
-+
-+	/*
-+	 * Tell the External Memory Interface to populate the relevant
-+	 * registers with information about the last ECC error occurrence.
-+	 */
-+	edels.word = 0;
-+	edels.start = 1;
-+	writel(edels.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_LATCH_SELECT);
-+
-+	/*
-+	 * Verify that the ECC reported info in the registers is of the
-+	 * same type as the one asked to report. If not, just report the
-+	 * error without the detailed information.
-+	 */
-+	eds.word = readl(priv->emi_base + MLXBF_EMI_DRAM_SYNDROM);
-+
-+	if ((is_single_ecc && !eds.serr) || (!is_single_ecc && !eds.derr)) {
-+		edac_mc_handle_error(ecc_type, mci, error_cnt, 0, 0, 0,
-+				     0, 0, -1, mci->ctl_name, "");
-+		return;
-+	}
-+
-+	edai0.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ADDITIONAL_INFO_0);
-+
-+	ecc_dimm = edai0.err_prank >= 2 && priv->dimm_ranks[0] <= 2;
-+
-+	edea0 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_0);
-+	edea1 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_1);
-+
-+	ecc_dimm_addr = ((unsigned long)edea1 << 32) | edea0;
-+
-+	edac_mc_handle_error(ecc_type, mci, error_cnt,
-+			     ecc_dimm_addr / 0x1000, ecc_dimm_addr & 0xfff,
-+			     eds.syndrom, ecc_dimm, 0, 0, mci->ctl_name, "");
-+}
-+
-+static void bluefield_edac_check(struct mem_ctl_info *mci)
-+{
-+	union mlxbf_emi_dram_ecc_error edee = { .word = 0 };
-+	struct bluefield_edac_priv *priv = mci->pvt_info;
-+	union mlxbf_emi_dram_ecc_count edec;
-+
-+	/*
-+	 * The memory controller might not be initialized by the firmware
-+	 * when there isn't memory, which may lead to bad register readings.
-+	 */
-+	if (mci->edac_cap == EDAC_FLAG_NONE)
-+		return;
-+
-+	edec.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ECC_COUNT);
-+
-+	if (edec.single_error_count) {
-+		edee.dram_ecc_single = 1;
-+
-+		bluefield_gather_report_ecc(mci, edec.single_error_count, 1);
-+	}
-+
-+	if (edec.double_error_count) {
-+		edee.dram_ecc_double = 1;
-+
-+		bluefield_gather_report_ecc(mci, edec.double_error_count, 0);
-+	}
-+
-+	/* Write to clear reported errors. */
-+	if (edec.word)
-+		writel(edee.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_ERROR);
-+}
-+
-+/* Initialize the DIMMs information for the given memory controller. */
-+static void bluefield_edac_init_dimms(struct mem_ctl_info *mci)
-+{
-+	struct bluefield_edac_priv *priv = mci->pvt_info;
-+	int mem_ctrl_idx = mci->mc_idx;
-+	union dimm_info_smc smc_info;
-+	struct dimm_info *dimm;
-+	unsigned long smc_arg;
-+	int is_empty = 1;
-+	int i;
-+
-+	for (i = 0; i < MLXBF_EDAC_DIMM_PER_MC; i++) {
-+		dimm = mci->dimms[i];
-+
-+		smc_arg = mem_ctrl_idx << 16 | i;
-+		smc_info = (union dimm_info_smc) {
-+			.val = smc_call1(MLNX_SIP_GET_DIMM_INFO, smc_arg),
-+		};
-+
-+		if (!smc_info.size_GB) {
-+			dimm->mtype = MEM_EMPTY;
-+			continue;
-+		}
-+
-+		is_empty = 0;
-+
-+		dimm->edac_mode = EDAC_SECDED;
-+
-+		if (smc_info.is_nvdimm)
-+			dimm->mtype = MEM_NVDIMM;
-+		else if (smc_info.is_lrdimm)
-+			dimm->mtype = MEM_LRDDR4;
-+		else if (smc_info.is_rdimm)
-+			dimm->mtype = MEM_RDDR4;
-+		else
-+			dimm->mtype = MEM_DDR4;
-+
-+		dimm->nr_pages = smc_info.size_GB * 256 * 1024;
-+		dimm->grain = MLXBF_EDAC_ERROR_GRAIN;
-+
-+		/* Mem controller for BlueField only supports x4, x8 and x16 */
-+		if (smc_info.package_X == 4)
-+			dimm->dtype = DEV_X4;
-+		else if (smc_info.package_X == 8)
-+			dimm->dtype = DEV_X8;
-+		else if (smc_info.package_X == 16)
-+			dimm->dtype = DEV_X16;
-+		else
-+			dimm->dtype = DEV_UNKNOWN;
-+
-+		priv->dimm_ranks[i] = smc_info.ranks;
-+	}
-+
-+	if (is_empty)
-+		mci->edac_cap = EDAC_FLAG_NONE;
-+	else
-+		mci->edac_cap = EDAC_FLAG_SECDED;
-+}
-+
-+static int bluefield_edac_mc_probe(struct platform_device *pdev)
-+{
-+	struct bluefield_edac_priv *priv;
-+	struct device *dev = &pdev->dev;
-+	struct edac_mc_layer layers[1];
-+	struct mem_ctl_info *mci;
-+	struct resource *emi_res;
-+	unsigned int mc_idx;
-+	int rc, ret;
-+
-+	/* Read the MSS (Memory SubSystem) index from ACPI table. */
-+	if (device_property_read_u32(dev, "mss_number", &mc_idx)) {
-+		dev_warn(dev, "bf_edac: MSS number unknown\n");
-+		return -EINVAL;
-+	}
-+
-+	emi_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!emi_res)
-+		return -EINVAL;
-+
-+	layers[0].type = EDAC_MC_LAYER_SLOT;
-+	layers[0].size = MLXBF_EDAC_DIMM_PER_MC;
-+	layers[0].is_virt_csrow = true;
-+
-+	mci = edac_mc_alloc(mc_idx, ARRAY_SIZE(layers), layers, sizeof(*priv));
-+	if (!mci)
-+		return -ENOMEM;
-+
-+	priv = mci->pvt_info;
-+
-+	priv->emi_base = devm_ioremap_resource(dev, emi_res);
-+	if (IS_ERR(priv->emi_base)) {
-+		dev_err(dev, "failed to map EMI IO resource\n");
-+		ret = PTR_ERR(priv->emi_base);
-+		goto err;
-+	}
-+
-+	mci->pdev = dev;
-+	mci->mtype_cap = MEM_FLAG_DDR4 | MEM_FLAG_RDDR4 |
-+			 MEM_FLAG_LRDDR4 | MEM_FLAG_NVDIMM;
-+	mci->edac_ctl_cap = EDAC_FLAG_SECDED;
-+
-+	mci->mod_name = DRIVER_NAME;
-+	mci->ctl_name = "BlueField_Memory_Controller";
-+	mci->dev_name = dev_name(dev);
-+	mci->edac_check = bluefield_edac_check;
-+
-+	/* Initialize mci with the actual populated DIMM information. */
-+	bluefield_edac_init_dimms(mci);
-+
-+	platform_set_drvdata(pdev, mci);
-+
-+	/* Register with EDAC core */
-+	rc = edac_mc_add_mc(mci);
-+	if (rc) {
-+		dev_err(dev, "failed to register with EDAC core\n");
-+		ret = rc;
-+		goto err;
-+	}
-+
-+	/* Only POLL mode supported so far. */
-+	edac_op_state = EDAC_OPSTATE_POLL;
-+
-+	return 0;
-+
-+err:
-+	edac_mc_free(mci);
-+
-+	return ret;
-+
-+}
-+
-+static int bluefield_edac_mc_remove(struct platform_device *pdev)
-+{
-+	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-+
-+	edac_mc_del_mc(&pdev->dev);
-+	edac_mc_free(mci);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id bluefield_mc_acpi_ids[] = {
-+	{"MLNXBF08", 0},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, bluefield_mc_acpi_ids);
-+
-+static struct platform_driver bluefield_edac_mc_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.acpi_match_table = bluefield_mc_acpi_ids,
-+	},
-+	.probe = bluefield_edac_mc_probe,
-+	.remove = bluefield_edac_mc_remove,
-+};
-+
-+module_platform_driver(bluefield_edac_mc_driver);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField memory edac driver");
-+MODULE_AUTHOR("Mellanox Technologies");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.2
+Ah OK, no worries.
 
+How do we proceed further with those user APIs? Besides the comment to
+be added above and previous suggestion from Jean ("Invalidations by
+@granularity use field ...), have we reached a consensus now on:
+
+- attach/detach_pasid_table
+- cache_invalidate
+- fault data and fault report API?
+
+If not, please let me know.
+
+Thanks
+
+Eric
+
+
+> 
+> Thanks,
+> Jean
+> 
+>> "
+>> • IOTLB entries caching mappings associated with the specified domain-id
+>> are invalidated.
+>> • Paging-structure-cache entries caching mappings associated with the
+>> specified domain-id are invalidated.
+>> "
+>>
+>> Thanks
+>>
+>> Eric
+>>
+>>>
+>>> Thanks,
+>>> Jean
+>>>
+>>>>
+>>>>> +	__u8	cache;
+>>>>> +	__u8	granularity;
+>>>>> +	__u8	padding[2];
+>>>>> +	union {
+>>>>> +		__u64	pasid;
+>>>>> +		struct iommu_inv_addr_info addr_info;
+>>>>> +	};
+>>>>> +};
+>>>>> +
+>>>>> +
+>>>>>  #endif /* _UAPI_IOMMU_H */
+>>>>
+>>>> [Jacob Pan]
+>>>> _______________________________________________
+>>>> iommu mailing list
+>>>> iommu@lists.linux-foundation.org
+>>>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>>>
+>>>
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
+> 
