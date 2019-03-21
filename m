@@ -4,118 +4,243 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339EEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA68DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05741218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1F0218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfCUPnl (ORCPT
+        id S1728445AbfCUPo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:43:41 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:24132 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727823AbfCUPnl (ORCPT
+        Thu, 21 Mar 2019 11:44:57 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37249 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfCUPo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:43:41 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2LFeqZM000698;
-        Thu, 21 Mar 2019 16:43:35 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qg4xa4r-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 21 Mar 2019 16:43:35 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 670903A;
-        Thu, 21 Mar 2019 15:43:34 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 469A7544D;
-        Thu, 21 Mar 2019 15:43:34 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 21 Mar
- 2019 16:43:34 +0100
-Received: from localhost (10.129.4.239) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 21 Mar 2019 16:43:33
- +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] tty: fix NULL pointer issue when tty_port ops is not set
-Date:   Thu, 21 Mar 2019 16:43:26 +0100
-Message-ID: <1553183006-12820-1-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 21 Mar 2019 11:44:57 -0400
+X-Originating-IP: 185.94.189.187
+Received: from localhost (unknown [185.94.189.187])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7CF4F2000B;
+        Thu, 21 Mar 2019 15:44:53 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 16:44:52 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
+Message-ID: <20190321154452.noq3l44x3mshljvy@flea>
+References: <20190311134713.25876-1-mans@mansr.com>
+ <20190311154702.eslw5ccol44vxcmy@flea>
+ <yw1xef7d4cit.fsf@mansr.com>
+ <20190314154105.o6r7hzeuiyajxh7v@flea>
+ <yw1xk1h130ba.fsf@mansr.com>
+ <20190318155013.lge2x2cp5hvyz52f@flea>
+ <yw1xh8c0178j.fsf@mansr.com>
+ <20190319123445.w6q7vzr3qtgkejwj@flea>
+ <yw1xva0fyqr0.fsf@mansr.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.4.239]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_07:,,
- signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d7t26a5uorjmt2ya"
+Content-Disposition: inline
+In-Reply-To: <yw1xva0fyqr0.fsf@mansr.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike 'client_ops' which is initialized to 'default_client_ops', the
-port operations 'ops' may be left to NULL.
-Check the 'ops' value before checking the 'ops->x' value.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/tty/tty_port.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+--d7t26a5uorjmt2ya
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 044c3cb..a9e12b3 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -325,7 +325,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
- 		if (tty && C_HUPCL(tty))
- 			tty_port_lower_dtr_rts(port);
- 
--		if (port->ops->shutdown)
-+		if (port->ops && port->ops->shutdown)
- 			port->ops->shutdown(port);
- 	}
- out:
-@@ -398,7 +398,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
-  */
- int tty_port_carrier_raised(struct tty_port *port)
- {
--	if (port->ops->carrier_raised == NULL)
-+	if (!port->ops || !port->ops->carrier_raised)
- 		return 1;
- 	return port->ops->carrier_raised(port);
- }
-@@ -414,7 +414,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
-  */
- void tty_port_raise_dtr_rts(struct tty_port *port)
- {
--	if (port->ops->dtr_rts)
-+	if (port->ops && port->ops->dtr_rts)
- 		port->ops->dtr_rts(port, 1);
- }
- EXPORT_SYMBOL(tty_port_raise_dtr_rts);
-@@ -429,7 +429,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
-  */
- void tty_port_lower_dtr_rts(struct tty_port *port)
- {
--	if (port->ops->dtr_rts)
-+	if (port->ops && port->ops->dtr_rts)
- 		port->ops->dtr_rts(port, 0);
- }
- EXPORT_SYMBOL(tty_port_lower_dtr_rts);
-@@ -684,7 +684,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
- 
- 	if (!tty_port_initialized(port)) {
- 		clear_bit(TTY_IO_ERROR, &tty->flags);
--		if (port->ops->activate) {
-+		if (port->ops && port->ops->activate) {
- 			int retval = port->ops->activate(port, tty);
- 			if (retval) {
- 				mutex_unlock(&port->mutex);
--- 
-2.7.4
+On Tue, Mar 19, 2019 at 12:48:19PM +0000, M=E5ns Rullg=E5rd wrote:
+> Maxime Ripard <maxime.ripard@bootlin.com> writes:
+>
+> > On Mon, Mar 18, 2019 at 04:23:56PM +0000, M=E5ns Rullg=E5rd wrote:
+> >> Maxime Ripard <maxime.ripard@bootlin.com> writes:
+> >>
+> >> > On Thu, Mar 14, 2019 at 04:09:13PM +0000, M=E5ns Rullg=E5rd wrote:
+> >> >> Maxime Ripard <maxime.ripard@bootlin.com> writes:
+> >> >>
+> >> >> > On Mon, Mar 11, 2019 at 04:11:06PM +0000, M=E5ns Rullg=E5rd wrote:
+> >> >> >> Maxime Ripard <maxime.ripard@bootlin.com> writes:
+> >> >> >>
+> >> >> >> > Hi!
+> >> >> >> >
+> >> >> >> > On Mon, Mar 11, 2019 at 01:47:13PM +0000, Mans Rullgard wrote:
+> >> >> >> >> Sometimes it is desirabled to use a separate i2c controller f=
+or ddc
+> >> >> >> >> access.  This adds support for the ddc-i2c-bus property of the
+> >> >> >> >> hdmi-connector node, using the specified controller if provid=
+ed.
+> >> >> >> >>
+> >> >> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> >> >> >> >> ---
+> >> >> >> >>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
+> >> >> >> >>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 37 ++++++++++++++++=
++++++++---
+> >> >> >> >>  2 files changed, 35 insertions(+), 3 deletions(-)
+> >> >> >> >>
+> >> >> >> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu=
+/drm/sun4i/sun4i_hdmi.h
+> >> >> >> >> index b685ee11623d..b08c4453d47c 100644
+> >> >> >> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+> >> >> >> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+> >> >> >> >> @@ -269,6 +269,7 @@ struct sun4i_hdmi {
+> >> >> >> >>  	struct clk		*tmds_clk;
+> >> >> >> >>
+> >> >> >> >>  	struct i2c_adapter	*i2c;
+> >> >> >> >> +	struct i2c_adapter	*ddc_i2c;
+> >> >> >> >>
+> >> >> >> >>  	/* Regmap fields for I2C adapter */
+> >> >> >> >>  	struct regmap_field	*field_ddc_en;
+> >> >> >> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers=
+/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> >> >> >> >> index 061d2e0d9011..5b2fac79f5d6 100644
+> >> >> >> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> >> >> >> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> >> >> >> >> @@ -212,7 +212,7 @@ static int sun4i_hdmi_get_modes(struct dr=
+m_connector *connector)
+> >> >> >> >>  	struct edid *edid;
+> >> >> >> >>  	int ret;
+> >> >> >> >>
+> >> >> >> >> -	edid =3D drm_get_edid(connector, hdmi->i2c);
+> >> >> >> >> +	edid =3D drm_get_edid(connector, hdmi->ddc_i2c ?: hdmi->i2c=
+);
+> >> >> >> >
+> >> >> >> > You can't test whether ddc_i2c is NULL or not...
+> >> >> >> >
+> >> >> >> >>  	if (!edid)
+> >> >> >> >>  		return 0;
+> >> >> >> >>
+> >> >> >> >> @@ -228,6 +228,28 @@ static int sun4i_hdmi_get_modes(struct d=
+rm_connector *connector)
+> >> >> >> >>  	return ret;
+> >> >> >> >>  }
+> >> >> >> >>
+> >> >> >> >> +static struct i2c_adapter *sun4i_hdmi_get_ddc(struct device =
+*dev)
+> >> >> >> >> +{
+> >> >> >> >> +	struct device_node *phandle, *remote;
+> >> >> >> >> +	struct i2c_adapter *ddc;
+> >> >> >> >> +
+> >> >> >> >> +	remote =3D of_graph_get_remote_node(dev->of_node, 1, -1);
+> >> >> >> >> +	if (!remote)
+> >> >> >> >> +		return ERR_PTR(-EINVAL);
+> >> >> >> >> +
+> >> >> >> >> +	phandle =3D of_parse_phandle(remote, "ddc-i2c-bus", 0);
+> >> >> >> >> +	of_node_put(remote);
+> >> >> >> >> +	if (!phandle)
+> >> >> >> >> +		return NULL;
+> >> >> >> >> +
+> >> >> >> >> +	ddc =3D of_get_i2c_adapter_by_node(phandle);
+> >> >> >> >> +	of_node_put(phandle);
+> >> >> >> >> +	if (!ddc)
+> >> >> >> >> +		return ERR_PTR(-EPROBE_DEFER);
+> >> >> >> >> +
+> >> >> >> >> +	return ddc;
+> >> >> >> >
+> >> >> >> > ... Since even in (most) error cases you're returning a !NULL =
+pointer.
+> >> >> >> >
+> >> >> >> >> +}
+> >> >> >> >> +
+> >> >> >> >>  static const struct drm_connector_helper_funcs sun4i_hdmi_co=
+nnector_helper_funcs =3D {
+> >> >> >> >>  	.get_modes	=3D sun4i_hdmi_get_modes,
+> >> >> >> >>  };
+> >> >> >> >> @@ -575,6 +597,12 @@ static int sun4i_hdmi_bind(struct device=
+ *dev, struct device *master,
+> >> >> >> >>  		goto err_disable_mod_clk;
+> >> >> >> >>  	}
+> >> >> >> >>
+> >> >> >> >> +	hdmi->ddc_i2c =3D sun4i_hdmi_get_ddc(dev);
+> >> >> >> >> +	if (IS_ERR(hdmi->ddc_i2c)) {
+> >> >> >>
+> >> >> >> ... which is checked here.
+> >> >> >>
+> >> >> >> The property is optional, so the idea was to return null in that=
+ case
+> >> >> >> and use the built-in controller.  If the property exists but som=
+e error
+> >> >> >> occurs, we want to abort rather than proceed with the fallback w=
+hich
+> >> >> >> almost certainly won't work.
+> >> >> >>
+> >> >> >> Maybe I got something wrong in that logic.
+> >> >> >
+> >> >> > Indeed, I just got confused. I guess returning ENODEV in such a c=
+ase,
+> >> >> > and testing for that, would make things more obvious.
+> >> >>
+> >> >> There's also a case I hadn't thought of: property exists but isn't a
+> >> >> valid phandle.  What do you think is the correct action in that cas=
+e?
+> >> >
+> >> > I think we would have that one covered. of_parse_phandle will return
+> >> > !NULL, but then of_get_i2c_adapter_by_node will return NULL since we
+> >> > wouldn't have an associated i2c adapter to the bogus phandle, and you
+> >> > are checking for that already.
+> >>
+> >> of_parse_phandle() doesn't differentiate between a missing property and
+> >> an existing non-phandle value.  The following cases are possible with
+> >> this patch:
+> >>
+> >> - ddc-i2c-bus points to valid i2c controller node: use this for ddc
+> >> - no ddc-i2c-bus property: return NULL, use internal i2c
+> >> - ddc-i2c-bus exists but isn't a phandle: likewise
+> >> - ddc-i2c-bus points to a non-i2c-controller node: EPROBE_DEFER
+> >>
+> >> The last two cases obviously mean the devicetree is invalid, so perhaps
+> >> it doesn't matter much what happens then.  I don't think it's possible
+> >> to distinguish between a well-formed phandle pointing to some bogus no=
+de
+> >> and a good one where the i2c driver hasn't been probed yet.
+> >
+> > Ah, I see what you mean now. Yeah, there's not much we can do against
+> > a wrong / corrupted DT. The DT validation would help prevent the third
+> > case, and possibly the fourth, but that's basically the only thing we
+> > can do.
+>
+> We need to return -EPROBE_DEFER in the case that everything is fine but
+> the i2c driver hasn't been probed yet.  From here, that is
+> indistinguishable from of_parse_phandle() returning a completely bogus
+> node.
 
+That's unfortunate, but if we start to not trust the DT content, we
+have far worse to deal with.
+
+> If the ddc-i2c-bus property doesn't contain a phandle at all, we could
+> either return an error or fall back to the internal i2c.  The patch does
+> the latter because that's less code.  I don't think that's any worse
+> than aborting entirely in terms of user experience.
+
+I'm totally fine with the latter behaviour as well. And like I said,
+the DT validation can help us prevent that case from happening
+entirely at compilation time.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--d7t26a5uorjmt2ya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJOxdAAKCRDj7w1vZxhR
+xS+zAQDxq4cfhKfuYhOOZhCrJ4Cl+VnyDRy4NYKaZDx5O8IbeQEAlow7BVxj+qw1
+xcb65MrjOp2xDUpBNZAG3yxcFeW6BwE=
+=P+oR
+-----END PGP SIGNATURE-----
+
+--d7t26a5uorjmt2ya--
