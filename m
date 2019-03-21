@@ -2,110 +2,96 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE168C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F894218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=arashfotouhi.com header.i=@arashfotouhi.com header.b="Gl08xGXb"
+	by mail.kernel.org (Postfix) with ESMTP id 58993218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 19:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfCUTjY (ORCPT
+        id S1728557AbfCUTmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 15:39:24 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.154]:27759 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728013AbfCUTjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 15:39:20 -0400
-X-Greylist: delayed 1248 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Mar 2019 15:39:20 EDT
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id C03EC401428D6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:18:31 -0500 (CDT)
-Received: from box5525.bluehost.com ([162.241.218.13])
-        by cmsmtp with SMTP
-        id 73Cxh3XX12PzO73CxhNmiX; Thu, 21 Mar 2019 14:18:31 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=arashfotouhi.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bXjtLnwcSJzQo4aUrP86WEA+tLC/C4TE8HfzIl/qxbU=; b=Gl08xGXbK//ZwgP88JqBBffcOj
-        w9d98mqD51eWEyJB9cT7PUMKZMDsI1Qwfzs78iUiVGEfn7HABBZD68XfDrrxfiw/eYKgiX4SM697E
-        Za/ai3py75l9few2kawIZ6W0nE2cb7DE6hc0vccj3kdbSGT2uqjCYt2eUhin+EIVvz/YynwIpw0Rb
-        ZiBLL8pCuBZpqYE2FN5Gwc+/KEBEocGeoosv+kCyOSmVw/xOmXKqvue/UbEBdmbCK7+QmQ57VpdI3
-        xJa8y+bRUx5MX2uy3mNeRe2DTKCa2xWFk8o2Wnj6B53G72pY+gRaFqVT5EhiJ+Mt2S0CwjtrWqyqM
-        KR7V+hbQ==;
-Received: from cpe-172-113-71-92.socal.res.rr.com ([172.113.71.92]:53031 helo=ubuntu.localdomain)
-        by box5525.bluehost.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <arash@arashfotouhi.com>)
-        id 1h73Cw-0010ih-Sc; Thu, 21 Mar 2019 14:18:30 -0500
-From:   Arash Fotouhi <arash@arashfotouhi.com>
-To:     abbotti@mev.co.uk
-Cc:     hsweeten@visionengravers.com, gregkh@linuxfoundation.org,
-        olsonse@umich.edu, giulio.benetti@micronovasrl.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Arash Fotouhi <arash@arashfotouhi.com>
-Subject: [PATCH] Staging: comedi: ni_mio_common.c: Added blank line after declarations
-Date:   Thu, 21 Mar 2019 12:18:12 -0700
-Message-Id: <1553195892-40323-1-git-send-email-arash@arashfotouhi.com>
-X-Mailer: git-send-email 2.7.4
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5525.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - arashfotouhi.com
-X-BWhitelist: no
-X-Source-IP: 172.113.71.92
-X-Source-L: No
-X-Exim-ID: 1h73Cw-0010ih-Sc
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cpe-172-113-71-92.socal.res.rr.com (ubuntu.localdomain) [172.113.71.92]:53031
-X-Source-Auth: arash@arashfotouhi.com
-X-Email-Count: 2
-X-Source-Cap: bXltaWNybzU7bXltaWNybzU7Ym94NTUyNS5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
+        Thu, 21 Mar 2019 15:42:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59078 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727958AbfCUTmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 15:42:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C7D0308338F;
+        Thu, 21 Mar 2019 19:42:24 +0000 (UTC)
+Received: from localhost.localdomain.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2404819C59;
+        Thu, 21 Mar 2019 19:42:23 +0000 (UTC)
+From:   jglisse@redhat.com
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] gpu/nouveau: empty chunk do not have a buffer object associated with them.
+Date:   Thu, 21 Mar 2019 15:42:18 -0400
+Message-Id: <20190321194218.2716-1-jglisse@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 21 Mar 2019 19:42:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added blank line after declarations.
+From: Jérôme Glisse <jglisse@redhat.com>
 
-Signed-off-by: Arash Fotouhi <arash@arashfotouhi.com>
+Empty chunk do not have a bo associated with them so no need to pin/unpin
+on suspend/resume.
+
+This fix suspend/resume on 5.1rc1 when NOUVEAU_SVM is enabled.
+
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Reviewed-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Tested-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
 ---
- drivers/staging/comedi/drivers/ni_mio_common.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
-index 5edf59a..c6aff8f 100644
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -2110,6 +2110,7 @@ static int ni_ai_cmdtest(struct comedi_device *dev, struct comedi_subdevice *s,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index aa9fec80492d..a510dbe9a9cb 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -456,11 +456,6 @@ nouveau_dmem_resume(struct nouveau_drm *drm)
+ 		/* FIXME handle pin failure */
+ 		WARN_ON(ret);
+ 	}
+-	list_for_each_entry (chunk, &drm->dmem->chunk_empty, list) {
+-		ret = nouveau_bo_pin(chunk->bo, TTM_PL_FLAG_VRAM, false);
+-		/* FIXME handle pin failure */
+-		WARN_ON(ret);
+-	}
+ 	mutex_unlock(&drm->dmem->mutex);
+ }
  
- 	if (cmd->scan_begin_src == TRIG_TIMER) {
- 		unsigned int tmp = cmd->scan_begin_arg;
-+
- 		cmd->scan_begin_arg =
- 		    ni_timer_to_ns(dev, ni_ns_to_timer(dev,
- 						       cmd->scan_begin_arg,
-@@ -2120,6 +2121,7 @@ static int ni_ai_cmdtest(struct comedi_device *dev, struct comedi_subdevice *s,
- 	if (cmd->convert_src == TRIG_TIMER) {
- 		if (!devpriv->is_611x && !devpriv->is_6143) {
- 			unsigned int tmp = cmd->convert_arg;
-+
- 			cmd->convert_arg =
- 			    ni_timer_to_ns(dev, ni_ns_to_timer(dev,
- 							       cmd->convert_arg,
+@@ -479,9 +474,6 @@ nouveau_dmem_suspend(struct nouveau_drm *drm)
+ 	list_for_each_entry (chunk, &drm->dmem->chunk_full, list) {
+ 		nouveau_bo_unpin(chunk->bo);
+ 	}
+-	list_for_each_entry (chunk, &drm->dmem->chunk_empty, list) {
+-		nouveau_bo_unpin(chunk->bo);
+-	}
+ 	mutex_unlock(&drm->dmem->mutex);
+ }
+ 
 -- 
-2.7.4
+2.17.1
 
