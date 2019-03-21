@@ -2,118 +2,108 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE55C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BB5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3207C21902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553193603;
-	bh=JXTkUGXPXJNFc8tfPQMYvmPEi+TlCbTvKrvWrNyxzCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E4N93pWCH/Nyea73uqxcygjMEoUIhnStr0nD814rMLyWT0zq9JgRMoX0kA1dO8p/t
-	 iBuqtGbKBijLU5vzRdjzH7J21mSADspYySONsUhwyJjo/JLcfqvvMlQ+8S+Oer9P0r
-	 /9CGmH2KSkuew4PChtsWiW9u024q8hwdsFOWOdT4=
+	by mail.kernel.org (Postfix) with ESMTP id 6363821902
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xv0uOkzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbfCUSkC (ORCPT
+        id S1728675AbfCUSlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfCUSkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:40:01 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27ABB2190A
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 18:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553193600;
-        bh=JXTkUGXPXJNFc8tfPQMYvmPEi+TlCbTvKrvWrNyxzCY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xyXdkEVC6UDZ8NaV92U1oHCFJmx3HN3XpUCac/naOHTaJGkaZdIh7585K2Cd4ZU+0
-         U4Xyk+6oXJPIdZs/QywuJuA1CnTVicGZD3aXGNrZkYugKNOmg0cUbqzGao4clT0CMy
-         VOlKTRSqA/W8WUeR4JSfYkB1KhARl/16yC9KYekE=
-Received: by mail-wm1-f47.google.com with SMTP id a184so3841692wma.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 11:40:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAV8v+8IBgA0vhIvWW3BKy+1O0WUTDTysZyiJUBc+bSNDlFOQwgk
-        c0ZjE5Joap7QxxBjqm471kPOGdVdxQbrM5gSLcf9qQ==
-X-Google-Smtp-Source: APXvYqxv3w0ZxWGWi7t4nGWfE8MxkMeH4FGZDfYRwsHn6h2/36Pr3cTA2BA28zLDl514R7PjEeboFw3GLdYS/UJG1D4=
-X-Received: by 2002:a1c:9a41:: with SMTP id c62mr440748wme.108.1553193598741;
- Thu, 21 Mar 2019 11:39:58 -0700 (PDT)
+        Thu, 21 Mar 2019 14:41:49 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33531 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbfCUSls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:41:48 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k14so7839112qtb.0;
+        Thu, 21 Mar 2019 11:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=tY6+2yg5kBlO2MGtS1RdpL8kEichnYOMAH7b32Qy3RY=;
+        b=Xv0uOkzqllGXScY4vjGguqYLVr5w6YlrdB12LeF9KMC5TSmugoacp9q+r7J3azEZXQ
+         UTTiGiL2kliydJyEwoKoALs64KgEUWxCNM5/Xq7c/Qxq4O7xRnVZMQOLSwMPnSfhgG+q
+         xQ/Dw46vuInaXcf7VczZBqAydm68JBj6FCn+mtcuqoOIeo98jPA/wnCsCCCHuLKwgFEq
+         U0bH+q2WWiAS53V5pmN1zAuxR3yMJF5SgWUtBvbKcFKQH0yLzhKUtyczVnhQrjC/3WZJ
+         Rd5gVpLXjDWP2Yy2Domhu4BjGNV2232f2xrnHUKS+IzzfrzQCeSIHhQWpS7+98cxATGg
+         VGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tY6+2yg5kBlO2MGtS1RdpL8kEichnYOMAH7b32Qy3RY=;
+        b=pBhtkfznCoFS1AEcSQo4luLq5sNbiW+M7d/Obk7wXrBL+weJHjMEjOUore1PwA5Wof
+         GKaZLkBUgrXQ5lLeHMMa1MoS/7iMRhFFzUDX6GeUnkm739qOTR86MGAEUR+F/Ux3KGCg
+         9DcJcLMM5xHbk/UFPgb1NU2voQ+4aNV2L+wFPzDLgqzFNEJ1kNJk46R3ALzRCUsKKMP+
+         Tb4KotYMFPjAquhKVXpBQx3lgi/J0FjwpkFWAF7TuJVQbnWNvASaO+XK6AaUZdFquqti
+         YIAAeZK8B2+KrdS+65UoToPbWAI+JE8pJctUkE7eQunst0gs2zzQadu4l5B4HfBYe6Ii
+         rgMA==
+X-Gm-Message-State: APjAAAUmp9OKIxV+6+VSJONVjhO6/iHF07Xotgv9rDt6mWCF3BaHQ45s
+        kPy/BYbJjLB4X1V2l4E+pmE=
+X-Google-Smtp-Source: APXvYqxzjhFVm4s99YLvolN5QUmAWmBn9FwIuD2PdRLvvn2QaMVXC7jV7TsTUGsU9Hp9a8eAB1prBQ==
+X-Received: by 2002:ac8:1489:: with SMTP id l9mr4264423qtj.267.1553193707492;
+        Thu, 21 Mar 2019 11:41:47 -0700 (PDT)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id a10sm3648694qti.32.2019.03.21.11.41.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 21 Mar 2019 11:41:46 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 15:41:42 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     lars@metafoo.de, jic23@kernel.org, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        michael.hennerich@analog.com, stefan.popa@analog.com,
+        alexandru.Ardelean@analog.com
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v5 0/2] staging: iio: ad5933: move out of staging
+Message-ID: <cover.1553192834.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
-References: <20190320221534.165ab87b@oasis.local.home> <20190321083317.GL6058@hirez.programming.kicks-ass.net>
- <20190321090241.GL6521@hirez.programming.kicks-ass.net> <20190321104517.GM6521@hirez.programming.kicks-ass.net>
- <20190321093242.4a948198@gandalf.local.home> <20190321172203.GS5996@hirez.programming.kicks-ass.net>
- <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
- <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
- <CALCETrVaCZKjXj9ZqtvQgLk2DqXwNCh7b5DHvSnNAORsqJXCcQ@mail.gmail.com>
- <CAHk-=wjEHqY1+DxJ-_oNWTuTNQwMPtJKJh_HE=e1F60V+TwUfQ@mail.gmail.com> <20190321183713.GX5996@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190321183713.GX5996@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 21 Mar 2019 11:39:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrW-Jn=nWOgYUdMhoS_Z6vYNmfYzt6P54FBOaWzp4kPvQQ@mail.gmail.com>
-Message-ID: <CALCETrW-Jn=nWOgYUdMhoS_Z6vYNmfYzt6P54FBOaWzp4kPvQQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on error_entry
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        He Zhe <zhe.he@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:37 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Mar 21, 2019 at 11:25:44AM -0700, Linus Torvalds wrote:
-> > On Thu, Mar 21, 2019 at 11:21 AM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > I dunno.  Lots of people at least use to have serious commercial interest in it.
-> >
-> > Yes, it used to be a big deal. But full virtualization has gotten a
-> > lot more common and better.
-> >
-> > > Hey Xen folks, how close are we to being able to say "if you want to
-> > > run a new kernel, you need to switch to PVH or similar"?
-> >
-> > I'd also like to know if we could perhaps at least limit PV to just
-> > the thing that people care most deeply about.
-> >
-> > For example, maybe people notice that they really deeply care about
-> > the PV spinlocks because they help a lot for some loads, but don't
-> > care so much about the low-level CPU PV stuff any more because modern
-> > CPUs do _those_ things so well these days.
-> >
-> > So it might not be an all-or-nothing thing, but a gradual "let's stop
-> > supporting xyz under PV, because it causes pain and isn't worth it".
->
-> So Juergen recently introduced PARAVIRT_XXL, which are exactly those
-> bits of PV we can get rid of.
->
-> This paravirt-me-harder config does indeed include the CR2 bits.
->
-> I recently talked to Andrew Cooper about this, and he said Xen Dom0
-> still needs all this :/
+This series of patches makes device attributes' names equal to ABI
+documentation and move ad5933 driver out of staging. More precisely:
+It changes device attributes' names to match or be similar to existing
+ABI.
+It moves the ad5933 driver from staging directory to iio main drivers
+directory.
 
-There were patches from last year to fix that:
+Marcelo Schmitt (2):
+  staging: iio: ad5933: change attributes to match ABI
+  staging: iio: ad5933: move out of staging
 
-https://lwn.net/Articles/753982/
+ drivers/iio/Kconfig                           |   1 +
+ drivers/iio/Makefile                          |   1 +
+ drivers/iio/impedance-analyzer/Kconfig        |  18 +
+ drivers/iio/impedance-analyzer/Makefile       |   5 +
+ drivers/iio/impedance-analyzer/ad5933.c       | 811 ++++++++++++++++++
+ drivers/staging/iio/Kconfig                   |   1 -
+ drivers/staging/iio/Makefile                  |   1 -
+ .../staging/iio/impedance-analyzer/Kconfig    |  18 -
+ .../staging/iio/impedance-analyzer/Makefile   |   5 -
+ .../staging/iio/impedance-analyzer/ad5933.c   | 811 ------------------
+ 10 files changed, 836 insertions(+), 836 deletions(-)
+ create mode 100644 drivers/iio/impedance-analyzer/Kconfig
+ create mode 100644 drivers/iio/impedance-analyzer/Makefile
+ create mode 100644 drivers/iio/impedance-analyzer/ad5933.c
+ delete mode 100644 drivers/staging/iio/impedance-analyzer/Kconfig
+ delete mode 100644 drivers/staging/iio/impedance-analyzer/Makefile
+ delete mode 100644 drivers/staging/iio/impedance-analyzer/ad5933.c
 
-I have no clue what the status is.
+-- 
+2.20.1
+
