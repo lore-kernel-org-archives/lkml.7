@@ -2,260 +2,104 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375F2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442ECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0CC218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F6B218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 15:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GVVrpzln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfCUPjY (ORCPT
+        id S1728305AbfCUPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 11:39:24 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38588 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfCUPjY (ORCPT
+        Thu, 21 Mar 2019 11:40:14 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:32887 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbfCUPkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 11:39:24 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h6zmq-00082A-Dh; Thu, 21 Mar 2019 16:39:20 +0100
-Date:   Thu, 21 Mar 2019 16:39:20 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [WARNING] tick_handle_oneshot_broadcast() on !online CPU
-In-Reply-To: <7fe83094-6821-dd94-f91e-6beb658bc7e6@arm.com>
-Message-ID: <alpine.DEB.2.21.1903211540180.1784@nanos.tec.linutronix.de>
-References: <7fe83094-6821-dd94-f91e-6beb658bc7e6@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 21 Mar 2019 11:40:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id b6so5631487iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 08:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/rP30qae+c6bSHaVrK4mLSxBRk9fRh6YZC+PfgjPC5g=;
+        b=GVVrpzlnU6BYkaW65uvgqSj9iMnpZAT6H8v+qSXufg/BU9Y1L5HML4fbLu0UWXKPQP
+         KyNQYs1HUtVNpDIxlE8mqd1UDUXwAlEavXfb0IXvY76urnvV/9NQETOhv5N3qawwIO0I
+         rEPuj8yK5D3JBksHVzF3GhXBbSQwXSJZTDma3BmEvlWsbzIY4/ffJJThKw7dk04Pz+b1
+         iDLkr3WW8xsOAImMOxyuyZOBmmCGyJWO5HCrXS0iSLC7X79kYEnhvQ4QwJv5HHOiYkBO
+         GyfErthmB60U9o908jFRZQo9bSd69r0QmE9XxlRJYssqQgSAyB1e2AxJvs0I7QEdhnjo
+         XQuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/rP30qae+c6bSHaVrK4mLSxBRk9fRh6YZC+PfgjPC5g=;
+        b=YayxP0IYEhk0RndC2a3gKromQlSeyrwSvngWtMXQFU/TPMwVS7Zd0kcogLcaajnkL7
+         dzsW34zW/XuGWGuTDUwYUpBNpP0XuV4zxxNWDtuH7ljydpfzlXX2ojBQBCMm1Tysdvts
+         nmugyZH8R73TrdK+JPLujczw9LvkO+4d6aUXva4rTOscd+vVlL6dHjwDDvYIJu6b6iYS
+         5K7WRYk3QB5XEPipVrjgSVn3IXN7so77682pcgAXJZps6idHl83WpzQSi/TxTpsTRIxm
+         yhS0++QYCoLHHT8X9dW+IjpSt3QR8wYxdN6l5VQqmhe0FPV+0KJx8ZmAqekP3P9Zuzi6
+         gWGA==
+X-Gm-Message-State: APjAAAUB8JHHFMTvgmIapZWSGVrkYKx+IAM4DFh8q7xce+3buUoCR9hb
+        Fm0YPuR3/4D1oheaa/Nw/ToUzPVtTn/K8JHSIaILsQ==
+X-Google-Smtp-Source: APXvYqzj6+enPVpSxbq5Hk/KnHml7LM5ecBMOV0Jp4UyYuMW8OyOPDbQu46EbRb4NllXvVDc1Kojwh0X+3ynssUUA0Y=
+X-Received: by 2002:a6b:6e0f:: with SMTP id d15mr3412120ioh.111.1553182813502;
+ Thu, 21 Mar 2019 08:40:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190321141010.19612-1-brgl@bgdev.pl> <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
+In-Reply-To: <e4d51b63-bc07-c595-9d73-c4b09eb11341@lechnology.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 21 Mar 2019 16:40:02 +0100
+Message-ID: <CAMRc=MespSLpsknVrMwYVorv0NxAsSL+U9R049Fw_Wqe1_gqkw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] ARM: da850: enable cpufreq in DT mode
+To:     David Lechner <david@lechnology.com>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019, Valentin Schneider wrote:
-> I stared at the code and did a bit of tracing, the sequence seems to be:
-> 
-> ---
-> echo 0 > /sys/devices/system/cpu/cpu2/online
-> 
-> takedown_cpu()
->   take_cpu_down()
->      __cpu_disable() (clears CPU in cpu_online_mask & cpu_active_mask)
-
-active_mask has been cleared long ago.
- 
->   [...] <warn happens here>
-> 
->   tick_cleanup_dead_cpu()
->     tick_shutdown_broadcast_oneshot() (removes cpu from the tick_broadcast_* masks)
-> ---
-> 
-> In that case we always have
-> 
->   tick_broadcast_force_mask=[CPU2]
->   cpu_online_mask=[CPU4]
-> 
-> So tick_handle_oneshot_broadcast::tmpmask becomes [CPU2] and we hit the warn.
+czw., 21 mar 2019 o 16:29 David Lechner <david@lechnology.com> napisa=C5=82=
+(a):
 >
-> 
-> I was thinking of guarding the setting of tmpmask with cpu_online(cpu), but
-> AFAICT nothing saves us from __cpu_disable() happening *after* those checks
-> (and even potentially after the WARN_ON_ONCE). Do we want some extra lock
-> in here, or is that a benign issue?
+> On 3/21/19 9:10 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This series adds cpufreq-dt operating points for da850 boards supported
+> > with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
+> > includes a fix for the da850-evm boardfile which checks an unset variab=
+le
+> > to determine the highest available frequency for cpufreq.
+>
+>
+> I can't find any old threads about this, but I recall that there was a
+> problem with the USB OHCI controller breaking when switching frequencies.
+> It didn't happen all of the time, but often enough that it made using
+> cpufreq unusable for me. Is this still a problem?
+>
 
-Hmm. This only seems to be an issue with forced broadcast. The dynamic
-broadcast stuff does not have that problem as the CPU is obviously not idle
-while going down.
+Yes, it's still a problem, but it's bug-compatible with the legacy BSP
+from TI (project arago). I've spent some time trying to figure out the
+culprit at the time you were working on the clock driver, but
+eventually gave up. I think it's some kind of a HW issue. The
+controller would simple die after a couple transitions.
 
-Patch below (completely untested) should fix it.
+Bart
 
-Thanks,
-
-	tglx
-
-8<---------------
-
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -68,6 +68,12 @@ extern void tick_broadcast_control(enum
- static inline void tick_broadcast_control(enum tick_broadcast_mode mode) { }
- #endif /* BROADCAST */
- 
-+#if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_CPU)
-+extern void tick_offline_cpu(unsigned int cpu);
-+#else
-+static inline void tick_offline_cpu(unsigned int cpu) { }
-+#endif
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- extern int tick_broadcast_oneshot_control(enum tick_broadcast_state state);
- #else
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -844,6 +844,8 @@ static int take_cpu_down(void *_param)
- 
- 	/* Give up timekeeping duties */
- 	tick_handover_do_timer();
-+	/* Remove CPU from timer broadcasting */
-+	tick_offline_cpu(cpu);
- 	/* Park the stopper thread */
- 	stop_machine_park(cpu);
- 	return 0;
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -611,6 +611,22 @@ void clockevents_resume(void)
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
-+
-+# ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
-+/**
-+ * tick_offline_cpu - Take CPU out of the broadcast mechanism
-+ * @cpu:	The outgoing CPU
-+ *
-+ * Called on the outgoing CPU after it took itself offline.
-+ */
-+void tick_offline_cpu(unsigned int cpu)
-+{
-+	raw_spin_lock(&clockevents_lock);
-+	tick_broadcast_offline(cpu);
-+	raw_spin_unlock(&clockevents_lock);
-+}
-+# endif
-+
- /**
-  * tick_cleanup_dead_cpu - Cleanup the tick and clockevents of a dead cpu
-  */
-@@ -621,8 +637,6 @@ void tick_cleanup_dead_cpu(int cpu)
- 
- 	raw_spin_lock_irqsave(&clockevents_lock, flags);
- 
--	tick_shutdown_broadcast_oneshot(cpu);
--	tick_shutdown_broadcast(cpu);
- 	tick_shutdown(cpu);
- 	/*
- 	 * Unregister the clock event devices which were
---- a/kernel/time/tick-broadcast.c
-+++ b/kernel/time/tick-broadcast.c
-@@ -36,10 +36,12 @@ static __cacheline_aligned_in_smp DEFINE
- static void tick_broadcast_setup_oneshot(struct clock_event_device *bc);
- static void tick_broadcast_clear_oneshot(int cpu);
- static void tick_resume_broadcast_oneshot(struct clock_event_device *bc);
-+static void tick_broadcast_oneshot_offline(unsigned int cpu);
- #else
- static inline void tick_broadcast_setup_oneshot(struct clock_event_device *bc) { BUG(); }
- static inline void tick_broadcast_clear_oneshot(int cpu) { }
- static inline void tick_resume_broadcast_oneshot(struct clock_event_device *bc) { }
-+static inline void tick_broadcast_oneshot_offline(unsigned int cpu) { }
- #endif
- 
- /*
-@@ -444,8 +446,6 @@ void tick_shutdown_broadcast(unsigned in
- 	raw_spin_lock_irqsave(&tick_broadcast_lock, flags);
- 
- 	bc = tick_broadcast_device.evtdev;
--	cpumask_clear_cpu(cpu, tick_broadcast_mask);
--	cpumask_clear_cpu(cpu, tick_broadcast_on);
- 
- 	if (tick_broadcast_device.mode == TICKDEV_MODE_PERIODIC) {
- 		if (bc && cpumask_empty(tick_broadcast_mask))
-@@ -454,6 +454,16 @@ void tick_shutdown_broadcast(unsigned in
- 
- 	raw_spin_unlock_irqrestore(&tick_broadcast_lock, flags);
- }
-+
-+void tick_broadcast_offline(unsigned int cpu)
-+{
-+	raw_spin_lock(&tick_broadcast_lock);
-+	cpumask_clear_cpu(cpu, tick_broadcast_mask);
-+	cpumask_clear_cpu(cpu, tick_broadcast_on);
-+	tick_broadcast_oneshot_offline(cpu);
-+	raw_spin_unlock(&tick_broadcast_lock);
-+}
-+
- #endif
- 
- void tick_suspend_broadcast(void)
-@@ -950,14 +960,10 @@ void hotplug_cpu__broadcast_tick_pull(in
- }
- 
- /*
-- * Remove a dead CPU from broadcasting
-+ * Remove a dying CPU from broadcasting
-  */
--void tick_shutdown_broadcast_oneshot(unsigned int cpu)
-+static void tick_broadcast_oneshot_offline(unsigned int cpu)
- {
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&tick_broadcast_lock, flags);
--
- 	/*
- 	 * Clear the broadcast masks for the dead cpu, but do not stop
- 	 * the broadcast device!
-@@ -965,8 +971,6 @@ void tick_shutdown_broadcast_oneshot(uns
- 	cpumask_clear_cpu(cpu, tick_broadcast_oneshot_mask);
- 	cpumask_clear_cpu(cpu, tick_broadcast_pending_mask);
- 	cpumask_clear_cpu(cpu, tick_broadcast_force_mask);
--
--	raw_spin_unlock_irqrestore(&tick_broadcast_lock, flags);
- }
- #endif
- 
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -64,7 +64,6 @@ extern ssize_t sysfs_get_uname(const cha
- extern int tick_device_uses_broadcast(struct clock_event_device *dev, int cpu);
- extern void tick_install_broadcast_device(struct clock_event_device *dev);
- extern int tick_is_broadcast_device(struct clock_event_device *dev);
--extern void tick_shutdown_broadcast(unsigned int cpu);
- extern void tick_suspend_broadcast(void);
- extern void tick_resume_broadcast(void);
- extern bool tick_resume_check_broadcast(void);
-@@ -78,7 +77,6 @@ static inline void tick_install_broadcas
- static inline int tick_is_broadcast_device(struct clock_event_device *dev) { return 0; }
- static inline int tick_device_uses_broadcast(struct clock_event_device *dev, int cpu) { return 0; }
- static inline void tick_do_periodic_broadcast(struct clock_event_device *d) { }
--static inline void tick_shutdown_broadcast(unsigned int cpu) { }
- static inline void tick_suspend_broadcast(void) { }
- static inline void tick_resume_broadcast(void) { }
- static inline bool tick_resume_check_broadcast(void) { return false; }
-@@ -128,19 +126,23 @@ static inline int tick_check_oneshot_cha
- /* Functions related to oneshot broadcasting */
- #if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_TICK_ONESHOT)
- extern void tick_broadcast_switch_to_oneshot(void);
--extern void tick_shutdown_broadcast_oneshot(unsigned int cpu);
- extern int tick_broadcast_oneshot_active(void);
- extern void tick_check_oneshot_broadcast_this_cpu(void);
- bool tick_broadcast_oneshot_available(void);
- extern struct cpumask *tick_get_broadcast_oneshot_mask(void);
- #else /* !(BROADCAST && ONESHOT): */
- static inline void tick_broadcast_switch_to_oneshot(void) { }
--static inline void tick_shutdown_broadcast_oneshot(unsigned int cpu) { }
- static inline int tick_broadcast_oneshot_active(void) { return 0; }
- static inline void tick_check_oneshot_broadcast_this_cpu(void) { }
- static inline bool tick_broadcast_oneshot_available(void) { return tick_oneshot_possible(); }
- #endif /* !(BROADCAST && ONESHOT) */
- 
-+#if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_CPU)
-+extern void tick_broadcast_offline(unsigned int cpu);
-+#else
-+static inline void tick_broadcast_offline(unsigned int cpu) { }
-+#endif
-+
- /* NO_HZ_FULL internal */
- #ifdef CONFIG_NO_HZ_FULL
- extern void tick_nohz_init(void);
+> Also, a big-picture question. On boards with fixed regulators, what is
+> the benefit of enabling frequency scaling? The power savings aspect
+> seems negligible (< 1% in my tests) since the voltage cannot be changed.
