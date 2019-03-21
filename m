@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA50BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC1B21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC5521917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 22:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfCUWB3 (ORCPT
+        id S1727596AbfCUWBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 18:01:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53197 "EHLO mga06.intel.com"
+        Thu, 21 Mar 2019 18:01:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20537 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727203AbfCUWA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 18:00:26 -0400
+        id S1727050AbfCUWAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 18:00:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:23 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 15:00:24 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="216357239"
+   d="scan'208";a="157183552"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2019 15:00:23 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 3901E30214C; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
+        id 0C77A300AB8; Thu, 21 Mar 2019 15:00:23 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
 Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>, Yong.Zhao@amd.com,
-        alexander.deucher@amd.com, airlied@redhat.com
-Subject: [PATCH 07/17] amdkfd: Fix extern declaration
-Date:   Thu, 21 Mar 2019 14:59:59 -0700
-Message-Id: <20190321220009.29334-8-andi@firstfloor.org>
+        Andi Kleen <ak@linux.intel.com>, arnd@arndb.de,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc 9
+Date:   Thu, 21 Mar 2019 14:59:53 -0700
+Message-Id: <20190321220009.29334-2-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321220009.29334-1-andi@firstfloor.org>
 References: <20190321220009.29334-1-andi@firstfloor.org>
@@ -50,32 +50,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-When you use bare externs outside include files, need to at least specify
-matching types. This fixes a type confusion between u16 and unsigned.
+This warning is very noisy in a default build with gcc 9.
+Move it into W=2 only.
 
-Cc: Yong.Zhao@amd.com
-Cc: alexander.deucher@amd.com
-Cc: airlied@redhat.com
+Cc: arnd@arndb.de
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Makefile                   | 1 +
+ scripts/Makefile.extrawarn | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c b/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-index 01494752c36a..a8cba8d3714d 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-@@ -341,8 +341,8 @@ int kfd_iommu_resume(struct kfd_dev *kfd)
- }
+diff --git a/Makefile b/Makefile
+index 71c2c482e2a2..78efbb172991 100644
+--- a/Makefile
++++ b/Makefile
+@@ -676,6 +676,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
++KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
  
- extern bool amd_iommu_pc_supported(void);
--extern u8 amd_iommu_pc_get_max_banks(u16 devid);
--extern u8 amd_iommu_pc_get_max_counters(u16 devid);
-+extern u8 amd_iommu_pc_get_max_banks(unsigned devid);
-+extern u8 amd_iommu_pc_get_max_counters(unsigned devid);
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+ KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 768306add591..ed974a0f4a47 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -43,6 +43,7 @@ warning-2 += $(call cc-option, -Wmissing-field-initializers)
+ warning-2 += $(call cc-option, -Wsign-compare)
+ warning-2 += $(call cc-option, -Wmaybe-uninitialized)
+ warning-2 += $(call cc-option, -Wunused-macros)
++warning-2 += $(call cc-option, -Waddress-of-packed-member)
  
- /** kfd_iommu_add_perf_counters - Add IOMMU performance counters to topology
-  */
+ warning-3 := -Wbad-function-cast
+ warning-3 += -Wcast-qual
 -- 
 2.20.1
 
