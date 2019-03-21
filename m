@@ -2,130 +2,131 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25B3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A953C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94662218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D597218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 00:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ambHfo6J"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="warZYzT1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfCUAmT (ORCPT
+        id S1727575AbfCUArw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 20:42:19 -0400
-Received: from mail-eopbgr1320114.outbound.protection.outlook.com ([40.107.132.114]:64320
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        Wed, 20 Mar 2019 20:47:52 -0400
+Received: from mail-eopbgr10049.outbound.protection.outlook.com ([40.107.1.49]:28825
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726753AbfCUAmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 20:42:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
+        id S1726169AbfCUArv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 20:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Ca6vH2AqIImnQHoLXJOwExKBGBjABLNFlqQCFoNYe8=;
- b=ambHfo6Je3qn25Ci41onkV5JhMpH8NiRK5vi19cvLgSPOvgkKvAEBSjOliplIL7ZyPsBc3C0si2QnZxkR8dH1HmTWOm/jiZDC0FjnMHuyWShCCNaj04ieCYghVHTb9MhGoyYr2llNiQSCcs0MvE+uE0smD3u4UzNea9YSspGtk4=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
+ bh=RSBtxswWHYuJrF+v0hb8s6usTlqYf9kL+Mi/f7AdG9s=;
+ b=warZYzT1HTUb2NmM1KQRNosKHr6WUgIaQRm6pPWAL1TIwxKN/bH850u/Udlvy1Dxh0PcZpLkU1ZPbAQJrEg84hUiGxNn1a45IGblA5d9knj6vX5bpBr+VVtZ1zIaTvnJ3FvEk9jxE2sM31q8G3qospPB/W6dx5xOA1ehSRnxCfU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3738.eurprd04.prod.outlook.com (52.134.70.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.3; Thu, 21 Mar 2019 00:42:11 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::8073:4441:ad0d:75c0]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::8073:4441:ad0d:75c0%7]) with mapi id 15.20.1750.002; Thu, 21 Mar 2019
- 00:42:11 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ 15.20.1709.14; Thu, 21 Mar 2019 00:47:44 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Thu, 21 Mar 2019
+ 00:47:44 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
- pci_devices_present_work(), if necessary
-Thread-Topic: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
- pci_devices_present_work(), if necessary
-Thread-Index: AQHU32YKEJIP46QDrEis0DD/jJcNx6YVOGoAgAAF9cA=
-Date:   Thu, 21 Mar 2019 00:42:10 +0000
-Message-ID: <PU1P153MB016935A5D6D203B9E44CEDB2BF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20190304213357.16652-1-decui@microsoft.com>
- <20190304213357.16652-4-decui@microsoft.com>
- <DM5PR2101MB091892992BB0431538A09A30D7410@DM5PR2101MB0918.namprd21.prod.outlook.com>
- <PU1P153MB01691FE3199135CE5C3BFFEDBF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB01691FE3199135CE5C3BFFEDBF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V8 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Topic: [PATCH V8 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Index: AQHU33+yczxouQcxw0e7w8f7WTm6uQ==
+Date:   Thu, 21 Mar 2019 00:47:44 +0000
+Message-ID: <1553128960-17923-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-20T21:44:04.4186852Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=85e9252e-0119-484c-a7d0-9f061de1f9c6;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [2601:600:a280:1760:b139:a24a:e67f:7afd]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6744cbd5-cb59-4992-3a9b-08d6ad960e05
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0203;
-x-ms-traffictypediagnostic: PU1P153MB0203:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB020336548C5613F727CC72E9BF420@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0983EAD6B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(39860400002)(376002)(346002)(189003)(199004)(99286004)(10290500003)(1511001)(2201001)(54906003)(2501003)(102836004)(256004)(6346003)(11346002)(2940100002)(186003)(486006)(81166006)(5660300002)(8990500004)(86612001)(14454004)(446003)(86362001)(8676002)(93886005)(22452003)(478600001)(110136005)(476003)(10090500001)(316002)(81156014)(4744005)(6436002)(105586002)(6116002)(6246003)(33656002)(7416002)(8936002)(25786009)(7736002)(55016002)(71200400001)(7696005)(106356001)(46003)(53936002)(2906002)(74316002)(9686003)(52536014)(6506007)(4326008)(71190400001)(6636002)(68736007)(97736004)(229853002)(76176011)(93156006)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0087.apcprd03.prod.outlook.com
+ (2603:1096:203:72::27) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3d1ea2be-3bef-4794-b458-08d6ad96d456
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3738;
+x-ms-traffictypediagnostic: DB3PR0402MB3738:
+x-microsoft-antispam-prvs: <DB3PR0402MB3738F9544B8770DF32DD5550F5420@DB3PR0402MB3738.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0983EAD6B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(376002)(136003)(396003)(199004)(189003)(53936002)(2616005)(71200400001)(486006)(3846002)(478600001)(476003)(6486002)(8936002)(6116002)(36756003)(66066001)(25786009)(102836004)(14454004)(26005)(7736002)(110136005)(186003)(99286004)(6436002)(7416002)(81156014)(4326008)(81166006)(305945005)(6512007)(97736004)(2201001)(4744005)(105586002)(386003)(256004)(50226002)(2501003)(68736007)(6506007)(8676002)(86362001)(316002)(5660300002)(52116002)(106356001)(71190400001)(2906002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3738;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1Y0o/Wve5scTXJj1TgHAleBMqSv1Ov1JIljSOeI+QGrse9XprNEniSJLTWSHa92aO5m8rp4ckXAsM5sJ9V4OqdVyzAlJRiFeBp3/NVV2GEqgwDvsSW20ZOQlNkNEc7Wh9N7XKcbgWrq4ugduKxIu/tpiobocDioNS8Lh/WF2KoSlEVTy7dyyb6I2IjSO9az2mt8jWKlsG9whh42BOd6DvSGgjExLI3BAIf239Q1K0gEe6sR5y7oAk5lr7QcARqB2xOjvxk1BTpFyVa4so0tb+L3DL7/HM6U5ip7YDHf3YlQZbE4+gsgc2K08aiy+dSGVrvQcKCzMqHfnvZs0C/ZFzkVUi+W0lqmy0Bge8Rhlztxj/5AudkbzKhHz3OqMNxMmtLEm/8M9hOLdLU46FmPWYixgA4KpS5UrNy9i8iBowds=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: D5qWZFSRFaZKGzJofJco+i3YVpLa5nMmk6DOeGbcNTATX5yGIi1l+CvhlrXC+ifhd2py2dF2LFXLWrElPJUI7loKP3IUhISvWhR0ioMW57pyxIwaVLxbbBew+/cUQRl4ruy1iPn/4JsZkPUVz425rxTTubPQ6RL9gy5P291CrfMQj9yM1gBii+nlXLoJHd2EcoM5be8M4elU/eIFhsXEjxyFKz6jgprWVcBRCMH9xVHdCd2e3OZi7WDSepYfiXgZTAGlddrNFMo2d/TiGbp5w+m6yJiWbD9ZDZSaaBdCkerpY3nvQnE1vAFDc1lGWnUrFOGrZ+yQn1YptkdIAeijj8nGUOGplrDol8wXBhX4U/yGlVCxbEwDi/8oN5EZdsoANWG9ovDryIm+hI3XQaJfHfj087vuVsUWo8KQ6urw0vc=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6744cbd5-cb59-4992-3a9b-08d6ad960e05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 00:42:10.6599
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d1ea2be-3bef-4794-b458-08d6ad96d456
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2019 00:47:44.5920
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3738
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
-> > ...
-> > Patch 2 in this series does set it to NULL, but this code does not.
-> In Patch2, i.e. in the code path hv_pci_remove() -> hv_pci_remove_slots()=
-,
-> we must set hpdev->pci_slot to NULL, otherwise, later, due to
-> hv_pci_remove() -> hv_pci_bus_exit() ->
-> hv_pci_devices_present() with the zero "relations", we'll double-free the
-> "hpdev" struct in pci_devices_present_work() -- see the above.
-A minor correction: I meant we'll call pci_destroy_slot(hpdev->pci_slot)
-twice, not "double-free hpdev".
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
+TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
+and also add backlight support for MIPI-DSI display.
 
-Thanks,
--- Dexuan
+Changes since V7:
+	- ONLY change the pwm driver patch.
+
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add pwm0 support
+  ARM: dts: imx7ulp-evk: Add backlight support
+
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  22 ++
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  21 +
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  10 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 435 +++++++++++++++++=
+++++
+ 7 files changed, 501 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
+
+--=20
+2.7.4
+
