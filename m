@@ -2,122 +2,145 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A52C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAFBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F9B218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501FE218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 01:40:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lhzNZaAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfCUBgU (ORCPT
+        id S1727722AbfCUBj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 21:36:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11515 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726853AbfCUBgT (ORCPT
+        Wed, 20 Mar 2019 21:39:59 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:54419 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfCUBj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 21:36:19 -0400
-X-UUID: 985428ae6d394019b8742e9c7419fc58-20190321
-X-UUID: 985428ae6d394019b8742e9c7419fc58-20190321
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 984471648; Thu, 21 Mar 2019 09:36:15 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 21 Mar 2019 09:36:14 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 21 Mar
- 2019 09:36:13 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 21 Mar 2019 09:36:13 +0800
-Message-ID: <1553132173.18216.16.camel@mtksdaap41>
-Subject: Re: Aw: [PATCH v2] gpu/drm: mediatek: call mtk_dsi_stop() after
- mtk_drm_crtc_atomic_disable()
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-CC:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 21 Mar 2019 09:36:13 +0800
-In-Reply-To: <trinity-60833541-df5b-44b8-82c7-1ed844f9ab51-1553104864025@3c-app-gmx-bs13>
-References: <20190320071825.20268-1-hsinyi@chromium.org>
-         <trinity-60833541-df5b-44b8-82c7-1ed844f9ab51-1553104864025@3c-app-gmx-bs13>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 20 Mar 2019 21:39:58 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190321013955epoutp0433157e0e0297b3b3203f8b3d4de3010d~N1a9YK5u13230032300epoutp04G
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 01:39:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190321013955epoutp0433157e0e0297b3b3203f8b3d4de3010d~N1a9YK5u13230032300epoutp04G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1553132395;
+        bh=oYSpwt8VRK/3qu/1kElbUVazyQE0Cf4m2sfUOAAhy2g=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=lhzNZaAJZKdHmUmmMRo00Zd7iLjagmNdOurvsUajMB55/Vh2iSZiu9MC9U3+HdjI2
+         sR5K310LLew1eTv5K9KfUBaKDB/P6j3khMb2gYJVh4a64dxv8tfnZn6SBRHkYTGwKa
+         QiDHTH70xVH6A+6IFUeDfz1tDa9GIvR6J4rMAauU=
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.155]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190321013945epcas1p1ff66bba871cba46874ac0cf69c1ed01f~N1a0Aa2LL2138021380epcas1p1n;
+        Thu, 21 Mar 2019 01:39:45 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D5.ED.04108.B5BE29C5; Thu, 21 Mar 2019 10:39:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190321013938epcas1p4093e78aa4335f5b5b6a345ac242cd5ef~N1at6LZde2398423984epcas1p4U;
+        Thu, 21 Mar 2019 01:39:38 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190321013938epsmtrp28e7432bc0793d95c671e2b090efdcfeb~N1at5kkBq0994309943epsmtrp2h;
+        Thu, 21 Mar 2019 01:39:38 +0000 (GMT)
+X-AuditID: b6c32a39-89fff7000000100c-17-5c92eb5b6916
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        64.40.03662.A5BE29C5; Thu, 21 Mar 2019 10:39:38 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190321013938epsmtip12e38cdc14948e0f44bd958eb407d0011~N1atwYxrC2831028310epsmtip1M;
+        Thu, 21 Mar 2019 01:39:38 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] extcon: Introduce support of Basin Cove PMIC
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <fd9b39b9-c589-0a61-5191-c91e63153f6c@samsung.com>
+Date:   Thu, 21 Mar 2019 10:39:54 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+In-Reply-To: <20190319143042.66606-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmvm7060kxBgeniFv0Nk1nsnhzHEhc
+        3jWHzeJ24wo2BxaPeScDPd7vu8rm0bdlFaPH501yASxR2TYZqYkpqUUKqXnJ+SmZeem2St7B
+        8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QBuVFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnF
+        JbZKqQUpOQWWBXrFibnFpXnpesn5uVaGBgZGpkCFCdkZf9erFHzjqJi/4x5TA+Nnti5GTg4J
+        AROJkwuaWLoYuTiEBHYwSlz5cArK+cQoseLgPDYI5xujxO7+w4wwLec+LmGFSOxllPi6dQUj
+        hPOeUeLBjx9gVcICHhJT5nwAS4gILGeUeHpnCTtIgk1AS2L/ixtg2/kFFCWu/ngM1sArYCfR
+        fnQjUxcjBweLgKrE3aUZIGFRgQiJ9093s0CUCEqcnPmEBaSEU8BdonuiHUiYWUBc4taT+UwQ
+        trxE89bZzCBrJQQOsEkc2XGCGeJqF4njS79DfSAs8er4FnYIW0ri87u90MCollh58ggbRHMH
+        o8SW/RdYIRLGEvuXTga7jVlAU2L9Ln2IZXwS7772sIKEJQR4JTrahCCqlSUuP7jLBGFLSixu
+        74Qa7yHx6WYDNKxmMUr03f/JMoFRYRaS12Yh+WcWkn9mIWxewMiyilEstaA4Nz212LDAFDm2
+        NzGCU6OW5Q7GY+d8DjEKcDAq8fB6GE2KEWJNLCuuzD3EKMHBrCTCG6EEFOJNSaysSi3Kjy8q
+        zUktPsRoCgz4icxSosn5wLSdVxJvaGpkbGxsYWJoZmpoqCTOu97BOUZIID2xJDU7NbUgtQim
+        j4mDU6qB0SfriUm7w81Xc46GfHvRXfGIMVL1b55rjjh7q8nplb+7ihhcogLMv9akyHmJHvx8
+        ivENS/7b2xKHZO1r5eQFHZSfssqFhP/sejBRlrvr0mnpPCfhmGXaTPFLN+27bbzzoOCGDuat
+        By9GvCqf3LGZqXdz89xY94u9p1fw73LiF1GRTdsRvX6VEktxRqKhFnNRcSIAqSPo56MDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsWy7bCSnG7U60kxBvf3m1n0Nk1nsnhzHEhc
+        3jWHzeJ24wo2BxaPeScDPd7vu8rm0bdlFaPH501yASxRXDYpqTmZZalF+nYJXBl/16sUfOOo
+        mL/jHlMD42e2LkZODgkBE4lzH5ewdjFycQgJ7GaUeNCwgBkiISkx7eJRIJsDyBaWOHy4GKLm
+        LaPErum7wZqFBTwkpsz5wAiSEBFYzijx+NwidpCEkMAsRonbLe4gNpuAlsT+FzfAGvgFFCWu
+        /njMCGLzCthJtB/dyASygEVAVeLu0gyQsKhAhMTdiy9YIEoEJU7OfMICUsIp4C7RPdEOJMws
+        oC7xZ94lZghbXOLWk/lMELa8RPPW2cwTGIVmIemehaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYs
+        MMpLLdcrTswtLs1L10vOz93ECI4DLa0djCdOxB9iFOBgVOLh7TadFCPEmlhWXJl7iFGCg1lJ
+        hDdCCSjEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBMXmn
+        mdFBqcsplzI1yt0D1psv8OO/lBYSxHivmtV1X5f5psmG3S/mHK7h2/dlk9d9R9klfzZXFj/U
+        y/JTv/QxY+n+d5tKrspEfl52TI9rZe7R9v+H6/da7juY7JvTq/Qhfcbvj89mrfU+ItnsULi1
+        +sUCoV1OHZ9EvSwaMtUCDs+3LrikHTzfVYmlOCPRUIu5qDgRAOOKjuV/AgAA
+X-CMS-MailID: 20190321013938epcas1p4093e78aa4335f5b5b6a345ac242cd5ef
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190319143051epcas2p3d606ab8e344a2dc5c01e969d3cbfd024
+References: <CGME20190319143051epcas2p3d606ab8e344a2dc5c01e969d3cbfd024@epcas2p3.samsung.com>
+        <20190319143042.66606-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
+Hi Andy,
 
-On Wed, 2019-03-20 at 19:01 +0100, Frank Wunderlich wrote:
-> Hi,
+On 19. 3. 19. 오후 11:30, Andy Shevchenko wrote:
+> On Intel Merrifield platforms the Basin Cove PMIC responsible for USB DR
+> detection among other things.
 > 
-> i hoped this fixes my warning (maybe have similar cause) on bananapi-r2/mt7623
+> Here is the extcon driver to support USB DR and charger detection.
+> 
+> Since v2:
+> - rebase on top of extcon-next
+> - update copyright year
+> - address most of Chanwoo's comments
+>   (rest is left in similarity with other Intel extcon drivers)
+> 
+> Andy Shevchenko (2):
+>   extcon: intel: Split out some definitions to a common header
+>   extcon: mrfld: Introduce extcon driver for Basin Cove PMIC
+> 
+>  drivers/extcon/Kconfig               |   7 +
+>  drivers/extcon/Makefile              |   1 +
+>  drivers/extcon/extcon-intel-cht-wc.c |  21 +-
+>  drivers/extcon/extcon-intel-mrfld.c  | 284 +++++++++++++++++++++++++++
+>  drivers/extcon/extcon-intel.h        |  20 ++
+>  5 files changed, 319 insertions(+), 14 deletions(-)
+>  create mode 100644 drivers/extcon/extcon-intel-mrfld.c
+>  create mode 100644 drivers/extcon/extcon-intel.h
+> 
 
-This patch fix the problem of dsi driver. Your case is hdmi output which
-does not go through dsi hardware. So your problem is another cause.
+Applied them to extcon-next branch. Thanks.
 
-Regards,
-CK
-
-> 
-> [    6.872034] WARNING: CPU: 2 PID: 160 at drivers/gpu/drm/drm_atomic_helper.c:1
-> 430 drm_atomic_helper_wait_for_vblanks.part.1+0x2a4/0x2a8
-> [    6.872038] [CRTC:36:crtc-0] vblank wait timed out
-> 
-> ...
-> 
-> [    6.872127] [<c0126e4c>] (__warn) from [<c0126fac>] (warn_slowpath_fmt+0x58/0
-> x74)
-> [    6.872136]  r9:00000000 r8:00000001 r7:00000000 r6:00000001 r5:c0d7da9c r4:c
-> 1008c48
-> [    6.872145] [<c0126f58>] (warn_slowpath_fmt) from [<c05ce65c>] (drm_atomic_helper_wait_for_vblanks.part.1+0x2a4/0x2a8)
-> [    6.872150]  r3:00000024 r2:c0d7da9c
-> [    6.872154]  r5:00000000 r4:d991f440
-> [    6.872164] [<c05ce3b8>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c05ce684>] (drm_atomic_helper_wait_for_vblanks+0x24/0x28)
-> [    6.872172]  r10:dae68f28 r9:dae68f38 r8:00000000 r7:d9f759c0 r6:d991ec00 r5:d9f759c0
-> [    6.872175]  r4:00000005
-> [    6.872185] [<c05ce660>] (drm_atomic_helper_wait_for_vblanks) from [<c060af04>] (mtk_atomic_complete+0x98/0xc0)
-> [    6.872194] [<c060ae6c>] (mtk_atomic_complete) from [<c060aff4>] (mtk_atomic_commit+0xc8/0xcc)
-> [    6.872201]  r7:d9f759c0 r6:dae68e40 r5:d991ec00 r4:00000000
-> [    6.872211] [<c060af2c>] (mtk_atomic_commit) from [<c05efed0>] (drm_atomic_commit+0x54/0x60)
-> [    6.872219]  r10:00000002 r9:d9f74eac r8:00000001 r7:d98d5700 r6:d991ec00 r5:d9f759c0
-> [    6.872223]  r4:00000000 r3:c060af2c
-> [    6.872234] [<c05efe7c>] (drm_atomic_commit) from [<c05d33b8>] (restore_fbdev_mode_atomic+0x1d4/0x1e4)
-> [    6.872241]  r7:d98d5700 r6:00000001 r5:d991edb0 r4:d9f759c0
-> [    6.872251] [<c05d31e4>] (restore_fbdev_mode_atomic) from [<c05d5598>] (restore_fbdev_mode+0x5c/0x194)
-> [    6.872260]  r10:00000000 r9:d991ecdc r8:d98d57b4 r7:00000000 r6:d98d5700 r5:d98d5700
-> [    6.872263]  r4:00000000
-> [    6.872274] [<c05d553c>] (restore_fbdev_mode) from [<c05d7054>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x64/0xb0)
-> [    6.872282]  r10:00000000 r9:d991ecdc r8:d98d57b4 r7:00000000 r6:c10824c8 r5:d98d5700
-> [    6.872285]  r4:00000000
-> [    6.872296] [<c05d6ff0>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c05d70e0>] (drm_fb_helper_set_par+0x40/0x64)
-> [    6.872304]  r9:d991ecdc r8:d991ec8c r7:c0d82d88 r6:d98d57b4 r5:00000000 r4:00000000
-> [    6.872315] [<c05d70a0>] (drm_fb_helper_set_par) from [<c05d6fa4>] (drm_fb_helper_hotplug_event.part.11+0xb0/0xb8)
-> [    6.872319]  r5:00000000 r4:d98d5700
-> [    6.872330] [<c05d6ef4>] (drm_fb_helper_hotplug_event.part.11) from [<c05d72c8>] (drm_fbdev_client_hotplug+0x13c/0x1d8)
-> [    6.872337]  r7:c0d82d88 r6:d991eca0 r5:d991ec00 r4:d98d5700
-> [    6.872348] [<c05d718c>] (drm_fbdev_client_hotplug) from [<c0601640>] (drm_client_dev_hotplug+0x84/0xc0)
-> 
-> this crash also happens without fbdev-patch
-> 
-> my codebase: https://github.com/frank-w/BPI-R2-4.14/commits/5.1-hdmi
-> 
-> regards Frank
-
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
