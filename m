@@ -2,92 +2,126 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF564C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F295C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F127218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PD6DSjC2"
+	by mail.kernel.org (Postfix) with ESMTP id DB94F21917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfCUXFX (ORCPT
+        id S1727362AbfCUXGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:05:23 -0400
-Received: from ozlabs.org ([203.11.71.1]:37197 "EHLO ozlabs.org"
+        Thu, 21 Mar 2019 19:06:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:35688 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfCUXFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:05:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QMnq53jQz9sRy;
-        Fri, 22 Mar 2019 10:05:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553209519;
-        bh=b6q639ISBNCc22gmNm9lf0SV6i81VMdLnismz4oV6As=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PD6DSjC2P7899C17EjlxG+TpJ5fchikz5z4eLi46RUYoOO7TLsQotXMJDrw99Mxcs
-         Qd8N9S3SiB8SvNV/OrL/5K5zft5Xpyy/E/F9QElImjyRjCL/WNOp0Cmwkgc2wlPZxC
-         y5WCblTh1UuGfzXxx3zEh1ERp5L74I5O6l3+wj9jz8aP+uceLAG9J+uHNlYBSrPfYF
-         CJBVLm83dj6nJ8K+yCANMEm40PK/dMThxgW54vsy5rfDNbbZOnSj03VIzZC94e8+wS
-         7XA4fjJnf3DmafQGCRzL/1WE3IrkyX7slEC43wlNW4kNUJEnSpPJt3+uWsc+77PHcp
-         GuPWP2mwHFbxQ==
-Date:   Fri, 22 Mar 2019 10:05:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: linux-next: build warning after merge of the net-next tree
-Message-ID: <20190322100512.51b5ea25@canb.auug.org.au>
+        id S1726695AbfCUXGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 19:06:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65040374;
+        Thu, 21 Mar 2019 16:06:05 -0700 (PDT)
+Received: from beelzebub.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BBDFA3F614;
+        Thu, 21 Mar 2019 16:06:04 -0700 (PDT)
+From:   Jeremy Linton <jeremy.linton@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com, Andre.Przywara@arm.com,
+        linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH v6 00/10] arm64: add system vulnerability sysfs entries
+Date:   Thu, 21 Mar 2019 18:05:47 -0500
+Message-Id: <20190321230557.45107-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/g8GA6XQIB7jGLEa/q1VShjD"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g8GA6XQIB7jGLEa/q1VShjD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Arm64 machines should be displaying a human readable
+vulnerability status to speculative execution attacks in
+/sys/devices/system/cpu/vulnerabilities 
 
-Hi all,
+This series enables that behavior by providing the expected
+functions. Those functions expose the cpu errata and feature
+states, as well as whether firmware is responding appropriately
+to display the overall machine status. This means that in a
+heterogeneous machine we will only claim the machine is mitigated
+or safe if we are confident all booted cores are safe or
+mitigated.
 
-After merging the net-next tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+v5->v6:
+	Invert meltdown logic to display that a core is safe rather
+	       than mitigated if the mitigation has been enabled on
+	       machines that are safe. This can happen when the
+	       mitigation was forced on via command line or KASLR.
+	       This means that in order to detect if kpti is enabled
+	       other methods must be used (look at dmesg) when the
+	       machine isn't itself susceptible to meltdown.
+	Trivial whitespace tweaks.
 
-drivers/net/phy/Kconfig:276:warning: prompt redefined
+v4->v5:
+	Revert the changes to remove the CONFIG_EXPERT hidden
+	       options, but leave the detection paths building
+	       without #ifdef wrappers. Also remove the
+	       CONFIG_GENERIC_CPU_VULNERABILITIES #ifdefs
+	       as we are 'select'ing the option in the Kconfig.
+	       This allows us to keep all three variations of
+	       the CONFIG/enable/disable paths without a lot of
+	       (CONFIG_X || CONFIG_Y) checks.
+	Various bits/pieces moved between the patches in an attempt
+		to keep similar features/changes together.
 
-Introduced by commit
+v3->v4:
+        Drop the patch which selectivly exports sysfs entries
+        Remove the CONFIG_EXPERT hidden options which allowed
+               the kernel to be built without the vulnerability
+               detection code.
+        Pick Marc Z's patches which invert the white/black
+               lists for spectrev2 and clean up the firmware
+               detection logic.
+        Document the existing kpti controls
+        Add a nospectre_v2 option to boot time disable the
+             mitigation
 
-  17cc9821766c ("net: phy: Move Omega PHY entry to Cygnus PHY driver")
+v2->v3:
+        Remove "Unknown" states, replace with further blacklists
+               and default vulnerable/not affected states.
+        Add the ability for an arch port to selectively export
+               sysfs vulnerabilities.
 
---=20
-Cheers,
-Stephen Rothwell
+v1->v2:
+        Add "Unknown" state to ABI/testing docs.
+        Minor tweaks.
 
---Sig_/g8GA6XQIB7jGLEa/q1VShjD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Jeremy Linton (6):
+  arm64: Provide a command line to disable spectre_v2 mitigation
+  arm64: add sysfs vulnerability show for meltdown
+  arm64: Always enable spectrev2 vulnerability detection
+  arm64: add sysfs vulnerability show for spectre v2
+  arm64: Always enable ssb vulnerability detection
+  arm64: add sysfs vulnerability show for speculative store bypass
 
------BEGIN PGP SIGNATURE-----
+Marc Zyngier (2):
+  arm64: Advertise mitigation of Spectre-v2, or lack thereof
+  arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyUGKgACgkQAVBC80lX
-0GzxTgf+L6z3IEpUU+OwKxIsoPP98Q2F0PNUEsrr5HJNL7P1tTaet384dgE6cGlp
-zoJwp11YF1Bwjy+yIAfYeJM9HjpWcMjaCK9fiJtzCIDYrKBGaRStEcTEZCAUibF7
-rmVndLMCf0beLV1LF7HiYa++OY+X6LLaC0eUfyAdRMmBB1tyEffipMQCJqubhWaa
-iMzcK4sWknlLC3rGx8OeDNFqz4Ero9Vh9QsUcymXko8YDWcs4qGYDJiTHD/I2HEi
-fLOBbKuzjfWTzJx1t1GRPtFAg541sZ3lMLcuTNEuF/miIMtLJW8VoYoes1nfbQv4
-g5kOTuTKAMCBX+f7LiDRUqMU9YJaVA==
-=hqRW
------END PGP SIGNATURE-----
+Mian Yousaf Kaukab (2):
+  arm64: add sysfs vulnerability show for spectre v1
+  arm64: enable generic CPU vulnerabilites support
 
---Sig_/g8GA6XQIB7jGLEa/q1VShjD--
+ .../admin-guide/kernel-parameters.txt         |   8 +-
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/cpufeature.h           |   4 -
+ arch/arm64/kernel/cpu_errata.c                | 239 +++++++++++++-----
+ arch/arm64/kernel/cpufeature.c                |  58 ++++-
+ 5 files changed, 223 insertions(+), 87 deletions(-)
+
+-- 
+2.20.1
+
