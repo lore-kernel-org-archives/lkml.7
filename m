@@ -4,239 +4,410 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8428DC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54B3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542DE218FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61113218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 11:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfCULuw (ORCPT
+        id S1728342AbfCULvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 07:50:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40570 "EHLO mx1.redhat.com"
+        Thu, 21 Mar 2019 07:51:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52056 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfCULuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 07:50:51 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1728165AbfCULu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 07:50:58 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B908C2026E;
-        Thu, 21 Mar 2019 11:50:50 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3A6F8309266D;
+        Thu, 21 Mar 2019 11:50:58 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26E7F19C57;
-        Thu, 21 Mar 2019 11:50:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5CA31001DC1;
+        Thu, 21 Mar 2019 11:50:56 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 3/6] cramfs: Convert to fs_context
+Subject: [RFC PATCH 4/6] jffs2: Convert to fs_context
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     Nicolas Pitre <nico@linaro.org>, linux-mtd@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, dhowells@redhat.com
-Date:   Thu, 21 Mar 2019 11:50:48 +0000
-Message-ID: <155316904836.29884.4272832456354077956.stgit@warthog.procyon.org.uk>
+Date:   Thu, 21 Mar 2019 11:50:56 +0000
+Message-ID: <155316905597.29884.3278277521315532086.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
 References: <155316902426.29884.2476392753144421312.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 21 Mar 2019 11:50:50 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 21 Mar 2019 11:50:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Nicolas Pitre <nico@linaro.org>
+cc: David Woodhouse <dwmw2@infradead.org>
 cc: linux-mtd@lists.infradead.org
-cc: linux-block@vger.kernel.org
 ---
 
- fs/cramfs/inode.c |   69 ++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 39 insertions(+), 30 deletions(-)
+ fs/jffs2/fs.c       |   21 +++---
+ fs/jffs2/os-linux.h |    4 +
+ fs/jffs2/super.c    |  172 +++++++++++++++++++++++++--------------------------
+ 3 files changed, 96 insertions(+), 101 deletions(-)
 
-diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
-index 9352487bd0fc..2ee89a353d64 100644
---- a/fs/cramfs/inode.c
-+++ b/fs/cramfs/inode.c
-@@ -24,6 +24,7 @@
- #include <linux/blkdev.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/super.h>
+diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
+index eab04eca95a3..d79734bd7650 100644
+--- a/fs/jffs2/fs.c
++++ b/fs/jffs2/fs.c
+@@ -17,6 +17,7 @@
+ #include <linux/sched.h>
+ #include <linux/cred.h>
+ #include <linux/fs.h>
 +#include <linux/fs_context.h>
- #include <linux/slab.h>
- #include <linux/vfs.h>
- #include <linux/mutex.h>
-@@ -506,18 +507,19 @@ static void cramfs_kill_sb(struct super_block *sb)
- 	kfree(sbi);
+ #include <linux/list.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/pagemap.h>
+@@ -184,7 +185,7 @@ int jffs2_do_setattr (struct inode *inode, struct iattr *iattr)
+ 	if (ivalid & ATTR_SIZE && inode->i_size > iattr->ia_size) {
+ 		truncate_setsize(inode, iattr->ia_size);
+ 		inode->i_blocks = (inode->i_size + 511) >> 9;
+-	}	
++	}
+ 
+ 	return 0;
+ }
+@@ -390,7 +391,7 @@ void jffs2_dirty_inode(struct inode *inode, int flags)
+ 	jffs2_do_setattr(inode, &iattr);
  }
  
--static int cramfs_remount(struct super_block *sb, int *flags, char *data)
-+static int cramfs_reconfigure(struct fs_context *fc)
+-int jffs2_do_remount_fs(struct super_block *sb, int *flags, char *data)
++int jffs2_do_remount_fs(struct super_block *sb, struct fs_context *fc)
  {
--	sync_filesystem(sb);
--	*flags |= SB_RDONLY;
-+	sync_filesystem(fc->root->d_sb);
-+	fc->sb_flags |= SB_RDONLY;
+ 	struct jffs2_sb_info *c = JFFS2_SB_INFO(sb);
+ 
+@@ -408,10 +409,10 @@ int jffs2_do_remount_fs(struct super_block *sb, int *flags, char *data)
+ 		mutex_unlock(&c->alloc_sem);
+ 	}
+ 
+-	if (!(*flags & SB_RDONLY))
++	if (!(fc->sb_flags & SB_RDONLY))
+ 		jffs2_start_garbage_collect_thread(c);
+ 
+-	*flags |= SB_NOATIME;
++	fc->sb_flags |= SB_NOATIME;
  	return 0;
  }
  
--static int cramfs_read_super(struct super_block *sb,
--			     struct cramfs_super *super, int silent)
-+static int cramfs_read_super(struct super_block *sb, struct fs_context *fc,
-+			     struct cramfs_super *super)
- {
- 	struct cramfs_sb_info *sbi = CRAMFS_SB(sb);
- 	unsigned long root_offset;
-+	bool silent = fc->sb_flags & SB_SILENT;
- 
- 	/* We don't know the real size yet */
- 	sbi->size = PAGE_SIZE;
-@@ -532,7 +534,7 @@ static int cramfs_read_super(struct super_block *sb,
- 		/* check for wrong endianness */
- 		if (super->magic == CRAMFS_MAGIC_WEND) {
- 			if (!silent)
--				pr_err("wrong endianness\n");
-+				errorf(fc, "cramfs: wrong endianness");
- 			return -EINVAL;
- 		}
- 
-@@ -544,22 +546,22 @@ static int cramfs_read_super(struct super_block *sb,
- 		mutex_unlock(&read_mutex);
- 		if (super->magic != CRAMFS_MAGIC) {
- 			if (super->magic == CRAMFS_MAGIC_WEND && !silent)
--				pr_err("wrong endianness\n");
-+				errorf(fc, "cramfs: wrong endianness");
- 			else if (!silent)
--				pr_err("wrong magic\n");
-+				errorf(fc, "cramfs: wrong magic");
- 			return -EINVAL;
- 		}
- 	}
- 
- 	/* get feature flags first */
- 	if (super->flags & ~CRAMFS_SUPPORTED_FLAGS) {
--		pr_err("unsupported filesystem features\n");
-+		errorf(fc, "cramfs: unsupported filesystem features");
- 		return -EINVAL;
- 	}
- 
- 	/* Check that the root inode is in a sane state */
- 	if (!S_ISDIR(super->root.mode)) {
--		pr_err("root is not a directory\n");
-+		errorf(fc, "cramfs: root is not a directory");
- 		return -EINVAL;
- 	}
- 	/* correct strange, hard-coded permissions of mkcramfs */
-@@ -578,12 +580,12 @@ static int cramfs_read_super(struct super_block *sb,
- 	sbi->magic = super->magic;
- 	sbi->flags = super->flags;
- 	if (root_offset == 0)
--		pr_info("empty filesystem");
-+		infof(fc, "cramfs: empty filesystem");
- 	else if (!(super->flags & CRAMFS_FLAG_SHIFTED_ROOT_OFFSET) &&
- 		 ((root_offset != sizeof(struct cramfs_super)) &&
- 		  (root_offset != 512 + sizeof(struct cramfs_super))))
- 	{
--		pr_err("bad root offset %lu\n", root_offset);
-+		errorf(fc, "cramfs: bad root offset %lu", root_offset);
- 		return -EINVAL;
- 	}
- 
-@@ -607,8 +609,7 @@ static int cramfs_finalize_super(struct super_block *sb,
- 	return 0;
+@@ -508,7 +509,7 @@ static int calculate_inocache_hashsize(uint32_t flash_size)
+ 	return hashsize;
  }
  
--static int cramfs_blkdev_fill_super(struct super_block *sb, void *data,
--				    int silent)
-+static int cramfs_blkdev_fill_super(struct super_block *sb, struct fs_context *fc)
+-int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
++int jffs2_do_fill_super(struct super_block *sb, struct fs_context *fc)
  {
- 	struct cramfs_sb_info *sbi;
- 	struct cramfs_super super;
-@@ -623,14 +624,13 @@ static int cramfs_blkdev_fill_super(struct super_block *sb, void *data,
- 	for (i = 0; i < READ_BUFFERS; i++)
- 		buffer_blocknr[i] = -1;
+ 	struct jffs2_sb_info *c;
+ 	struct inode *root_i;
+@@ -523,11 +524,11 @@ int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
  
--	err = cramfs_read_super(sb, &super, silent);
-+	err = cramfs_read_super(sb, fc, &super);
- 	if (err)
- 		return err;
- 	return cramfs_finalize_super(sb, &super.root);
- }
+ #ifndef CONFIG_JFFS2_FS_WRITEBUFFER
+ 	if (c->mtd->type == MTD_NANDFLASH) {
+-		pr_err("Cannot operate on NAND flash unless jffs2 NAND support is compiled in\n");
++		errorf(fc, "Cannot operate on NAND flash unless jffs2 NAND support is compiled in");
+ 		return -EINVAL;
+ 	}
+ 	if (c->mtd->type == MTD_DATAFLASH) {
+-		pr_err("Cannot operate on DataFlash unless jffs2 DataFlash support is compiled in\n");
++		errorf(fc, "Cannot operate on DataFlash unless jffs2 DataFlash support is compiled in");
+ 		return -EINVAL;
+ 	}
+ #endif
+@@ -541,12 +542,12 @@ int jffs2_do_fill_super(struct super_block *sb, void *data, int silent)
+ 	 */
+ 	if ((c->sector_size * blocks) != c->flash_size) {
+ 		c->flash_size = c->sector_size * blocks;
+-		pr_info("Flash size not aligned to erasesize, reducing to %dKiB\n",
+-			c->flash_size / 1024);
++		infof(fc, "Flash size not aligned to erasesize, reducing to %dKiB",
++		      c->flash_size / 1024);
+ 	}
  
--static int cramfs_mtd_fill_super(struct super_block *sb, void *data,
--				 int silent)
-+static int cramfs_mtd_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct cramfs_sb_info *sbi;
- 	struct cramfs_super super;
-@@ -652,7 +652,7 @@ static int cramfs_mtd_fill_super(struct super_block *sb, void *data,
- 
- 	pr_info("checking physical address %pap for linear cramfs image\n",
- 		&sbi->linear_phys_addr);
--	err = cramfs_read_super(sb, &super, silent);
-+	err = cramfs_read_super(sb, fc, &super);
- 	if (err)
- 		return err;
- 
-@@ -947,32 +947,41 @@ static const struct inode_operations cramfs_dir_inode_operations = {
+ 	if (c->flash_size < 5*c->sector_size) {
+-		pr_err("Too few erase blocks (%d)\n",
++		errorf(fc, "Too few erase blocks (%d)",
+ 		       c->flash_size / c->sector_size);
+ 		return -EINVAL;
+ 	}
+diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
+index a2dbbb3f4c74..ac23ae5cdb54 100644
+--- a/fs/jffs2/os-linux.h
++++ b/fs/jffs2/os-linux.h
+@@ -172,8 +172,8 @@ void jffs2_dirty_inode(struct inode *inode, int flags);
+ struct inode *jffs2_new_inode (struct inode *dir_i, umode_t mode,
+ 			       struct jffs2_raw_inode *ri);
+ int jffs2_statfs (struct dentry *, struct kstatfs *);
+-int jffs2_do_remount_fs(struct super_block *, int *, char *);
+-int jffs2_do_fill_super(struct super_block *sb, void *data, int silent);
++int jffs2_do_remount_fs(struct super_block *sb, struct fs_context *fc);
++int jffs2_do_fill_super(struct super_block *sb, struct fs_context *fc);
+ void jffs2_gc_release_inode(struct jffs2_sb_info *c,
+ 			    struct jffs2_inode_info *f);
+ struct jffs2_inode_info *jffs2_gc_fetch_inode(struct jffs2_sb_info *c,
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index bb6ae387469f..69dcc4e0b243 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -19,7 +19,8 @@
+ #include <linux/fs.h>
+ #include <linux/err.h>
+ #include <linux/mount.h>
+-#include <linux/parser.h>
++#include <linux/fs_context.h>
++#include <linux/fs_parser.h>
+ #include <linux/jffs2.h>
+ #include <linux/pagemap.h>
+ #include <linux/mtd/super.h>
+@@ -160,96 +161,77 @@ static const struct export_operations jffs2_export_ops = {
+ /*
+  * JFFS2 mount options.
+  *
++ * Opt_source: The source device
+  * Opt_override_compr: override default compressor
+  * Opt_rp_size: size of reserved pool in KiB
+- * Opt_err: just end of array marker
+  */
+ enum {
++	Opt_source,
+ 	Opt_override_compr,
+ 	Opt_rp_size,
+-	Opt_err,
  };
  
- static const struct super_operations cramfs_ops = {
--	.remount_fs	= cramfs_remount,
- 	.statfs		= cramfs_statfs,
+-static const match_table_t tokens = {
+-	{Opt_override_compr, "compr=%s"},
+-	{Opt_rp_size, "rp_size=%u"},
+-	{Opt_err, NULL},
++static const struct fs_parameter_spec jffs2_param_specs[] = {
++	fsparam_string	("source",	Opt_source),
++	fsparam_enum	("compr",	Opt_override_compr),
++	fsparam_u32	("rp_size",	Opt_rp_size),
++	{}
  };
  
--static struct dentry *cramfs_mount(struct file_system_type *fs_type, int flags,
--				   const char *dev_name, void *data)
-+static int cramfs_get_tree(struct fs_context *fc)
- {
--	struct dentry *ret = ERR_PTR(-ENOPROTOOPT);
-+	int ret = -ENOPROTOOPT;
- 
- 	if (IS_ENABLED(CONFIG_CRAMFS_MTD)) {
--		ret = mount_mtd(fs_type, flags, dev_name, data,
--				cramfs_mtd_fill_super);
--		if (!IS_ERR(ret))
-+		ret = vfs_get_mtd_super(fc, cramfs_mtd_fill_super);
-+		if (ret < 0)
- 			return ret;
- 	}
--	if (IS_ENABLED(CONFIG_CRAMFS_BLOCKDEV)) {
--		ret = mount_bdev(fs_type, flags, dev_name, data,
--				 cramfs_blkdev_fill_super);
--	}
-+	if (IS_ENABLED(CONFIG_CRAMFS_BLOCKDEV))
-+		ret = vfs_get_block_super(fc, cramfs_blkdev_fill_super);
- 	return ret;
- }
- 
-+static const struct fs_context_operations cramfs_context_ops = {
-+	.get_tree	= cramfs_get_tree,
-+	.reconfigure	= cramfs_reconfigure,
+-static int jffs2_parse_options(struct jffs2_sb_info *c, char *data)
+-{
+-	substring_t args[MAX_OPT_ARGS];
+-	char *p, *name;
+-	unsigned int opt;
+-
+-	if (!data)
+-		return 0;
+-
+-	while ((p = strsep(&data, ","))) {
+-		int token;
+-
+-		if (!*p)
+-			continue;
+-
+-		token = match_token(p, tokens, args);
+-		switch (token) {
+-		case Opt_override_compr:
+-			name = match_strdup(&args[0]);
+-
+-			if (!name)
+-				return -ENOMEM;
+-			if (!strcmp(name, "none"))
+-				c->mount_opts.compr = JFFS2_COMPR_MODE_NONE;
++static const struct fs_parameter_enum jffs2_param_enums[] = {
++	{ Opt_override_compr,	"none",	JFFS2_COMPR_MODE_NONE },
+ #ifdef CONFIG_JFFS2_LZO
+-			else if (!strcmp(name, "lzo"))
+-				c->mount_opts.compr = JFFS2_COMPR_MODE_FORCELZO;
++	{ Opt_override_compr,	"lzo",	JFFS2_COMPR_MODE_FORCELZO },
+ #endif
+ #ifdef CONFIG_JFFS2_ZLIB
+-			else if (!strcmp(name, "zlib"))
+-				c->mount_opts.compr =
+-						JFFS2_COMPR_MODE_FORCEZLIB;
++	{ Opt_override_compr,	"zlib",	JFFS2_COMPR_MODE_FORCEZLIB },
+ #endif
+-			else {
+-				pr_err("Error: unknown compressor \"%s\"\n",
+-				       name);
+-				kfree(name);
+-				return -EINVAL;
+-			}
+-			kfree(name);
+-			c->mount_opts.override_compr = true;
+-			break;
+-		case Opt_rp_size:
+-			if (match_int(&args[0], &opt))
+-				return -EINVAL;
+-			opt *= 1024;
+-			if (opt > c->mtd->size) {
+-				pr_warn("Too large reserve pool specified, max "
+-					"is %llu KB\n", c->mtd->size / 1024);
+-				return -EINVAL;
+-			}
+-			c->mount_opts.rp_size = opt;
+-			break;
+-		default:
+-			pr_err("Error: unrecognized mount option '%s' or missing value\n",
+-			       p);
+-			return -EINVAL;
+-		}
++	{}
 +};
 +
-+/*
-+ * Set up the filesystem mount context.
-+ */
-+static int cramfs_init_fs_context(struct fs_context *fc)
++const struct fs_parameter_description jffs2_fs_parameters = {
++	.name		= "jffs2",
++	.specs		= jffs2_param_specs,
++	.enums		= jffs2_param_enums,
++};
++
++static int jffs2_parse_param(struct fs_context *fc, struct fs_parameter *param)
 +{
-+	fc->ops = &cramfs_context_ops;
-+	return 0;
++	struct fs_parse_result result;
++	struct jffs2_sb_info *c = fc->s_fs_info;
++	int opt;
++
++	opt = fs_parse(fc, &jffs2_fs_parameters, param, &result);
++	if (opt < 0)
++		return opt;
++
++	switch (opt) {
++	case Opt_override_compr:
++		c->mount_opts.compr = result.uint_32;
++		c->mount_opts.override_compr = true;
++		break;
++	case Opt_rp_size:
++		if (result.uint_32 > UINT_MAX / 1024)
++			return invalf(fc, "jffs2: rp_size unrepresentable");
++		opt = result.uint_32 * 1024;
++		if (opt > c->mtd->size)
++			return invalf(fc, "jffs2: Too large reserve pool specified, max is %llu KB",
++				      c->mtd->size / 1024);
++		c->mount_opts.rp_size = opt;
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int jffs2_remount_fs(struct super_block *sb, int *flags, char *data)
++static int jffs2_reconfigure(struct fs_context *fc)
+ {
+-	struct jffs2_sb_info *c = JFFS2_SB_INFO(sb);
+-	int err;
++	struct super_block *sb = fc->root->d_sb;
+ 
+ 	sync_filesystem(sb);
+-	err = jffs2_parse_options(c, data);
+-	if (err)
+-		return -EINVAL;
+-
+-	return jffs2_do_remount_fs(sb, flags, data);
++	return jffs2_do_remount_fs(sb, fc);
+ }
+ 
+ static const struct super_operations jffs2_super_operations =
+@@ -258,7 +240,6 @@ static const struct super_operations jffs2_super_operations =
+ 	.destroy_inode =jffs2_destroy_inode,
+ 	.put_super =	jffs2_put_super,
+ 	.statfs =	jffs2_statfs,
+-	.remount_fs =	jffs2_remount_fs,
+ 	.evict_inode =	jffs2_evict_inode,
+ 	.dirty_inode =	jffs2_dirty_inode,
+ 	.show_options =	jffs2_show_options,
+@@ -268,26 +249,16 @@ static const struct super_operations jffs2_super_operations =
+ /*
+  * fill in the superblock
+  */
+-static int jffs2_fill_super(struct super_block *sb, void *data, int silent)
++static int jffs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+-	struct jffs2_sb_info *c;
+-	int ret;
++	struct jffs2_sb_info *c = sb->s_fs_info;
+ 
+ 	jffs2_dbg(1, "jffs2_get_sb_mtd():"
+ 		  " New superblock for device %d (\"%s\")\n",
+ 		  sb->s_mtd->index, sb->s_mtd->name);
+ 
+-	c = kzalloc(sizeof(*c), GFP_KERNEL);
+-	if (!c)
+-		return -ENOMEM;
+-
+ 	c->mtd = sb->s_mtd;
+ 	c->os_priv = sb;
+-	sb->s_fs_info = c;
+-
+-	ret = jffs2_parse_options(c, data);
+-	if (ret)
+-		return -EINVAL;
+ 
+ 	/* Initialize JFFS2 superblock locks, the further initialization will
+ 	 * be done later */
+@@ -305,15 +276,37 @@ static int jffs2_fill_super(struct super_block *sb, void *data, int silent)
+ #ifdef CONFIG_JFFS2_FS_POSIX_ACL
+ 	sb->s_flags |= SB_POSIXACL;
+ #endif
+-	ret = jffs2_do_fill_super(sb, data, silent);
+-	return ret;
++	return jffs2_do_fill_super(sb, fc);
+ }
+ 
+-static struct dentry *jffs2_mount(struct file_system_type *fs_type,
+-			int flags, const char *dev_name,
+-			void *data)
++static int jffs2_get_tree(struct fs_context *fc)
+ {
+-	return mount_mtd(fs_type, flags, dev_name, data, jffs2_fill_super);
++	return vfs_get_mtd_super(fc, jffs2_fill_super);
 +}
 +
- static struct file_system_type cramfs_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "cramfs",
--	.mount		= cramfs_mount,
-+	.init_fs_context = cramfs_init_fs_context,
- 	.kill_sb	= cramfs_kill_sb,
- 	.fs_flags	= FS_REQUIRES_DEV,
++static void jffs2_free_fc(struct fs_context *fc)
++{
++	kfree(fc->s_fs_info);
++}
++
++static const struct fs_context_operations jffs2_context_ops = {
++	.free		= jffs2_free_fc,
++	.parse_param	= jffs2_parse_param,
++	.get_tree	= jffs2_get_tree,
++	.reconfigure	= jffs2_reconfigure,
++};
++
++static int jffs2_init_fs_context(struct fs_context *fc)
++{
++	struct jffs2_sb_info *ctx;
++
++	ctx = kzalloc(sizeof(struct jffs2_sb_info), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	fc->s_fs_info = ctx;
++	fc->ops = &jffs2_context_ops;
++	return 0;
+ }
+ 
+ static void jffs2_put_super (struct super_block *sb)
+@@ -350,7 +343,8 @@ static void jffs2_kill_sb(struct super_block *sb)
+ static struct file_system_type jffs2_fs_type = {
+ 	.owner =	THIS_MODULE,
+ 	.name =		"jffs2",
+-	.mount =	jffs2_mount,
++	.init_fs_context = jffs2_init_fs_context,
++	.parameters =	&jffs2_fs_parameters,
+ 	.kill_sb =	jffs2_kill_sb,
  };
+ MODULE_ALIAS_FS("jffs2");
 
