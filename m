@@ -2,187 +2,136 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10330C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFC1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76F4218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3047E218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 08:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8V6zDZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfCUIQE (ORCPT
+        id S1727914AbfCUIUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 04:16:04 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:33376 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725985AbfCUIQD (ORCPT
+        Thu, 21 Mar 2019 04:20:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45456 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfCUIUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 04:16:03 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2L8BZLE019244;
-        Thu, 21 Mar 2019 09:15:49 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qsxv3uj-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 21 Mar 2019 09:15:49 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 57FB338;
-        Thu, 21 Mar 2019 08:15:48 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2CB3524F5;
-        Thu, 21 Mar 2019 08:15:48 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 21 Mar
- 2019 09:15:48 +0100
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Thu, 21 Mar 2019 09:15:47
- +0100
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: add sleep power management
-Date:   Thu, 21 Mar 2019 09:15:20 +0100
-Message-ID: <1553156120-13851-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 21 Mar 2019 04:20:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s15so650779wra.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 01:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=BGbfVbtgv+XC+5W7MKRmcuvP1lcC0VAQHZYdqQn85VQ=;
+        b=N8V6zDZVYXPXiHJNdv5iwKwO/vtFfW3j4/Y/Y7Ufah8F5BR32H/t5+cSVRaCA6I11T
+         UgJeG9JveO5JYKbYGfKj9mCLPkuQ0Ps7GBhkP878CV+rXz6LEQFXcS62n8QRU40leaGl
+         JKLKUIo43a6OQ5qfgEiBL0dFzy2CwYK7d/Ne6ITLD7XGfwN4YBSUUbjM9QKtYkABk5yw
+         5XyJlHxUtKEdG8xFm7D2bG+AYNklnL8mCr1k+lqBC8GDg/HFr+4ZubX6OHuU4tJrLjcu
+         mMSFSBSn8uohqznfb9KKmdxtcdpQVYeF/I7VSrZLx8zxpcaoVDIrNY6BmDjFF/4Wb78N
+         tqqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=BGbfVbtgv+XC+5W7MKRmcuvP1lcC0VAQHZYdqQn85VQ=;
+        b=IIyK9TeAUFP0KUDsuGT5mWsJzxdr3SNILFfjQ+8V1pBvWJm575LgD9NRd0Tse5cSGo
+         EhM8s0ku+tOwPogPQlazj+3Iqt9NI8DQeDUVsrLxHbiiTLiN2N4mXlJlAo5ZSSUL02Mx
+         9Dx0Ui7Cpiah+vitWMTxvccO5C1YQH4YEMlhVESGATxV5TPWLX1bs2u52FnGnWNSaqD1
+         cUdCKEmXrlyzLIH4x+XjXNAoEAV2t9/QjaiXTeP1JWo8o298B8oTemfKxmB0rkvry4Tu
+         f0g1nsiaogQs2hzQaG48O2tE9MtE6vpFBrwnZoRLNs8xmNqLICQqlv8jtfr2lQQindfO
+         EXYg==
+X-Gm-Message-State: APjAAAU8MX8GjyVwM3gqjYJm5wxKTYR8uL4cugXUHszAuJifL7yi7cTu
+        Yxg/WWQ57fwfy3rCtW6Cyvxj1LBsAZQ=
+X-Google-Smtp-Source: APXvYqyC1nxIMmfTReF+4oThrSNSuWx/8QVlBZy5EhfnE3pC0oTm0DltfVtlBeaU5osXlm68NgZdXA==
+X-Received: by 2002:a5d:42c5:: with SMTP id t5mr1510977wrr.275.1553156437021;
+        Thu, 21 Mar 2019 01:20:37 -0700 (PDT)
+Received: from dell ([2.27.167.37])
+        by smtp.gmail.com with ESMTPSA id h14sm6495664wre.90.2019.03.21.01.20.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 01:20:36 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 08:20:34 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz,
+        tony@atomide.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] leds: lm3532: Introduce the lm3532 LED driver
+Message-ID: <20190321082034.GR4731@dell>
+References: <20190313123249.17258-1-dmurphy@ti.com>
+ <20190313123249.17258-4-dmurphy@ti.com>
+ <a7ee025e-361e-90b8-e38d-53546a542102@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-21_04:,,
- signatures=0
+In-Reply-To: <a7ee025e-361e-90b8-e38d-53546a542102@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements system sleep power management ops.
+On Wed, 20 Mar 2019, Jacek Anaszewski wrote:
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- drivers/gpu/drm/stm/drv.c  | 35 +++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/stm/ltdc.c | 24 ++++++++++++++++++++++++
- drivers/gpu/drm/stm/ltdc.h |  3 +++
- 3 files changed, 62 insertions(+)
+> Hi Dan,
+> 
+> I have one minor issue below.
+> 
+> On 3/13/19 1:32 PM, Dan Murphy wrote:
+> > Introduce the Texas Instruments LM3532 White LED driver.
+> > The driver supports ALS configurability or manual brightness
+> > control.
+> > 
+> > The driver also supports associating LED strings with specific
+> > control banks in a group or as individually controlled strings.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > ---
+> > 
+> > v4 - Updated code to DT doc changes appending "ti," to TI specific properties -
+> > https://lore.kernel.org/patchwork/patch/1050124/
+> > 
+> > v3 - Removed switch case for register setting in favor of an algorithim (v1 comment),
+> > https://lore.kernel.org/patchwork/patch/1049024/
+> > v2 - Added look up tables for als_avg, als_imp and ramp times, fixed brightness
+> > control when ALS is in control, added property value checks to ensure the values
+> > are not out of bounds - https://lore.kernel.org/patchwork/patch/1048807/
+> > 
+> >   drivers/leds/Kconfig       |  10 +
+> >   drivers/leds/Makefile      |   1 +
+> >   drivers/leds/leds-lm3532.c | 681 +++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 692 insertions(+)
+> >   create mode 100644 drivers/leds/leds-lm3532.c
 
-diff --git a/drivers/gpu/drm/stm/drv.c b/drivers/gpu/drm/stm/drv.c
-index 0a7f933..5834ef5 100644
---- a/drivers/gpu/drm/stm/drv.c
-+++ b/drivers/gpu/drm/stm/drv.c
-@@ -129,6 +129,40 @@ static void drv_unload(struct drm_device *ddev)
- 	drm_mode_config_cleanup(ddev);
- }
- 
-+static __maybe_unused int drv_suspend(struct device *dev)
-+{
-+	struct drm_device *ddev = dev_get_drvdata(dev);
-+	struct ltdc_device *ldev = ddev->dev_private;
-+	struct drm_atomic_state *state;
-+
-+	drm_kms_helper_poll_disable(ddev);
-+	state = drm_atomic_helper_suspend(ddev);
-+	if (IS_ERR(state)) {
-+		drm_kms_helper_poll_enable(ddev);
-+		return PTR_ERR(state);
-+	}
-+	ldev->suspend_state = state;
-+	ltdc_suspend(ddev);
-+
-+	return 0;
-+}
-+
-+static __maybe_unused int drv_resume(struct device *dev)
-+{
-+	struct drm_device *ddev = dev_get_drvdata(dev);
-+	struct ltdc_device *ldev = ddev->dev_private;
-+
-+	ltdc_resume(ddev);
-+	drm_atomic_helper_resume(ddev, ldev->suspend_state);
-+	drm_kms_helper_poll_enable(ddev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops drv_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(drv_suspend, drv_resume)
-+};
-+
- static int stm_drm_platform_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -186,6 +220,7 @@ static struct platform_driver stm_drm_platform_driver = {
- 	.driver = {
- 		.name = "stm32-display",
- 		.of_match_table = drv_dt_ids,
-+		.pm = &drv_pm_ops,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index b1741a9..32fd6a3 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -1062,6 +1062,30 @@ static int ltdc_get_caps(struct drm_device *ddev)
- 	return 0;
- }
- 
-+void ltdc_suspend(struct drm_device *ddev)
-+{
-+	struct ltdc_device *ldev = ddev->dev_private;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+	clk_disable_unprepare(ldev->pixel_clk);
-+}
-+
-+int ltdc_resume(struct drm_device *ddev)
-+{
-+	struct ltdc_device *ldev = ddev->dev_private;
-+	int ret;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+
-+	ret = clk_prepare_enable(ldev->pixel_clk);
-+	if (ret) {
-+		DRM_ERROR("failed to enable pixel clock (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- int ltdc_load(struct drm_device *ddev)
- {
- 	struct platform_device *pdev = to_platform_device(ddev->dev);
-diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
-index e46f477..a1ad0ae 100644
---- a/drivers/gpu/drm/stm/ltdc.h
-+++ b/drivers/gpu/drm/stm/ltdc.h
-@@ -36,6 +36,7 @@ struct ltdc_device {
- 	u32 error_status;
- 	u32 irq_status;
- 	struct fps_info plane_fpsi[LTDC_MAX_LAYER];
-+	struct drm_atomic_state *suspend_state;
- };
- 
- bool ltdc_crtc_scanoutpos(struct drm_device *dev, unsigned int pipe,
-@@ -45,5 +46,7 @@ bool ltdc_crtc_scanoutpos(struct drm_device *dev, unsigned int pipe,
- 
- int ltdc_load(struct drm_device *ddev);
- void ltdc_unload(struct drm_device *ddev);
-+void ltdc_suspend(struct drm_device *ddev);
-+int ltdc_resume(struct drm_device *ddev);
- 
- #endif
+[snip]
+
+> > diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+> > new file mode 100644
+> > index 000000000000..e8a614d71469
+> > --- /dev/null
+> > +++ b/drivers/leds/leds-lm3532.c
+
+[snip 700 lines of churn]
+
+Jacek could you please trim your replies please?  It took way to long
+to locate your one line comment in this 700 line patch.
+
+> > +static int lm3532_remove(struct i2c_client *client)
+> > +{
+> > +	struct lm3532_data *drvdata = i2c_get_clientdata(client);
+> mutex_destroy(&drvdata->lock);
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
