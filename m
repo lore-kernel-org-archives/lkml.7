@@ -2,123 +2,189 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E9CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6728218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CA821917
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 21:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCsJA9n3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfCUVbf (ORCPT
+        id S1727183AbfCUVbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 17:31:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55363 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfCUVbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 17:31:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 14:31:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="216350456"
-Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2019 14:31:34 -0700
-From:   fei.yang@intel.com
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        andrzej.p@collabora.com, plr.vincent@gmail.com, fei.yang@intel.com,
-        jingx.shen@intel.com, john.stultz@linaro.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
-Date:   Thu, 21 Mar 2019 14:31:14 -0700
-Message-Id: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 21 Mar 2019 17:31:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45661 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfCUVbj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 17:31:39 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z76so14387qkb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 14:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=K5qEJIfaP1FU+TlftVfWGQJyiXvp5tk0HeUMOFbMHTs=;
+        b=VCsJA9n3CjybgQtvH6n8StUZl06dN+iBu9VBu3tEVR21Y+o9uYRAtJiSGOwKCTBA83
+         J5HEaz/PY5SWF/vIQ8RsaiJWiGRHZTmqCdD63pPgcKiGo+GC3wlKOwMgfXSjBFoDW/So
+         L3fAdTRz0ObGDB82qnxEqHcPGaC5Y0i1icgRpxd6uiz/Tgix+TwxIcvwIXwC0oaZP3Wz
+         HxKDdp+oGZDqizGOAEiPaOSlm32wmqFkbhwMaDCtfgvS1wpmSio0Vsu6MXUCjFUpwqC+
+         hSzGRWd0lFfbpnCFYFJmgaDK+r/arXQP3LbuqURnkA6IlRAgynv0pirb/d7J285c0QMN
+         cbVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K5qEJIfaP1FU+TlftVfWGQJyiXvp5tk0HeUMOFbMHTs=;
+        b=FijGfl3vlIHFFqJtQ7vXBdEZXyet7+w58Om83TuIB0Kt6Cx1rG3Y1jyuBTgoHbmAFp
+         uf+DrSG7OyUgr3uXSRIYztRSk5QdQsczZqHsn5suLsBuXD1CQxg763Pfcbh5n+gqj7+T
+         JgM4HRBQeNol0hM1BuOgxKEnhqU0fLdXzknzdF6yrQGolVFJ44c5G+YWIpWfO5ICnXmk
+         rMYL8mvZJvDAEsANxi39sX13TzBK0nizXXvZjBjDjjRFSNtyQDEgBmE/h/w3tHoZSo0u
+         t2LsdxjZ3J43IoWeRILcrSQ/dKjHORm7Q0g2fErrGovoCj94ZeNN/EVKgCM8dOPS3mAx
+         FOXQ==
+X-Gm-Message-State: APjAAAUMUbkfIgzmJxBMEXrICJaDUXjA2WB4NIFVAH8U3W00Qy2NQN3X
+        8RO1t5imeNAAkxCSOnMAoSMWdPeM+7Kg0K7Hh/lPoOFH
+X-Google-Smtp-Source: APXvYqzZmcTKqVDyKqYVf4pkwAAoop0Xp9xuRCKqpQf0lMiOQ0tKk13pYTcZEPryEI1bTXMMBNqnDOcaIie1YHz+E2k=
+X-Received: by 2002:a37:47cb:: with SMTP id u194mr846211qka.358.1553203898505;
+ Thu, 21 Mar 2019 14:31:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190320212030.43682-1-evgreen@chromium.org> <20190320212030.43682-2-evgreen@chromium.org>
+In-Reply-To: <20190320212030.43682-2-evgreen@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 21 Mar 2019 22:31:27 +0100
+Message-ID: <CAFqH_52vsfsxGRQNNzLGjLySHeTXVjdqjBn+1v4EaGMt5ipkbw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: cros_ec: Add host_sleep_event_v1 command
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Yang <fei.yang@intel.com>
+Hi Evan,Thanks for sending this upstream, one comment below.
+Missatge de Evan Green <evgreen@chromium.org> del dia dc., 20 de mar=C3=A7
+2019 a les 22:24:
+>
+> Introduce the command and response structures for the second revision
+> of the host sleep event. These structures are part of a new EC change
+> that enables detection of failure to enter S0ix. The EC waits a
+> kernel-specified timeout (or a default amount of time) for the S0_SLP
+> pin to change, and wakes the system if that change does not occur in
+> time.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+>
+> ---
+>
+>  include/linux/mfd/cros_ec_commands.h | 59 ++++++++++++++++++++++++++++
 
-The following kernel panic happens due to the io_data buffer gets deallocated
-before the async io is completed. Add a check for the case where io_data buffer
-should be deallocated by ffs_user_copy_worker.
+We're trying to sync kernel cros_ec_commands.h with the EC protocol at
+https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/e=
+c_commands.h
 
-[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
-[   41.672099] #PF error: [normal kernel read fault]
-[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-[   41.683687] Oops: 0000 [#1] PREEMPT SMP
-[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-[   41.705309] Workqueue: adb ffs_user_copy_worker
-[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.705331] Call Trace:
-[   41.705338]  vfree+0x50/0xb0
-[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-[   41.705344]  process_one_work+0x19f/0x3e0
-[   41.705348]  worker_thread+0x3f/0x3b0
-[   41.829766]  kthread+0x12b/0x150
-[   41.833371]  ? process_one_work+0x3e0/0x3e0
-[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-[   41.843695]  ret_from_fork+0x3a/0x50
-[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-[   41.876880] CR2: 0000000000000048
-[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.985930] Kernel panic - not syncing: Fatal exception
-[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[   42.009525] Rebooting in 10 seconds..
-[   52.014376] ACPI MEMORY or I/O RESET_REG.
+Gwendal send a first patch [1] and a second version will be sent soon.
+I don't see these definitions in the mentioned patch neither the
+master ec_commands.h from the EC firmware repository. Is this a
+feature that didn't land in the EC firmware yet?
 
-Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-Signed-off-by: Fei Yang <fei.yang@intel.com>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
----
-v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
-v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
-    and keep the original logic intact.
----
- drivers/usb/gadget/function/f_fs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[1] https://lkml.org/lkml/2019/2/27/723
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 20413c2..0bce731 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- error_mutex:
- 	mutex_unlock(&epfile->mutex);
- error:
--	ffs_free_buffer(io_data);
-+	if (data) /* don't free if there is iocb queued */
-+		ffs_free_buffer(io_data);
- 	return ret;
- }
- 
--- 
-2.7.4
+Thanks,
+ Enric
 
+>  1 file changed, 59 insertions(+)
+>
+> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cro=
+s_ec_commands.h
+> index fc91082d4c35..4db1240c28a8 100644
+> --- a/include/linux/mfd/cros_ec_commands.h
+> +++ b/include/linux/mfd/cros_ec_commands.h
+> @@ -2729,6 +2729,65 @@ struct ec_params_host_sleep_event {
+>         uint8_t sleep_event;
+>  } __packed;
+>
+> +/*
+> + * Use a default timeout value (CONFIG_SLEEP_TIMEOUT_MS) for detecting s=
+leep
+> + * transition failures
+> + */
+> +#define EC_HOST_SLEEP_TIMEOUT_DEFAULT 0
+> +
+> +/* Disable timeout detection for this sleep transition */
+> +#define EC_HOST_SLEEP_TIMEOUT_INFINITE 0xFFFF
+> +
+> +struct ec_params_host_sleep_event_v1 {
+> +       /* The type of sleep being entered or exited. */
+> +       uint8_t sleep_event;
+> +
+> +       /* Padding */
+> +       uint8_t reserved;
+> +       union {
+> +               /* Parameters that apply for suspend messages. */
+> +               struct {
+> +                       /*
+> +                        * The timeout in milliseconds between when this =
+message
+> +                        * is received and when the EC will declare sleep
+> +                        * transition failure if the sleep signal is not
+> +                        * asserted.
+> +                        */
+> +                       uint16_t sleep_timeout_ms;
+> +               } suspend_params;
+> +
+> +               /* Reserved space for non-suspend commands. */
+> +               uint16_t reserved;
+> +       } u;
+> +} __packed;
+> +
+> +/* A timeout occurred when this bit is set */
+> +#define EC_HOST_RESUME_SLEEP_TIMEOUT 0x80000000
+> +
+> +/*
+> + * The mask defining which bits correspond to the number of sleep transi=
+tions,
+> + * as well as the maximum number of suspend line transitions that will b=
+e
+> + * reported back to the host.
+> + */
+> +#define EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK 0x7FFFFFFF
+> +
+> +struct ec_response_host_sleep_event_v1 {
+> +       union {
+> +               /* Response fields that apply for resume messages. */
+> +               struct {
+> +                       /*
+> +                        * The number of sleep power signal transitions t=
+hat
+> +                        * occurred since the suspend message. The high b=
+it
+> +                        * indicates a timeout occurred.
+> +                        */
+> +                       uint32_t sleep_transitions;
+> +               } resume_response;
+> +
+> +               /* Padding for non-resume responses. */
+> +               uint32_t reserved;
+> +       } u;
+> +} __packed;
+> +
+>  /***********************************************************************=
+******/
+>  /* Smart battery pass-through */
+>
+> --
+> 2.20.1
+>
