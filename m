@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB27EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8A8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831AD21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13FD2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 20:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfCUU3F (ORCPT
+        id S1729208AbfCUU3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 16:29:05 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39355 "EHLO
+        Thu, 21 Mar 2019 16:29:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39346 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbfCUU0u (ORCPT
+        with ESMTP id S1728931AbfCUU0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Mar 2019 16:26:50 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1h74H0-00057y-7C; Thu, 21 Mar 2019 21:26:46 +0100
+        id 1h74Gz-00057y-Bx; Thu, 21 Mar 2019 21:26:45 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 14/24] x86/pkeys: Don't check if PKRU is zero before writting it
-Date:   Thu, 21 Mar 2019 21:26:22 +0100
-Message-Id: <20190321202632.16810-15-bigeasy@linutronix.de>
+Subject: [PATCH 13/24] x86/fpu: Only write PKRU if it is different from current
+Date:   Thu, 21 Mar 2019 21:26:21 +0100
+Message-Id: <20190321202632.16810-14-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321202632.16810-1-bigeasy@linutronix.de>
 References: <20190321202632.16810-1-bigeasy@linutronix.de>
@@ -46,35 +46,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-write_pkru() checks if the current value is the same as the expected
-value. So instead just checking if the current and new value is zero
-(and skip the write in such a case) we can benefit from that.
+Dave Hansen says that the `wrpkru' is more expensive than `rdpkru'. It
+has a higher cycle cost and it's also practically a (light) speculation
+barrier.
 
-Remove the zero check of PKRU, write_pkru() provides a similar check.
+As an optimisation read the current PKRU value and only write the new
+one if it is different.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/mm/pkeys.c | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/x86/include/asm/special_insns.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 05bb9a44eb1c3..50f65fc1b9a3f 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -142,13 +142,6 @@ u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
- void copy_init_pkru_to_fpregs(void)
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 27328606ff687..28ffdf0c1add4 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -121,6 +121,12 @@ static inline void __write_pkru_ins(u32 pkru)
+ 
+ static inline void __write_pkru(u32 pkru)
  {
- 	u32 init_pkru_value_snapshot = READ_ONCE(init_pkru_value);
--	/*
--	 * Any write to PKRU takes it out of the XSAVE 'init
--	 * state' which increases context switch cost.  Avoid
--	 * writing 0 when PKRU was already 0.
--	 */
--	if (!init_pkru_value_snapshot && !read_pkru())
--		return;
- 	/*
- 	 * Override the PKRU state that came from 'init_fpstate'
- 	 * with the baseline from the process.
++	/*
++	 * WRPKRU is relatively expensive compared to RDPKRU.
++	 * Avoid WRPKRU when it would not change the value.
++	 */
++	if (pkru == __read_pkru_ins())
++		return;
+ 	__write_pkru_ins(pkru);
+ }
+ 
 -- 
 2.20.1
 
