@@ -2,245 +2,130 @@ Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC4EC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78FEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA9A218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663F2218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 03:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSL34AFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfCUDoe (ORCPT
+        id S1727844AbfCUDr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Mar 2019 23:44:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58860 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726620AbfCUDoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Mar 2019 23:44:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 36540AD49;
-        Thu, 21 Mar 2019 03:44:31 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     David Miller <davem@davemloft.net>
-Date:   Thu, 21 Mar 2019 14:42:40 +1100
-Subject: [PATCH 2/2] rhashtable: rename rht_for_each*continue as *from.
-Cc:     tgraf@suug.ch, netdev@vger.kernel.org, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org
-Message-ID: <155313976003.31132.1151463596410155500.stgit@noble.brown>
-In-Reply-To: <155313966311.31132.17461701268394583387.stgit@noble.brown>
-References: <155313966311.31132.17461701268394583387.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 20 Mar 2019 23:47:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36620 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfCUDr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Mar 2019 23:47:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id f6so4143487iop.3;
+        Wed, 20 Mar 2019 20:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=560gdLQ9K5QkP6bOTK3jGWQLe35SKY2rQO0/WiF1Ojw=;
+        b=iSL34AFw9dzFRe4U5h4Cg1pgYHWt1iO+0VStGQe1xYQMTiH+hB36qbyuCSYspOc3To
+         40IDsIBikJFCYCjFSHYF0q25eJknBWCWeHmlkTab1HPfqkSQY9HkQPWdZDUuQdh+McEs
+         vcvkWjcD/W2rlX2C16Rcs3fY3Mt9xfWN1Usrq9Yr3PZycMc0gKlJ73A72+nnhS47hpoz
+         pYeJwlapZdPQ+OcIDhXDY8hq7ZjDk350OLVDYapXNeC5NT9RlDzEBMvpCuyqehQtrHYi
+         YX0JWOSQFT6mB5khmyVW79izoAWBrfeXN4JmKC+weAmGHuidSh1NL+8XLR/ceo26iBUV
+         OLxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=560gdLQ9K5QkP6bOTK3jGWQLe35SKY2rQO0/WiF1Ojw=;
+        b=OD8++Aeb9vG8ZdGxHuK6aqeiaKum6j7I4A+/smfy6IuylCzY1/VLDCmTQcvpz53ydE
+         bTl+wl4kTFSnbRYtPJIsuwvtpZYKhh4Gkf2YGApNMXhBdCHmFlUWfgtFH6THTL1MpJWr
+         OkZlH5X5CBtKmNuZ0+HK3obnZGw1//UuGtTYEyP1Dy/sQNAbYEXlsLKa3y5t3fMRdgGl
+         mU094M9Hwmuk6qt9Zxk2dnaBNdnCm5IkoHTN1S6L2e4aBOVD6wccc+bToM0/hDuHzPue
+         FwOX1tznnx0u8RT4GghR3ZCq1AGYXtiTHMXRI0I3GX+O9Y7qP9nP5SG+LFr7J4/XZQME
+         4CDA==
+X-Gm-Message-State: APjAAAVY7+FCic00MsQ2RXkRJxbWJ07nOf0wbLK00wPX53FnizPk/ZpD
+        c1h3MpR7H0WqbJ7pmEYrokY=
+X-Google-Smtp-Source: APXvYqyWCmScoNy/n6e8DX6lgLHz4TUJXFVo0dqIGQZVQHUgY7ZlPX0Bio5mUFQfDN3yOQF1J5BlEg==
+X-Received: by 2002:a5d:8049:: with SMTP id b9mr1166774ior.302.1553140075547;
+        Wed, 20 Mar 2019 20:47:55 -0700 (PDT)
+Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
+        by smtp.gmail.com with ESMTPSA id v18sm2092974ita.21.2019.03.20.20.47.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Mar 2019 20:47:54 -0700 (PDT)
+Date:   Wed, 20 Mar 2019 23:47:52 -0400
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
+ ring_buffer_info mutex
+Message-ID: <20190321034752.GA6828@ubu-Virtual-Machine>
+References: <cover.1550806305.git.kimbrownkd@gmail.com>
+ <cover.1552592620.git.kimbrownkd@gmail.com>
+ <262046fa9e89d5f483ecd5972d86f4f9608dbcc3.1552592620.git.kimbrownkd@gmail.com>
+ <20190314154533.17c8a362@shemminger-XPS-13-9360>
+ <20190317014927.GA60356@ubu-Virtual-Machine>
+ <20190320130619.07e49c97@shemminger-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320130619.07e49c97@shemminger-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pattern set by list.h is that for_each..continue()
-iterators start at the next entry after the given one,
-while for_each..from() iterators start at the given
-entry.
+On Wed, Mar 20, 2019 at 01:06:19PM -0700, Stephen Hemminger wrote:
+> On Sat, 16 Mar 2019 21:49:28 -0400
+> Kimberly Brown <kimbrownkd@gmail.com> wrote:
+> 
+> > On Thu, Mar 14, 2019 at 03:45:33PM -0700, Stephen Hemminger wrote:
+> > > On Thu, 14 Mar 2019 13:05:15 -0700
+> > > "Kimberly Brown" <kimbrownkd@gmail.com> wrote:
+> > >   
+> > > > Fix a race condition that can result in a ring buffer pointer being set
+> > > > to null while a "_show" function is reading the ring buffer's data. This
+> > > > problem was discussed here:
+> > > > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org
+> > > > %2Flkml%2F2018%2F10%2F18%2F779&amp;data=02%7C01%7Csthemmin%40microsoft.com
+> > > > %7C1d7557d667b741bdbb6008d6a8b8620f%7C72f988bf86f141af91ab2d7cd011db47%7C1
+> > > > %7C0%7C636881907217609564&amp;sdata=1bUbLaxsODANM7lCBR8lxyYajNpufuwUW%2FOl
+> > > > vtGu2hU%3D&amp;reserved=0
+> > > > 
+> > > > To fix the race condition, add a new mutex lock to the
+> > > > "hv_ring_buffer_info" struct. Add a new function,
+> > > > "hv_ringbuffer_pre_init()", where a channel's inbound and outbound
+> > > > ring_buffer_info mutex locks are initialized.
+> > > >
+> > > >  ... snip ...    
+> > > 
+> > > Adding more locks will solve the problem but it seems like overkill.
+> > > Why not either use a reference count or an RCU style access for the
+> > > ring buffer?  
+> > 
+> > I agree that a reference count or RCU could also solve this problem.
+> > Using mutex locks seemed like the most straightforward solution, but
+> > I'll certainly switch to a different approach if it's better!
+> > 
+> > Are you concerned about the extra memory required for the mutex locks,
+> > read performance, or something else?
+> 
+> Locks in control path are ok, but my concern is performance of the
+> data path which puts packets in/out of rings. To keep reasonable performance,
+> no additional locking should be added in those paths.
+> 
+> So if data path is using RCU, can/should the control operations also
+> use it?
 
-The rht_for_each*continue() iterators are documented as though the
-start at the 'next' entry, but actually start at the given entry,
-and they are used expecting that behaviour.
-So fix the documentation and change the names to *from for consistency
-with list.h
-
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Signed-off-by: NeilBrown <neilb@suse.com>
----
- .clang-format              |    8 ++++----
- include/linux/rhashtable.h |   40 ++++++++++++++++++++--------------------
- lib/rhashtable.c           |    2 +-
- 3 files changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/.clang-format b/.clang-format
-index f49620f506f1..3a4c8220df2f 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -366,14 +366,14 @@ ForEachMacros:
-   - 'rhl_for_each_entry_rcu'
-   - 'rhl_for_each_rcu'
-   - 'rht_for_each'
--  - 'rht_for_each_continue'
-+  - 'rht_for_each_from'
-   - 'rht_for_each_entry'
--  - 'rht_for_each_entry_continue'
-+  - 'rht_for_each_entry_from'
-   - 'rht_for_each_entry_rcu'
--  - 'rht_for_each_entry_rcu_continue'
-+  - 'rht_for_each_entry_rcu_from'
-   - 'rht_for_each_entry_safe'
-   - 'rht_for_each_rcu'
--  - 'rht_for_each_rcu_continue'
-+  - 'rht_for_each_rcu_from'
-   - '__rq_for_each_bio'
-   - 'rq_for_each_segment'
-   - 'scsi_for_each_prot_sg'
-diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-index 3864193d5e2e..86dfa417848d 100644
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -306,13 +306,13 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
- }
- 
- /**
-- * rht_for_each_continue - continue iterating over hash chain
-+ * rht_for_each_from - iterate over hash chain from given head
-  * @pos:	the &struct rhash_head to use as a loop cursor.
-- * @head:	the previous &struct rhash_head to continue from
-+ * @head:	the &struct rhash_head to start from
-  * @tbl:	the &struct bucket_table
-  * @hash:	the hash value / bucket index
-  */
--#define rht_for_each_continue(pos, head, tbl, hash) \
-+#define rht_for_each_from(pos, head, tbl, hash) \
- 	for (pos = rht_dereference_bucket(head, tbl, hash); \
- 	     !rht_is_a_nulls(pos); \
- 	     pos = rht_dereference_bucket((pos)->next, tbl, hash))
-@@ -324,18 +324,18 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * @hash:	the hash value / bucket index
-  */
- #define rht_for_each(pos, tbl, hash) \
--	rht_for_each_continue(pos, *rht_bucket(tbl, hash), tbl, hash)
-+	rht_for_each_from(pos, *rht_bucket(tbl, hash), tbl, hash)
- 
- /**
-- * rht_for_each_entry_continue - continue iterating over hash chain
-+ * rht_for_each_entry_from - iterate over hash chain from given head
-  * @tpos:	the type * to use as a loop cursor.
-  * @pos:	the &struct rhash_head to use as a loop cursor.
-- * @head:	the previous &struct rhash_head to continue from
-+ * @head:	the &struct rhash_head to start from
-  * @tbl:	the &struct bucket_table
-  * @hash:	the hash value / bucket index
-  * @member:	name of the &struct rhash_head within the hashable struct.
-  */
--#define rht_for_each_entry_continue(tpos, pos, head, tbl, hash, member)	\
-+#define rht_for_each_entry_from(tpos, pos, head, tbl, hash, member)	\
- 	for (pos = rht_dereference_bucket(head, tbl, hash);		\
- 	     (!rht_is_a_nulls(pos)) && rht_entry(tpos, pos, member);	\
- 	     pos = rht_dereference_bucket((pos)->next, tbl, hash))
-@@ -349,7 +349,7 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * @member:	name of the &struct rhash_head within the hashable struct.
-  */
- #define rht_for_each_entry(tpos, pos, tbl, hash, member)		\
--	rht_for_each_entry_continue(tpos, pos, *rht_bucket(tbl, hash),	\
-+	rht_for_each_entry_from(tpos, pos, *rht_bucket(tbl, hash),	\
- 				    tbl, hash, member)
- 
- /**
-@@ -374,9 +374,9 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
- 		       rht_dereference_bucket(pos->next, tbl, hash) : NULL)
- 
- /**
-- * rht_for_each_rcu_continue - continue iterating over rcu hash chain
-+ * rht_for_each_rcu_from - iterate over rcu hash chain from given head
-  * @pos:	the &struct rhash_head to use as a loop cursor.
-- * @head:	the previous &struct rhash_head to continue from
-+ * @head:	the &struct rhash_head to start from
-  * @tbl:	the &struct bucket_table
-  * @hash:	the hash value / bucket index
-  *
-@@ -384,7 +384,7 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * the _rcu mutation primitives such as rhashtable_insert() as long as the
-  * traversal is guarded by rcu_read_lock().
-  */
--#define rht_for_each_rcu_continue(pos, head, tbl, hash)			\
-+#define rht_for_each_rcu_from(pos, head, tbl, hash)			\
- 	for (({barrier(); }),						\
- 	     pos = rht_dereference_bucket_rcu(head, tbl, hash);		\
- 	     !rht_is_a_nulls(pos);					\
-@@ -401,13 +401,13 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * traversal is guarded by rcu_read_lock().
-  */
- #define rht_for_each_rcu(pos, tbl, hash)				\
--	rht_for_each_rcu_continue(pos, *rht_bucket(tbl, hash), tbl, hash)
-+	rht_for_each_rcu_from(pos, *rht_bucket(tbl, hash), tbl, hash)
- 
- /**
-- * rht_for_each_entry_rcu_continue - continue iterating over rcu hash chain
-+ * rht_for_each_entry_rcu_from - iterated over rcu hash chain from given head
-  * @tpos:	the type * to use as a loop cursor.
-  * @pos:	the &struct rhash_head to use as a loop cursor.
-- * @head:	the previous &struct rhash_head to continue from
-+ * @head:	the &struct rhash_head to start from
-  * @tbl:	the &struct bucket_table
-  * @hash:	the hash value / bucket index
-  * @member:	name of the &struct rhash_head within the hashable struct.
-@@ -416,7 +416,7 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * the _rcu mutation primitives such as rhashtable_insert() as long as the
-  * traversal is guarded by rcu_read_lock().
-  */
--#define rht_for_each_entry_rcu_continue(tpos, pos, head, tbl, hash, member) \
-+#define rht_for_each_entry_rcu_from(tpos, pos, head, tbl, hash, member) \
- 	for (({barrier(); }),						    \
- 	     pos = rht_dereference_bucket_rcu(head, tbl, hash);		    \
- 	     (!rht_is_a_nulls(pos)) && rht_entry(tpos, pos, member);	    \
-@@ -435,7 +435,7 @@ static inline struct rhash_head __rcu **rht_bucket_insert(
-  * traversal is guarded by rcu_read_lock().
-  */
- #define rht_for_each_entry_rcu(tpos, pos, tbl, hash, member)		   \
--	rht_for_each_entry_rcu_continue(tpos, pos, *rht_bucket(tbl, hash), \
-+	rht_for_each_entry_rcu_from(tpos, pos, *rht_bucket(tbl, hash), \
- 					tbl, hash, member)
- 
- /**
-@@ -491,7 +491,7 @@ static inline struct rhash_head *__rhashtable_lookup(
- 	hash = rht_key_hashfn(ht, tbl, key, params);
- 	head = rht_bucket(tbl, hash);
- 	do {
--		rht_for_each_rcu_continue(he, *head, tbl, hash) {
-+		rht_for_each_rcu_from(he, *head, tbl, hash) {
- 			if (params.obj_cmpfn ?
- 			    params.obj_cmpfn(&arg, rht_obj(ht, he)) :
- 			    rhashtable_compare(&arg, rht_obj(ht, he)))
-@@ -625,7 +625,7 @@ static inline void *__rhashtable_insert_fast(
- 	if (!pprev)
- 		goto out;
- 
--	rht_for_each_continue(head, *pprev, tbl, hash) {
-+	rht_for_each_from(head, *pprev, tbl, hash) {
- 		struct rhlist_head *plist;
- 		struct rhlist_head *list;
- 
-@@ -890,7 +890,7 @@ static inline int __rhashtable_remove_fast_one(
- 	spin_lock_bh(lock);
- 
- 	pprev = rht_bucket_var(tbl, hash);
--	rht_for_each_continue(he, *pprev, tbl, hash) {
-+	rht_for_each_from(he, *pprev, tbl, hash) {
- 		struct rhlist_head *list;
- 
- 		list = container_of(he, struct rhlist_head, rhead);
-@@ -1042,7 +1042,7 @@ static inline int __rhashtable_replace_fast(
- 	spin_lock_bh(lock);
- 
- 	pprev = rht_bucket_var(tbl, hash);
--	rht_for_each_continue(he, *pprev, tbl, hash) {
-+	rht_for_each_from(he, *pprev, tbl, hash) {
- 		if (he != obj_old) {
- 			pprev = &he->next;
- 			continue;
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index 776b3a82d3a1..f65e43fb1ff8 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -490,7 +490,7 @@ static void *rhashtable_lookup_one(struct rhashtable *ht,
- 
- 	elasticity = RHT_ELASTICITY;
- 	pprev = rht_bucket_var(tbl, hash);
--	rht_for_each_continue(head, *pprev, tbl, hash) {
-+	rht_for_each_from(head, *pprev, tbl, hash) {
- 		struct rhlist_head *list;
- 		struct rhlist_head *plist;
- 
-
-
+The data path doesn't use RCU to protect the ring buffers.
