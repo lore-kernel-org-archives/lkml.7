@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F289FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197DBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C608A21917
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E455921925
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 18:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553194456;
-	bh=tE1lnmuO91mxGpc8Usqdv8Vgrlxmq4AQYRE0Zw3cgtM=;
+	s=default; t=1553194461;
+	bh=7gaG9JPq6za4P8+XC/VSDDJEVErVw0eYY2v+eoNkXEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kr26NDMGbvCLT3PD8eI5begcMjV1KNwmoXX+sQZs2m+ZJwDaqEqJQH+cuJcwC7rUe
-	 MJdkx30hvA2C0EU5dPM1xaJu0hnDz0SYeVQNH66C0ihZrgxepNmqv/cx1k1CkyMwDA
-	 2s2Af8Z+P1QtMN9DHeYQRd3LaxOZZyisyRZ/8mAw=
+	b=jmZIXS6/w+vvUKDlX+7aCp+wXAIVh5WtTTx/H3SFKz4FYwS0nZCcr8TrXac/x6UQV
+	 C5kZKw/SrflhQVMYZshq/VJz64zLI8rbnWsGuqs+yQ4dbzl5bYH2HDxwWI171EgD3Y
+	 CSFoKdba6QPfw1ymfTQiebqGAmllw+gv6Jd/cfkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfCUSyP (ORCPT
+        id S1728903AbfCUSyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 14:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        Thu, 21 Mar 2019 14:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfCUSyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 14:54:12 -0400
+        id S1728917AbfCUSyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 14:54:17 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F6620657;
-        Thu, 21 Mar 2019 18:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BC221873;
+        Thu, 21 Mar 2019 18:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553194451;
-        bh=tE1lnmuO91mxGpc8Usqdv8Vgrlxmq4AQYRE0Zw3cgtM=;
+        s=default; t=1553194456;
+        bh=7gaG9JPq6za4P8+XC/VSDDJEVErVw0eYY2v+eoNkXEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocJ2f+52LplHgL4X5xU8CWWmvXW0ZOrdO3KyXhiGhQgtBPrIX9wMNeiWFyrB8Yhee
-         4e8Is44vSJtg8qVg2LmxoiFFnsqBkufgwGUdajZZbOt5p0VDzF9PZZIq8sOSKFn2aa
-         QSsfCDH3wmXJYT/dnmAfxRxHxvSBAH2KViIsVAoc=
+        b=SfvCZz1iYJHWuFOk3tz6dw7iXJpVSX25RK+K4ZSmdkMyAlSbP5o4T1jBSyMsj5O4N
+         S6oxnokAT2gNrKFKQ873Mesg1A/1YBb4aJszyT9x2Dn+yWiaOq0Nh4Ql/Qbski3dfL
+         cuv5Y+gDe5S51O8tRmD33XpII2hBrxSsFJ99fxD8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Daniel Borkmann <daniel@iogearbox.net>, kernel-team@fb.com,
         Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Stanislav Fomichev <sdf@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 25/44] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
-Date:   Thu, 21 Mar 2019 15:51:23 -0300
-Message-Id: <20190321185142.11441-26-acme@kernel.org>
+Subject: [PATCH 26/44] perf record: Replace option --bpf-event with --no-bpf-event
+Date:   Thu, 21 Mar 2019 15:51:24 -0300
+Message-Id: <20190321185142.11441-27-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
@@ -62,56 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Song Liu <songliubraving@fb.com>
 
-  =================================================================
-  ==20875==ERROR: LeakSanitizer: detected memory leaks
+Currently, monitoring of BPF programs through bpf_event is off by
+default for 'perf record'.
 
-  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
-      #1 0x55bd50005599 in zalloc util/util.h:23
-      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
-      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
-      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
-      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
-      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
-      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
-      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
-      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+To turn it on, the user need to use option "--bpf-event".  As BPF gets
+wider adoption in different subsystems, this option becomes
+inconvenient.
 
-  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
-      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
+This patch makes bpf_event on by default, and adds option "--no-bpf-event"
+to turn it off. Since option --bpf-event is not released yet, it is safe
+to remove it.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: kernel-team@fb.com
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
-Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
+Cc: Stanislav Fomichev <sdf@google.com>
+Link: http://lkml.kernel.org/r/20190312053051.2690567-2-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/evsel-tp-sched.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/perf.h           | 2 +-
+ tools/perf/util/bpf-event.c | 2 +-
+ tools/perf/util/evsel.c     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index ea7acf403727..71f60c0f9faa 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -85,5 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
- 		ret = -1;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e7144a1c1c82..f29874192d3e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1891,7 +1891,7 @@ static struct option __record_options[] = {
+ 	OPT_BOOLEAN(0, "tail-synthesize", &record.opts.tail_synthesize,
+ 		    "synthesize non-sample events at the end of output"),
+ 	OPT_BOOLEAN(0, "overwrite", &record.opts.overwrite, "use overwrite mode"),
+-	OPT_BOOLEAN(0, "bpf-event", &record.opts.bpf_event, "record bpf events"),
++	OPT_BOOLEAN(0, "no-bpf-event", &record.opts.no_bpf_event, "record bpf events"),
+ 	OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
+ 		    "Fail if the specified frequency can't be used"),
+ 	OPT_CALLBACK('F', "freq", &record.opts, "freq or 'max'",
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index b120e547ddc7..c59743def8d3 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -66,7 +66,7 @@ struct record_opts {
+ 	bool	     ignore_missing_thread;
+ 	bool	     strict_freq;
+ 	bool	     sample_id;
+-	bool	     bpf_event;
++	bool	     no_bpf_event;
+ 	unsigned int freq;
+ 	unsigned int mmap_pages;
+ 	unsigned int auxtrace_mmap_pages;
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 028c8ec1f62a..ea012b735a37 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -187,7 +187,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	}
  
-+	perf_evsel__delete(evsel);
- 	return ret;
- }
+ 	/* Synthesize PERF_RECORD_BPF_EVENT */
+-	if (opts->bpf_event) {
++	if (!opts->no_bpf_event) {
+ 		*bpf_event = (struct bpf_event){
+ 			.header = {
+ 				.type = PERF_RECORD_BPF_EVENT,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1a2023da5d9c..7835e05f0c0a 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1036,7 +1036,7 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 	attr->mmap2 = track && !perf_missing_features.mmap2;
+ 	attr->comm  = track;
+ 	attr->ksymbol = track && !perf_missing_features.ksymbol;
+-	attr->bpf_event = track && opts->bpf_event &&
++	attr->bpf_event = track && !opts->no_bpf_event &&
+ 		!perf_missing_features.bpf_event;
+ 
+ 	if (opts->record_namespaces)
 -- 
 2.20.1
 
