@@ -3,35 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B73C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF47218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB3E218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 12:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfCUMZI (ORCPT
+        id S1728145AbfCUM0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 08:25:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49522 "EHLO mx1.suse.de"
+        Thu, 21 Mar 2019 08:26:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49696 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728111AbfCUMZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 08:25:07 -0400
+        id S1727823AbfCUM0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 08:26:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B963AC8B;
-        Thu, 21 Mar 2019 12:25:06 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 13:25:06 +0100
-Message-ID: <s5hbm24ct3x.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 871B9AB48;
+        Thu, 21 Mar 2019 12:26:42 +0000 (UTC)
+Date:   Thu, 21 Mar 2019 13:26:42 +0100
+Message-ID: <s5ha7hoct19.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     " Gustavo A. R. Silva " <gustavo@embeddedor.com>
-Cc:     "Jaroslav Kysela" <perex@perex.cz>, <alsa-devel@alsa-project.org>,
+To:     "Jian-Hong Pan" <jian-hong@endlessm.com>
+Cc:     <alsa-devel@alsa-project.org>, "Daniel Drake" <drake@endlessm.com>,
+        <linux@endlessm.com>, "Kailang Yang" <kailang@realtek.com>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: seq: oss: Fix Spectre v1 vulnerability
-In-Reply-To: <20190320234201.GA24574@embeddedor>
-References: <20190320234201.GA24574@embeddedor>
+Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer Aspire Z24-890 with ALC286
+In-Reply-To: <20190321083903.2962-1-jian-hong@endlessm.com>
+References: <20190321083903.2962-1-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -42,26 +43,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 00:42:01 +0100,
- Gustavo A. R. Silva  wrote:
+On Thu, 21 Mar 2019 09:39:04 +0100,
+Jian-Hong Pan wrote:
 > 
-> dev is indirectly controlled by user-space, hence leading to
-> a potential exploitation of the Spectre variant 1 vulnerability.
+> The Acer Aspire Z24-890 cannot detect the headset MIC until
+> ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk applied.
 > 
-> This issue was detected with the help of Smatch:
-> 
-> sound/core/seq/oss/seq_oss_synth.c:626 snd_seq_oss_synth_make_info() warn: potential spectre issue 'dp->synths' [w] (local cap)
-> 
-> Fix this by sanitizing dev before using it to index dp->synths.
-> 
-> Notice that given that speculation windows are large, the policy is
-> to kill the speculation on the first load and not worry if it can be
-> completed with a dependent load/store [1].
-> 
-> [1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
 
 Applied, thanks.
 
