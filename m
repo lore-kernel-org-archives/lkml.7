@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF29C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44146C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1020821934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C542192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256299;
-	bh=SVyvQgEaS2n3edZ7nZf9yc8X9rgzTjRrdjVgXqGD66k=;
+	s=default; t=1553256302;
+	bh=NsGYUF1oNj4iOLCJJ6ujyXQF2d3a0oRqzKKDCu5D7No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USMBruxNc80dmsDoFc6eJA2zAjXaagfuKkYKkWxjGU4xFwKQ+XlcH7Bb+lMH/rNAg
-	 1ZsVskFIqxVtI9ftHIgamszLYF6lSmeS5i8Ok+1bhni/Yt3eA9yCgtfaTBwLf0iyE0
-	 1rddt7WLGP5PtVfA6AN1UULJTcd7IJc5ZhgstUBE=
+	b=RgYglz6r8PB6pXHy84PbPkP+DcO1Ee6jnWwRib1lbTDuT8MkVwwtHoVNLXA3ksSBg
+	 b9VFd4G6pRNSKgW2KgTDTo7oUsNKesBrUDrVHOsbbXZyTU9TgmFoi2n4uenN8pFCVH
+	 efUN24p9WjIe3lTkuPekykmUP5I0d+4SXOWXBB8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388730AbfCVME4 (ORCPT
+        id S2388760AbfCVMFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388723AbfCVMEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:52 -0400
+        id S2388259AbfCVME4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A9812192D;
-        Fri, 22 Mar 2019 12:04:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C392192D;
+        Fri, 22 Mar 2019 12:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256291;
-        bh=SVyvQgEaS2n3edZ7nZf9yc8X9rgzTjRrdjVgXqGD66k=;
+        s=default; t=1553256295;
+        bh=NsGYUF1oNj4iOLCJJ6ujyXQF2d3a0oRqzKKDCu5D7No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7hienFyIY9jGnEjZJ1YNpGLrO1VmXnrkUh8y7u3lpzNTRBv+pS+1sL/NpZ8FFw2o
-         yGfgUSHp7TxrhDs/LnsIXoKbyV8n6ZR4+oqFxPKpwZfO7v31dUGl8YTSb2u4HWxpge
-         wZHzMQX4GELljPLgWhR+Jkiv26Vcg/4nWxVA90uk=
+        b=SgfglyAD7zdHOgc7KIfzjCuaotBs6myhBOVKek5IiZQeCdBZLO6rbIdT7y+Q0BiO6
+         wYPIuZdsVtreQIMc08xrah6vAI2gYHdbcssZpodHZDUoI+WYvvDUVAfdA9mmwXKopM
+         dCT1W/aphrXEPxjMFw29Qzb3SA4qBZXzLm5ic03Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Jan Beulich <jbeulich@suse.com>
-Subject: [PATCH 4.19 143/280] xen: fix dom0 boot on huge systems
-Date:   Fri, 22 Mar 2019 12:14:56 +0100
-Message-Id: <20190322111318.730430506@linuxfoundation.org>
+        stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 144/280] ACPI / device_sysfs: Avoid OF modalias creation for removed device
+Date:   Fri, 22 Mar 2019 12:14:57 +0100
+Message-Id: <20190322111318.930959206@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,71 +67,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Juergen Gross <jgross@suse.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 01bd2ac2f55a1916d81dace12fa8d7ae1c79b5ea upstream.
+commit f16eb8a4b096514ac06fb25bf599dcc792899b3d upstream.
 
-Commit f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit
-PV guests") introduced a regression for booting dom0 on huge systems
-with lots of RAM (in the TB range).
+If SSDT overlay is loaded via ConfigFS and then unloaded the device,
+we would like to have OF modalias for, already gone. Thus, acpi_get_name()
+returns no allocated buffer for such case and kernel crashes afterwards:
 
-Reason is that on those hosts the p2m list needs to be moved early in
-the boot process and this requires temporary page tables to be created.
-Said commit modified xen_set_pte_init() to use a hypercall for writing
-a PTE, but this requires the page table being in the direct mapped
-area, which is not the case for the temporary page tables used in
-xen_relocate_p2m().
+ ACPI: Host-directed Dynamic ACPI Table Unload
+ ads7950 spi-PRP0001:00: Dropping the link to regulator.0
+ BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+ #PF error: [normal kernel read fault]
+ PGD 80000000070d6067 P4D 80000000070d6067 PUD 70d0067 PMD 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 0 PID: 40 Comm: kworker/u4:2 Not tainted 5.0.0+ #96
+ Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
+ Workqueue: kacpi_hotplug acpi_device_del_work_fn
+ RIP: 0010:create_of_modalias.isra.1+0x4c/0x150
+ Code: 00 00 48 89 44 24 18 31 c0 48 8d 54 24 08 48 c7 44 24 10 00 00 00 00 48 c7 44 24 08 ff ff ff ff e8 7a b0 03 00 48 8b 4c 24 10 <0f> b6 01 84 c0 74 27 48 c7 c7 00 09 f4 a5 0f b6 f0 8d 50 20 f6 04
+ RSP: 0000:ffffa51040297c10 EFLAGS: 00010246
+ RAX: 0000000000001001 RBX: 0000000000000785 RCX: 0000000000000000
+ RDX: 0000000000001001 RSI: 0000000000000286 RDI: ffffa2163dc042e0
+ RBP: ffffa216062b1196 R08: 0000000000001001 R09: ffffa21639873000
+ R10: ffffffffa606761d R11: 0000000000000001 R12: ffffa21639873218
+ R13: ffffa2163deb5060 R14: ffffa216063d1010 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffffa2163e000000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000000 CR3: 0000000007114000 CR4: 00000000001006f0
+ Call Trace:
+  __acpi_device_uevent_modalias+0xb0/0x100
+  spi_uevent+0xd/0x40
 
-As the page tables are completely written before being linked to the
-actual address space instead of set_pte() a plain write to memory can
-be used in xen_relocate_p2m().
+ ...
 
-Fixes: f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit PV guests")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+In order to fix above let create_of_modalias() check the status returned
+by acpi_get_name() and bail out in case of failure.
+
+Fixes: 8765c5ba1949 ("ACPI / scan: Rework modalias creation when "compatible" is present")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201381
+Reported-by: Ferry Toth <fntoth@gmail.com>
+Tested-by: Ferry Toth<fntoth@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: 4.1+ <stable@vger.kernel.org> # 4.1+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/xen/mmu_pv.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/acpi/device_sysfs.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -2106,10 +2106,10 @@ void __init xen_relocate_p2m(void)
- 				pt = early_memremap(pt_phys, PAGE_SIZE);
- 				clear_page(pt);
- 				for (idx_pte = 0;
--						idx_pte < min(n_pte, PTRS_PER_PTE);
--						idx_pte++) {
--					set_pte(pt + idx_pte,
--							pfn_pte(p2m_pfn, PAGE_KERNEL));
-+				     idx_pte < min(n_pte, PTRS_PER_PTE);
-+				     idx_pte++) {
-+					pt[idx_pte] = pfn_pte(p2m_pfn,
-+							      PAGE_KERNEL);
- 					p2m_pfn++;
- 				}
- 				n_pte -= PTRS_PER_PTE;
-@@ -2117,8 +2117,7 @@ void __init xen_relocate_p2m(void)
- 				make_lowmem_page_readonly(__va(pt_phys));
- 				pin_pagetable_pfn(MMUEXT_PIN_L1_TABLE,
- 						PFN_DOWN(pt_phys));
--				set_pmd(pmd + idx_pt,
--						__pmd(_PAGE_TABLE | pt_phys));
-+				pmd[idx_pt] = __pmd(_PAGE_TABLE | pt_phys);
- 				pt_phys += PAGE_SIZE;
- 			}
- 			n_pt -= PTRS_PER_PMD;
-@@ -2126,7 +2125,7 @@ void __init xen_relocate_p2m(void)
- 			make_lowmem_page_readonly(__va(pmd_phys));
- 			pin_pagetable_pfn(MMUEXT_PIN_L2_TABLE,
- 					PFN_DOWN(pmd_phys));
--			set_pud(pud + idx_pmd, __pud(_PAGE_TABLE | pmd_phys));
-+			pud[idx_pmd] = __pud(_PAGE_TABLE | pmd_phys);
- 			pmd_phys += PAGE_SIZE;
- 		}
- 		n_pmd -= PTRS_PER_PUD;
+--- a/drivers/acpi/device_sysfs.c
++++ b/drivers/acpi/device_sysfs.c
+@@ -202,11 +202,15 @@ static int create_of_modalias(struct acp
+ {
+ 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
+ 	const union acpi_object *of_compatible, *obj;
++	acpi_status status;
+ 	int len, count;
+ 	int i, nval;
+ 	char *c;
+ 
+-	acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
++	status = acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
+ 	/* DT strings are all in lower case */
+ 	for (c = buf.pointer; *c != '\0'; c++)
+ 		*c = tolower(*c);
 
 
