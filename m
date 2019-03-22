@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C11BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADC5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B543218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0EF218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254680;
-	bh=v4VCDocyS9gOQw938pcDhGDoj329Se2TfXw3x4OSMqQ=;
+	s=default; t=1553254683;
+	bh=zV6vqOO8z89dN2eFGmapVREkFGJAbse7I/6LmDGd7rY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJ84CjEx2sFXvKRbZZy9ofQ8HUTSobPhm0d0TqsOL+v+NhZ6rZvnnYxblwMlsX2W4
-	 U5R8uecOAB2Rm2ZuD6PMhWfc1f9NoQmpZKqHAKcOBBPi0HkvZXhvQ9phrd1xbSlftg
-	 qBseiK2PPMceEucwaoxjTOYvJugo8BdRGP2JYVTc=
+	b=BeWeTBNuuzJcz1MCOr0unM0is6Jo7LgX9OlNjt8i7kT3BcAyN4g3WOsXvUKO0upd0
+	 5wVIw6b9/6b5ElUX6eEcMSEL8YdXdr9Djujdy/SqcAZR/JOlbCfTtNwsrm+EQ25Xy2
+	 Hoz10oOo7N/h7VsWusE2p2xTS3RU6b9S2sqXFKjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbfCVLh6 (ORCPT
+        id S1730922AbfCVLiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbfCVLh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:56 -0400
+        id S1730909AbfCVLh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17A13218B0;
-        Fri, 22 Mar 2019 11:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0711E2183E;
+        Fri, 22 Mar 2019 11:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254675;
-        bh=v4VCDocyS9gOQw938pcDhGDoj329Se2TfXw3x4OSMqQ=;
+        s=default; t=1553254678;
+        bh=zV6vqOO8z89dN2eFGmapVREkFGJAbse7I/6LmDGd7rY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ttr/0/JJCz5q9YP5ymTkIEpwkU6AvHHCOUWRbD7sJjetKBe5H5hgnSw1LpN1CwfdB
-         7vRzgWaaFBH+whspzd4nJTrUOwOHp7Q3wraV5qFWOUHD0nNYjSpBpzkTqheXtami5F
-         3FcoErbdwuLUkPx9QE6k8O18amuBC482RpbxyzTY=
+        b=cGcMT4jl6nLtvg1zAvIBjX9/6+YTNL3ssjENY2CUvdTSbRgZIgD+vN4Zqu1mOqW3J
+         9/wsCdAVvdLiox+K739oygxYP9bDoazw7EMXQyu0pvRpK7jgrTPLK1Pydz/ZA3MAnG
+         KUdB/11I3xhjaNQR+VM3Q1g6banSAzlEKICiHzgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Maxim Zhukov <mussitantesmortem@gmail.com>
-Subject: [PATCH 4.4 192/230] crypto: pcbc - remove bogus memcpy()s with src == dest
-Date:   Fri, 22 Mar 2019 12:15:30 +0100
-Message-Id: <20190322111250.278898466@linuxfoundation.org>
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.4 193/230] cpufreq: tegra124: add missing of_node_put()
+Date:   Fri, 22 Mar 2019 12:15:31 +0100
+Message-Id: <20190322111250.356660698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,93 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
+commit 446fae2bb5395f3028d8e3aae1508737e5a72ea1 upstream.
 
-The memcpy()s in the PCBC implementation use walk->iv as both the source
-and destination, which has undefined behavior.  These memcpy()'s are
-actually unneeded, because walk->iv is already used to hold the previous
-plaintext block XOR'd with the previous ciphertext block.  Thus,
-walk->iv is already updated to its final value.
+of_cpu_device_node_get() will increase the refcount of device_node,
+it is necessary to call of_node_put() at the end to release the
+refcount.
 
-So remove the broken and unnecessary memcpy()s.
-
-Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
-Cc: <stable@vger.kernel.org> # v2.6.21+
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
+Fixes: 9eb15dbbfa1a2 ("cpufreq: Add cpufreq driver for Tegra124")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- crypto/pcbc.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/crypto/pcbc.c
-+++ b/crypto/pcbc.c
-@@ -52,7 +52,7 @@ static int crypto_pcbc_encrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
+---
+ drivers/cpufreq/tegra124-cpufreq.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/cpufreq/tegra124-cpufreq.c
++++ b/drivers/cpufreq/tegra124-cpufreq.c
+@@ -141,6 +141,8 @@ static int tegra124_cpufreq_probe(struct
  
- 	do {
- 		crypto_xor(iv, src, bsize);
-@@ -76,7 +76,7 @@ static int crypto_pcbc_encrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[bsize];
+ 	platform_set_drvdata(pdev, priv);
  
- 	do {
-@@ -89,8 +89,6 @@ static int crypto_pcbc_encrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
++	of_node_put(np);
++
+ 	return 0;
  
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
-@@ -130,7 +128,7 @@ static int crypto_pcbc_decrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 
- 	do {
- 		fn(crypto_cipher_tfm(tfm), dst, src);
-@@ -142,8 +140,6 @@ static int crypto_pcbc_decrypt_segment(s
- 		dst += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
-@@ -156,7 +152,7 @@ static int crypto_pcbc_decrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[bsize];
- 
- 	do {
-@@ -169,8 +165,6 @@ static int crypto_pcbc_decrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
+ out_switch_to_pllx:
 
 
