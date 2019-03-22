@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D641C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9A0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E270218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD806218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253596;
-	bh=n8Uypl4oWuRR4ENAz1iGCy8qlGQ66sIA1NJFHyeDwaQ=;
+	s=default; t=1553253600;
+	bh=2QgRpHCP+8kVTAcbhq7ZeQTGAE971k7liuOBCb8vntI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQcOPRyfh7qZBHFg5vKIvwQG+QzGvTiYq2VCmydieuTyjlse8qMw/gfo37w6WbPgQ
-	 xozLisSVAyIs/xRT+Q9kGYns46phKWVNSggUm6Fr7Z78J6toiMymVmZYNNZ7n0m4mT
-	 t/BODuJW2cF276PmObwRiPg6Jv8h1n2hIbtC9psg=
+	b=hPlk8f5tvCP0fpmw8G6bdJqvJU8oFg58f8qwJiV6mv59YjJCP4hq8gbDQfs9cmuI/
+	 SlWyCHn/GCTInjR0nhJwMgzGNKEU/zht63eVOPyP4FBjn2yQAN6+CCOe94KsQe7sXH
+	 cHT+GPmRv0vwBxDF+F2FydIyO6peZ60yj03s+enI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfCVLTz (ORCPT
+        id S1728271AbfCVLT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfCVLTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:19:45 -0400
+        id S1728096AbfCVLT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:19:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25AC02190A;
-        Fri, 22 Mar 2019 11:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB871218A2;
+        Fri, 22 Mar 2019 11:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253584;
-        bh=n8Uypl4oWuRR4ENAz1iGCy8qlGQ66sIA1NJFHyeDwaQ=;
+        s=default; t=1553253595;
+        bh=2QgRpHCP+8kVTAcbhq7ZeQTGAE971k7liuOBCb8vntI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnKW3rJWsZStxglk0d6GPsHZU/mAus3YGe4BU1chv6tlC1s5AifZZDjWfeuAQvNR5
-         +TnwKVsILhsGODfeBFn/wz1gfo56+YT1HQRHk+CRzpW5UouG2eYgXn/44q9MK8Bu7/
-         sOEVqf6onv4LAmaA55PrZoF3TFPs6NCJFHHtRKjw=
+        b=LFmW/9VSC3YjXDaOmo0c5KGnaFeJfLvMgqXSbNmzC/5jlysTO/lkUx+50rQvq9mcN
+         rJsuMIZAvnpbhoiDxzdgiHZoENb6v+oYpm+7lQon+W0Z63BW9Ua9IhD5akWYyqiRe3
+         tNZF8NfAxtRzV63A4YcK619t7sfswdmAz6KsvUGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 013/134] MIPS: jazz: fix 64bit build
-Date:   Fri, 22 Mar 2019 12:13:46 +0100
-Message-Id: <20190322111211.056566988@linuxfoundation.org>
+Subject: [PATCH 3.18 016/134] leds: lp5523: fix a missing check of return value of lp55xx_read
+Date:   Fri, 22 Mar 2019 12:13:49 +0100
+Message-Id: <20190322111211.183960476@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -69,73 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 41af167fbc0032f9d7562854f58114eaa9270336 ]
+[ Upstream commit 248b57015f35c94d4eae2fdd8c6febf5cd703900 ]
 
-64bit JAZZ builds failed with
+When lp55xx_read() fails, "status" is an uninitialized variable and thus
+may contain random value; using it leads to undefined behaviors.
 
-  linux-next/arch/mips/jazz/jazzdma.c: In function `vdma_init`:
-  /linux-next/arch/mips/jazz/jazzdma.c:77:30: error: implicit declaration
-    of function `KSEG1ADDR`; did you mean `CKSEG1ADDR`?
-    [-Werror=implicit-function-declaration]
-    pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-                                ^~~~~~~~~
-                                CKSEG1ADDR
-  /linux-next/arch/mips/jazz/jazzdma.c:77:10: error: cast to pointer from
-    integer of different size [-Werror=int-to-pointer-cast]
-    pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-            ^
-  In file included from /linux-next/arch/mips/include/asm/barrier.h:11:0,
-                   from /linux-next/include/linux/compiler.h:248,
-                   from /linux-next/include/linux/kernel.h:10,
-                   from /linux-next/arch/mips/jazz/jazzdma.c:11:
-  /linux-next/arch/mips/include/asm/addrspace.h:41:29: error: cast from
-    pointer to integer of different size [-Werror=pointer-to-int-cast]
-   #define _ACAST32_  (_ATYPE_)(_ATYPE32_) /* widen if necessary */
-                               ^
-  /linux-next/arch/mips/include/asm/addrspace.h:53:25: note: in
-    expansion of macro `_ACAST32_`
-   #define CPHYSADDR(a)  ((_ACAST32_(a)) & 0x1fffffff)
-                           ^~~~~~~~~
-  /linux-next/arch/mips/jazz/jazzdma.c:84:44: note: in expansion of
-    macro `CPHYSADDR`
-    r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE, CPHYSADDR(pgtbl));
+The fix inserts a check for the return value of lp55xx_read: if it
+fails, returns with its error code.
 
-Using correct casts and CKSEG1ADDR when dealing with the pgtbl setup
-fixes this.
-
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/jazz/jazzdma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/leds/leds-lp5523.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/jazz/jazzdma.c b/arch/mips/jazz/jazzdma.c
-index db6f5afff4ff1..ea897912bc712 100644
---- a/arch/mips/jazz/jazzdma.c
-+++ b/arch/mips/jazz/jazzdma.c
-@@ -71,14 +71,15 @@ static int __init vdma_init(void)
- 						    get_order(VDMA_PGTBL_SIZE));
- 	BUG_ON(!pgtbl);
- 	dma_cache_wback_inv((unsigned long)pgtbl, VDMA_PGTBL_SIZE);
--	pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-+	pgtbl = (VDMA_PGTBL_ENTRY *)CKSEG1ADDR((unsigned long)pgtbl);
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index 9e1716f8098ca..20e43f8b93256 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -313,7 +313,9 @@ static int lp5523_init_program_engine(struct lp55xx_chip *chip)
  
- 	/*
- 	 * Clear the R4030 translation table
- 	 */
- 	vdma_pgtbl_init();
+ 	/* Let the programs run for couple of ms and check the engine status */
+ 	usleep_range(3000, 6000);
+-	lp55xx_read(chip, LP5523_REG_STATUS, &status);
++	ret = lp55xx_read(chip, LP5523_REG_STATUS, &status);
++	if (ret)
++		return ret;
+ 	status &= LP5523_ENG_STATUS_MASK;
  
--	r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE, CPHYSADDR(pgtbl));
-+	r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE,
-+			  CPHYSADDR((unsigned long)pgtbl));
- 	r4030_write_reg32(JAZZ_R4030_TRSTBL_LIM, VDMA_PGTBL_SIZE);
- 	r4030_write_reg32(JAZZ_R4030_TRSTBL_INV, 0);
- 
+ 	if (status != LP5523_ENG_STATUS_MASK) {
 -- 
 2.19.1
 
