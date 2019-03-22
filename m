@@ -2,242 +2,127 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA46C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76612C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F865218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ocgrHda6"
+	by mail.kernel.org (Postfix) with ESMTP id 3FACF218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553232969;
+	bh=mX++0dd0hjObisk5SEXrUW7udMc7ZLafaRpSFFqF/FE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IF4fRXuwZK6/3EEPwdBFXXDbMUASzIx4F1N8RWHdE6s3wqpSQ++w5FWa8KOVwuhNI
+	 mauoiG8+/vR/IM6DABVOzBisQGT4IIs5W7+5yvUUs4XF/m6Lo34g0tg83GLS7Kq09u
+	 rpjEcylBagJK2ywSR/2B5cRW9NuMj433eVEmqdTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfCVFfH (ORCPT
+        id S1727717AbfCVFgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:35:07 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:54605 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfCVFfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:35:06 -0400
-X-Greylist: delayed 160771 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Mar 2019 01:35:04 EDT
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x2M5Ymik020594;
-        Fri, 22 Mar 2019 14:34:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2M5Ymik020594
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553232889;
-        bh=3G+F+GkHXom1y9/RdMCamoGKcIrGh7/m05WrpcTgTk4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ocgrHda6QRh8sGsVIVTEHORMWv/7O/A4dtXw8MD9me830qEujWxb3EkGRiwCkLQhc
-         8ryxurCtjm2W08TAVwYwgkeH7MV+/Pz7MZN87+t7MMS/ZoXe35hEhgzvsSu0bcynNP
-         w7DZsJdAxG0lM7YqNmCR1+MQHGu04/Qg8msOItsj4xO/THrLNdJX9ztP3ASKTix6bL
-         k+CNV3dk5/6UT8CDkl7bxsa3t96/uzHjsD0ANpfIu2mZf8r70Zn4maVDiLitM9ZahC
-         xtzh6VzqbcwxLSPIXpoh9OUjPPqrwM5eWzox/dyBSOCxju2xxXpcNa600Yt7onirRt
-         +tDrD4WITRQ+w==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id z6so719400vsc.0;
-        Thu, 21 Mar 2019 22:34:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrJgw6Sz0XFNcyRi4hTvT35w2PW2E3YyEXoSWIur05j978ov9B
-        pTEMigmM6Bx0OCpwOKpJUaBEWeZTulaDYseQFOQ=
-X-Google-Smtp-Source: APXvYqx8I79lEVO+jw3DjawOBT7goLq61FD6qkY8IBZ0YFnaB9i4e1O1fltLjjPznqQTyB2+RvcN+a6ZS8AJmj27WP8=
-X-Received: by 2002:a67:7c04:: with SMTP id x4mr4802586vsc.155.1553232888139;
- Thu, 21 Mar 2019 22:34:48 -0700 (PDT)
+        Fri, 22 Mar 2019 01:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfCVFgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 01:36:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60580218B0;
+        Fri, 22 Mar 2019 05:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553232965;
+        bh=mX++0dd0hjObisk5SEXrUW7udMc7ZLafaRpSFFqF/FE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u7ihKpvycdNKRXBe9HgslhWBlq4OmYVUF7bsXw9uARp3JPivf9LWNI3S48FLQy433
+         +L2pDe+dD1TaGFH9bGVt2njlzDm5FLFgqRDyXW/sIi0sTsGUg1ZRGJFxtBs6Q3WMZV
+         52tPfnPl6S0I3zSQgW3yZOlk53RRkzpDPKBJWGuA=
+Date:   Fri, 22 Mar 2019 06:36:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     fei.yang@intel.com
+Cc:     balbi@kernel.org, andrzej.p@collabora.com, plr.vincent@gmail.com,
+        jingx.shen@intel.com, john.stultz@linaro.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
+Message-ID: <20190322053602.GA31708@kroah.com>
+References: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
 MIME-Version: 1.0
-References: <20190315101013.GN8455@Legion-PC.fortress>
-In-Reply-To: <20190315101013.GN8455@Legion-PC.fortress>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 22 Mar 2019 14:34:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
-Message-ID: <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
- modules in separate file
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Jessica Yu <jeyu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-(added some people to CC)
-
-
-On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->
-> Problem:
->
-> When a kernel module is compiled as a separate module, some important
-> information about the kernel module is available via .modinfo section of
-> the module.  In contrast, when the kernel module is compiled into the
-> kernel, that information is not available.
-
-
-I might be missing something, but
-vmlinux provides info of builtin modules
-in /sys/module/.
-
-(Looks like currently only module_param and MODULE_VERSION)
-
-This patch is not exactly the same, but I see a kind of overwrap.
-I'd like to be sure if we want this new scheme.
-
-
-> Information about built-in modules is necessary in the following cases:
->
-> 1. When it is necessary to find out what additional parameters can be
-> passed to the kernel at boot time.
-
-
-Actually, /sys/module/<module>/parameters/
-exposes this information.
-
-Doesn't it work for your purpose?
-
-
-
-> 2. When you need to know which module names and their aliases are in
-> the kernel. This is very useful for creating an initrd image.
->
-> Proposal:
->
-> The proposed patch does not remove .modinfo section with module
-> information from the vmlinux at the build time and saves it into a
-> separate file after kernel linking. So, the kernel does not increase in
-> size and no additional information remains in it. Information is stored
-> in the same format as in the separate modules (null-terminated string
-> array). Because the .modinfo section is already exported with a separate
-> modules, we are not creating a new API.
->
-> It can be easily read in the userspace:
->
-> $ tr '\0' '\n' < kernel.builtin.modinfo
-> ext4.softdep=pre: crc32c
-> ext4.license=GPL
-> ext4.description=Fourth Extended Filesystem
-> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
-> ext4.alias=fs-ext4
-> ext4.alias=ext3
-> ext4.alias=fs-ext3
-> ext4.alias=ext2
-> ext4.alias=fs-ext2
-> md_mod.alias=block-major-9-*
-> md_mod.alias=md
-> md_mod.description=MD RAID framework
-> md_mod.license=GPL
-> md_mod.parmtype=create_on_open:bool
-> md_mod.parmtype=start_dirty_degraded:int
-> ...
->
-> Co-Developed-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
-> Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+On Thu, Mar 21, 2019 at 02:31:14PM -0700, fei.yang@intel.com wrote:
+> From: Fei Yang <fei.yang@intel.com>
+> 
+> The following kernel panic happens due to the io_data buffer gets deallocated
+> before the async io is completed. Add a check for the case where io_data buffer
+> should be deallocated by ffs_user_copy_worker.
+> 
+> [   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+> [   41.672099] #PF error: [normal kernel read fault]
+> [   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
+> [   41.683687] Oops: 0000 [#1] PREEMPT SMP
+> [   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
+> [   41.705309] Workqueue: adb ffs_user_copy_worker
+> [   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
+> [   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+> [   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+> [   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+> [   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+> [   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+> [   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+> [   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+> [   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+> [   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+> [   41.705331] Call Trace:
+> [   41.705338]  vfree+0x50/0xb0
+> [   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
+> [   41.705344]  process_one_work+0x19f/0x3e0
+> [   41.705348]  worker_thread+0x3f/0x3b0
+> [   41.829766]  kthread+0x12b/0x150
+> [   41.833371]  ? process_one_work+0x3e0/0x3e0
+> [   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
+> [   41.843695]  ret_from_fork+0x3a/0x50
+> [   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
+> [   41.876880] CR2: 0000000000000048
+> [   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
+> [   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
+> [   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+> [   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+> [   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+> [   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+> [   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+> [   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+> [   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+> [   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+> [   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+> [   41.985930] Kernel panic - not syncing: Fatal exception
+> [   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> [   42.009525] Rebooting in 10 seconds..
+> [   52.014376] ACPI MEMORY or I/O RESET_REG.
+> 
+> Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+> Signed-off-by: Fei Yang <fei.yang@intel.com>
+> Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+> Tested-by: John Stultz <john.stultz@linaro.org>
 > ---
->  Makefile                    |  1 +
->  include/linux/moduleparam.h | 12 +++++-------
->  scripts/link-vmlinux.sh     |  8 ++++++++
->  3 files changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index d5713e7b1e50..971102194c92 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1288,6 +1288,7 @@ _modinst_:
->         fi
->         @cp -f $(objtree)/modules.order $(MODLIB)/
->         @cp -f $(objtree)/modules.builtin $(MODLIB)/
-> +       @cp -f $(objtree)/kernel.builtin.modinfo $(MODLIB)/
->         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
->
->  # This depmod is only for convenience to give the initial
-> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> index ba36506db4fb..5ba250d9172a 100644
-> --- a/include/linux/moduleparam.h
-> +++ b/include/linux/moduleparam.h
-> @@ -10,23 +10,21 @@
->     module name. */
->  #ifdef MODULE
->  #define MODULE_PARAM_PREFIX /* empty */
-> +#define __MODULE_INFO_PREFIX /* empty */
->  #else
->  #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
-> +/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
-> +#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
->  #endif
->
->  /* Chosen so that structs with an unsigned long line up. */
->  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
->
-> -#ifdef MODULE
->  #define __MODULE_INFO(tag, name, info)                                   \
->  static const char __UNIQUE_ID(name)[]                                    \
->    __used __attribute__((section(".modinfo"), unused, aligned(1)))        \
-> -  = __stringify(tag) "=" info
-> -#else  /* !MODULE */
-> -/* This struct is here for syntactic coherency, it is not used */
-> -#define __MODULE_INFO(tag, name, info)                                   \
-> -  struct __UNIQUE_ID(name) {}
-> -#endif
-> +  = __MODULE_INFO_PREFIX __stringify(tag) "=" info
-> +
->  #define __MODULE_PARM_TYPE(name, _type)                                          \
->    __MODULE_INFO(parmtype, name##type, #name ":" _type)
->
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index c8cf45362bd6..399d7e4d11ec 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -258,10 +258,12 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
->
->         # step 1
->         vmlinux_link "" .tmp_vmlinux1
-> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux1
->         kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
->
->         # step 2
->         vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
-> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux2
->         kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
->
->         # step 3
-> @@ -273,6 +275,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
->                 kallsyms_vmlinux=.tmp_vmlinux3
->
->                 vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
-> +               "${OBJCOPY}" -R .modinfo .tmp_vmlinux3
->
->                 kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
->         fi
-> @@ -281,6 +284,11 @@ fi
->  info LD vmlinux
->  vmlinux_link "${kallsymso}" vmlinux
->
-> +info MODINFO kernel.builtin.modinfo
-> +"${OBJCOPY}" -j .modinfo -O binary vmlinux kernel.builtin.modinfo
-> +chmod 444 kernel.builtin.modinfo
-> +"${OBJCOPY}" -R .modinfo vmlinux
-> +
->  if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
->         info SORTEX vmlinux
->         sortextable vmlinux
-> --
-> 2.19.2
->
+> v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
+> v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
+>     and keep the original logic intact.
 
+If it "fixes" a problem in 5.0, we should add a:
+	Cc: stable <stable@vger.kernel.org>
+to it as well.
 
--- 
-Best Regards
-Masahiro Yamada
+thanks,
+
+greg k-h
