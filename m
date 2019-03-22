@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F813C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5EEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1AD2192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92542192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256341;
-	bh=+yd/nLcav1ElfIh0EzOGydtD8yPPPDZtlAq3oQNmZ4s=;
+	s=default; t=1553256348;
+	bh=LCMkBdBp1MBXtm8yaKRuSdMJZxpdgxQVNsb2d/CFItI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cnFBvBsoCNC4ypCwuYIshwoGpD6ROozbpOs5P+l6W2PUQElmFJ2aXh3W+zUOx+2x/
-	 epeKBm/xjPx+rfYW0LHhnmvqnG7F6xyPqpkOh1ByIjuNqVfpZy2QzvihdUBkOtMAuL
-	 KcsYShE/VAWaIuxc+1JGEn9LSlFolClbXcAzjltE=
+	b=mx/Z/8QKyxfVFO+2Hi/jF6MFhhAa7XvtQ2wQDUYlWx0AWZUvunkstPYDTBPLsCAjQ
+	 1AooSf/swXV/84KydkI0d8oNEi9d9qzeMneabbTMDYDw3cn4N/iGCHQKodbGeBiIlc
+	 KLyrQ6pYPcfQnwR4fA3FgOo86eqG8yA5J+m7ZTWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbfCVMFj (ORCPT
+        id S2388734AbfCVMFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388077AbfCVMFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:36 -0400
+        id S2388210AbfCVMEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3D42082C;
-        Fri, 22 Mar 2019 12:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A3892195D;
+        Fri, 22 Mar 2019 12:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256335;
-        bh=+yd/nLcav1ElfIh0EzOGydtD8yPPPDZtlAq3oQNmZ4s=;
+        s=default; t=1553256282;
+        bh=LCMkBdBp1MBXtm8yaKRuSdMJZxpdgxQVNsb2d/CFItI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nGCmL+d5LiSJy6vyZ1cJwTvWZf+JC3qhGxq2mB9Bv/PwKVcire2p4Nw2cgTpkYhWX
-         db4A7by7KIKYKr52/XpUST3+W+kTzY05063XVKK/UPuATUlaMxkhjSYFNU0g4aUaAW
-         Y6Y1FrMw1z2SNfn/wZ0jXg4nWFUspBl3skm1dr48=
+        b=qbMGgTP8/ggADtV17JUzpgRrMWfjmGIwe1SvJPjqxOS2LAjfM8DFXezF5GOg8nJIU
+         TZ7accBDHWNjJ2l1n2baLidAngeGL7meu4cCnfzM3m36AnWiTFzORSKKt4yNjlQwaH
+         CLxZFC6tklFQupxARhh5LBfEzmtF0Y9q3UsWntxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 179/280] cpufreq: pxa2xx: remove incorrect __init annotation
-Date:   Fri, 22 Mar 2019 12:15:32 +0100
-Message-Id: <20190322111326.295984789@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 162/280] scsi: qla2xxx: Fix LUN discovery if loop id is not assigned yet by firmware
+Date:   Fri, 22 Mar 2019 12:15:15 +0100
+Message-Id: <20190322111322.701075819@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -68,53 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-commit 9505b98ccddc454008ca7efff90044e3e857c827 upstream.
+commit ec322937a7f152d68755dc8316523bf6f831b48f upstream.
 
-pxa_cpufreq_init_voltages() is marked __init but usually inlined into
-the non-__init pxa_cpufreq_init() function. When building with clang,
-it can stay as a standalone function in a discarded section, and produce
-this warning:
+This patch fixes LUN discovery when loop ID is not yet assigned by the
+firmware during driver load/sg_reset operations. Driver will now search for
+new loop id before retrying login.
 
-WARNING: vmlinux.o(.text+0x616a00): Section mismatch in reference from the function pxa_cpufreq_init() to the function .init.text:pxa_cpufreq_init_voltages()
-The function pxa_cpufreq_init() references
-the function __init pxa_cpufreq_init_voltages().
-This is often because pxa_cpufreq_init lacks a __init
-annotation or the annotation of pxa_cpufreq_init_voltages is wrong.
-
-Fixes: 50e77fcd790e ("ARM: pxa: remove __init from cpufreq_driver->init()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
+Cc: stable@vger.kernel.org #4.19
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/pxa2xx-cpufreq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/cpufreq/pxa2xx-cpufreq.c
-+++ b/drivers/cpufreq/pxa2xx-cpufreq.c
-@@ -143,7 +143,7 @@ static int pxa_cpufreq_change_voltage(co
- 	return ret;
- }
- 
--static void __init pxa_cpufreq_init_voltages(void)
-+static void pxa_cpufreq_init_voltages(void)
- {
- 	vcc_core = regulator_get(NULL, "vcc_core");
- 	if (IS_ERR(vcc_core)) {
-@@ -159,7 +159,7 @@ static int pxa_cpufreq_change_voltage(co
- 	return 0;
- }
- 
--static void __init pxa_cpufreq_init_voltages(void) { }
-+static void pxa_cpufreq_init_voltages(void) { }
- #endif
- 
- static void find_freq_tables(struct cpufreq_frequency_table **freq_table,
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -643,11 +643,14 @@ static void qla24xx_handle_gnl_done_even
+ 				break;
+ 			case DSC_LS_PORT_UNAVAIL:
+ 			default:
+-				if (fcport->loop_id != FC_NO_LOOP_ID)
+-					qla2x00_clear_loop_id(fcport);
+-
+-				fcport->loop_id = loop_id;
+-				fcport->fw_login_state = DSC_LS_PORT_UNAVAIL;
++				if (fcport->loop_id == FC_NO_LOOP_ID) {
++					qla2x00_find_new_loop_id(vha, fcport);
++					fcport->fw_login_state =
++					    DSC_LS_PORT_UNAVAIL;
++				}
++				ql_dbg(ql_dbg_disc, vha, 0x20e5,
++				    "%s %d %8phC\n", __func__, __LINE__,
++				    fcport->port_name);
+ 				qla24xx_fcport_handle_login(vha, fcport);
+ 				break;
+ 			}
 
 
