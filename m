@@ -4,113 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858A3C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57DEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5985421874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A78321874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbfCVOHq (ORCPT
+        id S1728084AbfCVOIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:07:46 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:57969 "EHLO
+        Fri, 22 Mar 2019 10:08:14 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:53411 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOHp (ORCPT
+        with ESMTP id S1727487AbfCVOIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:07:45 -0400
+        Fri, 22 Mar 2019 10:08:13 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M7KG2-1h42V92tcS-007ksc; Fri, 22 Mar 2019 15:07:27 +0100
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N7xml-1gujVI0uTD-014xXn; Fri, 22 Mar 2019 15:06:51 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>
+To:     Takashi Iwai <tiwai@suse.com>,
+        Connor McAdams <conmanx360@gmail.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nfsd: avoid uninitialized variable warning
-Date:   Fri, 22 Mar 2019 15:07:11 +0100
-Message-Id: <20190322140726.251521-1-arnd@arndb.de>
+        Jaroslav Kysela <perex@perex.cz>,
+        Alastair Bridgewater <alastair.bridgewater@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: hda/ca0132: work around clang -Wuninitialized warning
+Date:   Fri, 22 Mar 2019 15:06:28 +0100
+Message-Id: <20190322140649.197027-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ClqJeMIIUkB9B1PjxqSTgR+0icspArSydm3eP4QX8KXk1cbCgud
- iHZc7n3E2QXam7UFXOqaLr3HXM8LOTd2U4S7LTXrsyUQ54IFFxeDbvW/wtXsswAmsV1chi0
- rqN2cRIbaW05brr7QR9dDT9gfEABoxBc87eMuY2V9zIPfqKo7QcioQkfny3zfEzAphCtCdx
- qZEceoJdxr28tF3H6gXdg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LGxE0xuTpZs=:kZtuMZP9gxBlOmbKB5g9TH
- OFD7INBA+zol0o63/lMsauA3ARhRDRKe8iidgyjakTWaeROQqoo4WthKNxy8TkmiD7C1QSItU
- zpgPnrPMXti9I0NaAIut0axtEdCxeqUWnft6q7Us2QzV5NUqHo6Eln0Ppn7HAwSJOuvrAux7r
- W9ZdBUts+/grU2oqWMenrL1UBI6rUT6pYeUG6SP4JYWkZr/dhr0ZsBqxZQAA5YNBotRlDBvuh
- ZZc6hPTj/GS3tHvKjKqyve5mzzfwUrx2okO+jfErbxnUCdsfaqm5+JLpyxDW6bWw4FkgXWnOW
- otRnhAql9DsHXcQOcG5ohL0Xi1MHhBwA4aSMY9QG4JqMBfBMn4uEUz9wy1ZlF+hvFUYZvTDFS
- H23fTdcH8V9ve0+QvPK8JDoLp/cJdCYKiAZ3nEWZ5pH/679+Y5FPJTzRnSq7/rAnA1QYno0GW
- M3VEvyxCN11JyY/A63WX9YK+LLZEH531ra5ivba9T3KuugxBoHXddlME1Ls8TuSk0jM1cKUB/
- xMcqGQvMaK2ite05Cm2jqB+MdbQpNz4aEOVw29R8as5RyBsBjKg86L3r5IRudm0EpmUy9xRMc
- 2XDYTcVK+q+KY7SPPDFQ9enKRiVjdi7nrxdLwEBrSNxbM0PxbpX7IDIXILDLa6HF/rKnV4iBC
- ETN/0wccaoozGT3tF3ala1X9JpGlf0vwVClaOFCRx+KHAoV9Ot85S9azf/edJRUaegDNsn5qm
- lZtiklxc2ZKY82NW8RQgWG7iW8AMvftx7lb6PQ==
+X-Provags-ID: V03:K1:evwjwt7mhgRLU3GN33j/cnsVOiV9wjtnPs/Dj8C9wsXFF7C7+eG
+ KQftvmfclIpjzA1lm+KnVgJGY+aizj2DBCfem1Hi0U7EjOTEllryll26CsB42wPv6dsbF1E
+ CEIvqkUZzFlTa2gp36kUqL23R0B+GNzD7O6D2N+Ac8hlmvWTh6S7+mXtd2jmlVenCxHydYA
+ hQnSGqwKjuRwRm1r4vEgg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3wEGlyncInU=:JLa7x3tbCMH4nqij1shbri
+ 1xq5ojC/sg+a7kY5uMO4xkVsvGVDMMsQjuxcjIDblPP60GITXocCVHQ7xFhEQSjbmLnVjwnYp
+ Tgc0jmUlMoTcYZVKy+Y3HX+MKSoewt7gEjeHNgy9/BOSrXDlcwIKRcLiA0qL/Y7mVF+G7heDu
+ uYK2wNYWGLtdJ5XZbGZeI6ERlXCRI5RboGYefcKeOm8dzERDQtZhg+6v+hPtEIQ3M9SnWT79L
+ eCP4HoljvvJPPWe6foESCtfg9UfiP/KSWjLBWOn5pnLEnNwIbv8rlDjCqFq9oksq40iM6EkGs
+ naZpyz9qPuBvFcSvquPL0IaKftJIBZ0425E1E+GqQjKGAnV5F8zq+Z5nzlqnVjVbmoVbI4ucg
+ 7b3WhkNCsEgmN7R9yjmjEYi3wAC7ym1iUzebRZ1D7CSAx8dDZDjvI+4umCKD6S3nE2rq2MYDn
+ CH1bzybw0w39JvLmb+18jLZwMV5tIbRKB1X29xuiY5rEql06RzMR4onrsxj07lowf62E4iX3J
+ /zgk7tLeMbz+Ai6i/IZJCsA79VIY2CyOA9oYjYJz7Fn/8xJo21w5l7N2GLodHwW4YKq1jrt6Y
+ kEVn/7/uSczGN2zo3QeF9X9zoIa48+0xni9FsLfjaGxluG2y8zd+FATDyIW2/Z7WoGbEmsLNs
+ pqmrbH/cksXIOVsAQ3HytSRx1gD9AqfADM4d6qDrZvER6o034q4SWHCVfdlIolDSwGdEE9AR2
+ v624crwjxrDeOLPCOxBOtTH1HgikuOnqJVYnGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns that 'contextlen' may be accessed without an initialization:
+When CONFIG_PCI is disabled, clang gets confused about the
+control flow of the switch() statement always ending up
+in the default case, and warns:
 
-fs/nfsd/nfs4xdr.c:2911:9: error: variable 'contextlen' is uninitialized when used here [-Werror,-Wuninitialized]
-                                                                contextlen);
-                                                                ^~~~~~~~~~
-fs/nfsd/nfs4xdr.c:2424:16: note: initialize the variable 'contextlen' to silence this warning
-        int contextlen;
-                      ^
-                       = 0
+sound/pci/hda/patch_ca0132.c:7558:6: error: variable 'fw_entry' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+        if (!spec->alt_firmware_present) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/pci/hda/patch_ca0132.c:7565:42: note: uninitialized use occurs here
+        dsp_os_image = (struct dsp_image_seg *)(fw_entry->data);
+                                                ^~~~~~~~
+sound/pci/hda/patch_ca0132.c:7558:2: note: remove the 'if' if its condition is always true
+        if (!spec->alt_firmware_present) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/pci/hda/patch_ca0132.c:7521:33: note: initialize the variable 'fw_entry' to silence this warning
+        const struct firmware *fw_entry;
+                                       ^
+                                        = NULL
 
-Presumably this cannot happen, as FATTR4_WORD2_SECURITY_LABEL is
-set if CONFIG_NFSD_V4_SECURITY_LABEL is enabled.
-Adding another #ifdef like the other two in this function
-avoids the warning.
+Adding an explicit check for CONFIG_PCI avoids the issue.
+Unfortunately this is not very intuitive here.
 
+Link: https://bugs.llvm.org/show_bug.cgi?id=41197#c1
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4xdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Any suggestions for other workarounds appreciated. If you can think
+of a better fix, please treat this as a reported-by:
+---
+ sound/pci/hda/patch_ca0132.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 3de42a729093..a3a3455826aa 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2420,8 +2420,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	__be32 status;
- 	int err;
- 	struct nfs4_acl *acl = NULL;
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	void *context = NULL;
- 	int contextlen;
-+#endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
- 	u32 minorversion = resp->cstate.minorversion;
-@@ -2906,12 +2908,14 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
- 	}
- 
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
- 		status = nfsd4_encode_security_label(xdr, rqstp, context,
- 								contextlen);
- 		if (status)
- 			goto out;
- 	}
-+#endif
- 
- 	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
- 	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index 29882bda7632..415b16b7db70 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -7555,7 +7555,7 @@ static bool ca0132_download_dsp_images(struct hda_codec *codec)
+ 	 * Use default ctefx.bin if no alt firmware is detected, or if none
+ 	 * exists for your particular codec.
+ 	 */
+-	if (!spec->alt_firmware_present) {
++	if (!IS_ENABLED(CONFIG_PCI) || !spec->alt_firmware_present) {
+ 		codec_dbg(codec, "Default firmware selected.");
+ 		if (request_firmware(&fw_entry, EFX_FILE,
+ 					codec->card->dev) != 0)
 -- 
 2.20.0
 
