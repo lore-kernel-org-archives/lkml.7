@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A9BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D94C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BF02070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E61D2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258435;
-	bh=G8x3nrhxVcqhNAdY7UbUCnyC+hULVW5gZvVJhBiRjqk=;
+	s=default; t=1553258438;
+	bh=jGnQ3aWdcq+TW4612Xeaq2E6PkwCDEbcKFNUikpzpqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTqRMsSIvf3alZ3QSG8GN0yHRpyJB+gbVyqTtKOQJ3LDiwNsAx3BNqds3pxOLS8ft
-	 bLt97L+RILck3ITdKSsHiJYRwBed3PBOPLzeMGbRiQZ3jny6a4MMZsOkAivltTxCVa
-	 QTpJWkOpwfAEAoGNtzalKrGHtQGNKPPVBFFiAick=
+	b=LkZ1l2vfz8UwwXSlmH53gxKpX21S7yb18jNyKFt8mWAD3qtTcRL1fBmvooXTd3n26
+	 eK3LKD/xd3BhJ5izRMKV2OgO5MnpjtoCBU5C03QIlu1yA6udESbCuTGoQX1y4ECD5A
+	 DMzgunIrwmIFMr/1Y7XfXS/5YfcRTZRZw2oxSN9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389120AbfCVMkd (ORCPT
+        id S2389185AbfCVMkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45048 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388086AbfCVMGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:36 -0400
+        id S1732215AbfCVMG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 067D52192D;
-        Fri, 22 Mar 2019 12:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F9F2192D;
+        Fri, 22 Mar 2019 12:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256395;
-        bh=G8x3nrhxVcqhNAdY7UbUCnyC+hULVW5gZvVJhBiRjqk=;
+        s=default; t=1553256388;
+        bh=jGnQ3aWdcq+TW4612Xeaq2E6PkwCDEbcKFNUikpzpqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y02vKlL5fXNZZwq8hAWQFrSHQrwN5d8ZgV2PXtZPYq0Nt2PElpFzp41km6WtHeqT2
-         rtPf6omqIWsQ9h1hF9B4+qOcPDlp7mO28loDUaXIf+xGFFh2GTHeJY7VLZ8I3pGdcm
-         srSsPmMV7e+FnarV4wLyYVf2MYasmIYEucDSo0Qo=
+        b=S3hboMcsibKSgNUTrJnjfUOwcI3ejfNcSwwbXovtiDs4BqiPa1oZs+TsVbLMANTvu
+         8cYOLcS0MK9RLyI+fg+Fd3D0bDoc1LID5Rln/rN7ehaDS8iLYy6aHeFZO9+q4JweEr
+         bZbQPRm1J2iNGG7BPqg7xsy7X3mN45vP7Dxolf6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 4.19 198/280] usb: typec: tps6598x: handle block writes separately with plain-I2C adapters
-Date:   Fri, 22 Mar 2019 12:15:51 +0100
-Message-Id: <20190322111330.151334518@linuxfoundation.org>
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 188/280] IB/hfi1: Close race condition on user context disable and close
+Date:   Fri, 22 Mar 2019 12:15:41 +0100
+Message-Id: <20190322111328.083720941@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,91 +68,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-commit 8a863a608d47fa5d9dd15cf841817f73f804cf91 upstream.
+commit bc5add09764c123f58942a37c8335247e683d234 upstream.
 
-Commit 1a2f474d328f handles block _reads_ separately with plain-I2C
-adapters, but the problem described with regmap-i2c not handling
-SMBus block transfers (i.e. read and writes) correctly also exists
-with writes.
+When disabling and removing a receive context, it is possible for an
+asynchronous event (i.e IRQ) to occur.  Because of this, there is a race
+between cleaning up the context, and the context being used by the
+asynchronous event.
 
-As workaround, this patch adds a block write function the same way
-1a2f474d328f adds a block read function.
+cpu 0  (context cleanup)
+    rc->ref_count-- (ref_count == 0)
+    hfi1_rcd_free()
+cpu 1  (IRQ (with rcd index))
+	rcd_get_by_index()
+	lock
+	ref_count+++     <-- reference count race (WARNING)
+	return rcd
+	unlock
+cpu 0
+    hfi1_free_ctxtdata() <-- incorrect free location
+    lock
+    remove rcd from array
+    unlock
+    free rcd
 
-Fixes: 1a2f474d328f ("usb: typec: tps6598x: handle block reads separately with plain-I2C adapters")
-Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+This race will cause the following WARNING trace:
+
+WARNING: CPU: 0 PID: 175027 at include/linux/kref.h:52 hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+CPU: 0 PID: 175027 Comm: IMB-MPI1 Kdump: loaded Tainted: G OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+Call Trace:
+  dump_stack+0x19/0x1b
+  __warn+0xd8/0x100
+  warn_slowpath_null+0x1d/0x20
+  hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+  is_rcv_urgent_int+0x24/0x90 [hfi1]
+  general_interrupt+0x1b6/0x210 [hfi1]
+  __handle_irq_event_percpu+0x44/0x1c0
+  handle_irq_event_percpu+0x32/0x80
+  handle_irq_event+0x3c/0x60
+  handle_edge_irq+0x7f/0x150
+  handle_irq+0xe4/0x1a0
+  do_IRQ+0x4d/0xf0
+  common_interrupt+0x162/0x162
+
+The race can also lead to a use after free which could be similar to:
+
+general protection fault: 0000 1 SMP
+CPU: 71 PID: 177147 Comm: IMB-MPI1 Kdump: loaded Tainted: G W OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+task: ffff9962a8098000 ti: ffff99717a508000 task.ti: ffff99717a508000 __kmalloc+0x94/0x230
+Call Trace:
+  ? hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_aio_write+0xba/0x110 [hfi1]
+  do_sync_readv_writev+0x7b/0xd0
+  do_readv_writev+0xce/0x260
+  ? handle_mm_fault+0x39d/0x9b0
+  ? pick_next_task_fair+0x5f/0x1b0
+  ? sched_clock_cpu+0x85/0xc0
+  ? __schedule+0x13a/0x890
+  vfs_writev+0x35/0x60
+  SyS_writev+0x7f/0x110
+  system_call_fastpath+0x22/0x27
+
+Use the appropriate kref API to verify access.
+
+Reorder context cleanup to ensure context removal before cleanup occurs
+correctly.
+
+Cc: stable@vger.kernel.org # v4.14.0+
+Fixes: f683c80ca68e ("IB/hfi1: Resolve kernel panics by reference counting receive contexts")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tps6598x.c |   26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/hfi1/hfi.h  |    2 +-
+ drivers/infiniband/hw/hfi1/init.c |   14 +++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -110,6 +110,20 @@ tps6598x_block_read(struct tps6598x *tps
- 	return 0;
- }
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1425,7 +1425,7 @@ void hfi1_init_pportdata(struct pci_dev
+ 			 struct hfi1_devdata *dd, u8 hw_pidx, u8 port);
+ void hfi1_free_ctxtdata(struct hfi1_devdata *dd, struct hfi1_ctxtdata *rcd);
+ int hfi1_rcd_put(struct hfi1_ctxtdata *rcd);
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
+ struct hfi1_ctxtdata *hfi1_rcd_get_by_index_safe(struct hfi1_devdata *dd,
+ 						 u16 ctxt);
+ struct hfi1_ctxtdata *hfi1_rcd_get_by_index(struct hfi1_devdata *dd, u16 ctxt);
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -213,12 +213,12 @@ static void hfi1_rcd_free(struct kref *k
+ 	struct hfi1_ctxtdata *rcd =
+ 		container_of(kref, struct hfi1_ctxtdata, kref);
  
-+static int tps6598x_block_write(struct tps6598x *tps, u8 reg,
-+				void *val, size_t len)
-+{
-+	u8 data[TPS_MAX_LEN + 1];
+-	hfi1_free_ctxtdata(rcd->dd, rcd);
+-
+ 	spin_lock_irqsave(&rcd->dd->uctxt_lock, flags);
+ 	rcd->dd->rcd[rcd->ctxt] = NULL;
+ 	spin_unlock_irqrestore(&rcd->dd->uctxt_lock, flags);
+ 
++	hfi1_free_ctxtdata(rcd->dd, rcd);
 +
-+	if (!tps->i2c_protocol)
-+		return regmap_raw_write(tps->regmap, reg, val, len);
-+
-+	data[0] = len;
-+	memcpy(&data[1], val, len);
-+
-+	return regmap_raw_write(tps->regmap, reg, data, sizeof(data));
-+}
-+
- static inline int tps6598x_read16(struct tps6598x *tps, u8 reg, u16 *val)
- {
- 	return tps6598x_block_read(tps, reg, val, sizeof(u16));
-@@ -127,23 +141,23 @@ static inline int tps6598x_read64(struct
- 
- static inline int tps6598x_write16(struct tps6598x *tps, u8 reg, u16 val)
- {
--	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u16));
-+	return tps6598x_block_write(tps, reg, &val, sizeof(u16));
+ 	kfree(rcd);
  }
  
- static inline int tps6598x_write32(struct tps6598x *tps, u8 reg, u32 val)
+@@ -241,10 +241,13 @@ int hfi1_rcd_put(struct hfi1_ctxtdata *r
+  * @rcd: pointer to an initialized rcd data structure
+  *
+  * Use this to get a reference after the init.
++ *
++ * Return : reflect kref_get_unless_zero(), which returns non-zero on
++ * increment, otherwise 0.
+  */
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
  {
--	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u32));
-+	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
+-	kref_get(&rcd->kref);
++	return kref_get_unless_zero(&rcd->kref);
  }
  
- static inline int tps6598x_write64(struct tps6598x *tps, u8 reg, u64 val)
- {
--	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u64));
-+	return tps6598x_block_write(tps, reg, &val, sizeof(u64));
- }
- 
- static inline int
- tps6598x_write_4cc(struct tps6598x *tps, u8 reg, const char *val)
- {
--	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u32));
-+	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
- }
- 
- static int tps6598x_read_partner_identity(struct tps6598x *tps)
-@@ -229,8 +243,8 @@ static int tps6598x_exec_cmd(struct tps6
- 		return -EBUSY;
- 
- 	if (in_len) {
--		ret = regmap_raw_write(tps->regmap, TPS_REG_DATA1,
--				       in_data, in_len);
-+		ret = tps6598x_block_write(tps, TPS_REG_DATA1,
-+					   in_data, in_len);
- 		if (ret)
- 			return ret;
+ /**
+@@ -324,7 +327,8 @@ struct hfi1_ctxtdata *hfi1_rcd_get_by_in
+ 	spin_lock_irqsave(&dd->uctxt_lock, flags);
+ 	if (dd->rcd[ctxt]) {
+ 		rcd = dd->rcd[ctxt];
+-		hfi1_rcd_get(rcd);
++		if (!hfi1_rcd_get(rcd))
++			rcd = NULL;
  	}
+ 	spin_unlock_irqrestore(&dd->uctxt_lock, flags);
+ 
 
 
