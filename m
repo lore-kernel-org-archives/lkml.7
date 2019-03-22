@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86106C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57FF21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5693B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254921;
-	bh=2CUxJUH8XRn9678sXuORd/gLYT7BCor3ALtqRz/UObY=;
+	s=default; t=1553254924;
+	bh=ocNa1ajrqR1e1/aVVDZrR/ZkzXNk0sRFgEMJ0eVO0wQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psHfbhO7X5jifPsqvWMQii/GR5mjPn/yr4bnkNFCoxXulEr+w/BU5rhszekUk1uWn
-	 s2jREt6Bdi/YMerm867pKxYtika3dEQy5dMRheFYO7BFLRnsnb2ZFgLg1HDWeFGtzK
-	 g4aaOYQ4EhvYp2zP6mrTy3BCnq5Gmd6zQaAl+GIs=
+	b=pwDiCLcsGOwj+6qKxwr1xaRuJaOVULBPxWvvI2p90E3HQvm6psRC+EjkPfqcgbRZR
+	 mp3bxi+Pjfcothr7H5ByM7NJ1zozOGlYglKIZB85LrbkpGyBnzTGYLJEE4jZQ36stG
+	 lVEUWcVBontcq6+ekHzmQPHVZVP0HqjtGJbIhwdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731476AbfCVLl7 (ORCPT
+        id S1731487AbfCVLmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44240 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbfCVLl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:41:57 -0400
+        id S1731475AbfCVLmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3131D218B0;
-        Fri, 22 Mar 2019 11:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02EAA204FD;
+        Fri, 22 Mar 2019 11:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254916;
-        bh=2CUxJUH8XRn9678sXuORd/gLYT7BCor3ALtqRz/UObY=;
+        s=default; t=1553254919;
+        bh=ocNa1ajrqR1e1/aVVDZrR/ZkzXNk0sRFgEMJ0eVO0wQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSKlNDXrFrFTp0dwnsBrx30YWX7oxKAKAlSn0w0TfnErEGMacWmvLyv9OBfP32lGo
-         upukGJcnbLrpxj62Hc5jcavnzsRekSM3ncOnA4Ad7PfRvJsDgIcVovZfRrnaBVBST5
-         JrUAqvqA+GZWy9KGumJgZ6XWES+g9zK7S8PDSB6o=
+        b=A29Y/B9iA40pai6ttj0BZm11lqmaZQS/xVp8pmEA4KK16NjRi3Ca5ArhN2nAcIwPn
+         RwWUB46hR+bMJO7f2tC5HGmOEToAEpcXbA7+2YgJy/ME24b36+0lbe+hHjLCfmLrB+
+         BsojVMWhl7MPd7xcEvJVe76hzJCh1KBtclQtSnA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 050/118] tracing: Use strncpy instead of memcpy for string keys in hist triggers
-Date:   Fri, 22 Mar 2019 12:15:22 +0100
-Message-Id: <20190322111219.960075837@linuxfoundation.org>
+Subject: [PATCH 4.9 051/118] tracing: Do not free iter->trace in fail path of tracing_open_pipe()
+Date:   Fri, 22 Mar 2019 12:15:23 +0100
+Message-Id: <20190322111220.036770318@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,74 +65,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 9f0bbf3115ca9f91f43b7c74e9ac7d79f47fc6c2 upstream.
+commit e7f0c424d0806b05d6f47be9f202b037eb701707 upstream.
 
-Because there may be random garbage beyond a string's null terminator,
-it's not correct to copy the the complete character array for use as a
-hist trigger key.  This results in multiple histogram entries for the
-'same' string key.
+Commit d716ff71dd12 ("tracing: Remove taking of trace_types_lock in
+pipe files") use the current tracer instead of the copy in
+tracing_open_pipe(), but it forget to remove the freeing sentence in
+the error path.
 
-So, in the case of a string key, use strncpy instead of memcpy to
-avoid copying in the extra bytes.
+There's an error path that can call kfree(iter->trace) after the iter->trace
+was assigned to tr->current_trace, which would be bad to free.
 
-Before, using the gdbus entries in the following hist trigger as an
-example:
+Link: http://lkml.kernel.org/r/1550060946-45984-1-git-send-email-yi.zhang@huawei.com
 
-  # echo 'hist:key=comm' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist
-
-  ...
-
-  { comm: ImgDecoder #4                      } hitcount:        203
-  { comm: gmain                              } hitcount:        213
-  { comm: gmain                              } hitcount:        216
-  { comm: StreamTrans #73                    } hitcount:        221
-  { comm: mozStorage #3                      } hitcount:        230
-  { comm: gdbus                              } hitcount:        233
-  { comm: StyleThread#5                      } hitcount:        253
-  { comm: gdbus                              } hitcount:        256
-  { comm: gdbus                              } hitcount:        260
-  { comm: StyleThread#4                      } hitcount:        271
-
-  ...
-
-  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
-  51
-
-After:
-
-  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
-  1
-
-Link: http://lkml.kernel.org/r/50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com
-
-Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: 79e577cbce4c4 ("tracing: Support string type key properly")
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Fixes: d716ff71dd12 ("tracing: Remove taking of trace_types_lock in pipe files")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_hist.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -871,9 +871,10 @@ static inline void add_to_key(char *comp
- 		/* ensure NULL-termination */
- 		if (size > key_field->size - 1)
- 			size = key_field->size - 1;
--	}
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5057,7 +5057,6 @@ out:
+ 	return ret;
  
--	memcpy(compound_key + key_field->offset, key, size);
-+		strncpy(compound_key + key_field->offset, (char *)key, size);
-+	} else
-+		memcpy(compound_key + key_field->offset, key, size);
- }
- 
- static void event_hist_trigger(struct event_trigger_data *data, void *rec)
+ fail:
+-	kfree(iter->trace);
+ 	kfree(iter);
+ 	__trace_array_put(tr);
+ 	mutex_unlock(&trace_types_lock);
 
 
