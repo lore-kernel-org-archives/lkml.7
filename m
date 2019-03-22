@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942AAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD2BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651612082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202872192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255580;
-	bh=86rsPASrvm9fBBq4B45Qc5s/xg1Je0P1Z6DQLEok60U=;
+	s=default; t=1553255584;
+	bh=hieSCee2oo6gMaywsVSheWxOZoDbs2fnF8C8bBTrGb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFJEmZa0iDVbARUmUGZp9m3VzjAFOov2fZpdGr2JvidDHtZ0KqC9EAnKilywpFpxq
-	 tYuOgvzyFYx1Pc+F9OVQpvNFpb0+1U+h4Pn4KvykVlLXkfyqoBzSJ76gIPW5o6TgAK
-	 4CxaXgB8NBnaxjb2Jc9QdIacv8UpgI496Od1D5gs=
+	b=afNIoYbluuGy1WIkXNcSfDS6NFM2XGJswZ2DL/F9jj6861QsAmwilBmsthWMuUNwa
+	 8147aQWKpRe+/oUaQgkldAV2tgSUZ4v+TB5cvot/sl2eaPU6QGQQZsy6u03BwgL0Uq
+	 wU2CPc6ew/HF810sElxn+Emy94bzGjuUaUAribcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732978AbfCVLw7 (ORCPT
+        id S1732990AbfCVLxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732761AbfCVLwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:52:55 -0400
+        id S1732668AbfCVLw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF12A2192B;
-        Fri, 22 Mar 2019 11:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E6912196F;
+        Fri, 22 Mar 2019 11:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255575;
-        bh=86rsPASrvm9fBBq4B45Qc5s/xg1Je0P1Z6DQLEok60U=;
+        s=default; t=1553255578;
+        bh=hieSCee2oo6gMaywsVSheWxOZoDbs2fnF8C8bBTrGb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmA81Y/NOLTAq8KOIz6z1PMptbEJfu4ZmfoPTx8eMRGWhDOi/fnDN0nOIKmxEGvzr
-         An4M2qH/byQ17WhiiuB0e7sWSClMJ/kNacRvZpT2lT2CguhaSEBiCI6/odpCud8SDX
-         p/Mo1QiVTW2hRs9VysWpU44E1KDJTKRx1KMDNX5w=
+        b=hCQvMZHHLoIzd+4zTjr2Q29cgBc9Zvh55/ifjStjN0j4KEbjQrhW/lHvKTkOHUFuh
+         JrT/fkiTILMtdX46TyC8jtpXiTr5bsZZ2mKELikrYHsx+5ju47DrPBqJS7ltjBDBve
+         RXvhWKVoA9DA4d3rdRHg88CpZ1p01bI5xr/5fnZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 4.14 132/183] serial: 8250_of: assume reg-shift of 2 for mrvl,mmp-uart
-Date:   Fri, 22 Mar 2019 12:16:00 +0100
-Message-Id: <20190322111251.315866482@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.14 115/183] ext2: Fix underflow in ext2_max_size()
+Date:   Fri, 22 Mar 2019 12:15:43 +0100
+Message-Id: <20190322111250.037413404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -64,37 +65,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Jan Kara <jack@suse.cz>
 
-commit f4817843e39ce78aace0195a57d4e8500a65a898 upstream.
+commit 1c2d14212b15a60300a2d4f6364753e87394c521 upstream.
 
-There are two other drivers that bind to mrvl,mmp-uart and both of them
-assume register shift of 2 bits. There are device trees that lack the
-property and rely on that assumption.
+When ext2 filesystem is created with 64k block size, ext2_max_size()
+will return value less than 0. Also, we cannot write any file in this fs
+since the sb->maxbytes is less than 0. The core of the problem is that
+the size of block index tree for such large block size is more than
+i_blocks can carry. So fix the computation to count with this
+possibility.
 
-If this driver wins the race to bind to those devices, it should behave
-the same as the older deprecated driver.
+File size limits computed with the new function for the full range of
+possible block sizes look like:
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: stable@vger.kernel.org
+bits file_size
+10     17247252480
+11    275415851008
+12   2196873666560
+13   2197948973056
+14   2198486220800
+15   2198754754560
+16   2198888906752
+
+CC: stable@vger.kernel.org
+Reported-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_of.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext2/super.c |   41 ++++++++++++++++++++++++++---------------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -105,6 +105,10 @@ static int of_platform_serial_setup(stru
- 	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
- 		port->mapbase += prop;
+--- a/fs/ext2/super.c
++++ b/fs/ext2/super.c
+@@ -754,7 +754,8 @@ static loff_t ext2_max_size(int bits)
+ {
+ 	loff_t res = EXT2_NDIR_BLOCKS;
+ 	int meta_blocks;
+-	loff_t upper_limit;
++	unsigned int upper_limit;
++	unsigned int ppb = 1 << (bits-2);
  
-+	/* Compatibility with the deprecated pxa driver and 8250_pxa drivers. */
-+	if (of_device_is_compatible(np, "mrvl,mmp-uart"))
-+		port->regshift = 2;
+ 	/* This is calculated to be the largest file size for a
+ 	 * dense, file such that the total number of
+@@ -768,24 +769,34 @@ static loff_t ext2_max_size(int bits)
+ 	/* total blocks in file system block size */
+ 	upper_limit >>= (bits - 9);
+ 
+-
+-	/* indirect blocks */
+-	meta_blocks = 1;
+-	/* double indirect blocks */
+-	meta_blocks += 1 + (1LL << (bits-2));
+-	/* tripple indirect blocks */
+-	meta_blocks += 1 + (1LL << (bits-2)) + (1LL << (2*(bits-2)));
+-
+-	upper_limit -= meta_blocks;
+-	upper_limit <<= bits;
+-
++	/* Compute how many blocks we can address by block tree */
+ 	res += 1LL << (bits-2);
+ 	res += 1LL << (2*(bits-2));
+ 	res += 1LL << (3*(bits-2));
++	/* Does block tree limit file size? */
++	if (res < upper_limit)
++		goto check_lfs;
 +
- 	/* Check for registers offset within the devices address range */
- 	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
- 		port->regshift = prop;
++	res = upper_limit;
++	/* How many metadata blocks are needed for addressing upper_limit? */
++	upper_limit -= EXT2_NDIR_BLOCKS;
++	/* indirect blocks */
++	meta_blocks = 1;
++	upper_limit -= ppb;
++	/* double indirect blocks */
++	if (upper_limit < ppb * ppb) {
++		meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb);
++		res -= meta_blocks;
++		goto check_lfs;
++	}
++	meta_blocks += 1 + ppb;
++	upper_limit -= ppb * ppb;
++	/* tripple indirect blocks for the rest */
++	meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb) +
++		DIV_ROUND_UP(upper_limit, ppb*ppb);
++	res -= meta_blocks;
++check_lfs:
+ 	res <<= bits;
+-	if (res > upper_limit)
+-		res = upper_limit;
+-
+ 	if (res > MAX_LFS_FILESIZE)
+ 		res = MAX_LFS_FILESIZE;
+ 
 
 
