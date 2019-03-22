@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BDDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47745C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93922190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F45B218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253701;
-	bh=jP94hG+MU/+ygDetenA6l7zWqPI0zcq0GIM7iv7ksmc=;
+	s=default; t=1553253703;
+	bh=Dh7Vp0cHL3FO4dZM3VLdkqpw6V/sz2OCqRv6HWZszv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CFgFF0qafzh5oPO/N5cLbddwRdclPqGA3cEdJJRC/N9twJYQVkOl/DbM0a4i88a7p
-	 ZNw2tcTT4ZUqRYGyg3D1pt/JzFzBItN4ieOebiwx2Z6NiAxo2G9O7dq4Rm3vSuCt4S
-	 oTZZchqGtuvvAPlU47KL8nbAaQgfYJfy9MJhivt8=
+	b=TL5Xgi13uYfB7qJ79xo1i4ifDAntstQe9ArgmluiKgAEjAuNBUQpKntnmd5rKN/2V
+	 Owi7FKTG77yRd6qQPTqgV6w8ly4TuSFhDAP8VpAzQwawU1KXf7mxihmKHdiZptOvgI
+	 umuBM2bGyFlMJ8uHMh8E2KNFWozqhbmHQ9QUdcyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfCVLVk (ORCPT
+        id S1728644AbfCVLVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbfCVLVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:35 -0400
+        id S1728291AbfCVLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E16218A2;
-        Fri, 22 Mar 2019 11:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D945218D4;
+        Fri, 22 Mar 2019 11:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253695;
-        bh=jP94hG+MU/+ygDetenA6l7zWqPI0zcq0GIM7iv7ksmc=;
+        s=default; t=1553253698;
+        bh=Dh7Vp0cHL3FO4dZM3VLdkqpw6V/sz2OCqRv6HWZszv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYQ9/bXu/6qBEkPLc9M2i62GdFG3NQNTJwGAsnvwrZxkWJoqPhaRitvdus5aAlKqh
-         HuBgaYmF68Mh+N+src5Am93Hx02w3EbnxJM+ggi5PWUZoGpIqGJGYkg+Mitxyi6CUr
-         AUpKg2ahF2yk12n//EsmBSOA5C+I9bTAsFLaH1Zs=
+        b=FbOf4yf1hVcxbUCCzgiyOYaTW71yIVTN4Yq2oFVgQCy++jS587pdHFZ9E70NhMEY0
+         qWFrQdZ+qHW+hF6+dJc4P/xKIBjG1htfAMdnz+u73jqHvXY8iImcain785/9NkKRRh
+         HAgvLgsP+TM4uifzk1gh58SFMIKniZkGBUV9i41c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Sage Weil <sage@redhat.com>
-Subject: [PATCH 3.18 025/134] libceph: handle an empty authorize reply
-Date:   Fri, 22 Mar 2019 12:13:58 +0100
-Message-Id: <20190322111211.624715014@linuxfoundation.org>
+        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
+        John Garry <john.garry@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 3.18 026/134] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
+Date:   Fri, 22 Mar 2019 12:13:59 +0100
+Message-Id: <20190322111211.693578481@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,63 +67,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 0fd3fd0a9bb0b02b6435bb7070e9f7b82a23f068 upstream.
+commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
 
-The authorize reply can be empty, for example when the ticket used to
-build the authorizer is too old and TAG_BADAUTHORIZER is returned from
-the service.  Calling ->verify_authorizer_reply() results in an attempt
-to decrypt and validate (somewhat) random data in au->buf (most likely
-the signature block from calc_signature()), which fails and ends up in
-con_fault_finish() with !con->auth_retry.  The ticket isn't invalidated
-and the connection is retried again and again until a new ticket is
-obtained from the monitor:
+The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
+phy_identifier value.
 
-  libceph: osd2 192.168.122.1:6809 bad authorize reply
-  libceph: osd2 192.168.122.1:6809 bad authorize reply
-  libceph: osd2 192.168.122.1:6809 bad authorize reply
-  libceph: osd2 192.168.122.1:6809 bad authorize reply
+Currently this is not being set for rphys with an end device attached, so
+we see incorrect symlinks from systemd disk/by-path:
 
-Let TAG_BADAUTHORIZER handler kick in and increment con->auth_retry.
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
 
-Cc: stable@vger.kernel.org
-Fixes: 5c056fdc5b47 ("libceph: verify authorize reply on connect")
-Link: https://tracker.ceph.com/issues/20164
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Sage Weil <sage@redhat.com>
-[idryomov@gmail.com: backport to 4.4: extra arg, no CEPHX_V2]
+Indeed, each sas_end_device phy_identifier value is 0:
+
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
+0
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
+0
+
+This patch fixes the discovery code to set the phy_identifier.  With this,
+we now get proper symlinks:
+
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
+
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Reported-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ceph/messenger.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/scsi/libsas/sas_expander.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ceph/messenger.c
-+++ b/net/ceph/messenger.c
-@@ -1980,15 +1980,19 @@ static int process_connect(struct ceph_c
- 	dout("process_connect on %p tag %d\n", con, (int)con->in_tag);
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_disc
+ 		rphy = sas_end_device_alloc(phy->port);
+ 		if (!rphy)
+ 			goto out_free;
++		rphy->identify.phy_identifier = phy_id;
  
- 	if (con->auth_reply_buf) {
-+		int len = le32_to_cpu(con->in_reply.authorizer_len);
-+
- 		/*
- 		 * Any connection that defines ->get_authorizer()
- 		 * should also define ->verify_authorizer_reply().
- 		 * See get_connect_authorizer().
- 		 */
--		ret = con->ops->verify_authorizer_reply(con, 0);
--		if (ret < 0) {
--			con->error_msg = "bad authorize reply";
--			return ret;
-+		if (len) {
-+			ret = con->ops->verify_authorizer_reply(con, 0);
-+			if (ret < 0) {
-+				con->error_msg = "bad authorize reply";
-+				return ret;
-+			}
- 		}
- 	}
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
+@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_disc
  
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
++		rphy->identify.phy_identifier = phy_id;
+ 		sas_fill_in_rphy(child, rphy);
+ 
+ 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
 
 
