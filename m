@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41096C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECDCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14082218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62C7218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfCVW0Y (ORCPT
+        id S1728135AbfCVW1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:26:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43481 "EHLO
+        Fri, 22 Mar 2019 18:27:05 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48391 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfCVW0Y (ORCPT
+        with ESMTP id S1726205AbfCVW1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:26:24 -0400
+        Fri, 22 Mar 2019 18:27:04 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMPRUx752717
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMQ5UB752764
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:25:27 -0700
+        Fri, 22 Mar 2019 15:26:05 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMPRbR752714;
-        Fri, 22 Mar 2019 15:25:27 -0700
-Date:   Fri, 22 Mar 2019 15:25:27 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMQ5o3752761;
+        Fri, 22 Mar 2019 15:26:05 -0700
+Date:   Fri, 22 Mar 2019 15:26:05 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Changbin Du <tipbot@zytor.com>
-Message-ID: <tip-39df730b09774bd860e39ea208a48d15078236cb@git.kernel.org>
-Cc:     acme@redhat.com, rostedt@goodmis.org, tglx@linutronix.de,
-        changbin.du@gmail.com, hpa@zytor.com, namhyung@kernel.org,
-        mingo@kernel.org, daniel@iogearbox.net, jolsa@kernel.org,
-        ast@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
-          jolsa@kernel.org, daniel@iogearbox.net, ast@kernel.org,
-          mingo@kernel.org, hpa@zytor.com, namhyung@kernel.org,
-          changbin.du@gmail.com, acme@redhat.com, rostedt@goodmis.org,
-          tglx@linutronix.de
-In-Reply-To: <20190316080556.3075-3-changbin.du@gmail.com>
-References: <20190316080556.3075-3-changbin.du@gmail.com>
+Message-ID: <tip-11c1ea6f1a9bc97bf857fd12f72eacb6c69794e2@git.kernel.org>
+Cc:     namhyung@kernel.org, daniel@iogearbox.net, hpa@zytor.com,
+        jolsa@kernel.org, acme@redhat.com, changbin.du@gmail.com,
+        rostedt@goodmis.org, ast@kernel.org, mingo@kernel.org,
+        tglx@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Reply-To: ast@kernel.org, mingo@kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, linux-kernel@vger.kernel.org,
+          namhyung@kernel.org, daniel@iogearbox.net, hpa@zytor.com,
+          jolsa@kernel.org, acme@redhat.com, changbin.du@gmail.com,
+          rostedt@goodmis.org
+In-Reply-To: <20190316080556.3075-4-changbin.du@gmail.com>
+References: <20190316080556.3075-4-changbin.du@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf list: Don't forget to drop the reference to
- the allocated thread_map
-Git-Commit-ID: 39df730b09774bd860e39ea208a48d15078236cb
+Subject: [tip:perf/urgent] perf tools: Fix errors under optimization level
+ '-Og'
+Git-Commit-ID: 11c1ea6f1a9bc97bf857fd12f72eacb6c69794e2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,30 +61,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  39df730b09774bd860e39ea208a48d15078236cb
-Gitweb:     https://git.kernel.org/tip/39df730b09774bd860e39ea208a48d15078236cb
+Commit-ID:  11c1ea6f1a9bc97bf857fd12f72eacb6c69794e2
+Gitweb:     https://git.kernel.org/tip/11c1ea6f1a9bc97bf857fd12f72eacb6c69794e2
 Author:     Changbin Du <changbin.du@gmail.com>
-AuthorDate: Sat, 16 Mar 2019 16:05:42 +0800
+AuthorDate: Sat, 16 Mar 2019 16:05:43 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 19 Mar 2019 16:52:04 -0300
 
-perf list: Don't forget to drop the reference to the allocated thread_map
+perf tools: Fix errors under optimization level '-Og'
 
-Detected via gcc's ASan:
+Optimization level '-Og' offers a reasonable level of optimization while
+maintaining fast compilation and a good debugging experience. This patch
+tries to make it work.
 
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  $ make DEBUG=1 EXTRA_CFLAGS='-Og'
+  bench/epoll-ctl.c: In function ‘do_threads’:
+  bench/epoll-ctl.c:274:9: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    return ret;
+           ^~~
+  ...
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -92,22 +88,64 @@ Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-4-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/libbpf.c                  | 2 +-
+ tools/perf/bench/epoll-ctl.c            | 2 +-
+ tools/perf/bench/epoll-wait.c           | 2 +-
+ tools/perf/tests/backward-ring-buffer.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4dcc01b2532c..2e9035c4c252 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2271,6 +2271,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index f5eb60379c8d..4884557aa17f 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -622,7 +622,7 @@ bpf_object__init_maps(struct bpf_object *obj, int flags)
+ 	bool strict = !(flags & MAPS_RELAX_COMPAT);
+ 	int i, map_idx, map_def_sz, nr_maps = 0;
+ 	Elf_Scn *scn;
+-	Elf_Data *data;
++	Elf_Data *data = NULL;
+ 	Elf_Data *symbols = obj->efile.symbols;
  
-+	thread_map__put(tmap);
- 	return ret;
- }
+ 	if (obj->efile.maps_shndx < 0)
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index 0c0a6e824934..2af067859966 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -224,7 +224,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret;
++	int ret = 0;
  
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 5a11534e96a0..fe85448abd45 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -293,7 +293,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret, events = EPOLLIN;
++	int ret = 0, events = EPOLLIN;
+ 
+ 	if (oneshot)
+ 		events |= EPOLLONESHOT;
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 6d598cc071ae..1a9c3becf5ff 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -18,7 +18,7 @@ static void testcase(void)
+ 	int i;
+ 
+ 	for (i = 0; i < NR_ITERS; i++) {
+-		char proc_name[10];
++		char proc_name[15];
+ 
+ 		snprintf(proc_name, sizeof(proc_name), "p:%d\n", i);
+ 		prctl(PR_SET_NAME, proc_name);
