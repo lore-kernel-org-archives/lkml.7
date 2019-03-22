@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAC3C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BF921900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB45321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfCVQks (ORCPT
+        id S1728104AbfCVQjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:40:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60745 "EHLO mga18.intel.com"
+        Fri, 22 Mar 2019 12:39:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbfCVQjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:39:43 -0400
+        id S1727868AbfCVQjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:36 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:42 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="144356639"
+   d="scan'208";a="144356618"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:42 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:35 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 17/23] perf/x86/intel: Export new top down events for Icelake
-Date:   Fri, 22 Mar 2019 09:37:12 -0700
-Message-Id: <20190322163718.2191-18-kan.liang@linux.intel.com>
+Subject: [PATCH V3 08/23] perf/x86/intel/cstate: Add Icelake support
+Date:   Fri, 22 Mar 2019 09:37:03 -0700
+Message-Id: <20190322163718.2191-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
 References: <20190322163718.2191-1-kan.liang@linux.intel.com>
@@ -45,51 +45,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Export new top down events for perf that map to the sub metrics
-in the metrics register, and another for the new slots fixed counter.
-This makes the new fixed counters in Icelake visible to the perf
-user tools.
+Icelake uses the same C-state residency events as Sandy Bridge.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V2.
 
- arch/x86/events/intel/core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/events/intel/cstate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 31e4e283e7c5..b08e361fc718 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -320,6 +320,12 @@ EVENT_ATTR_STR_HT(topdown-recovery-bubbles, td_recovery_bubbles,
- EVENT_ATTR_STR_HT(topdown-recovery-bubbles.scale, td_recovery_bubbles_scale,
- 	"4", "2");
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 94a4b7fc75d0..dd5658ec31d5 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -578,6 +578,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
  
-+EVENT_ATTR_STR(slots,			slots,		"event=0x00,umask=0x4");
-+EVENT_ATTR_STR(topdown-retiring,	td_retiring,	"event=0xff,umask=0x1");
-+EVENT_ATTR_STR(topdown-bad-spec,	td_bad_spec,	"event=0xff,umask=0x2");
-+EVENT_ATTR_STR(topdown-fe-bound,	td_fe_bound,	"event=0xff,umask=0x3");
-+EVENT_ATTR_STR(topdown-be-bound,	td_be_bound,	"event=0xff,umask=0x4");
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
 +
- static struct attribute *snb_events_attrs[] = {
- 	EVENT_PTR(td_slots_issued),
- 	EVENT_PTR(td_slots_retired),
-@@ -4383,6 +4389,11 @@ EVENT_ATTR_STR(el-capacity-write, el_capacity_write, "event=0x54,umask=0x2");
- static struct attribute *icl_events_attrs[] = {
- 	EVENT_PTR(mem_ld_hsw),
- 	EVENT_PTR(mem_st_hsw),
-+	EVENT_PTR(slots),
-+	EVENT_PTR(td_retiring),
-+	EVENT_PTR(td_bad_spec),
-+	EVENT_PTR(td_fe_bound),
-+	EVENT_PTR(td_be_bound),
- 	NULL,
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+ 	{ },
  };
- 
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
 -- 
 2.17.1
 
