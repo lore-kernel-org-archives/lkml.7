@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC079C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6DA20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0B520830
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256807;
-	bh=/u5KiXdqifZiMuKZEgqySgQgd5x6HMxevslPNM3u8+o=;
+	s=default; t=1553256811;
+	bh=yrDc0+aDK/A9feax3ChG0Rwe48iA+C3zaYEfuB+VXu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwjWNYBsw+hV5teXlc10uzyDJiA5X/+rIWRd9Au0eT32BRdwUNMeNBaZV9RifLS4Q
-	 bCK3HrY720Ogl+77qGPY2R7XKnMqQUnOXu7QM0bKpWuy8VBXb3TfuzHFvl9OZ7Du6I
-	 j+PEMViCdu4BGjCz2LY5XYuoz6upfBRl47phv5P4=
+	b=IIX7KqDNvAtMtW+u9rXtxDEL0Nusxbk0svVxxA8WNyF3934WJIUMxAyfW/LZ5EFkj
+	 +K+MV1vrTDAcn7gPWaTqSPJqDpZUO3qQ4M+7N8IV4s9mmU49jChWySTBpeBHLpp1Gc
+	 tcgXicUu6antMnO42SKz/QcNGkbG+V8djSRql538=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbfCVMN0 (ORCPT
+        id S2389764AbfCVMNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389243AbfCVMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:23 -0400
+        id S2389753AbfCVMN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2E520830;
-        Fri, 22 Mar 2019 12:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF932082C;
+        Fri, 22 Mar 2019 12:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256802;
-        bh=/u5KiXdqifZiMuKZEgqySgQgd5x6HMxevslPNM3u8+o=;
+        s=default; t=1553256805;
+        bh=yrDc0+aDK/A9feax3ChG0Rwe48iA+C3zaYEfuB+VXu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiDI7UFxvLjMi4zzkLT34toVBDPg6bzsWwT+tJMnZyojPrCcBxW+Z/rDcerwLTr6k
-         qte+zn8zKnMLX+Mph7YPxIDY6ddksJK4MdnvM90qv5OrifecgMK7qXJAGJG6wKnKti
-         lEiU83veBt5g2A2AxouKPtRu4gAL9RBDtRUZXEoQ=
+        b=d1g0HPkCUcS9Iy7n0l7db2B4bAAi8C0BshYwrTLm8qthLqSKKEngpSlkl88HOYD9n
+         uGao5zGnHPddH1Nz4bfIh+jcutE1SelJe8WzBRRCn34X3gHsVe4vUDTnTSp+vqNyZD
+         eiffmlp2kdastInDNq3Y6bbKziIBdSawLckeCtEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 041/238] crypto: hash - set CRYPTO_TFM_NEED_KEY if ->setkey() fails
-Date:   Fri, 22 Mar 2019 12:14:20 +0100
-Message-Id: <20190322111300.810560345@linuxfoundation.org>
+Subject: [PATCH 5.0 042/238] crypto: morus - fix handling chunked inputs
+Date:   Fri, 22 Mar 2019 12:14:21 +0100
+Message-Id: <20190322111300.883451700@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,146 +68,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit ba7d7433a0e998c902132bd47330e355a1eaa894 upstream.
+commit d644f1c8746ed24f81075480f9e9cb3777ae8d65 upstream.
 
-Some algorithms have a ->setkey() method that is not atomic, in the
-sense that setting a key can fail after changes were already made to the
-tfm context.  In this case, if a key was already set the tfm can end up
-in a state that corresponds to neither the old key nor the new key.
+The generic MORUS implementations all fail the improved AEAD tests
+because they produce the wrong result with some data layouts.  The issue
+is that they assume that if the skcipher_walk API gives 'nbytes' not
+aligned to the walksize (a.k.a. walk.stride), then it is the end of the
+data.  In fact, this can happen before the end.  Fix them.
 
-It's not feasible to make all ->setkey() methods atomic, especially ones
-that have to key multiple sub-tfms.  Therefore, make the crypto API set
-CRYPTO_TFM_NEED_KEY if ->setkey() fails and the algorithm requires a
-key, to prevent the tfm from being used until a new key is set.
-
-Note: we can't set CRYPTO_TFM_NEED_KEY for OPTIONAL_KEY algorithms, so
-->setkey() for those must nevertheless be atomic.  That's fine for now
-since only the crc32 and crc32c algorithms set OPTIONAL_KEY, and it's
-not intended that OPTIONAL_KEY be used much.
-
-[Cc stable mainly because when introducing the NEED_KEY flag I changed
- AF_ALG to rely on it; and unlike in-kernel crypto API users, AF_ALG
- previously didn't have this problem.  So these "incompletely keyed"
- states became theoretically accessible via AF_ALG -- though, the
- opportunities for causing real mischief seem pretty limited.]
-
-Fixes: 9fa68f620041 ("crypto: hash - prevent using keyed hashes without setting key")
-Cc: stable@vger.kernel.org
+Fixes: 396be41f16fd ("crypto: morus - Add generic MORUS AEAD implementations")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/ahash.c |   28 +++++++++++++++++++---------
- crypto/shash.c |   18 +++++++++++++-----
- 2 files changed, 32 insertions(+), 14 deletions(-)
+ crypto/morus1280.c |   13 +++++++------
+ crypto/morus640.c  |   13 +++++++------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -190,6 +190,21 @@ static int ahash_setkey_unaligned(struct
- 	return ret;
- }
- 
-+static int ahash_nosetkey(struct crypto_ahash *tfm, const u8 *key,
-+			  unsigned int keylen)
-+{
-+	return -ENOSYS;
-+}
-+
-+static void ahash_set_needkey(struct crypto_ahash *tfm)
-+{
-+	const struct hash_alg_common *alg = crypto_hash_alg_common(tfm);
-+
-+	if (tfm->setkey != ahash_nosetkey &&
-+	    !(alg->base.cra_flags & CRYPTO_ALG_OPTIONAL_KEY))
-+		crypto_ahash_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
-+}
-+
- int crypto_ahash_setkey(struct crypto_ahash *tfm, const u8 *key,
- 			unsigned int keylen)
+--- a/crypto/morus1280.c
++++ b/crypto/morus1280.c
+@@ -366,18 +366,19 @@ static void crypto_morus1280_process_cry
+ 					   const struct morus1280_ops *ops)
  {
-@@ -201,20 +216,16 @@ int crypto_ahash_setkey(struct crypto_ah
- 	else
- 		err = tfm->setkey(tfm, key, keylen);
+ 	struct skcipher_walk walk;
+-	u8 *dst;
+-	const u8 *src;
  
--	if (err)
-+	if (unlikely(err)) {
-+		ahash_set_needkey(tfm);
- 		return err;
-+	}
+ 	ops->skcipher_walk_init(&walk, req, false);
  
- 	crypto_ahash_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(crypto_ahash_setkey);
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
++		unsigned int nbytes = walk.nbytes;
  
--static int ahash_nosetkey(struct crypto_ahash *tfm, const u8 *key,
--			  unsigned int keylen)
--{
--	return -ENOSYS;
--}
--
- static inline unsigned int ahash_align_buffer_size(unsigned len,
- 						   unsigned long mask)
- {
-@@ -489,8 +500,7 @@ static int crypto_ahash_init_tfm(struct
+-		ops->crypt_chunk(state, dst, src, walk.nbytes);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
  
- 	if (alg->setkey) {
- 		hash->setkey = alg->setkey;
--		if (!(alg->halg.base.cra_flags & CRYPTO_ALG_OPTIONAL_KEY))
--			crypto_ahash_set_flags(hash, CRYPTO_TFM_NEED_KEY);
-+		ahash_set_needkey(hash);
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
  	}
- 
- 	return 0;
---- a/crypto/shash.c
-+++ b/crypto/shash.c
-@@ -53,6 +53,13 @@ static int shash_setkey_unaligned(struct
- 	return err;
  }
  
-+static void shash_set_needkey(struct crypto_shash *tfm, struct shash_alg *alg)
-+{
-+	if (crypto_shash_alg_has_setkey(alg) &&
-+	    !(alg->base.cra_flags & CRYPTO_ALG_OPTIONAL_KEY))
-+		crypto_shash_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
-+}
-+
- int crypto_shash_setkey(struct crypto_shash *tfm, const u8 *key,
- 			unsigned int keylen)
+--- a/crypto/morus640.c
++++ b/crypto/morus640.c
+@@ -365,18 +365,19 @@ static void crypto_morus640_process_cryp
+ 					  const struct morus640_ops *ops)
  {
-@@ -65,8 +72,10 @@ int crypto_shash_setkey(struct crypto_sh
- 	else
- 		err = shash->setkey(tfm, key, keylen);
+ 	struct skcipher_walk walk;
+-	u8 *dst;
+-	const u8 *src;
  
--	if (err)
-+	if (unlikely(err)) {
-+		shash_set_needkey(tfm, shash);
- 		return err;
-+	}
+ 	ops->skcipher_walk_init(&walk, req, false);
  
- 	crypto_shash_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -373,7 +382,8 @@ int crypto_init_shash_ops_async(struct c
- 	crt->final = shash_async_final;
- 	crt->finup = shash_async_finup;
- 	crt->digest = shash_async_digest;
--	crt->setkey = shash_async_setkey;
-+	if (crypto_shash_alg_has_setkey(alg))
-+		crt->setkey = shash_async_setkey;
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
++		unsigned int nbytes = walk.nbytes;
  
- 	crypto_ahash_set_flags(crt, crypto_shash_get_flags(shash) &
- 				    CRYPTO_TFM_NEED_KEY);
-@@ -395,9 +405,7 @@ static int crypto_shash_init_tfm(struct
+-		ops->crypt_chunk(state, dst, src, walk.nbytes);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
  
- 	hash->descsize = alg->descsize;
- 
--	if (crypto_shash_alg_has_setkey(alg) &&
--	    !(alg->base.cra_flags & CRYPTO_ALG_OPTIONAL_KEY))
--		crypto_shash_set_flags(hash, CRYPTO_TFM_NEED_KEY);
-+	shash_set_needkey(hash, alg);
- 
- 	return 0;
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
  }
+ 
 
 
