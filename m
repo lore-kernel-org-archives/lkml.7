@@ -2,52 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863D62082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0752183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254634;
-	bh=uJI99Q1i7nnGDLcP+cFhBQEvjxsTXCgOLRD5jtpGgm0=;
+	s=default; t=1553254639;
+	bh=sEGjuQu9ZoaA4tJ66QbGq59EYvJJJ+QvRIK+gvJT+cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOxDeJbttGa62+dAsQ0NRla5lToE312JWBcsVsoF1bcK3EfJsu5l1ra5j4D/acqWW
-	 vdJDqrexfroBoLTjJYjn8ELFsRCHS2m0dH2nMwqfKs3U54/bsQuPc83OHNQg4hFGmI
-	 3UnYDuYrHKKj5T39s4CZwv45Kw4XYdf2PRoY4Cbw=
+	b=vYEF9jTeQCpIjzwXFmlSyaj542gthEpezNfHtNFiQbLJ3XYqYrYdDPn3O/jnkl1K8
+	 8GjMXcXXRN3bcfw+xyH9S7Dn0rpXnXYUb/J3tOBkOs/hBFg4vNoRLinRTNs1MRCiMy
+	 j5bwHSZ8e7svhwemErkbptDc8hVt2f6Z0A+AIhEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbfCVLhM (ORCPT
+        id S1730481AbfCVLhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730803AbfCVLhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:09 -0400
+        id S1730586AbfCVLhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E392183E;
-        Fri, 22 Mar 2019 11:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0DA21929;
+        Fri, 22 Mar 2019 11:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254628;
-        bh=uJI99Q1i7nnGDLcP+cFhBQEvjxsTXCgOLRD5jtpGgm0=;
+        s=default; t=1553254631;
+        bh=sEGjuQu9ZoaA4tJ66QbGq59EYvJJJ+QvRIK+gvJT+cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrkRdo9IaVnnIASCOry7tn0TkBFK7SGd0jM7i1llpT6glQ7nUh11iiDMpWj8/XRnb
-         23srJh+PNWh4raQ71W9D7sv4MV5ONXWeD5n0Cso92kdGNLC4W3SuZd/b3lqVs7OpUt
-         zpQdFi29XYvg02ruPnqNHdPq6o9Ebk7S4Vo4F6bU=
+        b=U5u4Nsumh3CfNLImjrCpgM5InA+8fI2jwtFOJ4z6a9gHcneBCGkHROMbEaLeoGoK+
+         0PzY3ISuq8HGm+ytXdJ3Jb1bdzrknKP+ZNV97aPhscoTG+9asYaJ8OfZEgLKsYn5C4
+         TOQ+UxdLrfvD7OtLPzj2/vTRVx5eCD/G54D5zcXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 178/230] crypto: arm64/aes-ccm - fix logical bug in AAD MAC handling
-Date:   Fri, 22 Mar 2019 12:15:16 +0100
-Message-Id: <20190322111249.233460922@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 169/230] ASoC: topology: free created components in tplg load error
+Date:   Fri, 22 Mar 2019 12:15:07 +0100
+Message-Id: <20190322111248.614849030@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,47 +67,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
 
-commit eaf46edf6ea89675bd36245369c8de5063a0272c upstream.
+Topology resources are no longer needed if any element failed to load.
 
-The NEON MAC calculation routine fails to handle the case correctly
-where there is some data in the buffer, and the input fills it up
-exactly. In this case, we enter the loop at the end with w8 == 0,
-while a negative value is assumed, and so the loop carries on until
-the increment of the 32-bit counter wraps around, which is quite
-obviously wrong.
-
-So omit the loop altogether in this case, and exit right away.
-
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: a3fd82105b9d1 ("arm64/crypto: AES in CCM mode using ARMv8 Crypto ...")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/crypto/aes-ce-ccm-core.S |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/crypto/aes-ce-ccm-core.S
-+++ b/arch/arm64/crypto/aes-ce-ccm-core.S
-@@ -74,12 +74,13 @@ ENTRY(ce_aes_ccm_auth_data)
- 	beq	10f
- 	ext	v0.16b, v0.16b, v0.16b, #1	/* rotate out the mac bytes */
- 	b	7b
--8:	mov	w7, w8
-+8:	cbz	w8, 91f
-+	mov	w7, w8
- 	add	w8, w8, #16
- 9:	ext	v1.16b, v1.16b, v1.16b, #1
- 	adds	w7, w7, #1
- 	bne	9b
--	eor	v0.16b, v0.16b, v1.16b
-+91:	eor	v0.16b, v0.16b, v1.16b
- 	st1	{v0.16b}, [x0]
- 10:	str	w8, [x3]
- 	ret
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index c1e76feb3529..824f4d7fc41f 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1770,6 +1770,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+ {
+ 	struct soc_tplg tplg;
++	int ret;
+ 
+ 	/* setup parsing context */
+ 	memset(&tplg, 0, sizeof(tplg));
+@@ -1783,7 +1784,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
+ 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 
+-	return soc_tplg_load(&tplg);
++	ret = soc_tplg_load(&tplg);
++	/* free the created components if fail to load topology */
++	if (ret)
++		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
+ 
+-- 
+2.19.1
+
 
 
