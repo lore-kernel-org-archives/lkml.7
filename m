@@ -2,99 +2,71 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB8C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E8DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B075720693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259874;
-	bh=Kiauwo8Efvq+a56SRIgINaotnOd+wT0fTMAvkMQRBr0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxZh4hwsfIhEbS+ikdahVTqTjcWPDEqIpJajxL1wwv3HavAUxPLfAtjCwfBoN4LkE
-	 N+det/l3EKFEYF/CEqBcuMmgvs1MH5cEP7eN+Og21FncC+LOKnxMpvSvBP8D3rHQd8
-	 7AcQYbhPLkCX850YSJqEBoYGTxfiLZsjBAsYriXE=
+	by mail.kernel.org (Postfix) with ESMTP id 2EFDE20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfCVLj2 (ORCPT
+        id S1731444AbfCVNEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731131AbfCVLjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A0121916;
-        Fri, 22 Mar 2019 11:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254764;
-        bh=Kiauwo8Efvq+a56SRIgINaotnOd+wT0fTMAvkMQRBr0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWBFy60Ed17ys3TZ9mu6DJv4dm/SkFMIvlqy55CQYbhE2E+dOnaLSE/dEJ3L5KOYy
-         66eOFBE1LnsJ3Mn7K4fxuXE3VUIYmKnbGEmICuVT5GoAGCK9OHUzxyxRuFYmAP8pvu
-         OUtaGf9DV1wxWyHCSSKlUl3KmrziCAuo/Dlpwvo0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        Fri, 22 Mar 2019 09:04:38 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:49502 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730587AbfCVNEg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:04:36 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h7JqM-0006GC-LZ; Fri, 22 Mar 2019 21:04:18 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h7JqK-0005eV-88; Fri, 22 Mar 2019 21:04:16 +0800
+Date:   Fri, 22 Mar 2019 21:04:16 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.4 227/230] drm/radeon/evergreen_cs: fix missing break in switch statement
-Date:   Fri, 22 Mar 2019 12:16:05 +0100
-Message-Id: <20190322111252.892604406@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-References: <20190322111236.796964179@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: ccree - reduce kernel stack usage with clang
+Message-ID: <20190322130416.qxpznh6d3z6yhppx@gondor.apana.org.au>
+References: <20190314090951.840339-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314090951.840339-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Mar 14, 2019 at 10:09:44AM +0100, Arnd Bergmann wrote:
+> Building with clang for a 32-bit architecture runs over the stack
+> frame limit in the setkey function:
+> 
+> drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=]
+> 
+> The problem is that there are two large variables: the temporary
+> 'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
+> the first into the block in which it is used reduces the
+> total frame size to 768 bytes, which seems more reasonable
+> and is under the warning limit.
+> 
+> Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/crypto/ccree/cc_cipher.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-------------------
-
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-commit cc5034a5d293dd620484d1d836aa16c6764a1c8c upstream.
-
-Add missing break statement in order to prevent the code from falling
-through to case CB_TARGET_MASK.
-
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/radeon/evergreen_cs.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/gpu/drm/radeon/evergreen_cs.c
-+++ b/drivers/gpu/drm/radeon/evergreen_cs.c
-@@ -1299,6 +1299,7 @@ static int evergreen_cs_handle_reg(struc
- 			return -EINVAL;
- 		}
- 		ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
-+		break;
- 	case CB_TARGET_MASK:
- 		track->cb_target_mask = radeon_get_ib_value(p, idx);
- 		track->cb_dirty = true;
-
-
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
