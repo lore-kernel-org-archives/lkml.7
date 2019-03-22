@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03220C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C6AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970DA2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549B321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6hf30br"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pva7vkP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfCVD3S (ORCPT
+        id S1727647AbfCVD3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:29:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43798 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfCVD3Q (ORCPT
+        Thu, 21 Mar 2019 23:29:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38201 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbfCVD3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:29:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l11so484845pgq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 20:29:15 -0700 (PDT)
+        Thu, 21 Mar 2019 23:29:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 10so535753pfo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 20:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JPSVcf+dfvV2lEaXqE0Y3BqqEMdwT4aIXnO4VFTAii4=;
-        b=Y6hf30brOL+wOWTz7vL8GCUFl8DNj6a8LAREJ/5QHZMMjy3qeQDGjarGn8XZiGxIad
-         CCBvgA4fsFGLLPf8sRpmVbZ1HeU6I7fbTGWJV7WzRbYBggwecEWd66GQe+iJnNTRIDXT
-         f60eqBiIsw3j5PwEazlePVcNWA1H3CytBIcIwn2oAAkK28kkbQFFWsDsWEnyakRjIo/G
-         skHiJrJ8uOtqLsEkfEvlMlAJowApzvE4CZKQiXpOQKMeJjoKn1qXPI7PLsiZPfwaZEVg
-         ehmuirYb7IZCpwd60ZEuy6k5GZKO9uuOmGx9uqdZlKvV9H7Vcm4jb95g2AS9ov1TDLs7
-         BOLg==
+        bh=mDOxiUU7Ui5Bt+r0LjeQZZzpwc0N9T5pZP48PklvOT0=;
+        b=pva7vkP2bOWbxgia9upiIVTREtJhkJ97LTEOKexjCguUZUlWsRU9+OfJ+eKopsIqpC
+         YVFFM4/OdWK1R/mnDJ4lUjd7EcjsKAVA/CraC1QhPn1WVjBTOHX+4+ekZgRMWShuPkg2
+         uM3XpSQ3EwHNxsHB9xByQDQnQSdEIL5DTwKlcqFklbg9Y72HMPYgz/ZIzChtbC+A1xJv
+         HCLRxUU5e75FXyiifLGI6rtuqoaua1nyVst7wCjOdU7/IAtOmIcEMunRGBH6zMfOV0VJ
+         TqfbMUHZtMXYLiPuTdaUlCyA42bHz58dcqKghBieYw06/4D2udew1TsjIj1rxvGUbqQl
+         nRpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JPSVcf+dfvV2lEaXqE0Y3BqqEMdwT4aIXnO4VFTAii4=;
-        b=pTUN3mlHjV8M6SwgL9NtMeUjto/nM/9ehffrQzrKhIEDLIZfBxQFRyVs5B6yW2upjz
-         /YYOHTBNWSh8RPnyfI3s1CKT08h7Xk1h55IOxXMOdqBVGjF59zyu5CcCYtwU+W6ZgI60
-         FtjH7yAbKM25UZ5fTc67dyWav9sHFu8BkgaJbsuaxKA9/pPZuXJQdqDn/WMnhRsyT0dJ
-         bPjP7ya5tqaoHPOD+LwKxiBGKD0Lg8FVNLAynCa/9fZ8WQOR7IhPCDlfpXPbRkMLOt81
-         OGZFt9jnVFPo2JVtpqjHb1awXl1b41MX+/9+XbsP29q3gjJDUptlzkiX+ceAhZ9ccmcV
-         YHkQ==
-X-Gm-Message-State: APjAAAUjdNkBFpOCJMCI1UobxWmMUGHqsjbzH09HsQSZ3OoLsNqXM8fe
-        also86PAGDipyVLVAFeWIPI=
-X-Google-Smtp-Source: APXvYqzX50NhTPanZDDio+q1H5JolPCSOsSvXxaGUxsYqZA9UE9Q3XxlDQyM0IjwZN2iX5KguKFP2Q==
-X-Received: by 2002:a63:d5f:: with SMTP id 31mr6691138pgn.274.1553225355378;
-        Thu, 21 Mar 2019 20:29:15 -0700 (PDT)
+        bh=mDOxiUU7Ui5Bt+r0LjeQZZzpwc0N9T5pZP48PklvOT0=;
+        b=H/VDLMBvBEc26wDB8OYNMp9KinTdY1tQuFV/0IGp+xI7o6gm5IvLMqFGQRFkni8xjc
+         /oalwYzw0DlgajfhW6jOei3yjiooNSjswZ8PIzTCBzOhmArwVBprne2uNr5tTlfyT2Cr
+         P/tnUL3KmV7f6oKTaY+mG/nDbfbPbc6m/bGYzrUn9IaTiOGe4m7RXvNBZAXuhqUCgyQw
+         3BBNHOJF1eU44UnMwgsR82VQ5AJQJYKRFhXbjW40cAgqLG/dFFt1AMOQXrNKgXloRFx4
+         hiJazhwK6CqBUTtxwdcgtJJ9t5Uzop3cEHMdcKrGoZascQKpkuO412kBZtmPYZXuHKON
+         1wSA==
+X-Gm-Message-State: APjAAAUkEclRLxSiZumL4562SMarux2cWo7Qoferb99is/b9ZEGykzHj
+        pkNNcRS4BlRFoh2AiYpNRVQ=
+X-Google-Smtp-Source: APXvYqyDtc5hFWLx/HszbpiuOqlpwIURC5gUb2JrbG2ytBoasR5PXr8wzLCbEYD3DmGtmfhK9QhhDw==
+X-Received: by 2002:a65:614a:: with SMTP id o10mr6780292pgv.51.1553225356934;
+        Thu, 21 Mar 2019 20:29:16 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id o76sm16154476pfa.156.2019.03.21.20.29.14
+        by smtp.gmail.com with ESMTPSA id o76sm16154476pfa.156.2019.03.21.20.29.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Mar 2019 20:29:14 -0700 (PDT)
+        Thu, 21 Mar 2019 20:29:16 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
@@ -70,9 +69,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/15] drm/bridge: tc358767: Simplify tc_poll_timeout()
-Date:   Thu, 21 Mar 2019 20:28:47 -0700
-Message-Id: <20190322032901.12045-2-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 02/15] drm/bridge: tc358767: Simplify polling in tc_main_link_setup()
+Date:   Thu, 21 Mar 2019 20:28:48 -0700
+Message-Id: <20190322032901.12045-3-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322032901.12045-1-andrew.smirnov@gmail.com>
 References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
@@ -83,15 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implementation of tc_poll_timeout() is almost a 100% copy-and-paste of
-the code for regmap_read_poll_timeout(). Replace copied code with a
-call to the original. While at it change tc_poll_timeout to accept
-"struct tc_data *" instead of "struct regmap *" for brevity. No
-functional change intended.
+Replace explicit polling loop with equivalent call to
+tc_poll_timeout() for brevity. No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Archit Taneja <architt@codeaurora.org>
 Cc: Andrzej Hajda <a.hajda@samsung.com>
 Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
@@ -103,63 +97,42 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 26 ++++++--------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 51095ab1e996..89a4392dfa35 100644
+index 89a4392dfa35..2531f4dadbf8 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -250,34 +250,21 @@ static inline struct tc_data *connector_to_tc(struct drm_connector *c)
- 			goto err;				\
- 	} while (0)
+@@ -761,7 +761,6 @@ static int tc_main_link_enable(struct tc_data *tc)
+ 	struct device *dev = tc->dev;
+ 	unsigned int rate;
+ 	u32 dp_phy_ctrl;
+-	int timeout;
+ 	u32 value;
+ 	int ret;
+ 	u8 tmp[8];
+@@ -817,15 +816,11 @@ static int tc_main_link_enable(struct tc_data *tc)
+ 	dp_phy_ctrl &= ~(DP_PHY_RST | PHY_M1_RST | PHY_M0_RST);
+ 	tc_write(DP_PHY_CTRL, dp_phy_ctrl);
  
--static inline int tc_poll_timeout(struct regmap *map, unsigned int addr,
-+static inline int tc_poll_timeout(struct tc_data *tc, unsigned int addr,
- 				  unsigned int cond_mask,
- 				  unsigned int cond_value,
- 				  unsigned long sleep_us, u64 timeout_us)
- {
--	ktime_t timeout = ktime_add_us(ktime_get(), timeout_us);
- 	unsigned int val;
--	int ret;
- 
--	for (;;) {
--		ret = regmap_read(map, addr, &val);
--		if (ret)
--			break;
--		if ((val & cond_mask) == cond_value)
--			break;
--		if (timeout_us && ktime_compare(ktime_get(), timeout) > 0) {
--			ret = regmap_read(map, addr, &val);
--			break;
--		}
--		if (sleep_us)
--			usleep_range((sleep_us >> 2) + 1, sleep_us);
--	}
--	return ret ?: (((val & cond_mask) == cond_value) ? 0 : -ETIMEDOUT);
-+	return regmap_read_poll_timeout(tc->regmap, addr, val,
-+					(val & cond_mask) == cond_value,
-+					sleep_us, timeout_us);
- }
- 
- static int tc_aux_wait_busy(struct tc_data *tc, unsigned int timeout_ms)
- {
--	return tc_poll_timeout(tc->regmap, DP0_AUXSTATUS, AUX_BUSY, 0,
-+	return tc_poll_timeout(tc, DP0_AUXSTATUS, AUX_BUSY, 0,
- 			       1000, 1000 * timeout_ms);
- }
- 
-@@ -584,8 +571,7 @@ static int tc_aux_link_setup(struct tc_data *tc)
- 	tc_write(DP1_PLLCTRL, PLLUPDATE | PLLEN);
- 	tc_wait_pll_lock(tc);
- 
--	ret = tc_poll_timeout(tc->regmap, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1,
--			      1000);
+-	timeout = 1000;
+-	do {
+-		tc_read(DP_PHY_CTRL, &value);
+-		udelay(1);
+-	} while ((!(value & PHY_RDY)) && (--timeout));
+-
+-	if (timeout == 0) {
+-		dev_err(dev, "timeout waiting for phy become ready");
+-		return -ETIMEDOUT;
 +	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
- 	if (ret == -ETIMEDOUT) {
- 		dev_err(tc->dev, "Timeout waiting for PHY to become ready");
- 		return ret;
++	if (ret) {
++		if (ret == -ETIMEDOUT)
++			dev_err(dev, "timeout waiting for phy become ready");
++		return ret;
+ 	}
+ 
+ 	/* Set misc: 8 bits per color */
 -- 
 2.20.1
 
