@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE80EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37649C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3D621929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081B22183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254347;
-	bh=veTG3c79lY6bSLCMYOfl//JIYojEwrR6tMNRVsy8PsI=;
+	s=default; t=1553254351;
+	bh=379sZPl20NLmqizmnvywmBxVB5UjhpOQ58oeLAQCNcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuyD7XZ69YTmQGVrxJ/j75F/Q8lWqJVTmKEhQoEdxB0WuBpWIXHcfOGXnTOTpAcwH
-	 n31xY1ZuwtIq2Q7CWSWlSwREs9Er8h9anZv04rgAmUOgsoldBPQvALgGUD7C2K2jTx
-	 RBrUIU10aPI5mbC/uHRnAJ4KM2WKdpT70EJsPI2U=
+	b=wHwqa2hwEr7FbslB//GqZ2B1A9wObqli16qBVu7UPGP+0gnnlUAIh7jdSEVXcMgsi
+	 NTZrGR7MRZQsrhwP1IXb6HtpDbDYZyeKzuffRjsGP1eS4OE2XWflY15+EVGUMdHBZb
+	 ddJ8XoH13JL6YLWQdIMGRKjsvj2eiStA5D2kkJ3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfCVLc0 (ORCPT
+        id S1730165AbfCVLc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:32:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60690 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:32:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbfCVLcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:32:17 -0400
+        id S1730149AbfCVLcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:32:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2D4720449;
-        Fri, 22 Mar 2019 11:32:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0953121916;
+        Fri, 22 Mar 2019 11:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254337;
-        bh=veTG3c79lY6bSLCMYOfl//JIYojEwrR6tMNRVsy8PsI=;
+        s=default; t=1553254343;
+        bh=379sZPl20NLmqizmnvywmBxVB5UjhpOQ58oeLAQCNcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5P1hY21NcXPvlx9fkBuHrErcb8Jv/xcLwMvZ0qTPcIedKTtXrXyMLxerEI+8MXtp
-         JuJGvQ2BV+JSQVBkZCZXf/OvC1bsoQawUhfHtMQp6KQqJw2COHM/NJP30cUZRRkzU0
-         Ix8qSgT7rS2MLBXDWFzSfi9u68LvIQnrOF+WVZVA=
+        b=kAb0i0Fz00emXVsGYvAduCOJRl0AC6SqjyzeTrwwxPPBBc8gTrP8AtenPX5WhKnqg
+         CEGr/OdA175x8aYQ7I/AmNTcf/N3IHysTjAWCWcxvrcAwVPDruak/TapfEi1GguW2s
+         3jlfG7WLujcCbKq67g5EwV+nMqbdToTShkCdLNsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
+        Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhe@redhat.com,
+        David Howells <dhowells@redhat.com>, erik.schmauss@intel.com,
+        fanc.fnst@cn.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        Philipp Rudo <prudo@linux.vnet.ibm.com>,
+        rafael.j.wysocki@intel.com, robert.moore@intel.com,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 087/230] xtensa: smp_lx200_defconfig: fix vectors clash
-Date:   Fri, 22 Mar 2019 12:13:45 +0100
-Message-Id: <20190322111242.719267469@linuxfoundation.org>
+Subject: [PATCH 4.4 098/230] x86/kexec: Dont setup EFI info if EFI runtime is not enabled
+Date:   Fri, 22 Mar 2019 12:13:56 +0100
+Message-Id: <20190322111243.491677243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,31 +77,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 306b38305c0f86de7f17c5b091a95451dcc93d7d ]
+[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
 
-Secondary CPU reset vector overlaps part of the double exception handler
-code, resulting in weird crashes and hangups when running user code.
-Move exception vectors one page up so that they don't clash with the
-secondary CPU reset vector.
+Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
+line causes the following null pointer dereference:
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  #PF error: [normal kernel read fault]
+  Call Trace:
+   efi_runtime_map_copy+0x28/0x30
+   bzImage64_load+0x688/0x872
+   arch_kexec_kernel_image_load+0x6d/0x70
+   kimage_file_alloc_init+0x13e/0x220
+   __x64_sys_kexec_file_load+0x144/0x290
+   do_syscall_64+0x55/0x1a0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Just skip the EFI info setup if EFI runtime services are not enabled.
+
+ [ bp: Massage commit message. ]
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Dave Young <dyoung@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: bhe@redhat.com
+Cc: David Howells <dhowells@redhat.com>
+Cc: erik.schmauss@intel.com
+Cc: fanc.fnst@cn.fujitsu.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org
+Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: rafael.j.wysocki@intel.com
+Cc: robert.moore@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yannik Sembritzki <yannik@sembritzki.me>
+Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/configs/smp_lx200_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/kexec-bzimage64.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/xtensa/configs/smp_lx200_defconfig b/arch/xtensa/configs/smp_lx200_defconfig
-index 22eeacba37cc..199e05f85e89 100644
---- a/arch/xtensa/configs/smp_lx200_defconfig
-+++ b/arch/xtensa/configs/smp_lx200_defconfig
-@@ -35,6 +35,7 @@ CONFIG_SMP=y
- CONFIG_HOTPLUG_CPU=y
- # CONFIG_INITIALIZE_XTENSA_MMU_INSIDE_VMLINUX is not set
- # CONFIG_PCI is not set
-+CONFIG_VECTORS_OFFSET=0x00002000
- CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon=uart8250,mmio32,0xfd050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug"
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 0f8a6bbaaa44..0bf17576dd2a 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -168,6 +168,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ 	struct efi_info *current_ei = &boot_params.efi_info;
+ 	struct efi_info *ei = &params->efi_info;
+ 
++	if (!efi_enabled(EFI_RUNTIME_SERVICES))
++		return 0;
++
+ 	if (!current_ei->efi_memmap_size)
+ 		return 0;
+ 
 -- 
 2.19.1
 
