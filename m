@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E979C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE1BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057E8206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9A12082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256371;
-	bh=EcaoYsmo0Lk9K3Kx6Xmj/CqTyIb+OlgpxwXJABRVifw=;
+	s=default; t=1553256373;
+	bh=2lNWOdiUFCHN0LFSYgH4Yldz4nscNDxzyHxtwBn1dRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zn7KkH4X4E51EhQ512WCOSiz/jD03DnxIaMy0lLc+36gnvPBr4eakiy73EdM0os5/
-	 X9c5+q1ZNMCHGeHePt0Um4CMsrVUCHNbvw9Heo8e5Odk9PIpFtlmk7koqkSl8vo/sD
-	 ji150FEp9D3rgT38KhaqY4I4H6HdsyvhvoI1zFuE=
+	b=WUnp1/ODQmSCOP/fQ3LEp0uWCzRO9hd8Zj5DEBfWTR+/V45TSnlIS9aDk7JxXghpQ
+	 fykFkrzQ+FGoDDPCUwN+nZIXUZVrGk2djgSPr8U0LTgSYaANO4yiMobPCf3zYQcMlG
+	 IqZoqCzXyKOPH5Khs/4L64IQHoI02skMdo4y1PvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388894AbfCVMGK (ORCPT
+        id S2388905AbfCVMGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44554 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388096AbfCVMGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:05 -0400
+        id S2388888AbfCVMGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95803206C0;
-        Fri, 22 Mar 2019 12:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903BB206C0;
+        Fri, 22 Mar 2019 12:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256365;
-        bh=EcaoYsmo0Lk9K3Kx6Xmj/CqTyIb+OlgpxwXJABRVifw=;
+        s=default; t=1553256369;
+        bh=2lNWOdiUFCHN0LFSYgH4Yldz4nscNDxzyHxtwBn1dRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F36xHZXJFmOQos1DE84lSatMilwD4Ig/01E+tam3T5eC3bFEnpvkc8MAG2qMUISne
-         EGpf00HmZUv/WMyTYA/wbDj0rBIyW2DKRGsGc0DYMS+Ap2ti39E26+ksUjjvi/Pn5Q
-         cxYHxhODMemwLiBFRZttjO3cCT0QTDc2ySCosSVk=
+        b=MmjRRX7IStZ4+pvC6UmRMV5hHTdt1xNKMUqQtQYG+lu1H7juTQLBcX9lmQMQr1pTv
+         aTAHWX3CDLpi+3paQTtyC+ypjKXo5t91nOrgO3GX2sdNDIFQPMonb9baaOoOhVC2Tv
+         o8V0Q8cY36oHyZzPiq188I+X4J5i1DOT8T8L2BNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 4.19 167/280] m68k: Add -ffreestanding to CFLAGS
-Date:   Fri, 22 Mar 2019 12:15:20 +0100
-Message-Id: <20190322111323.730143530@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 168/280] Btrfs: setup a nofs context for memory allocation at btrfs_create_tree()
+Date:   Fri, 22 Mar 2019 12:15:21 +0100
+Message-Id: <20190322111323.923063772@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,55 +66,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
+commit b89f6d1fcb30a8cbdc18ce00c7d93792076af453 upstream.
 
-This patch fixes a build failure when using GCC 8.1:
+We are holding a transaction handle when creating a tree, therefore we can
+not allocate the root using GFP_KERNEL, as we could deadlock if reclaim is
+triggered by the allocation, therefore setup a nofs context.
 
-/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
-block/partitions/ldm.c:153: undefined reference to `strcmp'
-
-This is caused by a new optimization which effectively replaces a
-strncmp() call with a strcmp() call. This affects a number of strncmp()
-call sites in the kernel.
-
-The entire class of optimizations is avoided with -fno-builtin, which
-gets enabled by -ffreestanding. This may avoid possible future build
-failures in case new optimizations appear in future compilers.
-
-I haven't done any performance measurements with this patch but I did
-count the function calls in a defconfig build. For example, there are now
-23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
-other libc functions is smaller.
-
-If this harms performance we can tackle that regression by optimizing
-the call sites, ideally using semantic patches. That way, clang and ICC
-builds might benfit too.
-
-Cc: stable@vger.kernel.org
-Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: 74e4d82757f74 ("btrfs: let callers of btrfs_alloc_root pass gfp flags")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/m68k/Makefile |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/m68k/Makefile
-+++ b/arch/m68k/Makefile
-@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
- cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -17,6 +17,7 @@
+ #include <linux/semaphore.h>
+ #include <linux/error-injection.h>
+ #include <linux/crc32c.h>
++#include <linux/sched/mm.h>
+ #include <asm/unaligned.h>
+ #include "ctree.h"
+ #include "disk-io.h"
+@@ -1236,10 +1237,17 @@ struct btrfs_root *btrfs_create_tree(str
+ 	struct btrfs_root *tree_root = fs_info->tree_root;
+ 	struct btrfs_root *root;
+ 	struct btrfs_key key;
++	unsigned int nofs_flag;
+ 	int ret = 0;
+ 	uuid_le uuid = NULL_UUID_LE;
  
- KBUILD_AFLAGS += $(cpuflags-y)
--KBUILD_CFLAGS += $(cpuflags-y) -pipe
-+KBUILD_CFLAGS += $(cpuflags-y)
-+
-+KBUILD_CFLAGS += -pipe -ffreestanding
-+
- ifdef CONFIG_MMU
- # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
- KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
++	/*
++	 * We're holding a transaction handle, so use a NOFS memory allocation
++	 * context to avoid deadlock if reclaim happens.
++	 */
++	nofs_flag = memalloc_nofs_save();
+ 	root = btrfs_alloc_root(fs_info, GFP_KERNEL);
++	memalloc_nofs_restore(nofs_flag);
+ 	if (!root)
+ 		return ERR_PTR(-ENOMEM);
+ 
 
 
