@@ -2,71 +2,72 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E4EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793FC21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B1221904
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwSBWS1E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dosrz1Ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfCVHnq (ORCPT
+        id S1727691AbfCVHnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:43:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38316 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfCVHnp (ORCPT
+        Fri, 22 Mar 2019 03:43:49 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54109 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCVHnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:43:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g12so1192542wrm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:43:44 -0700 (PDT)
+        Fri, 22 Mar 2019 03:43:47 -0400
+Received: by mail-it1-f196.google.com with SMTP id w85so2218692itc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=VvhmhUaJBmKBUIKN16Nd55bRItuZiV9os2uR8iZYzf8=;
-        b=EwSBWS1ErC4Tyg+4EfcEXpNZTPgVpWMVCXDN90wxFIcYUUsCYbPztpTTPUQehT4i9W
-         oMh5Hoez9oA/47jxFTjSwB40M3i/D0B+3H/uhDEjJD1l02BpxpLDP+LzJfWcRUOjh78w
-         KpuNbOXdtYc3PqxK95IgEZSBsnbM2yoPWoJZSuztSLpD6K74Kju7diqVZMIlIPGyIHBT
-         kjXOg2ti3OpJr8EdVmqLv1tgpZnP9hGH6kRmjU08t0YFR3w8fTsrUeZqlR1maYhWHwBf
-         lgXDZ0nVRMh+8K+KCnFEQcvcES9e+QCdRnc9gQEhFxQqJidY8lN2VCrxWhlGKq70Qj1h
-         0svw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1LJcxQiBxVwiPD/78aWDVPhv4zia0X6OwrfoJ2C57Ig=;
+        b=Dosrz1Kyr+wp4IPD3C52twTiKvDkttURLJyLSwV4HCR4gST2aLzZPrY3fD2qhiZRrn
+         c4KkHRfc8p3PRsxaoDWHGd+joZT3Ppizx2Ejw92ao7BBUTR3cjUBkeLvgfdt4uIDqDAG
+         1voNNiEOpC8ekRrne1CcP5ZZVXjow/vkxIWMlkkE1dLipbViY/2DscbPXf7x5AtkDmCF
+         2tEWvQdfqSZ0lKCyvSmsi+IalhVNqgv8yP00wgo6C6t5MG5mySpW9NXVAyrn2Q1plwGv
+         OLC47812RnJeOgf9FrODw251F6YSU4gsCfjNFgXFdrSDyrG5ma8wPQr+oqJyNTfq9EVM
+         W49A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=VvhmhUaJBmKBUIKN16Nd55bRItuZiV9os2uR8iZYzf8=;
-        b=mTFmFWiA9kPoC3LK/heNyVB8FjLV8CnGb0NgIn2m1Tqbs3d4qf3zf4MelYpv+Zeu4+
-         fh6p0OZHQfU4iL85FyUME5OuG0PtC+cRZoIMqZ9FDdxbCUIcI9B3zIzu0Jv8omsp0hzN
-         g7y2eh+TOjB7xS7Bpx4uFa5LQZxRIud9BYBGqBlkwMFAlPDZjc5YJ/6pLn/W67E8i73O
-         HvkdYvwfkZVmDRM3rVDJBxdHYb6elJSjdv0lUPHhce9bGbLmqurT2vPm55ge6M3DAr4K
-         L02afOPYlEULsi0xp/ge1E85SpLCIu3eDs7tZrWEaok+GMxLo0H4cRJKpnOKy5QWMC9N
-         zsDg==
-X-Gm-Message-State: APjAAAUQIi7vMO75X3N58JslkdLaGpa07RIMuHxYlmAsTDrv9ZW8WLkb
-        t0eWaPZhB1BzmVpmcjQcLnrHc9j7JvuiSEfjzmo=
-X-Google-Smtp-Source: APXvYqyl8Tx0BOLMocCe316eDsLgKYTExCQVCQE6/evO9LFHree9SfE7koN1N8dQRubjK7FirzWm5Sm8HcZ5pEDj6dc=
-X-Received: by 2002:a5d:48ca:: with SMTP id p10mr5651263wrs.141.1553240623508;
- Fri, 22 Mar 2019 00:43:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1LJcxQiBxVwiPD/78aWDVPhv4zia0X6OwrfoJ2C57Ig=;
+        b=W9Fwvam5BXwT8PTIY1c4/runNGnaXJnmut2YJ/w6hluVqtdylVumv6G6/ny23P3ikM
+         g03qPgroCRyUBTy0CN0mT8ecZm7Nu4ELP52WXD+ySjTM2+gGuA0nZKENoIEC8J/kNQKN
+         Xgs/DiASJvUsJ7tnjGYx3SzhGtbcHp5U/HGUBkDm0Dc5m6MsC+Wvja1mWIqwoYNSKmya
+         8+To0JfqPzPwCM1uWhNxRjawdi6B6CuV42HxluSV3/YPQ0YbbvuLz8Oi+4isyRezJmko
+         ZlakB+ENgCX/X7Y9jZJxSqTRdq45x/p4eotlU2vyYpv/7nLiH+mhODJKVDUwUX5apziw
+         hOgA==
+X-Gm-Message-State: APjAAAVCY/L7O8soAyWjva5/N+6uNib7bJ+wfYzlKzPs3ZCOtTQWZEZE
+        ox50iDY78kavFiSp12H8eNuBq9LlNb9le6rpYQ==
+X-Google-Smtp-Source: APXvYqwhXNoh9Ovd4O++Jj41YC7k2xLDnIgHgg2Is0g1WiRyfL3YKX2u1AUwUcaGx6aT5+ABEwhXBZIi5kzyDm1KQn8=
+X-Received: by 2002:a02:93ee:: with SMTP id z101mr6217191jah.17.1553240626579;
+ Fri, 22 Mar 2019 00:43:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
- <20190313211335.165605-1-ndesaulniers@google.com> <20190320191135.e49e976a8258c8ac0bb428c9@linux-foundation.org>
- <CAKwvOdn84HNEB3u4XO-V_+c=txmDd1061G_7K0zZVS4MfF--Lg@mail.gmail.com> <e0b18c66-677c-7418-875d-f3d8c2f01913@rasmusvillemoes.dk>
-In-Reply-To: <e0b18c66-677c-7418-875d-f3d8c2f01913@rasmusvillemoes.dk>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 22 Mar 2019 08:43:29 +0100
-Message-ID: <CA+icZUWiiAjwQm3ajHyYpX5z6pUU7V8TrF=f_9G_EPN75iM_fw@mail.gmail.com>
-Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
+References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com> <20190320002524.GD18740@MiWiFi-R3L-srv>
+In-Reply-To: <20190320002524.GD18740@MiWiFi-R3L-srv>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 22 Mar 2019 15:43:35 +0800
+Message-ID: <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel reserved region
+To:     Baoquan He <bhe@redhat.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,29 +75,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 8:17 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Wed, Mar 20, 2019 at 8:25 AM Baoquan He <bhe@redhat.com> wrote:
 >
-> On 21/03/2019 18.02, Nick Desaulniers wrote:
-> > On Wed, Mar 20, 2019 at 7:11 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >>
+> Please change subject as:
+>
+> "x86/boot/KASLR: skip the specified crashkernel region"
+>
+OK.
+
+> Don't see why reserved is needed here.
+>
+> On 03/13/19 at 12:19pm, Pingfan Liu wrote:
+> > crashkernel=x@y option may fail to reserve the required memory region if
+> > KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
+> > skip the required region.
 > >
-> > Further, I can drop some of the __GNUC__ < 4 code in
-> > arch/x86/include/asm/string_32.h.
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Nicolas Pitre <nico@linaro.org>
+> > Cc: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> > v1 -> v2: fix some trival format
+> >
+> >  arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
+> >  1 file changed, 24 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+> > index 9ed9709..e185318 100644
+> > --- a/arch/x86/boot/compressed/kaslr.c
+> > +++ b/arch/x86/boot/compressed/kaslr.c
+> > @@ -109,6 +109,7 @@ enum mem_avoid_index {
+> >       MEM_AVOID_BOOTPARAMS,
+> >       MEM_AVOID_MEMMAP_BEGIN,
+> >       MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
+> > +     MEM_AVOID_CRASHKERNEL,
+> >       MEM_AVOID_MAX,
+> >  };
+> >
+> > @@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
+> >       }
+> >  }
+> >
+> > +/* parse crashkernel=x@y option */
+> > +static void mem_avoid_crashkernel_simple(char *option)
 >
-> Already on its way to Linus:
+> Chao ever mentioned this, I want to ask again, why does it has to be
+> xxx_simple()?
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=88ca66d8540ca26119b1428cddb96b37925bdf01
+Seems that I had replied Chao's question in another email. The naming
+follows the function parse_crashkernel_simple(), as the notes above
+the definition
+/*
+ * That function parses "simple" (old) crashkernel command lines like
+ *
+ * crashkernel=size[@offset]
+ *
+ * It returns 0 on success and -EINVAL on failure.
+ */
+static int __init parse_crashkernel_simple(char *cmdline,
+
+Do you have alternative suggestion?
+
+> Except of these, patch looks good to me. It's a nice catch, and only
+> need a simple fix based on the current code.
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=2e905c7abdcd5ff09b9df33d25eb7148c85bed2a
+Thank you for the kindly review.
+
+Regards,
+Pingfan
+
+> Thanks
+> Baoquan
 >
-
-Upstream:
-
-"x86/asm: Remove dead __GNUC__ conditionals"
-https://git.kernel.org/linus/88ca66d8540ca26119b1428cddb96b37925bdf01
-
-"x86/asm: Remove unused __constant_c_x_memset() macro and inlines"
-https://git.kernel.org/linus/2e905c7abdcd5ff09b9df33d25eb7148c85bed2a
-
-- Sedat -
+> > +{
+> > +     unsigned long long crash_size, crash_base;
+> > +     char *cur = option;
+> > +
+> > +     crash_size = memparse(option, &cur);
+> > +     if (option == cur)
+> > +             return;
+> > +
+> > +     if (*cur == '@') {
+> > +             option = cur + 1;
+> > +             crash_base = memparse(option, &cur);
+> > +             if (option == cur)
+> > +                     return;
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+> > +     }
+> > +}
+> >
+> >  static void handle_mem_options(void)
+> >  {
+> > @@ -250,7 +270,7 @@ static void handle_mem_options(void)
+> >       u64 mem_size;
+> >
+> >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
+> > -             !strstr(args, "hugepages"))
+> > +             !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
+> >               return;
+> >
+> >       tmp_cmdline = malloc(len + 1);
+> > @@ -286,6 +306,8 @@ static void handle_mem_options(void)
+> >                               goto out;
+> >
+> >                       mem_limit = mem_size;
+> > +             } else if (strstr(param, "crashkernel")) {
+> > +                     mem_avoid_crashkernel_simple(val);
+> >               }
+> >       }
+> >
+> > @@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+> >
+> >       /* We don't need to set a mapping for setup_data. */
+> >
+> > -     /* Mark the memmap regions we need to avoid */
+> > +     /* Mark the regions we need to avoid */
+> >       handle_mem_options();
+> >
+> >  #ifdef CONFIG_X86_VERBOSE_BOOTUP
+> > --
+> > 2.7.4
+> >
