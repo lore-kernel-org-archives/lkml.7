@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B73C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAE5218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6477F21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253776;
-	bh=zmEg1I8HcG+p5HlgBPXh83MTtzguc8QtMeFWP5vbOZ8=;
+	s=default; t=1553253778;
+	bh=+VaddMuCBThMQICx6JB2+2wNuJHCzgQIxrcp8KTCHcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ym9PhSzwr3DkhBt4GP+p3SM8zT9G2E8O1OUYoKRZ+Z4oAHV2Q9npGO///5eQF+KMJ
-	 FyVNuUGuDTjml/Ih5lfGRhcKOgtyuM2fg632wAz7187H4TeF+7jWz1tScjpvHUNui0
-	 hDCWIQKD88/mLxzuPYrRx4unwZ+TelnulShwn5Co=
+	b=dachilYCx0kai00k2LmUwb5X8DnqyK2e9wzM+qcjnC1Y7CI2/Caya2/QlTuYfZFQK
+	 Itd8iYN3NZEoIPfIbKSFY/eRvJyyzIme9CJpvz0Kgy9bV+7Ye1vV7W4aq2556x0jvM
+	 LeUQF4D2whEIpDqlu2CH65ePgQR8wiCxrkW5agS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbfCVLWy (ORCPT
+        id S1728894AbfCVLW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfCVLWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:49 -0400
+        id S1728873AbfCVLWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409DA218A2;
-        Fri, 22 Mar 2019 11:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02FC921916;
+        Fri, 22 Mar 2019 11:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253768;
-        bh=zmEg1I8HcG+p5HlgBPXh83MTtzguc8QtMeFWP5vbOZ8=;
+        s=default; t=1553253771;
+        bh=+VaddMuCBThMQICx6JB2+2wNuJHCzgQIxrcp8KTCHcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dgxes5h79lRa+wYw1FyEiuXkR3fm/KwtqVdgF8MRRQgn8cdRElivS9Uxtk1jFX+6u
-         5dTNehlyw8ZIohpNVhHIYPRKXQ95bfMb51NRaHYjiKdiEXOSJoURgBmLpjVHR9X8ZY
-         mxFtDyeKw1tVCNoxlqJqk3minsyrFIlXz8VVhKYw=
+        b=LkfCQKXZ5FAj2u5HG07++st6w05xBDAUawHd2ufffJiRdLepYEFixNwpYepbqCuIG
+         qS16FCkl+SPCkFAeIT5BJ6l/r6Pxj7ANbSorN1ALJRxYh35rwOV2IyINe0W0VvVOAZ
+         KluAnZuB04dwm/c0iL7atV9/On6uwvqV+wYn79Gk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 058/134] iommu/amd: Fix IOMMU page flush when detach device from a domain
-Date:   Fri, 22 Mar 2019 12:14:31 +0100
-Message-Id: <20190322111214.210520651@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 067/134] cifs: fix computation for MAX_SMB2_HDR_SIZE
+Date:   Fri, 22 Mar 2019 12:14:40 +0100
+Message-Id: <20190322111214.915617141@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -69,76 +67,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e ]
+[ Upstream commit 58d15ed1203f4d858c339ea4d7dafa94bd2a56d3 ]
 
-When a VM is terminated, the VFIO driver detaches all pass-through
-devices from VFIO domain by clearing domain id and page table root
-pointer from each device table entry (DTE), and then invalidates
-the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
+The size of the fixed part of the create response is 88 bytes not 56.
 
-Currently, the IOMMU driver keeps track of which IOMMU and how many
-devices are attached to the domain. When invalidate IOMMU pages,
-the driver checks if the IOMMU is still attached to the domain before
-issuing the invalidate page command.
-
-However, since VFIO has already detached all devices from the domain,
-the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
-there is no IOMMU attached to the domain. This results in data
-corruption and could cause the PCI device to end up in indeterministic
-state.
-
-Fix this by invalidate IOMMU pages when detach a device, and
-before decrementing the per-domain device reference counts.
-
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Suggested-by: Joerg Roedel <joro@8bytes.org>
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/cifs/smb2pdu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 5cf388ad1555..48a73c48876b 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2132,14 +2132,11 @@ static void do_attach(struct iommu_dev_data *dev_data,
+diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
+index 05c322d9e1e7..c68c31c9fedf 100644
+--- a/fs/cifs/smb2pdu.h
++++ b/fs/cifs/smb2pdu.h
+@@ -82,8 +82,8 @@
  
- static void do_detach(struct iommu_dev_data *dev_data)
- {
-+	struct protection_domain *domain = dev_data->domain;
- 	struct amd_iommu *iommu;
+ #define NUMBER_OF_SMB2_COMMANDS	0x0013
  
- 	iommu = amd_iommu_rlookup_table[dev_data->devid];
+-/* 4 len + 52 transform hdr + 64 hdr + 56 create rsp */
+-#define MAX_SMB2_HDR_SIZE 0x00b0
++/* 52 transform hdr + 64 hdr + 88 create rsp */
++#define MAX_SMB2_HDR_SIZE 204
  
--	/* decrease reference counters */
--	dev_data->domain->dev_iommu[iommu->index] -= 1;
--	dev_data->domain->dev_cnt                 -= 1;
--
- 	/* Update data structures */
- 	dev_data->domain = NULL;
- 	list_del(&dev_data->list);
-@@ -2147,6 +2144,16 @@ static void do_detach(struct iommu_dev_data *dev_data)
+ #define SMB2_PROTO_NUMBER __constant_cpu_to_le32(0x424d53fe)
  
- 	/* Flush the DTE entry */
- 	device_flush_dte(dev_data);
-+
-+	/* Flush IOTLB */
-+	domain_flush_tlb_pde(domain);
-+
-+	/* Wait for the flushes to finish */
-+	domain_flush_complete(domain);
-+
-+	/* decrease reference counters - needs to happen after the flushes */
-+	domain->dev_iommu[iommu->index] -= 1;
-+	domain->dev_cnt                 -= 1;
- }
- 
- /*
 -- 
 2.19.1
 
