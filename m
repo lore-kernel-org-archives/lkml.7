@@ -2,127 +2,143 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA4AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2866EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22ABE218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76ED2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yXeM6mBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfCVQUJ (ORCPT
+        id S1727236AbfCVQVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:20:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51374 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbfCVQUJ (ORCPT
+        Fri, 22 Mar 2019 12:21:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43568 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfCVQVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:20:09 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MGEBJH022281
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 12:20:07 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rd20mkmm3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 12:20:06 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 22 Mar 2019 16:20:03 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 16:19:58 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MGK0T124117466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 16:20:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49049B2065;
-        Fri, 22 Mar 2019 16:20:00 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B7B5B2064;
-        Fri, 22 Mar 2019 16:20:00 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Mar 2019 16:20:00 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8CC7616C2A5D; Fri, 22 Mar 2019 09:20:52 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 09:20:52 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] rcu/tree: Make rcu_check_gp_start_stall static
-Reply-To: paulmck@linux.ibm.com
-References: <20190322142659.12368-1-yuehaibing@huawei.com>
+        Fri, 22 Mar 2019 12:21:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id x3so2157365iol.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 09:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FinR+IjhZDJgPonC4fG9bQ8oToE745baJij2yjHIuSw=;
+        b=yXeM6mBWjCkKz0G3Jx7TkTFp6qEugUDgoTTzWcZqjmmQo1guYtvaNro3m8PQ5yIyV6
+         j8GRm3pcaDDCTlo+j1rMgWFzm7D36KGzN+8UkRhvRHwnDyVgSCgO+ar33pCFtlWg9FZz
+         N+uL2cVTBLgpFhI43ozMWZX+wA9xS1NzY/7kWC3HaBc2UDCIoPQZKq8uwTcipJ7+yqEh
+         08mTJ8v5+2uSRzDgF3p2P0rydcmFtRuW5khFfHuhScc1QMKEas+NcBaxzAlhnrryGt/3
+         eaQjuJR+qHOXDq5jZUc0pNfTukYC9YumD4eAkENBwNJayqZT8ynPYWUF4RcqVroniE+U
+         JkMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FinR+IjhZDJgPonC4fG9bQ8oToE745baJij2yjHIuSw=;
+        b=UKZ4aB//teqRoXe7NYla4LX/dFenn2/hk1L899v5XZrdzr2wwghlL1yrWnVC3T/jWR
+         qBOsT4yfD6cXdIVqVhIMvuwVj6i+qC3kEmGYiaIcjkqPyjKGZfHZnZd7Huti1gzqPPCb
+         h5sXbICJhfQTQKJAOkjMQUTe6TJEs9Ps7xsit3mhbhsAbni/U7OIu7COj8Y1wcgVa1re
+         H0M6yHLW+cll1WCZHuQuE9viSWJYesAl4Wh7WC9Bg+NUc22VQoelOfViQjAj56mlSVFj
+         0w0WBydvoNrapqtQS2QindqroPxN0N/VMD/8Hrcb1v30s58bLCwlNE3rktdOfQaztVGl
+         T1xg==
+X-Gm-Message-State: APjAAAWxwqxKAXr1aq/B8sOYZdKTMbCg6roRh8YoFcd1SriyWwN9oZJu
+        vFyRmiIYBjc0jS7fV4tzvOBuOpXSN8XXMfl0ABPsXw==
+X-Google-Smtp-Source: APXvYqyYvUNkkH7/kVxFEBmTPdnSzEM26yKlFgHZNF9RUgA357LvIA2jIyluI9ZY/Z8xlnqX1yMfavwoKVA7Vxf1Fk0=
+X-Received: by 2002:a5d:8b41:: with SMTP id c1mr7546985iot.173.1553271681269;
+ Fri, 22 Mar 2019 09:21:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322142659.12368-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032216-0064-0000-0000-000003BEB9DC
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010795; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01178093; UDB=6.00616339; IPR=6.00958791;
- MB=3.00026111; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-22 16:20:01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032216-0065-0000-0000-00003CCDF899
-Message-Id: <20190322162052.GN4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903220119
+References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
+ <20190322124331.s5iu4ontsakv7he5@gondor.apana.org.au> <CAKv+Gu_SBkhV8SVXpOBDoPRBJYhFdmF3jJdZ5OPm3SrPBTSarQ@mail.gmail.com>
+ <f8cb10b3dcce0703a652f2f544161abd41bc67f3.camel@perches.com>
+In-Reply-To: <f8cb10b3dcce0703a652f2f544161abd41bc67f3.camel@perches.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 22 Mar 2019 17:21:10 +0100
+Message-ID: <CAKv+Gu8nds6WgE5UWj8iy=fr7AOmCsaQsrE4Dcj0oiNOXkkt6g@mail.gmail.com>
+Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not IS_ENABLED(DEBUG)
+To:     Joe Perches <joe@perches.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 10:26:59PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> kernel/rcu/tree.c:2643:1: warning:
->  symbol 'rcu_check_gp_start_stall' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Fri, 22 Mar 2019 at 16:07, Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-03-22 at 15:29 +0100, Ard Biesheuvel wrote:
+> > On Fri, 22 Mar 2019 at 13:43, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> > > On Thu, Mar 07, 2019 at 04:15:55PM -0800, Joe Perches wrote:
+> > > > Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
+> > > > there is no -DDEBUG in the Makefile here.
+> > > >
+> > > > Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
+> > > > blocks.
+> > > >
+> > > > Miscellanea:
+> > > >
+> > > > o Move the sahara_state array into the function that uses it.
+> > > >
+> > > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > > ---
+> > > >  drivers/crypto/sahara.c | 20 +++++++++-----------
+> > > >  1 file changed, 9 insertions(+), 11 deletions(-)
+> > >
+> > > Even if this is correct this is way too ugly.  The original code
+> > > at least compiled everything regardless of macros.  Your new code
+> > > won't detect compile errors in debugging code unless debugging is
+> > > enabled.
+> > >
+> >
+> > What's wrong with IS_ENABLED(DEBUG) anyway? It may not be 'normal use'
+> > but it works fine.
+>
+> drivers/crypto/sahara.c is the only user in the kernel tree.
+> So only it's abnormal use.  I rather like the concept actually.
+>
+> IS_ENABLED is almost exclusively used with CONFIG_<FOO> symbols
+> and it could be useful to require it to be used with CONFIG_<FOO>
+> symbols and use some other similar mechanism for DEBUG use.
+>
+> Maybe just adding a global #define in kernel.h like
+>
+> #define IS_DEBUG_ENABLED        IS_ENABLED(DEBUG)
+>
 
-Good eyes!
+__is_defined(DEBUG) seems to be the most appropriate here. I don't
+feel strongly about whether we or not should wrap it in another macro.
 
-But someone beat you to this.  Please see branch "dev" of -rcu:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
 
-							Thanx, Paul
+> to isolate this in one place might be better.
+>
+> A good thing about using IS_ENABLED or the suggested IS_DEBUG_ENABLED
+> would be that least gcc 5+ seems to automatically elide the uses of any
+> unreferenced static const char * arrays like the sahara_state uses here.
+>
 
-> ---
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index acd6ccf..ed3ef40 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2639,7 +2639,7 @@ EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
->   * This function checks for grace-period requests that fail to motivate
->   * RCU to come out of its idle mode.
->   */
-> -void
-> +static void
->  rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
->  			 const unsigned long gpssdelay)
->  {
-> -- 
-> 2.7.0
-> 
-> 
+Yes, that is kind of the point. If you use #ifdef, the compiler will
+complain about unused static variables in this case.
 
+> (I don't have gcc4 anymore so I couldn't check that version)
+>
+> So using 'if (IS_DEBUG_ENABLED)' could simplify some existing code like
+> the many uses of
+>
+> #ifdef DEBUG
+>         ...
+> #endif
+>
+> or equivalent
+>
+>
+
+My vote would be to use __is_defined(DEBUG) in place, but if others
+prefer wrapping it in a macro, that is also fine with me.
