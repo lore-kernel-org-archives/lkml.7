@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE108C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA442C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E522183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D2B21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254145;
-	bh=5CEdWi3+IJoVbesMIIZBD0SNwxHswr6V8G83JVlygqw=;
+	s=default; t=1553254148;
+	bh=Tuh43H7lY/8v9UFO6LIA+0i0DxTd/pkKVNmkxOsvEzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0QmynkLO4/Dps2dSgHUo9nq3WPWRtLNLJPNXkbUAcYewlXu/Hcv8VaC43YqWJaVh
-	 v3bpuCa52SH934xtr7FTuFD5wuYNdqm03pDNxIXlCe+4zMYxvrRoxPA3ugHN/vD2Vn
-	 zZ8wQnrCrh0SSnuPc77u7oHbKWwvMXlNNCa0P5lA=
+	b=IS5zqGZeQoVBBxC8cjrMl2AXOZrFt6ZLvaWKYd5Wy0ylj62Y5Yf8ZrbCr8LxTwApP
+	 yMvzUH2n6muaY+Dlhp9ey3HpQ322YhBk1R65E5qqCNmXx4gHOvkBlOrWIF4M2lGwwC
+	 AssauS7QSll4WzfvXHScXrH47v75SaYFeZAcp6k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfCVL3E (ORCPT
+        id S1729765AbfCVL3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56862 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbfCVL3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:29:01 -0400
+        id S1728509AbfCVL26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806E720449;
-        Fri, 22 Mar 2019 11:29:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CDC21917;
+        Fri, 22 Mar 2019 11:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254141;
-        bh=5CEdWi3+IJoVbesMIIZBD0SNwxHswr6V8G83JVlygqw=;
+        s=default; t=1553254137;
+        bh=Tuh43H7lY/8v9UFO6LIA+0i0DxTd/pkKVNmkxOsvEzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDn7b2eiYrzGney0UjFPX+JWjxEN3/1Ds6Fluuzwuy9O4kFA6PmME5C84OPNgJL9V
-         KCh38vCTtjO5Hjf3i1uLmTbnbo1/5j1GYLUIRHUVwQl7tfqVr/2R56buuKD+lNrP3D
-         6EpiSfkfj1tgO1NBqw8FAC6hJWIDdY/DyTO2ql9Q=
+        b=fgngpEJ6tcb6oqnD/e0m9yE6MAJuC1FMBuFs2G+rkp78/f3pBDAtR803LrT+ds6Uz
+         k70JMPVfcaWejsN8ZVZFWcajJWBtB0m5fobi3qBPLi6KCldNVVu2KrSKNSUdr6Lh4t
+         9VhSBHgJFcg7KBwyjPT1w7dfFSoVSWmr7nWhWR60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.4 028/230] ARCv2: Enable unaligned access in early ASM code
-Date:   Fri, 22 Mar 2019 12:12:46 +0100
-Message-Id: <20190322111238.661190525@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 027/230] net/mlx4_en: Force CHECKSUM_NONE for short ethernet frames
+Date:   Fri, 22 Mar 2019 12:12:45 +0100
+Message-Id: <20190322111238.593288935@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,49 +67,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-commit 252f6e8eae909bc075a1b1e3b9efb095ae4c0b56 upstream.
+[ Upstream commit 29dded89e80e3fff61efb34f07a8a3fba3ea146d ]
 
-It is currently done in arc_init_IRQ() which might be too late
-considering gcc 7.3.1 onwards (GNU 2018.03) generates unaligned
-memory accesses by default
+When an ethernet frame is padded to meet the minimum ethernet frame
+size, the padding octets are not covered by the hardware checksum.
+Fortunately the padding octets are usually zero's, which don't affect
+checksum. However, it is not guaranteed. For example, switches might
+choose to make other use of these octets.
+This repeatedly causes kernel hardware checksum fault.
 
-Cc: stable@vger.kernel.org #4.4+
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-[vgupta: rewrote changelog]
+Prior to the cited commit below, skb checksum was forced to be
+CHECKSUM_NONE when padding is detected. After it, we need to keep
+skb->csum updated. However, fixing up CHECKSUM_COMPLETE requires to
+verify and parse IP headers, it does not worth the effort as the packets
+are so small that CHECKSUM_COMPLETE has no significant advantage.
+
+Future work: when reporting checksum complete is not an option for
+IP non-TCP/UDP packets, we can actually fallback to report checksum
+unnecessary, by looking at cqe IPOK bit.
+
+Fixes: 88078d98d1bb ("net: pskb_trim_rcsum() and CHECKSUM_COMPLETE are friends")
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arc/kernel/head.S |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/arch/arc/kernel/head.S
-+++ b/arch/arc/kernel/head.S
-@@ -17,6 +17,7 @@
- #include <asm/entry.h>
- #include <asm/arcregs.h>
- #include <asm/cache.h>
-+#include <asm/irqflags.h>
- 
- .macro CPU_EARLY_SETUP
- 
-@@ -47,6 +48,15 @@
- 	sr	r5, [ARC_REG_DC_CTRL]
- 
- 1:
+--- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+@@ -725,13 +725,27 @@ static int get_fixed_ipv6_csum(__wsum hw
+ 	return 0;
+ }
+ #endif
 +
-+#ifdef CONFIG_ISA_ARCV2
-+	; Unaligned access is disabled at reset, so re-enable early as
-+	; gcc 7.3.1 (ARC GNU 2018.03) onwards generates unaligned access
-+	; by default
-+	lr	r5, [status32]
-+	bset	r5, r5, STATUS_AD_BIT
-+	kflag	r5
-+#endif
- .endm
++#define short_frame(size) ((size) <= ETH_ZLEN + ETH_FCS_LEN)
++
+ static int check_csum(struct mlx4_cqe *cqe, struct sk_buff *skb, void *va,
+ 		      netdev_features_t dev_features)
+ {
+ 	__wsum hw_checksum = 0;
++	void *hdr;
  
- 	.section .init.text, "ax",@progbits
+-	void *hdr = (u8 *)va + sizeof(struct ethhdr);
++	/* CQE csum doesn't cover padding octets in short ethernet
++	 * frames. And the pad field is appended prior to calculating
++	 * and appending the FCS field.
++	 *
++	 * Detecting these padded frames requires to verify and parse
++	 * IP headers, so we simply force all those small frames to skip
++	 * checksum complete.
++	 */
++	if (short_frame(skb->len))
++		return -EINVAL;
+ 
++	hdr = (u8 *)va + sizeof(struct ethhdr);
+ 	hw_checksum = csum_unfold((__force __sum16)cqe->checksum);
+ 
+ 	if (cqe->vlan_my_qpn & cpu_to_be32(MLX4_CQE_CVLAN_PRESENT_MASK) &&
+@@ -851,6 +865,11 @@ int mlx4_en_process_rx_cq(struct net_dev
+ 			(cqe->vlan_my_qpn & cpu_to_be32(MLX4_CQE_L2_TUNNEL));
+ 
+ 		if (likely(dev->features & NETIF_F_RXCSUM)) {
++			/* TODO: For IP non TCP/UDP packets when csum complete is
++			 * not an option (not supported or any other reason) we can
++			 * actually check cqe IPOK status bit and report
++			 * CHECKSUM_UNNECESSARY rather than CHECKSUM_NONE
++			 */
+ 			if (cqe->status & cpu_to_be16(MLX4_CQE_STATUS_TCP |
+ 						      MLX4_CQE_STATUS_UDP)) {
+ 				if ((cqe->status & cpu_to_be16(MLX4_CQE_STATUS_IPOK)) &&
 
 
