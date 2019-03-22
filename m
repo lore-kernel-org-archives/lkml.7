@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47931C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D927C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D29821916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB6721916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256492;
-	bh=m7bxAp2r3ggGnxIiqb9+D68Fb1011zBDg43L2s/NLAQ=;
+	s=default; t=1553256495;
+	bh=S6RXJX/8koBWAQUPN4/9a97itODPVuL7Kq1siGOY88w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adBHwYs0W64n7jHDU7yk1Gxcyf+aRgCKb2euVoEdQrryYjz4sG/Evy5xd/of+LI6E
-	 25JFEMwI3s0DimD7Bu8YwDb75j3lyMlXcOW4BG6lcnhyyO3j3Y1I/BcQe5dJr6awjk
-	 M+4dDoEbwo4X8dP1SoGrUMKDTnrNRItBHMBZf9C0=
+	b=k4p/SWBpS+Gsh0HDX10pzaYcTNqwqMT5K3Wadz5VpfD0QM2kFd9v1TXAPYwwKtSMA
+	 paI0ZsHmNTaxUBTtGz1XHkBX23AEVQFc+y6LBI8vyup57vslwkFh8V857iTvScARFx
+	 kDsfl6VBaffN8iACpZnMwEn/B/J6s9hW3+41tne4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbfCVMIJ (ORCPT
+        id S2389137AbfCVMIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388676AbfCVMID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:08:03 -0400
+        id S2389126AbfCVMIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:08:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC619206C0;
-        Fri, 22 Mar 2019 12:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B34206C0;
+        Fri, 22 Mar 2019 12:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256482;
-        bh=m7bxAp2r3ggGnxIiqb9+D68Fb1011zBDg43L2s/NLAQ=;
+        s=default; t=1553256489;
+        bh=S6RXJX/8koBWAQUPN4/9a97itODPVuL7Kq1siGOY88w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QhrIpAt+oGjpABFOEmaia5QSaF8bfdbPQZz0AIEGIsnubH/YCL2OL3tGiA3Cey/KZ
-         yWEXWwe7MMRSB7iJMxe8DAonFpyBIo4n+PjmogE58KunyUsPPEq6mamOF2zfc6JghJ
-         mSwGTXU9XMaszPntnE+LddxtDX5EGZkJpOl9qZA8=
+        b=uJeqtty6y5BmxTeO8X4701FcUCtbL1QtT+41Jq0CgUHqEnVFQByaKmt0prhXJETMR
+         76a9d2wNxLNdxGHalIRuxt/W/cJeG3uNdm/LayTqlEfY9OxvtJ2phs6JGIrGfc6WB4
+         LKHDQFjLME2D3Dj/JtbMH+XjGzRw6ADEpiMteBEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
+        Mathieu Malaterre <malat@debian.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 225/280] powerpc/powernv: Dont reprogram SLW image on every KVM guest entry/exit
-Date:   Fri, 22 Mar 2019 12:16:18 +0100
-Message-Id: <20190322111335.854711331@linuxfoundation.org>
+Subject: [PATCH 4.19 227/280] powerpc/ptrace: Simplify vr_get/set() to avoid GCC warning
+Date:   Fri, 22 Mar 2019 12:16:20 +0100
+Message-Id: <20190322111336.272940618@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,157 +66,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Mackerras <paulus@ozlabs.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 19f8a5b5be2898573a5e1dc1db93e8d40117606a upstream.
+commit ca6d5149d2ad0a8d2f9c28cbe379802260a0a5e0 upstream.
 
-Commit 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api
-only on Hotplug", 2017-07-21) added two calls to opal_slw_set_reg()
-inside pnv_cpu_offline(), with the aim of changing the LPCR value in
-the SLW image to disable wakeups from the decrementer while a CPU is
-offline.  However, pnv_cpu_offline() gets called each time a secondary
-CPU thread is woken up to participate in running a KVM guest, that is,
-not just when a CPU is offlined.
+GCC 8 warns about the logic in vr_get/set(), which with -Werror breaks
+the build:
 
-Since opal_slw_set_reg() is a very slow operation (with observed
-execution times around 20 milliseconds), this means that an offline
-secondary CPU can often be busy doing the opal_slw_set_reg() call
-when the primary CPU wants to grab all the secondary threads so that
-it can run a KVM guest.  This leads to messages like "KVM: couldn't
-grab CPU n" being printed and guest execution failing.
+  In function ‘user_regset_copyin’,
+      inlined from ‘vr_set’ at arch/powerpc/kernel/ptrace.c:628:9:
+  include/linux/regset.h:295:4: error: ‘memcpy’ offset [-527, -529] is
+  out of the bounds [0, 16] of object ‘vrsave’ with type ‘union
+  <anonymous>’ [-Werror=array-bounds]
+  arch/powerpc/kernel/ptrace.c: In function ‘vr_set’:
+  arch/powerpc/kernel/ptrace.c:623:5: note: ‘vrsave’ declared here
+     } vrsave;
 
-There is no need to reprogram the SLW image on every KVM guest entry
-and exit.  So that we do it only when a CPU is really transitioning
-between online and offline, this moves the calls to
-pnv_program_cpu_hotplug_lpcr() into pnv_smp_cpu_kill_self().
+This has been identified as a regression in GCC, see GCC bug 88273.
 
-Fixes: 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api only on Hotplug")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+However we can avoid the warning and also simplify the logic and make
+it more robust.
+
+Currently we pass -1 as end_pos to user_regset_copyout(). This says
+"copy up to the end of the regset".
+
+The definition of the regset is:
+	[REGSET_VMX] = {
+		.core_note_type = NT_PPC_VMX, .n = 34,
+		.size = sizeof(vector128), .align = sizeof(vector128),
+		.active = vr_active, .get = vr_get, .set = vr_set
+	},
+
+The end is calculated as (n * size), ie. 34 * sizeof(vector128).
+
+In vr_get/set() we pass start_pos as 33 * sizeof(vector128), meaning
+we can copy up to sizeof(vector128) into/out-of vrsave.
+
+The on-stack vrsave is defined as:
+  union {
+	  elf_vrreg_t reg;
+	  u32 word;
+  } vrsave;
+
+And elf_vrreg_t is:
+  typedef __vector128 elf_vrreg_t;
+
+So there is no bug, but we rely on all those sizes lining up,
+otherwise we would have a kernel stack exposure/overwrite on our
+hands.
+
+Rather than relying on that we can pass an explict end_pos based on
+the sizeof(vrsave). The result should be exactly the same but it's
+more obviously not over-reading/writing the stack and it avoids the
+compiler warning.
+
+Reported-by: Meelis Roos <mroos@linux.ee>
+Reported-by: Mathieu Malaterre <malat@debian.org>
+Cc: stable@vger.kernel.org
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Meelis Roos <mroos@linux.ee>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/powernv.h    |    2 ++
- arch/powerpc/platforms/powernv/idle.c |   27 ++-------------------------
- arch/powerpc/platforms/powernv/smp.c  |   25 +++++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 25 deletions(-)
+ arch/powerpc/kernel/ptrace.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/include/asm/powernv.h
-+++ b/arch/powerpc/include/asm/powernv.h
-@@ -23,6 +23,8 @@ extern int pnv_npu2_handle_fault(struct
- 				unsigned long *flags, unsigned long *status,
- 				int count);
- 
-+void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val);
-+
- void pnv_tm_init(void);
- #else
- static inline void powernv_set_nmmu_ptcr(unsigned long ptcr) { }
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -458,7 +458,8 @@ EXPORT_SYMBOL_GPL(pnv_power9_force_smt4_
- #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
- 
- #ifdef CONFIG_HOTPLUG_CPU
--static void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
-+
-+void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
- {
- 	u64 pir = get_hard_smp_processor_id(cpu);
- 
-@@ -481,20 +482,6 @@ unsigned long pnv_cpu_offline(unsigned i
- {
- 	unsigned long srr1;
- 	u32 idle_states = pnv_get_supported_cpuidle_states();
--	u64 lpcr_val;
--
--	/*
--	 * We don't want to take decrementer interrupts while we are
--	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
--	 * LPCR_PECE_HVEE on P9) enabled as to let IPIs in.
--	 *
--	 * If the CPU gets woken up by a special wakeup, ensure that
--	 * the SLW engine sets LPCR with decrementer bit cleared, else
--	 * the CPU will come back to the kernel due to a spurious
--	 * wakeup.
--	 */
--	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
--	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
- 
- 	__ppc64_runlatch_off();
- 
-@@ -526,16 +513,6 @@ unsigned long pnv_cpu_offline(unsigned i
- 
- 	__ppc64_runlatch_on();
- 
--	/*
--	 * Re-enable decrementer interrupts in LPCR.
--	 *
--	 * Further, we want stop states to be woken up by decrementer
--	 * for non-hotplug cases. So program the LPCR via stop api as
--	 * well.
--	 */
--	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
--	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
--
- 	return srr1;
- }
- #endif
---- a/arch/powerpc/platforms/powernv/smp.c
-+++ b/arch/powerpc/platforms/powernv/smp.c
-@@ -39,6 +39,7 @@
- #include <asm/cpuidle.h>
- #include <asm/kexec.h>
- #include <asm/reg.h>
-+#include <asm/powernv.h>
- 
- #include "powernv.h"
- 
-@@ -153,6 +154,7 @@ static void pnv_smp_cpu_kill_self(void)
- {
- 	unsigned int cpu;
- 	unsigned long srr1, wmask;
-+	u64 lpcr_val;
- 
- 	/* Standard hot unplug procedure */
- 	/*
-@@ -174,6 +176,19 @@ static void pnv_smp_cpu_kill_self(void)
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S))
- 		wmask = SRR1_WAKEMASK_P8;
- 
-+	/*
-+	 * We don't want to take decrementer interrupts while we are
-+	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
-+	 * LPCR_PECE_HVEE on P9) enabled so as to let IPIs in.
-+	 *
-+	 * If the CPU gets woken up by a special wakeup, ensure that
-+	 * the SLW engine sets LPCR with decrementer bit cleared, else
-+	 * the CPU will come back to the kernel due to a spurious
-+	 * wakeup.
-+	 */
-+	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
-+	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
-+
- 	while (!generic_check_cpu_restart(cpu)) {
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -561,6 +561,7 @@ static int vr_get(struct task_struct *ta
  		/*
- 		 * Clear IPI flag, since we don't handle IPIs while
-@@ -246,6 +261,16 @@ static void pnv_smp_cpu_kill_self(void)
+ 		 * Copy out only the low-order word of vrsave.
+ 		 */
++		int start, end;
+ 		union {
+ 			elf_vrreg_t reg;
+ 			u32 word;
+@@ -569,8 +570,10 @@ static int vr_get(struct task_struct *ta
  
+ 		vrsave.word = target->thread.vrsave;
+ 
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
+ 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					  33 * sizeof(vector128), -1);
++					  start, end);
  	}
  
-+	/*
-+	 * Re-enable decrementer interrupts in LPCR.
-+	 *
-+	 * Further, we want stop states to be woken up by decrementer
-+	 * for non-hotplug cases. So program the LPCR via stop api as
-+	 * well.
-+	 */
-+	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
-+	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
-+
- 	DBG("CPU%d coming online...\n", cpu);
- }
+ 	return ret;
+@@ -608,6 +611,7 @@ static int vr_set(struct task_struct *ta
+ 		/*
+ 		 * We use only the first word of vrsave.
+ 		 */
++		int start, end;
+ 		union {
+ 			elf_vrreg_t reg;
+ 			u32 word;
+@@ -616,8 +620,10 @@ static int vr_set(struct task_struct *ta
  
+ 		vrsave.word = target->thread.vrsave;
+ 
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
+ 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					 33 * sizeof(vector128), -1);
++					 start, end);
+ 		if (!ret)
+ 			target->thread.vrsave = vrsave.word;
+ 	}
 
 
