@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25AFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C44C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13B0218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A75218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253895;
-	bh=xKwU1bQhzx2x3K64PFDwZt640IjNJuEpTohk9+vteHw=;
+	s=default; t=1553253902;
+	bh=5pJY/SsA583MQg5Hlg0Db8h+NxkmdwU25pBFksjuRRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDZCeSsloxdivp0qQcIp13mFLay1IEu+vPqDSfWei7g6vREnbC0eppueUWCJ4n/al
-	 qkNhfElyAbfrndmLAvIx47DUbXPx0pnibBAA40Si2W46D7eq7sLpHYhq+FQSjYttSR
-	 NqRKwpXzZVQU/A2w7qEt8MIKUXMCTO3oosBB8uzE=
+	b=iqagAC0oCs8rxWbApW6cDJm5TgXD9WGgJpS4OcZ6xjcfDPlxxCs8zDocGgmcEn0Tw
+	 FfgiPdyXYt/Q1IhdguwMLbO6ynlRuP8UxHvprwu+VcNp+pVp++Ytilb8O2XsMZDZa1
+	 Op7oD9dUeLv3a85daBdrOgIruMB626HTOQG0B2NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfCVLYy (ORCPT
+        id S1729217AbfCVLZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbfCVLYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:52 -0400
+        id S1728398AbfCVLY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76ED320657;
-        Fri, 22 Mar 2019 11:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A41218A2;
+        Fri, 22 Mar 2019 11:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253891;
-        bh=xKwU1bQhzx2x3K64PFDwZt640IjNJuEpTohk9+vteHw=;
+        s=default; t=1553253897;
+        bh=5pJY/SsA583MQg5Hlg0Db8h+NxkmdwU25pBFksjuRRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xnxciSvQfMQfw1MVVRClhwHwOLwVtn/W+ZgXXju0AlCjs93HllQlC8orPtZMg+SGb
-         KcnYEpvw8Rl9QP1WQjPnnAXtAZ1Wsw+DS1QZVI2aiZPqq2gnzEOG3+BF1iVcasCe2H
-         9XroTZpCiT3Em9oUACOtL8DSubp5p97zoWN7PEXk=
+        b=Nm8wFbpIAi5IgSRawKe8odSEmaEFv0mzv6Jbysez3K8iryd/uPudoSVXMi7yZYA4G
+         lS3/Ou/FYytm8lesbnX1HQPm0w09YtBq+4dV6b3KGx68sKoMVz+cuTU3rkAXD/9vWe
+         aN2GgpndJINYiYaLWYm8BkquGd40+ntDBKhsSuXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anoob Soman <anoob.soman@citrix.com>,
-        Bob Liu <bob.liu@oracle.com>, Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 103/134] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
-Date:   Fri, 22 Mar 2019 12:15:16 +0100
-Message-Id: <20190322111217.630285305@linuxfoundation.org>
+Subject: [PATCH 3.18 105/134] net: mv643xx_eth: disable clk on error path in mv643xx_eth_shared_probe()
+Date:   Fri, 22 Mar 2019 12:15:18 +0100
+Message-Id: <20190322111217.820321869@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,107 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
+[ Upstream commit e928b5d6b75e239feb9c6d5488974b6646a0ebc8 ]
 
-When a target sends Check Condition, whilst initiator is busy xmiting
-re-queued data, could lead to race between iscsi_complete_task() and
-iscsi_xmit_task() and eventually crashing with the following kernel
-backtrace.
+If mv643xx_eth_shared_of_probe() fails, mv643xx_eth_shared_probe()
+leaves clk enabled.
 
-[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
-[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
-[3326150.987582] WARN: Oops: 0002 [#1] SMP
-[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
-[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
-[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
-[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
-[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
-[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
-[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
-[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
-[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
-[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
-[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
-[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
-[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
-[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
-[3326150.987918] WARN: Stack:
-[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
-[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
-[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
-[3326150.987964] WARN: Call Trace:
-[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
-[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
-[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
-[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
-[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
-[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
-[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
-[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.988138] WARN: RSP <ffff8801f545bdb0>
-[3326150.988144] WARN: CR2: 0000000000000078
-[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
-list corruption regression") introduced "taskqueuelock" to fix list
-corruption during the race, but this wasn't enough.
-
-Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
-iscsi_complete_task()
-{
-    ....
-    if (conn->task == task)
-        conn->task = NULL;
-}
-
-conn->task in iscsi_xmit_task() could be NULL and so will be task.
-__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
-refcount.
-
-iscsi_xmit_task()
-{
-    struct iscsi_task *task = conn->task;
-
-    __iscsi_get_task(task);
-}
-
-This commit will take extra conn->session->back_lock in iscsi_xmit_task()
-to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
-iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
-iscsi_xmit_task() increments task->refcount
-(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
-
-Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libiscsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/marvell/mv643xx_eth.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
-index 56441a5ec3d7..d9a061ac8e7f 100644
---- a/drivers/scsi/libiscsi.c
-+++ b/drivers/scsi/libiscsi.c
-@@ -1448,7 +1448,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
- 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
- 		return -ENODATA;
+diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
+index d44560d1d268..5fcf026d3528 100644
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -2814,7 +2814,7 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
  
-+	spin_lock_bh(&conn->session->back_lock);
-+	if (conn->task == NULL) {
-+		spin_unlock_bh(&conn->session->back_lock);
-+		return -ENODATA;
-+	}
- 	__iscsi_get_task(task);
-+	spin_unlock_bh(&conn->session->back_lock);
- 	spin_unlock_bh(&conn->session->frwd_lock);
- 	rc = conn->session->tt->xmit_task(task);
- 	spin_lock_bh(&conn->session->frwd_lock);
+ 	ret = mv643xx_eth_shared_of_probe(pdev);
+ 	if (ret)
+-		return ret;
++		goto err_put_clk;
+ 	pd = dev_get_platdata(&pdev->dev);
+ 
+ 	msp->tx_csum_limit = (pd != NULL && pd->tx_csum_limit) ?
+@@ -2822,6 +2822,11 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
+ 	infer_hw_params(msp);
+ 
+ 	return 0;
++
++err_put_clk:
++	if (!IS_ERR(msp->clk))
++		clk_disable_unprepare(msp->clk);
++	return ret;
+ }
+ 
+ static int mv643xx_eth_shared_remove(struct platform_device *pdev)
 -- 
 2.19.1
 
