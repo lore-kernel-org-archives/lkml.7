@@ -2,52 +2,58 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE44C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D90C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908D621929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC102192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553268887;
-	bh=yE23CXSgMZVJk/f6Xgdzvhp7ReeofiFb/vufFYHaYOo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oP4dyQECJ3DAW5DeP2UI7Wk2wAA+i40r/oE5iRhx5zPfwXWAlbmzBCYfdk8t9510+
-	 rb7IxJn75yGRsTHxnTiPLBe+Mxih6JxE9NBP60L1p3EpS9kq4g09jKksk4LVRrI0UA
-	 GxLvEfv5RE0q+NF+CVyNOlEcQ+hfMVxSwaoyVltw=
+	s=default; t=1553268892;
+	bh=MOIAYCKpstULYRU18uc0LhO/WFyrYWiiTLPjC97cLFo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=060XgNfycYnOoDnlrn/7LrT2MkVuHnDBvS5MUaxDesYKNG8kX2k5t6ED3AeUayXK8
+	 PJbLxZbAbwBrTNaYnkPEZeHZ9W2VYVSGGIys43lb+bm2kuN3iDzlnyb+QKhYm1iqNI
+	 dyyuBaXRgi7caAi4wm/oNINi+rKwyKGcIi6jX4wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfCVPeq (ORCPT
+        id S1727392AbfCVPeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 11:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbfCVPep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:34:45 -0400
+        id S1727307AbfCVPer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:34:47 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDE720850;
-        Fri, 22 Mar 2019 15:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E92D0213F2;
+        Fri, 22 Mar 2019 15:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553268883;
-        bh=yE23CXSgMZVJk/f6Xgdzvhp7ReeofiFb/vufFYHaYOo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A8Ii8knK1fvXuNsb8A0aBKZkW8If53PxpHoJReFLDIZkBzHGUkFCMqTWfV/3M23Ix
-         sMlvBcVei2FW3IO5UmgW9d02vTcn8NcNNI9ZGNfkzk1rp3noMT65SJb3OIVxbTu8x8
-         SrVkcfCDW8oKec+jvpKmqdnogBs7prlSqCwTE5y4=
+        s=default; t=1553268885;
+        bh=MOIAYCKpstULYRU18uc0LhO/WFyrYWiiTLPjC97cLFo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=ePRPIqwTDc9krtdJk8aDSY38lH8JHhp8ta7zS6sfHCl5rOf8VHaMuY8pZgqGjXb6+
+         GAPkUUliGNnC880iZQGumNsisyFS6VS1W5huFhQFBOj4YIeQtKqcEQUBr2Gkh5Ovdv
+         b4RotSkA0j5JECF3Yii/AwsxC1HfpCiLGkDbsI/c=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
         bigeasy@linutronix.de, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v4 00/11] tracing: common error_log for ftrace
-Date:   Fri, 22 Mar 2019 10:34:26 -0500
-Message-Id: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH v4 01/11] tracing: Add tracing error log
+Date:   Fri, 22 Mar 2019 10:34:27 -0500
+Message-Id: <5038ab97eaa3cf23c16264299221c5f1c5cf8147.1553268040.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+In-Reply-To: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,185 +61,297 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Hi,
+Introduce a new ftrace file, tracing/error_log, for ftrace commands to
+log errors.  This is useful for allowing more complex commands such as
+hist trigger and kprobe_event commands to point out specifically where
+something may have gone wrong without forcing them to resort to more
+ad hoc methods such as tacking error messages onto existing output
+files.
 
-This is v4 of the frace error_log patchset.  This version adds
-Masami's probe events error_log patches and removes the previous
-placeholder for that.  It also removes the hist trigger extended error
-err testcase and replaces it with a basic error_log functionality
-testcase, and replaces the error numbering with timestamps, also as
-suggested by Masami.  Finally, the Documentation and README are both
-updated to describe the error_log.
+To log a tracing error, call the event_log_err() function, passing it
+a location string describing where it came from e.g. kprobe_events or
+system:event, the command that caused the error, an array of static
+error strings describing errors and an index within that array which
+describes the specific error, along with the position to place the
+error caret.
 
-Note: The probe event error_log test cases failed on my Ubuntu system,
-due to the >& redirection operator that dash doesn't understand, so I
-tacked on a final patch that fixes it for me.  If acceptable, feel
-free to just merge it with Masami's patch.
+Reading the log displays the last (currently) 8 errors logged in the
+following format:
 
-Changes from v3:
-
-  - Added Masami's [PATCH 05/11] tracing: Use tracing error_log with probe events
-  - Added Masami's [PATCH 06/11] selftests/ftrace: Add error_log testcase for probe
-  - Added [PATCH 11/11] to fix [PATCH 06/11]
-  - Removed [RFC PATCH v3 4/5] tracing: Use tracing error_log with kprobe events
-  - Added [PATCH 08/11] selftests/ftrace: Add tracing/error_log testcase
-  - Removed trigger-extended-error-support testcase
-  - Changed [n] numbering to [timestamp] numbering as suggested by Masami
-  - Updated Documentation and README
-
-Changes from v2:
-
-  - Added [n] numbering as suggested by Masami
-
-
-Text from original post:
-
-Last April, I posted an RFC patchset [1] implementing a common
-error_log interface as suggested by Masami [2].  We were supposed to
-discuss it at Plumbers but that never happened, and Steve recently
-asked about patches for a follow-on discussion [3], so here they are.
-
-I incorporated comments from the previous discussion, the most
-important of which are:
-
- - Incorporated Steve's suggestion of using static strings as in the
-   existing trace event filter code, along with err_info indexing into
-   the string arrays and a position for the error caret.
-
- - Converted all the hist trigger errors and the existing trace event
-   filter parse errors to use the new interface.
-
- - Converted a few kprobe_event errors to the new interface as
-   examples, but these will require more work - I didn't spend much
-   time figuring out how to get the full kprobe command into the error
-   info, for instance.
-
- - Got rid of the custom single-page ring buffer and used standard
-   lists instead.
-
-For now, this is implemented on top of the latest 'hist trigger
-snapshot and onchange additions' patchset [4].
-
-Below is an example session of a few failed commands and the
-corresponding error_log contents:
-
-  # echo > /sys/kernel/debug/tracing/error_log
-
-  # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-  # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-  -su: echo: write error: Invalid argument
-
-  #  cat /sys/kernel/debug/tracing/error_log
-  [  217.431858] hist:sched:sched_wakeup: error: Variable already defined
-    Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
+  [timestamp] <loc>: error: <static error text>
+    Command: <command that caused the error>
                       ^
 
-  # echo 'hist:key=comm:p=prio:onchange($q).snapshot()' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-  -su: echo: write error: Invalid argument
+Memory for the error log isn't allocated unless there has been a trace
+event error, and the error log can be cleared and have its memory
+freed by writing the empty string in truncation mode to it:
 
-  # cat /sys/kernel/debug/tracing/error_log
-  [  217.431858] hist:sched:sched_wakeup: error: Variable already defined
-    Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
-                      ^
-  [  311.554978] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
-    Command: key=comm:p=prio:onchange($q).snapshot()
-                                       ^
+  # echo > tracing/error_log.
 
-  # echo 'hist:keys=pid' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-  # echo 'hist:keys=pid' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-  -su: echo: write error: File exists
-  # echo 'comm="cyclictest"' > /sys/kernel/debug/tracing/events/sched/sched_wakeup/filter
-  -su: echo: write error: Invalid argument
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Improvements-suggested-by: Steve Rostedt <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 223 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace.h |   4 +
+ 2 files changed, 227 insertions(+)
 
-  # cat /sys/kernel/debug/tracing/error_log
-  [  217.431858] hist:sched:sched_wakeup: error: Variable already defined
-    Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
-                      ^
-  [  311.554978] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
-    Command: key=comm:p=prio:onchange($q).snapshot()
-                                       ^
-  [  715.626153] hist:sched:sched_wakeup: error: Hist trigger already exists
-    Command: keys=pid
-             ^
-  [  730.480310] event filter parse error: error: Invalid operator
-    Command: comm="cyclictest"
-                  ^
-
-  # echo "((sig >= 10 && sig < 15) || dsig == 17) && comm != bash" > /sys/kernel/debug/tracing/events/signal/signal_generate/filter
-  -su: echo: write error: Invalid argument
-
-  # cat /sys/kernel/debug/tracing/error_log
-  [  217.431858] hist:sched:sched_wakeup: error: Variable already defined
-    Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
-                      ^
-  [  311.554978] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
-    Command: key=comm:p=prio:onchange($q).snapshot()
-                                       ^
-  [  715.626153] hist:sched:sched_wakeup: error: Hist trigger already exists
-    Command: keys=pid
-             ^
-  [  730.480310] event filter parse error: error: Invalid operator
-    Command: comm="cyclictest"
-                  ^
-  [  800.548673] event filter parse error: error: Field not found
-    Command: ((sig >= 10 && sig < 15) || dsig == 17) && comm != bash
-                                              ^
-
-
-Thanks,
-
-Tom
-
-[1] https://lore.kernel.org/lkml/cover.1523545519.git.tom.zanussi@linux.intel.com/
-[2] https://lore.kernel.org/lkml/20180406105309.b50ea1a21d2cbd9b0e39dbfd@kernel.org/
-[3] https://lore.kernel.org/lkml/e885d1fd02e76f121d6cc2bb28e58b523e2434a7.camel@linux.intel.com/
-[4] https://lore.kernel.org/lkml/cover.1549403369.git.tom.zanussi@linux.intel.com/
-
-
-The following changes since commit a039480e9e93896cadc5a91468964febb3c5d488:
-
-  tracing/probe: Verify alloc_trace_*probe() result (2019-03-14 19:54:21 -0400)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/error_log_v4
-
-Masami Hiramatsu (2):
-  tracing: Use tracing error_log with probe events
-  selftests/ftrace: Add error_log testcase for probe errors
-
-Tom Zanussi (9):
-  tracing: Add tracing error log
-  tracing: Save the last hist command's associated event name
-  tracing: Use tracing error_log with hist triggers
-  tracing: Use tracing error_log with trace event filters
-  tracing: Remove trigger-extended-error-support testcase
-  selftests/ftrace: Add tracing/error_log testcase
-  tracing: Add tracing/error_log Documentation
-  tracing: Add error_log to README
-  selftests/ftrace: Change stderr redirection for probe error_log
-    testcase
-
- Documentation/trace/ftrace.rst                     |  31 +++
- Documentation/trace/histogram.rst                  |  16 +-
- kernel/trace/trace.c                               | 224 +++++++++++++++++
- kernel/trace/trace.h                               |   4 +
- kernel/trace/trace_events_filter.c                 |   7 +-
- kernel/trace/trace_events_hist.c                   | 221 +++++++++--------
- kernel/trace/trace_kprobe.c                        |  77 +++---
- kernel/trace/trace_probe.c                         | 274 +++++++++++++++------
- kernel/trace/trace_probe.h                         |  77 +++++-
- kernel/trace/trace_uprobe.c                        |  44 +++-
- .../ftrace/test.d/ftrace/tracing-error-log.tc      |  23 ++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |  93 +++++++
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |  31 +++
- .../inter-event/trigger-extended-error-support.tc  |  28 ---
- 14 files changed, 883 insertions(+), 267 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
- delete mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ccd759eaad79..0388038a9253 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6875,6 +6875,226 @@ static const struct file_operations snapshot_raw_fops = {
+ 
+ #endif /* CONFIG_TRACER_SNAPSHOT */
+ 
++#define TRACING_LOG_ERRS_MAX	8
++#define TRACING_LOG_LOC_MAX	128
++
++#define CMD_PREFIX "  Command: "
++
++struct err_info {
++	const char	**errs;	/* ptr to loc-specific array of err strings */
++	u8		type;	/* index into errs -> specific err string */
++	u8		pos;	/* MAX_FILTER_STR_VAL = 256 */
++	u64		ts;
++};
++
++struct tracing_log_err {
++	struct list_head	list;
++	struct err_info		info;
++	char			loc[TRACING_LOG_LOC_MAX]; /* err location */
++	char			cmd[MAX_FILTER_STR_VAL]; /* what caused err */
++};
++
++static LIST_HEAD(tracing_err_log);
++static DEFINE_MUTEX(tracing_err_log_lock);
++
++static unsigned int n_tracing_err_log_entries;
++
++struct tracing_log_err *get_tracing_log_err(void)
++{
++	struct tracing_log_err *err;
++
++	if (n_tracing_err_log_entries < TRACING_LOG_ERRS_MAX) {
++		err = kzalloc(sizeof(*err), GFP_KERNEL);
++		if (!err)
++			err = ERR_PTR(-ENOMEM);
++		n_tracing_err_log_entries++;
++
++		return err;
++	}
++
++	err = list_first_entry(&tracing_err_log, struct tracing_log_err, list);
++	list_del(&err->list);
++
++	return err;
++}
++
++/**
++ * err_pos - find the position of a string within a command for error careting
++ * @cmd: The tracing command that caused the error
++ * @str: The string to position the caret at within @cmd
++ *
++ * Finds the position of the first occurence of @str within @cmd.  The
++ * return value can be passed to tracing_log_err() for caret placement
++ * within @cmd.
++ *
++ * Returns the index within @cmd of the first occurence of @str or 0
++ * if @str was not found.
++ */
++unsigned int err_pos(char *cmd, const char *str)
++{
++	char *found;
++
++	if (WARN_ON(!strlen(cmd)))
++		return 0;
++
++	found = strstr(cmd, str);
++	if (found)
++		return found - cmd;
++
++	return 0;
++}
++
++/**
++ * tracing_log_err - write an error to the tracing error log
++ * @loc: A string describing where the error occurred
++ * @cmd: The tracing command that caused the error
++ * @errs: The array of loc-specific static error strings
++ * @type: The index into errs[], which produces the specific static err string
++ * @pos: The position the caret should be placed in the cmd
++ *
++ * Writes an error into tracing/error_log of the form:
++ *
++ * <loc>: error: <text>
++ *   Command: <cmd>
++ *              ^
++ *
++ * tracing/error_log is a small log file containing the last
++ * TRACING_LOG_ERRS_MAX errors (8).  Memory for errors isn't allocated
++ * unless there has been a tracing error, and the error log can be
++ * cleared and have its memory freed by writing the empty string in
++ * truncation mode to it i.e. echo > tracing/error_log.
++ *
++ * NOTE: the @errs array along with the @type param are used to
++ * produce a static error string - this string is not copied and saved
++ * when the error is logged - only a pointer to it is saved.  See
++ * existing callers for examples of how static strings are typically
++ * defined for use with tracing_log_err().
++ */
++void tracing_log_err(const char *loc, const char *cmd,
++		     const char **errs, u8 type, u8 pos)
++{
++	struct tracing_log_err *err;
++
++	mutex_lock(&tracing_err_log_lock);
++	err = get_tracing_log_err();
++	if (PTR_ERR(err) == -ENOMEM) {
++		mutex_unlock(&tracing_err_log_lock);
++		return;
++	}
++
++	snprintf(err->loc, TRACING_LOG_LOC_MAX, "%s: error: ", loc);
++	snprintf(err->cmd, MAX_FILTER_STR_VAL,"\n" CMD_PREFIX "%s\n", cmd);
++
++	err->info.errs = errs;
++	err->info.type = type;
++	err->info.pos = pos;
++	err->info.ts = local_clock();
++
++	list_add_tail(&err->list, &tracing_err_log);
++	mutex_unlock(&tracing_err_log_lock);
++}
++
++static void clear_tracing_err_log(void)
++{
++	struct tracing_log_err *err, *next;
++
++	mutex_lock(&tracing_err_log_lock);
++	list_for_each_entry_safe(err, next, &tracing_err_log, list) {
++		list_del(&err->list);
++		kfree(err);
++	}
++
++	n_tracing_err_log_entries = 0;
++	mutex_unlock(&tracing_err_log_lock);
++}
++
++static void *tracing_err_log_seq_start(struct seq_file *m, loff_t *pos)
++{
++	mutex_lock(&tracing_err_log_lock);
++
++	return seq_list_start(&tracing_err_log, *pos);
++}
++
++static void *tracing_err_log_seq_next(struct seq_file *m, void *v, loff_t *pos)
++{
++	return seq_list_next(v, &tracing_err_log, pos);
++}
++
++static void tracing_err_log_seq_stop(struct seq_file *m, void *v)
++{
++	mutex_unlock(&tracing_err_log_lock);
++}
++
++static void tracing_err_log_show_pos(struct seq_file *m, u8 pos)
++{
++	u8 i;
++
++	for (i = 0; i < sizeof(CMD_PREFIX) - 1; i++)
++		seq_putc(m, ' ');
++	for (i = 0; i < pos; i++)
++		seq_putc(m, ' ');
++	seq_puts(m, "^\n");
++}
++
++static int tracing_err_log_seq_show(struct seq_file *m, void *v)
++{
++	struct tracing_log_err *err = v;
++
++	if (err) {
++		const char *err_text = err->info.errs[err->info.type];
++		u64 sec = err->info.ts;
++		u32 nsec;
++
++		nsec = do_div(sec, NSEC_PER_SEC);
++		seq_printf(m, "[%5llu.%06u] %s%s", sec, nsec / 1000,
++			   err->loc, err_text);
++		seq_printf(m, "%s", err->cmd);
++		tracing_err_log_show_pos(m, err->info.pos);
++	}
++
++	return 0;
++}
++
++static const struct seq_operations tracing_err_log_seq_ops = {
++	.start  = tracing_err_log_seq_start,
++	.next   = tracing_err_log_seq_next,
++	.stop   = tracing_err_log_seq_stop,
++	.show   = tracing_err_log_seq_show
++};
++
++static int tracing_err_log_open(struct inode *inode, struct file *file)
++{
++	if (file->f_mode & FMODE_WRITE) {
++		if (file->f_flags & O_TRUNC)
++			return 0;
++		else
++			return -EINVAL;
++	}
++
++	return seq_open(file, &tracing_err_log_seq_ops);
++}
++
++static ssize_t tracing_err_log_write(struct file *file,
++				     const char __user *buffer,
++				     size_t count, loff_t *ppos)
++{
++	if (count == 1)
++		clear_tracing_err_log();
++	else
++		return -EINVAL;
++
++	*ppos += count;
++
++	return count;
++}
++
++static const struct file_operations tracing_err_log_fops = {
++	.open           = tracing_err_log_open,
++	.write		= tracing_err_log_write,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++};
++
+ static int tracing_buffers_open(struct inode *inode, struct file *filp)
+ {
+ 	struct trace_array *tr = inode->i_private;
+@@ -8258,6 +8478,9 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 			  tr, &snapshot_fops);
+ #endif
+ 
++	trace_create_file("error_log", 0644, d_tracer,
++			  tr, &tracing_err_log_fops);
++
+ 	for_each_tracing_cpu(cpu)
+ 		tracing_init_tracefs_percpu(tr, cpu);
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d80cee49e0eb..b711edbef7e7 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1884,6 +1884,10 @@ extern ssize_t trace_parse_run_command(struct file *file,
+ 		const char __user *buffer, size_t count, loff_t *ppos,
+ 		int (*createfn)(int, char**));
+ 
++extern unsigned int err_pos(char *cmd, const char *str);
++extern void tracing_log_err(const char *loc, const char *cmd,
++			    const char **errs, u8 type, u8 pos);
++
+ /*
+  * Normal trace_printk() and friends allocates special buffers
+  * to do the manipulation, as well as saves the print formats
 -- 
 2.14.1
 
