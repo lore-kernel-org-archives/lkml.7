@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD4CC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ED1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3245D21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E639E21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254079;
-	bh=Y6UPK52dxbAvh0F56qqicUxs58j64ZpXvVgTO1e3aLE=;
+	s=default; t=1553254082;
+	bh=Uob69VCzih5ZrMqeTpFr+J+cOWI20p9KSwr+UUTVWDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZZfaG4Wg82jKmvRb66P6pcwrdHK9tc9gDKq2tEqsPRk4AgyECBTAO/9YBR+6fWAq
-	 K2n1qbzFmz7hgcf5tGDZLS3HroSsTZooutBFUhWHlObCghZobF/FQ+hvHFfkOxw4py
-	 dBN5i6SjXOOvj3xk5cEh6RREfTNop1AIBGkoRFr4=
+	b=iiPRor6TfXQbMAWA9y5ldNZElW9ImNzpAjnvIzsLDP7dj9JRnN5L0sgTDSPDr5ICX
+	 G62g49qZgUwBSIhnNYViKaMQlZV8qaEvn/tnPDwX+NDs8FARU6ks6sjm6+vT8icSqR
+	 O9D9ZG2wXud3CfqNt3BOS5env0irPmrPO/Yu5rwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfCVL15 (ORCPT
+        id S1729622AbfCVL2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729335AbfCVL1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:55 -0400
+        id S1729612AbfCVL15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19AC02183E;
-        Fri, 22 Mar 2019 11:27:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63092183E;
+        Fri, 22 Mar 2019 11:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254074;
-        bh=Y6UPK52dxbAvh0F56qqicUxs58j64ZpXvVgTO1e3aLE=;
+        s=default; t=1553254077;
+        bh=Uob69VCzih5ZrMqeTpFr+J+cOWI20p9KSwr+UUTVWDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+zEqxw7qnTFcQbimZFjQNlEAja/L418rMRS3VVYkGBXeCLTfUsATUREM4xStdLKA
-         qVYH3G7KthWoQi4Ype1s1PxXemMzQcRv4mnVlWTJRgnnkHn36boWV+dAuDwmrw6ncb
-         /MS1DBffnNjl7dc0P0B1QgatQXMv7+Bc1iFlCxZw=
+        b=MpvB/ujraVu9kUMf0wTTqHpQHYZ8+1eLOcAgthYU8giixFrLH4aCGAT168EKKKqud
+         QEvEfCzYKwsGEBQD5RUeKlqt2XS8tlJv636RWJULIlG1F+9Nu+5ptOq2SuKl8utTTr
+         8rFUruypW4WPwDCxrChqUqiW9peKV0AvOnWkvdpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 008/230] mfd: qcom_rpm: write fw_version to CTRL_REG
-Date:   Fri, 22 Mar 2019 12:12:26 +0100
-Message-Id: <20190322111237.336386149@linuxfoundation.org>
+Subject: [PATCH 4.4 009/230] mfd: wm5110: Add missing ASRC rate register
+Date:   Fri, 22 Mar 2019 12:12:27 +0100
+Message-Id: <20190322111237.400626637@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,35 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 504e4175829c44328773b96ad9c538e4783a8d22 ]
+[ Upstream commit 04c801c18ded421845324255e660147a6f58dcd6 ]
 
-This is required as part of the initialization sequence on certain SoCs.
-
-If these registers are not initialized, the hardware can be unresponsive.
-This fixes the driver on apq8060 (HP TouchPad device).
-
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/qcom_rpm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mfd/wm5110-tables.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/qcom_rpm.c b/drivers/mfd/qcom_rpm.c
-index a867cc91657ef..27486f278201e 100644
---- a/drivers/mfd/qcom_rpm.c
-+++ b/drivers/mfd/qcom_rpm.c
-@@ -570,6 +570,10 @@ static int qcom_rpm_probe(struct platform_device *pdev)
- 		return -EFAULT;
- 	}
- 
-+	writel(fw_version[0], RPM_CTRL_REG(rpm, 0));
-+	writel(fw_version[1], RPM_CTRL_REG(rpm, 1));
-+	writel(fw_version[2], RPM_CTRL_REG(rpm, 2));
-+
- 	dev_info(&pdev->dev, "RPM firmware %u.%u.%u\n", fw_version[0],
- 							fw_version[1],
- 							fw_version[2]);
+diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.c
+index 2bb2d0467a92d..c47efe6dcb01b 100644
+--- a/drivers/mfd/wm5110-tables.c
++++ b/drivers/mfd/wm5110-tables.c
+@@ -1622,6 +1622,7 @@ static const struct reg_default wm5110_reg_default[] = {
+ 	{ 0x00000ECD, 0x0000 },    /* R3789  - HPLPF4_2 */
+ 	{ 0x00000EE0, 0x0000 },    /* R3808  - ASRC_ENABLE */
+ 	{ 0x00000EE2, 0x0000 },    /* R3810  - ASRC_RATE1 */
++	{ 0x00000EE3, 0x4000 },    /* R3811  - ASRC_RATE2 */
+ 	{ 0x00000EF0, 0x0000 },    /* R3824  - ISRC 1 CTRL 1 */
+ 	{ 0x00000EF1, 0x0000 },    /* R3825  - ISRC 1 CTRL 2 */
+ 	{ 0x00000EF2, 0x0000 },    /* R3826  - ISRC 1 CTRL 3 */
+@@ -2877,6 +2878,7 @@ static bool wm5110_readable_register(struct device *dev, unsigned int reg)
+ 	case ARIZONA_ASRC_ENABLE:
+ 	case ARIZONA_ASRC_STATUS:
+ 	case ARIZONA_ASRC_RATE1:
++	case ARIZONA_ASRC_RATE2:
+ 	case ARIZONA_ISRC_1_CTRL_1:
+ 	case ARIZONA_ISRC_1_CTRL_2:
+ 	case ARIZONA_ISRC_1_CTRL_3:
 -- 
 2.19.1
 
