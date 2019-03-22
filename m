@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA65C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DBDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BD12054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FC82054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257704;
-	bh=rbAQW8FIwOjyTYbkgLkbQT0+Ek40RrizhduilU2oNKo=;
+	s=default; t=1553257706;
+	bh=GpsUx+ZQEoPrjn4rstYJuVzOfeDhx9uZLINIlYND+I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HulruDAUVRGXVrl3P8Cs2N7GPbeqRopg/Gr2jsPJpTU7aRhiEPQocYMMMasK82X6y
-	 3oFKhVib96KIt53fLHMITwD1Lfj3kvWyeuAiAe6/KyX4y26VJBhnwlp9upv+5AKUw2
-	 5XOLionA3DLIhiC4ghVsYGPZW0yd8XUGp8WG4T7I=
+	b=undFJXpme5bvvC/nZ6jspoZThL9WNCSNyByBEWoLUSDYNWsi7kd42V03J8ZQbtOlZ
+	 n958Fj1Gz8kjH3vhTB4UXengNmeF5eodEIyvUoT7VyxmKD4W+OZ6dzn/qkTGhoP8C6
+	 weXlnHWhDtQOjtPuK8SkjWkVfi4L+iXMZaetbyok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390754AbfCVMUn (ORCPT
+        id S2390714AbfCVM2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59618 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390224AbfCVMUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:20:37 -0400
+        id S2390262AbfCVMUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:20:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10FE621900;
-        Fri, 22 Mar 2019 12:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E97F218A1;
+        Fri, 22 Mar 2019 12:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257236;
-        bh=rbAQW8FIwOjyTYbkgLkbQT0+Ek40RrizhduilU2oNKo=;
+        s=default; t=1553257242;
+        bh=GpsUx+ZQEoPrjn4rstYJuVzOfeDhx9uZLINIlYND+I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZ/1JBEq4ujEnP1iowlMZLDPBGVHwLeNUwTFkdVgkOH/FaJsBWZAX9zkIS0I7CNzz
-         u+PAfw2yh4ohPHaJIb295hAEY9jcdkxItRtlYodoiRwSD+FL9byghGf0tfzcij6cM5
-         CuQW9A5GnDfCq2R6uDD1fT9f1IoVNVmYbr33cWXs=
+        b=sFp/PRpqfUAXeH+HLtjx3qU6+EGekV33K3UxTc0aio5fTr7lOsuHV+8mO0YNapnU1
+         B/mjPopnI4lHefSXcQU80ANSNpwFgsGCVpwP0gM+Px+BaAYwLEfChUQ8RMQSUQLboO
+         6xQnlPx1hl9f2L5/9uxUfzPxS2TpYyUusk1Mc3yI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.0 172/238] arm64: debug: Dont propagate UNKNOWN FAR into si_code for debug signals
-Date:   Fri, 22 Mar 2019 12:16:31 +0100
-Message-Id: <20190322111308.434783417@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 5.0 174/238] arm64: KVM: Fix architecturally invalid reset value for FPEXC32_EL2
+Date:   Fri, 22 Mar 2019 12:16:33 +0100
+Message-Id: <20190322111308.547007032@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,61 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+From: Dave Martin <Dave.Martin@arm.com>
 
-commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
+commit c88b093693ccbe41991ef2e9b1d251945e6e54ed upstream.
 
-FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
-taking a hardware watchpoint. Unfortunately, if a debug handler returns
-a non-zero value, then we will propagate the UNKNOWN FAR value to
-userspace via the si_addr field of the SIGTRAP siginfo_t.
+Due to what looks like a typo dating back to the original addition
+of FPEXC32_EL2 handling, KVM currently initialises this register to
+an architecturally invalid value.
 
-Instead, let's set si_addr to take on the PC of the faulting instruction,
-which we have available in the current pt_regs.
+As a result, the VECITR field (RES1) in bits [10:8] is initialised
+with 0, and the two reserved (RES0) bits [6:5] are initialised with
+1.  (In the Common VFP Subarchitecture as specified by ARMv7-A,
+these two bits were IMP DEF.  ARMv8-A removes them.)
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+This patch changes the reset value from 0x70 to 0x700, which
+reflects the architectural constraints and is presumably what was
+originally intended.
+
+Cc: <stable@vger.kernel.org> # 4.12.x-
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Fixes: 62a89c44954f ("arm64: KVM: 32bit handling of coprocessor traps")
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/fault.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/kvm/sys_regs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -824,11 +824,12 @@ void __init hook_debug_fault_code(int nr
- 	debug_fault_info[nr].name	= name;
- }
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1476,7 +1476,7 @@ static const struct sys_reg_desc sys_reg
  
--asmlinkage int __exception do_debug_exception(unsigned long addr,
-+asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 					      unsigned int esr,
- 					      struct pt_regs *regs)
- {
- 	const struct fault_info *inf = esr_to_debug_fault_info(esr);
-+	unsigned long pc = instruction_pointer(regs);
- 	int rv;
+ 	{ SYS_DESC(SYS_DACR32_EL2), NULL, reset_unknown, DACR32_EL2 },
+ 	{ SYS_DESC(SYS_IFSR32_EL2), NULL, reset_unknown, IFSR32_EL2 },
+-	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x70 },
++	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x700 },
+ };
  
- 	/*
-@@ -838,14 +839,14 @@ asmlinkage int __exception do_debug_exce
- 	if (interrupts_enabled(regs))
- 		trace_hardirqs_off();
- 
--	if (user_mode(regs) && !is_ttbr0_addr(instruction_pointer(regs)))
-+	if (user_mode(regs) && !is_ttbr0_addr(pc))
- 		arm64_apply_bp_hardening();
- 
--	if (!inf->fn(addr, esr, regs)) {
-+	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
- 		rv = 1;
- 	} else {
- 		arm64_notify_die(inf->name, regs,
--				 inf->sig, inf->code, (void __user *)addr, esr);
-+				 inf->sig, inf->code, (void __user *)pc, esr);
- 		rv = 0;
- 	}
- 
+ static bool trap_dbgidr(struct kvm_vcpu *vcpu,
 
 
