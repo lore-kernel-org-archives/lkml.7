@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D84C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC33C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D1F21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533BB21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257289;
-	bh=99fDLY2VefQQ0muZGqq+a+40JBF6nXswHyx8SPqL7p8=;
+	s=default; t=1553257294;
+	bh=MWx5qREbaF92xdA1pGLz5X73weeDdNV270W5qiMl0DE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUTCo1oi4N3OxJ7LVhpCVdlcZDVL2O5BAQwsD97jm55Zvm4vQ3r+iWK0JIGwFJKEN
-	 4n3WcTXNp7w0mwdxaAaFulnSdFaMoi21f7lYxd4RoPldPMVMU1FcLyV5xd77Dq0y06
-	 cMW7Iv7u4H5UD8SvWptWRb9nniKV/UxVBj9rU+AQ=
+	b=JbCuVEX3JwjVsQ8xRLpR2Jrh7m/EDFfRSNq26QoZK/B24Bsb7VWU2ar+DDa9C6Lwm
+	 u52aIwuu/1w0TaHavwZUSnK0l/7xxUudpPMaJITiLJOHmBzjm2py5Dntsvbh+tKpKU
+	 n2n/naHuftcxk6HtsetodPOpgGKI08e0hSrwW5oY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390874AbfCVMV2 (ORCPT
+        id S2390884AbfCVMVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60468 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390846AbfCVMVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:21:23 -0400
+        id S2390866AbfCVMV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:21:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EDB2054F;
-        Fri, 22 Mar 2019 12:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC032054F;
+        Fri, 22 Mar 2019 12:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257283;
-        bh=99fDLY2VefQQ0muZGqq+a+40JBF6nXswHyx8SPqL7p8=;
+        s=default; t=1553257285;
+        bh=MWx5qREbaF92xdA1pGLz5X73weeDdNV270W5qiMl0DE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmFhRGQXLNJUd2aOuwi9n52o8nfFZbqmpzbeU9oJ8utd0IEPKFZPuxvOlefSUQwL3
-         UC90n9MOG/RHaPRNgAq+XtmFmaxjjxt7NqCwMwbKTLrRxpXcfu8zoUP65rUMjMIBmp
-         nB8/4rkmFvSPW5tZvQCBhnLEF5PTwcDk5FaRZmk0=
+        b=zHzvFeNm3+OTZvI7qhodNQY9pKRlVvGL01uOUD8kXSatJUCKkzeMXU14XtC6nK5hL
+         bxtR46d0Yq9ZVohlZUrg9vASzLBq4wfi1tGWMF/2TpPOeTz1zdGhi13qLke+hzav+Z
+         /eNaUJVOBpgmbwWAHnI27hKGVS54/Dr7HYE5ukMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.0 185/238] NFS: Fix an I/O request leakage in nfs_do_recoalesce
-Date:   Fri, 22 Mar 2019 12:16:44 +0100
-Message-Id: <20190322111309.171271476@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 159/238] powerpc/83xx: Also save/restore SPRG4-7 during suspend
+Date:   Fri, 22 Mar 2019 12:16:18 +0100
+Message-Id: <20190322111307.684684567@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,31 +64,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 4d91969ed4dbcefd0e78f77494f0cb8fada9048a upstream.
+commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
 
-Whether we need to exit early, or just reprocess the list, we
-must not lost track of the request which failed to get recoalesced.
+The 83xx has 8 SPRG registers and uses at least SPRG4
+for DTLB handling LRU.
 
-Fixes: 03d5eb65b538 ("NFS: Fix a memory leak in nfs_do_recoalesce")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.0+
+Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/platforms/83xx/suspend-asm.S |   34 +++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1092,7 +1092,6 @@ static int nfs_do_recoalesce(struct nfs_
- 			struct nfs_page *req;
+--- a/arch/powerpc/platforms/83xx/suspend-asm.S
++++ b/arch/powerpc/platforms/83xx/suspend-asm.S
+@@ -26,13 +26,13 @@
+ #define SS_MSR		0x74
+ #define SS_SDR1		0x78
+ #define SS_LR		0x7c
+-#define SS_SPRG		0x80 /* 4 SPRGs */
+-#define SS_DBAT		0x90 /* 8 DBATs */
+-#define SS_IBAT		0xd0 /* 8 IBATs */
+-#define SS_TB		0x110
+-#define SS_CR		0x118
+-#define SS_GPREG	0x11c /* r12-r31 */
+-#define STATE_SAVE_SIZE 0x16c
++#define SS_SPRG		0x80 /* 8 SPRGs */
++#define SS_DBAT		0xa0 /* 8 DBATs */
++#define SS_IBAT		0xe0 /* 8 IBATs */
++#define SS_TB		0x120
++#define SS_CR		0x128
++#define SS_GPREG	0x12c /* r12-r31 */
++#define STATE_SAVE_SIZE 0x17c
  
- 			req = list_first_entry(&head, struct nfs_page, wb_list);
--			nfs_list_remove_request(req);
- 			if (__nfs_pageio_add_request(desc, req))
- 				continue;
- 			if (desc->pg_error < 0) {
+ 	.section .data
+ 	.align	5
+@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
+ 	stw	r7, SS_SPRG+12(r3)
+ 	stw	r8, SS_SDR1(r3)
+ 
++	mfspr	r4, SPRN_SPRG4
++	mfspr	r5, SPRN_SPRG5
++	mfspr	r6, SPRN_SPRG6
++	mfspr	r7, SPRN_SPRG7
++
++	stw	r4, SS_SPRG+16(r3)
++	stw	r5, SS_SPRG+20(r3)
++	stw	r6, SS_SPRG+24(r3)
++	stw	r7, SS_SPRG+28(r3)
++
+ 	mfspr	r4, SPRN_DBAT0U
+ 	mfspr	r5, SPRN_DBAT0L
+ 	mfspr	r6, SPRN_DBAT1U
+@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
+ 	mtspr	SPRN_IBAT7U, r6
+ 	mtspr	SPRN_IBAT7L, r7
+ 
++	lwz	r4, SS_SPRG+16(r3)
++	lwz	r5, SS_SPRG+20(r3)
++	lwz	r6, SS_SPRG+24(r3)
++	lwz	r7, SS_SPRG+28(r3)
++
++	mtspr	SPRN_SPRG4, r4
++	mtspr	SPRN_SPRG5, r5
++	mtspr	SPRN_SPRG6, r6
++	mtspr	SPRN_SPRG7, r7
++
+ 	lwz	r4, SS_SPRG+0(r3)
+ 	lwz	r5, SS_SPRG+4(r3)
+ 	lwz	r6, SS_SPRG+8(r3)
 
 
