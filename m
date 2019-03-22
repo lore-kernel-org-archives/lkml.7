@@ -2,196 +2,133 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CC5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E905A2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F8C2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="B/o/gfHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfCVRl2 (ORCPT
+        id S1728021AbfCVRnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:41:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37150 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbfCVRl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:41:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE834882FF;
-        Fri, 22 Mar 2019 17:41:25 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86E1A1001E6F;
-        Fri, 22 Mar 2019 17:41:06 +0000 (UTC)
-Subject: Re: [PATCH v5 3/3] locking/rwsem: Optimize down_read_trylock()
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-mips@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
-        x86@kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-um@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
-        openrisc@lists.librecores.org, Borislav Petkov <bp@alien8.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        linux-parisc@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190322143008.21313-1-longman@redhat.com>
- <20190322143008.21313-4-longman@redhat.com>
- <20190322172501.3nbjw6e2wqsaisgw@shell.armlinux.org.uk>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <27c2fb96-daa4-ba2c-da06-e559dc5b693e@redhat.com>
-Date:   Fri, 22 Mar 2019 13:41:05 -0400
+        Fri, 22 Mar 2019 13:43:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39690 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727752AbfCVRnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:43:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m13so1958570lfb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IMZyRvjTUJeXcyRJIt9BLHdj0+q+YadZU/4CnekWVCQ=;
+        b=B/o/gfHZWjYbWJHqRjEbFyWu0kUzjrPb1foz3cnBpLuUV4kIaDcbO5xS5GqEKi/VOl
+         Uz8ITaf57VJsn16Fgs3mQePwmdBOzqg4gk4/lM96R0RMljGjDIXfxUXwV/EMijjorCyD
+         xdVTWG4ulpRgm9+tBE/8/F2Mk0fb2dFBLYSo45BViQTfWgfASEKiYtdaFgD7b2PfmRto
+         Kg0ZHoTBN5Lk7rN/VSIY6YlvHwvWblJ0X1afKiY4YW5paMY+j6H+NPMZSHx0Z3GHFMED
+         81y3yzJJhoTSkljy1EJUfaUzIv9G0oselYFTksBXuxKqjbAnZ9/ACD5LMSyHgE7eQZoF
+         jlDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=IMZyRvjTUJeXcyRJIt9BLHdj0+q+YadZU/4CnekWVCQ=;
+        b=L2nNgorrk/kPw0ab0F7oronQof+75Tt3/hDh3RsBPdo//Uw9KiclUwhDHSmSmC41Se
+         qfT+1Sa0iirb22V9XrGgfk3IIZXu82eqq0msxK+kexRUlEtP9cL6gB+9v29m8BQPH5ni
+         vOkodGe88q1/McMroov/KjAWub8Qxpy88B3/KV7/JXSt6YwXP4qqdmPec1qDxCd561st
+         hDArt4f4uYR92hhH6Sm6P4igswBzsdAQ3LCXVCyEiNJiPzpP8jwwEDV45Iq4WHJVHbmu
+         aJGkmIOPvLt/pbsxMmRbI0PzRIPi95j+63HoD5jgffEPeSAnJVu4KUegaGUrWy33FLED
+         9/jQ==
+X-Gm-Message-State: APjAAAVaOORO95rVRd4Fl6bBUfFpDsobXWA1F067KrBd4Nn4KB3cI+vG
+        BYhnI+Rj8yn7xYqUSbfnm5IFDQ==
+X-Google-Smtp-Source: APXvYqwGlmAiwpa2Tm4ZwX4ZGEN3Y1vnHzePPZ+l3htJJ6q6Zx2yMn4/w7K5SCWXmi0/5KAihX3iwg==
+X-Received: by 2002:ac2:50d8:: with SMTP id h24mr5738535lfm.7.1553276610764;
+        Fri, 22 Mar 2019 10:43:30 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.86.92])
+        by smtp.gmail.com with ESMTPSA id l12sm1797539lfc.61.2019.03.22.10.43.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 10:43:29 -0700 (PDT)
+Subject: Re: [PATCH v8 1/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
+        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        zhengxunli@mxic.com.tw
+References: <1548658158-5460-1-git-send-email-masonccyang@mxic.com.tw>
+ <1548658158-5460-2-git-send-email-masonccyang@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <75c4642b-536e-f596-158d-387a63a5f6c5@cogentembedded.com>
+Date:   Fri, 22 Mar 2019 20:43:28 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190322172501.3nbjw6e2wqsaisgw@shell.armlinux.org.uk>
+In-Reply-To: <1548658158-5460-2-git-send-email-masonccyang@mxic.com.tw>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 22 Mar 2019 17:41:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/22/2019 01:25 PM, Russell King - ARM Linux admin wrote:
-> On Fri, Mar 22, 2019 at 10:30:08AM -0400, Waiman Long wrote:
->> Modify __down_read_trylock() to optimize for an unlocked rwsem and make
->> it generate slightly better code.
->>
->> Before this patch, down_read_trylock:
->>
->>    0x0000000000000000 <+0>:     callq  0x5 <down_read_trylock+5>
->>    0x0000000000000005 <+5>:     jmp    0x18 <down_read_trylock+24>
->>    0x0000000000000007 <+7>:     lea    0x1(%rdx),%rcx
->>    0x000000000000000b <+11>:    mov    %rdx,%rax
->>    0x000000000000000e <+14>:    lock cmpxchg %rcx,(%rdi)
->>    0x0000000000000013 <+19>:    cmp    %rax,%rdx
->>    0x0000000000000016 <+22>:    je     0x23 <down_read_trylock+35>
->>    0x0000000000000018 <+24>:    mov    (%rdi),%rdx
->>    0x000000000000001b <+27>:    test   %rdx,%rdx
->>    0x000000000000001e <+30>:    jns    0x7 <down_read_trylock+7>
->>    0x0000000000000020 <+32>:    xor    %eax,%eax
->>    0x0000000000000022 <+34>:    retq
->>    0x0000000000000023 <+35>:    mov    %gs:0x0,%rax
->>    0x000000000000002c <+44>:    or     $0x3,%rax
->>    0x0000000000000030 <+48>:    mov    %rax,0x20(%rdi)
->>    0x0000000000000034 <+52>:    mov    $0x1,%eax
->>    0x0000000000000039 <+57>:    retq
->>
->> After patch, down_read_trylock:
->>
->>    0x0000000000000000 <+0>:	callq  0x5 <down_read_trylock+5>
->>    0x0000000000000005 <+5>:	xor    %eax,%eax
->>    0x0000000000000007 <+7>:	lea    0x1(%rax),%rdx
->>    0x000000000000000b <+11>:	lock cmpxchg %rdx,(%rdi)
->>    0x0000000000000010 <+16>:	jne    0x29 <down_read_trylock+41>
->>    0x0000000000000012 <+18>:	mov    %gs:0x0,%rax
->>    0x000000000000001b <+27>:	or     $0x3,%rax
->>    0x000000000000001f <+31>:	mov    %rax,0x20(%rdi)
->>    0x0000000000000023 <+35>:	mov    $0x1,%eax
->>    0x0000000000000028 <+40>:	retq
->>    0x0000000000000029 <+41>:	test   %rax,%rax
->>    0x000000000000002c <+44>:	jns    0x7 <down_read_trylock+7>
->>    0x000000000000002e <+46>:	xor    %eax,%eax
->>    0x0000000000000030 <+48>:	retq
->>
->> By using a rwsem microbenchmark, the down_read_trylock() rate (with a
->> load of 10 to lengthen the lock critical section) on a x86-64 system
->> before and after the patch were:
->>
->>                  Before Patch    After Patch
->>    # of Threads     rlock           rlock
->>    ------------     -----           -----
->>         1           14,496          14,716
->>         2            8,644           8,453
->> 	4            6,799           6,983
->> 	8            5,664           7,190
->>
->> On a ARM64 system, the performance results were:
->>
->>                  Before Patch    After Patch
->>    # of Threads     rlock           rlock
->>    ------------     -----           -----
->>         1           23,676          24,488
->>         2            7,697           9,502
->>         4            4,945           3,440
->>         8            2,641           1,603
->>
->> For the uncontended case (1 thread), the new down_read_trylock() is a
->> little bit faster. For the contended cases, the new down_read_trylock()
->> perform pretty well in x86-64, but performance degrades at high
->> contention level on ARM64.
-> So, 70% for 4 threads, 61% for 4 threads - does this trend
-> continue tailing off as the number of threads (and cores)
-> increase?
->
-I didn't try higher number of contending threads. I won't worry too much
-about contention as trylock is a one-off event. The chance of having
-more than one trylock happening simultaneously is very small.
+Hello!
 
-Cheers,
-Longman
+On 01/28/2019 09:49 AM, Mason Yang wrote:
 
+> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+   I've just found an error due to which my flash couldn't be read.
+
+[...]
+> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
+> new file mode 100644
+> index 0000000..ea12017
+> --- /dev/null
+> +++ b/drivers/spi/spi-renesas-rpc.c
+> @@ -0,0 +1,804 @@
+[...]
+> +static void rpc_spi_mem_set_prep_op_cfg(struct spi_device *spi,
+> +					const struct spi_mem_op *op,
+> +					u64 *offs, size_t *len)
+> +{
+> +	struct rpc_spi *rpc = spi_controller_get_devdata(spi->controller);
+
+> +	if (op->dummy.nbytes) {
+> +		rpc->smenr |= RPC_SMENR_DME;
+> +		rpc->dummy = RPC_SMDMCR_DMCYC(op->dummy.nbytes);
+
+   SMDMCR.DMCYC is in bits -- you forgot to multiply by 8.
+
+> +		rpc->totalxferlen += op->dummy.nbytes;
+> +	}[...]
+> +static void rpc_spi_transfer_setup(struct rpc_spi *rpc,
+> +				   struct spi_message *msg)
+> +{
+> +	struct spi_transfer *t, xfer[4] = { };
+> +	u32 i, xfercnt, xferpos = 0;
+[...]
+> +	if (xfercnt > 3 && xfer[2].len && xfer[2].tx_buf) {
+> +		rpc->smenr |= RPC_SMENR_DME;
+> +		rpc->dummy = RPC_SMDMCR_DMCYC(xfer[2].len);
+
+    Here as well, I guess.
+
+[...]
+
+MBR, Sergei
