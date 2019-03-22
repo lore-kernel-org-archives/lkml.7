@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180C7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C9FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D976E20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055F121939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255460;
-	bh=alaXUz021eVBDPg3/keTevQjU2lkzuy5nHDnkELhemI=;
+	s=default; t=1553255466;
+	bh=KCQ6nCeht4Gfefhx4JVGZnX0bBQjjpjTRk/qfUNTccA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TPNY4KYn8FxGpj4Xbl/zMHCxleyIw9DxdPAb2u5ma/XLtM9hndkivLAwQ11VE4Fv1
-	 QvTd657LXXzu1iTklUDJNSvEeKW0HUvU9ZSgZmXIyP8hpnsuxqcqfbQd4rl34w1wah
-	 8jtgZT91ocNB/vxk7O+EehCidNX0aO3Scb/97dY0=
+	b=KMI58Sxy/38YTZ3Z/yE6YvfnsgpuS3J0839t6cBY9i3SapQ/kJqtd3BqG0J4w68Iu
+	 qs4yF+17Fyo+20z/MBBFa6jcfAah9NQP4novB+xV7/6mNumxisq35YG1NKF2LJuHAW
+	 IIjZ4RWwxwnUaZ5e9aVudVMrFCMkHYzIw/IeVr6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732730AbfCVLu7 (ORCPT
+        id S1732737AbfCVLvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbfCVLu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:50:56 -0400
+        id S1732485AbfCVLvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:51:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEE1E20693;
-        Fri, 22 Mar 2019 11:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4FA2082C;
+        Fri, 22 Mar 2019 11:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255456;
-        bh=alaXUz021eVBDPg3/keTevQjU2lkzuy5nHDnkELhemI=;
+        s=default; t=1553255459;
+        bh=KCQ6nCeht4Gfefhx4JVGZnX0bBQjjpjTRk/qfUNTccA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DbowCW8RCZChCvpHGFdgAgGqWLhckGGRnonyt1WGZ2RtIIHznkAOz7WHBRaU+EyZM
-         CGTU8yX5R8JCoIh2R9s/fPS3lQVHrwxu3qTNlvH4qx2mO8LNC2pN7982bDJGwp5jby
-         glrSU0MmP3NcywJRKzEGvjd+lFy+iw8xw6R5cUWA=
+        b=FIqH4i2CFvhjmV+LPzbFM6fkcqXugsx6DvpNlbhTcuUI5PtmqjVNgTkChRXXOF5c4
+         X06qWYdBRznBnRUfnaBuadoN9zgRyLiPDv0Jta5xH2lhS4m+EEbfvaO030R7lENlz+
+         8z2w+8bGzuZtRvxRTKU2zYh6RG+No6XL+TgBfbOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 078/183] crypto: arm64/aes-ccm - fix bugs in non-NEON fallback routine
-Date:   Fri, 22 Mar 2019 12:15:06 +0100
-Message-Id: <20190322111247.375560800@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.14 079/183] CIFS: Do not reset lease state to NONE on lease break
+Date:   Fri, 22 Mar 2019 12:15:07 +0100
+Message-Id: <20190322111247.453291129@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,48 +65,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 969e2f59d589c15f6aaf306e590dde16f12ea4b3 upstream.
+commit 7b9b9edb49ad377b1e06abf14354c227e9ac4b06 upstream.
 
-Commit 5092fcf34908 ("crypto: arm64/aes-ce-ccm: add non-SIMD generic
-fallback") introduced C fallback code to replace the NEON routines
-when invoked from a context where the NEON is not available (i.e.,
-from the context of a softirq taken while the NEON is already being
-used in kernel process context)
+Currently on lease break the client sets a caching level twice:
+when oplock is detected and when oplock is processed. While the
+1st attempt sets the level to the value provided by the server,
+the 2nd one resets the level to None unconditionally.
+This happens because the oplock/lease processing code was changed
+to avoid races between page cache flushes and oplock breaks.
+The commit c11f1df5003d534 ("cifs: Wait for writebacks to complete
+before attempting write.") fixed the races for oplocks but didn't
+apply the same changes for leases resulting in overwriting the
+server granted value to None. Fix this by properly processing
+lease breaks.
 
-Fix two logical flaws in the MAC calculation of the associated data.
-
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 5092fcf34908 ("crypto: arm64/aes-ce-ccm: add non-SIMD generic fallback")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-ce-ccm-glue.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/cifs/smb2misc.c |   17 ++++++++++++++---
+ fs/cifs/smb2ops.c  |   15 ++++++++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/crypto/aes-ce-ccm-glue.c
-+++ b/arch/arm64/crypto/aes-ce-ccm-glue.c
-@@ -123,7 +123,7 @@ static void ccm_update_mac(struct crypto
- 			abytes -= added;
- 		}
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -479,7 +479,6 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct TCP_Server_Info *server = tcon->ses->server;
+ 	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+@@ -499,13 +498,25 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 		cifs_dbg(FYI, "lease key match, lease break 0x%x\n",
+ 			 le32_to_cpu(rsp->NewLeaseState));
  
--		while (abytes > AES_BLOCK_SIZE) {
-+		while (abytes >= AES_BLOCK_SIZE) {
- 			__aes_arm64_encrypt(key->key_enc, mac, mac,
- 					    num_rounds(key));
- 			crypto_xor(mac, in, AES_BLOCK_SIZE);
-@@ -137,8 +137,6 @@ static void ccm_update_mac(struct crypto
- 					    num_rounds(key));
- 			crypto_xor(mac, in, abytes);
- 			*macp = abytes;
--		} else {
--			*macp = 0;
- 		}
- 	}
+-		server->ops->set_oplock_level(cinode, lease_state, 0, NULL);
+-
+ 		if (ack_req)
+ 			cfile->oplock_break_cancelled = false;
+ 		else
+ 			cfile->oplock_break_cancelled = true;
+ 
++		set_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
++
++		/*
++		 * Set or clear flags depending on the lease state being READ.
++		 * HANDLE caching flag should be added when the client starts
++		 * to defer closing remote file handles with HANDLE leases.
++		 */
++		if (lease_state & SMB2_LEASE_READ_CACHING_HE)
++			set_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				&cinode->flags);
++		else
++			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				  &cinode->flags);
++
+ 		queue_work(cifsoplockd_wq, &cfile->oplock_break);
+ 		kfree(lw);
+ 		return true;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1933,6 +1933,15 @@ smb2_downgrade_oplock(struct TCP_Server_
  }
+ 
+ static void
++smb21_downgrade_oplock(struct TCP_Server_Info *server,
++		       struct cifsInodeInfo *cinode, bool set_level2)
++{
++	server->ops->set_oplock_level(cinode,
++				      set_level2 ? SMB2_LEASE_READ_CACHING_HE :
++				      0, 0, NULL);
++}
++
++static void
+ smb2_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
+ 		      unsigned int epoch, bool *purge_cache)
+ {
+@@ -2917,7 +2926,7 @@ struct smb_version_operations smb21_oper
+ 	.print_stats = smb2_print_stats,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
+@@ -3012,7 +3021,7 @@ struct smb_version_operations smb30_oper
+ 	.dump_share_caps = smb2_dump_share_caps,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
+@@ -3117,7 +3126,7 @@ struct smb_version_operations smb311_ope
+ 	.dump_share_caps = smb2_dump_share_caps,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
 
 
