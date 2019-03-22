@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DEBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D622205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB8E205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258045;
-	bh=GbgIjC8+0X2SIo2Y02LstKsPVcS2DuQKT46R7hod5iI=;
+	s=default; t=1553258049;
+	bh=9Jctmm5+BIvXzDNxS51eYe+c8Mn1wHB/aNy+PNMtbQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gZfwjt48TBE2p3QBAAVaeYaXqh3MWaxAjGOgG0Ko39YGOvMKwzzUx4t7R4h4/tpP
-	 uAGBqpJ1/VypPa3rYphsAJftGoCar2jHAWDtBDanVlHkVsGoLwzldacwX0sV4DcC63
-	 H7dRdw03vKQYfSr9eqMlYN0bdYsvYifox2sauaRI=
+	b=mgOwLR14Dt/ZczSVJZB56KI3vTZ5ZyOBl1Vp6y7yBtKOweZFV64rxlyeGSD6Nc90o
+	 TLWMU/yhEGalJTRm1FfJm2lIBE+828jl/Jvnm52YmMv4AjRRUvuO1zSAVxJ2/UKJww
+	 0zR2jmoTgBdFYRpyhy+ceOjk/houI3pSEt1dxVtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389635AbfCVMOB (ORCPT
+        id S2389822AbfCVMNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52136 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389827AbfCVMNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:52 -0400
+        id S2389807AbfCVMNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8065420830;
-        Fri, 22 Mar 2019 12:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE26B20830;
+        Fri, 22 Mar 2019 12:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256832;
-        bh=GbgIjC8+0X2SIo2Y02LstKsPVcS2DuQKT46R7hod5iI=;
+        s=default; t=1553256825;
+        bh=9Jctmm5+BIvXzDNxS51eYe+c8Mn1wHB/aNy+PNMtbQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdbCGO0Op/4poN3iqjxC6QSAMjEqxcpA6E/3ydHaLrp4+3Fp7wdqE+7Fhu4G5VzRd
-         iyakgSocgQnqBOGOYWc/QhsJTsR1c91AugR4nGbE3tPrpsOWX8vcIobjazKv3ps8RU
-         N/VitJYHQpdmkqna8dF0NHPZKMfUYA3WGWjW2UA8=
+        b=ILvjnYaRZ+TiBxvcKqkZAqBk00LU8HwFhz+LS9XtONEZKDdxaj1sZZZALfxLbDtm7
+         4XS2adbjiTP0jp939bOv9mPPxp1tKeFbVOEVJZDdIlkQ8DYd04Lva/VYXIteD1kmnX
+         O+4ezK384SDaOIcLKnCh36bKVO43KT+2IzZ+4BXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 049/238] crypto: arm64/aes-ccm - fix logical bug in AAD MAC handling
-Date:   Fri, 22 Mar 2019 12:14:28 +0100
-Message-Id: <20190322111301.298077615@linuxfoundation.org>
+Subject: [PATCH 5.0 048/238] crypto: x86/morus - fix handling chunked inputs and MAY_SLEEP
+Date:   Fri, 22 Mar 2019 12:14:27 +0100
+Message-Id: <20190322111301.231522715@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,47 +66,159 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit eaf46edf6ea89675bd36245369c8de5063a0272c upstream.
+commit 2060e284e9595fc3baed6e035903c05b93266555 upstream.
 
-The NEON MAC calculation routine fails to handle the case correctly
-where there is some data in the buffer, and the input fills it up
-exactly. In this case, we enter the loop at the end with w8 == 0,
-while a negative value is assumed, and so the loop carries on until
-the increment of the 32-bit counter wraps around, which is quite
-obviously wrong.
+The x86 MORUS implementations all fail the improved AEAD tests because
+they produce the wrong result with some data layouts.  The issue is that
+they assume that if the skcipher_walk API gives 'nbytes' not aligned to
+the walksize (a.k.a. walk.stride), then it is the end of the data.  In
+fact, this can happen before the end.
 
-So omit the loop altogether in this case, and exit right away.
+Also, when the CRYPTO_TFM_REQ_MAY_SLEEP flag is given, they can
+incorrectly sleep in the skcipher_walk_*() functions while preemption
+has been disabled by kernel_fpu_begin().
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: a3fd82105b9d1 ("arm64/crypto: AES in CCM mode using ARMv8 Crypto ...")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fix these bugs.
+
+Fixes: 56e8e57fc3a7 ("crypto: morus - Add common SIMD glue code for MORUS")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-ce-ccm-core.S |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/crypto/morus1280_glue.c |   40 +++++++++++++++------------------------
+ arch/x86/crypto/morus640_glue.c  |   39 ++++++++++++++------------------------
+ 2 files changed, 31 insertions(+), 48 deletions(-)
 
---- a/arch/arm64/crypto/aes-ce-ccm-core.S
-+++ b/arch/arm64/crypto/aes-ce-ccm-core.S
-@@ -74,12 +74,13 @@ ENTRY(ce_aes_ccm_auth_data)
- 	beq	10f
- 	ext	v0.16b, v0.16b, v0.16b, #1	/* rotate out the mac bytes */
- 	b	7b
--8:	mov	w7, w8
-+8:	cbz	w8, 91f
-+	mov	w7, w8
- 	add	w8, w8, #16
- 9:	ext	v1.16b, v1.16b, v1.16b, #1
- 	adds	w7, w7, #1
- 	bne	9b
--	eor	v0.16b, v0.16b, v1.16b
-+91:	eor	v0.16b, v0.16b, v1.16b
- 	st1	{v0.16b}, [x0]
- 10:	str	w8, [x3]
- 	ret
+--- a/arch/x86/crypto/morus1280_glue.c
++++ b/arch/x86/crypto/morus1280_glue.c
+@@ -85,31 +85,20 @@ static void crypto_morus1280_glue_proces
+ 
+ static void crypto_morus1280_glue_process_crypt(struct morus1280_state *state,
+ 						struct morus1280_ops ops,
+-						struct aead_request *req)
++						struct skcipher_walk *walk)
+ {
+-	struct skcipher_walk walk;
+-	u8 *cursor_src, *cursor_dst;
+-	unsigned int chunksize, base;
+-
+-	ops.skcipher_walk_init(&walk, req, false);
+-
+-	while (walk.nbytes) {
+-		cursor_src = walk.src.virt.addr;
+-		cursor_dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
+-
+-		ops.crypt_blocks(state, cursor_src, cursor_dst, chunksize);
+-
+-		base = chunksize & ~(MORUS1280_BLOCK_SIZE - 1);
+-		cursor_src += base;
+-		cursor_dst += base;
+-		chunksize &= MORUS1280_BLOCK_SIZE - 1;
+-
+-		if (chunksize > 0)
+-			ops.crypt_tail(state, cursor_src, cursor_dst,
+-				       chunksize);
++	while (walk->nbytes >= MORUS1280_BLOCK_SIZE) {
++		ops.crypt_blocks(state, walk->src.virt.addr,
++				 walk->dst.virt.addr,
++				 round_down(walk->nbytes,
++					    MORUS1280_BLOCK_SIZE));
++		skcipher_walk_done(walk, walk->nbytes % MORUS1280_BLOCK_SIZE);
++	}
+ 
+-		skcipher_walk_done(&walk, 0);
++	if (walk->nbytes) {
++		ops.crypt_tail(state, walk->src.virt.addr, walk->dst.virt.addr,
++			       walk->nbytes);
++		skcipher_walk_done(walk, 0);
+ 	}
+ }
+ 
+@@ -147,12 +136,15 @@ static void crypto_morus1280_glue_crypt(
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct morus1280_ctx *ctx = crypto_aead_ctx(tfm);
+ 	struct morus1280_state state;
++	struct skcipher_walk walk;
++
++	ops.skcipher_walk_init(&walk, req, true);
+ 
+ 	kernel_fpu_begin();
+ 
+ 	ctx->ops->init(&state, &ctx->key, req->iv);
+ 	crypto_morus1280_glue_process_ad(&state, ctx->ops, req->src, req->assoclen);
+-	crypto_morus1280_glue_process_crypt(&state, ops, req);
++	crypto_morus1280_glue_process_crypt(&state, ops, &walk);
+ 	ctx->ops->final(&state, tag_xor, req->assoclen, cryptlen);
+ 
+ 	kernel_fpu_end();
+--- a/arch/x86/crypto/morus640_glue.c
++++ b/arch/x86/crypto/morus640_glue.c
+@@ -85,31 +85,19 @@ static void crypto_morus640_glue_process
+ 
+ static void crypto_morus640_glue_process_crypt(struct morus640_state *state,
+ 					       struct morus640_ops ops,
+-					       struct aead_request *req)
++					       struct skcipher_walk *walk)
+ {
+-	struct skcipher_walk walk;
+-	u8 *cursor_src, *cursor_dst;
+-	unsigned int chunksize, base;
+-
+-	ops.skcipher_walk_init(&walk, req, false);
+-
+-	while (walk.nbytes) {
+-		cursor_src = walk.src.virt.addr;
+-		cursor_dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
+-
+-		ops.crypt_blocks(state, cursor_src, cursor_dst, chunksize);
+-
+-		base = chunksize & ~(MORUS640_BLOCK_SIZE - 1);
+-		cursor_src += base;
+-		cursor_dst += base;
+-		chunksize &= MORUS640_BLOCK_SIZE - 1;
+-
+-		if (chunksize > 0)
+-			ops.crypt_tail(state, cursor_src, cursor_dst,
+-				       chunksize);
++	while (walk->nbytes >= MORUS640_BLOCK_SIZE) {
++		ops.crypt_blocks(state, walk->src.virt.addr,
++				 walk->dst.virt.addr,
++				 round_down(walk->nbytes, MORUS640_BLOCK_SIZE));
++		skcipher_walk_done(walk, walk->nbytes % MORUS640_BLOCK_SIZE);
++	}
+ 
+-		skcipher_walk_done(&walk, 0);
++	if (walk->nbytes) {
++		ops.crypt_tail(state, walk->src.virt.addr, walk->dst.virt.addr,
++			       walk->nbytes);
++		skcipher_walk_done(walk, 0);
+ 	}
+ }
+ 
+@@ -143,12 +131,15 @@ static void crypto_morus640_glue_crypt(s
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct morus640_ctx *ctx = crypto_aead_ctx(tfm);
+ 	struct morus640_state state;
++	struct skcipher_walk walk;
++
++	ops.skcipher_walk_init(&walk, req, true);
+ 
+ 	kernel_fpu_begin();
+ 
+ 	ctx->ops->init(&state, &ctx->key, req->iv);
+ 	crypto_morus640_glue_process_ad(&state, ctx->ops, req->src, req->assoclen);
+-	crypto_morus640_glue_process_crypt(&state, ops, req);
++	crypto_morus640_glue_process_crypt(&state, ops, &walk);
+ 	ctx->ops->final(&state, tag_xor, req->assoclen, cryptlen);
+ 
+ 	kernel_fpu_end();
 
 
