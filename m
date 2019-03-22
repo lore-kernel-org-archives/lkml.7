@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E133C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011AEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30FB2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C627721929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256724;
-	bh=RZKieupcb+ixJX6DFH7+vjjBIeF5AxZqZt+1WHuh+80=;
+	s=default; t=1553256729;
+	bh=jIImtb19x6wdiJJzDnn77niy0v4N6aOnTJ29y0YOIWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0+2ju0J7noQ75u9uc5Pr173qqRYHOtPLXL46sbLHfNLwyhHJ6aZqOruc6QyewL1C
-	 RZi0lAjmxazg/EKli0g1v8Z8QwzqibVRRlE7fS5U/T9EwpyLOKT/F357DcFWkUGYk9
-	 by8lK2GAzQ6gnV8uh9Av29kMyup0FkPhOr/xHJ2s=
+	b=eoAODitVLPVCgUC5/6JRVER1Q94gBwHD3ZfCsKkKedA7NYgr+xqoaxpS3LM/HSumI
+	 wb0BARHlZESSnbeTLoXNIP/d8tHzbCmtGWP1OteBwBeZ4Ccc35n7WVxtQ/Nz9TUPm2
+	 husUDMS2aO0AUD/xHQxPuqlA5GIRlQU8G1MEBzF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389576AbfCVMMD (ORCPT
+        id S2389579AbfCVMMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50176 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388968AbfCVML5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:57 -0400
+        id S2388968AbfCVMMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 439DA21934;
-        Fri, 22 Mar 2019 12:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE74220830;
+        Fri, 22 Mar 2019 12:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256716;
-        bh=RZKieupcb+ixJX6DFH7+vjjBIeF5AxZqZt+1WHuh+80=;
+        s=default; t=1553256723;
+        bh=jIImtb19x6wdiJJzDnn77niy0v4N6aOnTJ29y0YOIWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZdR28BxzrSqwNtycvT6ban1Vsz89MKWhVXDtPOwR7VOn0b9fQooAGjRBGh0mgSGp
-         n/Kp4l7KV8Cg2690gi8SLKlylurf/AKyJbSnDqfkBbt16OApjNFBSSJWj7KnX++rmx
-         Yrkk38mtI4mJ8ZpNqfo3R0iYe/gBEghEr8YuL/yI=
+        b=Qh3QGcoCG6Q3HpIImrhxeOHVKkIB2HNkzcU2wOA8Rfd70L+/Lqh46WTMmr9gCLlQu
+         diiDlyKS5XLl6b+ZVC8eXPzOIoyiBvk79jBc9t+fAUoMc5Ex7xeIy6u+w92FR3l9O/
+         ob8Sdiy6xH2aoMM0hOpGxEtbfhz1p3w8phuq581Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hadar Gat <hadar.gat@arm.com>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 016/238] crypto: ccree - fix free of unallocated mlli buffer
-Date:   Fri, 22 Mar 2019 12:13:55 +0100
-Message-Id: <20190322111259.153058088@linuxfoundation.org>
+Subject: [PATCH 5.0 018/238] crypto: ccree - dont copy zero size ciphertext
+Date:   Fri, 22 Mar 2019 12:13:57 +0100
+Message-Id: <20190322111259.245385243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,41 +65,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hadar Gat <hadar.gat@arm.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit a49411959ea6d4915a9fd2a7eb5ba220e6284e9a upstream.
+commit 2b5ac17463dcb2411fed506edcf259a89bb538ba upstream.
 
-In cc_unmap_aead_request(), call dma_pool_free() for mlli buffer only
-if an item is allocated from the pool and not always if there is a
-pool allocated.
-This fixes a kernel panic when trying to free a non-allocated item.
+For decryption in CBC mode we need to save the last ciphertext block
+for use as the next IV. However, we were trying to do this also with
+zero sized ciphertext resulting in a panic.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+Fix this by only doing the copy if the ciphertext length is at least
+of IV size.
+
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/crypto/ccree/cc_cipher.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -614,10 +614,10 @@ void cc_unmap_aead_request(struct device
- 				 hw_iv_size, DMA_BIDIRECTIONAL);
- 	}
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -801,7 +801,8 @@ static int cc_cipher_decrypt(struct skci
  
--	/*In case a pool was set, a table was
--	 *allocated and should be released
--	 */
--	if (areq_ctx->mlli_params.curr_pool) {
-+	/* Release pool */
-+	if ((areq_ctx->assoc_buff_type == CC_DMA_BUF_MLLI ||
-+	     areq_ctx->data_buff_type == CC_DMA_BUF_MLLI) &&
-+	    (areq_ctx->mlli_params.mlli_virt_addr)) {
- 		dev_dbg(dev, "free MLLI buffer: dma=%pad virt=%pK\n",
- 			&areq_ctx->mlli_params.mlli_dma_addr,
- 			areq_ctx->mlli_params.mlli_virt_addr);
+ 	memset(req_ctx, 0, sizeof(*req_ctx));
+ 
+-	if (ctx_p->cipher_mode == DRV_CIPHER_CBC) {
++	if ((ctx_p->cipher_mode == DRV_CIPHER_CBC) &&
++	    (req->cryptlen >= ivsize)) {
+ 
+ 		/* Allocate and save the last IV sized bytes of the source,
+ 		 * which will be lost in case of in-place decryption.
 
 
