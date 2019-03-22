@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74B9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2DEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85649218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAA1218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258484;
-	bh=uc7rO/OQp1qIn0NzgaAZa6imd0pHU6V7kUAP1Wrlcjk=;
+	s=default; t=1553258493;
+	bh=H7Uu7nHeyrjziqxvw48A2g3HKwY3W2kOLzdV0fKa0Mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8BT7TeBYLwsPdptAUy7FojXYiO6L5a962ErdBwWNeKr5+cSVXF4x7cGp4bUFcPL1
-	 VlC5rZ2/q8xvCjiCh6fjAeT+ZlWXuA5UQ6AG05f7OROMcdMyhkKwXmcmrjnJTIkEND
-	 FlEDtRefC/h1s0je9yqsNvQnotbihsgSiGKz7Xy4=
+	b=KyiHk9h//KSgZETmNEBe89mgkbkFTTrJSJ14cCVusp3+DYRg88T+MrJ6qvX4JwFFU
+	 +SvyCNBjYhaUGiyouiD7TVbBXjwYVSMupoWdR14a3P4d0YpHh4DaKpjUBwNFyilOlj
+	 oOFya7p6nSG8RDSokMc38JJsWItAVQjNjUQ8xyPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbfCVMlX (ORCPT
+        id S2389012AbfCVMlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732305AbfCVMFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:42 -0400
+        id S2388014AbfCVMF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4886A206C0;
-        Fri, 22 Mar 2019 12:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070C921929;
+        Fri, 22 Mar 2019 12:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256341;
-        bh=uc7rO/OQp1qIn0NzgaAZa6imd0pHU6V7kUAP1Wrlcjk=;
+        s=default; t=1553256328;
+        bh=H7Uu7nHeyrjziqxvw48A2g3HKwY3W2kOLzdV0fKa0Mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQ4EQYrBp7PBkMi5sR9ulpv6MzxwET530KTkSgHOZNa3o9173edPh/jN0CBNHSJXo
-         4ujX51ayLRleppS1s0E2BAA6TdNIn1Jv1W1/7Q7SdVUghW/vJoBPs6/CUT/MhNRq/z
-         o9HsQ0Zhcf6hPmgbjj9ETpWEURv5ALjc4Ce76DVc=
+        b=Hq57qeWLoZol+YRzKdqlArF7zEkydFJtNdx1dp++KdBhoogZd6CKCzBmCw72W6zOS
+         H8N8g+C9uGlLSD/EtVeokH4QVF/53/b2EiiVaUSl/dI2rhA74OSyRO2DB41kGSMxPC
+         zR6nBR9G3ItYs1TpqZTF4Sv7WfyM+6fWDiis5QLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.19 181/280] ext4: cleanup pagecache before swap i_data
-Date:   Fri, 22 Mar 2019 12:15:34 +0100
-Message-Id: <20190322111326.751009912@linuxfoundation.org>
+        stable@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.19 177/280] cpufreq: kryo: Release OPP tables on module removal
+Date:   Fri, 22 Mar 2019 12:15:30 +0100
+Message-Id: <20190322111325.865431090@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,71 +65,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: yangerkun <yangerkun@huawei.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit a46c68a318b08f819047843abf349aeee5d10ac2 upstream.
+commit 0334906c06967142c8805fbe88acf787f65d3d26 upstream.
 
-While do swap, we should make sure there has no new dirty page since we
-should swap i_data between two inode:
-1.We should lock i_mmap_sem with write to avoid new pagecache from mmap
-read/write;
-2.Change filemap_flush to filemap_write_and_wait and move them to the
-space protected by inode lock to avoid new pagecache from buffer read/write.
+Commit 5ad7346b4ae2 ("cpufreq: kryo: Add module remove and exit") made
+it possible to build the kryo cpufreq driver as a module, but it failed
+to release all the resources, i.e. OPP tables, when the module is
+unloaded.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+This patch fixes it by releasing the OPP tables, by calling
+dev_pm_opp_put_supported_hw() for them, from the
+qcom_cpufreq_kryo_remove() routine. The array of pointers to the OPP
+tables is also allocated dynamically now in qcom_cpufreq_kryo_probe(),
+as the pointers will be required while releasing the resources.
+
+Compile tested only.
+
+Cc: 4.18+ <stable@vger.kernel.org> # v4.18+
+Fixes: 5ad7346b4ae2 ("cpufreq: kryo: Add module remove and exit")
+Reviewed-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ioctl.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/cpufreq/qcom-cpufreq-kryo.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -121,9 +121,6 @@ static long swap_inode_boot_loader(struc
- 		return PTR_ERR(inode_bl);
- 	ei_bl = EXT4_I(inode_bl);
+--- a/drivers/cpufreq/qcom-cpufreq-kryo.c
++++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
+@@ -75,7 +75,7 @@ static enum _msm8996_version qcom_cpufre
  
--	filemap_flush(inode->i_mapping);
--	filemap_flush(inode_bl->i_mapping);
--
- 	/* Protect orig inodes against a truncate and make sure,
- 	 * that only 1 swap_inode_boot_loader is running. */
- 	lock_two_nondirectories(inode, inode_bl);
-@@ -141,6 +138,15 @@ static long swap_inode_boot_loader(struc
- 		goto journal_err_out;
+ static int qcom_cpufreq_kryo_probe(struct platform_device *pdev)
+ {
+-	struct opp_table *opp_tables[NR_CPUS] = {0};
++	struct opp_table **opp_tables;
+ 	enum _msm8996_version msm8996_version;
+ 	struct nvmem_cell *speedbin_nvmem;
+ 	struct device_node *np;
+@@ -133,6 +133,10 @@ static int qcom_cpufreq_kryo_probe(struc
  	}
+ 	kfree(speedbin);
  
-+	down_write(&EXT4_I(inode)->i_mmap_sem);
-+	err = filemap_write_and_wait(inode->i_mapping);
-+	if (err)
-+		goto err_out;
++	opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables), GFP_KERNEL);
++	if (!opp_tables)
++		return -ENOMEM;
 +
-+	err = filemap_write_and_wait(inode_bl->i_mapping);
-+	if (err)
-+		goto err_out;
-+
- 	/* Wait for all existing dio workers */
- 	inode_dio_wait(inode);
- 	inode_dio_wait(inode_bl);
-@@ -151,7 +157,7 @@ static long swap_inode_boot_loader(struc
- 	handle = ext4_journal_start(inode_bl, EXT4_HT_MOVE_EXTENTS, 2);
- 	if (IS_ERR(handle)) {
- 		err = -EINVAL;
--		goto journal_err_out;
-+		goto err_out;
+ 	for_each_possible_cpu(cpu) {
+ 		cpu_dev = get_cpu_device(cpu);
+ 		if (NULL == cpu_dev) {
+@@ -151,8 +155,10 @@ static int qcom_cpufreq_kryo_probe(struc
+ 
+ 	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
+ 							  NULL, 0);
+-	if (!IS_ERR(cpufreq_dt_pdev))
++	if (!IS_ERR(cpufreq_dt_pdev)) {
++		platform_set_drvdata(pdev, opp_tables);
+ 		return 0;
++	}
+ 
+ 	ret = PTR_ERR(cpufreq_dt_pdev);
+ 	dev_err(cpu_dev, "Failed to register platform device\n");
+@@ -163,13 +169,23 @@ free_opp:
+ 			break;
+ 		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
  	}
++	kfree(opp_tables);
  
- 	/* Protect extent tree against block allocations via delalloc */
-@@ -208,6 +214,8 @@ static long swap_inode_boot_loader(struc
- 	ext4_journal_stop(handle);
- 	ext4_double_up_write_data_sem(inode, inode_bl);
+ 	return ret;
+ }
  
-+err_out:
-+	up_write(&EXT4_I(inode)->i_mmap_sem);
- journal_err_out:
- 	unlock_two_nondirectories(inode, inode_bl);
- 	iput(inode_bl);
+ static int qcom_cpufreq_kryo_remove(struct platform_device *pdev)
+ {
++	struct opp_table **opp_tables = platform_get_drvdata(pdev);
++	unsigned int cpu;
++
+ 	platform_device_unregister(cpufreq_dt_pdev);
++
++	for_each_possible_cpu(cpu)
++		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
++
++	kfree(opp_tables);
++
+ 	return 0;
+ }
+ 
 
 
