@@ -2,174 +2,237 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD73FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC0AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACF52190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834CF2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WDqV4exp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfCVKEs (ORCPT
+        id S1728035AbfCVKFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:04:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36112 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727680AbfCVKEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:04:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6F5EAACD0;
-        Fri, 22 Mar 2019 10:04:45 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-References: <20190315111107.15154-1-lhenriques@suse.com>
-        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
-        <87r2b4zd2q.fsf@suse.com>
-        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
-        <87lg1c17b2.fsf@suse.com>
-        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
-        <87a7hr19v7.fsf@suse.com>
-Date:   Fri, 22 Mar 2019 10:04:44 +0000
-In-Reply-To: <87a7hr19v7.fsf@suse.com> (Luis Henriques's message of "Tue, 19
-        Mar 2019 09:39:24 +0000")
-Message-ID: <87o963jkcj.fsf@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 22 Mar 2019 06:05:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44522 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfCVKFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:05:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a3so1188501pff.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=lHmSWJUB1UfS8KwlMojgAe9J1R+c5xJo/X32xFOukVo=;
+        b=WDqV4expSghTQrn9I8OR/yY+dpUpaTbJ6+FewCshp2mtFSrabpShjXBvia5KVvxz9n
+         HWOtfEU6NZ5P5lOE7WLWCv3x4VAvDp+2LGTw2+6eMMGuGaIc91A20SQRvoRsr2VsNQKA
+         75A9gkltiWJiiAZVU9vvEq04U9wPiC/ahXaI1pNunQEPE5HQOJ6KMYvgC34bREqKdX5/
+         Ab6yVs18GhWlDC/MzSjReA++UBVoFTLDjbLFN9hvv6RpvDZJGCF+zsqcFAdSnHBXi2hV
+         iKo+fuA24GPfEdjjS8y5ogsDsdggsbNrwj7rOAuMqf7B1xgvmgL9S7RLERRUhJkvoWb6
+         SxUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=lHmSWJUB1UfS8KwlMojgAe9J1R+c5xJo/X32xFOukVo=;
+        b=V37nrwMSIPN1qnGFKuSBRtq2lMb3Qkz5mOSa2d1Q0bVJMjMihAYCnnK77qEOP/Ozj4
+         LHpze1UwJrWgkl8DXRfIZkmk27KCYo5O0Zi8d33Qr8Y536LsD9DUfxvPbpx1vbLo+++o
+         kshm+olT1M1c/tvUfkFTS153yYbrUkBk8jQccdc+2BU8V2RyFfTXQ3EimNCwtbxF2a4V
+         fIXsopQqqM8RpBpuEc0e2VzGop1Jo/p3oOdYRv96dZNn/3CT/6RcGNXp8+t4fx2vQD4C
+         ijVHxUYtuz+Z7T9gpzAYU3UMfi7wQtHSSlN0vlwgRgCDW6EEmTGzF3OoFGCVTrNBxMRA
+         EsBw==
+X-Gm-Message-State: APjAAAVreZAmQyq2rFMeU3Vtfrvel5WRYy0nr69rRcOiV3tjuRQ5+jsf
+        FG56s+ABjbfyH0fOHRic3Ju1ag==
+X-Google-Smtp-Source: APXvYqzNbGwYgvmZXdvKQTKYum9q27U18EdmyU7gtqS5T3cxGuERJEGaDeOmvdFFd2eX5foUpztfVA==
+X-Received: by 2002:aa7:92c1:: with SMTP id k1mr8315442pfa.246.1553249117734;
+        Fri, 22 Mar 2019 03:05:17 -0700 (PDT)
+Received: from [192.168.0.150] ([37.228.240.42])
+        by smtp.gmail.com with ESMTPSA id o7sm16549386pfi.105.2019.03.22.03.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 03:05:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH v2 0/7] iommu/vt-d: Fix-up device-domain relationship by
+ refactoring to use iommu group default domain.
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <418d1432-2036-3f6f-48de-77005807e350@linux.intel.com>
+Date:   Fri, 22 Mar 2019 10:05:07 +0000
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0359F732-374F-4EDB-B49C-14B2F1BB637D@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <0e74cc54-bb90-a620-5763-466cb11aaef7@linux.intel.com>
+ <94706334-3DE4-4964-8FDD-125C58D493A0@arista.com>
+ <418d1432-2036-3f6f-48de-77005807e350@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Henriques <lhenriques@suse.com> writes:
+Hey Lu,
 
-> "Yan, Zheng" <ukernel@gmail.com> writes:
->
->> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
->>>
->>> "Yan, Zheng" <ukernel@gmail.com> writes:
->>>
->>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
->>> >>
->>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
->>> >>
->>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
->>> >> >>
->>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
->>> >> >>
->>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
->>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
->>> >> >>   hex dump (first 32 bytes):
->>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
->>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>> >> >>   backtrace:
->>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
->>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
->>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
->>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
->>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
->>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
->>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
->>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
->>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
->>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
->>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
->>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
->>> >> >>
->>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
->>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
->>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
->>> >> >>
->>> >> >> Link: https://tracker.ceph.com/issues/38224
->>> >> >> Cc: stable@vger.kernel.org
->>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->>> >> >> ---
->>> >> >>  fs/ceph/caps.c | 7 +++++++
->>> >> >>  1 file changed, 7 insertions(+)
->>> >> >>
->>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->>> >> >> index 36a8dc699448..208f4dc6f574 100644
->>> >> >> --- a/fs/ceph/caps.c
->>> >> >> +++ b/fs/ceph/caps.c
->>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
->>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->>> >> >>  {
->>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
->>> >> >> +
->>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
->>> >> >>         list_del_init(&ci->i_snap_realm_item);
->>> >> >>         ci->i_snap_realm_counter++;
->>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
->>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->>> >> >>                             realm);
->>> >> >> +       /*
->>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
->>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
->>> >> >> +        * ceph_snap_context and we need to drop it.
->>> >> >> +        */
->>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
->>> >> >>  }
->>> >> >>
->>> >> >>  /*
->>> >> >
->>> >> > This does not seem right.  i_head_snapc is cleared when
->>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
->>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
->>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
->>> >> > should be in iterate_session_caps()
->>> >> >
->>> >>
->>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
->>> >> seems to execute fine, except from the memory leak.
->>> >>
->>> >> It's very difficult to reproduce this issue, but last time I managed to
->>> >> get this memory leak to trigger I actually had some debugging code in
->>> >> drop_inode_snap_realm, something like:
->>> >>
->>> >>   if (ci->i_head_snapc)
->>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
->>> >
->>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
->>> > i_flushing_caps. and try reproducing it again.
->>> >
->>>
->>> Ok, it took me a few hours, but I managed to reproduce the bug, with
->>> those extra printks.  All those values are set to 0 when the bug
->>> triggers (and i_head_snapc != NULL).
->>>
->>
->> Thanks, which test triggers this bug?
->
-> That's generic/013.  It usually triggers after a few hours of running it
-> in a loop (I'm using a vstart cluster for that).
->
->>
->> I searched that code, found we may fail to cleanup i_head_snap in two
->> places. One is in ceph_queue_cap_snap, Another is in
->> remove_session_caps_cb().
->
-> Ah, great!  I spent a lot of time looking but I couldn't really find it.
-> My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
-> and that the corresponding ceph_put_snap_context would be done in
-> handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
-> MDS.
+> On 20 Mar 2019, at 01:26, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>=20
+> Hi James,
+>=20
+> On 3/19/19 9:35 PM, James Sewart wrote:
+>> Hey Lu,
+>>> On 15 Mar 2019, at 03:13, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>=20
+>>> Hi James,
+>>>=20
+>>> On 3/14/19 7:56 PM, James Sewart wrote:
+>>>> Patches 1 and 2 are the same as v1.
+>>>> v1-v2:
+>>>>   Refactored ISA direct mappings to be returned by =
+iommu_get_resv_regions.
+>>>>   Integrated patch by Lu to defer turning on DMAR until iommu.c has =
+mapped
+>>>> reserved regions.
+>>>>   Integrated patches by Lu to remove more unused code in cleanup.
+>>>> Lu: I didn't integrate your patch to set the default domain type as =
+it
+>>>> isn't directly related to the aim of this patchset. Instead patch 4
+>>>=20
+>>> Without those patches, user experience will be affected and some =
+devices
+>>> will not work on Intel platforms anymore.
+>>>=20
+>>> For a long time, Intel IOMMU driver has its own logic to determine
+>>> whether a device requires an identity domain. For example, when user
+>>> specifies "iommu=3Dpt" in kernel parameter, all device will be =
+attached
+>>> with the identity domain. Further more, some quirky devices require
+>>> an identity domain to be used before enabling DMA remapping, =
+otherwise,
+>>> it will not work. This was done by adding quirk bits in Intel IOMMU
+>>> driver.
+>>>=20
+>>> So from my point of view, one way is porting all those quirks and =
+kernel
+>>> parameters into IOMMU generic layer, or opening a door for vendor =
+IOMMU
+>>> driver to determine the default domain type by their own. I prefer =
+the
+>>> latter option since it will not impact any behaviors on other
+>>> architectures.
+>> I see your point. I=E2=80=99m not confident that using the proposed =
+door to set a
+>> groups default domain has the desired behaviour. As discussed before =
+the
+>> default domain type will be set based on the desired type for only =
+the
+>> first device attached to a group. I think to change the default =
+domain
+>> type you would need a slightly different door that wasn=E2=80=99t =
+conditioned on
+>> device.
+>=20
+> I think this as another problem. Just a summarize for the ease of
+> discussion. We saw two problems:
+>=20
+> 1. When allocating a new group for a device, how should we determine =
+the
+> type of the default domain? This is what my proposal patches trying to
+> address.
 
-Something that I didn't said explicitly is that I *know* that the
-unbalanced ceph_get_snap_context() is the one in function
-ceph_queue_cap_snap().  I know this for sure because I've managed to
-reproduce the issue several times with an instrumented kernel (with
-tracepoints) that allowed me to keep track of all ceph_snap_context
-operations (create, get, put, delete).
+This will work as expected only if all devices within a group get the =
+same=20
+result from is_identity_map. Otherwise wee see issue 2.
+
+>=20
+> 2. If we need to put a device into an existing group which uses a
+> different type of domain from what the device desires to use, we might
+> break the functionality of the device. For this problem I'd second =
+your
+> proposal below if I get your point correctly.
+>=20
+>> For situations where individual devices require an identity domain =
+because
+>> of quirks then maybe calling is_identity_map per device in
+>> iommu_group_get_for_dev is a better solution than the one I proposed.
+>=20
+> Do you mean if we see a quirky device requires a different domain type
+> other than the default domain type of the group, we will assign a new
+> group to it? That looks good to me as far as I can see. I suppose this
+> should be done in vt-d's ops callback.
+
+I have thought about this a bit and I think the cleanest approach is to=20=
+
+put devices that require an identity domain into their own group, this =
+can=20
+be done in the device_group callback, avoiding any situation where we =
+have=20
+to deal with creating a new group based on domain type in=20
+iommu_group_get_for_dev. This way we shouldn=E2=80=99t ever be in a =
+situation with=20
+multiple different domain types per group. This way your patches will =
+work=20
+as expected. See below for a possible implementation.
+
+>=20
+> Best regards,
+> Lu Baolu
 
 Cheers,
--- 
-Luis
+James.
+
+Devices that require an identity map because of quirks or other reasons
+should be put in their own IOMMU group so as to not end up with multiple
+different domains per group.
+
+Signed-off-by: James Sewart <jamessewart@arista.com>
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3cb8b36abf50..0f5a121d31a0 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5421,6 +5421,22 @@ struct intel_iommu =
+*intel_svm_device_to_iommu(struct device *dev)
+ }
+ #endif /* CONFIG_INTEL_IOMMU_SVM */
+
++static struct iommu_group *intel_identity_group;
++
++struct iommu_group *intel_iommu_pci_device_group(struct device *dev)
++{
++       if (iommu_no_mapping(dev)) {
++               if (!intel_identity_group) {
++                       intel_identity_group =3D iommu_group_alloc();
++                       if (IS_ERR(intel_identity_group))
++                               return NULL;
++               }
++               return intel_identity_group;
++       }
++
++       return pci_device_group(dev);
++}
++
+ const struct iommu_ops intel_iommu_ops =3D {
+        .capable                =3D intel_iommu_capable,
+        .domain_alloc           =3D intel_iommu_domain_alloc,
+@@ -5435,7 +5451,7 @@ const struct iommu_ops intel_iommu_ops =3D {
+        .get_resv_regions       =3D intel_iommu_get_resv_regions,
+        .put_resv_regions       =3D intel_iommu_put_resv_regions,
+        .apply_resv_region      =3D intel_iommu_apply_resv_region,
+-       .device_group           =3D pci_device_group,
++       .device_group           =3D intel_iommu_pci_device_group,
+        .pgsize_bitmap          =3D INTEL_IOMMU_PGSIZES,
+ };
+
+--=20
+2.17.1
+
