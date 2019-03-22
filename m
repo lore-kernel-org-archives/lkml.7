@@ -2,132 +2,143 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46128C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA90C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153E0218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA92218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HOsjRto2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfCVOC4 (ORCPT
+        id S1727970AbfCVOEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:02:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:35007 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOCz (ORCPT
+        Fri, 22 Mar 2019 10:04:13 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43136 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfCVOEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:02:55 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N0Fh1-1gksC41oTH-00xHb5; Fri, 22 Mar 2019 15:02:43 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
-Date:   Fri, 22 Mar 2019 15:02:26 +0100
-Message-Id: <20190322140241.4171530-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 22 Mar 2019 10:04:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2ME45e2027885;
+        Fri, 22 Mar 2019 09:04:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553263445;
+        bh=ut3ejAwdnl3Z9KXHbgo43PzWaKiBK/c6CzyK3VBCv8s=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=HOsjRto2zAqjrMiUJU0N9rq3zCTVSacxqxdJbA60kRTD1Pq7wdGpeKhz8oNXzuvC7
+         387AMk66mi8SSnuKorYPDoOCqmUigJZSaK/GTjea2bUgRIFwnueysq3pEZ0UJ6+nWs
+         zNcL+CsZWBcUbaFe2c/eVXlNhMKScTUlgDeq0SI4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2ME45xQ037397
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Mar 2019 09:04:05 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
+ Mar 2019 09:04:04 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 22 Mar 2019 09:04:04 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2ME44Bi026371;
+        Fri, 22 Mar 2019 09:04:04 -0500
+Date:   Fri, 22 Mar 2019 09:04:04 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <contact@paulk.fr>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
+ dual role
+Message-ID: <20190322140404.GH25852@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <contact@paulk.fr>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+References: <1522324644.1746.19.camel@bootlin.com>
+ <20180420142524.GB29011@uda0271908>
+ <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
+ <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
+ <20190321130133.zllt5pqbrhiecoch@flea>
+ <20190321164138.GB11121@kroah.com>
+ <20190322124622.GB25852@uda0271908>
+ <20190322130953.kb4llrtz2nriyfbu@flea>
+ <20190322132846.GD25852@uda0271908>
+ <20190322134630.c4cauwj5smxvj77y@flea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Dp9ZRsPxecNlIjLmRl+hmaeVN/jA0KGkR6kC9RGmz1v9wug9RZf
- u9liQou4XYpDcE0z6K3BmeW4rj6xnNOLav6GkQvv4APUbgOqnBeNAzLgA3bx1PCg0zLHL3C
- BnTcR6bragtIyOX68CcnzKp+vXu+V96zRHmHFk2KMzBmtJrvrb4mx465qGyUbkmOXnxCIV3
- P7w7apfDBDCKLoXJ/gNPw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1ul4WU+k5uI=:a61oJR4ykm8GoOy8V086Kt
- 7DdXUrxeCMRX8+03AX1S3nkg5xoYIMD5Q347tyPvpB7UxA2eZPQPCDlH1ipkTiWfbeBFDdYh2
- d9v4qvtxF34ybp4uny4kSwAys6uAzOzuvKqh6Sm0kutaB8boq4y1f38GDR1WQr0qEeEmENxF2
- Mh+fwJ5PwVNwncWSM10FlGAPcLmkqbieakxsrsUAJQFU9k9H3otn6B+gNjfMwL6YuxjXlD7gt
- wa6h1uYLw8XZDzQ/xdxmjxxff0XiDKP0ObD6vTxyTB6YgJWDV+Tjuhad0AlckAQICLrg1h0TT
- bl3guzn2Y0HtIdBhEE0Wayqis0GVEoGw6p8+q1Vid6fU5sdU9+a1wlEBw6Df9amESYAa+ln2+
- hXrw8cmRUSjbTIkxrZyNtovCfTTXzoOb8asRVPSnKgCwhJ0Ik3IxG6VUy/MYERKlRGxPkDLXY
- FYWjPsCa3KtrHzuteo4VF1GzifZw4dm04ei+a9V3Hd3gQOe67Rr+nK9wTJsgcLGg2fuFzlsDx
- nbMQDyQzg22SHrUcn/lJp9ylrJJSep8iybzfq0/ClETdt0UyW9IVtxhU0joSH+BlLlynJgsEs
- EFMlgTyh0IEBhh9J2DM0oVM7MXclBnQH2yUOb3ZnNovi/kXejnqJZDigF7vqbwjrdQCwngKOu
- mfRiaaXQPF96fKqqHxvagr1QRNwkwtEkutEI4XWLQpxPjSttlckN4BunONhdTObgwvvhgXUVo
- fCdPAsbo1bOG+JruF9eKvHMfQB+BzUEW9SBwiw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190322134630.c4cauwj5smxvj77y@flea>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configurations with CONFIG_EDAC_SKX and CONFIG_EDAC_I10NM
-both enabled, but only one of them built-in and the other
-being a loadable module fail to link because the common
-file is built the wrong way:
+Hi all,
 
-skx_common.c:672: undefined reference to `__this_module'
+On Fri, Mar 22, 2019 at 02:46:30PM +0100, Maxime Ripard wrote:
+> >
+> > Again, think about an embedded product,
+> 
+> That's all I'm thinking about.
+> 
+> > if dr_mode is 'otg' which indicates the peripheral mode will be used
+> > at some point
+> 
+> No, it indicates that it *might* be used at some point, based on a
+> number of external factors, including:
+>   - Whether or not the user has plugged something in the connected USB
+>     connector
+>   - If they did so, how the ID pin has been wired (and therefore, is
+>     a device or a host on the other end)
+>   - And how the system designer decided to configure their kernel and
+>     userspace.
+> 
+> > when and how to load the gadget driver if it is not loaded
+> > automatically when Linux boots up? the end user doesn't have access
+> > to the console.
+> 
+> An application could load it. And really, we start seeing SoCs in more
+> and more pc-like devices, including with mUSB, so I don't think we
+> should be making assumptions here.
+> 
+> How do you think Fedora, Ubuntu or Debian would behave here?
+> 
+> > > Because no other controller requires it and therefore it's not
+> > > standard and violates the principle of least surprise?
+> >
+> > I know no other controller does this, but this doesn't mean it is not
+> > standard.
+> 
+> I'm pretty sure that would be the definition of "standard", or of a
+> norm at least.
+> 
+> > > And even without taking this into account, there's also the fact that
+> > > while the *hardware* can do dual role, the software might decide
+> > > otherwise. If I don't want to have support for any gadget (at all) in
+> > > the end system, then why should I be forced to compile and load
+> > > something I don't even want to use in the first place?
+> >
+> > then dr_mode should be set to 'host' instead, you don't have to load a
+> > gadget if peripheral mode will never be used.
+> 
+> No. The hardware is perfectly capable of using OTG. The software has
+> been configured not to.
 
-This overrides the way the modules are built, building
-both into the zImage file if that happens.
+I don't think the argument will lead to anywhere. Let's stop arguing
+here, so that you can spend time to fix the driver if you want to.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/edac/Kconfig  | 9 +++++++++
- drivers/edac/Makefile | 8 ++++++--
- 2 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 47eb4d13ed5f..70080926329f 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -235,6 +235,7 @@ config EDAC_SKX
- 	depends on ACPI_NFIT || !ACPI_NFIT # if ACPI_NFIT=m, EDAC_SKX can't be y
- 	select DMI
- 	select ACPI_ADXL
-+	select EDAC_SKX_COMMON
- 	help
- 	  Support for error detection and correction the Intel
- 	  Skylake server Integrated Memory Controllers. If your
-@@ -247,12 +248,20 @@ config EDAC_I10NM
- 	depends on ACPI_NFIT || !ACPI_NFIT # if ACPI_NFIT=m, EDAC_I10NM can't be y
- 	select DMI
- 	select ACPI_ADXL
-+	select EDAC_SKX_COMMON
- 	help
- 	  Support for error detection and correction the Intel
- 	  10nm server Integrated Memory Controllers. If your
- 	  system has non-volatile DIMMs you should also manually
- 	  select CONFIG_ACPI_NFIT.
- 
-+config EDAC_SKX_COMMON
-+	tristate
-+	help
-+	  This is an internal helper symbol to ensure that all variants
-+	  of the EDAC_SKX driver are either built-in or modular, as mixing
-+	  the two causes link time problems.
-+
- config EDAC_PND2
- 	tristate "Intel Pondicherry2"
- 	depends on PCI && X86_64 && X86_MCE_INTEL
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 89ad4a84a0f6..0f363309f662 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -58,10 +58,14 @@ layerscape_edac_mod-y			:= fsl_ddr_edac.o layerscape_edac.o
- obj-$(CONFIG_EDAC_LAYERSCAPE)		+= layerscape_edac_mod.o
- 
- skx_edac-y				:= skx_common.o skx_base.o
--obj-$(CONFIG_EDAC_SKX)			+= skx_edac.o
-+ifdef CONFIG_EDAC_SKX
-+obj-$(CONFIG_EDAC_SKX_COMMON)		+= skx_edac.o
-+endif
- 
- i10nm_edac-y				:= skx_common.o i10nm_base.o
--obj-$(CONFIG_EDAC_I10NM)		+= i10nm_edac.o
-+ifdef CONFIG_EDAC_I10NM
-+obj-$(CONFIG_EDAC_SKX_COMMON))		+= i10nm_edac.o
-+endif
- 
- obj-$(CONFIG_EDAC_MV64X60)		+= mv64x60_edac.o
- obj-$(CONFIG_EDAC_CELL)			+= cell_edac.o
--- 
-2.20.0
-
+Regards,
+-Bin.
