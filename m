@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE31BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF21B218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B099218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257504;
-	bh=YkjagHRAlD6nBd+xWeh2QU4bJVBUhbk250LFHw6WVfo=;
+	s=default; t=1553257514;
+	bh=ahwCBb5teDE71cdhGpq9QYVKMnKtPJmZ0wwOMj3NCjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qKhkc4AIf7byroUUdaiw/2B/G/li3kAJQ9lk+wpX8l36LpLAvilZXMfB2s/fxKYIJ
-	 NAN5YWM2zORAaHJywYAsSOFSGfitD2gfGH82aetnb43fmxjRPftM8nytMJIx4lHFWP
-	 8aIygXiymded0FLXSfK36454bfF5PGKKzTU0ij74=
+	b=wnIQmPEvZ59cb1cyaZX9ORPwmf4hyHGLJBVpgh8heG+gml1AL4zbjCg6660aoSUSz
+	 JSVSQbOa8d341HwhwMjwMQOQ1FDcd1LXtNfu4Jlklnapr6By07FhZ8qekC7gRLjdaj
+	 IWahX7yf/gno8JvIob4svukR4CY2ghLoCCTIEuZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390967AbfCVMZD (ORCPT
+        id S2390917AbfCVMYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36612 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390738AbfCVMYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:24:39 -0400
+        id S2403760AbfCVMYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC3B2070D;
-        Fri, 22 Mar 2019 12:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52FC32054F;
+        Fri, 22 Mar 2019 12:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257478;
-        bh=YkjagHRAlD6nBd+xWeh2QU4bJVBUhbk250LFHw6WVfo=;
+        s=default; t=1553257458;
+        bh=ahwCBb5teDE71cdhGpq9QYVKMnKtPJmZ0wwOMj3NCjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2lxfYKxyy0wtJfQdxiYD1eve7ksTi+LZJwWIzyowAGZ0ocOBO0kCZPfX5Dy4l4FSL
-         Z9qiRbYqb5JsVDzkz+/86pcNLrXLB6Q2AcdHmNSml3/Kda+iXXf93GR0fN/1bniBvf
-         iF3Kmk5DFlSYhVog4Ms3KHChc0CRPML8TjMrMWU4=
+        b=GQ32Vx+pKsNsmYi5ZGwRnPkqmZZNzhy5RBg8OMuQ/9SD3JejrM1BMHiHur6S39Nyj
+         2u7ues6+4Eo+E07mFcfbv48q/rEauoF9vvBFNsuEBhDOYijXAMsYrP1wKfIVH6qLcF
+         GkaJ4o3ELtaKU7f50KZ5sgqKHqtTuFYRQYONqBPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH 5.0 235/238] s390/setup: fix boot crash for machine without EDAT-1
-Date:   Fri, 22 Mar 2019 12:17:34 +0100
-Message-Id: <20190322111312.270759139@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 229/238] KVM: nVMX: Sign extend displacements of VMX instrs mem operands
+Date:   Fri, 22 Mar 2019 12:17:28 +0100
+Message-Id: <20190322111311.872258998@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,50 +66,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 86a86804e4f18fc3880541b3d5a07f4df0fe29cb upstream.
+commit 946c522b603f281195af1df91837a1d4d1eb3bc9 upstream.
 
-The fix to make WARN work in the early boot code created a problem
-on older machines without EDAT-1. The setup_lowcore_dat_on function
-uses the pointer from lowcore_ptr[0] to set the DAT bit in the new
-PSWs. That does not work if the kernel page table is set up with
-4K pages as the prefix address maps to absolute zero.
+The VMCS.EXIT_QUALIFCATION field reports the displacements of memory
+operands for various instructions, including VMX instructions, as a
+naturally sized unsigned value, but masks the value by the addr size,
+e.g. given a ModRM encoded as -0x28(%ebp), the -0x28 displacement is
+reported as 0xffffffd8 for a 32-bit address size.  Despite some weird
+wording regarding sign extension, the SDM explicitly states that bits
+beyond the instructions address size are undefined:
 
-To make this work the PSWs need to be changed with via address 0 in
-form of the S390_lowcore definition.
+    In all cases, bits of this field beyond the instructionâ€™s address
+    size are undefined.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Cornelia Huck <cohuck@redhat.com>
-Fixes: 94f85ed3e2f8 ("s390/setup: fix early warning messages")
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Failure to sign extend the displacement results in KVM incorrectly
+treating a negative displacement as a large positive displacement when
+the address size of the VMX instruction is smaller than KVM's native
+size, e.g. a 32-bit address size on a 64-bit KVM.
+
+The very original decoding, added by commit 064aea774768 ("KVM: nVMX:
+Decoding memory operands of VMX instructions"), sort of modeled sign
+extension by truncating the final virtual/linear address for a 32-bit
+address size.  I.e. it messed up the effective address but made it work
+by adjusting the final address.
+
+When segmentation checks were added, the truncation logic was kept
+as-is and no sign extension logic was introduced.  In other words, it
+kept calculating the wrong effective address while mostly generating
+the correct virtual/linear address.  As the effective address is what's
+used in the segment limit checks, this results in KVM incorreclty
+injecting #GP/#SS faults due to non-existent segment violations when
+a nested VMM uses negative displacements with an address size smaller
+than KVM's native address size.
+
+Using the -0x28(%ebp) example, an EBP value of 0x1000 will result in
+KVM using 0x100000fd8 as the effective address when checking for a
+segment limit violation.  This causes a 100% failure rate when running
+a 32-bit KVM build as L1 on top of a 64-bit KVM L0.
+
+Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/setup.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/nested.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -451,13 +451,12 @@ static void __init setup_lowcore_dat_off
- 
- static void __init setup_lowcore_dat_on(void)
- {
--	struct lowcore *lc;
--
--	lc = lowcore_ptr[0];
--	lc->external_new_psw.mask |= PSW_MASK_DAT;
--	lc->svc_new_psw.mask |= PSW_MASK_DAT;
--	lc->program_new_psw.mask |= PSW_MASK_DAT;
--	lc->io_new_psw.mask |= PSW_MASK_DAT;
-+	__ctl_clear_bit(0, 28);
-+	S390_lowcore.external_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.svc_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.program_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.io_new_psw.mask |= PSW_MASK_DAT;
-+	__ctl_set_bit(0, 28);
- }
- 
- static struct resource code_resource = {
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4035,6 +4035,10 @@ int get_vmx_mem_address(struct kvm_vcpu
+ 	/* Addr = segment_base + offset */
+ 	/* offset = base + [index * scale] + displacement */
+ 	off = exit_qualification; /* holds the displacement */
++	if (addr_size == 1)
++		off = (gva_t)sign_extend64(off, 31);
++	else if (addr_size == 0)
++		off = (gva_t)sign_extend64(off, 15);
+ 	if (base_is_valid)
+ 		off += kvm_register_read(vcpu, base_reg);
+ 	if (index_is_valid)
 
 
