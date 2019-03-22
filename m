@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C2AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61372C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A742082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3210E204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254997;
-	bh=ujHrULrwiUWD2jBL/6dOMBRjBI7vYWaKxBeW+CgRJZE=;
+	s=default; t=1553255001;
+	bh=aLUFDYJc4/n/Llle+hrNDdaY9Cq75axnQ1+kFQv30+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGeylFcovg6VWRtdEts4E9Qd4SznDCpMSy5VfPNNXwlycjsFSZrnTxl099gjjOkkJ
-	 OUct8v0g59OzQYhxT3T5xHJGPDr5lskEYvyBgeHdXuR9NhggEB6qcuD2Yhk0CjniBn
-	 IdCsN2AmgvkdP3UVxGcdNLmZZos0iRDvbm2JudYg=
+	b=xqibEHsIXN1XZgcy1Q+IEG4aXDE+aAvKZxjLPRYtT9qq3imDPRo9qLll421HOANQL
+	 G4+vDIEyGelf8wTUtvw6OFpmb+99vIX+jggFMMGYr2WXWlxok7fpqyLTfqgjcN0yxp
+	 Q2q8XdILkPn6g61mihqbc7OqgseMf6YHVlII10kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfCVLnQ (ORCPT
+        id S1731658AbfCVLnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfCVLnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:14 -0400
+        id S1727954AbfCVLnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01562082C;
-        Fri, 22 Mar 2019 11:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ECFB204FD;
+        Fri, 22 Mar 2019 11:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254993;
-        bh=ujHrULrwiUWD2jBL/6dOMBRjBI7vYWaKxBeW+CgRJZE=;
+        s=default; t=1553254998;
+        bh=aLUFDYJc4/n/Llle+hrNDdaY9Cq75axnQ1+kFQv30+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyw1ga2j8f68kRIBHP0k+MfluR5cut5LsOoV40MTS/QcUyLhNHnRHmH6kNauoLSAF
-         nWd6VQRKN/+EKWAOczEaYzdXoSlxb0DngTqGFOhqyXjyJgkuJKL2adK6L89bLhd+K8
-         9zd4icTjlDLA78nCV0i7165iIfiWuVkZ+V9WzZu4=
+        b=KcKbbR8iAQe9IJ/Un9Fb7pc57svd0tPOLiNXStzQAGDqn5bWwttecWZLTIltxtnOp
+         rgk0sELFYK3K6KKlLXajHThiRY3TFMM13MUMBqacG9ZsNlf/GnYZdaZNXVmzcbCNlD
+         bRx9ih3byF8kbkPK13TqVW20I9CSqpwqNnii3yoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Maarten ter Huurne <maarten@treewalker.org>,
         Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.9 074/118] clk: clk-twl6040: Fix imprecise external abort for pdmclk
-Date:   Fri, 22 Mar 2019 12:15:46 +0100
-Message-Id: <20190322111221.855885341@linuxfoundation.org>
+Subject: [PATCH 4.9 075/118] clk: ingenic: Fix round_rate misbehaving with non-integer dividers
+Date:   Fri, 22 Mar 2019 12:15:47 +0100
+Message-Id: <20190322111221.916626082@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,117 +66,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tony Lindgren <tony@atomide.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 5ae51d67aec95f6f9386aa8dd5db424964895575 upstream.
+commit bc5d922c93491878c44c9216e9d227c7eeb81d7f upstream.
 
-I noticed that modprobe clk-twl6040 can fail after a cold boot with:
-abe_cm:clk:0010:0: failed to enable
-...
-Unhandled fault: imprecise external abort (0x1406) at 0xbe896b20
+Take a parent rate of 180 MHz, and a requested rate of 4.285715 MHz.
+This results in a theorical divider of 41.999993 which is then rounded
+up to 42. The .round_rate function would then return (180 MHz / 42) as
+the clock, rounded down, so 4.285714 MHz.
 
-WARNING: CPU: 1 PID: 29 at drivers/clk/clk.c:828 clk_core_disable_lock+0x18/0x24
-...
-(clk_core_disable_lock) from [<c0123534>] (_disable_clocks+0x18/0x90)
-(_disable_clocks) from [<c0124040>] (_idle+0x17c/0x244)
-(_idle) from [<c0125ad4>] (omap_hwmod_idle+0x24/0x44)
-(omap_hwmod_idle) from [<c053a038>] (sysc_runtime_suspend+0x48/0x108)
-(sysc_runtime_suspend) from [<c06084c4>] (__rpm_callback+0x144/0x1d8)
-(__rpm_callback) from [<c0608578>] (rpm_callback+0x20/0x80)
-(rpm_callback) from [<c0607034>] (rpm_suspend+0x120/0x694)
-(rpm_suspend) from [<c0607a78>] (__pm_runtime_idle+0x60/0x84)
-(__pm_runtime_idle) from [<c053aaf0>] (sysc_probe+0x874/0xf2c)
-(sysc_probe) from [<c05fecd4>] (platform_drv_probe+0x48/0x98)
+Calling clk_set_rate on 4.285714 MHz would round the rate again, and
+give a theorical divider of 42,0000028, now rounded up to 43, and the
+rate returned would be (180 MHz / 43) which is 4.186046 MHz, aka. not
+what we requested.
 
-After searching around for a similar issue, I came across an earlier fix
-that never got merged upstream in the Android tree for glass-omap-xrr02.
-There is patch "MFD: twl6040-codec: Implement PDMCLK cold temp errata"
-by Misael Lopez Cruz <misael.lopez@ti.com>.
+Fix this by rounding up the divisions.
 
-Based on my observations, this fix is also needed when cold booting
-devices, and not just for deeper idle modes. Since we now have a clock
-driver for pdmclk, let's fix the issue in twl6040_pdmclk_prepare().
-
-Cc: Misael Lopez Cruz <misael.lopez@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Maarten ter Huurne <maarten@treewalker.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk-twl6040.c |   53 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
+ drivers/clk/ingenic/cgu.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/clk/clk-twl6040.c
-+++ b/drivers/clk/clk-twl6040.c
-@@ -41,6 +41,43 @@ static int twl6040_pdmclk_is_prepared(st
- 	return pdmclk->enabled;
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -364,16 +364,16 @@ ingenic_clk_round_rate(struct clk_hw *hw
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info;
+-	long rate = *parent_rate;
++	unsigned int div = 1;
+ 
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 
+ 	if (clk_info->type & CGU_CLK_DIV)
+-		rate /= ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
++		div = ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
+ 	else if (clk_info->type & CGU_CLK_FIXDIV)
+-		rate /= clk_info->fixdiv.div;
++		div = clk_info->fixdiv.div;
+ 
+-	return rate;
++	return DIV_ROUND_UP(*parent_rate, div);
  }
  
-+static int twl6040_pdmclk_reset_one_clock(struct twl6040_pdmclk *pdmclk,
-+					  unsigned int reg)
-+{
-+	const u8 reset_mask = TWL6040_HPLLRST;	/* Same for HPPLL and LPPLL */
-+	int ret;
-+
-+	ret = twl6040_set_bits(pdmclk->twl6040, reg, reset_mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = twl6040_clear_bits(pdmclk->twl6040, reg, reset_mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * TWL6040A2 Phoenix Audio IC erratum #6: "PDM Clock Generation Issue At
-+ * Cold Temperature". This affects cold boot and deeper idle states it
-+ * seems. The workaround consists of resetting HPPLL and LPPLL.
-+ */
-+static int twl6040_pdmclk_quirk_reset_clocks(struct twl6040_pdmclk *pdmclk)
-+{
-+	int ret;
-+
-+	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_HPPLLCTL);
-+	if (ret)
-+		return ret;
-+
-+	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_LPPLLCTL);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int twl6040_pdmclk_prepare(struct clk_hw *hw)
- {
- 	struct twl6040_pdmclk *pdmclk = container_of(hw, struct twl6040_pdmclk,
-@@ -48,8 +85,20 @@ static int twl6040_pdmclk_prepare(struct
- 	int ret;
+ static int
+@@ -393,7 +393,7 @@ ingenic_clk_set_rate(struct clk_hw *hw,
  
- 	ret = twl6040_power(pdmclk->twl6040, 1);
--	if (!ret)
--		pdmclk->enabled = 1;
-+	if (ret)
-+		return ret;
-+
-+	ret = twl6040_pdmclk_quirk_reset_clocks(pdmclk);
-+	if (ret)
-+		goto out_err;
-+
-+	pdmclk->enabled = 1;
-+
-+	return 0;
-+
-+out_err:
-+	dev_err(pdmclk->dev, "%s: error %i\n", __func__, ret);
-+	twl6040_power(pdmclk->twl6040, 0);
+ 	if (clk_info->type & CGU_CLK_DIV) {
+ 		div = ingenic_clk_calc_div(clk_info, parent_rate, req_rate);
+-		rate = parent_rate / div;
++		rate = DIV_ROUND_UP(parent_rate, div);
  
- 	return ret;
- }
+ 		if (rate != req_rate)
+ 			return -EINVAL;
 
 
