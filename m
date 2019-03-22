@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49480C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1876821916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC2421900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfCVQje (ORCPT
+        id S1729184AbfCVQlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:39:34 -0400
+        Fri, 22 Mar 2019 12:41:32 -0400
 Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbfCVQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:39:31 -0400
+        id S1727757AbfCVQje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:34 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:30 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="144356581"
+   d="scan'208";a="144356601"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:30 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:33 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
-Date:   Fri, 22 Mar 2019 09:36:56 -0700
-Message-Id: <20190322163718.2191-2-kan.liang@linux.intel.com>
+Subject: [PATCH V3 05/23] perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
+Date:   Fri, 22 Mar 2019 09:37:00 -0700
+Message-Id: <20190322163718.2191-6-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
 References: <20190322163718.2191-1-kan.liang@linux.intel.com>
@@ -45,176 +45,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Starting from Icelake, XMM registers can be collected in PEBS record.
-But current code only output the pt_regs.
+With adaptive PEBS the CPU can directly supply the LBR information,
+so we don't need to read it again. But the LBRs still need to be
+enabled. Add a special count to the cpuc that distinguishes these
+two cases, and avoid reading the LBRs unnecessarily when PEBS is
+active.
 
-Add a new struct x86_perf_regs for both pt_regs and xmm_regs.
-XMM registers are 128 bit. To simplify the code, they are handled like
-two different registers, which means setting two bits in the register
-bitmap. This also allows only sampling the lower 64bit bits in XMM.
-The index of XMM registers starts from 32. There are 16 XMM registers.
-So all reserved space for regs are used.
-PERF_REG_X86_MAX stands for the max number of all x86 regs include XMM.
-PERF_REG_GPR_X86_MAX stands for the max number of all x86 general
-purpose registers, which not include XMM.
-PERF_REG_GPR_X86_32_MAX and PERF_REG_GPR_X86_64_MAX are introduced to
-replace PERF_REG_X86_32_MAX and PERF_REG_X86_64_MAX for x86 general
-purpose registers.
-
-The REG_RESERVED is also updated to allow the XMM registers.
-XMM is not supported on all platforms. Adding has_xmm_regs to indicate
-the specific platform. Also add checks in x86_pmu_hw_config() to reject
-invalid config of regs_user and regs_intr.
-
-Originally-by: Andi Kleen <ak@linux.intel.com>
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V2.
 
- arch/x86/events/core.c                | 10 ++++++++++
- arch/x86/events/perf_event.h          |  2 ++
- arch/x86/include/asm/perf_event.h     |  5 +++++
- arch/x86/include/uapi/asm/perf_regs.h | 26 ++++++++++++++++++++++++--
- arch/x86/kernel/perf_regs.c           | 18 ++++++++++++++----
- 5 files changed, 55 insertions(+), 6 deletions(-)
+ arch/x86/events/intel/lbr.c  | 13 ++++++++++++-
+ arch/x86/events/perf_event.h |  1 +
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e2b1447192a8..9378c6b2128f 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -560,6 +560,16 @@ int x86_pmu_hw_config(struct perf_event *event)
- 			return -EINVAL;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 07b7175fc378..6f814a27416b 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -488,6 +488,8 @@ void intel_pmu_lbr_add(struct perf_event *event)
+ 	 * be 'new'. Conversely, a new event can get installed through the
+ 	 * context switch path for the first time.
+ 	 */
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users++;
+ 	perf_sched_cb_inc(event->ctx->pmu);
+ 	if (!cpuc->lbr_users++ && !event->total_time_running)
+ 		intel_pmu_lbr_reset();
+@@ -507,8 +509,11 @@ void intel_pmu_lbr_del(struct perf_event *event)
+ 		task_ctx->lbr_callstack_users--;
  	}
  
-+	if (event->attr.sample_regs_user & ~PEBS_REGS)
-+		return -EINVAL;
-+	/*
-+	 * Besides the general purpose registers, XMM registers may
-+	 * be collected in PEBS on some platforms, e.g. Icelake
-+	 */
-+	if ((event->attr.sample_regs_intr & ~PEBS_REGS) &&
-+	    (!x86_pmu.has_xmm_regs || !event->attr.precise_ip))
-+		return -EINVAL;
-+
- 	return x86_setup_perfctr(event);
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users--;
+ 	cpuc->lbr_users--;
+ 	WARN_ON_ONCE(cpuc->lbr_users < 0);
++	WARN_ON_ONCE(cpuc->lbr_pebs_users < 0);
+ 	perf_sched_cb_dec(event->ctx->pmu);
  }
  
+@@ -658,7 +663,13 @@ void intel_pmu_lbr_read(void)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	if (!cpuc->lbr_users)
++	/*
++	 * Don't read when all LBRs users are using adaptive PEBS.
++	 *
++	 * This could be smarter and actually check the event,
++	 * but this simple approach seems to work for now.
++	 */
++	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
+ 		return;
+ 
+ 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a75955741c50..6428941a5073 100644
+index 4ca20078ca92..f2351e47de3d 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -657,6 +657,8 @@ struct x86_pmu {
- 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+@@ -216,6 +216,7 @@ struct cpu_hw_events {
+ 	 * Intel LBR bits
  	 */
- 	int (*check_period) (struct perf_event *event, u64 period);
-+
-+	unsigned int	has_xmm_regs : 1; /* support XMM regs */
- };
- 
- struct x86_perf_task_context {
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 8bdf74902293..d9f5bbe44b3c 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -248,6 +248,11 @@ extern void perf_events_lapic_init(void);
- #define PERF_EFLAGS_VM		(1UL << 5)
- 
- struct pt_regs;
-+struct x86_perf_regs {
-+	struct pt_regs	regs;
-+	u64		*xmm_regs;
-+};
-+
- extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
- extern unsigned long perf_misc_flags(struct pt_regs *regs);
- #define perf_misc_flags(regs)	perf_misc_flags(regs)
-diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
-index f3329cabce5c..b33995313d17 100644
---- a/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/arch/x86/include/uapi/asm/perf_regs.h
-@@ -28,7 +28,29 @@ enum perf_event_x86_regs {
- 	PERF_REG_X86_R14,
- 	PERF_REG_X86_R15,
- 
--	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
--	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
-+	/* These all need two bits set because they are 128bit */
-+	PERF_REG_X86_XMM0  = 32,
-+	PERF_REG_X86_XMM1  = 34,
-+	PERF_REG_X86_XMM2  = 36,
-+	PERF_REG_X86_XMM3  = 38,
-+	PERF_REG_X86_XMM4  = 40,
-+	PERF_REG_X86_XMM5  = 42,
-+	PERF_REG_X86_XMM6  = 44,
-+	PERF_REG_X86_XMM7  = 46,
-+	PERF_REG_X86_XMM8  = 48,
-+	PERF_REG_X86_XMM9  = 50,
-+	PERF_REG_X86_XMM10 = 52,
-+	PERF_REG_X86_XMM11 = 54,
-+	PERF_REG_X86_XMM12 = 56,
-+	PERF_REG_X86_XMM13 = 58,
-+	PERF_REG_X86_XMM14 = 60,
-+	PERF_REG_X86_XMM15 = 62,
-+
-+	/* This does not include the XMMX registers */
-+	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
-+	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
-+
-+	/* All registers include the XMMX registers */
-+	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
- };
- #endif /* _ASM_X86_PERF_REGS_H */
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index c06c4c16c6b6..421d76895565 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -10,14 +10,14 @@
- #include <asm/ptrace.h>
- 
- #ifdef CONFIG_X86_32
--#define PERF_REG_X86_MAX PERF_REG_X86_32_MAX
-+#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_32_MAX
- #else
--#define PERF_REG_X86_MAX PERF_REG_X86_64_MAX
-+#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_64_MAX
- #endif
- 
- #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
- 
--static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
-+static unsigned int pt_regs_offset[PERF_REG_GPR_X86_MAX] = {
- 	PT_REGS_OFFSET(PERF_REG_X86_AX, ax),
- 	PT_REGS_OFFSET(PERF_REG_X86_BX, bx),
- 	PT_REGS_OFFSET(PERF_REG_X86_CX, cx),
-@@ -59,13 +59,23 @@ static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
- 
- u64 perf_reg_value(struct pt_regs *regs, int idx)
- {
-+	struct x86_perf_regs *perf_regs;
-+
-+	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_MAX) {
-+		perf_regs = container_of(regs, struct x86_perf_regs, regs);
-+		if (!perf_regs->xmm_regs)
-+			return 0;
-+		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
-+	}
-+
- 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
- 		return 0;
- 
- 	return regs_get_register(regs, pt_regs_offset[idx]);
- }
- 
--#define REG_RESERVED (~((1ULL << PERF_REG_X86_MAX) - 1ULL))
-+#define REG_RESERVED \
-+	(PERF_REG_X86_MAX == 64 ? 0 : ~((1ULL << PERF_REG_X86_MAX)) - 1ULL)
- 
- #ifdef CONFIG_X86_32
- int perf_reg_validate(u64 mask)
+ 	int				lbr_users;
++	int				lbr_pebs_users;
+ 	struct perf_branch_stack	lbr_stack;
+ 	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+ 	struct er_account		*lbr_sel;
 -- 
 2.17.1
 
