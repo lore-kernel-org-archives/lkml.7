@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF7FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F8BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936E020693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D0120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbfCVLjX (ORCPT
+        id S1731111AbfCVLjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:23 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:38486 "EHLO
+        Fri, 22 Mar 2019 07:39:22 -0400
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:37950 "EHLO
         mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730830AbfCVLjU (ORCPT
+        by vger.kernel.org with ESMTP id S1731092AbfCVLjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:20 -0400
+        Fri, 22 Mar 2019 07:39:18 -0400
 Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:55278 helo=purcell.lan)
         by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h7IVo-0006yM-Oe; Fri, 22 Mar 2019 12:39:00 +0100
+        id 1h7IVm-0006yM-6O; Fri, 22 Mar 2019 12:38:58 +0100
 From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
         shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
@@ -32,22 +32,21 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
 Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
         Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
         Michal Simek <michal.simek@xilinx.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
         Tony Xie <tony.xie@rock-chips.com>,
+        Randy Li <ayaka@soulik.info>,
         Vicente Bergas <vicencb@gmail.com>,
         Ezequiel Garcia <ezequiel@collabora.com>,
         Klaus Goger <klaus.goger@theobroma-systems.com>,
         linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH v3 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
-Date:   Fri, 22 Mar 2019 12:38:06 +0100
-Message-Id: <20190322113808.16858-3-christoph.muellner@theobroma-systems.com>
+Subject: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
+Date:   Fri, 22 Mar 2019 12:38:05 +0100
+Message-Id: <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
 References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
@@ -56,76 +55,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+which exposes a control register bit to enable the feature.
+The current implementation sets this bit unconditionally.
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
-
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
-
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
-
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
-
-Therefore this patch disables DCMDs for RK3399.
+This patch allows to suppress the feature activation,
+by specifying the property disable-cqe-dcmd.
 
 Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index db9d948c0b03..1a16d6ce3ea8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -333,6 +333,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index c9e3e050ccc8..88dc3f00a5be 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		host->mmc_host_ops.start_signal_voltage_switch =
+ 					sdhci_arasan_voltage_switch;
+ 		sdhci_arasan->has_cqe = true;
+-		host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
++		host->mmc->caps2 |= MMC_CAP2_CQE;
++
++		if (!of_property_read_bool(np, "disable-cqe-dcmd"))
++			host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
+ 	}
  
+ 	ret = sdhci_arasan_add_host(sdhci_arasan);
 -- 
 2.11.0
 
