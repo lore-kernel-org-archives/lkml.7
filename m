@@ -2,117 +2,134 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A8BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC412054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258023;
-	bh=86ca78CONUTwoXMla2cfh8kZ2I4Gahr5jDOTewKAMtg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vbuayh7kt+iFJoyDbsrUNDcCoaG9qyOrsOTN+aLAn5NsrfUqa1kN0ZsagtwowH5/8
-	 enWMuhpM0xGNbqohAVQ5xzqioqVUKIGXXEyN9x8VfdVjYpS6g5vYW07FHoYmTM5Un7
-	 GvKjP6JYSK170E2+kqjnGntdLwA1jmkRTDtURCKg=
+	by mail.kernel.org (Postfix) with ESMTP id C12232054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+w16A0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389975AbfCVMdl (ORCPT
+        id S2389992AbfCVMdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389894AbfCVMOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0182083D;
-        Fri, 22 Mar 2019 12:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256862;
-        bh=86ca78CONUTwoXMla2cfh8kZ2I4Gahr5jDOTewKAMtg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRvQ4jVpOKfOZ8ik4Yjpu4BBGpy46E6jD3Tbzz7xCa8s3GWCQUoBGlnpAP/8M83+u
-         KFBzuiKBuXuL4M4GUUN6SaoqW0D8Xty1G1TYApfRvMIiP+sICpJH6uGYTnQGAViZsA
-         iuHjiBMZCApc/EbL1wIAqnBntRVp5Dmma8exFCk4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.0 027/238] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
-Date:   Fri, 22 Mar 2019 12:14:06 +0100
-Message-Id: <20190322111259.824281376@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
-References: <20190322111258.383569278@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:33:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44134 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389259AbfCVMOR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i2so1393956pgj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 05:14:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=e+Q6ymh8nE2cUHIAaKzDKoWB06PYHRB0lZuPNM3MsFo=;
+        b=h+w16A0yy0ULcEJgOLJAS0P2Oq7mt3GAzP33EIF4Kvndu9f+TBHPmQ/I4Hus4X9rbT
+         o7pMCiZtqd0b50Lpl1Pu7ifbJU3Cb4eBxwb/vbbpFDwN0vNojw5vgsHoxr9jDTdIZkVR
+         yaNKJLLih0w4bJx3mrGsAZOtWYAF50Nav9uDDrqgzv3H5LsptjQ+0eObE3d3JuPtPcvc
+         gYv0d5ZbEe3YlSzi19O3e2K46kWyDh2w6BI1mFdi/XcLDmMIqZnzi11YlsH9+asMULYz
+         Z7CuVI8O8wlRyNNfp8oAy0ysEneunW2wRq4c13gEhvYa3nuRyBuL50xT+nL24xLVZJ1y
+         51lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=e+Q6ymh8nE2cUHIAaKzDKoWB06PYHRB0lZuPNM3MsFo=;
+        b=DMqfUoAVFX1jnlUlyGr+AmyA9QJ5JNg/Ny7k//e+POg1e+dKsK6kx+ybG4cr90BY6Q
+         tpLXPy43v741OBCvjvDfCBcvnZMCt5t4bStyHVd+eUiHohJwCieVA6QZMK3CnIzcths8
+         faTNIWxjnNszUEr5RsycXPDUPS40x2+SO4axNw0mjtzjf1/ssBEJrCcItpJP4O8EH2/i
+         uiPn+aFVYf+/I+T1HuuU/LGX7nPReDqCtz1QKEez/gNDx2pBHZQojVZgzYhncbLTJPGf
+         ERfXjhoAQ1NWFRPWo23Lxnv2LGNCwJjxAcr2M4FGXemUDU9tpn5KD6DX7k5yIIpKevZK
+         utPQ==
+X-Gm-Message-State: APjAAAWqtGZpZm5pEUkCoV01t5X5LwosX8imXiy3hoFFtpROoJQcf/qx
+        0gtsSOzTAiVlSDx/2W6ZaT8=
+X-Google-Smtp-Source: APXvYqx0YoGUPxq1XR+HJUn+4u43AktsBNN2oprUYVQpXoLcLV9+zxAfo7c17Dy6HWwUGKjKa1IZ9A==
+X-Received: by 2002:a17:902:aa90:: with SMTP id d16mr8972652plr.250.1553256856389;
+        Fri, 22 Mar 2019 05:14:16 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([117.198.99.29])
+        by smtp.gmail.com with ESMTPSA id h87sm12481248pfj.20.2019.03.22.05.14.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 05:14:15 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 17:44:10 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     gregkh@linuxfoundation.org, christian@lkamp.de
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: ralink-gdma: Change uint32_t to u32
+Message-ID: <20190322121410.GA3177@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+Change occurences of uint32_t to u32 to fix checkpatch.pl warning
 
-------------------
-
-From: Dexuan Cui <decui@microsoft.com>
-
-commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
-
-In the case of ND_CMD_CALL, we should also check out_obj->type.
-
-The patch uses out_obj->type, which is a short alias to
-out_obj->package.type.
-
-Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 ---
- drivers/acpi/nfit/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Changes since v1:
+	-Improved the changelog.
+---
+ drivers/staging/ralink-gdma/ralink-gdma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -554,6 +554,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return -EINVAL;
- 	}
+diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
+index 2c19287..7e824d3 100644
+--- a/drivers/staging/ralink-gdma/ralink-gdma.c
++++ b/drivers/staging/ralink-gdma/ralink-gdma.c
+@@ -157,14 +157,14 @@ static struct gdma_dma_desc *to_gdma_dma_desc(struct virt_dma_desc *vdesc)
+ 	return container_of(vdesc, struct gdma_dma_desc, vdesc);
+ }
  
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
-+				dimm_name, cmd_name, out_obj->type);
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -572,13 +579,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return 0;
- 	}
+-static inline uint32_t gdma_dma_read(struct gdma_dma_dev *dma_dev,
++static inline u32 gdma_dma_read(struct gdma_dma_dev *dma_dev,
+ 				     unsigned int reg)
+ {
+ 	return readl(dma_dev->base + reg);
+ }
  
--	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
--		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
--				dimm_name, cmd_name, out_obj->type);
--		rc = -EINVAL;
--		goto out;
--	}
--
- 	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
- 			cmd_name, out_obj->buffer.length);
- 	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
-
+ static inline void gdma_dma_write(struct gdma_dma_dev *dma_dev,
+-				  unsigned reg, uint32_t val)
++				  unsigned reg, u32 val)
+ {
+ 	writel(val, dma_dev->base + reg);
+ }
+@@ -283,7 +283,7 @@ static int rt305x_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
+ 	struct gdma_dma_dev *dma_dev = gdma_dma_chan_get_dev(chan);
+ 	dma_addr_t src_addr, dst_addr;
+ 	struct gdma_dma_sg *sg;
+-	uint32_t ctrl0, ctrl1;
++	u32 ctrl0, ctrl1;
+ 
+ 	/* verify chan is already stopped */
+ 	ctrl0 = gdma_dma_read(dma_dev, GDMA_REG_CTRL0(chan->id));
+@@ -753,7 +753,7 @@ static void gdma_dma_tasklet(unsigned long arg)
+ 
+ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
+ 
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_RT305X_GCT, GDMA_REG_GCT_ARBIT_RR);
+@@ -767,7 +767,7 @@ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ 
+ static void rt3883_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
+ 
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_REG_GCT, GDMA_REG_GCT_ARBIT_RR);
+-- 
+2.7.4
 
