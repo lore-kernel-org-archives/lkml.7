@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86777C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800ECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F5621873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E2921873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260381;
-	bh=0ZocAiMeWoWxiXXRhIiHdSFDdCD4v3b/4VUGQj+lTxc=;
+	s=default; t=1553260391;
+	bh=S60mzx5ykPBtiTDiSq+UQ3Ch4flUqOURXU4XxSSfq7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INkTByI+ENG/US4MssX+X5uyaY2O0+rtniknbSMonwmREhrLRuBHQGRAjjVuSgIhn
-	 BZ8jlFHWfjaxYMWKEYPHOri6y8h7j2/NB/jCWzFdxna9hzemWmR8QNPPF7uvf0kOzJ
-	 AeoIjcOF8/bQGDnVoF+Vj4FccCN5hr6uyvpI1Uh8=
+	b=fltpEDc4t2LixvN95xsLh9mgDwzdrvGIkzeThpIxACdRd2yjwDidrSH/3L4bI5m2h
+	 HmdJn29Y1BbqwI7kjkbiqPxrwSRc9a7JIC9fCH3fZt9DJZHzlhVz/rY0bL3xRe6ev1
+	 SctbZNwRXGajOh793gNPmP8B1eQhKUVRI29VX620=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbfCVNMx (ORCPT
+        id S1729988AbfCVNNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbfCVLbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:31:11 -0400
+        id S1729709AbfCVLav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:30:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E39221917;
-        Fri, 22 Mar 2019 11:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F53F20449;
+        Fri, 22 Mar 2019 11:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254270;
-        bh=0ZocAiMeWoWxiXXRhIiHdSFDdCD4v3b/4VUGQj+lTxc=;
+        s=default; t=1553254251;
+        bh=S60mzx5ykPBtiTDiSq+UQ3Ch4flUqOURXU4XxSSfq7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2af2BoAeGXkgNkvDbQid+Fp18GQ9P0U2tTwYu8yMXTZdXsdxdqkx0KKqCKsYmMhp
-         lXRx5gj2b61t8H6X5+pVuECWTYDY6EXCiMvVv+0g/j1LsNxwjrFNuqs25OzkJyUe7s
-         NLS6Tcy3IlyQ275mtpjpjSL72BM3dNBIATyrK4ZA=
+        b=W5P7vCwgva1/IqF/YyG17HiaFaGkAHQYgcE4a1G2lSNYw92LnsWVG6lN5nx/QdrX+
+         VIPf4iKjOmEfkcOjZbCC7o8c1nZlsu/d+v8svKp3kZJW5WP5lnrMQutiZjHpX+Mw9R
+         UiK9EQfUbCxZx2njXt8BpFa3pXrcfVxZnFpGgeD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 066/230] bnxt_en: Drop oversize TX packets to prevent errors.
-Date:   Fri, 22 Mar 2019 12:13:24 +0100
-Message-Id: <20190322111241.314714819@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 060/230] ncpfs: fix build warning of strncpy
+Date:   Fri, 22 Mar 2019 12:13:18 +0100
+Message-Id: <20190322111240.893827598@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,45 +64,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
+Not upstream as ncpfs is long deleted.
 
-There have been reports of oversize UDP packets being sent to the
-driver to be transmitted, causing error conditions.  The issue is
-likely caused by the dst of the SKB switching between 'lo' with
-64K MTU and the hardware device with a smaller MTU.  Patches are
-being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
-issue.
+Fix up two strncpy build warnings in ncp_get_charsets() by using strscpy
+and the max size of the array.
 
-In the meantime, add a quick length check in the driver to prevent
-the error.  The driver uses the TX packet size as index to look up an
-array to setup the TX BD.  The array is large enough to support all MTU
-sizes supported by the driver.  The oversize TX packet causes the
-driver to index beyond the array and put garbage values into the
-TX BD.  Add a simple check to prevent this.
+It's not like anyone uses this code anyway, and this gets rid of two
+build warnings so that we can see real warnings as they pop up over
+time.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -330,6 +330,12 @@ normal_tx:
+---
+ fs/ncpfs/ioctl.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/fs/ncpfs/ioctl.c
++++ b/fs/ncpfs/ioctl.c
+@@ -233,7 +233,7 @@ ncp_get_charsets(struct ncp_server* serv
+ 		len = strlen(server->nls_vol->charset);
+ 		if (len > NCP_IOCSNAME_LEN)
+ 			len = NCP_IOCSNAME_LEN;
+-		strncpy(user.codepage, server->nls_vol->charset, len);
++		strscpy(user.codepage, server->nls_vol->charset, NCP_IOCSNAME_LEN);
+ 		user.codepage[len] = 0;
  	}
  
- 	length >>= 9;
-+	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
-+		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
-+				     skb->len);
-+		i = 0;
-+		goto tx_dma_error;
-+	}
- 	flags |= bnxt_lhint_arr[length];
- 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
- 
+@@ -243,7 +243,7 @@ ncp_get_charsets(struct ncp_server* serv
+ 		len = strlen(server->nls_io->charset);
+ 		if (len > NCP_IOCSNAME_LEN)
+ 			len = NCP_IOCSNAME_LEN;
+-		strncpy(user.iocharset,	server->nls_io->charset, len);
++		strscpy(user.iocharset,	server->nls_io->charset, NCP_IOCSNAME_LEN);
+ 		user.iocharset[len] = 0;
+ 	}
+ 	mutex_unlock(&server->root_setup_lock);
 
 
