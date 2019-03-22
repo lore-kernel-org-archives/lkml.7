@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7557C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DCCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976E420685
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B22920830
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256539;
-	bh=xZsZwbX5fcUTvpdlxSQZ4cTji1C0CvwLxfYUd5H/5WU=;
+	s=default; t=1553256543;
+	bh=HvvEhrvnZvwc9lt9y9aA5IFXJV0GQigyguAdWWyv5SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tt1Kos6J+rROtAoIZLv2Eqv51D+CJKd8Z4TTxqdaVAAI//YSS5YsQTPx6ixqIEWMq
-	 /+SEDpIfWiFHx0FK46psvux+g/9VQLNb6hd3HO/hmxHiLFYzqw+tnKQhKInJpbhq3m
-	 ViYc+PBY+DUHz97fJcYNcuyNp26KZ3p3yhlkB4s0=
+	b=cwjOnbDbkpVXpj/sIYl6Hb1+6c49kxYVR1cuCnS+QqitKDpQzOLj9OgwdnBwUuFl6
+	 NKMnaXecsHOZmRRArfMie+npNF/aHgvnZMH0PdOPRfMfKmcOKkST0g8uOuculRADWv
+	 UgTrCVfHcEeBO6kWY9Ue1vTkCSF3sclmpUlrPLfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389236AbfCVMI6 (ORCPT
+        id S2389016AbfCVMJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733201AbfCVMI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:08:57 -0400
+        id S1733201AbfCVMI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:08:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9715D21916;
-        Fri, 22 Mar 2019 12:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67888206C0;
+        Fri, 22 Mar 2019 12:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256536;
-        bh=xZsZwbX5fcUTvpdlxSQZ4cTji1C0CvwLxfYUd5H/5WU=;
+        s=default; t=1553256538;
+        bh=HvvEhrvnZvwc9lt9y9aA5IFXJV0GQigyguAdWWyv5SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goz7HkJFNPz2C01GWh/H6FnfdCKW8HgiSzjZb5v+qqsJwY56kCaxr6AWiLAyTJ/C4
-         Dk681RRLQuE0K5teYCgne8mKgld/oVCtYiVLCLUApJlkvMw/pW2QtSugCMpSLoSHnQ
-         n8zF9/aKjQXlf8Wq1JmVNsvYiR2Y/TggACCAgvxI=
+        b=sinSHuVNkY1kRYBzbbIHwulO5wWEeZWsIYHKinJSQVvBOO6/NbGYM5ie9hxHZSiK4
+         89vGx12SHziLMWqMmJjfAtxbhZjlPDSdjGqm3AMiGo1XmzamL7iJ6rHpigcxdN1o6Q
+         XJCHqopKwHvoSV2LspmqQP13BCVa2DIEJr6PDaUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 218/280] jbd2: fix compile warning when using JBUFFER_TRACE
-Date:   Fri, 22 Mar 2019 12:16:11 +0100
-Message-Id: <20190322111334.382247985@linuxfoundation.org>
+        stable@vger.kernel.org, Chunyu Hu <chuhu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.19 219/280] selinux: add the missing walk_size + len check in selinux_sctp_bind_connect
+Date:   Fri, 22 Mar 2019 12:16:12 +0100
+Message-Id: <20190322111334.573696241@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,87 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
+commit 292c997a1970f8d1e1dfa354ed770a22f7b5a434 upstream.
 
-The jh pointer may be used uninitialized in the two cases below and the
-compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
+As does in __sctp_connect(), when checking addrs in a while loop, after
+get the addr len according to sa_family, it's necessary to do the check
+walk_size + af->sockaddr_len > addrs_size to make sure it won't access
+an out-of-bounds addr.
 
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
+The same thing is needed in selinux_sctp_bind_connect(), otherwise an
+out-of-bounds issue can be triggered:
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+  [14548.772313] BUG: KASAN: slab-out-of-bounds in selinux_sctp_bind_connect+0x1aa/0x1f0
+  [14548.927083] Call Trace:
+  [14548.938072]  dump_stack+0x9a/0xe9
+  [14548.953015]  print_address_description+0x65/0x22e
+  [14548.996524]  kasan_report.cold.6+0x92/0x1a6
+  [14549.015335]  selinux_sctp_bind_connect+0x1aa/0x1f0
+  [14549.036947]  security_sctp_bind_connect+0x58/0x90
+  [14549.058142]  __sctp_setsockopt_connectx+0x5a/0x150 [sctp]
+  [14549.081650]  sctp_setsockopt.part.24+0x1322/0x3ce0 [sctp]
+
 Cc: stable@vger.kernel.org
-Reviewed-by: Jan Kara <jack@suse.cz>
+Fixes: d452930fd3b9 ("selinux: Add SCTP support")
+Reported-by: Chunyu Hu <chuhu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ security/selinux/hooks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1219,11 +1219,12 @@ int jbd2_journal_get_undo_access(handle_
- 	struct journal_head *jh;
- 	char *committed_data = NULL;
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -5334,6 +5334,9 @@ static int selinux_sctp_bind_connect(str
+ 			return -EINVAL;
+ 		}
  
--	JBUFFER_TRACE(jh, "entry");
- 	if (jbd2_write_access_granted(handle, bh, true))
- 		return 0;
- 
- 	jh = jbd2_journal_add_journal_head(bh);
-+	JBUFFER_TRACE(jh, "entry");
++		if (walk_size + len > addrlen)
++			return -EINVAL;
 +
- 	/*
- 	 * Do this first --- it can drop the journal lock, so we want to
- 	 * make sure that obtaining the committed_data is done
-@@ -1334,15 +1335,17 @@ int jbd2_journal_dirty_metadata(handle_t
- 
- 	if (is_handle_aborted(handle))
- 		return -EROFS;
--	if (!buffer_jbd(bh)) {
--		ret = -EUCLEAN;
--		goto out;
--	}
-+	if (!buffer_jbd(bh))
-+		return -EUCLEAN;
-+
- 	/*
- 	 * We don't grab jh reference here since the buffer must be part
- 	 * of the running transaction.
- 	 */
- 	jh = bh2jh(bh);
-+	jbd_debug(5, "journal_head %p\n", jh);
-+	JBUFFER_TRACE(jh, "entry");
-+
- 	/*
- 	 * This and the following assertions are unreliable since we may see jh
- 	 * in inconsistent state unless we grab bh_state lock. But this is
-@@ -1376,9 +1379,6 @@ int jbd2_journal_dirty_metadata(handle_t
- 	}
- 
- 	journal = transaction->t_journal;
--	jbd_debug(5, "journal_head %p\n", jh);
--	JBUFFER_TRACE(jh, "entry");
--
- 	jbd_lock_bh_state(bh);
- 
- 	if (jh->b_modified == 0) {
+ 		err = -EINVAL;
+ 		switch (optname) {
+ 		/* Bind checks */
 
 
