@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8360AC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B55FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE1B213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A421213F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259679;
-	bh=AvOgPfbZcpdhkIYDA7zG+EOIjlUyzywq5MOL0krCROU=;
+	s=default; t=1553259683;
+	bh=hVyhiDCj04rp3csRNWp9F7OMoCyRSUzgnWwLtj+AqjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11WQZiX7cn8hOM+Pn47WNpolu3pNaw0vbN22NbwhidACVHswZ+CbFz1KDMRGVlXxt
-	 wo1ymdUeQYez+hrsrYtRW9WWvfl1IEfUtobh/NDNl9AAU/vLF7YR2AWtnZ6O5ZZztl
-	 yuekRdmns0w0W9dz1hjoL8EGbpXfFAAJVT/EIslE=
+	b=QNtEicujh349SXgVsTJj4xObWTl3JeVjV/zC8tsJtF3x8q6sNhq7CCb99gVoHvpw9
+	 Q58AHNPWYDRPXaymRDMzhkD8iUMJV6swZh/h9gqcmWYy+1rWojJUMZ+tH8C5Kyetl4
+	 XlFsRqCRSn0Q3j7PeeiIsfBsFm8CjF5CafnXhTTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfCVLnH (ORCPT
+        id S1731615AbfCVLnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730719AbfCVLnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:04 -0400
+        id S1731602AbfCVLnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BDB72082C;
-        Fri, 22 Mar 2019 11:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 500B5218B0;
+        Fri, 22 Mar 2019 11:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254983;
-        bh=AvOgPfbZcpdhkIYDA7zG+EOIjlUyzywq5MOL0krCROU=;
+        s=default; t=1553254979;
+        bh=hVyhiDCj04rp3csRNWp9F7OMoCyRSUzgnWwLtj+AqjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqfqJQ7P4urW+43ZmwC+nSJfu9WXbAOYBKIqwDJSgtSFLeOVlH2DJi+M4+QuCNi0U
-         dtAZbvBb8o1VNXlWQkv3X4nceNJmNs+a0U3w/feKeWu3EL+zx5jxvmYHQ1VN8wpdVn
-         IsjgY16aRV+9wvR/GyVMpRIHhbmpjPciSG74VisM=
+        b=nlQ4m0M7bK0PAlheuo2tQ2kSUz8ZDuWoxyCxJKrDX9EGt6SQ30t+JGBY5T299Etk0
+         ZHS4seiQov3GmMlqtCJgYqUwlFtgtBGws7lFKQwybPdKKq+PawrcgaY8Xra1xfXh8Z
+         +43Lf4Z/p1inn/ETwr0czfAZnTfX6vXuIIdlFQ3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 071/118] cpufreq: pxa2xx: remove incorrect __init annotation
-Date:   Fri, 22 Mar 2019 12:15:43 +0100
-Message-Id: <20190322111221.666916220@linuxfoundation.org>
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.9 070/118] cpufreq: tegra124: add missing of_node_put()
+Date:   Fri, 22 Mar 2019 12:15:42 +0100
+Message-Id: <20190322111221.598131080@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -68,53 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-commit 9505b98ccddc454008ca7efff90044e3e857c827 upstream.
+commit 446fae2bb5395f3028d8e3aae1508737e5a72ea1 upstream.
 
-pxa_cpufreq_init_voltages() is marked __init but usually inlined into
-the non-__init pxa_cpufreq_init() function. When building with clang,
-it can stay as a standalone function in a discarded section, and produce
-this warning:
+of_cpu_device_node_get() will increase the refcount of device_node,
+it is necessary to call of_node_put() at the end to release the
+refcount.
 
-WARNING: vmlinux.o(.text+0x616a00): Section mismatch in reference from the function pxa_cpufreq_init() to the function .init.text:pxa_cpufreq_init_voltages()
-The function pxa_cpufreq_init() references
-the function __init pxa_cpufreq_init_voltages().
-This is often because pxa_cpufreq_init lacks a __init
-annotation or the annotation of pxa_cpufreq_init_voltages is wrong.
-
-Fixes: 50e77fcd790e ("ARM: pxa: remove __init from cpufreq_driver->init()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 9eb15dbbfa1a2 ("cpufreq: Add cpufreq driver for Tegra124")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/pxa2xx-cpufreq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpufreq/tegra124-cpufreq.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/cpufreq/pxa2xx-cpufreq.c
-+++ b/drivers/cpufreq/pxa2xx-cpufreq.c
-@@ -192,7 +192,7 @@ static int pxa_cpufreq_change_voltage(co
- 	return ret;
- }
+--- a/drivers/cpufreq/tegra124-cpufreq.c
++++ b/drivers/cpufreq/tegra124-cpufreq.c
+@@ -134,6 +134,8 @@ static int tegra124_cpufreq_probe(struct
  
--static void __init pxa_cpufreq_init_voltages(void)
-+static void pxa_cpufreq_init_voltages(void)
- {
- 	vcc_core = regulator_get(NULL, "vcc_core");
- 	if (IS_ERR(vcc_core)) {
-@@ -208,7 +208,7 @@ static int pxa_cpufreq_change_voltage(co
+ 	platform_set_drvdata(pdev, priv);
+ 
++	of_node_put(np);
++
  	return 0;
- }
  
--static void __init pxa_cpufreq_init_voltages(void) { }
-+static void pxa_cpufreq_init_voltages(void) { }
- #endif
- 
- static void find_freq_tables(struct cpufreq_frequency_table **freq_table,
+ out_switch_to_pllx:
 
 
