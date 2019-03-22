@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88822C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E3BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FA32082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D5B2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259190;
-	bh=YdAQcg1fpGC9IqiqWJvRXCnl8LyHiQ80G3hMp+8r56A=;
+	s=default; t=1553259198;
+	bh=cFqUYifMdhBkD64FQr5wLag8mBMoTU0aQ660+fabwdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHtXoT/J94npYBcoM5qLto/YgYVjeV4hI3+xVU1OxSw9NEaz/e0/E+lq60PMtUCDI
-	 /Ewsc/LkZleTtR/A/uIPmdqDASbABGLOJqis/pXq7/g3bivwo92xJbz4PVlCkO1Wye
-	 djtCuf/Ft86iePPLs5bikOMUMW08cesxhX7I19Po=
+	b=VjJzTBqWH9N2r+HwU/WOM/MfCyfsi07ir7Z/UFusSDlnzeISFBM9tntOYqN044KqP
+	 I2f2lRwH7sWkIZ5GgmfdodxiLTeZKeLnz/Is6SIJQhH9htphwsPREW6gS7KSPaSsUJ
+	 h9f3TNdqYYWmVi99FvFjCoEnuwrZZsUeFoq39HSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfCVLw1 (ORCPT
+        id S1732917AbfCVMxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732886AbfCVLwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:52:23 -0400
+        id S1732718AbfCVLwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB89B2082C;
-        Fri, 22 Mar 2019 11:52:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC412082C;
+        Fri, 22 Mar 2019 11:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255542;
-        bh=YdAQcg1fpGC9IqiqWJvRXCnl8LyHiQ80G3hMp+8r56A=;
+        s=default; t=1553255535;
+        bh=cFqUYifMdhBkD64FQr5wLag8mBMoTU0aQ660+fabwdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mxxFpGzHcfGiXiL3pACwj+TYGo52CeF34nnb+sd/RSzZJ40h5pEh7otjvQeygIQzu
-         BUfGAf+M60Znq/IcIjFuCJSotOgoSSLExG2l03lLH+UQqV/V0hBbzYCnz9GI4ksS+f
-         TPDeWOLlmxmqSJkcvDJM86VNXeRqdqA/jF9ZQwls=
+        b=AzQjqtjnlRoobr3OZct8EUCh+EmNa/A5QKWCohdbBkO8BKTc6DOwUh/Pwqtd2rHJL
+         FqS+06GOn6m2KWXOoMqorB2f8+7TttQ3RDTyMLQOMypXop1QTc9jCWLOxLjUOMvgAY
+         /t+AXNPbriU67aVFTRlHZrxRa7Ou6at2ylzDMlQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Joe Perches <joe@perches.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 123/183] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
-Date:   Fri, 22 Mar 2019 12:15:51 +0100
-Message-Id: <20190322111250.625475067@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 113/183] IB/hfi1: Close race condition on user context disable and close
+Date:   Fri, 22 Mar 2019 12:15:41 +0100
+Message-Id: <20190322111249.896467318@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -70,86 +68,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
+commit bc5add09764c123f58942a37c8335247e683d234 upstream.
 
-When VM_NO_GUARD is not set area->size includes adjacent guard page,
-thus for correct size checking get_vm_area_size() should be used, but
-not area->size.
+When disabling and removing a receive context, it is possible for an
+asynchronous event (i.e IRQ) to occur.  Because of this, there is a race
+between cleaning up the context, and the context being used by the
+asynchronous event.
 
-This fixes possible kernel oops when userspace tries to mmap an area on
-1 page bigger than was allocated by vmalloc_user() call: the size check
-inside remap_vmalloc_range_partial() accounts non-existing guard page
-also, so check successfully passes but vmalloc_to_page() returns NULL
-(guard page does not physically exist).
+cpu 0  (context cleanup)
+    rc->ref_count-- (ref_count == 0)
+    hfi1_rcd_free()
+cpu 1  (IRQ (with rcd index))
+	rcd_get_by_index()
+	lock
+	ref_count+++     <-- reference count race (WARNING)
+	return rcd
+	unlock
+cpu 0
+    hfi1_free_ctxtdata() <-- incorrect free location
+    lock
+    remove rcd from array
+    unlock
+    free rcd
 
-The following code pattern example should trigger an oops:
+This race will cause the following WARNING trace:
 
-  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        void *mem;
+WARNING: CPU: 0 PID: 175027 at include/linux/kref.h:52 hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+CPU: 0 PID: 175027 Comm: IMB-MPI1 Kdump: loaded Tainted: G OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+Call Trace:
+  dump_stack+0x19/0x1b
+  __warn+0xd8/0x100
+  warn_slowpath_null+0x1d/0x20
+  hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+  is_rcv_urgent_int+0x24/0x90 [hfi1]
+  general_interrupt+0x1b6/0x210 [hfi1]
+  __handle_irq_event_percpu+0x44/0x1c0
+  handle_irq_event_percpu+0x32/0x80
+  handle_irq_event+0x3c/0x60
+  handle_edge_irq+0x7f/0x150
+  handle_irq+0xe4/0x1a0
+  do_IRQ+0x4d/0xf0
+  common_interrupt+0x162/0x162
 
-        mem = vmalloc_user(4096);
-        BUG_ON(!mem);
-        /* Do not care about mem leak */
+The race can also lead to a use after free which could be similar to:
 
-        return remap_vmalloc_range(vma, mem, 0);
-  }
+general protection fault: 0000 1 SMP
+CPU: 71 PID: 177147 Comm: IMB-MPI1 Kdump: loaded Tainted: G W OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+task: ffff9962a8098000 ti: ffff99717a508000 task.ti: ffff99717a508000 __kmalloc+0x94/0x230
+Call Trace:
+  ? hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_aio_write+0xba/0x110 [hfi1]
+  do_sync_readv_writev+0x7b/0xd0
+  do_readv_writev+0xce/0x260
+  ? handle_mm_fault+0x39d/0x9b0
+  ? pick_next_task_fair+0x5f/0x1b0
+  ? sched_clock_cpu+0x85/0xc0
+  ? __schedule+0x13a/0x890
+  vfs_writev+0x35/0x60
+  SyS_writev+0x7f/0x110
+  system_call_fastpath+0x22/0x27
 
-And userspace simply mmaps size + PAGE_SIZE:
+Use the appropriate kref API to verify access.
 
-  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+Reorder context cleanup to ensure context removal before cleanup occurs
+correctly.
 
-Possible candidates for oops which do not have any explicit size
-checks:
-
-   *** drivers/media/usb/stkwebcam/stk-webcam.c:
-   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
-
-Or the following one:
-
-   *** drivers/video/fbdev/core/fbmem.c
-   static int
-   fb_mmap(struct file *file, struct vm_area_struct * vma)
-        ...
-        res = fb->fb_mmap(info, vma);
-
-Where fb_mmap callback calls remap_vmalloc_range() directly without any
-explicit checks:
-
-   *** drivers/video/fbdev/vfb.c
-   static int vfb_mmap(struct fb_info *info,
-             struct vm_area_struct *vma)
-   {
-       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
-   }
-
-Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org # v4.14.0+
+Fixes: f683c80ca68e ("IB/hfi1: Resolve kernel panics by reference counting receive contexts")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/hfi.h  |    2 +-
+ drivers/infiniband/hw/hfi1/init.c |   14 +++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2262,7 +2262,7 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1398,7 +1398,7 @@ void hfi1_init_pportdata(struct pci_dev
+ 			 struct hfi1_devdata *dd, u8 hw_pidx, u8 port);
+ void hfi1_free_ctxtdata(struct hfi1_devdata *dd, struct hfi1_ctxtdata *rcd);
+ int hfi1_rcd_put(struct hfi1_ctxtdata *rcd);
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
+ struct hfi1_ctxtdata *hfi1_rcd_get_by_index(struct hfi1_devdata *dd, u16 ctxt);
+ int handle_receive_interrupt(struct hfi1_ctxtdata *rcd, int thread);
+ int handle_receive_interrupt_nodma_rtail(struct hfi1_ctxtdata *rcd, int thread);
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -215,12 +215,12 @@ static void hfi1_rcd_free(struct kref *k
+ 	struct hfi1_ctxtdata *rcd =
+ 		container_of(kref, struct hfi1_ctxtdata, kref);
  
--	if (kaddr + size > area->addr + area->size)
-+	if (kaddr + size > area->addr + get_vm_area_size(area))
- 		return -EINVAL;
+-	hfi1_free_ctxtdata(rcd->dd, rcd);
+-
+ 	spin_lock_irqsave(&rcd->dd->uctxt_lock, flags);
+ 	rcd->dd->rcd[rcd->ctxt] = NULL;
+ 	spin_unlock_irqrestore(&rcd->dd->uctxt_lock, flags);
  
- 	do {
++	hfi1_free_ctxtdata(rcd->dd, rcd);
++
+ 	kfree(rcd);
+ }
+ 
+@@ -243,10 +243,13 @@ int hfi1_rcd_put(struct hfi1_ctxtdata *r
+  * @rcd: pointer to an initialized rcd data structure
+  *
+  * Use this to get a reference after the init.
++ *
++ * Return : reflect kref_get_unless_zero(), which returns non-zero on
++ * increment, otherwise 0.
+  */
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
+ {
+-	kref_get(&rcd->kref);
++	return kref_get_unless_zero(&rcd->kref);
+ }
+ 
+ /**
+@@ -305,7 +308,8 @@ struct hfi1_ctxtdata *hfi1_rcd_get_by_in
+ 	spin_lock_irqsave(&dd->uctxt_lock, flags);
+ 	if (dd->rcd[ctxt]) {
+ 		rcd = dd->rcd[ctxt];
+-		hfi1_rcd_get(rcd);
++		if (!hfi1_rcd_get(rcd))
++			rcd = NULL;
+ 	}
+ 	spin_unlock_irqrestore(&dd->uctxt_lock, flags);
+ 
 
 
