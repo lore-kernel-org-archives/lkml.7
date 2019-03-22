@@ -6,91 +6,123 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBECC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16316218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26F72190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfCVQSU (ORCPT
+        id S1729655AbfCVQS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:18:20 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:55441 "EHLO
+        Fri, 22 Mar 2019 12:18:28 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:50421 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbfCVQSR (ORCPT
+        with ESMTP id S1728506AbfCVQST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:18:17 -0400
+        Fri, 22 Mar 2019 12:18:19 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MGz9p-1hC5qR2OBv-00E4Nl; Fri, 22 Mar 2019 17:18:12 +0100
+ 1McGxG-1gZP252F1Y-00celC; Fri, 22 Mar 2019 17:18:09 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org,
+To:     stable@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 8/8] power: supply: charger-manager: Fix incorrect return value
-Date:   Fri, 22 Mar 2019 17:17:23 +0100
-Message-Id: <20190322161727.1153278-9-arnd@arndb.de>
+Subject: [BACKPORT 4.14.y 7/8] pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
+Date:   Fri, 22 Mar 2019 17:17:22 +0100
+Message-Id: <20190322161727.1153278-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190322161727.1153278-1-arnd@arndb.de>
 References: <20190322161727.1153278-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6ScF2cDbBBtmdzkHdRlSrHcxdLZn0+JBp7AxazAA+HUIu4cU7BF
- O6YY5JWQPNLaP27RU+gIXmAhUSQBpbwKHBtDu3q7eyqppgM9upVOG+je0fogwPvrvkhPrrH
- yYw3wfTIoAIREC88a6DD8sYR5DvxGLFOzGmMmDXUvBb6OpnCQN3dN68veWv4A7rGcNd9xG5
- R/birbHdbDrlg/ZhDHCSQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BYxt3WBL1qs=:G8aBjDBAzJ9p+b57cHYdFl
- R70dmBuroo7xpL7qA7YWV9ve5VBE3NOoiRhGcdAg5roJULVzNtkwsCn9AqZc8qpg/stivFZAf
- HUXTjAkkMWGNFQ9qLa0JFIAUcqjYQenqaEuwvEfQyw3HFbEgAc7PhydSobEdZakCKZ5OX4PAi
- DoMRYvzDWaHUHc6d0F2tnRWWXSIpThiq6I5ztyLNSRtbAtuSZNBaFGOXDuMgegxReu3tTp4Us
- aqRFbdsi4DrL9eMPy5hBzOZZzdh5ve/D0+Tc2pJ1UkRufwGFaVyQEDjNxtTJvBlka2GrKZrSF
- SFOJ5rK5bmCUhQv3BrBYFo0jKJckW6lRbcwA25uYkVwnxVOy1dQ9HIvwJQe4fP0RjpSgmM5ka
- p/iLHCFYS0TahHNTo9WdY4fidqJaq8hwrIRV3RJ+Fl+KYsD6xXTS1UJcvl0MY4Kd+z6BqxTyN
- 1b01Po0oDvDG2gIUhtdidWpUlpVBPRkKUMTWeeRr5v80PgeSXWIeITeDD7F9O9QqCs14/fISW
- j5v5U0Buc6dAKiIYep61lMu5rRbSlQTvjls4LKHc3okTa4J6p7CDqDe1UJaEoMTk0UP35pjnB
- DZip7WXsVgewXatRUrtnTFElSmLXOylQiewH4CmJwb2BV/B72aAB3zKhLWH0tzlR9231sru4O
- jCGRq5nnqps08UQcQ6tBQtcYHK+u244RfWTkDiYDzaPt2lEKcoyKSVqOikIL47cc56utdAg0m
- ePh6i5X1cSPFz+GcaHD9UPaP2Iv1LTYvbdBIaQ==
+X-Provags-ID: V03:K1:98ZaXMT7Sqw9y1pDFUAjfR/TmDFSO4/c2yDoQqHy9p35Lv3HvzJ
+ zciPwkDzqGxDKzw+WyOpVoyffMWXaocOntl7TtlIJdUdjLDZnGzBhBEQEf6Lcgax7rfjMbP
+ JadONNGfZ5QYDpBv0C1un4TuFE4fNdhbI6D0fOhl9WT7Zv6H5O/2PwWOG2Xxf4JKv4YOpTw
+ wRJEyGTPF0eJPlJ7PkILA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lnfPOrnU93g=:E+yyWykToN2NNLGa8WibcA
+ uFG5Nt4M9GyDb6fN4XzH3ZLvT65SN/4quOBwwQevFkiLbG5A4WlwB1O50Y2cvj5lbKqbmscZS
+ 9LFfGY+rHuIr5ydKLThpH8eEklNBZyRWZjVY+wAjdtgbmJPbxS8uj3ooh2OZ2thwGvBhTS5Jb
+ XFOoKGJ/8a25He5M9saGFK3iJfMpJsaQphb4obnGKxq6e623h7vO/Z3Gu3A4qpULAFl2YUYu+
+ bIi8VM0xMiUVgb7oZRnRvjgIOysy7yMp0Aro5wd3f+PGiSbzUXSaDk2EGxXp2sJFcMIVrRoX0
+ 8csmoSFviYm0r2OMsFCZ6KFcru6s+zZ+cG0uDsLGf0nJvdDLduhEgDICbPM9caENgOl9hQYQs
+ 6iREkPu6gznxJNeh2JmzT3rnVx7ZcPwhqRHI9HscXWH1Re14eNZ5ELG60jhcK5vPueVg31y3J
+ rQFkRwl09XG1+ZZ575e7Qe9uf1blU2tiBOpgEOU4Yp2fMlixphAAcPQZtLdFymG3s7MZDZmvf
+ VsLnK5qMT5FLLbPReDVbCuK7jWtWjWh83mawfe7+B1qJWtw9K7z1CGh+Mj8foYTCS8JkX5aTS
+ aYJoat0Cs/L2hzL08kbCu4x3iiJqgaVtjYmuUIahPbciYsmtLnknUd6Uz+WBLDMNOVm+/UOVR
+ UxvOWvLbTKTFP3VLuT4g0jSPcgWBM4wo5vPBv16eWR7ECDybaofPYNok+1uc1+hCX4fFFdFNB
+ 3YyDKBHSJ24vamhc3MXW7OSz3WfnjCBXHky+aQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Fix incorrect return value.
+Before this patch the enable signal was set before the PWM signal and
+vice-versa on power off. This sequence is wrong, at least, it is on
+the different panels datasheets that I checked, so I inverted the sequence
+to follow the specs.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-(cherry picked from commit f25a646fbe2051527ad9721853e892d13a99199e)
+For reference the following panels have the mentioned sequence:
+  - N133HSE-EA1 (Innolux)
+  - N116BGE (Innolux)
+  - N156BGE-L21 (Innolux)
+  - B101EAN0 (Auo)
+  - B101AW03 (Auo)
+  - LTN101NT05 (Samsung)
+  - CLAA101WA01A (Chunghwa)
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+(cherry picked from commit 5fb5caee92ba35a4a3baa61d45a78eb057e2c031)
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/power/supply/charger-manager.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/backlight/pwm_bl.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index 6502fa7c2106..f60dfc213257 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -1212,7 +1212,6 @@ static int charger_extcon_init(struct charger_manager *cm,
- 	if (ret < 0) {
- 		pr_info("Cannot register extcon_dev for %s(cable: %s)\n",
- 			cable->extcon_name, cable->name);
--		ret = -EINVAL;
- 	}
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 0fa7d2bd0e48..155153ecb894 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -54,10 +54,11 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb, int brightness)
+ 	if (err < 0)
+ 		dev_err(pb->dev, "failed to enable power supply\n");
  
- 	return ret;
-@@ -1629,7 +1628,7 @@ static int charger_manager_probe(struct platform_device *pdev)
++	pwm_enable(pb->pwm);
++
+ 	if (pb->enable_gpio)
+ 		gpiod_set_value_cansleep(pb->enable_gpio, 1);
  
- 	if (IS_ERR(desc)) {
- 		dev_err(&pdev->dev, "No platform data (desc) found\n");
--		return -ENODEV;
-+		return PTR_ERR(desc);
- 	}
+-	pwm_enable(pb->pwm);
+ 	pb->enabled = true;
+ }
  
- 	cm = devm_kzalloc(&pdev->dev, sizeof(*cm), GFP_KERNEL);
+@@ -66,12 +67,12 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+ 	if (!pb->enabled)
+ 		return;
+ 
+-	pwm_config(pb->pwm, 0, pb->period);
+-	pwm_disable(pb->pwm);
+-
+ 	if (pb->enable_gpio)
+ 		gpiod_set_value_cansleep(pb->enable_gpio, 0);
+ 
++	pwm_config(pb->pwm, 0, pb->period);
++	pwm_disable(pb->pwm);
++
+ 	regulator_disable(pb->power_supply);
+ 	pb->enabled = false;
+ }
 -- 
 2.20.0
 
