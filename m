@@ -2,191 +2,350 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347F7C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0460F20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CB020850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFEHFlKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfCVRYJ (ORCPT
+        id S1728812AbfCVRYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:24:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36284 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbfCVRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:24:07 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 832A885363;
-        Fri, 22 Mar 2019 17:24:06 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D26460BE0;
-        Fri, 22 Mar 2019 17:23:56 +0000 (UTC)
-Subject: Re: [PATCH v5 1/3] locking/rwsem: Remove arch specific rwsem files
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org, uclinux-h8-devel@lists.sourceforge.jp,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-References: <20190322143008.21313-1-longman@redhat.com>
- <20190322143008.21313-2-longman@redhat.com>
- <CAHk-=wikkO-1f1=FEOEzkSnaDg3yJLP=4Vd59UCuLBztFd0KOw@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <15530d24-51fd-579d-2b1a-2ca98487f63f@redhat.com>
-Date:   Fri, 22 Mar 2019 13:23:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 22 Mar 2019 13:24:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33616 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfCVRYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:24:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q1so3240328wrp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D+iRj6RrZ5LZRmE3eANyClzvBaOa5hSIo4qZkLuqdTU=;
+        b=RFEHFlKyDaMNOGo3f3APQRfPU6+iNPN/0bB39NlkjvmfM+jlbi0jJF+bl7xg5KPfDu
+         bQDiLsjxfH/hxSbZu7hkGVXcNW2KyP27njPoIMzNwP1wq4ub/oStaCT80owvdndStrlG
+         9Yz9olymk09jsvkji49HbeQVIjOzyRrpdHK0ra8P0Vz412DfG5R8biM4UpHPLtG8oZ/B
+         4ak8epMEv3uXx42nleRgkM5uPMPNno6VfgipVUCsic+v9s21PYTTgNcuNq2Ow0wKvXuj
+         4KTcGAgMLQF5BBgCRmdsg24/5PWVuK3V4zpvQKcYmrC80Nut44au662fHEgQvNoJRAHd
+         P3ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D+iRj6RrZ5LZRmE3eANyClzvBaOa5hSIo4qZkLuqdTU=;
+        b=Kp0kqytV52DueNh+w6fcsI5fKvCLkPGGgwjihAVzMl/7Y2s2P9758bNuAA2QmB4ism
+         WRy9gcRImqYtqzH2PCnhg0Ki+Lb9MqXq1m1oqWTLwk57hTH7pc832PlR35gNfdAYmtQU
+         3ehGR2aUw3iovJOCjhYEoD7EE4bg8gbSZuP1W5/Y+3rqDMf3ckDsUpOF7WjD/7rb+eeQ
+         pchZvg8IVgTz7sYkv3clFr4KGRc3sSioDgksAz4xcBcNxDMPq/vWcRMVWwNJTjR/FiJC
+         nnhH+AUC7ntWiSqu864WstxqGDMCdpSqVpeVho93J+k7Qu1kOIoCkDANFImfEJes/Qa5
+         tT4w==
+X-Gm-Message-State: APjAAAUHJYOGWzs8ELkgdocaKcbB+BEbhjRUOUU88O3VvmZcXcw+zPvD
+        GrJCuuoObwKmF4Y9Ttjn5kAAOqh0nQ+JY/OX4p4=
+X-Google-Smtp-Source: APXvYqzxB4BbODoi41AVHPNrvQnD/M7vMe72GhxYPSKqtxYEKsGo8S9vPP8QywYDqUnN6X49xyXFuaoOB+wGNIPx4SY=
+X-Received: by 2002:adf:f3ce:: with SMTP id g14mr7607997wrp.129.1553275478059;
+ Fri, 22 Mar 2019 10:24:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wikkO-1f1=FEOEzkSnaDg3yJLP=4Vd59UCuLBztFd0KOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 22 Mar 2019 17:24:07 +0000 (UTC)
+References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
+ <20190322032901.12045-5-andrew.smirnov@gmail.com> <0d08d4e0-ff1d-ae14-e8f8-696c7448fcb1@ti.com>
+In-Reply-To: <0d08d4e0-ff1d-ae14-e8f8-696c7448fcb1@ti.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 22 Mar 2019 10:24:26 -0700
+Message-ID: <CAHQ1cqFVN-cYU-cieO9BWU=s3v1+nbj0pxqda3VOyCNzH9K65g@mail.gmail.com>
+Subject: Re: [PATCH v2 04/15] drm/bridge: tc358767: Simplify tc_set_video_mode()
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/22/2019 01:01 PM, Linus Torvalds wrote:
-> On Fri, Mar 22, 2019 at 7:30 AM Waiman Long <longman@redhat.com> wrote:
->>  19 files changed, 133 insertions(+), 930 deletions(-)
-> Lovely. And it all looks sane to me.
+On Fri, Mar 22, 2019 at 3:19 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
 >
-> So ack.
+> On 22/03/2019 05:28, Andrey Smirnov wrote:
+> > Simplify tc_set_video_mode() by replacing repreated calls to
+> > tc_write()/regmap_write() with a single call to
+> > regmap_multi_reg_write(). While at it, simplify explicit shifting by
+> > using macros from <linux/bitfield.h>. No functional change intended.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Archit Taneja <architt@codeaurora.org>
+> > Cc: Andrzej Hajda <a.hajda@samsung.com>
+> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/gpu/drm/bridge/tc358767.c | 146 +++++++++++++++++-------------
+> >  1 file changed, 85 insertions(+), 61 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> > index 38d542f553cd..d99c9f32a133 100644
+> > --- a/drivers/gpu/drm/bridge/tc358767.c
+> > +++ b/drivers/gpu/drm/bridge/tc358767.c
+> > @@ -24,6 +24,7 @@
+> >   * GNU General Public License for more details.
+> >   */
+> >
+> > +#include <linux/bitfield.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/device.h>
+> >  #include <linux/gpio/consumer.h>
+> > @@ -56,6 +57,7 @@
+> >
+> >  /* Video Path */
+> >  #define VPCTRL0                      0x0450
+> > +#define VSDELAY                      GENMASK(31, 20)
+> >  #define OPXLFMT_RGB666                       (0 << 8)
+> >  #define OPXLFMT_RGB888                       (1 << 8)
+> >  #define FRMSYNC_DISABLED             (0 << 4) /* Video Timing Gen Disabled */
+> > @@ -63,9 +65,17 @@
+> >  #define MSF_DISABLED                 (0 << 0) /* Magic Square FRC disabled */
+> >  #define MSF_ENABLED                  (1 << 0) /* Magic Square FRC enabled */
+> >  #define HTIM01                       0x0454
+> > +#define HPW                  GENMASK(8, 0)
+> > +#define HBPR                 GENMASK(24, 16)
+> >  #define HTIM02                       0x0458
+> > +#define HDISPR                       GENMASK(10, 0)
+> > +#define HFPR                 GENMASK(24, 16)
+> >  #define VTIM01                       0x045c
+> > +#define VSPR                 GENMASK(7, 0)
+> > +#define VBPR                 GENMASK(23, 16)
+> >  #define VTIM02                       0x0460
+> > +#define VFPR                 GENMASK(23, 16)
+> > +#define VDISPR                       GENMASK(10, 0)
+> >  #define VFUEN0                       0x0464
+> >  #define VFUEN                                BIT(0)   /* Video Frame Timing Upload */
+> >
+> > @@ -100,14 +110,28 @@
+> >  /* Main Channel */
+> >  #define DP0_SECSAMPLE                0x0640
+> >  #define DP0_VIDSYNCDELAY     0x0644
+> > +#define VID_SYNC_DLY         GENMASK(15, 0)
+> > +#define THRESH_DLY           GENMASK(31, 16)
+> > +
+> >  #define DP0_TOTALVAL         0x0648
+> > +#define H_TOTAL                      GENMASK(15, 0)
+> > +#define V_TOTAL                      GENMASK(31, 16)
+> >  #define DP0_STARTVAL         0x064c
+> > +#define H_START                      GENMASK(15, 0)
+> > +#define V_START                      GENMASK(31, 16)
+> >  #define DP0_ACTIVEVAL                0x0650
+> > +#define H_ACT                        GENMASK(15, 0)
+> > +#define V_ACT                        GENMASK(31, 16)
+> > +
+> >  #define DP0_SYNCVAL          0x0654
+> > +#define VS_WIDTH             GENMASK(30, 16)
+> > +#define HS_WIDTH             GENMASK(14, 0)
+> >  #define SYNCVAL_HS_POL_ACTIVE_LOW    (1 << 15)
+> >  #define SYNCVAL_VS_POL_ACTIVE_LOW    (1 << 31)
+> >  #define DP0_MISC             0x0658
+> >  #define TU_SIZE_RECOMMENDED          (63) /* LSCLK cycles per TU */
+> > +#define MAX_TU_SYMBOL                GENMASK(28, 23)
+> > +#define TU_SIZE                      GENMASK(21, 16)
+> >  #define BPC_6                                (0 << 5)
+> >  #define BPC_8                                (1 << 5)
+> >
+> > @@ -184,6 +208,12 @@
+> >
+> >  /* Test & Debug */
+> >  #define TSTCTL                       0x0a00
+> > +#define COLOR_R                      GENMASK(31, 24)
+> > +#define COLOR_G                      GENMASK(23, 16)
+> > +#define COLOR_B                      GENMASK(15, 8)
+> > +#define ENI2CFILTER          BIT(4)
+> > +#define COLOR_BAR_MODE               GENMASK(1, 0)
+> > +#define COLOR_BAR_MODE_BARS  2
+> >  #define PLL_DBG                      0x0a04
+> >
+> >  static bool tc_test_pattern;
+> > @@ -647,10 +677,6 @@ static int tc_get_display_props(struct tc_data *tc)
+> >
+> >  static int tc_set_video_mode(struct tc_data *tc, struct drm_display_mode *mode)
+> >  {
+> > -     int ret;
+> > -     int vid_sync_dly;
+> > -     int max_tu_symbol;
+> > -
+> >       int left_margin = mode->htotal - mode->hsync_end;
+> >       int right_margin = mode->hsync_start - mode->hdisplay;
+> >       int hsync_len = mode->hsync_end - mode->hsync_start;
+> > @@ -659,76 +685,74 @@ static int tc_set_video_mode(struct tc_data *tc, struct drm_display_mode *mode)
+> >       int vsync_len = mode->vsync_end - mode->vsync_start;
+> >
+> >       /*
+> > -      * Recommended maximum number of symbols transferred in a transfer unit:
+> > +      * Recommended maximum number of symbols transferred in a
+> > +      * transfer unit:
+> >        * DIV_ROUND_UP((input active video bandwidth in bytes) * tu_size,
+> >        *              (output active video bandwidth in bytes))
+> >        * Must be less than tu_size.
+> >        */
+> > -     max_tu_symbol = TU_SIZE_RECOMMENDED - 1;
+> > -
+> > -     dev_dbg(tc->dev, "set mode %dx%d\n",
+> > -             mode->hdisplay, mode->vdisplay);
+> > -     dev_dbg(tc->dev, "H margin %d,%d sync %d\n",
+> > -             left_margin, right_margin, hsync_len);
+> > -     dev_dbg(tc->dev, "V margin %d,%d sync %d\n",
+> > -             upper_margin, lower_margin, vsync_len);
+> > -     dev_dbg(tc->dev, "total: %dx%d\n", mode->htotal, mode->vtotal);
+> > -
+> > +     int max_tu_symbol = TU_SIZE_RECOMMENDED - 1;
+> >
+> > +     /* DP Main Stream Attributes */
+> > +     int vid_sync_dly = hsync_len + left_margin + mode->hdisplay;
+> >       /*
+> >        * LCD Ctl Frame Size
+> >        * datasheet is not clear of vsdelay in case of DPI
+> >        * assume we do not need any delay when DPI is a source of
+> >        * sync signals
+> >        */
+> > -     tc_write(VPCTRL0, (0 << 20) /* VSDELAY */ |
+> > -              OPXLFMT_RGB888 | FRMSYNC_DISABLED | MSF_DISABLED);
+> > -     tc_write(HTIM01, (ALIGN(left_margin, 2) << 16) | /* H back porch */
+> > -                      (ALIGN(hsync_len, 2) << 0));    /* Hsync */
+> > -     tc_write(HTIM02, (ALIGN(right_margin, 2) << 16) |  /* H front porch */
+> > -                      (ALIGN(mode->hdisplay, 2) << 0)); /* width */
+> > -     tc_write(VTIM01, (upper_margin << 16) |         /* V back porch */
+> > -                      (vsync_len << 0));             /* Vsync */
+> > -     tc_write(VTIM02, (lower_margin << 16) |         /* V front porch */
+> > -                      (mode->vdisplay << 0));        /* height */
+> > -     tc_write(VFUEN0, VFUEN);                /* update settings */
+> > -
+> > -     /* Test pattern settings */
+> > -     tc_write(TSTCTL,
+> > -              (120 << 24) |  /* Red Color component value */
+> > -              (20 << 16) |   /* Green Color component value */
+> > -              (99 << 8) |    /* Blue Color component value */
+> > -              (1 << 4) |     /* Enable I2C Filter */
+> > -              (2 << 0) |     /* Color bar Mode */
+> > -              0);
+> > -
+> > -     /* DP Main Stream Attributes */
+> > -     vid_sync_dly = hsync_len + left_margin + mode->hdisplay;
+> > -     tc_write(DP0_VIDSYNCDELAY,
+> > -              (max_tu_symbol << 16) |        /* thresh_dly */
+> > -              (vid_sync_dly << 0));
+> > +     const u32 vs_pol = mode->flags & DRM_MODE_FLAG_NVSYNC ?
+> > +             SYNCVAL_VS_POL_ACTIVE_LOW : 0;
+> > +     const u32 hs_pol = mode->flags & DRM_MODE_FLAG_NHSYNC ?
+> > +             SYNCVAL_HS_POL_ACTIVE_LOW : 0;
+> > +     const struct reg_sequence video_mode_settings[] = {
+> > +             { VPCTRL0, FIELD_PREP(VSDELAY, 0) |
+> > +                        OPXLFMT_RGB888 | FRMSYNC_DISABLED | MSF_DISABLED },
+> > +             { HTIM01, FIELD_PREP(HBPR, ALIGN(left_margin, 2)) |
+> > +                       FIELD_PREP(HPW, ALIGN(hsync_len, 2)) },
+> > +             { HTIM02, FIELD_PREP(HDISPR, ALIGN(mode->hdisplay, 2)) |
+> > +                       FIELD_PREP(HFPR, ALIGN(right_margin, 2)) },
+> > +             { VTIM01, FIELD_PREP(VBPR, upper_margin) |
+> > +                       FIELD_PREP(VSPR, vsync_len) },
+> > +             { VTIM02, FIELD_PREP(VFPR, lower_margin) |
+> > +                       FIELD_PREP(VDISPR, mode->vdisplay) },
+> > +             { VFUEN0, VFUEN },
+> > +             { TSTCTL, FIELD_PREP(COLOR_R, 120) |
+> > +                       FIELD_PREP(COLOR_G, 20) |
+> > +                       FIELD_PREP(COLOR_B, 99) |
+> > +                       ENI2CFILTER |
+> > +                       FIELD_PREP(COLOR_BAR_MODE, COLOR_BAR_MODE_BARS) },
+> > +             { DP0_VIDSYNCDELAY, FIELD_PREP(THRESH_DLY, max_tu_symbol) |
+> > +                                 FIELD_PREP(VID_SYNC_DLY, vid_sync_dly) },
+> > +             { DP0_TOTALVAL, FIELD_PREP(H_TOTAL, mode->htotal) |
+> > +                             FIELD_PREP(V_TOTAL, mode->vtotal) },
+> > +             { DP0_STARTVAL, FIELD_PREP(H_START, left_margin + hsync_len) |
+> > +                             FIELD_PREP(V_START,
+> > +                                        upper_margin + vsync_len) },
+> > +             { DP0_ACTIVEVAL, FIELD_PREP(V_ACT, mode->vdisplay) |
+> > +                              FIELD_PREP(H_ACT, mode->hdisplay) },
+> > +             { DP0_SYNCVAL, FIELD_PREP(VS_WIDTH, vsync_len) |
+> > +                            FIELD_PREP(HS_WIDTH, hsync_len) |
+> > +                            hs_pol | vs_pol },
+> > +             { DPIPXLFMT, VS_POL_ACTIVE_LOW | HS_POL_ACTIVE_LOW |
+> > +                          DE_POL_ACTIVE_HIGH | SUB_CFG_TYPE_CONFIG1 |
+> > +                          DPI_BPP_RGB888 },
+> > +             { DP0_MISC, FIELD_PREP(MAX_TU_SYMBOL, max_tu_symbol) |
+> > +                         FIELD_PREP(TU_SIZE, TU_SIZE_RECOMMENDED) |
+> > +                         BPC_8 },
+> > +     };
+> >
+> > -     tc_write(DP0_TOTALVAL, (mode->vtotal << 16) | (mode->htotal));
+> > -
+> > -     tc_write(DP0_STARTVAL,
+> > -              ((upper_margin + vsync_len) << 16) |
+> > -              ((left_margin + hsync_len) << 0));
+> > -
+> > -     tc_write(DP0_ACTIVEVAL, (mode->vdisplay << 16) | (mode->hdisplay));
+> > -
+> > -     tc_write(DP0_SYNCVAL, (vsync_len << 16) | (hsync_len << 0) |
+> > -              ((mode->flags & DRM_MODE_FLAG_NHSYNC) ? SYNCVAL_HS_POL_ACTIVE_LOW : 0) |
+> > -              ((mode->flags & DRM_MODE_FLAG_NVSYNC) ? SYNCVAL_VS_POL_ACTIVE_LOW : 0));
+> > -
+> > -     tc_write(DPIPXLFMT, VS_POL_ACTIVE_LOW | HS_POL_ACTIVE_LOW |
+> > -              DE_POL_ACTIVE_HIGH | SUB_CFG_TYPE_CONFIG1 | DPI_BPP_RGB888);
+> > -
+> > -     tc_write(DP0_MISC, (max_tu_symbol << 23) | (TU_SIZE_RECOMMENDED << 16) |
+> > -                        BPC_8);
+> > +     dev_dbg(tc->dev, "set mode %dx%d\n",
+> > +             mode->hdisplay, mode->vdisplay);
+> > +     dev_dbg(tc->dev, "H margin %d,%d sync %d\n",
+> > +             left_margin, right_margin, hsync_len);
+> > +     dev_dbg(tc->dev, "V margin %d,%d sync %d\n",
+> > +             upper_margin, lower_margin, vsync_len);
+> > +     dev_dbg(tc->dev, "total: %dx%d\n", mode->htotal, mode->vtotal);
+> >
+> > -     return 0;
+> > -err:
+> > -     return ret;
+> > +     return regmap_multi_reg_write(tc->regmap,
+> > +                                   video_mode_settings,
+> > +                                   ARRAY_SIZE(video_mode_settings));
+> >  }
+> >
+> >  static int tc_wait_link_training(struct tc_data *tc, u32 *error)
 >
-> The only comment I have is about __down_read_trylock(), which probably
-> isn't critical enough to actually care about, but:
->
->> +static inline int __down_read_trylock(struct rw_semaphore *sem)
->> +{
->> +       long tmp;
->> +
->> +       while ((tmp = atomic_long_read(&sem->count)) >= 0) {
->> +               if (tmp == atomic_long_cmpxchg_acquire(&sem->count, tmp,
->> +                                  tmp + RWSEM_ACTIVE_READ_BIAS)) {
->> +                       return 1;
->> +               }
->> +       }
->> +       return 0;
->> +}
-> So this seems to
->
->  (a) read the line early (the whole cacheline in shared state issue)
->
->  (b) read the line again unnecessarily in the while loop
->
-> Now, (a) might be explained by "well, maybe we do trylock even with
-> existing readers", although I continue to think that the case we
-> should optimize for is simply the uncontended one, where we don't even
-> have multiple readers.
->
-> But (b) just seems silly.
->
-> So I wonder if it shouldn't just be
->
->         long tmp = 0;
->
->         do {
->                 long new = atomic_long_cmpxchg_acquire(&sem->count, tmp,
->                         tmp + RWSEM_ACTIVE_READ_BIAS);
->                 if (likely(new == tmp))
->                         return 1;
->                tmp = new;
->         } while (tmp >= 0);
->         return 0;
->
-> which would seem simpler and solve both issues. Hmm?
->
-> But honestly, I didn't check what our uses of down_read_trylock() look
-> like. We have more of them than I expected, and I _think_ the normal
-> case is the "nobody else holds the lock", but that's just a gut
-> feeling.
->
-> Some of them _might_ be performance-critical. There's the one on
-> mmap_sem in the fault handling path, for example. And yes, I'd expect
-> the normal case to very much be "no other readers or writers" for that
-> one.
->
-> NOTE! The above code snippet is absolutely untested, and might be
-> completely wrong. Take it as a "something like this" rather than
-> anything else.
->
->                    Linus
+> I don't like this change. I think multi_reg_write is good for writing
+> things like, say, color conversion table. But the data for video mode is
+> more complex and needs more logic (e.g. here ?: operator is used).
 
-As you have noticed already, this patch is just for moving code around
-without changing it. I optimize __down_read_trylock() in patch 3.
+The logic was stuffed into function arguments before, so this patch
+didn't really change anything.
 
-Cheers,
-Longman
+> You need to stuff all that logic into variable initializers. You can't use
+> e.g. if() anymore,
 
+Where you planning on doing so, or is it just hypothetical?
+
+> and you can't even insert a debug print between the
+> writes if you need to.
+>
+
+Same here.
+
+> So, in my opinion, this doesn't look (much) cleaner, and makes life more
+> difficult.
+>
+
+Sure, I'll drop this patch since it generates so much resistance.
+
+Thanks,
+Andrey Smirnov
