@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6B7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764BEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD2721917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3A1218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257404;
-	bh=0O5L8f+Y9T237irFx86v0acqpxfWQARuFfyRel8Cg9c=;
+	s=default; t=1553257408;
+	bh=aMDEcG0r+NK4S8W3hjMXWoWnRfBC0h37AZI/gPbZSIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6M9h0n4PHKVgL7/lZSDCy4+MUcgPXRP5f92AHLdiYfoSP9Hx5QlBcFXk6yHa6EcS
-	 UYibaC3DaU6SW/K60JimvhemM/smHr4QVtJr/OFkYS8LLKPNnFxeZYAKqvtxqTIL3c
-	 +9N4+6wEtJj+cNG6bk19jaNIJxsN4g6aE0D9GBPA=
+	b=slByYaiUtnfAu6z47AZ1VsKloCMeBUlbeTb+ElYcVK28LQhEmhlKP5f9vLpUq/sVV
+	 0aOTETGrK4CFKytqhsF1LEseXFeBb7TjS2DRpH21zDOM7kRFxeU/oF252RO7IKMBKj
+	 QyDgAx/QLScxP+Hg8pSaEADDvdqpbXo3CKqSSSag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390756AbfCVMXX (ORCPT
+        id S2391131AbfCVMX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391110AbfCVMXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:23:17 -0400
+        id S2390752AbfCVMXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:23:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E121A218B0;
-        Fri, 22 Mar 2019 12:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94740218A1;
+        Fri, 22 Mar 2019 12:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257396;
-        bh=0O5L8f+Y9T237irFx86v0acqpxfWQARuFfyRel8Cg9c=;
+        s=default; t=1553257403;
+        bh=aMDEcG0r+NK4S8W3hjMXWoWnRfBC0h37AZI/gPbZSIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qee7JC5pQc3EQ9yX803CQRfzSzHE+n2+w4yNEGPOcIFNDqssGLb5nxiBJ0133DScQ
-         dxxpbw8O8M0Xnim1u4vCEbRXQLuRxoceAOYnOeZInPOJ5epBnPAK3+PchPkkfYhnDi
-         0h8thehk6wG9FfegkEJAaejUH/W5TWLOgqJuT9kQ=
+        b=aui8NeBwT//7PRBX8FhvtDZnNMdymJMmwD+kPEOsjQsnizeKFsiVuecs6tppifn+T
+         n6i2kfNBGP6xtXielu05ZwkQNSJSGxdvefJ0uFeGAcjbm5b1rK4b0+MM0OaQKdGniW
+         NKlexpzTEsXgVGyGZS4UGIyglJX2Q05xJM7WdXFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.0 219/238] media: imx: csi: Stop upstream before disabling IDMA channel
-Date:   Fri, 22 Mar 2019 12:17:18 +0100
-Message-Id: <20190322111311.205522747@linuxfoundation.org>
+        stable@vger.kernel.org, Kent Overstreet <koverstreet@google.com>,
+        Daniel Axtens <dja@axtens.net>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.0 194/238] bcache: never writeback a discard operation
+Date:   Fri, 22 Mar 2019 12:16:53 +0100
+Message-Id: <20190322111309.638483927@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,91 +66,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 4bc1ab41eee9d02ad2483bf8f51a7b72e3504eba upstream.
+commit 9951379b0ca88c95876ad9778b9099e19a95d566 upstream.
 
-Move upstream stream off to just after receiving the last EOF completion
-and disabling the CSI (and thus before disabling the IDMA channel) in
-csi_stop(). For symmetry also move upstream stream on to beginning of
-csi_start().
+Some users see panics like the following when performing fstrim on a
+bcached volume:
 
-Doing this makes csi_s_stream() more symmetric with prp_s_stream() which
-will require the same change to fix a hard lockup.
+[  529.803060] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+[  530.183928] #PF error: [normal kernel read fault]
+[  530.412392] PGD 8000001f42163067 P4D 8000001f42163067 PUD 1f42168067 PMD 0
+[  530.750887] Oops: 0000 [#1] SMP PTI
+[  530.920869] CPU: 10 PID: 4167 Comm: fstrim Kdump: loaded Not tainted 5.0.0-rc1+ #3
+[  531.290204] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 12/27/2015
+[  531.693137] RIP: 0010:blk_queue_split+0x148/0x620
+[  531.922205] Code: 60 38 89 55 a0 45 31 db 45 31 f6 45 31 c9 31 ff 89 4d 98 85 db 0f 84 7f 04 00 00 44 8b 6d 98 4c 89 ee 48 c1 e6 04 49 03 70 78 <8b> 46 08 44 8b 56 0c 48
+8b 16 44 29 e0 39 d8 48 89 55 a8 0f 47 c3
+[  532.838634] RSP: 0018:ffffb9b708df39b0 EFLAGS: 00010246
+[  533.093571] RAX: 00000000ffffffff RBX: 0000000000046000 RCX: 0000000000000000
+[  533.441865] RDX: 0000000000000200 RSI: 0000000000000000 RDI: 0000000000000000
+[  533.789922] RBP: ffffb9b708df3a48 R08: ffff940d3b3fdd20 R09: 0000000000000000
+[  534.137512] R10: ffffb9b708df3958 R11: 0000000000000000 R12: 0000000000000000
+[  534.485329] R13: 0000000000000000 R14: 0000000000000000 R15: ffff940d39212020
+[  534.833319] FS:  00007efec26e3840(0000) GS:ffff940d1f480000(0000) knlGS:0000000000000000
+[  535.224098] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  535.504318] CR2: 0000000000000008 CR3: 0000001f4e256004 CR4: 00000000001606e0
+[  535.851759] Call Trace:
+[  535.970308]  ? mempool_alloc_slab+0x15/0x20
+[  536.174152]  ? bch_data_insert+0x42/0xd0 [bcache]
+[  536.403399]  blk_mq_make_request+0x97/0x4f0
+[  536.607036]  generic_make_request+0x1e2/0x410
+[  536.819164]  submit_bio+0x73/0x150
+[  536.980168]  ? submit_bio+0x73/0x150
+[  537.149731]  ? bio_associate_blkg_from_css+0x3b/0x60
+[  537.391595]  ? _cond_resched+0x1a/0x50
+[  537.573774]  submit_bio_wait+0x59/0x90
+[  537.756105]  blkdev_issue_discard+0x80/0xd0
+[  537.959590]  ext4_trim_fs+0x4a9/0x9e0
+[  538.137636]  ? ext4_trim_fs+0x4a9/0x9e0
+[  538.324087]  ext4_ioctl+0xea4/0x1530
+[  538.497712]  ? _copy_to_user+0x2a/0x40
+[  538.679632]  do_vfs_ioctl+0xa6/0x600
+[  538.853127]  ? __do_sys_newfstat+0x44/0x70
+[  539.051951]  ksys_ioctl+0x6d/0x80
+[  539.212785]  __x64_sys_ioctl+0x1a/0x20
+[  539.394918]  do_syscall_64+0x5a/0x110
+[  539.568674]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: stable@vger.kernel.org	# for 4.13 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+We have observed it where both:
+1) LVM/devmapper is involved (bcache backing device is LVM volume) and
+2) writeback cache is involved (bcache cache_mode is writeback)
+
+On one machine, we can reliably reproduce it with:
+
+ # echo writeback > /sys/block/bcache0/bcache/cache_mode
+   (not sure whether above line is required)
+ # mount /dev/bcache0 /test
+ # for i in {0..10}; do
+	file="$(mktemp /test/zero.XXX)"
+	dd if=/dev/zero of="$file" bs=1M count=256
+	sync
+	rm $file
+    done
+  # fstrim -v /test
+
+Observing this with tracepoints on, we see the following writes:
+
+fstrim-18019 [022] .... 91107.302026: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4260112 + 196352 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.302050: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4456464 + 262144 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.302075: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4718608 + 81920 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.302094: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5324816 + 180224 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.302121: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5505040 + 262144 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.302145: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5767184 + 81920 hit 0 bypass 1
+fstrim-18019 [022] .... 91107.308777: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 6373392 + 180224 hit 1 bypass 0
+<crash>
+
+Note the final one has different hit/bypass flags.
+
+This is because in should_writeback(), we were hitting a case where
+the partial stripe condition was returning true and so
+should_writeback() was returning true early.
+
+If that hadn't been the case, it would have hit the would_skip test, and
+as would_skip == s->iop.bypass == true, should_writeback() would have
+returned false.
+
+Looking at the git history from 'commit 72c270612bd3 ("bcache: Write out
+full stripes")', it looks like the idea was to optimise for raid5/6:
+
+       * If a stripe is already dirty, force writes to that stripe to
+	 writeback mode - to help build up full stripes of dirty data
+
+To fix this issue, make sure that should_writeback() on a discard op
+never returns true.
+
+More details of debugging:
+https://www.spinics.net/lists/linux-bcache/msg06996.html
+
+Previous reports:
+ - https://bugzilla.kernel.org/show_bug.cgi?id=201051
+ - https://bugzilla.kernel.org/show_bug.cgi?id=196103
+ - https://www.spinics.net/lists/linux-bcache/msg06885.html
+
+(Coly Li: minor modification to follow maximum 75 chars per line rule)
+
+Cc: Kent Overstreet <koverstreet@google.com>
+Cc: stable@vger.kernel.org
+Fixes: 72c270612bd3 ("bcache: Write out full stripes")
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-media-csi.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/md/bcache/writeback.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -725,10 +725,16 @@ static int csi_start(struct csi_priv *pr
+--- a/drivers/md/bcache/writeback.h
++++ b/drivers/md/bcache/writeback.h
+@@ -71,6 +71,9 @@ static inline bool should_writeback(stru
+ 	    in_use > bch_cutoff_writeback_sync)
+ 		return false;
  
- 	output_fi = &priv->frame_interval[priv->active_output_pad];
- 
-+	/* start upstream */
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
-+	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
-+	if (ret)
-+		return ret;
++	if (bio_op(bio) == REQ_OP_DISCARD)
++		return false;
 +
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		ret = csi_idmac_start(priv);
- 		if (ret)
--			return ret;
-+			goto stop_upstream;
- 	}
- 
- 	ret = csi_setup(priv);
-@@ -756,6 +762,8 @@ fim_off:
- idmac_stop:
- 	if (priv->dest == IPU_CSI_DEST_IDMAC)
- 		csi_idmac_stop(priv);
-+stop_upstream:
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	return ret;
- }
- 
-@@ -771,6 +779,9 @@ static void csi_stop(struct csi_priv *pr
- 	 */
- 	ipu_csi_disable(priv->csi);
- 
-+	/* stop upstream */
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		csi_idmac_stop(priv);
- 
-@@ -938,23 +949,13 @@ static int csi_s_stream(struct v4l2_subd
- 		goto update_count;
- 
- 	if (enable) {
--		/* upstream must be started first, before starting CSI */
--		ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
--		ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
--		if (ret)
--			goto out;
--
- 		dev_dbg(priv->dev, "stream ON\n");
- 		ret = csi_start(priv);
--		if (ret) {
--			v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+		if (ret)
- 			goto out;
--		}
- 	} else {
- 		dev_dbg(priv->dev, "stream OFF\n");
--		/* CSI must be stopped first, then stop upstream */
- 		csi_stop(priv);
--		v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	}
- 
- update_count:
+ 	if (dc->partial_stripes_expensive &&
+ 	    bcache_dev_stripe_dirty(dc, bio->bi_iter.bi_sector,
+ 				    bio_sectors(bio)))
 
 
