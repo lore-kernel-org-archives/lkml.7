@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1FFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA5521916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B05C21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255006;
-	bh=ZpNsMm2PyMNeCW7bGc3o5xCr5LrqbDrsnpGRo7eZVhk=;
+	s=default; t=1553255011;
+	bh=5f9SPUiSuYqARjV2rnA/JmguT00rwDiLyp5PXmjdpY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5ay/Fg+eMPGJBV0Ijk3/x0SKNqczUtxEFXsjazF3p5sapq1q1q3lO+HigeMUhXtT
-	 Jl/8KXsGY2RzzTXT9xEVgg1WzDRJanv4hxSe8Q/3FYuvP3oo8+oBQ5H6EZXi6YAYGs
-	 6bYs5byQ8EZGQekYFgVHm0Acn3FZC7XZvCg3YwWA=
+	b=zPOtziQpH3ypjPV6hn+XGvKE/+xPugnti78rodMHm+ZiZ7cAv60FodP2lIoumVrXx
+	 6sr3fCc0zfrWBBDQ3/dNNesSEVP49mIqBdF0+J/IxgcAm7fVVhVY5De32C8BMaR7I1
+	 7f5bveVuAoZP5lKHUcQYfptVtgrO8RhNlR+FC5mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbfCVLnZ (ORCPT
+        id S1731679AbfCVLna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46050 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfCVLnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:21 -0400
+        id S1731299AbfCVLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69742218B0;
-        Fri, 22 Mar 2019 11:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 352A6204FD;
+        Fri, 22 Mar 2019 11:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255000;
-        bh=ZpNsMm2PyMNeCW7bGc3o5xCr5LrqbDrsnpGRo7eZVhk=;
+        s=default; t=1553255003;
+        bh=5f9SPUiSuYqARjV2rnA/JmguT00rwDiLyp5PXmjdpY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igsIwbPI9xCqVkRf/u+j4ItjBXisxKycAcQCPDsv50S8uyJqdBi4LyqnGFB+g2N2V
-         kWGY/REIPxjBJ9sNuqV24FBti3nqi2RF/mxfunzrXuHfZ6thOJ4VPcuRYRXc28Uh3K
-         ANEYNRz9Rjw9pXvFuw76AabYgxmLmJbvBq1flY8E=
+        b=d74LdV5lROUUnyjLrLuUU7mkom0fJICdVS0wd6hYvfRncZikSTJLfMQzAm+mQ9eWm
+         uDAQVGOFn8eqf2F9piS3jmteSc+z4hfXiEy+32XkzbQL9zeW6YNFPBSkqno+jOT2X3
+         qU28H26DPOw/WR9KAUyd27fBxswRsS14oUKmDBew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.9 076/118] clk: ingenic: Fix doc of ingenic_cgu_div_info
-Date:   Fri, 22 Mar 2019 12:15:48 +0100
-Message-Id: <20190322111221.976441926@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 4.9 077/118] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
+Date:   Fri, 22 Mar 2019 12:15:49 +0100
+Message-Id: <20190322111222.029264202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,34 +65,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 7ca4c922aad2e3c46767a12f80d01c6b25337b59 upstream.
+commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
 
-The 'div' field does not represent a number of bits used to divide
-(understand: right-shift) the divider, but a number itself used to
-divide the divider.
+In the case of ND_CMD_CALL, we should also check out_obj->type.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+The patch uses out_obj->type, which is a short alias to
+out_obj->package.type.
+
+Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/clk/ingenic/cgu.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/ingenic/cgu.h
-+++ b/drivers/clk/ingenic/cgu.h
-@@ -78,7 +78,7 @@ struct ingenic_cgu_mux_info {
-  * @reg: offset of the divider control register within the CGU
-  * @shift: number of bits to left shift the divide value by (ie. the index of
-  *         the lowest bit of the divide value within its control register)
-- * @div: number of bits to divide the divider value by (i.e. if the
-+ * @div: number to divide the divider value by (i.e. if the
-  *	 effective divider value is the value written to the register
-  *	 multiplied by some constant)
-  * @bits: the size of the divide value in bits
+---
+ drivers/acpi/nfit/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -307,6 +307,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return -EINVAL;
+ 	}
+ 
++	if (out_obj->type != ACPI_TYPE_BUFFER) {
++		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
++				dimm_name, cmd_name, out_obj->type);
++		rc = -EINVAL;
++		goto out;
++	}
++
+ 	if (call_pkg) {
+ 		call_pkg->nd_fw_size = out_obj->buffer.length;
+ 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
+@@ -325,13 +332,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return 0;
+ 	}
+ 
+-	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
+-		dev_dbg(dev, "%s:%s unexpected output object type cmd: %s type: %d\n",
+-				__func__, dimm_name, cmd_name, out_obj->type);
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+ 	if (IS_ENABLED(CONFIG_ACPI_NFIT_DEBUG)) {
+ 		dev_dbg(dev, "%s:%s cmd: %s output length: %d\n", __func__,
+ 				dimm_name, cmd_name, out_obj->buffer.length);
 
 
