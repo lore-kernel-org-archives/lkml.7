@@ -2,75 +2,85 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9BFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB94A2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896802190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="M7u8KuSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfCVQ62 (ORCPT
+        id S1728107AbfCVRBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:58:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20435 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfCVQ61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:58:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:58:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="133875258"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Mar 2019 09:58:25 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id CBD29300E46; Fri, 22 Mar 2019 09:58:26 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 09:58:26 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Andi Kleen <andi@firstfloor.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc
- 9
-Message-ID: <20190322165826.GE24002@tassilo.jf.intel.com>
-References: <20190321220009.29334-1-andi@firstfloor.org>
- <20190321220009.29334-2-andi@firstfloor.org>
- <CAK8P3a31L6ddJ1JPpygHqeVspExv7eaKWsLQ5pb+T8LAF2Zjtw@mail.gmail.com>
- <20190322163954.GG7905@worktop.programming.kicks-ass.net>
+        Fri, 22 Mar 2019 13:01:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33338 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfCVRBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:01:18 -0400
+Received: by mail-io1-f66.google.com with SMTP id b6so2304106iog.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=SphU88uVn3a1mGtgaNuJg8uzZkQYPk+1LZgC7fUi1kM=;
+        b=M7u8KuSxsCvqZbkxlCzXWXQ6OaRZhO9Yh8MDKgpxgahfOwPrapMO3YsqYgCQFFizuB
+         hl8MLthPLALsX1kBt14xJFEHd8VgVwHCfafkwGAipgh2+1Z1ebAsU2WFi2RpjJGLtu8M
+         rZREEcurGxek43Phpya5Kh4SkkJbSXy502ziKcNYeSADCcdhrG+3ujc20wOQSjiaTyGI
+         xAqPgff6YR6e8YtWrbACAm/Y28KIwUF5Vazo5pkmJQlXia/yN2WxnCvkDLwKyEliz8Ve
+         YzuaG5760ULCvBrqsR/cCJdlF0+SXSQewbPvKb1mDLNnIY1VKDx8wcHvrAstvQshpt6/
+         b+QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SphU88uVn3a1mGtgaNuJg8uzZkQYPk+1LZgC7fUi1kM=;
+        b=PEsvUMXl4ZE7YPhW0kWy14qOO+C5TtP3KDJsjB9UkqrUlQ2SLcfM6ZZdF21X+WYE3U
+         lXYJ2zHRhq5z5M0dZLyHY1Z3i7D5FAzU8MBONfb5wMdhEEnnsthV/EwgkDWT1EC8wtOB
+         YYg6Mcq2V+KUKmQT23SMeyf6YRM5TF9Bdww/dMpdSQnjbWV8JC1f7ALfY/Q+XRkDzkjF
+         whctuAKidE2egBqZuCHbAL6us1pYmh0M9AsCsDPth151XKx7LL6D93fNpa5wKrt5mHcD
+         TIzF42fdEUn2Bz7Ia2JsA9ungkdqH87/39CWct4ZmpMnxKlOta57j0w27EDOi0Cwm74/
+         OpaA==
+X-Gm-Message-State: APjAAAUviH3ll54wCC6M2i7CEnfS6vc+9hYEYriutzBkTS7U0a3scfsR
+        aIDxCrSvs7+/tPKqAMjwTERP5HWaSjv3fCzu
+X-Google-Smtp-Source: APXvYqzTz2s7sKuATbkBZkLR00A1/K3ikzEdTxY+0wOj6CXuuMxxL1Yrl5DvbXtF99yrodtopsYYFQ==
+X-Received: by 2002:a5e:830c:: with SMTP id x12mr7359360iom.224.1553274077526;
+        Fri, 22 Mar 2019 10:01:17 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id 14sm1755848ity.24.2019.03.22.10.01.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 10:01:16 -0700 (PDT)
+Subject: Re: [PATCH] sbitmap: trivial - update comment for
+ sbitmap_deferred_clear_bit
+To:     Shenghui Wang <shhuiw@foxmail.com>, osandov@fb.com,
+        linux-kernel@vger.kernel.org
+References: <20190316082437.2766-1-shhuiw@foxmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a52f163b-4bf9-33e0-f01f-e14a7cf08b0b@kernel.dk>
+Date:   Fri, 22 Mar 2019 11:01:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322163954.GG7905@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190316082437.2766-1-shhuiw@foxmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Lol... we're actively moving away from the C standard on many places.
+On 3/16/19 2:24 AM, Shenghui Wang wrote:
+> "sbitmap_batch_clear" should be "sbitmap_deferred_clear"
 
-Yes and also packed is not part of the C standard.
+Applied, thanks.
 
-> Why does the silly compiler think it is a problem to take the address of
-> a member of a packed structure? That sounds like something that's
-> perfectly fine and useful.
+-- 
+Jens Axboe
 
-Probably because a pointer reference doesn't do whatever magic
-may be needed on architectures with poor misalignment handling.
-In theory you would need memcpy().
-
-In practice it's likely a lot of false positives, like
-the architectures with poor misalignment handling are usually
-in SOCs without PCI and they don't have the devices
-with the problematic drivers.
-
--Andi
