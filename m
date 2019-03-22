@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7256BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B341C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EAE218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1E4218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfCVHNl (ORCPT
+        id S1728052AbfCVHNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:13:41 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58103 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727931AbfCVHNi (ORCPT
+        Fri, 22 Mar 2019 03:13:44 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35073 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbfCVHNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:13:38 -0400
-X-Originating-IP: 182.72.246.220
+        Fri, 22 Mar 2019 03:13:41 -0400
 Received: from localhost (unknown [182.72.246.220])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id BD19120004;
-        Fri, 22 Mar 2019 07:13:34 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 26748200003;
+        Fri, 22 Mar 2019 07:13:37 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/4] rtc: wm831x: set range
-Date:   Fri, 22 Mar 2019 08:13:25 +0100
-Message-Id: <20190322071328.16123-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/4] rtc: wm831x: remove unnecessary goto
+Date:   Fri, 22 Mar 2019 08:13:26 +0100
+Message-Id: <20190322071328.16123-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190322071328.16123-1-alexandre.belloni@bootlin.com>
+References: <20190322071328.16123-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,40 +41,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wm831x has a 32bit second counter.
+There is no specific handling in the error path of wm831x_rtc_probe, remove
+the unnecessary goto and label.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-wm831x.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-wm831x.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-wm831x.c b/drivers/rtc/rtc-wm831x.c
-index 7b824dabf104..deaffe0eaf2f 100644
+index deaffe0eaf2f..1b0c3b3f63e8 100644
 --- a/drivers/rtc/rtc-wm831x.c
 +++ b/drivers/rtc/rtc-wm831x.c
-@@ -436,12 +436,16 @@ static int wm831x_rtc_probe(struct platform_device *pdev)
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 
--	wm831x_rtc->rtc = devm_rtc_device_register(&pdev->dev, "wm831x",
--					      &wm831x_rtc_ops, THIS_MODULE);
--	if (IS_ERR(wm831x_rtc->rtc)) {
--		ret = PTR_ERR(wm831x_rtc->rtc);
+@@ -429,7 +429,7 @@ static int wm831x_rtc_probe(struct platform_device *pdev)
+ 	ret = wm831x_reg_read(wm831x, WM831X_RTC_CONTROL);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to read RTC control: %d\n", ret);
 -		goto err;
--	}
-+	wm831x_rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(wm831x_rtc->rtc))
-+		return PTR_ERR(wm831x_rtc->rtc);
-+
-+	wm831x_rtc->rtc->ops = &wm831x_rtc_ops;
-+	wm831x_rtc->rtc->range_max = U32_MAX;
-+
-+	ret = rtc_register_device(wm831x_rtc->rtc);
-+	if (ret)
 +		return ret;
+ 	}
+ 	if (ret & WM831X_RTC_ALM_ENA)
+ 		wm831x_rtc->alarm_enabled = 1;
+@@ -459,9 +459,6 @@ static int wm831x_rtc_probe(struct platform_device *pdev)
+ 	wm831x_rtc_add_randomness(wm831x);
  
- 	ret = devm_request_threaded_irq(&pdev->dev, alm_irq, NULL,
- 				wm831x_alm_irq,
+ 	return 0;
+-
+-err:
+-	return ret;
+ }
+ 
+ static const struct dev_pm_ops wm831x_rtc_pm_ops = {
 -- 
 2.20.1
 
