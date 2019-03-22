@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA73C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF9D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A7120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255555;
-	bh=u1fp7wDpK30V31PqNWBsQqA5+ZK1hO+/SErEm/2Xkzc=;
+	s=default; t=1553255561;
+	bh=tgaRnlXnKy7ysK0AssQuwwvOr8c3WkKVCohtFoiqV6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbz8cadoVmtFmWB17zceONeS9OJzui0OQW1mqbzpxDQG+lYZ575EcAM8vrRrFtA1W
-	 XGY0YKeKUnpRap0HZt/ewLWFCLOqWBzUChcJMGRl/JgOMoZx+V0Dz66komQbAzVk44
-	 GE2Qh9+1FM5zU/lYiA7xyhe4DwBXw05c5laD1ZAo=
+	b=M3P1SA4rWOYhxv7PcKZOvp5acObq7S4gQhNtyDn4MWUaHrmHRT7rVP8/uwKh0EyVQ
+	 iW/3IYDeCpfyroPtNEOuNCjM2d21pCybIaAKw8OBTLHxP4PZbAxShNn5NrzA8J1EL5
+	 1S+1ZDOn5Mn7Y0tfuJoArCYZ5LXlORrsJK5LKTfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfCVLwe (ORCPT
+        id S1732304AbfCVLwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732253AbfCVLwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:52:32 -0400
+        id S1732253AbfCVLwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B10120693;
-        Fri, 22 Mar 2019 11:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE5020693;
+        Fri, 22 Mar 2019 11:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255551;
-        bh=u1fp7wDpK30V31PqNWBsQqA5+ZK1hO+/SErEm/2Xkzc=;
+        s=default; t=1553255555;
+        bh=tgaRnlXnKy7ysK0AssQuwwvOr8c3WkKVCohtFoiqV6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhpojoNFuUreM74ijL+AX4bSP9MNRKLfO98LZ7EhA8SxHrs+9MfYTXTdVUHEAwR41
-         Ew97S07ADkYvcmMFYqRt0GMQ4cR3cWz24yvL9cKj8recX4D6DDAvl6HBb5wEFNkd3K
-         JGEVepMkRrOo0KDXbiJBdrLWJPauuOZGeKNxw31U=
+        b=VO3Zv0i1IM+l6Z7lWj5RYNORmWy0yEeELRXyHLIVORFCnSQ586HUI6NfhiS6sFBpn
+         gFUMFiDksl7pJWGduNRdaakMSQ2OcRp75yfc6UJWn/qtlVMc/apowStvHSELGM4E/+
+         Xz9pS60fS/5tgpYTpZCuuavr+O23qnkvg6I2Z7SY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH 4.14 126/183] intel_th: Dont reference unassigned outputs
-Date:   Fri, 22 Mar 2019 12:15:54 +0100
-Message-Id: <20190322111250.855625900@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        QiaoChong <qiaochong@loongson.cn>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.14 127/183] parport_pc: fix find_superio io compare code, should use equal test.
+Date:   Fri, 22 Mar 2019 12:15:55 +0100
+Message-Id: <20190322111250.927899333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,60 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: QiaoChong <qiaochong@loongson.cn>
 
-commit 9ed3f22223c33347ed963e7c7019cf2956dd4e37 upstream.
+commit 21698fd57984cd28207d841dbdaa026d6061bceb upstream.
 
-When an output port driver is removed, also remove references to it from
-any masters. Failing to do this causes a NULL ptr dereference when
-configuring another output port:
+In the original code before 181bf1e815a2 the loop was continuing until
+it finds the first matching superios[i].io and p->base.
+But after 181bf1e815a2 the logic changed and the loop now returns the
+pointer to the first mismatched array element which is then used in
+get_superio_dma() and get_superio_irq() and thus returning the wrong
+value.
+Fix the condition so that it now returns the correct pointer.
 
-> BUG: unable to handle kernel NULL pointer dereference at 000000000000000d
-> RIP: 0010:master_attr_store+0x9d/0x160 [intel_th_gth]
-> Call Trace:
-> dev_attr_store+0x1b/0x30
-> sysfs_kf_write+0x3c/0x50
-> kernfs_fop_write+0x125/0x1a0
-> __vfs_write+0x3a/0x190
-> ? __vfs_write+0x5/0x190
-> ? _cond_resched+0x1a/0x50
-> ? rcu_all_qs+0x5/0xb0
-> ? __vfs_write+0x5/0x190
-> vfs_write+0xb8/0x1b0
-> ksys_write+0x55/0xc0
-> __x64_sys_write+0x1a/0x20
-> do_syscall_64+0x5a/0x140
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: b27a6a3f97b9 ("intel_th: Add Global Trace Hub driver")
-CC: stable@vger.kernel.org # v4.4+
-Reported-by: Ammy Yi <ammy.yi@intel.com>
+Fixes: 181bf1e815a2 ("parport_pc: clean up the modified while loops using for")
+Cc: Alan Cox <alan@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: QiaoChong <qiaochong@loongson.cn>
+[rewrite the commit message]
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/gth.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/parport/parport_pc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -615,6 +615,7 @@ static void intel_th_gth_unassign(struct
+--- a/drivers/parport/parport_pc.c
++++ b/drivers/parport/parport_pc.c
+@@ -1377,7 +1377,7 @@ static struct superio_struct *find_super
  {
- 	struct gth_device *gth = dev_get_drvdata(&thdev->dev);
- 	int port = othdev->output.port;
-+	int master;
- 
- 	if (thdev->host_mode)
- 		return;
-@@ -623,6 +624,9 @@ static void intel_th_gth_unassign(struct
- 	othdev->output.port = -1;
- 	othdev->output.active = false;
- 	gth->output[port].output = NULL;
-+	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
-+		if (gth->master[master] == port)
-+			gth->master[master] = -1;
- 	spin_unlock(&gth->gth_lock);
+ 	int i;
+ 	for (i = 0; i < NR_SUPERIOS; i++)
+-		if (superios[i].io != p->base)
++		if (superios[i].io == p->base)
+ 			return &superios[i];
+ 	return NULL;
  }
- 
 
 
