@@ -2,66 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEFCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A3521939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0A321939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257044;
-	bh=o41vpkczxIy6Qw4OAXaddKl3H3dcPfJj1m47z/V78Yg=;
+	s=default; t=1553257049;
+	bh=sRbmd3xFavSrlK6/o9IaQFEO7DFEDX8DHDxLhyNx3sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8r1FwBIh1b4xEsa0MLD2nqyWxsrk5xoVIoe6sFmtBec/mi9eF5RFG0zpHH/T4DA2
-	 UUa4KCvyOZQ+PVNWvgOawCh6idUkVuovDKzgZkBSQxiivfTShwPsamuSsPEIpYJwCc
-	 oQYLdLiAhNELD6hnU5Et4GwH8h2X0SQYlLXmAUYQ=
+	b=KuFpzSzE5ru/rdvNtV++/hscwl80Cd6lIXyDMNxOcx7QUc1JMYk8l1SAiX8/bRv4e
+	 DSy5ZOT+cAag9tX3rCOR0h1Yl6XBEKSTAqPepjFOHooFYGWW6L/voXZHINS7CuPGkK
+	 HTatzoy+eumn50qGFG07dYw6zJP4+5b+BaYjwlzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbfCVMRX (ORCPT
+        id S2390360AbfCVMR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56102 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:17:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389942AbfCVMRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:17:13 -0400
+        id S2389942AbfCVMRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:17:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F7002192C;
-        Fri, 22 Mar 2019 12:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D9C218A1;
+        Fri, 22 Mar 2019 12:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257032;
-        bh=o41vpkczxIy6Qw4OAXaddKl3H3dcPfJj1m47z/V78Yg=;
+        s=default; t=1553257043;
+        bh=sRbmd3xFavSrlK6/o9IaQFEO7DFEDX8DHDxLhyNx3sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0aPDsOA1g2axz15AGV18b3rtjv1VLzFKQVycLnCvzWXCqZQrK+LkIzjP6ofaa/3Z
-         /6RvpjU3pjo1AB/7LvqA8WaLieAIzRtA9Sp4N+fBvc273w96jBOVXvfiSZZWJva+k8
-         ygojX/P03gVB5PUIYTaPB195TirW+nbBJhqiIbJE=
+        b=v9I8J4C/FoINySWOzmOqZ37br1blrIy7vohvcWnZdMGfv+ErJSDw5Dzo7MHGF33+T
+         xFfB0XRrpNGMLzrp1KkXy/f62guYJT4w/caufLIyg4hGtqgE2DuONhOS9NUDuSReOg
+         f8He2B3nGp27DdU81YETsRpVvPgIw1pH4AEuZ+GA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 111/238] mm/memory.c: do_fault: avoid usage of stale vm_area_struct
-Date:   Fri, 22 Mar 2019 12:15:30 +0100
-Message-Id: <20190322111305.077729968@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.0 114/238] device property: Fix the length used in PROPERTY_ENTRY_STRING()
+Date:   Fri, 22 Mar 2019 12:15:33 +0100
+Message-Id: <20190322111305.248843580@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -80,118 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Stancek <jstancek@redhat.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit fc8efd2ddfed3f343c11b693e87140ff358d7ff5 upstream.
+commit 2b6e492467c78183bb629bb0a100ea3509b615a5 upstream.
 
-LTP testcase mtest06 [1] can trigger a crash on s390x running 5.0.0-rc8.
-This is a stress test, where one thread mmaps/writes/munmaps memory area
-and other thread is trying to read from it:
+With string type property entries we need to use
+sizeof(const char *) instead of the number of characters as
+the length of the entry.
 
-  CPU: 0 PID: 2611 Comm: mmap1 Not tainted 5.0.0-rc8+ #51
-  Hardware name: IBM 2964 N63 400 (z/VM 6.4.0)
-  Krnl PSW : 0404e00180000000 00000000001ac8d8 (__lock_acquire+0x7/0x7a8)
-  Call Trace:
-  ([<0000000000000000>]           (null))
-   [<00000000001adae4>] lock_acquire+0xec/0x258
-   [<000000000080d1ac>] _raw_spin_lock_bh+0x5c/0x98
-   [<000000000012a780>] page_table_free+0x48/0x1a8
-   [<00000000002f6e54>] do_fault+0xdc/0x670
-   [<00000000002fadae>] __handle_mm_fault+0x416/0x5f0
-   [<00000000002fb138>] handle_mm_fault+0x1b0/0x320
-   [<00000000001248cc>] do_dat_exception+0x19c/0x2c8
-   [<000000000080e5ee>] pgm_check_handler+0x19e/0x200
+If the string was shorter then sizeof(const char *),
+attempts to read it would have failed with -EOVERFLOW. The
+problem has been hidden because all build-in string
+properties have had a string longer then 8 characters until
+now.
 
-page_table_free() is called with NULL mm parameter, but because "0" is a
-valid address on s390 (see S390_lowcore), it keeps going until it
-eventually crashes in lockdep's lock_acquire.  This crash is
-reproducible at least since 4.14.
-
-Problem is that "vmf->vma" used in do_fault() can become stale.  Because
-mmap_sem may be released, other threads can come in, call munmap() and
-cause "vma" be returned to kmem cache, and get zeroed/re-initialized and
-re-used:
-
-handle_mm_fault                           |
-  __handle_mm_fault                       |
-    do_fault                              |
-      vma = vmf->vma                      |
-      do_read_fault                       |
-        __do_fault                        |
-          vma->vm_ops->fault(vmf);        |
-            mmap_sem is released          |
-                                          |
-                                          | do_munmap()
-                                          |   remove_vma_list()
-                                          |     remove_vma()
-                                          |       vm_area_free()
-                                          |         # vma is released
-                                          | ...
-                                          | # same vma is allocated
-                                          | # from kmem cache
-                                          | do_mmap()
-                                          |   vm_area_alloc()
-                                          |     memset(vma, 0, ...)
-                                          |
-      pte_free(vma->vm_mm, ...);          |
-        page_table_free                   |
-          spin_lock_bh(&mm->context.lock);|
-            <crash>                       |
-
-Cache mm_struct to avoid using potentially stale "vma".
-
-[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/mtest06/mmap1.c
-
-Link: http://lkml.kernel.org/r/5b3fdf19e2a5be460a384b936f5b56e13733f1b8.1551595137.git.jstancek@redhat.com
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Reviewed-by: Minchan Kim <minchan@kernel.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: a85f42047533 ("device property: helper macros for property entry creation")
+Cc: 4.5+ <stable@vger.kernel.org> # 4.5+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/property.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3517,10 +3517,13 @@ static vm_fault_t do_shared_fault(struct
-  * but allow concurrent faults).
-  * The mmap_sem may have been released depending on flags and our
-  * return value.  See filemap_fault() and __lock_page_or_retry().
-+ * If mmap_sem is released, vma may become invalid (for example
-+ * by other thread calling munmap()).
-  */
- static vm_fault_t do_fault(struct vm_fault *vmf)
- {
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct mm_struct *vm_mm = vma->vm_mm;
- 	vm_fault_t ret;
- 
- 	/*
-@@ -3561,7 +3564,7 @@ static vm_fault_t do_fault(struct vm_fau
- 
- 	/* preallocated pagetable is unused: free it */
- 	if (vmf->prealloc_pte) {
--		pte_free(vma->vm_mm, vmf->prealloc_pte);
-+		pte_free(vm_mm, vmf->prealloc_pte);
- 		vmf->prealloc_pte = NULL;
- 	}
- 	return ret;
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -258,7 +258,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING(_name_, _val_)		\
+ (struct property_entry) {				\
+ 	.name = _name_,					\
+-	.length = sizeof(_val_),			\
++	.length = sizeof(const char *),			\
+ 	.type = DEV_PROP_STRING,			\
+ 	{ .value = { .str = _val_ } },			\
+ }
 
 
