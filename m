@@ -6,94 +6,92 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A34C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E15C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E029218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9D1218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfCVDF5 (ORCPT
+        id S1727574AbfCVDHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:05:57 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:37592 "EHLO mxhk.zte.com.cn"
+        Thu, 21 Mar 2019 23:07:12 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:39582 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfCVDF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:05:56 -0400
+        id S1727222AbfCVDHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:07:12 -0400
 Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id D719F5A81AB6C9609765;
-        Fri, 22 Mar 2019 11:05:53 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 69DE437EF9822F2DE665;
+        Fri, 22 Mar 2019 11:07:10 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2M346W9071537;
-        Fri, 22 Mar 2019 11:04:06 +0800 (GMT-8)
+        by mse01.zte.com.cn with ESMTP id x2M35kRq078031;
+        Fri, 22 Mar 2019 11:05:46 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032211044244-5922626 ;
-          Fri, 22 Mar 2019 11:04:42 +0800 
+          with ESMTP id 2019032211062248-5922967 ;
+          Fri, 22 Mar 2019 11:06:22 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH 3/3] net: ethernet: ti: fix possible object reference leak
-Date:   Fri, 22 Mar 2019 11:04:09 +0800
-Message-Id: <1553223849-7143-3-git-send-email-wen.yang99@zte.com.cn>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 1/5] powerpc/sparse: fix possible object reference leak
+Date:   Fri, 22 Mar 2019 11:05:51 +0800
+Message-Id: <1553223955-7350-1-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1553223849-7143-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1553223849-7143-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-22 11:04:42,
+ 21, 2013) at 2019-03-22 11:06:22,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-22 11:03:51,
-        Serialize complete at 2019-03-22 11:03:51
-X-MAIL: mse01.zte.com.cn x2M346W9071537
+ 2019-03-22 11:05:31,
+        Serialize complete at 2019-03-22 11:05:31
+X-MAIL: mse01.zte.com.cn x2M35kRq078031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_get_child_by_name returns a node pointer with refcount
+The call to of_find_node_by_path returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
+./arch/powerpc/platforms/pseries/pseries_energy.c:101:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 46, but without a corresponding object release within this function.
+./arch/powerpc/platforms/pseries/pseries_energy.c:172:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 111, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/pseries_energy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 5174d31..0a920c5 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3657,12 +3657,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+diff --git a/arch/powerpc/platforms/pseries/pseries_energy.c b/arch/powerpc/platforms/pseries/pseries_energy.c
+index 6ed2212..e3913e4 100644
+--- a/arch/powerpc/platforms/pseries/pseries_energy.c
++++ b/arch/powerpc/platforms/pseries/pseries_energy.c
+@@ -69,7 +69,7 @@ static u32 cpu_to_drc_index(int cpu)
  
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+ 			of_read_drc_info_cell(&info, &value, &drc);
+ 			if (strncmp(drc.drc_type, "CPU", 3))
+-				goto err;
++				goto err_of_node_put;
  
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+ 			if (thread_index < drc.last_drc_index)
+ 				break;
+@@ -131,7 +131,7 @@ static int drc_index_to_cpu(u32 drc_index)
  
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+ 			of_read_drc_info_cell(&info, &value, &drc);
+ 			if (strncmp(drc.drc_type, "CPU", 3))
+-				goto err;
++				goto err_of_node_put;
+ 
+ 			if (drc_index > drc.last_drc_index) {
+ 				cpu += drc.num_sequential_elems;
 -- 
 2.9.5
 
