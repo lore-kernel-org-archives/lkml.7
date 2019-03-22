@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CA721934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7812192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255653;
-	bh=UlP1H+u+UWVOtT1krFbs7idNT08YIAoJkuPD4TvVkVk=;
+	s=default; t=1553255655;
+	bh=Oz8PE7WAz/8IECeHortTes2PffMBRz9shNA2Kit+wK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uElo1hvrnaHryNAUheB7c0QZs9Zv5LAz/31DTTGME6xOrzrUTA0UiNv+tCfnTQnCx
-	 30a0WFbjiwWY+fWpLjj2E8uynYtqzt0Z9hyxZBNwdt5VPDiH+nCgJD4hek7Hr52I3U
-	 m2Hs9RK1G10tZR+Dtydwu8vvenlAtXyIc293rXRI=
+	b=jl1Ij660q3Yg0J6Q7NgsjO7kRhMw18oCSn1v+YLRLt/im+6M53C+32kCKi+pHV6nf
+	 EYwqytGJArE01yba2uiAeMgkkh5zjPDBwKJv+mHbRp3qN4xCzcABCKG5zDctRBQq4f
+	 1DoY7qjIHmUkTF6KRSeWL6AtWWr5dGoDnO3TeTSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733138AbfCVLyL (ORCPT
+        id S1733149AbfCVLyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58272 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732470AbfCVLx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:58 -0400
+        id S1733137AbfCVLyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959A421916;
-        Fri, 22 Mar 2019 11:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED54620643;
+        Fri, 22 Mar 2019 11:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255638;
-        bh=UlP1H+u+UWVOtT1krFbs7idNT08YIAoJkuPD4TvVkVk=;
+        s=default; t=1553255650;
+        bh=Oz8PE7WAz/8IECeHortTes2PffMBRz9shNA2Kit+wK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulbpEu/FNZ5S9cmJCa6DU5DfcSYxcYWX1LvqK1Gi9cCwFs4l6OZtzLYBb8Vs1dT/m
-         P+fndAMP7FglR6/G39rVfIjgvVhrmUbhk91d4b3v/CNpxaK/LSbhoVOLbiwwH6vQE9
-         +P9pNgEqwX4XIuixRWHtEA1rvtLj64wBv+D8A7eU=
+        b=WeumlmFuGDVWJh4uQfKDrK7giIl/bKYFFu1gcA1SrWego2HU3SZh8LWcx4HNZ0zz6
+         AfCAoGg4f+oFPwG4xkMaUODE8myseH7eOnVZvmEE1n3QfrxV7qP6It1kdK/NFLSu+n
+         7apsnJNCWkezV1qQk5YJU3ehXOPOJqn+Iv1Kfs/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 152/183] dm integrity: limit the rate of error messages
-Date:   Fri, 22 Mar 2019 12:16:20 +0100
-Message-Id: <20190322111252.898595061@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 138/183] powerpc/32: Clear on-stack exception marker upon exception return
+Date:   Fri, 22 Mar 2019 12:16:06 +0100
+Message-Id: <20190322111251.756730044@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,51 +65,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 225557446856448039a9e495da37b72c20071ef2 upstream.
+commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
 
-When using dm-integrity underneath md-raid, some tests with raid
-auto-correction trigger large amounts of integrity failures - and all
-these failures print an error message. These messages can bring the
-system to a halt if the system is using serial console.
+Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
+to avoid confusing stacktrace like the one below.
 
-Fix this by limiting the rate of error messages - it improves the speed
-of raid recovery and avoids the hang.
+  Call Trace:
+  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895130] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
+  --- interrupt: c0e9df00 at 0x400f330
+      LR = init_stack+0x1f00/0x2000
+  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
 
-Fixes: 7eada909bfd7a ("dm: add integrity target")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+With this patch the trace becomes:
+
+  Call Trace:
+  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895150] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
+  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/entry_32.S |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -1276,8 +1276,8 @@ again:
- 						checksums_ptr - checksums, !dio->write ? TAG_CMP : TAG_WRITE);
- 			if (unlikely(r)) {
- 				if (r > 0) {
--					DMERR("Checksum failed at sector 0x%llx",
--					      (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
-+					DMERR_LIMIT("Checksum failed at sector 0x%llx",
-+						    (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
- 					r = -EILSEQ;
- 					atomic64_inc(&ic->number_of_mismatches);
- 				}
-@@ -1469,8 +1469,8 @@ retry_kmap:
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -726,6 +726,9 @@ fast_exception_return:
+ 	mtcr	r10
+ 	lwz	r10,_LINK(r11)
+ 	mtlr	r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r11)
+ 	REST_GPR(10, r11)
+ #ifdef CONFIG_PPC_8xx_PERF_EVENT
+ 	mtspr	SPRN_NRI, r0
+@@ -963,6 +966,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
+ 	mtcrf	0xFF,r10
+ 	mtlr	r11
  
- 					integrity_sector_checksum(ic, logical_sector, mem + bv.bv_offset, checksums_onstack);
- 					if (unlikely(memcmp(checksums_onstack, journal_entry_tag(ic, je), ic->tag_size))) {
--						DMERR("Checksum failed when reading from journal, at sector 0x%llx",
--						      (unsigned long long)logical_sector);
-+						DMERR_LIMIT("Checksum failed when reading from journal, at sector 0x%llx",
-+							    (unsigned long long)logical_sector);
- 					}
- 				}
- #endif
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	/*
+ 	 * Once we put values in SRR0 and SRR1, we are in a state
+ 	 * where exceptions are not recoverable, since taking an
+@@ -1002,6 +1008,9 @@ exc_exit_restart_end:
+ 	mtlr	r11
+ 	lwz	r10,_CCR(r1)
+ 	mtcrf	0xff,r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	REST_2GPRS(9, r1)
+ 	.globl exc_exit_restart
+ exc_exit_restart:
 
 
