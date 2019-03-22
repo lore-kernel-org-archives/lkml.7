@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50570C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C11BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C78F2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B543218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254677;
-	bh=seM9QVf3DJG6qN8V/SWs7haUcZfQGTlnRjpQOzeGDbA=;
+	s=default; t=1553254680;
+	bh=v4VCDocyS9gOQw938pcDhGDoj329Se2TfXw3x4OSMqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YF8+whI0NzeAfuMA6tW8AJt99Dh1MFAekLJiKKmpO5deK0LwlZbFZf2+vASwPVMeF
-	 1Yn3NRCuw5xBVVFMYnO/38tAGVNXTUYOdyu93qA04UmQYg00PRsFkreCm4Nj7qFSt/
-	 x0kTBszagPFbseq9N+T7aBtmmZiBv1qDYbT3gpM4=
+	b=uJ84CjEx2sFXvKRbZZy9ofQ8HUTSobPhm0d0TqsOL+v+NhZ6rZvnnYxblwMlsX2W4
+	 U5R8uecOAB2Rm2ZuD6PMhWfc1f9NoQmpZKqHAKcOBBPi0HkvZXhvQ9phrd1xbSlftg
+	 qBseiK2PPMceEucwaoxjTOYvJugo8BdRGP2JYVTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfCVLhz (ORCPT
+        id S1730913AbfCVLh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39282 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbfCVLhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:46 -0400
+        id S1730306AbfCVLh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3B8218B0;
-        Fri, 22 Mar 2019 11:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A13218B0;
+        Fri, 22 Mar 2019 11:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254665;
-        bh=seM9QVf3DJG6qN8V/SWs7haUcZfQGTlnRjpQOzeGDbA=;
+        s=default; t=1553254675;
+        bh=v4VCDocyS9gOQw938pcDhGDoj329Se2TfXw3x4OSMqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yB6GToI0jQLJJDbtkPXJMjZDgCFLLVWMKjQt98nX3Yv55db/1QqwVhTtYXX0srx7o
-         YClirvHDU77CcDZ/stcT5yBwWTr6ndsAGsRBXCxKKDBBqToZ2rtCkxUzLBqc4qWwlV
-         Wz9jl6CpmHDKme2QrynWOXnYc8+QF6V86aZiRegI=
+        b=Ttr/0/JJCz5q9YP5ymTkIEpwkU6AvHHCOUWRbD7sJjetKBe5H5hgnSw1LpN1CwfdB
+         7vRzgWaaFBH+whspzd4nJTrUOwOHp7Q3wraV5qFWOUHD0nNYjSpBpzkTqheXtami5F
+         3FcoErbdwuLUkPx9QE6k8O18amuBC482RpbxyzTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 4.4 189/230] m68k: Add -ffreestanding to CFLAGS
-Date:   Fri, 22 Mar 2019 12:15:27 +0100
-Message-Id: <20190322111250.061091267@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxim Zhukov <mussitantesmortem@gmail.com>
+Subject: [PATCH 4.4 192/230] crypto: pcbc - remove bogus memcpy()s with src == dest
+Date:   Fri, 22 Mar 2019 12:15:30 +0100
+Message-Id: <20190322111250.278898466@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -64,55 +66,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
+commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
 
-This patch fixes a build failure when using GCC 8.1:
+The memcpy()s in the PCBC implementation use walk->iv as both the source
+and destination, which has undefined behavior.  These memcpy()'s are
+actually unneeded, because walk->iv is already used to hold the previous
+plaintext block XOR'd with the previous ciphertext block.  Thus,
+walk->iv is already updated to its final value.
 
-/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
-block/partitions/ldm.c:153: undefined reference to `strcmp'
+So remove the broken and unnecessary memcpy()s.
 
-This is caused by a new optimization which effectively replaces a
-strncmp() call with a strcmp() call. This affects a number of strncmp()
-call sites in the kernel.
-
-The entire class of optimizations is avoided with -fno-builtin, which
-gets enabled by -ffreestanding. This may avoid possible future build
-failures in case new optimizations appear in future compilers.
-
-I haven't done any performance measurements with this patch but I did
-count the function calls in a defconfig build. For example, there are now
-23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
-other libc functions is smaller.
-
-If this harms performance we can tackle that regression by optimizing
-the call sites, ideally using semantic patches. That way, clang and ICC
-builds might benfit too.
-
-Cc: stable@vger.kernel.org
-Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
+Cc: <stable@vger.kernel.org> # v2.6.21+
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/m68k/Makefile |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ crypto/pcbc.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/arch/m68k/Makefile
-+++ b/arch/m68k/Makefile
-@@ -59,7 +59,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
- cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
+--- a/crypto/pcbc.c
++++ b/crypto/pcbc.c
+@@ -52,7 +52,7 @@ static int crypto_pcbc_encrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
  
- KBUILD_AFLAGS += $(cpuflags-y)
--KBUILD_CFLAGS += $(cpuflags-y) -pipe
-+KBUILD_CFLAGS += $(cpuflags-y)
-+
-+KBUILD_CFLAGS += -pipe -ffreestanding
-+
- ifdef CONFIG_MMU
- # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
- KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+ 	do {
+ 		crypto_xor(iv, src, bsize);
+@@ -76,7 +76,7 @@ static int crypto_pcbc_encrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[bsize];
+ 
+ 	do {
+@@ -89,8 +89,6 @@ static int crypto_pcbc_encrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
+@@ -130,7 +128,7 @@ static int crypto_pcbc_decrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 
+ 	do {
+ 		fn(crypto_cipher_tfm(tfm), dst, src);
+@@ -142,8 +140,6 @@ static int crypto_pcbc_decrypt_segment(s
+ 		dst += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
+@@ -156,7 +152,7 @@ static int crypto_pcbc_decrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[bsize];
+ 
+ 	do {
+@@ -169,8 +165,6 @@ static int crypto_pcbc_decrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
 
 
