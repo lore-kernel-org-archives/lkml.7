@@ -2,143 +2,74 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA90C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4A9C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA92218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HOsjRto2"
+	by mail.kernel.org (Postfix) with ESMTP id B6176218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfCVOEN (ORCPT
+        id S1728060AbfCVOEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:04:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43136 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOEN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:04:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2ME45e2027885;
-        Fri, 22 Mar 2019 09:04:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553263445;
-        bh=ut3ejAwdnl3Z9KXHbgo43PzWaKiBK/c6CzyK3VBCv8s=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=HOsjRto2zAqjrMiUJU0N9rq3zCTVSacxqxdJbA60kRTD1Pq7wdGpeKhz8oNXzuvC7
-         387AMk66mi8SSnuKorYPDoOCqmUigJZSaK/GTjea2bUgRIFwnueysq3pEZ0UJ6+nWs
-         zNcL+CsZWBcUbaFe2c/eVXlNhMKScTUlgDeq0SI4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2ME45xQ037397
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 Mar 2019 09:04:05 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
- Mar 2019 09:04:04 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Fri, 22 Mar 2019 09:04:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2ME44Bi026371;
-        Fri, 22 Mar 2019 09:04:04 -0500
-Date:   Fri, 22 Mar 2019 09:04:04 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
- dual role
-Message-ID: <20190322140404.GH25852@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-References: <1522324644.1746.19.camel@bootlin.com>
- <20180420142524.GB29011@uda0271908>
- <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
- <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
- <20190321130133.zllt5pqbrhiecoch@flea>
- <20190321164138.GB11121@kroah.com>
- <20190322124622.GB25852@uda0271908>
- <20190322130953.kb4llrtz2nriyfbu@flea>
- <20190322132846.GD25852@uda0271908>
- <20190322134630.c4cauwj5smxvj77y@flea>
+        Fri, 22 Mar 2019 10:04:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36818 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727487AbfCVOEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:04:23 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 93AB923E581FDAC0502D;
+        Fri, 22 Mar 2019 22:04:18 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 22:04:09 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <paul@paul-moore.com>, <sds@tycho.nsa.gov>, <eparis@parisplace.org>
+CC:     <linux-kernel@vger.kernel.org>, <selinux@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] selinux: Make selinux_kernfs_init_security static
+Date:   Fri, 22 Mar 2019 22:04:00 +0800
+Message-ID: <20190322140400.18892-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190322134630.c4cauwj5smxvj77y@flea>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: YueHaibing <yuehaibing@huawei.com>
 
-On Fri, Mar 22, 2019 at 02:46:30PM +0100, Maxime Ripard wrote:
-> >
-> > Again, think about an embedded product,
-> 
-> That's all I'm thinking about.
-> 
-> > if dr_mode is 'otg' which indicates the peripheral mode will be used
-> > at some point
-> 
-> No, it indicates that it *might* be used at some point, based on a
-> number of external factors, including:
->   - Whether or not the user has plugged something in the connected USB
->     connector
->   - If they did so, how the ID pin has been wired (and therefore, is
->     a device or a host on the other end)
->   - And how the system designer decided to configure their kernel and
->     userspace.
-> 
-> > when and how to load the gadget driver if it is not loaded
-> > automatically when Linux boots up? the end user doesn't have access
-> > to the console.
-> 
-> An application could load it. And really, we start seeing SoCs in more
-> and more pc-like devices, including with mUSB, so I don't think we
-> should be making assumptions here.
-> 
-> How do you think Fedora, Ubuntu or Debian would behave here?
-> 
-> > > Because no other controller requires it and therefore it's not
-> > > standard and violates the principle of least surprise?
-> >
-> > I know no other controller does this, but this doesn't mean it is not
-> > standard.
-> 
-> I'm pretty sure that would be the definition of "standard", or of a
-> norm at least.
-> 
-> > > And even without taking this into account, there's also the fact that
-> > > while the *hardware* can do dual role, the software might decide
-> > > otherwise. If I don't want to have support for any gadget (at all) in
-> > > the end system, then why should I be forced to compile and load
-> > > something I don't even want to use in the first place?
-> >
-> > then dr_mode should be set to 'host' instead, you don't have to load a
-> > gadget if peripheral mode will never be used.
-> 
-> No. The hardware is perfectly capable of using OTG. The software has
-> been configured not to.
+Fix sparse warning:
 
-I don't think the argument will lead to anywhere. Let's stop arguing
-here, so that you can spend time to fix the driver if you want to.
+security/selinux/hooks.c:3389:5: warning:
+ symbol 'selinux_kernfs_init_security' was not declared. Should it be static?
 
-Regards,
--Bin.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ security/selinux/hooks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index ab4b049..b6e6152 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3386,8 +3386,8 @@ static int selinux_inode_copy_up_xattr(const char *name)
+ 
+ /* kernfs node operations */
+ 
+-int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
+-				 struct kernfs_node *kn)
++static int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
++					struct kernfs_node *kn)
+ {
+ 	const struct task_security_struct *tsec = current_security();
+ 	u32 parent_sid, newsid, clen;
+-- 
+2.7.0
+
+
