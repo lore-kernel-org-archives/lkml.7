@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E42C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53016C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782752054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221052054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257648;
-	bh=N+erI/6sSMJ+u/qoS9r5QPoJidtlNzv4sNmLMC25pu8=;
+	s=default; t=1553257651;
+	bh=tii/t6p5OyX3yi86EIYcC6aEC57bnE+6dDmFiFRUUFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1cX90AzUqi4Ez+WNfObt0bkrSV1hmylle1dLnNzGPnwYcrlZa0zgekElLmwARc8/m
-	 lJ3Z7ehQ3C3dqEqBI38GP+eXkFRaZaMpqUDlgDibKLWQMZc+h5ebB2Lgwt45iXuKdd
-	 jPo+eunZCUgL4+DXUnI+SioNaL1G3464dwDLoQhM=
+	b=DMNeHRBFtIKg/0+W8gYQZh1GqqJdFsC+OJgO0DCwG3SrQWC1s0LDSqug4uC8shgij
+	 R35Gtx49v3oqe8P6+IzFXYGn7b7yv4Evui07RQCjIU6n4bakbwkkMMHE/DVHPxVgtv
+	 s9Cgf6CZLYdrFsyMauzYd7OmNy+1VPV5RCYHInb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391068AbfCVM10 (ORCPT
+        id S2391072AbfCVM13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:27:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390922AbfCVM1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:27:21 -0400
+        id S2391087AbfCVM11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:27:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A9EC2054F;
-        Fri, 22 Mar 2019 12:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C85032054F;
+        Fri, 22 Mar 2019 12:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257640;
-        bh=N+erI/6sSMJ+u/qoS9r5QPoJidtlNzv4sNmLMC25pu8=;
+        s=default; t=1553257646;
+        bh=tii/t6p5OyX3yi86EIYcC6aEC57bnE+6dDmFiFRUUFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/cYUXOGNCSElXTBsnAHrUpusdl/ePj+4lkcQRTvBOyvaUhWt3uQJGwIzt3ouBFwU
-         NLKGXlvjZoGG0kES2IFH/6JuXyu7lzrwhRWGTureT3rYrFBNmb5ybIrYadV5DtYzCT
-         cwseF5Fbq5tv/HPuxWwnBFBkPWZGczt5q+LWOr1o=
+        b=VquyGBJRkOBdyeAr4Z/neb8O++UeT2XJLjfKQow1HbcLtT5OXN9bYFg1HvkReRD3k
+         +MlvAGwjy+k79w+b7c51QWytORJvIX+JJmTYj02UppJLhIpVy6xtxHCebJCcfinrpo
+         5Zn4bQuuX+T16b9d1q3S2LIMZJji5OjNk8YBFQ+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Zhang, Jun" <jun.zhang@intel.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         "xiao, jin" <jin.xiao@intel.com>, Jie A <jie.a.bai@intel.com>
-Subject: [PATCH 4.4 225/230] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
-Date:   Fri, 22 Mar 2019 12:16:03 +0100
-Message-Id: <20190322111252.734441923@linuxfoundation.org>
+Subject: [PATCH 4.14 170/183] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
+Date:   Fri, 22 Mar 2019 12:16:38 +0100
+Message-Id: <20190322111254.213865666@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-References: <20190322111236.796964179@linuxfoundation.org>
+In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
+References: <20190322111241.819468003@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -118,7 +118,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -1611,15 +1611,23 @@ static int rcu_future_gp_cleanup(struct
+@@ -1789,15 +1789,23 @@ static int rcu_future_gp_cleanup(struct
  }
  
  /*
