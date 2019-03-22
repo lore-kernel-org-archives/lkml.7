@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE25C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103F2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1C821916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D583921916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254219;
-	bh=Yt1FTaJdZnZJujHy8hZOiJmfm081DRQkx2AYG7WbUIU=;
+	s=default; t=1553254222;
+	bh=pHCPNIqsCw5Gg9eK8g5RdrunVYsps0yEwAzkTi90Trs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2FvhdLjNCRY7WZ+CFSFThDfz4RBWHWhbJbiAzbZEK5XkkCGP6ElBiqkRHABHLFgv
-	 v/P6SWcZR92f/P8D4ieN+ULmrOk0i0fEH2iSlhos5rA/mfNO65vIG3o5gcj51VllrC
-	 0CC8z1/6lafU4ATsNI6tJV5IhWMDbRSJQiCed+Ss=
+	b=Czo3NDYySKO9A4knLcuJZXb/cxFqdwguG+KQmeoHThRalfoznWeZ6UqsEbgZlwVNc
+	 f+hYKeVJUdRmfFK/GtVBNuUTsjzo1siWVVNgKe0zECPYP/DtvNLzJ/ik3CmBaQbx0j
+	 UrPVqm/m37SHslDZrNCK436ZaLV1+QWC2V6/pLcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfCVLaR (ORCPT
+        id S1729942AbfCVLaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbfCVLaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:30:15 -0400
+        id S1729935AbfCVLaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:30:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE0620449;
-        Fri, 22 Mar 2019 11:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9DF2183E;
+        Fri, 22 Mar 2019 11:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254214;
-        bh=Yt1FTaJdZnZJujHy8hZOiJmfm081DRQkx2AYG7WbUIU=;
+        s=default; t=1553254217;
+        bh=pHCPNIqsCw5Gg9eK8g5RdrunVYsps0yEwAzkTi90Trs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CYFuyu/2dOcXXr/4G1w9sDbuUGWB/1FG9YH8wbFSefDqQMa3KH1KxkDt7uT36sxfI
-         WLagvuDK/28PuQjolVInYPqEeCGIUpBHZvD1pfmBDQRgIwjQEZbry7PBRB+KA+oVdf
-         tR3C6eC5zDCUlRtCyYUwRGVrOm7NeBP4baGg6b34=
+        b=fUX2xs3hx0Q9BaiqShNaG9EsJepTBEoxytwxyASWMHoA+jTHHfJuYZs3mKjmXwRZN
+         81rfehFvFRYKQmxHYZtMIA6cSDDxDCEBwZu1mpuFYVd6GKFaQ2KfIt1W+mp5+BJXTO
+         G+ltKXFOo7UQZ65jzCprLOvRdmqRvmYcsqH7nN5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.4 059/230] sockfs: getxattr: Fail with -EOPNOTSUPP for invalid attribute names
-Date:   Fri, 22 Mar 2019 12:13:17 +0100
-Message-Id: <20190322111240.821173335@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Durrant <paul.durrant@citrix.com>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Wei Liu <wei.liu2@citrix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 068/230] xen-netback: fix occasional leak of grant ref mappings under memory pressure
+Date:   Fri, 22 Mar 2019 12:13:26 +0100
+Message-Id: <20190322111241.447884227@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,61 +67,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-commit 971df15bd54ad46e907046ff33750a137b2f0096 upstream.
+[ Upstream commit 99e87f56b48f490fb16b6e0f74691c1e664dea95 ]
 
-The standard return value for unsupported attribute names is
--EOPNOTSUPP, as opposed to undefined but supported attributes
-(-ENODATA).
+Zero-copy callback flag is not yet set on frag list skb at the moment
+xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
+leaking grant ref mappings since xenvif_zerocopy_callback() is never
+called for these fragments. Those eventually build up and cause Xen
+to kill Dom0 as the slots get reused for new mappings:
 
-Also, fail for attribute names like "system.sockprotonameXXX" and
-simplify the code a bit.
+"d0v0 Attempt to implicitly unmap a granted PTE c010000329fce005"
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[removes a build warning on 4.4.y - gregkh]
+That behavior is observed under certain workloads where sudden spikes
+of page cache writes coexist with active atomic skb allocations from
+network traffic. Additionally, rework the logic to deal with frag_list
+deallocation in a single place.
+
+Signed-off-by: Paul Durrant <paul.durrant@citrix.com>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Acked-by: Wei Liu <wei.liu2@citrix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/socket.c |   24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/net/xen-netback/netback.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -470,27 +470,15 @@ static struct socket *sockfd_lookup_ligh
- static ssize_t sockfs_getxattr(struct dentry *dentry,
- 			       const char *name, void *value, size_t size)
- {
--	const char *proto_name;
--	size_t proto_size;
--	int error;
--
--	error = -ENODATA;
--	if (!strncmp(name, XATTR_NAME_SOCKPROTONAME, XATTR_NAME_SOCKPROTONAME_LEN)) {
--		proto_name = dentry->d_name.name;
--		proto_size = strlen(proto_name);
--
-+	if (!strcmp(name, XATTR_NAME_SOCKPROTONAME)) {
- 		if (value) {
--			error = -ERANGE;
--			if (proto_size + 1 > size)
--				goto out;
--
--			strncpy(value, proto_name, proto_size + 1);
-+			if (dentry->d_name.len + 1 > size)
-+				return -ERANGE;
-+			memcpy(value, dentry->d_name.name, dentry->d_name.len + 1);
- 		}
--		error = proto_size + 1;
-+		return dentry->d_name.len + 1;
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1538,11 +1538,6 @@ static int xenvif_handle_frag_list(struc
+ 		skb_frag_size_set(&frags[i], len);
  	}
--
--out:
--	return error;
-+	return -EOPNOTSUPP;
- }
  
- static ssize_t sockfs_listxattr(struct dentry *dentry, char *buffer,
+-	/* Copied all the bits from the frag list -- free it. */
+-	skb_frag_list_init(skb);
+-	xenvif_skb_zerocopy_prepare(queue, nskb);
+-	kfree_skb(nskb);
+-
+ 	/* Release all the original (foreign) frags. */
+ 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
+ 		skb_frag_unref(skb, f);
+@@ -1611,6 +1606,8 @@ static int xenvif_tx_submit(struct xenvi
+ 		xenvif_fill_frags(queue, skb);
+ 
+ 		if (unlikely(skb_has_frag_list(skb))) {
++			struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
++			xenvif_skb_zerocopy_prepare(queue, nskb);
+ 			if (xenvif_handle_frag_list(queue, skb)) {
+ 				if (net_ratelimit())
+ 					netdev_err(queue->vif->dev,
+@@ -1619,6 +1616,9 @@ static int xenvif_tx_submit(struct xenvi
+ 				kfree_skb(skb);
+ 				continue;
+ 			}
++			/* Copied all the bits from the frag list -- free it. */
++			skb_frag_list_init(skb);
++			kfree_skb(nskb);
+ 		}
+ 
+ 		skb->dev      = queue->vif->dev;
 
 
