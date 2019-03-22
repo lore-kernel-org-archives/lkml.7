@@ -2,254 +2,145 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F02C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77A1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0E521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990FF21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSPIUbHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfCVRL2 (ORCPT
+        id S1728485AbfCVRNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:11:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19243 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfCVRL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:11:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 10:11:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="154861778"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Mar 2019 10:11:25 -0700
-Subject: [PATCH v5 10/10] libnvdimm/pfn: Stop padding pmem namespaces to
- section alignment
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Date:   Fri, 22 Mar 2019 09:58:46 -0700
-Message-ID: <155327392690.225273.7607286722861237500.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Fri, 22 Mar 2019 13:13:38 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34018 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbfCVRNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:13:37 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v12so1967564pgq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=I50p//vhpQDBwqjd66qrwtpLp6XzkYdrA3fvDwtkU4o=;
+        b=VSPIUbHqwOA6w/7zyKcBsR/BB940oo+9Zg2MM7OWIZEFQCpBOy3hPu0I9qGQhE32Jt
+         Gan2M3e0EY3t4UHACT6eyNt0Skh/m3qcABWnlmG3UrIrkIOA0DcABFkkDJFEb9y2WHmu
+         l/n3VvHOodcnL6y7fQJmm4elhBn9qHu8YDLOMj1zIbj1kXsKwRTiceYSMtUfevAyPsqA
+         Ov70XJDbqTHZW6aLnJPdtq8j5cALGdqDsq9X0t6ERg74A8YShR4WhN4IrrejE5kEJWWF
+         fnkevpxWwRv4ORTXql3Lwnodf70Y08QSsELwSvhGpu0joyN4Rp94+odMVW95KocLOxhg
+         T83Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=I50p//vhpQDBwqjd66qrwtpLp6XzkYdrA3fvDwtkU4o=;
+        b=mp4v6dlN9FHUfNsXwV+Kv3W93K1TR8g2FoxoRP072+3CzsNPyhfV2egCm7jfOc4ugm
+         8/uXggf1J56KdVTd6rNp7oFFtl1+81oi/s9WUhMldt5vt9es24laKPlySiSyur0Tvebx
+         pO24aXQBqRc67NRlRvTWa/7um+3S8Zshf5C7FKCjHOrKxGYCzaUO7brQqJQD2GeGU0Tm
+         Zr+kfxvj7GeHSUvGImgGLmjWskHT45I05SjIOwvDGI8oQWFVLjHisXpo+Z2Jdrrn4R+w
+         KPHwqMDqHX42CGGer6CsIFb6LBdYailFI+J2W41wI94gHuF4+po/OVqDmObRb8sQz6En
+         +KZQ==
+X-Gm-Message-State: APjAAAV4yt7/YeA3/HChafsuChmkCV+Q8jlF05UfkjFq0bEYgF+3zuj0
+        onA/MxvQ2bV7N4hH6r5d29U=
+X-Google-Smtp-Source: APXvYqyN8MH0lry/35VJ5m0uOMZwM+kzRWWSTg05l40NtM/qw01RY8mgfeaftT+H9KflCLvg4jesFg==
+X-Received: by 2002:a62:6ec3:: with SMTP id j186mr10535065pfc.89.1553274817123;
+        Fri, 22 Mar 2019 10:13:37 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.32])
+        by smtp.gmail.com with ESMTPSA id z77sm15862091pfi.155.2019.03.22.10.13.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 10:13:36 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 22:43:30 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     gregkh@linuxfoundation.org, christian@lkamp.de
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: ralink-gdma: Use u32 over uint32_t
+Message-ID: <20190322171330.GA13658@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the mm core supports section-unaligned hotplug of ZONE_DEVICE
-memory, we no longer need to add padding at pfn/dax device creation
-time. The kernel will still honor padding established by older kernels.
+This fixes the checkpatch.pl warning: "Prefer u32 over uint32_t"
 
-Reported-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 ---
- drivers/nvdimm/pfn.h      |   11 ++-----
- drivers/nvdimm/pfn_devs.c |   75 +++++++--------------------------------------
- include/linux/mmzone.h    |    4 ++
- 3 files changed, 19 insertions(+), 71 deletions(-)
+Changes since v2
+	- Improved changelog
+	- Thanks for the good feedback. I am a beginner. I will learn
+	  and grow. :)
+---
+ drivers/staging/ralink-gdma/ralink-gdma.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nvdimm/pfn.h b/drivers/nvdimm/pfn.h
-index e901e3a3b04c..ae589cc528f2 100644
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -41,18 +41,13 @@ struct nd_pfn_sb {
- 	__le64 checksum;
- };
- 
--#ifdef CONFIG_SPARSEMEM
--#define PFN_SECTION_ALIGN_DOWN(x) SECTION_ALIGN_DOWN(x)
--#define PFN_SECTION_ALIGN_UP(x) SECTION_ALIGN_UP(x)
--#else
- /*
-  * In this case ZONE_DEVICE=n and we will disable 'pfn' device support,
-  * but we still want pmem to compile.
-  */
--#define PFN_SECTION_ALIGN_DOWN(x) (x)
--#define PFN_SECTION_ALIGN_UP(x) (x)
-+#ifndef SUB_SECTION_ALIGN_DOWN
-+#define SUB_SECTION_ALIGN_DOWN(x) (x)
-+#define SUB_SECTION_ALIGN_UP(x) (x)
- #endif
- 
--#define PHYS_SECTION_ALIGN_DOWN(x) PFN_PHYS(PFN_SECTION_ALIGN_DOWN(PHYS_PFN(x)))
--#define PHYS_SECTION_ALIGN_UP(x) PFN_PHYS(PFN_SECTION_ALIGN_UP(PHYS_PFN(x)))
- #endif /* __NVDIMM_PFN_H */
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index f0e918186504..b7928bfc5691 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -595,14 +595,14 @@ static u32 info_block_reserve(void)
+diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
+index d78042e..7e824d3 100644
+--- a/drivers/staging/ralink-gdma/ralink-gdma.c
++++ b/drivers/staging/ralink-gdma/ralink-gdma.c
+@@ -157,14 +157,14 @@ static struct gdma_dma_desc *to_gdma_dma_desc(struct virt_dma_desc *vdesc)
+ 	return container_of(vdesc, struct gdma_dma_desc, vdesc);
  }
  
- /*
-- * We hotplug memory at section granularity, pad the reserved area from
-- * the previous section base to the namespace base address.
-+ * We hotplug memory at sub-section granularity, pad the reserved area
-+ * from the previous section base to the namespace base address.
-  */
- static unsigned long init_altmap_base(resource_size_t base)
+-static inline uint32_t gdma_dma_read(struct gdma_dma_dev *dma_dev,
++static inline u32 gdma_dma_read(struct gdma_dma_dev *dma_dev,
+ 				     unsigned int reg)
  {
- 	unsigned long base_pfn = PHYS_PFN(base);
- 
--	return PFN_SECTION_ALIGN_DOWN(base_pfn);
-+	return SUB_SECTION_ALIGN_DOWN(base_pfn);
+ 	return readl(dma_dev->base + reg);
  }
  
- static unsigned long init_altmap_reserve(resource_size_t base)
-@@ -610,7 +610,7 @@ static unsigned long init_altmap_reserve(resource_size_t base)
- 	unsigned long reserve = info_block_reserve() >> PAGE_SHIFT;
- 	unsigned long base_pfn = PHYS_PFN(base);
- 
--	reserve += base_pfn - PFN_SECTION_ALIGN_DOWN(base_pfn);
-+	reserve += base_pfn - SUB_SECTION_ALIGN_DOWN(base_pfn);
- 	return reserve;
- }
- 
-@@ -641,8 +641,7 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
- 		nd_pfn->npfns = le64_to_cpu(pfn_sb->npfns);
- 		pgmap->altmap_valid = false;
- 	} else if (nd_pfn->mode == PFN_MODE_PMEM) {
--		nd_pfn->npfns = PFN_SECTION_ALIGN_UP((resource_size(res)
--					- offset) / PAGE_SIZE);
-+		nd_pfn->npfns = PHYS_PFN((resource_size(res) - offset));
- 		if (le64_to_cpu(nd_pfn->pfn_sb->npfns) > nd_pfn->npfns)
- 			dev_info(&nd_pfn->dev,
- 					"number of pfns truncated from %lld to %ld\n",
-@@ -658,50 +657,10 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
- 	return 0;
- }
- 
--static u64 phys_pmem_align_down(struct nd_pfn *nd_pfn, u64 phys)
--{
--	return min_t(u64, PHYS_SECTION_ALIGN_DOWN(phys),
--			ALIGN_DOWN(phys, nd_pfn->align));
--}
--
--/*
-- * Check if pmem collides with 'System RAM', or other regions when
-- * section aligned.  Trim it accordingly.
-- */
--static void trim_pfn_device(struct nd_pfn *nd_pfn, u32 *start_pad, u32 *end_trunc)
--{
--	struct nd_namespace_common *ndns = nd_pfn->ndns;
--	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
--	struct nd_region *nd_region = to_nd_region(nd_pfn->dev.parent);
--	const resource_size_t start = nsio->res.start;
--	const resource_size_t end = start + resource_size(&nsio->res);
--	resource_size_t adjust, size;
--
--	*start_pad = 0;
--	*end_trunc = 0;
--
--	adjust = start - PHYS_SECTION_ALIGN_DOWN(start);
--	size = resource_size(&nsio->res) + adjust;
--	if (region_intersects(start - adjust, size, IORESOURCE_SYSTEM_RAM,
--				IORES_DESC_NONE) == REGION_MIXED
--			|| nd_region_conflict(nd_region, start - adjust, size))
--		*start_pad = PHYS_SECTION_ALIGN_UP(start) - start;
--
--	/* Now check that end of the range does not collide. */
--	adjust = PHYS_SECTION_ALIGN_UP(end) - end;
--	size = resource_size(&nsio->res) + adjust;
--	if (region_intersects(start, size, IORESOURCE_SYSTEM_RAM,
--				IORES_DESC_NONE) == REGION_MIXED
--			|| !IS_ALIGNED(end, nd_pfn->align)
--			|| nd_region_conflict(nd_region, start, size))
--		*end_trunc = end - phys_pmem_align_down(nd_pfn, end);
--}
--
- static int nd_pfn_init(struct nd_pfn *nd_pfn)
+ static inline void gdma_dma_write(struct gdma_dma_dev *dma_dev,
+-				  unsigned reg, uint32_t val)
++				  unsigned reg, u32 val)
  {
- 	struct nd_namespace_common *ndns = nd_pfn->ndns;
- 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
--	u32 start_pad, end_trunc, reserve = info_block_reserve();
- 	resource_size_t start, size;
- 	struct nd_region *nd_region;
- 	struct nd_pfn_sb *pfn_sb;
-@@ -736,43 +695,35 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 		return -ENXIO;
- 	}
+ 	writel(val, dma_dev->base + reg);
+ }
+@@ -283,7 +283,7 @@ static int rt305x_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
+ 	struct gdma_dma_dev *dma_dev = gdma_dma_chan_get_dev(chan);
+ 	dma_addr_t src_addr, dst_addr;
+ 	struct gdma_dma_sg *sg;
+-	uint32_t ctrl0, ctrl1;
++	u32 ctrl0, ctrl1;
  
--	memset(pfn_sb, 0, sizeof(*pfn_sb));
--
--	trim_pfn_device(nd_pfn, &start_pad, &end_trunc);
--	if (start_pad + end_trunc)
--		dev_info(&nd_pfn->dev, "%s alignment collision, truncate %d bytes\n",
--				dev_name(&ndns->dev), start_pad + end_trunc);
--
- 	/*
- 	 * Note, we use 64 here for the standard size of struct page,
- 	 * debugging options may cause it to be larger in which case the
- 	 * implementation will limit the pfns advertised through
- 	 * ->direct_access() to those that are included in the memmap.
- 	 */
--	start = nsio->res.start + start_pad;
-+	start = nsio->res.start;
- 	size = resource_size(&nsio->res);
--	npfns = PFN_SECTION_ALIGN_UP((size - start_pad - end_trunc - reserve)
--			/ PAGE_SIZE);
-+	npfns = PHYS_PFN(size - SZ_8K);
- 	if (nd_pfn->mode == PFN_MODE_PMEM) {
- 		/*
- 		 * The altmap should be padded out to the block size used
- 		 * when populating the vmemmap. This *should* be equal to
- 		 * PMD_SIZE for most architectures.
- 		 */
--		offset = ALIGN(start + reserve + 64 * npfns,
--				max(nd_pfn->align, PMD_SIZE)) - start;
-+		offset = ALIGN(start + SZ_8K + 64 * npfns,
-+				max(nd_pfn->align, SECTION_ACTIVE_SIZE)) - start;
- 	} else if (nd_pfn->mode == PFN_MODE_RAM)
--		offset = ALIGN(start + reserve, nd_pfn->align) - start;
-+		offset = ALIGN(start + SZ_8K, nd_pfn->align) - start;
- 	else
- 		return -ENXIO;
+ 	/* verify chan is already stopped */
+ 	ctrl0 = gdma_dma_read(dma_dev, GDMA_REG_CTRL0(chan->id));
+@@ -361,7 +361,7 @@ static int rt3883_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
+ 	struct gdma_dma_dev *dma_dev = gdma_dma_chan_get_dev(chan);
+ 	dma_addr_t src_addr, dst_addr;
+ 	struct gdma_dma_sg *sg;
+-	uint32_t ctrl0, ctrl1;
++	u32 ctrl0, ctrl1;
  
--	if (offset + start_pad + end_trunc >= size) {
-+	if (offset >= size) {
- 		dev_err(&nd_pfn->dev, "%s unable to satisfy requested alignment\n",
- 				dev_name(&ndns->dev));
- 		return -ENXIO;
- 	}
+ 	/* verify chan is already stopped */
+ 	ctrl0 = gdma_dma_read(dma_dev, GDMA_REG_CTRL0(chan->id));
+@@ -753,7 +753,7 @@ static void gdma_dma_tasklet(unsigned long arg)
  
--	npfns = (size - offset - start_pad - end_trunc) / SZ_4K;
-+	npfns = PHYS_PFN(size - offset);
- 	pfn_sb->mode = cpu_to_le32(nd_pfn->mode);
- 	pfn_sb->dataoff = cpu_to_le64(offset);
- 	pfn_sb->npfns = cpu_to_le64(npfns);
-@@ -781,8 +732,6 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
- 	pfn_sb->version_minor = cpu_to_le16(3);
--	pfn_sb->start_pad = cpu_to_le32(start_pad);
--	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
- 	checksum = nd_sb_checksum((struct nd_gen_sb *) pfn_sb);
- 	pfn_sb->checksum = cpu_to_le64(checksum);
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 067ee217c692..3117aa9d0f33 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1114,6 +1114,10 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
- #define PAGES_PER_SUB_SECTION (SECTION_ACTIVE_SIZE / PAGE_SIZE)
- #define PAGE_SUB_SECTION_MASK (~(PAGES_PER_SUB_SECTION-1))
+ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
  
-+#define SUB_SECTION_ALIGN_UP(pfn) (((pfn) + PAGES_PER_SUB_SECTION - 1) \
-+		& PAGE_SUB_SECTION_MASK)
-+#define SUB_SECTION_ALIGN_DOWN(pfn) ((pfn) & PAGE_SUB_SECTION_MASK)
-+
- struct mem_section_usage {
- 	/*
- 	 * SECTION_ACTIVE_SIZE portions of the section that are populated in
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_RT305X_GCT, GDMA_REG_GCT_ARBIT_RR);
+@@ -767,7 +767,7 @@ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ 
+ static void rt3883_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
+ 
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_REG_GCT, GDMA_REG_GCT_ARBIT_RR);
+-- 
+2.7.4
 
