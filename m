@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B7C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27C4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F79321902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8836521902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfCVAG4 (ORCPT
+        id S1727528AbfCVAHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:06:56 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:54882 "EHLO ale.deltatee.com"
+        Thu, 21 Mar 2019 20:07:06 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:54952 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfCVAGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:06:53 -0400
+        id S1727462AbfCVAGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 20:06:55 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h77hx-0002X9-Rf; Thu, 21 Mar 2019 18:06:51 -0600
+        id 1h77i1-0002XH-FB; Thu, 21 Mar 2019 18:06:54 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h77hv-00044F-DW; Thu, 21 Mar 2019 18:06:47 -0600
+        id 1h77hw-00044d-9A; Thu, 21 Mar 2019 18:06:48 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
         linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
@@ -38,8 +38,8 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 21 Mar 2019 18:06:37 -0600
-Message-Id: <20190322000645.15580-3-logang@deltatee.com>
+Date:   Thu, 21 Mar 2019 18:06:45 -0600
+Message-Id: <20190322000645.15580-11-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322000645.15580-1-logang@deltatee.com>
 References: <20190322000645.15580-1-logang@deltatee.com>
@@ -48,7 +48,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 02/10] PCI/switchtec: Add module parameter to request more interrupts
+Subject: [PATCH v3 10/10] NTB: Describe the ntb_msi_test client in the documentation.
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,49 +56,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing the we want to use more interrupts in the NTB MSI code
-we need to be able allocate more (sometimes virtual) interrupts
-in the switchtec driver. Therefore add a module parameter to
-request to allocate additional interrupts.
-
-This puts virtually no limit on the number of MSI interrupts available
-to NTB clients.
+Add a blurb in Documentation/ntb.txt to describe the ntb_msi_test tool's
+debugfs interface. Similar to the (out of date) ntb_tool description.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/switch/switchtec.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ Documentation/ntb.txt | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index e22766c79fe9..8b1db78197d9 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -30,6 +30,10 @@ module_param(use_dma_mrpc, bool, 0644);
- MODULE_PARM_DESC(use_dma_mrpc,
- 		 "Enable the use of the DMA MRPC feature");
+diff --git a/Documentation/ntb.txt b/Documentation/ntb.txt
+index a043854d28df..802a539f1592 100644
+--- a/Documentation/ntb.txt
++++ b/Documentation/ntb.txt
+@@ -194,6 +194,33 @@ Debugfs Files:
+ 	This file is used to read and write peer scratchpads.  See
+ 	*spad* for details.
  
-+static int nirqs = 32;
-+module_param(nirqs, int, 0644);
-+MODULE_PARM_DESC(nirqs, "number of interrupts to allocate (more may be useful for NTB applications)");
++NTB MSI Test Client (ntb\_msi\_test)
++------------------------------------
 +
- static dev_t switchtec_devt;
- static DEFINE_IDA(switchtec_minor_ida);
- 
-@@ -1247,8 +1251,12 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
- 	int dma_mrpc_irq;
- 	int rc;
- 
--	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, 4,
--				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-+	if (nirqs < 4)
-+		nirqs = 4;
++The MSI test client serves to test and debug the MSI library which
++allows for passing MSI interrupts across NTB memory windows. The
++test client is interacted with through the debugfs filesystem:
 +
-+	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
-+				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
-+				      PCI_IRQ_VIRTUAL);
- 	if (nvecs < 0)
- 		return nvecs;
++* *debugfs*/ntb\_tool/*hw*/
++	A directory in debugfs will be created for each
++	NTB device probed by the tool.  This directory is shortened to *hw*
++	below.
++* *hw*/port
++	This file describes the local port number
++* *hw*/irq*_occurrences
++	One occurrences file exists for each interrupt and, when read,
++	returns the number of times the interrupt has been triggered.
++* *hw*/peer*/port
++	This file describes the port number for each peer
++* *hw*/peer*/count
++	This file describes the number of interrupts that can be
++	triggered on each peer
++* *hw*/peer*/trigger
++	Writing an interrupt number (any number less than the value
++	specified in count) will trigger the interrupt on the
++	specified peer. That peer's interrupt's occurrence file
++	should be incremented.
++
+ NTB Hardware Drivers
+ ====================
  
 -- 
 2.20.1
