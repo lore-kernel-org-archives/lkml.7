@@ -2,64 +2,81 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53207C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB988C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA07218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DF721904
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfCVHCM (ORCPT
+        id S1727591AbfCVHIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:02:12 -0400
-Received: from mx2.cyber.ee ([193.40.6.72]:58131 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfCVHCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:02:12 -0400
-Subject: Re: Radeon HD 7450 brightness oversaturated
-To:     Alex Deucher <alexdeucher@gmail.com>, Meelis Roos <mroos@linux.ee>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-References: <6f3801ea-476f-6715-db9b-0eb188c5711d@linux.ee>
- <CADnq5_O-sFxVsbxouJBRYi=H+RCmc0==jB7XVTifvWm-+EQLnQ@mail.gmail.com>
-From:   Meelis Roos <mroos@linux.ee>
-Message-ID: <e61ee046-92fc-4e3d-02fb-c53d5699e41d@linux.ee>
-Date:   Fri, 22 Mar 2019 09:02:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 03:08:02 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:34730 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfCVHIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 03:08:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id y13so1025160iol.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:08:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=We/Sg27LqRj2nWSdbJg1A6SLyTwFCLM1xyYF+U7bC/g=;
+        b=jcTkkSeRB/d4nAe2Mh66sQ5m07duGAWWuFzuvfvblbhTNS5yRx4oq1aPxHdzhNnR4G
+         HtVoR4wHOFSywOwe+nIq3+1C5WRUzmT1HUgCK6iVY73//DTf7yDhlp6pjmq/0/OS049P
+         X4x0AZYIaV8r9p1TyDxhV87fAxA7eTwZejGCQGM92SyLZaRmHJaXQ1XKdGgGCv0Od96u
+         j7LT3JowOHgtEY3gKukbqkuSFIukZxk64uiA2AgQ0IC0GPWHplbeho7TlU/Sqf1ubGVe
+         c8DZHbZJhGO6TqXI2JxESQfT8kZyS9BvWEiNzk+PL8/k94ea5hgVwLrSNAJwIZr6m4tf
+         ntMw==
+X-Gm-Message-State: APjAAAWOCxjgowcDMsA0X6ZgfleuXNybdo7LM1K+oCSU6XcYKyqX/AuW
+        loSAH/Vuj+GEwIM9boj0VnABLCrKc0Emmrz1bjWG0cSmBs62
+X-Google-Smtp-Source: APXvYqy7Aky+F53NuKK5x5RtyI0ve6II5XMGbh2PGk4QjvMLoUnO1wr6ezUcLU4k6A+9z1PAAFkU6O0JTiM34h3c47R1BqElu7bH
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_O-sFxVsbxouJBRYi=H+RCmc0==jB7XVTifvWm-+EQLnQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: et-EE
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:da0b:: with SMTP id x11mr5537935ioj.200.1553238480789;
+ Fri, 22 Mar 2019 00:08:00 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 00:08:00 -0700
+In-Reply-To: <00000000000080601805795ada2e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e626290584a983c0@google.com>
+Subject: Re: INFO: task hung in vivid_stop_generating_vid_cap
+From:   syzbot <syzbot+06283a66a648cd073885@syzkaller.appspotmail.com>
+To:     andy@greyhouse.net, davem@davemloft.net, hverkuil@xs4all.nl,
+        j.vosburgh@gmail.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, maheshb@google.com,
+        mchehab@kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vfalico@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I decided to put a discrete graphics card into a PC and found a fitting Radeon HD 7450.
->> It works, but there is strange whiteness like the brightness is oversaturated and
->> light places turn into other colors:
->> * on fbcon, right after radeondrmfb initializes
->> * in X after powersave
->>
->> The colors return to normal after a VT switch or two.
->>
->> Screenshot of one such washed view is at http://kodu.ut.ee/~mroos/radeon_washed.jpg
->>
->> Kernels are 5.0 and 5.1-rc1.
-> 
-> Is it just kernels 5.0 and 5.1?  There haven't really been any display
-> related changes to radeon in ages.  Possibly a duplicate of:
-> https://bugzilla.kernel.org/show_bug.cgi?id=198123
+syzbot has bisected this bug to:
 
-No, I just put the card in and tested with only the current kernels I had.
-I can get some older kernel and test with that if that is of any help.
+commit 4493b81bea24269df898339dee638d7c5cb2b2df
+Author: Mahesh Bandewar <maheshb@google.com>
+Date:   Wed Mar 8 18:55:54 2017 +0000
 
--- 
-Meelis Roos <mroos@linux.ee>
+     bonding: initialize work-queues during creation of bond
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176d1617200000
+start commit:   4493b81b bonding: initialize work-queues during creation o..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14ed1617200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ed1617200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=62118286bb772a24
+dashboard link: https://syzkaller.appspot.com/bug?extid=06283a66a648cd073885
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15701a33400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154c8e4d400000
+
+Reported-by: syzbot+06283a66a648cd073885@syzkaller.appspotmail.com
+Fixes: 4493b81bea24 ("bonding: initialize work-queues during creation of  
+bond")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
