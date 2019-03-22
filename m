@@ -2,138 +2,89 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4C7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA4CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD775218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sGqrfmWm"
+	by mail.kernel.org (Postfix) with ESMTP id 01537218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553272422;
+	bh=vBMmIYWinP9ID3nsFNnw8dW/txhV8eRk56kGmRTCOuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VAcjk5r37dhFjs3XyEGYmmYDA+vHSx18zESY6QB/+0ONxh6c9/faatqWVW1D2vKzc
+	 vR89q/0ZQ8EajtWfUagmdkU9IqgMGSCi4wMEX4GMMzyLx8ruLvq903kdHHBQSEH6Fc
+	 PZvi/48yMd7tfksTdHp1f2qzQzMhphaUfGIyS2AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfCVQdN (ORCPT
+        id S1727604AbfCVQdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:33:13 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37492 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfCVQdM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:33:12 -0400
-Received: by mail-it1-f193.google.com with SMTP id z124so4235378itc.2;
-        Fri, 22 Mar 2019 09:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uFdh5su4BD4vPggq8QdolC54ZdktUMxSqZocHhZqF9A=;
-        b=sGqrfmWmQyF5KNClIkWxbumhmE4nXo8YEbmHn9le4vfkhpmCu/gaZ4Z9yO5KQ4NJlF
-         t9KhdgfwDsh5pouXJdaPaoXpOw4dNKnEEgDQNfuusRGN+CqvctfzWNCmRKRrJ++7EZZa
-         YfjVC1nK3ICGeKr4wcWAM033O4qGGw2zaQ4YmKzyt8i6MGhJ/MKlZLhsN0WGGH74wrLO
-         qbf5Ft55vUHdqdbP++u9ZwA8QSey8wWR9GzFef7NjxRBxXqZLkyd5TLlMz+Cs+caXU5Q
-         XOtE9PyxZsdbxmphhb23DC4+tfegZ6OhPoW/lDOgss5kDs7XG0qTH7tH9F59PyVLlhlN
-         WJ3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uFdh5su4BD4vPggq8QdolC54ZdktUMxSqZocHhZqF9A=;
-        b=EBnIHmlXCc/YntYpuRWD0jTBRt8AkMqVID3Lz7L6lR6ONIOs1OxupWUf0S9p4ZggKK
-         7hxLHmtHJjKUggAU4J1ti2iB9ZDmZZssGCowTrNhfDAl7IrUKB0avDPGEnu4YSCLGAk0
-         pz+GWFoRlCdOY0eWuVp/uI4p5gY90FCO0TSoFlIeiQ6eUuxqaWzSBWqkw96Mz2R2I7d+
-         ZVmKV03VR0QnECG6uvzi42LWQf7CuJOQ4uRe7px6ojyN4fqrueZFCO8PCH7hgxgncfOk
-         7SZI3JI0B0vZn+t99USrvweVwAST7zVz+q2V+FH7vpPBY7aOcLLmGn+H25aSiQiWBNKY
-         PMcQ==
-X-Gm-Message-State: APjAAAXkdYxpTsYC7Hm92WgDhHAFfiGVS/GyoR44ItUJNCTZfBvyH4dq
-        H2FBnM5uEYhmicQqwceCnI9+cHIzm2VC4M9PU2mKOKAN
-X-Google-Smtp-Source: APXvYqy9RAYEpkJbfVm1kNZL+ObumBJkNzFxbB8+/0XhaOArpR4nqrU2CRUXg2r0rFd/rjIqs1PKjx0lRRcYu4cOqak=
-X-Received: by 2002:a02:3b6f:: with SMTP id i47mr7841684jaf.39.1553272391734;
- Fri, 22 Mar 2019 09:33:11 -0700 (PDT)
+        Fri, 22 Mar 2019 12:33:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16971 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726603AbfCVQdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:33:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:33:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="142975999"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Mar 2019 09:33:39 -0700
+Date:   Fri, 22 Mar 2019 10:34:41 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 3/5] mm: Attempt to migrate page in lieu of discard
+Message-ID: <20190322163440.GB31194@localhost.localdomain>
+References: <20190321200157.29678-1-keith.busch@intel.com>
+ <20190321200157.29678-4-keith.busch@intel.com>
+ <CAHbLzkqGGJ7dFiZkR-=yvGEF0AM4JbBe6pxGFbSe9tSnC7wgzQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190322143643.1317312-1-arnd@arndb.de>
-In-Reply-To: <20190322143643.1317312-1-arnd@arndb.de>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 22 Mar 2019 17:34:26 +0100
-Message-ID: <CAOi1vP9scH+DECa1udToEvtYMRTZ1-VMuVajAh8uwpxzuMq0RA@mail.gmail.com>
-Subject: Re: [PATCH] rbd: avoid clang -Wuninitialized warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sage Weil <sage@redhat.com>, Alex Elder <elder@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkqGGJ7dFiZkR-=yvGEF0AM4JbBe6pxGFbSe9tSnC7wgzQ@mail.gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 3:36 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> clang fails to see that rbd_assert(0) ends in an unreachable code
-> path and warns about a subsequent use of an uninitialized variable
-> when CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
->
-> drivers/block/rbd.c:2402:4: error: variable 'ret' is used uninitialized whenever 'if' condition is false
->       [-Werror,-Wsometimes-uninitialized]
->                         rbd_assert(0);
->                         ^~~~~~~~~~~~~
-> drivers/block/rbd.c:563:7: note: expanded from macro 'rbd_assert'
->                 if (unlikely(!(expr))) {                                \
->                     ^~~~~~~~~~~~~~~~~
-> include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
->  #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
->                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/block/rbd.c:2410:6: note: uninitialized use occurs here
->         if (ret) {
->             ^~~
-> drivers/block/rbd.c:2402:4: note: remove the 'if' if its condition is always true
->                         rbd_assert(0);
->                         ^
-> drivers/block/rbd.c:563:3: note: expanded from macro 'rbd_assert'
->                 if (unlikely(!(expr))) {                                \
->                 ^
-> drivers/block/rbd.c:2376:9: note: initialize the variable 'ret' to silence this warning
->         int ret;
->                ^
->                 = 0
-> 1 error generated.
->
-> This seems to be a bug in clang, but is easy to work around by using
-> an unconditional BUG().
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/block/rbd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 4ba967d65cf9..cbcc3baf3807 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -2399,7 +2399,7 @@ static int rbd_obj_read_from_parent(struct rbd_obj_request *obj_req)
->                                                       &obj_req->bvec_pos);
->                         break;
->                 default:
-> -                       rbd_assert(0);
-> +                       BUG();
->                 }
->         } else {
->                 ret = rbd_img_fill_from_bvecs(child_img_req,
+On Thu, Mar 21, 2019 at 04:58:16PM -0700, Yang Shi wrote:
+> On Thu, Mar 21, 2019 at 1:03 PM Keith Busch <keith.busch@intel.com> wrote:
+> > +               if (!PageCompound(page)) {
+> > +                       if (migrate_demote_mapping(page)) {
+> > +                                unlock_page(page);
+> > +                                if (likely(put_page_testzero(page)))
+> > +                                        goto free_it;
+> > +
+> > +                                /*
+> > +                                * Speculative reference will free this page,
+> > +                                * so leave it off the LRU.
+> > +                                */
+> > +                                nr_reclaimed++;
+> > +                                continue;
+> > +                        }
+> > +               }
+> 
+> It looks the reclaim path would fall through if the migration is
+> failed. But, it looks, with patch #4, you may end up trying reclaim an
+> anon page on swapless system if migration is failed?
 
-Hi Arnd,
+Right, and add_to_swap() will fail and the page jumps to activate_locked
+label, placing it back where it was before.
 
-You did a couple of these last year in commit c6244b3b2377 ("rbd: avoid
-Wreturn-type warnings").  Let's change all of those default cases to BUG
-in one go.  Do you want to do that or should I?
+> And, actually I have the same question with Yan Zi. Why not just put
+> the demote candidate into a separate list, then migrate all the
+> candidates in bulk with migrate_pages()?
 
-Thanks,
-
-                Ilya
+The page is already locked at the point we know we want to migrate it.
