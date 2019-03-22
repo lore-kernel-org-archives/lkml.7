@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ABDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F79421916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8C1218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253808;
-	bh=yIbE/nz2fkIC7gW1IJZpv+41GXvXo79pnULrKDf+QAM=;
+	s=default; t=1553253813;
+	bh=FQm5p6VRF6Hrs39Azz1XFAqZIlJss/d9zS5xkb1kGdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3uK/jrSR436IOxAKQ/fGbd8PcAjbPEiT6EySnKwzOotKtjhe9zKRU+xzjIM+udWC
-	 5ceIIkW73Ps6RhrbZKhjgFAa7BmJOr+AlcFxNFy6bxq9IMEsyY4FTsgrSfS1epQpBA
-	 QfamyCy1B1O0TmkcVhUbw8g4VxDHc3nfonXUoUlM=
+	b=yYczfxzVZGR7mRY2++c0R3REAu11Md5qlXnDODqRYt8OiuqPp2O/9ZAcGD67HvfmC
+	 xo9RkEkSzf2PV/b8Zhwp6ZEiVU47WMOqidcS18D5tL4OEMgbgGvt5NfuusmeFBVNvl
+	 bgMswyGnrwtLbnwraesmRS8HTppCnwIVZdiNCXak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbfCVLX1 (ORCPT
+        id S1728980AbfCVLXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbfCVLXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:23:22 -0400
+        id S1728614AbfCVLX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:23:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE6F2190A;
-        Fri, 22 Mar 2019 11:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EEB12190A;
+        Fri, 22 Mar 2019 11:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253801;
-        bh=yIbE/nz2fkIC7gW1IJZpv+41GXvXo79pnULrKDf+QAM=;
+        s=default; t=1553253808;
+        bh=FQm5p6VRF6Hrs39Azz1XFAqZIlJss/d9zS5xkb1kGdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCa9ZW12wh211ukf4a7rHrTutWnbuECQZRfg1OwPshEjuTnR4ZOEni8hvE1c/g7yV
-         q+yPFu9t1TwgcabwaIk8YXMebVG3h8l6646UR2r7KWCwvKq5iV5dpC+fYJPeppA6m9
-         fXo2OxIOh2oq/333iEaWRcFYAZFNXJJMwZTHy69g=
+        b=kng6jOXT3PxW+7Rzqf5IpIFlmnxNo+0+ltNKyEC7jmXGY1/Vc4fUYZqC6eHVSeKMb
+         hGi+mNCcKB6gNJKWrXKH2BkF3A3yJsKaKV4MLrHpG/suK0uCm8zjxyrj3GSQ+CqS16
+         kf2svvwdv6idDRBEenHRi8yHIVNQzZbRBXlksYaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 059/134] xtensa: SMP: fix secondary CPU initialization
-Date:   Fri, 22 Mar 2019 12:14:32 +0100
-Message-Id: <20190322111214.293641718@linuxfoundation.org>
+Subject: [PATCH 3.18 061/134] xtensa: SMP: mark each possible CPU as present
+Date:   Fri, 22 Mar 2019 12:14:34 +0100
+Message-Id: <20190322111214.440355160@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,126 +65,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 32a7726c4f4aadfabdb82440d84f88a5a2c8fe13 ]
+[ Upstream commit 8b1c42cdd7181200dc1fff39dcb6ac1a3fac2c25 ]
 
-- add missing memory barriers to the secondary CPU synchronization spin
-  loops; add comment to the matching memory barrier in the boot_secondary
-  and __cpu_die functions;
-- use READ_ONCE/WRITE_ONCE to access cpu_start_id/cpu_start_ccount
-  instead of reading/writing them directly;
-- re-initialize cpu_running every time before starting secondary CPU to
-  flush possible previous CPU startup results.
+Otherwise it is impossible to enable CPUs after booting with 'maxcpus'
+parameter.
 
 Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/head.S |  5 ++++-
- arch/xtensa/kernel/smp.c  | 34 +++++++++++++++++++++-------------
- 2 files changed, 25 insertions(+), 14 deletions(-)
+ arch/xtensa/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/kernel/head.S b/arch/xtensa/kernel/head.S
-index 64140998e117..16bdb414784a 100644
---- a/arch/xtensa/kernel/head.S
-+++ b/arch/xtensa/kernel/head.S
-@@ -281,12 +281,13 @@ should_never_return:
- 
- 	movi	a2, cpu_start_ccount
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	movi	a3, 0
- 	s32i	a3, a2, 0
--	memw
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	wsr	a3, ccount
-@@ -323,11 +324,13 @@ ENTRY(cpu_restart)
- 	rsr	a0, prid
- 	neg	a2, a0
- 	movi	a3, cpu_start_id
-+	memw
- 	s32i	a2, a3, 0
- #if XCHAL_DCACHE_IS_WRITEBACK
- 	dhwbi	a3, 0
- #endif
- 1:
-+	memw
- 	l32i	a2, a3, 0
- 	dhi	a3, 0
- 	bne	a2, a0, 1b
 diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 4d02e38514f5..545144d1431d 100644
+index 545144d1431d..0e34c1ed4aa8 100644
 --- a/arch/xtensa/kernel/smp.c
 +++ b/arch/xtensa/kernel/smp.c
-@@ -192,9 +192,11 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 	int i;
+@@ -80,7 +80,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ {
+ 	unsigned i;
  
- #ifdef CONFIG_HOTPLUG_CPU
--	cpu_start_id = cpu;
--	system_flush_invalidate_dcache_range(
--			(unsigned long)&cpu_start_id, sizeof(cpu_start_id));
-+	WRITE_ONCE(cpu_start_id, cpu);
-+	/* Pairs with the third memw in the cpu_restart */
-+	mb();
-+	system_flush_invalidate_dcache_range((unsigned long)&cpu_start_id,
-+					     sizeof(cpu_start_id));
- #endif
- 	smp_call_function_single(0, mx_cpu_start, (void *)cpu, 1);
+-	for (i = 0; i < max_cpus; ++i)
++	for_each_possible_cpu(i)
+ 		set_cpu_present(i, true);
+ }
  
-@@ -203,18 +205,21 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 			ccount = get_ccount();
- 		while (!ccount);
- 
--		cpu_start_ccount = ccount;
-+		WRITE_ONCE(cpu_start_ccount, ccount);
- 
--		while (time_before(jiffies, timeout)) {
-+		do {
-+			/*
-+			 * Pairs with the first two memws in the
-+			 * .Lboot_secondary.
-+			 */
- 			mb();
--			if (!cpu_start_ccount)
--				break;
--		}
-+			ccount = READ_ONCE(cpu_start_ccount);
-+		} while (ccount && time_before(jiffies, timeout));
- 
--		if (cpu_start_ccount) {
-+		if (ccount) {
- 			smp_call_function_single(0, mx_cpu_stop,
--					(void *)cpu, 1);
--			cpu_start_ccount = 0;
-+						 (void *)cpu, 1);
-+			WRITE_ONCE(cpu_start_ccount, 0);
- 			return -EIO;
- 		}
- 	}
-@@ -234,6 +239,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 	pr_debug("%s: Calling wakeup_secondary(cpu:%d, idle:%p, sp: %08lx)\n",
- 			__func__, cpu, idle, start_info.stack);
- 
-+	init_completion(&cpu_running);
- 	ret = boot_secondary(cpu, idle);
- 	if (ret == 0) {
- 		wait_for_completion_timeout(&cpu_running,
-@@ -295,8 +301,10 @@ void __cpu_die(unsigned int cpu)
- 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
- 	while (time_before(jiffies, timeout)) {
- 		system_invalidate_dcache_range((unsigned long)&cpu_start_id,
--				sizeof(cpu_start_id));
--		if (cpu_start_id == -cpu) {
-+					       sizeof(cpu_start_id));
-+		/* Pairs with the second memw in the cpu_restart */
-+		mb();
-+		if (READ_ONCE(cpu_start_id) == -cpu) {
- 			platform_cpu_kill(cpu);
- 			return;
- 		}
 -- 
 2.19.1
 
