@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236BAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD252082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E749D218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255202;
-	bh=7RK1mMNrkgYObUonrXQXb+eCbTYoflGEXN5HBzDz/as=;
+	s=default; t=1553255207;
+	bh=znMkddJcjVto+p97eDOprf0x0nH3xomdE+wbOmgMAbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDcMTzypVHRQ8LsBFQmfV22Uikvd3CHFIVA0knHuXTIJ3XkZ7L/D/9jCvMI0uPyQq
-	 SO0+fg6OedwpkksPtpZmfhV6qyQuPSvzAKprP4XcmJnEfG6cuLXHVEhw6epzWLkdQh
-	 FMwR2HlJSwO8wwBlOeqUtO/mF8BGQyYNihmiDC7I=
+	b=tQ9q3tjPlW4LdrJca9GnAe8EfngzOAruTyQL/bZeDJEFR5JgCWqKZT7LYvnQcAO7A
+	 Z+GxcGtI/J0RY/H+JaG7jWjx2lIwKcGtMeGEw4IAwi0vxjd2VZKe6jp7U4qyl6tnDm
+	 jswwq6ZtBc5dzLjsGWIZVtVxoGRhWnIjI29n7xJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbfCVLql (ORCPT
+        id S1732086AbfCVLqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731682AbfCVLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:37 -0400
+        id S1731770AbfCVLqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357012075E;
-        Fri, 22 Mar 2019 11:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18E52075E;
+        Fri, 22 Mar 2019 11:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255196;
-        bh=7RK1mMNrkgYObUonrXQXb+eCbTYoflGEXN5HBzDz/as=;
+        s=default; t=1553255199;
+        bh=znMkddJcjVto+p97eDOprf0x0nH3xomdE+wbOmgMAbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b87aqKl7J86tOvFvozZt+nXdrADr0w2MvQ1sSzOzvnyzToYHezQ+FLSgiIbb9eZHo
-         g5pYQ+wqSKiEP5TGeYvDuBLgQZLrxZSmlD5ebbkbS+zgd0oqE25fASkkpYLuxpDIT9
-         kLkzx5Y895cx/7TLnhAmA+/3Uvj8ra1gphk2rfL8=
+        b=ugiTZluu5kLZU/OXuXS1m9lzbi3PRFQaH0s5j+PUiuRDKAdN0T7m5VJrJnBlSboWB
+         0HLrsLsTi82yDvTChA/4Ze6dLIN/k35gTFxsYkuUD5zSe7EAgEtNk372gItewXiB7c
+         DD35Vv+gBIDDYfk96t0tTNQ0R63Z5wZRWvLqHU5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.14 005/183] stm class: Fix an endless loop in channel allocation
-Date:   Fri, 22 Mar 2019 12:13:53 +0100
-Message-Id: <20190322111242.193188596@linuxfoundation.org>
+        stable@vger.kernel.org, Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Arun Pathak <arun.pathak@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 006/183] crypto: caam - fixed handling of sg list
+Date:   Fri, 22 Mar 2019 12:13:54 +0100
+Message-Id: <20190322111242.250612206@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,41 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhi Jin <zhi.jin@intel.com>
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
 
-commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
+commit 42e95d1f10dcf8b18b1d7f52f7068985b3dc5b79 upstream.
 
-There is a bug in the channel allocation logic that leads to an endless
-loop when looking for a contiguous range of channels in a range with a
-mixture of free and occupied channels. For example, opening three
-consequtive channels, closing the first two and requesting 4 channels in
-a row will trigger this soft lockup. The bug is that the search loop
-forgets to skip over the range once it detects that one channel in that
-range is occupied.
+when the source sg contains more than 1 fragment and
+destination sg contains 1 fragment, the caam driver
+mishandle the buffers to be sent to caam.
 
-Restore the original intent to the logic by fixing the omission.
-
-Signed-off-by: Zhi Jin <zhi.jin@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-CC: stable@vger.kernel.org # v4.4+
+Fixes: f2147b88b2b1 ("crypto: caam - Convert GCM to new AEAD interface")
+Cc: <stable@vger.kernel.org> # 4.2+
+Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
+Signed-off-by: Arun Pathak <arun.pathak@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/caam/caamalg.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -252,6 +252,9 @@ static int find_free_channels(unsigned l
- 			;
- 		if (i == width)
- 			return pos;
-+
-+		/* step over [pos..pos+i) to continue search */
-+		pos += i;
- 	}
- 
- 	return -1;
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -1097,6 +1097,7 @@ static void init_ablkcipher_job(u32 *sh_
+ 	} else {
+ 		if (edesc->dst_nents == 1) {
+ 			dst_dma = sg_dma_address(req->dst);
++			out_options = 0;
+ 		} else {
+ 			dst_dma = edesc->sec4_sg_dma + (edesc->src_nents + 1) *
+ 				  sizeof(struct sec4_sg_entry);
 
 
