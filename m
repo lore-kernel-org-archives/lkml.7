@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43418C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F4CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1374B204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8537204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256185;
-	bh=Smy/IecndsygcsHXX3JxixQW0zEoBex/87Gu0amPEVI=;
+	s=default; t=1553256187;
+	bh=Coz5JRkHZhxkRwu4/Y5gofM4WFI0cWoargxD6sv1M0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2m9SHu/kXC9OH468udmdAAySYOHMffYB4izaPP/2/yftSaCM/h9c9DLGQSk1Z7DFV
-	 hD0bsMiaOSGM0hbTE3nBUimHeGLKPjBg1p8vlSqH2eAr/LSv7z3pJmZ+UZlYZ85oe6
-	 vlHV6MGd7O8wJEcn2aomDt+jJHdbdXy+iMmCaZV4=
+	b=gYjxRAY16iUSvm3/P2u1c36agsuNHpW6yhjznAuVXPJSx44A8YxYGljpa7BrS87G5
+	 j0CBbh2n8WNHzMFgOxbu2QFQdBtyHlK5B0evviMZZ6Cf7US2tIYWkk0NHtQrw9rtc7
+	 Gca51X7iCAlM1XSiczo/j5PX88L/imRS33AEeip8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388455AbfCVMDE (ORCPT
+        id S2388134AbfCVMDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41126 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388117AbfCVMCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:02:53 -0400
+        id S2388446AbfCVMC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:02:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E740204FD;
-        Fri, 22 Mar 2019 12:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D44A321B24;
+        Fri, 22 Mar 2019 12:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256171;
-        bh=Smy/IecndsygcsHXX3JxixQW0zEoBex/87Gu0amPEVI=;
+        s=default; t=1553256178;
+        bh=Coz5JRkHZhxkRwu4/Y5gofM4WFI0cWoargxD6sv1M0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qp5g176d9u2/ceRTou8V70/FT3+sr2W++PVj42JkzHHV3tJMa1n2rfNazBjDZ26pR
-         swu+g7xFw4dT/iKfIMdXSqX8XxcL7AS8f+CesOythRQP0CEo7D8w1kiMHZCmjj1+QU
-         32DNykY9Xc5Lb5T9TvA3PavubCKSJrgB44wiIOLc=
+        b=d+ajLYTctsE6+494Z58RuzSMXhQRUS8IkDyC6DcYSy4bp3ENP5L/zq+hOCnkXmbW2
+         8kU2jkY8JxcNHXEtuQEhgUgkXOwqqmjjWfUvxHLmzgh4Mw6x7hOcEiB/mFe9tyMavH
+         lue3vljFHGHMrANbyzhEOuPEITQxggB2K/0x5E8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 130/280] crypto: skcipher - set CRYPTO_TFM_NEED_KEY if ->setkey() fails
-Date:   Fri, 22 Mar 2019 12:14:43 +0100
-Message-Id: <20190322111316.531680044@linuxfoundation.org>
+Subject: [PATCH 4.19 132/280] crypto: x86/aegis - fix handling chunked inputs and MAY_SLEEP
+Date:   Fri, 22 Mar 2019 12:14:45 +0100
+Message-Id: <20190322111316.835283946@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,118 +68,222 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit b1f6b4bf416b49f00f3abc49c639371cdecaaad1 upstream.
+commit ba6771c0a0bc2fac9d6a8759bab8493bd1cffe3b upstream.
 
-Some algorithms have a ->setkey() method that is not atomic, in the
-sense that setting a key can fail after changes were already made to the
-tfm context.  In this case, if a key was already set the tfm can end up
-in a state that corresponds to neither the old key nor the new key.
+The x86 AEGIS implementations all fail the improved AEAD tests because
+they produce the wrong result with some data layouts.  The issue is that
+they assume that if the skcipher_walk API gives 'nbytes' not aligned to
+the walksize (a.k.a. walk.stride), then it is the end of the data.  In
+fact, this can happen before the end.
 
-For example, in lrw.c, if gf128mul_init_64k_bbe() fails due to lack of
-memory, then priv::table will be left NULL.  After that, encryption with
-that tfm will cause a NULL pointer dereference.
+Also, when the CRYPTO_TFM_REQ_MAY_SLEEP flag is given, they can
+incorrectly sleep in the skcipher_walk_*() functions while preemption
+has been disabled by kernel_fpu_begin().
 
-It's not feasible to make all ->setkey() methods atomic, especially ones
-that have to key multiple sub-tfms.  Therefore, make the crypto API set
-CRYPTO_TFM_NEED_KEY if ->setkey() fails and the algorithm requires a
-key, to prevent the tfm from being used until a new key is set.
+Fix these bugs.
 
-[Cc stable mainly because when introducing the NEED_KEY flag I changed
- AF_ALG to rely on it; and unlike in-kernel crypto API users, AF_ALG
- previously didn't have this problem.  So these "incompletely keyed"
- states became theoretically accessible via AF_ALG -- though, the
- opportunities for causing real mischief seem pretty limited.]
-
-Fixes: f8d33fac8480 ("crypto: skcipher - prevent using skciphers without setting key")
-Cc: <stable@vger.kernel.org> # v4.16+
+Fixes: 1d373d4e8e15 ("crypto: x86 - Add optimized AEGIS implementations")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/skcipher.c |   27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ arch/x86/crypto/aegis128-aesni-glue.c  |   38 +++++++++++++--------------------
+ arch/x86/crypto/aegis128l-aesni-glue.c |   38 +++++++++++++--------------------
+ arch/x86/crypto/aegis256-aesni-glue.c  |   38 +++++++++++++--------------------
+ 3 files changed, 45 insertions(+), 69 deletions(-)
 
---- a/crypto/skcipher.c
-+++ b/crypto/skcipher.c
-@@ -584,6 +584,12 @@ static unsigned int crypto_skcipher_exts
- 	return crypto_alg_extsize(alg);
+--- a/arch/x86/crypto/aegis128-aesni-glue.c
++++ b/arch/x86/crypto/aegis128-aesni-glue.c
+@@ -119,31 +119,20 @@ static void crypto_aegis128_aesni_proces
  }
  
-+static void skcipher_set_needkey(struct crypto_skcipher *tfm)
-+{
-+	if (tfm->keysize)
-+		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
-+}
-+
- static int skcipher_setkey_blkcipher(struct crypto_skcipher *tfm,
- 				     const u8 *key, unsigned int keylen)
+ static void crypto_aegis128_aesni_process_crypt(
+-		struct aegis_state *state, struct aead_request *req,
++		struct aegis_state *state, struct skcipher_walk *walk,
+ 		const struct aegis_crypt_ops *ops)
  {
-@@ -597,8 +603,10 @@ static int skcipher_setkey_blkcipher(str
- 	err = crypto_blkcipher_setkey(blkcipher, key, keylen);
- 	crypto_skcipher_set_flags(tfm, crypto_blkcipher_get_flags(blkcipher) &
- 				       CRYPTO_TFM_RES_MASK);
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
+-	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize, base;
+-
+-	ops->skcipher_walk_init(&walk, req, false);
+-
+-	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
+-
+-		ops->crypt_blocks(state, chunksize, src, dst);
+-
+-		base = chunksize & ~(AEGIS128_BLOCK_SIZE - 1);
+-		src += base;
+-		dst += base;
+-		chunksize &= AEGIS128_BLOCK_SIZE - 1;
+-
+-		if (chunksize > 0)
+-			ops->crypt_tail(state, chunksize, src, dst);
++	while (walk->nbytes >= AEGIS128_BLOCK_SIZE) {
++		ops->crypt_blocks(state,
++				  round_down(walk->nbytes, AEGIS128_BLOCK_SIZE),
++				  walk->src.virt.addr, walk->dst.virt.addr);
++		skcipher_walk_done(walk, walk->nbytes % AEGIS128_BLOCK_SIZE);
 +	}
  
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -676,8 +684,7 @@ static int crypto_init_skcipher_ops_blkc
- 	skcipher->ivsize = crypto_blkcipher_ivsize(blkcipher);
- 	skcipher->keysize = calg->cra_blkcipher.max_keysize;
- 
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
- 
- 	return 0;
+-		skcipher_walk_done(&walk, 0);
++	if (walk->nbytes) {
++		ops->crypt_tail(state, walk->nbytes, walk->src.virt.addr,
++				walk->dst.virt.addr);
++		skcipher_walk_done(walk, 0);
+ 	}
  }
-@@ -697,8 +704,10 @@ static int skcipher_setkey_ablkcipher(st
- 	crypto_skcipher_set_flags(tfm,
- 				  crypto_ablkcipher_get_flags(ablkcipher) &
- 				  CRYPTO_TFM_RES_MASK);
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
-+	}
  
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -775,8 +784,7 @@ static int crypto_init_skcipher_ops_ablk
- 			    sizeof(struct ablkcipher_request);
- 	skcipher->keysize = calg->cra_ablkcipher.max_keysize;
+@@ -186,13 +175,16 @@ static void crypto_aegis128_aesni_crypt(
+ {
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct aegis_ctx *ctx = crypto_aegis128_aesni_ctx(tfm);
++	struct skcipher_walk walk;
+ 	struct aegis_state state;
  
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
++	ops->skcipher_walk_init(&walk, req, true);
++
+ 	kernel_fpu_begin();
  
- 	return 0;
+ 	crypto_aegis128_aesni_init(&state, ctx->key.bytes, req->iv);
+ 	crypto_aegis128_aesni_process_ad(&state, req->src, req->assoclen);
+-	crypto_aegis128_aesni_process_crypt(&state, req, ops);
++	crypto_aegis128_aesni_process_crypt(&state, &walk, ops);
+ 	crypto_aegis128_aesni_final(&state, tag_xor, req->assoclen, cryptlen);
+ 
+ 	kernel_fpu_end();
+--- a/arch/x86/crypto/aegis128l-aesni-glue.c
++++ b/arch/x86/crypto/aegis128l-aesni-glue.c
+@@ -119,31 +119,20 @@ static void crypto_aegis128l_aesni_proce
  }
-@@ -819,8 +827,10 @@ static int skcipher_setkey(struct crypto
- 	else
- 		err = cipher->setkey(tfm, key, keylen);
  
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
+ static void crypto_aegis128l_aesni_process_crypt(
+-		struct aegis_state *state, struct aead_request *req,
++		struct aegis_state *state, struct skcipher_walk *walk,
+ 		const struct aegis_crypt_ops *ops)
+ {
+-	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize, base;
+-
+-	ops->skcipher_walk_init(&walk, req, false);
+-
+-	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
+-
+-		ops->crypt_blocks(state, chunksize, src, dst);
+-
+-		base = chunksize & ~(AEGIS128L_BLOCK_SIZE - 1);
+-		src += base;
+-		dst += base;
+-		chunksize &= AEGIS128L_BLOCK_SIZE - 1;
+-
+-		if (chunksize > 0)
+-			ops->crypt_tail(state, chunksize, src, dst);
++	while (walk->nbytes >= AEGIS128L_BLOCK_SIZE) {
++		ops->crypt_blocks(state, round_down(walk->nbytes,
++						    AEGIS128L_BLOCK_SIZE),
++				  walk->src.virt.addr, walk->dst.virt.addr);
++		skcipher_walk_done(walk, walk->nbytes % AEGIS128L_BLOCK_SIZE);
 +	}
  
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -852,8 +862,7 @@ static int crypto_skcipher_init_tfm(stru
- 	skcipher->ivsize = alg->ivsize;
- 	skcipher->keysize = alg->max_keysize;
+-		skcipher_walk_done(&walk, 0);
++	if (walk->nbytes) {
++		ops->crypt_tail(state, walk->nbytes, walk->src.virt.addr,
++				walk->dst.virt.addr);
++		skcipher_walk_done(walk, 0);
+ 	}
+ }
  
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
+@@ -186,13 +175,16 @@ static void crypto_aegis128l_aesni_crypt
+ {
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct aegis_ctx *ctx = crypto_aegis128l_aesni_ctx(tfm);
++	struct skcipher_walk walk;
+ 	struct aegis_state state;
  
- 	if (alg->exit)
- 		skcipher->base.exit = crypto_skcipher_exit_tfm;
++	ops->skcipher_walk_init(&walk, req, true);
++
+ 	kernel_fpu_begin();
+ 
+ 	crypto_aegis128l_aesni_init(&state, ctx->key.bytes, req->iv);
+ 	crypto_aegis128l_aesni_process_ad(&state, req->src, req->assoclen);
+-	crypto_aegis128l_aesni_process_crypt(&state, req, ops);
++	crypto_aegis128l_aesni_process_crypt(&state, &walk, ops);
+ 	crypto_aegis128l_aesni_final(&state, tag_xor, req->assoclen, cryptlen);
+ 
+ 	kernel_fpu_end();
+--- a/arch/x86/crypto/aegis256-aesni-glue.c
++++ b/arch/x86/crypto/aegis256-aesni-glue.c
+@@ -119,31 +119,20 @@ static void crypto_aegis256_aesni_proces
+ }
+ 
+ static void crypto_aegis256_aesni_process_crypt(
+-		struct aegis_state *state, struct aead_request *req,
++		struct aegis_state *state, struct skcipher_walk *walk,
+ 		const struct aegis_crypt_ops *ops)
+ {
+-	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize, base;
+-
+-	ops->skcipher_walk_init(&walk, req, false);
+-
+-	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
+-
+-		ops->crypt_blocks(state, chunksize, src, dst);
+-
+-		base = chunksize & ~(AEGIS256_BLOCK_SIZE - 1);
+-		src += base;
+-		dst += base;
+-		chunksize &= AEGIS256_BLOCK_SIZE - 1;
+-
+-		if (chunksize > 0)
+-			ops->crypt_tail(state, chunksize, src, dst);
++	while (walk->nbytes >= AEGIS256_BLOCK_SIZE) {
++		ops->crypt_blocks(state,
++				  round_down(walk->nbytes, AEGIS256_BLOCK_SIZE),
++				  walk->src.virt.addr, walk->dst.virt.addr);
++		skcipher_walk_done(walk, walk->nbytes % AEGIS256_BLOCK_SIZE);
++	}
+ 
+-		skcipher_walk_done(&walk, 0);
++	if (walk->nbytes) {
++		ops->crypt_tail(state, walk->nbytes, walk->src.virt.addr,
++				walk->dst.virt.addr);
++		skcipher_walk_done(walk, 0);
+ 	}
+ }
+ 
+@@ -186,13 +175,16 @@ static void crypto_aegis256_aesni_crypt(
+ {
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct aegis_ctx *ctx = crypto_aegis256_aesni_ctx(tfm);
++	struct skcipher_walk walk;
+ 	struct aegis_state state;
+ 
++	ops->skcipher_walk_init(&walk, req, true);
++
+ 	kernel_fpu_begin();
+ 
+ 	crypto_aegis256_aesni_init(&state, ctx->key, req->iv);
+ 	crypto_aegis256_aesni_process_ad(&state, req->src, req->assoclen);
+-	crypto_aegis256_aesni_process_crypt(&state, req, ops);
++	crypto_aegis256_aesni_process_crypt(&state, &walk, ops);
+ 	crypto_aegis256_aesni_final(&state, tag_xor, req->assoclen, cryptlen);
+ 
+ 	kernel_fpu_end();
 
 
