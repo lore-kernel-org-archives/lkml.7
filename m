@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D863CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256F1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A472192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E8C204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255967;
-	bh=99IKQ3xNW0QANt7KjAjWBDrMUnlkI7P9qvJmh1Ix6lU=;
+	s=default; t=1553255974;
+	bh=HoGVdYJ7B+TLLgmwFxTRG5ihe+SS6NjAF07znru19LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTFLnn5i2A5aRbzPUz42XsjGDE8rQP1GlIHQHfjeM1etIPPW/JJRGDphnuK0HNdmL
-	 2ACO+RySuNvO353wwQRl6wrEVZNr0tlLtuBDyQwBpgc1bZqa/eke+Dh2EKIYJec7SL
-	 QbCZP/K0J5Mrs0uvPYqHHtHPUs4ZegARxCVaacts=
+	b=nIof++kEHIiKyprmP+9x67y70HWcmcu4u4PqoAFE1vBoK009JvRlQi80ANnx/+8LF
+	 OxBshpb41+gkuZOUkxo0ptUQTSTAu1efckfQc1Te3URqdPuGW0IVdyQO9h1QzP9pcA
+	 ICFgtxHgntiii7INYvoa5g9Blmsm4C/3lnmlGwq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfCVL70 (ORCPT
+        id S2387976AbfCVL7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbfCVL7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:59:25 -0400
+        id S1733301AbfCVL73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:59:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CDE120830;
-        Fri, 22 Mar 2019 11:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 233F420830;
+        Fri, 22 Mar 2019 11:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255964;
-        bh=99IKQ3xNW0QANt7KjAjWBDrMUnlkI7P9qvJmh1Ix6lU=;
+        s=default; t=1553255968;
+        bh=HoGVdYJ7B+TLLgmwFxTRG5ihe+SS6NjAF07znru19LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQ6CSUnxfFytLNz30FhnWBZysK9R/kLH3S4jC86Jis8okK+lyFMwGIVD4J4OxDNAA
-         CaSFjnjYc+OLfmm1i/m0Wg03mfISUrZpW/shoWhppclv253uvIrc9nakS64+EY13Kx
-         LUIVQiw87feX5NbrNbcQ6g5TWpXdW+fOHzFYTP1s=
+        b=j7AI87z3cJWKVsOwwOCUWXhfrmItF6NNel1+4ypu6kpwOS2pRnEGIBVcZi25UZg6+
+         c7XXKf8WXd0LLbLVK5AkURfmVnZbU0sCWLnEz0+FzZpL22vXwzzrLpTSb2IFYDusU2
+         +xVQo50gfcQt+ZNCIdX9SXMwF+bl2zwpRqC6SRWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/280] arm/arm64: KVM: Dont panic on failure to properly reset system registers
-Date:   Fri, 22 Mar 2019 12:13:13 +0100
-Message-Id: <20190322111308.572048233@linuxfoundation.org>
+Subject: [PATCH 4.19 061/280] mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs
+Date:   Fri, 22 Mar 2019 12:13:34 +0100
+Message-Id: <20190322111309.703910508@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,50 +66,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 20589c8cc47dce5854c8bf1b44a9fc63d798d26d ]
+[ Upstream commit 2c2ade81741c66082f8211f0b96cf509cc4c0218 ]
 
-Failing to properly reset system registers is pretty bad. But not
-quite as bad as bringing the whole machine down... So warn loudly,
-but slightly more gracefully.
+The basic idea behind ->pagecnt_bias is: If we pre-allocate the maximum
+number of references that we might need to create in the fastpath later,
+the bump-allocation fastpath only has to modify the non-atomic bias value
+that tracks the number of extra references we hold instead of the atomic
+refcount. The maximum number of allocations we can serve (under the
+assumption that no allocation is made with size 0) is nc->size, so that's
+the bias used.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+However, even when all memory in the allocation has been given away, a
+reference to the page is still held; and in the `offset < 0` slowpath, the
+page may be reused if everyone else has dropped their references.
+This means that the necessary number of references is actually
+`nc->size+1`.
+
+Luckily, from a quick grep, it looks like the only path that can call
+page_frag_alloc(fragsz=1) is TAP with the IFF_NAPI_FRAGS flag, which
+requires CAP_NET_ADMIN in the init namespace and is only intended to be
+used for kernel testing and fuzzing.
+
+To test for this issue, put a `WARN_ON(page_ref_count(page) == 0)` in the
+`offset < 0` path, below the virt_to_page() call, and then repeatedly call
+writev() on a TAP device with IFF_TAP|IFF_NO_PI|IFF_NAPI_FRAGS|IFF_NAPI,
+with a vector consisting of 15 elements containing 1 byte each.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/coproc.c     | 4 ++--
- arch/arm64/kvm/sys_regs.c | 8 +++++---
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ mm/page_alloc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/kvm/coproc.c b/arch/arm/kvm/coproc.c
-index cb094e55dc5f..fd6cde23bb5d 100644
---- a/arch/arm/kvm/coproc.c
-+++ b/arch/arm/kvm/coproc.c
-@@ -1450,6 +1450,6 @@ void kvm_reset_coprocs(struct kvm_vcpu *vcpu)
- 	reset_coproc_regs(vcpu, table, num);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index a9de1dbb9a6c..ef99971c13dd 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4532,11 +4532,11 @@ refill:
+ 		/* Even if we own the page, we do not use atomic_set().
+ 		 * This would break get_page_unless_zero() users.
+ 		 */
+-		page_ref_add(page, size - 1);
++		page_ref_add(page, size);
  
- 	for (num = 1; num < NR_CP15_REGS; num++)
--		if (vcpu_cp15(vcpu, num) == 0x42424242)
--			panic("Didn't reset vcpu_cp15(vcpu, %zi)", num);
-+		WARN(vcpu_cp15(vcpu, num) == 0x42424242,
-+		     "Didn't reset vcpu_cp15(vcpu, %zi)", num);
- }
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 22fbbdbece3c..fe18e68f9a20 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -2586,7 +2586,9 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
- 	table = get_target_table(vcpu->arch.target, true, &num);
- 	reset_sys_reg_descs(vcpu, table, num);
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pfmemalloc = page_is_pfmemalloc(page);
+-		nc->pagecnt_bias = size;
++		nc->pagecnt_bias = size + 1;
+ 		nc->offset = size;
+ 	}
  
--	for (num = 1; num < NR_SYS_REGS; num++)
--		if (__vcpu_sys_reg(vcpu, num) == 0x4242424242424242)
--			panic("Didn't reset __vcpu_sys_reg(%zi)", num);
-+	for (num = 1; num < NR_SYS_REGS; num++) {
-+		if (WARN(__vcpu_sys_reg(vcpu, num) == 0x4242424242424242,
-+			 "Didn't reset __vcpu_sys_reg(%zi)\n", num))
-+			break;
-+	}
- }
+@@ -4552,10 +4552,10 @@ refill:
+ 		size = nc->size;
+ #endif
+ 		/* OK, page count is 0, we can safely set it */
+-		set_page_count(page, size);
++		set_page_count(page, size + 1);
+ 
+ 		/* reset page count bias and offset to start of new frag */
+-		nc->pagecnt_bias = size;
++		nc->pagecnt_bias = size + 1;
+ 		offset = size - fragsz;
+ 	}
+ 
 -- 
 2.19.1
 
