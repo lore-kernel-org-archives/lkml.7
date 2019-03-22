@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F412FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB0C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E242192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BF6218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253957;
-	bh=dVB8mm9g7TXmk6jyHWAgK5L53uSn/G/vQak8mKzg7kA=;
+	s=default; t=1553253961;
+	bh=BIwZQAgvAnuHma6nyVqHMimjZ6ojK2I8nmW2OjQ5CW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04y62xRNPEIhJy7hYaTjb89IU/XwShkmRYfQwY4TVxf3ypy/KgFf+YzK96VvWBQYP
-	 LV+oXp5SM8NZWCkyIMb1o5z4uy6CFMK7v7ILxk3+zhaEgY3Iw3gxVtLMqmntEEF+Ik
-	 YwhxCN2DgUpBwpSrFvFxU/HjpAqrNfF14KAnD/64=
+	b=JbUuKKul8fisYiLfCVwdJaldb5Y3qNGTtyw2cKNsCIDCMbHX5jjFCmWh6WbUWXk7G
+	 ZyZcV0Wk0qVod0ESVkExNzTxI1dmCQsVC7JXY9+Y6lsE6od93iNuhzND/sETIcFR2k
+	 JPTQW15x6IBR7uOQ0L8nrDHIZxDEAjsdwQC97kaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfCVLZ4 (ORCPT
+        id S1729372AbfCVLZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53512 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbfCVLZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:55 -0400
+        id S1727904AbfCVLZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23CBF21916;
-        Fri, 22 Mar 2019 11:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE404218B0;
+        Fri, 22 Mar 2019 11:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253954;
-        bh=dVB8mm9g7TXmk6jyHWAgK5L53uSn/G/vQak8mKzg7kA=;
+        s=default; t=1553253957;
+        bh=BIwZQAgvAnuHma6nyVqHMimjZ6ojK2I8nmW2OjQ5CW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgTzBGBGF+r07d4F53nKd2IBib3fWqdTMqEHwFLQPxq3bjpB10ZE87rYn5p7xxWdz
-         QTpQhe8sBVuyN8D2mEdu3uPsG2/ZTWI3lzz2eAIp7CnASFP0lGOhlch+bQLwxW8AnG
-         U1cPLzdkW/Fq+yLFqNQ82UEQYPXI+qzLXCiPLFUQ=
+        b=PjH44T/t+nv/ekxG1Yk4s2BGEjOvL1sinlmEtc2EBcuh5pvMBOSVQr7gU8kKYgtuX
+         4i0lF3Xj9ULxgwrxkS90bEolxtht9aTwd3kPpMeBRAKp3s+PFraK5MiNQd10UdKEbo
+         u//Imt/oSl1EsKYztddAm43isl9Y60iJJwEnMHmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        QiaoChong <qiaochong@loongson.cn>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 3.18 122/134] parport_pc: fix find_superio io compare code, should use equal test.
-Date:   Fri, 22 Mar 2019 12:15:35 +0100
-Message-Id: <20190322111219.245634038@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 3.18 123/134] jbd2: clear dirty flag when revoking a buffer from an older transaction
+Date:   Fri, 22 Mar 2019 12:15:36 +0100
+Message-Id: <20190322111219.326191364@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,40 +64,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: QiaoChong <qiaochong@loongson.cn>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 21698fd57984cd28207d841dbdaa026d6061bceb upstream.
+commit 904cdbd41d749a476863a0ca41f6f396774f26e4 upstream.
 
-In the original code before 181bf1e815a2 the loop was continuing until
-it finds the first matching superios[i].io and p->base.
-But after 181bf1e815a2 the logic changed and the loop now returns the
-pointer to the first mismatched array element which is then used in
-get_superio_dma() and get_superio_irq() and thus returning the wrong
-value.
-Fix the condition so that it now returns the correct pointer.
+Now, we capture a data corruption problem on ext4 while we're truncating
+an extent index block. Imaging that if we are revoking a buffer which
+has been journaled by the committing transaction, the buffer's jbddirty
+flag will not be cleared in jbd2_journal_forget(), so the commit code
+will set the buffer dirty flag again after refile the buffer.
 
-Fixes: 181bf1e815a2 ("parport_pc: clean up the modified while loops using for")
-Cc: Alan Cox <alan@linux.intel.com>
+fsx                               kjournald2
+                                  jbd2_journal_commit_transaction
+jbd2_journal_revoke                commit phase 1~5...
+ jbd2_journal_forget
+   belongs to older transaction    commit phase 6
+   jbddirty not clear               __jbd2_journal_refile_buffer
+                                     __jbd2_journal_unfile_buffer
+                                      test_clear_buffer_jbddirty
+                                       mark_buffer_dirty
+
+Finally, if the freed extent index block was allocated again as data
+block by some other files, it may corrupt the file data after writing
+cached pages later, such as during unmount time. (In general,
+clean_bdev_aliases() related helpers should be invoked after
+re-allocation to prevent the above corruption, but unfortunately we
+missed it when zeroout the head of extra extent blocks in
+ext4_ext_handle_unwritten_extents()).
+
+This patch mark buffer as freed and set j_next_transaction to the new
+transaction when it already belongs to the committing transaction in
+jbd2_journal_forget(), so that commit code knows it should clear dirty
+bits when it is done with the buffer.
+
+This problem can be reproduced by xfstests generic/455 easily with
+seeds (3246 3247 3248 3249).
+
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@vger.kernel.org
-Signed-off-by: QiaoChong <qiaochong@loongson.cn>
-[rewrite the commit message]
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parport/parport_pc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/transaction.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/parport/parport_pc.c
-+++ b/drivers/parport/parport_pc.c
-@@ -1377,7 +1377,7 @@ static struct superio_struct *find_super
- {
- 	int i;
- 	for (i = 0; i < NR_SUPERIOS; i++)
--		if (superios[i].io != p->base)
-+		if (superios[i].io == p->base)
- 			return &superios[i];
- 	return NULL;
- }
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1473,14 +1473,21 @@ int jbd2_journal_forget (handle_t *handl
+ 		/* However, if the buffer is still owned by a prior
+ 		 * (committing) transaction, we can't drop it yet... */
+ 		JBUFFER_TRACE(jh, "belongs to older transaction");
+-		/* ... but we CAN drop it from the new transaction if we
+-		 * have also modified it since the original commit. */
++		/* ... but we CAN drop it from the new transaction through
++		 * marking the buffer as freed and set j_next_transaction to
++		 * the new transaction, so that not only the commit code
++		 * knows it should clear dirty bits when it is done with the
++		 * buffer, but also the buffer can be checkpointed only
++		 * after the new transaction commits. */
+ 
+-		if (jh->b_next_transaction) {
+-			J_ASSERT(jh->b_next_transaction == transaction);
++		set_buffer_freed(bh);
++
++		if (!jh->b_next_transaction) {
+ 			spin_lock(&journal->j_list_lock);
+-			jh->b_next_transaction = NULL;
++			jh->b_next_transaction = transaction;
+ 			spin_unlock(&journal->j_list_lock);
++		} else {
++			J_ASSERT(jh->b_next_transaction == transaction);
+ 
+ 			/*
+ 			 * only drop a reference if this transaction modified
 
 
