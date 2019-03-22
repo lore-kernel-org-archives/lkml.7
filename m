@@ -7,47 +7,58 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FF7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB65620850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E772195D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255894;
-	bh=rMKl+uHl9JDVW1O2rw/6StSy5cJmjt4XGIL2ulQNiJE=;
+	s=default; t=1553255898;
+	bh=7VieeIoHCGgo+vw6Zaam26iIruZvmZVmE+n5jqxPOOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJCdHHE4Ezu7rF5poy2BF966ZQO1QgpSwdOgNNu/711BcaDlXTumAAoAUqHQZH+hy
-	 hRpiy3rTb5FYGPqAgn6kjmNaHk1Ql91tiT7rMgRvsJfuAg8l6E67YutH2iBXsRKgCO
-	 JEonMlIu/y4SLUDHkM4doxiagtVrS64bkHDfDD9o=
+	b=JkRbXum5N0PEKAUVxx+Fk6kI9DcLqm8vdO9FX698ufi320KWVvafbKJTgWl/QphFE
+	 CJsFlFfF6w73HHwbM2mRhiBtr9gesK6U1e6aToEZP+yDGA1/xKuMr4If3QjrPURCxr
+	 lzNOxFge6xF+eJTO5A+jQi2NHxzTtVe/f9v6KZDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbfCVL6N (ORCPT
+        id S2387796AbfCVL6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34740 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387773AbfCVL6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:09 -0400
+        id S2387779AbfCVL6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3442020850;
-        Fri, 22 Mar 2019 11:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC7521939;
+        Fri, 22 Mar 2019 11:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255888;
-        bh=rMKl+uHl9JDVW1O2rw/6StSy5cJmjt4XGIL2ulQNiJE=;
+        s=default; t=1553255891;
+        bh=7VieeIoHCGgo+vw6Zaam26iIruZvmZVmE+n5jqxPOOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJow4FGJhdBzO5QVoeaEJu1X6+IEO++KxK7MNRt9/FUKmk8KTDROtmWoMHdm2sY2I
-         OTVpjovlC11z5mxKgBUOciYC+Et99bbHbwdrxyiZYdGlgqavrSinKB8kpw1KUiB3U7
-         sQa5q7PG8rMyXYcHWZr3lutZeQRU2FlkzJ00a5+A=
+        b=uBJqwTPOQ0+MEpYVYhap9N9tyDiM0Xqo9cXzbhlecqJks4HhGyCszZRqGJheyux38
+         fhWAPKOxuAfYWXlRIpw+vbaTSFi1Qz+0qAwDhZCLKqMkHRulTj3pkrJTc42EQFMt/Y
+         6PXFpG2QqBKBzo+Ot5zlluWuzGNTxcMad2CaK9aI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/280] ASoC: rt5682: Correct the setting while select ASRC clk for AD/DA filter
-Date:   Fri, 22 Mar 2019 12:13:00 +0100
-Message-Id: <20190322111307.825134270@linuxfoundation.org>
+Subject: [PATCH 4.19 028/280] clocksource: timer-ti-dm: Fix pwm dmtimer usage of fck reparenting
+Date:   Fri, 22 Mar 2019 12:13:01 +0100
+Message-Id: <20190322111307.876230024@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,33 +77,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8077ec011b1ea26abb7ca786f28ecccfb352717f ]
+[ Upstream commit 983a5a43ec254cd5ddf3254db80ca96e8f8bb2a4 ]
 
-AD/DA ASRC function control two ASRC clock sources separately.
-Whether AD/DA filter select which clock source, we enable AD/DA ASRC
-function for all cases.
+Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
+them with ti-sysc") moved some omap4 timers to probe with ti-sysc
+interconnect target module. Turns out this broke pwm-omap-dmtimer
+where we now try to reparent the clock to itself with the following:
 
-Signed-off-by: Shuming Fan <shumingf@realtek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+omap_dm_timer_of_set_source: failed to set parent
+
+With ti-sysc, we can now configure the clock sources in the dts
+with assigned-clocks and assigned-clock-parents. So we should be able
+to remove omap_dm_timer_of_set_source with clean-up patches later on.
+But for now, let's just fix it first by checking if parent and fck
+are the same and bail out of so.
+
+Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Tested-By: Andreas Kemnade <andreas@kemnade.info>
+Tested-By: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5682.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/timer-ti-dm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index afe7d5b19313..79ebcc239786 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -1757,7 +1757,9 @@ static const struct snd_soc_dapm_route rt5682_dapm_routes[] = {
- 	{"ADC Stereo1 Filter", NULL, "ADC STO1 ASRC", is_using_asrc},
- 	{"DAC Stereo1 Filter", NULL, "DAC STO1 ASRC", is_using_asrc},
- 	{"ADC STO1 ASRC", NULL, "AD ASRC"},
-+	{"ADC STO1 ASRC", NULL, "DA ASRC"},
- 	{"ADC STO1 ASRC", NULL, "CLKDET"},
-+	{"DAC STO1 ASRC", NULL, "AD ASRC"},
- 	{"DAC STO1 ASRC", NULL, "DA ASRC"},
- 	{"DAC STO1 ASRC", NULL, "CLKDET"},
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 4cce6b224b87..3ecf84706640 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -154,6 +154,10 @@ static int omap_dm_timer_of_set_source(struct omap_dm_timer *timer)
+ 	if (IS_ERR(parent))
+ 		return -ENODEV;
  
++	/* Bail out if both clocks point to fck */
++	if (clk_is_match(parent, timer->fclk))
++		return 0;
++
+ 	ret = clk_set_parent(timer->fclk, parent);
+ 	if (ret < 0)
+ 		pr_err("%s: failed to set parent\n", __func__);
 -- 
 2.19.1
 
