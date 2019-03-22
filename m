@@ -2,74 +2,102 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BECC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0682190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OdFbo4mX"
+	by mail.kernel.org (Postfix) with ESMTP id 049732083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfCVPX1 (ORCPT
+        id S1727227AbfCVPXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:23:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45674 "EHLO mail.skyhub.de"
+        Fri, 22 Mar 2019 11:23:40 -0400
+Received: from fieldses.org ([173.255.197.46]:52468 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbfCVPX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:23:26 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 80B1E1EC00FF;
-        Fri, 22 Mar 2019 16:23:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553268205;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=qRw4iZkAziOv6VmeiqfOrJRVJ3BZJo1nZAdArkjjySI=;
-        b=OdFbo4mXX6DMTdzVtnksS1CkWWDghcnU5dBr12PYq3Mcf4rm/KX09ahhFJaimYEzHituT/
-        JlT6onfY0xZ5GKCyC0xsqCr3vg+eLa9PVQFoWV3CSPIhjWwCULLl/7O/iZF1P7nhpToDBJ
-        m/cSvrxMItdCLcuBD8gT24yJL3RagbE=
-Date:   Fri, 22 Mar 2019 16:23:28 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
-Message-ID: <20190322152328.GD12472@zn.tnic>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+        id S1726440AbfCVPXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:23:40 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C9B011B90; Fri, 22 Mar 2019 11:23:39 -0400 (EDT)
+Date:   Fri, 22 Mar 2019 11:23:39 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: avoid uninitialized variable warning
+Message-ID: <20190322152339.GA7692@fieldses.org>
+References: <20190322140726.251521-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322140726.251521-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
-> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> in the early parsing code tries to search RSDP from EFI table but
-> whose address is virtual.
+On Fri, Mar 22, 2019 at 03:07:11PM +0100, Arnd Bergmann wrote:
+> clang warns that 'contextlen' may be accessed without an initialization:
 > 
-> Since kexec(1) provides physical address of config_table via boot_params,
-> efi_get_rsdp_addr() should look for setup_data in the same way as
-> efi_systab_init() in arch/x86/platform/efi/efi.c does.
+> fs/nfsd/nfs4xdr.c:2911:9: error: variable 'contextlen' is uninitialized when used here [-Werror,-Wuninitialized]
+>                                                                 contextlen);
+>                                                                 ^~~~~~~~~~
+> fs/nfsd/nfs4xdr.c:2424:16: note: initialize the variable 'contextlen' to silence this warning
+>         int contextlen;
+>                       ^
+>                        = 0
+> 
+> Presumably this cannot happen, as FATTR4_WORD2_SECURITY_LABEL is
+> set if CONFIG_NFSD_V4_SECURITY_LABEL is enabled.
+> Adding another #ifdef like the other two in this function
+> avoids the warning.
 
-If the kexec kernel should continue to use efi_systab_init() then you
-should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+Thanks, applied.--b.
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  fs/nfsd/nfs4xdr.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 3de42a729093..a3a3455826aa 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2420,8 +2420,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  	__be32 status;
+>  	int err;
+>  	struct nfs4_acl *acl = NULL;
+> +#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+>  	void *context = NULL;
+>  	int contextlen;
+> +#endif
+>  	bool contextsupport = false;
+>  	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+>  	u32 minorversion = resp->cstate.minorversion;
+> @@ -2906,12 +2908,14 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
+>  	}
+>  
+> +#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+>  	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
+>  		status = nfsd4_encode_security_label(xdr, rqstp, context,
+>  								contextlen);
+>  		if (status)
+>  			goto out;
+>  	}
+> +#endif
+>  
+>  	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
+>  	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
+> -- 
+> 2.20.0
