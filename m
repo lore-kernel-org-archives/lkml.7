@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D78C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88822C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71472082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FA32082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259161;
-	bh=grX2bnu+Nwhwj/5lAimFXl0InQlOYMtVi/84HW2l6Cw=;
+	s=default; t=1553259190;
+	bh=YdAQcg1fpGC9IqiqWJvRXCnl8LyHiQ80G3hMp+8r56A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lnyeOLP8SQm+Y+WartU7ZXHkTQYuDWqbGpjRcqwtmGk3L99ZnKO69R5dDCyHGcwf3
-	 +u35VGCV99EF14+56yPXijqJOVysEx9lvJ6YFneuBpsnIcCGxKSTL4YutXkb3v80sY
-	 pEH4MDhsH2+QMlSzyRQscsL+dLl4hDRzJO8omwOg=
+	b=QHtXoT/J94npYBcoM5qLto/YgYVjeV4hI3+xVU1OxSw9NEaz/e0/E+lq60PMtUCDI
+	 /Ewsc/LkZleTtR/A/uIPmdqDASbABGLOJqis/pXq7/g3bivwo92xJbz4PVlCkO1Wye
+	 djtCuf/Ft86iePPLs5bikOMUMW08cesxhX7I19Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733189AbfCVMwk (ORCPT
+        id S1732895AbfCVLw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729567AbfCVLxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:06 -0400
+        id S1732886AbfCVLwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 293F02192D;
-        Fri, 22 Mar 2019 11:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB89B2082C;
+        Fri, 22 Mar 2019 11:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255584;
-        bh=grX2bnu+Nwhwj/5lAimFXl0InQlOYMtVi/84HW2l6Cw=;
+        s=default; t=1553255542;
+        bh=YdAQcg1fpGC9IqiqWJvRXCnl8LyHiQ80G3hMp+8r56A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weasaZlDKi8AvEu2Q7tpi2qQ7E6xkUOjSLCcAh0tlfn0Rt428wVqY5ZfU5t952vwX
-         eF3+RV6lTphg+d3nhqchRrXb+8QjKH1n1QFb1vbVsdCW8SM4ZSUTSQoQF0sZd3TP9B
-         iBuuAxfSiNjz7ocLqdFrv2xDc4svjnIOTpHRsQ20=
+        b=mxxFpGzHcfGiXiL3pACwj+TYGo52CeF34nnb+sd/RSzZJ40h5pEh7otjvQeygIQzu
+         BUfGAf+M60Znq/IcIjFuCJSotOgoSSLExG2l03lLH+UQqV/V0hBbzYCnz9GI4ksS+f
+         TPDeWOLlmxmqSJkcvDJM86VNXeRqdqA/jF9ZQwls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.14 117/183] clk: clk-twl6040: Fix imprecise external abort for pdmclk
-Date:   Fri, 22 Mar 2019 12:15:45 +0100
-Message-Id: <20190322111250.187233537@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Joe Perches <joe@perches.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 123/183] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
+Date:   Fri, 22 Mar 2019 12:15:51 +0100
+Message-Id: <20190322111250.625475067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,117 +70,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tony Lindgren <tony@atomide.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 5ae51d67aec95f6f9386aa8dd5db424964895575 upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-I noticed that modprobe clk-twl6040 can fail after a cold boot with:
-abe_cm:clk:0010:0: failed to enable
-...
-Unhandled fault: imprecise external abort (0x1406) at 0xbe896b20
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-WARNING: CPU: 1 PID: 29 at drivers/clk/clk.c:828 clk_core_disable_lock+0x18/0x24
-...
-(clk_core_disable_lock) from [<c0123534>] (_disable_clocks+0x18/0x90)
-(_disable_clocks) from [<c0124040>] (_idle+0x17c/0x244)
-(_idle) from [<c0125ad4>] (omap_hwmod_idle+0x24/0x44)
-(omap_hwmod_idle) from [<c053a038>] (sysc_runtime_suspend+0x48/0x108)
-(sysc_runtime_suspend) from [<c06084c4>] (__rpm_callback+0x144/0x1d8)
-(__rpm_callback) from [<c0608578>] (rpm_callback+0x20/0x80)
-(rpm_callback) from [<c0607034>] (rpm_suspend+0x120/0x694)
-(rpm_suspend) from [<c0607a78>] (__pm_runtime_idle+0x60/0x84)
-(__pm_runtime_idle) from [<c053aaf0>] (sysc_probe+0x874/0xf2c)
-(sysc_probe) from [<c05fecd4>] (platform_drv_probe+0x48/0x98)
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-After searching around for a similar issue, I came across an earlier fix
-that never got merged upstream in the Android tree for glass-omap-xrr02.
-There is patch "MFD: twl6040-codec: Implement PDMCLK cold temp errata"
-by Misael Lopez Cruz <misael.lopez@ti.com>.
+The following code pattern example should trigger an oops:
 
-Based on my observations, this fix is also needed when cold booting
-devices, and not just for deeper idle modes. Since we now have a clock
-driver for pdmclk, let's fix the issue in twl6040_pdmclk_prepare().
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
 
-Cc: Misael Lopez Cruz <misael.lopez@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
+
+        return remap_vmalloc_range(vma, mem, 0);
+  }
+
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk-twl6040.c |   53 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/clk-twl6040.c
-+++ b/drivers/clk/clk-twl6040.c
-@@ -41,6 +41,43 @@ static int twl6040_pdmclk_is_prepared(st
- 	return pdmclk->enabled;
- }
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2262,7 +2262,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
+ 		return -EINVAL;
  
-+static int twl6040_pdmclk_reset_one_clock(struct twl6040_pdmclk *pdmclk,
-+					  unsigned int reg)
-+{
-+	const u8 reset_mask = TWL6040_HPLLRST;	/* Same for HPPLL and LPPLL */
-+	int ret;
-+
-+	ret = twl6040_set_bits(pdmclk->twl6040, reg, reset_mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = twl6040_clear_bits(pdmclk->twl6040, reg, reset_mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * TWL6040A2 Phoenix Audio IC erratum #6: "PDM Clock Generation Issue At
-+ * Cold Temperature". This affects cold boot and deeper idle states it
-+ * seems. The workaround consists of resetting HPPLL and LPPLL.
-+ */
-+static int twl6040_pdmclk_quirk_reset_clocks(struct twl6040_pdmclk *pdmclk)
-+{
-+	int ret;
-+
-+	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_HPPLLCTL);
-+	if (ret)
-+		return ret;
-+
-+	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_LPPLLCTL);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int twl6040_pdmclk_prepare(struct clk_hw *hw)
- {
- 	struct twl6040_pdmclk *pdmclk = container_of(hw, struct twl6040_pdmclk,
-@@ -48,8 +85,20 @@ static int twl6040_pdmclk_prepare(struct
- 	int ret;
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
  
- 	ret = twl6040_power(pdmclk->twl6040, 1);
--	if (!ret)
--		pdmclk->enabled = 1;
-+	if (ret)
-+		return ret;
-+
-+	ret = twl6040_pdmclk_quirk_reset_clocks(pdmclk);
-+	if (ret)
-+		goto out_err;
-+
-+	pdmclk->enabled = 1;
-+
-+	return 0;
-+
-+out_err:
-+	dev_err(pdmclk->dev, "%s: error %i\n", __func__, ret);
-+	twl6040_power(pdmclk->twl6040, 0);
- 
- 	return ret;
- }
+ 	do {
 
 
