@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324ABC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F041C21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EFC2192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256273;
-	bh=75LcOqD5FzkA5yiD5y/jYnOWf1B9Iu8ZuoAyGYoX4No=;
+	s=default; t=1553256281;
+	bh=vprQ4Uqu6DcR1uDbw/86Ts8/f93E3icdcF7atHaZCyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZrxGHCj7J8Ie7Y9sH+tHQPzML/MzJwtzTDDhnGsiUrXkJna9yWjZHs3ZV10g9v/Sa
-	 Cvue+nHtSl1xS76SNTQ5xwfAQ30fKgzWhR3cQdDyU3V1P/J4OWw4s4a0gTZ1ONpFn6
-	 gm/M/jl1U8EnlEVkNqO4lIEZxgz9wY4ALBU+lc18=
+	b=RTb2CvG1xvb1l7YIqx2zOEV3pPhBTRGgyg2hOmuDLGzDanCbFkr3mbRUvzI/5tXWt
+	 HsMloCZXXAmjtGNb04jEpURit/CUdDYafU+xpNMnBj6563kh4K8y8PJbEwJ8gA6dL/
+	 Dd1mE3DdarrsB7pcubYmKJYogbJztu/4v+rKQmCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388682AbfCVMEb (ORCPT
+        id S2388709AbfCVMEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388316AbfCVME3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:29 -0400
+        id S2388685AbfCVMEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB6621939;
-        Fri, 22 Mar 2019 12:04:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D91CE2195D;
+        Fri, 22 Mar 2019 12:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256268;
-        bh=75LcOqD5FzkA5yiD5y/jYnOWf1B9Iu8ZuoAyGYoX4No=;
+        s=default; t=1553256275;
+        bh=vprQ4Uqu6DcR1uDbw/86Ts8/f93E3icdcF7atHaZCyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHdBZq0yV1pajHNX9A6/gI395t0BYyqpn3TorpzlLoAGdGU8mww3U942dL2QklF47
-         jglCXBvqa96Mz3TMWgRd5ZJ209C9NQqpQm0hjKG9dPFluFklKeWubNzok/O/FKGKa5
-         Yoch7NTDbZPWgg8Ly9XCQfYVBKF0d97CBL2UguH0=
+        b=CHcqEwBPeLUBew5rv6iT/gz7CO6CUsjWTikb9rK5qLoMV6sBbfxf5VOlIOK4qFTFO
+         bc3ZiPMrVgNTZK06rVLJ9bor97ef3tp6brs42V1w7nR8eXhT0viFFEyG+cd5CFtebv
+         UErbJaUtsC/iOzhduNfq++fPHRdpXMJsXQoC6gz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org,
+        Christoph Anton Mitterer <calestyo@scientia.net>,
+        Christoph Hellwig <hch@lst.de>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 158/280] scsi: virtio_scsi: dont send sc payload with tmfs
-Date:   Fri, 22 Mar 2019 12:15:11 +0100
-Message-Id: <20190322111321.867627517@linuxfoundation.org>
+Subject: [PATCH 4.19 160/280] scsi: sd: Optimal I/O size should be a multiple of physical block size
+Date:   Fri, 22 Mar 2019 12:15:13 +0100
+Message-Id: <20190322111322.300459318@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,63 +67,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
+commit a83da8a4509d3ebfe03bb7fffce022e4d5d4764f upstream.
 
-The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
-device-readable records and a single device-writable response entry:
+It was reported that some devices report an OPTIMAL TRANSFER LENGTH of
+0xFFFF blocks. That looks bogus, especially for a device with a
+4096-byte physical block size.
 
-    struct virtio_scsi_ctrl_tmf
-    {
-        // Device-readable part
-        le32 type;
-        le32 subtype;
-        u8 lun[8];
-        le64 id;
-        // Device-writable part
-        u8 response;
-    }
+Ignore OPTIMAL TRANSFER LENGTH if it is not a multiple of the device's
+reported physical block size.
 
-The above should be organised as two descriptor entries (or potentially
-more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
-id" or after "u8 response".
+To make the sanity checking conditionals more readable--and to
+facilitate printing warnings--relocate the checking to a helper
+function. No functional change aside from the printks.
 
-The Linux driver doesn't respect that, with virtscsi_abort() and
-virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
-results in the original scsi command payload (or writable buffers) added to
-the tmf.
-
-This fixes the problem by leaving cmd->sc zeroed out, which makes
-virtscsi_kick_cmd() add the tmf to the control vq without any payload.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199759
+Reported-by: Christoph Anton Mitterer <calestyo@scientia.net>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/virtio_scsi.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/sd.c |   59 +++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 9 deletions(-)
 
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -621,7 +621,6 @@ static int virtscsi_device_reset(struct
- 		return FAILED;
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3066,6 +3066,55 @@ static void sd_read_security(struct scsi
+ 		sdkp->security = 1;
+ }
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = cpu_to_virtio32(vscsi->vdev,
-@@ -680,7 +679,6 @@ static int virtscsi_abort(struct scsi_cm
- 		return FAILED;
++/*
++ * Determine the device's preferred I/O size for reads and writes
++ * unless the reported value is unreasonably small, large, not a
++ * multiple of the physical block size, or simply garbage.
++ */
++static bool sd_validate_opt_xfer_size(struct scsi_disk *sdkp,
++				      unsigned int dev_max)
++{
++	struct scsi_device *sdp = sdkp->device;
++	unsigned int opt_xfer_bytes =
++		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
++
++	if (sdkp->opt_xfer_blocks > dev_max) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> dev_max (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, dev_max);
++		return false;
++	}
++
++	if (sdkp->opt_xfer_blocks > SD_DEF_XFER_BLOCKS) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> sd driver limit (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, SD_DEF_XFER_BLOCKS);
++		return false;
++	}
++
++	if (opt_xfer_bytes < PAGE_SIZE) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes < " \
++				"PAGE_SIZE (%u bytes)\n",
++				opt_xfer_bytes, (unsigned int)PAGE_SIZE);
++		return false;
++	}
++
++	if (opt_xfer_bytes & (sdkp->physical_block_size - 1)) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes not a " \
++				"multiple of physical block size (%u bytes)\n",
++				opt_xfer_bytes, sdkp->physical_block_size);
++		return false;
++	}
++
++	sd_first_printk(KERN_INFO, sdkp, "Optimal transfer size %u bytes\n",
++			opt_xfer_bytes);
++	return true;
++}
++
+ /**
+  *	sd_revalidate_disk - called the first time a new disk is seen,
+  *	performs disk spin up, read_capacity, etc.
+@@ -3144,15 +3193,7 @@ static int sd_revalidate_disk(struct gen
+ 	dev_max = min_not_zero(dev_max, sdkp->max_xfer_blocks);
+ 	q->limits.max_dev_sectors = logical_to_sectors(sdp, dev_max);
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
+-	/*
+-	 * Determine the device's preferred I/O size for reads and writes
+-	 * unless the reported value is unreasonably small, large, or
+-	 * garbage.
+-	 */
+-	if (sdkp->opt_xfer_blocks &&
+-	    sdkp->opt_xfer_blocks <= dev_max &&
+-	    sdkp->opt_xfer_blocks <= SD_DEF_XFER_BLOCKS &&
+-	    logical_to_bytes(sdp, sdkp->opt_xfer_blocks) >= PAGE_SIZE) {
++	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+ 	} else
 
 
