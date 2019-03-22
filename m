@@ -2,224 +2,738 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB158C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60CDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA74213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PLW0DGXN"
+	by mail.kernel.org (Postfix) with ESMTP id 7C23F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfCVISN (ORCPT
+        id S1727675AbfCVITi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:18:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36992 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfCVISN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:18:13 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D135F2DE;
-        Fri, 22 Mar 2019 09:18:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1553242690;
-        bh=u1YD/ec9XrfsgarGSR88KutgfIZwVQ7Gs1zBie686KY=;
-        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
-        b=PLW0DGXNhw8/fgpEVPI9liYerUxb1qSSEr9X5DmAVltYwc3TYX2amI0hwQAFV1KMW
-         uy0WFGjewFcLtDZ2w0vGJevaAtuuh6c7UVMelA2emYSx3/r2cwGX0YaSCtXmW2n50K
-         CYqdEamG0tqeJEkjk8aZ8ZTCttA6mFM31eqBcB7I=
-Subject: Re: [PATCH 1/2] drm/msm: simplify getting .driver_data
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Fri, 22 Mar 2019 04:19:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60048 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727545AbfCVITh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:19:37 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32066811A9;
+        Fri, 22 Mar 2019 08:19:37 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-171.ams2.redhat.com [10.36.116.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9136B5C883;
+        Fri, 22 Mar 2019 08:19:35 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
         linux-kernel@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-References: <20190319163629.30660-1-wsa+renesas@sang-engineering.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Organization: Ideas on Board
-Message-ID: <7d66ed6f-1dc4-05ec-567e-939df7d8c94b@ideasonboard.com>
-Date:   Fri, 22 Mar 2019 08:18:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Subject: [PATCH v2] virt: vbox: Implement passing requestor info to the host for VirtualBox 6.0.x
+Date:   Fri, 22 Mar 2019 09:19:34 +0100
+Message-Id: <20190322081934.24762-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319163629.30660-1-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 22 Mar 2019 08:19:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+VirtualBox 6.0.x has a new feature where the guest kernel driver passes
+info about the origin of the request (e.g. userspace or kernelspace) to
+the hypervisor.
 
-Thank you for the patch,
+If we do not pass this information then when running the 6.0.x userspace
+guest-additions tools on a 6.0.x host, some requests will get denied
+with a VERR_VERSION_MISMATCH error, breaking vboxservice.service and
+the mounting of shared folders marked to be auto-mounted.
 
-On 19/03/2019 16:36, Wolfram Sang wrote:
-> We should get 'driver_data' from 'struct device' directly. Going via
-> platform_device is an unneeded step back and forth.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+This commit implements passing the requestor info to the host, fixing this.
 
-This looks good to me.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-Improve VMMDEV_REQUESTOR_* define comments and add a few
+ VMMDEV_REQUESTOR_*_MASK defines to make it sure that some bits are to be
+ be checked as a group with a mask (while other bits are individual booleans)
+-Drop Cc: stable
+---
+ drivers/virt/vboxguest/vboxguest_core.c    | 106 ++++++++++++++-------
+ drivers/virt/vboxguest/vboxguest_core.h    |  15 +--
+ drivers/virt/vboxguest/vboxguest_linux.c   |  26 ++++-
+ drivers/virt/vboxguest/vboxguest_utils.c   |  32 ++++---
+ drivers/virt/vboxguest/vboxguest_version.h |   9 +-
+ drivers/virt/vboxguest/vmmdev.h            |   8 +-
+ include/linux/vbox_utils.h                 |  12 ++-
+ include/uapi/linux/vbox_vmmdev_types.h     |  60 ++++++++++++
+ 8 files changed, 197 insertions(+), 71 deletions(-)
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
-> 
-> Build tested only. buildbot is happy.
-> 
->  drivers/gpu/drm/msm/adreno/adreno_device.c |  6 ++----
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 13 +++++--------
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   |  6 ++----
->  drivers/gpu/drm/msm/dsi/dsi_host.c         |  6 ++----
->  drivers/gpu/drm/msm/msm_drv.c              |  3 +--
->  5 files changed, 12 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> index 714ed6505e47..13802af8294c 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -412,16 +412,14 @@ static const struct of_device_id dt_match[] = {
->  #ifdef CONFIG_PM
->  static int adreno_resume(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-> +	struct msm_gpu *gpu = dev_get_drvdata(dev);
-
-Nice simplification :-)
-
-Do you catch these with Coccinelle?
-
->  
->  	return gpu->funcs->pm_resume(gpu);
->  }
->  
->  static int adreno_suspend(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-> +	struct msm_gpu *gpu = dev_get_drvdata(dev);
->  
->  	return gpu->funcs->pm_suspend(gpu);
->  }
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index 885bf88afa3e..0154eb9b343f 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -1036,16 +1036,15 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
->  
->  static void dpu_unbind(struct device *dev, struct device *master, void *data)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
->  	struct dss_module_power *mp = &dpu_kms->mp;
->  
->  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
-> -	devm_kfree(&pdev->dev, mp->clk_config);
-> +	devm_kfree(dev, mp->clk_config);
-
-
-Using the dev to get the pdev to get the dev :-D
-
->  	mp->num_clk = 0;
->  
->  	if (dpu_kms->rpm_enabled)
-> -		pm_runtime_disable(&pdev->dev);
-> +		pm_runtime_disable(dev);
->  }
->  
->  static const struct component_ops dpu_ops = {
-> @@ -1067,8 +1066,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
->  static int __maybe_unused dpu_runtime_suspend(struct device *dev)
->  {
->  	int rc = -1;
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
->  	struct drm_device *ddev;
->  	struct dss_module_power *mp = &dpu_kms->mp;
->  
-> @@ -1088,8 +1086,7 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
->  static int __maybe_unused dpu_runtime_resume(struct device *dev)
->  {
->  	int rc = -1;
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
->  	struct drm_encoder *encoder;
->  	struct drm_device *ddev;
->  	struct dss_module_power *mp = &dpu_kms->mp;
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> index 97179bec8902..8f7a01d7a663 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -1063,8 +1063,7 @@ static int mdp5_dev_remove(struct platform_device *pdev)
->  
->  static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
-> +	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
->  
->  	DBG("");
->  
-> @@ -1073,8 +1072,7 @@ static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
->  
->  static __maybe_unused int mdp5_runtime_resume(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
-> +	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
->  
->  	DBG("");
->  
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> index 610183db1daf..4a158c41ef30 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -485,8 +485,7 @@ static void dsi_bus_clk_disable(struct msm_dsi_host *msm_host)
->  
->  int msm_dsi_runtime_suspend(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
-> +	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
->  	struct mipi_dsi_host *host = msm_dsi->host;
->  	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
->  
-> @@ -500,8 +499,7 @@ int msm_dsi_runtime_suspend(struct device *dev)
->  
->  int msm_dsi_runtime_resume(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
-> +	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
->  	struct mipi_dsi_host *host = msm_dsi->host;
->  	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
->  
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 0bdd93648761..071ad87ce44e 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -251,8 +251,7 @@ static int vblank_ctrl_queue_work(struct msm_drm_private *priv,
->  
->  static int msm_drm_uninit(struct device *dev)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct drm_device *ddev = platform_get_drvdata(pdev);
-> +	struct drm_device *ddev = dev_get_drvdata(dev);
->  	struct msm_drm_private *priv = ddev->dev_private;
->  	struct msm_kms *kms = priv->kms;
->  	struct msm_mdss *mdss = priv->mdss;
-> 
+diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
+index 1475ed5ffcde..2ec5b34ffed7 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -27,6 +27,10 @@
+ 
+ #define GUEST_MAPPINGS_TRIES	5
+ 
++#define VBG_KERNEL_REQUEST \
++	(VMMDEV_REQUESTOR_KERNEL | VMMDEV_REQUESTOR_USR_DRV | \
++	 VMMDEV_REQUESTOR_CON_DONT_KNOW | VMMDEV_REQUESTOR_TRUST_NOT_GIVEN)
++
+ /**
+  * Reserves memory in which the VMM can relocate any guest mappings
+  * that are floating around.
+@@ -48,7 +52,8 @@ static void vbg_guest_mappings_init(struct vbg_dev *gdev)
+ 	int i, rc;
+ 
+ 	/* Query the required space. */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HYPERVISOR_INFO);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HYPERVISOR_INFO,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return;
+ 
+@@ -135,7 +140,8 @@ static void vbg_guest_mappings_exit(struct vbg_dev *gdev)
+ 	 * Tell the host that we're going to free the memory we reserved for
+ 	 * it, the free it up. (Leak the memory if anything goes wrong here.)
+ 	 */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_HYPERVISOR_INFO);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_HYPERVISOR_INFO,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return;
+ 
+@@ -172,8 +178,10 @@ static int vbg_report_guest_info(struct vbg_dev *gdev)
+ 	struct vmmdev_guest_info2 *req2 = NULL;
+ 	int rc, ret = -ENOMEM;
+ 
+-	req1 = vbg_req_alloc(sizeof(*req1), VMMDEVREQ_REPORT_GUEST_INFO);
+-	req2 = vbg_req_alloc(sizeof(*req2), VMMDEVREQ_REPORT_GUEST_INFO2);
++	req1 = vbg_req_alloc(sizeof(*req1), VMMDEVREQ_REPORT_GUEST_INFO,
++			     VBG_KERNEL_REQUEST);
++	req2 = vbg_req_alloc(sizeof(*req2), VMMDEVREQ_REPORT_GUEST_INFO2,
++			     VBG_KERNEL_REQUEST);
+ 	if (!req1 || !req2)
+ 		goto out_free;
+ 
+@@ -187,8 +195,8 @@ static int vbg_report_guest_info(struct vbg_dev *gdev)
+ 	req2->additions_minor = VBG_VERSION_MINOR;
+ 	req2->additions_build = VBG_VERSION_BUILD;
+ 	req2->additions_revision = VBG_SVN_REV;
+-	/* (no features defined yet) */
+-	req2->additions_features = 0;
++	req2->additions_features =
++		VMMDEV_GUEST_INFO2_ADDITIONS_FEATURES_REQUESTOR_INFO;
+ 	strlcpy(req2->name, VBG_VERSION_STRING,
+ 		sizeof(req2->name));
+ 
+@@ -230,7 +238,8 @@ static int vbg_report_driver_status(struct vbg_dev *gdev, bool active)
+ 	struct vmmdev_guest_status *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_REPORT_GUEST_STATUS);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_REPORT_GUEST_STATUS,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -423,7 +432,8 @@ static int vbg_heartbeat_host_config(struct vbg_dev *gdev, bool enabled)
+ 	struct vmmdev_heartbeat *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_HEARTBEAT_CONFIGURE);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_HEARTBEAT_CONFIGURE,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -457,7 +467,8 @@ static int vbg_heartbeat_init(struct vbg_dev *gdev)
+ 
+ 	gdev->guest_heartbeat_req = vbg_req_alloc(
+ 					sizeof(*gdev->guest_heartbeat_req),
+-					VMMDEVREQ_GUEST_HEARTBEAT);
++					VMMDEVREQ_GUEST_HEARTBEAT,
++					VBG_KERNEL_REQUEST);
+ 	if (!gdev->guest_heartbeat_req)
+ 		return -ENOMEM;
+ 
+@@ -528,7 +539,8 @@ static int vbg_reset_host_event_filter(struct vbg_dev *gdev,
+ 	struct vmmdev_mask *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -567,8 +579,14 @@ static int vbg_set_session_event_filter(struct vbg_dev *gdev,
+ 	u32 changed, previous;
+ 	int rc, ret = 0;
+ 
+-	/* Allocate a request buffer before taking the spinlock */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK);
++	/*
++	 * Allocate a request buffer before taking the spinlock, when
++	 * the session is being terminated the requestor is the kernel,
++	 * as we're cleaning up.
++	 */
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_CTL_GUEST_FILTER_MASK,
++			    session_termination ? VBG_KERNEL_REQUEST :
++						  session->requestor);
+ 	if (!req) {
+ 		if (!session_termination)
+ 			return -ENOMEM;
+@@ -627,7 +645,8 @@ static int vbg_reset_host_capabilities(struct vbg_dev *gdev)
+ 	struct vmmdev_mask *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -662,8 +681,14 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
+ 	u32 changed, previous;
+ 	int rc, ret = 0;
+ 
+-	/* Allocate a request buffer before taking the spinlock */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES);
++	/*
++	 * Allocate a request buffer before taking the spinlock, when
++	 * the session is being terminated the requestor is the kernel,
++	 * as we're cleaning up.
++	 */
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
++			    session_termination ? VBG_KERNEL_REQUEST :
++						  session->requestor);
+ 	if (!req) {
+ 		if (!session_termination)
+ 			return -ENOMEM;
+@@ -722,7 +747,8 @@ static int vbg_query_host_version(struct vbg_dev *gdev)
+ 	struct vmmdev_host_version *req;
+ 	int rc, ret;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HOST_VERSION);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_GET_HOST_VERSION,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -783,19 +809,24 @@ int vbg_core_init(struct vbg_dev *gdev, u32 fixed_events)
+ 
+ 	gdev->mem_balloon.get_req =
+ 		vbg_req_alloc(sizeof(*gdev->mem_balloon.get_req),
+-			      VMMDEVREQ_GET_MEMBALLOON_CHANGE_REQ);
++			      VMMDEVREQ_GET_MEMBALLOON_CHANGE_REQ,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->mem_balloon.change_req =
+ 		vbg_req_alloc(sizeof(*gdev->mem_balloon.change_req),
+-			      VMMDEVREQ_CHANGE_MEMBALLOON);
++			      VMMDEVREQ_CHANGE_MEMBALLOON,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->cancel_req =
+ 		vbg_req_alloc(sizeof(*(gdev->cancel_req)),
+-			      VMMDEVREQ_HGCM_CANCEL2);
++			      VMMDEVREQ_HGCM_CANCEL2,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->ack_events_req =
+ 		vbg_req_alloc(sizeof(*gdev->ack_events_req),
+-			      VMMDEVREQ_ACKNOWLEDGE_EVENTS);
++			      VMMDEVREQ_ACKNOWLEDGE_EVENTS,
++			      VBG_KERNEL_REQUEST);
+ 	gdev->mouse_status_req =
+ 		vbg_req_alloc(sizeof(*gdev->mouse_status_req),
+-			      VMMDEVREQ_GET_MOUSE_STATUS);
++			      VMMDEVREQ_GET_MOUSE_STATUS,
++			      VBG_KERNEL_REQUEST);
+ 
+ 	if (!gdev->mem_balloon.get_req || !gdev->mem_balloon.change_req ||
+ 	    !gdev->cancel_req || !gdev->ack_events_req ||
+@@ -892,9 +923,9 @@ void vbg_core_exit(struct vbg_dev *gdev)
+  * vboxguest_linux.c calls this when userspace opens the char-device.
+  * Return: A pointer to the new session or an ERR_PTR on error.
+  * @gdev:		The Guest extension device.
+- * @user:		Set if this is a session for the vboxuser device.
++ * @requestor:		VMMDEV_REQUESTOR_* flags
+  */
+-struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user)
++struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, u32 requestor)
+ {
+ 	struct vbg_session *session;
+ 
+@@ -903,7 +934,7 @@ struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	session->gdev = gdev;
+-	session->user_session = user;
++	session->requestor = requestor;
+ 
+ 	return session;
+ }
+@@ -924,7 +955,9 @@ void vbg_core_close_session(struct vbg_session *session)
+ 		if (!session->hgcm_client_ids[i])
+ 			continue;
+ 
+-		vbg_hgcm_disconnect(gdev, session->hgcm_client_ids[i], &rc);
++		/* requestor is kernel here, as we're cleaning up. */
++		vbg_hgcm_disconnect(gdev, VBG_KERNEL_REQUEST,
++				    session->hgcm_client_ids[i], &rc);
+ 	}
+ 
+ 	kfree(session);
+@@ -1152,7 +1185,8 @@ static int vbg_req_allowed(struct vbg_dev *gdev, struct vbg_session *session,
+ 		return -EPERM;
+ 	}
+ 
+-	if (trusted_apps_only && session->user_session) {
++	if (trusted_apps_only &&
++	    (session->requestor & VMMDEV_REQUESTOR_USER_DEVICE)) {
+ 		vbg_err("Denying userspace vmm call type %#08x through vboxuser device node\n",
+ 			req->request_type);
+ 		return -EPERM;
+@@ -1209,8 +1243,8 @@ static int vbg_ioctl_hgcm_connect(struct vbg_dev *gdev,
+ 	if (i >= ARRAY_SIZE(session->hgcm_client_ids))
+ 		return -EMFILE;
+ 
+-	ret = vbg_hgcm_connect(gdev, &conn->u.in.loc, &client_id,
+-			       &conn->hdr.rc);
++	ret = vbg_hgcm_connect(gdev, session->requestor, &conn->u.in.loc,
++			       &client_id, &conn->hdr.rc);
+ 
+ 	mutex_lock(&gdev->session_mutex);
+ 	if (ret == 0 && conn->hdr.rc >= 0) {
+@@ -1251,7 +1285,8 @@ static int vbg_ioctl_hgcm_disconnect(struct vbg_dev *gdev,
+ 	if (i >= ARRAY_SIZE(session->hgcm_client_ids))
+ 		return -EINVAL;
+ 
+-	ret = vbg_hgcm_disconnect(gdev, client_id, &disconn->hdr.rc);
++	ret = vbg_hgcm_disconnect(gdev, session->requestor, client_id,
++				  &disconn->hdr.rc);
+ 
+ 	mutex_lock(&gdev->session_mutex);
+ 	if (ret == 0 && disconn->hdr.rc >= 0)
+@@ -1313,12 +1348,12 @@ static int vbg_ioctl_hgcm_call(struct vbg_dev *gdev,
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_COMPAT) && f32bit)
+-		ret = vbg_hgcm_call32(gdev, client_id,
++		ret = vbg_hgcm_call32(gdev, session->requestor, client_id,
+ 				      call->function, call->timeout_ms,
+ 				      VBG_IOCTL_HGCM_CALL_PARMS32(call),
+ 				      call->parm_count, &call->hdr.rc);
+ 	else
+-		ret = vbg_hgcm_call(gdev, client_id,
++		ret = vbg_hgcm_call(gdev, session->requestor, client_id,
+ 				    call->function, call->timeout_ms,
+ 				    VBG_IOCTL_HGCM_CALL_PARMS(call),
+ 				    call->parm_count, &call->hdr.rc);
+@@ -1408,6 +1443,7 @@ static int vbg_ioctl_check_balloon(struct vbg_dev *gdev,
+ }
+ 
+ static int vbg_ioctl_write_core_dump(struct vbg_dev *gdev,
++				     struct vbg_session *session,
+ 				     struct vbg_ioctl_write_coredump *dump)
+ {
+ 	struct vmmdev_write_core_dump *req;
+@@ -1415,7 +1451,8 @@ static int vbg_ioctl_write_core_dump(struct vbg_dev *gdev,
+ 	if (vbg_ioctl_chk(&dump->hdr, sizeof(dump->u.in), 0))
+ 		return -EINVAL;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_WRITE_COREDUMP);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_WRITE_COREDUMP,
++			    session->requestor);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -1476,7 +1513,7 @@ int vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data)
+ 	case VBG_IOCTL_CHECK_BALLOON:
+ 		return vbg_ioctl_check_balloon(gdev, data);
+ 	case VBG_IOCTL_WRITE_CORE_DUMP:
+-		return vbg_ioctl_write_core_dump(gdev, data);
++		return vbg_ioctl_write_core_dump(gdev, session, data);
+ 	}
+ 
+ 	/* Variable sized requests. */
+@@ -1508,7 +1545,8 @@ int vbg_core_set_mouse_status(struct vbg_dev *gdev, u32 features)
+ 	struct vmmdev_mouse_status *req;
+ 	int rc;
+ 
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_MOUSE_STATUS);
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_MOUSE_STATUS,
++			    VBG_KERNEL_REQUEST);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/virt/vboxguest/vboxguest_core.h b/drivers/virt/vboxguest/vboxguest_core.h
+index 7ad9ec45bfa9..4188c12b839f 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.h
++++ b/drivers/virt/vboxguest/vboxguest_core.h
+@@ -154,15 +154,15 @@ struct vbg_session {
+ 	 * host. Protected by vbg_gdev.session_mutex.
+ 	 */
+ 	u32 guest_caps;
+-	/** Does this session belong to a root process or a user one? */
+-	bool user_session;
++	/** VMMDEV_REQUESTOR_* flags */
++	u32 requestor;
+ 	/** Set on CANCEL_ALL_WAITEVENTS, protected by vbg_devevent_spinlock. */
+ 	bool cancel_waiters;
+ };
+ 
+ int  vbg_core_init(struct vbg_dev *gdev, u32 fixed_events);
+ void vbg_core_exit(struct vbg_dev *gdev);
+-struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, bool user);
++struct vbg_session *vbg_core_open_session(struct vbg_dev *gdev, u32 requestor);
+ void vbg_core_close_session(struct vbg_session *session);
+ int  vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data);
+ int  vbg_core_set_mouse_status(struct vbg_dev *gdev, u32 features);
+@@ -172,12 +172,13 @@ irqreturn_t vbg_core_isr(int irq, void *dev_id);
+ void vbg_linux_mouse_event(struct vbg_dev *gdev);
+ 
+ /* Private (non exported) functions form vboxguest_utils.c */
+-void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type);
++void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type,
++		    u32 requestor);
+ void vbg_req_free(void *req, size_t len);
+ int vbg_req_perform(struct vbg_dev *gdev, void *req);
+ int vbg_hgcm_call32(
+-	struct vbg_dev *gdev, u32 client_id, u32 function, u32 timeout_ms,
+-	struct vmmdev_hgcm_function_parameter32 *parm32, u32 parm_count,
+-	int *vbox_status);
++	struct vbg_dev *gdev, u32 requestor, u32 client_id, u32 function,
++	u32 timeout_ms, struct vmmdev_hgcm_function_parameter32 *parm32,
++	u32 parm_count, int *vbox_status);
+ 
+ #endif
+diff --git a/drivers/virt/vboxguest/vboxguest_linux.c b/drivers/virt/vboxguest/vboxguest_linux.c
+index 6e2a9619192d..6e8c0f1c1056 100644
+--- a/drivers/virt/vboxguest/vboxguest_linux.c
++++ b/drivers/virt/vboxguest/vboxguest_linux.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2006-2016 Oracle Corporation
+  */
+ 
++#include <linux/cred.h>
+ #include <linux/input.h>
+ #include <linux/kernel.h>
+ #include <linux/miscdevice.h>
+@@ -28,6 +29,23 @@ static DEFINE_MUTEX(vbg_gdev_mutex);
+ /** Global vbg_gdev pointer used by vbg_get/put_gdev. */
+ static struct vbg_dev *vbg_gdev;
+ 
++static u32 vbg_misc_device_requestor(struct inode *inode)
++{
++	u32 requestor = VMMDEV_REQUESTOR_USERMODE |
++			VMMDEV_REQUESTOR_CON_DONT_KNOW |
++			VMMDEV_REQUESTOR_TRUST_NOT_GIVEN;
++
++	if (from_kuid(current_user_ns(), current->cred->uid) == 0)
++		requestor |= VMMDEV_REQUESTOR_USR_ROOT;
++	else
++		requestor |= VMMDEV_REQUESTOR_USR_USER;
++
++	if (in_egroup_p(inode->i_gid))
++		requestor |= VMMDEV_REQUESTOR_GRP_VBOX;
++
++	return requestor;
++}
++
+ static int vbg_misc_device_open(struct inode *inode, struct file *filp)
+ {
+ 	struct vbg_session *session;
+@@ -36,7 +54,7 @@ static int vbg_misc_device_open(struct inode *inode, struct file *filp)
+ 	/* misc_open sets filp->private_data to our misc device */
+ 	gdev = container_of(filp->private_data, struct vbg_dev, misc_device);
+ 
+-	session = vbg_core_open_session(gdev, false);
++	session = vbg_core_open_session(gdev, vbg_misc_device_requestor(inode));
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
+@@ -53,7 +71,8 @@ static int vbg_misc_device_user_open(struct inode *inode, struct file *filp)
+ 	gdev = container_of(filp->private_data, struct vbg_dev,
+ 			    misc_device_user);
+ 
+-	session = vbg_core_open_session(gdev, false);
++	session = vbg_core_open_session(gdev, vbg_misc_device_requestor(inode) |
++					      VMMDEV_REQUESTOR_USER_DEVICE);
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
+@@ -115,7 +134,8 @@ static long vbg_misc_device_ioctl(struct file *filp, unsigned int req,
+ 			 req == VBG_IOCTL_VMMDEV_REQUEST_BIG;
+ 
+ 	if (is_vmmdev_req)
+-		buf = vbg_req_alloc(size, VBG_IOCTL_HDR_TYPE_DEFAULT);
++		buf = vbg_req_alloc(size, VBG_IOCTL_HDR_TYPE_DEFAULT,
++				    session->requestor);
+ 	else
+ 		buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf)
+diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
+index bf4474214b4d..75fd140b02ff 100644
+--- a/drivers/virt/vboxguest/vboxguest_utils.c
++++ b/drivers/virt/vboxguest/vboxguest_utils.c
+@@ -62,7 +62,8 @@ VBG_LOG(vbg_err, pr_err);
+ VBG_LOG(vbg_debug, pr_debug);
+ #endif
+ 
+-void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type)
++void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type,
++		    u32 requestor)
+ {
+ 	struct vmmdev_request_header *req;
+ 	int order = get_order(PAGE_ALIGN(len));
+@@ -78,7 +79,7 @@ void *vbg_req_alloc(size_t len, enum vmmdev_request_type req_type)
+ 	req->request_type = req_type;
+ 	req->rc = VERR_GENERAL_FAILURE;
+ 	req->reserved1 = 0;
+-	req->reserved2 = 0;
++	req->requestor = requestor;
+ 
+ 	return req;
+ }
+@@ -119,7 +120,7 @@ static bool hgcm_req_done(struct vbg_dev *gdev,
+ 	return done;
+ }
+ 
+-int vbg_hgcm_connect(struct vbg_dev *gdev,
++int vbg_hgcm_connect(struct vbg_dev *gdev, u32 requestor,
+ 		     struct vmmdev_hgcm_service_location *loc,
+ 		     u32 *client_id, int *vbox_status)
+ {
+@@ -127,7 +128,7 @@ int vbg_hgcm_connect(struct vbg_dev *gdev,
+ 	int rc;
+ 
+ 	hgcm_connect = vbg_req_alloc(sizeof(*hgcm_connect),
+-				     VMMDEVREQ_HGCM_CONNECT);
++				     VMMDEVREQ_HGCM_CONNECT, requestor);
+ 	if (!hgcm_connect)
+ 		return -ENOMEM;
+ 
+@@ -153,13 +154,15 @@ int vbg_hgcm_connect(struct vbg_dev *gdev,
+ }
+ EXPORT_SYMBOL(vbg_hgcm_connect);
+ 
+-int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 client_id, int *vbox_status)
++int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 requestor,
++			u32 client_id, int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_disconnect *hgcm_disconnect = NULL;
+ 	int rc;
+ 
+ 	hgcm_disconnect = vbg_req_alloc(sizeof(*hgcm_disconnect),
+-					VMMDEVREQ_HGCM_DISCONNECT);
++					VMMDEVREQ_HGCM_DISCONNECT,
++					requestor);
+ 	if (!hgcm_disconnect)
+ 		return -ENOMEM;
+ 
+@@ -593,9 +596,10 @@ static int hgcm_call_copy_back_result(
+ 	return 0;
+ }
+ 
+-int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+-		  u32 timeout_ms, struct vmmdev_hgcm_function_parameter *parms,
+-		  u32 parm_count, int *vbox_status)
++int vbg_hgcm_call(struct vbg_dev *gdev, u32 requestor, u32 client_id,
++		  u32 function, u32 timeout_ms,
++		  struct vmmdev_hgcm_function_parameter *parms, u32 parm_count,
++		  int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_call *call;
+ 	void **bounce_bufs = NULL;
+@@ -615,7 +619,7 @@ int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+ 		goto free_bounce_bufs;
+ 	}
+ 
+-	call = vbg_req_alloc(size, VMMDEVREQ_HGCM_CALL);
++	call = vbg_req_alloc(size, VMMDEVREQ_HGCM_CALL, requestor);
+ 	if (!call) {
+ 		ret = -ENOMEM;
+ 		goto free_bounce_bufs;
+@@ -647,9 +651,9 @@ EXPORT_SYMBOL(vbg_hgcm_call);
+ 
+ #ifdef CONFIG_COMPAT
+ int vbg_hgcm_call32(
+-	struct vbg_dev *gdev, u32 client_id, u32 function, u32 timeout_ms,
+-	struct vmmdev_hgcm_function_parameter32 *parm32, u32 parm_count,
+-	int *vbox_status)
++	struct vbg_dev *gdev, u32 requestor, u32 client_id, u32 function,
++	u32 timeout_ms, struct vmmdev_hgcm_function_parameter32 *parm32,
++	u32 parm_count, int *vbox_status)
+ {
+ 	struct vmmdev_hgcm_function_parameter *parm64 = NULL;
+ 	u32 i, size;
+@@ -689,7 +693,7 @@ int vbg_hgcm_call32(
+ 			goto out_free;
+ 	}
+ 
+-	ret = vbg_hgcm_call(gdev, client_id, function, timeout_ms,
++	ret = vbg_hgcm_call(gdev, requestor, client_id, function, timeout_ms,
+ 			    parm64, parm_count, vbox_status);
+ 	if (ret < 0)
+ 		goto out_free;
+diff --git a/drivers/virt/vboxguest/vboxguest_version.h b/drivers/virt/vboxguest/vboxguest_version.h
+index 77f0c8f8a231..84834dad38d5 100644
+--- a/drivers/virt/vboxguest/vboxguest_version.h
++++ b/drivers/virt/vboxguest/vboxguest_version.h
+@@ -9,11 +9,10 @@
+ #ifndef __VBOX_VERSION_H__
+ #define __VBOX_VERSION_H__
+ 
+-/* Last synced October 4th 2017 */
+-#define VBG_VERSION_MAJOR 5
+-#define VBG_VERSION_MINOR 2
++#define VBG_VERSION_MAJOR 6
++#define VBG_VERSION_MINOR 0
+ #define VBG_VERSION_BUILD 0
+-#define VBG_SVN_REV 68940
+-#define VBG_VERSION_STRING "5.2.0"
++#define VBG_SVN_REV 127566
++#define VBG_VERSION_STRING "6.0.0"
+ 
+ #endif
+diff --git a/drivers/virt/vboxguest/vmmdev.h b/drivers/virt/vboxguest/vmmdev.h
+index 5e2ae978935d..6337b8d75d96 100644
+--- a/drivers/virt/vboxguest/vmmdev.h
++++ b/drivers/virt/vboxguest/vmmdev.h
+@@ -98,8 +98,8 @@ struct vmmdev_request_header {
+ 	s32 rc;
+ 	/** Reserved field no.1. MBZ. */
+ 	u32 reserved1;
+-	/** Reserved field no.2. MBZ. */
+-	u32 reserved2;
++	/** IN: Requestor information (VMMDEV_REQUESTOR_*) */
++	u32 requestor;
+ };
+ VMMDEV_ASSERT_SIZE(vmmdev_request_header, 24);
+ 
+@@ -247,6 +247,8 @@ struct vmmdev_guest_info {
+ };
+ VMMDEV_ASSERT_SIZE(vmmdev_guest_info, 24 + 8);
+ 
++#define VMMDEV_GUEST_INFO2_ADDITIONS_FEATURES_REQUESTOR_INFO	BIT(0)
++
+ /** struct vmmdev_guestinfo2 - Guest information report, version 2. */
+ struct vmmdev_guest_info2 {
+ 	/** Header. */
+@@ -259,7 +261,7 @@ struct vmmdev_guest_info2 {
+ 	u32 additions_build;
+ 	/** SVN revision. */
+ 	u32 additions_revision;
+-	/** Feature mask, currently unused. */
++	/** Feature mask. */
+ 	u32 additions_features;
+ 	/**
+ 	 * The intentional meaning of this field was:
+diff --git a/include/linux/vbox_utils.h b/include/linux/vbox_utils.h
+index a240ed2a0372..ff56c443180c 100644
+--- a/include/linux/vbox_utils.h
++++ b/include/linux/vbox_utils.h
+@@ -24,15 +24,17 @@ __printf(1, 2) void vbg_debug(const char *fmt, ...);
+ #define vbg_debug pr_debug
+ #endif
+ 
+-int vbg_hgcm_connect(struct vbg_dev *gdev,
++int vbg_hgcm_connect(struct vbg_dev *gdev, u32 requestor,
+ 		     struct vmmdev_hgcm_service_location *loc,
+ 		     u32 *client_id, int *vbox_status);
+ 
+-int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 client_id, int *vbox_status);
++int vbg_hgcm_disconnect(struct vbg_dev *gdev, u32 requestor,
++			u32 client_id, int *vbox_status);
+ 
+-int vbg_hgcm_call(struct vbg_dev *gdev, u32 client_id, u32 function,
+-		  u32 timeout_ms, struct vmmdev_hgcm_function_parameter *parms,
+-		  u32 parm_count, int *vbox_status);
++int vbg_hgcm_call(struct vbg_dev *gdev, u32 requestor, u32 client_id,
++		  u32 function, u32 timeout_ms,
++		  struct vmmdev_hgcm_function_parameter *parms, u32 parm_count,
++		  int *vbox_status);
+ 
+ /**
+  * Convert a VirtualBox status code to a standard Linux kernel return value.
+diff --git a/include/uapi/linux/vbox_vmmdev_types.h b/include/uapi/linux/vbox_vmmdev_types.h
+index 0e68024f36c7..26f39816af14 100644
+--- a/include/uapi/linux/vbox_vmmdev_types.h
++++ b/include/uapi/linux/vbox_vmmdev_types.h
+@@ -102,6 +102,66 @@ enum vmmdev_request_type {
+ #define VMMDEVREQ_HGCM_CALL VMMDEVREQ_HGCM_CALL32
+ #endif
+ 
++/* vmmdev_request_header.requestor defines */
++
++/* Requestor user not given. */
++#define VMMDEV_REQUESTOR_USR_NOT_GIVEN                      0x00000000
++/* The kernel driver (vboxguest) is the requestor. */
++#define VMMDEV_REQUESTOR_USR_DRV                            0x00000001
++/* Some other kernel driver is the requestor. */
++#define VMMDEV_REQUESTOR_USR_DRV_OTHER                      0x00000002
++/* The root or a admin user is the requestor. */
++#define VMMDEV_REQUESTOR_USR_ROOT                           0x00000003
++/* Regular joe user is making the request. */
++#define VMMDEV_REQUESTOR_USR_USER                           0x00000006
++/* User classification mask. */
++#define VMMDEV_REQUESTOR_USR_MASK                           0x00000007
++
++/* Kernel mode request. Note this is 0, check for !USERMODE instead. */
++#define VMMDEV_REQUESTOR_KERNEL                             0x00000000
++/* User mode request. */
++#define VMMDEV_REQUESTOR_USERMODE                           0x00000008
++/* User or kernel mode classification mask. */
++#define VMMDEV_REQUESTOR_MODE_MASK                          0x00000008
++
++/* Don't know the physical console association of the requestor. */
++#define VMMDEV_REQUESTOR_CON_DONT_KNOW                      0x00000000
++/*
++ * The request originates with a process that is NOT associated with the
++ * physical console.
++ */
++#define VMMDEV_REQUESTOR_CON_NO                             0x00000010
++/* Requestor process is associated with the physical console. */
++#define VMMDEV_REQUESTOR_CON_YES                            0x00000020
++/* Console classification mask. */
++#define VMMDEV_REQUESTOR_CON_MASK                           0x00000030
++
++/* Requestor is member of special VirtualBox user group. */
++#define VMMDEV_REQUESTOR_GRP_VBOX                           0x00000080
++
++/* Note: trust level is for windows guests only, linux always uses not-given */
++/* Requestor trust level: Unspecified */
++#define VMMDEV_REQUESTOR_TRUST_NOT_GIVEN                    0x00000000
++/* Requestor trust level: Untrusted (SID S-1-16-0) */
++#define VMMDEV_REQUESTOR_TRUST_UNTRUSTED                    0x00001000
++/* Requestor trust level: Untrusted (SID S-1-16-4096) */
++#define VMMDEV_REQUESTOR_TRUST_LOW                          0x00002000
++/* Requestor trust level: Medium (SID S-1-16-8192) */
++#define VMMDEV_REQUESTOR_TRUST_MEDIUM                       0x00003000
++/* Requestor trust level: Medium plus (SID S-1-16-8448) */
++#define VMMDEV_REQUESTOR_TRUST_MEDIUM_PLUS                  0x00004000
++/* Requestor trust level: High (SID S-1-16-12288) */
++#define VMMDEV_REQUESTOR_TRUST_HIGH                         0x00005000
++/* Requestor trust level: System (SID S-1-16-16384) */
++#define VMMDEV_REQUESTOR_TRUST_SYSTEM                       0x00006000
++/* Requestor trust level >= Protected (SID S-1-16-20480, S-1-16-28672) */
++#define VMMDEV_REQUESTOR_TRUST_PROTECTED                    0x00007000
++/* Requestor trust level mask */
++#define VMMDEV_REQUESTOR_TRUST_MASK                         0x00007000
++
++/* Requestor is using the less trusted user device node (/dev/vboxuser) */
++#define VMMDEV_REQUESTOR_USER_DEVICE                        0x00008000
++
+ /** HGCM service location types. */
+ enum vmmdev_hgcm_service_location_type {
+ 	VMMDEV_HGCM_LOC_INVALID    = 0,
+-- 
+2.21.0
 
