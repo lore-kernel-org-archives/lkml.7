@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6839AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738EFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC62075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350352075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259635;
-	bh=qq/bz6Z2MbVFsxKlh8biKRahJ9lsSxr8Ein4HVBI8JQ=;
+	s=default; t=1553259643;
+	bh=N4O/7PxreP7ZpVqk/9PpC6mT2DIdQzNcjQxNqNM5p00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsJzEHmC7fKmtc5qvPR5WMEBeRpCLFy8ktjoMaa5mCQ4njCKXNtV9ZPOv8rzUEFk/
-	 wokANZPO9gMwrrnAQQFHQHrnTRQHqleP5nBIqbM5OcKll80HBUNOFTYvqgzPUIeS2b
-	 ASBe7cA3RdBCJB6+ydqAHHLumYJuUzUGb1CSb44s=
+	b=09NZeNor1hWvY2moX4gRYxHh/oJidlJB8VS98mBdxZvLZx+2+oJxVhC82Scs5nqce
+	 piUP118Qx1jGN2zR1rfQlBn42xXoowKKySsWnbouo8gmjYaigtIZAIdi4yL5LHwpE5
+	 1vsAjEOYOb70g+9n1nBWIG/6ZXK+hjRL/CTj9+Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfCVNAe (ORCPT
+        id S1731987AbfCVNAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbfCVLoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:00 -0400
+        id S1731551AbfCVLn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7252075E;
-        Fri, 22 Mar 2019 11:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65468204FD;
+        Fri, 22 Mar 2019 11:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255039;
-        bh=qq/bz6Z2MbVFsxKlh8biKRahJ9lsSxr8Ein4HVBI8JQ=;
+        s=default; t=1553255036;
+        bh=N4O/7PxreP7ZpVqk/9PpC6mT2DIdQzNcjQxNqNM5p00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVJtfZDTz8DS6squF/fcV7pH0HJT9WPYLaNYbm2y1FWKqtM8Nzl5yP6OwMJCcTdvm
-         U3RWSKb0hKETZTPEW0XtLRgmFCt0jz1jjxp6ag98zAM6unPlrHwDqRPn5wGVX50hIa
-         Phe3M81PyKY/I6v+OnutQ/E+T7oStBBk9f3nznMM=
+        b=aO79Ar6UJeui4OutiJxPhQmmeREjqGf0g+OOLQMSFYTQ4HZ3wOJce3T9IuCs26rQd
+         DNnbeX+AoeN3hkHmBZrq2fhjV80suUik3RlZ71vdEYpWhkZMIAF23SEP89uELI+j6M
+         pVuXzt9urn9kGlBeG53kLshTmsYDkpvjV4XQroos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 080/118] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
-Date:   Fri, 22 Mar 2019 12:15:52 +0100
-Message-Id: <20190322111222.344175860@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 4.9 059/118] s390/virtio: handle find on invalid queue gracefully
+Date:   Fri, 22 Mar 2019 12:15:31 +0100
+Message-Id: <20190322111220.713821771@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -70,52 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zev Weiss <zev@bewilderbeest.net>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
+commit 3438b2c039b4bf26881786a1f3450f016d66ad11 upstream.
 
-This bug has apparently existed since the introduction of this function
-in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
-"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
-neighbour sysctls.").
+A queue with a capacity of zero is clearly not a valid virtio queue.
+Some emulators report zero queue size if queried with an invalid queue
+index. Instead of crashing in this case let us just return -ENOENT. To
+make that work properly, let us fix the notifier cleanup logic as well.
 
-As a minimal fix we can simply duplicate the corresponding check in
-do_proc_dointvec_conv().
-
-Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>	[2.6.2+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sysctl.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/s390/virtio/virtio_ccw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2377,7 +2377,16 @@ static int do_proc_dointvec_minmax_conv(
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -283,6 +283,8 @@ static void virtio_ccw_drop_indicators(s
  {
- 	struct do_proc_dointvec_minmax_conv_param *param = data;
- 	if (write) {
--		int val = *negp ? -*lvalp : *lvalp;
-+		int val;
-+		if (*negp) {
-+			if (*lvalp > (unsigned long) INT_MAX + 1)
-+				return -EINVAL;
-+			val = -*lvalp;
-+		} else {
-+			if (*lvalp > (unsigned long) INT_MAX)
-+				return -EINVAL;
-+			val = *lvalp;
-+		}
- 		if ((param->min && *param->min > val) ||
- 		    (param->max && *param->max < val))
- 			return -EINVAL;
+ 	struct virtio_ccw_vq_info *info;
+ 
++	if (!vcdev->airq_info)
++		return;
+ 	list_for_each_entry(info, &vcdev->virtqueues, node)
+ 		drop_airq_indicator(info->vq, vcdev->airq_info);
+ }
+@@ -424,7 +426,7 @@ static int virtio_ccw_read_vq_conf(struc
+ 	ret = ccw_io_helper(vcdev, ccw, VIRTIO_CCW_DOING_READ_VQ_CONF);
+ 	if (ret)
+ 		return ret;
+-	return vcdev->config_block->num;
++	return vcdev->config_block->num ?: -ENOENT;
+ }
+ 
+ static void virtio_ccw_del_vq(struct virtqueue *vq, struct ccw1 *ccw)
 
 
