@@ -2,102 +2,208 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE129C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2CFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD57320835
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A853218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfCVNjq (ORCPT
+        id S1728074AbfCVNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:39:46 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42234 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfCVNjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:39:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 908E220010A;
-        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 83BD8200081;
-        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 284B2205F3;
-        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] crypto: caam - limit AXI pipeline to a depth of 1
-Date:   Fri, 22 Mar 2019 15:39:28 +0200
-Message-Id: <1553261968-5766-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 22 Mar 2019 09:40:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55311 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbfCVNke (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:40:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MDeK1c599385
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 22 Mar 2019 06:40:20 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MDeKP1599382;
+        Fri, 22 Mar 2019 06:40:20 -0700
+Date:   Fri, 22 Mar 2019 06:40:20 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-77dcc6233e0def71e104d728ab5a39c2fca51127@git.kernel.org>
+Cc:     kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        johannes@sipsolutions.net, tglx@linutronix.de, mingo@kernel.org,
+        anna-maria@linutronix.de, hpa@zytor.com, bigeasy@linutronix.de,
+        davem@davemloft.net
+Reply-To: johannes@sipsolutions.net, kvalo@codeaurora.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          mingo@kernel.org, hpa@zytor.com, anna-maria@linutronix.de,
+          davem@davemloft.net, bigeasy@linutronix.de
+In-Reply-To: <20190301224821.29843-2-bigeasy@linutronix.de>
+References: <20190301224821.29843-2-bigeasy@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] mac80211_hwsim: Replace hrtimer tasklet with
+ softirq hrtimer
+Git-Commit-ID: 77dcc6233e0def71e104d728ab5a39c2fca51127
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some i.MX6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ) have
-an issue wherein AXI bus transactions may not occur in the correct order.
-This isn't a problem running single descriptors, but can be if running
-multiple concurrent descriptors. Reworking the CAAM driver to throttle
-to single requests is impractical, so this patch limits the AXI pipeline
-to a depth of one (from a default of 4) to preclude this situation from
-occurring.
-This patch applies to known affected platforms.
+Commit-ID:  77dcc6233e0def71e104d728ab5a39c2fca51127
+Gitweb:     https://git.kernel.org/tip/77dcc6233e0def71e104d728ab5a39c2fca51127
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 1 Mar 2019 23:48:19 +0100
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 22 Mar 2019 14:35:30 +0100
 
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+mac80211_hwsim: Replace hrtimer tasklet with softirq hrtimer
+
+Switch the timer to HRTIMER_MODE_REL_SOFT, which executed the timer callback in
+softirq context and remove the hrtimer_tasklet.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
+Acked-by: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lkml.kernel.org/r/20190301224821.29843-2-bigeasy@linutronix.de
+
 ---
- drivers/crypto/caam/ctrl.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/net/wireless/mac80211_hwsim.c | 46 ++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 858bdc9..e2ba3d2 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -468,6 +468,24 @@ static int caam_get_era(struct caam_ctrl __iomem *ctrl)
- 		return caam_get_era_from_hw(ctrl);
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 0838af04d681..2a407a71bcd1 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -521,7 +521,7 @@ struct mac80211_hwsim_data {
+ 	unsigned int rx_filter;
+ 	bool started, idle, scanning;
+ 	struct mutex mutex;
+-	struct tasklet_hrtimer beacon_timer;
++	struct hrtimer beacon_timer;
+ 	enum ps_mode {
+ 		PS_DISABLED, PS_ENABLED, PS_AUTO_POLL, PS_MANUAL_POLL
+ 	} ps;
+@@ -1460,7 +1460,7 @@ static void mac80211_hwsim_stop(struct ieee80211_hw *hw)
+ {
+ 	struct mac80211_hwsim_data *data = hw->priv;
+ 	data->started = false;
+-	tasklet_hrtimer_cancel(&data->beacon_timer);
++	hrtimer_cancel(&data->beacon_timer);
+ 	wiphy_dbg(hw->wiphy, "%s\n", __func__);
  }
  
-+/*
-+ * ERRATA: imx6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ)
-+ * have an issue wherein AXI bus transactions may not occur in the correct
-+ * order. This isn't a problem running single descriptors, but can be if
-+ * running multiple concurrent descriptors. Reworking the driver to throttle
-+ * to single requests is impractical, thus the workaround is to limit the AXI
-+ * pipeline to a depth of 1 (from it's default of 4) to preclude this situation
-+ * from occurring.
-+ */
-+static void handle_imx6_err005766(u32 *mcr)
-+{
-+	if (of_machine_is_compatible("fsl,imx6q") ||
-+	    of_machine_is_compatible("fsl,imx6dl") ||
-+	    of_machine_is_compatible("fsl,imx6qp"))
-+		clrsetbits_32(mcr, MCFGR_AXIPIPE_MASK,
-+			      1 << MCFGR_AXIPIPE_SHIFT);
-+}
-+
- static const struct of_device_id caam_match[] = {
- 	{
- 		.compatible = "fsl,sec-v4.0",
-@@ -640,6 +658,8 @@ static int caam_probe(struct platform_device *pdev)
- 			      (sizeof(dma_addr_t) == sizeof(u64) ?
- 			       MCFGR_LONG_PTR : 0));
+@@ -1583,14 +1583,12 @@ static enum hrtimer_restart
+ mac80211_hwsim_beacon(struct hrtimer *timer)
+ {
+ 	struct mac80211_hwsim_data *data =
+-		container_of(timer, struct mac80211_hwsim_data,
+-			     beacon_timer.timer);
++		container_of(timer, struct mac80211_hwsim_data, beacon_timer);
+ 	struct ieee80211_hw *hw = data->hw;
+ 	u64 bcn_int = data->beacon_int;
+-	ktime_t next_bcn;
  
-+	handle_imx6_err005766(&ctrl->mcr);
+ 	if (!data->started)
+-		goto out;
++		return HRTIMER_NORESTART;
+ 
+ 	ieee80211_iterate_active_interfaces_atomic(
+ 		hw, IEEE80211_IFACE_ITER_NORMAL,
+@@ -1601,12 +1599,9 @@ mac80211_hwsim_beacon(struct hrtimer *timer)
+ 		bcn_int -= data->bcn_delta;
+ 		data->bcn_delta = 0;
+ 	}
+-
+-	next_bcn = ktime_add(hrtimer_get_expires(timer),
+-			     ns_to_ktime(bcn_int * 1000));
+-	tasklet_hrtimer_start(&data->beacon_timer, next_bcn, HRTIMER_MODE_ABS);
+-out:
+-	return HRTIMER_NORESTART;
++	hrtimer_forward(&data->beacon_timer, hrtimer_get_expires(timer),
++			ns_to_ktime(bcn_int * NSEC_PER_USEC));
++	return HRTIMER_RESTART;
+ }
+ 
+ static const char * const hwsim_chanwidths[] = {
+@@ -1680,15 +1675,15 @@ static int mac80211_hwsim_config(struct ieee80211_hw *hw, u32 changed)
+ 	mutex_unlock(&data->mutex);
+ 
+ 	if (!data->started || !data->beacon_int)
+-		tasklet_hrtimer_cancel(&data->beacon_timer);
+-	else if (!hrtimer_is_queued(&data->beacon_timer.timer)) {
++		hrtimer_cancel(&data->beacon_timer);
++	else if (!hrtimer_is_queued(&data->beacon_timer)) {
+ 		u64 tsf = mac80211_hwsim_get_tsf(hw, NULL);
+ 		u32 bcn_int = data->beacon_int;
+ 		u64 until_tbtt = bcn_int - do_div(tsf, bcn_int);
+ 
+-		tasklet_hrtimer_start(&data->beacon_timer,
+-				      ns_to_ktime(until_tbtt * 1000),
+-				      HRTIMER_MODE_REL);
++		hrtimer_start(&data->beacon_timer,
++			      ns_to_ktime(until_tbtt * NSEC_PER_USEC),
++			      HRTIMER_MODE_REL_SOFT);
+ 	}
+ 
+ 	return 0;
+@@ -1751,7 +1746,7 @@ static void mac80211_hwsim_bss_info_changed(struct ieee80211_hw *hw,
+ 			  info->enable_beacon, info->beacon_int);
+ 		vp->bcn_en = info->enable_beacon;
+ 		if (data->started &&
+-		    !hrtimer_is_queued(&data->beacon_timer.timer) &&
++		    !hrtimer_is_queued(&data->beacon_timer) &&
+ 		    info->enable_beacon) {
+ 			u64 tsf, until_tbtt;
+ 			u32 bcn_int;
+@@ -1759,9 +1754,10 @@ static void mac80211_hwsim_bss_info_changed(struct ieee80211_hw *hw,
+ 			tsf = mac80211_hwsim_get_tsf(hw, vif);
+ 			bcn_int = data->beacon_int;
+ 			until_tbtt = bcn_int - do_div(tsf, bcn_int);
+-			tasklet_hrtimer_start(&data->beacon_timer,
+-					      ns_to_ktime(until_tbtt * 1000),
+-					      HRTIMER_MODE_REL);
 +
- 	/*
- 	 *  Read the Compile Time paramters and SCFGR to determine
- 	 * if Virtualization is enabled for this platform
--- 
-2.1.0
-
++			hrtimer_start(&data->beacon_timer,
++				      ns_to_ktime(until_tbtt * NSEC_PER_USEC),
++				      HRTIMER_MODE_REL_SOFT);
+ 		} else if (!info->enable_beacon) {
+ 			unsigned int count = 0;
+ 			ieee80211_iterate_active_interfaces_atomic(
+@@ -1770,7 +1766,7 @@ static void mac80211_hwsim_bss_info_changed(struct ieee80211_hw *hw,
+ 			wiphy_dbg(hw->wiphy, "  beaconing vifs remaining: %u",
+ 				  count);
+ 			if (count == 0) {
+-				tasklet_hrtimer_cancel(&data->beacon_timer);
++				hrtimer_cancel(&data->beacon_timer);
+ 				data->beacon_int = 0;
+ 			}
+ 		}
+@@ -2922,9 +2918,9 @@ static int mac80211_hwsim_new_radio(struct genl_info *info,
+ 
+ 	wiphy_ext_feature_set(hw->wiphy, NL80211_EXT_FEATURE_CQM_RSSI_LIST);
+ 
+-	tasklet_hrtimer_init(&data->beacon_timer,
+-			     mac80211_hwsim_beacon,
+-			     CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
++	hrtimer_init(&data->beacon_timer, CLOCK_MONOTONIC,
++		     HRTIMER_MODE_ABS_SOFT);
++	data->beacon_timer.function = mac80211_hwsim_beacon;
+ 
+ 	err = ieee80211_register_hw(hw);
+ 	if (err < 0) {
