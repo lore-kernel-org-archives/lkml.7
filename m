@@ -2,245 +2,266 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72442C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D427AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393C8218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AFD218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553220693;
+	bh=21voZlmTYfBpBNlUti6twAYJCV2rlig14i/vbhS8hZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N7kqx3HS6Nms8/87gflXwUStA2c78cD+HglJRLRxb6DhkCqfiR/y8TJ6NWyQSEQgQ
+	 a2TSnEV8YyAfWsVZppErUUXvxdC+Kx0XWVCqcd3sGMbmDkMHGMMmrxo+wcIYubHu/t
+	 k//LuCm/mHocN86FuH/KeYpNDwFyRCr/vLqENOy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfCVCDD (ORCPT
+        id S1727518AbfCVCLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 22:03:03 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:34568 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfCVCDD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 22:03:03 -0400
-Received: by mail-it1-f193.google.com with SMTP id l4so3932254ite.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 19:03:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KbWATDX+8hOsiQa4XIVJ4C1elQr9+5ttSB/cQbkzKoU=;
-        b=khb7BK5tyTa0DzMXB55n6p5NWxRlCMjGEW6Y2VZipQpyuYKEwmvk7LKxQOUIuWtUcN
-         sAJMYE7y2DPdytgSVI2xWmvGW7vgJN7ntz1u2bzVu1X0ivbrVHaiV0makcRJJ1+LOTPg
-         yC8+ioDL3DQtS9TsAw2D7dn4i27Rs+5SZthb5JkBcdmQKA35PhM/TpMAGIfwN199azFr
-         amIM3V1VKUwhBqmVQi95eWAO/syey5nJjLi6Gs1eJoM9cGuphB+vSOkt8t/TRHDlARDk
-         H0xlV0Oz2FK7jyI66iwWZi8WpiE8qozPV2RtKvF69BD8hecuLmJV3qFLSp8bWVB9gnbS
-         k6nQ==
-X-Gm-Message-State: APjAAAUKCR/bY7/dNuRhQGkmdMMFWCFzzrpBfIN3vZU+JwAW5xGYSg5q
-        mdowmdOHoXOZ5+TBmkErK6hBLL0scYLZUr2g/+RxbvMOzeA=
-X-Google-Smtp-Source: APXvYqxGnkka5Ef1AiDDzLMYJcSQ0dXpQPaIkSYk8EZrqic2dK6okn7nmq9SNub+LnO5cmGNz4uBItnsRb5Q5HhaQH0=
-X-Received: by 2002:a24:73c5:: with SMTP id y188mr1507948itb.147.1553220181665;
- Thu, 21 Mar 2019 19:03:01 -0700 (PDT)
+        Thu, 21 Mar 2019 22:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727376AbfCVCLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 22:11:31 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DF2D218FE;
+        Fri, 22 Mar 2019 02:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553220690;
+        bh=21voZlmTYfBpBNlUti6twAYJCV2rlig14i/vbhS8hZ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R92IchNawQr/Km2AZtoZOnoOwidvOyiYpHoq0IiaF/zU/XUxsvOpLuflZpBsZWJbJ
+         S8Pi+KYq34/sJWZ5XOcAWXsqZgx3eMFOc8wRquOpx21UrjkoDyujq25x7IpbrKcVtZ
+         RweQPrfw7jWP4NHYhynJ1mdIYgqTzTFr1nBdbKdM=
+Date:   Fri, 22 Mar 2019 10:11:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
+Message-ID: <20190322021102.GW12513@dragon>
+References: <20190311213124.29325-1-angus@akkea.ca>
+ <20190321125252.4498-1-angus@akkea.ca>
 MIME-Version: 1.0
-References: <20190308030508.13548-1-kasong@redhat.com>
-In-Reply-To: <20190308030508.13548-1-kasong@redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 22 Mar 2019 10:02:50 +0800
-Message-ID: <CACPcB9c+L581C1r=V-kwEuFQUqpqkRuLra1QiEV9am1RPSQAXg@mail.gmail.com>
-Subject: Re: [PATCH v5] x86/gart/kcore: Exclude GART aperture from kcore
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Omar Sandoval <osandov@fb.com>, Jiri Bohac <jbohac@suse.cz>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321125252.4498-1-angus@akkea.ca>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 11:06 AM Kairui Song <kasong@redhat.com> wrote:
->
-> On machines where the GART aperture is mapped over physical RAM,
-> /proc/kcore contains the GART aperture range and reading it may lead
-> to kernel panic.
->
-> Vmcore used to have the same issue, until we fixed it in
-> commit 2a3e83c6f96c ("x86/gart: Exclude GART aperture from vmcore")',
-> leveraging existing hook infrastructure in vmcore to let /proc/vmcore
-> return zeroes when attempting to read the aperture region, and so it
-> won't read from the actual memory.
->
-> We apply the same workaround for kcore. First implement the same hook
-> infrastructure for kcore, then reuse the hook functions introduced in
-> previous vmcore fix. Just with some minor adjustment, rename some
-> functions for more general usage, and simplify the hook infrastructure
-> a bit as there is no module usage yet.
->
-> Suggested-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Kairui Song <kasong@redhat.com>
->
+On Thu, Mar 21, 2019 at 05:52:52AM -0700, Angus Ainslie (Purism) wrote:
+> Add the imx8mq TMU (Thermal management unit) nodes for CPU,
+> GPU, and VPU.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+
+Subject prefix 'arm64: dts: imx8mq:' would be good enough.  I changed it
+and applied patch.
+
+Shawn
+
 > ---
->
-> Update from V4:
-> - Remove the unregistering funtion and move functions never used after
->   init to .init
->
-> Update from V3:
-> - Reuse the approach in V2, as Jiri noticed V3 approach may fail
->   some use case. It introduce overlapped region in kcore, and can't
->   garenteen the read request will fall into the region we wanted.
-> - Improve some function naming suggested by Baoquan in V2.
-> - Simplify the hook registering and checking, we are not exporting the
->   hook register function for now, no need to make it that complex.
->
-> Update from V2:
-> Instead of repeating the same hook infrastructure for kcore, introduce
-> a new kcore area type to avoid reading from, and let kcore always bypass
-> this kind of area.
->
-> Update from V1:
-> Fix a complie error when CONFIG_PROC_KCORE is not set
->
->  arch/x86/kernel/aperture_64.c | 20 +++++++++++++-------
->  fs/proc/kcore.c               | 27 +++++++++++++++++++++++++++
->  include/linux/kcore.h         |  2 ++
->  3 files changed, 42 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
-> index 58176b56354e..294ed4392a0e 100644
-> --- a/arch/x86/kernel/aperture_64.c
-> +++ b/arch/x86/kernel/aperture_64.c
-> @@ -14,6 +14,7 @@
->  #define pr_fmt(fmt) "AGP: " fmt
->
->  #include <linux/kernel.h>
-> +#include <linux/kcore.h>
->  #include <linux/types.h>
->  #include <linux/init.h>
->  #include <linux/memblock.h>
-> @@ -57,7 +58,7 @@ int fallback_aper_force __initdata;
->
->  int fix_aperture __initdata = 1;
->
-> -#ifdef CONFIG_PROC_VMCORE
-> +#if defined(CONFIG_PROC_VMCORE) || defined(CONFIG_PROC_KCORE)
->  /*
->   * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
->   * use the same range because it will remain configured in the northbridge.
-> @@ -66,20 +67,25 @@ int fix_aperture __initdata = 1;
->   */
->  static unsigned long aperture_pfn_start, aperture_page_count;
->
-> -static int gart_oldmem_pfn_is_ram(unsigned long pfn)
-> +static int gart_mem_pfn_is_ram(unsigned long pfn)
->  {
->         return likely((pfn < aperture_pfn_start) ||
->                       (pfn >= aperture_pfn_start + aperture_page_count));
->  }
->
-> -static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-> +static void __init exclude_from_core(u64 aper_base, u32 aper_order)
->  {
->         aperture_pfn_start = aper_base >> PAGE_SHIFT;
->         aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
-> -       WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
-> +#ifdef CONFIG_PROC_VMCORE
-> +       WARN_ON(register_oldmem_pfn_is_ram(&gart_mem_pfn_is_ram));
-> +#endif
-> +#ifdef CONFIG_PROC_KCORE
-> +       WARN_ON(register_mem_pfn_is_ram(&gart_mem_pfn_is_ram));
-> +#endif
->  }
->  #else
-> -static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-> +static void exclude_from_core(u64 aper_base, u32 aper_order)
->  {
->  }
->  #endif
-> @@ -474,7 +480,7 @@ int __init gart_iommu_hole_init(void)
->                          * may have allocated the range over its e820 RAM
->                          * and fixed up the northbridge
->                          */
-> -                       exclude_from_vmcore(last_aper_base, last_aper_order);
-> +                       exclude_from_core(last_aper_base, last_aper_order);
->
->                         return 1;
->                 }
-> @@ -520,7 +526,7 @@ int __init gart_iommu_hole_init(void)
->          * overlap with the first kernel's memory. We can't access the
->          * range through vmcore even though it should be part of the dump.
->          */
-> -       exclude_from_vmcore(aper_alloc, aper_order);
-> +       exclude_from_core(aper_alloc, aper_order);
->
->         /* Fix up the north bridges */
->         for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
-> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> index bbcc185062bb..d29d869abec1 100644
-> --- a/fs/proc/kcore.c
-> +++ b/fs/proc/kcore.c
-> @@ -54,6 +54,28 @@ static LIST_HEAD(kclist_head);
->  static DECLARE_RWSEM(kclist_lock);
->  static int kcore_need_update = 1;
->
-> +/*
-> + * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
-> + * Same as oldmem_pfn_is_ram in vmcore
-> + */
-> +static int (*mem_pfn_is_ram)(unsigned long pfn);
+> 
+> Changes since v3:
+> 
+> Moved the annotation.
+> 
+> Changes since v2:
+> 
+> Updated alert and critical temps for commercial parts.
+> Fixed node names.
+> 
+> Changes since v1:
+> 
+> Removed references to multi sensor patch.
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index b39c6c75c043..81d5ce1b1ec1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/power/imx8mq-power.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  #include "imx8mq-pinfunc.h"
+>  
+>  / {
+> @@ -89,6 +90,7 @@
+>  			reg = <0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_1: cpu@1 {
+> @@ -97,6 +99,7 @@
+>  			reg = <0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_2: cpu@2 {
+> @@ -105,6 +108,7 @@
+>  			reg = <0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_3: cpu@3 {
+> @@ -113,6 +117,7 @@
+>  			reg = <0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A53_L2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A53_L2: l2-cache0 {
+> @@ -210,6 +215,119 @@
+>  				#interrupt-cells = <2>;
+>  			};
+>  
+> +			tmu: tmu@30260000 {
+> +				compatible = "fsl,imx8mq-tmu";
+> +				reg = <0x30260000 0x10000>;
+> +				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +				little-endian;
+> +				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
+> +				fsl,tmu-calibration = <0x00000000 0x00000023
+> +						       0x00000001 0x00000029
+> +						       0x00000002 0x0000002f
+> +						       0x00000003 0x00000035
+> +						       0x00000004 0x0000003d
+> +						       0x00000005 0x00000043
+> +						       0x00000006 0x0000004b
+> +						       0x00000007 0x00000051
+> +						       0x00000008 0x00000057
+> +						       0x00000009 0x0000005f
+> +						       0x0000000a 0x00000067
+> +						       0x0000000b 0x0000006f
 > +
-> +int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
-> +{
-> +       if (mem_pfn_is_ram)
-> +               return -EBUSY;
-> +       mem_pfn_is_ram = fn;
-> +       return 0;
-> +}
+> +						       0x00010000 0x0000001b
+> +						       0x00010001 0x00000023
+> +						       0x00010002 0x0000002b
+> +						       0x00010003 0x00000033
+> +						       0x00010004 0x0000003b
+> +						       0x00010005 0x00000043
+> +						       0x00010006 0x0000004b
+> +						       0x00010007 0x00000055
+> +						       0x00010008 0x0000005d
+> +						       0x00010009 0x00000067
+> +						       0x0001000a 0x00000070
 > +
-> +static int pfn_is_ram(unsigned long pfn)
-> +{
-> +       if (mem_pfn_is_ram)
-> +               return mem_pfn_is_ram(pfn);
-> +       else
-> +               return 1;
-> +}
+> +						       0x00020000 0x00000017
+> +						       0x00020001 0x00000023
+> +						       0x00020002 0x0000002d
+> +						       0x00020003 0x00000037
+> +						       0x00020004 0x00000041
+> +						       0x00020005 0x0000004b
+> +						       0x00020006 0x00000057
+> +						       0x00020007 0x00000063
+> +						       0x00020008 0x0000006f
 > +
->  /* This doesn't grab kclist_lock, so it should only be used at init time. */
->  void __init kclist_add(struct kcore_list *new, void *addr, size_t size,
->                        int type)
-> @@ -465,6 +487,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->                                 goto out;
->                         }
->                         m = NULL;       /* skip the list anchor */
-> +               } else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
-> +                       if (clear_user(buffer, tsz)) {
-> +                               ret = -EFAULT;
-> +                               goto out;
-> +                       }
->                 } else if (m->type == KCORE_VMALLOC) {
->                         vread(buf, (char *)start, tsz);
->                         /* we have to zero-fill user buffer even if no read */
-> diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-> index 8c3f8c14eeaa..c843f4a9c512 100644
-> --- a/include/linux/kcore.h
-> +++ b/include/linux/kcore.h
-> @@ -44,6 +44,8 @@ void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
->         m->vaddr = (unsigned long)vaddr;
->         kclist_add(m, addr, sz, KCORE_REMAP);
->  }
+> +						       0x00030000 0x00000015
+> +						       0x00030001 0x00000021
+> +						       0x00030002 0x0000002d
+> +						       0x00030003 0x00000039
+> +						       0x00030004 0x00000045
+> +						       0x00030005 0x00000053
+> +						       0x00030006 0x0000005f
+> +						       0x00030007 0x00000071>;
+> +				#thermal-sensor-cells =  <1>;
+> +			};
 > +
-> +extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
->  #else
->  static inline
->  void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
-> --
-> 2.20.1
->
-
-Ping? Can any one help to take this patch?
-
---
-Best Regards,
-Kairui Song
+> +			thermal-zones {
+> +				cpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 0>;
+> +
+> +					trips {
+> +						cpu_alert: cpu-alert {
+> +							temperature = <80000>;
+> +							hysteresis = <2000>;
+> +							type = "passive";
+> +						};
+> +
+> +						cpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +
+> +					cooling-maps {
+> +						map0 {
+> +							trip = <&cpu_alert>;
+> +							cooling-device =
+> +								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +						};
+> +					};
+> +				};
+> +
+> +				gpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 1>;
+> +
+> +					trips {
+> +						gpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +				};
+> +
+> +				vpu-thermal {
+> +					polling-delay-passive = <250>;
+> +					polling-delay = <2000>;
+> +					thermal-sensors = <&tmu 2>;
+> +
+> +					trips {
+> +						vpu-crit {
+> +							temperature = <90000>;
+> +							hysteresis = <2000>;
+> +							type = "critical";
+> +						};
+> +					};
+> +				};
+> +			};
+> +
+>  			wdog1: watchdog@30280000 {
+>  				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+>  				reg = <0x30280000 0x10000>;
+> -- 
+> 2.17.1
+> 
