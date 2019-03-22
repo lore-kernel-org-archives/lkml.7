@@ -6,54 +6,55 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFA1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90D5C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945AF2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F78218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfCVJg5 (ORCPT
+        id S1727947AbfCVJhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 05:36:57 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:53370 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727684AbfCVJg4 (ORCPT
+        Fri, 22 Mar 2019 05:37:08 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:36800 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727684AbfCVJhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 05:36:56 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M9XxU9019340;
-        Fri, 22 Mar 2019 04:36:53 -0500
+        Fri, 22 Mar 2019 05:37:07 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M9Y0Hg019937;
+        Fri, 22 Mar 2019 04:37:05 -0500
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2ratwunxpf-1;
-        Fri, 22 Mar 2019 04:36:53 -0500
-Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id EFB62611C8B9;
-        Fri, 22 Mar 2019 04:36:52 -0500 (CDT)
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2ratnq6bfe-1;
+        Fri, 22 Mar 2019 04:37:04 -0500
+Received: from EX17.ad.cirrus.com (ex17.ad.cirrus.com [172.20.9.81])
+        by mail3.cirrus.com (Postfix) with ESMTP id D0160611C8B2;
+        Fri, 22 Mar 2019 04:37:25 -0500 (CDT)
 Received: from imbe.wolfsonmicro.main (198.61.95.81) by EX17.ad.cirrus.com
  (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
- 09:36:52 +0000
+ 09:37:03 +0000
 Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
  [198.61.86.93])        by imbe.wolfsonmicro.main (8.14.4/8.14.4) with ESMTP id
- x2M9aqIm004272;        Fri, 22 Mar 2019 09:36:52 GMT
-Date:   Fri, 22 Mar 2019 09:36:52 +0000
+ x2M9b3Cb004298;        Fri, 22 Mar 2019 09:37:03 GMT
+Date:   Fri, 22 Mar 2019 09:37:03 +0000
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 2/4] rtc: wm831x: remove unnecessary goto
-Message-ID: <20190322093652.GA46536@ediswmail.ad.cirrus.com>
+Subject: Re: [PATCH 3/4] rtc: wm831x: switch to
+ rtc_time64_to_tm/rtc_tm_to_time64
+Message-ID: <20190322093703.GB46536@ediswmail.ad.cirrus.com>
 References: <20190322071611.16407-1-alexandre.belloni@bootlin.com>
- <20190322071611.16407-2-alexandre.belloni@bootlin.com>
+ <20190322071611.16407-3-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190322071611.16407-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190322071611.16407-3-alexandre.belloni@bootlin.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=688 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=671 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1903220072
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,9 +62,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 08:16:09AM +0100, Alexandre Belloni wrote:
-> There is no specific handling in the error path of wm831x_rtc_probe, remove
-> the unnecessary goto and label.
+On Fri, Mar 22, 2019 at 08:16:10AM +0100, Alexandre Belloni wrote:
+> Call the 64bit versions of rtc_tm time conversion now that the range is
+> enforced by the core.
 > 
 > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
