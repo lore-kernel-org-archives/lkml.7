@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEBEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86BD21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930F2218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254005;
-	bh=EnF7MeBTW0j7hpgBQXTSAHzkd7ebYsc5Oy6a1iM5aQI=;
+	s=default; t=1553254009;
+	bh=COHtvt5ZrcT74APEONreLYLf+qwDSSTE7+TApVZfll0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gNjUkgpi2xUCxFNHjZv+bTbR8Cd3+gSMU+rFDxRL52iP4bFPFo1yzsTbwOqZabv9j
-	 CTiMPVJ0iSfnmwJMIkYmOzkYKTNfxofBovMAC8s0e5xSBtMPs5KhA3+/SMTveWxmNZ
-	 GFPKBxnM+meJPN5bb6KyDLrRW3Y0oigcBoi//+Ow=
+	b=tjvoDUfwKFoSTjKEoQan7iKQihwN+w9MQZj1xrncVTH0Y95N1m4jTrpLg9xP6e//+
+	 7SQzuL5qfSJn0fN6/2//C49J/HTaoaUwPHXj3Msg6OBUMq1/5G+viWqGT2eB2JypMp
+	 0WPQCjlCMGb53RLj4bCP7hs3NsWPgxND24blPumg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfCVL0o (ORCPT
+        id S1729464AbfCVL0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbfCVL0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:42 -0400
+        id S1729454AbfCVL0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E738020657;
-        Fri, 22 Mar 2019 11:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85721218B0;
+        Fri, 22 Mar 2019 11:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254001;
-        bh=EnF7MeBTW0j7hpgBQXTSAHzkd7ebYsc5Oy6a1iM5aQI=;
+        s=default; t=1553254004;
+        bh=COHtvt5ZrcT74APEONreLYLf+qwDSSTE7+TApVZfll0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBvggWnkGIoyluQF2gyg+Vh00HS9tnGyy7GyEJvQr1BB0DAew+fxB5kC1iAZ0WGQu
-         QZ1+6FRMHhHaHagra7VRi3N396yl0yZb3QPR64akMT70JdxtUJzr3Vhd+DbXHo+QIF
-         +8GRd+oxJhD+JHJA/Trc5PVduoB4ES/TQ1GNIaNI=
+        b=Wyp6rdjooOH9UotkmTe11rRtEExufcjojMaCzCqTPsLnOnBXUjib3l+K4OgtAeQrJ
+         Ezyd19A3DIIn2CqyTw2w1e5/9xfj8XqhA3Aofada7JGyD30Zkcyh8Iah36DFEV50vr
+         VW74ObNq76y3mWZCk22nGbQ/LhCL2wkOczQ21dSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 3.18 121/134] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
-Date:   Fri, 22 Mar 2019 12:15:34 +0100
-Message-Id: <20190322111219.145981996@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 3.18 112/134] scsi: virtio_scsi: dont send sc payload with tmfs
+Date:   Fri, 22 Mar 2019 12:15:25 +0100
+Message-Id: <20190322111218.424874403@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -70,52 +66,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zev Weiss <zev@bewilderbeest.net>
+From: Felipe Franciosi <felipe@nutanix.com>
 
-commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
+commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
 
-This bug has apparently existed since the introduction of this function
-in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
-"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
-neighbour sysctls.").
+The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
+device-readable records and a single device-writable response entry:
 
-As a minimal fix we can simply duplicate the corresponding check in
-do_proc_dointvec_conv().
+    struct virtio_scsi_ctrl_tmf
+    {
+        // Device-readable part
+        le32 type;
+        le32 subtype;
+        u8 lun[8];
+        le64 id;
+        // Device-writable part
+        u8 response;
+    }
 
-Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>	[2.6.2+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The above should be organised as two descriptor entries (or potentially
+more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
+id" or after "u8 response".
+
+The Linux driver doesn't respect that, with virtscsi_abort() and
+virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
+results in the original scsi command payload (or writable buffers) added to
+the tmf.
+
+This fixes the problem by leaving cmd->sc zeroed out, which makes
+virtscsi_kick_cmd() add the tmf to the control vq without any payload.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sysctl.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/scsi/virtio_scsi.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2153,7 +2153,16 @@ static int do_proc_dointvec_minmax_conv(
- {
- 	struct do_proc_dointvec_minmax_conv_param *param = data;
- 	if (write) {
--		int val = *negp ? -*lvalp : *lvalp;
-+		int val;
-+		if (*negp) {
-+			if (*lvalp > (unsigned long) INT_MAX + 1)
-+				return -EINVAL;
-+			val = -*lvalp;
-+		} else {
-+			if (*lvalp > (unsigned long) INT_MAX)
-+				return -EINVAL;
-+			val = *lvalp;
-+		}
- 		if ((param->min && *param->min > val) ||
- 		    (param->max && *param->max < val))
- 			return -EINVAL;
+--- a/drivers/scsi/virtio_scsi.c
++++ b/drivers/scsi/virtio_scsi.c
+@@ -653,7 +653,6 @@ static int virtscsi_device_reset(struct
+ 		return FAILED;
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->sc = sc;
+ 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
+ 		.type = VIRTIO_SCSI_T_TMF,
+ 		.subtype = VIRTIO_SCSI_T_TMF_LOGICAL_UNIT_RESET,
+@@ -728,7 +727,6 @@ static int virtscsi_abort(struct scsi_cm
+ 		return FAILED;
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->sc = sc;
+ 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
+ 		.type = VIRTIO_SCSI_T_TMF,
+ 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
 
 
