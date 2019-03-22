@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3851BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660042190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0149E218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253695;
-	bh=3Sgdnf3koeXeTMaPS3J74eXibG0SHxcWUNDSWmsQVkE=;
+	s=default; t=1553253699;
+	bh=j1ptw1Sp0B7w15N9QVLk+6+7gSq8LA6/4OrJRnkF9VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gOP2GjtBOGBbLlphglghoTOJuA15S4vQVhOCnKGTJhuFsk0x4PMl68nppAPkshNF
-	 PK2fZ9CJRhbwHHUhWsBBmw543SkvUqgoGJwmc090QY88H1S2Ey7yyW0rYOm6/njYeE
-	 Sye0lJPl5PxxNPFnMmXBbqUI0XGlkB+u5ipAAQgM=
+	b=LKdCZf3XrAmzZ40Se0urFNlMaECqfYKuSbAxZV8LNsCC9B3/0MkBUpcXxDW5YuGGj
+	 kd7HlXgWqbTiHlf4KlnBpavYOnznxmELbder1vQ8yfBMxHUGstL6fEeK8HG7R+psNK
+	 ehK2kUHENl0Q41rFQS+aeLYnnNWJTmUEqNHuIVOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbfCVLVe (ORCPT
+        id S1728613AbfCVLVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbfCVLVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 07:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728589AbfCVLV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C88F1218D4;
-        Fri, 22 Mar 2019 11:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D0B5218A2;
+        Fri, 22 Mar 2019 11:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253691;
-        bh=3Sgdnf3koeXeTMaPS3J74eXibG0SHxcWUNDSWmsQVkE=;
+        s=default; t=1553253688;
+        bh=j1ptw1Sp0B7w15N9QVLk+6+7gSq8LA6/4OrJRnkF9VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ki17kg3FxDhdL9rz3mg4q4CbtEXuySJ8XAybN1QduiReGTbCSyZq9v0W1kOqKF8HH
-         YnmQ2IWJHu9g9fM02g0/RnQdw+zsrcoPuKFcaBVSJSD+nBZrwHfZBa3f2WcQnGpDi4
-         sHPdaYH1NYs51yhZLacbUGxw15JG73uKDHuKOe7U=
+        b=qpfzTr62Pu3GQABGRK2K1fiEsjKEN0nZypglqmr7Kl0W2Ffi+dXwgP4/1Yo62DZyx
+         wq2TGvDrhEw7H1T1b9nkxyfJ/VZwGFU4IwuyXtQ31Op4rBjKC/QZRepkn7gOBqA8se
+         oLHuhdWAt7IiLdJ1LuqYPSWOL2b3ifLcA96sDlpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronen Arad <ronen.arad@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Salyzyn <salyzyn@android.com>
-Subject: [PATCH 3.18 024/134] netlink: Trim skb to alloc size to avoid MSG_TRUNC
-Date:   Fri, 22 Mar 2019 12:13:57 +0100
-Message-Id: <20190322111211.573883178@linuxfoundation.org>
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Oussama Ghorbel <ghorbel@pivasoftware.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 023/134] sit: check if IPv6 enabled before calling ip6_err_gen_icmpv6_unreach()
+Date:   Fri, 22 Mar 2019 12:13:56 +0100
+Message-Id: <20190322111211.529741395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,108 +68,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arad, Ronen <ronen.arad@intel.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit db65a3aaf29ecce2e34271d52e8d2336b97bd9fe upstream.
+[ Upstream commit 173656accaf583698bac3f9e269884ba60d51ef4 ]
 
-netlink_dump() allocates skb based on the calculated min_dump_alloc or
-a per socket max_recvmsg_len.
-min_alloc_size is maximum space required for any single netdev
-attributes as calculated by rtnl_calcit().
-max_recvmsg_len tracks the user provided buffer to netlink_recvmsg.
-It is capped at 16KiB.
-The intention is to avoid small allocations and to minimize the number
-of calls required to obtain dump information for all net devices.
+If we disabled IPv6 from the kernel command line (ipv6.disable=1), we should
+not call ip6_err_gen_icmpv6_unreach(). This:
 
-netlink_dump packs as many small messages as could fit within an skb
-that was sized for the largest single netdev information. The actual
-space available within an skb is larger than what is requested. It could
-be much larger and up to near 2x with align to next power of 2 approach.
+  ip link add sit1 type sit local 192.0.2.1 remote 192.0.2.2 ttl 1
+  ip link set sit1 up
+  ip addr add 198.51.100.1/24 dev sit1
+  ping 198.51.100.2
 
-Allowing netlink_dump to use all the space available within the
-allocated skb increases the buffer size a user has to provide to avoid
-truncaion (i.e. MSG_TRUNG flag set).
+if IPv6 is disabled at boot time, will crash the kernel.
 
-It was observed that with many VLANs configured on at least one netdev,
-a larger buffer of near 64KiB was necessary to avoid "Message truncated"
-error in "ip link" or "bridge [-c[ompressvlans]] vlan show" when
-min_alloc_size was only little over 32KiB.
+v2: there's no need to use in6_dev_get(), use __in6_dev_get() instead,
+    as we only need to check that idev exists and we are under
+    rcu_read_lock() (from netif_receive_skb_internal()).
 
-This patch trims skb to allocated size in order to allow the user to
-avoid truncation with more reasonable buffer size.
-
-Signed-off-by: Ronen Arad <ronen.arad@intel.com>
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: ca15a078bd90 ("sit: generate icmpv6 error when receiving icmpv4 error")
+Cc: Oussama Ghorbel <ghorbel@pivasoftware.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-
 ---
- net/netlink/af_netlink.c |   34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ net/ipv6/sit.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -1977,6 +1977,7 @@ static int netlink_dump(struct sock *sk)
- 	struct nlmsghdr *nlh;
- 	struct module *module;
- 	int err = -ENOBUFS;
-+	int alloc_min_size;
- 	int alloc_size;
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -577,7 +577,7 @@ static int ipip6_err(struct sk_buff *skb
+ 		goto out;
  
- 	mutex_lock(nlk->cb_mutex);
-@@ -1985,9 +1986,6 @@ static int netlink_dump(struct sock *sk)
- 		goto errout_skb;
- 	}
+ 	err = 0;
+-	if (!ipip6_err_gen_icmpv6_unreach(skb))
++	if (__in6_dev_get(skb->dev) && !ipip6_err_gen_icmpv6_unreach(skb))
+ 		goto out;
  
--	cb = &nlk->cb;
--	alloc_size = max_t(int, cb->min_dump_alloc, NLMSG_GOODSIZE);
--
- 	if (atomic_read(&sk->sk_rmem_alloc) >= sk->sk_rcvbuf)
- 		goto errout_skb;
- 
-@@ -1996,22 +1994,34 @@ static int netlink_dump(struct sock *sk)
- 	 * to reduce number of system calls on dump operations, if user
- 	 * ever provided a big enough buffer.
- 	 */
--	if (alloc_size < nlk->max_recvmsg_len) {
--		skb = netlink_alloc_skb(sk,
--					nlk->max_recvmsg_len,
--					nlk->portid,
-+	cb = &nlk->cb;
-+	alloc_min_size = max_t(int, cb->min_dump_alloc, NLMSG_GOODSIZE);
-+
-+	if (alloc_min_size < nlk->max_recvmsg_len) {
-+		alloc_size = nlk->max_recvmsg_len;
-+		skb = netlink_alloc_skb(sk, alloc_size, nlk->portid,
- 					(GFP_KERNEL & ~__GFP_WAIT) |
- 					__GFP_NOWARN | __GFP_NORETRY);
--		/* available room should be exact amount to avoid MSG_TRUNC */
--		if (skb)
--			skb_reserve(skb, skb_tailroom(skb) -
--					 nlk->max_recvmsg_len);
- 	}
--	if (!skb)
-+	if (!skb) {
-+		alloc_size = alloc_min_size;
- 		skb = netlink_alloc_skb(sk, alloc_size, nlk->portid,
- 					(GFP_KERNEL & ~__GFP_WAIT));
-+	}
- 	if (!skb)
- 		goto errout_skb;
-+
-+	/* Trim skb to allocated size. User is expected to provide buffer as
-+	 * large as max(min_dump_alloc, 16KiB (mac_recvmsg_len capped at
-+	 * netlink_recvmsg())). dump will pack as many smaller messages as
-+	 * could fit within the allocated skb. skb is typically allocated
-+	 * with larger space than required (could be as much as near 2x the
-+	 * requested size with align to next power of 2 approach). Allowing
-+	 * dump to use the excess space makes it difficult for a user to have a
-+	 * reasonable static buffer based on the expected largest dump of a
-+	 * single netdev. The outcome is MSG_TRUNC error.
-+	 */
-+	skb_reserve(skb, skb_tailroom(skb) - alloc_size);
- 	netlink_skb_set_owner_r(skb, sk);
- 
- 	if (nlk->dump_done_errno > 0)
+ 	if (t->parms.iph.ttl == 0 && type == ICMP_TIME_EXCEEDED)
 
 
