@@ -6,167 +6,111 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7EC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858A3C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A20421874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5985421874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfCVOFQ (ORCPT
+        id S1728018AbfCVOHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:05:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:55721 "EHLO
+        Fri, 22 Mar 2019 10:07:46 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:57969 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOFQ (ORCPT
+        with ESMTP id S1727487AbfCVOHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:05:16 -0400
+        Fri, 22 Mar 2019 10:07:45 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mlejs-1ghJNm2mf4-00igkg; Fri, 22 Mar 2019 15:05:08 +0100
+ 1M7KG2-1h42V92tcS-007ksc; Fri, 22 Mar 2019 15:07:27 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Zhao Qiang <qiang.zhao@nxp.com>,
-        Yalin Wang <yalin.wang@sonymobile.com>, stable@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] bitrev: fix constant bitrev
-Date:   Fri, 22 Mar 2019 15:04:55 +0100
-Message-Id: <20190322140503.123580-1-arnd@arndb.de>
+Subject: [PATCH] nfsd: avoid uninitialized variable warning
+Date:   Fri, 22 Mar 2019 15:07:11 +0100
+Message-Id: <20190322140726.251521-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DjxO67pqGSmp/6OXn3JSRwKihmVX3Z6HQD8rsXRcR2QgYIGheUs
- 1A/SGunzMjAjCuL9pk10yL/joHa/RBrzqiF8gFGRG+pqe6MsayQLHLFPiTPyQ5I0q+W7Kct
- 0BLMvLUSMD89AgV7l6z5dIMS0ObsvhWlWK8KaPxLGoRboVGFxEmwsDABe/ullalPP/YAd3Z
- EhuYoUJN+mpe1qDOzLKgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z//SUnpAaVw=:RMLFOHxNBAN5wj1JB7NMYh
- EAAYYml6kukoFQkDrnPEWxcmm56Xwzcs810TaF/STKKS4rBLLM7DSxpar8OIzSjg0wePPRvUF
- n9j8bO96nTBReKb4QAphhU/Ms/2HDNRzNrdOcRDGaVW94IkE8ik0Q0qTguICzx6Li4uqNoG1H
- WiDu0vCMxoBWR6vEGj8Z0Hxjnp3jhQnKJ4BTvLk2xxlA1PyWNmoj6El0G2ZX+jULukRkQ38Ez
- +f81FanxuYYGT9KljND87Zgvq1JiFciFW0QmSLFARXeNK9YYPyO6nLEwhTcG4f70XbHDpYs9y
- 99HljQsq1C6fnKJJdd14+XTz4zu0gMtSWZ6jrsXXoliCi/4+fE2xgH1rkPF1QGvPVFdzaiyRS
- yx6KS60m3z1M1JqYElpFCIj4kaX0vm46l4adjIaFnhi0S9EiSNeejBQM06d5oVtMmuPUjMrwp
- NI3G1Zl8VhRscEYalsfvCLRm3vNGb7hsBfEM+9wVk/0LN4ZL8xRnu33u7XNARnRLCgyUgHttV
- /F1M7A8RENahjyQd0kc8aWwU+7L8VuCNfqGPEJgveIe556dMRP0RmOSb3eDKINcSm6sDS1MDl
- ikTwlYy8OnaO8KkRyr4i8CmxvsQdjbPJAyN/naOV8Xo91MFizgQ0xKyGvDHBXnhPSwdMwPT6t
- lnQvp7bwCbE13pJIAypceEXbOogX8wn4OvIl7qMihUUbDuCuZgGlyDn3sN/USamu9R3ZVB7A6
- gWwi9FrxgIxIKhTsNI+uQ2/EZ0mBvKk1xoneqg==
+X-Provags-ID: V03:K1:ClqJeMIIUkB9B1PjxqSTgR+0icspArSydm3eP4QX8KXk1cbCgud
+ iHZc7n3E2QXam7UFXOqaLr3HXM8LOTd2U4S7LTXrsyUQ54IFFxeDbvW/wtXsswAmsV1chi0
+ rqN2cRIbaW05brr7QR9dDT9gfEABoxBc87eMuY2V9zIPfqKo7QcioQkfny3zfEzAphCtCdx
+ qZEceoJdxr28tF3H6gXdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LGxE0xuTpZs=:kZtuMZP9gxBlOmbKB5g9TH
+ OFD7INBA+zol0o63/lMsauA3ARhRDRKe8iidgyjakTWaeROQqoo4WthKNxy8TkmiD7C1QSItU
+ zpgPnrPMXti9I0NaAIut0axtEdCxeqUWnft6q7Us2QzV5NUqHo6Eln0Ppn7HAwSJOuvrAux7r
+ W9ZdBUts+/grU2oqWMenrL1UBI6rUT6pYeUG6SP4JYWkZr/dhr0ZsBqxZQAA5YNBotRlDBvuh
+ ZZc6hPTj/GS3tHvKjKqyve5mzzfwUrx2okO+jfErbxnUCdsfaqm5+JLpyxDW6bWw4FkgXWnOW
+ otRnhAql9DsHXcQOcG5ohL0Xi1MHhBwA4aSMY9QG4JqMBfBMn4uEUz9wy1ZlF+hvFUYZvTDFS
+ H23fTdcH8V9ve0+QvPK8JDoLp/cJdCYKiAZ3nEWZ5pH/679+Y5FPJTzRnSq7/rAnA1QYno0GW
+ M3VEvyxCN11JyY/A63WX9YK+LLZEH531ra5ivba9T3KuugxBoHXddlME1Ls8TuSk0jM1cKUB/
+ xMcqGQvMaK2ite05Cm2jqB+MdbQpNz4aEOVw29R8as5RyBsBjKg86L3r5IRudm0EpmUy9xRMc
+ 2XDYTcVK+q+KY7SPPDFQ9enKRiVjdi7nrxdLwEBrSNxbM0PxbpX7IDIXILDLa6HF/rKnV4iBC
+ ETN/0wccaoozGT3tF3ala1X9JpGlf0vwVClaOFCRx+KHAoV9Ot85S9azf/edJRUaegDNsn5qm
+ lZtiklxc2ZKY82NW8RQgWG7iW8AMvftx7lb6PQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out with hundreds of warnings that the bitrev macros
-have a problem with constant input:
+clang warns that 'contextlen' may be accessed without an initialization:
 
-drivers/hwmon/sht15.c:187:11: error: variable '__x' is uninitialized when used within its own initialization
-      [-Werror,-Wuninitialized]
-        u8 crc = bitrev8(data->val_status & 0x0F);
-                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/bitrev.h:102:21: note: expanded from macro 'bitrev8'
-        __constant_bitrev8(__x) :                       \
-        ~~~~~~~~~~~~~~~~~~~^~~~
-include/linux/bitrev.h:67:11: note: expanded from macro '__constant_bitrev8'
-        u8 __x = x;                     \
-           ~~~   ^
+fs/nfsd/nfs4xdr.c:2911:9: error: variable 'contextlen' is uninitialized when used here [-Werror,-Wuninitialized]
+                                                                contextlen);
+                                                                ^~~~~~~~~~
+fs/nfsd/nfs4xdr.c:2424:16: note: initialize the variable 'contextlen' to silence this warning
+        int contextlen;
+                      ^
+                       = 0
 
-Both the bitrev and the __constant_bitrev macros use an internal variable
-named __x, which goes horribly wrong when passing one to the other.
+Presumably this cannot happen, as FATTR4_WORD2_SECURITY_LABEL is
+set if CONFIG_NFSD_V4_SECURITY_LABEL is enabled.
+Adding another #ifdef like the other two in this function
+avoids the warning.
 
-The obvious fix is to rename one of the variables, so this adds an
-extra '_'.
-
-It seems we got away with this because
-- there are only a few drivers using bitrev macros
-- usually there are no constant arguments to those
-- when they are constant, they tend to be either 0 or (unsigned)-1
-  (drivers/isdn/i4l/isdnhdlc.o, drivers/iio/amplifiers/ad8366.c)
-  and give the correct result by pure chance.
-
-In fact, the only driver that I could find that gets different results
-with this is drivers/net/wan/slic_ds26522.c, which in turn is a driver
-for fairly rare hardware (adding the maintainer to Cc for testing).
-
-Cc: Zhao Qiang <qiang.zhao@nxp.com>
-Cc: Yalin Wang <yalin.wang@sonymobile.com>
-Cc: stable@vger.kernel.org
-Fixes: 556d2f055bf6 ("ARM: 8187/1: add CONFIG_HAVE_ARCH_BITREVERSE to support rbit instruction")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/bitrev.h | 46 +++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ fs/nfsd/nfs4xdr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
-index 50fb0dee23e8..d35b8ec1c485 100644
---- a/include/linux/bitrev.h
-+++ b/include/linux/bitrev.h
-@@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 3de42a729093..a3a3455826aa 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2420,8 +2420,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 	__be32 status;
+ 	int err;
+ 	struct nfs4_acl *acl = NULL;
++#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+ 	void *context = NULL;
+ 	int contextlen;
++#endif
+ 	bool contextsupport = false;
+ 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+ 	u32 minorversion = resp->cstate.minorversion;
+@@ -2906,12 +2908,14 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
+ 	}
  
- #define __constant_bitrev32(x)	\
- ({					\
--	u32 __x = x;			\
--	__x = (__x >> 16) | (__x << 16);	\
--	__x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);	\
--	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
--	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
--	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
--	__x;								\
-+	u32 ___x = x;			\
-+	___x = (___x >> 16) | (___x << 16);	\
-+	___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);	\
-+	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
-+	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
-+	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
-+	___x;								\
- })
++#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+ 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
+ 		status = nfsd4_encode_security_label(xdr, rqstp, context,
+ 								contextlen);
+ 		if (status)
+ 			goto out;
+ 	}
++#endif
  
- #define __constant_bitrev16(x)	\
- ({					\
--	u16 __x = x;			\
--	__x = (__x >> 8) | (__x << 8);	\
--	__x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);	\
--	__x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);	\
--	__x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);	\
--	__x;								\
-+	u16 ___x = x;			\
-+	___x = (___x >> 8) | (___x << 8);	\
-+	___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);	\
-+	___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);	\
-+	___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);	\
-+	___x;								\
- })
- 
- #define __constant_bitrev8x4(x) \
- ({			\
--	u32 __x = x;	\
--	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
--	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
--	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
--	__x;								\
-+	u32 ___x = x;	\
-+	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
-+	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
-+	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
-+	___x;								\
- })
- 
- #define __constant_bitrev8(x)	\
- ({					\
--	u8 __x = x;			\
--	__x = (__x >> 4) | (__x << 4);	\
--	__x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);	\
--	__x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);	\
--	__x;								\
-+	u8 ___x = x;			\
-+	___x = (___x >> 4) | (___x << 4);	\
-+	___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);	\
-+	___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);	\
-+	___x;								\
- })
- 
- #define bitrev32(x) \
+ 	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
+ 	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
 -- 
 2.20.0
 
