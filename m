@@ -2,134 +2,161 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4FDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04043C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5142195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255909;
-	bh=7eibj3al9HMLW6P5VvZplGcWbt/dBpLCkrKS64I7abY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oup/V1twzNwC3sUNqhJeoIB9yILmugdwQN2JzBC2ihvbVk7O9nBEwrC0yOOokfl8T
-	 3oOJL/hapJTjT6kXZABK+8DoJzMVxn/3PzIdcqTekZvWkDC/fvy10Y+mRiRMRQXn7N
-	 b8bKqE0G88QymfQIUGuRAsXAFoH+OXCo9KES0Eos=
+	by mail.kernel.org (Postfix) with ESMTP id C28FE21934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TwYPEBnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387833AbfCVL62 (ORCPT
+        id S2387845AbfCVL6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730121AbfCVL6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17C22195D;
-        Fri, 22 Mar 2019 11:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255904;
-        bh=7eibj3al9HMLW6P5VvZplGcWbt/dBpLCkrKS64I7abY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUP8MySs7jD/5co5eQ/6rOKlSePn1sG5gstqLu9Oe02o7XYiaugdzje/IibdHWIf8
-         Ch84uQCKptn9xUYiX4gM9auDQaH6a2+C5SyEfUKvFOIPS2D5bLC8fc+3cy5oMP5p5E
-         /4YBjx0ylFbxd2FoniCqGJaazTJRx1CQzmMmW41M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 050/280] netfilter: compat: initialize all fields in xt_init
-Date:   Fri, 22 Mar 2019 12:13:23 +0100
-Message-Id: <20190322111309.123528121@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 07:58:31 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:33548 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387823AbfCVL61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:27 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2MBnJno030483;
+        Fri, 22 Mar 2019 11:58:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=nBL4+RHOYzG4OWB9aNyOjbCEf0XNxXIGQYLtHZrRaEU=;
+ b=TwYPEBnFFZYF2kSvZvWHnl3P8vv6DFCp5rnrETRkyMomrVy8YjYXxDOfoi0NYYvx8bAd
+ sxkBobpDVQ+hKhFqASDYEB8fBg9P062T6GdJSOItGFwn8PiUctH57cuJGRUcsUVQl3Tq
+ EiJ0ahrcfBkNbOeedff8dixTdTOFtZhbDDPkoyUlPflCNu821G8ft2TE3rtvfxAvhuI6
+ pPRHzs+7B9kqkEqSSZGkQ8HW68flbXGEzPcF1HsDWXG4MZyvC5CsDVmatEnqyTWqs2rc
+ CRthmYuz42d3uMr1lbn7vtYFOAL/Y5o0LZa3D5/zTROKp9fZgvFLp3jD4SrXzc3X+alZ TQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by aserp2130.oracle.com with ESMTP id 2r8pnf5tnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 11:58:15 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2MBwEds030966
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 11:58:14 GMT
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2MBwEtr022364;
+        Fri, 22 Mar 2019 11:58:14 GMT
+Received: from [10.191.13.95] (/10.191.13.95)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 Mar 2019 04:58:14 -0700
+Subject: Re: [PATCH] block/mq: blk map queues by core id
+To:     luferry <luferry@163.com>
+References: <20190322100949.5555-1-luferry@163.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <9fa3eda2-536c-86a1-a7a3-c157fd0cdfdc@oracle.com>
+Date:   Fri, 22 Mar 2019 19:58:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190322100949.5555-1-luferry@163.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9202 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903220089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-[ Upstream commit 8d29d16d21342a0c86405d46de0c4ac5daf1760f ]
-
-If a non zero value happens to be in xt[NFPROTO_BRIDGE].cur at init
-time, the following panic can be caused by running
-
-% ebtables -t broute -F BROUTING
-
-from a 32-bit user level on a 64-bit kernel. This patch replaces
-kmalloc_array with kcalloc when allocating xt.
-
-[  474.680846] BUG: unable to handle kernel paging request at 0000000009600920
-[  474.687869] PGD 2037006067 P4D 2037006067 PUD 2038938067 PMD 0
-[  474.693838] Oops: 0000 [#1] SMP
-[  474.697055] CPU: 9 PID: 4662 Comm: ebtables Kdump: loaded Not tainted 4.19.17-11302235.AroraKernelnext.fc18.x86_64 #1
-[  474.707721] Hardware name: Supermicro X9DRT/X9DRT, BIOS 3.0 06/28/2013
-[  474.714313] RIP: 0010:xt_compat_calc_jump+0x2f/0x63 [x_tables]
-[  474.720201] Code: 40 0f b6 ff 55 31 c0 48 6b ff 70 48 03 3d dc 45 00 00 48 89 e5 8b 4f 6c 4c 8b 47 60 ff c9 39 c8 7f 2f 8d 14 08 d1 fa 48 63 fa <41> 39 34 f8 4c 8d 0c fd 00 00 00 00 73 05 8d 42 01 eb e1 76 05 8d
-[  474.739023] RSP: 0018:ffffc9000943fc58 EFLAGS: 00010207
-[  474.744296] RAX: 0000000000000000 RBX: ffffc90006465000 RCX: 0000000002580249
-[  474.751485] RDX: 00000000012c0124 RSI: fffffffff7be17e9 RDI: 00000000012c0124
-[  474.758670] RBP: ffffc9000943fc58 R08: 0000000000000000 R09: ffffffff8117cf8f
-[  474.765855] R10: ffffc90006477000 R11: 0000000000000000 R12: 0000000000000001
-[  474.773048] R13: 0000000000000000 R14: ffffc9000943fcb8 R15: ffffc9000943fcb8
-[  474.780234] FS:  0000000000000000(0000) GS:ffff88a03f840000(0063) knlGS:00000000f7ac7700
-[  474.788612] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[  474.794632] CR2: 0000000009600920 CR3: 0000002037422006 CR4: 00000000000606e0
-[  474.802052] Call Trace:
-[  474.804789]  compat_do_replace+0x1fb/0x2a3 [ebtables]
-[  474.810105]  compat_do_ebt_set_ctl+0x69/0xe6 [ebtables]
-[  474.815605]  ? try_module_get+0x37/0x42
-[  474.819716]  compat_nf_setsockopt+0x4f/0x6d
-[  474.824172]  compat_ip_setsockopt+0x7e/0x8c
-[  474.828641]  compat_raw_setsockopt+0x16/0x3a
-[  474.833220]  compat_sock_common_setsockopt+0x1d/0x24
-[  474.838458]  __compat_sys_setsockopt+0x17e/0x1b1
-[  474.843343]  ? __check_object_size+0x76/0x19a
-[  474.847960]  __ia32_compat_sys_socketcall+0x1cb/0x25b
-[  474.853276]  do_fast_syscall_32+0xaf/0xf6
-[  474.857548]  entry_SYSENTER_compat+0x6b/0x7a
-
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/netfilter/x_tables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index aecadd471e1d..13e1ac333fa4 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1899,7 +1899,7 @@ static int __init xt_init(void)
- 		seqcount_init(&per_cpu(xt_recseq, i));
- 	}
- 
--	xt = kmalloc_array(NFPROTO_NUMPROTO, sizeof(struct xt_af), GFP_KERNEL);
-+	xt = kcalloc(NFPROTO_NUMPROTO, sizeof(struct xt_af), GFP_KERNEL);
- 	if (!xt)
- 		return -ENOMEM;
- 
--- 
-2.19.1
 
 
+On 03/22/2019 06:09 PM, luferry wrote:
+> under virtual machine environment, cpu topology may differ from normal
+> physical server.
 
+Would mind share the name of virtual machine monitor, the command line if
+available, and which device to reproduce.
+
+For instance, I am not able to reproduce with qemu nvme or virtio-blk as I
+assume they use pci or virtio specific mapper to establish the mapping.
+
+E.g., with qemu and nvme: -smp 8,sockets=1,cores=4,threads=2
+
+Indeed I use three queues instead of twp as one is reserved for admin.
+
+# ls /sys/block/nvme0n1/mq/*
+/sys/block/nvme0n1/mq/0:
+cpu0  cpu1  cpu2  cpu3  cpu_list  nr_reserved_tags  nr_tags
+
+/sys/block/nvme0n1/mq/1:
+cpu4  cpu5  cpu6  cpu7  cpu_list  nr_reserved_tags  nr_tags
+
+
+Thank you very much!
+
+Dongli Zhang
+
+> for example (machine with 4 cores, 2 threads per core):
+> 
+> normal physical server:
+> core-id   thread-0-id  thread-1-id
+> 0         0            4
+> 1         1            5
+> 2         2            6
+> 3         3            7
+> 
+> virtual machine:
+> core-id   thread-0-id  thread-1-id
+> 0         0            1
+> 1         2            3
+> 2         4            5
+> 3         6            7
+> 
+> When attach disk with two queues, all the even numbered cpus will be
+> mapped to queue 0. Under virtual machine, all the cpus is followed by
+> its sibling cpu.Before this patch, all the odd numbered cpus will also
+> be mapped to queue 0, can cause serious imbalance.this will lead to
+> performance impact on system IO
+> 
+> So suggest to allocate cpu map by core id, this can be more currency
+> 
+> Signed-off-by: luferry <luferry@163.com>
+> ---
+>  block/blk-mq-cpumap.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+> index 03a534820271..4125e8e77679 100644
+> --- a/block/blk-mq-cpumap.c
+> +++ b/block/blk-mq-cpumap.c
+> @@ -35,7 +35,7 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>  {
+>  	unsigned int *map = qmap->mq_map;
+>  	unsigned int nr_queues = qmap->nr_queues;
+> -	unsigned int cpu, first_sibling;
+> +	unsigned int cpu, first_sibling, core = 0;
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		/*
+> @@ -48,9 +48,10 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>  			map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
+>  		} else {
+>  			first_sibling = get_first_sibling(cpu);
+> -			if (first_sibling == cpu)
+> -				map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
+> -			else
+> +			if (first_sibling == cpu) {
+> +				map[cpu] = cpu_to_queue_index(qmap, nr_queues, core);
+> +				core++;
+> +			} else
+>  				map[cpu] = map[first_sibling];
+>  		}
+>  	}
+> 
