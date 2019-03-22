@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A607DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DCBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745CF218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FC62082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259118;
-	bh=kwTdIg5YRjJgKUE7RHl6EmYrASBf7zczISOjhBIzy5o=;
+	s=default; t=1553259127;
+	bh=qD6Ad7WrzaDWjJaJaqP4V/VFCSLpm62H6o0p/XpYuYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xbD9WyXpUNRT7vIPwHnvPL+4KqtE3fdxCq6qkXbLaooFpQMdbHY4p1VYc8aQFjaO9
-	 QwKij5j4lMGKyU8q9tqmZH4XC9N9mRunec/7DoLg9XMsvu0Fzg2d6ochu79ow02qKD
-	 8G8Ls+0zvpSAFXyURKZOTqZMYP8+SSm8BcG6DzxM=
+	b=wcwjEwRbF/XOh1Xcpjo/vkZrhImFPigI61kjiKiEYPrEw5U/iB/aapnZaxt5L2HfJ
+	 uwUhaUmafRqNSIxo1mYavv8oWJ2hM/NMdchM2NBkyjiqI06jpAAI1sxiqaXvZXq5FW
+	 N/NRnPbD2kjVgwwrpMkZhn235CNXb0sITnMCrt3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfCVMv5 (ORCPT
+        id S1733104AbfCVLxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733127AbfCVLyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:05 -0400
+        id S1732910AbfCVLxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2406721916;
-        Fri, 22 Mar 2019 11:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7068D20850;
+        Fri, 22 Mar 2019 11:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255644;
-        bh=kwTdIg5YRjJgKUE7RHl6EmYrASBf7zczISOjhBIzy5o=;
+        s=default; t=1553255628;
+        bh=qD6Ad7WrzaDWjJaJaqP4V/VFCSLpm62H6o0p/XpYuYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRY/rxteOTnr1DMzRUUH/yFrZO4i/3y6SY3637rwEizPjBAsdbxmor4DBASBsfvE+
-         GKdAioIqzzVdEyVhDdHr1xwdeYbOC0gLC6CDLj33XHJ9fiUoKGsXDH+ediMUYuliCh
-         j84yuseOMlXnsrCDy5ZCgSp0z9DMFqZEjx2BbGI8=
+        b=JceM8qRK6mkwn31qOzhTWbMCNB3F1SMckhURMF6gavSrdCDmrQi1jZKHeNTuEHCww
+         pVhxIxPUQs+b/Or/+nD03uDPXxP5TTaM4AzUrG8EyG/esI2j1B9zIM2IgQ7uX5uKe1
+         pyEDwknCO0N2s6+txXSJnXxQyWlDG/Hf5sh4Un8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 136/183] jbd2: fix compile warning when using JBUFFER_TRACE
-Date:   Fri, 22 Mar 2019 12:16:04 +0100
-Message-Id: <20190322111251.613794660@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 149/183] arm64: debug: Ensure debug handlers check triggering exception level
+Date:   Fri, 22 Mar 2019 12:16:17 +0100
+Message-Id: <20190322111252.631003777@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,87 +66,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
+commit 6bd288569b50bc89fa5513031086746968f585cb upstream.
 
-The jh pointer may be used uninitialized in the two cases below and the
-compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
+Debug exception handlers may be called for exceptions generated both by
+user and kernel code. In many cases, this is checked explicitly, but
+in other cases things either happen to work by happy accident or they
+go slightly wrong. For example, executing 'brk #4' from userspace will
+enter the kprobes code and be ignored, but the instruction will be
+retried forever in userspace instead of delivering a SIGTRAP.
 
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
+Fix this issue in the most stable-friendly fashion by simply adding
+explicit checks of the triggering exception level to all of our debug
+exception handlers.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/kernel/kgdb.c           |   14 ++++++++++----
+ arch/arm64/kernel/probes/kprobes.c |    6 ++++++
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1224,11 +1224,12 @@ int jbd2_journal_get_undo_access(handle_
- 	struct journal_head *jh;
- 	char *committed_data = NULL;
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -233,27 +233,33 @@ int kgdb_arch_handle_exception(int excep
  
--	JBUFFER_TRACE(jh, "entry");
- 	if (jbd2_write_access_granted(handle, bh, true))
- 		return 0;
- 
- 	jh = jbd2_journal_add_journal_head(bh);
-+	JBUFFER_TRACE(jh, "entry");
+ static int kgdb_brk_fn(struct pt_regs *regs, unsigned int esr)
+ {
++	if (user_mode(regs))
++		return DBG_HOOK_ERROR;
 +
- 	/*
- 	 * Do this first --- it can drop the journal lock, so we want to
- 	 * make sure that obtaining the committed_data is done
-@@ -1339,15 +1340,17 @@ int jbd2_journal_dirty_metadata(handle_t
+ 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
+-	return 0;
++	return DBG_HOOK_HANDLED;
+ }
+ NOKPROBE_SYMBOL(kgdb_brk_fn)
  
- 	if (is_handle_aborted(handle))
- 		return -EROFS;
--	if (!buffer_jbd(bh)) {
--		ret = -EUCLEAN;
--		goto out;
--	}
-+	if (!buffer_jbd(bh))
-+		return -EUCLEAN;
+ static int kgdb_compiled_brk_fn(struct pt_regs *regs, unsigned int esr)
+ {
++	if (user_mode(regs))
++		return DBG_HOOK_ERROR;
 +
- 	/*
- 	 * We don't grab jh reference here since the buffer must be part
- 	 * of the running transaction.
- 	 */
- 	jh = bh2jh(bh);
-+	jbd_debug(5, "journal_head %p\n", jh);
-+	JBUFFER_TRACE(jh, "entry");
+ 	compiled_break = 1;
+ 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
+ 
+-	return 0;
++	return DBG_HOOK_HANDLED;
+ }
+ NOKPROBE_SYMBOL(kgdb_compiled_brk_fn);
+ 
+ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
+ {
+-	if (!kgdb_single_step)
++	if (user_mode(regs) || !kgdb_single_step)
+ 		return DBG_HOOK_ERROR;
+ 
+ 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
+-	return 0;
++	return DBG_HOOK_HANDLED;
+ }
+ NOKPROBE_SYMBOL(kgdb_step_brk_fn);
+ 
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -458,6 +458,9 @@ kprobe_single_step_handler(struct pt_reg
+ 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+ 	int retval;
+ 
++	if (user_mode(regs))
++		return DBG_HOOK_ERROR;
 +
- 	/*
- 	 * This and the following assertions are unreliable since we may see jh
- 	 * in inconsistent state unless we grab bh_state lock. But this is
-@@ -1381,9 +1384,6 @@ int jbd2_journal_dirty_metadata(handle_t
- 	}
+ 	/* return error if this is not our step */
+ 	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
  
- 	journal = transaction->t_journal;
--	jbd_debug(5, "journal_head %p\n", jh);
--	JBUFFER_TRACE(jh, "entry");
--
- 	jbd_lock_bh_state(bh);
- 
- 	if (jh->b_modified == 0) {
+@@ -474,6 +477,9 @@ kprobe_single_step_handler(struct pt_reg
+ int __kprobes
+ kprobe_breakpoint_handler(struct pt_regs *regs, unsigned int esr)
+ {
++	if (user_mode(regs))
++		return DBG_HOOK_ERROR;
++
+ 	kprobe_handler(regs);
+ 	return DBG_HOOK_HANDLED;
+ }
 
 
