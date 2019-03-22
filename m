@@ -2,170 +2,151 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A83C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA28204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13739204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="To7dCAIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfCVUN7 (ORCPT
+        id S1727265AbfCVUOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:13:59 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35342 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbfCVUN6 (ORCPT
+        Fri, 22 Mar 2019 16:14:44 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34998 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfCVUOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:13:58 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z13so2004382qki.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:13:58 -0700 (PDT)
+        Fri, 22 Mar 2019 16:14:44 -0400
+Received: by mail-it1-f194.google.com with SMTP id w15so5351323itc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=lhbKbOmtHpV/pF1JUjV1D5/KDzGY4a07jsH4EYtOhaY=;
+        b=To7dCAIleFEZoS6UaisSRXnAS0gRXeUSYLWQY4tYwzzEDfnMqpen+mdTuUtRcTQwgO
+         23EkKPHUN+NjlRGQnLJ2TGFaSMlNJSGVE3DVCzeL4OKJ2LYt9lWPjQloqZR3Evvgo/Sl
+         bMm3KBfw6hDfu+LtHjwfuPPjvJgYEXntrT/FIjlVpZLiEEfcCkJJDG+FVKAejEwhho+n
+         X49IXGeJJE2Zf5Efj7O/dL8S1KPVZKs2+1CiUUTeimRhsy0myxpbtwyTf+jvIOAVLdj+
+         YJ7OTwvzjxvQlkUCOOoGuXEdtT/ZzPUvSn6mnGuBRScfIznV+O4u5I6atPojpd46VVdm
+         TSSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3GVlQtUkOBzM0wtGS5EMCR1UzhxBjccrlpb4vEqZEkU=;
-        b=m5HBWVT1I+8uCJp8o8inPJRaFAxT5N9XejSgHG5ZZoGtfESbUsip4lE3dGbk5cUr0u
-         ZlzaWXmBqmzHhuYU1ZDLtBNbvKx1qlW+1L69L+DzGQjAIxo9LnBvTcdz9Ucc/mRyxdPE
-         +iPy2q1OUus+HbrgKZOExIG3drQ4dWWVNRdzUCNXr4C69cMFidvRZObrzRHJhnWrtzBN
-         Xfr/QZFhdlVae95A/g7AkRdl9YubD9hi+F8LYI2WPJfdX2wjAIikGRcHBKV5r5XnBntW
-         d7a+WFAUhhLNzNHQRb0sRqY1cKcXDLZEHsZV0viV2dH/yMBJOyAEcJFFHeN5vVWAvQ3Z
-         tcEg==
-X-Gm-Message-State: APjAAAXC78ue6r18Q9zjaJCkzUcnx11rLBpfbe01vn81r5sfT2U3u1qC
-        NHRMejB7L9r6GwFj3zmcmqcJmA==
-X-Google-Smtp-Source: APXvYqwzUac+SDBZB/olBS2PKp60a32yDr0hpyBUOdAVetzLxH59C389evgLDbw/IpbGp6I71tHhCA==
-X-Received: by 2002:ae9:f509:: with SMTP id o9mr9198639qkg.133.1553285637702;
-        Fri, 22 Mar 2019 13:13:57 -0700 (PDT)
-Received: from [10.150.73.190] (178.sub-174-227-146.myvzw.com. [174.227.146.178])
-        by smtp.gmail.com with ESMTPSA id 92sm5508111qtc.97.2019.03.22.13.13.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 13:13:57 -0700 (PDT)
-Subject: Re: [PATCH 2/4] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Carlos O'Donell <carlos@redhat.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
- <20190212194253.1951-3-mathieu.desnoyers@efficios.com>
-From:   Carlos O'Donell <codonell@redhat.com>
-Message-ID: <fc431a95-789a-6c02-13d0-d0d01916ee99@redhat.com>
-Date:   Fri, 22 Mar 2019 16:13:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=lhbKbOmtHpV/pF1JUjV1D5/KDzGY4a07jsH4EYtOhaY=;
+        b=KfBgYHWcHtzk9AQc6PNkKZVZpGv0KmTI43f1wheQpsYsicBSRpV+TuVDgTHJBIDUnl
+         0J9eZiBlhtpjxfEPGuWpHxyexU5tmeDSV1rpiDDQ01+cg1lKNqE0W43f/MnSdqS9/dkv
+         gGIVfiYkxB2rGMuv0kBmeFOAJNLMIIcRtXH/E1SP8egV7IqjMgXtDwQ1/p6ab4nCQ6hV
+         5k/mHMtgkTfqfN4DuZcWR2UM+aeygwX3ts1ILPZju9UkiiYZoKhA+ZzAUxxLa6MSnyxK
+         4hSc5aZASl3F1o8wGdDUpO4Hs39Ej+v25c33C7vsRLQGdmIXrsKP4tEQMK73Kdh3pwRT
+         oQXw==
+X-Gm-Message-State: APjAAAUjBElPFZR1l2BDCQZC0tUcznqHk47J7DBtbyyq0RRwn4bs8DvH
+        49MI7oPGwurVFZ7loXm+EM4=
+X-Google-Smtp-Source: APXvYqxFESPJ9aYBAWM2ZGsRNF1WnDFBARd22GWLOd6LpRHXnqTjJ6W79VVfU6t4nnYclEdSyhI7/A==
+X-Received: by 2002:a05:660c:50:: with SMTP id p16mr2743494itk.139.1553285683152;
+        Fri, 22 Mar 2019 13:14:43 -0700 (PDT)
+Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
+        by smtp.gmail.com with ESMTPSA id v10sm2154563itv.8.2019.03.22.13.14.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 13:14:42 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 16:14:40 -0400
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] kobject: Add support for default attribute groups to
+ kobj_type
+Message-ID: <20190322201440.GA30814@ubu-Virtual-Machine>
 MIME-Version: 1.0
-In-Reply-To: <20190212194253.1951-3-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/19 2:42 PM, Mathieu Desnoyers wrote:
-> When available, use the cpu_id field from __rseq_abi on Linux to
-> implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
-> 
-> Benchmarks:
-> 
-> x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
+kobj_type currently uses a list of individual attributes to store
+default attributes. Attribute groups are more flexible than a list of
+attributes because groups provide support for attribute visibility. So,
+add support for default attribute groups to kobj_type.
 
-This patch looks good to me for master, but is blocked on patch 1/4
-being reworked.
+In future patches, the existing uses of kobj_type’s attribute list will
+be converted to attribute groups. When that is complete, kobj_type’s
+attribute list, “default_attrs”, will be removed.
 
-Reviewed-by: Carlos O'Donell <carlos@redhat.com>
+Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
+---
+ include/linux/kobject.h |  3 ++-
+ lib/kobject.c           | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-> glibc sched_getcpu():                     13.7 ns (baseline)
-> glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
-> inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
-> 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> CC: Carlos O'Donell <carlos@redhat.com>
-> CC: Florian Weimer <fweimer@redhat.com>
-> CC: Joseph Myers <joseph@codesourcery.com>
-> CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Ben Maurer <bmaurer@fb.com>
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-> CC: Boqun Feng <boqun.feng@gmail.com>
-> CC: Will Deacon <will.deacon@arm.com>
-> CC: Dave Watson <davejwatson@fb.com>
-> CC: Paul Turner <pjt@google.com>
-> CC: libc-alpha@sourceware.org
-> CC: linux-kernel@vger.kernel.org
-> CC: linux-api@vger.kernel.org
-> ---
->   sysdeps/unix/sysv/linux/sched_getcpu.c | 25 +++++++++++++++++++++++--
->   1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
-> index fb0d317f83..8bfb03778b 100644
-> --- a/sysdeps/unix/sysv/linux/sched_getcpu.c
-> +++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
-> @@ -24,8 +24,8 @@
->   #endif
->   #include <sysdep-vdso.h>
->   
-> -int
-> -sched_getcpu (void)
-> +static int
-> +vsyscall_sched_getcpu (void)
-
-OK.
-
->   {
->   #ifdef __NR_getcpu
->     unsigned int cpu;
-> @@ -37,3 +37,24 @@ sched_getcpu (void)
->     return -1;
->   #endif
->   }
-> +
-> +#ifdef __NR_rseq
-> +#include <linux/rseq.h>
-> +
-> +extern __attribute__ ((tls_model ("initial-exec")))
-> +__thread volatile struct rseq __rseq_abi;
-
-OK.
-
-> +
-> +int
-> +sched_getcpu (void)
-> +{
-> +  int cpu_id = __rseq_abi.cpu_id;
-> +
-> +  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
-
-OK. Impressive :-)
-
-> +}
-> +#else
-> +int
-> +sched_getcpu (void)
-> +{
-> +  return vsyscall_sched_getcpu ();
-
-OK.
-
-> +}
-> +#endif
-> 
-
-
+diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+index 1ab0d624fb36..e2ca0a292e21 100644
+--- a/include/linux/kobject.h
++++ b/include/linux/kobject.h
+@@ -139,7 +139,8 @@ static inline bool kobject_has_children(struct kobject *kobj)
+ struct kobj_type {
+ 	void (*release)(struct kobject *kobj);
+ 	const struct sysfs_ops *sysfs_ops;
+-	struct attribute **default_attrs;
++	struct attribute **default_attrs;	/* use default_groups instead */
++	const struct attribute_group **default_groups;
+ 	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+ 	const void *(*namespace)(struct kobject *kobj);
+ 	void (*get_ownership)(struct kobject *kobj, kuid_t *uid, kgid_t *gid);
+diff --git a/lib/kobject.c b/lib/kobject.c
+index b72e00fd7d09..67789f34951d 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -82,6 +82,7 @@ static int populate_dir(struct kobject *kobj)
+ 
+ static int create_dir(struct kobject *kobj)
+ {
++	const struct kobj_type *ktype = get_ktype(kobj);
+ 	const struct kobj_ns_type_operations *ops;
+ 	int error;
+ 
+@@ -95,6 +96,14 @@ static int create_dir(struct kobject *kobj)
+ 		return error;
+ 	}
+ 
++	if (ktype) {
++		error = sysfs_create_groups(kobj, ktype->default_groups);
++		if (error) {
++			sysfs_remove_dir(kobj);
++			return error;
++		}
++	}
++
+ 	/*
+ 	 * @kobj->sd may be deleted by an ancestor going away.  Hold an
+ 	 * extra reference so that it stays until @kobj is gone.
+@@ -584,11 +593,16 @@ EXPORT_SYMBOL_GPL(kobject_move);
+ void kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
++	const struct kobj_type *ktype = get_ktype(kobj);
+ 
+ 	if (!kobj)
+ 		return;
+ 
+ 	sd = kobj->sd;
++
++	if (ktype)
++		sysfs_remove_groups(kobj, ktype->default_groups);
++
+ 	sysfs_remove_dir(kobj);
+ 	sysfs_put(sd);
+ 
 -- 
-Cheers,
-Carlos.
+2.17.1
+
