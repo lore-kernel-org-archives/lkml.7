@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB9BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA292C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7015218B0
+	by mail.kernel.org (Postfix) with ESMTP id 9AC0521917
 	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1553257214;
-	bh=TRgFqfXBxRYsK7Yo4zv/Deih6TEcR2qf4nAvuZ4X3NA=;
+	bh=VR71bDdq3DNBvWX3u8FZpdzQh9PhPkg8qxy+Cpj0XQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7FPxhWHlWzlAwVS5tJ7u3YvbRrUr11wpDLpf5K+R3TBc3qTsfygmdIpCEyRYO72k
-	 GMR6a8MrqvNem3ERKfGwoU2xgRHOphGIhAvF/7yM9mhqVYJlX2FSl15nnrXMy5EFYX
-	 INU4fiZTVTSksR1JNHlSiefFLk1TkFvpu0l6Ja+4=
+	b=q+Fjl02d9rc/AVCEHqjSlSFkSG5aSJM9RVs2Hf1BQ2kin9JlSk18Hgx5mZzw+9jkn
+	 BZBkZSXy/OG+GdXYMBXNa8tLo5HV9HhakV/yEGGvZl1UsTbaKlIVD6cH4TXgEArWDG
+	 Vmb+R2LGHYHYcogo4U4RTu+a9oeXXC7gX0ONuv0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390705AbfCVMUI (ORCPT
+        id S2390698AbfCVMUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390673AbfCVMUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:20:00 -0400
+        id S2389943AbfCVMUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:20:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7775B21900;
-        Fri, 22 Mar 2019 12:19:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81EFC218A1;
+        Fri, 22 Mar 2019 12:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257199;
-        bh=TRgFqfXBxRYsK7Yo4zv/Deih6TEcR2qf4nAvuZ4X3NA=;
+        s=default; t=1553257202;
+        bh=VR71bDdq3DNBvWX3u8FZpdzQh9PhPkg8qxy+Cpj0XQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p16v9Ob0KDUkCupEAIn1rID83nDNxfP1H56BX0veJvYI0L7TlBVg0Iqag/EdfqMQB
-         USEj+h0j3XKbU0rA69z79EXmLAZvYCf+Kp/sNLGUAsUtPqMSxPZfPYIfnXBETTAQlv
-         gem26Git08reNpurqsVkBXtTEIIpFMPjEH1J0GqM=
+        b=gthZr2tg5ah2SduMOH0uwSvVtQHsmkKA2apOzvR9X+iWwyZ1OhjUXGFc57RSrkgWR
+         KW91pksxN8IR++HtjpGiFfEvF51wqswCnY4d3WFw4nf/fAIgSATqivbHmuanAstIO4
+         LhU7DIFvWuvXiZS63sHiV2oY+nx4haKbZxkFeMuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 131/238] PCI: pciehp: Disable Data Link Layer State Changed event on suspend
-Date:   Fri, 22 Mar 2019 12:15:50 +0100
-Message-Id: <20190322111306.217018026@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.0 122/238] ext4: add mask of ext4 flags to swap
+Date:   Fri, 22 Mar 2019 12:15:41 +0100
+Message-Id: <20190322111305.723557203@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,87 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: yangerkun <yangerkun@huawei.com>
 
-commit bbe54ea5330d828cc396d451c0e1e5c3f9764c1e upstream.
+commit abdc644e8cbac2e9b19763680e5a7cf9bab2bee7 upstream.
 
-Commit 0e157e528604 ("PCI/PME: Implement runtime PM callbacks") tried to
-solve an issue where the hierarchy immediately wakes up when it is
-transitioned into D3cold.  However, it turns out to prevent PME
-propagation on some systems that do not support D3cold.
+The reason is that while swapping two inode, we swap the flags too.
+Some flags such as EXT4_JOURNAL_DATA_FL can really confuse the things
+since we're not resetting the address operations structure.  The
+simplest way to keep things sane is to restrict the flags that can be
+swapped.
 
-I looked more closely at what might cause the immediate wakeup.  It happens
-when the ACPI power resource of the root port is turned off.  The AML code
-associated with the _OFF() method of the ACPI power resource starts a PCIe
-L2/L3 Ready transition and waits for it to complete.  Right after the L2/L3
-Ready transition is started the root port receives a PME from the
-downstream port.
-
-The simplest hierarchy where this happens looks like this:
-
-  00:1d.0 PCIe Root Port
-    ^
-    |
-    v
-    05:00.0 PCIe switch #1 upstream port
-      06:01.0 PCIe switch #1 downstream hotplug port
-        ^
-        |
-        v
-        08:00.0 PCIe switch #2 upstream port
-
-It seems that the PCIe link between the two switches, before
-PME_Turn_Off/PME_TO_Ack is complete for the whole hierarchy, goes
-inactive and triggers PME towards the root port bringing it back to D0.
-The L2/L3 Ready sequence is described in PCIe r4.0 spec sections 5.2 and
-5.3.3 but unfortunately they do not state what happens if DLLSCE is
-enabled during the sequence.
-
-Disabling Data Link Layer State Changed event (DLLSCE) seems to prevent
-the issue and still allows the downstream hotplug port to notice when a
-device is plugged/unplugged.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202593
-Fixes: 0e157e528604 ("PCI/PME: Implement runtime PM callbacks")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-CC: stable@vger.kernel.org	# v4.20+
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/hotplug/pciehp_hpc.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/ext4/ext4.h  |    3 +++
+ fs/ext4/ioctl.c |    6 +++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -736,12 +736,25 @@ void pcie_clear_hotplug_events(struct co
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -426,6 +426,9 @@ struct flex_groups {
+ /* Flags that are appropriate for non-directories/regular files. */
+ #define EXT4_OTHER_FLMASK (EXT4_NODUMP_FL | EXT4_NOATIME_FL)
  
- void pcie_enable_interrupt(struct controller *ctrl)
- {
--	pcie_write_cmd(ctrl, PCI_EXP_SLTCTL_HPIE, PCI_EXP_SLTCTL_HPIE);
-+	u16 mask;
++/* The only flags that should be swapped */
++#define EXT4_FL_SHOULD_SWAP (EXT4_HUGE_FILE_FL | EXT4_EXTENTS_FL)
 +
-+	mask = PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_DLLSCE;
-+	pcie_write_cmd(ctrl, mask, mask);
- }
- 
- void pcie_disable_interrupt(struct controller *ctrl)
+ /* Mask out flags that are inappropriate for the given type of inode. */
+ static inline __u32 ext4_mask_flags(umode_t mode, __u32 flags)
  {
--	pcie_write_cmd(ctrl, 0, PCI_EXP_SLTCTL_HPIE);
-+	u16 mask;
-+
-+	/*
-+	 * Mask hot-plug interrupt to prevent it triggering immediately
-+	 * when the link goes inactive (we still get PME when any of the
-+	 * enabled events is detected). Same goes with Link Layer State
-+	 * changed event which generates PME immediately when the link goes
-+	 * inactive so mask it as well.
-+	 */
-+	mask = PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_DLLSCE;
-+	pcie_write_cmd(ctrl, 0, mask);
- }
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -63,6 +63,7 @@ static void swap_inode_data(struct inode
+ 	loff_t isize;
+ 	struct ext4_inode_info *ei1;
+ 	struct ext4_inode_info *ei2;
++	unsigned long tmp;
  
- /*
+ 	ei1 = EXT4_I(inode1);
+ 	ei2 = EXT4_I(inode2);
+@@ -72,7 +73,10 @@ static void swap_inode_data(struct inode
+ 	swap(inode1->i_mtime, inode2->i_mtime);
+ 
+ 	memswap(ei1->i_data, ei2->i_data, sizeof(ei1->i_data));
+-	swap(ei1->i_flags, ei2->i_flags);
++	tmp = ei1->i_flags & EXT4_FL_SHOULD_SWAP;
++	ei1->i_flags = (ei2->i_flags & EXT4_FL_SHOULD_SWAP) |
++		(ei1->i_flags & ~EXT4_FL_SHOULD_SWAP);
++	ei2->i_flags = tmp | (ei2->i_flags & ~EXT4_FL_SHOULD_SWAP);
+ 	swap(ei1->i_disksize, ei2->i_disksize);
+ 	ext4_es_remove_extent(inode1, 0, EXT_MAX_BLOCKS);
+ 	ext4_es_remove_extent(inode2, 0, EXT_MAX_BLOCKS);
 
 
