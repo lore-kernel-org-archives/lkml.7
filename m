@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FC3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB3FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F852192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B400921916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255488;
-	bh=5CFyk3Y8RndE1cAQjI2fJXMh7EzsDjY/zinibJf2iWY=;
+	s=default; t=1553255495;
+	bh=NLc0USrtCMkKgavkDI4pLvNbZCKre+yN+kQxXL0+Ha0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xFhXW9+EkaR2KydLP7beRR6UluaFP5+EbDKFXlsTvSHCMvdjUAbjFxYx7onIOpLmz
-	 MgHzo51iCsQo0IH72w/BRPYpGiht4pUtTYDeYRUyg9lAOoXydTY+qftEpNcGhcze+b
-	 ycsCSFVUvbiqBG4ymZIkBy4siYEu26HL69VqHBFs=
+	b=C7tg9h8jh6YHQuyI8P5OjykOFdcBU47Ds0oh231eAql4zTbIP6MdzVgl4OLQUC2uR
+	 +0Mk+KXR8PmTQv3XaRw0g60rsGrRx9dYMwNtOuhwmUGmTouqfEqhL2LZiKc3Jxrd+O
+	 AYT1DN3CwPFmVNg/WNkl07FuCZIiW+AumB4sZINQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbfCVLv0 (ORCPT
+        id S1732315AbfCVLve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfCVLvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:23 -0400
+        id S1732302AbfCVLv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:51:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A35420693;
-        Fri, 22 Mar 2019 11:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A28CF20693;
+        Fri, 22 Mar 2019 11:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255482;
-        bh=5CFyk3Y8RndE1cAQjI2fJXMh7EzsDjY/zinibJf2iWY=;
+        s=default; t=1553255489;
+        bh=NLc0USrtCMkKgavkDI4pLvNbZCKre+yN+kQxXL0+Ha0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpG2MGj/VF0ty3LF7KABKNj8oqYhLY+B/z09/60Bg3eHddlRJ227XE3ERJpnpe/JN
-         pon0LXFea9y29wHpYA+xjrNMSIdBqw6vBdvPMmICxd/qi3HAAePrQIdpPZ2gNt2dtj
-         pbNEH3fD04GdGvv2k0c0JHamf+Os/LOSyIKums0E=
+        b=W8g0OEy2mfVIPAwdzNsJRbSvKDL5eer/SMKDYsHauQirxB7BXJa0mZM44owkxOp4V
+         zgl1XLDDnPsIHe5SWAHySB3+GMXKLf5Bkny/gQbW2V5CPTqKivl0ijY9k1ko0e2mZY
+         dyUfxLmeixwVyoVXgR7lKai4onCA3qwxeqUQEgUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Maxim Zhukov <mussitantesmortem@gmail.com>
-Subject: [PATCH 4.14 105/183] crypto: pcbc - remove bogus memcpy()s with src == dest
-Date:   Fri, 22 Mar 2019 12:15:33 +0100
-Message-Id: <20190322111249.308274987@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 4.14 107/183] irqchip/gic-v3-its: Avoid parsing _indirect_ twice for Device table
+Date:   Fri, 22 Mar 2019 12:15:35 +0100
+Message-Id: <20190322111249.454006912@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,93 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
+commit 8d565748b6035eeda18895c213396a4c9fac6a4c upstream.
 
-The memcpy()s in the PCBC implementation use walk->iv as both the source
-and destination, which has undefined behavior.  These memcpy()'s are
-actually unneeded, because walk->iv is already used to hold the previous
-plaintext block XOR'd with the previous ciphertext block.  Thus,
-walk->iv is already updated to its final value.
+In current logic, its_parse_indirect_baser() will be invoked twice
+when allocating Device tables. Add a *break* to omit the unnecessary
+and annoying (might be ...) invoking.
 
-So remove the broken and unnecessary memcpy()s.
-
-Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
-Cc: <stable@vger.kernel.org> # v2.6.21+
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
+Fixes: 32bd44dc19de ("irqchip/gic-v3-its: Fix the incorrect parsing of VCPU table size")
+Cc: stable@vger.kernel.org
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- crypto/pcbc.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/crypto/pcbc.c
-+++ b/crypto/pcbc.c
-@@ -50,7 +50,7 @@ static int crypto_pcbc_encrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 
- 	do {
- 		crypto_xor(iv, src, bsize);
-@@ -71,7 +71,7 @@ static int crypto_pcbc_encrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[bsize];
- 
- 	do {
-@@ -83,8 +83,6 @@ static int crypto_pcbc_encrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
-@@ -120,7 +118,7 @@ static int crypto_pcbc_decrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 
- 	do {
- 		crypto_cipher_decrypt_one(tfm, dst, src);
-@@ -131,8 +129,6 @@ static int crypto_pcbc_decrypt_segment(s
- 		dst += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
-@@ -143,7 +139,7 @@ static int crypto_pcbc_decrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[bsize] __aligned(__alignof__(u32));
- 
- 	do {
-@@ -155,8 +151,6 @@ static int crypto_pcbc_decrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
+---
+ drivers/irqchip/irq-gic-v3-its.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1708,6 +1708,8 @@ static int its_alloc_tables(struct its_n
+ 			indirect = its_parse_indirect_baser(its, baser,
+ 							    psz, &order,
+ 							    its->device_ids);
++			break;
++
+ 		case GITS_BASER_TYPE_VCPU:
+ 			indirect = its_parse_indirect_baser(its, baser,
+ 							    psz, &order,
 
 
