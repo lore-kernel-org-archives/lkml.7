@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2147FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CE5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F3E21904
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2825C21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfCVHpu (ORCPT
+        id S1727590AbfCVHqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:45:50 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47575 "EHLO
+        Fri, 22 Mar 2019 03:46:54 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52741 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfCVHpu (ORCPT
+        with ESMTP id S1725938AbfCVHqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:45:50 -0400
+        Fri, 22 Mar 2019 03:46:54 -0400
 Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
         (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4A88E20001D;
-        Fri, 22 Mar 2019 07:45:43 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EECA9200009;
+        Fri, 22 Mar 2019 07:46:47 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Christoph Hellwig <hch@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
@@ -41,9 +41,9 @@ To:     Christoph Hellwig <hch@infradead.org>,
         linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 3/4] mips: Use generic mmap top-down layout
-Date:   Fri, 22 Mar 2019 03:42:24 -0400
-Message-Id: <20190322074225.22282-4-alex@ghiti.fr>
+Subject: [PATCH 4/4] riscv: Make mmap allocation top-down by default
+Date:   Fri, 22 Mar 2019 03:42:25 -0400
+Message-Id: <20190322074225.22282-5-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322074225.22282-1-alex@ghiti.fr>
 References: <20190322074225.22282-1-alex@ghiti.fr>
@@ -54,108 +54,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips uses a top-down layout by default that fits the generic functions.
-At the same time, this commit allows to fix problem uncovered
-and not fixed for mips here:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
+In order to avoid wasting user address space by using bottom-up mmap
+allocation scheme, prefer top-down scheme when possible.
+
+Before:
+root@qemuriscv64:~# cat /proc/self/maps
+00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
+00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
+00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
+00018000-00039000 rw-p 00000000 00:00 0          [heap]
+1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+155556f000-1555570000 rw-p 00000000 00:00 0
+1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
+1555574000-1555576000 rw-p 00000000 00:00 0
+1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
+1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
+1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
+155567a000-15556a0000 rw-p 00000000 00:00 0
+3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
+
+After:
+root@qemuriscv64:~# cat /proc/self/maps
+00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
+00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
+00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
+00018000-00039000 rw-p 00000000 00:00 0          [heap]
+3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
+3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
+3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
+3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
+3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
+3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
+3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
+3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- arch/mips/include/asm/processor.h |  4 +--
- arch/mips/mm/mmap.c               | 57 -------------------------------
- 2 files changed, 2 insertions(+), 59 deletions(-)
+ arch/riscv/Kconfig                 | 12 ++++++++++++
+ arch/riscv/include/asm/processor.h |  1 +
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
-index aca909bd7841..f8e04962b52d 100644
---- a/arch/mips/include/asm/processor.h
-+++ b/arch/mips/include/asm/processor.h
-@@ -30,9 +30,9 @@
- extern unsigned int vced_count, vcei_count;
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index eb56c82d8aa1..7661335d1667 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -50,6 +50,18 @@ config RISCV
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select HAVE_EBPF_JIT if 64BIT
  
- /*
-- * MIPS does have an arch_pick_mmap_layout()
-+ * MIPS uses the default implementation of topdown mmap layout.
++config HAVE_ARCH_MMAP_RND_BITS
++	def_bool y
++
++config ARCH_MMAP_RND_BITS_MIN
++	default 18
++
++# max bits determined by the following formula:
++#  VA_BITS - PAGE_SHIFT - 3
++config ARCH_MMAP_RND_BITS_MAX
++	default 33 if 64BIT # SV48 based
++	default 18
++
+ config MMU
+ 	def_bool y
+ 
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index ce70bceb8872..e68a1b1e144a 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -23,6 +23,7 @@
+  * space during mmap's.
   */
--#define HAVE_ARCH_PICK_MMAP_LAYOUT 1
+ #define TASK_UNMAPPED_BASE	PAGE_ALIGN(TASK_SIZE / 3)
 +#define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
  
- #ifdef CONFIG_32BIT
- #ifdef CONFIG_KVM_GUEST
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index 2f616ebeb7e0..61e65a69bb09 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -20,33 +20,6 @@
- unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
- 
--/* gap between mmap and stack */
--#define MIN_GAP (128*1024*1024UL)
--#define MAX_GAP ((TASK_SIZE)/6*5)
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(TASK_SIZE - gap - rnd);
--}
--
- #define COLOUR_ALIGN(addr, pgoff)				\
- 	((((addr) + shm_align_mask) & ~shm_align_mask) +	\
- 	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
-@@ -144,36 +117,6 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp,
- 			addr0, len, pgoff, flags, DOWN);
- }
- 
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--#ifdef CONFIG_COMPAT
--	if (TASK_IS_32BIT_ADDR)
--		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
--	else
--#endif /* CONFIG_COMPAT */
--		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--
--	return rnd << PAGE_SHIFT;
--}
--
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
- static inline unsigned long brk_rnd(void)
- {
- 	unsigned long rnd = get_random_long();
+ #define STACK_TOP		TASK_SIZE
+ #define STACK_TOP_MAX		STACK_TOP
 -- 
 2.20.1
 
