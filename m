@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CDBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E55C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C6C218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B755218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258362;
-	bh=vWZy7Sx9HAxboYJ28IOL5TsJp43Vd4glxZQ59Au8nMc=;
+	s=default; t=1553258366;
+	bh=aYZHFHgeVdl2GRbo3j+Fk6Ms5tBe1gFHYCnTkzknYzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r6ezSWrSOaAmB43gJs4Ysww9ER/TwFyZxwM7r5bG2Ipcsj01ibQv0Pg3kMMEkbQHM
-	 VkCq3ZQ9O4LP4vMQbXsnDWVHsmJazLgtCRFd6/jV3i1+wehudaCmEjRhMe0DbGcDxs
-	 zyVFTDoEDflMk7/SFJeY6LzEsCXkryBWGyM3whfc=
+	b=IqqF2CT0+OVClhHNK+o650TNA15e0qXjN+RPCay6wtTydtwIBoqtYkl5UNIlETd4P
+	 1gkVY3UT+zJywqU0xpxOGN5RZMhVK9r5cLujCFDkZK4zgAtyVh0A4JqLlx0ix3N6fB
+	 G8ktSfV0hNIZqGdc+24lAKzgTUBmNLTf1dLzcUts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389073AbfCVMHq (ORCPT
+        id S2388910AbfCVMjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46002 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389055AbfCVMHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:37 -0400
+        id S2388661AbfCVMHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:07:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C9E21929;
-        Fri, 22 Mar 2019 12:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D5B21929;
+        Fri, 22 Mar 2019 12:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256456;
-        bh=vWZy7Sx9HAxboYJ28IOL5TsJp43Vd4glxZQ59Au8nMc=;
+        s=default; t=1553256465;
+        bh=aYZHFHgeVdl2GRbo3j+Fk6Ms5tBe1gFHYCnTkzknYzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n2LXqndJlHNdPc3vmuUpYTZOQNeNXHXFqZLfue9XSu/Tu4bVjaMAneAYQokVMJoUs
-         tWY+FOy/MpLTj61OYxIsUq6zTadDI82uzbmDC8jaUFQQFpkE4qWLmw7q0oYSUhA6IP
-         677wflp/j4Yw6dtU3H0UIfgde/YoUzBII2w6bRro=
+        b=2HinUOlL4XPPXteI0dWR8m0OfTe0l/dueRZ3HXa3/TDoTvlMaxtWkSKVhYNY9q92j
+         TYJTvTnG6EBmt3VomvDHY32uuKYlC/kpQ4+8Nm8o14LZ4kEkFlKuInWlXyMRqz07ui
+         DWbFzekGOp2Z2tHNSa+2WlFjHQy1XpJvJEJeP5EI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.19 196/280] clk: ingenic: Fix doc of ingenic_cgu_div_info
-Date:   Fri, 22 Mar 2019 12:15:49 +0100
-Message-Id: <20190322111329.745146531@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.19 220/280] security/selinux: fix SECURITY_LSM_NATIVE_LABELS on reused superblock
+Date:   Fri, 22 Mar 2019 12:16:13 +0100
+Message-Id: <20190322111334.762993193@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,34 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit 7ca4c922aad2e3c46767a12f80d01c6b25337b59 upstream.
+commit 3815a245b50124f0865415dcb606a034e97494d4 upstream.
 
-The 'div' field does not represent a number of bits used to divide
-(understand: right-shift) the divider, but a number itself used to
-divide the divider.
+In the case when we're reusing a superblock, selinux_sb_clone_mnt_opts()
+fails to set set_kern_flags, with the result that
+nfs_clone_sb_security() incorrectly clears NFS_CAP_SECURITY_LABEL.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+The result is that if you mount the same NFS filesystem twice, NFS
+security labels are turned off, even if they would work fine if you
+mounted the filesystem only once.
+
+("fixes" may be not exactly the right tag, it may be more like
+"fixed-other-cases-but-missed-this-one".)
+
+Cc: Scott Mayhew <smayhew@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 0b4d3452b8b4 "security/selinux: allow security_sb_clone_mnt_opts..."
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/ingenic/cgu.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/selinux/hooks.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/clk/ingenic/cgu.h
-+++ b/drivers/clk/ingenic/cgu.h
-@@ -80,7 +80,7 @@ struct ingenic_cgu_mux_info {
-  * @reg: offset of the divider control register within the CGU
-  * @shift: number of bits to left shift the divide value by (ie. the index of
-  *         the lowest bit of the divide value within its control register)
-- * @div: number of bits to divide the divider value by (i.e. if the
-+ * @div: number to divide the divider value by (i.e. if the
-  *	 effective divider value is the value written to the register
-  *	 multiplied by some constant)
-  * @bits: the size of the divide value in bits
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1034,8 +1034,11 @@ static int selinux_sb_clone_mnt_opts(con
+ 	BUG_ON(!(oldsbsec->flags & SE_SBINITIALIZED));
+ 
+ 	/* if fs is reusing a sb, make sure that the contexts match */
+-	if (newsbsec->flags & SE_SBINITIALIZED)
++	if (newsbsec->flags & SE_SBINITIALIZED) {
++		if ((kern_flags & SECURITY_LSM_NATIVE_LABELS) && !set_context)
++			*set_kern_flags |= SECURITY_LSM_NATIVE_LABELS;
+ 		return selinux_cmp_sb_context(oldsb, newsb);
++	}
+ 
+ 	mutex_lock(&newsbsec->lock);
+ 
 
 
