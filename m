@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC663C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D933BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB3621929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CEF21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253669;
-	bh=tECfx1IbZmSmm8w7LzucapR9s7TDRYw62zVqv7bQkPM=;
+	s=default; t=1553253672;
+	bh=Ci8r9JrvBQlkMj6wlh01sOCISBE4+eY9wb35xQ7lnnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZtVWh2wy4Px84vZXdlKsCtfUuimGVGHzzGmxa+7yU2p+XQo0eq4joKz47hpiKdON
-	 ERjci/wtQ0UYgYpJy3ET84vXH6wSFk8fgteUaIfKMHV9nDs9F2Qq0EVL+uQO5wN1R+
-	 P96imgPstp/DOnpjA1WON4pJyWT1mw3HyQ830RSY=
+	b=D6MXnvkNt18yzyrS1xJzlMt6/+N87qxv5pYa9jl0jhSnZPYTSbvVgvnOmFSZBtdao
+	 ztEDb6oNDzc99rKFqeAoAs2CQ2RJtiSSTUk67PC4ax7JGRFnvh8e52pDAgN5Czm4OU
+	 4/nW32O+fjPwNP+U1mgM2E69yPqgLJYT9FLY7xtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbfCVLVI (ORCPT
+        id S1728544AbfCVLVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbfCVLVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:04 -0400
+        id S1728504AbfCVLVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42B021917;
-        Fri, 22 Mar 2019 11:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0166E218A2;
+        Fri, 22 Mar 2019 11:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253664;
-        bh=tECfx1IbZmSmm8w7LzucapR9s7TDRYw62zVqv7bQkPM=;
+        s=default; t=1553253668;
+        bh=Ci8r9JrvBQlkMj6wlh01sOCISBE4+eY9wb35xQ7lnnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2u01SiTnes5nZKTDUwkrQrsOHTNPIDVRJX5n6Mj0ZqKxFYKt71qOOf40ZJh/7Aldj
-         Q4ALKw8W1mU8oFrljO1ZmyYuhK1wD0TCvvlUvreIY1s8fS8Wqem0tskStiTZv+pPuS
-         oMdQHgMt14zWwMTjVGHkfkrifc1BeMUWghn/TSdg=
+        b=SVQ6B8BV76gNDw3+jYS4miXqU6m6IWy3jxPw7vEUMpFaKBJIMGY/eG6Gil75n06bh
+         jOJY0ULZ5wJMs/stLnH+WW83OBtZp+RTgHAynrk040MkeiKSbccM6jer6Gsx0b8h5Y
+         vTgGjoyoFBRibVKO/f3BIr+UqH3OyHsK2m0vys+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
-        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 034/134] serial: fsl_lpuart: fix maximum acceptable baud rate with over-sampling
-Date:   Fri, 22 Mar 2019 12:14:07 +0100
-Message-Id: <20190322111212.201258363@linuxfoundation.org>
+Subject: [PATCH 3.18 035/134] scsi: csiostor: fix NULL pointer dereference in csio_vport_set_state()
+Date:   Fri, 22 Mar 2019 12:14:08 +0100
+Message-Id: <20190322111212.275272667@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,31 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 815d835b7ba46685c316b000013367dacb2b461b ]
+[ Upstream commit fe35a40e675473eb65f2f5462b82770f324b5689 ]
 
-Using over-sampling ratio, lpuart can accept baud rate upto uartclk / 4.
+Assign fc_vport to ln->fc_vport before calling csio_fcoe_alloc_vnp() to
+avoid a NULL pointer dereference in csio_vport_set_state().
 
-Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ln->fc_vport is dereferenced in csio_vport_set_state().
+
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c | 2 +-
+ drivers/scsi/csiostor/csio_attr.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 839e65da4d3f7..f18551ea5ba51 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1426,7 +1426,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
+diff --git a/drivers/scsi/csiostor/csio_attr.c b/drivers/scsi/csiostor/csio_attr.c
+index 065a87ace623b..22b800b5ac7ff 100644
+--- a/drivers/scsi/csiostor/csio_attr.c
++++ b/drivers/scsi/csiostor/csio_attr.c
+@@ -582,12 +582,12 @@ csio_vport_create(struct fc_vport *fc_vport, bool disable)
  	}
  
- 	/* ask the core to calculate the divisor */
--	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
-+	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 4);
+ 	fc_vport_set_state(fc_vport, FC_VPORT_INITIALIZING);
++	ln->fc_vport = fc_vport;
  
- 	spin_lock_irqsave(&sport->port.lock, flags);
+ 	if (csio_fcoe_alloc_vnp(hw, ln))
+ 		goto error;
  
+ 	*(struct csio_lnode **)fc_vport->dd_data = ln;
+-	ln->fc_vport = fc_vport;
+ 	if (!fc_vport->node_name)
+ 		fc_vport->node_name = wwn_to_u64(csio_ln_wwnn(ln));
+ 	if (!fc_vport->port_name)
 -- 
 2.19.1
 
