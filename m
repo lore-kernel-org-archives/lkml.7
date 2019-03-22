@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBFCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2136BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C22218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DB221925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfCVWhU (ORCPT
+        id S1728247AbfCVWhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:37:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34905 "EHLO
+        Fri, 22 Mar 2019 18:37:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43131 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfCVWhT (ORCPT
+        with ESMTP id S1726056AbfCVWhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:37:19 -0400
+        Fri, 22 Mar 2019 18:37:54 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMafBA754679
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMbJR9754755
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:36:41 -0700
+        Fri, 22 Mar 2019 15:37:19 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMaevU754674;
-        Fri, 22 Mar 2019 15:36:40 -0700
-Date:   Fri, 22 Mar 2019 15:36:40 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMbIE8754752;
+        Fri, 22 Mar 2019 15:37:18 -0700
+Date:   Fri, 22 Mar 2019 15:37:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Song Liu <tipbot@zytor.com>
-Message-ID: <tip-cae73f2339231d61022769f09c94e4500e8ad47a@git.kernel.org>
-Cc:     daniel@iogearbox.net, peterz@infradead.org, sdf@google.com,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        songliubraving@fb.com, jolsa@kernel.org, namhyung@kernel.org,
-        mingo@kernel.org, tglx@linutronix.de, acme@redhat.com,
-        hpa@zytor.com
-Reply-To: jolsa@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-          songliubraving@fb.com, peterz@infradead.org, sdf@google.com,
-          daniel@iogearbox.net, hpa@zytor.com, acme@redhat.com,
-          tglx@linutronix.de, namhyung@kernel.org, mingo@kernel.org
-In-Reply-To: <20190312053051.2690567-4-songliubraving@fb.com>
-References: <20190312053051.2690567-4-songliubraving@fb.com>
+Message-ID: <tip-a742258af131e570a68ad8cf16cd2cc4692675a0@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        daniel@iogearbox.net, sdf@google.com, ast@kernel.org,
+        hpa@zytor.com, jolsa@kernel.org, acme@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, songliubraving@fb.com,
+        peterz@infradead.org
+Reply-To: sdf@google.com, daniel@iogearbox.net, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, ast@kernel.org,
+          acme@redhat.com, jolsa@kernel.org, songliubraving@fb.com,
+          peterz@infradead.org, namhyung@kernel.org, tglx@linutronix.de
+In-Reply-To: <20190312053051.2690567-5-songliubraving@fb.com>
+References: <20190312053051.2690567-5-songliubraving@fb.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] bpftool: use bpf_program__get_prog_info_linear()
- in prog.c:do_dump()
-Git-Commit-ID: cae73f2339231d61022769f09c94e4500e8ad47a
+Subject: [tip:perf/urgent] perf bpf: Synthesize bpf events with
+ bpf_program__get_prog_info_linear()
+Git-Commit-ID: a742258af131e570a68ad8cf16cd2cc4692675a0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,498 +60,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cae73f2339231d61022769f09c94e4500e8ad47a
-Gitweb:     https://git.kernel.org/tip/cae73f2339231d61022769f09c94e4500e8ad47a
+Commit-ID:  a742258af131e570a68ad8cf16cd2cc4692675a0
+Gitweb:     https://git.kernel.org/tip/a742258af131e570a68ad8cf16cd2cc4692675a0
 Author:     Song Liu <songliubraving@fb.com>
-AuthorDate: Mon, 11 Mar 2019 22:30:39 -0700
+AuthorDate: Mon, 11 Mar 2019 22:30:40 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 19 Mar 2019 16:52:06 -0300
 
-bpftool: use bpf_program__get_prog_info_linear() in prog.c:do_dump()
+perf bpf: Synthesize bpf events with bpf_program__get_prog_info_linear()
 
-This patches uses bpf_program__get_prog_info_linear() to simplify the
-logic in prog.c do_dump().
+With bpf_program__get_prog_info_linear, we can simplify the logic that
+synthesizes bpf events.
 
-Committer testing:
+This patch doesn't change the behavior of the code.
 
-Before:
+Commiter notes:
 
-  # bpftool prog dump xlated id 208 > /tmp/dump.xlated.before
-  # bpftool prog dump jited id 208 > /tmp/dump.jited.before
-  # bpftool map dump id 107 > /tmp/map.dump.before
+Needed this (for all four variables), suggested by Song, to overcome
+build failure on debian experimental cross building to MIPS 32-bit:
 
-After:
+  -               u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(info->prog_tags);
+  +               u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(uintptr_t)(info->prog_tags);
 
-  # ~acme/git/perf/tools/bpf/bpftool/bpftool map dump id 107 > /tmp/map.dump.after
-  # ~acme/git/perf/tools/bpf/bpftool/bpftool prog dump xlated id 208 > /tmp/dump.xlated.after
-  # ~acme/git/perf/tools/bpf/bpftool/bpftool prog dump jited id 208 > /tmp/dump.jited.after
-  # diff -u /tmp/dump.xlated.before /tmp/dump.xlated.after
-  # diff -u /tmp/dump.jited.before /tmp/dump.jited.after
-  # diff -u /tmp/map.dump.before /tmp/map.dump.after
-  # ~acme/git/perf/tools/bpf/bpftool/bpftool prog dump xlated id 208
-     0: (bf) r6 = r1
-     1: (85) call bpf_get_current_pid_tgid#80800
-     2: (63) *(u32 *)(r10 -328) = r0
-     3: (bf) r2 = r10
-     4: (07) r2 += -328
-     5: (18) r1 = map[id:107]
-     7: (85) call __htab_map_lookup_elem#85680
-     8: (15) if r0 == 0x0 goto pc+1
-     9: (07) r0 += 56
-    10: (b7) r7 = 0
-    11: (55) if r0 != 0x0 goto pc+52
-    12: (bf) r1 = r10
-    13: (07) r1 += -328
-    14: (b7) r2 = 64
-    15: (bf) r3 = r6
-    16: (85) call bpf_probe_read#-46848
-    17: (bf) r2 = r10
-    18: (07) r2 += -320
-    19: (18) r1 = map[id:106]
-    21: (07) r1 += 208
-    22: (61) r0 = *(u32 *)(r2 +0)
-    23: (35) if r0 >= 0x200 goto pc+3
-    24: (67) r0 <<= 3
-    25: (0f) r0 += r1
-    26: (05) goto pc+1
-    27: (b7) r0 = 0
-    28: (15) if r0 == 0x0 goto pc+35
-    29: (71) r1 = *(u8 *)(r0 +0)
-    30: (15) if r1 == 0x0 goto pc+33
-    31: (b7) r5 = 64
-    32: (79) r1 = *(u64 *)(r10 -320)
-    33: (15) if r1 == 0x2 goto pc+2
-    34: (15) if r1 == 0x101 goto pc+3
-    35: (55) if r1 != 0x15 goto pc+19
-    36: (79) r3 = *(u64 *)(r6 +16)
-    37: (05) goto pc+1
-    38: (79) r3 = *(u64 *)(r6 +24)
-    39: (15) if r3 == 0x0 goto pc+15
-    40: (b7) r1 = 0
-    41: (63) *(u32 *)(r10 -260) = r1
-    42: (bf) r1 = r10
-    43: (07) r1 += -256
-    44: (b7) r2 = 256
-    45: (85) call bpf_probe_read_str#-46704
-    46: (b7) r5 = 328
-    47: (63) *(u32 *)(r10 -264) = r0
-    48: (bf) r1 = r0
-    49: (67) r1 <<= 32
-    50: (77) r1 >>= 32
-    51: (25) if r1 > 0xff goto pc+3
-    52: (07) r0 += 72
-    53: (57) r0 &= 255
-    54: (bf) r5 = r0
-    55: (bf) r4 = r10
-    56: (07) r4 += -328
-    57: (bf) r1 = r6
-    58: (18) r2 = map[id:105]
-    60: (18) r3 = 0xffffffff
-    62: (85) call bpf_perf_event_output_tp#-45104
-    63: (bf) r7 = r0
-    64: (bf) r0 = r7
-    65: (95) exit
-  #
+  util/bpf-event.c: In function 'perf_event__synthesize_one_bpf_prog':
+  util/bpf-event.c:143:35: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+     u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(info->prog_tags);
+                                     ^
+  util/bpf-event.c:144:22: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+     __u32 *prog_lens = (__u32 *)(info->jited_func_lens);
+                        ^
+  util/bpf-event.c:145:23: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+     __u64 *prog_addrs = (__u64 *)(info->jited_ksyms);
+                         ^
+  util/bpf-event.c:146:22: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+     void *func_infos = (void *)(info->func_info);
+                        ^
+  cc1: all warnings being treated as errors
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: kernel-team@fb.com
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190312053051.2690567-4-songliubraving@fb.com
+Link: http://lkml.kernel.org/r/20190312053051.2690567-5-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/bpf/bpftool/prog.c | 266 +++++++++++------------------------------------
- 1 file changed, 59 insertions(+), 207 deletions(-)
+ tools/perf/util/bpf-event.c | 118 +++++++++++++++-----------------------------
+ 1 file changed, 40 insertions(+), 78 deletions(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 8ef80d65a474..d2be5a06c339 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -401,41 +401,31 @@ static int do_show(int argc, char **argv)
- 
- static int do_dump(int argc, char **argv)
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index ea012b735a37..e0cbe7f87170 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -3,7 +3,9 @@
+ #include <stdlib.h>
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
++#include <bpf/libbpf.h>
+ #include <linux/btf.h>
++#include <linux/err.h>
+ #include "bpf-event.h"
+ #include "debug.h"
+ #include "symbol.h"
+@@ -49,99 +51,62 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
  {
--	unsigned int finfo_rec_size, linfo_rec_size, jited_linfo_rec_size;
--	void *func_info = NULL, *linfo = NULL, *jited_linfo = NULL;
--	unsigned int nr_finfo, nr_linfo = 0, nr_jited_linfo = 0;
+ 	struct ksymbol_event *ksymbol_event = &event->ksymbol_event;
+ 	struct bpf_event *bpf_event = &event->bpf_event;
+-	u32 sub_prog_cnt, i, func_info_rec_size = 0;
+-	u8 (*prog_tags)[BPF_TAG_SIZE] = NULL;
+-	struct bpf_prog_info info = { .type = 0, };
+-	u32 info_len = sizeof(info);
+-	void *func_infos = NULL;
+-	u64 *prog_addrs = NULL;
 +	struct bpf_prog_info_linear *info_linear;
- 	struct bpf_prog_linfo *prog_linfo = NULL;
--	unsigned long *func_ksyms = NULL;
--	struct bpf_prog_info info = {};
--	unsigned int *func_lens = NULL;
-+	enum {DUMP_JITED, DUMP_XLATED} mode;
- 	const char *disasm_opt = NULL;
--	unsigned int nr_func_ksyms;
--	unsigned int nr_func_lens;
 +	struct bpf_prog_info *info;
- 	struct dump_data dd = {};
--	__u32 len = sizeof(info);
-+	void *func_info = NULL;
  	struct btf *btf = NULL;
--	unsigned int buf_size;
- 	char *filepath = NULL;
- 	bool opcodes = false;
- 	bool visual = false;
- 	char func_sig[1024];
- 	unsigned char *buf;
- 	bool linum = false;
--	__u32 *member_len;
--	__u64 *member_ptr;
-+	__u32 member_len;
-+	__u64 arrays;
- 	ssize_t n;
--	int err;
- 	int fd;
+-	u32 *prog_lens = NULL;
+ 	bool has_btf = false;
+-	char errbuf[512];
++	u32 sub_prog_cnt, i;
+ 	int err = 0;
++	u64 arrays;
  
- 	if (is_prefix(*argv, "jited")) {
- 		if (disasm_init())
- 			return -1;
--
--		member_len = &info.jited_prog_len;
--		member_ptr = &info.jited_prog_insns;
-+		mode = DUMP_JITED;
- 	} else if (is_prefix(*argv, "xlated")) {
--		member_len = &info.xlated_prog_len;
--		member_ptr = &info.xlated_prog_insns;
-+		mode = DUMP_XLATED;
- 	} else {
- 		p_err("expected 'xlated' or 'jited', got: %s", *argv);
- 		return -1;
-@@ -474,175 +464,50 @@ static int do_dump(int argc, char **argv)
- 		return -1;
- 	}
- 
--	err = bpf_obj_get_info_by_fd(fd, &info, &len);
--	if (err) {
--		p_err("can't get prog info: %s", strerror(errno));
--		return -1;
--	}
--
--	if (!*member_len) {
--		p_info("no instructions returned");
--		close(fd);
--		return 0;
--	}
-+	if (mode == DUMP_JITED)
-+		arrays = 1UL << BPF_PROG_INFO_JITED_INSNS;
-+	else
-+		arrays = 1UL << BPF_PROG_INFO_XLATED_INSNS;
- 
--	buf_size = *member_len;
-+	arrays |= 1UL << BPF_PROG_INFO_JITED_KSYMS;
+-	/* Call bpf_obj_get_info_by_fd() to get sizes of arrays */
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
++	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
 +	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
 +	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
-+	arrays |= 1UL << BPF_PROG_INFO_LINE_INFO;
-+	arrays |= 1UL << BPF_PROG_INFO_JITED_LINE_INFO;
++	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
  
--	buf = malloc(buf_size);
--	if (!buf) {
--		p_err("mem alloc failed");
--		close(fd);
+-	if (err) {
+-		pr_debug("%s: failed to get BPF program info: %s, aborting\n",
+-			 __func__, str_error_r(errno, errbuf, sizeof(errbuf)));
 +	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
-+	close(fd);
 +	if (IS_ERR_OR_NULL(info_linear)) {
-+		p_err("can't get prog info: %s", strerror(errno));
++		info_linear = NULL;
++		pr_debug("%s: failed to get BPF program info. aborting\n", __func__);
  		return -1;
  	}
- 
--	nr_func_ksyms = info.nr_jited_ksyms;
--	if (nr_func_ksyms) {
--		func_ksyms = malloc(nr_func_ksyms * sizeof(__u64));
--		if (!func_ksyms) {
--			p_err("mem alloc failed");
--			close(fd);
--			goto err_free;
--		}
--	}
--
--	nr_func_lens = info.nr_jited_func_lens;
--	if (nr_func_lens) {
--		func_lens = malloc(nr_func_lens * sizeof(__u32));
--		if (!func_lens) {
--			p_err("mem alloc failed");
--			close(fd);
-+	info = &info_linear->info;
-+	if (mode == DUMP_JITED) {
-+		if (info->jited_prog_len == 0) {
-+			p_info("no instructions returned");
- 			goto err_free;
- 		}
--	}
--
--	nr_finfo = info.nr_func_info;
--	finfo_rec_size = info.func_info_rec_size;
--	if (nr_finfo && finfo_rec_size) {
--		func_info = malloc(nr_finfo * finfo_rec_size);
--		if (!func_info) {
--			p_err("mem alloc failed");
--			close(fd);
-+		buf = (unsigned char *)(info->jited_prog_insns);
-+		member_len = info->jited_prog_len;
-+	} else {	/* DUMP_XLATED */
-+		if (info->xlated_prog_len == 0) {
-+			p_err("error retrieving insn dump: kernel.kptr_restrict set?");
- 			goto err_free;
- 		}
-+		buf = (unsigned char *)info->xlated_prog_insns;
-+		member_len = info->xlated_prog_len;
+-	if (info_len < offsetof(struct bpf_prog_info, prog_tags)) {
++
++	if (info_linear->info_len < offsetof(struct bpf_prog_info, prog_tags)) {
+ 		pr_debug("%s: the kernel is too old, aborting\n", __func__);
+ 		return -2;
  	}
  
--	linfo_rec_size = info.line_info_rec_size;
--	if (info.nr_line_info && linfo_rec_size && info.btf_id) {
--		nr_linfo = info.nr_line_info;
--		linfo = malloc(nr_linfo * linfo_rec_size);
--		if (!linfo) {
--			p_err("mem alloc failed");
--			close(fd);
--			goto err_free;
++	info = &info_linear->info;
++
+ 	/* number of ksyms, func_lengths, and tags should match */
+-	sub_prog_cnt = info.nr_jited_ksyms;
+-	if (sub_prog_cnt != info.nr_prog_tags ||
+-	    sub_prog_cnt != info.nr_jited_func_lens)
++	sub_prog_cnt = info->nr_jited_ksyms;
++	if (sub_prog_cnt != info->nr_prog_tags ||
++	    sub_prog_cnt != info->nr_jited_func_lens)
+ 		return -1;
+ 
+ 	/* check BTF func info support */
+-	if (info.btf_id && info.nr_func_info && info.func_info_rec_size) {
++	if (info->btf_id && info->nr_func_info && info->func_info_rec_size) {
+ 		/* btf func info number should be same as sub_prog_cnt */
+-		if (sub_prog_cnt != info.nr_func_info) {
++		if (sub_prog_cnt != info->nr_func_info) {
+ 			pr_debug("%s: mismatch in BPF sub program count and BTF function info count, aborting\n", __func__);
+-			return -1;
 -		}
+-		if (btf__get_from_id(info.btf_id, &btf)) {
+-			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info.btf_id);
+-			return -1;
++			err = -1;
++			goto out;
+ 		}
+-		func_info_rec_size = info.func_info_rec_size;
+-		func_infos = calloc(sub_prog_cnt, func_info_rec_size);
+-		if (!func_infos) {
+-			pr_debug("%s: failed to allocate memory for func_infos, aborting\n", __func__);
+-			return -1;
++		if (btf__get_from_id(info->btf_id, &btf)) {
++			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info->btf_id);
++			err = -1;
++			btf = NULL;
++			goto out;
+ 		}
+ 		has_btf = true;
+ 	}
+ 
+-	/*
+-	 * We need address, length, and tag for each sub program.
+-	 * Allocate memory and call bpf_obj_get_info_by_fd() again
+-	 */
+-	prog_addrs = calloc(sub_prog_cnt, sizeof(u64));
+-	if (!prog_addrs) {
+-		pr_debug("%s: failed to allocate memory for prog_addrs, aborting\n", __func__);
+-		goto out;
 -	}
--
--	jited_linfo_rec_size = info.jited_line_info_rec_size;
--	if (info.nr_jited_line_info &&
--	    jited_linfo_rec_size &&
--	    info.nr_jited_ksyms &&
--	    info.nr_jited_func_lens &&
--	    info.btf_id) {
--		nr_jited_linfo = info.nr_jited_line_info;
--		jited_linfo = malloc(nr_jited_linfo * jited_linfo_rec_size);
--		if (!jited_linfo) {
--			p_err("mem alloc failed");
--			close(fd);
--			goto err_free;
--		}
+-	prog_lens = calloc(sub_prog_cnt, sizeof(u32));
+-	if (!prog_lens) {
+-		pr_debug("%s: failed to allocate memory for prog_lens, aborting\n", __func__);
+-		goto out;
+-	}
+-	prog_tags = calloc(sub_prog_cnt, BPF_TAG_SIZE);
+-	if (!prog_tags) {
+-		pr_debug("%s: failed to allocate memory for prog_tags, aborting\n", __func__);
+-		goto out;
 -	}
 -
 -	memset(&info, 0, sizeof(info));
+-	info.nr_jited_ksyms = sub_prog_cnt;
+-	info.nr_jited_func_lens = sub_prog_cnt;
+-	info.nr_prog_tags = sub_prog_cnt;
+-	info.jited_ksyms = ptr_to_u64(prog_addrs);
+-	info.jited_func_lens = ptr_to_u64(prog_lens);
+-	info.prog_tags = ptr_to_u64(prog_tags);
+-	info_len = sizeof(info);
+-	if (has_btf) {
+-		info.nr_func_info = sub_prog_cnt;
+-		info.func_info_rec_size = func_info_rec_size;
+-		info.func_info = ptr_to_u64(func_infos);
+-	}
 -
--	*member_ptr = ptr_to_u64(buf);
--	*member_len = buf_size;
--	info.jited_ksyms = ptr_to_u64(func_ksyms);
--	info.nr_jited_ksyms = nr_func_ksyms;
--	info.jited_func_lens = ptr_to_u64(func_lens);
--	info.nr_jited_func_lens = nr_func_lens;
--	info.nr_func_info = nr_finfo;
--	info.func_info_rec_size = finfo_rec_size;
--	info.func_info = ptr_to_u64(func_info);
--	info.nr_line_info = nr_linfo;
--	info.line_info_rec_size = linfo_rec_size;
--	info.line_info = ptr_to_u64(linfo);
--	info.nr_jited_line_info = nr_jited_linfo;
--	info.jited_line_info_rec_size = jited_linfo_rec_size;
--	info.jited_line_info = ptr_to_u64(jited_linfo);
--
--	err = bpf_obj_get_info_by_fd(fd, &info, &len);
--	close(fd);
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
 -	if (err) {
--		p_err("can't get prog info: %s", strerror(errno));
--		goto err_free;
+-		pr_debug("%s: failed to get BPF program info, aborting\n", __func__);
+-		goto out;
 -	}
 -
--	if (*member_len > buf_size) {
--		p_err("too many instructions returned");
--		goto err_free;
--	}
--
--	if (info.nr_jited_ksyms > nr_func_ksyms) {
--		p_err("too many addresses returned");
--		goto err_free;
--	}
--
--	if (info.nr_jited_func_lens > nr_func_lens) {
--		p_err("too many values returned");
--		goto err_free;
--	}
--
--	if (info.nr_func_info != nr_finfo) {
--		p_err("incorrect nr_func_info %d vs. expected %d",
--		      info.nr_func_info, nr_finfo);
--		goto err_free;
--	}
--
--	if (info.func_info_rec_size != finfo_rec_size) {
--		p_err("incorrect func_info_rec_size %d vs. expected %d",
--		      info.func_info_rec_size, finfo_rec_size);
--		goto err_free;
--	}
--
--	if (linfo && info.nr_line_info != nr_linfo) {
--		p_err("incorrect nr_line_info %u vs. expected %u",
--		      info.nr_line_info, nr_linfo);
--		goto err_free;
--	}
--
--	if (info.line_info_rec_size != linfo_rec_size) {
--		p_err("incorrect line_info_rec_size %u vs. expected %u",
--		      info.line_info_rec_size, linfo_rec_size);
--		goto err_free;
--	}
--
--	if (jited_linfo && info.nr_jited_line_info != nr_jited_linfo) {
--		p_err("incorrect nr_jited_line_info %u vs. expected %u",
--		      info.nr_jited_line_info, nr_jited_linfo);
--		goto err_free;
--	}
--
--	if (info.jited_line_info_rec_size != jited_linfo_rec_size) {
--		p_err("incorrect jited_line_info_rec_size %u vs. expected %u",
--		      info.jited_line_info_rec_size, jited_linfo_rec_size);
--		goto err_free;
--	}
--
--	if ((member_len == &info.jited_prog_len &&
--	     info.jited_prog_insns == 0) ||
--	    (member_len == &info.xlated_prog_len &&
--	     info.xlated_prog_insns == 0)) {
--		p_err("error retrieving insn dump: kernel.kptr_restrict set?");
--		goto err_free;
--	}
--
--	if (info.btf_id && btf__get_from_id(info.btf_id, &btf)) {
-+	if (info->btf_id && btf__get_from_id(info->btf_id, &btf)) {
- 		p_err("failed to get btf");
- 		goto err_free;
+ 	/* Synthesize PERF_RECORD_KSYMBOL */
+ 	for (i = 0; i < sub_prog_cnt; i++) {
++		u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(uintptr_t)(info->prog_tags);
++		__u32 *prog_lens  = (__u32 *)(uintptr_t)(info->jited_func_lens);
++		__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
++		void *func_infos  = (void *)(uintptr_t)(info->func_info);
+ 		const struct bpf_func_info *finfo;
+ 		const char *short_name = NULL;
+ 		const struct btf_type *t;
+@@ -163,13 +128,13 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 					 KSYM_NAME_LEN - name_len,
+ 					 prog_tags[i], BPF_TAG_SIZE);
+ 		if (has_btf) {
+-			finfo = func_infos + i * info.func_info_rec_size;
++			finfo = func_infos + i * info->func_info_rec_size;
+ 			t = btf__type_by_id(btf, finfo->type_id);
+ 			short_name = btf__name_by_offset(btf, t->name_off);
+ 		} else if (i == 0 && sub_prog_cnt == 1) {
+ 			/* no subprog */
+-			if (info.name[0])
+-				short_name = info.name;
++			if (info->name[0])
++				short_name = info->name;
+ 		} else
+ 			short_name = "F";
+ 		if (short_name)
+@@ -195,9 +160,9 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 			},
+ 			.type = PERF_BPF_EVENT_PROG_LOAD,
+ 			.flags = 0,
+-			.id = info.id,
++			.id = info->id,
+ 		};
+-		memcpy(bpf_event->tag, prog_tags[i], BPF_TAG_SIZE);
++		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
+ 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
+ 		event->header.size += machine->id_hdr_size;
+ 		err = perf_tool__process_synth_event(tool, event,
+@@ -205,10 +170,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
  	}
  
--	if (nr_linfo) {
--		prog_linfo = bpf_prog_linfo__new(&info);
-+	func_info = (void *)info->func_info;
-+
-+	if (info->nr_line_info) {
-+		prog_linfo = bpf_prog_linfo__new(info);
- 		if (!prog_linfo)
- 			p_info("error in processing bpf_line_info.  continue without it.");
- 	}
-@@ -655,9 +520,9 @@ static int do_dump(int argc, char **argv)
- 			goto err_free;
- 		}
- 
--		n = write(fd, buf, *member_len);
-+		n = write(fd, buf, member_len);
- 		close(fd);
--		if (n != *member_len) {
-+		if (n != member_len) {
- 			p_err("error writing output file: %s",
- 			      n < 0 ? strerror(errno) : "short write");
- 			goto err_free;
-@@ -665,19 +530,19 @@ static int do_dump(int argc, char **argv)
- 
- 		if (json_output)
- 			jsonw_null(json_wtr);
--	} else if (member_len == &info.jited_prog_len) {
-+	} else if (mode == DUMP_JITED) {
- 		const char *name = NULL;
- 
--		if (info.ifindex) {
--			name = ifindex_to_bfd_params(info.ifindex,
--						     info.netns_dev,
--						     info.netns_ino,
-+		if (info->ifindex) {
-+			name = ifindex_to_bfd_params(info->ifindex,
-+						     info->netns_dev,
-+						     info->netns_ino,
- 						     &disasm_opt);
- 			if (!name)
- 				goto err_free;
- 		}
- 
--		if (info.nr_jited_func_lens && info.jited_func_lens) {
-+		if (info->nr_jited_func_lens && info->jited_func_lens) {
- 			struct kernel_sym *sym = NULL;
- 			struct bpf_func_info *record;
- 			char sym_name[SYM_MAX_NAME];
-@@ -685,17 +550,16 @@ static int do_dump(int argc, char **argv)
- 			__u64 *ksyms = NULL;
- 			__u32 *lens;
- 			__u32 i;
--
--			if (info.nr_jited_ksyms) {
-+			if (info->nr_jited_ksyms) {
- 				kernel_syms_load(&dd);
--				ksyms = (__u64 *) info.jited_ksyms;
-+				ksyms = (__u64 *) info->jited_ksyms;
- 			}
- 
- 			if (json_output)
- 				jsonw_start_array(json_wtr);
- 
--			lens = (__u32 *) info.jited_func_lens;
--			for (i = 0; i < info.nr_jited_func_lens; i++) {
-+			lens = (__u32 *) info->jited_func_lens;
-+			for (i = 0; i < info->nr_jited_func_lens; i++) {
- 				if (ksyms) {
- 					sym = kernel_syms_search(&dd, ksyms[i]);
- 					if (sym)
-@@ -707,7 +571,7 @@ static int do_dump(int argc, char **argv)
- 				}
- 
- 				if (func_info) {
--					record = func_info + i * finfo_rec_size;
-+					record = func_info + i * info->func_info_rec_size;
- 					btf_dumper_type_only(btf, record->type_id,
- 							     func_sig,
- 							     sizeof(func_sig));
-@@ -744,49 +608,37 @@ static int do_dump(int argc, char **argv)
- 			if (json_output)
- 				jsonw_end_array(json_wtr);
- 		} else {
--			disasm_print_insn(buf, *member_len, opcodes, name,
-+			disasm_print_insn(buf, member_len, opcodes, name,
- 					  disasm_opt, btf, NULL, 0, 0, false);
- 		}
- 	} else if (visual) {
- 		if (json_output)
- 			jsonw_null(json_wtr);
- 		else
--			dump_xlated_cfg(buf, *member_len);
-+			dump_xlated_cfg(buf, member_len);
- 	} else {
- 		kernel_syms_load(&dd);
--		dd.nr_jited_ksyms = info.nr_jited_ksyms;
--		dd.jited_ksyms = (__u64 *) info.jited_ksyms;
-+		dd.nr_jited_ksyms = info->nr_jited_ksyms;
-+		dd.jited_ksyms = (__u64 *) info->jited_ksyms;
- 		dd.btf = btf;
- 		dd.func_info = func_info;
--		dd.finfo_rec_size = finfo_rec_size;
-+		dd.finfo_rec_size = info->func_info_rec_size;
- 		dd.prog_linfo = prog_linfo;
- 
- 		if (json_output)
--			dump_xlated_json(&dd, buf, *member_len, opcodes,
-+			dump_xlated_json(&dd, buf, member_len, opcodes,
- 					 linum);
- 		else
--			dump_xlated_plain(&dd, buf, *member_len, opcodes,
-+			dump_xlated_plain(&dd, buf, member_len, opcodes,
- 					  linum);
- 		kernel_syms_destroy(&dd);
- 	}
- 
--	free(buf);
--	free(func_ksyms);
--	free(func_lens);
--	free(func_info);
--	free(linfo);
--	free(jited_linfo);
--	bpf_prog_linfo__free(prog_linfo);
+ out:
+-	free(prog_tags);
+-	free(prog_lens);
+-	free(prog_addrs);
+-	free(func_infos);
 +	free(info_linear);
- 	return 0;
- 
- err_free:
--	free(buf);
--	free(func_ksyms);
--	free(func_lens);
--	free(func_info);
--	free(linfo);
--	free(jited_linfo);
--	bpf_prog_linfo__free(prog_linfo);
-+	free(info_linear);
- 	return -1;
+ 	free(btf);
+ 	return err ? -1 : 0;
  }
- 
