@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3698C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8949BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC8B204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A442192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256080;
-	bh=lna+cj7IuRO7/uT8Eg0jObAHUQx1MSx1lNQlz4mzYgA=;
+	s=default; t=1553256083;
+	bh=MFmtybwV3bMEaPXHc09FxXCq1VEflH19Nw5wz2kedko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIxBx362BPPH4aBju+vL/NrM+KubB/CsMO0/VrcZGo2aAyqxh8Gnk+IhuOxXxygNc
-	 1V+ZACSBkyuVq7N/JCrKOI6euyY+vSKHe6DC7IiVot1Z0E8/ytdLnUyO7f5UVxv+Du
-	 6CHrPMR9jCqu1RSJkdhGm+nFCu+FQFkcCXbPNg/w=
+	b=yOoLJCPeTFtlPPVkBfWEYFtsIkeBfLuNyVqaQUGiwc+CYNF0UJN2835D+eRUKL6zr
+	 ojL0PCVdTcMdsEos6ed3c/ar4uD3V5jbRGYPnlDnomZcPB76JMFOYKX9Fk59dH53ZD
+	 1ziKAEAG6UfJnsUDXLA0TWTKyunKmjrHc6PMwXmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388196AbfCVMBT (ORCPT
+        id S2388000AbfCVMBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38792 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbfCVMBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:16 -0400
+        id S2388190AbfCVMBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 437BC204FD;
-        Fri, 22 Mar 2019 12:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DDEC204FD;
+        Fri, 22 Mar 2019 12:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256075;
-        bh=lna+cj7IuRO7/uT8Eg0jObAHUQx1MSx1lNQlz4mzYgA=;
+        s=default; t=1553256078;
+        bh=MFmtybwV3bMEaPXHc09FxXCq1VEflH19Nw5wz2kedko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCtnmTczWgAZS5vWLguFfRCZe1PH3yv9DTZlx3FP4GchW0IjGlpYxUEObcXRBDMRZ
-         KGul3uaJ0H1E9EL9KSGS44nF3aPdFGsWXj6wu9bt3zdJ4niZq9obKKdXmaJCIRIrp+
-         t4ll3FAE2kvd+oOxGqQ+P74SbHJpak1uknRq7n0g=
+        b=0wzWbEmyI5VKVg/jgBv/fB4obcpCLSrgjv4AgmRr1G4v+yVYzi7IJB5oRk82CrmHf
+         0icnrPYF/b7oSp/EUamX/Pgm/zRCtsz2B8DMdXGl4IyAVc0MR+pFbG5yliuwHC2mnH
+         IGA4XBEbivZwiBqR6hm0CEUu8cvMNLwL1QdSRgMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 085/280] mailbox: bcm-flexrm-mailbox: Fix FlexRM ring flush timeout issue
-Date:   Fri, 22 Mar 2019 12:13:58 +0100
-Message-Id: <20190322111311.166615780@linuxfoundation.org>
+Subject: [PATCH 4.19 086/280] ASoC: topology: free created components in tplg load error
+Date:   Fri, 22 Mar 2019 12:13:59 +0100
+Message-Id: <20190322111311.251142681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -69,38 +67,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d7bf31a0f85faaf63c63c39d55154825a1eaaea9 ]
+[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
 
-RING_CONTROL reg was not written due to wrong address, hence all
-the subsequent ring flush was timing out.
+Topology resources are no longer needed if any element failed to load.
 
-Fixes: a371c10ea4b3 ("mailbox: bcm-flexrm-mailbox: Fix FlexRM ring flush sequence")
-
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/bcm-flexrm-mailbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
-index 8ab077ff58f4..96bcabfebc23 100644
---- a/drivers/mailbox/bcm-flexrm-mailbox.c
-+++ b/drivers/mailbox/bcm-flexrm-mailbox.c
-@@ -1396,9 +1396,9 @@ static void flexrm_shutdown(struct mbox_chan *chan)
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 66e77e020745..88a7e860b175 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2493,6 +2493,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+ {
+ 	struct soc_tplg tplg;
++	int ret;
  
- 	/* Clear ring flush state */
- 	timeout = 1000; /* timeout of 1s */
--	writel_relaxed(0x0, ring + RING_CONTROL);
-+	writel_relaxed(0x0, ring->regs + RING_CONTROL);
- 	do {
--		if (!(readl_relaxed(ring + RING_FLUSH_DONE) &
-+		if (!(readl_relaxed(ring->regs + RING_FLUSH_DONE) &
- 		      FLUSH_DONE_MASK))
- 			break;
- 		mdelay(1);
+ 	/* setup parsing context */
+ 	memset(&tplg, 0, sizeof(tplg));
+@@ -2506,7 +2507,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
+ 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 
+-	return soc_tplg_load(&tplg);
++	ret = soc_tplg_load(&tplg);
++	/* free the created components if fail to load topology */
++	if (ret)
++		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
+ 
 -- 
 2.19.1
 
