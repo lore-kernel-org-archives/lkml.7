@@ -2,198 +2,186 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D71C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23185C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5151521900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33A221900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hm+JsRSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfCVBVn (ORCPT
+        id S1727517AbfCVBX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:21:43 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37559 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727397AbfCVBVn (ORCPT
+        Thu, 21 Mar 2019 21:23:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42744 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfCVBX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:21:43 -0400
-X-UUID: 82716ddd024649f3bf5b6f907ffea631-20190322
-X-UUID: 82716ddd024649f3bf5b6f907ffea631-20190322
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1919452019; Fri, 22 Mar 2019 09:21:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 22 Mar 2019 09:21:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 22 Mar 2019 09:21:35 +0800
-Message-ID: <1553217695.25217.5.camel@mtksdaap41>
-Subject: Re: [PATCH v2] gpu/drm: mediatek: call mtk_dsi_stop() after
- mtk_drm_crtc_atomic_disable()
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 22 Mar 2019 09:21:35 +0800
-In-Reply-To: <CAJMQK-j9af8_L7DsWzgUy3=0Mr65FFeU71owan+acQgRuAnE7w@mail.gmail.com>
-References: <20190320071825.20268-1-hsinyi@chromium.org>
-         <1553131722.18216.10.camel@mtksdaap41>
-         <1553132815.18216.18.camel@mtksdaap41>
-         <CAJMQK-j9af8_L7DsWzgUy3=0Mr65FFeU71owan+acQgRuAnE7w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 21 Mar 2019 21:23:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r15so326405pfn.9;
+        Thu, 21 Mar 2019 18:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=B46QIBIzguzuQr0SfuXfjkWdBRNFyX9AyKWMSdbfBrg=;
+        b=hm+JsRStu8C/idqnAUcPxMv/7/cyum/wXukiXx4IJ411SupdBv6419L//2590d099x
+         quAecFUcgdHHQDGeJYJs9hsQ1BWvR11ZXIwGllJrN7BKTStP7SDvYSOKl1EO53MQxv/m
+         8IT1MJOj59rElmeXYLbx2oZrYkBVYffg/a1cvOwgXvJeOHv3BrVZFvQFKYS4Dsfj4dUU
+         mQ2APCXx18mNa5SFnctRM+6fmvpssO+WKi4zUuD0Ihhvxrp1x+dwRJF7MvYJZDUEEDqS
+         dRdgxt+e+8K3K1egiEaT9l9JRpd7ypfn2q90Xv3owDldfbXcv+hJYkrhJurr/XGzrQMJ
+         wcsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B46QIBIzguzuQr0SfuXfjkWdBRNFyX9AyKWMSdbfBrg=;
+        b=kFci9sX5kB3DAdz5Qtp4k731SrVysMGZFIibvvrFsYJTJKrxC5EbALDWMs4dnyH4cH
+         zINKLWILOu5GBX+owjKzZ03eVG2hB4N3kMzQhNRko3g/se0kFj/bYUgOxWHhowWzkUuD
+         n/rPK1dmS1kDWtoE1YwpZmgGMqBxq1jRTg2uKH+eFuSAKeAUZSZVDjYO7uTreQ5rAy/l
+         RxVyKSbjCdN8RiiE8O7Ii2ZXwBUJZITvoPcbpCZ8/keG5sZhCF45E4HrpFLC04hwznGT
+         Y+0CZN+W2rswU9h+XkZ8DERBY5iss7D0tAZHrcFygXdmqmSrj1R7XjYbu49QWW9BZ3+N
+         0EyQ==
+X-Gm-Message-State: APjAAAVrZbyGkT8V2w6YUXP3bgwYglQ32Ljv1HLmiiwlYccEhct1JdZB
+        ebq/exnsawWJAKyfPVINjfA=
+X-Google-Smtp-Source: APXvYqwnlQ/k+jEHKf0clvUlHm1msVn6VbfcmcKWsrFFCEVlaK+EdjFaQbltlhnKzDDbuxO3s/gNfA==
+X-Received: by 2002:a63:5452:: with SMTP id e18mr6371830pgm.386.1553217836568;
+        Thu, 21 Mar 2019 18:23:56 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id k9sm11422638pfc.57.2019.03.21.18.23.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 18:23:56 -0700 (PDT)
+Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <0e6eb370-3e62-e1a5-1b91-bccc5868e8e4@gmail.com>
+Date:   Thu, 21 Mar 2019 18:23:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <CAFd5g45F3YUsAjse+Vt5hj5CLjaXrRWgr5zCZZ6CJKc0hboP6Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Hsin-yi:
+On 3/4/19 3:01 PM, Brendan Higgins wrote:
+> On Thu, Feb 14, 2019 at 1:38 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> This patch set proposes KUnit, a lightweight unit testing and mocking
+>> framework for the Linux kernel.
+>>
+> 
+> <snip>
+> 
+>> ## More information on KUnit
+>>
+>> There is a bunch of documentation near the end of this patch set that
+>> describes how to use KUnit and best practices for writing unit tests.
+>> For convenience I am hosting the compiled docs here:
+>> https://google.github.io/kunit-docs/third_party/kernel/docs/
+>> Additionally for convenience, I have applied these patches to a branch:
+>> https://kunit.googlesource.com/linux/+/kunit/rfc/5.0-rc5/v4
+>> The repo may be cloned with:
+>> git clone https://kunit.googlesource.com/linux
+>> This patchset is on the kunit/rfc/5.0-rc5/v4 branch.
+>>
+>> ## Changes Since Last Version
+>>
+>>  - Got KUnit working on (hypothetically) all architectures (tested on
+>>    x86), as per Rob's (and other's) request
+>>  - Punting all KUnit features/patches depending on UML for now.
+>>  - Broke out UML specific support into arch/um/* as per "[RFC v3 01/19]
+>>    kunit: test: add KUnit test runner core", as requested by Luis.
+>>  - Added support to kunit_tool to allow it to build kernels in external
+>>    directories, as suggested by Kieran.
+>>  - Added a UML defconfig, and a config fragment for KUnit as suggested
+>>    by Kieran and Luis.
+>>  - Cleaned up, and reformatted a bunch of stuff.
+>>
+>> --
+>> 2.21.0.rc0.258.g878e2cd30e-goog
+>>
+> 
+> Someone suggested I should send the next revision out as "PATCH"
+> instead of "RFC" since there seems to be general consensus about
+> everything at a high level, with a couple exceptions.
+> 
+> At this time I am planning on sending the next revision out as "[PATCH
+> v1 00/NN] kunit: introduce KUnit, the Linux kernel unit testing
+> framework". Initially I wasn't sure if the next revision should be
+> "[PATCH v1 ...]" or "[PATCH v5 ...]". Please let me know if you have a
+> strong objection to the former.
+> 
+> In the next revision, I will be dropping the last two of three patches
+> for the DT unit tests as there doesn't seem to be enough features
+> currently available to justify the heavy refactoring I did; however, I
 
-On Thu, 2019-03-21 at 22:09 +0800, Hsin-Yi Wang wrote:
-> On Thu, Mar 21, 2019 at 9:46 AM CK Hu <ck.hu@mediatek.com> wrote:
-> >
-> > Hi, Hsin-yi:
-> >
-> > On Thu, 2019-03-21 at 09:28 +0800, CK Hu wrote:
-> > > Hi, Hsin-yi:
-> > >
-> > > On Wed, 2019-03-20 at 15:18 +0800, Hsin-Yi Wang wrote:
-> > > > mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
-> > > > ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
-> > > > ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
-> > > > irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
-> > > > happens sometimes when turning off the screen.
-> > > >
-> > > > In drm_atomic_helper.c#disable_outputs(),
-> > > > the calling sequence when turning off the screen is:
-> > > >
-> > > > 1. mtk_dsi_encoder_disable()
-> > > >      --> mtk_output_dsi_disable()
-> > > >        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
-> > > >        --> mtk_dsi_poweroff();
-> > > > 2. mtk_drm_crtc_atomic_disable()
-> > > >      --> drm_crtc_wait_one_vblank();
-> > > >      ...
-> > > >        --> mtk_dsi_ddp_stop()
-> > > >          --> mtk_dsi_poweroff();
-> > > >
-> > > > mtk_dsi_poweroff() has reference count design, change to make mtk_dsi_stop()
-> > > > called in mtk_dsi_poweroff() when refcount is 0.
-> > > >
-> > > > Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
-> > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > ---
-> > > > change log:
-> > > > v1->v2:
-> > > >  * update commit message.
-> > > >  * call mtk_dsi_stop() in mtk_dsi_poweroff() when refcount is 0.
-> > > > ---
-> > > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 5 ++++-
-> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > > index b00eb2d2e086..e152f37af57d 100644
-> > > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > > @@ -630,6 +630,8 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
-> > > >     if (--dsi->refcount != 0)
-> > > >             return;
-> > > >
-> > > > +   mtk_dsi_stop(dsi);
-> > > > +
-> > > >     if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
-> > > >             if (dsi->panel) {
-> > > >                     if (drm_panel_unprepare(dsi->panel)) {
-> > >
-> > > I think you just move mtk_dsi_stop() into mtk_dsi_poweroff() would works
-> > > fine, but I would rather like calling mtk_dsi_start() and mtk_dsi_stop()
-> > > in a symmetric manner. That means you may also move below functions into
-> > > mtk_dsi_poweron():
-> > >
-> > > mtk_dsi_set_mode(dsi);
-> > > mtk_dsi_clk_hs_mode(dsi, 1);
-> > > mtk_dsi_start(dsi);
-> 
-> For MT8183 with bridge panel, calling mtk_dsi_start() in
-> mtk_dsi_poweron() when refcount is 0->1, like the following order,
-> will results in no irq, not sure why though. I think this might be the
-> timing issue you mentioned in patch v1. (MT8183 without bridge panel
-> doesn't have this issue.)
-> 
-> atomic_enable
->   --> mtk_crtc_ddp_hw_init
->     --> mtk_dsi_ddp_start
->       --> mtk_dsi_poweron (ref 0->1)
->         --> drm_panel_prepare
->         --> *mtk_dsi_start  // results in no irq for MT8183 with bridge
->   --> drm_crtc_vblank_on
-> 
-> mtk_output_dsi_enable
->   --> mtk_dsi_poweron (ref 1->2, ignored)
->   --> mtk_dsi_start //original position
-> 
-> For mtk_dsi_stop() both with or without bridge is fine.
+Thank you.
 
-I'm not familiar with dsi hardware, so I could not answer why this
-problem happen. Jitao is familiar with dsi hardware, you may ask him for
-help. If this is hardware behavior, I could accept asymmetric flow, but
-please be sure this is hardware behavior not software bug.
 
-Regards,
-CK
+> will still include the patch that just converts everything over to
+> KUnit without restructuring the test cases:
+> https://lkml.org/lkml/2019/2/14/1133
+
+The link doesn't work for me (don't worry about that), so I'm assuming
+this is:
+
+   [RFC v4 15/17] of: unittest: migrate tests to run on KUnit
+
+The conversation on that patch ended after:
+
+   >> After adding patch 15, there are a lot of "unittest internal error" messages.
+   > 
+   > Yeah, I meant to ask you about that. I thought it was due to a change
+   > you made, but after further examination, just now, I found it was my
+   > fault. Sorry for not mentioning that anywhere. I will fix it in v5.
+
+It is not worth my time to look at patch 15 when it is that broken.  So I
+have not done any review of it.
+
+So no, I think you are still in the RFC stage unless you drop patch 15.
 
 > 
-> > >
-> > >
-> > > > @@ -696,7 +698,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
-> > > >             }
-> > > >     }
-> > > >
-> > > > -   mtk_dsi_stop(dsi);
-> > > >     mtk_dsi_poweroff(dsi);
-> > > >
-> > > >     dsi->enabled = false;
-> > > > @@ -1178,6 +1179,8 @@ static int mtk_dsi_remove(struct platform_device *pdev)
-> > > >     struct mtk_dsi *dsi = platform_get_drvdata(pdev);
-> > > >
-> > > >     mtk_output_dsi_disable(dsi);
-> > > > +   mtk_dsi_stop(dsi);
-> > > > +   mtk_dsi_poweroff(dsi);
-> > >
-> > > I think mtk_output_dsi_disable() would call mtk_dsi_poweroff(), and
-> > > mtk_dsi_poweroff() would call mtk_dsi_stop(), so these two line are
-> > > redundant. And I think you should remove mtk_dsi_stop() in
-> > > mtk_output_dsi_disable(), why not in this patch?
-> >
-> > You've removed mtk_dsi_stop() in mtk_output_dsi_disable(), I just miss
-> > it, sorry for this.
-> >
-> > Regards,
-> > CK
-> >
-> > >
-> > > Regards,
-> > > CK
-> > >
-> > > >     component_del(&pdev->dev, &mtk_dsi_component_ops);
-> > > >
-> > > >     return 0;
-> > >
-> >
-> >
-
+> I should have the next revision out in a week or so.
+> 
 
