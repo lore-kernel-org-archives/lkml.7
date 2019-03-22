@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36197C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F32218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F050C21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254087;
-	bh=VZ3eTCq0JbM6d69kgPXOjV50u7qeAnjWj17XwI3Cp5c=;
+	s=default; t=1553254091;
+	bh=lvUNEmoYphm1nf7ISKV2wRlWi2QCWtSdlBMvrguRndw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZ4wXlix3VnUXiSnw1nzhE0NVrZHU7ZMvS1+x/rZpcV/8IwR2RfQJFoP31jlzIfUr
-	 Pw9TAEMp5AhElE3RxzgrIPr9p8oD13G2r6Kk0hkLASfoc5Vu74W4+ZaGoEJQbFrxDp
-	 ZHTST+9spH5HgdEtZHG8tTTXXRmHTu4/Q2ay+uK8=
+	b=eAvDAZWwOMrCP3yqUaXZe0YsXimXI4h9oH75QyxFOPqYcol/HMp4CDRtT19BlzzQl
+	 95LM2gWeZ+ehF4hKbu835S9K2RrJqIal70uAkTY8y0h5ldz8k7yDywoTA99lajKHFQ
+	 DokX3QTgoagGy+C8cWLaVYm9wI6jN8vM11PX6mH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfCVL2F (ORCPT
+        id S1729629AbfCVL2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbfCVL2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:01 -0400
+        id S1729043AbfCVL2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93192183E;
-        Fri, 22 Mar 2019 11:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E5EC2183E;
+        Fri, 22 Mar 2019 11:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254081;
-        bh=VZ3eTCq0JbM6d69kgPXOjV50u7qeAnjWj17XwI3Cp5c=;
+        s=default; t=1553254087;
+        bh=lvUNEmoYphm1nf7ISKV2wRlWi2QCWtSdlBMvrguRndw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cYy0ngkfVPaHIAFUKxfkjYIY3HeIYwAY1yONU17QMnfyzsr1yS6H9oeZYjvwWpCjO
-         UCfJ13Xl1HyAE/oBosyTP/796BAjNQ/gzgi0mwWX01grO3cHJ/jOMv82mIgUYZIFYR
-         ruN+dkBvOIfFEWSXxShB9VENRMVuMU+MuyaiBpi8=
+        b=X5I7pW+tHInjxIRdkhAPDIe6t3doo56+d1qR0Ol57/SwMfWG/qJRx81k7tuHyvU3o
+         j/PV+S30PtRDK4U/5c4S5cK0XJzrD+Iq+3QSeMrys88RpcJqbxBgJMPNVTE7dOM5OE
+         cGO5WXLHaKGWPqL11lDGGYb5cI8+bBI2PbkT9X5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Alban Bedel <albeu@free.fr>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 010/230] mfd: mc13xxx: Fix a missing check of a register-read failure
-Date:   Fri, 22 Mar 2019 12:12:28 +0100
-Message-Id: <20190322111237.467116943@linuxfoundation.org>
+Subject: [PATCH 4.4 012/230] MIPS: ath79: Enable OF serial ports in the default config
+Date:   Fri, 22 Mar 2019 12:12:30 +0100
+Message-Id: <20190322111237.600363791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,36 +68,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9e28989d41c0eab57ec0bb156617a8757406ff8a ]
+[ Upstream commit 565dc8a4f55e491935bfb04866068d21784ea9a4 ]
 
-When mc13xxx_reg_read() fails, "old_adc0" is uninitialized and will
-contain random value. Further execution uses "old_adc0" even when
-mc13xxx_reg_read() fails.
-The fix checks the return value of mc13xxx_reg_read(), and exits
-the execution when it fails.
+CONFIG_SERIAL_OF_PLATFORM is needed to get a working console on the OF
+boards, enable it in the default config to get a working setup out of
+the box.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Alban Bedel <albeu@free.fr>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mc13xxx-core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/configs/ath79_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 3f9f4c874d2aa..8d74806b83c12 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -274,7 +274,9 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 
- 	mc13xxx->adcflags |= MC13XXX_ADC_WORKING;
- 
--	mc13xxx_reg_read(mc13xxx, MC13XXX_ADC0, &old_adc0);
-+	ret = mc13xxx_reg_read(mc13xxx, MC13XXX_ADC0, &old_adc0);
-+	if (ret)
-+		goto out;
- 
- 	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
- 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
+diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
+index 134879c1310a0..4ed369c0ec6a1 100644
+--- a/arch/mips/configs/ath79_defconfig
++++ b/arch/mips/configs/ath79_defconfig
+@@ -74,6 +74,7 @@ CONFIG_SERIAL_8250_CONSOLE=y
+ # CONFIG_SERIAL_8250_PCI is not set
+ CONFIG_SERIAL_8250_NR_UARTS=1
+ CONFIG_SERIAL_8250_RUNTIME_UARTS=1
++CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_SERIAL_AR933X=y
+ CONFIG_SERIAL_AR933X_CONSOLE=y
+ # CONFIG_HW_RANDOM is not set
 -- 
 2.19.1
 
