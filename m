@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28936218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCF6218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253966;
-	bh=CuiZyeM3+zr2KQxNmILH/Tk7Osv5QFLMxuTH/Esu92s=;
+	s=default; t=1553253968;
+	bh=58vDfN6oQo1Jj7dSL6HS2HUUZpUUJlBCo58rLnaR+Y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iG3F6ZYegxuvdsTJKO5RHpeY06CjT9AV3HX6tSlj2ddK5Wr0YzAfOYrtUHGDOLOj
-	 6/TTT8nM14SFTwX059uf4QLA+zNlIR51eK/70QXpSfH4IymfSk4lsL2Bx72rZAM6mB
-	 but03ioGe0Y5FSLS3oPevgvZAhpGAUOcbDuNar7E=
+	b=lTrT283FFPA2OYtBtkR7zvS8sESrPt2cl0oxrtuXdR5UcDm4F6DrY5JnlCtlngTMI
+	 6kPphxYzIjGFm1NFzReK6Opl/B+wEusphxOXzRrF/3VcmV0Htjk7btpwphUnR/Bt6l
+	 pEKPNVrZiahcmPNEri9qc0NvdSEayEn77EigNuh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfCVL0E (ORCPT
+        id S1729386AbfCVL0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53712 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfCVL0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:02 -0400
+        id S1729378AbfCVL0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E33AA20657;
-        Fri, 22 Mar 2019 11:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF21218B0;
+        Fri, 22 Mar 2019 11:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253961;
-        bh=CuiZyeM3+zr2KQxNmILH/Tk7Osv5QFLMxuTH/Esu92s=;
+        s=default; t=1553253964;
+        bh=58vDfN6oQo1Jj7dSL6HS2HUUZpUUJlBCo58rLnaR+Y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFU0DQW4ZuF5nfmOeKwTmOUK+Z2gbPi4EIPkCSN7IJ2oPWKvZclRvquYy2fbQmwb7
-         jmhHm3bfYtPOweY8Jxff7jk+dswcntgtQ3k3KHkNPUcIym6lX3+Slikl8uFuGVC56V
-         7UzNQ4BI4NUoQmR1uvQmy7noKA47jbvkmhSezI2Y=
+        b=tRbvQjbnUSqWeTn0uV8bXNZP0MJFFN3IN8qjU6bvEBV85XnsElOKlikMgVkBoJxOr
+         GE5nXB208eKyBkrVcW5o5aPeOOhGpg/ToyexQ+4f8mDflda5j4KxVECx3lbjiYUCOe
+         snPVMkV2qw4GC3Z1YvsL0BvOCAC6grfKonAW8ESQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org,
+        Jonathan Neuschafer <j.neuschaefer@gmx.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 3.18 124/134] powerpc/32: Clear on-stack exception marker upon exception return
-Date:   Fri, 22 Mar 2019 12:15:37 +0100
-Message-Id: <20190322111219.412629332@linuxfoundation.org>
+Subject: [PATCH 3.18 125/134] powerpc/wii: properly disable use of BATs when requested.
+Date:   Fri, 22 Mar 2019 12:15:38 +0100
+Message-Id: <20190322111219.494735102@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,79 +68,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
+commit 6d183ca8baec983dc4208ca45ece3c36763df912 upstream.
 
-Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
-to avoid confusing stacktrace like the one below.
+'nobats' kernel parameter or some options like CONFIG_DEBUG_PAGEALLOC
+deny the use of BATS for mapping memory.
 
-  Call Trace:
-  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895130] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
-  --- interrupt: c0e9df00 at 0x400f330
-      LR = init_stack+0x1f00/0x2000
-  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
+This patch makes sure that the specific wii RAM mapping function
+takes it into account as well.
 
-With this patch the trace becomes:
-
-  Call Trace:
-  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895150] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
-  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
-
+Fixes: de32400dd26e ("wii: use both mem1 and mem2 as ram")
 Cc: stable@vger.kernel.org
+Reviewed-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/entry_32.S |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/powerpc/platforms/embedded6xx/wii.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -757,6 +757,9 @@ fast_exception_return:
- 	mtcr	r10
- 	lwz	r10,_LINK(r11)
- 	mtlr	r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r11)
- 	REST_GPR(10, r11)
- 	mtspr	SPRN_SRR1,r9
- 	mtspr	SPRN_SRR0,r12
-@@ -987,6 +990,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
- 	mtcrf	0xFF,r10
- 	mtlr	r11
- 
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	/*
- 	 * Once we put values in SRR0 and SRR1, we are in a state
- 	 * where exceptions are not recoverable, since taking an
-@@ -1024,6 +1030,9 @@ exc_exit_restart_end:
- 	mtlr	r11
- 	lwz	r10,_CCR(r1)
- 	mtcrf	0xff,r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	REST_2GPRS(9, r1)
- 	.globl exc_exit_restart
- exc_exit_restart:
+--- a/arch/powerpc/platforms/embedded6xx/wii.c
++++ b/arch/powerpc/platforms/embedded6xx/wii.c
+@@ -104,6 +104,10 @@ unsigned long __init wii_mmu_mapin_mem2(
+ 	/* MEM2 64MB@0x10000000 */
+ 	delta = wii_hole_start + wii_hole_size;
+ 	size = top - delta;
++
++	if (__map_without_bats)
++		return delta;
++
+ 	for (bl = 128<<10; bl < max_size; bl <<= 1) {
+ 		if (bl * 2 > size)
+ 			break;
 
 
