@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C6AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A6FC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81ED2213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE392175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfCVFYB (ORCPT
+        id S1727655AbfCVFXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:24:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45726 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727630AbfCVFXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45632 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727439AbfCVFXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-000160-Ou; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-00015v-LP; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001og-IG; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001oN-Em; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Hartkopp" <socketcan@hartkopp.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>,
-        "Muyu Yu" <ieatmuttonchuan@gmail.com>,
-        "Michal Kubecek" <mkubecek@suse.cz>,
-        "Marcus Meissner" <meissner@suse.de>
+        "Kees Cook" <keescook@chromium.org>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        "Christoph Hellwig" <hch@lst.de>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.741933337@decadent.org.uk>
+Message-ID: <lsq.1553232018.788477399@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 07/16] can: gw: ensure DLC boundaries after CAN frame
- modification
+Subject: [PATCH 3.16 03/16] swiotlb: clean up reporting
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,88 +56,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Kees Cook <keescook@chromium.org>
 
-commit 0aaa81377c5a01f686bcdb8c7a6929a7bf330c68 upstream.
+commit 7d63fb3af87aa67aa7d24466e792f9d7c57d8e79 upstream.
 
-Muyu Yu provided a POC where user root with CAP_NET_ADMIN can create a CAN
-frame modification rule that makes the data length code a higher value than
-the available CAN frame data size. In combination with a configured checksum
-calculation where the result is stored relatively to the end of the data
-(e.g. cgw_csum_xor_rel) the tail of the skb (e.g. frag_list pointer in
-skb_shared_info) can be rewritten which finally can cause a system crash.
+This removes needless use of '%p', and refactors the printk calls to
+use pr_*() helpers instead.
 
-Michael Kubecek suggested to drop frames that have a DLC exceeding the
-available space after the modification process and provided a patch that can
-handle CAN FD frames too. Within this patch we also limit the length for the
-checksum calculations to the maximum of Classic CAN data length (8).
-
-CAN frames that are dropped by these additional checks are counted with the
-CGW_DELETED counter which indicates misconfigurations in can-gw rules.
-
-This fixes CVE-2019-3701.
-
-Reported-by: Muyu Yu <ieatmuttonchuan@gmail.com>
-Reported-by: Marcus Meissner <meissner@suse.de>
-Suggested-by: Michal Kubecek <mkubecek@suse.cz>
-Tested-by: Muyu Yu <ieatmuttonchuan@gmail.com>
-Tested-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/can/gw.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ lib/swiotlb.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
---- a/net/can/gw.c
-+++ b/net/can/gw.c
-@@ -417,13 +417,29 @@ static void can_can_gw_rcv(struct sk_buf
- 	while (modidx < MAX_MODFUNCTIONS && gwj->mod.modfunc[modidx])
- 		(*gwj->mod.modfunc[modidx++])(cf, &gwj->mod);
+--- a/lib/swiotlb.c
++++ b/lib/swiotlb.c
+@@ -17,6 +17,8 @@
+  * 08/12/11 beckyb	Add highmem support
+  */
  
--	/* check for checksum updates when the CAN frame has been modified */
-+	/* Has the CAN frame been modified? */
- 	if (modidx) {
--		if (gwj->mod.csumfunc.crc8)
-+		/* get available space for the processed CAN frame type */
-+		int max_len = nskb->len - offsetof(struct can_frame, data);
++#define pr_fmt(fmt) "software IO TLB: " fmt
 +
-+		/* dlc may have changed, make sure it fits to the CAN frame */
-+		if (cf->can_dlc > max_len)
-+			goto out_delete;
-+
-+		/* check for checksum updates in classic CAN length only */
-+		if (gwj->mod.csumfunc.crc8) {
-+			if (cf->can_dlc > 8)
-+				goto out_delete;
-+
- 			(*gwj->mod.csumfunc.crc8)(cf, &gwj->mod.csum.crc8);
-+		}
-+
-+		if (gwj->mod.csumfunc.xor) {
-+			if (cf->can_dlc > 8)
-+				goto out_delete;
+ #include <linux/cache.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/mm.h>
+@@ -143,20 +145,16 @@ static bool no_iotlb_memory;
+ void swiotlb_print_info(void)
+ {
+ 	unsigned long bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+-	unsigned char *vstart, *vend;
  
--		if (gwj->mod.csumfunc.xor)
- 			(*gwj->mod.csumfunc.xor)(cf, &gwj->mod.csum.xor);
-+		}
+ 	if (no_iotlb_memory) {
+-		pr_warn("software IO TLB: No low mem\n");
++		pr_warn("No low mem\n");
+ 		return;
  	}
  
- 	/* clear the skb timestamp if not configured the other way */
-@@ -435,6 +451,14 @@ static void can_can_gw_rcv(struct sk_buf
- 		gwj->dropped_frames++;
- 	else
- 		gwj->handled_frames++;
-+
-+	return;
-+
-+ out_delete:
-+	/* delete frame due to misconfiguration */
-+	gwj->deleted_frames++;
-+	kfree_skb(nskb);
-+	return;
+-	vstart = phys_to_virt(io_tlb_start);
+-	vend = phys_to_virt(io_tlb_end);
+-
+-	printk(KERN_INFO "software IO TLB [mem %#010llx-%#010llx] (%luMB) mapped at [%p-%p]\n",
++	pr_info("mapped [mem %#010llx-%#010llx] (%luMB)\n",
+ 	       (unsigned long long)io_tlb_start,
+ 	       (unsigned long long)io_tlb_end,
+-	       bytes >> 20, vstart, vend - 1);
++	       bytes >> 20);
  }
  
- static inline int cgw_register_filter(struct cgw_job *gwj)
+ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+@@ -230,7 +228,7 @@ swiotlb_init(int verbose)
+ 	if (io_tlb_start)
+ 		memblock_free_early(io_tlb_start,
+ 				    PAGE_ALIGN(io_tlb_nslabs << IO_TLB_SHIFT));
+-	pr_warn("Cannot allocate SWIOTLB buffer");
++	pr_warn("Cannot allocate buffer");
+ 	no_iotlb_memory = true;
+ }
+ 
+@@ -272,8 +270,8 @@ swiotlb_late_init_with_default_size(size
+ 		return -ENOMEM;
+ 	}
+ 	if (order != get_order(bytes)) {
+-		printk(KERN_WARNING "Warning: only able to allocate %ld MB "
+-		       "for software IO TLB\n", (PAGE_SIZE << order) >> 20);
++		pr_warn("only able to allocate %ld MB\n",
++			(PAGE_SIZE << order) >> 20);
+ 		io_tlb_nslabs = SLABS_PER_PAGE << order;
+ 	}
+ 	rc = swiotlb_late_init_with_tbl(vstart, io_tlb_nslabs);
 
