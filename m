@@ -2,51 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A77C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3229520693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E272082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255385;
-	bh=/cGfmxWRZhwj5v/TZrnpAzXj10HY/Hirf53r+kOKwQc=;
+	s=default; t=1553255389;
+	bh=Wg+vfHT8iP47CZiH5R+uRGEtzazSaOCFThm+36j9Vls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMv5d4vgTcEGwuiP+yexEOM+sPE/y4HWnux2anpnylvwlVV4gSfOPF4AO19qnejY8
-	 q8EW8J0ciVavpdQM8nDawkm4BMC5V6CrdnWc9C7F96fX0LPD1FY+KNlK7liE3yyxrx
-	 toooo24xielP0bBf3ii8u/C2Qg814JlWVdZv5mG0=
+	b=lYQXeXTD60XTJ5WQw26dRlfbw8+svM2QawT7rHJqWqbE7NHlae2f3Yg7fA5o4tLP8
+	 wZgLYbODuXd26xTAhHwD3SaLyUX/6/WLMWTgyF2kR5jREFSTTMnWqnWKQqpy3pn6BK
+	 QJwAhoHa6ixlGCL+LiyzgMPXfZW12XwdDksqXK5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbfCVLtn (ORCPT
+        id S1732533AbfCVLts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732496AbfCVLtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:39 -0400
+        id S1731919AbfCVLtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:49:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F1420693;
-        Fri, 22 Mar 2019 11:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2409218B0;
+        Fri, 22 Mar 2019 11:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255377;
-        bh=/cGfmxWRZhwj5v/TZrnpAzXj10HY/Hirf53r+kOKwQc=;
+        s=default; t=1553255380;
+        bh=Wg+vfHT8iP47CZiH5R+uRGEtzazSaOCFThm+36j9Vls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ciiVsA47GjVeQHH9cq5z1qXXcd+NzPyhJFMPK5vRG8n6cRF/sZnrvm+/pzRGLldNH
-         Ixpb2I0kimDn8NC/H4KzIQuWWLzoVSy7n54i83eztGvo3yilzY9MXM8XrLeX+1YP+M
-         6p6aqp9uItAsPsCsfZ3nMBH8qFnm0woYbFNQuHnA=
+        b=2DwvrJeFAIVmZfA5akF5SRE52Rlol+1mvlVxebYDc5oy0pVyNHvagATdIhgsxZw+Y
+         GSUN5CJQIFLOyqzUCUuV+YBSM5o0v0soQD5o43NkK2/P1fBuz0GXpet6gq749pvTLj
+         88MlabqeEJ1qi7aSbytcuzjSUdxONiBw32ffjdT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.14 072/183] fix cgroup_do_mount() handling of failure exits
-Date:   Fri, 22 Mar 2019 12:15:00 +0100
-Message-Id: <20190322111246.920964652@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 055/183] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
+Date:   Fri, 22 Mar 2019 12:14:43 +0100
+Message-Id: <20190322111245.706321600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,95 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
 
-commit 399504e21a10be16dd1408ba0147367d9d82a10c upstream.
+The enabling L3/L4 filtering for transmit switched packets for all
+devices caused unforeseen issue on older devices when trying to send UDP
+traffic in an ordered sequence.  This bit was originally intended for X550
+devices, which supported this feature, so limit the scope of this bit to
+only X550 devices.
 
-same story as with last May fixes in sysfs (7b745a4e4051
-"unfuck sysfs_mount()"); new_sb is left uninitialized
-in case of early errors in kernfs_mount_ns() and papering
-over it by treating any error from kernfs_mount_ns() as
-equivalent to !new_ns ends up conflating the cases when
-objects had never been transferred to a superblock with
-ones when that has happened and resulting new superblock
-had been dropped.  Easily fixed (same way as in sysfs
-case).  Additionally, there's a superblock leak on
-kernfs_node_dentry() failure *and* a dentry leak inside
-kernfs_node_dentry() itself - the latter on probably
-impossible errors, but the former not impossible to trigger
-(as the matter of fact, injecting allocation failures
-at that point *does* trigger it).
-
-Cc: stable@kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/mount.c      |    8 ++++++--
- kernel/cgroup/cgroup.c |    9 ++++++---
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/kernfs/mount.c
-+++ b/fs/kernfs/mount.c
-@@ -196,8 +196,10 @@ struct dentry *kernfs_node_dentry(struct
- 		return dentry;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 42183a8b649c..01c120d656c5 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -3827,8 +3827,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
+ 			else
+ 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
  
- 	knparent = find_next_ancestor(kn, NULL);
--	if (WARN_ON(!knparent))
-+	if (WARN_ON(!knparent)) {
-+		dput(dentry);
- 		return ERR_PTR(-EINVAL);
-+	}
- 
- 	do {
- 		struct dentry *dtmp;
-@@ -206,8 +208,10 @@ struct dentry *kernfs_node_dentry(struct
- 		if (kn == knparent)
- 			return dentry;
- 		kntmp = find_next_ancestor(kn, knparent);
--		if (WARN_ON(!kntmp))
-+		if (WARN_ON(!kntmp)) {
-+			dput(dentry);
- 			return ERR_PTR(-EINVAL);
-+		}
- 		dtmp = lookup_one_len_unlocked(kntmp->name, dentry,
- 					       strlen(kntmp->name));
- 		dput(dentry);
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1942,7 +1942,7 @@ struct dentry *cgroup_do_mount(struct fi
- 			       struct cgroup_namespace *ns)
- {
- 	struct dentry *dentry;
--	bool new_sb;
-+	bool new_sb = false;
- 
- 	dentry = kernfs_mount(fs_type, flags, root->kf_root, magic, &new_sb);
- 
-@@ -1952,6 +1952,7 @@ struct dentry *cgroup_do_mount(struct fi
- 	 */
- 	if (!IS_ERR(dentry) && ns != &init_cgroup_ns) {
- 		struct dentry *nsdentry;
-+		struct super_block *sb = dentry->d_sb;
- 		struct cgroup *cgrp;
- 
- 		mutex_lock(&cgroup_mutex);
-@@ -1962,12 +1963,14 @@ struct dentry *cgroup_do_mount(struct fi
- 		spin_unlock_irq(&css_set_lock);
- 		mutex_unlock(&cgroup_mutex);
- 
--		nsdentry = kernfs_node_dentry(cgrp->kn, dentry->d_sb);
-+		nsdentry = kernfs_node_dentry(cgrp->kn, sb);
- 		dput(dentry);
-+		if (IS_ERR(nsdentry))
-+			deactivate_locked_super(sb);
- 		dentry = nsdentry;
- 	}
- 
--	if (IS_ERR(dentry) || !new_sb)
-+	if (!new_sb)
- 		cgroup_put(&root->cgrp);
- 
- 	return dentry;
+-			/* Enable L3/L4 for Tx Switched packets */
+-			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
++			/* Enable L3/L4 for Tx Switched packets only for X550,
++			 * older devices do not support this feature
++			 */
++			if (hw->mac.type >= ixgbe_mac_X550)
++				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
+ 		} else {
+ 			if (tcs > 4)
+ 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
+-- 
+2.19.1
+
 
 
