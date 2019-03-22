@@ -2,101 +2,81 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58995C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA4EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2662221900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553273268;
-	bh=+WR5/YkORYFKXnsrL4Kq4xe+UkSaYNt9o/GK851Cwdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xabhp6GaA+6WpUb6SjRDZDuif5VCnl+5pDrEUAxvkvKMfgl7cETStOIPr49UxdudL
-	 rZYF9NPVcyFSUR4TloLKtbfkXQCuqxBtrLT4if7HHKJuw0jV1ntpmCHDN5KN/4Z7VG
-	 CLnjGL3s0R8XofYTKRaZPz0fyX+TYoiT1X77KA/U=
+	by mail.kernel.org (Postfix) with ESMTP id 4C88921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfCVQrq (ORCPT
+        id S1728070AbfCVQr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfCVQrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:47:46 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03E9621900;
-        Fri, 22 Mar 2019 16:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553273265;
-        bh=+WR5/YkORYFKXnsrL4Kq4xe+UkSaYNt9o/GK851Cwdk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cN7cxwyrt4aXb+RwQl8Xo4qso2c8wK5bSKmQiiym/GXp+MdEPUr6QRhgRkD4he4wU
-         NZ0slkZCa2VyxBwE7V6d9dXRCNdFwmwvGAIH50fB27eNt3dSlthuDXZSkd24FXXMcg
-         UzdDEDYUQOCdjeaI34qJ5BdB83CySX5CvjcHoRHI=
-Date:   Fri, 22 Mar 2019 11:47:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Joerg Roedel <joro@8bytes.org>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-Subject: Re: [PATCH v3 09/10] NTB: Add MSI interrupt support to ntb_transport
-Message-ID: <20190322164743.GN251185@google.com>
-References: <20190322000645.15580-1-logang@deltatee.com>
- <20190322000645.15580-10-logang@deltatee.com>
+        Fri, 22 Mar 2019 12:47:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49402 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfCVQr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:47:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6763AA78;
+        Fri, 22 Mar 2019 09:47:57 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A158D3F59C;
+        Fri, 22 Mar 2019 09:47:55 -0700 (PDT)
+Subject: Re: [PATCH] ASoC: codecs: Fix to avoid potential NULL pointer
+ dereferences
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Barry Song <baohua@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190319005805.13823-1-pakki001@umn.edu>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <23781985-7747-730c-764d-1565a511cb67@arm.com>
+Date:   Fri, 22 Mar 2019 16:47:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322000645.15580-10-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190319005805.13823-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Logan,
+On 19/03/2019 00:58, Aditya Pakki wrote:
+> In sirf_audio_codec_driver_probe, of_match_node may fail and return a
+> NULL pointer. The patch avoids a potential NULL pointer dereference.
 
-Drive-by nits:
+Actually 'match' isn't used in this function...  So there's no chance of
+a NULL dereference. You might as well remove the call.
 
-On Thu, Mar 21, 2019 at 06:06:44PM -0600, Logan Gunthorpe wrote:
-> Introduce the module parameter 'use_msi' which, when set uses
+Steve
 
-s/set/set,/
-
-> MSI interrupts instead of doorbells for each queue pair (QP). T
-> he parameter is only available if NTB MSI support is configured into
-
-Spurious newline in the middle of "The".
-
-> the kernel. We also require there to be more than one memory window
-> (MW) so that an extra one is available to forward the APIC region.
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  sound/soc/codecs/sirf-audio-codec.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> To use MSIs, we request one interrupt per QP and forward the MSI address
-> and data to the peer using scratch pad registers (SPADS) above the MW
-> spads. (If there are not enough SPADS the MSI interrupt will not be used.)
-
-/spads/SPADS/ for consistency
-
-> Once registered, we simply use ntb_msi_peer_trigger and the recieving
-
-s/recieving/receiving/
-
-> ISR simply queues up the rxc_db_work for the queue.
+> diff --git a/sound/soc/codecs/sirf-audio-codec.c b/sound/soc/codecs/sirf-audio-codec.c
+> index e424499a8450..fd2bbd6a3c58 100644
+> --- a/sound/soc/codecs/sirf-audio-codec.c
+> +++ b/sound/soc/codecs/sirf-audio-codec.c
+> @@ -464,6 +464,8 @@ static int sirf_audio_codec_driver_probe(struct platform_device *pdev)
+>  	const struct of_device_id *match;
+>  
+>  	match = of_match_node(sirf_audio_codec_of_match, pdev->dev.of_node);
+> +	if (!match)
+> +		return -ENXIO;
+>  
+>  	sirf_audio_codec = devm_kzalloc(&pdev->dev,
+>  		sizeof(struct sirf_audio_codec), GFP_KERNEL);
 > 
-> This addition can significantly improve performance of ntb_transport.
-> In a simple, untuned, apples-to-apples comparision using ntb_netdev
-> and iperf with switchtec hardware, I see 3.88Gb/s without MSI
-> interrupts and 14.1Gb/s which is a more than 3x improvement.
 
-s/which is/with MSI, which is/
-
-Bjorn
