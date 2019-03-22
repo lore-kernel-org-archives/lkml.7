@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C1EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E43C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7572183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428C521873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260543;
-	bh=qEAqvr0SQNvC6fO1rGm94tbT/YdfP85kJGoyb1JbFaE=;
+	s=default; t=1553260560;
+	bh=q0yXjPaSgnFacPwb7WXEtdBd/iRw1KfJqtoZtL80xSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i+4kWRuCFTZUaW/ATI48RyYlwhE6AsxvuomRnaXQlzCMsSch8f0yl33YZmvf6bh9i
-	 cKk1trCpYxqUFRyws9fNQUsFWeg6OFUu9syF4J5U2jH3Q2vfFZ0BOrFH78YYR6mbnl
-	 ppfKVOVbJKnvY0GUrAe6O+x62/6yDUgTuL4WNxHI=
+	b=hCAWOJD4V6hoiar0zRFe+HJZw2oCFEfFBZX/bXHuvdWkLF76lhh+XtG1Y1Md3xbye
+	 cBBTGPIH8eVY18H/Rv4QkxoRyFK3aYIlBsGGsa5paJwOni7hYzQGI3f+49vCvackKp
+	 ZIzuCWpezeBhhzBec+j9NFLJXd0cQENQ5My30N90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfCVL1w (ORCPT
+        id S1729590AbfCVNP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55514 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:15:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbfCVL1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:48 -0400
+        id S1728703AbfCVL1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFAB2183E;
-        Fri, 22 Mar 2019 11:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17786218A2;
+        Fri, 22 Mar 2019 11:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254067;
-        bh=qEAqvr0SQNvC6fO1rGm94tbT/YdfP85kJGoyb1JbFaE=;
+        s=default; t=1553254050;
+        bh=q0yXjPaSgnFacPwb7WXEtdBd/iRw1KfJqtoZtL80xSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SnxKo1mpRGwBsdBNPjT/r3SBazciYZDh3ACdhjIsVD0fH+2S2+CK66Ro/BzuTvsUd
-         BfsXyw3dK1WlD+jUIlypT7+C2lf2v2JfZGTGyH39r3SnNXzrRDEZR5fRjEGptdNotD
-         pqxnykwlhxNK71dfizRjUOJuNhvGo/aARE4+YosI=
+        b=y9C2x0PpCqfU2xT1HHqB68QOkwA/WVQEvavOdfLNd5fSt35SpiexsPZhcVPP2uXbK
+         jrUyL38UYPugJRg1X417rGQukSRYhwI/t0F1C8FsRPTz7k+S2N6ePs+Fuw5jB6e1uT
+         oYa2f0VRWB6RecvkdsVawBEvFu0oNXGpAXVl1rcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 006/230] mfd: db8500-prcmu: Fix some section annotations
-Date:   Fri, 22 Mar 2019 12:12:24 +0100
-Message-Id: <20190322111237.207297606@linuxfoundation.org>
+Subject: [PATCH 4.4 017/230] atm: he: fix sign-extension overflow on large shift
+Date:   Fri, 22 Mar 2019 12:12:35 +0100
+Message-Id: <20190322111237.966968897@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,59 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a3888f62fe66429fad3be7f2ba962e1e08c26fd6 ]
+[ Upstream commit cb12d72b27a6f41325ae23a11033cf5fedfa1b97 ]
 
-When building the kernel with Clang, the following section mismatch
-warnings appear:
+Shifting the 1 by exp by an int can lead to sign-extension overlow when
+exp is 31 since 1 is an signed int and sign-extending this result to an
+unsigned long long will set the upper 32 bits.  Fix this by shifting an
+unsigned long.
 
-WARNING: vmlinux.o(.text+0x7239cc): Section mismatch in reference from
-the function db8500_prcmu_probe() to the function
-.init.text:init_prcm_registers()
-The function db8500_prcmu_probe() references
-the function __init init_prcm_registers().
-This is often because db8500_prcmu_probe lacks a __init
-annotation or the annotation of init_prcm_registers is wrong.
+Detected by cppcheck:
+(warning) Shifting signed 32-bit value by 31 bits is undefined behaviour
 
-WARNING: vmlinux.o(.text+0x723e28): Section mismatch in reference from
-the function db8500_prcmu_probe() to the function
-.init.text:fw_project_name()
-The function db8500_prcmu_probe() references
-the function __init fw_project_name().
-This is often because db8500_prcmu_probe lacks a __init
-annotation or the annotation of fw_project_name is wrong.
-
-db8500_prcmu_probe should not be marked as __init so remove the __init
-annotation from fw_project_name and init_prcm_registers.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/db8500-prcmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/atm/he.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-index 12099b09a9a71..e71b9f23379d0 100644
---- a/drivers/mfd/db8500-prcmu.c
-+++ b/drivers/mfd/db8500-prcmu.c
-@@ -2610,7 +2610,7 @@ static struct irq_chip prcmu_irq_chip = {
- 	.irq_unmask	= prcmu_irq_unmask,
- };
+diff --git a/drivers/atm/he.c b/drivers/atm/he.c
+index 0f5cb37636bcc..010581e8bee05 100644
+--- a/drivers/atm/he.c
++++ b/drivers/atm/he.c
+@@ -717,7 +717,7 @@ static int he_init_cs_block_rcm(struct he_dev *he_dev)
+ 			instead of '/ 512', use '>> 9' to prevent a call
+ 			to divdu3 on x86 platforms
+ 		*/
+-		rate_cps = (unsigned long long) (1 << exp) * (man + 512) >> 9;
++		rate_cps = (unsigned long long) (1UL << exp) * (man + 512) >> 9;
  
--static __init char *fw_project_name(u32 project)
-+static char *fw_project_name(u32 project)
- {
- 	switch (project) {
- 	case PRCMU_FW_PROJECT_U8500:
-@@ -2758,7 +2758,7 @@ void __init db8500_prcmu_early_init(u32 phy_base, u32 size)
- 	INIT_WORK(&mb0_transfer.mask_work, prcmu_mask_work);
- }
- 
--static void __init init_prcm_registers(void)
-+static void init_prcm_registers(void)
- {
- 	u32 val;
- 
+ 		if (rate_cps < 10)
+ 			rate_cps = 10;	/* 2.2.1 minimum payload rate is 10 cps */
 -- 
 2.19.1
 
