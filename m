@@ -2,458 +2,137 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E41EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC30C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E312218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F27E218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b="kxADz2eR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfCVGjP (ORCPT
+        id S1727798AbfCVGjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:39:15 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:44304 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbfCVGjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:39:15 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h7Dh3-0002ZM-Aw; Fri, 22 Mar 2019 14:30:20 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h7Dgk-0001K4-Mg; Fri, 22 Mar 2019 14:29:59 +0800
-Subject: [PATCH 17/17] security/keys: rewrite big_key crypto to use Zinc
-References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Crowley <paulcrowley@google.com>,
-        Greg Kaiser <gkaiser@google.com>,
-        Samuel Neves <samuel.c.p.neves@gmail.com>,
-        Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
-        Martin Willi <martin@strongswan.org>
-Message-Id: <E1h7Dgk-0001K4-Mg@gondobar>
-From:   Herbert Xu <herbert@gondor.apana.org.au>
+        Fri, 22 Mar 2019 02:39:21 -0400
+Received: from mail.synology.com ([211.23.38.101]:35119 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727461AbfCVGjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:39:20 -0400
+X-Greylist: delayed 544 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Mar 2019 02:39:18 EDT
+From:   lifonghsu <lifonghsu@synology.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1553236213; bh=+TyQ2ld6b+WpeAV4MOSaXkFmKltzNZOAeaD2+CWwWbE=;
+        h=From:To:Cc:Subject:Date;
+        b=kxADz2eR0jh6XS9sJjGgprGnR8ZvVUPFcOmVBDSlfGAQ2f7w7mN5Er4EYnJEvP0TS
+         PMN1MoFEHR1k+y2t5RoFlGRnRXnzeshQkcM5xzorqrjYXbLTT1ezirjUs9jPH4zcjh
+         zmmHkNGQoczwDtSHo9ojj4YchoREDgXBt/EMw5j0=
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        LiFong Hsu <lifonghsu@synology.com>
+Subject: net: fix routing encapsulated packets when binding a socket to a tunnel interface
 Date:   Fri, 22 Mar 2019 14:29:58 +0800
+Message-Id: <1553236198-5955-1-git-send-email-lifonghsu@synology.com>
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: LiFong Hsu <lifonghsu@synology.com>
 
-A while back, I noticed that the crypto and crypto API usage in big_keys
-were entirely broken in multiple ways, so I rewrote it. Now, I'm
-rewriting it again, but this time using Zinc's ChaCha20Poly1305
-function. This makes the file considerably more simple; the diffstat
-alone should justify this commit. It also should be faster, since it no
-longer requires a mutex around the "aead api object" (nor allocations),
-allowing us to encrypt multiple items in parallel. We also benefit from
-being able to pass any type of pointer to Zinc, so we can get rid of the
-ridiculously complex custom page allocator that big_key really doesn't
-need.
+When binding a socket to a 4in6/6in4 tunnel interface, the kernel sends
+the packet to the tunnel interface without any problem, e.g.,
+ping 8.8.8.8 -I 4in6. However, after the 4in6/6in4 tunnel encapsulation,
+the encapsulated packet could be sent to the tunnel interface again when
+some fields of the skb were changed in mangle table's output chain,
+such as skb->mark and src/dest IP address. Sending to the tunnel interface
+twice is unexpected, since there are no corresponding routing rules on
+the tunnel interface for the encapsulated packet. Eventually, the encapsulated
+packet will be dropped by the tunnel interface.
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Samuel Neves <sneves@dei.uc.pt>
-Cc: Jean-Philippe Aumasson <jeanphilippe.aumasson@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel-hardening@lists.openwall.com
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This commit stops referring to sk_bound_dev_if while re-routing a packet
+with skb_iif!=0 which indicates that the packet has already been sent to
+the interface specified by sk_bound_dev_if. Instead, this commit sends
+the packet to the underlying network device.
+
+Signed-off-by: LiFong Hsu <lifonghsu@synology.com>
+Reviewed-by: JianJhen Chen <kchen@synology.com>
 ---
+ net/ipv4/netfilter.c  | 2 +-
+ net/ipv6/ip6_tunnel.c | 3 +++
+ net/ipv6/netfilter.c  | 2 +-
+ net/ipv6/sit.c        | 4 ++++
+ 4 files changed, 9 insertions(+), 2 deletions(-)
 
- security/keys/Kconfig   |    4 
- security/keys/big_key.c |  230 +++++-------------------------------------------
- 2 files changed, 28 insertions(+), 206 deletions(-)
+diff --git a/net/ipv4/netfilter.c b/net/ipv4/netfilter.c
+index 8d2e5dc9..426c56b 100644
+--- a/net/ipv4/netfilter.c
++++ b/net/ipv4/netfilter.c
+@@ -41,7 +41,7 @@ int ip_route_me_harder(struct net *net, struct sk_buff *skb, unsigned int addr_t
+ 	fl4.daddr = iph->daddr;
+ 	fl4.saddr = saddr;
+ 	fl4.flowi4_tos = RT_TOS(iph->tos);
+-	fl4.flowi4_oif = sk ? sk->sk_bound_dev_if : 0;
++	fl4.flowi4_oif = (sk && !skb->skb_iif) ? sk->sk_bound_dev_if : 0;
+ 	if (!fl4.flowi4_oif)
+ 		fl4.flowi4_oif = l3mdev_master_ifindex(dev);
+ 	fl4.flowi4_mark = skb->mark;
+diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+index 0c6403c..6997599 100644
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -1220,6 +1220,9 @@ int ip6_tnl_xmit(struct sk_buff *skb, struct net_device *dev, __u8 dsfield,
+ 	ipv6h->nexthdr = proto;
+ 	ipv6h->saddr = fl6->saddr;
+ 	ipv6h->daddr = fl6->daddr;
++
++	/* Reset the skb_iif to Tunnels interface index */
++	skb->skb_iif = dev->ifindex;
+ 	ip6tunnel_xmit(NULL, skb, dev);
+ 	return 0;
+ tx_err_link_failure:
+diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
+index 6d0b1f3..55cc431 100644
+--- a/net/ipv6/netfilter.c
++++ b/net/ipv6/netfilter.c
+@@ -26,7 +26,7 @@ int ip6_route_me_harder(struct net *net, struct sk_buff *skb)
+ 	int strict = (ipv6_addr_type(&iph->daddr) &
+ 		      (IPV6_ADDR_MULTICAST | IPV6_ADDR_LINKLOCAL));
+ 	struct flowi6 fl6 = {
+-		.flowi6_oif = sk && sk->sk_bound_dev_if ? sk->sk_bound_dev_if :
++		.flowi6_oif = (sk && sk->sk_bound_dev_if && !skb->skb_iif) ? sk->sk_bound_dev_if :
+ 			strict ? skb_dst(skb)->dev->ifindex : 0,
+ 		.flowi6_mark = skb->mark,
+ 		.flowi6_uid = sock_net_uid(net, sk),
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index e8a1dab..1112ef2 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -988,6 +988,8 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
+ 
+ 	skb_set_inner_ipproto(skb, IPPROTO_IPV6);
+ 
++	/* Reset the skb_iif to Tunnels interface index */
++	skb->skb_iif = dev->ifindex;
+ 	iptunnel_xmit(NULL, rt, skb, fl4.saddr, fl4.daddr, protocol, tos, ttl,
+ 		      df, !net_eq(tunnel->net, dev_net(dev)));
+ 	return NETDEV_TX_OK;
+@@ -1011,6 +1013,8 @@ static netdev_tx_t sit_tunnel_xmit__(struct sk_buff *skb,
+ 
+ 	skb_set_inner_ipproto(skb, ipproto);
+ 
++	/* Reset the skb_iif to Tunnels interface index */
++	skb->skb_iif = dev->ifindex;
+ 	ip_tunnel_xmit(skb, dev, tiph, ipproto);
+ 	return NETDEV_TX_OK;
+ tx_error:
+-- 
+1.9.1
 
-diff --git a/security/keys/Kconfig b/security/keys/Kconfig
-index 6462e6654ccf..66ff26298fb3 100644
---- a/security/keys/Kconfig
-+++ b/security/keys/Kconfig
-@@ -45,9 +45,7 @@ config BIG_KEYS
- 	bool "Large payload keys"
- 	depends on KEYS
- 	depends on TMPFS
--	select CRYPTO
--	select CRYPTO_AES
--	select CRYPTO_GCM
-+	select ZINC_CHACHA20POLY1305
- 	help
- 	  This option provides support for holding large keys within the kernel
- 	  (for example Kerberos ticket caches).  The data may be stored out to
-diff --git a/security/keys/big_key.c b/security/keys/big_key.c
-index 2806e70d7f8f..bb15360221d8 100644
---- a/security/keys/big_key.c
-+++ b/security/keys/big_key.c
-@@ -1,6 +1,6 @@
- /* Large capacity key type
-  *
-- * Copyright (C) 2017 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ * Copyright (C) 2017-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-  * Copyright (C) 2013 Red Hat, Inc. All Rights Reserved.
-  * Written by David Howells (dhowells@redhat.com)
-  *
-@@ -16,20 +16,10 @@
- #include <linux/file.h>
- #include <linux/shmem_fs.h>
- #include <linux/err.h>
--#include <linux/scatterlist.h>
- #include <linux/random.h>
--#include <linux/vmalloc.h>
- #include <keys/user-type.h>
- #include <keys/big_key-type.h>
--#include <crypto/aead.h>
--#include <crypto/gcm.h>
--
--struct big_key_buf {
--	unsigned int		nr_pages;
--	void			*virt;
--	struct scatterlist	*sg;
--	struct page		*pages[];
--};
-+#include <zinc/chacha20poly1305.h>
- 
- /*
-  * Layout of key payload words.
-@@ -42,14 +32,6 @@ enum {
- };
- 
- /*
-- * Crypto operation with big_key data
-- */
--enum big_key_op {
--	BIG_KEY_ENC,
--	BIG_KEY_DEC,
--};
--
--/*
-  * If the data is under this limit, there's no point creating a shm file to
-  * hold it as the permanently resident metadata for the shmem fs will be at
-  * least as large as the data.
-@@ -57,16 +39,6 @@ enum big_key_op {
- #define BIG_KEY_FILE_THRESHOLD (sizeof(struct inode) + sizeof(struct dentry))
- 
- /*
-- * Key size for big_key data encryption
-- */
--#define ENC_KEY_SIZE 32
--
--/*
-- * Authentication tag length
-- */
--#define ENC_AUTHTAG_SIZE 16
--
--/*
-  * big_key defined keys take an arbitrary string as the description and an
-  * arbitrary blob of data as the payload
-  */
-@@ -79,136 +51,20 @@ struct key_type key_type_big_key = {
- 	.destroy		= big_key_destroy,
- 	.describe		= big_key_describe,
- 	.read			= big_key_read,
--	/* no ->update(); don't add it without changing big_key_crypt() nonce */
-+	/* no ->update(); don't add it without changing chacha20poly1305's nonce */
- };
- 
- /*
-- * Crypto names for big_key data authenticated encryption
-- */
--static const char big_key_alg_name[] = "gcm(aes)";
--#define BIG_KEY_IV_SIZE		GCM_AES_IV_SIZE
--
--/*
-- * Crypto algorithms for big_key data authenticated encryption
-- */
--static struct crypto_aead *big_key_aead;
--
--/*
-- * Since changing the key affects the entire object, we need a mutex.
-- */
--static DEFINE_MUTEX(big_key_aead_lock);
--
--/*
-- * Encrypt/decrypt big_key data
-- */
--static int big_key_crypt(enum big_key_op op, struct big_key_buf *buf, size_t datalen, u8 *key)
--{
--	int ret;
--	struct aead_request *aead_req;
--	/* We always use a zero nonce. The reason we can get away with this is
--	 * because we're using a different randomly generated key for every
--	 * different encryption. Notably, too, key_type_big_key doesn't define
--	 * an .update function, so there's no chance we'll wind up reusing the
--	 * key to encrypt updated data. Simply put: one key, one encryption.
--	 */
--	u8 zero_nonce[BIG_KEY_IV_SIZE];
--
--	aead_req = aead_request_alloc(big_key_aead, GFP_KERNEL);
--	if (!aead_req)
--		return -ENOMEM;
--
--	memset(zero_nonce, 0, sizeof(zero_nonce));
--	aead_request_set_crypt(aead_req, buf->sg, buf->sg, datalen, zero_nonce);
--	aead_request_set_callback(aead_req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
--	aead_request_set_ad(aead_req, 0);
--
--	mutex_lock(&big_key_aead_lock);
--	if (crypto_aead_setkey(big_key_aead, key, ENC_KEY_SIZE)) {
--		ret = -EAGAIN;
--		goto error;
--	}
--	if (op == BIG_KEY_ENC)
--		ret = crypto_aead_encrypt(aead_req);
--	else
--		ret = crypto_aead_decrypt(aead_req);
--error:
--	mutex_unlock(&big_key_aead_lock);
--	aead_request_free(aead_req);
--	return ret;
--}
--
--/*
-- * Free up the buffer.
-- */
--static void big_key_free_buffer(struct big_key_buf *buf)
--{
--	unsigned int i;
--
--	if (buf->virt) {
--		memset(buf->virt, 0, buf->nr_pages * PAGE_SIZE);
--		vunmap(buf->virt);
--	}
--
--	for (i = 0; i < buf->nr_pages; i++)
--		if (buf->pages[i])
--			__free_page(buf->pages[i]);
--
--	kfree(buf);
--}
--
--/*
-- * Allocate a buffer consisting of a set of pages with a virtual mapping
-- * applied over them.
-- */
--static void *big_key_alloc_buffer(size_t len)
--{
--	struct big_key_buf *buf;
--	unsigned int npg = (len + PAGE_SIZE - 1) >> PAGE_SHIFT;
--	unsigned int i, l;
--
--	buf = kzalloc(sizeof(struct big_key_buf) +
--		      sizeof(struct page) * npg +
--		      sizeof(struct scatterlist) * npg,
--		      GFP_KERNEL);
--	if (!buf)
--		return NULL;
--
--	buf->nr_pages = npg;
--	buf->sg = (void *)(buf->pages + npg);
--	sg_init_table(buf->sg, npg);
--
--	for (i = 0; i < buf->nr_pages; i++) {
--		buf->pages[i] = alloc_page(GFP_KERNEL);
--		if (!buf->pages[i])
--			goto nomem;
--
--		l = min_t(size_t, len, PAGE_SIZE);
--		sg_set_page(&buf->sg[i], buf->pages[i], l, 0);
--		len -= l;
--	}
--
--	buf->virt = vmap(buf->pages, buf->nr_pages, VM_MAP, PAGE_KERNEL);
--	if (!buf->virt)
--		goto nomem;
--
--	return buf;
--
--nomem:
--	big_key_free_buffer(buf);
--	return NULL;
--}
--
--/*
-  * Preparse a big key
-  */
- int big_key_preparse(struct key_preparsed_payload *prep)
- {
--	struct big_key_buf *buf;
- 	struct path *path = (struct path *)&prep->payload.data[big_key_path];
- 	struct file *file;
--	u8 *enckey;
-+	u8 *buf, *enckey;
- 	ssize_t written;
--	size_t datalen = prep->datalen, enclen = datalen + ENC_AUTHTAG_SIZE;
-+	size_t datalen = prep->datalen;
-+	size_t enclen = datalen + CHACHA20POLY1305_AUTHTAG_SIZE;
- 	int ret;
- 
- 	if (datalen <= 0 || datalen > 1024 * 1024 || !prep->data)
-@@ -224,28 +80,28 @@ int big_key_preparse(struct key_preparsed_payload *prep)
- 		 * to be swapped out if needed.
- 		 *
- 		 * File content is stored encrypted with randomly generated key.
-+		 * Since the key is random for each file, we can set the nonce
-+		 * to zero, provided we never define a ->update() call.
- 		 */
- 		loff_t pos = 0;
- 
--		buf = big_key_alloc_buffer(enclen);
-+		buf = kvmalloc(enclen, GFP_KERNEL);
- 		if (!buf)
- 			return -ENOMEM;
--		memcpy(buf->virt, prep->data, datalen);
- 
- 		/* generate random key */
--		enckey = kmalloc(ENC_KEY_SIZE, GFP_KERNEL);
-+		enckey = kmalloc(CHACHA20POLY1305_KEY_SIZE, GFP_KERNEL);
- 		if (!enckey) {
- 			ret = -ENOMEM;
- 			goto error;
- 		}
--		ret = get_random_bytes_wait(enckey, ENC_KEY_SIZE);
-+		ret = get_random_bytes_wait(enckey, CHACHA20POLY1305_KEY_SIZE);
- 		if (unlikely(ret))
- 			goto err_enckey;
- 
--		/* encrypt aligned data */
--		ret = big_key_crypt(BIG_KEY_ENC, buf, datalen, enckey);
--		if (ret)
--			goto err_enckey;
-+		/* encrypt data */
-+		chacha20poly1305_encrypt(buf, prep->data, datalen, NULL, 0,
-+					 0, enckey);
- 
- 		/* save aligned data to file */
- 		file = shmem_kernel_file_setup("", enclen, 0);
-@@ -254,7 +110,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
- 			goto err_enckey;
- 		}
- 
--		written = kernel_write(file, buf->virt, enclen, &pos);
-+		written = kernel_write(file, buf, enclen, &pos);
- 		if (written != enclen) {
- 			ret = written;
- 			if (written >= 0)
-@@ -269,7 +125,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
- 		*path = file->f_path;
- 		path_get(path);
- 		fput(file);
--		big_key_free_buffer(buf);
-+		kvfree(buf);
- 	} else {
- 		/* Just store the data in a buffer */
- 		void *data = kmalloc(datalen, GFP_KERNEL);
-@@ -287,7 +143,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
- err_enckey:
- 	kzfree(enckey);
- error:
--	big_key_free_buffer(buf);
-+	kvfree(buf);
- 	return ret;
- }
- 
-@@ -365,14 +221,13 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
- 		return datalen;
- 
- 	if (datalen > BIG_KEY_FILE_THRESHOLD) {
--		struct big_key_buf *buf;
- 		struct path *path = (struct path *)&key->payload.data[big_key_path];
- 		struct file *file;
--		u8 *enckey = (u8 *)key->payload.data[big_key_data];
--		size_t enclen = datalen + ENC_AUTHTAG_SIZE;
-+		u8 *buf, *enckey = (u8 *)key->payload.data[big_key_data];
-+		size_t enclen = datalen + CHACHA20POLY1305_AUTHTAG_SIZE;
- 		loff_t pos = 0;
- 
--		buf = big_key_alloc_buffer(enclen);
-+		buf = kvmalloc(enclen, GFP_KERNEL);
- 		if (!buf)
- 			return -ENOMEM;
- 
-@@ -383,26 +238,27 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
- 		}
- 
- 		/* read file to kernel and decrypt */
--		ret = kernel_read(file, buf->virt, enclen, &pos);
-+		ret = kernel_read(file, buf, enclen, &pos);
- 		if (ret >= 0 && ret != enclen) {
- 			ret = -EIO;
- 			goto err_fput;
- 		}
- 
--		ret = big_key_crypt(BIG_KEY_DEC, buf, enclen, enckey);
--		if (ret)
-+		ret = chacha20poly1305_decrypt(buf, buf, enclen, NULL, 0, 0,
-+					       enckey) ? 0 : -EINVAL;
-+		if (unlikely(ret))
- 			goto err_fput;
- 
- 		ret = datalen;
- 
- 		/* copy decrypted data to user */
--		if (copy_to_user(buffer, buf->virt, datalen) != 0)
-+		if (copy_to_user(buffer, buf, datalen) != 0)
- 			ret = -EFAULT;
- 
- err_fput:
- 		fput(file);
- error:
--		big_key_free_buffer(buf);
-+		kvfree(buf);
- 	} else {
- 		ret = datalen;
- 		if (copy_to_user(buffer, key->payload.data[big_key_data],
-@@ -418,39 +274,7 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
-  */
- static int __init big_key_init(void)
- {
--	int ret;
--
--	/* init block cipher */
--	big_key_aead = crypto_alloc_aead(big_key_alg_name, 0, CRYPTO_ALG_ASYNC);
--	if (IS_ERR(big_key_aead)) {
--		ret = PTR_ERR(big_key_aead);
--		pr_err("Can't alloc crypto: %d\n", ret);
--		return ret;
--	}
--
--	if (unlikely(crypto_aead_ivsize(big_key_aead) != BIG_KEY_IV_SIZE)) {
--		WARN(1, "big key algorithm changed?");
--		ret = -EINVAL;
--		goto free_aead;
--	}
--
--	ret = crypto_aead_setauthsize(big_key_aead, ENC_AUTHTAG_SIZE);
--	if (ret < 0) {
--		pr_err("Can't set crypto auth tag len: %d\n", ret);
--		goto free_aead;
--	}
--
--	ret = register_key_type(&key_type_big_key);
--	if (ret < 0) {
--		pr_err("Can't register type: %d\n", ret);
--		goto free_aead;
--	}
--
--	return 0;
--
--free_aead:
--	crypto_free_aead(big_key_aead);
--	return ret;
-+	return register_key_type(&key_type_big_key);
- }
- 
- late_initcall(big_key_init);
