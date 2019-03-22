@@ -2,116 +2,72 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4D2C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EDE2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258614;
-	bh=gXbYJMgb1V/boK1svDiS1Q3s0tn2VpFtx2hHqvQ4N34=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4qCpoht1f6SaAZL6R+Gt7aVCTMg/lG31GEiAPYVnfsgTP1nGnKUFsw++qSsOKq+r
-	 PYJaCGFBYElFiRAqrAmNgGhuJD0wyYUcczQpK1WBZdUCk9mxHNy8quxYLDHcWlvADk
-	 mx+dBMfbO9CzKDijAAtsoN7JApZV93ceKxol3XkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 40F122070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388459AbfCVMnd (ORCPT
+        id S2388660AbfCVMnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731126AbfCVMDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEA1204FD;
-        Fri, 22 Mar 2019 12:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256182;
-        bh=gXbYJMgb1V/boK1svDiS1Q3s0tn2VpFtx2hHqvQ4N34=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VnMkIrOynwg5o4iNM+dfPyaa4ZTlNiJp9DpHylvdrRwfi6rAue/9bhTjBsdtwPlTI
-         RoBvWHYqWHcv2xChzTC/YVIFVMmkgFvgzxnZJnTxBNK0PUzZuuhDk5Nq2QcIqq/81+
-         miQ52UHvXtplF4MCfeT4QAmhZNHeLUioz+ceqRxw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Watson <davejwatson@fb.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 133/280] crypto: x86/aesni-gcm - fix crash on empty plaintext
-Date:   Fri, 22 Mar 2019 12:14:46 +0100
-Message-Id: <20190322111316.962414821@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:43:40 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:49190 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732620AbfCVMni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:43:38 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h7JWI-0003z1-7b; Fri, 22 Mar 2019 20:43:34 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h7JWF-0002wr-Jn; Fri, 22 Mar 2019 20:43:31 +0800
+Date:   Fri, 22 Mar 2019 20:43:31 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Joe Perches <joe@perches.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
+ IS_ENABLED(DEBUG)
+Message-ID: <20190322124331.s5iu4ontsakv7he5@gondor.apana.org.au>
+References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Mar 07, 2019 at 04:15:55PM -0800, Joe Perches wrote:
+> Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
+> there is no -DDEBUG in the Makefile here.
+> 
+> Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
+> blocks.
+> 
+> Miscellanea:
+> 
+> o Move the sahara_state array into the function that uses it.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/crypto/sahara.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
 
-------------------
+Even if this is correct this is way too ugly.  The original code
+at least compiled everything regardless of macros.  Your new code
+won't detect compile errors in debugging code unless debugging is
+enabled.
 
-From: Eric Biggers <ebiggers@google.com>
-
-commit 3af349639597fea582a93604734d717e59a0e223 upstream.
-
-gcmaes_crypt_by_sg() dereferences the NULL pointer returned by
-scatterwalk_ffwd() when encrypting an empty plaintext and the source
-scatterlist ends immediately after the associated data.
-
-Fix it by only fast-forwarding to the src/dst data scatterlists if the
-data length is nonzero.
-
-This bug is reproduced by the "rfc4543(gcm(aes))" test vectors when run
-with the new AEAD test manager.
-
-Fixes: e845520707f8 ("crypto: aesni - Update aesni-intel_glue to use scatter/gather")
-Cc: <stable@vger.kernel.org> # v4.17+
-Cc: Dave Watson <davejwatson@fb.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/crypto/aesni-intel_glue.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
---- a/arch/x86/crypto/aesni-intel_glue.c
-+++ b/arch/x86/crypto/aesni-intel_glue.c
-@@ -830,11 +830,14 @@ static int gcmaes_crypt_by_sg(bool enc,
- 		scatterwalk_map_and_copy(assoc, req->src, 0, assoclen, 0);
- 	}
- 
--	src_sg = scatterwalk_ffwd(src_start, req->src, req->assoclen);
--	scatterwalk_start(&src_sg_walk, src_sg);
--	if (req->src != req->dst) {
--		dst_sg = scatterwalk_ffwd(dst_start, req->dst, req->assoclen);
--		scatterwalk_start(&dst_sg_walk, dst_sg);
-+	if (left) {
-+		src_sg = scatterwalk_ffwd(src_start, req->src, req->assoclen);
-+		scatterwalk_start(&src_sg_walk, src_sg);
-+		if (req->src != req->dst) {
-+			dst_sg = scatterwalk_ffwd(dst_start, req->dst,
-+						  req->assoclen);
-+			scatterwalk_start(&dst_sg_walk, dst_sg);
-+		}
- 	}
- 
- 	kernel_fpu_begin();
-
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
