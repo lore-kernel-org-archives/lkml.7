@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE32C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2C6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D4A218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2384218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254413;
-	bh=24wHugJs24qJpX/141yMWjLZH2oXIhh1jScx1Dj2VhE=;
+	s=default; t=1553254417;
+	bh=NtsUMFoHaSSZT9viitKF5gUdPOwCXVQVZ7erNnVQ/e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQUgFFmwEYh1mi/YFHVvQq8x5qpTpCCvihQURD+SlrS+4SWjW3/hV8eGWwg5C2N6T
-	 mWvFetCYgvbsZQy3wV9Oboq9rau1yUXtqarVjuTglno+iB6iBG9JvEIIF4SXJeujC0
-	 VBPRXdaHvshJeASmyn0/KPh7dUM+pJW0Z2mOk4F4=
+	b=E66bKypsqhgW3Gi7EyGGZYmOcTXiGhocsuEYRjtYJTkw66xfbFX433uJPaHQloqgx
+	 0LQobcbHC3MX0vOH5NOu7Daps+PfXE3Og4SJLi3U0G0LzAEk+nNMHypTlU8Y7bfQOW
+	 NUPuEiHUHp4XA34wMSdszDiz9/NC6pCxHgicNr58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfCVLdc (ORCPT
+        id S1729866AbfCVLdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbfCVLd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:29 -0400
+        id S1730274AbfCVLdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1D5218B0;
-        Fri, 22 Mar 2019 11:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1866B21916;
+        Fri, 22 Mar 2019 11:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254407;
-        bh=24wHugJs24qJpX/141yMWjLZH2oXIhh1jScx1Dj2VhE=;
+        s=default; t=1553254410;
+        bh=NtsUMFoHaSSZT9viitKF5gUdPOwCXVQVZ7erNnVQ/e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKNcr5z6aFBQWQut5Kbs1nPtPlDcsFkSdioKHMOhH3NQEHdO7opfY7iLkBDdaUjgd
-         tismxARFUDrkkz+Wzp/GJ44sSAo7QpIKMag98TqtMkf65fg4xq1yqIn33tHcCdjo5E
-         b7LsXsqs3w1YAVBuzxLCs4ynBWsSu5SwLbn44cLk=
+        b=sif5hHBjJ4nhVOfJnZlBK556O6bH+cL5YLUdY4MGwCI22Wn/5F4kCcm+niGShAsU9
+         UfRzEiuNUV87waTeDbsTCdyOulusNuWCnI1+XXgunF7hEPHtkFtGKvC/MCwEpp9/5w
+         3tc64aUDHX0JP931+PF1D6+llkjJLvMl/g4XNZQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linmiaohe <linmiaohe@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+04babcefcd396fabec37@syzkaller.appspotmail.com,
+        andrew hendry <andrew.hendry@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 127/230] net: sit: fix UBSAN Undefined behaviour in check_6rd
-Date:   Fri, 22 Mar 2019 12:14:25 +0100
-Message-Id: <20190322111245.577916536@linuxfoundation.org>
+Subject: [PATCH 4.4 128/230] net/x25: fix use-after-free in x25_device_event()
+Date:   Fri, 22 Mar 2019 12:14:26 +0100
+Message-Id: <20190322111245.657735738@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,71 +67,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a843dc4ebaecd15fca1f4d35a97210f72ea1473b ]
+[ Upstream commit 95d6ebd53c79522bf9502dbc7e89e0d63f94dae4 ]
 
-In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
-32,so UBSAN complain about it.
+In case of failure x25_connect() does a x25_neigh_put(x25->neighbour)
+but forgets to clear x25->neighbour pointer, thus triggering use-after-free.
 
-UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
-shift exponent 32 is too large for 32-bit type 'unsigned int'
-CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
-04/01/2014
+Since the socket is visible in x25_list, we need to hold x25_list_lock
+to protect the operation.
+
+syzbot report :
+
+BUG: KASAN: use-after-free in x25_kill_by_device net/x25/af_x25.c:217 [inline]
+BUG: KASAN: use-after-free in x25_device_event+0x296/0x2b0 net/x25/af_x25.c:252
+Read of size 8 at addr ffff8880a030edd0 by task syz-executor003/7854
+
+CPU: 0 PID: 7854 Comm: syz-executor003 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xca/0x13e lib/dump_stack.c:113
-ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
-__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
-check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
-try_6rd net/ipv6/sit.c:806 [inline]
-ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
-sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
-__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
-netdev_start_xmit include/linux/netdevice.h:4309 [inline]
-xmit_one net/core/dev.c:3243 [inline]
-dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
-__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
-neigh_output include/net/neighbour.h:501 [inline]
-ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
-ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
-NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
-dst_output include/net/dst.h:444 [inline]
-ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
-ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
-ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
-rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
-rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
-inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
-sock_sendmsg_nosec net/socket.c:621 [inline]
-sock_sendmsg+0xc8/0x110 net/socket.c:631
-___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
-__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
-do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ x25_kill_by_device net/x25/af_x25.c:217 [inline]
+ x25_device_event+0x296/0x2b0 net/x25/af_x25.c:252
+ notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
+ __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
+ call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
+ call_netdevice_notifiers net/core/dev.c:1765 [inline]
+ __dev_notify_flags+0x1e9/0x2c0 net/core/dev.c:7607
+ dev_change_flags+0x10d/0x170 net/core/dev.c:7643
+ dev_ifsioc+0x2b0/0x940 net/core/dev_ioctl.c:237
+ dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:488
+ sock_do_ioctl+0x1bd/0x300 net/socket.c:995
+ sock_ioctl+0x32b/0x610 net/socket.c:1096
+ vfs_ioctl fs/ioctl.c:46 [inline]
+ file_ioctl fs/ioctl.c:509 [inline]
+ do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+ ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+ __do_sys_ioctl fs/ioctl.c:720 [inline]
+ __se_sys_ioctl fs/ioctl.c:718 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4467c9
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fdbea222d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 00000000004467c9
+RDX: 0000000020000340 RSI: 0000000000008914 RDI: 0000000000000003
+RBP: 00000000006dbc50 R08: 00007fdbea223700 R09: 0000000000000000
+R10: 00007fdbea223700 R11: 0000000000000246 R12: 00000000006dbc5c
+R13: 6000030030626669 R14: 0000000000000000 R15: 0000000030626669
 
-Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+Allocated by task 7843:
+ save_stack+0x45/0xd0 mm/kasan/common.c:73
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:468
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:509
+ kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3615
+ kmalloc include/linux/slab.h:545 [inline]
+ x25_link_device_up+0x46/0x3f0 net/x25/x25_link.c:249
+ x25_device_event+0x116/0x2b0 net/x25/af_x25.c:242
+ notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
+ __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
+ call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
+ call_netdevice_notifiers net/core/dev.c:1765 [inline]
+ __dev_notify_flags+0x121/0x2c0 net/core/dev.c:7605
+ dev_change_flags+0x10d/0x170 net/core/dev.c:7643
+ dev_ifsioc+0x2b0/0x940 net/core/dev_ioctl.c:237
+ dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:488
+ sock_do_ioctl+0x1bd/0x300 net/socket.c:995
+ sock_ioctl+0x32b/0x610 net/socket.c:1096
+ vfs_ioctl fs/ioctl.c:46 [inline]
+ file_ioctl fs/ioctl.c:509 [inline]
+ do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+ ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+ __do_sys_ioctl fs/ioctl.c:720 [inline]
+ __se_sys_ioctl fs/ioctl.c:718 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 7865:
+ save_stack+0x45/0xd0 mm/kasan/common.c:73
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:457
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:465
+ __cache_free mm/slab.c:3494 [inline]
+ kfree+0xcf/0x230 mm/slab.c:3811
+ x25_neigh_put include/net/x25.h:253 [inline]
+ x25_connect+0x8d8/0xde0 net/x25/af_x25.c:824
+ __sys_connect+0x266/0x330 net/socket.c:1685
+ __do_sys_connect net/socket.c:1696 [inline]
+ __se_sys_connect net/socket.c:1693 [inline]
+ __x64_sys_connect+0x73/0xb0 net/socket.c:1693
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a030edc0
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 16 bytes inside of
+ 256-byte region [ffff8880a030edc0, ffff8880a030eec0)
+The buggy address belongs to the page:
+page:ffffea000280c380 count:1 mapcount:0 mapping:ffff88812c3f07c0 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002806788 ffffea00027f0188 ffff88812c3f07c0
+raw: 0000000000000000 ffff8880a030e000 000000010000000c 0000000000000000
+page dumped because: kasan: bad access detected
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+04babcefcd396fabec37@syzkaller.appspotmail.com
+Cc: andrew hendry <andrew.hendry@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/x25/af_x25.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -772,8 +772,9 @@ static bool check_6rd(struct ip_tunnel *
- 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
- 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
- 
--		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
--		    tunnel->ip6rd.relay_prefixlen;
-+		d = tunnel->ip6rd.relay_prefixlen < 32 ?
-+			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
-+		    tunnel->ip6rd.relay_prefixlen : 0;
- 
- 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
- 		if (pbi1 > 0)
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -812,8 +812,12 @@ static int x25_connect(struct socket *so
+ 	sock->state = SS_CONNECTED;
+ 	rc = 0;
+ out_put_neigh:
+-	if (rc)
++	if (rc) {
++		read_lock_bh(&x25_list_lock);
+ 		x25_neigh_put(x25->neighbour);
++		x25->neighbour = NULL;
++		read_unlock_bh(&x25_list_lock);
++	}
+ out_put_route:
+ 	x25_route_put(rt);
+ out:
 
 
