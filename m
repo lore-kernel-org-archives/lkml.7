@@ -2,53 +2,58 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9667CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C84DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A0921934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEDD218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253884;
-	bh=IeLcEfEH7otdVJcucPdaRb0gmbbyvnSwRT4531AhZC4=;
+	s=default; t=1553253888;
+	bh=3xB2Z9AfFXgKOqhZvIimgcMAAW1qVIES+0TUX9U1exM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQqxTxyB8saZ/gzwF4yF7e4EgJiUX1GlZl9kQFFlcmsBqIHN/ltqGrsba1JCYdTo2
-	 eeek8rlftvyubx5CzjqDD+xznoueoC2RAsapxXs2KnAhZtVowZJJc4eg//CX6Kcvsw
-	 JCjHY4pcdJ5NOogoRRqJlUr5e8Fv9iqQuEpEMegQ=
+	b=1M1MuBnjpzhB3LFIWxRRx0d0wIa0DLnzIN6BQWUZ4yQe2HvZQYr2MJ0u14umWlnuN
+	 TwY2FMSVYPZSXCkmj8uD3IWPhnguepNjv9V8X8vB1DWvTkm1azLJoUPYCts4vuRluH
+	 3HDOanQvAClffXof81nF8b8dptEF+LqlQGP5x1sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbfCVLYn (ORCPT
+        id S1729180AbfCVLYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbfCVLYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:42 -0400
+        id S1728398AbfCVLYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AD3720657;
-        Fri, 22 Mar 2019 11:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91CC6218B0;
+        Fri, 22 Mar 2019 11:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253881;
-        bh=IeLcEfEH7otdVJcucPdaRb0gmbbyvnSwRT4531AhZC4=;
+        s=default; t=1553253884;
+        bh=3xB2Z9AfFXgKOqhZvIimgcMAAW1qVIES+0TUX9U1exM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUxGooFFRub+fAzEqYLjVsozOB/0+CdzN4/QQ6lu+VqHjDlvVZoDZEFDvgmtT0Qzr
-         A+tu+7Q6OunKLwGKxCU4SSekAsOBx8uMCbb7joqflhRAZ7CGiaWLViu0FzajSia9Lz
-         u+/+oYOGqWN9RMyP23aTtrPrhuDNVt/BosaTT9iU=
+        b=hVfMy07NlYJ95E2Mp7j/ITAcM1IN3ljauquDYK/62CfRCsx+ugIhwZhE54Pf1GV69
+         HTzVzb3iMlzs+HpPlSA4wXdN99NOFH8NwMgPxkmt2w/0Rwrl9+eP2qKwJ5JcLzrQ+z
+         BqfGMaeHLeIbP7XB8jsLBdBFCW9kKsL0iu7RKXK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 085/134] net/mlx4_core: Fix qp mtt size calculation
-Date:   Fri, 22 Mar 2019 12:14:58 +0100
-Message-Id: <20190322111216.265681642@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 076/134] perf symbols: Filter out hidden symbols from labels
+Date:   Fri, 22 Mar 2019 12:14:49 +0100
+Message-Id: <20190322111215.588725264@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,68 +72,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-[ Upstream commit 8511a653e9250ef36b95803c375a7be0e2edb628 ]
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-Calculation of qp mtt size (in function mlx4_RST2INIT_wrapper)
-ultimately depends on function roundup_pow_of_two.
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-If the amount of memory required by the QP is less than one page,
-roundup_pow_of_two is called with argument zero.  In this case, the
-roundup_pow_of_two result is undefined.
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
 
-Calling roundup_pow_of_two with a zero argument resulted in the
-following stack trace:
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
 
-UBSAN: Undefined behaviour in ./include/linux/log2.h:61:13
-shift exponent 64 is too large for 64-bit type 'long unsigned int'
-CPU: 4 PID: 26939 Comm: rping Tainted: G OE 4.19.0-rc1
-Hardware name: Supermicro X9DR3-F/X9DR3-F, BIOS 3.2a 07/09/2015
-Call Trace:
-dump_stack+0x9a/0xeb
-ubsan_epilogue+0x9/0x7c
-__ubsan_handle_shift_out_of_bounds+0x254/0x29d
-? __ubsan_handle_load_invalid_value+0x180/0x180
-? debug_show_all_locks+0x310/0x310
-? sched_clock+0x5/0x10
-? sched_clock+0x5/0x10
-? sched_clock_cpu+0x18/0x260
-? find_held_lock+0x35/0x1e0
-? mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
-mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
 
-Fix this by explicitly testing for zero, and returning one if the
-argument is zero (assuming that the next higher power of 2 in this case
-should be one).
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
 
-Fixes: c82e9aa0a8bc ("mlx4_core: resource tracking for HCA resources used by guests")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-@@ -2474,13 +2474,13 @@ static int qp_get_mtt_size(struct mlx4_q
- 	int total_pages;
- 	int total_mem;
- 	int page_offset = (be32_to_cpu(qpc->params2) >> 6) & 0x3f;
-+	int tot;
- 
- 	sq_size = 1 << (log_sq_size + log_sq_sride + 4);
- 	rq_size = (srq|rss|xrc) ? 0 : (1 << (log_rq_size + log_rq_stride + 4));
- 	total_mem = sq_size + rq_size;
--	total_pages =
--		roundup_pow_of_two((total_mem + (page_offset << 6)) >>
--				   page_shift);
-+	tot = (total_mem + (page_offset << 6)) >> page_shift;
-+	total_pages = !tot ? 1 : roundup_pow_of_two(tot);
- 
- 	return total_pages;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 194300a08197..04100626ca51 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -48,6 +48,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
  }
+ 
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -72,7 +77,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
+ }
+ 
+ static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
+-- 
+2.19.1
+
 
 
