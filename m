@@ -2,74 +2,160 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8209C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1640FC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9884221900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CA921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfCVP7X (ORCPT
+        id S1728117AbfCVQAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:59:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:9518 "EHLO mga09.intel.com"
+        Fri, 22 Mar 2019 12:00:23 -0400
+Received: from mga04.intel.com ([192.55.52.120]:14965 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfCVP7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:59:23 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1727518AbfCVQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:00:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 08:59:22 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:00:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="136372574"
-Received: from dilu-mobl2.ccr.corp.intel.com (HELO localhost) ([10.249.254.184])
-  by orsmga003.jf.intel.com with ESMTP; 22 Mar 2019 08:59:18 -0700
-Date:   Fri, 22 Mar 2019 17:59:17 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tadeusz Struk <tadeusz.struk@intel.com>
-Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH RESEND v3] tpm: fix an invalid condition in
- tpm_common_poll
-Message-ID: <20190322155917.GA6987@linux.intel.com>
-References: <155326553839.17270.7997105682830234546.stgit@tstruk-mobl1.jf.intel.com>
+   d="scan'208";a="136536088"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Mar 2019 09:00:20 -0700
+Received: from fmsmsx152.amr.corp.intel.com (10.18.125.5) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 22 Mar 2019 09:00:20 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX152.amr.corp.intel.com (10.18.125.5) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 22 Mar 2019 09:00:20 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.26]) with mapi id 14.03.0415.000;
+ Sat, 23 Mar 2019 00:00:18 +0800
+From:   "He, Bo" <bo.he@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Zhang, Jun" <jun.zhang@intel.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Xiao, Jin" <jin.xiao@intel.com>,
+        "Bai, Jie A" <jie.a.bai@intel.com>
+Subject: RE: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
+ softirq and interrupt
+Thread-Topic: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
+ softirq and interrupt
+Thread-Index: AQHU4KqYbVRqZb7atkmxHemt0KStl6YXzqyA
+Date:   Fri, 22 Mar 2019 16:00:17 +0000
+Message-ID: <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
+References: <20190322111210.465931067@linuxfoundation.org>
+ <20190322111220.102008032@linuxfoundation.org>
+In-Reply-To: <20190322111220.102008032@linuxfoundation.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTI2OTgyNDgtNzAwNy00YzFkLThmNTItM2ZiMjZjZDQxYTdhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaW8raVBsemVhanNiVTdDYzgwNGNuaWY3SXRXS2VKVFFtakJGV05IVzFtYjIxcTlVazFHS2I5dnAyTkVMWWdhQyJ9
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <155326553839.17270.7997105682830234546.stgit@tstruk-mobl1.jf.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 07:38:58AM -0700, Tadeusz Struk wrote:
-> The poll condition should only check response_length,
-> because reads should only be issued if there is data to read.
-> The response_read flag only prevents double writes.
-> The problem was that the write set the response_read to false,
-> enqued a tpm job, and returned. Then application called poll
-> which checked the response_read flag and returned EPOLLIN.
-> Then the application called read, but got nothing.
-> After all that the async_work kicked in.
-> Added also mutex_lock around the poll check to prevent
-> other possible race conditions.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
-> Reported-by: Mantas Mikulėnas <grawity@gmail.com>
-> Tested-by: Mantas Mikulėnas <grawity@gmail.com>
-> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-Thank you.
-
-/Jarkko
+SGksIEdyZWc6DQoJQ2FuIHlvdSBob2xkIG9uIHRoZSAzLjE4LXN0YWJsZSBicmFuY2gsIGl0IHNl
+ZW1zIHRoZXJlIGFyZSBzb21lIGlzc3VlLCBwbGVhc2Ugc2VlIHRoZSBjb21tZW50cyBmcm9tIFBh
+dWw6DQoNCkNvbW1lbnRzIGZyb20gUGF1bDoNCkkgc3ViamVjdGVkIGFsbCBvZiB0aGUgb3RoZXJz
+IHRvIGxpZ2h0IHJjdXRvcnR1cmUgdGVzdGluZywgd2hpY2ggdGhleSBwYXNzZWQuICBUaGlzIHYz
+LjE4IHBhdGNoIGh1bmcsIGhvd2V2ZXIuICBUcnlpbmcgaXQgYWdhaW4gd2l0aCBzdG9jaw0KdjMu
+MTggZ290IHRoZSBzYW1lIGhhbmcsIHNvIEkgYmVsaWV2ZSB3ZSBjYW4gZXhvbmVyYXRlIHRoZSBw
+YXRjaCBhbmQgZ2l2ZSBpdCBhIGdvb2QgZmlybSAibWF5YmUiIG9uIDMuMTguDQoNCldvcnRoIHBh
+eWluZyBzcGVjaWFsIGF0dGVudGlvbiB0byBmdXJ0aGVyIHRlc3QgcmVzdWx0cyBmcm9tIDMuMTgu
+eCwgdGhvdWdoIQ0KDQoJCQkJCQkNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206
+IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+IA0KU2VudDog
+RnJpZGF5LCBNYXJjaCAyMiwgMjAxOSA3OjE2IFBNDQpUbzogbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZw0KQ2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc+OyBzdGFibGVAdmdlci5rZXJuZWwub3JnOyBIZSwgQm8gPGJvLmhlQGludGVsLmNvbT47IFpo
+YW5nLCBKdW4gPGp1bi56aGFuZ0BpbnRlbC5jb20+OyBQYXVsIEUuIE1jS2VubmV5IDxwYXVsbWNr
+QGxpbnV4LmlibS5jb20+OyBYaWFvLCBKaW4gPGppbi54aWFvQGludGVsLmNvbT47IEJhaSwgSmll
+IEEgPGppZS5hLmJhaUBpbnRlbC5jb20+DQpTdWJqZWN0OiBbUEFUQ0ggMy4xOCAxMzIvMTM0XSBy
+Y3U6IERvIFJDVSBHUCBrdGhyZWFkIHNlbGYtd2FrZXVwIGZyb20gc29mdGlycSBhbmQgaW50ZXJy
+dXB0DQoNCjMuMTgtc3RhYmxlIHJldmlldyBwYXRjaC4gIElmIGFueW9uZSBoYXMgYW55IG9iamVj
+dGlvbnMsIHBsZWFzZSBsZXQgbWUga25vdy4NCg0KLS0tLS0tLS0tLS0tLS0tLS0tDQoNCkZyb206
+IFpoYW5nLCBKdW4gPGp1bi56aGFuZ0BpbnRlbC5jb20+DQoNCmNvbW1pdCAxZDFmODk4ZGY2NTg2
+YzVlYTlhZWFmMzQ5ZjEzMDg5YzZmYTM3OTAzIHVwc3RyZWFtLg0KDQpUaGUgcmN1X2dwX2t0aHJl
+YWRfd2FrZSgpIGZ1bmN0aW9uIGlzIGludm9rZWQgd2hlbiBpdCBtaWdodCBiZSBuZWNlc3Nhcnkg
+dG8gd2FrZSB0aGUgUkNVIGdyYWNlLXBlcmlvZCBrdGhyZWFkLiAgQmVjYXVzZSBzZWxmLXdha2V1
+cHMgYXJlIG5vcm1hbGx5IGEgdXNlbGVzcyB3YXN0ZSBvZiBDUFUgY3ljbGVzLCBpZiByY3VfZ3Bf
+a3RocmVhZF93YWtlKCkgaXMgaW52b2tlZCBmcm9tIHRoaXMga3RocmVhZCwgaXQgbmF0dXJhbGx5
+IHJlZnVzZXMgdG8gZG8gdGhlIHdha2V1cC4NCg0KVW5mb3J0dW5hdGVseSwgbmF0dXJhbCB0aG91
+Z2ggaXQgbWlnaHQgYmUsIHRoaXMgaGV1cmlzdGljIGZhaWxzIHdoZW4NCnJjdV9ncF9rdGhyZWFk
+X3dha2UoKSBpcyBpbnZva2VkIGZyb20gYW4gaW50ZXJydXB0IG9yIHNvZnRpcnEgaGFuZGxlciB0
+aGF0IGludGVycnVwdGVkIHRoZSBncmFjZS1wZXJpb2Qga3RocmVhZCBqdXN0IGFmdGVyIHRoZSBm
+aW5hbCBjaGVjayBvZiB0aGUgd2FpdC1ldmVudCBjb25kaXRpb24gYnV0IGp1c3QgYmVmb3JlIHRo
+ZSBzY2hlZHVsZSgpIGNhbGwuICBJbiB0aGlzIGNhc2UsIGEgd2FrZXVwIGlzIHJlcXVpcmVkLCBl
+dmVuIHRob3VnaCB0aGUgY2FsbCB0byByY3VfZ3Bfa3RocmVhZF93YWtlKCkgaXMgd2l0aGluIHRo
+ZSBSQ1UgZ3JhY2UtcGVyaW9kIGt0aHJlYWQncyBjb250ZXh0LiAgRmFpbGluZyB0byBwcm92aWRl
+IHRoaXMgd2FrZXVwIGNhbiByZXN1bHQgaW4gZ3JhY2UgcGVyaW9kcyBmYWlsaW5nIHRvIHN0YXJ0
+LCB3aGljaCBpbiB0dXJuIHJlc3VsdHMgaW4gb3V0LW9mLW1lbW9yeSBjb25kaXRpb25zLg0KDQpU
+aGlzIHJhY2Ugd2luZG93IGlzIHF1aXRlIG5hcnJvdywgYnV0IGl0IGFjdHVhbGx5IGRpZCBoYXBw
+ZW4gZHVyaW5nIHJlYWwgdGVzdGluZy4gIEl0IHdvdWxkIG9mIGNvdXJzZSBuZWVkIHRvIGJlIGZp
+eGVkIGV2ZW4gaWYgaXQgd2FzIHN0cmljdGx5IHRoZW9yZXRpY2FsIGluIG5hdHVyZS4NCg0KVGhp
+cyBwYXRjaCBkb2VzIG5vdCBDYyBzdGFibGUgYmVjYXVzZSBpdCBkb2VzIG5vdCBhcHBseSBjbGVh
+bmx5IHRvIGVhcmxpZXIga2VybmVsIHZlcnNpb25zLg0KDQpGaXhlczogNDhhNzYzOWNlODBjICgi
+cmN1OiBNYWtlIGNhbGxlcnMgYXdha2VuIGdyYWNlLXBlcmlvZCBrdGhyZWFkIikNClJlcG9ydGVk
+LWJ5OiAiSGUsIEJvIiA8Ym8uaGVAaW50ZWwuY29tPg0KQ28tZGV2ZWxvcGVkLWJ5OiAiWmhhbmcs
+IEp1biIgPGp1bi56aGFuZ0BpbnRlbC5jb20+DQpDby1kZXZlbG9wZWQtYnk6ICJIZSwgQm8iIDxi
+by5oZUBpbnRlbC5jb20+DQpDby1kZXZlbG9wZWQtYnk6ICJ4aWFvLCBqaW4iIDxqaW4ueGlhb0Bp
+bnRlbC5jb20+DQpDby1kZXZlbG9wZWQtYnk6IEJhaSwgSmllIEEgPGppZS5hLmJhaUBpbnRlbC5j
+b20+DQpTaWduZWQtb2ZmOiAiWmhhbmcsIEp1biIgPGp1bi56aGFuZ0BpbnRlbC5jb20+DQpTaWdu
+ZWQtb2ZmOiAiSGUsIEJvIiA8Ym8uaGVAaW50ZWwuY29tPg0KU2lnbmVkLW9mZjogInhpYW8sIGpp
+biIgPGppbi54aWFvQGludGVsLmNvbT4NClNpZ25lZC1vZmY6IEJhaSwgSmllIEEgPGppZS5hLmJh
+aUBpbnRlbC5jb20+DQpTaWduZWQtb2ZmLWJ5OiAiWmhhbmcsIEp1biIgPGp1bi56aGFuZ0BpbnRl
+bC5jb20+IFsgcGF1bG1jazogU3dpdGNoIGZyb20gIWluX3NvZnRpcnEoKSB0byAiIWluX2ludGVy
+cnVwdCgpICYmDQogICFpbl9zZXJ2aW5nX3NvZnRpcnEoKSB0byBhdm9pZCByZWR1bmRhbnQgd2Fr
+ZXVwcyBhbmQgdG8gYWxzbyBoYW5kbGUgdGhlDQogIGludGVycnVwdC1oYW5kbGVyIHNjZW5hcmlv
+IGFzIHdlbGwgYXMgdGhlIHNvZnRpcnEtaGFuZGxlciBzY2VuYXJpbyB0aGF0DQogIGFjdHVhbGx5
+IG9jY3VycmVkIGluIHRlc3RpbmcuIF0NClNpZ25lZC1vZmYtYnk6IFBhdWwgRS4gTWNLZW5uZXkg
+PHBhdWxtY2tAbGludXguaWJtLmNvbT4NCkxpbms6IGh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3Iv
+Q0Q2OTI1RTg3ODFFRkQ0RDhFMTE4ODJEMjBGQzQwNkQ1MkExMUY2MUBTSFNNU1gxMDQuY2NyLmNv
+cnAuaW50ZWwuY29tDQpTaWduZWQtb2ZmLWJ5OiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBs
+aW51eGZvdW5kYXRpb24ub3JnPg0KDQotLS0NCiBrZXJuZWwvcmN1L3RyZWUuYyB8ICAgMjAgKysr
+KysrKysrKysrKystLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgNiBk
+ZWxldGlvbnMoLSkNCg0KLS0tIGEva2VybmVsL3JjdS90cmVlLmMNCisrKyBiL2tlcm5lbC9yY3Uv
+dHJlZS5jDQpAQCAtMTM5OSwxNSArMTM5OSwyMyBAQCBzdGF0aWMgaW50IHJjdV9mdXR1cmVfZ3Bf
+Y2xlYW51cChzdHJ1Y3QgIH0NCiANCiAvKg0KLSAqIEF3YWtlbiB0aGUgZ3JhY2UtcGVyaW9kIGt0
+aHJlYWQgZm9yIHRoZSBzcGVjaWZpZWQgZmxhdm9yIG9mIFJDVS4NCi0gKiBEb24ndCBkbyBhIHNl
+bGYtYXdha2VuLCBhbmQgZG9uJ3QgYm90aGVyIGF3YWtlbmluZyB3aGVuIHRoZXJlIGlzDQotICog
+bm90aGluZyBmb3IgdGhlIGdyYWNlLXBlcmlvZCBrdGhyZWFkIHRvIGRvIChhcyBpbiBzZXZlcmFs
+IENQVXMNCi0gKiByYWNlZCB0byBhd2FrZW4sIGFuZCB3ZSBsb3N0KSwgYW5kIGZpbmFsbHkgZG9u
+J3QgdHJ5IHRvIGF3YWtlbg0KLSAqIGEga3RocmVhZCB0aGF0IGhhcyBub3QgeWV0IGJlZW4gY3Jl
+YXRlZC4NCisgKiBBd2FrZW4gdGhlIGdyYWNlLXBlcmlvZCBrdGhyZWFkLiAgRG9uJ3QgZG8gYSBz
+ZWxmLWF3YWtlbiAodW5sZXNzIGluDQorICogYW4gaW50ZXJydXB0IG9yIHNvZnRpcnEgaGFuZGxl
+ciksIGFuZCBkb24ndCBib3RoZXIgYXdha2VuaW5nIHdoZW4gDQorIHRoZXJlDQorICogaXMgbm90
+aGluZyBmb3IgdGhlIGdyYWNlLXBlcmlvZCBrdGhyZWFkIHRvIGRvIChhcyBpbiBzZXZlcmFsIENQ
+VXMgDQorIHJhY2VkDQorICogdG8gYXdha2VuLCBhbmQgd2UgbG9zdCksIGFuZCBmaW5hbGx5IGRv
+bid0IHRyeSB0byBhd2FrZW4gYSBrdGhyZWFkIA0KKyB0aGF0DQorICogaGFzIG5vdCB5ZXQgYmVl
+biBjcmVhdGVkLiAgSWYgYWxsIHRob3NlIGNoZWNrcyBhcmUgcGFzc2VkLCB0cmFjayANCisgc29t
+ZQ0KKyAqIGRlYnVnIGluZm9ybWF0aW9uIGFuZCBhd2FrZW4uDQorICoNCisgKiBTbyB3aHkgZG8g
+dGhlIHNlbGYtd2FrZXVwIHdoZW4gaW4gYW4gaW50ZXJydXB0IG9yIHNvZnRpcnEgaGFuZGxlcg0K
+KyAqIGluIHRoZSBncmFjZS1wZXJpb2Qga3RocmVhZCdzIGNvbnRleHQ/ICBCZWNhdXNlIHRoZSBr
+dGhyZWFkIG1pZ2h0IA0KKyBoYXZlDQorICogYmVlbiBpbnRlcnJ1cHRlZCBqdXN0IGFzIGl0IHdh
+cyBnb2luZyB0byBzbGVlcCwgYW5kIGp1c3QgYWZ0ZXIgdGhlIA0KKyBmaW5hbA0KKyAqIHByZS1z
+bGVlcCBjaGVjayBvZiB0aGUgYXdha2VuIGNvbmRpdGlvbi4gIEluIHRoaXMgY2FzZSwgYSB3YWtl
+dXAgDQorIHJlYWxseQ0KKyAqIGlzIHJlcXVpcmVkLCBhbmQgaXMgdGhlcmVmb3JlIHN1cHBsaWVk
+Lg0KICAqLw0KIHN0YXRpYyB2b2lkIHJjdV9ncF9rdGhyZWFkX3dha2Uoc3RydWN0IHJjdV9zdGF0
+ZSAqcnNwKSAgew0KLQlpZiAoY3VycmVudCA9PSByc3AtPmdwX2t0aHJlYWQgfHwNCisJaWYgKChj
+dXJyZW50ID09IHJzcC0+Z3Bfa3RocmVhZCAmJg0KKwkgICAgICFpbl9pbnRlcnJ1cHQoKSAmJiAh
+aW5fc2VydmluZ19zb2Z0aXJxKCkpIHx8DQogCSAgICAhQUNDRVNTX09OQ0UocnNwLT5ncF9mbGFn
+cykgfHwNCiAJICAgICFyc3AtPmdwX2t0aHJlYWQpDQogCQlyZXR1cm47DQoNCg0K
