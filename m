@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418BBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C99C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE6A21934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D637921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254930;
-	bh=BS879CRbtLJWzcwUlITnKJm4dhh5E7gsYrFewpF6Ok8=;
+	s=default; t=1553254933;
+	bh=2XgAvsMbM6/Uztk4wzbNQHJGRo1fvJMeivVvIPWoLMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4x/ya5WtaizNHbZPS65HIqsNVm+QL/9vCcNWnh0RTNJqvY+D5eBbx7UZHHDHcq28
-	 t5uPwXM6Pawk4/em9TDtuoizS6nfokl+YD/B2wwPMEZVjI8Ei9TPfPw/+enbe8HIK0
-	 EEochma90eM/+84e0KE9Gl2BkI694AnHxaogV+Xg=
+	b=2m1WgGxMc1DtIZdQQYJwGf74+OR1Jm+F0qI6rbVAO+HGn0vwZiy7G97SPNYX0Q4/M
+	 t45EKbmFSq5GLdiTFO7kOga2N94Ns/uiEX601tpZImt2yZolxvEBFoLNeMv4Xud4bY
+	 rkge6bf6eWv1MrBnhrX621h1cShcEDUhSm31cUaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbfCVLmI (ORCPT
+        id S1731499AbfCVLmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbfCVLmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:42:04 -0400
+        id S1730951AbfCVLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD89321917;
-        Fri, 22 Mar 2019 11:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67A3F2082C;
+        Fri, 22 Mar 2019 11:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254923;
-        bh=BS879CRbtLJWzcwUlITnKJm4dhh5E7gsYrFewpF6Ok8=;
+        s=default; t=1553254929;
+        bh=2XgAvsMbM6/Uztk4wzbNQHJGRo1fvJMeivVvIPWoLMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UE7Smgcu+wH76ujA+KYRi4FqnQZCep5sXu+C8X8YjCBhdw7QxTMupJ3xKaTIsz+7r
-         xWQwhKc+JApsi1w2xGATcoGgLKGFLb9aacekWrzc3zA+gt+A1wb5TFyxr0U4Sk/Obl
-         vMKNllGLB2tLy00krYYFKrOL5VNLK5W5Jbr1Na90=
+        b=JYS+CPqMxzmMABVunyBf9P6ByWI2vJXhhqwcVzSUAvYv/a6+DUD82zfZb0Cg0M1J/
+         QayY93Z1qH8IG/ZBWJoahHCjA34+NBHm4rCoQFkNCjahgLGohB92usZHj3tNNMVvO0
+         r9W29nYTwMxV89U6clnBeyKzOVCiUQmXVXEB12Ho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>,
+        stable@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 052/118] ACPI / device_sysfs: Avoid OF modalias creation for removed device
-Date:   Fri, 22 Mar 2019 12:15:24 +0100
-Message-Id: <20190322111220.117106323@linuxfoundation.org>
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 054/118] spi: pxa2xx: Setup maximum supported DMA transfer length
+Date:   Fri, 22 Mar 2019 12:15:26 +0100
+Message-Id: <20190322111220.289891574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -69,73 +68,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit f16eb8a4b096514ac06fb25bf599dcc792899b3d upstream.
+commit ef070b4e4aa25bb5f8632ad196644026c11903bf upstream.
 
-If SSDT overlay is loaded via ConfigFS and then unloaded the device,
-we would like to have OF modalias for, already gone. Thus, acpi_get_name()
-returns no allocated buffer for such case and kernel crashes afterwards:
+When the commit b6ced294fb61
 
- ACPI: Host-directed Dynamic ACPI Table Unload
- ads7950 spi-PRP0001:00: Dropping the link to regulator.0
- BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
- #PF error: [normal kernel read fault]
- PGD 80000000070d6067 P4D 80000000070d6067 PUD 70d0067 PMD 0
- Oops: 0000 [#1] SMP PTI
- CPU: 0 PID: 40 Comm: kworker/u4:2 Not tainted 5.0.0+ #96
- Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
- Workqueue: kacpi_hotplug acpi_device_del_work_fn
- RIP: 0010:create_of_modalias.isra.1+0x4c/0x150
- Code: 00 00 48 89 44 24 18 31 c0 48 8d 54 24 08 48 c7 44 24 10 00 00 00 00 48 c7 44 24 08 ff ff ff ff e8 7a b0 03 00 48 8b 4c 24 10 <0f> b6 01 84 c0 74 27 48 c7 c7 00 09 f4 a5 0f b6 f0 8d 50 20 f6 04
- RSP: 0000:ffffa51040297c10 EFLAGS: 00010246
- RAX: 0000000000001001 RBX: 0000000000000785 RCX: 0000000000000000
- RDX: 0000000000001001 RSI: 0000000000000286 RDI: ffffa2163dc042e0
- RBP: ffffa216062b1196 R08: 0000000000001001 R09: ffffa21639873000
- R10: ffffffffa606761d R11: 0000000000000001 R12: ffffa21639873218
- R13: ffffa2163deb5060 R14: ffffa216063d1010 R15: 0000000000000000
- FS:  0000000000000000(0000) GS:ffffa2163e000000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 0000000007114000 CR4: 00000000001006f0
- Call Trace:
-  __acpi_device_uevent_modalias+0xb0/0x100
-  spi_uevent+0xd/0x40
+   ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
 
- ...
+switches to SPI core provided DMA helpers, it missed to setup maximum
+supported DMA transfer length for the controller and thus users
+mistakenly try to send more data than supported with the following
+warning:
 
-In order to fix above let create_of_modalias() check the status returned
-by acpi_get_name() and bail out in case of failure.
+  ili9341 spi-PRP0001:01: DMA disabled for transfer length 153600 greater than 65536
 
-Fixes: 8765c5ba1949 ("ACPI / scan: Rework modalias creation when "compatible" is present")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201381
-Reported-by: Ferry Toth <fntoth@gmail.com>
-Tested-by: Ferry Toth<fntoth@gmail.com>
+Setup maximum supported DMA transfer length in order to make users know
+the limit.
+
+Fixes: b6ced294fb61 ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: 4.1+ <stable@vger.kernel.org> # 4.1+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_sysfs.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/spi-pxa2xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -202,11 +202,15 @@ static int create_of_modalias(struct acp
- {
- 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
- 	const union acpi_object *of_compatible, *obj;
-+	acpi_status status;
- 	int len, count;
- 	int i, nval;
- 	char *c;
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1668,6 +1668,7 @@ static int pxa2xx_spi_probe(struct platf
+ 			platform_info->enable_dma = false;
+ 		} else {
+ 			master->can_dma = pxa2xx_spi_can_dma;
++			master->max_dma_len = MAX_DMA_LEN;
+ 		}
+ 	}
  
--	acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	status = acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
- 	/* DT strings are all in lower case */
- 	for (c = buf.pointer; *c != '\0'; c++)
- 		*c = tolower(*c);
 
 
