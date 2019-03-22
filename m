@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510BBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC6CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7512082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721E92083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256991;
-	bh=P27Cx0S3UEZY+SSGVQn0Ze0F2UeM7CCb+qjgzdqGKkI=;
+	s=default; t=1553256994;
+	bh=tewYpcjp57IVyuwIUoXCkjiL1b1KgdZji5xxbm8N7b8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJH3V+RmCHPiHiiA5+emeJsLXP0MOhmaaa3Nms0Hgnhc2jO/7TZqPKRGhsh4uMIQD
-	 TeYnOLbTb7bVD3coVH/u2ciFXfZxeWHfbnGEmC2f+00KWu4xoBd2u+F0T2wcKJK2Ik
-	 YnsTXHkq0Nd/38jzrPjsqKlbw0B2FLcGpvHx98K8=
+	b=2BnNKt6pTzrHD+DBxYAaY5IJbAvZRrReq43iZDRImc83Yy+Dz1FYiqx3y8em2OmgB
+	 pqnkSOZOUUsUz1uXvXxJu+hnerHbx11tjSf+Rt1KXLN7uRyppY+IKmBIQtvmNFkhii
+	 oMeikz6K54eMklWwv2ovuZs0mFUc0KLLp3kI6HzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390221AbfCVMQa (ORCPT
+        id S2390231AbfCVMQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390211AbfCVMQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:27 -0400
+        id S2390222AbfCVMQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A6A2083D;
-        Fri, 22 Mar 2019 12:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4745B218A1;
+        Fri, 22 Mar 2019 12:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256986;
-        bh=P27Cx0S3UEZY+SSGVQn0Ze0F2UeM7CCb+qjgzdqGKkI=;
+        s=default; t=1553256989;
+        bh=tewYpcjp57IVyuwIUoXCkjiL1b1KgdZji5xxbm8N7b8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rWBzs3SM5MOBj3/dS9DaLcA3hGQ58MzUX492Vqju32Lk0ZpV1MRoLTM8wOxqYe2LG
-         qUlywnc3iIbvpCukLcR1QTli0Ih9cGNW1DsMl74l6xpdy0uEIye8QkYH1r9cEk9GCi
-         /c+v6SI8E2zKBmURxbkRL0W8xj1bQWcy+bjZG7nc=
+        b=lLy83NI4UTdOvgo2seli0eOp9x1DZXHbD8UTgARjCWbkwzDDwMyeiX0aHH+gHdNqR
+         NPcAG6f4Gm1kKLyBLVR10SRn/+5qd2b1BKi4av/tyaJJddIeHSn3wR5D2ljF4430oQ
+         jKCxO+ne2IbEgLmUC3SKb8ZSF/N5/k7RushW0dEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 098/238] Btrfs: fix deadlock between clone/dedupe and rename
-Date:   Fri, 22 Mar 2019 12:15:17 +0100
-Message-Id: <20190322111304.345951751@linuxfoundation.org>
+        stable@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
+        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>
+Subject: [PATCH 5.0 099/238] soc: qcom: rpmh: Avoid accessing freed memory from batch API
+Date:   Fri, 22 Mar 2019 12:15:18 +0100
+Message-Id: <20190322111304.399008985@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,104 +70,233 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-commit 4ea748e1d2c9f8a27332b949e8210dbbf392987e upstream.
+commit baef1c90aac7e5bf13f0360a3b334825a23d31a1 upstream.
 
-Reflinking (clone/dedupe) and rename are operations that operate on two
-inodes and therefore need to lock them in the same order to avoid ABBA
-deadlocks. It happens that Btrfs' reflink implementation always locked
-them in a different order from VFS's lock_two_nondirectories() helper,
-which is used by the rename code in VFS, resulting in ABBA type deadlocks.
+Using the batch API from the interconnect driver sometimes leads to a
+KASAN error due to an access to freed memory. This is easier to trigger
+with threadirqs on the kernel commandline.
 
-Btrfs' locking order:
+ BUG: KASAN: use-after-free in rpmh_tx_done+0x114/0x12c
+ Read of size 1 at addr fffffff51414ad84 by task irq/110-apps_rs/57
 
-  static void btrfs_double_inode_lock(struct inode *inode1, struct inode *inode2)
-  {
-         if (inode1 < inode2)
-                swap(inode1, inode2);
+ CPU: 0 PID: 57 Comm: irq/110-apps_rs Tainted: G        W         4.19.10 #72
+ Call trace:
+  dump_backtrace+0x0/0x2f8
+  show_stack+0x20/0x2c
+  __dump_stack+0x20/0x28
+  dump_stack+0xcc/0x10c
+  print_address_description+0x74/0x240
+  kasan_report+0x250/0x26c
+  __asan_report_load1_noabort+0x20/0x2c
+  rpmh_tx_done+0x114/0x12c
+  tcs_tx_done+0x450/0x768
+  irq_forced_thread_fn+0x58/0x9c
+  irq_thread+0x120/0x1dc
+  kthread+0x248/0x260
+  ret_from_fork+0x10/0x18
 
-         inode_lock_nested(inode1, I_MUTEX_PARENT);
-         inode_lock_nested(inode2, I_MUTEX_CHILD);
-  }
+ Allocated by task 385:
+  kasan_kmalloc+0xac/0x148
+  __kmalloc+0x170/0x1e4
+  rpmh_write_batch+0x174/0x540
+  qcom_icc_set+0x8dc/0x9ac
+  icc_set+0x288/0x2e8
+  a6xx_gmu_stop+0x320/0x3c0
+  a6xx_pm_suspend+0x108/0x124
+  adreno_suspend+0x50/0x60
+  pm_generic_runtime_suspend+0x60/0x78
+  __rpm_callback+0x214/0x32c
+  rpm_callback+0x54/0x184
+  rpm_suspend+0x3f8/0xa90
+  pm_runtime_work+0xb4/0x178
+  process_one_work+0x544/0xbc0
+  worker_thread+0x514/0x7d0
+  kthread+0x248/0x260
+  ret_from_fork+0x10/0x18
 
-VFS's locking order:
+ Freed by task 385:
+  __kasan_slab_free+0x12c/0x1e0
+  kasan_slab_free+0x10/0x1c
+  kfree+0x134/0x588
+  rpmh_write_batch+0x49c/0x540
+  qcom_icc_set+0x8dc/0x9ac
+  icc_set+0x288/0x2e8
+  a6xx_gmu_stop+0x320/0x3c0
+  a6xx_pm_suspend+0x108/0x124
+  adreno_suspend+0x50/0x60
+ cr50_spi spi5.0: SPI transfer timed out
+  pm_generic_runtime_suspend+0x60/0x78
+  __rpm_callback+0x214/0x32c
+  rpm_callback+0x54/0x184
+  rpm_suspend+0x3f8/0xa90
+  pm_runtime_work+0xb4/0x178
+  process_one_work+0x544/0xbc0
+  worker_thread+0x514/0x7d0
+  kthread+0x248/0x260
+  ret_from_fork+0x10/0x18
 
-  void lock_two_nondirectories(struct inode *inode1, struct inode *inode2)
-  {
-        if (inode1 > inode2)
-                swap(inode1, inode2);
+ The buggy address belongs to the object at fffffff51414ac80
+  which belongs to the cache kmalloc-512 of size 512
+ The buggy address is located 260 bytes inside of
+  512-byte region [fffffff51414ac80, fffffff51414ae80)
+ The buggy address belongs to the page:
+ page:ffffffbfd4505200 count:1 mapcount:0 mapping:fffffff51e00c680 index:0x0 compound_mapcount: 0
+ flags: 0x4000000000008100(slab|head)
+ raw: 4000000000008100 ffffffbfd4529008 ffffffbfd44f9208 fffffff51e00c680
+ raw: 0000000000000000 0000000000200020 00000001ffffffff 0000000000000000
+ page dumped because: kasan: bad access detected
 
-        if (inode1 && !S_ISDIR(inode1->i_mode))
-                inode_lock(inode1);
-        if (inode2 && !S_ISDIR(inode2->i_mode) && inode2 != inode1)
-                inode_lock_nested(inode2, I_MUTEX_NONDIR2);
-}
+ Memory state around the buggy address:
+  fffffff51414ac80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  fffffff51414ad00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ >fffffff51414ad80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                    ^
+  fffffff51414ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  fffffff51414ae80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
 
-Fix this by killing the btrfs helper function that does the double inode
-locking and replace it with VFS's helper lock_two_nondirectories().
+The batch API sets the same completion for each rpmh message that's sent
+and then loops through all the messages and waits for that single
+completion declared on the stack to be completed before returning from
+the function and freeing the message structures. Unfortunately, some
+messages may still be in process and 'stuck' in the TCS. At some later
+point, the tcs_tx_done() interrupt will run and try to process messages
+that have already been freed at the end of rpmh_write_batch(). This will
+in turn access the 'needs_free' member of the rpmh_request structure and
+cause KASAN to complain. Furthermore, if there's a message that's
+completed in rpmh_tx_done() and freed immediately after the complete()
+call is made we'll be racing with potentially freed memory when
+accessing the 'needs_free' member:
 
-Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
-Fixes: 416161db9b63e3 ("btrfs: offline dedupe")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+	CPU0                         CPU1
+	----                         ----
+	rpmh_tx_done()
+	 complete(&compl)
+	                             wait_for_completion(&compl)
+	                             kfree(rpm_msg)
+	 if (rpm_msg->needs_free)
+	 <KASAN warning splat>
+
+Let's fix this by allocating a chunk of completions for each message and
+waiting for all of them to be completed before returning from the batch
+API. Alternatively, we could wait for the last message in the batch, but
+that may be a more complicated change because it looks like
+tcs_tx_done() just iterates through the indices of the queue and
+completes each message instead of tracking the last inserted message and
+completing that first.
+
+Fixes: c8790cb6da58 ("drivers: qcom: rpmh: add support for batch RPMH request")
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ioctl.c |   21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ drivers/soc/qcom/rpmh.c |   34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
 
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3206,21 +3206,6 @@ out:
- 	return ret;
+--- a/drivers/soc/qcom/rpmh.c
++++ b/drivers/soc/qcom/rpmh.c
+@@ -80,6 +80,7 @@ void rpmh_tx_done(const struct tcs_reque
+ 	struct rpmh_request *rpm_msg = container_of(msg, struct rpmh_request,
+ 						    msg);
+ 	struct completion *compl = rpm_msg->completion;
++	bool free = rpm_msg->needs_free;
+ 
+ 	rpm_msg->err = r;
+ 
+@@ -94,7 +95,7 @@ void rpmh_tx_done(const struct tcs_reque
+ 	complete(compl);
+ 
+ exit:
+-	if (rpm_msg->needs_free)
++	if (free)
+ 		kfree(rpm_msg);
  }
  
--static void btrfs_double_inode_unlock(struct inode *inode1, struct inode *inode2)
--{
--	inode_unlock(inode1);
--	inode_unlock(inode2);
--}
--
--static void btrfs_double_inode_lock(struct inode *inode1, struct inode *inode2)
--{
--	if (inode1 < inode2)
--		swap(inode1, inode2);
--
--	inode_lock_nested(inode1, I_MUTEX_PARENT);
--	inode_lock_nested(inode2, I_MUTEX_CHILD);
--}
--
- static void btrfs_double_extent_unlock(struct inode *inode1, u64 loff1,
- 				       struct inode *inode2, u64 loff2, u64 len)
+@@ -348,11 +349,12 @@ int rpmh_write_batch(const struct device
  {
-@@ -3989,7 +3974,7 @@ static int btrfs_remap_file_range_prep(s
- 	if (same_inode)
- 		inode_lock(inode_in);
- 	else
--		btrfs_double_inode_lock(inode_in, inode_out);
-+		lock_two_nondirectories(inode_in, inode_out);
+ 	struct batch_cache_req *req;
+ 	struct rpmh_request *rpm_msgs;
+-	DECLARE_COMPLETION_ONSTACK(compl);
++	struct completion *compls;
+ 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
+ 	unsigned long time_left;
+ 	int count = 0;
+-	int ret, i, j;
++	int ret, i;
++	void *ptr;
  
- 	/*
- 	 * Now that the inodes are locked, we need to start writeback ourselves
-@@ -4039,7 +4024,7 @@ static int btrfs_remap_file_range_prep(s
- 	if (same_inode)
- 		inode_unlock(inode_in);
- 	else
--		btrfs_double_inode_unlock(inode_in, inode_out);
-+		unlock_two_nondirectories(inode_in, inode_out);
+ 	if (!cmd || !n)
+ 		return -EINVAL;
+@@ -362,10 +364,15 @@ int rpmh_write_batch(const struct device
+ 	if (!count)
+ 		return -EINVAL;
+ 
+-	req = kzalloc(sizeof(*req) + count * sizeof(req->rpm_msgs[0]),
++	ptr = kzalloc(sizeof(*req) +
++		      count * (sizeof(req->rpm_msgs[0]) + sizeof(*compls)),
+ 		      GFP_ATOMIC);
+-	if (!req)
++	if (!ptr)
+ 		return -ENOMEM;
++
++	req = ptr;
++	compls = ptr + sizeof(*req) + count * sizeof(*rpm_msgs);
++
+ 	req->count = count;
+ 	rpm_msgs = req->rpm_msgs;
+ 
+@@ -380,25 +387,26 @@ int rpmh_write_batch(const struct device
+ 	}
+ 
+ 	for (i = 0; i < count; i++) {
+-		rpm_msgs[i].completion = &compl;
++		struct completion *compl = &compls[i];
++
++		init_completion(compl);
++		rpm_msgs[i].completion = compl;
+ 		ret = rpmh_rsc_send_data(ctrlr_to_drv(ctrlr), &rpm_msgs[i].msg);
+ 		if (ret) {
+ 			pr_err("Error(%d) sending RPMH message addr=%#x\n",
+ 			       ret, rpm_msgs[i].msg.cmds[0].addr);
+-			for (j = i; j < count; j++)
+-				rpmh_tx_done(&rpm_msgs[j].msg, ret);
+ 			break;
+ 		}
+ 	}
+ 
+ 	time_left = RPMH_TIMEOUT_MS;
+-	for (i = 0; i < count; i++) {
+-		time_left = wait_for_completion_timeout(&compl, time_left);
++	while (i--) {
++		time_left = wait_for_completion_timeout(&compls[i], time_left);
+ 		if (!time_left) {
+ 			/*
+ 			 * Better hope they never finish because they'll signal
+-			 * the completion on our stack and that's bad once
+-			 * we've returned from the function.
++			 * the completion that we're going to free once
++			 * we've returned from this function.
+ 			 */
+ 			WARN_ON(1);
+ 			ret = -ETIMEDOUT;
+@@ -407,7 +415,7 @@ int rpmh_write_batch(const struct device
+ 	}
+ 
+ exit:
+-	kfree(req);
++	kfree(ptr);
  
  	return ret;
- }
-@@ -4069,7 +4054,7 @@ loff_t btrfs_remap_file_range(struct fil
- 	if (same_inode)
- 		inode_unlock(src_inode);
- 	else
--		btrfs_double_inode_unlock(src_inode, dst_inode);
-+		unlock_two_nondirectories(src_inode, dst_inode);
- 
- 	return ret < 0 ? ret : len;
  }
 
 
