@@ -2,79 +2,81 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6ABC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D91A2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sNx1AHlF"
+	by mail.kernel.org (Postfix) with ESMTP id 84E2C21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfCVV0E (ORCPT
+        id S1727544AbfCVV2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 17:26:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35449 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfCVV0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 17:26:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zRtH7CxO3VITksqiNhcsPyxw/QZJND2ubKCgubb5DJ8=; b=sNx1AHlFOI8wwuzZUKbxsgJfRc
-        7JdbQrC7DaJoIyV3G10O9wbLhattnQ+J5jwzrQjYdsXd2AEfsR0d5FW23062L8FN3Oo2VxfBM0sKy
-        fXdVZOXp95dVtQwm3e9EJcByHT88TwN58KO/r4XjiVtfAmfmB8HsDq4USu6irKqL3RLg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h7Rfp-0005Or-Ez; Fri, 22 Mar 2019 22:25:57 +0100
-Date:   Fri, 22 Mar 2019 22:25:57 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BISECTED, REGRESSION] Broken networking on MIPS/OCTEON
- EdgeRouter Lite
-Message-ID: <20190322212557.GF16623@lunn.ch>
-References: <20190322002125.GD7872@darkstar.musicnaut.iki.fi>
- <20190322064506.GB5348@vkoul-mobl>
- <20190322205059.GA29013@darkstar.musicnaut.iki.fi>
+        Fri, 22 Mar 2019 17:28:02 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:34575 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbfCVV2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 17:28:02 -0400
+Received: by mail-it1-f197.google.com with SMTP id v11so2849781itb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 14:28:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=INpl/ImInpVvjNg6VwEIcNPDm6BB2I+j6XhGbJu9JZM=;
+        b=FhJiFXbECSVshrMyPbQqUMtezlbYWhXXiVNsyVxoEszz4GKXfCD04Qcd8mYtcOzL9W
+         0U75VQwceuzqT0CyZD34NNj8w6XfRVWRQcPxF1CDaVKaSVFPjVWaBQMZlRuOMmpC9fsz
+         rbwrzchkhHua0At7CdrWGn7R02LQ/0puOAADjL6Fc21O6r4E/hNzCEngw1Zd2UFnWjEa
+         OQYN6I/7AodsL+vJ/c87xwbJ47eh78djT3G/KQGDvM8fFXf8KEt1oZ1Nm3ve0eDXsLgh
+         IybDTeOp6DFTJVMqzg0yNj8q0VBVaL24joDKxPpp8XNhrawwKmlcDDADgafsnTz0UtL4
+         LpbA==
+X-Gm-Message-State: APjAAAXGcCl5I+Mb8Zg4ZwWCkkQPW4djqspQCbYJzFP+hxGorNZhKCh8
+        L0x9b0QW4WuDT5++7m3pFI4JKU+MmnvOMf5AEjqWdLqtK22/
+X-Google-Smtp-Source: APXvYqwVb9A5zyH076xjfKH6jANX5aTwiLOj7SbypYsinLvTB/jSN5NNa+XCnr57mt6sD2F849iSWjBJOYF/V7SU/hZ7lYJPkAms
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322205059.GA29013@darkstar.musicnaut.iki.fi>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a02:f8b:: with SMTP id 11mr9069901jao.53.1553290081395;
+ Fri, 22 Mar 2019 14:28:01 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 14:28:01 -0700
+In-Reply-To: <000000000000cd1e2205785951c2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000088ea3e0584b5872d@google.com>
+Subject: Re: possible deadlock in __generic_file_fsync
+From:   syzbot <syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        tytso@mit.edu, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The OCTEON HW code knows only about RGMII. And looking at
-> octeon ethernet staging driver it does phy connect always with
-> PHY_INTERFACE_MODE_GMII. I did some experimentation, and it seems that
-> with PHY_INTERFACE_MODE_RGMII_RXID it starts to work.. In the DT we have
-> for ethernet for this board:
-> 
-> 	rx-delay = <0>;
-> 	tx-delay = <0x10>;
+syzbot has bisected this bug to:
 
-These are not PHY properties. 
+commit 9022ada8ab6f1f1a932a3c93815061042e6548a5
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Aug 24 20:16:36 2018 +0000
 
-Looking at the code, it looks like these control delays the MAC
-inserts. I don't see a binding document for these properties, so i've
-no idea what 0x10 means. Before this driver moves out of staging,
-these values should be changed to be in ns.
+     Merge branch 'for-4.19' of  
+git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq
 
-However, PHY_INTERFACE_MODE_RGMII_RXID would make sense if 0x10 is
-sufficient to add the TX delay.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15330437200000
+start commit:   270b77a0 Merge tag 'drm-fixes-2018-10-20-1' of git://anong..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17330437200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13330437200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b3f55cb3dfcc6c33
+dashboard link: https://syzkaller.appspot.com/bug?extid=5cd33f0e6abe2bb3e397
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1436fc45400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11058e2d400000
 
-What the driver should however do is call of_of_get_phy_mode() to get
-the phy-mode from the DT blob and pass that to of_phy_connect().
+Reported-by: syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com
+Fixes: 9022ada8ab6f ("Merge branch 'for-4.19' of  
+git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq")
 
-    Andrew
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
