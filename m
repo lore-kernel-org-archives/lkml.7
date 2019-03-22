@@ -2,108 +2,99 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11BDC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E77C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B912190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alibaba-inc.com header.i=@alibaba-inc.com header.b="bpqjAucu"
+	by mail.kernel.org (Postfix) with ESMTP id C8E2A218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfCVKKJ (ORCPT
+        id S1728019AbfCVKLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:10:09 -0400
-Received: from out0-147.mail.aliyun.com ([140.205.0.147]:53569 "EHLO
-        out0-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727919AbfCVKKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=alibaba-inc.com; s=default;
-        t=1553249405; h=From:To:Subject:Date:Message-Id;
-        bh=CESTLGwAfcQfHJ2H49WSr6BzPB3M2SoBVB9y8nCwm+Y=;
-        b=bpqjAucuZ3VIB7kQvQ+pteYLMwbGi/hVZamdTdM/wxS5mMmIpJZLLF6M+KmWUCcr6q2/5NjPS4Aizc3eqq8CZ5mUia29xO8d+O0+ViLWmcmVoO9MB8uIHSdhdvwEH6wJX7O5hv1GLKWgJNAPVdWrfgarpLQOPB0tHfsUai2vAt8=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e02c03299;MF=xuyun.xy@alibaba-inc.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.EBGcyQx_1553249398;
-Received: from localhost(mailfrom:xuyun.xy@alibaba-inc.com fp:SMTPD_---.EBGcyQx_1553249398)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 22 Mar 2019 18:10:04 +0800
-From:   luferry <luferry@163.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        xuyun <luferry@163.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] block/mq: blk map queues by core id
-Date:   Fri, 22 Mar 2019 18:09:49 +0800
-Message-Id: <20190322100949.5555-1-luferry@163.com>
-X-Mailer: git-send-email 2.14.1.40.g8e62ba1
+        Fri, 22 Mar 2019 06:11:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:41202 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727858AbfCVKLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:11:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59125374;
+        Fri, 22 Mar 2019 03:11:21 -0700 (PDT)
+Received: from [10.37.13.63] (unknown [10.37.13.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1E403F575;
+        Fri, 22 Mar 2019 03:11:19 -0700 (PDT)
+Subject: Re: [PATCH 00/25] coresight: Support for ACPI bindings
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        coresight@lists.linaro.org, mike.leach@linaro.org,
+        robert.walker@arm.com, rjw@rjwysocki.net
+References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <80173965-149d-f56e-6b5e-bcf18988e21c@arm.com>
+Date:   Fri, 22 Mar 2019 10:13:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-under virtual machine environment, cpu topology may differ from normal
-physical server.
-for example (machine with 4 cores, 2 threads per core):
+On 03/20/2019 06:49 PM, Suzuki K Poulose wrote:
+> This series adds the support for CoreSight devices on ACPI based
+> platforms. The device connections are encoded as _DSD graph property[0],
+> with CoreSight specific extensions to indicate the direction of data
+> flow as described in [1]. Components attached to CPUs are listed
+> as child devices of the corresponding CPU, removing explicit links
+> to the CPU like we do in the DT.
+> 
+> As a prepartion for the ACPI support, we merge the driver for dynamic
+> and non-programmable replicators. We introduce platform independent
+> helpers to parse the platform supplied information. Thus we rename
+> the platform handling code from:
+> 	of_coresight.c  => coresight-platform.c
+> 
+> The CoreSight driver creates shadow devices that appear on the Coresight
+> bus, in addition to the real devices (e.g, AMBA bus devices). The name
+> of these devices match the real device. This makes the device name
+> a bit cryptic for ACPI platform. So this series also introduces a generic
+> platform agnostic device naming scheme for the shadow Coresight devices.
+> Towards this we also make changes to the way we lookup devices to resolve
+> the connections, as we can't use the names to identify the devices. So,
+> we use the "fwnode_handle" of the real device for the device lookups.
+> Towards that we clean up the drivers to keep track of the "CoreSight"
+> device rather than the "real" device. However, all real operations,
+> like DMA allocation, Power management etc. must be performed on
+> the real device which is the parent of the shadow device.
+> 
+> Finally we add the support for parsing the ACPI platform data. The power
+> management support is missing in the ACPI (and this is not specific to
+> CoreSight). The firmware must ensure that the respective power domains
+> are turned on.
+> 
+> Applies on v5.1-rc1
+> 
+> Tested on a Juno-r0 board with ACPI bindings patch (Patch 26/25) added on
+> top of [2]. You would need to make sure that the debug power domain is
+> turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
+> Juno board while at UEFI). arm32 code is only compile tested.
+> 
+> [0] ACPI Device Graphs using _DSD (Not available online yet, approved but
+>      awaiting publish and eventually should be linked at).
+>      https://uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm
+> [1] https://developer.arm.com/docs/den0067/latest/acpi-for-coresighttm-10-platform-design-document
+> [2] https://github.com/tianocore/edk2-platforms.git
 
-normal physical server:
-core-id   thread-0-id  thread-1-id
-0         0            4
-1         1            5
-2         2            6
-3         3            7
 
-virtual machine:
-core-id   thread-0-id  thread-1-id
-0         0            1
-1         2            3
-2         4            5
-3         6            7
+The kernel patches are also available here :
 
-When attach disk with two queues, all the even numbered cpus will be
-mapped to queue 0. Under virtual machine, all the cpus is followed by
-its sibling cpu.Before this patch, all the odd numbered cpus will also
-be mapped to queue 0, can cause serious imbalance.this will lead to
-performance impact on system IO
+git://linux-arm.org/linux-skp.git coresight-acpi/v1
 
-So suggest to allocate cpu map by core id, this can be more currency
-
-Signed-off-by: luferry <luferry@163.com>
----
- block/blk-mq-cpumap.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
-index 03a534820271..4125e8e77679 100644
---- a/block/blk-mq-cpumap.c
-+++ b/block/blk-mq-cpumap.c
-@@ -35,7 +35,7 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
- {
- 	unsigned int *map = qmap->mq_map;
- 	unsigned int nr_queues = qmap->nr_queues;
--	unsigned int cpu, first_sibling;
-+	unsigned int cpu, first_sibling, core = 0;
- 
- 	for_each_possible_cpu(cpu) {
- 		/*
-@@ -48,9 +48,10 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
- 			map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
- 		} else {
- 			first_sibling = get_first_sibling(cpu);
--			if (first_sibling == cpu)
--				map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
--			else
-+			if (first_sibling == cpu) {
-+				map[cpu] = cpu_to_queue_index(qmap, nr_queues, core);
-+				core++;
-+			} else
- 				map[cpu] = map[first_sibling];
- 		}
- 	}
--- 
-2.14.1.40.g8e62ba1
-
+Kind regards
+Suzuki
