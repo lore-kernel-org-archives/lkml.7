@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D392C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC616C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2211D21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717492183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254471;
-	bh=74R3t0TU8cTYaLbO3Kk7y4e+sSvrCgw4Xg+xcbW1MPo=;
+	s=default; t=1553254475;
+	bh=JNhDEjgloo9yriyYL6qY7FDpUkwlmL4YfBYA89rdgE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=190FVFktSxMEEvgcG9Uit4YEL/cOKZPYJluDb+2QCfXJBaxVBygyFAns0KKZbFZ/M
-	 ++5yKggv5NYg2IWIAVED3JOV5Ao9LCHH+fX8aKnUrCTUaPKK5+mfnS50TsW3ZpaCP/
-	 WKyvJLzm11kvUUdjD+zOln90Kmz8dQI+1lDHwpLY=
+	b=tLh+VhFh+dIHLCWp60B5oPlqGiyC9Ou0d1F4guB1ob1SITa9+I2GayScPoFHzZsMY
+	 Pi3b42/zAjavXcvJfPkrWXFdp0eYjvNlqmerJfxknmwzKvlzT1df6CzggAGU+f13la
+	 fzeXibgp43EDpsn8rSSyFRRMwJyIWM83UO1MYapE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbfCVLe3 (ORCPT
+        id S1730441AbfCVLed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbfCVLeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:34:22 -0400
+        id S1730414AbfCVLe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:34:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2FBF2183E;
-        Fri, 22 Mar 2019 11:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DA0D2183E;
+        Fri, 22 Mar 2019 11:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254461;
-        bh=74R3t0TU8cTYaLbO3Kk7y4e+sSvrCgw4Xg+xcbW1MPo=;
+        s=default; t=1553254468;
+        bh=JNhDEjgloo9yriyYL6qY7FDpUkwlmL4YfBYA89rdgE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSDxxwuZicnjfjdk6H4P0zkXMAp4SN/tlrQw2+zsmNkORVa8a6NmU5urI+/ps1VUT
-         FO7uzfYm3+lB94vWbK/vjlIIRcm4CgZyoAcLJWcAltZGNCybOPXRIWWFIRYPVIIuCp
-         xcMOcMe8q9bVcGmahpK5yEdCXFOvj6QalDEd5sFo=
+        b=ecJ6ObYgrWLwjz89B0pS0RktHShzKl+NCJIV6dzFC0071RazPP5hR4AvC9pNViIIN
+         /MP6pNHBHMXorlxdiZwQTAPvT9XVxzBrMEqxbxSD8UnM0ic5AT97b7gZHKhWB0mI5q
+         Eb26r6z4zoYrJb6ALcoU2aSboB53k7CLzMYt1KGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 143/230] net/hsr: fix possible crash in add_timer()
-Date:   Fri, 22 Mar 2019 12:14:41 +0100
-Message-Id: <20190322111246.684080249@linuxfoundation.org>
+        Shankara Pailoor <sp3485@columbia.edu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume Nault <gnault@redhat.com>
+Subject: [PATCH 4.4 145/230] tcp/dccp: remove reqsk_put() from inet_child_forget()
+Date:   Fri, 22 Mar 2019 12:14:43 +0100
+Message-Id: <20190322111246.821855595@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -69,129 +69,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 1e027960edfaa6a43f9ca31081729b716598112b ]
+commit da8ab57863ed7e912d10b179b6bdc652f635bd19 upstream.
 
-syzbot found another add_timer() issue, this time in net/hsr [1]
+Back in linux-4.4, I inadvertently put a call to reqsk_put() in
+inet_child_forget(), forgetting it could be called from two different
+points.
 
-Let's use mod_timer() which is safe.
+In the case it is called from inet_csk_reqsk_queue_add(), we want to
+keep the reference on the request socket, since it is released later by
+the caller (tcp_v{4|6}_rcv())
 
-[1]
-kernel BUG at kernel/time/timer.c:1136!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 15909 Comm: syz-executor.3 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-kobject: 'loop2' (00000000f5629718): kobject_uevent_env
-RIP: 0010:add_timer kernel/time/timer.c:1136 [inline]
-RIP: 0010:add_timer+0x654/0xbe0 kernel/time/timer.c:1134
-Code: 0f 94 c5 31 ff 44 89 ee e8 09 61 0f 00 45 84 ed 0f 84 77 fd ff ff e8 bb 5f 0f 00 e8 07 10 a0 ff e9 68 fd ff ff e8 ac 5f 0f 00 <0f> 0b e8 a5 5f 0f 00 0f 0b e8 9e 5f 0f 00 4c 89 b5 58 ff ff ff e9
-RSP: 0018:ffff8880656eeca0 EFLAGS: 00010246
-kobject: 'loop2' (00000000f5629718): fill_kobj_path: path = '/devices/virtual/block/loop2'
-RAX: 0000000000040000 RBX: 1ffff1100caddd9a RCX: ffffc9000c436000
-RDX: 0000000000040000 RSI: ffffffff816056c4 RDI: ffff88806a2f6cc8
-RBP: ffff8880656eed58 R08: ffff888067f4a300 R09: ffff888067f4abc8
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88806a2f6cc0
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff8880656eed30
-FS:  00007fc2019bf700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738000 CR3: 0000000067e8e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+This bug never showed up because atomic_dec_and_test() was not signaling
+the underflow, and SLAB_DESTROY_BY RCU semantic for request sockets
+prevented the request to be put in quarantine.
+
+Recent conversion of socket refcount from atomic_t to refcount_t finally
+exposed the bug.
+
+So move the reqsk_put() to inet_csk_listen_stop() to fix this.
+
+Thanks to Shankara Pailoor for using syzkaller and providing
+a nice set of .config and C repro.
+
+WARNING: CPU: 2 PID: 4277 at lib/refcount.c:186
+refcount_sub_and_test+0x167/0x1b0 lib/refcount.c:186
+Kernel panic - not syncing: panic_on_warn set ...
+
+CPU: 2 PID: 4277 Comm: syz-executor0 Not tainted 4.13.0-rc7 #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+Ubuntu-1.8.2-1ubuntu1 04/01/2014
 Call Trace:
- hsr_check_announce net/hsr/hsr_device.c:99 [inline]
- hsr_check_carrier_and_operstate+0x567/0x6f0 net/hsr/hsr_device.c:120
- hsr_netdev_notify+0x297/0xa00 net/hsr/hsr_main.c:51
- notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
- __raw_notifier_call_chain kernel/notifier.c:394 [inline]
- raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
- call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
- call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
- call_netdevice_notifiers net/core/dev.c:1765 [inline]
- dev_open net/core/dev.c:1436 [inline]
- dev_open+0x143/0x160 net/core/dev.c:1424
- team_port_add drivers/net/team/team.c:1203 [inline]
- team_add_slave+0xa07/0x15d0 drivers/net/team/team.c:1933
- do_set_master net/core/rtnetlink.c:2358 [inline]
- do_set_master+0x1d4/0x230 net/core/rtnetlink.c:2332
- do_setlink+0x966/0x3510 net/core/rtnetlink.c:2493
- rtnl_setlink+0x271/0x3b0 net/core/rtnetlink.c:2747
- rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
- netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
- netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
- netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
- netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
- sock_sendmsg_nosec net/socket.c:622 [inline]
- sock_sendmsg+0xdd/0x130 net/socket.c:632
- sock_write_iter+0x27c/0x3e0 net/socket.c:923
- call_write_iter include/linux/fs.h:1869 [inline]
- do_iter_readv_writev+0x5e0/0x8e0 fs/read_write.c:680
- do_iter_write fs/read_write.c:956 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:937
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1001
- do_writev+0xf6/0x290 fs/read_write.c:1036
- __do_sys_writev fs/read_write.c:1109 [inline]
- __se_sys_writev fs/read_write.c:1106 [inline]
- __x64_sys_writev+0x75/0xb0 fs/read_write.c:1106
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc2019bec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc2019bf6d4
-R13: 00000000004c4a60 R14: 00000000004dd218 R15: 00000000ffffffff
+ <IRQ>
+ __dump_stack lib/dump_stack.c:16 [inline]
+ dump_stack+0xf7/0x1aa lib/dump_stack.c:52
+ panic+0x1ae/0x3a7 kernel/panic.c:180
+ __warn+0x1c4/0x1d9 kernel/panic.c:541
+ report_bug+0x211/0x2d0 lib/bug.c:183
+ fixup_bug+0x40/0x90 arch/x86/kernel/traps.c:190
+ do_trap_no_signal arch/x86/kernel/traps.c:224 [inline]
+ do_trap+0x260/0x390 arch/x86/kernel/traps.c:273
+ do_error_trap+0x118/0x340 arch/x86/kernel/traps.c:310
+ do_invalid_op+0x1b/0x20 arch/x86/kernel/traps.c:323
+ invalid_op+0x18/0x20 arch/x86/entry/entry_64.S:846
+RIP: 0010:refcount_sub_and_test+0x167/0x1b0 lib/refcount.c:186
+RSP: 0018:ffff88006e006b60 EFLAGS: 00010286
+RAX: 0000000000000026 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000026 RSI: 1ffff1000dc00d2c RDI: ffffed000dc00d60
+RBP: ffff88006e006bf0 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff1000dc00d6d
+R13: 00000000ffffffff R14: 0000000000000001 R15: ffff88006ce9d340
+ refcount_dec_and_test+0x1a/0x20 lib/refcount.c:211
+ reqsk_put+0x71/0x2b0 include/net/request_sock.h:123
+ tcp_v4_rcv+0x259e/0x2e20 net/ipv4/tcp_ipv4.c:1729
+ ip_local_deliver_finish+0x2e2/0xba0 net/ipv4/ip_input.c:216
+ NF_HOOK include/linux/netfilter.h:248 [inline]
+ ip_local_deliver+0x1ce/0x6d0 net/ipv4/ip_input.c:257
+ dst_input include/net/dst.h:477 [inline]
+ ip_rcv_finish+0x8db/0x19c0 net/ipv4/ip_input.c:397
+ NF_HOOK include/linux/netfilter.h:248 [inline]
+ ip_rcv+0xc3f/0x17d0 net/ipv4/ip_input.c:488
+ __netif_receive_skb_core+0x1fb7/0x31f0 net/core/dev.c:4298
+ __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:4336
+ process_backlog+0x1c5/0x6d0 net/core/dev.c:5102
+ napi_poll net/core/dev.c:5499 [inline]
+ net_rx_action+0x6d3/0x14a0 net/core/dev.c:5565
+ __do_softirq+0x2cb/0xb2d kernel/softirq.c:284
+ do_softirq_own_stack+0x1c/0x30 arch/x86/entry/entry_64.S:898
+ </IRQ>
+ do_softirq.part.16+0x63/0x80 kernel/softirq.c:328
+ do_softirq kernel/softirq.c:176 [inline]
+ __local_bh_enable_ip+0x84/0x90 kernel/softirq.c:181
+ local_bh_enable include/linux/bottom_half.h:31 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:705 [inline]
+ ip_finish_output2+0x8ad/0x1360 net/ipv4/ip_output.c:231
+ ip_finish_output+0x74e/0xb80 net/ipv4/ip_output.c:317
+ NF_HOOK_COND include/linux/netfilter.h:237 [inline]
+ ip_output+0x1cc/0x850 net/ipv4/ip_output.c:405
+ dst_output include/net/dst.h:471 [inline]
+ ip_local_out+0x95/0x160 net/ipv4/ip_output.c:124
+ ip_queue_xmit+0x8c6/0x1810 net/ipv4/ip_output.c:504
+ tcp_transmit_skb+0x1963/0x3320 net/ipv4/tcp_output.c:1123
+ tcp_send_ack.part.35+0x38c/0x620 net/ipv4/tcp_output.c:3575
+ tcp_send_ack+0x49/0x60 net/ipv4/tcp_output.c:3545
+ tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:5795 [inline]
+ tcp_rcv_state_process+0x4876/0x4b60 net/ipv4/tcp_input.c:5930
+ tcp_v4_do_rcv+0x58a/0x820 net/ipv4/tcp_ipv4.c:1483
+ sk_backlog_rcv include/net/sock.h:907 [inline]
+ __release_sock+0x124/0x360 net/core/sock.c:2223
+ release_sock+0xa4/0x2a0 net/core/sock.c:2715
+ inet_wait_for_connect net/ipv4/af_inet.c:557 [inline]
+ __inet_stream_connect+0x671/0xf00 net/ipv4/af_inet.c:643
+ inet_stream_connect+0x58/0xa0 net/ipv4/af_inet.c:682
+ SYSC_connect+0x204/0x470 net/socket.c:1628
+ SyS_connect+0x24/0x30 net/socket.c:1609
+ entry_SYSCALL_64_fastpath+0x18/0xad
+RIP: 0033:0x451e59
+RSP: 002b:00007f474843fc08 EFLAGS: 00000216 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000718000 RCX: 0000000000451e59
+RDX: 0000000000000010 RSI: 0000000020002000 RDI: 0000000000000007
+RBP: 0000000000000046 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000216 R12: 0000000000000000
+R13: 00007ffc040a0f8f R14: 00007f47484409c0 R15: 0000000000000000
 
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Fixes: ebb516af60e1 ("tcp/dccp: fix race at listener dismantle phase")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Arvid Brodin <arvid.brodin@alten.se>
+Reported-by: Shankara Pailoor <sp3485@columbia.edu>
+Tested-by: Shankara Pailoor <sp3485@columbia.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guillaume Nault <gnault@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/hsr/hsr_device.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -93,9 +93,8 @@ static void hsr_check_announce(struct ne
- 	if ((hsr_dev->operstate == IF_OPER_UP) && (old_operstate != IF_OPER_UP)) {
- 		/* Went up */
- 		hsr->announce_count = 0;
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
--		add_timer(&hsr->announce_timer);
-+		mod_timer(&hsr->announce_timer,
-+			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
+---
+ net/ipv4/inet_connection_sock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -787,7 +787,6 @@ static void inet_child_forget(struct soc
+ 		tcp_sk(child)->fastopen_rsk = NULL;
  	}
- 
- 	if ((hsr_dev->operstate != IF_OPER_UP) && (old_operstate == IF_OPER_UP))
-@@ -323,6 +322,7 @@ static void hsr_announce(unsigned long d
- {
- 	struct hsr_priv *hsr;
- 	struct hsr_port *master;
-+	unsigned long interval;
- 
- 	hsr = (struct hsr_priv *) data;
- 
-@@ -337,14 +337,12 @@ static void hsr_announce(unsigned long d
- 	}
- 
- 	if (hsr->announce_count < 3)
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
-+		interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
- 	else
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
-+		interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
- 
- 	if (is_admin_up(master->dev))
--		add_timer(&hsr->announce_timer);
-+		mod_timer(&hsr->announce_timer, jiffies + interval);
- 
- 	rcu_read_unlock();
+ 	inet_csk_destroy_sock(child);
+-	reqsk_put(req);
  }
+ 
+ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
+@@ -858,6 +857,7 @@ void inet_csk_listen_stop(struct sock *s
+ 		sock_hold(child);
+ 
+ 		inet_child_forget(sk, req, child);
++		reqsk_put(req);
+ 		bh_unlock_sock(child);
+ 		local_bh_enable();
+ 		sock_put(child);
 
 
