@@ -2,51 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D588FC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892E7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7CB218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557F721929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254185;
-	bh=VEpA/bF0++wTY0NgxHMNevRKXr3GZZ1fdVNodjBMEAw=;
+	s=default; t=1553254191;
+	bh=kcn9Cg2sdaMpNfr0NWEn+vTtfXkoDWU6CtDVACnJfQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCck1UhJHyGRi//1OQaS4z+wIOuGIqQlt8ElQFtXmPyEb4FNJc5BbUxsii+mFPLjH
-	 JrfPFk/pjnGIWyFAQz0prPFLx/ZyIXkc49pad3e4TnAriaP59YdeGewX2XZfLFNyZZ
-	 kYPcmXyQ7wQ0sCrzmOCHklUWyVV1hvsowYEpZlx0=
+	b=sB/AUx/9l9gEsDgYAC9Me+O3zwDWwQpwdK0s0jV35K0hKY1bCpk/5c5f9jC7tYlCK
+	 HVZdF3JIo6RIFdhS4qNC08RhJsJaB66Vbu+bWa1xnbtcAaWZdnVW2EyJe4hXrk3ZjT
+	 JevFXGB2PMSgHjvGVA0WSsEAZkvhh63LgLGGJKu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfCVL3n (ORCPT
+        id S1729864AbfCVL3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729836AbfCVL3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:29:42 -0400
+        id S1729064AbfCVL3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E42218B0;
-        Fri, 22 Mar 2019 11:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1572183E;
+        Fri, 22 Mar 2019 11:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254181;
-        bh=VEpA/bF0++wTY0NgxHMNevRKXr3GZZ1fdVNodjBMEAw=;
+        s=default; t=1553254188;
+        bh=kcn9Cg2sdaMpNfr0NWEn+vTtfXkoDWU6CtDVACnJfQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVdPXk16i/yrVv7O0P4AJHGE4wzxYU2TwTlnKBY0RKBR67LpaJn20ifENGqWvzb8b
-         onhmeGXTMfoGw53UoW78oF9JVzHh/VOVVJ5IIR0uHLJg8FouDi/9pAfQsUTVzocrGJ
-         YK0caYvuV1JZJaiSC+wLNiNahW4Ohi9BoE4Spf9E=
+        b=kXYW3FYHQPu6Gqu43TeUp2+5cAxTdqDND/LYRPqoH4JnUI4Ho+thCAPSvNi1VWAMI
+         QUpFKTFIyjAw3E2DArZihOzXtXuC9fmS8TVYBglP15MmsokTAVfVS3XyoGUAAuMx3i
+         QOna8e0ZRdHzeWTpyEkr1b6r7E1VVVNKL1DweeOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 057/230] USB: serial: ftdi_sio: add ID for Hjelmslund Electronics USB485
-Date:   Fri, 22 Mar 2019 12:13:15 +0100
-Message-Id: <20190322111240.684093582@linuxfoundation.org>
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 043/230] scsi: csiostor: fix NULL pointer dereference in csio_vport_set_state()
+Date:   Fri, 22 Mar 2019 12:13:01 +0100
+Message-Id: <20190322111239.736090026@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,47 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mans Rullgard <mans@mansr.com>
+[ Upstream commit fe35a40e675473eb65f2f5462b82770f324b5689 ]
 
-commit 8d7fa3d4ea3f0ca69554215e87411494e6346fdc upstream.
+Assign fc_vport to ln->fc_vport before calling csio_fcoe_alloc_vnp() to
+avoid a NULL pointer dereference in csio_vport_set_state().
 
-This adds the USB ID of the Hjelmslund Electronics USB485 Iso stick.
+ln->fc_vport is dereferenced in csio_vport_set_state().
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c     |    2 ++
- drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
- 2 files changed, 8 insertions(+)
+ drivers/scsi/csiostor/csio_attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1020,6 +1020,8 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_BT_USB_PID) },
- 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_WL_USB_PID) },
- 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
-+	/* EZPrototypes devices */
-+	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
- 	{ }					/* Terminating entry */
- };
+diff --git a/drivers/scsi/csiostor/csio_attr.c b/drivers/scsi/csiostor/csio_attr.c
+index 2d1c4ebd40f91..6587f20cff1a1 100644
+--- a/drivers/scsi/csiostor/csio_attr.c
++++ b/drivers/scsi/csiostor/csio_attr.c
+@@ -582,12 +582,12 @@ csio_vport_create(struct fc_vport *fc_vport, bool disable)
+ 	}
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1308,6 +1308,12 @@
- #define IONICS_PLUGCOMPUTER_PID		0x0102
+ 	fc_vport_set_state(fc_vport, FC_VPORT_INITIALIZING);
++	ln->fc_vport = fc_vport;
  
- /*
-+ * EZPrototypes (PID reseller)
-+ */
-+#define EZPROTOTYPES_VID		0x1c40
-+#define HJELMSLUND_USB485_ISO_PID	0x0477
-+
-+/*
-  * Dresden Elektronik Sensor Terminal Board
-  */
- #define DE_VID			0x1cf1 /* Vendor ID */
+ 	if (csio_fcoe_alloc_vnp(hw, ln))
+ 		goto error;
+ 
+ 	*(struct csio_lnode **)fc_vport->dd_data = ln;
+-	ln->fc_vport = fc_vport;
+ 	if (!fc_vport->node_name)
+ 		fc_vport->node_name = wwn_to_u64(csio_ln_wwnn(ln));
+ 	if (!fc_vport->port_name)
+-- 
+2.19.1
+
 
 
